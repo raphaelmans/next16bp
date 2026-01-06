@@ -23,8 +23,46 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "KudosCourts",
-  description: "Discover and reserve courts near you",
+  title: {
+    default: "KudosCourts - Discover. Reserve. Play.",
+    template: "%s | KudosCourts",
+  },
+  description:
+    "Find pickleball courts near you and book your next game in seconds. The unified platform for players and court owners.",
+  keywords: [
+    "pickleball",
+    "court booking",
+    "court reservation",
+    "pickleball courts",
+    "sports booking",
+    "court discovery",
+  ],
+  authors: [{ name: "KudosCourts" }],
+  creator: "KudosCourts",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "https://kudoscourts.com",
+  ),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: "KudosCourts",
+    title: "KudosCourts - Discover. Reserve. Play.",
+    description:
+      "Find pickleball courts near you and book your next game in seconds. The unified platform for players and court owners.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "KudosCourts - Discover. Reserve. Play.",
+    description:
+      "Find pickleball courts near you and book your next game in seconds.",
+    creator: "@kudoscourts",
+    site: "@kudoscourts",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -37,9 +75,7 @@ export default function RootLayout({
       <body
         className={`${outfit.variable} ${sourceSans.variable} ${ibmPlexMono.variable} antialiased`}
       >
-        <Providers>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
