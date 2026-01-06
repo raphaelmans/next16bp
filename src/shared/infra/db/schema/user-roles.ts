@@ -14,8 +14,12 @@ export const userRoles = pgTable("user_roles", {
     .unique()
     .references(() => authUsers.id, { onDelete: "cascade" }),
   role: text("role").notNull().default("member"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
 });
 
 // Re-export authUsers for convenience
