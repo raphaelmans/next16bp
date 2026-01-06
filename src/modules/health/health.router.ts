@@ -17,9 +17,7 @@ export const healthRouter = router({
    * Basic health check endpoint.
    * Returns server status, timestamp, and uptime.
    */
-  check: publicProcedure.query(({ ctx }): HealthCheckResponse => {
-    ctx.log.info("Health check requested");
-
+  check: publicProcedure.query((): HealthCheckResponse => {
     return {
       status: "ok",
       timestamp: new Date().toISOString(),

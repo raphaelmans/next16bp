@@ -1,7 +1,8 @@
-import type { AuthService } from "../services/auth.service";
+import type { IAuthService } from "../services/auth.service";
 import type { IUserRoleService } from "@/modules/user-role/services/user-role.service";
 import type { TransactionManager } from "@/shared/kernel/transaction";
 import type { RegisterDTO } from "../dtos/register.dto";
+import { AuthRegistrationFailedError } from "../errors/auth.errors";
 
 /**
  * RegisterUserUseCase orchestrates user registration.
@@ -11,7 +12,7 @@ import type { RegisterDTO } from "../dtos/register.dto";
  */
 export class RegisterUserUseCase {
   constructor(
-    private authService: AuthService,
+    private authService: IAuthService,
     private userRoleService: IUserRoleService,
     private transactionManager: TransactionManager,
   ) {}
@@ -25,7 +26,7 @@ export class RegisterUserUseCase {
     );
 
     if (!result.user) {
-      throw new Error("Failed to create user");
+      throw new AuthRegistrationFailedError(input.email);
     }
 
     // 2. Create user role in our database (within transaction)

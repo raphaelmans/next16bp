@@ -3,6 +3,7 @@ import type { RequestContext } from "@/shared/kernel/context";
 import type { IUserRoleRepository } from "../repositories/user-role.repository";
 import type { UserRoleRecord, InsertUserRole } from "@/shared/infra/db/schema";
 import { UserRoleAlreadyExistsError } from "../errors/user-role.errors";
+import { logger } from "@/shared/infra/logger";
 
 export interface IUserRoleService {
   findByUserId(
@@ -50,6 +51,18 @@ export class UserRoleService implements IUserRoleService {
       throw new UserRoleAlreadyExistsError(data.userId);
     }
 
-    return this.userRoleRepository.create(data, ctx);
+    const userRole = await this.userRoleRepository.create(data, ctx);
+
+    // Business event: user role created
+    logger.info(
+      {
+        event: "user_role.created",
+        userId: userRole.userId,
+        role: userRole.role,
+      },
+      "User role created",
+    );
+
+    return userRole;
   }
 }

@@ -18,6 +18,7 @@ const t = initTRPC.context<Context>().create({
           err: cause,
           code: cause.code,
           details: cause.details,
+          requestId,
         },
         cause.message,
       );
@@ -38,6 +39,7 @@ const t = initTRPC.context<Context>().create({
     ctx?.log.error(
       {
         err: error,
+        requestId,
       },
       "Unexpected error",
     );
@@ -60,6 +62,36 @@ export const router = t.router;
 export const middleware = t.middleware;
 
 /**
+ * Logger middleware - request lifecycle tracing.
+ * Defined inline to avoid circular dependency with middleware exports.
+ */
+const loggerMiddleware = t.middleware(async ({ ctx, next, type }) => {
+  const start = Date.now();
+
+  ctx.log.info({ type }, "Request started");
+
+  // Log input at debug level only in development
+  if (process.env.NODE_ENV !== "production") {
+    ctx.log.debug("Request processing");
+  }
+
+  try {
+    const result = await next({ ctx });
+    const duration = Date.now() - start;
+
+    ctx.log.info({ duration, status: "success", type }, "Request completed");
+
+    return result;
+  } catch (error) {
+    const duration = Date.now() - start;
+
+    ctx.log.info({ duration, status: "error", type }, "Request failed");
+
+    throw error;
+  }
+});
+
+/**
  * Auth middleware - requires valid session.
  * Defined inline to avoid circular dependency.
  */
@@ -78,11 +110,16 @@ const authMiddleware = t.middleware(async ({ ctx, next }) => {
 });
 
 /**
+ * Base procedure with logging - all procedures use this
+ */
+const loggedProcedure = t.procedure.use(loggerMiddleware);
+
+/**
  * Public procedure - no authentication required
  */
-export const publicProcedure = t.procedure;
+export const publicProcedure = loggedProcedure;
 
 /**
  * Protected procedure - authentication required
  */
-export const protectedProcedure = t.procedure.use(authMiddleware);
+export const protectedProcedure = loggedProcedure.use(authMiddleware);

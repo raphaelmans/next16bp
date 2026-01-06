@@ -15,7 +15,7 @@
 ## Logger Configuration
 
 ```typescript
-// lib/shared/infra/logger/index.ts
+// shared/infra/logger/index.ts
 
 import pino from "pino";
 
@@ -79,7 +79,7 @@ export type Logger = typeof logger;
 Create a child logger with request context for correlation.
 
 ```typescript
-// lib/shared/infra/logger/index.ts
+// shared/infra/logger/index.ts
 
 export interface RequestLogContext {
   requestId: string;
@@ -138,60 +138,85 @@ log.debug({ input }, "Request input");
 
 ### tRPC Middleware
 
-```typescript
-// lib/shared/infra/trpc/middleware/logger.middleware.ts
-
-import { middleware } from "../trpc";
-import { createRequestLogger } from "@/lib/shared/infra/logger";
-
-export const loggerMiddleware = middleware(
-  async ({ ctx, next, path, type }) => {
-    const start = Date.now();
-
-    const log = createRequestLogger({
-      requestId: ctx.requestId,
-      userId: ctx.userId ?? undefined,
-      method: type,
-      path,
-    });
-
-    log.info("Request started");
-
-    // Log input at debug level only
-    if (process.env.NODE_ENV !== "production") {
-      log.debug({ input: ctx.input }, "Request input");
-    }
-
-    try {
-      const result = await next({ ctx: { ...ctx, log } });
-      const duration = Date.now() - start;
-
-      log.info({ duration, status: "success" }, "Request completed");
-
-      return result;
-    } catch (error) {
-      const duration = Date.now() - start;
-
-      log.info({ duration, status: "error" }, "Request failed");
-
-      throw error;
-    }
-  },
-);
-```
-
-### Apply to Procedures
+**Important:** Define middleware inline in `trpc.ts` to avoid circular dependencies. Do NOT create separate middleware files that import from `trpc.ts`.
 
 ```typescript
-// lib/shared/infra/trpc/trpc.ts
+// shared/infra/trpc/trpc.ts
+
+import { initTRPC, TRPCError } from "@trpc/server";
+import { AppError, AuthenticationError } from "@/shared/kernel/errors";
+import type { Context, AuthenticatedContext } from "./context";
 
 const t = initTRPC.context<Context>().create({
-  /* ... */
+  errorFormatter({ error, shape, ctx }) {
+    // ... error formatting
+  },
 });
 
+export const router = t.router;
+export const middleware = t.middleware;
+
+/**
+ * Logger middleware - request lifecycle tracing.
+ * Defined inline to avoid circular dependency with middleware exports.
+ */
+const loggerMiddleware = t.middleware(async ({ ctx, next, type }) => {
+  const start = Date.now();
+
+  ctx.log.info({ type }, "Request started");
+
+  // Log input at debug level only in development
+  if (process.env.NODE_ENV !== "production") {
+    ctx.log.debug("Request processing");
+  }
+
+  try {
+    const result = await next({ ctx });
+    const duration = Date.now() - start;
+
+    ctx.log.info({ duration, status: "success", type }, "Request completed");
+
+    return result;
+  } catch (error) {
+    const duration = Date.now() - start;
+
+    ctx.log.info({ duration, status: "error", type }, "Request failed");
+
+    throw error;
+  }
+});
+
+/**
+ * Auth middleware - requires valid session.
+ * Defined inline to avoid circular dependency.
+ */
+const authMiddleware = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session || !ctx.userId) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Authentication required",
+      cause: new AuthenticationError("Authentication required"),
+    });
+  }
+
+  return next({
+    ctx: ctx as AuthenticatedContext,
+  });
+});
+
+/**
+ * Base procedure with logging - all procedures use this
+ */
 const loggedProcedure = t.procedure.use(loggerMiddleware);
 
+/**
+ * Public procedure - no authentication required
+ */
 export const publicProcedure = loggedProcedure;
+
+/**
+ * Protected procedure - authentication required
+ */
 export const protectedProcedure = loggedProcedure.use(authMiddleware);
 ```
 
@@ -200,9 +225,9 @@ export const protectedProcedure = loggedProcedure.use(authMiddleware);
 Log significant business events in services.
 
 ```typescript
-// lib/modules/user/services/user.service.ts
+// modules/user/services/user.service.ts
 
-import { logger } from "@/lib/shared/infra/logger";
+import { logger } from "@/shared/infra/logger";
 
 export class UserService implements IUserService {
   async create(data: UserInsert, ctx?: RequestContext): Promise<User> {
@@ -236,6 +261,57 @@ export class UserService implements IUserService {
 }
 ```
 
+## Log Format Convention
+
+### Field Ordering
+
+Always order log fields consistently for readability:
+
+```typescript
+// 1. Event type identifier (if business event)
+// 2. Entity identifiers (userId, workspaceId, etc.)
+// 3. Action-specific data
+// 4. Metadata (duration, status, etc.)
+
+logger.info(
+  {
+    event: "user.logged_in",     // 1. Event type
+    userId: user.id,             // 2. Primary entity
+    email: user.email,           // 3. Action-specific
+  },
+  "User logged in",              // Human-readable message
+);
+```
+
+### Required Fields by Log Type
+
+| Log Type | Required Fields | Optional Fields |
+|----------|-----------------|-----------------|
+| Request start | `type` | — |
+| Request end | `duration`, `status`, `type` | `error` |
+| Business event | `event`, primary entity ID | Related entity IDs |
+| Known error | `err`, `code`, `requestId` | `details` |
+| Unknown error | `err`, `requestId` | — |
+
+### Message Format
+
+- **Request lifecycle**: Short verb phrase ("Request started", "Request completed")
+- **Business events**: Past tense describing what happened ("User logged in", "Order created")
+- **Errors**: The error message itself
+
+```typescript
+// Good messages
+log.info({ type }, "Request started");
+log.info({ duration, status, type }, "Request completed");
+logger.info({ event: "user.registered", userId }, "User registered");
+logger.warn({ err, code, requestId }, err.message);
+
+// Bad messages (avoid)
+log.info("Starting request processing...");  // Too verbose
+log.info("Done");                            // Too vague
+logger.info({ event: "user.registered" }, "A new user has been registered in the system");  // Too wordy
+```
+
 ### Business Event Naming Convention
 
 Use past tense, dot-separated format:
@@ -249,13 +325,30 @@ Use past tense, dot-separated format:
 | Event                      | Description                   |
 | -------------------------- | ----------------------------- |
 | `user.created`             | New user registered           |
+| `user.logged_in`           | User logged in                |
+| `user.logged_out`          | User logged out               |
 | `user.updated`             | User profile updated          |
 | `user.deleted`             | User account deleted          |
+| `user.magic_link_requested`| Magic link email sent         |
 | `workspace.created`        | New workspace created         |
 | `workspace.member.added`   | Member added to workspace     |
 | `workspace.member.removed` | Member removed from workspace |
 | `payment.processed`        | Payment completed             |
 | `payment.failed`           | Payment failed                |
+
+### Auth Events
+
+Standard auth-related events:
+
+| Event | When | Fields |
+|-------|------|--------|
+| `user.registered` | New user created | `userId`, `email` |
+| `user.logged_in` | Successful login | `userId`, `email` |
+| `user.logged_out` | User logged out | — |
+| `user.magic_link_requested` | Magic link sent | `email` |
+| `user.session_exchanged` | OAuth/magic link callback | `userId` |
+| `user.password_reset_requested` | Password reset email sent | `email` |
+| `user.password_changed` | Password updated | `userId` |
 
 ## Error Logging
 
@@ -290,7 +383,7 @@ logger.error(
 Generate UUID at the tRPC context creation.
 
 ```typescript
-// lib/shared/infra/trpc/context.ts
+// shared/infra/trpc/context.ts
 
 import { randomUUID } from "crypto";
 
@@ -317,7 +410,7 @@ Pino's `redact` option handles common sensitive fields automatically.
 For cases where you need to log objects that might contain sensitive data:
 
 ```typescript
-// lib/shared/utils/sanitize.ts
+// shared/utils/sanitize.ts
 
 const SENSITIVE_KEYS = [
   "password",
@@ -407,14 +500,33 @@ export interface RequestContext {
 
 ## Checklist
 
+### Configuration
 - [ ] Pino configured with appropriate log level
 - [ ] Pretty printing enabled in development
 - [ ] Sensitive fields redacted via pino config
-- [ ] Request logger creates child logger with `requestId`
-- [ ] Request ID generated at context creation
-- [ ] Logger middleware logs request lifecycle
-- [ ] Request input logged at `debug` level only
+- [ ] Base context includes `env` and `service`
+
+### Request Tracing
+- [ ] Request ID generated at context creation (UUID)
+- [ ] Request logger creates child logger with `requestId`, `userId`, `method`, `path`
+- [ ] Logger middleware logs request start/end with duration
+- [ ] All procedures use `loggedProcedure` as base
+- [ ] Request input logged at `debug` level only (not in production)
+
+### Business Events
 - [ ] Services log significant business events at `info` level
-- [ ] Business events use `<entity>.<action>` naming convention
-- [ ] Error handler logs known errors at `warn`, unknown at `error`
-- [ ] Repositories do not log
+- [ ] Business events use `event` field with `<entity>.<action>` format
+- [ ] Business events include primary entity ID (e.g., `userId`)
+- [ ] Auth events follow standard naming (`user.logged_in`, `user.registered`, etc.)
+- [ ] Message is past tense, concise ("User logged in", not "A user has logged in")
+
+### Error Logging
+- [ ] Error handler logs known errors at `warn` with `code`, `details`, `requestId`
+- [ ] Error handler logs unknown errors at `error` with full stack
+- [ ] Error message used as log message (not generic text)
+
+### Layer Rules
+- [ ] Routers: No logging (handled by middleware)
+- [ ] Services: Log business events
+- [ ] Repositories: No logging
+- [ ] Use cases: No logging (services log the events)

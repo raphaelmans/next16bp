@@ -21,12 +21,15 @@ function matchesRoute(path: string, routes: string[]): boolean {
 }
 
 /**
- * Next.js middleware for session refresh and route protection.
+ * Next.js proxy for session refresh and route protection.
  * - Refreshes Supabase session on every request
  * - Redirects unauthenticated users from protected routes to /login
  * - Redirects authenticated users from auth routes to /
+ *
+ * Note: In Next.js 16+, middleware is renamed to proxy.
+ * The proxy runtime is nodejs-only (edge runtime not supported).
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
