@@ -1,6 +1,6 @@
 import { initTRPC, TRPCError } from "@trpc/server";
-import { AppError } from "@/shared/kernel/errors";
-import type { Context } from "./context";
+import { AppError, AuthenticationError } from "@/shared/kernel/errors";
+import type { Context, AuthenticatedContext } from "./context";
 
 /**
  * tRPC initialization with error formatter.
@@ -60,12 +60,29 @@ export const router = t.router;
 export const middleware = t.middleware;
 
 /**
+ * Auth middleware - requires valid session.
+ * Defined inline to avoid circular dependency.
+ */
+const authMiddleware = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session || !ctx.userId) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Authentication required",
+      cause: new AuthenticationError("Authentication required"),
+    });
+  }
+
+  return next({
+    ctx: ctx as AuthenticatedContext,
+  });
+});
+
+/**
  * Public procedure - no authentication required
  */
 export const publicProcedure = t.procedure;
 
 /**
- * Protected procedure - authentication required (to be implemented)
- * For now, it's the same as publicProcedure.
+ * Protected procedure - authentication required
  */
-export const protectedProcedure = t.procedure;
+export const protectedProcedure = t.procedure.use(authMiddleware);

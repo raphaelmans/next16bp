@@ -1,12 +1,24 @@
+import type { TransactionContext } from "./transaction";
+
 /**
- * Request context for extensibility.
- * Currently holds request ID, can be extended for transactions, tracing, etc.
+ * RequestContext is passed through layers to provide:
+ * - Transaction context for database operations
+ * - Request ID for correlation in logs and error responses
+ * - Future: tracing context, user context, etc.
  */
 export interface RequestContext {
-  requestId: string;
+  /**
+   * Active transaction context, if within a transaction.
+   * Repositories use this to participate in the transaction.
+   */
+  tx?: TransactionContext;
+
+  /**
+   * Request ID for correlation in logs and error responses.
+   */
+  requestId?: string;
+
   // Future extensions:
-  // tx?: TransactionContext;
   // traceId?: string;
   // spanId?: string;
-  // userId?: string;
 }
