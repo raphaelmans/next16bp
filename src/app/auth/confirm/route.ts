@@ -18,8 +18,8 @@ export async function GET(request: NextRequest) {
   redirectTo.searchParams.delete("token_hash");
   redirectTo.searchParams.delete("type");
 
-  // Default redirect to dashboard
-  redirectTo.pathname = "/dashboard";
+  // Default redirect to home
+  redirectTo.pathname = "/home";
 
   if (!token_hash || !type) {
     logger.warn(
@@ -117,8 +117,8 @@ export async function GET(request: NextRequest) {
           "Password recovery verified",
         );
 
-        // For recovery, redirect to password reset page
-        redirectTo.pathname = "/dashboard";
+        // For recovery, redirect to home page
+        redirectTo.pathname = "/home";
         return NextResponse.redirect(redirectTo);
       } catch (error) {
         logger.error(

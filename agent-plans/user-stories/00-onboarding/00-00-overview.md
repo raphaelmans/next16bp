@@ -32,11 +32,13 @@ Navigation is consistent across three distinct areas: public discovery, authenti
 | US-00-05 | Owner Navigates Dashboard | Active | - |
 | US-00-06 | Admin Navigates Dashboard | Active | - |
 | US-00-07 | Home Page for Authenticated Users | Active | - |
+| 00-08 | Bug Fix: Legacy Dashboard Redirect | ✅ Fixed | - |
 
 ---
 
 ## Summary
 
-- Total: 7
+- Total: 7 user stories + 1 bug fix
 - Active: 7
 - Superseded: 0
+- Fixed: 1

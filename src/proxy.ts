@@ -6,7 +6,7 @@ import { createServerClient } from "@supabase/ssr";
  * Users will be redirected to /login if not authenticated.
  */
 const PROTECTED_ROUTES = [
-  "/dashboard",
+  "/home",
   "/settings",
   "/account",
   "/reservations",

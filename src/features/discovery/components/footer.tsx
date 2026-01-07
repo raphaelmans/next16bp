@@ -10,7 +10,7 @@ const FOOTER_LINKS = {
   ],
   owners: [
     { name: "List Your Court", href: "/owner/onboarding" },
-    { name: "Owner Dashboard", href: "/owner/dashboard" },
+    { name: "Owner Dashboard", href: "/owner" },
     { name: "Pricing", href: "/owner/pricing" },
   ],
   company: [
