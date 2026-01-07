@@ -5,7 +5,14 @@ import { createServerClient } from "@supabase/ssr";
  * Routes that require authentication.
  * Users will be redirected to /login if not authenticated.
  */
-const PROTECTED_ROUTES = ["/dashboard", "/settings", "/profile"];
+const PROTECTED_ROUTES = [
+  "/dashboard",
+  "/settings",
+  "/account",
+  "/reservations",
+  "/owner",
+  "/admin",
+];
 
 /**
  * Routes that are only accessible to unauthenticated users.

@@ -34,6 +34,7 @@ export interface IClaimAdminService {
     pagination: { limit: number; offset: number },
     ctx?: RequestContext,
   ): Promise<{ items: ClaimRequestRecord[]; total: number }>;
+  getPendingCount(ctx?: RequestContext): Promise<number>;
   getClaimRequestById(
     requestId: string,
     ctx?: RequestContext,
@@ -65,6 +66,17 @@ export class ClaimAdminService implements IClaimAdminService {
     ctx?: RequestContext,
   ): Promise<{ items: ClaimRequestRecord[]; total: number }> {
     return this.claimRequestRepository.findPending(pagination, ctx);
+  }
+
+  /**
+   * Get count of pending claim requests
+   */
+  async getPendingCount(ctx?: RequestContext): Promise<number> {
+    const result = await this.claimRequestRepository.findPending(
+      { limit: 0, offset: 0 },
+      ctx,
+    );
+    return result.total;
   }
 
   async getClaimRequestById(

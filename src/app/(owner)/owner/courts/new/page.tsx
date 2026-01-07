@@ -1,8 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
 import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
 import { OwnerSidebar, OwnerNavbar } from "@/features/owner";
+import { PageHeader } from "@/components/ui/page-header";
 import { CourtForm } from "@/features/owner/components/court-form";
 import {
   useCourtForm,
@@ -10,13 +13,24 @@ import {
 } from "@/features/owner/hooks/use-court-form";
 import { useSession, useLogout } from "@/features/auth";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export default function NewCourtPage() {
   const router = useRouter();
+  const trpc = useTRPC();
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
+  // Fetch the user's organizations
+  const { data: organizations, isLoading: orgsLoading } = useQuery(
+    trpc.organization.my.queryOptions(),
+  );
+
+  // Get the first organization (owner layout guard ensures they have one)
+  const organization = organizations?.[0];
+
   const { submit, isSubmitting } = useCourtForm({
+    organizationId: organization?.id ?? "",
     onSuccess: (result) => {
       toast.success("Court created successfully!");
       // Redirect to slots page for the newly created court
@@ -45,15 +59,27 @@ export default function NewCourtPage() {
     router.push("/owner/courts");
   };
 
-  // Mock organization data
-  const mockOrg = { id: "1", name: "My Sports Complex" };
+  // Show loading state while fetching organization
+  if (orgsLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  // This shouldn't happen due to layout guard, but handle gracefully
+  if (!organization) {
+    router.push("/owner/onboarding");
+    return null;
+  }
 
   return (
     <DashboardLayout
       sidebar={
         <OwnerSidebar
-          currentOrganization={mockOrg}
-          organizations={[mockOrg]}
+          currentOrganization={organization}
+          organizations={organizations ?? []}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,
@@ -62,7 +88,7 @@ export default function NewCourtPage() {
       }
       navbar={
         <OwnerNavbar
-          organizationName={mockOrg.name}
+          organizationName={organization.name}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,
@@ -72,15 +98,15 @@ export default function NewCourtPage() {
       }
     >
       <div className="space-y-6">
-        {/* Page header */}
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight font-heading">
-            Create New Court
-          </h1>
-          <p className="text-muted-foreground">
-            Add a new court to your organization
-          </p>
-        </div>
+        <PageHeader
+          title="Create New Court"
+          description="Add a new court to your organization"
+          breadcrumbs={[
+            { label: "My Courts", href: "/owner/courts" },
+            { label: "Create" },
+          ]}
+          backHref="/owner/courts"
+        />
 
         {/* Form */}
         <CourtForm

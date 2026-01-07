@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Loader2, MapPin } from "lucide-react";
+import { Loader2, MapPin } from "lucide-react";
 import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
 import { AdminSidebar, AdminNavbar } from "@/features/admin";
 import { useCreateCuratedCourt } from "@/features/admin/hooks/use-admin-courts";
@@ -17,6 +17,7 @@ import {
   AMENITIES,
 } from "@/features/admin/schemas/curated-court.schema";
 import { useSession, useLogout } from "@/features/auth";
+import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -117,22 +118,15 @@ export default function NewCuratedCourtPage() {
       }
     >
       <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/admin/courts">
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight font-heading">
-              Add Curated Court
-            </h1>
-            <p className="text-muted-foreground">
-              Add a new curated court to the platform
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="Add Curated Court"
+          description="Add a new curated court to the platform"
+          breadcrumbs={[
+            { label: "Courts", href: "/admin/courts" },
+            { label: "Create" },
+          ]}
+          backHref="/admin/courts"
+        />
 
         <Form {...form}>
           <form onSubmit={handleSubmit} className="space-y-6">

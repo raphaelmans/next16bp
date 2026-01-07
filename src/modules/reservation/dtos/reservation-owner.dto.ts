@@ -38,3 +38,9 @@ export const GetPendingForCourtSchema = z.object({
 });
 
 export type GetPendingForCourtDTO = z.infer<typeof GetPendingForCourtSchema>;
+
+export const GetPendingCountSchema = z.object({
+  organizationId: z.string().uuid(),
+});
+
+export type GetPendingCountDTO = z.infer<typeof GetPendingCountSchema>;

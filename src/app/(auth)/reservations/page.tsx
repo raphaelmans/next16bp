@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { ReservationTabs } from "@/features/reservation/components/reservation-tabs";
 import { ReservationList } from "@/features/reservation/components/reservation-list";
 import { ReservationListSkeleton } from "@/features/reservation/components/skeletons";
+import { PageHeader } from "@/components/ui/page-header";
 
 export const metadata = {
   title: "My Reservations",
@@ -11,13 +12,11 @@ export const metadata = {
 export default function MyReservationsPage() {
   return (
     <div className="space-y-6">
-      {/* Page header */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">My Reservations</h1>
-        <p className="text-muted-foreground">
-          View and manage your court bookings
-        </p>
-      </div>
+      <PageHeader
+        title="My Reservations"
+        description="View and manage your court bookings"
+        backHref="/home"
+      />
 
       {/* Tabs */}
       <Suspense fallback={null}>

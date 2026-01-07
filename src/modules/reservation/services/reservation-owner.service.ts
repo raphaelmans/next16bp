@@ -22,6 +22,7 @@ import {
   NotCourtOwnerError,
   CourtNotFoundError,
 } from "@/modules/court/errors/court.errors";
+import { NotOrganizationOwnerError } from "@/modules/organization/errors/organization.errors";
 import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
 import { logger } from "@/shared/infra/logger";
 
@@ -42,6 +43,7 @@ export interface IReservationOwnerService {
     userId: string,
     filters: GetOrgReservationsDTO,
   ): Promise<ReservationRecord[]>;
+  getPendingCount(userId: string, organizationId: string): Promise<number>;
 }
 
 export class ReservationOwnerService implements IReservationOwnerService {
@@ -339,6 +341,26 @@ export class ReservationOwnerService implements IReservationOwnerService {
     return allReservations.slice(
       filters.offset,
       filters.offset + filters.limit,
+    );
+  }
+
+  /**
+   * Get count of pending reservations (PAYMENT_MARKED_BY_USER) for an organization
+   */
+  async getPendingCount(
+    userId: string,
+    organizationId: string,
+  ): Promise<number> {
+    // Verify user owns this organization
+    const org = await this.organizationRepository.findById(organizationId);
+    if (!org || org.ownerUserId !== userId) {
+      throw new NotOrganizationOwnerError();
+    }
+
+    // Use the efficient repository method
+    return this.reservationRepository.countByOrganizationAndStatuses(
+      organizationId,
+      ["PAYMENT_MARKED_BY_USER"],
     );
   }
 }

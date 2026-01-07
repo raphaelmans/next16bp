@@ -85,6 +85,11 @@ export function AdminSidebar({
                     asChild
                     isActive={isActive(item.href)}
                     tooltip={item.title}
+                    className={
+                      isActive(item.href)
+                        ? "bg-primary/10 text-primary border-l-2 border-primary"
+                        : ""
+                    }
                   >
                     <Link href={item.href}>
                       <item.icon className="h-4 w-4" />

@@ -29,17 +29,15 @@ export interface UserDropdownUser {
 
 interface UserDropdownProps {
   user: UserDropdownUser;
-  // TODO: These should come from real auth context
-  // For now, always show all options for development
-  isOwner?: boolean;
-  isAdmin?: boolean;
+  isOwner: boolean;
+  isAdmin: boolean;
   onSignOut?: () => void;
 }
 
 export function UserDropdown({
   user,
-  isOwner = true, // Always show for dev
-  isAdmin = true, // Always show for dev
+  isOwner,
+  isAdmin,
   onSignOut,
 }: UserDropdownProps) {
   const initials = user.name
@@ -92,7 +90,7 @@ export function UserDropdown({
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/profile" className="cursor-pointer">
+            <Link href="/account/profile" className="cursor-pointer">
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </Link>

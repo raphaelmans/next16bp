@@ -268,7 +268,7 @@ export class ReservationService implements IReservationService {
     return this.reservationRepository.findByPlayerId(
       profileId,
       { limit: filters.limit, offset: filters.offset },
-      filters.status,
+      { status: filters.status, upcoming: filters.upcoming },
     );
   }
 }

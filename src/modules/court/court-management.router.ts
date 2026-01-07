@@ -8,9 +8,11 @@ import {
 import {
   makeCourtManagementService,
   makeCreateReservableCourtUseCase,
+  makeCreateSimpleCourtUseCase,
 } from "./factories/court.factory";
 import {
   CreateReservableCourtSchema,
+  CreateSimpleCourtSchema,
   UpdateCourtSchema,
   UpdateReservableCourtDetailSchema,
   AddPhotoSchema,
@@ -28,14 +30,20 @@ import {
   DuplicateAmenityError,
   CourtNotReservableError,
 } from "./errors/court.errors";
-import { NotOrganizationOwnerError } from "@/modules/organization/errors/organization.errors";
+import {
+  NotOrganizationOwnerError,
+  OrganizationNotFoundError,
+} from "@/modules/organization/errors/organization.errors";
 import { AppError } from "@/shared/kernel/errors";
 
 /**
  * Maps known errors to appropriate tRPC error codes
  */
 function handleCourtManagementError(error: unknown): never {
-  if (error instanceof CourtNotFoundError) {
+  if (
+    error instanceof CourtNotFoundError ||
+    error instanceof OrganizationNotFoundError
+  ) {
     throw new TRPCError({
       code: "NOT_FOUND",
       message: error.message,
@@ -91,13 +99,29 @@ function handleCourtManagementError(error: unknown): never {
 
 export const courtManagementRouter = router({
   /**
-   * Create a new reservable court for an organization
+   * Create a new reservable court for an organization (full version)
    */
   createReservable: protectedRateLimitedProcedure("mutation")
     .input(CreateReservableCourtSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         const useCase = makeCreateReservableCourtUseCase();
+        return await useCase.execute(ctx.userId, input);
+      } catch (error) {
+        handleCourtManagementError(error);
+      }
+    }),
+
+  /**
+   * Create a court with simplified fields (for onboarding flow)
+   * Creates a RESERVABLE court with CLAIMED status
+   * Coordinates default to 0,0 and can be updated later
+   */
+  createCourt: protectedRateLimitedProcedure("mutation")
+    .input(CreateSimpleCourtSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const useCase = makeCreateSimpleCourtUseCase();
         return await useCase.execute(ctx.userId, input);
       } catch (error) {
         handleCourtManagementError(error);

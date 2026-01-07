@@ -29,16 +29,10 @@ interface AdminNavbarProps {
     avatarUrl?: string;
   };
   onLogout?: () => void;
-  // TODO: Replace with actual role check when auth is implemented
   isOwner?: boolean;
 }
 
-export function AdminNavbar({
-  user,
-  onLogout,
-  // For development, always show Owner Dashboard link
-  isOwner = true,
-}: AdminNavbarProps) {
+export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
   return (
     <div className="flex flex-1 items-center justify-between">
       {/* Left side - Logo and Admin badge */}
@@ -115,7 +109,7 @@ export function AdminNavbar({
               )}
               {isOwner && <DropdownMenuSeparator />}
               <DropdownMenuItem asChild>
-                <Link href="/profile">
+                <Link href="/account/profile">
                   <User className="mr-2 h-4 w-4" />
                   Profile
                 </Link>

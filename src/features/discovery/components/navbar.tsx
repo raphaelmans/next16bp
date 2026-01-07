@@ -20,25 +20,9 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { KudosLogo } from "@/shared/components/kudos";
 import { UserDropdown } from "./user-dropdown";
-
-// =============================================================================
-// TODO: Replace mock auth state with real Supabase session
-// =============================================================================
-// import { useSession } from "@/features/auth/hooks/use-auth";
-// const { data: session } = useSession();
-// const isAuthenticated = !!session?.user;
-// const user = session?.user;
-
-// For development: Toggle these to test different auth states
-const DEV_IS_AUTHENTICATED = true; // Set to false to test guest state
-const DEV_USER = {
-  name: "Dev User",
-  email: "dev@kudoscourts.com",
-  avatarUrl: null,
-};
-const DEV_IS_OWNER = true; // Always show Owner Dashboard for dev
-const DEV_IS_ADMIN = true; // Always show Admin Dashboard for dev
-// =============================================================================
+import { useQuery } from "@tanstack/react-query";
+import { useSession, useLogout } from "@/features/auth/hooks/use-auth";
+import { useTRPC } from "@/trpc/client";
 
 interface NavbarProps {
   className?: string;
@@ -49,11 +33,31 @@ export function Navbar({ className }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // TODO: Replace with real auth state
-  const isAuthenticated = DEV_IS_AUTHENTICATED;
-  const user = DEV_USER;
-  const isOwner = DEV_IS_OWNER;
-  const isAdmin = DEV_IS_ADMIN;
+  const trpc = useTRPC();
+  const { data: sessionUser, isLoading: sessionLoading } = useSession();
+  const { mutate: logout } = useLogout();
+
+  const { data: orgs } = useQuery({
+    ...trpc.organization.my.queryOptions(),
+    enabled: !!sessionUser,
+  });
+
+  const isAuthenticated = !!sessionUser;
+
+  const user = sessionUser
+    ? {
+        name: sessionUser.email?.split("@")[0] || "User",
+        email: sessionUser.email || "",
+        avatarUrl: null,
+      }
+    : {
+        name: "",
+        email: "",
+        avatarUrl: null,
+      };
+
+  const isOwner = (orgs?.length ?? 0) > 0;
+  const isAdmin = sessionUser?.role === "admin";
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,10 +68,12 @@ export function Navbar({ className }: NavbarProps) {
   };
 
   const handleSignOut = () => {
-    // TODO: Implement real sign out with Supabase
-    // await supabase.auth.signOut();
-    router.push("/");
-    setIsOpen(false);
+    logout(undefined, {
+      onSuccess: () => {
+        router.push("/");
+        setIsOpen(false);
+      },
+    });
   };
 
   const handleListYourCourt = () => {
@@ -91,7 +97,10 @@ export function Navbar({ className }: NavbarProps) {
       )}
     >
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-2">
+      <Link
+        href={isAuthenticated ? "/home" : "/"}
+        className="flex items-center gap-2"
+      >
         <KudosLogo size={36} variant="full" />
       </Link>
 
@@ -214,7 +223,7 @@ export function Navbar({ className }: NavbarProps) {
                   My Reservations
                 </Link>
                 <Link
-                  href="/profile"
+                  href="/account/profile"
                   className="py-2 text-lg font-medium flex items-center gap-2"
                   onClick={() => setIsOpen(false)}
                 >

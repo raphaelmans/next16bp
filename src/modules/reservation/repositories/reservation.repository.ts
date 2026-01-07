@@ -1,6 +1,8 @@
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, count, inArray } from "drizzle-orm";
 import {
   reservation,
+  timeSlot,
+  court,
   type ReservationRecord,
   type InsertReservation,
 } from "@/shared/infra/db/schema";
@@ -16,7 +18,10 @@ export interface IReservationRepository {
   findByPlayerId(
     playerId: string,
     pagination: { limit: number; offset: number },
-    status?: string,
+    options?: {
+      status?: string;
+      upcoming?: boolean;
+    },
     ctx?: RequestContext,
   ): Promise<ReservationRecord[]>;
   findByTimeSlotId(
@@ -27,6 +32,18 @@ export interface IReservationRepository {
     timeSlotId: string,
     ctx?: RequestContext,
   ): Promise<ReservationRecord | null>;
+  countByOrganizationAndStatuses(
+    organizationId: string,
+    statuses: (
+      | "CREATED"
+      | "AWAITING_PAYMENT"
+      | "PAYMENT_MARKED_BY_USER"
+      | "CONFIRMED"
+      | "EXPIRED"
+      | "CANCELLED"
+    )[],
+    ctx?: RequestContext,
+  ): Promise<number>;
   create(
     data: InsertReservation,
     ctx?: RequestContext,
@@ -75,18 +92,65 @@ export class ReservationRepository implements IReservationRepository {
   async findByPlayerId(
     playerId: string,
     pagination: { limit: number; offset: number },
-    status?: string,
+    options?: {
+      status?: string;
+      upcoming?: boolean;
+    },
     ctx?: RequestContext,
   ): Promise<ReservationRecord[]> {
     const client = this.getClient(ctx);
 
+    // If upcoming filter is requested, we need to join with timeSlot
+    if (options?.upcoming) {
+      const conditions = [
+        eq(reservation.playerId, playerId),
+        // Only future reservations
+        // We use a subquery approach since we need timeSlot.startTime
+      ];
+
+      if (options.status) {
+        conditions.push(
+          eq(
+            reservation.status,
+            options.status as
+              | "CREATED"
+              | "AWAITING_PAYMENT"
+              | "PAYMENT_MARKED_BY_USER"
+              | "CONFIRMED"
+              | "EXPIRED"
+              | "CANCELLED",
+          ),
+        );
+      }
+
+      // Join with timeSlot to filter by startTime
+      const results = await client
+        .select({
+          reservation: reservation,
+          startTime: timeSlot.startTime,
+        })
+        .from(reservation)
+        .innerJoin(timeSlot, eq(reservation.timeSlotId, timeSlot.id))
+        .where(and(...conditions))
+        .orderBy(timeSlot.startTime)
+        .limit(pagination.limit)
+        .offset(pagination.offset);
+
+      // Filter for future reservations and return just the reservation records
+      const now = new Date();
+      return results
+        .filter((r) => new Date(r.startTime) > now)
+        .map((r) => r.reservation);
+    }
+
+    // Standard query without upcoming filter
     const conditions = [eq(reservation.playerId, playerId)];
 
-    if (status) {
+    if (options?.status) {
       conditions.push(
         eq(
           reservation.status,
-          status as
+          options.status as
             | "CREATED"
             | "AWAITING_PAYMENT"
             | "PAYMENT_MARKED_BY_USER"
@@ -162,5 +226,35 @@ export class ReservationRepository implements IReservationRepository {
       .where(eq(reservation.id, id))
       .returning();
     return result[0];
+  }
+
+  async countByOrganizationAndStatuses(
+    organizationId: string,
+    statuses: (
+      | "CREATED"
+      | "AWAITING_PAYMENT"
+      | "PAYMENT_MARKED_BY_USER"
+      | "CONFIRMED"
+      | "EXPIRED"
+      | "CANCELLED"
+    )[],
+    ctx?: RequestContext,
+  ): Promise<number> {
+    const client = this.getClient(ctx);
+
+    // Join reservation -> timeSlot -> court to filter by organization
+    const result = await client
+      .select({ count: count() })
+      .from(reservation)
+      .innerJoin(timeSlot, eq(reservation.timeSlotId, timeSlot.id))
+      .innerJoin(court, eq(timeSlot.courtId, court.id))
+      .where(
+        and(
+          eq(court.organizationId, organizationId),
+          inArray(reservation.status, statuses),
+        ),
+      );
+
+    return result[0]?.count ?? 0;
   }
 }

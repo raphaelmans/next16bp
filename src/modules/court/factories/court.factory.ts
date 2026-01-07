@@ -8,6 +8,7 @@ import { CourtDiscoveryService } from "../services/court-discovery.service";
 import { AdminCourtService } from "../services/admin-court.service";
 import { CourtManagementService } from "../services/court-management.service";
 import { CreateReservableCourtUseCase } from "../use-cases/create-reservable-court.use-case";
+import { CreateSimpleCourtUseCase } from "../use-cases/create-simple-court.use-case";
 import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
 
 let courtRepository: CourtRepository | null = null;
@@ -20,6 +21,7 @@ let courtDiscoveryService: CourtDiscoveryService | null = null;
 let adminCourtService: AdminCourtService | null = null;
 let courtManagementService: CourtManagementService | null = null;
 let createReservableCourtUseCase: CreateReservableCourtUseCase | null = null;
+let createSimpleCourtUseCase: CreateSimpleCourtUseCase | null = null;
 
 export function makeCourtRepository() {
   if (!courtRepository) {
@@ -101,4 +103,16 @@ export function makeCreateReservableCourtUseCase() {
     );
   }
   return createReservableCourtUseCase;
+}
+
+export function makeCreateSimpleCourtUseCase() {
+  if (!createSimpleCourtUseCase) {
+    createSimpleCourtUseCase = new CreateSimpleCourtUseCase(
+      makeCourtRepository(),
+      makeReservableCourtDetailRepository(),
+      makeOrganizationRepository(),
+      getContainer().transactionManager,
+    );
+  }
+  return createSimpleCourtUseCase;
 }

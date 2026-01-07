@@ -35,7 +35,7 @@ export function ProfilePreviewCard({
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Your Information</CardTitle>
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/profile">
+          <Link href="/account/profile">
             <Edit className="h-4 w-4 mr-1" />
             Edit
           </Link>

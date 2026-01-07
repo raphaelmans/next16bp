@@ -7,6 +7,7 @@ import {
   RejectReservationSchema,
   GetOrgReservationsSchema,
   GetPendingForCourtSchema,
+  GetPendingCountSchema,
 } from "./dtos";
 import {
   ReservationNotFoundError,
@@ -16,6 +17,7 @@ import {
   NotCourtOwnerError,
   CourtNotFoundError,
 } from "@/modules/court/errors/court.errors";
+import { NotOrganizationOwnerError } from "@/modules/organization/errors/organization.errors";
 import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
 import { AppError } from "@/shared/kernel/errors";
 
@@ -34,7 +36,10 @@ function handleReservationOwnerError(error: unknown): never {
       cause: error,
     });
   }
-  if (error instanceof NotCourtOwnerError) {
+  if (
+    error instanceof NotCourtOwnerError ||
+    error instanceof NotOrganizationOwnerError
+  ) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: error.message,
@@ -110,6 +115,20 @@ export const reservationOwnerRouter = router({
       try {
         const service = makeReservationOwnerService();
         return await service.getForOrganization(ctx.userId, input);
+      } catch (error) {
+        handleReservationOwnerError(error);
+      }
+    }),
+
+  /**
+   * Get count of pending reservations (PAYMENT_MARKED_BY_USER) for an organization
+   */
+  getPendingCount: protectedProcedure
+    .input(GetPendingCountSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationOwnerService();
+        return await service.getPendingCount(ctx.userId, input.organizationId);
       } catch (error) {
         handleReservationOwnerError(error);
       }

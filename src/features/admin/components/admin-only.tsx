@@ -15,7 +15,7 @@ interface AdminOnlyProps {
 export function AdminOnly({
   children,
   fallback = null,
-  isAdmin = true,
+  isAdmin,
 }: AdminOnlyProps) {
   if (!isAdmin) {
     return <>{fallback}</>;

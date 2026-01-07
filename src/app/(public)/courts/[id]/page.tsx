@@ -12,14 +12,7 @@ import {
   Droplets,
   ShowerHead,
 } from "lucide-react";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { PageHeader } from "@/components/ui/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Container } from "@/shared/components/layout";
@@ -86,30 +79,14 @@ export default function CourtDetailPage() {
 
   return (
     <Container className="py-6">
-      {/* Breadcrumb */}
-      <Breadcrumb className="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">Home</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <ChevronRight className="h-4 w-4" />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/courts">Courts</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <ChevronRight className="h-4 w-4" />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage>{court.name}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <PageHeader
+        title={court.name}
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+          { label: "Courts", href: "/courts" },
+          { label: court.name },
+        ]}
+      />
 
       {/* Main Content */}
       <div className="grid gap-8 lg:grid-cols-3">
@@ -123,9 +100,6 @@ export default function CourtDetailPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <h1 className="text-2xl font-bold tracking-tight">
-                    {court.name}
-                  </h1>
                   <Badge
                     variant={court.type === "CURATED" ? "contact" : "paid"}
                   >

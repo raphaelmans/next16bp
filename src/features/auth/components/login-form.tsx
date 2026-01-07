@@ -30,8 +30,8 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const loginMutation = useLogin();
 
-  // Get redirect URL from query params, default to /courts
-  const redirectUrl = searchParams.get("redirect") || "/courts";
+  // Get redirect URL from query params, default to /home
+  const redirectUrl = searchParams.get("redirect") || "/home";
 
   const form = useForm<LoginDTO>({
     resolver: zodResolver(LoginSchema),
@@ -44,7 +44,7 @@ export function LoginForm() {
   const onSubmit = async (data: LoginDTO) => {
     try {
       await loginMutation.mutateAsync(data);
-      // Redirect to the original page or default to /courts
+      // Redirect to the original page or default to /home
       router.push(redirectUrl);
       router.refresh();
     } catch (error) {
@@ -58,12 +58,12 @@ export function LoginForm() {
 
   // Preserve redirect param when linking to register
   const registerHref =
-    redirectUrl !== "/courts"
+    redirectUrl !== "/home"
       ? `/register?redirect=${encodeURIComponent(redirectUrl)}`
       : "/register";
 
   const magicLinkHref =
-    redirectUrl !== "/courts"
+    redirectUrl !== "/home"
       ? `/magic-link?redirect=${encodeURIComponent(redirectUrl)}`
       : "/magic-link";
 

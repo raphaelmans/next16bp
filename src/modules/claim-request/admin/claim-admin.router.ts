@@ -27,6 +27,15 @@ export const claimAdminRouter = router({
     }),
 
   /**
+   * Get count of pending claim requests
+   * Admin only - useful for sidebar badge
+   */
+  getPendingCount: adminProcedure.query(async () => {
+    const service = makeClaimAdminService();
+    return service.getPendingCount();
+  }),
+
+  /**
    * Get a claim request by ID with full details
    * Admin only
    */

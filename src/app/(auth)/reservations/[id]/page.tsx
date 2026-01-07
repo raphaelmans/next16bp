@@ -1,17 +1,10 @@
 "use client";
 
+"use client";
+
 import { useState } from "react";
-import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ChevronRight } from "lucide-react";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { KudosTimeline } from "@/shared/components/kudos";
 import { useReservation } from "@/features/reservation/hooks/use-reservation";
@@ -41,22 +34,14 @@ export default function ReservationDetailPage() {
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/reservations">My Reservations</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <ChevronRight className="h-4 w-4" />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage>Reservation Details</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <PageHeader
+        title="Reservation Details"
+        breadcrumbs={[
+          { label: "My Reservations", href: "/reservations" },
+          { label: "Details" },
+        ]}
+        backHref="/reservations"
+      />
 
       {/* Status banner */}
       <StatusBanner

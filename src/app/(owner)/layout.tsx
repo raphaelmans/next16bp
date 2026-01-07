@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createClient } from "@/shared/infra/supabase/create-client";
 import { env } from "@/lib/env";
+import { makeOrganizationService } from "@/modules/organization/factories/organization.factory";
 
 /**
  * Owner route group layout.
@@ -38,16 +39,13 @@ export default async function OwnerLayout({
     redirect("/login?redirect=/owner");
   }
 
-  // ==========================================================================
-  // AUTH BYPASS: Organization check is currently disabled for development.
-  // Any authenticated user can access /owner/* routes.
-  //
-  // TODO: Implement organization check before production:
-  // const hasOrg = await checkUserHasOrganization(user.id);
-  // if (!hasOrg) {
-  //   redirect("/owner/onboarding");
-  // }
-  // ==========================================================================
+  // Check if user has an organization
+  const organizationService = makeOrganizationService();
+  const organizations = await organizationService.getMyOrganizations(user.id);
+
+  if (organizations.length === 0) {
+    redirect("/owner/onboarding");
+  }
 
   return <>{children}</>;
 }

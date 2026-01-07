@@ -5,14 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { toast } from "sonner";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -131,36 +124,18 @@ export default function PaymentPage() {
       <CountdownBanner expiresAt={expiresAt} onExpire={handleExpire} />
 
       <Container className="py-6">
-        {/* Breadcrumb */}
-        <Breadcrumb className="mb-6">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/reservations">My Reservations</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <ChevronRight className="h-4 w-4" />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href={`/reservations/${reservationId}`}>
-                  Reservation Details
-                </Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator>
-              <ChevronRight className="h-4 w-4" />
-            </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbPage>Payment</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-
-        <h1 className="text-2xl font-bold tracking-tight mb-6">
-          Complete Your Payment
-        </h1>
+        <PageHeader
+          title="Complete Your Payment"
+          breadcrumbs={[
+            { label: "My Reservations", href: "/reservations" },
+            {
+              label: "Reservation Details",
+              href: `/reservations/${reservationId}`,
+            },
+            { label: "Payment" },
+          ]}
+          backHref={`/reservations/${reservationId}`}
+        />
 
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Left Column */}

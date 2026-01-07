@@ -30,7 +30,6 @@ interface OwnerNavbarProps {
     avatarUrl?: string;
   };
   onLogout?: () => void;
-  // TODO: Replace with actual role check when auth is implemented
   isAdmin?: boolean;
 }
 
@@ -38,8 +37,7 @@ export function OwnerNavbar({
   organizationName,
   user,
   onLogout,
-  // For development, always show Admin Dashboard link
-  isAdmin = true,
+  isAdmin,
 }: OwnerNavbarProps) {
   return (
     <div className="flex flex-1 items-center justify-between">
@@ -115,7 +113,7 @@ export function OwnerNavbar({
               )}
               {isAdmin && <DropdownMenuSeparator />}
               <DropdownMenuItem asChild>
-                <Link href="/profile">
+                <Link href="/account/profile">
                   <User className="mr-2 h-4 w-4" />
                   Profile
                 </Link>

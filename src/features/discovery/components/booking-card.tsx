@@ -13,17 +13,7 @@ import {
   type TimeSlot,
 } from "@/shared/components/kudos";
 import { formatCurrency } from "@/shared/lib/format";
-
-// =============================================================================
-// TODO: Replace mock auth state with real Supabase session
-// =============================================================================
-// import { useSession } from "@/features/auth/hooks/use-auth";
-// const { data: session } = useSession();
-// const isAuthenticated = !!session?.user;
-
-// For development: Toggle this to test guest vs authenticated states
-const DEV_IS_AUTHENTICATED = true; // Set to false to test guest "Sign in to reserve"
-// =============================================================================
+import { useSession } from "@/features/auth/hooks/use-auth";
 
 interface BookingCardProps {
   courtId: string;
@@ -53,8 +43,8 @@ export function BookingCard({
   const router = useRouter();
   const selectedSlot = slots.find((s) => s.id === selectedSlotId);
 
-  // TODO: Replace with real auth state
-  const isAuthenticated = DEV_IS_AUTHENTICATED;
+  const { data: sessionUser } = useSession();
+  const isAuthenticated = !!sessionUser;
 
   const handleReserveClick = () => {
     if (!selectedSlot) return;

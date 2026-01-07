@@ -5,14 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { toast } from "sonner";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { PageHeader } from "@/components/ui/page-header";
 import { Container } from "@/shared/components/layout";
 import { BookingSummaryCard } from "@/features/reservation/components/booking-summary-card";
 import { ProfilePreviewCard } from "@/features/reservation/components/profile-preview-card";
@@ -96,34 +89,15 @@ export default function BookSlotPage() {
 
   return (
     <Container className="py-6">
-      {/* Breadcrumb */}
-      <Breadcrumb className="mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/courts">Courts</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <ChevronRight className="h-4 w-4" />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href={`/courts/${courtId}`}>{court.name}</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <ChevronRight className="h-4 w-4" />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage>Book</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      <h1 className="text-2xl font-bold tracking-tight mb-6">
-        Complete Your Booking
-      </h1>
+      <PageHeader
+        title="Complete Your Booking"
+        breadcrumbs={[
+          { label: "Courts", href: "/courts" },
+          { label: court.name, href: `/courts/${courtId}` },
+          { label: "Book" },
+        ]}
+        backHref={`/courts/${courtId}`}
+      />
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Left Column - Details */}
