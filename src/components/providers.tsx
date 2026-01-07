@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { TRPCProvider } from "@/trpc/client";
 import { getQueryClient } from "@/trpc/query-client";
 import type { AppRouter } from "@/shared/infra/trpc/root";
@@ -38,10 +39,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-        {children}
-      </TRPCProvider>
-    </QueryClientProvider>
+    <NuqsAdapter>
+      <QueryClientProvider client={queryClient}>
+        <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
+          {children}
+        </TRPCProvider>
+      </QueryClientProvider>
+    </NuqsAdapter>
   );
 }

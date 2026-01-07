@@ -1,0 +1,161 @@
+"use client";
+
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Info } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AvatarUpload } from "./avatar-upload";
+import { ProfileFormSkeleton } from "./skeletons";
+import { useProfile, useUpdateProfile } from "../hooks/use-profile";
+import {
+  profileSchema,
+  type ProfileFormValues,
+} from "../schemas/profile.schema";
+
+export function ProfileForm() {
+  const { data: profile, isLoading } = useProfile();
+  const updateProfile = useUpdateProfile();
+
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      displayName: "",
+      email: "",
+      phoneNumber: "",
+      avatarUrl: "",
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty },
+  } = form;
+
+  // Sync profile data to form
+  useEffect(() => {
+    if (profile) {
+      reset({
+        displayName: profile.displayName || "",
+        email: profile.email || "",
+        phoneNumber: profile.phoneNumber || "",
+        avatarUrl: profile.avatarUrl || "",
+      });
+    }
+  }, [profile, reset]);
+
+  const onSubmit = (data: ProfileFormValues) => {
+    updateProfile.mutate(data);
+  };
+
+  const handleAvatarSelect = (file: File) => {
+    // TODO: Implement file upload
+    console.log("File selected:", file);
+  };
+
+  if (isLoading) {
+    return <ProfileFormSkeleton />;
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Profile Information</CardTitle>
+        <CardDescription>
+          Update your profile information. This will be shared with court owners
+          when you make a reservation.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* Avatar section */}
+          <AvatarUpload
+            currentAvatarUrl={profile?.avatarUrl}
+            displayName={profile?.displayName}
+            onFileSelect={handleAvatarSelect}
+          />
+
+          {/* Form fields */}
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="displayName">
+                Display Name <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="displayName"
+                placeholder="Enter your name"
+                {...register("displayName")}
+              />
+              {errors.displayName && (
+                <p className="text-sm text-destructive">
+                  {errors.displayName.message}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                {...register("email")}
+              />
+              {errors.email && (
+                <p className="text-sm text-destructive">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phoneNumber">Phone Number</Label>
+              <Input
+                id="phoneNumber"
+                type="tel"
+                placeholder="09XX XXX XXXX"
+                {...register("phoneNumber")}
+              />
+              {errors.phoneNumber && (
+                <p className="text-sm text-destructive">
+                  {errors.phoneNumber.message}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Info note */}
+          <Alert>
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              Your contact information will be shared with court owners when you
+              make a reservation to help them contact you if needed.
+            </AlertDescription>
+          </Alert>
+
+          {/* Submit button */}
+          <div className="flex justify-end">
+            <Button
+              type="submit"
+              disabled={!isDirty || updateProfile.isPending}
+            >
+              {updateProfile.isPending ? "Saving..." : "Save Changes"}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}

@@ -1,6 +1,12 @@
 import { initTRPC, TRPCError } from "@trpc/server";
-import { AppError, AuthenticationError } from "@/shared/kernel/errors";
+import {
+  AppError,
+  AuthenticationError,
+  AuthorizationError,
+} from "@/shared/kernel/errors";
 import type { Context, AuthenticatedContext } from "./context";
+import { createRateLimitMiddleware } from "./middleware/ratelimit.middleware";
+import type { RateLimitTier } from "../ratelimit";
 
 /**
  * tRPC initialization with error formatter.
@@ -123,3 +129,57 @@ export const publicProcedure = loggedProcedure;
  * Protected procedure - authentication required
  */
 export const protectedProcedure = loggedProcedure.use(authMiddleware);
+
+/**
+ * Admin middleware - requires admin role.
+ * Must be authenticated and have role === "admin".
+ */
+const adminMiddleware = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session || !ctx.userId) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Authentication required",
+      cause: new AuthenticationError("Authentication required"),
+    });
+  }
+
+  if (ctx.session.role !== "admin") {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "Admin access required",
+      cause: new AuthorizationError("Admin access required"),
+    });
+  }
+
+  return next({
+    ctx: ctx as AuthenticatedContext,
+  });
+});
+
+/**
+ * Admin procedure - requires admin role
+ */
+export const adminProcedure = loggedProcedure.use(adminMiddleware);
+
+/**
+ * Rate-limited public procedure factory.
+ * @param tier - The rate limit tier to apply
+ */
+export const rateLimitedProcedure = (tier: RateLimitTier) =>
+  publicProcedure.use(createRateLimitMiddleware(tier));
+
+/**
+ * Rate-limited protected procedure factory.
+ * Requires authentication + applies rate limiting.
+ * @param tier - The rate limit tier to apply
+ */
+export const protectedRateLimitedProcedure = (tier: RateLimitTier) =>
+  protectedProcedure.use(createRateLimitMiddleware(tier));
+
+/**
+ * Rate-limited admin procedure factory.
+ * Requires admin role + applies rate limiting.
+ * @param tier - The rate limit tier to apply
+ */
+export const adminRateLimitedProcedure = (tier: RateLimitTier) =>
+  adminProcedure.use(createRateLimitMiddleware(tier));
