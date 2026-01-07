@@ -323,3 +323,17 @@ The server-side implementation is production-ready with the exception of:
 1. Email notifications
 2. File upload (currently using reference number + notes)
 3. Integration testing
+
+## Bug Fixes
+
+### UI Spacing - Auth Forms Button Padding
+
+| File | Change |
+|------|--------|
+| `src/features/auth/components/login-form.tsx` | Added `mt-6` margin to CardFooter to create space between password input and submit button |
+| `src/features/auth/components/register-form.tsx` | Added `mt-6` margin to CardFooter to create space between password input and submit button |
+| `src/features/auth/components/magic-link-form.tsx` | Added `mt-6` margin to CardFooter to create space between email input and submit button |
+
+**Issue**: The submit button was too close to the last input field in all three auth forms (login, register, magic-link), making the forms feel cramped.
+
+**Fix**: Applied top margin (`mt-6`) to the `CardFooter` component containing the button in all three forms to improve visual spacing and usability.
