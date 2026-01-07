@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { Search, Tag, Trash2, MapPin } from "lucide-react";
 import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
@@ -44,6 +45,7 @@ import {
 } from "@/components/ui/pagination";
 
 export default function AdminClaimsPage() {
+  const router = useRouter();
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
@@ -194,7 +196,13 @@ export default function AdminClaimsPage() {
                     </TableHeader>
                     <TableBody>
                       {claimsData.claims.map((claim) => (
-                        <TableRow key={claim.id}>
+                        <TableRow
+                          key={claim.id}
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() =>
+                            router.push(`/admin/claims/${claim.id}`)
+                          }
+                        >
                           <TableCell>
                             <Badge
                               variant={
@@ -240,7 +248,10 @@ export default function AdminClaimsPage() {
                               )}
                             </p>
                           </TableCell>
-                          <TableCell className="text-right">
+                          <TableCell
+                            className="text-right"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <Button variant="outline" size="sm" asChild>
                               <Link href={`/admin/claims/${claim.id}`}>
                                 Review

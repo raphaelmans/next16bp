@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { LoginSchema, type LoginDTO } from "@/modules/auth/dtos";
 import { useLogin } from "../hooks/use-auth";
@@ -27,7 +27,11 @@ import {
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const loginMutation = useLogin();
+
+  // Get redirect URL from query params, default to /courts
+  const redirectUrl = searchParams.get("redirect") || "/courts";
 
   const form = useForm<LoginDTO>({
     resolver: zodResolver(LoginSchema),
@@ -40,7 +44,8 @@ export function LoginForm() {
   const onSubmit = async (data: LoginDTO) => {
     try {
       await loginMutation.mutateAsync(data);
-      router.push("/");
+      // Redirect to the original page or default to /courts
+      router.push(redirectUrl);
       router.refresh();
     } catch (error) {
       if (error instanceof Error) {
@@ -50,6 +55,17 @@ export function LoginForm() {
       }
     }
   };
+
+  // Preserve redirect param when linking to register
+  const registerHref =
+    redirectUrl !== "/courts"
+      ? `/register?redirect=${encodeURIComponent(redirectUrl)}`
+      : "/register";
+
+  const magicLinkHref =
+    redirectUrl !== "/courts"
+      ? `/magic-link?redirect=${encodeURIComponent(redirectUrl)}`
+      : "/magic-link";
 
   return (
     <Card className="w-full max-w-md">
@@ -118,13 +134,19 @@ export function LoginForm() {
 
             <div className="text-muted-foreground text-sm">
               Don&apos;t have an account?{" "}
-              <Link href="/register" className="text-primary hover:underline">
+              <Link
+                href={registerHref}
+                className="text-primary hover:underline"
+              >
                 Sign up
               </Link>
             </div>
 
             <div className="text-muted-foreground text-sm">
-              <Link href="/magic-link" className="text-primary hover:underline">
+              <Link
+                href={magicLinkHref}
+                className="text-primary hover:underline"
+              >
                 Sign in with magic link
               </Link>
             </div>

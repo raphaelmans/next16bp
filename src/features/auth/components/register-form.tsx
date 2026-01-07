@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { RegisterSchema, type RegisterDTO } from "@/modules/auth/dtos";
 import { useRegister } from "../hooks/use-auth";
@@ -26,8 +27,12 @@ import {
 } from "@/components/ui/card";
 
 export function RegisterForm() {
+  const searchParams = useSearchParams();
   const [success, setSuccess] = useState(false);
   const registerMutation = useRegister();
+
+  // Get redirect URL from query params for preserving through auth flow
+  const redirectUrl = searchParams.get("redirect") || "/courts";
 
   const form = useForm<RegisterDTO>({
     resolver: zodResolver(RegisterSchema),
@@ -50,6 +55,12 @@ export function RegisterForm() {
     }
   };
 
+  // Preserve redirect param when linking to login
+  const loginHref =
+    redirectUrl !== "/courts"
+      ? `/login?redirect=${encodeURIComponent(redirectUrl)}`
+      : "/login";
+
   if (success) {
     return (
       <Card className="w-full max-w-md">
@@ -61,7 +72,10 @@ export function RegisterForm() {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Link href="/login" className="text-primary hover:underline text-sm">
+          <Link
+            href={loginHref}
+            className="text-primary hover:underline text-sm"
+          >
             Back to sign in
           </Link>
         </CardFooter>
@@ -138,7 +152,7 @@ export function RegisterForm() {
 
             <div className="text-muted-foreground text-sm">
               Already have an account?{" "}
-              <Link href="/login" className="text-primary hover:underline">
+              <Link href={loginHref} className="text-primary hover:underline">
                 Sign in
               </Link>
             </div>

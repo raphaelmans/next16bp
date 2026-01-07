@@ -2,19 +2,81 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Search, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import {
+  Menu,
+  X,
+  Search,
+  User,
+  Calendar,
+  Building,
+  Shield,
+  LogOut,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 import { KudosLogo } from "@/shared/components/kudos";
+import { UserDropdown } from "./user-dropdown";
+
+// =============================================================================
+// TODO: Replace mock auth state with real Supabase session
+// =============================================================================
+// import { useSession } from "@/features/auth/hooks/use-auth";
+// const { data: session } = useSession();
+// const isAuthenticated = !!session?.user;
+// const user = session?.user;
+
+// For development: Toggle these to test different auth states
+const DEV_IS_AUTHENTICATED = true; // Set to false to test guest state
+const DEV_USER = {
+  name: "Dev User",
+  email: "dev@kudoscourts.com",
+  avatarUrl: null,
+};
+const DEV_IS_OWNER = true; // Always show Owner Dashboard for dev
+const DEV_IS_ADMIN = true; // Always show Admin Dashboard for dev
+// =============================================================================
 
 interface NavbarProps {
   className?: string;
 }
 
 export function Navbar({ className }: NavbarProps) {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // TODO: Replace with real auth state
+  const isAuthenticated = DEV_IS_AUTHENTICATED;
+  const user = DEV_USER;
+  const isOwner = DEV_IS_OWNER;
+  const isAdmin = DEV_IS_ADMIN;
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/courts?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+    setIsOpen(false);
+  };
+
+  const handleSignOut = () => {
+    // TODO: Implement real sign out with Supabase
+    // await supabase.auth.signOut();
+    router.push("/");
+    setIsOpen(false);
+  };
+
+  const handleListYourCourt = () => {
+    if (isAuthenticated) {
+      router.push("/owner/courts/new");
+    } else {
+      router.push("/login?redirect=/owner/courts/new");
+    }
+  };
 
   return (
     <nav
@@ -34,50 +96,94 @@ export function Navbar({ className }: NavbarProps) {
       </Link>
 
       {/* Desktop Search */}
-      <div className="hidden md:flex flex-1 max-w-md mx-8">
+      <form
+        onSubmit={handleSearch}
+        className="hidden md:flex flex-1 max-w-md mx-8"
+      >
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
             placeholder="Search courts..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 h-10 rounded-lg"
           />
         </div>
-      </div>
+      </form>
 
       {/* Desktop Actions */}
       <div className="hidden md:flex items-center gap-3">
-        <Button variant="ghost" asChild>
-          <Link href="/owner/onboarding">List Your Court</Link>
+        <Button variant="ghost" onClick={handleListYourCourt}>
+          List Your Court
         </Button>
-        <Button variant="outline" asChild>
-          <Link href="/login">
-            <User className="h-4 w-4 mr-2" />
-            Sign In
-          </Link>
-        </Button>
+
+        {isAuthenticated ? (
+          <UserDropdown
+            user={user}
+            isOwner={isOwner}
+            isAdmin={isAdmin}
+            onSignOut={handleSignOut}
+          />
+        ) : (
+          <Button variant="outline" asChild>
+            <Link href="/login">
+              <User className="h-4 w-4 mr-2" />
+              Sign In
+            </Link>
+          </Button>
+        )}
       </div>
 
       {/* Mobile Menu */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild className="md:hidden">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" aria-label="Open menu">
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </SheetTrigger>
         <SheetContent side="right" className="w-80">
           <div className="flex flex-col gap-4 mt-8">
             {/* Mobile Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search courts..."
-                className="pl-10"
-              />
-            </div>
+            <form onSubmit={handleSearch}>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Search courts..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </form>
 
-            <hr className="my-2" />
+            <Separator />
+
+            {/* User Info (when authenticated) */}
+            {isAuthenticated && (
+              <>
+                <div className="flex items-center gap-3 py-2">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span className="text-primary font-medium text-sm">
+                      {user.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()
+                        .slice(0, 2)}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium truncate">{user.name}</p>
+                    <p className="text-sm text-muted-foreground truncate">
+                      {user.email}
+                    </p>
+                  </div>
+                </div>
+                <Separator />
+              </>
+            )}
 
             {/* Mobile Navigation Links */}
             <Link
@@ -85,38 +191,106 @@ export function Navbar({ className }: NavbarProps) {
               className="py-2 text-lg font-medium"
               onClick={() => setIsOpen(false)}
             >
-              Discover Courts
+              Home
             </Link>
             <Link
               href="/courts"
               className="py-2 text-lg font-medium"
               onClick={() => setIsOpen(false)}
             >
-              Browse All Courts
+              Browse Courts
             </Link>
 
-            <hr className="my-2" />
+            {/* Authenticated User Links */}
+            {isAuthenticated && (
+              <>
+                <Separator />
+                <Link
+                  href="/reservations"
+                  className="py-2 text-lg font-medium flex items-center gap-2"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Calendar className="h-5 w-5" />
+                  My Reservations
+                </Link>
+                <Link
+                  href="/profile"
+                  className="py-2 text-lg font-medium flex items-center gap-2"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <User className="h-5 w-5" />
+                  Profile
+                </Link>
+              </>
+            )}
 
-            <Link
-              href="/owner/onboarding"
-              className="py-2 text-lg font-medium text-accent"
-              onClick={() => setIsOpen(false)}
+            {/* Dashboard Links */}
+            {isAuthenticated && (isOwner || isAdmin) && (
+              <>
+                <Separator />
+                {isOwner && (
+                  <Link
+                    href="/owner"
+                    className="py-2 text-lg font-medium flex items-center gap-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Building className="h-5 w-5" />
+                    Owner Dashboard
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className="py-2 text-lg font-medium flex items-center gap-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Shield className="h-5 w-5" />
+                    Admin Dashboard
+                  </Link>
+                )}
+              </>
+            )}
+
+            <Separator />
+
+            {/* List Your Court */}
+            <button
+              type="button"
+              onClick={() => {
+                handleListYourCourt();
+                setIsOpen(false);
+              }}
+              className="py-2 text-lg font-medium text-accent text-left"
             >
               List Your Court
-            </Link>
+            </button>
 
-            <hr className="my-2" />
+            <Separator />
 
-            <Button asChild className="w-full">
-              <Link href="/login" onClick={() => setIsOpen(false)}>
-                Sign In
-              </Link>
-            </Button>
-            <Button variant="outline" asChild className="w-full">
-              <Link href="/register" onClick={() => setIsOpen(false)}>
-                Create Account
-              </Link>
-            </Button>
+            {/* Auth Actions */}
+            {isAuthenticated ? (
+              <Button
+                variant="outline"
+                className="w-full justify-start text-destructive hover:text-destructive"
+                onClick={handleSignOut}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </Button>
+            ) : (
+              <>
+                <Button asChild className="w-full">
+                  <Link href="/login" onClick={() => setIsOpen(false)}>
+                    Sign In
+                  </Link>
+                </Button>
+                <Button variant="outline" asChild className="w-full">
+                  <Link href="/register" onClick={() => setIsOpen(false)}>
+                    Create Account
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
         </SheetContent>
       </Sheet>

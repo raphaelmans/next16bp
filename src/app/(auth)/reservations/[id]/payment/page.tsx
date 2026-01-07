@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { toast } from "sonner";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -77,9 +78,18 @@ export default function PaymentPage() {
         termsAccepted: true as const,
       });
 
-      router.push(`/reservations/${reservationId}`);
+      // Show success toast and redirect
+      toast.success("Payment proof submitted!", {
+        description:
+          "Awaiting owner confirmation. You'll be notified once confirmed.",
+      });
+      router.push("/reservations");
     } catch (error) {
-      // Error handled by mutation
+      // Show error toast
+      toast.error("Failed to submit payment proof", {
+        description:
+          error instanceof Error ? error.message : "Please try again.",
+      });
     }
   };
 

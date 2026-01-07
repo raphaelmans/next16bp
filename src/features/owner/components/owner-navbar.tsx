@@ -1,7 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { LogOut, User, Settings, ChevronDown } from "lucide-react";
+import {
+  LogOut,
+  User,
+  Settings,
+  ChevronDown,
+  ArrowLeft,
+  CalendarDays,
+  Shield,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { KudosLogo } from "@/shared/components/kudos";
 
 interface OwnerNavbarProps {
   organizationName?: string;
@@ -21,21 +30,28 @@ interface OwnerNavbarProps {
     avatarUrl?: string;
   };
   onLogout?: () => void;
+  // TODO: Replace with actual role check when auth is implemented
+  isAdmin?: boolean;
 }
 
 export function OwnerNavbar({
   organizationName,
   user,
   onLogout,
+  // For development, always show Admin Dashboard link
+  isAdmin = true,
 }: OwnerNavbarProps) {
   return (
     <div className="flex flex-1 items-center justify-between">
-      {/* Left side - Organization name */}
-      <div className="flex items-center gap-2">
+      {/* Left side - Logo and Organization name */}
+      <div className="flex items-center gap-4">
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80">
+          <KudosLogo size={28} variant="icon" />
+        </Link>
         {organizationName && (
-          <h1 className="text-sm font-medium text-muted-foreground">
+          <span className="text-sm font-medium text-muted-foreground hidden sm:inline">
             {organizationName}
-          </h1>
+          </span>
         )}
       </div>
 
@@ -76,6 +92,29 @@ export function OwnerNavbar({
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
+                <Link href="/courts">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Player View
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/reservations">
+                  <CalendarDays className="mr-2 h-4 w-4" />
+                  My Reservations
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              {/* TODO: Show conditionally based on user role being admin */}
+              {isAdmin && (
+                <DropdownMenuItem asChild>
+                  <Link href="/admin">
+                    <Shield className="mr-2 h-4 w-4" />
+                    Admin Dashboard
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              {isAdmin && <DropdownMenuSeparator />}
+              <DropdownMenuItem asChild>
                 <Link href="/profile">
                   <User className="mr-2 h-4 w-4" />
                   Profile
@@ -93,7 +132,7 @@ export function OwnerNavbar({
                 className="text-destructive focus:text-destructive"
               >
                 <LogOut className="mr-2 h-4 w-4" />
-                Log out
+                Sign Out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

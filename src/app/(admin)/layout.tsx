@@ -38,18 +38,19 @@ export default async function AdminLayout({
     redirect("/login?redirect=/admin");
   }
 
-  // TODO: Check if user has admin role
-  // For now, we allow any authenticated user
-  // In production, add role check:
-  // const { data: profile } = await supabase
-  //   .from("profiles")
-  //   .select("role")
-  //   .eq("id", user.id)
-  //   .single();
+  // ==========================================================================
+  // AUTH BYPASS: Admin role check is currently disabled for development.
+  // Any authenticated user can access /admin/* routes.
   //
-  // if (profile?.role !== "admin") {
+  // TODO: Implement admin role check before production:
+  // const userRole = await makeUserRoleRepository().findByUserId(user.id);
+  // if (userRole?.role !== "admin") {
   //   redirect("/unauthorized");
   // }
+  //
+  // To test admin functionality during development, you can also override
+  // the role in src/shared/infra/trpc/context.ts (line ~69)
+  // ==========================================================================
 
   return <>{children}</>;
 }

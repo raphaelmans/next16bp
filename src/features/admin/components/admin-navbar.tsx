@@ -1,8 +1,14 @@
 "use client";
 
-import { LogOut, Settings, User } from "lucide-react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
+import {
+  LogOut,
+  User,
+  ChevronDown,
+  ArrowLeft,
+  CalendarDays,
+  Building2,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +20,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { KudosLogo } from "@/shared/components/kudos";
 
 interface AdminNavbarProps {
   user?: {
@@ -22,66 +29,109 @@ interface AdminNavbarProps {
     avatarUrl?: string;
   };
   onLogout?: () => void;
+  // TODO: Replace with actual role check when auth is implemented
+  isOwner?: boolean;
 }
 
-export function AdminNavbar({ user, onLogout }: AdminNavbarProps) {
+export function AdminNavbar({
+  user,
+  onLogout,
+  // For development, always show Owner Dashboard link
+  isOwner = true,
+}: AdminNavbarProps) {
   return (
-    <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
-      <SidebarTrigger className="-ml-1" />
-      <Separator orientation="vertical" className="mr-2 h-4" />
-
-      <div className="flex items-center gap-2">
+    <div className="flex flex-1 items-center justify-between">
+      {/* Left side - Logo and Admin badge */}
+      <div className="flex items-center gap-4">
+        <Link href="/" className="flex items-center gap-2 hover:opacity-80">
+          <KudosLogo size={28} variant="icon" />
+        </Link>
         <Badge
           variant="outline"
-          className="bg-primary/10 text-primary border-primary/20"
+          className="bg-primary/10 text-primary border-primary/20 hidden sm:inline-flex"
         >
           Admin Dashboard
         </Badge>
       </div>
 
-      <div className="ml-auto flex items-center gap-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-              <Avatar className="h-9 w-9">
-                <AvatarImage src={user?.avatarUrl} alt={user?.name} />
-                <AvatarFallback>
-                  {user?.name?.charAt(0)?.toUpperCase() || "A"}
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">
-                  {user?.name || "Admin User"}
-                </p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  {user?.email || "admin@example.com"}
-                </p>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive focus:text-destructive"
-              onClick={onLogout}
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+      {/* Right side - User menu */}
+      <div className="flex items-center gap-2">
+        {user && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-8 gap-2 px-2">
+                <Avatar className="h-6 w-6">
+                  <AvatarImage
+                    src={user.avatarUrl}
+                    alt={user.name || user.email}
+                  />
+                  <AvatarFallback className="text-xs">
+                    {user.name?.charAt(0)?.toUpperCase() ||
+                      user.email?.charAt(0)?.toUpperCase() ||
+                      "A"}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="hidden text-sm font-medium md:inline-block">
+                  {user.name || user.email}
+                </span>
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  {user.name && (
+                    <p className="text-sm font-medium leading-none">
+                      {user.name}
+                    </p>
+                  )}
+                  <p className="text-xs leading-none text-muted-foreground">
+                    {user.email}
+                  </p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/courts">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Player View
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/reservations">
+                  <CalendarDays className="mr-2 h-4 w-4" />
+                  My Reservations
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              {/* TODO: Show conditionally based on user having an organization */}
+              {isOwner && (
+                <DropdownMenuItem asChild>
+                  <Link href="/owner">
+                    <Building2 className="mr-2 h-4 w-4" />
+                    Owner Dashboard
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              {isOwner && <DropdownMenuSeparator />}
+              <DropdownMenuItem asChild>
+                <Link href="/profile">
+                  <User className="mr-2 h-4 w-4" />
+                  Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive"
+                onClick={onLogout}
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                Sign Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
-    </header>
+    </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   MoreHorizontal,
   Pencil,
@@ -45,6 +46,12 @@ const statusBadgeVariant: Record<
 };
 
 export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
+  const router = useRouter();
+
+  const handleRowClick = (courtId: string) => {
+    router.push(`/owner/courts/${courtId}/slots`);
+  };
+
   return (
     <>
       {/* Desktop table */}
@@ -62,7 +69,11 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
           </TableHeader>
           <TableBody>
             {courts.map((court) => (
-              <TableRow key={court.id}>
+              <TableRow
+                key={court.id}
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => handleRowClick(court.id)}
+              >
                 <TableCell>
                   <div className="relative h-12 w-12 overflow-hidden rounded-md bg-muted">
                     {court.coverImageUrl ? (
@@ -98,6 +109,7 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                   <CourtActionsDropdown
                     court={court}
                     onDeactivate={onDeactivate}
+                    onContainerClick={(e) => e.stopPropagation()}
                   />
                 </TableCell>
               </TableRow>
@@ -109,7 +121,11 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
       {/* Mobile cards */}
       <div className="md:hidden space-y-3">
         {courts.map((court) => (
-          <Card key={court.id}>
+          <Card
+            key={court.id}
+            className="cursor-pointer hover:bg-muted/50 transition-colors"
+            onClick={() => handleRowClick(court.id)}
+          >
             <CardContent className="p-4">
               <div className="flex gap-3">
                 <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-muted">
@@ -137,6 +153,7 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                     <CourtActionsDropdown
                       court={court}
                       onDeactivate={onDeactivate}
+                      onContainerClick={(e) => e.stopPropagation()}
                     />
                   </div>
                   <div className="mt-2 flex items-center gap-2">
@@ -163,16 +180,23 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
 interface CourtActionsDropdownProps {
   court: OwnerCourt;
   onDeactivate?: (courtId: string) => void;
+  onContainerClick?: (e: React.MouseEvent) => void;
 }
 
 function CourtActionsDropdown({
   court,
   onDeactivate,
+  onContainerClick,
 }: CourtActionsDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={onContainerClick}
+        >
           <MoreHorizontal className="h-4 w-4" />
           <span className="sr-only">Open menu</span>
         </Button>

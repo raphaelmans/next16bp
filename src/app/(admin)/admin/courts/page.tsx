@@ -272,7 +272,14 @@ export default function AdminCourtsPage() {
                 </TableHeader>
                 <TableBody>
                   {courtsData.courts.map((court) => (
-                    <TableRow key={court.id}>
+                    <TableRow
+                      key={court.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => {
+                        // TODO: Navigate to /admin/courts/[id] when the page exists
+                        toast.info("Court detail page coming soon");
+                      }}
+                    >
                       <TableCell>
                         <div className="flex items-center gap-3">
                           {court.imageUrl && (
@@ -322,7 +329,10 @@ export default function AdminCourtsPage() {
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell
+                        className="text-right"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon">

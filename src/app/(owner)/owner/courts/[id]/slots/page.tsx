@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
 import { OwnerSidebar, OwnerNavbar } from "@/features/owner";
 import { CalendarNavigation } from "@/features/owner/components/calendar-navigation";
@@ -193,12 +193,24 @@ export default function ManageSlotsPage() {
       <div className="space-y-6">
         {/* Page header */}
         <div className="space-y-4">
-          <Button variant="ghost" size="sm" asChild className="-ml-2">
-            <Link href="/owner/courts">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Courts
-            </Link>
-          </Button>
+          <div className="flex items-center justify-between">
+            <Button variant="ghost" size="sm" asChild className="-ml-2">
+              <Link href="/owner/courts">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Courts
+              </Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <a
+                href={`/courts/${courtId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                View Public Page
+              </a>
+            </Button>
+          </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight font-heading">
               Manage Time Slots - {mockCourt.name}

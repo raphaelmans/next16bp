@@ -3,9 +3,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { CourtFormData } from "../schemas/court-form.schema";
 
+interface CreateCourtResult {
+  success: boolean;
+  courtId: string;
+}
+
 interface UseCourtFormOptions {
   courtId?: string;
-  onSuccess?: () => void;
+  onSuccess?: (result: CreateCourtResult) => void;
 }
 
 export function useCourtForm({ courtId, onSuccess }: UseCourtFormOptions = {}) {
@@ -25,9 +30,9 @@ export function useCourtForm({ courtId, onSuccess }: UseCourtFormOptions = {}) {
 
       return { success: true, courtId: courtId ?? "new-court-id" };
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["owner", "courts"] });
-      onSuccess?.();
+      onSuccess?.(result);
     },
   });
 

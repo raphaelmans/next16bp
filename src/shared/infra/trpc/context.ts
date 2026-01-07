@@ -66,6 +66,13 @@ export async function createContext({
       session = {
         userId: user.id,
         email: user.email!,
+        // =================================================================
+        // DEBUG: To test different roles, change the role value below:
+        //   "admin"  - Full admin access to /admin/* routes
+        //   "member" - Default player/owner access
+        //   "viewer" - Read-only access
+        // Example: role: "admin",
+        // =================================================================
         role: (userRole?.role as Session["role"]) ?? "member",
       };
     }

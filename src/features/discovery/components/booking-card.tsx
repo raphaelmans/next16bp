@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { LogIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,17 @@ import {
   type TimeSlot,
 } from "@/shared/components/kudos";
 import { formatCurrency } from "@/shared/lib/format";
+
+// =============================================================================
+// TODO: Replace mock auth state with real Supabase session
+// =============================================================================
+// import { useSession } from "@/features/auth/hooks/use-auth";
+// const { data: session } = useSession();
+// const isAuthenticated = !!session?.user;
+
+// For development: Toggle this to test guest vs authenticated states
+const DEV_IS_AUTHENTICATED = true; // Set to false to test guest "Sign in to reserve"
+// =============================================================================
 
 interface BookingCardProps {
   courtId: string;
@@ -38,7 +50,24 @@ export function BookingCard({
   onSlotSelect,
   className,
 }: BookingCardProps) {
+  const router = useRouter();
   const selectedSlot = slots.find((s) => s.id === selectedSlotId);
+
+  // TODO: Replace with real auth state
+  const isAuthenticated = DEV_IS_AUTHENTICATED;
+
+  const handleReserveClick = () => {
+    if (!selectedSlot) return;
+
+    if (isAuthenticated) {
+      router.push(`/courts/${courtId}/book/${selectedSlot.id}`);
+    } else {
+      // Redirect to login with return URL
+      router.push(
+        `/login?redirect=${encodeURIComponent(`/courts/${courtId}`)}`,
+      );
+    }
+  };
 
   return (
     <Card className={cn("sticky top-24", className)}>
@@ -94,20 +123,50 @@ export function BookingCard({
         )}
 
         {/* Reserve Button */}
-        <Button
-          size="lg"
-          className="w-full"
-          disabled={!selectedSlot}
-          asChild={!!selectedSlot}
-        >
-          {selectedSlot ? (
-            <Link href={`/courts/${courtId}/book/${selectedSlot.id}`}>
-              Reserve Now
-            </Link>
-          ) : (
-            <span>Select a time slot</span>
-          )}
-        </Button>
+        {isAuthenticated ? (
+          // Authenticated user - normal reserve flow
+          <Button
+            size="lg"
+            className="w-full"
+            disabled={!selectedSlot}
+            onClick={handleReserveClick}
+          >
+            {selectedSlot ? "Reserve Now" : "Select a time slot"}
+          </Button>
+        ) : (
+          // Guest user - show sign in prompt
+          <Button
+            size="lg"
+            variant="outline"
+            className="w-full"
+            onClick={handleReserveClick}
+            disabled={!selectedSlot}
+          >
+            <LogIn className="h-4 w-4 mr-2" />
+            {selectedSlot ? "Sign in to reserve" : "Select a time slot"}
+          </Button>
+        )}
+
+        {/* Sign in hint for guests */}
+        {!isAuthenticated && selectedSlot && (
+          <p className="text-xs text-muted-foreground text-center">
+            You need to{" "}
+            <Link
+              href={`/login?redirect=${encodeURIComponent(`/courts/${courtId}`)}`}
+              className="text-primary hover:underline"
+            >
+              sign in
+            </Link>{" "}
+            or{" "}
+            <Link
+              href={`/register?redirect=${encodeURIComponent(`/courts/${courtId}`)}`}
+              className="text-primary hover:underline"
+            >
+              create an account
+            </Link>{" "}
+            to reserve
+          </p>
+        )}
 
         {/* Summary */}
         {selectedSlot && (

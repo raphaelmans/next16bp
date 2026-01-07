@@ -17,9 +17,10 @@ export default function NewCourtPage() {
   const logoutMutation = useLogout();
 
   const { submit, isSubmitting } = useCourtForm({
-    onSuccess: () => {
+    onSuccess: (result) => {
       toast.success("Court created successfully!");
-      router.push("/owner/courts");
+      // Redirect to slots page for the newly created court
+      router.push(`/owner/courts/${result.courtId}/slots`);
     },
   });
 

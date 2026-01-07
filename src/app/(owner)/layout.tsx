@@ -38,12 +38,16 @@ export default async function OwnerLayout({
     redirect("/login?redirect=/owner");
   }
 
-  // TODO: Check if user has an organization
-  // If no organization, redirect to create org page
+  // ==========================================================================
+  // AUTH BYPASS: Organization check is currently disabled for development.
+  // Any authenticated user can access /owner/* routes.
+  //
+  // TODO: Implement organization check before production:
   // const hasOrg = await checkUserHasOrganization(user.id);
   // if (!hasOrg) {
   //   redirect("/owner/onboarding");
   // }
+  // ==========================================================================
 
   return <>{children}</>;
 }

@@ -8,3 +8,4 @@ export { PhotoGallery } from "./photo-gallery";
 export { BookingCard } from "./booking-card";
 export { ContactSection } from "./contact-section";
 export { EmptyResults } from "./empty-results";
+export { UserDropdown, type UserDropdownUser } from "./user-dropdown";

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import { toast } from "sonner";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -68,6 +69,11 @@ export default function BookSlotPage() {
         timeSlotId: slotId,
       });
 
+      // Show success toast
+      toast.success("Reservation created!", {
+        description: "Check your email for confirmation details.",
+      });
+
       // Redirect based on whether payment is required
       const requiresPayment = result.status === "AWAITING_PAYMENT";
       if (requiresPayment) {
@@ -76,7 +82,11 @@ export default function BookSlotPage() {
         router.push(`/reservations/${result.id}`);
       }
     } catch (error) {
-      // Error handled by mutation
+      // Show error toast
+      toast.error("Failed to create reservation", {
+        description:
+          error instanceof Error ? error.message : "Please try again.",
+      });
     }
   };
 

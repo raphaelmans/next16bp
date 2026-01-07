@@ -166,9 +166,10 @@ export default function AdminDashboardPage() {
               ) : (
                 <div className="space-y-3">
                   {pendingClaims.map((claim) => (
-                    <div
+                    <Link
                       key={claim.id}
-                      className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                      href={`/admin/claims/${claim.id}`}
+                      className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors cursor-pointer"
                     >
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
@@ -196,10 +197,10 @@ export default function AdminDashboardPage() {
                           })}
                         </p>
                       </div>
-                      <Button variant="outline" size="sm" asChild>
-                        <Link href={`/admin/claims/${claim.id}`}>Review</Link>
+                      <Button variant="outline" size="sm">
+                        Review
                       </Button>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               )}
