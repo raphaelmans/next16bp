@@ -29,6 +29,13 @@ export interface IAuthRepository {
   exchangeCodeForSession(
     code: string,
   ): Promise<{ user: User; session: Session }>;
+  verifyMagicLink(
+    tokenHash: string,
+  ): Promise<{ user: User | null; session: Session | null }>;
+  verifySignUp(
+    tokenHash: string,
+  ): Promise<{ user: User | null; session: Session | null }>;
+  verifyRecovery(tokenHash: string): Promise<void>;
 }
 
 /**
@@ -114,5 +121,35 @@ export class AuthRepository implements IAuthRepository {
     const { data, error } = await this.client.auth.exchangeCodeForSession(code);
     if (error) throw error;
     return data;
+  }
+
+  async verifyMagicLink(
+    tokenHash: string,
+  ): Promise<{ user: User | null; session: Session | null }> {
+    const { data, error } = await this.client.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: "magiclink",
+    });
+    if (error) throw error;
+    return data;
+  }
+
+  async verifySignUp(
+    tokenHash: string,
+  ): Promise<{ user: User | null; session: Session | null }> {
+    const { data, error } = await this.client.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: "signup",
+    });
+    if (error) throw error;
+    return data;
+  }
+
+  async verifyRecovery(tokenHash: string): Promise<void> {
+    const { error } = await this.client.auth.verifyOtp({
+      token_hash: tokenHash,
+      type: "recovery",
+    });
+    if (error) throw error;
   }
 }

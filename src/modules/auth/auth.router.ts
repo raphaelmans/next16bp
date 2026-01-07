@@ -7,7 +7,12 @@ import {
   makeAuthService,
   makeRegisterUserUseCase,
 } from "./factories/auth.factory";
-import { LoginSchema, RegisterSchema, MagicLinkSchema } from "./dtos";
+import {
+  LoginSchema,
+  RegisterSchema,
+  MagicLinkSchema,
+  VerifyTokenHashSchema,
+} from "./dtos";
 
 export const authRouter = router({
   login: publicProcedure.input(LoginSchema).mutation(async ({ input, ctx }) => {
@@ -45,4 +50,36 @@ export const authRouter = router({
       role: ctx.session.role,
     };
   }),
+
+  verifyMagicLink: publicProcedure
+    .input(VerifyTokenHashSchema)
+    .query(async ({ input, ctx }) => {
+      const authService = makeAuthService(ctx.cookies);
+      const result = await authService.verifyMagicLink(input.token_hash);
+      return {
+        user: result.user
+          ? { id: result.user.id, email: result.user.email }
+          : null,
+      };
+    }),
+
+  verifySignUp: publicProcedure
+    .input(VerifyTokenHashSchema)
+    .query(async ({ input, ctx }) => {
+      const authService = makeAuthService(ctx.cookies);
+      const result = await authService.verifySignUp(input.token_hash);
+      return {
+        user: result.user
+          ? { id: result.user.id, email: result.user.email }
+          : null,
+      };
+    }),
+
+  verifyRecovery: publicProcedure
+    .input(VerifyTokenHashSchema)
+    .mutation(async ({ input, ctx }) => {
+      const authService = makeAuthService(ctx.cookies);
+      await authService.verifyRecovery(input.token_hash);
+      return { success: true };
+    }),
 });

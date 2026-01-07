@@ -25,6 +25,13 @@ export interface IAuthService {
   exchangeCodeForSession(
     code: string,
   ): Promise<{ user: User; session: Session }>;
+  verifyMagicLink(
+    tokenHash: string,
+  ): Promise<{ user: User | null; session: Session | null }>;
+  verifySignUp(
+    tokenHash: string,
+  ): Promise<{ user: User | null; session: Session | null }>;
+  verifyRecovery(tokenHash: string): Promise<void>;
 }
 
 /**
@@ -59,7 +66,7 @@ export class AuthService implements IAuthService {
     email: string,
     baseUrl: string,
   ): Promise<{ user: User | null; session: Session | null }> {
-    const redirectTo = `${baseUrl}/auth/callback`;
+    const redirectTo = `${baseUrl}/auth/confirm`;
     const result = await this.authRepository.signInWithOtp(email, redirectTo);
 
     logger.info(
@@ -75,7 +82,7 @@ export class AuthService implements IAuthService {
     password: string,
     baseUrl: string,
   ): Promise<{ user: User | null; session: Session | null }> {
-    const redirectTo = `${baseUrl}/auth/callback`;
+    const redirectTo = `${baseUrl}/auth/confirm`;
     const result = await this.authRepository.signUp(
       email,
       password,
@@ -111,5 +118,44 @@ export class AuthService implements IAuthService {
     }
 
     return result;
+  }
+
+  async verifyMagicLink(
+    tokenHash: string,
+  ): Promise<{ user: User | null; session: Session | null }> {
+    const result = await this.authRepository.verifyMagicLink(tokenHash);
+
+    if (result.user) {
+      logger.info(
+        { event: "user.magic_link_verified", userId: result.user.id },
+        "Magic link verified",
+      );
+    }
+
+    return result;
+  }
+
+  async verifySignUp(
+    tokenHash: string,
+  ): Promise<{ user: User | null; session: Session | null }> {
+    const result = await this.authRepository.verifySignUp(tokenHash);
+
+    if (result.user) {
+      logger.info(
+        { event: "user.signup_verified", userId: result.user.id },
+        "Signup verified",
+      );
+    }
+
+    return result;
+  }
+
+  async verifyRecovery(tokenHash: string): Promise<void> {
+    await this.authRepository.verifyRecovery(tokenHash);
+
+    logger.info(
+      { event: "user.recovery_verified" },
+      "Password recovery verified",
+    );
   }
 }
