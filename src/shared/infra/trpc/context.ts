@@ -87,12 +87,38 @@ export async function createContext({
     path: new URL(req.url).pathname,
   });
 
+  // Determine the origin URL for redirects
+  const getOriginUrl = (): string => {
+    // 1. Use explicit APP_URL from env if set (production)
+    if (env.NEXT_PUBLIC_APP_URL) {
+      return env.NEXT_PUBLIC_APP_URL;
+    }
+
+    // 2. Build from x-forwarded-host (Vercel, proxies)
+    const forwardedHost = headerStore.get("x-forwarded-host");
+    const forwardedProto = headerStore.get("x-forwarded-proto");
+    if (forwardedHost) {
+      const protocol = forwardedProto || "https";
+      return `${protocol}://${forwardedHost}`;
+    }
+
+    // 3. Build from host header
+    const host = headerStore.get("host");
+    if (host) {
+      const protocol = host.includes("localhost") ? "http" : "https";
+      return `${protocol}://${host}`;
+    }
+
+    // 4. Fallback to localhost for development
+    return "http://localhost:3000";
+  };
+
   return {
     requestId,
     session,
     userId: session?.userId ?? null,
     cookies: cookieMethods,
-    origin: headerStore.get("origin") ?? "http://localhost:3000",
+    origin: getOriginUrl(),
     log,
   };
 }
