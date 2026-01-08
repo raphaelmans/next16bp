@@ -44,7 +44,7 @@ export function ProfileForm() {
     formState: { errors, isDirty },
   } = form;
 
-  // Sync profile data to form
+  // Sync profile data to form (only when profile ID changes)
   useEffect(() => {
     if (profile) {
       reset({
@@ -54,10 +54,20 @@ export function ProfileForm() {
         avatarUrl: profile.avatarUrl || "",
       });
     }
-  }, [profile, reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile?.id]); // Only reset when profile ID changes, not on every profile update
 
   const onSubmit = (data: ProfileFormValues) => {
-    updateProfile.mutate(data);
+    // Filter out empty strings to avoid validation errors
+    const cleanedData = Object.fromEntries(
+      Object.entries(data).filter(([_, value]) => value !== ""),
+    ) as ProfileFormValues;
+
+    updateProfile.mutate(cleanedData, {
+      onSuccess: () => {
+        // Form will be reset when profile refetches via useEffect
+      },
+    });
   };
 
   const handleAvatarSelect = (file: File) => {
@@ -146,7 +156,12 @@ export function ProfileForm() {
           </Alert>
 
           {/* Submit button */}
-          <div className="flex justify-end">
+          <div className="flex flex-col items-end gap-2">
+            {process.env.NODE_ENV === "development" && (
+              <p className="text-xs text-muted-foreground">
+                Form dirty: {isDirty ? "Yes" : "No"}
+              </p>
+            )}
             <Button
               type="submit"
               disabled={!isDirty || updateProfile.isPending}
