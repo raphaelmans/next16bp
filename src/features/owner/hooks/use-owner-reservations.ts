@@ -83,12 +83,26 @@ function mapStatusFromBackend(status: string): ReservationStatus {
 }
 
 /**
+ * Format ISO datetime string to time (e.g., "2:00 PM")
+ */
+function formatTime(isoString: string): string {
+  try {
+    const date = new Date(isoString);
+    return date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  } catch {
+    return "--:--";
+  }
+}
+
+/**
  * Fetch reservations for an organization
  * Uses reservationOwner.getForOrganization endpoint
  *
- * Note: The backend returns basic ReservationRecord without slot/court details.
- * For now, we display what data we have - court/time info will show placeholder
- * until the backend is enhanced to return richer data.
+ * Backend returns enriched data with court/slot details.
  */
 export function useOwnerReservations(
   organizationId: string | null,
@@ -110,20 +124,21 @@ export function useOwnerReservations(
       // Map backend records to frontend Reservation format
       let reservations: Reservation[] = data.map((r) => ({
         id: r.id,
-        // These will be empty/placeholder until backend provides slot/court data
-        courtId: "",
-        courtName: "Court",
+        courtId: r.courtId,
+        courtName: r.courtName,
         playerName: r.playerNameSnapshot ?? "Unknown",
         playerEmail: r.playerEmailSnapshot ?? "",
         playerPhone: r.playerPhoneSnapshot ?? "",
-        // Using createdAt as date for now since we don't have slot data
-        date: r.createdAt
-          ? new Date(r.createdAt).toISOString().split("T")[0]
-          : "",
-        startTime: "--:--",
-        endTime: "--:--",
-        amountCents: 0,
-        currency: "PHP",
+        // Extract date from slotStartTime
+        date: r.slotStartTime
+          ? new Date(r.slotStartTime).toISOString().split("T")[0]
+          : r.createdAt
+            ? new Date(r.createdAt).toISOString().split("T")[0]
+            : "",
+        startTime: r.slotStartTime ? formatTime(r.slotStartTime) : "--:--",
+        endTime: r.slotEndTime ? formatTime(r.slotEndTime) : "--:--",
+        amountCents: r.amountCents ?? 0,
+        currency: r.currency ?? "PHP",
         status: mapStatusFromBackend(r.status),
         paymentReference: undefined,
         paymentProofUrl: undefined,
@@ -138,7 +153,8 @@ export function useOwnerReservations(
           (r) =>
             r.playerName.toLowerCase().includes(searchLower) ||
             r.playerEmail.toLowerCase().includes(searchLower) ||
-            r.playerPhone.includes(search),
+            r.playerPhone.includes(search) ||
+            r.courtName.toLowerCase().includes(searchLower),
         );
       }
 

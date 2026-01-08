@@ -13,6 +13,8 @@ import { PaymentInfoCard } from "@/features/reservation/components/payment-info-
 import { OrderSummary } from "@/features/reservation/components/order-summary";
 import { useProfile } from "@/features/reservation/hooks/use-profile";
 import { useCreateReservation } from "@/features/reservation/hooks/use-create-reservation";
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
 
 export default function BookSlotPage() {
   const params = useParams();
@@ -25,19 +27,33 @@ export default function BookSlotPage() {
   const { data: profile, isLoading: isLoadingProfile } = useProfile();
   const createReservation = useCreateReservation();
 
-  // TODO: Fetch court and slot data from API
-  const court = {
-    name: "Sample Court",
-    address: "123 Main St, Manila",
-    coverImageUrl: undefined,
-  };
+  // Fetch court data from API
+  const trpc = useTRPC();
+  const { data: courtData, isLoading: isLoadingCourt } = useQuery(
+    trpc.court.getById.queryOptions({ id: courtId }),
+  );
 
-  const timeSlot = {
-    startTime: new Date().toISOString(),
-    endTime: new Date(Date.now() + 3600000).toISOString(),
-    priceCents: 50000,
-    currency: "PHP",
-  };
+  // Fetch slot data from API
+  const { data: slotData, isLoading: isLoadingSlot } = useQuery(
+    trpc.timeSlot.getById.queryOptions({ slotId }),
+  );
+
+  const court = courtData
+    ? {
+        name: courtData.court.name,
+        address: courtData.court.address,
+        coverImageUrl: courtData.photos[0]?.url,
+      }
+    : undefined;
+
+  const timeSlot = slotData
+    ? {
+        startTime: slotData.startTime,
+        endTime: slotData.endTime,
+        priceCents: slotData.priceCents ?? 0,
+        currency: slotData.currency ?? "PHP",
+      }
+    : undefined;
 
   const paymentMethods = [
     {
@@ -83,8 +99,27 @@ export default function BookSlotPage() {
     }
   };
 
-  if (isLoadingProfile) {
+  if (isLoadingProfile || isLoadingCourt || isLoadingSlot) {
     return <BookSlotPageSkeleton />;
+  }
+
+  if (!court || !timeSlot) {
+    return (
+      <Container className="py-12">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold">Court or time slot not found</h1>
+          <p className="text-muted-foreground mt-2">
+            The court or time slot you&apos;re looking for doesn&apos;t exist.
+          </p>
+          <Link
+            href="/courts"
+            className="text-primary hover:underline mt-4 inline-block"
+          >
+            Browse all courts
+          </Link>
+        </div>
+      </Container>
+    );
   }
 
   return (

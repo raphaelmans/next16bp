@@ -1,0 +1,9 @@
+name,address,city,latitude,longitude,facebook_url,instagram_url,viber_contact,website_url,other_contact_info,amenities
+"Makati Pickleball Club","123 Sports Avenue, Barangay San Lorenzo","Makati","14.5547","121.0244","https://facebook.com/makatipb","https://instagram.com/makatipb","0917 123 4567","https://makatipb.com","Open daily 6AM-10PM. Walk-ins welcome.","Parking;Restrooms;Lights;Covered Courts"
+"BGC Court Center","45 High Street, Fort Bonifacio","BGC","14.5503","121.0455","https://facebook.com/bgccourts","","","","Contact via Facebook Messenger for reservations","Parking;Lights;Food/Drinks"
+"Pasig Sports Hub","789 Ortigas Avenue Extension, Pasig City","Pasig","","","","","0918 765 4321","","First come first served. Open 5AM-9PM.","Restrooms;Parking;Seating Area"
+"QC Memorial Circle Courts","Elliptical Road, Diliman","Quezon City","14.6517","121.0498","https://facebook.com/qcpickleball","https://instagram.com/qcpickleball","","","Public courts. Free to use during park hours.","Parking;Restrooms;Lights"
+"Manila Bay Pickleball","Roxas Boulevard, Malate","Manila","14.5764","120.9769","","","0919 222 3333","","Near Manila Ocean Park. Street parking available.","Lights;Seating Area"
+"Taguig Lakeshore Courts","C5 Extension, Lower Bicutan","Taguig","14.5123","121.0567","https://facebook.com/taguiglakeshore","","","https://taguiglakeshore.ph","Members only. Contact for membership info.","Parking;Restrooms;Locker Rooms;Showers;Pro Shop"
+"Mandaluyong Sports Complex","EDSA corner Shaw Boulevard","Mandaluyong","14.5818","121.0545","","https://instagram.com/mandasports","0917 888 9999","","Public facility. ID required for entry.","Parking;Restrooms;Lights;Equipment Rental"
+"San Juan Pinaglabanan Courts","N. Domingo Street, San Juan","San Juan","14.6022","121.0355","https://facebook.com/sanjuanpb","","","","Open to residents. Bring valid ID.","Restrooms;Lights"

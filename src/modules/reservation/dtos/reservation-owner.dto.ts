@@ -44,3 +44,32 @@ export const GetPendingCountSchema = z.object({
 });
 
 export type GetPendingCountDTO = z.infer<typeof GetPendingCountSchema>;
+
+export const ReservationWithDetailsSchema = z.object({
+  id: z.string().uuid(),
+  status: z.enum([
+    "CREATED",
+    "AWAITING_PAYMENT",
+    "PAYMENT_MARKED_BY_USER",
+    "CONFIRMED",
+    "EXPIRED",
+    "CANCELLED",
+  ]),
+  playerNameSnapshot: z.string().nullable(),
+  playerEmailSnapshot: z.string().nullable(),
+  playerPhoneSnapshot: z.string().nullable(),
+  cancellationReason: z.string().nullable(),
+  createdAt: z.string().nullable(),
+
+  // Enriched fields from joins
+  courtId: z.string().uuid(),
+  courtName: z.string(),
+  slotStartTime: z.string(),
+  slotEndTime: z.string(),
+  amountCents: z.number().nullable(),
+  currency: z.string().nullable(),
+});
+
+export type ReservationWithDetails = z.infer<
+  typeof ReservationWithDetailsSchema
+>;

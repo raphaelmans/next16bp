@@ -1,11 +1,15 @@
 import type { TransactionManager } from "@/shared/kernel/transaction";
 import type { RequestContext } from "@/shared/kernel/context";
-import type { ITimeSlotRepository } from "../repositories/time-slot.repository";
+import type {
+  ITimeSlotRepository,
+  TimeSlotWithPlayerInfo,
+} from "../repositories/time-slot.repository";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
 import type { TimeSlotRecord } from "@/shared/infra/db/schema";
 import type {
   GetAvailableSlotsDTO,
+  GetSlotsForCourtDTO,
   CreateTimeSlotDTO,
   CreateBulkTimeSlotsDTO,
   UpdateSlotPriceDTO,
@@ -29,6 +33,10 @@ export interface ITimeSlotService {
   getSlotById(slotId: string): Promise<TimeSlotRecord>;
 
   // Owner operations
+  getSlotsForCourt(
+    userId: string,
+    data: GetSlotsForCourtDTO,
+  ): Promise<TimeSlotWithPlayerInfo[]>;
   createSlot(userId: string, data: CreateTimeSlotDTO): Promise<TimeSlotRecord>;
   createBulkSlots(
     userId: string,
@@ -114,6 +122,20 @@ export class TimeSlotService implements ITimeSlotService {
       throw new SlotNotFoundError(slotId);
     }
     return slot;
+  }
+
+  async getSlotsForCourt(
+    userId: string,
+    data: GetSlotsForCourtDTO,
+  ): Promise<TimeSlotWithPlayerInfo[]> {
+    // Verify ownership
+    await this.verifyCourtOwnership(userId, data.courtId);
+
+    return this.timeSlotRepository.findByCourtWithReservation(
+      data.courtId,
+      new Date(data.startDate),
+      new Date(data.endDate),
+    );
   }
 
   async createSlot(

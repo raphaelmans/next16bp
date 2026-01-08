@@ -21,6 +21,8 @@ import {
 import { useSession, useLogout } from "@/features/auth";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ManageSlotsPage() {
   const params = useParams();
@@ -28,10 +30,22 @@ export default function ManageSlotsPage() {
 
   const { data: user } = useSession();
   const logoutMutation = useLogout();
+  const trpc = useTRPC();
 
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [bulkModalOpen, setBulkModalOpen] = React.useState(false);
   const [actionLoadingId, setActionLoadingId] = React.useState<string>();
+
+  // Fetch court data
+  const { data: courtData, isLoading: courtLoading } = useQuery({
+    ...trpc.courtManagement.getById.queryOptions({ courtId }),
+    enabled: !!courtId,
+  });
+
+  // Fetch organization (for sidebar)
+  const { data: organization } = useQuery({
+    ...trpc.organization.my.queryOptions(),
+  });
 
   const { data: slots = [], isLoading: slotsLoading } = useSlots({
     courtId,
@@ -43,7 +57,7 @@ export default function ManageSlotsPage() {
   const deleteSlot = useDeleteSlot();
   const confirmBooking = useConfirmBooking();
   const rejectBooking = useRejectBooking();
-  const createBulkSlots = useCreateBulkSlots();
+  const createBulkSlots = useCreateBulkSlots(courtId);
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -149,9 +163,12 @@ export default function ManageSlotsPage() {
     });
   };
 
-  // Mock organization and court data
-  const mockOrg = { id: "1", name: "My Sports Complex" };
-  const mockCourt = { id: courtId, name: "Court A" };
+  // Real organization and court data
+  const currentOrg = organization?.[0];
+  const orgDisplay = currentOrg
+    ? { id: currentOrg.id, name: currentOrg.name }
+    : undefined;
+  const courtName = courtData?.court.name ?? "Loading...";
 
   // Generate mock dates with slots for calendar indicators
   const datesWithSlots = React.useMemo(() => {
@@ -167,12 +184,79 @@ export default function ManageSlotsPage() {
     return dates;
   }, []);
 
+  // Show loading state while court is loading
+  if (courtLoading) {
+    return (
+      <DashboardLayout
+        sidebar={
+          <OwnerSidebar
+            currentOrganization={orgDisplay}
+            organizations={organization ? [orgDisplay!] : []}
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+          />
+        }
+        navbar={
+          <OwnerNavbar
+            organizationName={orgDisplay?.name ?? ""}
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+            onLogout={handleLogout}
+          />
+        }
+      >
+        <div className="flex items-center justify-center h-64">
+          <p className="text-muted-foreground">Loading court...</p>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Show error state if court not found
+  if (!courtData && !courtLoading) {
+    return (
+      <DashboardLayout
+        sidebar={
+          <OwnerSidebar
+            currentOrganization={orgDisplay}
+            organizations={organization ? [orgDisplay!] : []}
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+          />
+        }
+        navbar={
+          <OwnerNavbar
+            organizationName={orgDisplay?.name ?? ""}
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+            onLogout={handleLogout}
+          />
+        }
+      >
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Court not found</p>
+          <Button asChild className="mt-4">
+            <Link href="/owner/courts">Back to Courts</Link>
+          </Button>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout
       sidebar={
         <OwnerSidebar
-          currentOrganization={mockOrg}
-          organizations={[mockOrg]}
+          currentOrganization={orgDisplay}
+          organizations={organization ? [orgDisplay!] : []}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,
@@ -181,7 +265,7 @@ export default function ManageSlotsPage() {
       }
       navbar={
         <OwnerNavbar
-          organizationName={mockOrg.name}
+          organizationName={orgDisplay?.name ?? ""}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,
@@ -213,7 +297,7 @@ export default function ManageSlotsPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight font-heading">
-              Manage Time Slots - {mockCourt.name}
+              Manage Time Slots - {courtName}
             </h1>
             <p className="text-muted-foreground">
               Create and manage time slots for your court

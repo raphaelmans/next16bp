@@ -1,7 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { Search, Calendar as CalendarIcon } from "lucide-react";
+import {
+  Search,
+  Calendar as CalendarIcon,
+  CheckCircle,
+  XCircle,
+  Clock,
+} from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
@@ -40,6 +46,65 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 
 type TabValue = "pending" | "upcoming" | "past" | "cancelled";
+
+/**
+ * Format price in Philippine Peso
+ */
+function formatPrice(amountCents: number, currency: string = "PHP"): string {
+  if (amountCents === 0) return "Free";
+  const amount = amountCents / 100;
+  if (currency === "PHP") {
+    return `₱${amount.toLocaleString()}`;
+  }
+  return `${currency} ${amount.toLocaleString()}`;
+}
+
+/**
+ * Empty state component
+ */
+function ReservationsEmptyState({ type }: { type: TabValue | "all" }) {
+  const config = {
+    all: {
+      icon: CalendarIcon,
+      title: "No reservations yet",
+      description:
+        "When players book your courts, reservations will appear here.",
+    },
+    pending: {
+      icon: CheckCircle,
+      title: "No pending reservations",
+      description:
+        "All caught up! No reservations need your attention right now.",
+    },
+    upcoming: {
+      icon: CalendarIcon,
+      title: "No upcoming reservations",
+      description: "No confirmed bookings scheduled for the future.",
+    },
+    past: {
+      icon: Clock,
+      title: "No past reservations",
+      description: "Completed bookings will appear here.",
+    },
+    cancelled: {
+      icon: XCircle,
+      title: "No cancelled reservations",
+      description: "Cancelled or rejected bookings will appear here.",
+    },
+  };
+
+  const { icon: Icon, title, description } = config[type];
+
+  return (
+    <div className="flex flex-col items-center justify-center py-12 text-center">
+      <div className="rounded-full bg-muted p-4 mb-4">
+        <Icon className="h-8 w-8 text-muted-foreground" />
+      </div>
+      <h3 className="font-heading font-semibold text-lg mb-2">{title}</h3>
+      <p className="text-muted-foreground text-sm max-w-sm">{description}</p>
+    </div>
+  );
+}
 
 export default function OwnerReservationsPage() {
   const { data: user } = useSession();
@@ -361,9 +426,7 @@ export default function OwnerReservationsPage() {
                 <Skeleton className="h-16 w-full" />
               </div>
             ) : filteredReservations.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No reservations found</p>
-              </div>
+              <ReservationsEmptyState type={activeTab} />
             ) : (
               <ReservationsTable
                 reservations={filteredReservations}
@@ -388,7 +451,7 @@ export default function OwnerReservationsPage() {
         courtName={selectedReservation?.courtName}
         dateTime={
           selectedReservation
-            ? `${format(new Date(selectedReservation.date), "MMM d, yyyy")} at ${selectedReservation.startTime}`
+            ? `${format(new Date(selectedReservation.date), "MMM d, yyyy")} at ${selectedReservation.startTime} - ${selectedReservation.endTime} for ${formatPrice(selectedReservation.amountCents, selectedReservation.currency)}`
             : undefined
         }
       />

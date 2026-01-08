@@ -42,23 +42,23 @@ const statusConfig: Record<
 > = {
   available: {
     label: "Available",
-    color: "bg-green-50 text-green-700 border-green-200",
-    dotColor: "bg-green-500",
+    color: "bg-[#ECFDF5] text-[#059669] border-[#059669]/20",
+    dotColor: "bg-[#059669]",
   },
   booked: {
     label: "Booked",
-    color: "bg-blue-50 text-blue-700 border-blue-200",
-    dotColor: "bg-blue-500",
+    color: "bg-[#CCFBF1] text-[#0F766E] border-[#0F766E]/20",
+    dotColor: "bg-[#0F766E]",
   },
   pending: {
     label: "Pending",
-    color: "bg-yellow-50 text-yellow-700 border-yellow-200",
-    dotColor: "bg-yellow-500",
+    color: "bg-[#FFFBEB] text-[#D97706] border-[#D97706]/20",
+    dotColor: "bg-[#D97706]",
   },
   blocked: {
     label: "Blocked",
-    color: "bg-gray-50 text-gray-700 border-gray-200",
-    dotColor: "bg-gray-400",
+    color: "bg-muted text-muted-foreground border-muted",
+    dotColor: "bg-muted-foreground",
   },
 };
 
@@ -76,7 +76,7 @@ export function SlotItem({
   const endTime = new Date(slot.endTime);
   const config = statusConfig[slot.status];
 
-  const formatPrice = (cents?: number, currency?: string) => {
+  const formatPrice = (cents?: number, currency?: string | null) => {
     if (!cents) return null;
     const amount = cents / 100;
     return new Intl.NumberFormat("en-PH", {

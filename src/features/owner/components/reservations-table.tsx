@@ -42,12 +42,29 @@ const statusConfig: Record<
   {
     label: string;
     variant: "default" | "secondary" | "destructive" | "outline";
+    className?: string;
   }
 > = {
-  pending: { label: "Pending", variant: "default" },
-  confirmed: { label: "Confirmed", variant: "secondary" },
-  cancelled: { label: "Cancelled", variant: "destructive" },
-  completed: { label: "Completed", variant: "outline" },
+  pending: {
+    label: "Pending",
+    variant: "outline",
+    className: "bg-amber-50 text-amber-700 border-amber-200",
+  },
+  confirmed: {
+    label: "Confirmed",
+    variant: "outline",
+    className: "bg-green-50 text-green-700 border-green-200",
+  },
+  cancelled: {
+    label: "Cancelled",
+    variant: "outline",
+    className: "bg-red-50 text-red-700 border-red-200",
+  },
+  completed: {
+    label: "Completed",
+    variant: "outline",
+    className: "bg-slate-50 text-slate-700 border-slate-200",
+  },
 };
 
 export function ReservationsTable({
@@ -273,7 +290,12 @@ export function ReservationsTable({
                       )}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={config.variant}>{config.label}</Badge>
+                      <Badge
+                        variant={config.variant}
+                        className={config.className}
+                      >
+                        {config.label}
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       {reservation.status === "pending" && (

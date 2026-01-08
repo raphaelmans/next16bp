@@ -1,0 +1,2425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KudosCourts User Stories - Checkpoint 01</title>
+    <style>
+        @page {
+            margin: 20mm 15mm;
+            @top-center {
+                content: "KudosCourts User Stories";
+                font-family: 'Segoe UI', Tahoma, sans-serif;
+                font-size: 10pt;
+                color: #666;
+            }
+            @bottom-right {
+                content: "Page " counter(page);
+                font-family: 'Segoe UI', Tahoma, sans-serif;
+                font-size: 9pt;
+                color: #666;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+            padding: 20px;
+        }
+
+        .cover-page {
+            text-align: center;
+            padding: 100px 40px;
+            page-break-after: always;
+        }
+
+        .cover-title {
+            font-size: 42pt;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .cover-subtitle {
+            font-size: 24pt;
+            color: #666;
+            margin-bottom: 60px;
+            font-weight: 300;
+        }
+
+        .cover-meta {
+            margin: 60px 0;
+            padding: 40px;
+            background: #f8f9fa;
+            border-left: 4px solid #2563eb;
+        }
+
+        .cover-meta-item {
+            font-size: 14pt;
+            margin: 15px 0;
+            color: #555;
+        }
+
+        .cover-meta-label {
+            font-weight: 600;
+            color: #1a1a1a;
+            display: inline-block;
+            width: 120px;
+        }
+
+        .toc {
+            page-break-after: always;
+        }
+
+        .toc-title {
+            font-size: 28pt;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 15px;
+        }
+
+        .toc-item {
+            margin: 15px 0;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toc-item-title {
+            font-size: 12pt;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        .toc-item-page {
+            font-size: 11pt;
+            color: #666;
+        }
+
+        h1 {
+            font-size: 32pt;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 40px 0 25px 0;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #2563eb;
+            page-break-after: avoid;
+        }
+
+        h2 {
+            font-size: 24pt;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 35px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            font-size: 16pt;
+            font-weight: 600;
+            color: #2563eb;
+            margin: 25px 0 15px 0;
+            page-break-after: avoid;
+        }
+
+        h4 {
+            font-size: 13pt;
+            font-weight: 600;
+            color: #4b5563;
+            margin: 20px 0 12px 0;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin: 12px 0;
+            text-align: justify;
+            font-size: 11pt;
+        }
+
+        .domain-section {
+            page-break-before: always;
+            margin-bottom: 40px;
+        }
+
+        .story-card {
+            background: #f8f9fa;
+            border-left: 5px solid #2563eb;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+
+        .story-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 15px;
+        }
+
+        .story-id {
+            font-size: 14pt;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .story-status {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 10pt;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-superseded {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-deferred {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .story-title {
+            font-size: 18pt;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin: 15px 0;
+        }
+
+        .story-narrative {
+            font-style: italic;
+            color: #4b5563;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-size: 11pt;
+        }
+
+        .criteria-section {
+            margin: 20px 0;
+        }
+
+        .criterion {
+            margin: 12px 0;
+            padding-left: 20px;
+            border-left: 3px solid #93c5fd;
+            page-break-inside: avoid;
+        }
+
+        .criterion-title {
+            font-weight: 600;
+            color: #1e40af;
+            font-size: 11pt;
+            margin-bottom: 8px;
+        }
+
+        .criterion-description {
+            color: #4b5563;
+            font-size: 10pt;
+            line-height: 1.6;
+            margin: 5px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        thead {
+            background: #1e40af;
+            color: white;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 10pt;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background: #eff6ff;
+        }
+
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            page-break-inside: avoid;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            page-break-inside: avoid;
+        }
+
+        .success-box {
+            background: #dcfce7;
+            border-left: 4px solid #16a34a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+            page-break-inside: avoid;
+        }
+
+        .flow-diagram {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            border: 1px solid #e5e7eb;
+            page-break-inside: avoid;
+        }
+
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin: 8px 0;
+            font-size: 10pt;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 9pt;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        .badge-primary {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border-top: 4px solid #2563eb;
+        }
+
+        .stat-number {
+            font-size: 36pt;
+            font-weight: 700;
+            color: #2563eb;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 11pt;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        .domain-overview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            page-break-inside: avoid;
+        }
+
+        .domain-overview h3 {
+            color: white;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            color: #e11d48;
+        }
+
+        .footer-note {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 9pt;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- COVER PAGE -->
+    <div class="cover-page">
+        <div class="cover-title">KudosCourts</div>
+        <div class="cover-subtitle">User Stories & Product Requirements</div>
+        
+        <div class="cover-meta">
+            <div class="cover-meta-item">
+                <span class="cover-meta-label">Checkpoint:</span> 01
+            </div>
+            <div class="cover-meta-item">
+                <span class="cover-meta-label">Date:</span> January 8, 2026
+            </div>
+            <div class="cover-meta-item">
+                <span class="cover-meta-label">Version:</span> 1.0 MVP
+            </div>
+            <div class="cover-meta-item">
+                <span class="cover-meta-label">Total Stories:</span> 24 Stories
+            </div>
+            <div class="cover-meta-item">
+                <span class="cover-meta-label">Status:</span> 19 Active, 3 Superseded, 1 Fixed, 1 Deferred
+            </div>
+        </div>
+
+        <p style="font-size: 12pt; color: #666; margin-top: 60px;">
+            Comprehensive documentation of user stories for KudosCourts MVP,<br/>
+            covering foundation, booking flow, and owner confirmation features.
+        </p>
+    </div>
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="toc">
+        <h1 class="toc-title">Table of Contents</h1>
+        
+        <div class="toc-item">
+            <span class="toc-item-title">1. Executive Summary</span>
+        </div>
+        <div class="toc-item">
+            <span class="toc-item-title">2. Checkpoint Overview</span>
+        </div>
+        <div class="toc-item">
+            <span class="toc-item-title">3. Domain 00: Onboarding (7 Stories)</span>
+        </div>
+        <div class="toc-item">
+            <span class="toc-item-title">4. Domain 01: Organization (1 Story)</span>
+        </div>
+        <div class="toc-item">
+            <span class="toc-item-title">5. Domain 02: Court Creation (4 Stories)</span>
+        </div>
+        <div class="toc-item">
+            <span class="toc-item-title">6. Domain 03: Court Reservation - Original (3 Stories)</span>
+        </div>
+        <div class="toc-item">
+            <span class="toc-item-title">7. Domain 04: Owner Dashboard (1 Story)</span>
+        </div>
+        <div class="toc-item">
+            <span class="toc-item-title">8. Domain 05: Availability Management (2 Stories)</span>
+        </div>
+        <div class="toc-item">
+            <span class="toc-item-title">9. Domain 06: Court Reservation - Simplified (2 Stories)</span>
+        </div>
+        <div class="toc-item">
+            <span class="toc-item-title">10. Domain 07: Owner Confirmation (2 Stories)</span>
+        </div>
+        <div class="toc-item">
+            <span class="toc-item-title">11. Domain 08: Future P2P Flow (Overview)</span>
+        </div>
+        <div class="toc-item">
+            <span class="toc-item-title">12. Implementation Roadmap</span>
+        </div>
+        <div class="toc-item">
+            <span class="toc-item-title">13. Appendices</span>
+        </div>
+    </div>
+
+    <!-- EXECUTIVE SUMMARY -->
+    <div class="domain-section">
+        <h1>1. Executive Summary</h1>
+        
+        <div class="info-box">
+            <h4>Project Overview</h4>
+            <p>
+                KudosCourts is a court booking platform that connects pickleball players with court owners 
+                through a peer-to-peer payment model. This document outlines 24 user stories covering the 
+                complete MVP journey from user onboarding through court booking and owner confirmation.
+            </p>
+        </div>
+
+        <div class="summary-stats">
+            <div class="stat-card">
+                <div class="stat-number">24</div>
+                <div class="stat-label">Total Stories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">9</div>
+                <div class="stat-label">Domains</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">19</div>
+                <div class="stat-label">Active Stories</div>
+            </div>
+        </div>
+
+        <h3>Key Features Covered</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Feature Area</th>
+                    <th>Stories</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>User Onboarding</strong></td>
+                    <td>7</td>
+                    <td><span class="badge badge-success">Complete</span></td>
+                    <td>P0</td>
+                </tr>
+                <tr>
+                    <td><strong>Organization Registration</strong></td>
+                    <td>1</td>
+                    <td><span class="badge badge-success">Complete</span></td>
+                    <td>P0</td>
+                </tr>
+                <tr>
+                    <td><strong>Court Creation</strong></td>
+                    <td>4</td>
+                    <td><span class="badge badge-success">Complete</span></td>
+                    <td>P0</td>
+                </tr>
+                <tr>
+                    <td><strong>Owner Dashboard</strong></td>
+                    <td>1</td>
+                    <td><span class="badge badge-success">Complete</span></td>
+                    <td>P0</td>
+                </tr>
+                <tr>
+                    <td><strong>Availability Management</strong></td>
+                    <td>2</td>
+                    <td><span class="badge badge-warning">Needs Implementation</span></td>
+                    <td>P1</td>
+                </tr>
+                <tr>
+                    <td><strong>Court Reservation</strong></td>
+                    <td>2</td>
+                    <td><span class="badge badge-warning">Needs Implementation</span></td>
+                    <td>P1</td>
+                </tr>
+                <tr>
+                    <td><strong>Owner Confirmation</strong></td>
+                    <td>2</td>
+                    <td><span class="badge badge-warning">Needs Implementation</span></td>
+                    <td>P1</td>
+                </tr>
+                <tr>
+                    <td><strong>P2P Reservation (Future)</strong></td>
+                    <td>1</td>
+                    <td><span class="badge badge-danger">Deferred</span></td>
+                    <td>P2</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Key Architectural Decisions</h3>
+        <ul>
+            <li><strong>Simplified MVP Flow:</strong> Domains 05-07 implement basic end-to-end booking without TTL timers or payment proof uploads, allowing faster shipping while deferring complexity to Domain 08.</li>
+            <li><strong>Backend-First Approach:</strong> Backend implementation for most features is complete. Stories focus on wiring frontend components to existing endpoints.</li>
+            <li><strong>Supersession over Deletion:</strong> Original domain 03 stories are marked superseded but retained for historical reference and context.</li>
+            <li><strong>Domain Split:</strong> Original US-03-03 (owner confirms payment) was split into US-07-01 (view) and US-07-02 (action) for clearer separation of concerns.</li>
+        </ul>
+    </div>
+
+    <!-- CHECKPOINT OVERVIEW -->
+    <div class="domain-section">
+        <h1>2. Checkpoint Overview</h1>
+        
+        <p>
+            <strong>Checkpoint 01</strong> documents all user stories created for the KudosCourts MVP through 
+            the owner confirmation flow. This checkpoint represents the core booking functionality required 
+            for the platform to operate end-to-end.
+        </p>
+
+        <h3>Stories Covered</h3>
+        <p>This checkpoint includes stories from the following domains:</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 15%;">Domain ID</th>
+                    <th style="width: 35%;">Domain Name</th>
+                    <th style="width: 15%;">Stories</th>
+                    <th style="width: 35%;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>00</td>
+                    <td>Onboarding</td>
+                    <td>7 + 1 bug fix</td>
+                    <td><span class="badge badge-success">Complete</span></td>
+                </tr>
+                <tr>
+                    <td>01</td>
+                    <td>Organization</td>
+                    <td>1</td>
+                    <td><span class="badge badge-success">Complete</span></td>
+                </tr>
+                <tr>
+                    <td>02</td>
+                    <td>Court Creation</td>
+                    <td>4</td>
+                    <td><span class="badge badge-success">Complete</span></td>
+                </tr>
+                <tr>
+                    <td>03</td>
+                    <td>Court Reservation (Original)</td>
+                    <td>3</td>
+                    <td><span class="badge badge-danger">Superseded by 06, 07</span></td>
+                </tr>
+                <tr>
+                    <td>04</td>
+                    <td>Owner Dashboard</td>
+                    <td>1</td>
+                    <td><span class="badge badge-success">Complete</span></td>
+                </tr>
+                <tr>
+                    <td>05</td>
+                    <td>Availability Management</td>
+                    <td>2</td>
+                    <td><span class="badge badge-warning">Active - Needs Implementation</span></td>
+                </tr>
+                <tr>
+                    <td>06</td>
+                    <td>Court Reservation (Simplified)</td>
+                    <td>2</td>
+                    <td><span class="badge badge-warning">Active - Needs Implementation</span></td>
+                </tr>
+                <tr>
+                    <td>07</td>
+                    <td>Owner Confirmation</td>
+                    <td>2</td>
+                    <td><span class="badge badge-warning">Active - Needs Implementation</span></td>
+                </tr>
+                <tr>
+                    <td>08</td>
+                    <td>P2P Reservation Confirmation</td>
+                    <td>1 overview</td>
+                    <td><span class="badge badge-danger">Deferred</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Domain Evolution: Supersession Chain</h3>
+        
+        <div class="flow-diagram">
+03-court-reservation (original)
+        │
+        ├── US-03-01 ──► US-06-01 (simplified, free court booking)
+        ├── US-03-02 ──► US-06-02 (simplified, no TTL timer)
+        └── US-03-03 ──► US-07-01 + US-07-02 (split into view + action)
+        </div>
+
+        <h3>New Domain Structure (05-08)</h3>
+        
+        <div class="flow-diagram">
+05-availability-management     06-court-reservation     07-owner-confirmation
+         │                             │                         │
+    Owner creates slots       Player books slots         Owner confirms
+         │                             │                         │
+         └──────────────── Simplified MVP Flow ──────────────────┘
+                                   │
+                                   ▼
+                    08-p2p-reservation-confirmation
+                         (Future: Full TTL, proof upload)
+        </div>
+
+        <div class="warning-box">
+            <h4>Implementation Priority</h4>
+            <p><strong>Next Steps:</strong> Domains 05, 06, and 07 are the highest priority for implementation as they enable the core booking functionality. Backend is largely complete; frontend wiring and one new endpoint (<code>timeSlot.getForCourt</code>) are required.</p>
+        </div>
+
+        <h3>Story Count Summary</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Count</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Total Stories</strong></td>
+                    <td>24</td>
+                    <td>All stories across all domains</td>
+                </tr>
+                <tr>
+                    <td><strong>Active</strong></td>
+                    <td>19</td>
+                    <td>Ready for implementation or complete</td>
+                </tr>
+                <tr>
+                    <td><strong>Superseded</strong></td>
+                    <td>3</td>
+                    <td>US-03-01, US-03-02, US-03-03</td>
+                </tr>
+                <tr>
+                    <td><strong>Fixed</strong></td>
+                    <td>1</td>
+                    <td>00-08 bug fix (legacy dashboard redirect)</td>
+                </tr>
+                <tr>
+                    <td><strong>Deferred</strong></td>
+                    <td>1</td>
+                    <td>08-00 overview (future P2P flow)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- DOMAIN 00: ONBOARDING -->
+    <div class="domain-section">
+        <h1>3. Domain 00: Onboarding</h1>
+        
+        <div class="domain-overview">
+            <h3>Domain Overview</h3>
+            <p>
+                The Onboarding feature domain covers the complete user journey from first visit through 
+                authenticated platform usage. This includes authentication flows (sign up, sign in, sign out), 
+                profile completion, and navigation patterns across all platform areas.
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>Total Stories:</strong> 7 Active + 1 Bug Fix<br/>
+                <strong>Status:</strong> Complete<br/>
+                <strong>PRD Reference:</strong> Sections 3, 4, 5, Journey 1
+            </p>
+        </div>
+
+        <!-- US-00-01 -->
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-00-01</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">User Authentication Flow</div>
+            <div class="story-narrative">
+                As a <strong>user</strong>, I want to <strong>sign up, sign in, and sign out</strong> 
+                so that <strong>I can access platform features like reservations and profile management</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>Acceptance Criteria</h4>
+                
+                <div class="criterion">
+                    <div class="criterion-title">Sign Up (Email/Password)</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on <code>/register</code><br/>
+                        <strong>When</strong> I submit a valid email and password (min 8 characters)<br/>
+                        <strong>Then</strong> my account is created and I see "Check your email for confirmation"
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Sign Up (Magic Link)</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on <code>/magic-link</code><br/>
+                        <strong>When</strong> I submit a valid email<br/>
+                        <strong>Then</strong> a magic link is sent and I see "Check your email for the login link"
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Sign In</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on <code>/login</code> with valid credentials<br/>
+                        <strong>When</strong> I submit the form<br/>
+                        <strong>Then</strong> I am authenticated and redirected to <code>/home</code> (or redirect param if present)
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Sign Out</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am authenticated<br/>
+                        <strong>When</strong> I click "Sign Out" in the user dropdown<br/>
+                        <strong>Then</strong> my session is cleared and I am redirected to <code>/</code>
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Redirect Preservation</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on a protected page as a guest<br/>
+                        <strong>When</strong> I am redirected to <code>/login</code><br/>
+                        <strong>Then</strong> the original URL is preserved in query param<br/>
+                        <strong>And</strong> after successful login I return to that page
+                    </div>
+                </div>
+            </div>
+
+            <h4>Edge Cases</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Behavior</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Invalid email format</td>
+                        <td>Show validation error inline</td>
+                    </tr>
+                    <tr>
+                        <td>Password too short (&lt; 8 chars)</td>
+                        <td>Show validation error inline</td>
+                    </tr>
+                    <tr>
+                        <td>Email already registered</td>
+                        <td>Show "Email already in use" error</td>
+                    </tr>
+                    <tr>
+                        <td>Invalid credentials on login</td>
+                        <td>Show "Invalid email or password" error</td>
+                    </tr>
+                    <tr>
+                        <td>Expired magic link</td>
+                        <td>Show "Link expired, request a new one" with retry CTA</td>
+                    </tr>
+                    <tr>
+                        <td>Network error during auth</td>
+                        <td>Show toast error with retry option</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>UI Components</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Page</th>
+                        <th>Route</th>
+                        <th>Components</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Login</td>
+                        <td><code>/login</code></td>
+                        <td>LoginForm, links to register/magic-link</td>
+                    </tr>
+                    <tr>
+                        <td>Register</td>
+                        <td><code>/register</code></td>
+                        <td>RegisterForm, link to login</td>
+                    </tr>
+                    <tr>
+                        <td>Magic Link</td>
+                        <td><code>/magic-link</code></td>
+                        <td>MagicLinkForm, link to login</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- US-00-02 -->
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-00-02</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">User Completes Profile</div>
+            <div class="story-narrative">
+                As a <strong>user</strong>, I want to <strong>complete my profile with minimal information</strong> 
+                so that <strong>I can make reservations and optionally become a court owner</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>Acceptance Criteria</h4>
+                
+                <div class="criterion">
+                    <div class="criterion-title">View Profile</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am authenticated<br/>
+                        <strong>When</strong> I navigate to <code>/account/profile</code><br/>
+                        <strong>Then</strong> I see my current profile information (display name, email, phone, avatar)
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Update Profile</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on <code>/account/profile</code><br/>
+                        <strong>When</strong> I update any field and click Save<br/>
+                        <strong>Then</strong> my profile is updated and I see a success toast
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Profile Auto-Creation</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am a new user with no profile<br/>
+                        <strong>When</strong> I first access <code>/account/profile</code> or <code>/home</code><br/>
+                        <strong>Then</strong> a profile is automatically created for me (empty fields)
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Minimum Required for Booking</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I try to book a court<br/>
+                        <strong>When</strong> my profile is missing display name AND (email AND phone)<br/>
+                        <strong>Then</strong> I am prompted to complete minimum fields before proceeding
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Become Owner CTA</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on <code>/account/profile</code> and have no organization<br/>
+                        <strong>When</strong> I view the page<br/>
+                        <strong>Then</strong> I see a "Want to list your courts?" CTA section
+                    </div>
+                </div>
+            </div>
+
+            <h4>Profile Fields</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Validation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Display Name</td>
+                        <td>text</td>
+                        <td>For booking</td>
+                        <td>1-100 chars</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>email</td>
+                        <td>Either email or phone</td>
+                        <td>Valid email format</td>
+                    </tr>
+                    <tr>
+                        <td>Phone Number</td>
+                        <td>tel</td>
+                        <td>Either email or phone</td>
+                        <td>Max 20 chars</td>
+                    </tr>
+                    <tr>
+                        <td>Avatar URL</td>
+                        <td>url</td>
+                        <td>No</td>
+                        <td>Valid URL</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <h4>Profile Completeness</h4>
+                <p><strong>Minimum for Booking:</strong></p>
+                <ul>
+                    <li>Display name (required)</li>
+                    <li>Email OR phone (at least one)</li>
+                </ul>
+                <p><strong>Complete Profile:</strong> Display name, Email, Phone, Avatar (optional, not counted)</p>
+            </div>
+        </div>
+
+        <!-- US-00-03 -->
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-00-03</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">User Navigates Public Area</div>
+            <div class="story-narrative">
+                As a <strong>user</strong>, I want to <strong>navigate the public discovery area with clear wayfinding</strong> 
+                so that <strong>I can find courts and understand where I am in the platform</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>Acceptance Criteria</h4>
+                
+                <div class="criterion">
+                    <div class="criterion-title">Navbar (Guest)</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am not authenticated<br/>
+                        <strong>When</strong> I view the discovery navbar<br/>
+                        <strong>Then</strong> I see: Logo (links to <code>/</code>), Browse Courts, Sign In button
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Navbar (Authenticated)</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am authenticated<br/>
+                        <strong>When</strong> I view the discovery navbar<br/>
+                        <strong>Then</strong> I see: Logo (links to <code>/home</code>), Browse Courts, User dropdown<br/>
+                        <strong>And</strong> the dropdown shows: My Reservations, Profile, Owner Dashboard (if owner), Admin Dashboard (if admin), Sign Out
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Logo Navigation</div>
+                    <div class="criterion-description">
+                        Authenticated → Logo clicks navigate to <code>/home</code><br/>
+                        NOT authenticated → Logo clicks navigate to <code>/</code>
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Court Detail Breadcrumbs</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on <code>/courts/[id]</code><br/>
+                        <strong>When</strong> I view the page header<br/>
+                        <strong>Then</strong> I see breadcrumbs: Home &gt; Courts &gt; {Court Name}
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Booking Flow Breadcrumbs</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on <code>/courts/[id]/book/[slotId]</code><br/>
+                        <strong>When</strong> I view the page header<br/>
+                        <strong>Then</strong> I see breadcrumbs: Courts &gt; {Court Name} &gt; Book<br/>
+                        <strong>And</strong> I see a back button to <code>/courts/[id]</code>
+                    </div>
+                </div>
+            </div>
+
+            <h4>Navigation Patterns</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Page</th>
+                        <th>Breadcrumbs</th>
+                        <th>Back Button</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/</code></td>
+                        <td>No</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>/courts</code></td>
+                        <td>No</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>/courts/[id]</code></td>
+                        <td>Home &gt; Courts &gt; {Name}</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>/courts/[id]/book/[slotId]</code></td>
+                        <td>Courts &gt; {Name} &gt; Book</td>
+                        <td>Yes, to <code>/courts/[id]</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Remaining onboarding stories summarized for brevity -->
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-00-04 through US-00-07</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">Additional Onboarding Stories</div>
+            <p style="margin: 15px 0; font-size: 10pt;">
+                The following stories complete the onboarding domain:
+            </p>
+            <ul style="font-size: 10pt;">
+                <li><strong>US-00-04:</strong> User Navigates Account Area (profile, reservations)</li>
+                <li><strong>US-00-05:</strong> Owner Navigates Dashboard (sidebar navigation, breadcrumbs)</li>
+                <li><strong>US-00-06:</strong> Admin Navigates Dashboard (sidebar, claims badge)</li>
+                <li><strong>US-00-07:</strong> Home Page for Authenticated Users (welcome, quick actions, upcoming reservations)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- DOMAIN 01: ORGANIZATION -->
+    <div class="domain-section">
+        <h1>4. Domain 01: Organization</h1>
+        
+        <div class="domain-overview">
+            <h3>Domain Overview</h3>
+            <p>
+                The Organization feature domain covers the self-registration flow for users who want to 
+                become court owners. This enables any authenticated user to create an organization, which 
+                is a prerequisite for listing and managing courts on the platform.
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>Total Stories:</strong> 1 Active<br/>
+                <strong>Status:</strong> Complete<br/>
+                <strong>PRD Reference:</strong> Section 6, Journey 3
+            </p>
+        </div>
+
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-01-01</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">Owner Registers Organization</div>
+            <div class="story-narrative">
+                As a <strong>user</strong>, I want to <strong>create an organization</strong> 
+                so that <strong>I can list and manage my pickleball courts on the platform</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>Acceptance Criteria</h4>
+                
+                <div class="criterion">
+                    <div class="criterion-title">Access Onboarding</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am authenticated and have no organization<br/>
+                        <strong>When</strong> I click the "Become a Court Owner" CTA on <code>/home</code> or <code>/account/profile</code><br/>
+                        <strong>Then</strong> I navigate to <code>/owner/onboarding</code>
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Create Organization</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on <code>/owner/onboarding</code><br/>
+                        <strong>When</strong> I enter an organization name and submit<br/>
+                        <strong>Then</strong> an organization is created with auto-generated slug<br/>
+                        <strong>And</strong> I am redirected to <code>/owner</code>
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Custom Slug</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on <code>/owner/onboarding</code><br/>
+                        <strong>When</strong> I provide a custom slug<br/>
+                        <strong>Then</strong> the system validates it is unique<br/>
+                        <strong>And</strong> uses my custom slug if valid
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Auto-Generated Slug</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I submit organization name "My Sports Complex"<br/>
+                        <strong>When</strong> no custom slug is provided<br/>
+                        <strong>Then</strong> the slug is generated as "my-sports-complex"
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Slug Conflict</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> the slug "my-courts" already exists<br/>
+                        <strong>When</strong> I try to use it<br/>
+                        <strong>Then</strong> the system appends a number: "my-courts-1"
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Already Has Organization</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I already have an organization<br/>
+                        <strong>When</strong> I try to access <code>/owner/onboarding</code><br/>
+                        <strong>Then</strong> I am redirected to <code>/owner</code>
+                    </div>
+                </div>
+            </div>
+
+            <h4>Form Fields</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Validation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Organization Name</td>
+                        <td>text</td>
+                        <td>Yes</td>
+                        <td>1-150 chars</td>
+                    </tr>
+                    <tr>
+                        <td>Slug</td>
+                        <td>text</td>
+                        <td>No</td>
+                        <td>Lowercase, alphanumeric, hyphens only, 1-100 chars</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Post-Creation Flow</h4>
+            <div class="flow-diagram">
+/owner/onboarding → [Create Organization] → /owner (Dashboard) → /owner/courts/new
+            </div>
+
+            <h4>API Endpoint</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Method</th>
+                        <th>Input</th>
+                        <th>Output</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>organization.create</code></td>
+                        <td>Mutation</td>
+                        <td><code>{ name, slug? }</code></td>
+                        <td><code>{ organization, profile }</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- DOMAIN 02: COURT CREATION -->
+    <div class="domain-section">
+        <h1>5. Domain 02: Court Creation</h1>
+        
+        <div class="domain-overview">
+            <h3>Domain Overview</h3>
+            <p>
+                The Court Creation feature domain enables two types of court listings: <strong>Curated Courts</strong> 
+                (created by admins for discovery) and <strong>Owner Courts</strong> (created by owners for reservations).
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>Total Stories:</strong> 4 Active<br/>
+                <strong>Status:</strong> Complete<br/>
+                <strong>PRD Reference:</strong> Section 10, Journeys 3-4
+            </p>
+        </div>
+
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-02-01</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">Admin Creates Curated Court</div>
+            <div class="story-narrative">
+                As an <strong>admin</strong>, I want to <strong>create a curated court listing</strong> 
+                so that <strong>players can discover courts before owners onboard the platform</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>Key Acceptance Criteria</h4>
+                <ul style="font-size: 10pt;">
+                    <li>Access form from <code>/admin/courts</code> via "Add Court" button</li>
+                    <li>Fill required fields (name, address, city) to create court</li>
+                    <li>Court created with <code>type: CURATED</code>, <code>claimStatus: UNCLAIMED</code></li>
+                    <li>Add photos, amenities, and contact socials (Facebook, Viber, Instagram, website)</li>
+                    <li>Court appears in discovery with "Contact to Book" label (not reservable)</li>
+                </ul>
+            </div>
+
+            <h4>Form Fields</h4>
+            <p style="font-size: 10pt; margin: 10px 0;"><strong>Required:</strong> Name, Address, City</p>
+            <p style="font-size: 10pt; margin: 10px 0;"><strong>Optional:</strong> Description, Photos, Amenities, Facebook URL, Viber, Instagram, Website</p>
+        </div>
+
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-02-02</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">Owner Creates Court</div>
+            <div class="story-narrative">
+                As an <strong>organization owner</strong>, I want to <strong>create my own court</strong> 
+                so that <strong>players can discover and book it through the platform</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>Key Acceptance Criteria</h4>
+                <ul style="font-size: 10pt;">
+                    <li>Access form from <code>/owner/courts</code> via "Add Court" button</li>
+                    <li>Fill required fields and submit to create court</li>
+                    <li>Court created with <code>type: RESERVABLE</code>, linked to organization</li>
+                    <li>Configure default pricing (hourly rate and currency)</li>
+                    <li>Redirected to <code>/owner/courts/[id]/slots</code> after creation to manage availability</li>
+                    <li>Court appears in discovery (shows "No availability" until slots are added)</li>
+                    <li>If no organization exists, redirect to <code>/owner/onboarding</code></li>
+                </ul>
+            </div>
+
+            <h4>Post-Creation Flow</h4>
+            <div class="flow-diagram">
+/owner/courts/new → [Create Court] → /owner/courts/[id]/slots → Add time slots
+            </div>
+        </div>
+
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-02-03 & US-02-04</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">Additional Court Creation Stories</div>
+            <ul style="font-size: 10pt; margin: 15px 0;">
+                <li><strong>US-02-03:</strong> Admin Data Entry Form (enhanced form for bulk court data)</li>
+                <li><strong>US-02-04:</strong> CSV Import Script (import courts from spreadsheet)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- DOMAIN 04: OWNER DASHBOARD -->
+    <div class="domain-section">
+        <h1>6. Domain 04: Owner Dashboard</h1>
+        
+        <div class="domain-overview">
+            <h3>Domain Overview</h3>
+            <p>
+                The Owner Dashboard provides organization owners with a real-time overview of their courts, 
+                reservations, and key metrics. This is the central hub for court management.
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>Total Stories:</strong> 1 Active<br/>
+                <strong>Status:</strong> Complete<br/>
+                <strong>PRD Reference:</strong> Section 12, Journey 5
+            </p>
+        </div>
+
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-04-01</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">Owner Views Real Dashboard Data</div>
+            <div class="story-narrative">
+                As an <strong>organization owner</strong>, I want to <strong>view real-time dashboard statistics</strong> 
+                so that <strong>I can monitor my courts' performance and pending reservations</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>Key Metrics Displayed</h4>
+                <ul style="font-size: 10pt;">
+                    <li><strong>Total Courts:</strong> Count of all courts owned</li>
+                    <li><strong>Active Courts:</strong> Courts with at least one available slot</li>
+                    <li><strong>Pending Confirmations:</strong> Count of reservations awaiting payment confirmation</li>
+                    <li><strong>Recent Reservations:</strong> List of latest 5 reservations with status</li>
+                    <li><strong>Quick Actions:</strong> Links to Add Court, Manage Slots, View Reservations</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOMAIN 05: AVAILABILITY MANAGEMENT -->
+    <div class="domain-section">
+        <h1>7. Domain 05: Availability Management</h1>
+        
+        <div class="domain-overview">
+            <h3>Domain Overview</h3>
+            <p>
+                The Availability Management domain enables organization owners to create and manage time slots 
+                for their courts. This is a prerequisite for the reservation flow - courts cannot accept bookings 
+                without available time slots.
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>Total Stories:</strong> 2 Active<br/>
+                <strong>Status:</strong> Needs Implementation<br/>
+                <strong>PRD Reference:</strong> Section 9, Journey 5
+            </p>
+        </div>
+
+        <div class="warning-box">
+            <h4>Implementation Status</h4>
+            <p>
+                <strong>Priority:</strong> P1 - High Priority<br/>
+                <strong>Backend:</strong> Mostly complete (needs <code>getForCourt</code> endpoint)<br/>
+                <strong>Frontend:</strong> UI complete, hooks use mock data, needs wiring to tRPC
+            </p>
+        </div>
+
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-05-01</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">Owner Creates Time Slots</div>
+            <div class="story-narrative">
+                As an <strong>organization owner</strong>, I want to <strong>create time slots for my courts</strong> 
+                so that <strong>players can discover and book availability</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>Acceptance Criteria</h4>
+                
+                <div class="criterion">
+                    <div class="criterion-title">Access Slot Management</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am an owner with at least one court<br/>
+                        <strong>When</strong> I navigate to <code>/owner/courts/[id]/slots</code><br/>
+                        <strong>Then</strong> I see the slot management page with calendar and slot list
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Create Single Slot</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on the slots page<br/>
+                        <strong>When</strong> I click "Add Slot" and enter start time, end time, and optional price<br/>
+                        <strong>Then</strong> a single slot is created with status <code>AVAILABLE</code><br/>
+                        <strong>And</strong> the slot appears in the list immediately
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Create Bulk Slots</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on the slots page<br/>
+                        <strong>When</strong> I click "Add Slots" and configure date range, days of week, time range, duration, and price<br/>
+                        <strong>Then</strong> multiple slots are created based on the configuration<br/>
+                        <strong>And</strong> I see a preview before confirming<br/>
+                        <strong>And</strong> a success toast shows "Created X slots successfully"
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Set Pricing</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am creating slot(s)<br/>
+                        <strong>When</strong> I set a price (priceCents &gt; 0) and currency<br/>
+                        <strong>Then</strong> the slot(s) are created as paid slots<br/>
+                        <strong>When</strong> I leave price empty or set to 0<br/>
+                        <strong>Then</strong> the slot(s) are created as free slots (priceCents = NULL)
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Overlap Validation</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am creating a slot<br/>
+                        <strong>When</strong> the time range overlaps with an existing slot for the same court<br/>
+                        <strong>Then</strong> the creation fails with error "Time slot overlaps with existing slot"<br/>
+                        <strong>And</strong> the error clearly indicates which slot(s) conflict
+                    </div>
+                </div>
+            </div>
+
+            <h4>Frontend Changes Required</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Current State</th>
+                        <th>Action Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>use-slots.ts</code></td>
+                        <td>Returns mock data with setTimeout</td>
+                        <td>Wire to <code>trpc.timeSlot.createBulk</code></td>
+                    </tr>
+                    <tr>
+                        <td>BulkSlotModal</td>
+                        <td>UI complete</td>
+                        <td>Connect to real hook</td>
+                    </tr>
+                    <tr>
+                        <td>SlotList</td>
+                        <td>UI complete</td>
+                        <td>Connect to real data source</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Backend Endpoints</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>timeSlot.create</code></td>
+                        <td><span class="badge badge-success">Complete</span></td>
+                        <td>Single slot creation</td>
+                    </tr>
+                    <tr>
+                        <td><code>timeSlot.createBulk</code></td>
+                        <td><span class="badge badge-success">Complete</span></td>
+                        <td>Max 100 slots per call</td>
+                    </tr>
+                    <tr>
+                        <td><code>timeSlot.getForCourt</code></td>
+                        <td><span class="badge badge-warning">NEW - Needs Creation</span></td>
+                        <td>Get all slots for owner view</td>
+                    </tr>
+                    <tr>
+                        <td><code>timeSlot.block</code></td>
+                        <td><span class="badge badge-success">Complete</span></td>
+                        <td>Block available slot</td>
+                    </tr>
+                    <tr>
+                        <td><code>timeSlot.unblock</code></td>
+                        <td><span class="badge badge-success">Complete</span></td>
+                        <td>Unblock blocked slot</td>
+                    </tr>
+                    <tr>
+                        <td><code>timeSlot.delete</code></td>
+                        <td><span class="badge badge-success">Complete</span></td>
+                        <td>Delete available slot</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-05-02</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">Owner Views and Manages Slots</div>
+            <div class="story-narrative">
+                As an <strong>organization owner</strong>, I want to <strong>view and manage all time slots</strong> 
+                so that <strong>I can block, unblock, or delete slots as needed</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>Key Features</h4>
+                <ul style="font-size: 10pt;">
+                    <li>View all slots across all statuses (AVAILABLE, HELD, BOOKED, BLOCKED)</li>
+                    <li>See player information on booked slots (name, phone from reservation snapshot)</li>
+                    <li>Block/unblock slots for maintenance or private use</li>
+                    <li>Delete available slots</li>
+                    <li>Filter slots by date range and status</li>
+                </ul>
+            </div>
+
+            <h4>Slot Status Reference</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Description</th>
+                        <th>Owner Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>AVAILABLE</code></td>
+                        <td>Open for booking</td>
+                        <td>Block, Delete</td>
+                    </tr>
+                    <tr>
+                        <td><code>HELD</code></td>
+                        <td>Temporarily locked (paid reservation pending)</td>
+                        <td>View player info</td>
+                    </tr>
+                    <tr>
+                        <td><code>BOOKED</code></td>
+                        <td>Confirmed reservation</td>
+                        <td>View player info</td>
+                    </tr>
+                    <tr>
+                        <td><code>BLOCKED</code></td>
+                        <td>Manually blocked by owner</td>
+                        <td>Unblock</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="info-box">
+            <h4>NEW Backend Requirement: timeSlot.getForCourt</h4>
+            <p>
+                The current <code>timeSlot.getAvailable</code> only returns AVAILABLE slots for player discovery. 
+                Owners need to see ALL slots regardless of status.
+            </p>
+            <p style="margin-top: 10px;">
+                <strong>Input:</strong> <code>{ courtId: string, startDate: string, endDate: string }</code><br/>
+                <strong>Output:</strong> <code>TimeSlotWithPlayerInfo[]</code> - includes player name and phone for HELD/BOOKED slots
+            </p>
+        </div>
+    </div>
+
+    <!-- DOMAIN 06: COURT RESERVATION (SIMPLIFIED) -->
+    <div class="domain-section">
+        <h1>8. Domain 06: Court Reservation (Simplified)</h1>
+        
+        <div class="domain-overview">
+            <h3>Domain Overview</h3>
+            <p>
+                The Court Reservation domain enables players to discover and book pickleball courts. This is the 
+                core player-facing booking flow that connects court discovery to confirmed reservations.
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>Total Stories:</strong> 2 Active<br/>
+                <strong>Status:</strong> Needs Implementation<br/>
+                <strong>PRD Reference:</strong> Section 7 (Journeys 2-3), Section 8<br/>
+                <strong>Supersedes:</strong> Domain 03 (US-03-01, US-03-02)
+            </p>
+        </div>
+
+        <div class="warning-box">
+            <h4>Simplified Scope</h4>
+            <p>
+                This version defers TTL timers, payment proof uploads, and expiration handling to Domain 08 
+                (P2P Reservation Confirmation). Focus is on essential end-to-end booking.
+            </p>
+            <p style="margin-top: 10px;">
+                <strong>Deferred to Domain 08:</strong> 15-minute TTL countdown, payment proof upload (reference number, 
+                notes, image), payment instructions display, expiration handling (cron job), T&C acknowledgement UI
+            </p>
+        </div>
+
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-06-01</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">Player Books Free Court</div>
+            <div class="story-narrative">
+                As a <strong>player</strong>, I want to <strong>book a free court slot</strong> 
+                so that <strong>I can reserve court time without any payment</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>User Flow</h4>
+                <div class="flow-diagram">
+/courts (discovery)
+        │
+        ▼
+/courts/[id] (court detail)
+        │
+        ├── View available free slots
+        │
+        ▼
+Click slot → /courts/[id]/book/[slotId]
+        │
+        ▼
+[Reserve] button
+        │
+        ▼
+reservation.create({ timeSlotId })
+        │
+        ▼
+Success → /reservations/[id] (confirmation)
+        │
+        ▼
+Optional: /reservations (my reservations list)
+                </div>
+
+                <h4>Key Acceptance Criteria</h4>
+                
+                <div class="criterion">
+                    <div class="criterion-title">Discover Free Slots</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on a court detail page<br/>
+                        <strong>When</strong> the court has available slots with no price<br/>
+                        <strong>Then</strong> I see time slots with "Free" badge
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Authentication Required</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am NOT authenticated<br/>
+                        <strong>When</strong> I attempt to book a slot<br/>
+                        <strong>Then</strong> I am redirected to <code>/login?redirect=/courts/[id]</code><br/>
+                        <strong>And</strong> after login, I return to the court page
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Profile Requirements</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am authenticated<br/>
+                        <strong>When</strong> I attempt to confirm a booking<br/>
+                        <strong>Then</strong> the system checks for minimum profile (displayName + email or phone)<br/>
+                        <strong>If incomplete,</strong> I am prompted to complete profile first
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Confirm Booking</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am authenticated with complete profile<br/>
+                        <strong>When</strong> I click "Reserve" or "Confirm Booking"<br/>
+                        <strong>Then</strong> a reservation is created via <code>reservation.create({ timeSlotId })</code><br/>
+                        <strong>And</strong> reservation status is immediately <code>CONFIRMED</code><br/>
+                        <strong>And</strong> slot status changes to <code>BOOKED</code><br/>
+                        <strong>And</strong> I see a success message
+                    </div>
+                </div>
+            </div>
+
+            <h4>API Integration</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Input</th>
+                        <th>Response (Free Court)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>reservation.create</code></td>
+                        <td><code>{ timeSlotId: string }</code></td>
+                        <td>Reservation with status <code>CONFIRMED</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <h4>Frontend Hook Status</h4>
+                <p>
+                    <code>useCreateReservation</code> in <code>src/features/reservation/hooks/use-create-reservation.ts</code> 
+                    is already connected to <code>trpc.reservation.create</code>. Verify end-to-end flow works.
+                </p>
+            </div>
+        </div>
+
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-06-02</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">Player Books Paid Court</div>
+            <div class="story-narrative">
+                As a <strong>player</strong>, I want to <strong>book a paid court slot</strong> 
+                so that <strong>I can reserve premium court time with external payment</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>Simplified Paid Booking Flow</h4>
+                <div class="flow-diagram">
+Player selects AVAILABLE slot (priceCents > 0)
+        │
+        ▼
+reservation.create({ timeSlotId })
+        │
+        ▼
+┌───────────────────────────────┐
+│ Reservation: AWAITING_PAYMENT │
+│ Slot: HELD                    │
+└───────────────────────────────┘
+        │
+        ▼
+Player pays externally (GCash, bank, cash)
+        │
+        ▼
+Player clicks "I Have Paid" button
+        │
+        ▼
+reservation.markPayment({ reservationId, termsAccepted: true })
+        │
+        ▼
+┌───────────────────────────────────┐
+│ Reservation: PAYMENT_MARKED_BY_USER│
+│ Slot: HELD (still)                │
+└───────────────────────────────────┘
+        │
+        ▼
+Awaiting owner confirmation...
+(See Domain 07: Owner Confirmation)
+                </div>
+
+                <h4>Key Acceptance Criteria</h4>
+                
+                <div class="criterion">
+                    <div class="criterion-title">View Pricing</div>
+                    <div class="criterion-description">
+                        See time slots with price badges (e.g., "₱200/hr")
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Initiate Booking</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am authenticated with complete profile<br/>
+                        <strong>When</strong> I click a paid slot and confirm<br/>
+                        <strong>Then</strong> reservation is created with status <code>AWAITING_PAYMENT</code><br/>
+                        <strong>And</strong> slot status changes to <code>HELD</code>
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">View Payment Instructions (Simplified)</div>
+                    <div class="criterion-description">
+                        <strong>Redirected to</strong> <code>/reservations/[id]/payment</code><br/>
+                        <strong>See:</strong> Amount due, basic payment methods info<br/>
+                        <strong>Note:</strong> Detailed payment instructions deferred to Domain 08
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Mark as Paid</div>
+                    <div class="criterion-description">
+                        <strong>When</strong> Player clicks "I Have Paid" button<br/>
+                        <strong>Then</strong> Status changes to <code>PAYMENT_MARKED_BY_USER</code><br/>
+                        <strong>And</strong> Player sees "Awaiting confirmation" message
+                    </div>
+                </div>
+            </div>
+
+            <h4>Reservation Status Reference</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Description</th>
+                        <th>Slot State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>CREATED</code></td>
+                        <td>Initial (transitional)</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td><code>AWAITING_PAYMENT</code></td>
+                        <td>Paid court, waiting for player</td>
+                        <td>HELD</td>
+                    </tr>
+                    <tr>
+                        <td><code>PAYMENT_MARKED_BY_USER</code></td>
+                        <td>Player clicked "I Have Paid"</td>
+                        <td>HELD</td>
+                    </tr>
+                    <tr>
+                        <td><code>CONFIRMED</code></td>
+                        <td>Reservation complete</td>
+                        <td>BOOKED</td>
+                    </tr>
+                    <tr>
+                        <td><code>CANCELLED</code></td>
+                        <td>Cancelled by player or owner</td>
+                        <td>AVAILABLE</td>
+                    </tr>
+                    <tr>
+                        <td><code>EXPIRED</code></td>
+                        <td>TTL expired (deferred to Domain 08)</td>
+                        <td>AVAILABLE</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Frontend Hooks Status</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hook</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>useCreateReservation</code></td>
+                        <td><span class="badge badge-success">Connected</span></td>
+                        <td>Verify works with paid slots</td>
+                    </tr>
+                    <tr>
+                        <td><code>useMarkPayment</code></td>
+                        <td><span class="badge badge-warning">May need creation</span></td>
+                        <td>Check if exists, create if missing</td>
+                    </tr>
+                    <tr>
+                        <td><code>useMyReservations</code></td>
+                        <td><span class="badge badge-success">Connected</span></td>
+                        <td>Verify status transitions</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- DOMAIN 07: OWNER CONFIRMATION -->
+    <div class="domain-section">
+        <h1>9. Domain 07: Owner Confirmation</h1>
+        
+        <div class="domain-overview">
+            <h3>Domain Overview</h3>
+            <p>
+                The Owner Confirmation domain enables organization owners to review and action pending reservations. 
+                When a player books a paid court and marks payment as complete, the owner must confirm (or reject) 
+                the reservation to finalize the booking.
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>Total Stories:</strong> 2 Active<br/>
+                <strong>Status:</strong> Needs Implementation<br/>
+                <strong>PRD Reference:</strong> Section 7 Journey 4<br/>
+                <strong>Supersedes:</strong> Part of US-03-03 (split into view and action)
+            </p>
+        </div>
+
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-07-01</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">Owner Views Pending Reservations</div>
+            <div class="story-narrative">
+                As an <strong>organization owner</strong>, I want to <strong>view pending reservations with full details</strong> 
+                so that <strong>I can review booking requests and take appropriate action</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>Simplified Flow</h4>
+                <div class="flow-diagram">
+[06] Player books paid court
+        │
+        ▼
+┌───────────────────────────┐
+│ PAYMENT_MARKED_BY_USER    │
+│ Slot: HELD                │
+└───────────────────────────┘
+        │
+        ▼
+[07] Owner views pending reservations
+        │
+        ├── Player name, email, phone
+        ├── Court name
+        ├── Slot date/time
+        ├── Amount
+        │
+        ▼
+┌─────────────────────────────────────────┐
+│ Owner Action                            │
+│                                         │
+│ [Confirm Payment]    [Reject]           │
+└─────────────────────────────────────────┘
+        │                    │
+        │                    │
+        ▼                    ▼
+┌─────────────────┐   ┌─────────────────┐
+│ CONFIRMED       │   │ CANCELLED       │
+│ Slot: BOOKED    │   │ Slot: AVAILABLE │
+└─────────────────┘   └─────────────────┘
+                </div>
+
+                <h4>Key Acceptance Criteria</h4>
+                
+                <div class="criterion">
+                    <div class="criterion-title">Access Reservations Page</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am an authenticated owner with organization<br/>
+                        <strong>When</strong> I navigate to <code>/owner/reservations</code><br/>
+                        <strong>Then</strong> I see a list of my organization's reservations
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Filter by Status</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on the reservations page<br/>
+                        <strong>When</strong> I use the status filter<br/>
+                        <strong>Then</strong> I can filter by: All, Pending, Confirmed, Cancelled<br/>
+                        <strong>And</strong> "Pending" shows <code>PAYMENT_MARKED_BY_USER</code> reservations
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">View Enriched Data</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am viewing a reservation<br/>
+                        <strong>Then</strong> I see:<br/>
+                        - <strong>Player info:</strong> Name, email, phone (from snapshot)<br/>
+                        - <strong>Court:</strong> Court name<br/>
+                        - <strong>Slot:</strong> Date, start time, end time<br/>
+                        - <strong>Amount:</strong> Price in formatted currency (e.g., "₱200")<br/>
+                        - <strong>Status:</strong> Badge showing current status<br/>
+                        - <strong>Created:</strong> When the reservation was made
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Pending Badge on Sidebar</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I have pending reservations<br/>
+                        <strong>When</strong> I view the owner sidebar<br/>
+                        <strong>Then</strong> I see a badge count on "Reservations" menu item<br/>
+                        <strong>And</strong> the count matches actual pending count
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Dashboard Stat</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am on <code>/owner</code> dashboard<br/>
+                        <strong>When</strong> I view the stats cards<br/>
+                        <strong>Then</strong> I see "Pending Confirmations: N" with real count<br/>
+                        <strong>And</strong> clicking navigates to <code>/owner/reservations?status=pending</code>
+                    </div>
+                </div>
+            </div>
+
+            <h4>Data Requirements: Enriched Reservation DTO</h4>
+            <div class="info-box">
+                <p><strong>Backend needs to return enriched data including:</strong></p>
+                <ul style="font-size: 10pt;">
+                    <li>Player info: name, email, phone (from snapshots)</li>
+                    <li>Court info: courtId, courtName (joined)</li>
+                    <li>Slot info: startTime, endTime (joined)</li>
+                    <li>Pricing: amountCents, currency (from slot)</li>
+                    <li>Metadata: createdAt</li>
+                </ul>
+            </div>
+
+            <h4>Backend Enhancement Required</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Current Status</th>
+                        <th>Enhancement Needed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>reservationOwner.getForOrganization</code></td>
+                        <td><span class="badge badge-warning">Missing Data</span></td>
+                        <td>Add court name, slot time, amount by joining related tables</td>
+                    </tr>
+                    <tr>
+                        <td><code>reservationOwner.getPendingCount</code></td>
+                        <td><span class="badge badge-success">Complete</span></td>
+                        <td>No changes needed</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Known Gap</h4>
+            <p style="font-size: 10pt; margin: 10px 0;">
+                Current <code>useOwnerReservations</code> hook maps data with placeholders:
+                <code>courtName: "Court"</code>, <code>startTime: "--:--"</code>, <code>endTime: "--:--"</code>, 
+                <code>amountCents: 0</code>. This will be fixed when backend is enhanced.
+            </p>
+        </div>
+
+        <div class="story-card">
+            <div class="story-header">
+                <span class="story-id">US-07-02</span>
+                <span class="story-status status-active">Active</span>
+            </div>
+            <div class="story-title">Owner Confirms or Rejects Reservation</div>
+            <div class="story-narrative">
+                As an <strong>organization owner</strong>, I want to <strong>confirm or reject payment for reservations</strong> 
+                so that <strong>reservations are finalized or slots are released</strong>.
+            </div>
+            
+            <div class="criteria-section">
+                <h4>Key Acceptance Criteria</h4>
+                
+                <div class="criterion">
+                    <div class="criterion-title">Confirm Payment</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am viewing a pending reservation<br/>
+                        <strong>When</strong> I click "Confirm Payment"<br/>
+                        <strong>Then</strong> Reservation status → <code>CONFIRMED</code><br/>
+                        <strong>And</strong> Slot status → <code>BOOKED</code><br/>
+                        <strong>And</strong> Success toast shown
+                    </div>
+                </div>
+
+                <div class="criterion">
+                    <div class="criterion-title">Reject Payment</div>
+                    <div class="criterion-description">
+                        <strong>Given</strong> I am viewing a pending reservation<br/>
+                        <strong>When</strong> I click "Reject" and provide a reason<br/>
+                        <strong>Then</strong> Reservation status → <code>CANCELLED</code><br/>
+                        <strong>And</strong> Slot status → <code>AVAILABLE</code><br/>
+                        <strong>And</strong> Confirmation toast shown
+                    </div>
+                </div>
+            </div>
+
+            <h4>Backend Endpoints (Already Complete)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>reservationOwner.confirmPayment</code></td>
+                        <td><span class="badge badge-success">Complete</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>reservationOwner.reject</code></td>
+                        <td><span class="badge badge-success">Complete</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Audit Trail</h4>
+            <p style="font-size: 10pt; margin: 10px 0;">
+                Per PRD Section 15.1, all status transitions are logged in <code>reservation_event</code> table 
+                with reservation ID, from status, to status, triggered by (owner user ID), role, timestamp, and optional notes.
+            </p>
+        </div>
+    </div>
+
+    <!-- DOMAIN 08: FUTURE P2P FLOW -->
+    <div class="domain-section">
+        <h1>10. Domain 08: P2P Reservation Confirmation (Future)</h1>
+        
+        <div class="domain-overview">
+            <h3>Domain Overview</h3>
+            <p>
+                Domain 08 represents the full-featured P2P reservation confirmation flow with TTL timers, 
+                payment proof uploads, and expiration handling. This domain is <strong>deferred to post-MVP</strong>.
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>Total Stories:</strong> 1 Overview<br/>
+                <strong>Status:</strong> Deferred<br/>
+                <strong>PRD Reference:</strong> Section 8 (Complete P2P Flow)
+            </p>
+        </div>
+
+        <div class="warning-box">
+            <h4>Deferred Items</h4>
+            <p>The following features are deferred from Domains 06 and 07 to this future domain:</p>
+            <ul style="font-size: 10pt;">
+                <li><strong>15-minute TTL countdown:</strong> Requires cron job or edge function</li>
+                <li><strong>Payment proof upload:</strong> Reference number, notes, image upload (S3 integration)</li>
+                <li><strong>Payment instructions display:</strong> Needs owner payment info setup</li>
+                <li><strong>Expiration handling:</strong> Auto-release slots after timer expiration</li>
+                <li><strong>P2P verification flow:</strong> Full feature with proof review</li>
+                <li><strong>Email/SMS notifications:</strong> Integration complexity</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h4>Rationale for Deferral</h4>
+            <p>
+                By deferring these features, the MVP can ship with basic end-to-end booking functionality faster. 
+                The simplified flow (Domains 06-07) provides the core value proposition while allowing time to 
+                properly architect timer infrastructure and payment proof handling.
+            </p>
+        </div>
+    </div>
+
+    <!-- IMPLEMENTATION ROADMAP -->
+    <div class="domain-section">
+        <h1>11. Implementation Roadmap</h1>
+        
+        <h3>Current Status</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 30%;">Layer</th>
+                    <th style="width: 20%;">Status</th>
+                    <th style="width: 50%;">Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Database Schema</td>
+                    <td><span class="badge badge-success">Complete</span></td>
+                    <td>All tables exist with proper relationships</td>
+                </tr>
+                <tr>
+                    <td>Backend Repositories</td>
+                    <td><span class="badge badge-success">Complete</span></td>
+                    <td>All CRUD operations implemented</td>
+                </tr>
+                <tr>
+                    <td>Backend Services</td>
+                    <td><span class="badge badge-success">Complete</span></td>
+                    <td>Business logic, ownership verification, validations</td>
+                </tr>
+                <tr>
+                    <td>tRPC Routers</td>
+                    <td><span class="badge badge-warning">Mostly Complete</span></td>
+                    <td>Missing: <code>timeSlot.getForCourt</code>, enhance <code>reservationOwner.getForOrganization</code></td>
+                </tr>
+                <tr>
+                    <td>Frontend UI Components</td>
+                    <td><span class="badge badge-success">Complete</span></td>
+                    <td>All UI components built and styled</td>
+                </tr>
+                <tr>
+                    <td>Frontend Hooks</td>
+                    <td><span class="badge badge-warning">Partial</span></td>
+                    <td><code>use-slots.ts</code> uses mock data, needs wiring</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Implementation Priority</h3>
+        
+        <div class="success-box">
+            <h4>Priority 1: Availability Management (Domain 05)</h4>
+            <ul style="font-size: 10pt;">
+                <li><strong>Backend:</strong> Add <code>timeSlot.getForCourt</code> endpoint</li>
+                <li><strong>Frontend:</strong> Wire <code>use-slots.ts</code> to <code>trpc.timeSlot.createBulk</code></li>
+                <li><strong>Frontend:</strong> Wire <code>useGetSlots</code> to new <code>getForCourt</code> endpoint</li>
+                <li><strong>Testing:</strong> Verify bulk slot creation, overlap detection, pricing</li>
+            </ul>
+            <p style="margin-top: 15px; font-size: 10pt;"><strong>Estimated Effort:</strong> 1-2 days</p>
+        </div>
+
+        <div class="success-box">
+            <h4>Priority 2: Court Reservation (Domain 06)</h4>
+            <ul style="font-size: 10pt;">
+                <li><strong>Frontend:</strong> Verify <code>useCreateReservation</code> works end-to-end</li>
+                <li><strong>Frontend:</strong> Add <code>useMarkPayment</code> hook if missing</li>
+                <li><strong>Testing:</strong> Test free court booking flow</li>
+                <li><strong>Testing:</strong> Test paid court booking → mark payment flow</li>
+            </ul>
+            <p style="margin-top: 15px; font-size: 10pt;"><strong>Estimated Effort:</strong> 1 day</p>
+        </div>
+
+        <div class="success-box">
+            <h4>Priority 3: Owner Confirmation (Domain 07)</h4>
+            <ul style="font-size: 10pt;">
+                <li><strong>Backend:</strong> Enhance <code>reservationOwner.getForOrganization</code> to return enriched data</li>
+                <li><strong>Frontend:</strong> Update <code>useOwnerReservations</code> to use real data (remove placeholders)</li>
+                <li><strong>Testing:</strong> Verify pending reservations display correctly</li>
+                <li><strong>Testing:</strong> Test confirm/reject actions</li>
+            </ul>
+            <p style="margin-top: 15px; font-size: 10pt;"><strong>Estimated Effort:</strong> 1-2 days</p>
+        </div>
+
+        <h3>Total Estimated Effort</h3>
+        <p style="font-size: 12pt; margin: 20px 0;">
+            <strong>3-5 days</strong> to complete implementation of Domains 05, 06, and 07, enabling full end-to-end 
+            booking functionality for the MVP.
+        </p>
+
+        <h3>Open Questions</h3>
+        <ul style="font-size: 10pt;">
+            <li>Should TTL timer be implemented before MVP launch or can it wait?</li>
+            <li>Do we need email/SMS notifications for reservation status changes?</li>
+            <li>What is the minimum viable payment proof? (Currently: just "I Have Paid" button)</li>
+        </ul>
+    </div>
+
+    <!-- APPENDICES -->
+    <div class="domain-section">
+        <h1>12. Appendices</h1>
+        
+        <h3>User Personas</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Persona</th>
+                    <th>Description</th>
+                    <th>Key Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Player</strong></td>
+                    <td>Discovers and books courts through the platform</td>
+                    <td>Browse courts, book slots, mark payment, view reservations</td>
+                </tr>
+                <tr>
+                    <td><strong>Owner</strong></td>
+                    <td>Organization owner who lists and manages courts</td>
+                    <td>Create courts, manage slots, confirm/reject reservations</td>
+                </tr>
+                <tr>
+                    <td><strong>Admin</strong></td>
+                    <td>Platform administrator who manages curated courts and claims</td>
+                    <td>Add curated courts, review claims, manage platform</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Key Flows Summary</h3>
+        
+        <div class="flow-diagram">
+<strong>Flow 1: Player Journey (Free Court)</strong>
+Guest → Sign Up → Complete Profile → Discover Courts → Select Free Slot → Reserve → Confirmed
+
+<strong>Flow 2: Player Journey (Paid Court)</strong>
+Authenticated → Discover Courts → Select Paid Slot → Reserve → Mark Payment → Await Owner Confirmation → Confirmed
+
+<strong>Flow 3: Owner Journey</strong>
+User → Create Organization → Add Court → Create Time Slots → Await Bookings → Confirm Payments
+
+<strong>Flow 4: Admin Journey</strong>
+Admin Login → Add Curated Court → Publish → Players Discover → Contact Owner Externally
+        </div>
+
+        <h3>Technical Architecture Notes</h3>
+        <ul style="font-size: 10pt;">
+            <li><strong>Framework:</strong> Next.js 16 with App Router</li>
+            <li><strong>API Layer:</strong> tRPC for type-safe API calls</li>
+            <li><strong>Database:</strong> PostgreSQL with Drizzle ORM</li>
+            <li><strong>Authentication:</strong> Supabase Auth</li>
+            <li><strong>State Management:</strong> React Query for server state, Zustand for client state</li>
+            <li><strong>Styling:</strong> Tailwind CSS with custom design system</li>
+        </ul>
+
+        <h3>References</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Document</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Product Requirements Document (PRD)</td>
+                    <td><code>business-contexts/kudoscourts-prd-v1.1.md</code></td>
+                </tr>
+                <tr>
+                    <td>Design System</td>
+                    <td><code>business-contexts/kudoscourts-design-system.md</code></td>
+                </tr>
+                <tr>
+                    <td>Server Context</td>
+                    <td><code>agent-contexts/00-01-kudoscourts-server.md</code></td>
+                </tr>
+                <tr>
+                    <td>Agent Plans</td>
+                    <td><code>agent-plans/context.md</code></td>
+                </tr>
+                <tr>
+                    <td>User Stories (Source)</td>
+                    <td><code>agent-plans/user-stories/</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Story ID Index</h3>
+        <p style="font-size: 9pt; margin: 15px 0;">Quick reference for all story IDs in this checkpoint:</p>
+        <table style="font-size: 9pt;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Domain</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>US-00-01</td><td>User Authentication Flow</td><td>00</td><td>Active</td></tr>
+                <tr><td>US-00-02</td><td>User Completes Profile</td><td>00</td><td>Active</td></tr>
+                <tr><td>US-00-03</td><td>User Navigates Public Area</td><td>00</td><td>Active</td></tr>
+                <tr><td>US-00-04</td><td>User Navigates Account Area</td><td>00</td><td>Active</td></tr>
+                <tr><td>US-00-05</td><td>Owner Navigates Dashboard</td><td>00</td><td>Active</td></tr>
+                <tr><td>US-00-06</td><td>Admin Navigates Dashboard</td><td>00</td><td>Active</td></tr>
+                <tr><td>US-00-07</td><td>Home Page for Authenticated Users</td><td>00</td><td>Active</td></tr>
+                <tr><td>00-08</td><td>Bug Fix: Legacy Dashboard Redirect</td><td>00</td><td>Fixed</td></tr>
+                <tr><td>US-01-01</td><td>Owner Registers Organization</td><td>01</td><td>Active</td></tr>
+                <tr><td>US-02-01</td><td>Admin Creates Curated Court</td><td>02</td><td>Active</td></tr>
+                <tr><td>US-02-02</td><td>Owner Creates Court</td><td>02</td><td>Active</td></tr>
+                <tr><td>US-02-03</td><td>Admin Data Entry Form</td><td>02</td><td>Active</td></tr>
+                <tr><td>US-02-04</td><td>CSV Import Script</td><td>02</td><td>Active</td></tr>
+                <tr><td>US-03-01</td><td>Player Books Free Court (Original)</td><td>03</td><td>Superseded by US-06-01</td></tr>
+                <tr><td>US-03-02</td><td>Player Books Paid Court (Original)</td><td>03</td><td>Superseded by US-06-02</td></tr>
+                <tr><td>US-03-03</td><td>Owner Confirms Payment (Original)</td><td>03</td><td>Superseded by US-07-01, US-07-02</td></tr>
+                <tr><td>US-04-01</td><td>Owner Views Real Dashboard Data</td><td>04</td><td>Active</td></tr>
+                <tr><td>US-05-01</td><td>Owner Creates Time Slots</td><td>05</td><td>Active</td></tr>
+                <tr><td>US-05-02</td><td>Owner Views and Manages Slots</td><td>05</td><td>Active</td></tr>
+                <tr><td>US-06-01</td><td>Player Books Free Court</td><td>06</td><td>Active</td></tr>
+                <tr><td>US-06-02</td><td>Player Books Paid Court</td><td>06</td><td>Active</td></tr>
+                <tr><td>US-07-01</td><td>Owner Views Pending Reservations</td><td>07</td><td>Active</td></tr>
+                <tr><td>US-07-02</td><td>Owner Confirms or Rejects Reservation</td><td>07</td><td>Active</td></tr>
+                <tr><td>08-00</td><td>P2P Reservation Confirmation Overview</td><td>08</td><td>Deferred</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer-note">
+        <p>
+            <strong>KudosCourts User Stories - Checkpoint 01</strong><br/>
+            Generated: January 8, 2026<br/>
+            Version: 1.0 MVP<br/>
+            Document Type: Product Requirements & User Stories
+        </p>
+        <p style="margin-top: 15px; font-size: 8pt; color: #999;">
+            This document is intended for internal product team use. It contains comprehensive user stories 
+            for the KudosCourts MVP covering onboarding, court creation, availability management, booking, 
+            and owner confirmation features.
+        </p>
+    </div>
+</body>
+</html>

@@ -1,11 +1,17 @@
-import { eq, and, lt, gt, ne, gte, lte } from "drizzle-orm";
+import { eq, and, lt, gt, ne, gte, lte, notInArray } from "drizzle-orm";
 import {
   timeSlot,
+  reservation,
   type TimeSlotRecord,
   type InsertTimeSlot,
 } from "@/shared/infra/db/schema";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
+
+export interface TimeSlotWithPlayerInfo extends TimeSlotRecord {
+  playerName?: string | null;
+  playerPhone?: string | null;
+}
 
 export interface ITimeSlotRepository {
   findById(id: string, ctx?: RequestContext): Promise<TimeSlotRecord | null>;
@@ -20,6 +26,12 @@ export interface ITimeSlotRepository {
     status?: string,
     ctx?: RequestContext,
   ): Promise<TimeSlotRecord[]>;
+  findByCourtWithReservation(
+    courtId: string,
+    startDate: Date,
+    endDate: Date,
+    ctx?: RequestContext,
+  ): Promise<TimeSlotWithPlayerInfo[]>;
   findAvailable(
     courtId: string,
     startDate: Date,
@@ -109,6 +121,51 @@ export class TimeSlotRepository implements ITimeSlotRepository {
       .from(timeSlot)
       .where(and(...conditions))
       .orderBy(timeSlot.startTime);
+  }
+
+  async findByCourtWithReservation(
+    courtId: string,
+    startDate: Date,
+    endDate: Date,
+    ctx?: RequestContext,
+  ): Promise<TimeSlotWithPlayerInfo[]> {
+    const client = this.getClient(ctx);
+
+    // Left join with reservation to get player info for HELD/BOOKED slots
+    // Only join with active reservations (not EXPIRED or CANCELLED)
+    const result = await client
+      .select({
+        id: timeSlot.id,
+        courtId: timeSlot.courtId,
+        startTime: timeSlot.startTime,
+        endTime: timeSlot.endTime,
+        status: timeSlot.status,
+        priceCents: timeSlot.priceCents,
+        currency: timeSlot.currency,
+        createdAt: timeSlot.createdAt,
+        updatedAt: timeSlot.updatedAt,
+        // Player info from reservation
+        playerName: reservation.playerNameSnapshot,
+        playerPhone: reservation.playerPhoneSnapshot,
+      })
+      .from(timeSlot)
+      .leftJoin(
+        reservation,
+        and(
+          eq(reservation.timeSlotId, timeSlot.id),
+          notInArray(reservation.status, ["EXPIRED", "CANCELLED"]),
+        ),
+      )
+      .where(
+        and(
+          eq(timeSlot.courtId, courtId),
+          gte(timeSlot.startTime, startDate),
+          lte(timeSlot.endTime, endDate),
+        ),
+      )
+      .orderBy(timeSlot.startTime);
+
+    return result;
   }
 
   async findAvailable(

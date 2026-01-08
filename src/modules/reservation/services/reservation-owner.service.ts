@@ -13,6 +13,7 @@ import type {
   ConfirmPaymentDTO,
   RejectReservationDTO,
   GetOrgReservationsDTO,
+  ReservationWithDetails,
 } from "../dtos";
 import {
   ReservationNotFoundError,
@@ -42,7 +43,7 @@ export interface IReservationOwnerService {
   getForOrganization(
     userId: string,
     filters: GetOrgReservationsDTO,
-  ): Promise<ReservationRecord[]>;
+  ): Promise<ReservationWithDetails[]>;
   getPendingCount(userId: string, organizationId: string): Promise<number>;
 }
 
@@ -285,62 +286,24 @@ export class ReservationOwnerService implements IReservationOwnerService {
   async getForOrganization(
     userId: string,
     filters: GetOrgReservationsDTO,
-  ): Promise<ReservationRecord[]> {
+  ): Promise<ReservationWithDetails[]> {
     // Verify user owns this organization
     const org = await this.organizationRepository.findById(
       filters.organizationId,
     );
     if (!org || org.ownerUserId !== userId) {
-      throw new NotCourtOwnerError();
+      throw new NotOrganizationOwnerError();
     }
 
-    // Get all courts for this organization
-    const courts = await this.courtRepository.findByOrganizationId(
+    // Use new repository method with joins for efficient querying
+    return this.reservationRepository.findWithDetailsByOrganization(
       filters.organizationId,
-    );
-
-    // If courtId filter provided, verify it belongs to this org
-    if (filters.courtId) {
-      const courtBelongsToOrg = courts.some((c) => c.id === filters.courtId);
-      if (!courtBelongsToOrg) {
-        throw new CourtNotFoundError(filters.courtId);
-      }
-    }
-
-    // Get time slots for relevant courts
-    const relevantCourts = filters.courtId
-      ? courts.filter((c) => c.id === filters.courtId)
-      : courts;
-
-    const allReservations: ReservationRecord[] = [];
-
-    for (const court of relevantCourts) {
-      const slots = await this.timeSlotRepository.findByCourtAndDateRange(
-        court.id,
-        new Date(0),
-        new Date(8640000000000000),
-      );
-
-      for (const slot of slots) {
-        const reservations = await this.reservationRepository.findByTimeSlotId(
-          slot.id,
-        );
-        const filtered = filters.status
-          ? reservations.filter((r) => r.status === filters.status)
-          : reservations;
-        allReservations.push(...filtered);
-      }
-    }
-
-    // Sort by createdAt desc and apply pagination
-    allReservations.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
-
-    return allReservations.slice(
-      filters.offset,
-      filters.offset + filters.limit,
+      {
+        courtId: filters.courtId,
+        status: filters.status,
+        limit: filters.limit,
+        offset: filters.offset,
+      },
     );
   }
 

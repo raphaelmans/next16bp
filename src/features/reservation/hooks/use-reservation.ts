@@ -1,20 +1,19 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
 import type { ReservationStatus } from "@/shared/components/kudos";
 import type { TimelineItem } from "@/shared/components/kudos/timeline";
 
 /**
  * Hook to fetch a single reservation by ID
- * TODO: Connect to actual tRPC endpoint when backend is ready
+ * Connected to reservation.getById tRPC endpoint
  */
 export function useReservation(id: string) {
+  const trpc = useTRPC();
+
   return useQuery({
-    queryKey: ["reservation", id],
-    queryFn: async () => {
-      // This will be replaced with actual API call
-      return null as ReservationDetail | null;
-    },
+    ...trpc.reservation.getById.queryOptions({ reservationId: id }),
     enabled: !!id,
   });
 }

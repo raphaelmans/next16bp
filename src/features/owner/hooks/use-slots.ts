@@ -1,6 +1,8 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTRPC, useTRPCClient } from "@/trpc/client";
+import { startOfDay, endOfDay } from "date-fns";
 
 export type SlotStatus = "available" | "booked" | "pending" | "blocked";
 
@@ -10,10 +12,10 @@ export interface TimeSlot {
   endTime: Date | string;
   durationMinutes: number;
   status: SlotStatus;
-  priceCents?: number;
-  currency?: string;
-  playerName?: string;
-  playerPhone?: string;
+  priceCents?: number | null;
+  currency?: string | null;
+  playerName?: string | null;
+  playerPhone?: string | null;
 }
 
 interface UseSlotsOptions {
@@ -21,113 +23,220 @@ interface UseSlotsOptions {
   date?: Date;
 }
 
-// Mock data generator
-const generateMockSlots = (date: Date): TimeSlot[] => {
-  const slots: TimeSlot[] = [];
-  const baseDate = new Date(date);
-  baseDate.setHours(6, 0, 0, 0);
+/**
+ * Map backend status (UPPERCASE) to frontend status (lowercase)
+ */
+function mapStatusFromBackend(
+  status: "AVAILABLE" | "HELD" | "BOOKED" | "BLOCKED",
+): SlotStatus {
+  const map: Record<string, SlotStatus> = {
+    AVAILABLE: "available",
+    HELD: "pending",
+    BOOKED: "booked",
+    BLOCKED: "blocked",
+  };
+  return map[status] ?? "available";
+}
 
-  const statuses: SlotStatus[] = ["available", "booked", "pending", "blocked"];
-  const playerNames = [
-    "John Doe",
-    "Jane Smith",
-    "Mike Johnson",
-    "Sarah Wilson",
-  ];
-
-  for (let i = 0; i < 16; i++) {
-    const startTime = new Date(baseDate);
-    startTime.setHours(6 + i);
-    const endTime = new Date(startTime);
-    endTime.setHours(startTime.getHours() + 1);
-
-    const status = statuses[i % 4];
-
-    slots.push({
-      id: `slot-${i}`,
-      startTime: startTime.toISOString(),
-      endTime: endTime.toISOString(),
-      durationMinutes: 60,
-      status,
-      priceCents: status !== "blocked" ? 50000 : undefined,
-      currency: "PHP",
-      playerName:
-        status === "booked" || status === "pending"
-          ? playerNames[i % 4]
-          : undefined,
-      playerPhone:
-        status === "booked" || status === "pending"
-          ? "0917123456" + i
-          : undefined,
-    });
-  }
-
-  return slots;
-};
+/**
+ * Calculate duration in minutes from start/end times
+ */
+function calculateDuration(startTime: string, endTime: string): number {
+  const start = new Date(startTime);
+  const end = new Date(endTime);
+  return Math.round((end.getTime() - start.getTime()) / (1000 * 60));
+}
 
 export function useSlots({ courtId, date }: UseSlotsOptions) {
+  const trpc = useTRPC();
+
+  const selectedDate = date ?? new Date();
+  const startDate = startOfDay(selectedDate);
+  const endDate = endOfDay(selectedDate);
+
   return useQuery({
-    queryKey: ["owner", "slots", courtId, date?.toISOString()],
-    queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      return generateMockSlots(date ?? new Date());
-    },
+    ...trpc.timeSlot.getForCourt.queryOptions({
+      courtId,
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+    }),
     enabled: !!courtId,
+    select: (data): TimeSlot[] =>
+      data.map((slot) => ({
+        id: slot.id,
+        startTime: slot.startTime,
+        endTime: slot.endTime,
+        durationMinutes: calculateDuration(
+          slot.startTime as string,
+          slot.endTime as string,
+        ),
+        status: mapStatusFromBackend(slot.status),
+        priceCents: slot.priceCents,
+        currency: slot.currency,
+        playerName: slot.playerName,
+        playerPhone: slot.playerPhone,
+      })),
   });
 }
 
 export function useBlockSlot() {
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ slotId }: { slotId: string }) => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return { success: true, slotId };
-    },
+    ...trpc.timeSlot.block.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["owner", "slots"] });
+      queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
     },
   });
 }
 
 export function useUnblockSlot() {
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ slotId }: { slotId: string }) => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return { success: true, slotId };
-    },
+    ...trpc.timeSlot.unblock.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["owner", "slots"] });
+      queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
     },
   });
 }
 
 export function useDeleteSlot() {
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ slotId }: { slotId: string }) => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return { success: true, slotId };
-    },
+    ...trpc.timeSlot.delete.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["owner", "slots"] });
+      queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
     },
   });
 }
+
+export interface BulkSlotData {
+  startDate: Date;
+  endDate?: Date;
+  daysOfWeek?: number[];
+  startTime: string; // "HH:mm"
+  endTime: string; // "HH:mm"
+  duration: number; // minutes
+  useDefaultPrice: boolean;
+  customPrice?: number;
+  currency?: string;
+}
+
+/**
+ * Generate slot array from bulk configuration
+ */
+function generateSlotsFromBulkData(
+  courtId: string,
+  data: BulkSlotData,
+): Array<{
+  startTime: string;
+  endTime: string;
+  priceCents: number | null;
+  currency: string | null;
+}> {
+  const slots: Array<{
+    startTime: string;
+    endTime: string;
+    priceCents: number | null;
+    currency: string | null;
+  }> = [];
+
+  const startDateObj = new Date(data.startDate);
+  const endDateObj = data.endDate ? new Date(data.endDate) : startDateObj;
+
+  // Parse time strings
+  const [startHour, startMin] = data.startTime.split(":").map(Number);
+  const [endHour, endMin] = data.endTime.split(":").map(Number);
+
+  // Iterate through dates
+  const currentDate = new Date(startDateObj);
+  while (currentDate <= endDateObj) {
+    // Check if day of week matches (if specified)
+    if (
+      !data.daysOfWeek ||
+      data.daysOfWeek.length === 0 ||
+      data.daysOfWeek.includes(currentDate.getDay())
+    ) {
+      // Generate slots for this day
+      let slotStart = new Date(currentDate);
+      slotStart.setHours(startHour, startMin, 0, 0);
+
+      const dayEnd = new Date(currentDate);
+      dayEnd.setHours(endHour, endMin, 0, 0);
+
+      while (slotStart < dayEnd) {
+        const slotEnd = new Date(slotStart.getTime() + data.duration * 60000);
+        if (slotEnd <= dayEnd) {
+          slots.push({
+            startTime: slotStart.toISOString(),
+            endTime: slotEnd.toISOString(),
+            priceCents: data.useDefaultPrice
+              ? null
+              : data.customPrice
+                ? Math.round(data.customPrice * 100)
+                : null,
+            currency: data.useDefaultPrice ? null : (data.currency ?? null),
+          });
+        }
+        slotStart = slotEnd;
+      }
+    }
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return slots;
+}
+
+export function useCreateBulkSlots(courtId: string) {
+  const client = useTRPCClient();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: BulkSlotData) => {
+      const slots = generateSlotsFromBulkData(courtId, data);
+
+      if (slots.length === 0) {
+        throw new Error("No slots to create with the given configuration");
+      }
+
+      if (slots.length > 100) {
+        throw new Error("Maximum 100 slots can be created at once");
+      }
+
+      // Call the tRPC mutation directly
+      const result = await client.timeSlot.createBulk.mutate({
+        courtId,
+        slots,
+      });
+
+      return { success: true, slotsCreated: result.length };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
+    },
+  });
+}
+
+// DEFERRED: These will be wired in 07-owner-confirmation
+// They call reservation endpoints, not time-slot endpoints
 
 export function useConfirmBooking() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ slotId }: { slotId: string }) => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return { success: true, slotId };
+      // TODO: Wire to reservationOwner.confirmPayment
+      // Need to get reservationId from slot context
+      console.warn("useConfirmBooking not yet implemented - see US-07-02");
+      throw new Error("Not implemented");
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["owner", "slots"] });
+      queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
     },
   });
 }
@@ -143,49 +252,13 @@ export function useRejectBooking() {
       slotId: string;
       reason: string;
     }) => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return { success: true, slotId, reason };
+      // TODO: Wire to reservationOwner.reject
+      // Need to get reservationId from slot context
+      console.warn("useRejectBooking not yet implemented - see US-07-02");
+      throw new Error("Not implemented");
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["owner", "slots"] });
-    },
-  });
-}
-
-export interface BulkSlotData {
-  startDate: Date;
-  endDate?: Date;
-  daysOfWeek?: number[];
-  startTime: string;
-  endTime: string;
-  duration: number;
-  useDefaultPrice: boolean;
-  customPrice?: number;
-}
-
-export function useCreateBulkSlots() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (data: BulkSlotData) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // Calculate number of slots
-      const slotsPerDay = Math.floor(
-        ((parseInt(data.endTime.split(":")[0]) -
-          parseInt(data.startTime.split(":")[0])) *
-          60) /
-          data.duration,
-      );
-      const days = data.endDate
-        ? Math.ceil(
-            (data.endDate.getTime() - data.startDate.getTime()) /
-              (1000 * 60 * 60 * 24),
-          ) + 1
-        : 1;
-      return { success: true, slotsCreated: slotsPerDay * days };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["owner", "slots"] });
+      queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
     },
   });
 }

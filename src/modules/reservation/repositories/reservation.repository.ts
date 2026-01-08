@@ -8,6 +8,7 @@ import {
 } from "@/shared/infra/db/schema";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
+import type { ReservationWithDetails } from "../dtos/reservation-owner.dto";
 
 export interface IReservationRepository {
   findById(id: string, ctx?: RequestContext): Promise<ReservationRecord | null>;
@@ -44,6 +45,16 @@ export interface IReservationRepository {
     )[],
     ctx?: RequestContext,
   ): Promise<number>;
+  findWithDetailsByOrganization(
+    organizationId: string,
+    filters: {
+      courtId?: string;
+      status?: string;
+      limit: number;
+      offset: number;
+    },
+    ctx?: RequestContext,
+  ): Promise<ReservationWithDetails[]>;
   create(
     data: InsertReservation,
     ctx?: RequestContext,
@@ -256,5 +267,77 @@ export class ReservationRepository implements IReservationRepository {
       );
 
     return result[0]?.count ?? 0;
+  }
+
+  /**
+   * Get reservations with slot and court details for an organization
+   * Uses JOINs to avoid N+1 queries
+   */
+  async findWithDetailsByOrganization(
+    organizationId: string,
+    filters: {
+      courtId?: string;
+      status?: string;
+      limit: number;
+      offset: number;
+    },
+    ctx?: RequestContext,
+  ): Promise<ReservationWithDetails[]> {
+    const client = this.getClient(ctx);
+
+    // Build query with joins
+    const conditions = [eq(court.organizationId, organizationId)];
+
+    if (filters.courtId) {
+      conditions.push(eq(court.id, filters.courtId));
+    }
+
+    if (filters.status) {
+      conditions.push(
+        eq(
+          reservation.status,
+          filters.status as
+            | "CREATED"
+            | "AWAITING_PAYMENT"
+            | "PAYMENT_MARKED_BY_USER"
+            | "CONFIRMED"
+            | "EXPIRED"
+            | "CANCELLED",
+        ),
+      );
+    }
+
+    const query = client
+      .select({
+        id: reservation.id,
+        status: reservation.status,
+        playerNameSnapshot: reservation.playerNameSnapshot,
+        playerEmailSnapshot: reservation.playerEmailSnapshot,
+        playerPhoneSnapshot: reservation.playerPhoneSnapshot,
+        cancellationReason: reservation.cancellationReason,
+        createdAt: reservation.createdAt,
+        courtId: court.id,
+        courtName: court.name,
+        slotStartTime: timeSlot.startTime,
+        slotEndTime: timeSlot.endTime,
+        amountCents: timeSlot.priceCents,
+        currency: timeSlot.currency,
+      })
+      .from(reservation)
+      .innerJoin(timeSlot, eq(reservation.timeSlotId, timeSlot.id))
+      .innerJoin(court, eq(timeSlot.courtId, court.id))
+      .where(and(...conditions))
+      .orderBy(desc(reservation.createdAt))
+      .limit(filters.limit)
+      .offset(filters.offset);
+
+    const results = await query;
+
+    return results.map((r) => ({
+      ...r,
+      slotStartTime: r.slotStartTime?.toISOString() ?? "",
+      slotEndTime: r.slotEndTime?.toISOString() ?? "",
+      createdAt: r.createdAt?.toISOString() ?? null,
+    }));
   }
 }

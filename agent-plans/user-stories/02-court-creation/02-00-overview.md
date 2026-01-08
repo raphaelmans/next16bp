@@ -28,11 +28,42 @@ This domain depends on the organization flow (01-organization) and feeds into th
 |----|-------|--------|------------|
 | US-02-01 | Admin Creates Curated Court | Active | - |
 | US-02-02 | Owner Creates Court | Active | - |
+| US-02-03 | Admin Data Entry Form | Active | - |
+| US-02-04 | CSV Import Script | Active | - |
 
 ---
 
 ## Summary
 
-- Total: 2
-- Active: 2
+- Total: 4
+- Active: 4
 - Superseded: 0
+
+---
+
+## New Stories (Data Entry)
+
+### US-02-03: Admin Data Entry Form
+
+A simplified data entry form at `/admin/courts/data-entry` for rapid manual court population. Uses modular admin-specific components (`admin-input.tsx`, `admin-select.tsx`, etc.) that can be reused across other admin forms.
+
+**Key Features:**
+- Simple single-page form (no card sections)
+- Wired to real `admin.court.createCurated` API
+- "Create Another" flow for bulk entry
+- Optional lat/lng with Manila defaults
+
+### US-02-04: CSV Import Script
+
+A CLI script at `scripts/import-curated-courts.ts` for bulk importing courts from CSV files.
+
+**Key Features:**
+- Transaction-safe (rollback on any error)
+- Duplicate detection by name + city
+- Validates all rows before inserting
+- Sample template at `scripts/templates/curated-courts-template.csv`
+
+**Usage:**
+```bash
+npx tsx scripts/import-curated-courts.ts --file ./data/courts.csv
+```

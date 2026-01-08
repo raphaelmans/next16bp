@@ -9,6 +9,7 @@ import {
 import { makeTimeSlotService } from "./factories/time-slot.factory";
 import {
   GetAvailableSlotsSchema,
+  GetSlotsForCourtSchema,
   CreateTimeSlotSchema,
   CreateBulkTimeSlotsSchema,
   UpdateSlotPriceSchema,
@@ -98,6 +99,21 @@ export const timeSlotRouter = router({
       try {
         const service = makeTimeSlotService();
         return await service.getSlotById(input.slotId);
+      } catch (error) {
+        handleTimeSlotError(error);
+      }
+    }),
+
+  /**
+   * Get all time slots for a court (owner only)
+   * Includes player info for HELD/BOOKED slots
+   */
+  getForCourt: protectedProcedure
+    .input(GetSlotsForCourtSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        const service = makeTimeSlotService();
+        return await service.getSlotsForCourt(ctx.userId, input);
       } catch (error) {
         handleTimeSlotError(error);
       }
