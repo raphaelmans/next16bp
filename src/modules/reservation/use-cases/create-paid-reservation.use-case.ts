@@ -7,7 +7,10 @@ import type { IProfileRepository } from "@/modules/profile/repositories/profile.
 import type { ReservationRecord } from "@/shared/infra/db/schema";
 import { SlotNotAvailableError } from "../errors/reservation.errors";
 import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
-import { ProfileNotFoundError } from "@/modules/profile/errors/profile.errors";
+import {
+  ProfileNotFoundError,
+  IncompleteProfileError,
+} from "@/modules/profile/errors/profile.errors";
 import { logger } from "@/shared/infra/logger";
 
 // TTL for paid reservations: 15 minutes
@@ -58,6 +61,11 @@ export class CreatePaidReservationUseCase
       const profile = await this.profileRepository.findById(profileId, ctx);
       if (!profile) {
         throw new ProfileNotFoundError(profileId);
+      }
+
+      // Validate profile completeness
+      if (!profile.displayName || (!profile.email && !profile.phoneNumber)) {
+        throw new IncompleteProfileError();
       }
 
       // Calculate expiration time

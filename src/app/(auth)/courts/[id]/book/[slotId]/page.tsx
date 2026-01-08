@@ -70,7 +70,7 @@ export default function BookSlotPage() {
   ];
 
   const isProfileComplete =
-    !!profile?.displayName && !!profile?.email && !!profile?.phoneNumber;
+    !!profile?.displayName && (!!profile?.email || !!profile?.phoneNumber);
 
   const handleConfirm = async () => {
     try {
@@ -142,7 +142,12 @@ export default function BookSlotPage() {
 
           {/* Profile Preview */}
           <ProfilePreviewCard
-            profile={profile || {}}
+            profile={{
+              displayName: profile?.displayName ?? undefined,
+              email: profile?.email ?? undefined,
+              phone: profile?.phoneNumber ?? undefined,
+              avatarUrl: profile?.avatarUrl ?? undefined,
+            }}
             isComplete={isProfileComplete}
           />
 

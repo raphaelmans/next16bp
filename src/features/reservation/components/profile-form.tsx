@@ -82,8 +82,8 @@ export function ProfileForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Avatar section */}
           <AvatarUpload
-            currentAvatarUrl={profile?.avatarUrl}
-            displayName={profile?.displayName}
+            currentAvatarUrl={profile?.avatarUrl ?? undefined}
+            displayName={profile?.displayName ?? undefined}
             onFileSelect={handleAvatarSelect}
           />
 

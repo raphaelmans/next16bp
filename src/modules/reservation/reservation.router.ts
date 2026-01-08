@@ -22,7 +22,10 @@ import {
   SlotNotAvailableError,
 } from "./errors/reservation.errors";
 import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
-import { ProfileNotFoundError } from "@/modules/profile/errors/profile.errors";
+import {
+  ProfileNotFoundError,
+  IncompleteProfileError,
+} from "@/modules/profile/errors/profile.errors";
 import { AppError } from "@/shared/kernel/errors";
 
 /**
@@ -51,7 +54,8 @@ function handleReservationError(error: unknown): never {
     error instanceof ReservationExpiredError ||
     error instanceof InvalidReservationStatusError ||
     error instanceof TermsNotAcceptedError ||
-    error instanceof SlotNotAvailableError
+    error instanceof SlotNotAvailableError ||
+    error instanceof IncompleteProfileError
   ) {
     throw new TRPCError({
       code: "BAD_REQUEST",
