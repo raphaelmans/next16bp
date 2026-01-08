@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
 
 export type ReservationStatus =
   | "pending"
@@ -35,95 +36,102 @@ interface UseOwnerReservationsOptions {
   dateTo?: Date;
 }
 
-// Mock data generator
-const generateMockReservations = (): Reservation[] => {
-  const statuses: ReservationStatus[] = [
-    "pending",
-    "confirmed",
-    "cancelled",
-    "completed",
-  ];
-  const courts = [
-    { id: "court-1", name: "Court A" },
-    { id: "court-2", name: "Court B" },
-    { id: "court-3", name: "Court C" },
-  ];
-  const players = [
-    { name: "John Doe", email: "john@example.com", phone: "09171234567" },
-    { name: "Jane Smith", email: "jane@example.com", phone: "09181234567" },
-    { name: "Mike Johnson", email: "mike@example.com", phone: "09191234567" },
-    { name: "Sarah Wilson", email: "sarah@example.com", phone: "09201234567" },
-    { name: "David Brown", email: "david@example.com", phone: "09211234567" },
-  ];
+/**
+ * Map frontend status to backend enum value
+ */
+function mapStatusToBackend(
+  status?: ReservationStatus,
+):
+  | "CREATED"
+  | "AWAITING_PAYMENT"
+  | "PAYMENT_MARKED_BY_USER"
+  | "CONFIRMED"
+  | "EXPIRED"
+  | "CANCELLED"
+  | undefined {
+  if (!status) return undefined;
+  const map: Record<
+    ReservationStatus,
+    | "CREATED"
+    | "AWAITING_PAYMENT"
+    | "PAYMENT_MARKED_BY_USER"
+    | "CONFIRMED"
+    | "EXPIRED"
+    | "CANCELLED"
+  > = {
+    pending: "PAYMENT_MARKED_BY_USER",
+    confirmed: "CONFIRMED",
+    cancelled: "CANCELLED",
+    completed: "CONFIRMED", // No separate completed status
+  };
+  return map[status];
+}
 
-  const reservations: Reservation[] = [];
-  const today = new Date();
+/**
+ * Map backend status to frontend status
+ */
+function mapStatusFromBackend(status: string): ReservationStatus {
+  const map: Record<string, ReservationStatus> = {
+    CREATED: "pending",
+    AWAITING_PAYMENT: "pending",
+    PAYMENT_MARKED_BY_USER: "pending",
+    CONFIRMED: "confirmed",
+    CANCELLED: "cancelled",
+    EXPIRED: "cancelled",
+  };
+  return map[status] ?? "pending";
+}
 
-  for (let i = 0; i < 25; i++) {
-    const court = courts[i % courts.length];
-    const player = players[i % players.length];
-    const status = statuses[i % statuses.length];
-    const daysOffset = Math.floor(i / 5) - 2; // Some past, some future
-    const date = new Date(today);
-    date.setDate(date.getDate() + daysOffset);
-
-    const hour = 6 + (i % 12);
-
-    reservations.push({
-      id: `reservation-${i}`,
-      courtId: court.id,
-      courtName: court.name,
-      playerName: player.name,
-      playerEmail: player.email,
-      playerPhone: player.phone,
-      date: date.toISOString().split("T")[0],
-      startTime: `${hour.toString().padStart(2, "0")}:00`,
-      endTime: `${(hour + 1).toString().padStart(2, "0")}:00`,
-      amountCents: 50000 + (i % 3) * 10000,
-      currency: "PHP",
-      status,
-      paymentReference:
-        status === "pending" || status === "confirmed"
-          ? `GC${Date.now()}${i}`
-          : undefined,
-      paymentProofUrl:
-        status === "pending"
-          ? "https://placehold.co/400x600?text=Receipt"
-          : undefined,
-      notes: i % 3 === 0 ? "Please prepare the court early" : undefined,
-      createdAt: new Date(today.getTime() - i * 3600000).toISOString(),
-    });
-  }
-
-  return reservations;
-};
-
+/**
+ * Fetch reservations for an organization
+ * Uses reservationOwner.getForOrganization endpoint
+ *
+ * Note: The backend returns basic ReservationRecord without slot/court details.
+ * For now, we display what data we have - court/time info will show placeholder
+ * until the backend is enhanced to return richer data.
+ */
 export function useOwnerReservations(
+  organizationId: string | null,
   options: UseOwnerReservationsOptions = {},
 ) {
-  const { courtId, status, search, dateFrom, dateTo } = options;
+  const trpc = useTRPC();
+  const { courtId, status, search } = options;
 
   return useQuery({
-    queryKey: [
-      "owner",
-      "reservations",
-      courtId,
-      status,
-      search,
-      dateFrom?.toISOString(),
-      dateTo?.toISOString(),
-    ],
-    queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      let reservations = generateMockReservations();
+    ...trpc.reservationOwner.getForOrganization.queryOptions({
+      organizationId: organizationId!,
+      courtId: courtId || undefined,
+      status: status !== "all" ? mapStatusToBackend(status) : undefined,
+      limit: 100,
+      offset: 0,
+    }),
+    enabled: !!organizationId,
+    select: (data) => {
+      // Map backend records to frontend Reservation format
+      let reservations: Reservation[] = data.map((r) => ({
+        id: r.id,
+        // These will be empty/placeholder until backend provides slot/court data
+        courtId: "",
+        courtName: "Court",
+        playerName: r.playerNameSnapshot ?? "Unknown",
+        playerEmail: r.playerEmailSnapshot ?? "",
+        playerPhone: r.playerPhoneSnapshot ?? "",
+        // Using createdAt as date for now since we don't have slot data
+        date: r.createdAt
+          ? new Date(r.createdAt).toISOString().split("T")[0]
+          : "",
+        startTime: "--:--",
+        endTime: "--:--",
+        amountCents: 0,
+        currency: "PHP",
+        status: mapStatusFromBackend(r.status),
+        paymentReference: undefined,
+        paymentProofUrl: undefined,
+        notes: r.cancellationReason ?? undefined,
+        createdAt: r.createdAt ?? "",
+      }));
 
-      // Apply filters
-      if (courtId) {
-        reservations = reservations.filter((r) => r.courtId === courtId);
-      }
-      if (status && status !== "all") {
-        reservations = reservations.filter((r) => r.status === status);
-      }
+      // Apply client-side search filter if provided
       if (search) {
         const searchLower = search.toLowerCase();
         reservations = reservations.filter(
@@ -133,66 +141,67 @@ export function useOwnerReservations(
             r.playerPhone.includes(search),
         );
       }
-      if (dateFrom) {
-        reservations = reservations.filter((r) => new Date(r.date) >= dateFrom);
-      }
-      if (dateTo) {
-        reservations = reservations.filter((r) => new Date(r.date) <= dateTo);
-      }
 
       return reservations;
     },
   });
 }
 
+/**
+ * Confirm payment for a reservation
+ */
 export function useConfirmReservation() {
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ reservationId }: { reservationId: string }) => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return { success: true, reservationId };
-    },
+    ...trpc.reservationOwner.confirmPayment.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["owner", "reservations"] });
+      queryClient.invalidateQueries({
+        queryKey: ["reservationOwner"],
+      });
     },
   });
 }
 
+/**
+ * Reject a reservation
+ */
 export function useRejectReservation() {
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      reservationId,
-      reason,
-    }: {
-      reservationId: string;
-      reason: string;
-    }) => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return { success: true, reservationId, reason };
-    },
+    ...trpc.reservationOwner.reject.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["owner", "reservations"] });
+      queryClient.invalidateQueries({
+        queryKey: ["reservationOwner"],
+      });
     },
   });
 }
 
-// Helper to get count by status
-export function useReservationCounts() {
-  return useQuery({
-    queryKey: ["owner", "reservations", "counts"],
-    queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      const reservations = generateMockReservations();
-      return {
-        pending: reservations.filter((r) => r.status === "pending").length,
-        confirmed: reservations.filter((r) => r.status === "confirmed").length,
-        cancelled: reservations.filter((r) => r.status === "cancelled").length,
-        completed: reservations.filter((r) => r.status === "completed").length,
-        total: reservations.length,
-      };
-    },
+/**
+ * Get reservation counts
+ */
+export function useReservationCounts(organizationId: string | null) {
+  const trpc = useTRPC();
+
+  const { data: pendingCount } = useQuery({
+    ...trpc.reservationOwner.getPendingCount.queryOptions({
+      organizationId: organizationId!,
+    }),
+    enabled: !!organizationId,
   });
+
+  return {
+    data: {
+      pending: pendingCount ?? 0,
+      // Other counts would need additional queries or backend support
+      confirmed: 0,
+      cancelled: 0,
+      completed: 0,
+      total: pendingCount ?? 0,
+    },
+  };
 }

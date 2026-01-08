@@ -2,10 +2,15 @@
 
 > Date: 2025-01-07
 > Previous: 00-03-ui-dev2-checklist-complete.md
+> Next: 00-05-onboarding-implementation.md
 
 ## Summary
 
 Implemented UX flow improvements for KudosCourts, including a discovery-focused landing page, authenticated user navigation, role-based dashboard access, and loading/error states. Created detailed planning documents in `agent-plans/01-ui/` and executed Dev Checklists 1 and 2.
+
+**See also:**
+- [00-05-onboarding-implementation.md](./00-05-onboarding-implementation.md) - Detailed onboarding user stories implementation status
+- [00-06-feature-implementation-status.md](./00-06-feature-implementation-status.md) - Organization, court creation, and reservation features
 
 ## Planning Documents Created
 

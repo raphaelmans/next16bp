@@ -10,6 +10,7 @@ import {
   useOwnerCourts,
   useDeactivateCourt,
 } from "@/features/owner/hooks/use-owner-courts";
+import { useOwnerOrganization } from "@/features/owner/hooks";
 import { useSession, useLogout } from "@/features/auth";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,31 +22,77 @@ export default function OwnerCourtsPage() {
   const deactivateMutation = useDeactivateCourt();
   const logoutMutation = useLogout();
 
+  // Use real organization from hook
+  const {
+    organization,
+    organizations,
+    isLoading: orgLoading,
+  } = useOwnerOrganization();
+
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = "/login";
   };
 
   const handleDeactivate = (courtId: string) => {
-    deactivateMutation.mutate(courtId, {
-      onSuccess: () => {
-        toast.success("Court deactivated successfully");
+    deactivateMutation.mutate(
+      { courtId },
+      {
+        onSuccess: () => {
+          toast.success("Court deactivated successfully");
+        },
+        onError: () => {
+          toast.error("Failed to deactivate court");
+        },
       },
-      onError: () => {
-        toast.error("Failed to deactivate court");
-      },
-    });
+    );
   };
 
-  // Mock organization data
-  const mockOrg = { id: "1", name: "My Sports Complex" };
+  // Show loading state while organization loads
+  if (orgLoading) {
+    return (
+      <DashboardLayout
+        sidebar={
+          <OwnerSidebar
+            currentOrganization={{ id: "", name: "Loading..." }}
+            organizations={[]}
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+          />
+        }
+        navbar={
+          <OwnerNavbar
+            organizationName="Loading..."
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+            onLogout={handleLogout}
+          />
+        }
+      >
+        <div className="space-y-6">
+          <Skeleton className="h-8 w-64" />
+          <div className="space-y-4">
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-16 w-full" />
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout
       sidebar={
         <OwnerSidebar
-          currentOrganization={mockOrg}
-          organizations={[mockOrg]}
+          currentOrganization={
+            organization ?? { id: "", name: "No Organization" }
+          }
+          organizations={organizations}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,
@@ -54,7 +101,7 @@ export default function OwnerCourtsPage() {
       }
       navbar={
         <OwnerNavbar
-          organizationName={mockOrg.name}
+          organizationName={organization?.name ?? "No Organization"}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,

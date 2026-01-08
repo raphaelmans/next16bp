@@ -2,10 +2,14 @@
 
 > Date: 2025-01-07
 > Previous: 00-00-server-auth-conventions.md
+> Next: 00-02-ui-backend-integration.md
 
 ## Summary
 
 Completed full backend implementation for KudosCourts - a Philippine pickleball court booking platform. Implemented 14 modules following layered architecture: court discovery, reservations, time slots, claims, admin, and TTL expiration job. Created seed script with 8 Philippine courts.
+
+**See also:**
+- [00-06-feature-implementation-status.md](./00-06-feature-implementation-status.md) - User story implementation status for organization, courts, and reservations
 
 ## Changes Made
 

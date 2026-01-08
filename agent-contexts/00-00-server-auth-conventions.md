@@ -2,10 +2,14 @@
 
 > Date: 2025-01-06
 > Previous: None (initial)
+> Next: 00-01-kudoscourts-server.md
 
 ## Summary
 
 Implemented complete server-side authentication with Supabase following layered architecture conventions. Fixed circular dependencies, migrated to Next.js 16 proxy convention, and aligned documentation with implementation.
+
+**See also:**
+- [00-05-onboarding-implementation.md](./00-05-onboarding-implementation.md) - Authentication user story implementation details (US-00-01)
 
 ## Changes Made
 

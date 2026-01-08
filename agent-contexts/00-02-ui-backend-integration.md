@@ -2,10 +2,14 @@
 
 > Date: 2025-01-07
 > Previous: 00-01-kudoscourts-server.md
+> Next: 00-03-ui-dev2-checklist-complete.md
 
 ## Summary
 
 Connected frontend hooks to real tRPC backend endpoints across discovery, reservation, and admin features. Fixed type mismatches, updated API call parameters, and marked UI Dev 1 & 2 checklists as complete. Build passes with no TypeScript errors.
+
+**See also:**
+- [00-06-feature-implementation-status.md](./00-06-feature-implementation-status.md) - Detailed user story coverage for reservations and court features
 
 ## Changes Made
 

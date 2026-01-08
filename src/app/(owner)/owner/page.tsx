@@ -1,31 +1,28 @@
 "use client";
 
-import { MapPin, CalendarDays, Clock, DollarSign } from "lucide-react";
+import { MapPin, CalendarDays } from "lucide-react";
 import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
 import {
   OwnerSidebar,
   OwnerNavbar,
   StatsCard,
   PendingActions,
-  RecentActivity,
-  TodaysBookings,
+  ComingSoonCard,
 } from "@/features/owner";
-import {
-  useOwnerStats,
-  useRecentActivity,
-  useTodaysBookings,
-} from "@/features/owner/hooks";
+import { useOwnerStats, useOwnerOrganization } from "@/features/owner/hooks";
 import { useSession, useLogout } from "@/features/auth";
-import { formatCurrency } from "@/shared/lib/format";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function OwnerDashboardPage() {
   const { data: user } = useSession();
-  const { data: stats, isLoading: statsLoading } = useOwnerStats();
-  const { data: activities, isLoading: activitiesLoading } =
-    useRecentActivity();
-  const { data: todaysBookings, isLoading: bookingsLoading } =
-    useTodaysBookings();
+  const {
+    organization,
+    organizations,
+    isLoading: orgLoading,
+  } = useOwnerOrganization();
+  const { data: stats, isLoading: statsLoading } = useOwnerStats(
+    organization?.id ?? null,
+  );
   const logoutMutation = useLogout();
 
   const handleLogout = async () => {
@@ -33,18 +30,53 @@ export default function OwnerDashboardPage() {
     window.location.href = "/login";
   };
 
-  // Mock organization data - replace with actual data
-  const mockOrg = {
-    id: "1",
-    name: "My Sports Complex",
-  };
+  // Show loading skeleton while organization data loads
+  if (orgLoading) {
+    return (
+      <DashboardLayout
+        sidebar={
+          <OwnerSidebar
+            currentOrganization={{ id: "", name: "Loading..." }}
+            organizations={[]}
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+          />
+        }
+        navbar={
+          <OwnerNavbar
+            organizationName="Loading..."
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+            onLogout={handleLogout}
+          />
+        }
+      >
+        <div className="space-y-6">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-16 w-full" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Skeleton className="h-32" />
+            <Skeleton className="h-32" />
+            <Skeleton className="h-32" />
+            <Skeleton className="h-32" />
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout
       sidebar={
         <OwnerSidebar
-          currentOrganization={mockOrg}
-          organizations={[mockOrg]}
+          currentOrganization={
+            organization ?? { id: "", name: "No Organization" }
+          }
+          organizations={organizations}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,
@@ -53,7 +85,7 @@ export default function OwnerDashboardPage() {
       }
       navbar={
         <OwnerNavbar
-          organizationName={mockOrg.name}
+          organizationName={organization?.name ?? "No Organization"}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,
@@ -74,7 +106,7 @@ export default function OwnerDashboardPage() {
         </div>
 
         {/* Pending actions alert */}
-        <PendingActions pendingCount={stats?.pendingBookings ?? 0} />
+        <PendingActions pendingCount={stats?.pendingReservations ?? 0} />
 
         {/* Stats cards */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -95,38 +127,26 @@ export default function OwnerDashboardPage() {
               />
               <StatsCard
                 title="Pending Bookings"
-                value={stats?.pendingBookings ?? 0}
+                value={stats?.pendingReservations ?? 0}
                 icon={CalendarDays}
                 href="/owner/reservations?status=pending"
               />
-              <StatsCard
-                title="Today's Bookings"
-                value={stats?.todaysBookings ?? 0}
-                icon={Clock}
-              />
-              <StatsCard
-                title="Revenue (Month)"
-                value={formatCurrency(stats?.monthlyRevenue ?? 0)}
-                icon={DollarSign}
-                trend={{ value: 12, label: "vs last month" }}
-              />
+              <ComingSoonCard title="Today's Bookings" />
+              <ComingSoonCard title="Monthly Revenue" />
             </>
           )}
         </div>
 
-        {/* Activity and bookings grid */}
+        {/* Activity and bookings grid - Coming Soon */}
         <div className="grid gap-6 lg:grid-cols-2">
-          {activitiesLoading ? (
-            <Skeleton className="h-80" />
-          ) : (
-            <RecentActivity activities={activities} />
-          )}
-
-          {bookingsLoading ? (
-            <Skeleton className="h-80" />
-          ) : (
-            <TodaysBookings bookings={todaysBookings} />
-          )}
+          <ComingSoonCard
+            title="Recent Activity"
+            description="Track recent bookings, payments, and cancellations"
+          />
+          <ComingSoonCard
+            title="Today's Schedule"
+            description="View today's bookings timeline"
+          />
         </div>
       </div>
     </DashboardLayout>

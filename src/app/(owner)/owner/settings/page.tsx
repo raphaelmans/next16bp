@@ -10,10 +10,10 @@ import { RemovalRequestModal } from "@/features/owner/components/removal-request
 import {
   useCurrentOrganization,
   useUpdateOrganization,
-  useUploadOrganizationLogo,
   useRequestRemoval,
   useCheckSlug,
 } from "@/features/owner/hooks/use-organization";
+import { useOwnerOrganization } from "@/features/owner/hooks";
 import {
   organizationSchema,
   type OrganizationFormData,
@@ -55,10 +55,13 @@ export default function OwnerSettingsPage() {
     "idle" | "checking" | "available" | "taken"
   >("idle");
 
+  // Use the shared organization hook for sidebar
+  const { organization: navOrg, organizations } = useOwnerOrganization();
+
+  // Use the current organization hook for the form data
   const { data: organization, isLoading: orgLoading } =
     useCurrentOrganization();
   const updateOrg = useUpdateOrganization();
-  const uploadLogo = useUploadOrganizationLogo();
   const requestRemoval = useRequestRemoval();
   const checkSlug = useCheckSlug();
 
@@ -94,27 +97,8 @@ export default function OwnerSettingsPage() {
   };
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please upload an image file");
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image must be less than 5MB");
-      return;
-    }
-
-    uploadLogo.mutate(file, {
-      onSuccess: () => {
-        toast.success("Logo uploaded successfully");
-      },
-      onError: () => {
-        toast.error("Failed to upload logo");
-      },
-    });
+    e.preventDefault();
+    toast.info("Logo upload coming soon!");
   };
 
   const handleSlugChange = (slug: string) => {
@@ -136,14 +120,26 @@ export default function OwnerSettingsPage() {
   };
 
   const handleSubmit = form.handleSubmit((data) => {
-    updateOrg.mutate(data, {
-      onSuccess: () => {
-        toast.success("Settings saved successfully");
+    if (!organization?.id) return;
+    updateOrg.mutate(
+      {
+        organizationId: organization.id,
+        name: data.name,
+        slug: data.slug,
+        description: data.description,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
       },
-      onError: () => {
-        toast.error("Failed to save settings");
+      {
+        onSuccess: () => {
+          toast.success("Settings saved successfully");
+        },
+        onError: () => {
+          toast.error("Failed to save settings");
+        },
       },
-    });
+    );
   });
 
   const handleRemovalRequest = (data: RemovalRequestFormData) => {
@@ -158,22 +154,19 @@ export default function OwnerSettingsPage() {
     });
   };
 
-  // Mock organization data
-  const mockOrg = { id: "1", name: "My Sports Complex" };
-
   if (orgLoading) {
     return (
       <DashboardLayout
         sidebar={
           <OwnerSidebar
-            currentOrganization={mockOrg}
-            organizations={[mockOrg]}
+            currentOrganization={navOrg ?? { id: "", name: "Loading..." }}
+            organizations={organizations}
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
           />
         }
         navbar={
           <OwnerNavbar
-            organizationName={mockOrg.name}
+            organizationName={navOrg?.name ?? "Loading..."}
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
             onLogout={handleLogout}
           />
@@ -191,14 +184,14 @@ export default function OwnerSettingsPage() {
     <DashboardLayout
       sidebar={
         <OwnerSidebar
-          currentOrganization={mockOrg}
-          organizations={[mockOrg]}
+          currentOrganization={navOrg ?? { id: "", name: "No Organization" }}
+          organizations={organizations}
           user={{ name: user?.email?.split("@")[0], email: user?.email }}
         />
       }
       navbar={
         <OwnerNavbar
-          organizationName={mockOrg.name}
+          organizationName={navOrg?.name ?? "No Organization"}
           user={{ name: user?.email?.split("@")[0], email: user?.email }}
           onLogout={handleLogout}
         />
@@ -248,13 +241,8 @@ export default function OwnerSettingsPage() {
                         type="button"
                         variant="outline"
                         onClick={() => fileInputRef.current?.click()}
-                        disabled={uploadLogo.isPending}
                       >
-                        {uploadLogo.isPending ? (
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        ) : (
-                          <Upload className="h-4 w-4 mr-2" />
-                        )}
+                        <Upload className="h-4 w-4 mr-2" />
                         Upload Logo
                       </Button>
                       <p className="text-xs text-muted-foreground mt-1">

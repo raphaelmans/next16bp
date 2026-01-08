@@ -1,7 +1,12 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
 
+/**
+ * Extended court type for owner dashboard display.
+ * Maps from backend CourtRecord to UI-friendly format.
+ */
 export interface OwnerCourt {
   id: string;
   name: string;
@@ -12,83 +17,80 @@ export interface OwnerCourt {
   openSlots: number;
   totalSlots: number;
   createdAt: Date | string;
+  isActive: boolean;
 }
 
 /**
- * Mock data for owner courts.
- * Replace with actual tRPC queries when backend is ready.
+ * Fetch all courts owned by the current user.
+ * Uses the courtManagement.getMyCourts endpoint.
  */
-const mockCourts: OwnerCourt[] = [
-  {
-    id: "1",
-    name: "Court A - Main Building",
-    address: "123 Sports Street",
-    city: "Metro Manila",
-    coverImageUrl: undefined,
-    status: "active",
-    openSlots: 12,
-    totalSlots: 20,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
-  },
-  {
-    id: "2",
-    name: "Court B - Outdoor",
-    address: "123 Sports Street",
-    city: "Metro Manila",
-    coverImageUrl: undefined,
-    status: "active",
-    openSlots: 8,
-    totalSlots: 15,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 15),
-  },
-  {
-    id: "3",
-    name: "Court C - Premium",
-    address: "123 Sports Street",
-    city: "Metro Manila",
-    coverImageUrl: undefined,
-    status: "draft",
-    openSlots: 0,
-    totalSlots: 10,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
-  },
-];
-
 export function useOwnerCourts() {
+  const trpc = useTRPC();
+
   return useQuery({
-    queryKey: ["owner", "courts"],
-    queryFn: async () => {
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return mockCourts;
-    },
+    ...trpc.courtManagement.getMyCourts.queryOptions(),
+    select: (courts) =>
+      courts.map(
+        (court): OwnerCourt => ({
+          id: court.id,
+          name: court.name,
+          address: court.address,
+          city: court.city,
+          coverImageUrl: undefined, // TODO: Add when photos are loaded
+          status: court.isActive ? "active" : "inactive",
+          openSlots: 0, // TODO: Calculate from time slots
+          totalSlots: 0, // TODO: Calculate from time slots
+          createdAt: court.createdAt,
+          isActive: court.isActive,
+        }),
+      ),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 }
 
+/**
+ * Fetch a single court by ID.
+ * Uses the courtManagement.getById endpoint.
+ * Note: getById returns CourtWithDetails with nested 'court' property
+ */
 export function useOwnerCourt(courtId: string) {
+  const trpc = useTRPC();
+
   return useQuery({
-    queryKey: ["owner", "courts", courtId],
-    queryFn: async () => {
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      return mockCourts.find((c) => c.id === courtId) ?? null;
-    },
+    ...trpc.courtManagement.getById.queryOptions({ courtId }),
     enabled: !!courtId,
+    select: (data): OwnerCourt | null =>
+      data
+        ? {
+            id: data.court.id,
+            name: data.court.name,
+            address: data.court.address,
+            city: data.court.city,
+            coverImageUrl: data.photos?.[0]?.url,
+            status: data.court.isActive ? "active" : "inactive",
+            openSlots: 0,
+            totalSlots: 0,
+            createdAt: data.court.createdAt,
+            isActive: data.court.isActive,
+          }
+        : null,
   });
 }
 
+/**
+ * Deactivate a court.
+ * Uses the courtManagement.deactivate endpoint.
+ */
 export function useDeactivateCourt() {
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (courtId: string) => {
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return { success: true, courtId };
-    },
+    ...trpc.courtManagement.deactivate.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["owner", "courts"] });
+      queryClient.invalidateQueries({
+        queryKey: trpc.courtManagement.getMyCourts.queryKey(),
+      });
     },
   });
 }

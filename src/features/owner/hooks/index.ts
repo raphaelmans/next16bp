@@ -1,3 +1,5 @@
+export { useOwnerOrganization } from "./use-owner-organization";
+
 export {
   useOwnerDashboard,
   useOwnerStats,

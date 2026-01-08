@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
 
 export interface Organization {
   id: string;
@@ -14,42 +15,8 @@ export interface Organization {
   createdAt: string;
 }
 
-// Mock data
-const mockOrganization: Organization = {
-  id: "org-1",
-  name: "My Sports Complex",
-  slug: "my-sports-complex",
-  description:
-    "Premium pickleball courts in the heart of Manila. We offer top-notch facilities for players of all levels.",
-  logoUrl: "https://placehold.co/200x200?text=Logo",
-  email: "contact@mysportscomplex.com",
-  phone: "09171234567",
-  address: "123 Sports Ave, Makati City",
-  createdAt: new Date().toISOString(),
-};
-
-export function useOrganization(orgId?: string) {
-  return useQuery({
-    queryKey: ["organization", orgId],
-    queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      return mockOrganization;
-    },
-    enabled: !!orgId,
-  });
-}
-
-export function useCurrentOrganization() {
-  return useQuery({
-    queryKey: ["organization", "current"],
-    queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      return mockOrganization;
-    },
-  });
-}
-
 export interface UpdateOrganizationData {
+  organizationId: string;
   name: string;
   slug: string;
   description?: string;
@@ -58,31 +25,121 @@ export interface UpdateOrganizationData {
   address?: string;
 }
 
+/**
+ * Fetch an organization by ID
+ */
+export function useOrganization(orgId?: string) {
+  const trpc = useTRPC();
+
+  return useQuery({
+    ...trpc.organization.get.queryOptions({ id: orgId! }),
+    enabled: !!orgId,
+  });
+}
+
+/**
+ * Fetch the current user's organization with profile data
+ * Note: organization.my returns OrganizationRecord[] without profile
+ * We need to fetch the full org data including profile via organization.get
+ */
+export function useCurrentOrganization() {
+  const trpc = useTRPC();
+
+  // First get the list of organizations
+  const {
+    data: organizations,
+    isLoading: listLoading,
+    ...rest
+  } = useQuery(trpc.organization.my.queryOptions());
+
+  const firstOrgId = organizations?.[0]?.id;
+
+  // Then fetch the first organization with full details including profile
+  const { data: fullOrg, isLoading: fullLoading } = useQuery({
+    ...trpc.organization.get.queryOptions({ id: firstOrgId! }),
+    enabled: !!firstOrgId,
+  });
+
+  const org = fullOrg?.organization;
+  const profile = fullOrg?.profile;
+
+  return {
+    data: org
+      ? {
+          id: org.id,
+          name: org.name,
+          slug: org.slug,
+          description: profile?.description ?? "",
+          logoUrl: profile?.logoUrl ?? undefined,
+          email: profile?.contactEmail ?? "",
+          phone: profile?.contactPhone ?? "",
+          address: profile?.address ?? "",
+          createdAt: org.createdAt,
+        }
+      : null,
+    isLoading: listLoading || fullLoading,
+    ...rest,
+  };
+}
+
+/**
+ * Update organization details
+ * Makes two mutation calls: one for basic info, one for profile
+ */
 export function useUpdateOrganization() {
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
+
+  // Create separate mutation options for each endpoint
+  const updateOrgMutation = useMutation({
+    ...trpc.organization.update.mutationOptions(),
+  });
+
+  const updateProfileMutation = useMutation({
+    ...trpc.organization.updateProfile.mutationOptions(),
+    onSuccess: () => {
+      // Invalidate after profile update (last step)
+      queryClient.invalidateQueries({
+        queryKey: trpc.organization.my.queryKey(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["organization", "get"],
+      });
+    },
+  });
 
   return useMutation({
     mutationFn: async (data: UpdateOrganizationData) => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return { ...mockOrganization, ...data };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["organization"] });
+      // Update basic org info
+      await updateOrgMutation.mutateAsync({
+        id: data.organizationId,
+        name: data.name,
+        slug: data.slug,
+      });
+
+      // Update profile
+      await updateProfileMutation.mutateAsync({
+        organizationId: data.organizationId,
+        description: data.description,
+        contactEmail: data.email || null,
+        contactPhone: data.phone || null,
+        address: data.address || null,
+      });
+
+      return { success: true };
     },
   });
 }
 
+/**
+ * Upload organization logo
+ * Coming Soon - requires Supabase Storage setup
+ */
 export function useUploadOrganizationLogo() {
-  const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async (file: File) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // In real implementation, this would upload to storage
-      return { url: URL.createObjectURL(file) };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["organization"] });
+    mutationFn: async (_file: File) => {
+      // Coming Soon - requires Supabase Storage setup
+      throw new Error("Coming Soon");
     },
   });
 }
@@ -93,26 +150,27 @@ export interface RemovalRequestData {
   acknowledgeApproval: boolean;
 }
 
+/**
+ * Request listing removal
+ * Keep as mock for now
+ */
 export function useRequestRemoval() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (data: RemovalRequestData) => {
       await new Promise((resolve) => setTimeout(resolve, 500));
       return { success: true, requestId: `removal-${Date.now()}` };
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["organization"] });
-    },
   });
 }
 
-// Check if slug is available
+/**
+ * Check if a slug is available
+ * Keep as mock for now - could wire to real endpoint
+ */
 export function useCheckSlug() {
   return useMutation({
     mutationFn: async (slug: string) => {
       await new Promise((resolve) => setTimeout(resolve, 300));
-      // Mock: some slugs are taken
       const takenSlugs = ["test", "admin", "owner", "courts"];
       return { available: !takenSlugs.includes(slug.toLowerCase()) };
     },

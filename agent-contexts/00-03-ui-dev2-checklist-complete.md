@@ -2,10 +2,15 @@
 
 > Date: 2025-01-07
 > Previous: 00-02-ui-backend-integration.md
+> Next: 00-04-ux-flow-implementation.md
 
 ## Summary
 
 Completed the entire UI Developer 2 Checklist (Days 3-7) for KudosCourts. Implemented Owner dashboard features (slot management, reservations, settings) and Admin dashboard features (claims management, court administration). All components use mock data hooks ready for backend integration.
+
+**See also:**
+- [00-05-onboarding-implementation.md](./00-05-onboarding-implementation.md) - Owner/admin navigation user stories (US-00-05, US-00-06)
+- [00-06-feature-implementation-status.md](./00-06-feature-implementation-status.md) - Court and reservation feature implementation status
 
 ## Changes Made
 

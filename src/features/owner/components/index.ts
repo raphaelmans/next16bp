@@ -4,6 +4,7 @@ export { StatsCard } from "./stats-card";
 export { PendingActions } from "./pending-actions";
 export { RecentActivity } from "./recent-activity";
 export { TodaysBookings } from "./todays-bookings";
+export { ComingSoonCard } from "./coming-soon-card";
 export { CourtsTable } from "./courts-table";
 export { CourtsEmptyState } from "./courts-empty-state";
 export { CourtForm } from "./court-form";

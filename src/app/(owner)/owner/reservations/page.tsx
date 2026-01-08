@@ -17,6 +17,7 @@ import {
   type ReservationStatus,
   type Reservation,
 } from "@/features/owner/hooks/use-owner-reservations";
+import { useOwnerOrganization, useOwnerCourts } from "@/features/owner/hooks";
 import { useSession, useLogout } from "@/features/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +45,14 @@ export default function OwnerReservationsPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
+  // Get organization and courts from hooks
+  const {
+    organization,
+    organizations,
+    isLoading: orgLoading,
+  } = useOwnerOrganization();
+  const { data: courts = [] } = useOwnerCourts();
+
   // Filters state
   const [courtId, setCourtId] = React.useState<string>("");
   const [search, setSearch] = React.useState("");
@@ -69,15 +78,18 @@ export default function OwnerReservationsPage() {
     }
   };
 
-  const { data: reservations = [], isLoading } = useOwnerReservations({
-    courtId: courtId || undefined,
-    status: getStatusFilter(activeTab),
-    search: search || undefined,
-    dateFrom,
-    dateTo,
-  });
+  const { data: reservations = [], isLoading } = useOwnerReservations(
+    organization?.id ?? null,
+    {
+      courtId: courtId || undefined,
+      status: getStatusFilter(activeTab),
+      search: search || undefined,
+      dateFrom,
+      dateTo,
+    },
+  );
 
-  const { data: counts } = useReservationCounts();
+  const { data: counts } = useReservationCounts(organization?.id ?? null);
   const confirmMutation = useConfirmReservation();
   const rejectMutation = useRejectReservation();
 
@@ -161,20 +173,48 @@ export default function OwnerReservationsPage() {
     );
   };
 
-  // Mock data
-  const mockOrg = { id: "1", name: "My Sports Complex" };
-  const mockCourts = [
-    { id: "court-1", name: "Court A" },
-    { id: "court-2", name: "Court B" },
-    { id: "court-3", name: "Court C" },
-  ];
+  // Show loading state while organization loads
+  if (orgLoading) {
+    return (
+      <DashboardLayout
+        sidebar={
+          <OwnerSidebar
+            currentOrganization={{ id: "", name: "Loading..." }}
+            organizations={[]}
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+          />
+        }
+        navbar={
+          <OwnerNavbar
+            organizationName="Loading..."
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+            onLogout={handleLogout}
+          />
+        }
+      >
+        <div className="space-y-6">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-96 w-full" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout
       sidebar={
         <OwnerSidebar
-          currentOrganization={mockOrg}
-          organizations={[mockOrg]}
+          currentOrganization={
+            organization ?? { id: "", name: "No Organization" }
+          }
+          organizations={organizations}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,
@@ -183,7 +223,7 @@ export default function OwnerReservationsPage() {
       }
       navbar={
         <OwnerNavbar
-          organizationName={mockOrg.name}
+          organizationName={organization?.name ?? "No Organization"}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,
@@ -205,13 +245,16 @@ export default function OwnerReservationsPage() {
 
         {/* Filters */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <Select value={courtId} onValueChange={setCourtId}>
+          <Select
+            value={courtId}
+            onValueChange={(value) => setCourtId(value === "all" ? "" : value)}
+          >
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="All Courts" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Courts</SelectItem>
-              {mockCourts.map((court) => (
+              {courts.map((court) => (
                 <SelectItem key={court.id} value={court.id}>
                   {court.name}
                 </SelectItem>
