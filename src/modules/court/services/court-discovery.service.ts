@@ -1,11 +1,11 @@
 import type { RequestContext } from "@/shared/kernel/context";
+import type { ListCourtsByCityDTO, SearchCourtsDTO } from "../dtos";
+import { CourtNotFoundError } from "../errors/court.errors";
 import type {
-  ICourtRepository,
   CourtWithDetails,
+  ICourtRepository,
   PaginatedCourts,
 } from "../repositories/court.repository";
-import type { SearchCourtsDTO, ListCourtsByCityDTO } from "../dtos";
-import { CourtNotFoundError } from "../errors/court.errors";
 
 export interface ICourtDiscoveryService {
   getCourtById(id: string, ctx?: RequestContext): Promise<CourtWithDetails>;

@@ -1,26 +1,19 @@
 "use client";
 
-import * as React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2, MapPin } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, MapPin } from "lucide-react";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
-import { AdminSidebar, AdminNavbar } from "@/features/admin";
-import { useCreateCuratedCourt } from "@/features/admin/hooks/use-admin-courts";
-import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
-import {
-  curatedCourtSchema,
-  type CuratedCourtFormData,
-  CITIES,
-  AMENITIES,
-} from "@/features/admin/schemas/curated-court.schema";
-import { useSession, useLogout } from "@/features/auth";
-import { PageHeader } from "@/components/ui/page-header";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
@@ -31,6 +24,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   Select,
   SelectContent,
@@ -38,14 +33,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { AdminNavbar, AdminSidebar } from "@/features/admin";
+import { useCreateCuratedCourt } from "@/features/admin/hooks/use-admin-courts";
+import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { toast } from "sonner";
+  AMENITIES,
+  CITIES,
+  type CuratedCourtFormData,
+  curatedCourtSchema,
+} from "@/features/admin/schemas/curated-court.schema";
+import { useLogout, useSession } from "@/features/auth";
+import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
 
 export default function NewCuratedCourtPage() {
   const router = useRouter();

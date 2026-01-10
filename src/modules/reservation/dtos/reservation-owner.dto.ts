@@ -68,6 +68,14 @@ export const ReservationWithDetailsSchema = z.object({
   slotEndTime: z.string(),
   amountCents: z.number().nullable(),
   currency: z.string().nullable(),
+  paymentProof: z
+    .object({
+      referenceNumber: z.string().nullable(),
+      notes: z.string().nullable(),
+      fileUrl: z.string().nullable(),
+      createdAt: z.string(),
+    })
+    .nullable(),
 });
 
 export type ReservationWithDetails = z.infer<

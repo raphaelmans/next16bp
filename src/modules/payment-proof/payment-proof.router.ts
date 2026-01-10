@@ -1,14 +1,19 @@
-import { router, protectedProcedure } from "@/shared/infra/trpc/trpc";
-import { makePaymentProofService } from "./factories/payment-proof.factory";
+import {
+  protectedProcedure,
+  protectedRateLimitedProcedure,
+  router,
+} from "@/shared/infra/trpc/trpc";
 import {
   AddPaymentProofSchema,
-  UpdatePaymentProofSchema,
   GetPaymentProofSchema,
+  UpdatePaymentProofSchema,
+  UploadPaymentProofSchema,
 } from "./dtos";
+import { makePaymentProofService } from "./factories/payment-proof.factory";
 
 export const paymentProofRouter = router({
   /**
-   * Add payment proof to a reservation
+   * Add payment proof to a reservation (URL-based)
    * Protected - requires authentication
    * Only reservation owner can add proof
    */
@@ -17,6 +22,24 @@ export const paymentProofRouter = router({
     .mutation(async ({ input, ctx }) => {
       const service = makePaymentProofService();
       return service.addPaymentProof(ctx.userId, input);
+    }),
+
+  /**
+   * Upload payment proof to a reservation (FormData with file)
+   * Protected - requires authentication
+   * Only reservation owner can upload proof
+   */
+  upload: protectedRateLimitedProcedure("mutation")
+    .input(UploadPaymentProofSchema)
+    .mutation(async ({ input, ctx }) => {
+      const service = makePaymentProofService();
+      return service.uploadPaymentProof(
+        ctx.userId,
+        input.reservationId,
+        input.image,
+        input.referenceNumber,
+        input.notes,
+      );
     }),
 
   /**

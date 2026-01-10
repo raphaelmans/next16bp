@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
+import { X } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import { useSession } from "@/features/auth/hooks/use-auth";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
 import { KudosLogo } from "@/shared/components/kudos";
-import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { useTRPC } from "@/trpc/client";
 
 export default function OnboardingPage() {
   const router = useRouter();

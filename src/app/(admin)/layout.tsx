@@ -1,7 +1,7 @@
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { createClient } from "@/shared/infra/supabase/create-client";
+import { redirect } from "next/navigation";
 import { env } from "@/lib/env";
+import { createClient } from "@/shared/infra/supabase/create-client";
 
 /**
  * Admin route group layout.

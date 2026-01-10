@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import {
-  MapMarker,
   CourtCard,
   type CourtCardCourt,
+  MapMarker,
 } from "@/shared/components/kudos";
 
 // Note: This is a placeholder implementation.

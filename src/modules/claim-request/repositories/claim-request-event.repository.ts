@@ -1,11 +1,11 @@
 import { eq } from "drizzle-orm";
 import {
-  claimRequestEvent,
   type ClaimRequestEventRecord,
+  claimRequestEvent,
   type InsertClaimRequestEvent,
 } from "@/shared/infra/db/schema";
-import type { RequestContext } from "@/shared/kernel/context";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
+import type { RequestContext } from "@/shared/kernel/context";
 
 export interface IClaimRequestEventRepository {
   findByClaimRequestId(

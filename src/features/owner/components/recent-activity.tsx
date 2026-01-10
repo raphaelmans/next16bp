@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  CalendarPlus,
-  CreditCard,
   Ban,
+  CalendarPlus,
   CheckCircle,
+  CreditCard,
   type LucideIcon,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

@@ -1,15 +1,15 @@
 import {
-  router,
   adminProcedure,
   adminRateLimitedProcedure,
+  router,
 } from "@/shared/infra/trpc/trpc";
-import { makeClaimAdminService } from "../factories/claim-request.factory";
 import {
+  ApproveClaimRequestSchema,
   GetClaimRequestByIdSchema,
   ListPendingClaimsSchema,
-  ApproveClaimRequestSchema,
   RejectClaimRequestSchema,
 } from "../dtos";
+import { makeClaimAdminService } from "../factories/claim-request.factory";
 
 export const claimAdminRouter = router({
   /**

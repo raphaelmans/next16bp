@@ -1,12 +1,8 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
 import { toast } from "sonner";
-
-interface CreateReservationInput {
-  timeSlotId: string;
-}
+import { useTRPC } from "@/trpc/client";
 
 /**
  * Hook to create a new reservation

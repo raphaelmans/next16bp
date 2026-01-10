@@ -1,11 +1,11 @@
 "use client";
 
+import { AlertTriangle, Edit, Mail, Phone, User } from "lucide-react";
 import Link from "next/link";
-import { User, Mail, Phone, AlertTriangle, Edit } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ProfilePreviewCardProps {
   profile: {

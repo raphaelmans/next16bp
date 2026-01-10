@@ -1,21 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { MagicLinkSchema, type MagicLinkDTO } from "@/modules/auth/dtos";
-import { useMagicLink } from "../hooks/use-auth";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -24,6 +13,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { type MagicLinkDTO, MagicLinkSchema } from "@/modules/auth/dtos";
+import { useMagicLink } from "../hooks/use-auth";
 
 export function MagicLinkForm() {
   const [success, setSuccess] = useState(false);

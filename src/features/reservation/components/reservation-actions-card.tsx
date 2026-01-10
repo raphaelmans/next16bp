@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { MapPin, Mail, Phone, X, Copy } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Copy, Mail, MapPin, Phone, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
   KudosStatusBadge,

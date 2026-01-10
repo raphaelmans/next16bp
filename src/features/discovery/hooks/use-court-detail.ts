@@ -1,8 +1,8 @@
 "use client";
 
-import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import type { TimeSlot, TimeSlotStatus } from "@/shared/components/kudos";
+import { useTRPC } from "@/trpc/client";
 
 export interface CourtDetail {
   id: string;
@@ -182,8 +182,8 @@ export function useAvailableSlots({ courtId, date }: UseAvailableSlotsOptions) {
     trpc.timeSlot.getAvailable.queryOptions(
       {
         courtId,
-        startDate: startDate!,
-        endDate: endDate!,
+        startDate: startDate ?? "",
+        endDate: endDate ?? "",
       },
       { enabled: !!courtId && !!date },
     ),

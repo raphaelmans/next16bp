@@ -1,16 +1,17 @@
 "use client";
 
-import Link from "next/link";
+import { CreditCard, Eye, MoreHorizontal, X } from "lucide-react";
 import Image from "next/image";
-import { MoreHorizontal, Eye, CreditCard, X } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 import {
   KudosStatusBadge,
   type ReservationStatus,
@@ -36,7 +37,7 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
   ].includes(status);
 
   return (
-    <Card className="p-4">
+    <Card className={cn("p-4", status === "EXPIRED" && "opacity-60")}>
       <div className="flex flex-col sm:flex-row gap-4">
         {/* Court image */}
         <div className="relative h-32 sm:h-20 sm:w-20 w-full shrink-0 overflow-hidden rounded-lg bg-muted">
@@ -88,7 +89,7 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
           </Button>
           {canPay && (
             <Button size="sm" asChild>
-              <Link href={`/reservations/${id}/pay`}>Pay Now</Link>
+              <Link href={`/reservations/${id}/payment`}>Pay Now</Link>
             </Button>
           )}
           <DropdownMenu>
@@ -107,7 +108,7 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
               </DropdownMenuItem>
               {canPay && (
                 <DropdownMenuItem asChild>
-                  <Link href={`/reservations/${id}/pay`}>
+                  <Link href={`/reservations/${id}/payment`}>
                     <CreditCard className="mr-2 h-4 w-4" />
                     Pay Now
                   </Link>
@@ -130,7 +131,7 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
           </Button>
           {canPay && (
             <Button size="sm" className="flex-1" asChild>
-              <Link href={`/reservations/${id}/pay`}>Pay Now</Link>
+              <Link href={`/reservations/${id}/payment`}>Pay Now</Link>
             </Button>
           )}
         </div>

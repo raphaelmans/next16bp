@@ -1,23 +1,25 @@
-import type { TransactionManager } from "@/shared/kernel/transaction";
-import type { RequestContext } from "@/shared/kernel/context";
-import type { IOrganizationRepository } from "../repositories/organization.repository";
-import type { IOrganizationProfileRepository } from "../repositories/organization-profile.repository";
+import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
+import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
 import type {
-  OrganizationRecord,
   OrganizationProfileRecord,
+  OrganizationRecord,
 } from "@/shared/infra/db/schema";
+import { logger } from "@/shared/infra/logger";
+import type { RequestContext } from "@/shared/kernel/context";
+import type { TransactionManager } from "@/shared/kernel/transaction";
 import type {
   CreateOrganizationDTO,
   UpdateOrganizationDTO,
   UpdateOrganizationProfileDTO,
 } from "../dtos";
 import {
+  NotOrganizationOwnerError,
   OrganizationNotFoundError,
   SlugAlreadyExistsError,
-  NotOrganizationOwnerError,
 } from "../errors/organization.errors";
+import type { IOrganizationRepository } from "../repositories/organization.repository";
+import type { IOrganizationProfileRepository } from "../repositories/organization-profile.repository";
 import { generateUniqueSlug } from "../utils/slug.utils";
-import { logger } from "@/shared/infra/logger";
 
 export interface OrganizationWithProfile {
   organization: OrganizationRecord;
@@ -40,6 +42,11 @@ export interface IOrganizationService {
     userId: string,
     data: UpdateOrganizationProfileDTO,
   ): Promise<OrganizationProfileRecord>;
+  uploadLogo(
+    userId: string,
+    organizationId: string,
+    file: File,
+  ): Promise<string>;
 }
 
 export class OrganizationService implements IOrganizationService {
@@ -47,6 +54,7 @@ export class OrganizationService implements IOrganizationService {
     private organizationRepository: IOrganizationRepository,
     private organizationProfileRepository: IOrganizationProfileRepository,
     private transactionManager: TransactionManager,
+    private storageService: IObjectStorageService,
   ) {}
 
   async createOrganization(
@@ -240,5 +248,66 @@ export class OrganizationService implements IOrganizationService {
 
       return profile;
     });
+  }
+
+  /**
+   * Upload a logo for an organization.
+   * Uploads to storage and updates the organization profile.
+   */
+  async uploadLogo(
+    userId: string,
+    organizationId: string,
+    file: File,
+  ): Promise<string> {
+    // Verify ownership first
+    const org = await this.organizationRepository.findById(organizationId);
+    if (!org) {
+      throw new OrganizationNotFoundError(organizationId);
+    }
+
+    if (org.ownerUserId !== userId) {
+      throw new NotOrganizationOwnerError();
+    }
+
+    // Generate path: {organizationId}/logo.{ext}
+    const ext = file.name.split(".").pop() || "png";
+    const path = `${organizationId}/logo.${ext}`;
+
+    // Upload to storage (upsert to replace existing logo)
+    const result = await this.storageService.upload({
+      bucket: STORAGE_BUCKETS.ORGANIZATION_ASSETS,
+      path,
+      file,
+      upsert: true,
+    });
+
+    // Update or create profile with logo URL
+    let profile =
+      await this.organizationProfileRepository.findByOrganizationId(
+        organizationId,
+      );
+
+    if (!profile) {
+      profile = await this.organizationProfileRepository.create({
+        organizationId,
+        logoUrl: result.url,
+      });
+    } else {
+      await this.organizationProfileRepository.update(profile.id, {
+        logoUrl: result.url,
+      });
+    }
+
+    logger.info(
+      {
+        event: "organization.logo_uploaded",
+        organizationId,
+        url: result.url,
+        userId,
+      },
+      "Organization logo uploaded",
+    );
+
+    return result.url;
   }
 }

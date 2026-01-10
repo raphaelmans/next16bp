@@ -1,22 +1,22 @@
 "use client";
 
 import { Suspense } from "react";
-import { Container } from "@/shared/components/layout";
 import {
   CourtFilters,
-  ViewToggle,
   CourtMap,
   EmptyResults,
+  ViewToggle,
 } from "@/features/discovery/components";
-import {
-  CourtCard,
-  CourtCardSkeleton,
-  AdBanner,
-} from "@/shared/components/kudos";
 import {
   useDiscoveryCourts,
   useDiscoveryFilters,
 } from "@/features/discovery/hooks";
+import {
+  AdBanner,
+  CourtCard,
+  CourtCardSkeleton,
+} from "@/shared/components/kudos";
+import { Container } from "@/shared/components/layout";
 
 export default function CourtsPage() {
   return (
@@ -88,47 +88,43 @@ function CourtsPageContent() {
               lng: 120.9842 + Math.random() * 0.1,
             }))}
           />
-        ) : (
+        ) : isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {["sk1", "sk2", "sk3", "sk4", "sk5", "sk6", "sk7", "sk8"].map(
+              (id) => (
+                <CourtCardSkeleton key={id} />
+              ),
+            )}
+          </div>
+        ) : courts.length > 0 ? (
           <>
-            {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {["sk1", "sk2", "sk3", "sk4", "sk5", "sk6", "sk7", "sk8"].map(
-                  (id) => (
-                    <CourtCardSkeleton key={id} />
-                  ),
-                )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {courts.map((court) => (
+                <CourtCard key={court.id} court={court} />
+              ))}
+            </div>
+
+            {/* Ad Banner */}
+            <AdBanner placement="search-results" className="mt-8" />
+
+            {/* Pagination placeholder */}
+            {data?.hasMore && (
+              <div className="flex justify-center pt-8">
+                <button
+                  type="button"
+                  onClick={() => filters.setPage(filters.page + 1)}
+                  className="text-primary hover:underline"
+                >
+                  Load more
+                </button>
               </div>
-            ) : courts.length > 0 ? (
-              <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {courts.map((court) => (
-                    <CourtCard key={court.id} court={court} />
-                  ))}
-                </div>
-
-                {/* Ad Banner */}
-                <AdBanner placement="search-results" className="mt-8" />
-
-                {/* Pagination placeholder */}
-                {data?.hasMore && (
-                  <div className="flex justify-center pt-8">
-                    <button
-                      type="button"
-                      onClick={() => filters.setPage(filters.page + 1)}
-                      className="text-primary hover:underline"
-                    >
-                      Load more
-                    </button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <EmptyResults
-                query={filters.q ?? undefined}
-                onClearFilters={filters.clearAll}
-              />
             )}
           </>
+        ) : (
+          <EmptyResults
+            query={filters.q ?? undefined}
+            onClearFilters={filters.clearAll}
+          />
         )}
       </div>
     </Container>

@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { ArrowRight, Calendar, CheckCircle, Search } from "lucide-react";
 import Link from "next/link";
-import { Search, Calendar, CheckCircle, ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Container } from "@/shared/components/layout";
-import { CourtCard, CourtCardSkeleton } from "@/shared/components/kudos";
-import { Navbar, Footer } from "@/features/discovery/components";
+import { Footer, Navbar } from "@/features/discovery/components";
 import type { CourtCardCourt } from "@/shared/components/kudos";
+import { CourtCard, CourtCardSkeleton } from "@/shared/components/kudos";
+import { Container } from "@/shared/components/layout";
 
 // Popular locations for quick access
 const POPULAR_LOCATIONS = [

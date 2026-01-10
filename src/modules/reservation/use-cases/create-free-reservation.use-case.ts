@@ -1,17 +1,17 @@
-import type { TransactionManager } from "@/shared/kernel/transaction";
+import {
+  IncompleteProfileError,
+  ProfileNotFoundError,
+} from "@/modules/profile/errors/profile.errors";
+import type { IProfileRepository } from "@/modules/profile/repositories/profile.repository";
+import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
+import type { ITimeSlotRepository } from "@/modules/time-slot/repositories/time-slot.repository";
+import type { ReservationRecord } from "@/shared/infra/db/schema";
+import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
+import type { TransactionManager } from "@/shared/kernel/transaction";
+import { SlotNotAvailableError } from "../errors/reservation.errors";
 import type { IReservationRepository } from "../repositories/reservation.repository";
 import type { IReservationEventRepository } from "../repositories/reservation-event.repository";
-import type { ITimeSlotRepository } from "@/modules/time-slot/repositories/time-slot.repository";
-import type { IProfileRepository } from "@/modules/profile/repositories/profile.repository";
-import type { ReservationRecord } from "@/shared/infra/db/schema";
-import { SlotNotAvailableError } from "../errors/reservation.errors";
-import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
-import {
-  ProfileNotFoundError,
-  IncompleteProfileError,
-} from "@/modules/profile/errors/profile.errors";
-import { logger } from "@/shared/infra/logger";
 
 export interface ICreateFreeReservationUseCase {
   execute(

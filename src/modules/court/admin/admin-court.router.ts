@@ -1,16 +1,16 @@
 import {
-  router,
   adminProcedure,
   adminRateLimitedProcedure,
+  router,
 } from "@/shared/infra/trpc/trpc";
-import { makeAdminCourtService } from "../factories/court.factory";
 import {
-  CreateCuratedCourtSchema,
-  AdminUpdateCourtSchema,
-  DeactivateCourtSchema,
   ActivateCourtSchema,
   AdminCourtFiltersSchema,
+  AdminUpdateCourtSchema,
+  CreateCuratedCourtSchema,
+  DeactivateCourtSchema,
 } from "../dtos";
+import { makeAdminCourtService } from "../factories/court.factory";
 
 export const adminCourtRouter = router({
   /**

@@ -1,4 +1,4 @@
-import { createServerClient, type CookieMethodsServer } from "@supabase/ssr";
+import { type CookieMethodsServer, createServerClient } from "@supabase/ssr";
 
 /**
  * Creates a Supabase server client with cookie handling for SSR.

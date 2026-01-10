@@ -1,18 +1,18 @@
-import { router } from "./trpc";
-import { healthRouter } from "@/modules/health/health.router";
+import { auditRouter } from "@/modules/audit/audit.router";
 import { authRouter } from "@/modules/auth/auth.router";
+import { claimAdminRouter } from "@/modules/claim-request/admin/claim-admin.router";
+import { claimRequestRouter } from "@/modules/claim-request/claim-request.router";
+import { adminCourtRouter } from "@/modules/court/admin/admin-court.router";
 import { courtRouter } from "@/modules/court/court.router";
 import { courtManagementRouter } from "@/modules/court/court-management.router";
-import { profileRouter } from "@/modules/profile/profile.router";
+import { healthRouter } from "@/modules/health/health.router";
 import { organizationRouter } from "@/modules/organization/organization.router";
 import { paymentProofRouter } from "@/modules/payment-proof/payment-proof.router";
-import { claimRequestRouter } from "@/modules/claim-request/claim-request.router";
-import { claimAdminRouter } from "@/modules/claim-request/admin/claim-admin.router";
-import { adminCourtRouter } from "@/modules/court/admin/admin-court.router";
-import { auditRouter } from "@/modules/audit/audit.router";
-import { timeSlotRouter } from "@/modules/time-slot/time-slot.router";
+import { profileRouter } from "@/modules/profile/profile.router";
 import { reservationRouter } from "@/modules/reservation/reservation.router";
 import { reservationOwnerRouter } from "@/modules/reservation/reservation-owner.router";
+import { timeSlotRouter } from "@/modules/time-slot/time-slot.router";
+import { router } from "./trpc";
 
 /**
  * Root router combining all module routers.

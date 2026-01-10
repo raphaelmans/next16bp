@@ -1,15 +1,15 @@
 "use client";
 
-import Link from "next/link";
 import { MapPin, Plus, Tag } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
+  EmptyContent,
+  EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-  EmptyDescription,
-  EmptyContent,
 } from "@/components/ui/empty";
 
 export function CourtsEmptyState() {

@@ -1,18 +1,18 @@
 import { sql } from "drizzle-orm";
 import {
-  pgTable,
-  uuid,
-  varchar,
-  text,
-  timestamp,
   boolean,
   decimal,
   index,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
-import { createSelectSchema, createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import type { z } from "zod";
+import { claimStatusEnum, courtTypeEnum } from "./enums";
 import { organization } from "./organization";
-import { courtTypeEnum, claimStatusEnum } from "./enums";
 
 /**
  * Court table (Base Entity)

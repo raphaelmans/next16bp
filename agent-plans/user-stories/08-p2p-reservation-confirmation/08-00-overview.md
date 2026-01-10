@@ -2,7 +2,13 @@
 
 ## Overview
 
-The P2P Reservation Confirmation domain captures the full peer-to-peer payment verification flow as specified in the PRD. This is a **future enhancement** domain that extends the simplified flows in `06-court-reservation` and `07-owner-confirmation`.
+The P2P Reservation Confirmation domain captures the full peer-to-peer payment verification flow as specified in the PRD. This domain **enhances** the simplified flows in `06-court-reservation` and `07-owner-confirmation` with:
+
+- 15-minute TTL countdown timer
+- Owner's payment instructions display (GCash, bank details)
+- Explicit Terms & Conditions acknowledgment
+- Payment proof submission (reference number, notes, screenshot)
+- Owner payment proof review
 
 KudosCourts uses a P2P payment model where:
 - Players pay court owners directly (GCash, bank transfer, cash)
@@ -46,15 +52,69 @@ Domains 06 and 07 implement a simplified version:
 
 ---
 
-## Future Story Index
+## Story Index
 
-| ID | Story | Priority | Description |
-|----|-------|----------|-------------|
-| US-08-01 | Player Completes P2P Payment Flow | High | TTL timer, instructions, proof upload, T&C |
-| US-08-02 | Owner Reviews Payment Proof | High | View proof, verify before confirming |
-| US-08-03 | TTL Expiration Handling | High | Auto-expire, slot release, cron job |
+| ID | Story | Status | Description |
+|----|-------|--------|-------------|
+| **US-08-01** | **Player Completes P2P Payment Flow** | Active | Parent story for player payment enhancements |
+| US-08-01-01 | Payment Page: TTL Countdown Timer | Active | Countdown timer with expiration warning |
+| US-08-01-02 | Payment Page: Display Payment Instructions | Active | Show owner's GCash/bank details |
+| US-08-01-03 | Payment Page: T&C Explicit Checkbox | Active | Legal acknowledgment with disclaimer |
+| US-08-01-04 | Payment Page: Payment Proof Form | Active | Reference number, notes (file upload via US-10-02) |
+| **US-08-02** | **Owner Reviews Payment Proof** | Active | Parent story for owner proof review |
+| US-08-02-01 | Backend: Include Payment Proof in Response | Active | Enhance `reservationOwner.getForOrganization` |
+| US-08-02-02 | Owner Dashboard: Display Payment Proof Card | Active | UI to show reference, notes, screenshot |
+| **US-08-03** | **TTL Expiration Handling** | Active | Parent story for expiration flow |
+| US-08-03-01 | Backend: Verify Cron Job E2E | Active | Test cron endpoint, configure Vercel |
+| US-08-03-02 | Frontend: Expired Reservation UI States | Active | UI for expired reservations |
 
-**Note:** Stories are placeholders for future implementation.
+---
+
+## Implementation Priority
+
+| Phase | Stories | Focus |
+|-------|---------|-------|
+| 1 | US-08-03-01 | TTL cron verification (backend) |
+| 2 | US-08-01-02 | Payment instructions display (simplest frontend) |
+| 3 | US-08-01-01 | TTL countdown timer (uses existing expiresAt) |
+| 4 | US-08-01-03 | T&C checkbox (UI-only) |
+| 5 | US-08-01-04 | Payment proof form (depends on US-10-02 for file) |
+| 6 | US-08-02-01, US-08-02-02 | Owner proof review |
+| 7 | US-08-03-02 | Expired reservation UI |
+
+**Rationale:** TTL is critical for slot integrity. Backend first, then frontend enhancements.
+
+---
+
+## Current Implementation State
+
+### Already Implemented (Backend)
+
+| Component | Status | Location |
+|-----------|--------|----------|
+| `reservation.expiresAt` column | Complete | Set on paid reservation create |
+| `payment_proof` table | Complete | `file_url`, `reference_number`, `notes` |
+| `paymentProof` router | Complete | `add`, `update`, `get` endpoints |
+| `reservable_court_detail` | Complete | Has `gcash_number`, `bank_name`, etc. |
+| Cron endpoint | Complete | `/api/cron/expire-reservations` |
+| Audit trail | Complete | `reservation_event` table |
+
+### Not Yet Implemented (Frontend)
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Countdown timer | Missing | No TTL countdown UI |
+| Payment instructions display | Missing | Shows generic text, not owner's GCash/bank |
+| Payment proof form | Missing | No reference/notes/upload fields |
+| T&C explicit checkbox | Missing | Just disclaimer text, no checkbox |
+| Owner proof review | Missing | Owner can't see payment proof |
+
+### Not Yet Implemented (Backend)
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Get payment details for slot | Missing | Need to fetch GCash/bank from `reservable_court_detail` |
+| Include payment proof in owner response | Missing | Owner can't see proof when reviewing |
 
 ---
 
@@ -160,7 +220,7 @@ expiresAt = new Date(Date.now() + 15 * 60 * 1000)
 
 **Background job (cron):**
 ```typescript
-// Run every minute
+// Run every minute - already implemented at /api/cron/expire-reservations
 const expired = await findExpiredReservations();
 for (const reservation of expired) {
   await transitionToExpired(reservation);
@@ -180,21 +240,21 @@ const remaining = expiresAt - Date.now();
 
 ## Payment Instructions
 
-Stored in organization profile:
+Stored in `reservable_court_detail` table:
 
 | Field | Example |
 |-------|---------|
-| GCash Number | 0917-123-4567 |
-| GCash Name | Juan Dela Cruz |
-| Bank Name | BDO |
-| Bank Account | 1234-5678-9012 |
-| Bank Account Name | Juan Dela Cruz Sports |
+| gcash_number | 0917-123-4567 |
+| bank_name | BDO |
+| bank_account_number | 1234-5678-9012 |
+| bank_account_name | Juan Dela Cruz Sports |
+| payment_instructions | (custom text) |
 
 **Display on payment page:**
 ```
 Pay via one of the following methods:
 
-GCash: 0917-123-4567 (Juan Dela Cruz)
+GCash: 0917-123-4567
 Bank: BDO 1234-5678-9012 (Juan Dela Cruz Sports)
 Cash: Pay at the court before your slot
 ```
@@ -221,7 +281,7 @@ Table: `payment_proof` (exists)
 1. Player fills optional fields:
    - Reference number (e.g., "GC-12345678")
    - Notes (e.g., "Paid via GCash at 2:30pm")
-   - Screenshot (optional file upload)
+   - Screenshot (optional file upload via US-10-02)
 2. Submit with "I Have Paid"
 3. Stored in `payment_proof` table
 4. Owner sees proof when reviewing reservation
@@ -261,103 +321,40 @@ All payment confirmations logged:
 
 ---
 
-## Backend Requirements
-
-### Player Side
-
-| Endpoint | Status | Enhancement |
-|----------|--------|-------------|
-| `reservation.markPayment` | Exists | Add proof fields |
-
-**Enhanced input:**
-```typescript
-{
-  reservationId: string,
-  termsAccepted: true,
-  referenceNumber?: string,
-  notes?: string,
-  fileUrl?: string  // From file upload
-}
-```
-
-### Owner Side
-
-| Endpoint | Status | Enhancement |
-|----------|--------|-------------|
-| `reservationOwner.getForOrganization` | Exists | Include payment proof |
-
-**Enhanced response:**
-```typescript
-{
-  // ... existing fields
-  paymentProof?: {
-    referenceNumber: string | null,
-    notes: string | null,
-    fileUrl: string | null,
-    createdAt: string
-  }
-}
-```
-
-### Expiration
-
-| Requirement | Implementation |
-|-------------|----------------|
-| Cron job | Supabase pg_cron or external scheduler |
-| Frequency | Every 1-5 minutes |
-| Action | Find expired, transition status, release slot |
-
----
-
-## Frontend Requirements
-
-### Payment Page Enhancements
-
-| Feature | Component |
-|---------|-----------|
-| Countdown timer | `CountdownTimer` component |
-| Payment instructions | `PaymentInstructions` component |
-| Proof upload form | `PaymentProofForm` component |
-| T&C checkbox | Checkbox with modal link |
-
-### Owner Reservation Detail
-
-| Feature | Component |
-|---------|-----------|
-| Payment proof display | `PaymentProofCard` component |
-| Reference number | Text display |
-| Notes | Text display |
-| Screenshot | Image display with zoom |
-
----
-
-## Implementation Priority
-
-| Phase | Stories | Focus |
-|-------|---------|-------|
-| 1 | US-08-03 | TTL expiration (backend) |
-| 2 | US-08-01 | Player payment flow UI |
-| 3 | US-08-02 | Owner proof review UI |
-
-**Rationale:** TTL is critical for slot integrity. UI can follow.
-
----
-
 ## Dependencies
 
 | Depends On | Reason |
 |------------|--------|
 | 06-court-reservation | Basic reservation flow |
 | 07-owner-confirmation | Basic confirmation flow |
+| 10-asset-uploads (US-10-02) | Payment proof file upload |
 | Organization profile | Payment details storage |
-| File upload service | Screenshot storage |
+
+---
+
+## Document Index
+
+| Document | Description |
+|----------|-------------|
+| `08-00-overview.md` | This file |
+| `08-01-player-completes-p2p-payment-flow.md` | Parent: Player payment flow |
+| `08-01-01-payment-page-ttl-countdown-timer.md` | Countdown timer |
+| `08-01-02-payment-page-display-payment-instructions.md` | Payment instructions |
+| `08-01-03-payment-page-tc-explicit-checkbox.md` | T&C checkbox |
+| `08-01-04-payment-page-payment-proof-form.md` | Proof form |
+| `08-02-owner-reviews-payment-proof.md` | Parent: Owner reviews proof |
+| `08-02-01-backend-include-payment-proof.md` | Backend enhancement |
+| `08-02-02-owner-display-payment-proof-card.md` | Proof card UI |
+| `08-03-ttl-expiration-handling.md` | Parent: TTL expiration |
+| `08-03-01-verify-cron-job-e2e.md` | Cron verification |
+| `08-03-02-expired-reservation-ui-states.md` | Expired UI |
 
 ---
 
 ## Summary
 
 - **Domain Purpose:** Full P2P payment verification flow
-- **Current Status:** Overview only (future implementation)
-- **Stories:** 3 planned
+- **Total Stories:** 11 (3 parent + 8 sub-stories)
+- **Status:** Active
 - **Key Features:** TTL, payment instructions, proof upload, T&C
 - **PRD Alignment:** Section 7 Journey 3, Section 8.3-8.4, Section 17

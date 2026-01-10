@@ -1,25 +1,24 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { router, protectedProcedure } from "@/shared/infra/trpc/trpc";
-import { makeReservationOwnerService } from "./factories/reservation.factory";
 import {
-  ConfirmPaymentSchema,
-  RejectReservationSchema,
-  GetOrgReservationsSchema,
-  GetPendingForCourtSchema,
-  GetPendingCountSchema,
-} from "./dtos";
-import {
-  ReservationNotFoundError,
-  InvalidReservationStatusError,
-} from "./errors/reservation.errors";
-import {
-  NotCourtOwnerError,
   CourtNotFoundError,
+  NotCourtOwnerError,
 } from "@/modules/court/errors/court.errors";
 import { NotOrganizationOwnerError } from "@/modules/organization/errors/organization.errors";
 import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
+import { protectedProcedure, router } from "@/shared/infra/trpc/trpc";
 import { AppError } from "@/shared/kernel/errors";
+import {
+  ConfirmPaymentSchema,
+  GetOrgReservationsSchema,
+  GetPendingCountSchema,
+  GetPendingForCourtSchema,
+  RejectReservationSchema,
+} from "./dtos";
+import {
+  InvalidReservationStatusError,
+  ReservationNotFoundError,
+} from "./errors/reservation.errors";
+import { makeReservationOwnerService } from "./factories/reservation.factory";
 
 /**
  * Maps known errors to appropriate tRPC error codes

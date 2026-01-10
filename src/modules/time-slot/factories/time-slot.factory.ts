@@ -1,8 +1,8 @@
+import { makeCourtRepository } from "@/modules/court/factories/court.factory";
+import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
 import { getContainer } from "@/shared/infra/container";
 import { TimeSlotRepository } from "../repositories/time-slot.repository";
 import { TimeSlotService } from "../services/time-slot.service";
-import { makeCourtRepository } from "@/modules/court/factories/court.factory";
-import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
 
 let timeSlotRepository: TimeSlotRepository | null = null;
 let timeSlotService: TimeSlotService | null = null;

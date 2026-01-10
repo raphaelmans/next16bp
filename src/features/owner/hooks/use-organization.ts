@@ -1,6 +1,7 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { useTRPC } from "@/trpc/client";
 
 export interface Organization {
@@ -32,7 +33,7 @@ export function useOrganization(orgId?: string) {
   const trpc = useTRPC();
 
   return useQuery({
-    ...trpc.organization.get.queryOptions({ id: orgId! }),
+    ...trpc.organization.get.queryOptions({ id: orgId ?? "" }),
     enabled: !!orgId,
   });
 }
@@ -56,7 +57,7 @@ export function useCurrentOrganization() {
 
   // Then fetch the first organization with full details including profile
   const { data: fullOrg, isLoading: fullLoading } = useQuery({
-    ...trpc.organization.get.queryOptions({ id: firstOrgId! }),
+    ...trpc.organization.get.queryOptions({ id: firstOrgId ?? "" }),
     enabled: !!firstOrgId,
   });
 
@@ -133,15 +134,27 @@ export function useUpdateOrganization() {
 
 /**
  * Upload organization logo
- * Coming Soon - requires Supabase Storage setup
  */
-export function useUploadOrganizationLogo() {
-  return useMutation({
-    mutationFn: async (_file: File) => {
-      // Coming Soon - requires Supabase Storage setup
-      throw new Error("Coming Soon");
-    },
-  });
+export function useUploadOrganizationLogo(organizationId: string) {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    trpc.organization.uploadLogo.mutationOptions({
+      onSuccess: () => {
+        toast.success("Logo uploaded successfully");
+        queryClient.invalidateQueries({
+          queryKey: trpc.organization.get.queryKey({ id: organizationId }),
+        });
+        queryClient.invalidateQueries({
+          queryKey: trpc.organization.my.queryKey(),
+        });
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to upload logo");
+      },
+    }),
+  );
 }
 
 export interface RemovalRequestData {
@@ -156,7 +169,7 @@ export interface RemovalRequestData {
  */
 export function useRequestRemoval() {
   return useMutation({
-    mutationFn: async (data: RemovalRequestData) => {
+    mutationFn: async (_data: RemovalRequestData) => {
       await new Promise((resolve) => setTimeout(resolve, 500));
       return { success: true, requestId: `removal-${Date.now()}` };
     },

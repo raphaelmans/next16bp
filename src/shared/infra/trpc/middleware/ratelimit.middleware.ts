@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
-import { getRateLimiter, type RateLimitTier } from "../../ratelimit";
 import { RateLimitError } from "@/shared/kernel/errors";
+import { getRateLimiter, type RateLimitTier } from "../../ratelimit";
 import { middleware } from "../trpc";
 
 /**

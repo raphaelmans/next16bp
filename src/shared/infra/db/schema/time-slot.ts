@@ -1,16 +1,16 @@
 import { sql } from "drizzle-orm";
 import {
+  check,
+  index,
+  integer,
   pgTable,
+  timestamp,
+  unique,
   uuid,
   varchar,
-  timestamp,
-  integer,
-  index,
-  unique,
-  check,
 } from "drizzle-orm/pg-core";
-import { createSelectSchema, createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import type { z } from "zod";
 import { court } from "./court";
 import { timeSlotStatusEnum } from "./enums";
 

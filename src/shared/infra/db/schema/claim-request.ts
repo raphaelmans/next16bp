@@ -1,17 +1,17 @@
 import {
+  index,
   pgTable,
-  uuid,
-  varchar,
   text,
   timestamp,
-  index,
+  uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
-import { createSelectSchema, createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import type { z } from "zod";
 import { court } from "./court";
+import { claimRequestStatusEnum, claimRequestTypeEnum } from "./enums";
 import { organization } from "./organization";
-import { claimRequestTypeEnum, claimRequestStatusEnum } from "./enums";
 
 /**
  * Claim Request table

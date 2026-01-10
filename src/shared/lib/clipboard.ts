@@ -30,7 +30,7 @@ export async function copyToClipboard(
       label ? `${label} copied to clipboard` : "Copied to clipboard",
     );
     return true;
-  } catch (error) {
+  } catch (_error) {
     toast.error("Failed to copy to clipboard");
     return false;
   }

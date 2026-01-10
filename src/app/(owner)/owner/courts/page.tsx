@@ -1,20 +1,20 @@
 "use client";
 
-import Link from "next/link";
 import { Plus } from "lucide-react";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
-import { OwnerSidebar, OwnerNavbar } from "@/features/owner";
-import { CourtsTable } from "@/features/owner/components/courts-table";
-import { CourtsEmptyState } from "@/features/owner/components/courts-empty-state";
-import {
-  useOwnerCourts,
-  useDeactivateCourt,
-} from "@/features/owner/hooks/use-owner-courts";
-import { useOwnerOrganization } from "@/features/owner/hooks";
-import { useSession, useLogout } from "@/features/auth";
+import Link from "next/link";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
+import { useLogout, useSession } from "@/features/auth";
+import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
+import { CourtsEmptyState } from "@/features/owner/components/courts-empty-state";
+import { CourtsTable } from "@/features/owner/components/courts-table";
+import { useOwnerOrganization } from "@/features/owner/hooks";
+import {
+  useDeactivateCourt,
+  useOwnerCourts,
+} from "@/features/owner/hooks/use-owner-courts";
+import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
 
 export default function OwnerCourtsPage() {
   const { data: user } = useSession();

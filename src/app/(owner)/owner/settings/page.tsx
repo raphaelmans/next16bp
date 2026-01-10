@@ -1,29 +1,19 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertTriangle, Check, Loader2, Upload } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Upload, Loader2, AlertTriangle, Check } from "lucide-react";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
-import { OwnerSidebar, OwnerNavbar } from "@/features/owner";
-import { RemovalRequestModal } from "@/features/owner/components/removal-request-modal";
-import {
-  useCurrentOrganization,
-  useUpdateOrganization,
-  useRequestRemoval,
-  useCheckSlug,
-} from "@/features/owner/hooks/use-organization";
-import { useOwnerOrganization } from "@/features/owner/hooks";
-import {
-  organizationSchema,
-  type OrganizationFormData,
-  type RemovalRequestFormData,
-} from "@/features/owner/schemas/organization.schema";
-import { useSession, useLogout } from "@/features/auth";
+import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -33,18 +23,29 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
+import { useLogout, useSession } from "@/features/auth";
+import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
+import { RemovalRequestModal } from "@/features/owner/components/removal-request-modal";
+import { useOwnerOrganization } from "@/features/owner/hooks";
+import {
+  useCheckSlug,
+  useCurrentOrganization,
+  useRequestRemoval,
+  useUpdateOrganization,
+  useUploadOrganizationLogo,
+} from "@/features/owner/hooks/use-organization";
+import {
+  type OrganizationFormData,
+  organizationSchema,
+  type RemovalRequestFormData,
+} from "@/features/owner/schemas/organization.schema";
 import { cn } from "@/lib/utils";
+import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
 
 export default function OwnerSettingsPage() {
   const { data: user } = useSession();
@@ -64,6 +65,7 @@ export default function OwnerSettingsPage() {
   const updateOrg = useUpdateOrganization();
   const requestRemoval = useRequestRemoval();
   const checkSlug = useCheckSlug();
+  const uploadLogo = useUploadOrganizationLogo(organization?.id ?? "");
 
   const form = useForm<OrganizationFormData>({
     resolver: zodResolver(organizationSchema),
@@ -98,7 +100,26 @@ export default function OwnerSettingsPage() {
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    toast.info("Logo upload coming soon!");
+    const file = e.target.files?.[0];
+    if (!file || !organization?.id) {
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload a valid image file");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Logo must be smaller than 5MB");
+      return;
+    }
+
+    uploadLogo.mutate({ organizationId: organization.id, image: file });
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleSlugChange = (slug: string) => {
@@ -241,9 +262,14 @@ export default function OwnerSettingsPage() {
                         type="button"
                         variant="outline"
                         onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadLogo.isPending}
                       >
-                        <Upload className="h-4 w-4 mr-2" />
-                        Upload Logo
+                        {uploadLogo.isPending ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <Upload className="h-4 w-4 mr-2" />
+                        )}
+                        {uploadLogo.isPending ? "Uploading..." : "Upload Logo"}
                       </Button>
                       <p className="text-xs text-muted-foreground mt-1">
                         Recommended: 200x200px, max 5MB

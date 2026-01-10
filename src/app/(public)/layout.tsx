@@ -1,4 +1,4 @@
-import { Navbar, Footer } from "@/features/discovery/components";
+import { Footer, Navbar } from "@/features/discovery/components";
 
 export default function PublicLayout({
   children,

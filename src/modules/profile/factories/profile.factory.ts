@@ -1,3 +1,4 @@
+import { makeObjectStorageService } from "@/modules/storage/factories/storage.factory";
 import { getContainer } from "@/shared/infra/container";
 import { ProfileRepository } from "../repositories/profile.repository";
 import { ProfileService } from "../services/profile.service";
@@ -17,6 +18,7 @@ export function makeProfileService(): ProfileService {
     profileService = new ProfileService(
       makeProfileRepository(),
       getContainer().transactionManager,
+      makeObjectStorageService(),
     );
   }
   return profileService;

@@ -1,6 +1,6 @@
-import type { IAuthRepository } from "../repositories/auth.repository";
-import type { User, Session } from "@supabase/supabase-js";
+import type { Session, User } from "@supabase/supabase-js";
 import { logger } from "@/shared/infra/logger";
+import type { IAuthRepository } from "../repositories/auth.repository";
 
 /**
  * Interface for authentication service.

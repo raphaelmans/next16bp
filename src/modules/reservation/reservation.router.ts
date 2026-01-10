@@ -1,32 +1,32 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 import {
-  router,
-  protectedProcedure,
-  protectedRateLimitedProcedure,
-} from "@/shared/infra/trpc/trpc";
-import { makeReservationService } from "./factories/reservation.factory";
+  IncompleteProfileError,
+  ProfileNotFoundError,
+} from "@/modules/profile/errors/profile.errors";
 import { makeProfileService } from "@/modules/profile/factories/profile.factory";
-import {
-  CreateReservationSchema,
-  MarkPaymentSchema,
-  CancelReservationSchema,
-  GetMyReservationsSchema,
-} from "./dtos";
-import {
-  ReservationNotFoundError,
-  ReservationExpiredError,
-  InvalidReservationStatusError,
-  NotReservationOwnerError,
-  TermsNotAcceptedError,
-  SlotNotAvailableError,
-} from "./errors/reservation.errors";
 import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
 import {
-  ProfileNotFoundError,
-  IncompleteProfileError,
-} from "@/modules/profile/errors/profile.errors";
+  protectedProcedure,
+  protectedRateLimitedProcedure,
+  router,
+} from "@/shared/infra/trpc/trpc";
 import { AppError } from "@/shared/kernel/errors";
+import {
+  CancelReservationSchema,
+  CreateReservationSchema,
+  GetMyReservationsSchema,
+  MarkPaymentSchema,
+} from "./dtos";
+import {
+  InvalidReservationStatusError,
+  NotReservationOwnerError,
+  ReservationExpiredError,
+  ReservationNotFoundError,
+  SlotNotAvailableError,
+  TermsNotAcceptedError,
+} from "./errors/reservation.errors";
+import { makeReservationService } from "./factories/reservation.factory";
 
 /**
  * Maps known errors to appropriate tRPC error codes

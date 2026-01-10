@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { Building2, ArrowRight, Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
+import { ArrowRight, Building2, Plus } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,8 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTRPC } from "@/trpc/client";
 
 export function OwnerCtaSection() {
   const trpc = useTRPC();

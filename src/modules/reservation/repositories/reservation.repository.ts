@@ -1,13 +1,14 @@
-import { eq, desc, and, count, inArray } from "drizzle-orm";
+import { and, count, desc, eq, inArray } from "drizzle-orm";
 import {
+  court,
+  type InsertReservation,
+  paymentProof,
+  type ReservationRecord,
   reservation,
   timeSlot,
-  court,
-  type ReservationRecord,
-  type InsertReservation,
 } from "@/shared/infra/db/schema";
-import type { RequestContext } from "@/shared/kernel/context";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
+import type { RequestContext } from "@/shared/kernel/context";
 import type { ReservationWithDetails } from "../dtos/reservation-owner.dto";
 
 export interface IReservationRepository {
@@ -322,10 +323,17 @@ export class ReservationRepository implements IReservationRepository {
         slotEndTime: timeSlot.endTime,
         amountCents: timeSlot.priceCents,
         currency: timeSlot.currency,
+        paymentProof: {
+          referenceNumber: paymentProof.referenceNumber,
+          notes: paymentProof.notes,
+          fileUrl: paymentProof.fileUrl,
+          createdAt: paymentProof.createdAt,
+        },
       })
       .from(reservation)
       .innerJoin(timeSlot, eq(reservation.timeSlotId, timeSlot.id))
       .innerJoin(court, eq(timeSlot.courtId, court.id))
+      .leftJoin(paymentProof, eq(paymentProof.reservationId, reservation.id))
       .where(and(...conditions))
       .orderBy(desc(reservation.createdAt))
       .limit(filters.limit)
@@ -333,11 +341,28 @@ export class ReservationRepository implements IReservationRepository {
 
     const results = await query;
 
-    return results.map((r) => ({
-      ...r,
-      slotStartTime: r.slotStartTime?.toISOString() ?? "",
-      slotEndTime: r.slotEndTime?.toISOString() ?? "",
-      createdAt: r.createdAt?.toISOString() ?? null,
-    }));
+    return results.map((r) => {
+      const proof = r.paymentProof;
+      const hasProof =
+        proof?.referenceNumber ||
+        proof?.notes ||
+        proof?.fileUrl ||
+        proof?.createdAt;
+
+      return {
+        ...r,
+        slotStartTime: r.slotStartTime?.toISOString() ?? "",
+        slotEndTime: r.slotEndTime?.toISOString() ?? "",
+        createdAt: r.createdAt?.toISOString() ?? null,
+        paymentProof: hasProof
+          ? {
+              referenceNumber: proof?.referenceNumber ?? null,
+              notes: proof?.notes ?? null,
+              fileUrl: proof?.fileUrl ?? null,
+              createdAt: proof?.createdAt?.toISOString() ?? "",
+            }
+          : null,
+      };
+    });
   }
 }

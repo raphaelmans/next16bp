@@ -1,10 +1,10 @@
-import { router, publicProcedure } from "@/shared/infra/trpc/trpc";
-import { makeCourtDiscoveryService } from "./factories/court.factory";
+import { publicProcedure, router } from "@/shared/infra/trpc/trpc";
 import {
   GetCourtByIdSchema,
-  SearchCourtsSchema,
   ListCourtsByCitySchema,
+  SearchCourtsSchema,
 } from "./dtos";
+import { makeCourtDiscoveryService } from "./factories/court.factory";
 
 export const courtRouter = router({
   /**

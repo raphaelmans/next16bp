@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import {
+  createTRPCClient,
+  httpBatchLink,
+  httpLink,
+  isNonJsonSerializable,
+  splitLink,
+} from "@trpc/client";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { useState } from "react";
+import type { AppRouter } from "@/shared/infra/trpc/root";
 import { TRPCProvider } from "@/trpc/client";
 import { getQueryClient } from "@/trpc/query-client";
-import type { AppRouter } from "@/shared/infra/trpc/root";
 
 /**
  * Returns the base URL for tRPC requests.
@@ -31,8 +37,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [trpcClient] = useState(() =>
     createTRPCClient<AppRouter>({
       links: [
-        httpBatchLink({
-          url: `${getBaseUrl()}/api/trpc`,
+        splitLink({
+          // Route FormData/File/Blob to non-batched endpoint
+          // httpLink handles non-JSON content types natively in tRPC v11
+          condition: (op) => isNonJsonSerializable(op.input),
+          true: httpLink({
+            url: `${getBaseUrl()}/api/trpc`,
+          }),
+          // Regular JSON uses batched endpoint for efficiency
+          false: httpBatchLink({
+            url: `${getBaseUrl()}/api/trpc`,
+          }),
         }),
       ],
     }),

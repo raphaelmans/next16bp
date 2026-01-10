@@ -1,14 +1,14 @@
 "use client";
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import {
-  useReservationsTabs,
-  reservationTabs,
-  type ReservationTab,
-} from "../hooks/use-reservations-tabs";
-import { useReservationCounts } from "../hooks/use-my-reservations";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { useReservationCounts } from "../hooks/use-my-reservations";
+import {
+  type ReservationTab,
+  reservationTabs,
+  useReservationsTabs,
+} from "../hooks/use-reservations-tabs";
 
 const tabLabels: Record<ReservationTab, string> = {
   upcoming: "Upcoming",

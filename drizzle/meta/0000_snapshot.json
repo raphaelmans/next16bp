@@ -64,9 +64,7 @@
         "users_phone_unique": {
           "name": "users_phone_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "phone"
-          ]
+          "columns": ["phone"]
         }
       },
       "policies": {},
@@ -119,12 +117,8 @@
           "tableFrom": "user_roles",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -134,9 +128,7 @@
         "user_roles_user_id_unique": {
           "name": "user_roles_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -222,12 +214,8 @@
           "tableFrom": "profile",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -237,9 +225,7 @@
         "profile_user_id_unique": {
           "name": "profile_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -320,12 +306,8 @@
           "tableFrom": "organization",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "owner_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -335,9 +317,7 @@
         "organization_slug_unique": {
           "name": "organization_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -412,12 +392,8 @@
           "name": "organization_profile_organization_id_organization_id_fk",
           "tableFrom": "organization_profile",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -427,9 +403,7 @@
         "organization_profile_organization_id_unique": {
           "name": "organization_profile_organization_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id"
-          ]
+          "columns": ["organization_id"]
         }
       },
       "policies": {},
@@ -610,12 +584,8 @@
           "name": "court_organization_id_organization_id_fk",
           "tableFrom": "court",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -694,12 +664,8 @@
           "name": "curated_court_detail_court_id_court_id_fk",
           "tableFrom": "curated_court_detail",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -709,9 +675,7 @@
         "curated_court_detail_court_id_unique": {
           "name": "curated_court_detail_court_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "court_id"
-          ]
+          "columns": ["court_id"]
         }
       },
       "policies": {},
@@ -800,12 +764,8 @@
           "name": "reservable_court_detail_court_id_court_id_fk",
           "tableFrom": "reservable_court_detail",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -815,9 +775,7 @@
         "reservable_court_detail_court_id_unique": {
           "name": "reservable_court_detail_court_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "court_id"
-          ]
+          "columns": ["court_id"]
         }
       },
       "policies": {},
@@ -868,12 +826,8 @@
           "name": "court_photo_court_id_court_id_fk",
           "tableFrom": "court_photo",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -921,12 +875,8 @@
           "name": "court_amenity_court_id_court_id_fk",
           "tableFrom": "court_amenity",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -936,10 +886,7 @@
         "court_amenity_court_id_name_unique": {
           "name": "court_amenity_court_id_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "court_id",
-            "name"
-          ]
+          "columns": ["court_id", "name"]
         }
       },
       "policies": {},
@@ -1075,12 +1022,8 @@
           "name": "time_slot_court_id_court_id_fk",
           "tableFrom": "time_slot",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1090,10 +1033,7 @@
         "time_slot_court_id_start_time_unique": {
           "name": "time_slot_court_id_start_time_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "court_id",
-            "start_time"
-          ]
+          "columns": ["court_id", "start_time"]
         }
       },
       "policies": {},
@@ -1158,12 +1098,8 @@
           "name": "payment_proof_reservation_id_reservation_id_fk",
           "tableFrom": "payment_proof",
           "tableTo": "reservation",
-          "columnsFrom": [
-            "reservation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reservation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1173,9 +1109,7 @@
         "payment_proof_reservation_id_unique": {
           "name": "payment_proof_reservation_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "reservation_id"
-          ]
+          "columns": ["reservation_id"]
         }
       },
       "policies": {},
@@ -1328,12 +1262,8 @@
           "name": "reservation_time_slot_id_time_slot_id_fk",
           "tableFrom": "reservation",
           "tableTo": "time_slot",
-          "columnsFrom": [
-            "time_slot_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["time_slot_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1341,12 +1271,8 @@
           "name": "reservation_player_id_profile_id_fk",
           "tableFrom": "reservation",
           "tableTo": "profile",
-          "columnsFrom": [
-            "player_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["player_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1435,12 +1361,8 @@
           "name": "reservation_event_reservation_id_reservation_id_fk",
           "tableFrom": "reservation_event",
           "tableTo": "reservation",
-          "columnsFrom": [
-            "reservation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reservation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1449,12 +1371,8 @@
           "tableFrom": "reservation_event",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "triggered_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["triggered_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1554,12 +1472,8 @@
           "name": "claim_request_court_id_court_id_fk",
           "tableFrom": "claim_request",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1567,12 +1481,8 @@
           "name": "claim_request_organization_id_organization_id_fk",
           "tableFrom": "claim_request",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1581,12 +1491,8 @@
           "tableFrom": "claim_request",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "requested_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["requested_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1595,12 +1501,8 @@
           "tableFrom": "claim_request",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "reviewer_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reviewer_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1682,12 +1584,8 @@
           "name": "claim_request_event_claim_request_id_claim_request_id_fk",
           "tableFrom": "claim_request_event",
           "tableTo": "claim_request",
-          "columnsFrom": [
-            "claim_request_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["claim_request_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1696,12 +1594,8 @@
           "tableFrom": "claim_request_event",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "triggered_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["triggered_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1717,37 +1611,22 @@
     "public.claim_request_status": {
       "name": "claim_request_status",
       "schema": "public",
-      "values": [
-        "PENDING",
-        "APPROVED",
-        "REJECTED"
-      ]
+      "values": ["PENDING", "APPROVED", "REJECTED"]
     },
     "public.claim_request_type": {
       "name": "claim_request_type",
       "schema": "public",
-      "values": [
-        "CLAIM",
-        "REMOVAL"
-      ]
+      "values": ["CLAIM", "REMOVAL"]
     },
     "public.claim_status": {
       "name": "claim_status",
       "schema": "public",
-      "values": [
-        "UNCLAIMED",
-        "CLAIM_PENDING",
-        "CLAIMED",
-        "REMOVAL_REQUESTED"
-      ]
+      "values": ["UNCLAIMED", "CLAIM_PENDING", "CLAIMED", "REMOVAL_REQUESTED"]
     },
     "public.court_type": {
       "name": "court_type",
       "schema": "public",
-      "values": [
-        "CURATED",
-        "RESERVABLE"
-      ]
+      "values": ["CURATED", "RESERVABLE"]
     },
     "public.reservation_status": {
       "name": "reservation_status",
@@ -1764,21 +1643,12 @@
     "public.time_slot_status": {
       "name": "time_slot_status",
       "schema": "public",
-      "values": [
-        "AVAILABLE",
-        "HELD",
-        "BOOKED",
-        "BLOCKED"
-      ]
+      "values": ["AVAILABLE", "HELD", "BOOKED", "BLOCKED"]
     },
     "public.triggered_by_role": {
       "name": "triggered_by_role",
       "schema": "public",
-      "values": [
-        "PLAYER",
-        "OWNER",
-        "SYSTEM"
-      ]
+      "values": ["PLAYER", "OWNER", "SYSTEM"]
     }
   },
   "schemas": {},

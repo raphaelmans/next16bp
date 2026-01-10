@@ -1,22 +1,22 @@
 import { eq } from "drizzle-orm";
-import type { TransactionManager } from "@/shared/kernel/transaction";
 import type { ClaimRequestRecord } from "@/shared/infra/db/schema";
 import {
   curatedCourtDetail,
   reservableCourtDetail,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
-import type {
-  IClaimRequestRepository,
-  IClaimCourtRepository,
-} from "../repositories/claim-request.repository";
-import type { IClaimRequestEventRepository } from "../repositories/claim-request-event.repository";
+import { logger } from "@/shared/infra/logger";
+import type { TransactionManager } from "@/shared/kernel/transaction";
 import {
   ClaimRequestNotFoundError,
-  InvalidClaimStatusError,
   CourtNotFoundError,
+  InvalidClaimStatusError,
 } from "../errors/claim-request.errors";
-import { logger } from "@/shared/infra/logger";
+import type {
+  IClaimCourtRepository,
+  IClaimRequestRepository,
+} from "../repositories/claim-request.repository";
+import type { IClaimRequestEventRepository } from "../repositories/claim-request-event.repository";
 
 export interface IApproveClaimRequestUseCase {
   execute(
@@ -32,7 +32,7 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
     private courtRepository: IClaimCourtRepository,
     private claimRequestEventRepository: IClaimRequestEventRepository,
     private transactionManager: TransactionManager,
-    private db: DbClient,
+    _db: DbClient,
   ) {}
 
   async execute(

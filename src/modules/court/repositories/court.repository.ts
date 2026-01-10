@@ -1,20 +1,20 @@
-import { eq, and, sql, count } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import {
-  court,
-  curatedCourtDetail,
-  reservableCourtDetail,
-  courtPhoto,
-  courtAmenity,
-  organization,
+  type CourtAmenityRecord,
+  type CourtPhotoRecord,
   type CourtRecord,
   type CuratedCourtDetailRecord,
-  type ReservableCourtDetailRecord,
-  type CourtPhotoRecord,
-  type CourtAmenityRecord,
+  court,
+  courtAmenity,
+  courtPhoto,
+  curatedCourtDetail,
   type OrganizationRecord,
+  organization,
+  type ReservableCourtDetailRecord,
+  reservableCourtDetail,
 } from "@/shared/infra/db/schema";
-import type { RequestContext } from "@/shared/kernel/context";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
+import type { RequestContext } from "@/shared/kernel/context";
 import type { SearchCourtsDTO } from "../dtos";
 
 /**

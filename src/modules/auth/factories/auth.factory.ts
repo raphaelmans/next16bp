@@ -1,11 +1,11 @@
 import type { CookieMethodsServer } from "@supabase/ssr";
-import { createClient } from "@/shared/infra/supabase/create-client";
 import { env } from "@/lib/env";
+import { makeUserRoleService } from "@/modules/user-role/factories/user-role.factory";
 import { getContainer } from "@/shared/infra/container";
+import { createClient } from "@/shared/infra/supabase/create-client";
 import { AuthRepository } from "../repositories/auth.repository";
 import { AuthService } from "../services/auth.service";
 import { RegisterUserUseCase } from "../use-cases/register-user.use-case";
-import { makeUserRoleService } from "@/modules/user-role/factories/user-role.factory";
 
 /**
  * Auth factories are REQUEST-SCOPED (not lazy singletons)

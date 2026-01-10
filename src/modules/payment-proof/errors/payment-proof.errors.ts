@@ -1,7 +1,7 @@
 import {
+  AuthorizationError,
   ConflictError,
   NotFoundError,
-  AuthorizationError,
   ValidationError,
 } from "@/shared/kernel/errors";
 
@@ -36,10 +36,6 @@ export class NotReservationOwnerError extends AuthorizationError {
 
 export class InvalidReservationStatusError extends ValidationError {
   readonly code = "INVALID_RESERVATION_STATUS";
-
-  constructor(message: string) {
-    super(message);
-  }
 }
 
 export class ReservationNotFoundError extends NotFoundError {

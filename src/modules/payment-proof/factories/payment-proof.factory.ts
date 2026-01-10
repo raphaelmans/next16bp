@@ -1,8 +1,9 @@
+import { makeObjectStorageService } from "@/modules/storage/factories/storage.factory";
 import { getContainer } from "@/shared/infra/container";
 import {
   PaymentProofRepository,
-  ReservationRepository,
   ProfileRepository,
+  ReservationRepository,
 } from "../repositories/payment-proof.repository";
 import { PaymentProofService } from "../services/payment-proof.service";
 
@@ -38,6 +39,7 @@ export function makePaymentProofService() {
       makePaymentProofRepository(),
       makeReservationRepository(),
       makeProfileRepository(),
+      makeObjectStorageService(),
     );
   }
   return paymentProofService;

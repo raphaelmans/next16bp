@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { AlertCircle, X } from "lucide-react";
 import Link from "next/link";
-import { X, AlertCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 interface ProfileCompletionBannerProps {

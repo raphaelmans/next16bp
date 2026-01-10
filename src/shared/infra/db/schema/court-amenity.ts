@@ -1,6 +1,6 @@
-import { pgTable, uuid, varchar, timestamp, unique } from "drizzle-orm/pg-core";
-import { createSelectSchema, createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { pgTable, timestamp, unique, uuid, varchar } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import type { z } from "zod";
 import { court } from "./court";
 
 /**

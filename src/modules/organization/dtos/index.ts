@@ -1,12 +1,16 @@
 export {
-  CreateOrganizationSchema,
   type CreateOrganizationDTO,
+  CreateOrganizationSchema,
 } from "./create-organization.dto";
 export {
-  UpdateOrganizationSchema,
   type UpdateOrganizationDTO,
+  UpdateOrganizationSchema,
 } from "./update-organization.dto";
 export {
-  UpdateOrganizationProfileSchema,
   type UpdateOrganizationProfileDTO,
+  UpdateOrganizationProfileSchema,
 } from "./update-organization-profile.dto";
+export {
+  type UploadOrgLogoInput,
+  UploadOrgLogoSchema,
+} from "./upload-logo.dto";

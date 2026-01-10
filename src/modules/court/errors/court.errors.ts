@@ -1,8 +1,8 @@
 import {
-  NotFoundError,
   AuthorizationError,
-  ValidationError,
   ConflictError,
+  NotFoundError,
+  ValidationError,
 } from "@/shared/kernel/errors";
 
 export class CourtNotFoundError extends NotFoundError {

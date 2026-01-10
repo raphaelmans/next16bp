@@ -1,22 +1,26 @@
-import type { TransactionManager } from "@/shared/kernel/transaction";
-import type { RequestContext } from "@/shared/kernel/context";
-import type { IProfileRepository } from "../repositories/profile.repository";
+import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
+import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
 import type { ProfileRecord } from "@/shared/infra/db/schema";
+import { logger } from "@/shared/infra/logger";
+import type { RequestContext } from "@/shared/kernel/context";
+import type { TransactionManager } from "@/shared/kernel/transaction";
 import type { UpdateProfileDTO } from "../dtos";
 import { ProfileNotFoundError } from "../errors/profile.errors";
-import { logger } from "@/shared/infra/logger";
+import type { IProfileRepository } from "../repositories/profile.repository";
 
 export interface IProfileService {
   getProfile(userId: string): Promise<ProfileRecord>;
   getOrCreateProfile(userId: string): Promise<ProfileRecord>;
   getProfileById(profileId: string): Promise<ProfileRecord>;
   updateProfile(userId: string, data: UpdateProfileDTO): Promise<ProfileRecord>;
+  uploadAvatar(userId: string, file: File): Promise<string>;
 }
 
 export class ProfileService implements IProfileService {
   constructor(
     private profileRepository: IProfileRepository,
     private transactionManager: TransactionManager,
+    private storageService: IObjectStorageService,
   ) {}
 
   async getProfile(userId: string): Promise<ProfileRecord> {
@@ -112,5 +116,43 @@ export class ProfileService implements IProfileService {
 
       return updatedProfile;
     });
+  }
+
+  /**
+   * Upload avatar image and update profile.
+   * Returns the public URL of the uploaded avatar.
+   */
+  async uploadAvatar(userId: string, file: File): Promise<string> {
+    // Get or create profile first
+    const profile = await this.getOrCreateProfile(userId);
+
+    // Generate path: {userId}/avatar.{ext}
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${userId}/avatar.${ext}`;
+
+    // Upload file (upsert to replace existing)
+    const result = await this.storageService.upload({
+      bucket: STORAGE_BUCKETS.AVATARS,
+      path,
+      file,
+      upsert: true,
+    });
+
+    // Update profile with new avatar URL
+    await this.profileRepository.update(profile.id, {
+      avatarUrl: result.url,
+    });
+
+    logger.info(
+      {
+        event: "profile.avatar_uploaded",
+        profileId: profile.id,
+        userId,
+        url: result.url,
+      },
+      "Profile avatar uploaded",
+    );
+
+    return result.url;
   }
 }

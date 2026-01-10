@@ -1,36 +1,37 @@
-import type { TransactionManager } from "@/shared/kernel/transaction";
-import type { RequestContext } from "@/shared/kernel/context";
-import type {
-  ITimeSlotRepository,
-  TimeSlotWithPlayerInfo,
-} from "../repositories/time-slot.repository";
-import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
-import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
-import type { TimeSlotRecord } from "@/shared/infra/db/schema";
-import type {
-  GetAvailableSlotsDTO,
-  GetSlotsForCourtDTO,
-  CreateTimeSlotDTO,
-  CreateBulkTimeSlotsDTO,
-  UpdateSlotPriceDTO,
-} from "../dtos";
-import {
-  SlotNotFoundError,
-  SlotOverlapError,
-  SlotNotAvailableError,
-  CourtNotReservableError,
-  SlotInUseError,
-} from "../errors/time-slot.errors";
 import {
   CourtNotFoundError,
   NotCourtOwnerError,
 } from "@/modules/court/errors/court.errors";
+import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
+import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
+import type { TimeSlotRecord } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
+import type { RequestContext } from "@/shared/kernel/context";
+import type { TransactionManager } from "@/shared/kernel/transaction";
+import type {
+  CreateBulkTimeSlotsDTO,
+  CreateTimeSlotDTO,
+  GetAvailableSlotsDTO,
+  GetSlotsForCourtDTO,
+  UpdateSlotPriceDTO,
+} from "../dtos";
+import {
+  CourtNotReservableError,
+  SlotInUseError,
+  SlotNotAvailableError,
+  SlotNotFoundError,
+  SlotOverlapError,
+} from "../errors/time-slot.errors";
+import type {
+  ITimeSlotRepository,
+  TimeSlotWithPaymentDetails,
+  TimeSlotWithPlayerInfo,
+} from "../repositories/time-slot.repository";
 
 export interface ITimeSlotService {
   // Public queries
   getAvailableSlots(data: GetAvailableSlotsDTO): Promise<TimeSlotRecord[]>;
-  getSlotById(slotId: string): Promise<TimeSlotRecord>;
+  getSlotById(slotId: string): Promise<TimeSlotWithPaymentDetails>;
 
   // Owner operations
   getSlotsForCourt(
@@ -116,7 +117,7 @@ export class TimeSlotService implements ITimeSlotService {
     );
   }
 
-  async getSlotById(slotId: string): Promise<TimeSlotRecord> {
+  async getSlotById(slotId: string): Promise<TimeSlotWithPaymentDetails> {
     const slot = await this.timeSlotRepository.findById(slotId);
     if (!slot) {
       throw new SlotNotFoundError(slotId);

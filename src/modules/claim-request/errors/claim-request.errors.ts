@@ -1,8 +1,8 @@
 import {
-  NotFoundError,
-  ConflictError,
-  ValidationError,
   AuthorizationError,
+  ConflictError,
+  NotFoundError,
+  ValidationError,
 } from "@/shared/kernel/errors";
 
 export class ClaimRequestNotFoundError extends NotFoundError {
@@ -55,10 +55,6 @@ export class NotClaimRequestOwnerError extends AuthorizationError {
 
 export class InvalidClaimStatusError extends ValidationError {
   readonly code = "INVALID_CLAIM_STATUS";
-
-  constructor(message: string) {
-    super(message);
-  }
 }
 
 export class NotOrganizationOwnerError extends AuthorizationError {

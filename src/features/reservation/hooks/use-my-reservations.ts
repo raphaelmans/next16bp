@@ -1,7 +1,7 @@
 "use client";
 
-import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
 import type { ReservationTab } from "./use-reservations-tabs";
 
 interface UseMyReservationsOptions {
@@ -39,7 +39,7 @@ export function useMyReservations(options: UseMyReservationsOptions = {}) {
   const trpc = useTRPC();
   const offset = (page - 1) * limit;
 
-  const status = TAB_STATUS_MAP[tab];
+  const status = tab === "cancelled" ? undefined : TAB_STATUS_MAP[tab];
 
   const query = useQuery(
     trpc.reservation.getMy.queryOptions({
@@ -51,9 +51,18 @@ export function useMyReservations(options: UseMyReservationsOptions = {}) {
 
   // Transform the array data to paginated format with UI-friendly structure
   // Note: Backend returns plain reservation records, we enrich with placeholder structure
-  const transformedData = query.data
+  const reservations = query.data ?? null;
+  const filteredData = reservations
+    ? tab === "cancelled"
+      ? reservations.filter((item) =>
+          ["CANCELLED", "EXPIRED"].includes(item.status),
+        )
+      : reservations
+    : null;
+
+  const transformedData = filteredData
     ? {
-        items: query.data.map((item) => ({
+        items: filteredData.map((item) => ({
           id: item.id,
           status: item.status,
           timeSlotId: item.timeSlotId,
@@ -77,10 +86,10 @@ export function useMyReservations(options: UseMyReservationsOptions = {}) {
             currency: "PHP",
           },
         })),
-        total: query.data.length,
+        total: filteredData.length,
         page,
         limit,
-        hasMore: query.data.length === limit, // Approximation
+        hasMore: filteredData.length === limit, // Approximation
       }
     : undefined;
 
@@ -122,16 +131,26 @@ export function useReservationCounts() {
     }),
   );
 
+  const expiredQuery = useQuery(
+    trpc.reservation.getMy.queryOptions({
+      status: "EXPIRED",
+      limit: 100,
+      offset: 0,
+    }),
+  );
+
   return {
     data: {
       upcoming: upcomingQuery.data?.length ?? 0,
       past: pastQuery.data?.length ?? 0,
-      cancelled: cancelledQuery.data?.length ?? 0,
+      cancelled:
+        (cancelledQuery.data?.length ?? 0) + (expiredQuery.data?.length ?? 0),
     },
     isLoading:
       upcomingQuery.isLoading ||
       pastQuery.isLoading ||
-      cancelledQuery.isLoading,
+      cancelledQuery.isLoading ||
+      expiredQuery.isLoading,
   };
 }
 

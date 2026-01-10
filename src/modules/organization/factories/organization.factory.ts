@@ -1,3 +1,4 @@
+import { makeObjectStorageService } from "@/modules/storage/factories/storage.factory";
 import { getContainer } from "@/shared/infra/container";
 import { OrganizationRepository } from "../repositories/organization.repository";
 import { OrganizationProfileRepository } from "../repositories/organization-profile.repository";
@@ -29,6 +30,7 @@ export function makeOrganizationService(): OrganizationService {
       makeOrganizationRepository(),
       makeOrganizationProfileRepository(),
       getContainer().transactionManager,
+      makeObjectStorageService(),
     );
   }
   return organizationService;

@@ -1,11 +1,11 @@
 "use client";
 
 import { format } from "date-fns";
-import { Calendar, Plus, Loader2 } from "lucide-react";
+import { Calendar, Loader2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SlotItem } from "./slot-item";
 import type { TimeSlot } from "../hooks/use-slots";
+import { SlotItem } from "./slot-item";
 
 interface SlotListProps {
   date: Date;
@@ -42,7 +42,7 @@ export function SlotList({
   });
 
   // Group slots by hour for potential gap detection
-  const slotsByHour = sortedSlots.reduce(
+  const _slotsByHour = sortedSlots.reduce(
     (acc, slot) => {
       const hour = new Date(slot.startTime).getHours();
       if (!acc[hour]) acc[hour] = [];

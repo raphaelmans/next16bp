@@ -1,8 +1,8 @@
 "use client";
 
-import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
 import type { CourtCardCourt } from "@/shared/components/kudos";
+import { useTRPC } from "@/trpc/client";
 
 interface UseDiscoveryOptions {
   q?: string;

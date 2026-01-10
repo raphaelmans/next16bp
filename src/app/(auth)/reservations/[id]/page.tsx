@@ -1,18 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
-import { PageHeader } from "@/components/ui/page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Container } from "@/shared/components/layout";
-import { StatusBanner } from "@/features/reservation/components/status-banner";
-import { BookingDetailsCard } from "@/features/reservation/components/booking-details-card";
-import { ReservationActionsCard } from "@/features/reservation/components/reservation-actions-card";
-import { CancelDialog } from "@/features/reservation/components/cancel-dialog";
-import Link from "next/link";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
+import { BookingDetailsCard } from "@/features/reservation/components/booking-details-card";
+import { CancelDialog } from "@/features/reservation/components/cancel-dialog";
+import { ReservationActionsCard } from "@/features/reservation/components/reservation-actions-card";
+import { ReservationExpired } from "@/features/reservation/components/reservation-expired";
+import { StatusBanner } from "@/features/reservation/components/status-banner";
+import { Container } from "@/shared/components/layout";
+import {
+  formatCurrency,
+  formatDateShort,
+  formatTimeRange,
+} from "@/shared/lib/format";
+import { useTRPC } from "@/trpc/client";
 
 export default function ReservationDetailPage() {
   const params = useParams();
@@ -100,6 +106,30 @@ export default function ReservationDetailPage() {
     currency: timeSlot.currency ?? "PHP",
   };
 
+  const slotDate = formatDateShort(transformedTimeSlot.startTime);
+  const slotTime = formatTimeRange(
+    transformedTimeSlot.startTime,
+    transformedTimeSlot.endTime,
+  );
+  const amount = formatCurrency(
+    transformedTimeSlot.priceCents,
+    transformedTimeSlot.currency,
+  );
+
+  if (reservation.status === "EXPIRED") {
+    return (
+      <Container className="py-6">
+        <ReservationExpired
+          courtId={court.id}
+          courtName={court.name}
+          slotDate={slotDate}
+          slotTime={slotTime}
+          amount={amount}
+        />
+      </Container>
+    );
+  }
+
   return (
     <Container className="py-6">
       <PageHeader
@@ -112,7 +142,7 @@ export default function ReservationDetailPage() {
       />
 
       <StatusBanner
-        status={reservation.status as any}
+        status={reservation.status}
         reservationId={reservation.id}
         expiresAt={reservation.expiresAt ?? undefined}
         cancellationReason={reservation.cancellationReason ?? undefined}
@@ -187,7 +217,7 @@ export default function ReservationDetailPage() {
         <div>
           <ReservationActionsCard
             reservationId={reservation.id}
-            status={reservation.status as any}
+            status={reservation.status}
             court={court}
             organization={organization}
             onCancel={() => setShowCancelDialog(true)}

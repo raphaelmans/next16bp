@@ -1,7 +1,7 @@
 import {
-  NotFoundError,
-  ConflictError,
   AuthorizationError,
+  ConflictError,
+  NotFoundError,
 } from "@/shared/kernel/errors";
 
 export class OrganizationNotFoundError extends NotFoundError {

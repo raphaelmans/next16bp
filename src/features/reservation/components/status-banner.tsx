@@ -1,12 +1,12 @@
 "use client";
 
+import { AlertTriangle, CheckCircle, Clock, Info, XCircle } from "lucide-react";
 import Link from "next/link";
-import { CheckCircle, Clock, AlertTriangle, XCircle, Info } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import type { ReservationStatus } from "@/shared/components/kudos";
 import { formatRelative } from "@/shared/lib/format";
-import { cn } from "@/lib/utils";
 
 interface StatusBannerProps {
   status: ReservationStatus;
@@ -53,7 +53,7 @@ export function StatusBanner({
         </span>
         {showPayButton && (
           <Button size="sm" asChild className="w-fit">
-            <Link href={`/reservations/${reservationId}/pay`}>Pay Now</Link>
+            <Link href={`/reservations/${reservationId}/payment`}>Pay Now</Link>
           </Button>
         )}
       </AlertDescription>

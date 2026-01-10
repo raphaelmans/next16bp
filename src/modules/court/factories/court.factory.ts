@@ -1,15 +1,16 @@
+import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
+import { makeObjectStorageService } from "@/modules/storage/factories/storage.factory";
 import { getContainer } from "@/shared/infra/container";
-import { CourtRepository } from "../repositories/court.repository";
 import { AdminCourtRepository } from "../repositories/admin-court.repository";
-import { CourtPhotoRepository } from "../repositories/court-photo.repository";
+import { CourtRepository } from "../repositories/court.repository";
 import { CourtAmenityRepository } from "../repositories/court-amenity.repository";
+import { CourtPhotoRepository } from "../repositories/court-photo.repository";
 import { ReservableCourtDetailRepository } from "../repositories/reservable-court-detail.repository";
-import { CourtDiscoveryService } from "../services/court-discovery.service";
 import { AdminCourtService } from "../services/admin-court.service";
+import { CourtDiscoveryService } from "../services/court-discovery.service";
 import { CourtManagementService } from "../services/court-management.service";
 import { CreateReservableCourtUseCase } from "../use-cases/create-reservable-court.use-case";
 import { CreateSimpleCourtUseCase } from "../use-cases/create-simple-court.use-case";
-import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
 
 let courtRepository: CourtRepository | null = null;
 let adminCourtRepository: AdminCourtRepository | null = null;
@@ -86,6 +87,7 @@ export function makeCourtManagementService() {
       makeCourtAmenityRepository(),
       makeOrganizationRepository(),
       getContainer().transactionManager,
+      makeObjectStorageService(),
     );
   }
   return courtManagementService;

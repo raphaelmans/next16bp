@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
 import { Camera } from "lucide-react";
+import { useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 

@@ -15,10 +15,10 @@ export const CreateCuratedCourtSchema = z.object({
   name: z.string().min(1).max(200),
   address: z.string().min(1),
   city: z.string().min(1).max(100),
-  latitude: z.string().refine((val) => !isNaN(parseFloat(val)), {
+  latitude: z.string().refine((val) => !Number.isNaN(parseFloat(val)), {
     message: "Latitude must be a valid decimal number",
   }),
-  longitude: z.string().refine((val) => !isNaN(parseFloat(val)), {
+  longitude: z.string().refine((val) => !Number.isNaN(parseFloat(val)), {
     message: "Longitude must be a valid decimal number",
   }),
   // Curated detail fields

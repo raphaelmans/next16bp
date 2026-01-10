@@ -1,21 +1,21 @@
 import { eq } from "drizzle-orm";
-import type { RequestContext } from "@/shared/kernel/context";
 import type {
-  ReservationEventRecord,
   ClaimRequestEventRecord,
+  ReservationEventRecord,
 } from "@/shared/infra/db/schema";
 import {
-  reservation,
-  reservationEvent,
   claimRequest,
   claimRequestEvent,
-  profile,
-  timeSlot,
   court,
   organization,
+  profile,
+  reservation,
+  reservationEvent,
+  timeSlot,
   userRoles,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
+import type { RequestContext } from "@/shared/kernel/context";
 import { AuthorizationError, NotFoundError } from "@/shared/kernel/errors";
 
 class ReservationNotFoundError extends NotFoundError {
@@ -135,7 +135,7 @@ export class AuditService implements IAuditService {
   }
 
   async getClaimRequestHistory(
-    adminUserId: string,
+    _adminUserId: string,
     claimRequestId: string,
     ctx?: RequestContext,
   ): Promise<ClaimRequestEventRecord[]> {

@@ -1,19 +1,19 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { LogIn } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useSession } from "@/features/auth/hooks/use-auth";
+import { cn } from "@/lib/utils";
 import {
   KudosDatePicker,
+  type TimeSlot,
   TimeSlotPicker,
   TimeSlotPickerSkeleton,
-  type TimeSlot,
 } from "@/shared/components/kudos";
 import { formatCurrency } from "@/shared/lib/format";
-import { useSession } from "@/features/auth/hooks/use-auth";
 
 interface BookingCardProps {
   courtId: string;

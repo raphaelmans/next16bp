@@ -18,7 +18,10 @@ export function useCancelReservation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ reservationId, reason }: CancelReservationInput) => {
+    mutationFn: async ({
+      reservationId: _reservationId,
+      reason: _reason,
+    }: CancelReservationInput) => {
       // This will be replaced with actual API call
       // await trpc.reservation.cancel.mutate({ reservationId, reason });
       throw new Error("Not implemented");

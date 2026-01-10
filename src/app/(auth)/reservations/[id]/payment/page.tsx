@@ -1,22 +1,36 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
-import { useMarkPayment } from "@/features/reservation/hooks";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { ArrowLeft, CheckCircle, Loader2, Clock } from "lucide-react";
+import { ArrowLeft, CheckCircle, Clock, Loader2 } from "lucide-react";
 import Link from "next/link";
-
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { CountdownTimer } from "@/features/reservation/components/countdown-timer";
+import { PaymentInstructions } from "@/features/reservation/components/payment-instructions";
+import { PaymentProofForm } from "@/features/reservation/components/payment-proof-form";
+import { ReservationExpired } from "@/features/reservation/components/reservation-expired";
+import { TermsCheckbox } from "@/features/reservation/components/terms-checkbox";
+import {
+  useMarkPayment,
+  useUploadPaymentProof,
+} from "@/features/reservation/hooks";
 import { Container } from "@/shared/components/layout";
+import { useTRPC } from "@/trpc/client";
 
 export default function PaymentPage() {
   const params = useParams();
   const router = useRouter();
   const reservationId = params.id as string;
   const trpc = useTRPC();
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [referenceNumber, setReferenceNumber] = useState("");
+  const [notes, setNotes] = useState("");
+  const [proofFile, setProofFile] = useState<File | null>(null);
+  const [isExpired, setIsExpired] = useState(false);
 
   // Fetch reservation details
   const { data: reservation, isLoading } = useQuery({
@@ -31,17 +45,50 @@ export default function PaymentPage() {
     enabled: !!reservation?.timeSlotId,
   });
 
+  const addPaymentProof = useMutation(
+    trpc.paymentProof.add.mutationOptions({
+      onError: (error) => {
+        toast.error(error.message || "Failed to submit payment proof");
+      },
+    }),
+  );
+
+  const uploadPaymentProof = useUploadPaymentProof();
   const markPayment = useMarkPayment();
 
-  const handleMarkPaid = () => {
-    markPayment.mutate(
-      { reservationId, termsAccepted: true },
-      {
-        onSuccess: () => {
-          router.push(`/reservations/${reservationId}`);
-        },
-      },
-    );
+  useEffect(() => {
+    if (reservation?.expiresAt) {
+      setIsExpired(new Date(reservation.expiresAt) < new Date());
+    }
+  }, [reservation?.expiresAt]);
+
+  const handleMarkPaid = async () => {
+    try {
+      if (!proofFile && notes && !referenceNumber) {
+        toast.error("Reference number required when adding notes");
+        return;
+      }
+
+      if (proofFile) {
+        await uploadPaymentProof.mutateAsync({
+          reservationId,
+          image: proofFile,
+          referenceNumber: referenceNumber || undefined,
+          notes: notes || undefined,
+        });
+      } else if (referenceNumber) {
+        await addPaymentProof.mutateAsync({
+          reservationId,
+          referenceNumber: referenceNumber || undefined,
+          notes: notes || undefined,
+        });
+      }
+
+      await markPayment.mutateAsync({ reservationId, termsAccepted: true });
+      router.push(`/reservations/${reservationId}`);
+    } catch (_error) {
+      toast.error("Failed to submit payment");
+    }
   };
 
   // Loading state
@@ -51,6 +98,39 @@ export default function PaymentPage() {
         <div className="flex items-center justify-center min-h-[400px]">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
         </div>
+      </Container>
+    );
+  }
+
+  const isPaymentExpired =
+    reservation?.status === "EXPIRED" || (reservation ? isExpired : false);
+  const price = slot?.priceCents
+    ? `₱${(slot.priceCents / 100).toFixed(0)}`
+    : "—";
+  const slotDate = slot?.startTime
+    ? format(new Date(slot.startTime), "EEEE, MMMM d, yyyy")
+    : undefined;
+  const slotTime = slot?.startTime
+    ? `${format(new Date(slot.startTime), "h:mm a")} - ${format(
+        new Date(slot.endTime),
+        "h:mm a",
+      )}`
+    : undefined;
+
+  const isSubmitting =
+    markPayment.isPending ||
+    uploadPaymentProof.isPending ||
+    addPaymentProof.isPending;
+
+  if (isPaymentExpired) {
+    return (
+      <Container className="py-6">
+        <ReservationExpired
+          courtId={slot?.courtId ?? undefined}
+          slotDate={slotDate}
+          slotTime={slotTime}
+          amount={price}
+        />
       </Container>
     );
   }
@@ -85,10 +165,6 @@ export default function PaymentPage() {
     );
   }
 
-  const price = slot?.priceCents
-    ? `₱${(slot.priceCents / 100).toFixed(0)}`
-    : "—";
-
   return (
     <Container className="py-6">
       <div className="max-w-lg mx-auto">
@@ -110,6 +186,15 @@ export default function PaymentPage() {
             Pay the court owner and mark your payment below
           </p>
         </div>
+
+        {reservation?.expiresAt && (
+          <div className="mb-6">
+            <CountdownTimer
+              expiresAt={reservation.expiresAt}
+              onExpire={() => setIsExpired(true)}
+            />
+          </div>
+        )}
 
         {/* Reservation Details */}
         <Card className="mb-6">
@@ -139,39 +224,42 @@ export default function PaymentPage() {
           </CardContent>
         </Card>
 
-        {/* Payment Instructions (Simplified) */}
-        <Card className="mb-6 bg-muted/30">
-          <CardContent className="p-6">
-            <h3 className="font-heading font-semibold mb-3">How to Pay</h3>
-            <ol className="space-y-2 text-sm text-muted-foreground">
-              <li className="flex gap-2">
-                <span className="font-medium text-foreground">1.</span>
-                Contact the court owner for payment details
-              </li>
-              <li className="flex gap-2">
-                <span className="font-medium text-foreground">2.</span>
-                Pay via GCash, bank transfer, or cash
-              </li>
-              <li className="flex gap-2">
-                <span className="font-medium text-foreground">3.</span>
-                Click "I Have Paid" below
-              </li>
-              <li className="flex gap-2">
-                <span className="font-medium text-foreground">4.</span>
-                Wait for the owner to confirm your payment
-              </li>
-            </ol>
-          </CardContent>
-        </Card>
+        <div className="mb-6">
+          <PaymentInstructions
+            gcashNumber={slot?.paymentDetails?.gcashNumber}
+            bankName={slot?.paymentDetails?.bankName}
+            bankAccountNumber={slot?.paymentDetails?.bankAccountNumber}
+            bankAccountName={slot?.paymentDetails?.bankAccountName}
+            paymentInstructions={slot?.paymentDetails?.paymentInstructions}
+          />
+        </div>
+
+        <div className="mb-6">
+          <PaymentProofForm
+            referenceNumber={referenceNumber}
+            notes={notes}
+            file={proofFile}
+            onReferenceChange={setReferenceNumber}
+            onNotesChange={setNotes}
+            onFileChange={setProofFile}
+          />
+        </div>
+
+        <div className="mb-6">
+          <TermsCheckbox
+            checked={termsAccepted}
+            onCheckedChange={setTermsAccepted}
+          />
+        </div>
 
         {/* Mark Paid Button */}
         <Button
           onClick={handleMarkPaid}
-          disabled={markPayment.isPending}
+          disabled={isSubmitting || !termsAccepted || isExpired}
           className="w-full"
           size="lg"
         >
-          {markPayment.isPending ? (
+          {isSubmitting ? (
             <>
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               Processing...

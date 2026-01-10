@@ -1,10 +1,10 @@
 import {
-  router,
-  protectedProcedure,
   adminProcedure,
+  protectedProcedure,
+  router,
 } from "@/shared/infra/trpc/trpc";
+import { GetClaimHistorySchema, GetReservationHistorySchema } from "./dtos";
 import { makeAuditService } from "./factories/audit.factory";
-import { GetReservationHistorySchema, GetClaimHistorySchema } from "./dtos";
 
 export const auditRouter = router({
   /**

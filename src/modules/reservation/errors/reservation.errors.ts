@@ -1,7 +1,7 @@
 import {
+  AuthorizationError,
   NotFoundError,
   ValidationError,
-  AuthorizationError,
 } from "@/shared/kernel/errors";
 
 export class ReservationNotFoundError extends NotFoundError {

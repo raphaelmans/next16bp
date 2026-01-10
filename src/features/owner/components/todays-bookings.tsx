@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { Clock, User } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { formatTime } from "@/shared/lib/format";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { formatTime } from "@/shared/lib/format";
 
 type BookingStatus = "booked" | "pending" | "available" | "blocked";
 

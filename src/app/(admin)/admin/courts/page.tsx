@@ -1,46 +1,21 @@
 "use client";
 
-import * as React from "react";
-import Link from "next/link";
 import {
-  Search,
-  Plus,
-  MoreHorizontal,
-  ExternalLink,
   Edit,
-  Power,
+  ExternalLink,
   History,
   MapPin,
+  MoreHorizontal,
+  Plus,
+  Power,
+  Search,
 } from "lucide-react";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
-import { AdminSidebar, AdminNavbar } from "@/features/admin";
-import {
-  useAdminCourts,
-  useToggleCourtStatus,
-  useCities,
-  type CourtType,
-  type CourtStatus,
-  type ClaimStatusFilter,
-} from "@/features/admin/hooks/use-admin-courts";
-import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
-import { useSession, useLogout } from "@/features/auth";
+import Image from "next/image";
+import Link from "next/link";
+import * as React from "react";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,8 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -58,10 +32,37 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { AdminNavbar, AdminSidebar } from "@/features/admin";
+import {
+  type ClaimStatusFilter,
+  type CourtStatus,
+  type CourtType,
+  useAdminCourts,
+  useCities,
+  useToggleCourtStatus,
+} from "@/features/admin/hooks/use-admin-courts";
+import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
+import { useLogout, useSession } from "@/features/auth";
 import { cn } from "@/lib/utils";
+import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
 
-const claimStatusLabels: Record<ClaimStatusFilter, string> = {
+const _claimStatusLabels: Record<ClaimStatusFilter, string> = {
   unclaimed: "Unclaimed",
   claim_pending: "Claim Pending",
   claimed: "Claimed",
@@ -283,9 +284,11 @@ export default function AdminCourtsPage() {
                       <TableCell>
                         <div className="flex items-center gap-3">
                           {court.imageUrl && (
-                            <img
+                            <Image
                               src={court.imageUrl}
                               alt={court.name}
+                              width={48}
+                              height={36}
                               className="w-12 h-9 object-cover rounded"
                             />
                           )}

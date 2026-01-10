@@ -1,11 +1,11 @@
-import { eq, and, ne } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import {
-  organization,
-  type OrganizationRecord,
   type InsertOrganization,
+  type OrganizationRecord,
+  organization,
 } from "@/shared/infra/db/schema";
-import type { RequestContext } from "@/shared/kernel/context";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
+import type { RequestContext } from "@/shared/kernel/context";
 
 export interface IOrganizationRepository {
   findById(

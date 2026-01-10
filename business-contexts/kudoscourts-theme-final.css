@@ -15,7 +15,7 @@
    Aesthetic: Minimalist Bento with warm-tinted neutrals
    ============================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 :root {
   /* ─────────────────────────────────────────────────────────────────────────────
@@ -23,10 +23,10 @@
      ───────────────────────────────────────────────────────────────────────────── */
   --background: oklch(0.985 0.003 90);
   --foreground: oklch(0.15 0.01 90);
-  
+
   --card: oklch(1 0.002 90);
   --card-foreground: oklch(0.15 0.01 90);
-  
+
   --popover: oklch(1 0.002 90);
   --popover-foreground: oklch(0.15 0.01 90);
 
@@ -37,14 +37,14 @@
   --primary: oklch(0.58 0.11 175);
   --primary-foreground: oklch(0.99 0 0);
   --primary-light: oklch(0.92 0.04 175);
-  --primary-dark: oklch(0.50 0.10 175);
+  --primary-dark: oklch(0.5 0.1 175);
 
   /* ─────────────────────────────────────────────────────────────────────────────
      SECONDARY - Warm neutral
      Secondary buttons, tags, less prominent actions
      ───────────────────────────────────────────────────────────────────────────── */
   --secondary: oklch(0.96 0.005 90);
-  --secondary-foreground: oklch(0.20 0.01 90);
+  --secondary-foreground: oklch(0.2 0.01 90);
 
   /* ─────────────────────────────────────────────────────────────────────────────
      MUTED - Warm neutral
@@ -57,7 +57,7 @@
      ACCENT - Orange (from logo: #FB923C → #F97316)
      Links, highlights, location pins, availability indicators
      ───────────────────────────────────────────────────────────────────────────── */
-  --accent: oklch(0.70 0.18 45);
+  --accent: oklch(0.7 0.18 45);
   --accent-foreground: oklch(0.99 0 0);
   --accent-light: oklch(0.92 0.06 45);
   --accent-dark: oklch(0.58 0.16 45);
@@ -74,7 +74,7 @@
      SUCCESS - Green (#059669)
      Confirmed reservations, available slots
      ───────────────────────────────────────────────────────────────────────────── */
-  --success: oklch(0.60 0.15 160);
+  --success: oklch(0.6 0.15 160);
   --success-foreground: oklch(0.99 0 0);
   --success-light: oklch(0.95 0.04 160);
 
@@ -83,7 +83,7 @@
      Awaiting payment, expiring soon
      ───────────────────────────────────────────────────────────────────────────── */
   --warning: oklch(0.65 0.15 70);
-  --warning-foreground: oklch(0.20 0.01 70);
+  --warning-foreground: oklch(0.2 0.01 70);
   --warning-light: oklch(0.96 0.04 70);
 
   /* ─────────────────────────────────────────────────────────────────────────────
@@ -96,11 +96,11 @@
   /* ─────────────────────────────────────────────────────────────────────────────
      CHARTS - Full brand palette
      ───────────────────────────────────────────────────────────────────────────── */
-  --chart-1: oklch(0.58 0.11 175);   /* Teal */
-  --chart-2: oklch(0.70 0.18 45);    /* Orange */
-  --chart-3: oklch(0.60 0.15 160);   /* Success Green */
-  --chart-4: oklch(0.65 0.15 70);    /* Warning Amber */
-  --chart-5: oklch(0.55 0.22 27);    /* Red */
+  --chart-1: oklch(0.58 0.11 175); /* Teal */
+  --chart-2: oklch(0.7 0.18 45); /* Orange */
+  --chart-3: oklch(0.6 0.15 160); /* Success Green */
+  --chart-4: oklch(0.65 0.15 70); /* Warning Amber */
+  --chart-5: oklch(0.55 0.22 27); /* Red */
 
   /* ─────────────────────────────────────────────────────────────────────────────
      SIDEBAR
@@ -117,10 +117,10 @@
   /* ─────────────────────────────────────────────────────────────────────────────
      TYPOGRAPHY
      ───────────────────────────────────────────────────────────────────────────── */
-  --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  
+  --font-heading: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
   /* ─────────────────────────────────────────────────────────────────────────────
      RADIUS
      ───────────────────────────────────────────────────────────────────────────── */
@@ -130,8 +130,10 @@
      SHADOWS - Soft, warm-tinted
      ───────────────────────────────────────────────────────────────────────────── */
   --shadow-sm: 0 1px 2px rgba(26, 25, 23, 0.04);
-  --shadow-md: 0 1px 3px rgba(26, 25, 23, 0.04), 0 4px 12px rgba(26, 25, 23, 0.03);
-  --shadow-lg: 0 4px 6px rgba(26, 25, 23, 0.04), 0 10px 24px rgba(26, 25, 23, 0.06);
+  --shadow-md:
+    0 1px 3px rgba(26, 25, 23, 0.04), 0 4px 12px rgba(26, 25, 23, 0.03);
+  --shadow-lg:
+    0 4px 6px rgba(26, 25, 23, 0.04), 0 10px 24px rgba(26, 25, 23, 0.06);
   --shadow-hover: 0 8px 30px rgba(26, 25, 23, 0.08);
 }
 
@@ -142,59 +144,59 @@
 .dark {
   --background: oklch(0.15 0.01 90);
   --foreground: oklch(0.98 0.003 90);
-  
-  --card: oklch(0.20 0.01 90);
+
+  --card: oklch(0.2 0.01 90);
   --card-foreground: oklch(0.98 0.003 90);
-  
-  --popover: oklch(0.20 0.01 90);
+
+  --popover: oklch(0.2 0.01 90);
   --popover-foreground: oklch(0.98 0.003 90);
 
-  --primary: oklch(0.65 0.10 175);
+  --primary: oklch(0.65 0.1 175);
   --primary-foreground: oklch(0.15 0.01 90);
   --primary-light: oklch(0.25 0.05 175);
   --primary-dark: oklch(0.58 0.11 175);
 
   --secondary: oklch(0.27 0.01 90);
   --secondary-foreground: oklch(0.98 0.003 90);
-  
+
   --muted: oklch(0.27 0.01 90);
-  --muted-foreground: oklch(0.70 0.01 90);
+  --muted-foreground: oklch(0.7 0.01 90);
 
   --accent: oklch(0.72 0.16 45);
   --accent-foreground: oklch(0.15 0.01 45);
-  --accent-light: oklch(0.30 0.08 45);
-  --accent-dark: oklch(0.70 0.18 45);
+  --accent-light: oklch(0.3 0.08 45);
+  --accent-dark: oklch(0.7 0.18 45);
 
-  --destructive: oklch(0.60 0.20 27);
+  --destructive: oklch(0.6 0.2 27);
   --destructive-foreground: oklch(0.99 0 0);
-  --destructive-light: oklch(0.30 0.10 27);
+  --destructive-light: oklch(0.3 0.1 27);
 
   --success: oklch(0.65 0.14 160);
   --success-foreground: oklch(0.15 0.01 160);
   --success-light: oklch(0.25 0.06 160);
 
-  --warning: oklch(0.70 0.14 70);
+  --warning: oklch(0.7 0.14 70);
   --warning-foreground: oklch(0.15 0.01 70);
-  --warning-light: oklch(0.30 0.06 70);
+  --warning-light: oklch(0.3 0.06 70);
 
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.65 0.10 175);
+  --ring: oklch(0.65 0.1 175);
 
-  --chart-1: oklch(0.65 0.10 175);
+  --chart-1: oklch(0.65 0.1 175);
   --chart-2: oklch(0.72 0.16 45);
   --chart-3: oklch(0.65 0.14 160);
-  --chart-4: oklch(0.70 0.14 70);
-  --chart-5: oklch(0.60 0.20 27);
+  --chart-4: oklch(0.7 0.14 70);
+  --chart-5: oklch(0.6 0.2 27);
 
   --sidebar: oklch(0.18 0.01 90);
   --sidebar-foreground: oklch(0.98 0.003 90);
-  --sidebar-primary: oklch(0.65 0.10 175);
+  --sidebar-primary: oklch(0.65 0.1 175);
   --sidebar-primary-foreground: oklch(0.15 0.01 90);
-  --sidebar-accent: oklch(0.30 0.08 45);
+  --sidebar-accent: oklch(0.3 0.08 45);
   --sidebar-accent-foreground: oklch(0.85 0.12 45);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.65 0.10 175);
+  --sidebar-ring: oklch(0.65 0.1 175);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -291,17 +293,36 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
 
-h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em; }
-h2 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.015em; }
-h3 { font-size: 1.25rem; font-weight: 600; }
-h4 { font-size: 1.125rem; font-weight: 600; }
+h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
 
 /* Links - use accent (orange) */
 a {
@@ -325,9 +346,15 @@ a:hover {
    ============================================================================= */
 
 /* Font families */
-.font-heading { font-family: var(--font-heading); }
-.font-body { font-family: var(--font-body); }
-.font-mono { font-family: var(--font-mono); }
+.font-heading {
+  font-family: var(--font-heading);
+}
+.font-body {
+  font-family: var(--font-body);
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
 
 /* Animation */
 @keyframes fadeInUp {
@@ -346,12 +373,24 @@ a:hover {
 }
 
 /* Stagger delays */
-.stagger-1 { animation-delay: 0.05s; }
-.stagger-2 { animation-delay: 0.10s; }
-.stagger-3 { animation-delay: 0.15s; }
-.stagger-4 { animation-delay: 0.20s; }
-.stagger-5 { animation-delay: 0.25s; }
-.stagger-6 { animation-delay: 0.30s; }
+.stagger-1 {
+  animation-delay: 0.05s;
+}
+.stagger-2 {
+  animation-delay: 0.1s;
+}
+.stagger-3 {
+  animation-delay: 0.15s;
+}
+.stagger-4 {
+  animation-delay: 0.2s;
+}
+.stagger-5 {
+  animation-delay: 0.25s;
+}
+.stagger-6 {
+  animation-delay: 0.3s;
+}
 
 /* Transitions */
 .transition-base {

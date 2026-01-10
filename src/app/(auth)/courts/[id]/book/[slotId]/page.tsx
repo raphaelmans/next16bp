@@ -1,20 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/page-header";
-import { Container } from "@/shared/components/layout";
 import { BookingSummaryCard } from "@/features/reservation/components/booking-summary-card";
-import { ProfilePreviewCard } from "@/features/reservation/components/profile-preview-card";
-import { PaymentInfoCard } from "@/features/reservation/components/payment-info-card";
 import { OrderSummary } from "@/features/reservation/components/order-summary";
-import { useProfile } from "@/features/reservation/hooks/use-profile";
+import { PaymentInfoCard } from "@/features/reservation/components/payment-info-card";
+import { ProfilePreviewCard } from "@/features/reservation/components/profile-preview-card";
 import { useCreateReservation } from "@/features/reservation/hooks/use-create-reservation";
+import { useProfile } from "@/features/reservation/hooks/use-profile";
+import { Container } from "@/shared/components/layout";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
 
 export default function BookSlotPage() {
   const params = useParams();

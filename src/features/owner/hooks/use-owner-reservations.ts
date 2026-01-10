@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 
 export type ReservationStatus =
@@ -22,8 +22,12 @@ export interface Reservation {
   amountCents: number;
   currency: string;
   status: ReservationStatus;
-  paymentReference?: string;
-  paymentProofUrl?: string;
+  paymentProof?: {
+    referenceNumber: string | null;
+    notes: string | null;
+    fileUrl: string | null;
+    createdAt: string;
+  } | null;
   notes?: string;
   createdAt: string;
 }
@@ -113,7 +117,7 @@ export function useOwnerReservations(
 
   return useQuery({
     ...trpc.reservationOwner.getForOrganization.queryOptions({
-      organizationId: organizationId!,
+      organizationId: organizationId ?? "",
       courtId: courtId || undefined,
       status: status !== "all" ? mapStatusToBackend(status) : undefined,
       limit: 100,
@@ -140,8 +144,7 @@ export function useOwnerReservations(
         amountCents: r.amountCents ?? 0,
         currency: r.currency ?? "PHP",
         status: mapStatusFromBackend(r.status),
-        paymentReference: undefined,
-        paymentProofUrl: undefined,
+        paymentProof: r.paymentProof ?? null,
         notes: r.cancellationReason ?? undefined,
         createdAt: r.createdAt ?? "",
       }));
@@ -205,7 +208,7 @@ export function useReservationCounts(organizationId: string | null) {
 
   const { data: pendingCount } = useQuery({
     ...trpc.reservationOwner.getPendingCount.queryOptions({
-      organizationId: organizationId!,
+      organizationId: organizationId ?? "",
     }),
     enabled: !!organizationId,
   });

@@ -1,40 +1,41 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 import {
-  router,
+  NotOrganizationOwnerError,
+  OrganizationNotFoundError,
+} from "@/modules/organization/errors/organization.errors";
+import {
   protectedProcedure,
   protectedRateLimitedProcedure,
+  router,
 } from "@/shared/infra/trpc/trpc";
+import { AppError } from "@/shared/kernel/errors";
+import {
+  AddAmenitySchema,
+  AddPhotoSchema,
+  CreateReservableCourtSchema,
+  CreateSimpleCourtSchema,
+  RemoveAmenitySchema,
+  RemovePhotoSchema,
+  ReorderPhotosSchema,
+  UpdateCourtSchema,
+  UpdateReservableCourtDetailSchema,
+  UploadCourtPhotoSchema,
+} from "./dtos";
+import {
+  AmenityNotFoundError,
+  CourtNotFoundError,
+  CourtNotReservableError,
+  DuplicateAmenityError,
+  MaxPhotosExceededError,
+  NotCourtOwnerError,
+  PhotoNotFoundError,
+} from "./errors/court.errors";
 import {
   makeCourtManagementService,
   makeCreateReservableCourtUseCase,
   makeCreateSimpleCourtUseCase,
 } from "./factories/court.factory";
-import {
-  CreateReservableCourtSchema,
-  CreateSimpleCourtSchema,
-  UpdateCourtSchema,
-  UpdateReservableCourtDetailSchema,
-  AddPhotoSchema,
-  RemovePhotoSchema,
-  ReorderPhotosSchema,
-  AddAmenitySchema,
-  RemoveAmenitySchema,
-} from "./dtos";
-import {
-  CourtNotFoundError,
-  NotCourtOwnerError,
-  MaxPhotosExceededError,
-  PhotoNotFoundError,
-  AmenityNotFoundError,
-  DuplicateAmenityError,
-  CourtNotReservableError,
-} from "./errors/court.errors";
-import {
-  NotOrganizationOwnerError,
-  OrganizationNotFoundError,
-} from "@/modules/organization/errors/organization.errors";
-import { AppError } from "@/shared/kernel/errors";
 
 /**
  * Maps known errors to appropriate tRPC error codes
@@ -193,7 +194,7 @@ export const courtManagementRouter = router({
     }),
 
   /**
-   * Add a photo to a court
+   * Add a photo to a court (URL-based)
    */
   addPhoto: protectedRateLimitedProcedure("mutation")
     .input(AddPhotoSchema)
@@ -201,6 +202,24 @@ export const courtManagementRouter = router({
       try {
         const service = makeCourtManagementService();
         return await service.addPhoto(ctx.userId, input);
+      } catch (error) {
+        handleCourtManagementError(error);
+      }
+    }),
+
+  /**
+   * Upload a photo to a court (FormData with file)
+   */
+  uploadPhoto: protectedRateLimitedProcedure("mutation")
+    .input(UploadCourtPhotoSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeCourtManagementService();
+        return await service.uploadPhoto(
+          ctx.userId,
+          input.courtId,
+          input.image,
+        );
       } catch (error) {
         handleCourtManagementError(error);
       }

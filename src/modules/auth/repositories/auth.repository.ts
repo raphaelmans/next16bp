@@ -1,8 +1,8 @@
+import type { Session, User } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@/shared/infra/supabase/types";
-import type { User, Session } from "@supabase/supabase-js";
 import {
-  InvalidCredentialsError,
   EmailNotVerifiedError,
+  InvalidCredentialsError,
   UserAlreadyExistsError,
 } from "../errors/auth.errors";
 

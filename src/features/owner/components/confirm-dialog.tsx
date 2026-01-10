@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,

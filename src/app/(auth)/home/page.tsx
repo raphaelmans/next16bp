@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useSession } from "@/features/auth/hooks/use-auth";
-import { useHomeData } from "@/features/home/hooks/use-home-data";
 import {
-  WelcomeHeader,
-  QuickActions,
-  UpcomingReservations,
   OrganizationSection,
   ProfileCompletionBanner,
+  QuickActions,
+  UpcomingReservations,
+  WelcomeHeader,
 } from "@/features/home/components";
 import type { Reservation } from "@/features/home/components/upcoming-reservations";
+import { useHomeData } from "@/features/home/hooks/use-home-data";
 
 export default function HomePage() {
   const router = useRouter();
@@ -38,16 +38,13 @@ export default function HomePage() {
   if (!sessionUser) return null;
 
   // Transform reservations to match UI component
-  const reservations: Reservation[] = rawReservations.map((r: any) => ({
-    id: r.id,
-    startTime: r.startTime ? new Date(r.startTime) : new Date(), // Fallback
-    status: r.status,
-    court: r.court
-      ? {
-          name: r.court.name,
-          address: r.court.address,
-        }
-      : { name: "Court details loading...", address: "" },
+  const reservations: Reservation[] = rawReservations.map((reservation) => ({
+    id: reservation.id,
+    startTime: reservation.createdAt
+      ? new Date(reservation.createdAt)
+      : new Date(),
+    status: reservation.status,
+    court: { name: "Court details loading...", address: "" },
   }));
 
   // Use mock data if no reservations found (for demo purposes if needed, otherwise just empty)

@@ -1,5 +1,6 @@
 export * from "./add-payment-proof.dto";
 export * from "./update-payment-proof.dto";
+export * from "./upload-payment-proof.dto";
 
 import { z } from "zod";
 

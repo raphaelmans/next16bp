@@ -1,12 +1,12 @@
 import { getContainer } from "@/shared/infra/container";
 import {
+  ClaimCourtRepository,
   ClaimRequestRepository,
   OrganizationRepository,
-  ClaimCourtRepository,
 } from "../repositories/claim-request.repository";
 import { ClaimRequestEventRepository } from "../repositories/claim-request-event.repository";
-import { ClaimRequestService } from "../services/claim-request.service";
 import { ClaimAdminService } from "../services/claim-admin.service";
+import { ClaimRequestService } from "../services/claim-request.service";
 import { ApproveClaimRequestUseCase } from "../use-cases/approve-claim-request.use-case";
 
 let claimRequestRepository: ClaimRequestRepository | null = null;

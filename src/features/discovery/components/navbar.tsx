@@ -1,28 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Building,
+  Calendar,
+  LogOut,
+  Menu,
+  Search,
+  Shield,
+  User,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Menu,
-  X,
-  Search,
-  User,
-  Calendar,
-  Building,
-  Shield,
-  LogOut,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useLogout, useSession } from "@/features/auth/hooks/use-auth";
+import { cn } from "@/lib/utils";
 import { KudosLogo } from "@/shared/components/kudos";
-import { UserDropdown } from "./user-dropdown";
-import { useQuery } from "@tanstack/react-query";
-import { useSession, useLogout } from "@/features/auth/hooks/use-auth";
 import { useTRPC } from "@/trpc/client";
+import { UserDropdown } from "./user-dropdown";
 
 interface NavbarProps {
   className?: string;
@@ -34,7 +34,7 @@ export function Navbar({ className }: NavbarProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const trpc = useTRPC();
-  const { data: sessionUser, isLoading: sessionLoading } = useSession();
+  const { data: sessionUser } = useSession();
   const { mutate: logout } = useLogout();
 
   const { data: orgs } = useQuery({

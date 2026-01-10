@@ -1,38 +1,41 @@
-import type { TransactionManager } from "@/shared/kernel/transaction";
-import type { RequestContext } from "@/shared/kernel/context";
-import type {
-  ICourtRepository,
-  CourtWithDetails,
-} from "../repositories/court.repository";
-import type { IReservableCourtDetailRepository } from "../repositories/reservable-court-detail.repository";
-import type { ICourtPhotoRepository } from "../repositories/court-photo.repository";
-import type { ICourtAmenityRepository } from "../repositories/court-amenity.repository";
+import { v4 as uuidv4 } from "uuid";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
+import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
+import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
 import type {
-  UpdateCourtDTO,
-  UpdateReservableCourtDetailDTO,
-  AddPhotoDTO,
-  RemovePhotoDTO,
-  ReorderPhotosDTO,
-  AddAmenityDTO,
-  RemoveAmenityDTO,
-} from "../dtos";
-import type {
-  CourtRecord,
-  CourtPhotoRecord,
   CourtAmenityRecord,
+  CourtPhotoRecord,
+  CourtRecord,
   ReservableCourtDetailRecord,
 } from "@/shared/infra/db/schema";
-import {
-  CourtNotFoundError,
-  NotCourtOwnerError,
-  MaxPhotosExceededError,
-  PhotoNotFoundError,
-  AmenityNotFoundError,
-  DuplicateAmenityError,
-  CourtNotReservableError,
-} from "../errors/court.errors";
 import { logger } from "@/shared/infra/logger";
+import type { RequestContext } from "@/shared/kernel/context";
+import type { TransactionManager } from "@/shared/kernel/transaction";
+import type {
+  AddAmenityDTO,
+  AddPhotoDTO,
+  RemoveAmenityDTO,
+  RemovePhotoDTO,
+  ReorderPhotosDTO,
+  UpdateCourtDTO,
+  UpdateReservableCourtDetailDTO,
+} from "../dtos";
+import {
+  AmenityNotFoundError,
+  CourtNotFoundError,
+  CourtNotReservableError,
+  DuplicateAmenityError,
+  MaxPhotosExceededError,
+  NotCourtOwnerError,
+  PhotoNotFoundError,
+} from "../errors/court.errors";
+import type {
+  CourtWithDetails,
+  ICourtRepository,
+} from "../repositories/court.repository";
+import type { ICourtAmenityRepository } from "../repositories/court-amenity.repository";
+import type { ICourtPhotoRepository } from "../repositories/court-photo.repository";
+import type { IReservableCourtDetailRepository } from "../repositories/reservable-court-detail.repository";
 
 const MAX_PHOTOS = 10;
 
@@ -48,6 +51,11 @@ export interface ICourtManagementService {
   deactivateCourt(userId: string, courtId: string): Promise<CourtRecord>;
 
   // Photo operations
+  uploadPhoto(
+    userId: string,
+    courtId: string,
+    file: File,
+  ): Promise<CourtPhotoRecord>;
   addPhoto(userId: string, data: AddPhotoDTO): Promise<CourtPhotoRecord>;
   removePhoto(userId: string, data: RemovePhotoDTO): Promise<void>;
   reorderPhotos(userId: string, data: ReorderPhotosDTO): Promise<void>;
@@ -65,6 +73,7 @@ export class CourtManagementService implements ICourtManagementService {
     private courtAmenityRepository: ICourtAmenityRepository,
     private organizationRepository: IOrganizationRepository,
     private transactionManager: TransactionManager,
+    private storageService: IObjectStorageService,
   ) {}
 
   /**
@@ -212,6 +221,55 @@ export class CourtManagementService implements ICourtManagementService {
 
       return updated;
     });
+  }
+
+  /**
+   * Upload a photo to storage and add it to the court.
+   */
+  async uploadPhoto(
+    userId: string,
+    courtId: string,
+    file: File,
+  ): Promise<CourtPhotoRecord> {
+    // Verify ownership first (outside transaction for fail-fast)
+    await this.verifyCourtOwnership(userId, courtId);
+
+    // Check photo limit
+    const photoCount = await this.courtPhotoRepository.countByCourtId(courtId);
+    if (photoCount >= MAX_PHOTOS) {
+      throw new MaxPhotosExceededError(MAX_PHOTOS);
+    }
+
+    // Generate unique path: {courtId}/{uuid}.{ext}
+    const photoId = uuidv4();
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${courtId}/${photoId}.${ext}`;
+
+    // Upload to storage
+    const result = await this.storageService.upload({
+      bucket: STORAGE_BUCKETS.COURT_PHOTOS,
+      path,
+      file,
+      upsert: false,
+    });
+
+    // Add photo record using existing logic
+    const photo = await this.addPhoto(userId, {
+      courtId,
+      url: result.url,
+    });
+
+    logger.info(
+      {
+        event: "court.photo_uploaded",
+        courtId,
+        photoId: photo.id,
+        url: result.url,
+      },
+      "Court photo uploaded",
+    );
+
+    return photo;
   }
 
   async addPhoto(userId: string, data: AddPhotoDTO): Promise<CourtPhotoRecord> {

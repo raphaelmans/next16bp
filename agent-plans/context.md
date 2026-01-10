@@ -8,6 +8,10 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2025-01-09 | Added 08-p2p-reservation-confirmation implementation plan with 4 phases |
+| 2025-01-09 | Added 08-p2p-reservation-confirmation user stories (11 total: 3 parent + 8 sub-stories) |
+| 2025-01-09 | Added 10-asset-uploads implementation plan with parallel dev checklists |
+| 2025-01-09 | Added 10-asset-uploads user stories for Supabase Storage integration |
 | 2025-01-08 | Added 08-admin-data-entry plan for US-02-03 and US-02-04 |
 | 2025-01-08 | Initial creation. Added all reference documents. |
 
@@ -43,6 +47,8 @@ References and context for planning artifacts.
 | 06-court-reservation | `agent-plans/user-stories/06-court-reservation/` | Player booking (simplified) |
 | 07-owner-confirmation | `agent-plans/user-stories/07-owner-confirmation/` | Owner confirms/rejects reservations |
 | 08-p2p-reservation-confirmation | `agent-plans/user-stories/08-p2p-reservation-confirmation/` | Future: Full P2P verification |
+| 09-client-profile | `agent-plans/user-stories/09-client-profile/` | Client profile management |
+| 10-asset-uploads | `agent-plans/user-stories/10-asset-uploads/` | Supabase Storage file uploads |
 
 ---
 
@@ -54,6 +60,8 @@ References and context for planning artifacts.
 | 06-court-reservation | `agent-plans/06-court-reservation/` | Complete |
 | 07-owner-confirmation | `agent-plans/07-owner-confirmation/` | In Progress |
 | 08-admin-data-entry | `agent-plans/08-admin-data-entry/` | Pending |
+| 08-p2p-reservation-confirmation | `agent-plans/08-p2p-reservation-confirmation/` | Pending |
+| 10-asset-uploads | `agent-plans/10-asset-uploads/` | Pending |
 
 ---
 

@@ -1,7 +1,7 @@
 export {
-  useSession,
   useLogin,
-  useRegister,
-  useMagicLink,
   useLogout,
+  useMagicLink,
+  useRegister,
+  useSession,
 } from "./use-auth";

@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { createClient } from "@/shared/infra/supabase/create-client";
+import { NextResponse } from "next/server";
 import { env } from "@/lib/env";
+import { createClient } from "@/shared/infra/supabase/create-client";
 
 /**
  * Auth callback route handler for OAuth and magic link flows.

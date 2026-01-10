@@ -1,12 +1,12 @@
-import { randomUUID } from "crypto";
-import { cookies, headers } from "next/headers";
-import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
+import { randomUUID } from "node:crypto";
 import type { CookieMethodsServer } from "@supabase/ssr";
-import { createClient } from "@/shared/infra/supabase/create-client";
-import { createRequestLogger } from "@/shared/infra/logger";
+import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
+import { cookies, headers } from "next/headers";
 import { env } from "@/lib/env";
-import type { Session } from "@/shared/kernel/auth";
 import { makeUserRoleRepository } from "@/modules/user-role/factories/user-role.factory";
+import { createRequestLogger } from "@/shared/infra/logger";
+import { createClient } from "@/shared/infra/supabase/create-client";
+import type { Session } from "@/shared/kernel/auth";
 
 export interface Context {
   requestId: string;
@@ -65,7 +65,8 @@ export async function createContext({
       const userRole = await makeUserRoleRepository().findByUserId(user.id);
       session = {
         userId: user.id,
-        email: user.email!,
+        email: user.email ?? "",
+
         // =================================================================
         // DEBUG: To test different roles, change the role value below:
         //   "admin"  - Full admin access to /admin/* routes

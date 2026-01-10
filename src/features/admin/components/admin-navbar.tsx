@@ -1,14 +1,17 @@
 "use client";
 
-import Link from "next/link";
 import {
+  ArrowLeft,
+  Building2,
+  CalendarDays,
+  ChevronDown,
   LogOut,
   User,
-  ChevronDown,
-  ArrowLeft,
-  CalendarDays,
-  Building2,
 } from "lucide-react";
+import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,9 +20,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { KudosLogo } from "@/shared/components/kudos";
 
 interface AdminNavbarProps {

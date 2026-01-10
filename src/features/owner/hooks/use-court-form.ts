@@ -81,7 +81,7 @@ export function useCourtDraft() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: Partial<CourtFormData>) => {
+    mutationFn: async (_data: Partial<CourtFormData>) => {
       // Draft saving is not yet implemented on the backend
       // For now, just simulate the operation
       await new Promise((resolve) => setTimeout(resolve, 500));

@@ -1,20 +1,37 @@
-import { eq, and, lt, gt, ne, gte, lte, notInArray } from "drizzle-orm";
+import { and, eq, gt, gte, lt, lte, ne, notInArray } from "drizzle-orm";
 import {
-  timeSlot,
+  court,
+  type InsertTimeSlot,
+  reservableCourtDetail,
   reservation,
   type TimeSlotRecord,
-  type InsertTimeSlot,
+  timeSlot,
 } from "@/shared/infra/db/schema";
-import type { RequestContext } from "@/shared/kernel/context";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
+import type { RequestContext } from "@/shared/kernel/context";
 
 export interface TimeSlotWithPlayerInfo extends TimeSlotRecord {
   playerName?: string | null;
   playerPhone?: string | null;
 }
 
+export interface TimeSlotPaymentDetails {
+  gcashNumber: string | null;
+  bankName: string | null;
+  bankAccountNumber: string | null;
+  bankAccountName: string | null;
+  paymentInstructions: string | null;
+}
+
+export interface TimeSlotWithPaymentDetails extends TimeSlotRecord {
+  paymentDetails: TimeSlotPaymentDetails | null;
+}
+
 export interface ITimeSlotRepository {
-  findById(id: string, ctx?: RequestContext): Promise<TimeSlotRecord | null>;
+  findById(
+    id: string,
+    ctx?: RequestContext,
+  ): Promise<TimeSlotWithPaymentDetails | null>;
   findByIdForUpdate(
     id: string,
     ctx: RequestContext,
@@ -68,14 +85,53 @@ export class TimeSlotRepository implements ITimeSlotRepository {
   async findById(
     id: string,
     ctx?: RequestContext,
-  ): Promise<TimeSlotRecord | null> {
+  ): Promise<TimeSlotWithPaymentDetails | null> {
     const client = this.getClient(ctx);
     const result = await client
-      .select()
+      .select({
+        id: timeSlot.id,
+        courtId: timeSlot.courtId,
+        startTime: timeSlot.startTime,
+        endTime: timeSlot.endTime,
+        status: timeSlot.status,
+        priceCents: timeSlot.priceCents,
+        currency: timeSlot.currency,
+        createdAt: timeSlot.createdAt,
+        updatedAt: timeSlot.updatedAt,
+        paymentDetails: {
+          gcashNumber: reservableCourtDetail.gcashNumber,
+          bankName: reservableCourtDetail.bankName,
+          bankAccountNumber: reservableCourtDetail.bankAccountNumber,
+          bankAccountName: reservableCourtDetail.bankAccountName,
+          paymentInstructions: reservableCourtDetail.paymentInstructions,
+        },
+      })
       .from(timeSlot)
+      .innerJoin(court, eq(court.id, timeSlot.courtId))
+      .leftJoin(
+        reservableCourtDetail,
+        eq(reservableCourtDetail.courtId, court.id),
+      )
       .where(eq(timeSlot.id, id))
       .limit(1);
-    return result[0] ?? null;
+
+    const slot = result[0];
+    if (!slot) {
+      return null;
+    }
+
+    const details = slot.paymentDetails;
+    const hasDetails =
+      details?.gcashNumber ||
+      details?.bankName ||
+      details?.bankAccountNumber ||
+      details?.bankAccountName ||
+      details?.paymentInstructions;
+
+    return {
+      ...slot,
+      paymentDetails: hasDetails ? details : null,
+    };
   }
 
   async findByIdForUpdate(

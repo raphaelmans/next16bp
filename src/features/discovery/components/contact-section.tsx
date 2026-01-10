@@ -1,10 +1,10 @@
 "use client";
 
-import { ExternalLink, Facebook, Instagram, Phone, Globe } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { ExternalLink, Facebook, Globe, Instagram, Phone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface SocialLinks {
   facebook?: string;
@@ -21,7 +21,7 @@ interface ContactSectionProps {
 }
 
 export function ContactSection({
-  courtName,
+  courtName: _courtName,
   socialLinks,
   className,
 }: ContactSectionProps) {

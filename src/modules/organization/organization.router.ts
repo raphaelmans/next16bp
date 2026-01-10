@@ -1,23 +1,24 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 import {
-  router,
-  publicProcedure,
   protectedProcedure,
   protectedRateLimitedProcedure,
+  publicProcedure,
+  router,
 } from "@/shared/infra/trpc/trpc";
-import { makeOrganizationService } from "./factories/organization.factory";
+import { AppError } from "@/shared/kernel/errors";
 import {
   CreateOrganizationSchema,
-  UpdateOrganizationSchema,
   UpdateOrganizationProfileSchema,
+  UpdateOrganizationSchema,
+  UploadOrgLogoSchema,
 } from "./dtos";
 import {
+  NotOrganizationOwnerError,
   OrganizationNotFoundError,
   SlugAlreadyExistsError,
-  NotOrganizationOwnerError,
 } from "./errors/organization.errors";
-import { AppError } from "@/shared/kernel/errors";
+import { makeOrganizationService } from "./factories/organization.factory";
 
 /**
  * Maps known errors to appropriate tRPC error codes
@@ -135,6 +136,26 @@ export const organizationRouter = router({
           ctx.userId,
           input,
         );
+      } catch (error) {
+        handleOrganizationError(error);
+      }
+    }),
+
+  /**
+   * Upload organization logo (FormData with file)
+   * Owner only
+   */
+  uploadLogo: protectedRateLimitedProcedure("mutation")
+    .input(UploadOrgLogoSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const organizationService = makeOrganizationService();
+        const url = await organizationService.uploadLogo(
+          ctx.userId,
+          input.organizationId,
+          input.image,
+        );
+        return { url };
       } catch (error) {
         handleOrganizationError(error);
       }

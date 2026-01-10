@@ -1,25 +1,35 @@
-import type { RequestContext } from "@/shared/kernel/context";
+import { v4 as uuidv4 } from "uuid";
+import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
+import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
 import type { PaymentProofRecord } from "@/shared/infra/db/schema";
-import type {
-  IPaymentProofRepository,
-  IReservationRepository,
-  IProfileRepository,
-} from "../repositories/payment-proof.repository";
+import { logger } from "@/shared/infra/logger";
+import type { RequestContext } from "@/shared/kernel/context";
 import type { AddPaymentProofDTO, UpdatePaymentProofDTO } from "../dtos";
 import {
+  InvalidReservationStatusError,
+  NotReservationOwnerError,
   PaymentProofAlreadyExistsError,
   PaymentProofNotFoundError,
   ReservationNotFoundError,
-  NotReservationOwnerError,
-  InvalidReservationStatusError,
 } from "../errors/payment-proof.errors";
-import { logger } from "@/shared/infra/logger";
+import type {
+  IPaymentProofRepository,
+  IProfileRepository,
+  IReservationRepository,
+} from "../repositories/payment-proof.repository";
 
 export interface IPaymentProofService {
   addPaymentProof(
     userId: string,
     data: AddPaymentProofDTO,
     ctx?: RequestContext,
+  ): Promise<PaymentProofRecord>;
+  uploadPaymentProof(
+    userId: string,
+    reservationId: string,
+    file: File,
+    referenceNumber?: string,
+    notes?: string,
   ): Promise<PaymentProofRecord>;
   updatePaymentProof(
     userId: string,
@@ -44,6 +54,7 @@ export class PaymentProofService implements IPaymentProofService {
     private paymentProofRepository: IPaymentProofRepository,
     private reservationRepository: IReservationRepository,
     private profileRepository: IProfileRepository,
+    private storageService: IObjectStorageService,
   ) {}
 
   async addPaymentProof(
@@ -101,6 +112,77 @@ export class PaymentProofService implements IPaymentProofService {
         userId,
       },
       "Payment proof added",
+    );
+
+    return proof;
+  }
+
+  /**
+   * Upload a payment proof image and create the record.
+   * Uploads to storage first, then calls addPaymentProof.
+   */
+  async uploadPaymentProof(
+    userId: string,
+    reservationId: string,
+    file: File,
+    referenceNumber?: string,
+    notes?: string,
+  ): Promise<PaymentProofRecord> {
+    // Validate reservation and ownership first (fail-fast)
+    const reservation =
+      await this.reservationRepository.findById(reservationId);
+    if (!reservation) {
+      throw new ReservationNotFoundError(reservationId);
+    }
+
+    const profile = await this.profileRepository.findByUserId(userId);
+    if (!profile || reservation.playerId !== profile.id) {
+      throw new NotReservationOwnerError();
+    }
+
+    if (!ALLOWED_STATUSES_FOR_PROOF.includes(reservation.status)) {
+      throw new InvalidReservationStatusError(
+        `Cannot add payment proof for reservation in ${reservation.status} status`,
+      );
+    }
+
+    // Check for existing proof
+    const existing =
+      await this.paymentProofRepository.findByReservationId(reservationId);
+    if (existing) {
+      throw new PaymentProofAlreadyExistsError(reservationId);
+    }
+
+    // Generate unique path: {reservationId}/{uuid}.{ext}
+    const proofId = uuidv4();
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${reservationId}/${proofId}.${ext}`;
+
+    // Upload to storage
+    const result = await this.storageService.upload({
+      bucket: STORAGE_BUCKETS.PAYMENT_PROOFS,
+      path,
+      file,
+      upsert: false,
+    });
+
+    // Create the proof record
+    const proof = await this.paymentProofRepository.create({
+      reservationId,
+      fileUrl: result.url,
+      referenceNumber,
+      notes,
+    });
+
+    logger.info(
+      {
+        event: "payment_proof.uploaded",
+        reservationId,
+        proofId: proof.id,
+        url: result.url,
+        userId,
+      },
+      "Payment proof uploaded",
     );
 
     return proof;

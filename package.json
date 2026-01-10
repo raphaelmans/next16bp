@@ -76,8 +76,10 @@
     "recharts": "2.15.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
+    "uuid": "^13.0.0",
     "vaul": "^1.1.2",
     "zod": "^4.3.5",
+    "zod-form-data": "^3.0.1",
     "zustand": "^5.0.9"
   },
   "devDependencies": {
@@ -87,6 +89,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/uuid": "^11.0.0",
     "babel-plugin-react-compiler": "1.0.0",
     "drizzle-kit": "^0.31.8",
     "tailwindcss": "^4",

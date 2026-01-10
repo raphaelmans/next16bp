@@ -1,11 +1,11 @@
-import { eq, and } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import {
-  courtAmenity,
   type CourtAmenityRecord,
+  courtAmenity,
   type InsertCourtAmenity,
 } from "@/shared/infra/db/schema";
-import type { RequestContext } from "@/shared/kernel/context";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
+import type { RequestContext } from "@/shared/kernel/context";
 
 export interface ICourtAmenityRepository {
   findByCourtId(

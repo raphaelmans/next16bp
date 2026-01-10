@@ -1,23 +1,23 @@
-import type { TransactionManager } from "@/shared/kernel/transaction";
-import type { RequestContext } from "@/shared/kernel/context";
 import type {
+  ClaimRequestEventRecord,
   ClaimRequestRecord,
   CourtRecord,
   OrganizationRecord,
-  ClaimRequestEventRecord,
 } from "@/shared/infra/db/schema";
-import type {
-  IClaimRequestRepository,
-  IClaimCourtRepository,
-  IOrganizationRepository,
-} from "../repositories/claim-request.repository";
-import type { IClaimRequestEventRepository } from "../repositories/claim-request-event.repository";
-import type { IApproveClaimRequestUseCase } from "../use-cases/approve-claim-request.use-case";
+import { logger } from "@/shared/infra/logger";
+import type { RequestContext } from "@/shared/kernel/context";
+import type { TransactionManager } from "@/shared/kernel/transaction";
 import {
   ClaimRequestNotFoundError,
   InvalidClaimStatusError,
 } from "../errors/claim-request.errors";
-import { logger } from "@/shared/infra/logger";
+import type {
+  IClaimCourtRepository,
+  IClaimRequestRepository,
+  IOrganizationRepository,
+} from "../repositories/claim-request.repository";
+import type { IClaimRequestEventRepository } from "../repositories/claim-request-event.repository";
+import type { IApproveClaimRequestUseCase } from "../use-cases/approve-claim-request.use-case";
 
 /**
  * Response type for claim request with full details (admin view)

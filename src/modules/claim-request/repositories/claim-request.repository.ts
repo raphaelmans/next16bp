@@ -1,16 +1,16 @@
-import { eq, and } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import {
+  type ClaimRequestRecord,
+  type CourtRecord,
   claimRequest,
   court,
-  organization,
-  type ClaimRequestRecord,
   type InsertClaimRequest,
-  type CourtRecord,
-  type OrganizationRecord,
   type InsertCourt,
+  type OrganizationRecord,
+  organization,
 } from "@/shared/infra/db/schema";
-import type { RequestContext } from "@/shared/kernel/context";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
+import type { RequestContext } from "@/shared/kernel/context";
 
 export interface IClaimRequestRepository {
   findById(

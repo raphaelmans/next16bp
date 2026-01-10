@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Info } from "lucide-react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,21 +13,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  useProfile,
+  useUpdateProfile,
+  useUploadAvatar,
+} from "../hooks/use-profile";
+import {
+  type ProfileFormValues,
+  profileSchema,
+} from "../schemas/profile.schema";
 import { AvatarUpload } from "./avatar-upload";
 import { ProfileFormSkeleton } from "./skeletons";
-import { useProfile, useUpdateProfile } from "../hooks/use-profile";
-import {
-  profileSchema,
-  type ProfileFormValues,
-} from "../schemas/profile.schema";
 
 export function ProfileForm() {
   const { data: profile, isLoading } = useProfile();
   const updateProfile = useUpdateProfile();
+  const uploadAvatar = useUploadAvatar();
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -55,7 +60,15 @@ export function ProfileForm() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile?.id]); // Only reset when profile ID changes, not on every profile update
+  }, [
+    profile?.id,
+    profile.avatarUrl,
+    profile.displayName,
+    profile.email,
+    profile.phoneNumber,
+    profile,
+    reset,
+  ]); // Only reset when profile ID changes, not on every profile update
 
   const onSubmit = (data: ProfileFormValues) => {
     // Filter out empty strings to avoid validation errors
@@ -71,8 +84,7 @@ export function ProfileForm() {
   };
 
   const handleAvatarSelect = (file: File) => {
-    // TODO: Implement file upload
-    console.log("File selected:", file);
+    uploadAvatar.mutate({ image: file });
   };
 
   if (isLoading) {
@@ -95,6 +107,7 @@ export function ProfileForm() {
             currentAvatarUrl={profile?.avatarUrl ?? undefined}
             displayName={profile?.displayName ?? undefined}
             onFileSelect={handleAvatarSelect}
+            isUploading={uploadAvatar.isPending}
           />
 
           {/* Form fields */}

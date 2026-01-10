@@ -1,8 +1,8 @@
 "use client";
 
 import { List, Map as MapIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type ViewMode = "list" | "map";
 

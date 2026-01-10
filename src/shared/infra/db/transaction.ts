@@ -1,6 +1,6 @@
 import type {
-  TransactionManager,
   TransactionContext,
+  TransactionManager,
 } from "@/shared/kernel/transaction";
 import type { DbClient, DrizzleTransaction } from "./types";
 

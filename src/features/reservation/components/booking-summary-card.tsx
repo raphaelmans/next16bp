@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { Calendar, Clock, MapPin } from "lucide-react";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDateShort, formatTimeRange } from "@/shared/lib/format";
 

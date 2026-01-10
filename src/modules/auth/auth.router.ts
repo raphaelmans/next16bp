@@ -1,18 +1,18 @@
 import {
-  router,
-  publicProcedure,
   protectedProcedure,
+  publicProcedure,
+  router,
 } from "@/shared/infra/trpc/trpc";
+import {
+  LoginSchema,
+  MagicLinkSchema,
+  RegisterSchema,
+  VerifyTokenHashSchema,
+} from "./dtos";
 import {
   makeAuthService,
   makeRegisterUserUseCase,
 } from "./factories/auth.factory";
-import {
-  LoginSchema,
-  RegisterSchema,
-  MagicLinkSchema,
-  VerifyTokenHashSchema,
-} from "./dtos";
 
 export const authRouter = router({
   login: publicProcedure.input(LoginSchema).mutation(async ({ input, ctx }) => {

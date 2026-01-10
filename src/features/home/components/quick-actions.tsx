@@ -1,14 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import {
-  Search,
-  CalendarDays,
-  User,
   Building2,
+  CalendarDays,
+  type LucideIcon,
+  Search,
   Shield,
-  LucideIcon,
+  User,
 } from "lucide-react";
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 

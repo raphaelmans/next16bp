@@ -1,29 +1,29 @@
-import type { TransactionManager } from "@/shared/kernel/transaction";
-import type { RequestContext } from "@/shared/kernel/context";
 import type {
+  ClaimRequestEventRecord,
   ClaimRequestRecord,
   CourtRecord,
-  ClaimRequestEventRecord,
 } from "@/shared/infra/db/schema";
-import type {
-  IClaimRequestRepository,
-  IOrganizationRepository,
-  IClaimCourtRepository,
-} from "../repositories/claim-request.repository";
-import type { IClaimRequestEventRepository } from "../repositories/claim-request-event.repository";
+import { logger } from "@/shared/infra/logger";
+import type { RequestContext } from "@/shared/kernel/context";
+import type { TransactionManager } from "@/shared/kernel/transaction";
 import type { SubmitClaimRequestDTO, SubmitRemovalRequestDTO } from "../dtos";
 import {
   ClaimRequestNotFoundError,
-  PendingClaimExistsError,
-  NotCuratedCourtError,
+  CourtNotFoundError,
   CourtNotUnclaimedError,
-  NotClaimRequestOwnerError,
   InvalidClaimStatusError,
+  NotClaimRequestOwnerError,
+  NotCuratedCourtError,
   NotOrganizationOwnerError,
   OrganizationNotFoundError,
-  CourtNotFoundError,
+  PendingClaimExistsError,
 } from "../errors/claim-request.errors";
-import { logger } from "@/shared/infra/logger";
+import type {
+  IClaimCourtRepository,
+  IClaimRequestRepository,
+  IOrganizationRepository,
+} from "../repositories/claim-request.repository";
+import type { IClaimRequestEventRepository } from "../repositories/claim-request-event.repository";
 
 /**
  * Response type for claim request with court details
@@ -79,7 +79,7 @@ export class ClaimRequestService implements IClaimRequestService {
   async submitClaimRequest(
     userId: string,
     data: SubmitClaimRequestDTO,
-    ctx?: RequestContext,
+    _ctx?: RequestContext,
   ): Promise<ClaimRequestRecord> {
     return this.transactionManager.run(async (tx) => {
       const txCtx = { tx };
@@ -173,7 +173,7 @@ export class ClaimRequestService implements IClaimRequestService {
   async submitRemovalRequest(
     userId: string,
     data: SubmitRemovalRequestDTO,
-    ctx?: RequestContext,
+    _ctx?: RequestContext,
   ): Promise<ClaimRequestRecord> {
     return this.transactionManager.run(async (tx) => {
       const txCtx = { tx };
@@ -262,7 +262,7 @@ export class ClaimRequestService implements IClaimRequestService {
   async cancelRequest(
     userId: string,
     requestId: string,
-    ctx?: RequestContext,
+    _ctx?: RequestContext,
   ): Promise<ClaimRequestRecord> {
     return this.transactionManager.run(async (tx) => {
       const txCtx = { tx };

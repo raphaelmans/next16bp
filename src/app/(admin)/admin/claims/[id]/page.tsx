@@ -1,45 +1,28 @@
 "use client";
 
-import * as React from "react";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
 import { format, formatDistanceToNow } from "date-fns";
 import {
+  AlertCircle,
   ArrowLeft,
   Building2,
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  Calendar,
-  ExternalLink,
-  Clock,
   CheckCircle2,
-  XCircle,
+  Clock,
+  ExternalLink,
+  Mail,
+  MapPin,
+  Phone,
   Tag,
   Trash2,
-  AlertCircle,
+  User,
+  XCircle,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
-import { AdminSidebar, AdminNavbar } from "@/features/admin";
-import { ClaimReviewActions } from "@/features/admin/components/claim-review-actions";
-import {
-  useClaim,
-  useClaimEvents,
-  useApproveClaim,
-  useRejectClaim,
-} from "@/features/admin/hooks/use-claims";
-import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
-import { useSession, useLogout } from "@/features/auth";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import Image from "next/image";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -48,12 +31,28 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
+import { AdminNavbar, AdminSidebar } from "@/features/admin";
+import { ClaimReviewActions } from "@/features/admin/components/claim-review-actions";
+import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
+import {
+  useApproveClaim,
+  useClaim,
+  useClaimEvents,
+  useRejectClaim,
+} from "@/features/admin/hooks/use-claims";
+import { useLogout, useSession } from "@/features/auth";
+import { cn } from "@/lib/utils";
+import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
 
 const statusConfig = {
   pending: {
@@ -261,11 +260,13 @@ export default function ClaimDetailPage() {
                 })}{" "}
                 by {claim.ownerName}
               </>
-            ) : (
+            ) : claim.reviewedAt ? (
               <>
-                Reviewed on {format(new Date(claim.reviewedAt!), "MMM d, yyyy")}{" "}
+                Reviewed on {format(new Date(claim.reviewedAt), "MMM d, yyyy")}{" "}
                 by {claim.reviewedBy}
               </>
+            ) : (
+              <>Reviewed by {claim.reviewedBy}</>
             )}
           </AlertDescription>
         </Alert>
@@ -285,9 +286,11 @@ export default function ClaimDetailPage() {
               <CardContent className="space-y-4">
                 <div className="flex gap-4">
                   {claim.courtImageUrl && (
-                    <img
+                    <Image
                       src={claim.courtImageUrl}
                       alt={claim.courtName}
+                      width={128}
+                      height={96}
                       className="w-32 h-24 object-cover rounded-lg"
                     />
                   )}
@@ -462,11 +465,12 @@ export default function ClaimDetailPage() {
                       </div>
                     )}
                     <p className="text-xs text-muted-foreground">
-                      Reviewed on{" "}
-                      {format(
-                        new Date(claim.reviewedAt!),
-                        "MMM d, yyyy 'at' h:mm a",
-                      )}
+                      {claim.reviewedAt
+                        ? `Reviewed on ${format(
+                            new Date(claim.reviewedAt),
+                            "MMM d, yyyy 'at' h:mm a",
+                          )}`
+                        : "Review date unavailable"}
                     </p>
                   </div>
                 </CardContent>

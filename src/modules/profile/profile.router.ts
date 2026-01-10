@@ -1,9 +1,9 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { router, protectedProcedure } from "@/shared/infra/trpc/trpc";
-import { makeProfileService } from "./factories/profile.factory";
-import { UpdateProfileSchema } from "./dtos";
+import { z } from "zod";
+import { protectedProcedure, router } from "@/shared/infra/trpc/trpc";
+import { UpdateProfileSchema, UploadAvatarSchema } from "./dtos";
 import { ProfileNotFoundError } from "./errors/profile.errors";
+import { makeProfileService } from "./factories/profile.factory";
 
 export const profileRouter = router({
   /**
@@ -24,6 +24,18 @@ export const profileRouter = router({
       const profileService = makeProfileService();
       const profile = await profileService.updateProfile(ctx.userId, input);
       return profile;
+    }),
+
+  /**
+   * Upload avatar image for current user.
+   * Accepts FormData with image file.
+   */
+  uploadAvatar: protectedProcedure
+    .input(UploadAvatarSchema)
+    .mutation(async ({ input, ctx }) => {
+      const profileService = makeProfileService();
+      const url = await profileService.uploadAvatar(ctx.userId, input.image);
+      return { url };
     }),
 
   /**

@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { MapPin, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Search, MapPin } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 const POPULAR_LOCATIONS = [
   { name: "Manila", slug: "manila" },

@@ -1,7 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import { format } from "date-fns";
 import { CalendarDays, MapPin } from "lucide-react";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,9 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
 
 export interface Reservation {
   id: string;

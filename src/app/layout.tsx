@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Source_Sans_3, IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Mono, Outfit, Source_Sans_3 } from "next/font/google";
 import { Providers } from "@/components/providers";
 import "./globals.css";
 

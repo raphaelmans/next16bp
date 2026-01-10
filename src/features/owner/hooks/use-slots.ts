@@ -1,8 +1,8 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { endOfDay, startOfDay } from "date-fns";
 import { useTRPC, useTRPCClient } from "@/trpc/client";
-import { startOfDay, endOfDay } from "date-fns";
 
 export type SlotStatus = "available" | "booked" | "pending" | "blocked";
 
@@ -131,7 +131,7 @@ export interface BulkSlotData {
  * Generate slot array from bulk configuration
  */
 function generateSlotsFromBulkData(
-  courtId: string,
+  _courtId: string,
   data: BulkSlotData,
 ): Array<{
   startTime: string;
@@ -229,7 +229,7 @@ export function useConfirmBooking() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ slotId }: { slotId: string }) => {
+    mutationFn: async ({ slotId: _slotId }: { slotId: string }) => {
       // TODO: Wire to reservationOwner.confirmPayment
       // Need to get reservationId from slot context
       console.warn("useConfirmBooking not yet implemented - see US-07-02");
@@ -246,8 +246,8 @@ export function useRejectBooking() {
 
   return useMutation({
     mutationFn: async ({
-      slotId,
-      reason,
+      slotId: _slotId,
+      reason: _reason,
     }: {
       slotId: string;
       reason: string;

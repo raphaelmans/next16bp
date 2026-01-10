@@ -1,13 +1,13 @@
 "use client";
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
+import type * as React from "react";
+import { Separator } from "@/components/ui/separator";
 import {
-  SidebarProvider,
   SidebarInset,
+  SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;

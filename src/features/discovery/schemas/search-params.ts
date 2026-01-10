@@ -1,10 +1,10 @@
 import {
-  parseAsString,
+  createSearchParamsCache,
+  parseAsArrayOf,
   parseAsBoolean,
   parseAsInteger,
+  parseAsString,
   parseAsStringLiteral,
-  parseAsArrayOf,
-  createSearchParamsCache,
 } from "nuqs/server";
 
 export const searchParamsSchema = {

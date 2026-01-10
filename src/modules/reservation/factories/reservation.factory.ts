@@ -1,3 +1,10 @@
+import {
+  makeCourtRepository,
+  makeReservableCourtDetailRepository,
+} from "@/modules/court/factories/court.factory";
+import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
+import { makeProfileRepository } from "@/modules/profile/factories/profile.factory";
+import { makeTimeSlotRepository } from "@/modules/time-slot/factories/time-slot.factory";
 import { getContainer } from "@/shared/infra/container";
 import { ReservationRepository } from "../repositories/reservation.repository";
 import { ReservationEventRepository } from "../repositories/reservation-event.repository";
@@ -5,13 +12,6 @@ import { ReservationService } from "../services/reservation.service";
 import { ReservationOwnerService } from "../services/reservation-owner.service";
 import { CreateFreeReservationUseCase } from "../use-cases/create-free-reservation.use-case";
 import { CreatePaidReservationUseCase } from "../use-cases/create-paid-reservation.use-case";
-import { makeTimeSlotRepository } from "@/modules/time-slot/factories/time-slot.factory";
-import { makeProfileRepository } from "@/modules/profile/factories/profile.factory";
-import {
-  makeReservableCourtDetailRepository,
-  makeCourtRepository,
-} from "@/modules/court/factories/court.factory";
-import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
 
 let reservationRepository: ReservationRepository | null = null;
 let reservationEventRepository: ReservationEventRepository | null = null;

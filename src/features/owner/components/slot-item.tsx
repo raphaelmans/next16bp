@@ -2,18 +2,18 @@
 
 import { format } from "date-fns";
 import {
-  Clock,
-  User,
-  Phone,
-  MoreHorizontal,
   Ban,
-  Unlock,
-  Trash2,
-  Eye,
   Check,
+  Clock,
+  Eye,
+  MoreHorizontal,
+  Phone,
+  Trash2,
+  Unlock,
+  User,
   X,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -22,8 +22,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import type { TimeSlot, SlotStatus } from "../hooks/use-slots";
+import { cn } from "@/lib/utils";
+import type { SlotStatus, TimeSlot } from "../hooks/use-slots";
 
 interface SlotItemProps {
   slot: TimeSlot;

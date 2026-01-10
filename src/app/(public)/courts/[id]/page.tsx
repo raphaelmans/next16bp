@@ -1,29 +1,28 @@
 "use client";
 
-import { useState } from "react";
-import { useParams } from "next/navigation";
-import Link from "next/link";
 import {
-  ChevronRight,
-  MapPin,
-  Wifi,
   Car,
-  Lightbulb,
   Droplets,
+  Lightbulb,
+  MapPin,
   ShowerHead,
+  Wifi,
 } from "lucide-react";
-import { PageHeader } from "@/components/ui/page-header";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Container } from "@/shared/components/layout";
-import { AdBanner } from "@/shared/components/kudos";
+import { PageHeader } from "@/components/ui/page-header";
 import {
-  PhotoGallery,
   BookingCard,
   ContactSection,
+  PhotoGallery,
 } from "@/features/discovery/components";
-import { useCourtDetail, useAvailableSlots } from "@/features/discovery/hooks";
+import { useAvailableSlots, useCourtDetail } from "@/features/discovery/hooks";
 import type { TimeSlot } from "@/shared/components/kudos";
+import { AdBanner } from "@/shared/components/kudos";
+import { Container } from "@/shared/components/layout";
 
 const AMENITY_ICONS: Record<
   string,

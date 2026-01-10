@@ -11,13 +11,13 @@ export const AdminUpdateCourtSchema = z.object({
   city: z.string().min(1).max(100).optional(),
   latitude: z
     .string()
-    .refine((val) => !isNaN(parseFloat(val)), {
+    .refine((val) => !Number.isNaN(parseFloat(val)), {
       message: "Latitude must be a valid decimal number",
     })
     .optional(),
   longitude: z
     .string()
-    .refine((val) => !isNaN(parseFloat(val)), {
+    .refine((val) => !Number.isNaN(parseFloat(val)), {
       message: "Longitude must be a valid decimal number",
     })
     .optional(),

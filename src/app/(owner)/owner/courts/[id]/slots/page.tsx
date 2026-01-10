@@ -1,28 +1,30 @@
 "use client";
 
-import * as React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ArrowLeft, ExternalLink } from "lucide-react";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
-import { OwnerSidebar, OwnerNavbar } from "@/features/owner";
-import { CalendarNavigation } from "@/features/owner/components/calendar-navigation";
-import { SlotList } from "@/features/owner/components/slot-list";
-import { BulkSlotModal } from "@/features/owner/components/bulk-slot-modal";
-import {
-  useSlots,
-  useBlockSlot,
-  useUnblockSlot,
-  useDeleteSlot,
-  useConfirmBooking,
-  useRejectBooking,
-  useCreateBulkSlots,
-} from "@/features/owner/hooks/use-slots";
-import { useSession, useLogout } from "@/features/auth";
-import { Button } from "@/components/ui/button";
+import * as React from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLogout, useSession } from "@/features/auth";
+import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
+import { BulkSlotModal } from "@/features/owner/components/bulk-slot-modal";
+import { CalendarNavigation } from "@/features/owner/components/calendar-navigation";
+import { CourtPhotoUpload } from "@/features/owner/components/court-photo-upload";
+import { SlotList } from "@/features/owner/components/slot-list";
+import {
+  useBlockSlot,
+  useConfirmBooking,
+  useCreateBulkSlots,
+  useDeleteSlot,
+  useRejectBooking,
+  useSlots,
+  useUnblockSlot,
+} from "@/features/owner/hooks/use-slots";
+import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
 
 export default function ManageSlotsPage() {
   const params = useParams();
@@ -191,7 +193,7 @@ export default function ManageSlotsPage() {
         sidebar={
           <OwnerSidebar
             currentOrganization={orgDisplay}
-            organizations={organization ? [orgDisplay!] : []}
+            organizations={orgDisplay ? [orgDisplay] : []}
             user={{
               name: user?.email?.split("@")[0],
               email: user?.email,
@@ -223,7 +225,7 @@ export default function ManageSlotsPage() {
         sidebar={
           <OwnerSidebar
             currentOrganization={orgDisplay}
-            organizations={organization ? [orgDisplay!] : []}
+            organizations={orgDisplay ? [orgDisplay] : []}
             user={{
               name: user?.email?.split("@")[0],
               email: user?.email,
@@ -256,7 +258,7 @@ export default function ManageSlotsPage() {
       sidebar={
         <OwnerSidebar
           currentOrganization={orgDisplay}
-          organizations={organization ? [orgDisplay!] : []}
+          organizations={orgDisplay ? [orgDisplay] : []}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,
@@ -317,18 +319,34 @@ export default function ManageSlotsPage() {
           </div>
 
           {/* Slots list */}
-          <SlotList
-            date={selectedDate}
-            slots={slots}
-            isLoading={slotsLoading}
-            onAddSlot={() => setBulkModalOpen(true)}
-            onBlockSlot={handleBlockSlot}
-            onUnblockSlot={handleUnblockSlot}
-            onDeleteSlot={handleDeleteSlot}
-            onConfirmBooking={handleConfirmBooking}
-            onRejectBooking={handleRejectBooking}
-            actionLoadingId={actionLoadingId}
-          />
+          <div className="space-y-6">
+            {courtData && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Court Photos</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CourtPhotoUpload
+                    courtId={courtId}
+                    photos={courtData.photos ?? []}
+                  />
+                </CardContent>
+              </Card>
+            )}
+
+            <SlotList
+              date={selectedDate}
+              slots={slots}
+              isLoading={slotsLoading}
+              onAddSlot={() => setBulkModalOpen(true)}
+              onBlockSlot={handleBlockSlot}
+              onUnblockSlot={handleUnblockSlot}
+              onDeleteSlot={handleDeleteSlot}
+              onConfirmBooking={handleConfirmBooking}
+              onRejectBooking={handleRejectBooking}
+              actionLoadingId={actionLoadingId}
+            />
+          </div>
         </div>
       </div>
 

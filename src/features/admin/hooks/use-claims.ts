@@ -1,8 +1,8 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTRPC } from "@/trpc/client";
 
 export type ClaimType = "claim" | "removal";
 export type ClaimStatus = "pending" | "approved" | "rejected";
@@ -51,7 +51,7 @@ interface UseClaimsOptions {
  * Connected to admin.claim.getPending tRPC endpoint
  */
 export function useClaims(options: UseClaimsOptions = {}) {
-  const { status, page = 1, limit = 10 } = options;
+  const { status: _status, page = 1, limit = 10 } = options;
   const trpc = useTRPC();
   const offset = (page - 1) * limit;
 

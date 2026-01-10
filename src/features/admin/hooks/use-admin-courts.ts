@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export type CourtType = "curated" | "reservable";
 export type CourtStatus = "active" | "inactive";
@@ -203,7 +203,7 @@ export function useCreateCuratedCourt() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: CuratedCourtData) => {
+    mutationFn: async (_data: CuratedCourtData) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return { success: true, courtId: `court-new-${Date.now()}` };
     },
@@ -220,7 +220,7 @@ export function useUpdateCuratedCourt() {
   return useMutation({
     mutationFn: async ({
       courtId,
-      data,
+      data: _data,
     }: {
       courtId: string;
       data: Partial<CuratedCourtData>;

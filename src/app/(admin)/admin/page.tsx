@@ -1,30 +1,21 @@
 "use client";
 
-import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import {
-  Tag,
+  AlertTriangle,
+  ArrowRight,
+  Ban,
   Building2,
   Calendar,
-  Users,
-  ArrowRight,
   CheckCircle2,
-  XCircle,
   Plus,
-  Ban,
-  AlertTriangle,
+  Tag,
   Trash2,
+  Users,
+  XCircle,
 } from "lucide-react";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
-import { AdminSidebar } from "@/features/admin/components/admin-sidebar";
-import { AdminNavbar } from "@/features/admin/components/admin-navbar";
-import { StatsCard } from "@/features/owner/components/stats-card";
-import {
-  useAdminStats,
-  usePendingClaims,
-  useAdminRecentActivity,
-} from "@/features/admin/hooks/use-admin-dashboard";
-import { useSession, useLogout } from "@/features/auth";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,9 +24,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AdminNavbar } from "@/features/admin/components/admin-navbar";
+import { AdminSidebar } from "@/features/admin/components/admin-sidebar";
+import {
+  useAdminRecentActivity,
+  useAdminStats,
+  usePendingClaims,
+} from "@/features/admin/hooks/use-admin-dashboard";
+import { useLogout, useSession } from "@/features/auth";
+import { StatsCard } from "@/features/owner/components/stats-card";
 import { cn } from "@/lib/utils";
+import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
 
 const activityIcons = {
   claim_approved: CheckCircle2,

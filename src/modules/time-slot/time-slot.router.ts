@@ -1,34 +1,34 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import {
-  router,
-  publicProcedure,
-  protectedProcedure,
-  protectedRateLimitedProcedure,
-} from "@/shared/infra/trpc/trpc";
-import { makeTimeSlotService } from "./factories/time-slot.factory";
-import {
-  GetAvailableSlotsSchema,
-  GetSlotsForCourtSchema,
-  CreateTimeSlotSchema,
-  CreateBulkTimeSlotsSchema,
-  UpdateSlotPriceSchema,
-  BlockSlotSchema,
-  UnblockSlotSchema,
-  DeleteSlotSchema,
-} from "./dtos";
-import {
-  SlotNotFoundError,
-  SlotOverlapError,
-  SlotNotAvailableError,
-  CourtNotReservableError,
-  SlotInUseError,
-} from "./errors/time-slot.errors";
+import { z } from "zod";
 import {
   CourtNotFoundError,
   NotCourtOwnerError,
 } from "@/modules/court/errors/court.errors";
+import {
+  protectedProcedure,
+  protectedRateLimitedProcedure,
+  publicProcedure,
+  router,
+} from "@/shared/infra/trpc/trpc";
 import { AppError } from "@/shared/kernel/errors";
+import {
+  BlockSlotSchema,
+  CreateBulkTimeSlotsSchema,
+  CreateTimeSlotSchema,
+  DeleteSlotSchema,
+  GetAvailableSlotsSchema,
+  GetSlotsForCourtSchema,
+  UnblockSlotSchema,
+  UpdateSlotPriceSchema,
+} from "./dtos";
+import {
+  CourtNotReservableError,
+  SlotInUseError,
+  SlotNotAvailableError,
+  SlotNotFoundError,
+  SlotOverlapError,
+} from "./errors/time-slot.errors";
+import { makeTimeSlotService } from "./factories/time-slot.factory";
 
 /**
  * Maps known errors to appropriate tRPC error codes

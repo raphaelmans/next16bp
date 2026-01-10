@@ -1,40 +1,13 @@
 "use client";
 
-import * as React from "react";
+import { formatDistanceToNow } from "date-fns";
+import { MapPin, Search, Tag, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { formatDistanceToNow } from "date-fns";
-import { Search, Tag, Trash2, MapPin } from "lucide-react";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
-import { AdminSidebar, AdminNavbar } from "@/features/admin";
-import {
-  useClaims,
-  useClaimCounts,
-  type ClaimType,
-  type ClaimStatus,
-} from "@/features/admin/hooks/use-claims";
-import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
-import { useSession, useLogout } from "@/features/auth";
+import * as React from "react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Pagination,
   PaginationContent,
@@ -43,6 +16,33 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AdminNavbar, AdminSidebar } from "@/features/admin";
+import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
+import {
+  type ClaimStatus,
+  type ClaimType,
+  useClaimCounts,
+  useClaims,
+} from "@/features/admin/hooks/use-claims";
+import { useLogout, useSession } from "@/features/auth";
+import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
 
 export default function AdminClaimsPage() {
   const router = useRouter();

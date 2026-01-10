@@ -17,7 +17,7 @@ export function useOwnerStats(organizationId: string | null) {
 
   const { data: pendingCount, isLoading: pendingLoading } = useQuery({
     ...trpc.reservationOwner.getPendingCount.queryOptions({
-      organizationId: organizationId!,
+      organizationId: organizationId ?? "",
     }),
     enabled: !!organizationId,
   });

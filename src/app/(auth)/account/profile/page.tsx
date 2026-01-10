@@ -1,10 +1,10 @@
 "use client";
 
 import { Suspense } from "react";
+import { PageHeader } from "@/components/ui/page-header";
+import { OwnerCtaSection } from "@/features/reservation/components/owner-cta-section";
 import { ProfileForm } from "@/features/reservation/components/profile-form";
 import { ProfileFormSkeleton } from "@/features/reservation/components/skeletons";
-import { OwnerCtaSection } from "@/features/reservation/components/owner-cta-section";
-import { PageHeader } from "@/components/ui/page-header";
 
 export default function ProfilePage() {
   return (

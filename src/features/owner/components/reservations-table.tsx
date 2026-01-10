@@ -1,20 +1,19 @@
 "use client";
 
-import * as React from "react";
 import { format } from "date-fns";
 import {
+  Check,
   ChevronDown,
   ChevronUp,
-  User,
   Mail,
   Phone,
-  Receipt,
-  ExternalLink,
-  Check,
+  User,
   X,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import * as React from "react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -23,12 +22,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import type {
   Reservation,
   ReservationStatus,
 } from "../hooks/use-owner-reservations";
+import { PaymentProofCard } from "./payment-proof-card";
 
 interface ReservationsTableProps {
   reservations: Reservation[];
@@ -150,34 +149,7 @@ export function ReservationsTable({
                 </div>
               </div>
 
-              {reservation.paymentReference && (
-                <div className="space-y-2">
-                  <h4 className="text-sm font-medium">Payment Proof</h4>
-                  <div className="text-sm space-y-1">
-                    <div className="flex items-center gap-2">
-                      <Receipt className="h-4 w-4 text-muted-foreground" />
-                      <span>Ref: {reservation.paymentReference}</span>
-                    </div>
-                    {reservation.paymentProofUrl && (
-                      <Button
-                        variant="link"
-                        size="sm"
-                        className="h-auto p-0"
-                        asChild
-                      >
-                        <a
-                          href={reservation.paymentProofUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <ExternalLink className="h-4 w-4 mr-1" />
-                          View Receipt Image
-                        </a>
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              )}
+              <PaymentProofCard proof={reservation.paymentProof ?? null} />
 
               {reservation.notes && (
                 <div className="space-y-2">
@@ -354,38 +326,9 @@ export function ReservationsTable({
                           </div>
 
                           {/* Payment Proof */}
-                          {reservation.paymentReference && (
-                            <div className="space-y-2">
-                              <h4 className="text-sm font-medium">
-                                Payment Proof
-                              </h4>
-                              <div className="text-sm space-y-1">
-                                <div className="flex items-center gap-2">
-                                  <Receipt className="h-4 w-4 text-muted-foreground" />
-                                  <span>
-                                    Ref: {reservation.paymentReference}
-                                  </span>
-                                </div>
-                                {reservation.paymentProofUrl && (
-                                  <Button
-                                    variant="link"
-                                    size="sm"
-                                    className="h-auto p-0"
-                                    asChild
-                                  >
-                                    <a
-                                      href={reservation.paymentProofUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      <ExternalLink className="h-4 w-4 mr-1" />
-                                      View Receipt Image
-                                    </a>
-                                  </Button>
-                                )}
-                              </div>
-                            </div>
-                          )}
+                          <PaymentProofCard
+                            proof={reservation.paymentProof ?? null}
+                          />
 
                           {/* Notes */}
                           {reservation.notes && (

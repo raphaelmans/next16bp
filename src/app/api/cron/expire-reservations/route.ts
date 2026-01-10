@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { and, lt, inArray, eq } from "drizzle-orm";
+import { and, eq, inArray, lt } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/shared/infra/db/drizzle";
 import {
   reservation,

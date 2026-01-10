@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import { ReservationTabs } from "@/features/reservation/components/reservation-tabs";
-import { ReservationList } from "@/features/reservation/components/reservation-list";
-import { ReservationListSkeleton } from "@/features/reservation/components/skeletons";
 import { PageHeader } from "@/components/ui/page-header";
+import { ReservationList } from "@/features/reservation/components/reservation-list";
+import { ReservationTabs } from "@/features/reservation/components/reservation-tabs";
+import { ReservationListSkeleton } from "@/features/reservation/components/skeletons";
 
 export const metadata = {
   title: "My Reservations",

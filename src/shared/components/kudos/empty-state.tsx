@@ -1,9 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { LocationPin } from "./location-pin";
 import type { LucideIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { LocationPin } from "./location-pin";
 
 interface EmptyStateProps {
   icon?: LucideIcon | React.ComponentType<{ className?: string }>;
