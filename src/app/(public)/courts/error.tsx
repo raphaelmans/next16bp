@@ -10,8 +10,8 @@ interface ErrorProps {
 
 export default function CourtsError({ error, reset }: ErrorProps) {
   return (
-    <div className="min-h-screen pt-24 pb-12">
-      <div className="container mx-auto px-4 max-w-md">
+    <div className="min-h-[60vh] py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center text-center py-12">
           <div className="rounded-full bg-destructive/10 p-4 mb-4">
             <AlertCircle className="h-8 w-8 text-destructive" />

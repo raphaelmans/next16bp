@@ -12,7 +12,7 @@ import {
   useCourtDraft,
   useCourtForm,
 } from "@/features/owner/hooks/use-court-form";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
+import { AppShell } from "@/shared/components/layout";
 import { useTRPC } from "@/trpc/client";
 
 export default function NewCourtPage() {
@@ -75,7 +75,7 @@ export default function NewCourtPage() {
   }
 
   return (
-    <DashboardLayout
+    <AppShell
       sidebar={
         <OwnerSidebar
           currentOrganization={organization}
@@ -116,6 +116,6 @@ export default function NewCourtPage() {
           isSubmitting={isSubmitting}
         />
       </div>
-    </DashboardLayout>
+    </AppShell>
   );
 }

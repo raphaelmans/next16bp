@@ -37,12 +37,12 @@ export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
     <div className="flex flex-1 items-center justify-between">
       {/* Left side - Logo and Admin badge */}
       <div className="flex items-center gap-4">
-        <Link href="/" className="flex items-center gap-2 hover:opacity-80">
+        <Link href="/home" className="flex items-center gap-2 hover:opacity-80">
           <KudosLogo size={28} variant="icon" />
         </Link>
         <Badge
           variant="outline"
-          className="bg-primary/10 text-primary border-primary/20 hidden sm:inline-flex"
+          className="bg-primary/10 text-primary border-primary/20 hidden sm:inline-flex font-heading"
         >
           Admin Dashboard
         </Badge>
@@ -53,7 +53,10 @@ export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 gap-2 px-2">
+              <Button
+                variant="ghost"
+                className="relative h-8 gap-2 px-2 font-heading"
+              >
                 <Avatar className="h-6 w-6">
                   <AvatarImage
                     src={user.avatarUrl}
@@ -75,7 +78,7 @@ export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   {user.name && (
-                    <p className="text-sm font-medium leading-none">
+                    <p className="text-sm font-heading font-medium leading-none">
                       {user.name}
                     </p>
                   )}

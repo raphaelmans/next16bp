@@ -88,8 +88,8 @@ export function Navbar({ className }: NavbarProps) {
     <nav
       className={cn(
         "fixed top-4 left-4 right-4 z-50",
-        "bg-card/80 backdrop-blur-md",
-        "border border-border/50 rounded-xl",
+        "bg-background/95 backdrop-blur-md",
+        "border border-border/60 rounded-xl",
         "h-16 px-4",
         "flex items-center justify-between",
         "shadow-md",
@@ -123,7 +123,11 @@ export function Navbar({ className }: NavbarProps) {
 
       {/* Desktop Actions */}
       <div className="hidden md:flex items-center gap-3">
-        <Button variant="ghost" onClick={handleListYourCourt}>
+        <Button
+          variant="ghost"
+          onClick={handleListYourCourt}
+          className="font-heading text-accent hover:text-accent/80"
+        >
           List Your Court
         </Button>
 
@@ -135,7 +139,7 @@ export function Navbar({ className }: NavbarProps) {
             onSignOut={handleSignOut}
           />
         ) : (
-          <Button variant="outline" asChild>
+          <Button variant="outline" asChild className="font-heading">
             <Link href="/login">
               <User className="h-4 w-4 mr-2" />
               Sign In
@@ -197,14 +201,14 @@ export function Navbar({ className }: NavbarProps) {
             {/* Mobile Navigation Links */}
             <Link
               href="/"
-              className="py-2 text-lg font-medium"
+              className="py-2 text-lg font-heading font-semibold"
               onClick={() => setIsOpen(false)}
             >
               Home
             </Link>
             <Link
               href="/courts"
-              className="py-2 text-lg font-medium"
+              className="py-2 text-lg font-heading font-semibold"
               onClick={() => setIsOpen(false)}
             >
               Browse Courts
@@ -216,7 +220,7 @@ export function Navbar({ className }: NavbarProps) {
                 <Separator />
                 <Link
                   href="/reservations"
-                  className="py-2 text-lg font-medium flex items-center gap-2"
+                  className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
                   onClick={() => setIsOpen(false)}
                 >
                   <Calendar className="h-5 w-5" />
@@ -224,7 +228,7 @@ export function Navbar({ className }: NavbarProps) {
                 </Link>
                 <Link
                   href="/account/profile"
-                  className="py-2 text-lg font-medium flex items-center gap-2"
+                  className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
                   onClick={() => setIsOpen(false)}
                 >
                   <User className="h-5 w-5" />
@@ -240,7 +244,7 @@ export function Navbar({ className }: NavbarProps) {
                 {isOwner && (
                   <Link
                     href="/owner"
-                    className="py-2 text-lg font-medium flex items-center gap-2"
+                    className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
                     onClick={() => setIsOpen(false)}
                   >
                     <Building className="h-5 w-5" />
@@ -250,7 +254,7 @@ export function Navbar({ className }: NavbarProps) {
                 {isAdmin && (
                   <Link
                     href="/admin"
-                    className="py-2 text-lg font-medium flex items-center gap-2"
+                    className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
                     onClick={() => setIsOpen(false)}
                   >
                     <Shield className="h-5 w-5" />
@@ -269,7 +273,7 @@ export function Navbar({ className }: NavbarProps) {
                 handleListYourCourt();
                 setIsOpen(false);
               }}
-              className="py-2 text-lg font-medium text-accent text-left"
+              className="py-2 text-lg font-heading font-semibold text-accent text-left"
             >
               List Your Court
             </button>
@@ -288,12 +292,16 @@ export function Navbar({ className }: NavbarProps) {
               </Button>
             ) : (
               <>
-                <Button asChild className="w-full">
+                <Button asChild className="w-full font-heading">
                   <Link href="/login" onClick={() => setIsOpen(false)}>
                     Sign In
                   </Link>
                 </Button>
-                <Button variant="outline" asChild className="w-full">
+                <Button
+                  variant="outline"
+                  asChild
+                  className="w-full font-heading"
+                >
                   <Link href="/register" onClick={() => setIsOpen(false)}>
                     Create Account
                   </Link>

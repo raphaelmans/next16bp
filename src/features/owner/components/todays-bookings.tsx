@@ -29,23 +29,23 @@ const statusConfig: Record<
 > = {
   booked: {
     label: "Booked",
-    dotClassName: "bg-blue-500",
-    bgClassName: "bg-blue-50 dark:bg-blue-950/30",
+    dotClassName: "bg-success",
+    bgClassName: "bg-success/10",
   },
   pending: {
     label: "Pending",
-    dotClassName: "bg-amber-500",
-    bgClassName: "bg-amber-50 dark:bg-amber-950/30",
+    dotClassName: "bg-warning",
+    bgClassName: "bg-warning/10",
   },
   available: {
     label: "Available",
-    dotClassName: "bg-green-500",
-    bgClassName: "",
+    dotClassName: "bg-primary",
+    bgClassName: "bg-primary/10",
   },
   blocked: {
     label: "Blocked",
-    dotClassName: "bg-gray-400",
-    bgClassName: "bg-gray-50 dark:bg-gray-800/50",
+    dotClassName: "bg-muted-foreground",
+    bgClassName: "bg-muted",
   },
 };
 

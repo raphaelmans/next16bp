@@ -2,8 +2,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CourtDetailLoading() {
   return (
-    <div className="min-h-screen pt-24 pb-12">
-      <div className="container mx-auto px-4">
+    <div className="min-h-[60vh] py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb skeleton */}
         <div className="mb-6">
           <Skeleton className="h-4 w-48" />

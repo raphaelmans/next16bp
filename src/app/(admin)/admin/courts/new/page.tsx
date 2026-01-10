@@ -44,7 +44,7 @@ import {
   curatedCourtSchema,
 } from "@/features/admin/schemas/curated-court.schema";
 import { useLogout, useSession } from "@/features/auth";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
+import { AppShell } from "@/shared/components/layout";
 
 export default function NewCuratedCourtPage() {
   const router = useRouter();
@@ -96,7 +96,7 @@ export default function NewCuratedCourtPage() {
   });
 
   return (
-    <DashboardLayout
+    <AppShell
       sidebar={
         <AdminSidebar
           user={{
@@ -379,6 +379,6 @@ export default function NewCuratedCourtPage() {
           </form>
         </Form>
       </div>
-    </DashboardLayout>
+    </AppShell>
   );
 }

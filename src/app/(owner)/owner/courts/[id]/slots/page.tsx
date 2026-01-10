@@ -23,7 +23,7 @@ import {
   useSlots,
   useUnblockSlot,
 } from "@/features/owner/hooks/use-slots";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
+import { AppShell } from "@/shared/components/layout";
 import { useTRPC } from "@/trpc/client";
 
 export default function ManageSlotsPage() {
@@ -189,7 +189,7 @@ export default function ManageSlotsPage() {
   // Show loading state while court is loading
   if (courtLoading) {
     return (
-      <DashboardLayout
+      <AppShell
         sidebar={
           <OwnerSidebar
             currentOrganization={orgDisplay}
@@ -214,14 +214,14 @@ export default function ManageSlotsPage() {
         <div className="flex items-center justify-center h-64">
           <p className="text-muted-foreground">Loading court...</p>
         </div>
-      </DashboardLayout>
+      </AppShell>
     );
   }
 
   // Show error state if court not found
   if (!courtData && !courtLoading) {
     return (
-      <DashboardLayout
+      <AppShell
         sidebar={
           <OwnerSidebar
             currentOrganization={orgDisplay}
@@ -249,12 +249,12 @@ export default function ManageSlotsPage() {
             <Link href="/owner/courts">Back to Courts</Link>
           </Button>
         </div>
-      </DashboardLayout>
+      </AppShell>
     );
   }
 
   return (
-    <DashboardLayout
+    <AppShell
       sidebar={
         <OwnerSidebar
           currentOrganization={orgDisplay}
@@ -358,6 +358,6 @@ export default function ManageSlotsPage() {
         isLoading={createBulkSlots.isPending}
         initialDate={selectedDate}
       />
-    </DashboardLayout>
+    </AppShell>
   );
 }

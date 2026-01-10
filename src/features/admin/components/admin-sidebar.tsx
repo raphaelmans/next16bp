@@ -67,7 +67,7 @@ export function AdminSidebar({
             <Shield className="h-4 w-4" />
           </div>
           <div>
-            <span className="font-semibold font-heading">Admin Panel</span>
+            <span className="font-heading font-semibold">Admin Panel</span>
             <p className="text-xs text-muted-foreground">KudosCourts</p>
           </div>
         </div>
@@ -90,13 +90,13 @@ export function AdminSidebar({
                         : ""
                     }
                   >
-                    <Link href={item.href}>
+                    <Link href={item.href} className="font-heading">
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
                       {item.badge && pendingClaimsCount > 0 && (
                         <Badge
                           variant="secondary"
-                          className="ml-auto bg-amber-100 text-amber-800"
+                          className="ml-auto bg-warning/10 text-warning border border-warning/20"
                         >
                           {pendingClaimsCount}
                         </Badge>
@@ -119,7 +119,7 @@ export function AdminSidebar({
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">
+            <p className="text-sm font-heading font-medium truncate">
               {user?.name || "Admin User"}
             </p>
             <p className="text-xs text-muted-foreground truncate">

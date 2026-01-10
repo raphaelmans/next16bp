@@ -31,13 +31,18 @@ export function DashboardLayout({
       {sidebar}
       <SidebarInset>
         {/* Top navbar */}
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+        <header className="flex h-16 w-full shrink-0 items-center gap-2 border-b bg-background px-4 sm:px-6 lg:px-8">
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
           {navbar}
         </header>
         {/* Main content */}
-        <main className={cn("flex-1 overflow-auto p-4 md:p-6", className)}>
+        <main
+          className={cn(
+            "flex-1 w-full overflow-auto px-4 py-6 sm:px-6 lg:px-8",
+            className,
+          )}
+        >
           {children}
         </main>
       </SidebarInset>

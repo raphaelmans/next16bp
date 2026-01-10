@@ -42,7 +42,7 @@ import {
   useClaims,
 } from "@/features/admin/hooks/use-claims";
 import { useLogout, useSession } from "@/features/auth";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
+import { AppShell } from "@/shared/components/layout";
 
 export default function AdminClaimsPage() {
   const router = useRouter();
@@ -83,7 +83,7 @@ export default function AdminClaimsPage() {
   }
 
   return (
-    <DashboardLayout
+    <AppShell
       sidebar={
         <AdminSidebar
           user={{
@@ -321,6 +321,6 @@ export default function AdminClaimsPage() {
           </TabsContent>
         </Tabs>
       </div>
-    </DashboardLayout>
+    </AppShell>
   );
 }

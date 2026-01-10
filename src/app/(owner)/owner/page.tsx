@@ -11,7 +11,7 @@ import {
   StatsCard,
 } from "@/features/owner";
 import { useOwnerOrganization, useOwnerStats } from "@/features/owner/hooks";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
+import { AppShell } from "@/shared/components/layout";
 
 export default function OwnerDashboardPage() {
   const { data: user } = useSession();
@@ -33,7 +33,7 @@ export default function OwnerDashboardPage() {
   // Show loading skeleton while organization data loads
   if (orgLoading) {
     return (
-      <DashboardLayout
+      <AppShell
         sidebar={
           <OwnerSidebar
             currentOrganization={{ id: "", name: "Loading..." }}
@@ -65,12 +65,12 @@ export default function OwnerDashboardPage() {
             <Skeleton className="h-32" />
           </div>
         </div>
-      </DashboardLayout>
+      </AppShell>
     );
   }
 
   return (
-    <DashboardLayout
+    <AppShell
       sidebar={
         <OwnerSidebar
           currentOrganization={
@@ -149,6 +149,6 @@ export default function OwnerDashboardPage() {
           />
         </div>
       </div>
-    </DashboardLayout>
+    </AppShell>
   );
 }

@@ -30,19 +30,19 @@ const activityConfig: Record<
 > = {
   booking: {
     icon: CalendarPlus,
-    iconClassName: "text-blue-600 bg-blue-100 dark:bg-blue-900/50",
+    iconClassName: "text-primary bg-primary/10",
   },
   payment: {
     icon: CreditCard,
-    iconClassName: "text-green-600 bg-green-100 dark:bg-green-900/50",
+    iconClassName: "text-success bg-success/10",
   },
   blocked: {
     icon: Ban,
-    iconClassName: "text-gray-600 bg-gray-100 dark:bg-gray-800",
+    iconClassName: "text-muted-foreground bg-muted",
   },
   confirmed: {
     icon: CheckCircle,
-    iconClassName: "text-emerald-600 bg-emerald-100 dark:bg-emerald-900/50",
+    iconClassName: "text-success bg-success/10",
   },
 };
 

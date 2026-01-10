@@ -57,12 +57,15 @@ export function UserDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="flex items-center gap-2 h-10 px-2">
+        <Button
+          variant="ghost"
+          className="flex items-center gap-2 h-10 px-2 font-heading"
+        >
           <Avatar className="h-8 w-8">
             {user.avatarUrl && (
               <AvatarImage src={user.avatarUrl} alt={user.name} />
             )}
-            <AvatarFallback className="bg-primary/10 text-primary text-xs font-medium">
+            <AvatarFallback className="bg-primary/10 text-primary text-xs font-heading font-medium">
               {initials}
             </AvatarFallback>
           </Avatar>
@@ -73,7 +76,9 @@ export function UserDropdown({
         {/* User Info Header */}
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.name}</p>
+            <p className="text-sm font-heading font-medium leading-none">
+              {user.name}
+            </p>
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
             </p>

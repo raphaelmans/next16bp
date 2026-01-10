@@ -60,7 +60,7 @@ import {
 import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
 import { useLogout, useSession } from "@/features/auth";
 import { cn } from "@/lib/utils";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
+import { AppShell } from "@/shared/components/layout";
 
 const _claimStatusLabels: Record<ClaimStatusFilter, string> = {
   unclaimed: "Unclaimed",
@@ -132,7 +132,7 @@ export default function AdminCourtsPage() {
   }
 
   return (
-    <DashboardLayout
+    <AppShell
       sidebar={
         <AdminSidebar
           user={{
@@ -323,8 +323,8 @@ export default function AdminCourtsPage() {
                             className={cn(
                               "w-2 h-2 rounded-full",
                               court.status === "active"
-                                ? "bg-green-500"
-                                : "bg-gray-400",
+                                ? "bg-success"
+                                : "bg-muted-foreground",
                             )}
                           />
                           <span className="text-sm capitalize">
@@ -435,6 +435,6 @@ export default function AdminCourtsPage() {
           </>
         )}
       </div>
-    </DashboardLayout>
+    </AppShell>
   );
 }

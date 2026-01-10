@@ -43,11 +43,11 @@ export function OwnerNavbar({
     <div className="flex flex-1 items-center justify-between">
       {/* Left side - Logo and Organization name */}
       <div className="flex items-center gap-4">
-        <Link href="/" className="flex items-center gap-2 hover:opacity-80">
+        <Link href="/home" className="flex items-center gap-2 hover:opacity-80">
           <KudosLogo size={28} variant="icon" />
         </Link>
         {organizationName && (
-          <span className="text-sm font-medium text-muted-foreground hidden sm:inline">
+          <span className="text-sm font-heading font-medium text-muted-foreground hidden sm:inline">
             {organizationName}
           </span>
         )}
@@ -58,7 +58,10 @@ export function OwnerNavbar({
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 gap-2 px-2">
+              <Button
+                variant="ghost"
+                className="relative h-8 gap-2 px-2 font-heading"
+              >
                 <Avatar className="h-6 w-6">
                   <AvatarImage
                     src={user.avatarUrl}
@@ -79,7 +82,7 @@ export function OwnerNavbar({
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   {user.name && (
-                    <p className="text-sm font-medium leading-none">
+                    <p className="text-sm font-heading font-medium leading-none">
                       {user.name}
                     </p>
                   )}

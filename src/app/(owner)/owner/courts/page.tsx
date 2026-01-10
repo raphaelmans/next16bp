@@ -14,7 +14,7 @@ import {
   useDeactivateCourt,
   useOwnerCourts,
 } from "@/features/owner/hooks/use-owner-courts";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
+import { AppShell } from "@/shared/components/layout";
 
 export default function OwnerCourtsPage() {
   const { data: user } = useSession();
@@ -51,7 +51,7 @@ export default function OwnerCourtsPage() {
   // Show loading state while organization loads
   if (orgLoading) {
     return (
-      <DashboardLayout
+      <AppShell
         sidebar={
           <OwnerSidebar
             currentOrganization={{ id: "", name: "Loading..." }}
@@ -81,12 +81,12 @@ export default function OwnerCourtsPage() {
             <Skeleton className="h-16 w-full" />
           </div>
         </div>
-      </DashboardLayout>
+      </AppShell>
     );
   }
 
   return (
-    <DashboardLayout
+    <AppShell
       sidebar={
         <OwnerSidebar
           currentOrganization={
@@ -143,6 +143,6 @@ export default function OwnerCourtsPage() {
           <CourtsEmptyState />
         )}
       </div>
-    </DashboardLayout>
+    </AppShell>
   );
 }

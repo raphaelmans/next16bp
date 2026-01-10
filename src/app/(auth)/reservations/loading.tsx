@@ -2,8 +2,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ReservationsLoading() {
   return (
-    <div className="min-h-screen pt-24 pb-12">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <div className="min-h-[60vh] py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         {/* Page header skeleton */}
         <div className="mb-8 space-y-2">
           <Skeleton className="h-8 w-48" />

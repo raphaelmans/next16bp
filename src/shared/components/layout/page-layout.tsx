@@ -10,7 +10,7 @@ interface PageLayoutProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function PageLayout({
   hasNavbar = true,
-  containerSize = "xl",
+  containerSize = "full",
   className,
   children,
   ...props

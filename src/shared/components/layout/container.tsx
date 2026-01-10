@@ -13,7 +13,7 @@ const sizeClasses = {
 };
 
 export function Container({
-  size = "xl",
+  size = "full",
   className,
   children,
   ...props

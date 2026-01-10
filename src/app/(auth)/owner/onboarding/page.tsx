@@ -57,38 +57,35 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="border-b bg-card/80 backdrop-blur-sm">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/">
-            <KudosLogo size={36} variant="full" />
-          </Link>
-          <Button variant="ghost" size="icon" onClick={handleCancel}>
-            <X className="h-5 w-5" />
-            <span className="sr-only">Cancel</span>
-          </Button>
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-heading font-bold tracking-tight">
+            Create your organization
+          </h1>
+          <p className="text-muted-foreground">
+            Set up your organization profile to start listing courts.
+          </p>
         </div>
-      </header>
+        <Button variant="ghost" size="icon" onClick={handleCancel}>
+          <X className="h-5 w-5" />
+          <span className="sr-only">Cancel</span>
+        </Button>
+      </div>
 
-      {/* Main content */}
-      <main className="flex-1 flex items-center justify-center p-4">
-        <OrganizationForm onSuccess={handleSuccess} onCancel={handleCancel} />
-      </main>
+      <OrganizationForm onSuccess={handleSuccess} onCancel={handleCancel} />
 
-      {/* Footer */}
-      <footer className="border-t py-4">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          By creating an organization, you agree to our{" "}
-          <Link href="/terms" className="underline hover:text-foreground">
-            Terms of Service
-          </Link>{" "}
-          and{" "}
-          <Link href="/privacy" className="underline hover:text-foreground">
-            Privacy Policy
-          </Link>
-        </div>
-      </footer>
+      <p className="text-sm text-muted-foreground">
+        By creating an organization, you agree to our{" "}
+        <Link href="/terms" className="underline hover:text-foreground">
+          Terms of Service
+        </Link>{" "}
+        and{" "}
+        <Link href="/privacy" className="underline hover:text-foreground">
+          Privacy Policy
+        </Link>
+        .
+      </p>
     </div>
   );
 }

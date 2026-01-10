@@ -22,8 +22,8 @@ function CourtCardSkeleton() {
 
 export default function CourtsLoading() {
   return (
-    <div className="min-h-screen pt-24 pb-12">
-      <div className="container mx-auto px-4">
+    <div className="min-h-[60vh] py-12">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         {/* Search and filters skeleton */}
         <div className="mb-8 space-y-4">
           <Skeleton className="h-10 w-full max-w-md" />

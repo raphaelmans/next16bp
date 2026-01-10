@@ -45,7 +45,7 @@ import {
   type RemovalRequestFormData,
 } from "@/features/owner/schemas/organization.schema";
 import { cn } from "@/lib/utils";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
+import { AppShell } from "@/shared/components/layout";
 
 export default function OwnerSettingsPage() {
   const { data: user } = useSession();
@@ -177,7 +177,7 @@ export default function OwnerSettingsPage() {
 
   if (orgLoading) {
     return (
-      <DashboardLayout
+      <AppShell
         sidebar={
           <OwnerSidebar
             currentOrganization={navOrg ?? { id: "", name: "Loading..." }}
@@ -197,12 +197,12 @@ export default function OwnerSettingsPage() {
           <Skeleton className="h-8 w-64" />
           <Skeleton className="h-96 w-full" />
         </div>
-      </DashboardLayout>
+      </AppShell>
     );
   }
 
   return (
-    <DashboardLayout
+    <AppShell
       sidebar={
         <OwnerSidebar
           currentOrganization={navOrg ?? { id: "", name: "No Organization" }}
@@ -489,6 +489,6 @@ export default function OwnerSettingsPage() {
         onSubmit={handleRemovalRequest}
         isLoading={requestRemoval.isPending}
       />
-    </DashboardLayout>
+    </AppShell>
   );
 }

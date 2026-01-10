@@ -52,28 +52,28 @@ import {
 } from "@/features/admin/hooks/use-claims";
 import { useLogout, useSession } from "@/features/auth";
 import { cn } from "@/lib/utils";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
+import { AppShell } from "@/shared/components/layout";
 
 const statusConfig = {
   pending: {
     label: "Pending Review",
-    variant: "default" as const,
-    bgClass: "bg-amber-50 border-amber-200",
-    textClass: "text-amber-800",
+    variant: "secondary" as const,
+    bgClass: "bg-warning/10 border-warning/20",
+    textClass: "text-warning",
     icon: Clock,
   },
   approved: {
     label: "Approved",
     variant: "secondary" as const,
-    bgClass: "bg-green-50 border-green-200",
-    textClass: "text-green-800",
+    bgClass: "bg-success/10 border-success/20",
+    textClass: "text-success",
     icon: CheckCircle2,
   },
   rejected: {
     label: "Rejected",
     variant: "outline" as const,
-    bgClass: "bg-gray-50 border-gray-200",
-    textClass: "text-gray-800",
+    bgClass: "bg-destructive/10 border-destructive/20",
+    textClass: "text-destructive",
     icon: XCircle,
   },
 };
@@ -133,7 +133,7 @@ export default function ClaimDetailPage() {
 
   if (claimLoading) {
     return (
-      <DashboardLayout
+      <AppShell
         sidebar={
           <AdminSidebar
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
@@ -151,13 +151,13 @@ export default function ClaimDetailPage() {
           <Skeleton className="h-8 w-64" />
           <Skeleton className="h-96 w-full" />
         </div>
-      </DashboardLayout>
+      </AppShell>
     );
   }
 
   if (!claim) {
     return (
-      <DashboardLayout
+      <AppShell
         sidebar={
           <AdminSidebar
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
@@ -181,12 +181,12 @@ export default function ClaimDetailPage() {
             <Link href="/admin/claims">Back to Claims</Link>
           </Button>
         </div>
-      </DashboardLayout>
+      </AppShell>
     );
   }
 
   return (
-    <DashboardLayout
+    <AppShell
       sidebar={
         <AdminSidebar
           user={{ name: user?.email?.split("@")[0], email: user?.email }}
@@ -394,10 +394,11 @@ export default function ClaimDetailPage() {
                         <div
                           className={cn(
                             "w-2 h-2 rounded-full mt-2",
-                            event.type === "submitted" && "bg-blue-500",
-                            event.type === "approved" && "bg-green-500",
-                            event.type === "rejected" && "bg-red-500",
-                            event.type === "note_added" && "bg-gray-400",
+                            event.type === "submitted" && "bg-accent",
+                            event.type === "approved" && "bg-success",
+                            event.type === "rejected" && "bg-destructive",
+                            event.type === "note_added" &&
+                              "bg-muted-foreground",
                           )}
                         />
                         {index < events.length - 1 && (
@@ -479,6 +480,6 @@ export default function ClaimDetailPage() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </AppShell>
   );
 }

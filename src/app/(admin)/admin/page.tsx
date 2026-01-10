@@ -35,7 +35,7 @@ import {
 import { useLogout, useSession } from "@/features/auth";
 import { StatsCard } from "@/features/owner/components/stats-card";
 import { cn } from "@/lib/utils";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
+import { AppShell } from "@/shared/components/layout";
 
 const activityIcons = {
   claim_approved: CheckCircle2,
@@ -45,10 +45,10 @@ const activityIcons = {
 };
 
 const activityColors = {
-  claim_approved: "text-green-600",
-  claim_rejected: "text-red-600",
-  court_added: "text-blue-600",
-  court_deactivated: "text-gray-600",
+  claim_approved: "text-success",
+  claim_rejected: "text-destructive",
+  court_added: "text-primary",
+  court_deactivated: "text-muted-foreground",
 };
 
 export default function AdminDashboardPage() {
@@ -67,7 +67,7 @@ export default function AdminDashboardPage() {
   };
 
   return (
-    <DashboardLayout
+    <AppShell
       sidebar={
         <AdminSidebar
           user={{
@@ -261,6 +261,6 @@ export default function AdminDashboardPage() {
           </Card>
         </div>
       </div>
-    </DashboardLayout>
+    </AppShell>
   );
 }

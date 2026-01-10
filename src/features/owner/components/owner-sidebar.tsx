@@ -107,7 +107,7 @@ export function OwnerSidebar({
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">
+                  <p className="text-sm font-heading font-medium truncate">
                     {currentOrganization.name}
                   </p>
                   <p className="text-xs text-muted-foreground">Owner</p>
@@ -141,7 +141,9 @@ export function OwnerSidebar({
               <Building2 className="h-4 w-4" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium">Owner Dashboard</p>
+              <p className="text-sm font-heading font-medium">
+                Owner Dashboard
+              </p>
             </div>
           </div>
         )}
@@ -162,7 +164,7 @@ export function OwnerSidebar({
                         : ""
                     }
                   >
-                    <Link href={item.href}>
+                    <Link href={item.href} className="font-heading">
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
                     </Link>
@@ -187,7 +189,7 @@ export function OwnerSidebar({
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">
+              <p className="text-sm font-heading font-medium truncate">
                 {user.name || user.email}
               </p>
               {user.name && (

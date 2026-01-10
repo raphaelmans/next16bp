@@ -51,7 +51,7 @@ export default function HomePage() {
   // Per checklist, we might want to mock if endpoints aren't ready, but let's show empty state if truly empty
 
   return (
-    <div className="container py-8 space-y-8 mx-auto px-4">
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       <WelcomeHeader
         name={profile?.displayName || sessionUser.email?.split("@")[0]}
         isLoading={dataLoading}

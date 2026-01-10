@@ -43,7 +43,7 @@ import {
   useReservationCounts,
 } from "@/features/owner/hooks/use-owner-reservations";
 import { cn } from "@/lib/utils";
-import { DashboardLayout } from "@/shared/components/layout/dashboard-layout";
+import { AppShell } from "@/shared/components/layout";
 
 type TabValue = "pending" | "upcoming" | "past" | "cancelled";
 
@@ -241,7 +241,7 @@ export default function OwnerReservationsPage() {
   // Show loading state while organization loads
   if (orgLoading) {
     return (
-      <DashboardLayout
+      <AppShell
         sidebar={
           <OwnerSidebar
             currentOrganization={{ id: "", name: "Loading..." }}
@@ -268,12 +268,12 @@ export default function OwnerReservationsPage() {
           <Skeleton className="h-12 w-full" />
           <Skeleton className="h-96 w-full" />
         </div>
-      </DashboardLayout>
+      </AppShell>
     );
   }
 
   return (
-    <DashboardLayout
+    <AppShell
       sidebar={
         <OwnerSidebar
           currentOrganization={
@@ -465,6 +465,6 @@ export default function OwnerReservationsPage() {
         playerName={selectedReservation?.playerName}
         courtName={selectedReservation?.courtName}
       />
-    </DashboardLayout>
+    </AppShell>
   );
 }
