@@ -25,20 +25,22 @@ export class RegisterUserUseCase {
       baseUrl,
     );
 
-    if (!result.user) {
+    const user = result.user;
+
+    if (!user) {
       throw new AuthRegistrationFailedError(input.email);
     }
 
     // 2. Create user role in our database (within transaction)
     await this.transactionManager.run(async (tx) => {
       await this.userRoleService.create(
-        { userId: result.user?.id, role: "member" },
+        { userId: user.id, role: "member" },
         { tx },
       );
     });
 
     return {
-      user: { id: result.user.id, email: result.user.email },
+      user: { id: user.id, email: user.email },
       session: result.session,
     };
   }

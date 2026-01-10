@@ -60,15 +60,7 @@ export function ProfileForm() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    profile?.id,
-    profile.avatarUrl,
-    profile.displayName,
-    profile.email,
-    profile.phoneNumber,
-    profile,
-    reset,
-  ]); // Only reset when profile ID changes, not on every profile update
+  }, [profile, reset]); // Only reset when profile changes, not on every profile update
 
   const onSubmit = (data: ProfileFormValues) => {
     // Filter out empty strings to avoid validation errors
