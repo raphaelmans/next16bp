@@ -8,6 +8,7 @@ import {
   OwnerNavbar,
   OwnerSidebar,
   PendingActions,
+  ReservationAlertsPanel,
   StatsCard,
 } from "@/features/owner";
 import { useOwnerOrganization, useOwnerStats } from "@/features/owner/hooks";
@@ -55,6 +56,7 @@ export default function OwnerDashboardPage() {
             onLogout={handleLogout}
           />
         }
+        floatingPanel={<ReservationAlertsPanel organizationId={null} />}
       >
         <div className="space-y-6">
           <Skeleton className="h-8 w-64" />
@@ -93,6 +95,9 @@ export default function OwnerDashboardPage() {
           }}
           onLogout={handleLogout}
         />
+      }
+      floatingPanel={
+        <ReservationAlertsPanel organizationId={organization?.id ?? null} />
       }
     >
       <div className="space-y-6">

@@ -30,9 +30,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
-import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
-import { RejectModal } from "@/features/owner/components/reject-modal";
-import { ReservationsTable } from "@/features/owner/components/reservations-table";
+import {
+  ConfirmDialog,
+  RejectModal,
+  ReservationAlertsPanel,
+  ReservationsTable,
+} from "@/features/owner/components";
 import { useOwnerCourts, useOwnerOrganization } from "@/features/owner/hooks";
 import {
   type Reservation,
@@ -263,6 +266,7 @@ export default function OwnerReservationsPage() {
             onLogout={handleLogout}
           />
         }
+        floatingPanel={<ReservationAlertsPanel organizationId={null} />}
       >
         <div className="space-y-6">
           <Skeleton className="h-8 w-64" />
@@ -296,6 +300,9 @@ export default function OwnerReservationsPage() {
           }}
           onLogout={handleLogout}
         />
+      }
+      floatingPanel={
+        <ReservationAlertsPanel organizationId={organization?.id ?? null} />
       }
     >
       <div className="space-y-6">

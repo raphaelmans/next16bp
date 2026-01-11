@@ -30,6 +30,9 @@ This domain implements a **simplified confirmation flow**:
 |----|-------|--------|-------------|
 | US-07-01 | Owner Views Pending Reservations | Active | List with enriched data (court, slot, player info) |
 | US-07-02 | Owner Confirms or Rejects Reservation | Active | Confirm → CONFIRMED, Reject → CANCELLED |
+| US-07-03 | Owner Sees Accurate Slot Reservation Status | Active | Slot list reflects reservation state + actions |
+| US-07-04 | Owner Manages Active Reservations with TTL | Active | Dedicated active list with countdowns |
+| US-07-05 | Owner Reservation Alerts Panel | Active | Floating draggable alerts panel |
 
 ---
 
@@ -180,6 +183,6 @@ See `07-99-deferred.md` and `08-p2p-reservation-confirmation`:
 
 ## Summary
 
-- **Total Stories:** 2
-- **Active:** 2
-- **Key Deliverable:** Enhance backend to return enriched data, verify frontend displays correctly
+- **Total Stories:** 5
+- **Active:** 5
+- **Key Deliverable:** Accurate reservation states across slot list, active TTL workflow, and alerts panel visibility

@@ -13,6 +13,16 @@ import type { RequestContext } from "@/shared/kernel/context";
 export interface TimeSlotWithPlayerInfo extends TimeSlotRecord {
   playerName?: string | null;
   playerPhone?: string | null;
+  reservationId?: string | null;
+  reservationStatus?:
+    | "CREATED"
+    | "AWAITING_PAYMENT"
+    | "PAYMENT_MARKED_BY_USER"
+    | "CONFIRMED"
+    | "EXPIRED"
+    | "CANCELLED"
+    | null;
+  reservationExpiresAt?: string | null;
 }
 
 export interface TimeSlotPaymentDetails {
@@ -206,6 +216,10 @@ export class TimeSlotRepository implements ITimeSlotRepository {
         currency: timeSlot.currency,
         createdAt: timeSlot.createdAt,
         updatedAt: timeSlot.updatedAt,
+        // Reservation info
+        reservationId: reservation.id,
+        reservationStatus: reservation.status,
+        reservationExpiresAt: reservation.expiresAt,
         // Player info from reservation
         playerName: reservation.playerNameSnapshot,
         playerPhone: reservation.playerPhoneSnapshot,
@@ -227,7 +241,12 @@ export class TimeSlotRepository implements ITimeSlotRepository {
       )
       .orderBy(timeSlot.startTime);
 
-    return result;
+    return result.map((slot) => ({
+      ...slot,
+      reservationExpiresAt: slot.reservationExpiresAt
+        ? slot.reservationExpiresAt.toISOString()
+        : null,
+    }));
   }
 
   async findAvailable(

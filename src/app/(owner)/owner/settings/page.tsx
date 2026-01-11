@@ -30,7 +30,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
-import { RemovalRequestModal } from "@/features/owner/components/removal-request-modal";
+import {
+  RemovalRequestModal,
+  ReservationAlertsPanel,
+} from "@/features/owner/components";
 import { useOwnerOrganization } from "@/features/owner/hooks";
 import {
   useCheckSlug,
@@ -193,6 +196,7 @@ export default function OwnerSettingsPage() {
             onLogout={handleLogout}
           />
         }
+        floatingPanel={<ReservationAlertsPanel organizationId={null} />}
       >
         <div className="space-y-6">
           <Skeleton className="h-8 w-64" />
@@ -217,6 +221,9 @@ export default function OwnerSettingsPage() {
           user={{ name: user?.email?.split("@")[0], email: user?.email }}
           onLogout={handleLogout}
         />
+      }
+      floatingPanel={
+        <ReservationAlertsPanel organizationId={navOrg?.id ?? null} />
       }
     >
       <div className="space-y-6">

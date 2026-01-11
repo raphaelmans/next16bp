@@ -1,0 +1,344 @@
+"use client";
+
+import { differenceInSeconds, format } from "date-fns";
+import { Bell, Clock, ExternalLink, X } from "lucide-react";
+import Link from "next/link";
+import * as React from "react";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
+import { RejectModal } from "@/features/owner/components/reject-modal";
+import { useOwnerOrganization } from "@/features/owner/hooks";
+import {
+  useConfirmReservation,
+  useRejectReservation,
+} from "@/features/owner/hooks/use-owner-reservations";
+import { useReservationAlerts } from "@/features/owner/hooks/use-reservation-alerts";
+import { cn } from "@/lib/utils";
+import { DraggablePanel } from "@/shared/components/ui/draggable-panel";
+import { appRoutes } from "@/shared/lib/app-routes";
+
+export function ReservationAlertsPanel({
+  organizationId,
+}: {
+  organizationId?: string | null;
+}) {
+  const [isOpen, setIsOpen] = React.useState(true);
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+  const [rejectOpen, setRejectOpen] = React.useState(false);
+  const [selectedReservationId, setSelectedReservationId] = React.useState<
+    string | null
+  >(null);
+  const [rejectMode, setRejectMode] = React.useState<"reject" | "cancel">(
+    "reject",
+  );
+  const [newIds, setNewIds] = React.useState<Set<string>>(new Set());
+  const lastPollRef = React.useRef<number | null>(null);
+
+  const { organization } = useOwnerOrganization();
+  const effectiveOrganizationId = organizationId ?? organization?.id ?? null;
+
+  const alertsQuery = useReservationAlerts(effectiveOrganizationId);
+  const confirmMutation = useConfirmReservation();
+  const rejectMutation = useRejectReservation();
+
+  const activeReservations = React.useMemo(
+    () =>
+      (alertsQuery.data ?? []).filter(
+        (reservation) =>
+          reservation.reservationStatus === "AWAITING_PAYMENT" ||
+          reservation.reservationStatus === "PAYMENT_MARKED_BY_USER",
+      ),
+    [alertsQuery.data],
+  );
+
+  React.useEffect(() => {
+    if (!alertsQuery.dataUpdatedAt) return;
+    if (lastPollRef.current) {
+      const nextIds = activeReservations
+        .filter((reservation) => {
+          if (!reservation.createdAt) return false;
+          const createdAt = new Date(reservation.createdAt).getTime();
+          return createdAt > (lastPollRef.current ?? 0);
+        })
+        .map((reservation) => reservation.id);
+      setNewIds(new Set(nextIds));
+    }
+    lastPollRef.current = alertsQuery.dataUpdatedAt;
+  }, [alertsQuery.dataUpdatedAt, activeReservations]);
+
+  const handleConfirm = (reservationId: string) => {
+    setSelectedReservationId(reservationId);
+    setConfirmOpen(true);
+  };
+
+  const handleReject = (reservationId: string, mode: "reject" | "cancel") => {
+    setSelectedReservationId(reservationId);
+    setRejectMode(mode);
+    setRejectOpen(true);
+  };
+
+  const handleConfirmSubmit = () => {
+    if (!selectedReservationId) return;
+    confirmMutation.mutate(
+      { reservationId: selectedReservationId },
+      {
+        onSuccess: () => {
+          toast.success("Reservation confirmed");
+          setConfirmOpen(false);
+        },
+        onError: () => {
+          toast.error("Failed to confirm reservation");
+        },
+      },
+    );
+  };
+
+  const handleRejectSubmit = (reason: string) => {
+    if (!selectedReservationId) return;
+    rejectMutation.mutate(
+      { reservationId: selectedReservationId, reason },
+      {
+        onSuccess: () => {
+          toast.success(
+            rejectMode === "cancel"
+              ? "Reservation cancelled"
+              : "Reservation rejected",
+          );
+          setRejectOpen(false);
+        },
+        onError: () => {
+          toast.error("Failed to update reservation");
+        },
+      },
+    );
+  };
+
+  if (!isOpen) {
+    return (
+      <Button
+        size="icon"
+        variant="secondary"
+        className="fixed bottom-6 right-6 z-50 shadow-lg"
+        onClick={() => setIsOpen(true)}
+      >
+        <Bell className="h-4 w-4" />
+      </Button>
+    );
+  }
+
+  const newCount = newIds.size;
+  const lastUpdatedLabel = alertsQuery.dataUpdatedAt
+    ? format(new Date(alertsQuery.dataUpdatedAt), "HH:mm:ss")
+    : "--";
+
+  return (
+    <>
+      <DraggablePanel
+        storageKey="owner-reservation-alerts"
+        header={
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-2">
+              <Bell className="h-4 w-4 text-accent" />
+              <CardTitle className="text-sm font-heading">
+                Active Reservations
+              </CardTitle>
+              {newCount > 0 && (
+                <Badge className="bg-accent/15 text-accent border border-accent/20">
+                  {newCount} new
+                </Badge>
+              )}
+            </div>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-7 w-7"
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={() => setIsOpen(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        }
+      >
+        <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+          <span>Last updated: {lastUpdatedLabel}</span>
+          <Link
+            href={appRoutes.owner.reservationsActive}
+            className="flex items-center gap-1 text-accent hover:underline"
+          >
+            View all
+            <ExternalLink className="h-3 w-3" />
+          </Link>
+        </div>
+
+        {alertsQuery.isError && (
+          <div className="rounded-md border border-destructive/20 bg-destructive/10 p-3 text-xs text-destructive">
+            Failed to refresh alerts.
+            <Button
+              variant="link"
+              className="px-1 text-destructive"
+              onClick={() => alertsQuery.refetch()}
+            >
+              Retry
+            </Button>
+          </div>
+        )}
+
+        {!alertsQuery.isError && activeReservations.length === 0 && (
+          <div className="rounded-md border border-dashed p-4 text-center text-sm text-muted-foreground">
+            No active reservations right now.
+            <Link
+              href={appRoutes.owner.reservationsActive}
+              className="block mt-2 text-accent hover:underline"
+            >
+              Go to active reservations
+            </Link>
+          </div>
+        )}
+
+        {activeReservations.length > 0 && (
+          <ScrollArea className="h-[280px] pr-2">
+            <div className="space-y-3">
+              {activeReservations.map((reservation) => {
+                const isAwaiting =
+                  reservation.reservationStatus === "AWAITING_PAYMENT";
+                const expiresAt = reservation.expiresAt
+                  ? new Date(reservation.expiresAt)
+                  : null;
+                const secondsRemaining = expiresAt
+                  ? Math.max(0, differenceInSeconds(expiresAt, new Date()))
+                  : null;
+                const countdown =
+                  secondsRemaining !== null
+                    ? `${Math.floor(secondsRemaining / 60)}m ${
+                        secondsRemaining % 60
+                      }s`
+                    : null;
+
+                return (
+                  <div
+                    key={reservation.id}
+                    className={cn(
+                      "rounded-md border p-3 space-y-2",
+                      newIds.has(reservation.id) &&
+                        "border-accent/40 bg-accent/5",
+                    )}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-heading font-semibold">
+                          {reservation.playerName}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {reservation.courtName} · {reservation.startTime} -{" "}
+                          {reservation.endTime}
+                        </p>
+                      </div>
+                      <Badge
+                        className={cn(
+                          "text-xs",
+                          isAwaiting
+                            ? "bg-warning/10 text-warning border border-warning/20"
+                            : "bg-primary/10 text-primary border border-primary/20",
+                        )}
+                      >
+                        {isAwaiting ? "Awaiting payment" : "Payment marked"}
+                      </Badge>
+                    </div>
+
+                    {isAwaiting && countdown && (
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Clock className="h-3 w-3" />
+                        <span>{countdown} left</span>
+                      </div>
+                    )}
+
+                    <Separator />
+
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="font-heading"
+                        asChild
+                      >
+                        <Link
+                          href={appRoutes.owner.reservationDetail(
+                            reservation.id,
+                          )}
+                        >
+                          View
+                        </Link>
+                      </Button>
+                      {isAwaiting ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10 font-heading"
+                          onClick={() => handleReject(reservation.id, "cancel")}
+                        >
+                          Cancel
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-primary hover:text-primary hover:bg-primary/10 font-heading"
+                            onClick={() => handleConfirm(reservation.id)}
+                          >
+                            Confirm
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10 font-heading"
+                            onClick={() =>
+                              handleReject(reservation.id, "reject")
+                            }
+                          >
+                            Reject
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </ScrollArea>
+        )}
+      </DraggablePanel>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        onConfirm={handleConfirmSubmit}
+        isLoading={confirmMutation.isPending}
+        title="Confirm Reservation"
+        confirmLabel="Confirm"
+      />
+
+      <RejectModal
+        open={rejectOpen}
+        onOpenChange={setRejectOpen}
+        onReject={handleRejectSubmit}
+        isLoading={rejectMutation.isPending}
+        title={
+          rejectMode === "cancel" ? "Cancel Reservation" : "Reject Reservation"
+        }
+        reasonLabel={
+          rejectMode === "cancel" ? "Reason for cancellation" : undefined
+        }
+        submitLabel={
+          rejectMode === "cancel" ? "Cancel Reservation" : "Reject Reservation"
+        }
+      />
+    </>
+  );
+}

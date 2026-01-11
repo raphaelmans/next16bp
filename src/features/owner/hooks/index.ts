@@ -35,6 +35,7 @@ export {
   useRejectReservation,
   useReservationCounts,
 } from "./use-owner-reservations";
+export { useReservationAlerts } from "./use-reservation-alerts";
 export {
   type BulkSlotData,
   type SlotStatus,

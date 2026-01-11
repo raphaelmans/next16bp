@@ -16,6 +16,16 @@ export interface TimeSlot {
   currency?: string | null;
   playerName?: string | null;
   playerPhone?: string | null;
+  reservationId?: string | null;
+  reservationStatus?:
+    | "CREATED"
+    | "AWAITING_PAYMENT"
+    | "PAYMENT_MARKED_BY_USER"
+    | "CONFIRMED"
+    | "EXPIRED"
+    | "CANCELLED"
+    | null;
+  reservationExpiresAt?: string | null;
 }
 
 interface UseSlotsOptions {
@@ -75,6 +85,9 @@ export function useSlots({ courtId, date }: UseSlotsOptions) {
         currency: slot.currency,
         playerName: slot.playerName,
         playerPhone: slot.playerPhone,
+        reservationId: slot.reservationId ?? null,
+        reservationStatus: slot.reservationStatus ?? null,
+        reservationExpiresAt: slot.reservationExpiresAt ?? null,
       })),
   });
 }
@@ -226,39 +239,27 @@ export function useCreateBulkSlots(courtId: string) {
 // They call reservation endpoints, not time-slot endpoints
 
 export function useConfirmBooking() {
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ slotId: _slotId }: { slotId: string }) => {
-      // TODO: Wire to reservationOwner.confirmPayment
-      // Need to get reservationId from slot context
-      console.warn("useConfirmBooking not yet implemented - see US-07-02");
-      throw new Error("Not implemented");
-    },
+    ...trpc.reservationOwner.confirmPayment.mutationOptions(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
+      queryClient.invalidateQueries({ queryKey: ["reservationOwner"] });
     },
   });
 }
 
 export function useRejectBooking() {
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      slotId: _slotId,
-      reason: _reason,
-    }: {
-      slotId: string;
-      reason: string;
-    }) => {
-      // TODO: Wire to reservationOwner.reject
-      // Need to get reservationId from slot context
-      console.warn("useRejectBooking not yet implemented - see US-07-02");
-      throw new Error("Not implemented");
-    },
+    ...trpc.reservationOwner.reject.mutationOptions(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
+      queryClient.invalidateQueries({ queryKey: ["reservationOwner"] });
     },
   });
 }

@@ -15,9 +15,9 @@ interface SlotListProps {
   onBlockSlot?: (slotId: string) => void;
   onUnblockSlot?: (slotId: string) => void;
   onDeleteSlot?: (slotId: string) => void;
-  onViewBooking?: (slotId: string) => void;
-  onConfirmBooking?: (slotId: string) => void;
-  onRejectBooking?: (slotId: string) => void;
+  onConfirmBooking?: (reservationId: string) => void;
+  onRejectBooking?: (reservationId: string) => void;
+  onCancelBooking?: (reservationId: string) => void;
   actionLoadingId?: string;
 }
 
@@ -29,9 +29,9 @@ export function SlotList({
   onBlockSlot,
   onUnblockSlot,
   onDeleteSlot,
-  onViewBooking,
   onConfirmBooking,
   onRejectBooking,
+  onCancelBooking,
   actionLoadingId,
 }: SlotListProps) {
   // Sort slots by start time
@@ -117,10 +117,13 @@ export function SlotList({
                 onBlock={onBlockSlot}
                 onUnblock={onUnblockSlot}
                 onDelete={onDeleteSlot}
-                onViewBooking={onViewBooking}
                 onConfirm={onConfirmBooking}
                 onReject={onRejectBooking}
-                isLoading={actionLoadingId === slot.id}
+                onCancel={onCancelBooking}
+                isLoading={
+                  actionLoadingId === slot.id ||
+                  actionLoadingId === slot.reservationId
+                }
               />
             ))}
           </div>

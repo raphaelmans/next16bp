@@ -299,6 +299,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     return this.reservationRepository.findWithDetailsByOrganization(
       filters.organizationId,
       {
+        reservationId: filters.reservationId,
         courtId: filters.courtId,
         status: filters.status,
         limit: filters.limit,

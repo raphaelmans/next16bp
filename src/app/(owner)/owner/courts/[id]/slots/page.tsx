@@ -10,9 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
+import { ReservationAlertsPanel } from "@/features/owner/components";
 import { BulkSlotModal } from "@/features/owner/components/bulk-slot-modal";
 import { CalendarNavigation } from "@/features/owner/components/calendar-navigation";
 import { CourtPhotoUpload } from "@/features/owner/components/court-photo-upload";
+import { RejectModal } from "@/features/owner/components/reject-modal";
 import { SlotList } from "@/features/owner/components/slot-list";
 import {
   useBlockSlot,
@@ -38,6 +40,12 @@ export default function ManageSlotsPage() {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [bulkModalOpen, setBulkModalOpen] = React.useState(false);
   const [actionLoadingId, setActionLoadingId] = React.useState<string>();
+  const [rejectModalOpen, setRejectModalOpen] = React.useState(false);
+  const [rejectContext, setRejectContext] = React.useState<{
+    reservationId: string;
+    mode: "reject" | "cancel";
+    playerName?: string | null;
+  } | null>(null);
 
   // Fetch court data
   const { data: courtData, isLoading: courtLoading } = useQuery({
@@ -120,10 +128,25 @@ export default function ManageSlotsPage() {
     );
   };
 
-  const handleConfirmBooking = (slotId: string) => {
-    setActionLoadingId(slotId);
+  const openRejectModal = (
+    reservationId: string,
+    mode: "reject" | "cancel",
+  ) => {
+    const targetSlot = slots.find(
+      (slot) => slot.reservationId === reservationId,
+    );
+    setRejectContext({
+      reservationId,
+      mode,
+      playerName: targetSlot?.playerName ?? undefined,
+    });
+    setRejectModalOpen(true);
+  };
+
+  const handleConfirmBooking = (reservationId: string) => {
+    setActionLoadingId(reservationId);
     confirmBooking.mutate(
-      { slotId },
+      { reservationId },
       {
         onSuccess: () => {
           toast.success("Booking confirmed successfully");
@@ -137,17 +160,32 @@ export default function ManageSlotsPage() {
     );
   };
 
-  const handleRejectBooking = (slotId: string) => {
-    setActionLoadingId(slotId);
+  const handleRejectBooking = (reservationId: string) => {
+    openRejectModal(reservationId, "reject");
+  };
+
+  const handleCancelBooking = (reservationId: string) => {
+    openRejectModal(reservationId, "cancel");
+  };
+
+  const handleRejectSubmit = (reason: string) => {
+    if (!rejectContext) return;
+    setActionLoadingId(rejectContext.reservationId);
     rejectBooking.mutate(
-      { slotId, reason: "Rejected by owner" },
+      { reservationId: rejectContext.reservationId, reason },
       {
         onSuccess: () => {
-          toast.success("Booking rejected");
+          toast.success(
+            rejectContext.mode === "cancel"
+              ? "Reservation cancelled"
+              : "Booking rejected",
+          );
           setActionLoadingId(undefined);
+          setRejectModalOpen(false);
+          setRejectContext(null);
         },
         onError: () => {
-          toast.error("Failed to reject booking");
+          toast.error("Failed to update reservation");
           setActionLoadingId(undefined);
         },
       },
@@ -223,6 +261,9 @@ export default function ManageSlotsPage() {
             onLogout={handleLogout}
           />
         }
+        floatingPanel={
+          <ReservationAlertsPanel organizationId={orgDisplay?.id ?? null} />
+        }
       >
         <div className="flex items-center justify-center h-64">
           <p className="text-muted-foreground">Loading court...</p>
@@ -254,6 +295,9 @@ export default function ManageSlotsPage() {
             }}
             onLogout={handleLogout}
           />
+        }
+        floatingPanel={
+          <ReservationAlertsPanel organizationId={orgDisplay?.id ?? null} />
         }
       >
         <div className="text-center py-12">
@@ -287,6 +331,9 @@ export default function ManageSlotsPage() {
           }}
           onLogout={handleLogout}
         />
+      }
+      floatingPanel={
+        <ReservationAlertsPanel organizationId={orgDisplay?.id ?? null} />
       }
     >
       <div className="space-y-6">
@@ -333,19 +380,17 @@ export default function ManageSlotsPage() {
 
           {/* Slots list */}
           <div className="space-y-6">
-            {courtData && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Court Photos</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CourtPhotoUpload
-                    courtId={courtId}
-                    photos={courtData.photos ?? []}
-                  />
-                </CardContent>
-              </Card>
-            )}
+            <Card>
+              <CardHeader>
+                <CardTitle>Court Photos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CourtPhotoUpload
+                  courtId={courtId}
+                  photos={courtData?.photos ?? []}
+                />
+              </CardContent>
+            </Card>
 
             <SlotList
               date={selectedDate}
@@ -357,6 +402,7 @@ export default function ManageSlotsPage() {
               onDeleteSlot={handleDeleteSlot}
               onConfirmBooking={handleConfirmBooking}
               onRejectBooking={handleRejectBooking}
+              onCancelBooking={handleCancelBooking}
               actionLoadingId={actionLoadingId}
             />
           </div>
@@ -371,6 +417,34 @@ export default function ManageSlotsPage() {
         isLoading={createBulkSlots.isPending}
         defaultPrice={defaultPriceCents}
         initialDate={selectedDate}
+      />
+
+      <RejectModal
+        open={rejectModalOpen}
+        onOpenChange={setRejectModalOpen}
+        onReject={handleRejectSubmit}
+        isLoading={rejectBooking.isPending}
+        title={
+          rejectContext?.mode === "cancel"
+            ? "Cancel Reservation"
+            : "Reject Reservation"
+        }
+        description={
+          rejectContext?.mode === "cancel"
+            ? "Provide a reason for cancelling this reservation."
+            : undefined
+        }
+        playerName={rejectContext?.playerName ?? undefined}
+        reasonLabel={
+          rejectContext?.mode === "cancel"
+            ? "Reason for cancellation"
+            : undefined
+        }
+        submitLabel={
+          rejectContext?.mode === "cancel"
+            ? "Cancel Reservation"
+            : "Reject Reservation"
+        }
       />
     </AppShell>
   );

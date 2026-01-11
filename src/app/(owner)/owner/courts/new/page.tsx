@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/page-header";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
-import { CourtForm } from "@/features/owner/components/court-form";
+import { CourtForm, ReservationAlertsPanel } from "@/features/owner/components";
 import {
   useCourtDraft,
   useCourtForm,
@@ -96,6 +96,9 @@ export default function NewCourtPage() {
           }}
           onLogout={handleLogout}
         />
+      }
+      floatingPanel={
+        <ReservationAlertsPanel organizationId={organization.id} />
       }
     >
       <div className="space-y-6">

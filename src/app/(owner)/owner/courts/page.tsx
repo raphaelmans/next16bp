@@ -7,8 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
-import { CourtsEmptyState } from "@/features/owner/components/courts-empty-state";
-import { CourtsTable } from "@/features/owner/components/courts-table";
+import {
+  CourtsEmptyState,
+  CourtsTable,
+  ReservationAlertsPanel,
+} from "@/features/owner/components";
 import { useOwnerOrganization } from "@/features/owner/hooks";
 import {
   useDeactivateCourt,
@@ -73,6 +76,7 @@ export default function OwnerCourtsPage() {
             onLogout={handleLogout}
           />
         }
+        floatingPanel={<ReservationAlertsPanel organizationId={null} />}
       >
         <div className="space-y-6">
           <Skeleton className="h-8 w-64" />
@@ -109,6 +113,9 @@ export default function OwnerCourtsPage() {
           }}
           onLogout={handleLogout}
         />
+      }
+      floatingPanel={
+        <ReservationAlertsPanel organizationId={organization?.id ?? null} />
       }
     >
       <div className="space-y-6">

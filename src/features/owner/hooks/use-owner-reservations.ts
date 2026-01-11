@@ -22,6 +22,14 @@ export interface Reservation {
   amountCents: number;
   currency: string;
   status: ReservationStatus;
+  reservationStatus:
+    | "CREATED"
+    | "AWAITING_PAYMENT"
+    | "PAYMENT_MARKED_BY_USER"
+    | "CONFIRMED"
+    | "EXPIRED"
+    | "CANCELLED";
+  expiresAt?: string | null;
   paymentProof?: {
     referenceNumber: string | null;
     notes: string | null;
@@ -33,11 +41,13 @@ export interface Reservation {
 }
 
 interface UseOwnerReservationsOptions {
+  reservationId?: string;
   courtId?: string;
   status?: ReservationStatus | "all";
   search?: string;
   dateFrom?: Date;
   dateTo?: Date;
+  refetchIntervalMs?: number;
 }
 
 /**
@@ -113,17 +123,20 @@ export function useOwnerReservations(
   options: UseOwnerReservationsOptions = {},
 ) {
   const trpc = useTRPC();
-  const { courtId, status, search } = options;
+  const { courtId, status, search, reservationId, refetchIntervalMs } = options;
 
   return useQuery({
     ...trpc.reservationOwner.getForOrganization.queryOptions({
       organizationId: organizationId ?? "",
+      reservationId: reservationId || undefined,
       courtId: courtId || undefined,
-      status: status !== "all" ? mapStatusToBackend(status) : undefined,
+      status:
+        status && status !== "all" ? mapStatusToBackend(status) : undefined,
       limit: 100,
       offset: 0,
     }),
     enabled: !!organizationId,
+    refetchInterval: refetchIntervalMs,
     select: (data) => {
       // Map backend records to frontend Reservation format
       let reservations: Reservation[] = data.map((r) => ({
@@ -144,6 +157,8 @@ export function useOwnerReservations(
         amountCents: r.amountCents ?? 0,
         currency: r.currency ?? "PHP",
         status: mapStatusFromBackend(r.status),
+        reservationStatus: r.status,
+        expiresAt: r.expiresAt ?? null,
         paymentProof: r.paymentProof ?? null,
         notes: r.cancellationReason ?? undefined,
         createdAt: r.createdAt ?? "",

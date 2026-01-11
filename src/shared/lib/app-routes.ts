@@ -80,6 +80,9 @@ export const appRoutes = {
       slots: (courtId: string) => `/owner/courts/${courtId}/slots`,
     },
     reservations: "/owner/reservations",
+    reservationsActive: "/owner/reservations/active",
+    reservationDetail: (reservationId: string) =>
+      `/owner/reservations/${reservationId}`,
     settings: "/owner/settings",
   },
   admin: {

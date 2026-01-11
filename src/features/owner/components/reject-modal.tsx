@@ -23,6 +23,8 @@ interface RejectModalProps {
   description?: string;
   playerName?: string;
   courtName?: string;
+  reasonLabel?: string;
+  submitLabel?: string;
 }
 
 export function RejectModal({
@@ -34,6 +36,8 @@ export function RejectModal({
   description,
   playerName,
   courtName,
+  reasonLabel,
+  submitLabel,
 }: RejectModalProps) {
   const [reason, setReason] = React.useState("");
 
@@ -54,6 +58,8 @@ export function RejectModal({
   const defaultDescription = playerName
     ? `You are about to reject the booking for ${playerName}${courtName ? ` at ${courtName}` : ""}. Please provide a reason.`
     : "Please provide a reason for rejecting this booking.";
+  const labelText = reasonLabel ?? "Reason for rejection";
+  const submitText = submitLabel ?? "Reject Booking";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -68,7 +74,7 @@ export function RejectModal({
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="reason">
-                Reason for rejection <span className="text-destructive">*</span>
+                {labelText} <span className="text-destructive">*</span>
               </Label>
               <Textarea
                 id="reason"
@@ -102,7 +108,7 @@ export function RejectModal({
               ) : (
                 <X className="h-4 w-4 mr-2" />
               )}
-              Reject Booking
+              {submitText}
             </Button>
           </DialogFooter>
         </form>

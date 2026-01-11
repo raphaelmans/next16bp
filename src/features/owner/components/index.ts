@@ -10,6 +10,7 @@ export { OwnerSidebar } from "./owner-sidebar";
 export { PendingActions } from "./pending-actions";
 export { RecentActivity } from "./recent-activity";
 export { RejectModal } from "./reject-modal";
+export { ReservationAlertsPanel } from "./reservation-alerts-panel";
 export { RemovalRequestModal } from "./removal-request-modal";
 export { ReservationsTable } from "./reservations-table";
 export { SlotItem } from "./slot-item";

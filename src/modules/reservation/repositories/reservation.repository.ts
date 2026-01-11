@@ -50,6 +50,7 @@ export interface IReservationRepository {
   findWithDetailsByOrganization(
     organizationId: string,
     filters: {
+      reservationId?: string;
       courtId?: string;
       status?: string;
       limit: number;
@@ -278,6 +279,7 @@ export class ReservationRepository implements IReservationRepository {
   async findWithDetailsByOrganization(
     organizationId: string,
     filters: {
+      reservationId?: string;
       courtId?: string;
       status?: string;
       limit: number;
@@ -292,6 +294,10 @@ export class ReservationRepository implements IReservationRepository {
 
     if (filters.courtId) {
       conditions.push(eq(court.id, filters.courtId));
+    }
+
+    if (filters.reservationId) {
+      conditions.push(eq(reservation.id, filters.reservationId));
     }
 
     if (filters.status) {
@@ -318,6 +324,7 @@ export class ReservationRepository implements IReservationRepository {
         playerPhoneSnapshot: reservation.playerPhoneSnapshot,
         cancellationReason: reservation.cancellationReason,
         createdAt: reservation.createdAt,
+        expiresAt: reservation.expiresAt,
         courtId: court.id,
         courtName: court.name,
         slotStartTime: timeSlot.startTime,
@@ -363,6 +370,7 @@ export class ReservationRepository implements IReservationRepository {
         slotStartTime: r.slotStartTime?.toISOString() ?? "",
         slotEndTime: r.slotEndTime?.toISOString() ?? "",
         createdAt: r.createdAt?.toISOString() ?? null,
+        expiresAt: r.expiresAt?.toISOString() ?? null,
         paymentProof: hasProof
           ? {
               referenceNumber: proof?.referenceNumber ?? null,

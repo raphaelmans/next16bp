@@ -16,6 +16,7 @@ export type RejectReservationDTO = z.infer<typeof RejectReservationSchema>;
 
 export const GetOrgReservationsSchema = z.object({
   organizationId: z.string().uuid(),
+  reservationId: z.string().uuid().optional(),
   courtId: z.string().uuid().optional(),
   status: z
     .enum([
@@ -60,6 +61,7 @@ export const ReservationWithDetailsSchema = z.object({
   playerPhoneSnapshot: z.string().nullable(),
   cancellationReason: z.string().nullable(),
   createdAt: z.string().nullable(),
+  expiresAt: z.string().nullable(),
 
   // Enriched fields from joins
   courtId: z.string().uuid(),

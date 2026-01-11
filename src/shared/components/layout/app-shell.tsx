@@ -8,6 +8,7 @@ interface AppShellProps {
   children: React.ReactNode;
   sidebar: React.ReactNode;
   navbar: React.ReactNode;
+  floatingPanel?: React.ReactNode;
   className?: string;
 }
 
@@ -15,6 +16,7 @@ export function AppShell({
   children,
   sidebar,
   navbar,
+  floatingPanel,
   className,
 }: AppShellProps) {
   return (
@@ -34,6 +36,7 @@ export function AppShell({
           {children}
         </div>
       </DashboardLayout>
+      {floatingPanel}
     </div>
   );
 }

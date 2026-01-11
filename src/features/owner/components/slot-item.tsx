@@ -13,6 +13,7 @@ import {
   User,
   X,
 } from "lucide-react";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { appRoutes } from "@/shared/lib/app-routes";
 import type { SlotStatus, TimeSlot } from "../hooks/use-slots";
 
 interface SlotItemProps {
@@ -30,9 +32,9 @@ interface SlotItemProps {
   onBlock?: (slotId: string) => void;
   onUnblock?: (slotId: string) => void;
   onDelete?: (slotId: string) => void;
-  onViewBooking?: (slotId: string) => void;
-  onConfirm?: (slotId: string) => void;
-  onReject?: (slotId: string) => void;
+  onConfirm?: (reservationId: string) => void;
+  onReject?: (reservationId: string) => void;
+  onCancel?: (reservationId: string) => void;
   isLoading?: boolean;
 }
 
@@ -67,14 +69,26 @@ export function SlotItem({
   onBlock,
   onUnblock,
   onDelete,
-  onViewBooking,
   onConfirm,
   onReject,
+  onCancel,
   isLoading,
 }: SlotItemProps) {
   const startTime = new Date(slot.startTime);
   const endTime = new Date(slot.endTime);
   const config = statusConfig[slot.status];
+  const pendingLabel =
+    slot.reservationStatus === "PAYMENT_MARKED_BY_USER"
+      ? "Payment marked"
+      : slot.reservationStatus === "AWAITING_PAYMENT"
+        ? "Awaiting payment"
+        : "Held";
+  const reservationId = slot.reservationId ?? undefined;
+  const showPendingActions = slot.status === "pending" && reservationId;
+  const showConfirmActions =
+    showPendingActions && slot.reservationStatus === "PAYMENT_MARKED_BY_USER";
+  const showAwaitingActions =
+    showPendingActions && slot.reservationStatus === "AWAITING_PAYMENT";
 
   const formatPrice = (cents?: number, currency?: string | null) => {
     if (!cents) return null;
@@ -109,7 +123,7 @@ export function SlotItem({
       <div className="flex items-center gap-4 flex-1 justify-center">
         <Badge variant="outline" className={cn("gap-1.5", config.color)}>
           <span className={cn("w-2 h-2 rounded-full", config.dotColor)} />
-          {config.label}
+          {slot.status === "pending" ? pendingLabel : config.label}
         </Badge>
 
         {/* Player info for booked/pending */}
@@ -135,25 +149,43 @@ export function SlotItem({
             {formatPrice(slot.priceCents, slot.currency)}
           </span>
         )}
-
-        {/* Payment marked indicator for pending */}
-        {slot.status === "pending" && (
-          <Badge variant="secondary" className="text-xs">
-            Payment marked
-          </Badge>
-        )}
       </div>
 
       {/* Actions */}
       <div className="flex items-center gap-2">
         {/* Quick actions for pending */}
-        {slot.status === "pending" && (
+        {showAwaitingActions && (
           <>
             <Button
               variant="outline"
               size="sm"
-              className="text-green-600 hover:text-green-700 hover:bg-green-50"
-              onClick={() => onConfirm?.(slot.id)}
+              className="font-heading"
+              asChild
+            >
+              <Link href={appRoutes.owner.reservationDetail(reservationId)}>
+                <Eye className="h-4 w-4 mr-1" />
+                View
+              </Link>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10 font-heading"
+              onClick={() => onCancel?.(reservationId)}
+              disabled={isLoading}
+            >
+              <X className="h-4 w-4 mr-1" />
+              Cancel
+            </Button>
+          </>
+        )}
+        {showConfirmActions && (
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-primary hover:text-primary hover:bg-primary/10 font-heading"
+              onClick={() => onConfirm?.(reservationId)}
               disabled={isLoading}
             >
               <Check className="h-4 w-4 mr-1" />
@@ -162,8 +194,8 @@ export function SlotItem({
             <Button
               variant="outline"
               size="sm"
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-              onClick={() => onReject?.(slot.id)}
+              className="text-destructive hover:text-destructive hover:bg-destructive/10 font-heading"
+              onClick={() => onReject?.(reservationId)}
               disabled={isLoading}
             >
               <X className="h-4 w-4 mr-1" />
@@ -198,19 +230,15 @@ export function SlotItem({
               </>
             )}
 
-            {slot.status === "booked" && (
-              <DropdownMenuItem onClick={() => onViewBooking?.(slot.id)}>
-                <Eye className="h-4 w-4 mr-2" />
-                View Booking
-              </DropdownMenuItem>
-            )}
-
-            {slot.status === "pending" && (
-              <DropdownMenuItem onClick={() => onViewBooking?.(slot.id)}>
-                <Eye className="h-4 w-4 mr-2" />
-                View Details
-              </DropdownMenuItem>
-            )}
+            {(slot.status === "booked" || slot.status === "pending") &&
+              reservationId && (
+                <DropdownMenuItem asChild>
+                  <Link href={appRoutes.owner.reservationDetail(reservationId)}>
+                    <Eye className="h-4 w-4 mr-2" />
+                    View Reservation
+                  </Link>
+                </DropdownMenuItem>
+              )}
 
             {slot.status === "blocked" && (
               <DropdownMenuItem onClick={() => onUnblock?.(slot.id)}>
