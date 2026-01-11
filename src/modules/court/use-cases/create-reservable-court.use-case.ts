@@ -68,6 +68,7 @@ export class CreateReservableCourtUseCase
           courtId: court.id,
           isFree: data.isFree,
           defaultCurrency: data.defaultCurrency,
+          defaultPriceCents: data.defaultPriceCents ?? null,
           paymentInstructions: data.paymentInstructions,
           gcashNumber: data.gcashNumber,
           bankName: data.bankName,

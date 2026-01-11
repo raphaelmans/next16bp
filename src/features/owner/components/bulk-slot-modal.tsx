@@ -63,7 +63,7 @@ export function BulkSlotModal({
   onOpenChange,
   onSubmit,
   isLoading,
-  defaultPrice = 50000,
+  defaultPrice = 0,
   initialDate,
 }: BulkSlotModalProps) {
   const [mode, setMode] = React.useState<"single" | "recurring">("single");
@@ -81,6 +81,8 @@ export function BulkSlotModal({
   const [duration, setDuration] = React.useState(60);
   const [useDefaultPrice, setUseDefaultPrice] = React.useState(true);
   const [customPrice, setCustomPrice] = React.useState(defaultPrice / 100);
+  const defaultPriceLabel =
+    defaultPrice > 0 ? `${(defaultPrice / 100).toFixed(0)} PHP` : "Free";
 
   // Reset form when modal opens
   React.useEffect(() => {
@@ -357,7 +359,7 @@ export function BulkSlotModal({
                 htmlFor="use-default"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
               >
-                Use default price ({(defaultPrice / 100).toFixed(0)} PHP)
+                Use default price ({defaultPriceLabel})
               </label>
             </div>
             {!useDefaultPrice && (

@@ -73,6 +73,14 @@ export default function CourtDetailPage() {
     );
   }
 
+  const defaultSlotPrice = court.isFree ? undefined : court.pricePerHourCents;
+  const defaultCurrency = court.currency ?? "PHP";
+  const pricedSlots = slots.map((slot) => ({
+    ...slot,
+    priceCents: slot.priceCents ?? defaultSlotPrice,
+    currency: slot.currency ?? defaultCurrency,
+  }));
+
   const handleSlotSelect = (slot: TimeSlot) => {
     setSelectedSlotId(slot.id);
   };
@@ -186,7 +194,8 @@ export default function CourtDetailPage() {
               courtId={court.id}
               pricePerHourCents={court.pricePerHourCents}
               currency={court.currency}
-              slots={slots}
+              isFree={court.isFree}
+              slots={pricedSlots}
               isLoadingSlots={isLoadingSlots}
               selectedDate={selectedDate}
               onDateChange={setSelectedDate}

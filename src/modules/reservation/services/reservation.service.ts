@@ -71,9 +71,11 @@ export class ReservationService implements IReservationService {
 
     const courtDetail =
       await this.reservableCourtDetailRepository.findByCourtId(slot.courtId);
+    const defaultPriceCents = courtDetail?.defaultPriceCents ?? null;
 
-    // If court is free OR slot has no price, use free flow
-    const isFree = courtDetail?.isFree || slot.priceCents === null;
+    // Free if court is marked free or both slot and default prices are missing
+    const isFree =
+      courtDetail?.isFree || (slot.priceCents === null && !defaultPriceCents);
 
     if (isFree) {
       return this.createFreeReservationUseCase.execute(

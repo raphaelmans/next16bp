@@ -52,7 +52,7 @@ interface CuratedDetail {
 interface ReservableDetail {
   isFree: boolean;
   defaultPriceCents?: number | null;
-  currency?: string | null;
+  defaultCurrency?: string | null;
 }
 
 /**
@@ -113,14 +113,16 @@ export function useCourtDetail({ courtId }: UseCourtDetailOptions) {
             }
           : {}),
         ...(query.data.court.courtType === "RESERVABLE" && query.data.detail
-          ? {
-              isFree: (query.data.detail as ReservableDetail).isFree,
-              pricePerHourCents:
-                (query.data.detail as ReservableDetail).defaultPriceCents ??
-                undefined,
-              currency:
-                (query.data.detail as ReservableDetail).currency ?? "PHP",
-            }
+          ? (() => {
+              const detail = query.data.detail as ReservableDetail;
+              return {
+                isFree: detail.isFree,
+                pricePerHourCents: detail.isFree
+                  ? undefined
+                  : (detail.defaultPriceCents ?? undefined),
+                currency: detail.defaultCurrency ?? "PHP",
+              };
+            })()
           : {}),
       }
     : undefined;

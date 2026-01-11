@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  CreditCard,
-  Image as ImageIcon,
-  Info,
-  MapPin,
-  Sparkles,
-} from "lucide-react";
-import { useState } from "react";
+import { Image as ImageIcon, MapPin } from "lucide-react";
+import { useEffect, useState } from "react";
+import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import {
   CITIES,
@@ -38,6 +32,24 @@ interface CourtFormProps {
   isEditing?: boolean;
 }
 
+const courtFormSteps = [
+  "basic",
+  "location",
+  "photos",
+  "amenities",
+  "payment",
+] as const;
+
+type CourtFormStep = (typeof courtFormSteps)[number];
+
+const stepConfig: { id: CourtFormStep; label: string }[] = [
+  { id: "basic", label: "Basic" },
+  { id: "location", label: "Location" },
+  { id: "photos", label: "Photos" },
+  { id: "amenities", label: "Amenities" },
+  { id: "payment", label: "Payment" },
+];
+
 export function CourtForm({
   defaultValues,
   onSubmit,
@@ -46,7 +58,20 @@ export function CourtForm({
   isSubmitting = false,
   isEditing = false,
 }: CourtFormProps) {
-  const [activeTab, setActiveTab] = useState("basic");
+  const [step, setStep] = useQueryState(
+    "step",
+    parseAsStringLiteral(courtFormSteps)
+      .withDefault("basic")
+      .withOptions({ history: "push" }),
+  );
+  const activeStep = step ?? "basic";
+  const currentStepIndex = Math.max(
+    0,
+    stepConfig.findIndex((item) => item.id === activeStep),
+  );
+  const currentStep = stepConfig[currentStepIndex];
+  const isFirstStep = currentStepIndex === 0;
+  const isLastStep = currentStepIndex === stepConfig.length - 1;
 
   // Form state
   const [name, setName] = useState(defaultValues?.name ?? "");
@@ -91,8 +116,39 @@ export function CourtForm({
     defaultValues?.bankAccountName ?? "",
   );
 
+  useEffect(() => {
+    if (!defaultValues) return;
+    setName(defaultValues.name ?? "");
+    setNumberOfCourts(defaultValues.numberOfCourts ?? 1);
+    setOperatingHoursStart(defaultValues.operatingHoursStart ?? "06:00");
+    setOperatingHoursEnd(defaultValues.operatingHoursEnd ?? "22:00");
+    setAddress(defaultValues.address ?? "");
+    setCity(defaultValues.city ?? "");
+    setLatitude(defaultValues.latitude);
+    setLongitude(defaultValues.longitude);
+    setAmenities(defaultValues.amenities ?? []);
+    setIsFree(defaultValues.isFree ?? false);
+    setDefaultHourlyRate(defaultValues.defaultHourlyRate);
+    setCurrency(defaultValues.currency ?? "PHP");
+    setPaymentInstructions(defaultValues.paymentInstructions ?? "");
+    setGcashEnabled(defaultValues.gcashEnabled ?? false);
+    setGcashNumber(defaultValues.gcashNumber ?? "");
+    setBankTransferEnabled(defaultValues.bankTransferEnabled ?? false);
+    setBankName(defaultValues.bankName ?? "");
+    setBankAccountNumber(defaultValues.bankAccountNumber ?? "");
+    setBankAccountName(defaultValues.bankAccountName ?? "");
+  }, [defaultValues]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!isLastStep) {
+      if (stepValidity[activeStep]) {
+        handleNext();
+      }
+      return;
+    }
+
     onSubmit({
       name,
       numberOfCourts,
@@ -137,34 +193,64 @@ export function CourtForm({
     );
   };
 
+  const isBasicValid = name.trim().length > 0;
+  const isLocationValid = address.trim().length > 0 && city.trim().length > 0;
+  const isPaymentValid =
+    isFree ||
+    (defaultHourlyRate !== undefined && !Number.isNaN(defaultHourlyRate));
+
+  const stepValidity: Record<CourtFormStep, boolean> = {
+    basic: isBasicValid,
+    location: isLocationValid,
+    photos: true,
+    amenities: true,
+    payment: isPaymentValid,
+  };
+
+  const canNavigateTo = (index: number) =>
+    stepConfig.slice(0, index).every((item) => stepValidity[item.id]);
+
+  const handleStepSelect = (nextStep: CourtFormStep, index: number) => {
+    if (!canNavigateTo(index)) return;
+    setStep(nextStep);
+  };
+
+  const handleNext = () => {
+    if (isLastStep || !stepValidity[activeStep]) return;
+    setStep(stepConfig[currentStepIndex + 1].id);
+  };
+
+  const handleBack = () => {
+    if (isFirstStep) return;
+    setStep(stepConfig[currentStepIndex - 1].id);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="basic" className="gap-2">
-            <Info className="h-4 w-4 hidden sm:inline" />
-            Basic
-          </TabsTrigger>
-          <TabsTrigger value="location" className="gap-2">
-            <MapPin className="h-4 w-4 hidden sm:inline" />
-            Location
-          </TabsTrigger>
-          <TabsTrigger value="photos" className="gap-2">
-            <ImageIcon className="h-4 w-4 hidden sm:inline" />
-            Photos
-          </TabsTrigger>
-          <TabsTrigger value="amenities" className="gap-2">
-            <Sparkles className="h-4 w-4 hidden sm:inline" />
-            Amenities
-          </TabsTrigger>
-          <TabsTrigger value="payment" className="gap-2">
-            <CreditCard className="h-4 w-4 hidden sm:inline" />
-            Payment
-          </TabsTrigger>
-        </TabsList>
+      <div className="rounded-lg border bg-card p-4">
+        <div className="flex flex-wrap gap-2">
+          {stepConfig.map((stepItem, index) => (
+            <Button
+              key={stepItem.id}
+              type="button"
+              variant={activeStep === stepItem.id ? "default" : "outline"}
+              size="sm"
+              onClick={() => handleStepSelect(stepItem.id, index)}
+              disabled={!canNavigateTo(index)}
+            >
+              {index + 1}. {stepItem.label}
+            </Button>
+          ))}
+        </div>
+        <p className="text-sm text-muted-foreground mt-2">
+          Step {currentStepIndex + 1} of {stepConfig.length}:{" "}
+          {currentStep.label}
+        </p>
+      </div>
 
-        {/* Basic Info Tab */}
-        <TabsContent value="basic" className="space-y-4 mt-6">
+      {/* Basic Info Step */}
+      {activeStep === "basic" && (
+        <div className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Basic Information</CardTitle>
@@ -220,10 +306,12 @@ export function CourtForm({
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+        </div>
+      )}
 
-        {/* Location Tab */}
-        <TabsContent value="location" className="space-y-4 mt-6">
+      {/* Location Step */}
+      {activeStep === "location" && (
+        <div className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Location Details</CardTitle>
@@ -297,10 +385,12 @@ export function CourtForm({
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+        </div>
+      )}
 
-        {/* Photos Tab */}
-        <TabsContent value="photos" className="space-y-4 mt-6">
+      {/* Photos Step */}
+      {activeStep === "photos" && (
+        <div className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Court Photos</CardTitle>
@@ -323,10 +413,12 @@ export function CourtForm({
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+        </div>
+      )}
 
-        {/* Amenities Tab */}
-        <TabsContent value="amenities" className="space-y-4 mt-6">
+      {/* Amenities Step */}
+      {activeStep === "amenities" && (
+        <div className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Amenities</CardTitle>
@@ -358,10 +450,12 @@ export function CourtForm({
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+        </div>
+      )}
 
-        {/* Payment Tab */}
-        <TabsContent value="payment" className="space-y-4 mt-6">
+      {/* Payment Step */}
+      {activeStep === "payment" && (
+        <div className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Payment Settings</CardTitle>
@@ -517,33 +611,54 @@ export function CourtForm({
               )}
             </CardContent>
           </Card>
-        </TabsContent>
-      </Tabs>
+        </div>
+      )}
 
       {/* Form actions */}
-      <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+      <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        {onSaveDraft && (
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={handleSaveDraft}
-            disabled={isSubmitting}
-          >
-            Save as Draft
-          </Button>
-        )}
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting
-            ? isEditing
-              ? "Saving..."
-              : "Publishing..."
-            : isEditing
-              ? "Save Changes"
-              : "Publish Court"}
-        </Button>
+        <div className="flex flex-col-reverse gap-2 sm:flex-row">
+          {onSaveDraft && (
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={handleSaveDraft}
+              disabled={isSubmitting}
+            >
+              Save as Draft
+            </Button>
+          )}
+          {!isFirstStep && (
+            <Button type="button" variant="outline" onClick={handleBack}>
+              Back
+            </Button>
+          )}
+          {!isLastStep && (
+            <Button
+              type="button"
+              onClick={handleNext}
+              disabled={!stepValidity[activeStep] || isSubmitting}
+            >
+              Next
+            </Button>
+          )}
+          {isLastStep && (
+            <Button
+              type="submit"
+              disabled={!stepValidity[activeStep] || isSubmitting}
+            >
+              {isSubmitting
+                ? isEditing
+                  ? "Saving..."
+                  : "Publishing..."
+                : isEditing
+                  ? "Save Changes"
+                  : "Publish Court"}
+            </Button>
+          )}
+        </div>
       </div>
     </form>
   );

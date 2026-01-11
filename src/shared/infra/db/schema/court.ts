@@ -3,6 +3,7 @@ import {
   boolean,
   decimal,
   index,
+  integer,
   pgTable,
   text,
   timestamp,
@@ -105,6 +106,7 @@ export const reservableCourtDetail = pgTable("reservable_court_detail", {
   defaultCurrency: varchar("default_currency", { length: 3 })
     .notNull()
     .default("PHP"),
+  defaultPriceCents: integer("default_price_cents"),
   paymentInstructions: text("payment_instructions"),
   gcashNumber: varchar("gcash_number", { length: 20 }),
   bankName: varchar("bank_name", { length: 100 }),

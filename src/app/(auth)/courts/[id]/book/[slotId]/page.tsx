@@ -46,12 +46,20 @@ export default function BookSlotPage() {
       }
     : undefined;
 
+  const effectivePriceCents = slotData
+    ? (slotData.priceCents ?? slotData.defaultPriceCents ?? 0)
+    : 0;
+  const effectiveCurrency = slotData
+    ? (slotData.currency ?? slotData.defaultCurrency ?? "PHP")
+    : "PHP";
+  const isFreeSlot = slotData?.isFree || effectivePriceCents === 0;
+
   const timeSlot = slotData
     ? {
         startTime: slotData.startTime,
         endTime: slotData.endTime,
-        priceCents: slotData.priceCents ?? 0,
-        currency: slotData.currency ?? "PHP",
+        priceCents: effectivePriceCents,
+        currency: effectiveCurrency,
       }
     : undefined;
 
@@ -152,9 +160,7 @@ export default function BookSlotPage() {
           />
 
           {/* Payment Info (for paid courts) */}
-          {timeSlot.priceCents > 0 && (
-            <PaymentInfoCard paymentMethods={paymentMethods} />
-          )}
+          {!isFreeSlot && <PaymentInfoCard paymentMethods={paymentMethods} />}
         </div>
 
         {/* Right Column - Order Summary (sticky) */}

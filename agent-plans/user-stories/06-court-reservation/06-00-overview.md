@@ -45,6 +45,7 @@ This domain supersedes `03-court-reservation` with aligned, end-to-end context:
 |----|-------|--------|-------------|
 | US-06-01 | Player Books Free Court | Active | Select slot → immediate CONFIRMED |
 | US-06-02 | Player Books Paid Court | Active | Select slot → mark paid → await confirmation |
+| US-06-03 | Player Sees Correct Pricing During Booking | Active | Default + custom price fallback across booking |
 
 ---
 
@@ -183,7 +184,7 @@ See `06-99-deferred.md` and `08-p2p-reservation-confirmation`:
 
 ## Summary
 
-- **Total Stories:** 2
-- **Active:** 2
+- **Total Stories:** 3
+- **Active:** 3
 - **Key Focus:** Verify end-to-end flow works with real data
 - **Simplified:** No TTL, no proof upload, basic "I Have Paid" button

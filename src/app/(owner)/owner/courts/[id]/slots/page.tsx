@@ -174,6 +174,16 @@ export default function ManageSlotsPage() {
     ? { id: currentOrg.id, name: currentOrg.name }
     : undefined;
   const courtName = courtData?.court.name ?? "Loading...";
+  const reservableDetail =
+    courtData?.detail && courtData.court.courtType === "RESERVABLE"
+      ? (courtData.detail as {
+          defaultPriceCents?: number | null;
+          isFree?: boolean | null;
+        })
+      : null;
+  const defaultPriceCents = reservableDetail?.isFree
+    ? 0
+    : (reservableDetail?.defaultPriceCents ?? 0);
 
   // Generate mock dates with slots for calendar indicators
   const datesWithSlots = React.useMemo(() => {
@@ -359,6 +369,7 @@ export default function ManageSlotsPage() {
         onOpenChange={setBulkModalOpen}
         onSubmit={handleBulkCreate}
         isLoading={createBulkSlots.isPending}
+        defaultPrice={defaultPriceCents}
         initialDate={selectedDate}
       />
     </AppShell>

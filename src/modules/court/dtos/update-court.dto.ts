@@ -27,6 +27,7 @@ export type UpdateCourtDTO = z.infer<typeof UpdateCourtSchema>;
 export const UpdateReservableCourtDetailSchema = z.object({
   courtId: z.string().uuid(),
   isFree: z.boolean().optional(),
+  defaultPriceCents: z.number().int().min(0).nullable().optional(),
   defaultCurrency: z.string().length(3).optional(),
   paymentInstructions: z.string().nullable().optional(),
   gcashNumber: z.string().max(20).nullable().optional(),

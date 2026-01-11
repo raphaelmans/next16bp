@@ -99,12 +99,18 @@ export default function ReservationDetailPage() {
     contactPhone: undefined,
   };
 
+  const effectivePriceCents =
+    timeSlot.priceCents ?? timeSlot.defaultPriceCents ?? 0;
+  const effectiveCurrency =
+    timeSlot.currency ?? timeSlot.defaultCurrency ?? "PHP";
+  const isFreeSlot = timeSlot.isFree || effectivePriceCents === 0;
+
   const transformedTimeSlot = {
     id: timeSlot.id,
     startTime: timeSlot.startTime,
     endTime: timeSlot.endTime,
-    priceCents: timeSlot.priceCents ?? 0,
-    currency: timeSlot.currency ?? "PHP",
+    priceCents: effectivePriceCents,
+    currency: effectiveCurrency,
   };
 
   const slotDate = formatDateShort(transformedTimeSlot.startTime);
@@ -112,10 +118,12 @@ export default function ReservationDetailPage() {
     transformedTimeSlot.startTime,
     transformedTimeSlot.endTime,
   );
-  const amount = formatCurrency(
-    transformedTimeSlot.priceCents,
-    transformedTimeSlot.currency,
-  );
+  const amount = isFreeSlot
+    ? "Free"
+    : formatCurrency(
+        transformedTimeSlot.priceCents,
+        transformedTimeSlot.currency,
+      );
 
   if (reservation.status === "EXPIRED") {
     return (

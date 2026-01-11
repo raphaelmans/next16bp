@@ -19,6 +19,7 @@ import {
   useUploadPaymentProof,
 } from "@/features/reservation/hooks";
 import { Container } from "@/shared/components/layout";
+import { formatCurrency } from "@/shared/lib/format";
 import { useTRPC } from "@/trpc/client";
 
 export default function PaymentPage() {
@@ -104,9 +105,16 @@ export default function PaymentPage() {
 
   const isPaymentExpired =
     reservation?.status === "EXPIRED" || (reservation ? isExpired : false);
-  const price = slot?.priceCents
-    ? `₱${(slot.priceCents / 100).toFixed(0)}`
-    : "—";
+  const effectivePriceCents = slot?.priceCents ?? slot?.defaultPriceCents;
+  const priceCurrency = slot?.currency ?? slot?.defaultCurrency ?? "PHP";
+  const isFreeSlot =
+    slot?.isFree ||
+    effectivePriceCents === null ||
+    effectivePriceCents === undefined ||
+    effectivePriceCents === 0;
+  const price = isFreeSlot
+    ? "Free"
+    : formatCurrency(effectivePriceCents ?? 0, priceCurrency);
   const slotDate = slot?.startTime
     ? format(new Date(slot.startTime), "EEEE, MMMM d, yyyy")
     : undefined;

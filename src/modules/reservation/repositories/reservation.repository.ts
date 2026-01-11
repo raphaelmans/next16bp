@@ -1,8 +1,9 @@
-import { and, count, desc, eq, inArray } from "drizzle-orm";
+import { and, count, desc, eq, inArray, sql } from "drizzle-orm";
 import {
   court,
   type InsertReservation,
   paymentProof,
+  reservableCourtDetail,
   type ReservationRecord,
   reservation,
   timeSlot,
@@ -321,8 +322,12 @@ export class ReservationRepository implements IReservationRepository {
         courtName: court.name,
         slotStartTime: timeSlot.startTime,
         slotEndTime: timeSlot.endTime,
-        amountCents: timeSlot.priceCents,
-        currency: timeSlot.currency,
+        amountCents: sql<
+          number | null
+        >`coalesce(${timeSlot.priceCents}, ${reservableCourtDetail.defaultPriceCents})`,
+        currency: sql<
+          string | null
+        >`coalesce(${timeSlot.currency}, ${reservableCourtDetail.defaultCurrency})`,
         paymentProof: {
           referenceNumber: paymentProof.referenceNumber,
           notes: paymentProof.notes,
@@ -333,6 +338,10 @@ export class ReservationRepository implements IReservationRepository {
       .from(reservation)
       .innerJoin(timeSlot, eq(reservation.timeSlotId, timeSlot.id))
       .innerJoin(court, eq(timeSlot.courtId, court.id))
+      .leftJoin(
+        reservableCourtDetail,
+        eq(reservableCourtDetail.courtId, court.id),
+      )
       .leftJoin(paymentProof, eq(paymentProof.reservationId, reservation.id))
       .where(and(...conditions))
       .orderBy(desc(reservation.createdAt))

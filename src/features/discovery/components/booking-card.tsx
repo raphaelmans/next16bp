@@ -19,6 +19,7 @@ interface BookingCardProps {
   courtId: string;
   pricePerHourCents?: number;
   currency?: string;
+  isFree?: boolean;
   slots?: TimeSlot[];
   isLoadingSlots?: boolean;
   selectedDate?: Date;
@@ -32,6 +33,7 @@ export function BookingCard({
   courtId,
   pricePerHourCents,
   currency = "PHP",
+  isFree = false,
   slots = [],
   isLoadingSlots = false,
   selectedDate,
@@ -42,6 +44,9 @@ export function BookingCard({
 }: BookingCardProps) {
   const router = useRouter();
   const selectedSlot = slots.find((s) => s.id === selectedSlotId);
+  const selectedSlotPrice = selectedSlot?.priceCents ?? pricePerHourCents;
+  const hasSelectedPrice = selectedSlotPrice !== undefined;
+  const isFreeCourt = isFree;
 
   const { data: sessionUser } = useSession();
   const isAuthenticated = !!sessionUser;
@@ -73,8 +78,13 @@ export function BookingCard({
               </span>
             </>
           ) : (
-            <span className="font-heading text-2xl font-bold text-success">
-              Free
+            <span
+              className={cn(
+                "font-heading text-2xl font-bold",
+                isFreeCourt ? "text-success" : "text-muted-foreground",
+              )}
+            >
+              {isFreeCourt ? "Free" : "—"}
             </span>
           )}
         </CardTitle>
@@ -164,13 +174,21 @@ export function BookingCard({
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Slot price</span>
               <span>
-                {formatCurrency(selectedSlot.priceCents || 0, currency)}
+                {hasSelectedPrice
+                  ? formatCurrency(selectedSlotPrice ?? 0, currency)
+                  : isFreeCourt
+                    ? "Free"
+                    : "—"}
               </span>
             </div>
             <div className="flex justify-between font-medium">
               <span>Total</span>
               <span>
-                {formatCurrency(selectedSlot.priceCents || 0, currency)}
+                {hasSelectedPrice
+                  ? formatCurrency(selectedSlotPrice ?? 0, currency)
+                  : isFreeCourt
+                    ? "Free"
+                    : "—"}
               </span>
             </div>
           </div>

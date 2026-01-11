@@ -57,8 +57,11 @@ export class CreateSimpleCourtUseCase implements ICreateSimpleCourtUseCase {
         ctx,
       );
 
-      // Determine if court is free based on defaultPrice
-      const isFree = data.defaultPrice === null || data.defaultPrice === 0;
+      // Determine if court is free based on default price
+      const isFree =
+        data.defaultPriceCents === null ||
+        data.defaultPriceCents === undefined ||
+        data.defaultPriceCents === 0;
 
       // Create reservable court detail
       await this.reservableCourtDetailRepository.create(
@@ -66,6 +69,7 @@ export class CreateSimpleCourtUseCase implements ICreateSimpleCourtUseCase {
           courtId: court.id,
           isFree,
           defaultCurrency: data.currency,
+          defaultPriceCents: data.defaultPriceCents ?? null,
           // Payment details can be added later through updateDetail
         },
         ctx,

@@ -12,6 +12,7 @@ export const CreateReservableCourtSchema = z.object({
   longitude: z.string().regex(/^-?\d+\.\d+$/, "Invalid longitude format"),
   // Reservable court details
   isFree: z.boolean().default(false),
+  defaultPriceCents: z.number().int().min(0).nullable().optional(),
   defaultCurrency: z.string().length(3).default("PHP"),
   paymentInstructions: z.string().optional(),
   gcashNumber: z.string().max(20).optional(),

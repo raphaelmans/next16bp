@@ -30,13 +30,15 @@ This domain depends on the organization flow (01-organization) and feeds into th
 | US-02-02 | Owner Creates Court | Active | - |
 | US-02-03 | Admin Data Entry Form | Active | - |
 | US-02-04 | CSV Import Script | Active | - |
+| US-02-05 | Owner Creates Court via Setup Wizard | Active | US-02-02 |
+| US-02-06 | Owner Edits Court Details & Pricing | Active | - |
 
 ---
 
 ## Summary
 
-- Total: 4
-- Active: 4
+- Total: 6
+- Active: 6
 - Superseded: 0
 
 ---
@@ -67,3 +69,25 @@ A CLI script at `scripts/import-curated-courts.ts` for bulk importing courts fro
 ```bash
 npx tsx scripts/import-curated-courts.ts --file ./data/courts.csv
 ```
+
+---
+
+## New Stories (Owner Wizard & Editing)
+
+### US-02-05: Owner Creates Court via Setup Wizard
+
+A step-by-step wizard experience for owner court creation using nuqs query params to preserve progress, validation per step, and a guided submit flow that leads directly into slot management.
+
+**Key Features:**
+- Step-based navigation with `step` query param
+- Required-field gating per step
+- Progress preserved on refresh and browser navigation
+
+### US-02-06: Owner Edits Court Details & Pricing
+
+An edit flow that lets owners update court information, payment configuration, and default pricing while ensuring future slots without custom prices reflect the latest default rate.
+
+**Key Features:**
+- Pre-filled edit form with existing court details
+- Update payment settings and default rate
+- Propagate new default price to future slots using defaults

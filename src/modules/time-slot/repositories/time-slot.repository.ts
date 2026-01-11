@@ -25,6 +25,9 @@ export interface TimeSlotPaymentDetails {
 
 export interface TimeSlotWithPaymentDetails extends TimeSlotRecord {
   paymentDetails: TimeSlotPaymentDetails | null;
+  defaultPriceCents?: number | null;
+  defaultCurrency?: string | null;
+  isFree?: boolean | null;
 }
 
 export interface ITimeSlotRepository {
@@ -96,6 +99,9 @@ export class TimeSlotRepository implements ITimeSlotRepository {
         status: timeSlot.status,
         priceCents: timeSlot.priceCents,
         currency: timeSlot.currency,
+        defaultPriceCents: reservableCourtDetail.defaultPriceCents,
+        defaultCurrency: reservableCourtDetail.defaultCurrency,
+        isFree: reservableCourtDetail.isFree,
         createdAt: timeSlot.createdAt,
         updatedAt: timeSlot.updatedAt,
         paymentDetails: {
