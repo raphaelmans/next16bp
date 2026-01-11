@@ -99,7 +99,7 @@ export function useBlockSlot() {
   return useMutation({
     ...trpc.timeSlot.block.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
+      queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
     },
   });
 }
@@ -111,7 +111,7 @@ export function useUnblockSlot() {
   return useMutation({
     ...trpc.timeSlot.unblock.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
+      queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
     },
   });
 }
@@ -123,7 +123,7 @@ export function useDeleteSlot() {
   return useMutation({
     ...trpc.timeSlot.delete.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
+      queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
     },
   });
 }
@@ -207,6 +207,7 @@ function generateSlotsFromBulkData(
 
 export function useCreateBulkSlots(courtId: string) {
   const client = useTRPCClient();
+  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -230,7 +231,7 @@ export function useCreateBulkSlots(courtId: string) {
       return { success: true, slotsCreated: result.length };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
+      queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
     },
   });
 }
@@ -245,8 +246,10 @@ export function useConfirmBooking() {
   return useMutation({
     ...trpc.reservationOwner.confirmPayment.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
-      queryClient.invalidateQueries({ queryKey: ["reservationOwner"] });
+      queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
+      queryClient.invalidateQueries(
+        trpc.reservationOwner.getForOrganization.queryFilter(),
+      );
     },
   });
 }
@@ -258,8 +261,10 @@ export function useRejectBooking() {
   return useMutation({
     ...trpc.reservationOwner.reject.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["timeSlot"] });
-      queryClient.invalidateQueries({ queryKey: ["reservationOwner"] });
+      queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
+      queryClient.invalidateQueries(
+        trpc.reservationOwner.getForOrganization.queryFilter(),
+      );
     },
   });
 }

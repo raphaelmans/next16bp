@@ -112,6 +112,13 @@ function formatTime(isoString: string): string {
   }
 }
 
+function formatDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 /**
  * Fetch reservations for an organization
  * Uses reservationOwner.getForOrganization endpoint
@@ -123,7 +130,15 @@ export function useOwnerReservations(
   options: UseOwnerReservationsOptions = {},
 ) {
   const trpc = useTRPC();
-  const { courtId, status, search, reservationId, refetchIntervalMs } = options;
+  const {
+    courtId,
+    dateFrom,
+    dateTo,
+    status,
+    search,
+    reservationId,
+    refetchIntervalMs,
+  } = options;
 
   return useQuery({
     ...trpc.reservationOwner.getForOrganization.queryOptions({
@@ -176,6 +191,16 @@ export function useOwnerReservations(
         );
       }
 
+      if (dateFrom) {
+        const from = formatDate(dateFrom);
+        reservations = reservations.filter((r) => r.date && r.date >= from);
+      }
+
+      if (dateTo) {
+        const to = formatDate(dateTo);
+        reservations = reservations.filter((r) => r.date && r.date <= to);
+      }
+
       return reservations;
     },
   });
@@ -191,9 +216,9 @@ export function useConfirmReservation() {
   return useMutation({
     ...trpc.reservationOwner.confirmPayment.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["reservationOwner"],
-      });
+      queryClient.invalidateQueries(
+        trpc.reservationOwner.getForOrganization.queryFilter(),
+      );
     },
   });
 }
@@ -208,9 +233,9 @@ export function useRejectReservation() {
   return useMutation({
     ...trpc.reservationOwner.reject.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["reservationOwner"],
-      });
+      queryClient.invalidateQueries(
+        trpc.reservationOwner.getForOrganization.queryFilter(),
+      );
     },
   });
 }

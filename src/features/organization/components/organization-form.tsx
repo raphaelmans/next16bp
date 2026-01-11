@@ -47,9 +47,7 @@ export function OrganizationForm({
   const createMutation = useMutation({
     ...trpc.organization.create.mutationOptions(),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: trpc.organization.my.queryKey(),
-      });
+      queryClient.invalidateQueries(trpc.organization.my.queryFilter());
       onSuccess?.({ id: data.organization.id });
     },
   });

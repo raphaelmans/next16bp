@@ -15,9 +15,9 @@ export function useUploadCourtPhoto(courtId: string) {
     trpc.courtManagement.uploadPhoto.mutationOptions({
       onSuccess: () => {
         toast.success("Photo uploaded successfully");
-        queryClient.invalidateQueries({
-          queryKey: trpc.courtManagement.getById.queryKey({ courtId }),
-        });
+        queryClient.invalidateQueries(
+          trpc.courtManagement.getById.queryFilter({ courtId }),
+        );
       },
       onError: (error) => {
         toast.error(error.message || "Failed to upload photo");
@@ -37,9 +37,9 @@ export function useRemoveCourtPhoto(courtId: string) {
     trpc.courtManagement.removePhoto.mutationOptions({
       onSuccess: () => {
         toast.success("Photo removed");
-        queryClient.invalidateQueries({
-          queryKey: trpc.courtManagement.getById.queryKey({ courtId }),
-        });
+        queryClient.invalidateQueries(
+          trpc.courtManagement.getById.queryFilter({ courtId }),
+        );
       },
       onError: (error) => {
         toast.error(error.message || "Failed to remove photo");
@@ -58,9 +58,9 @@ export function useReorderCourtPhotos(courtId: string) {
   return useMutation(
     trpc.courtManagement.reorderPhotos.mutationOptions({
       onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: trpc.courtManagement.getById.queryKey({ courtId }),
-        });
+        queryClient.invalidateQueries(
+          trpc.courtManagement.getById.queryFilter({ courtId }),
+        );
       },
       onError: (error) => {
         toast.error(error.message || "Failed to reorder photos");

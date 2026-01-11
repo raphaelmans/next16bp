@@ -190,7 +190,7 @@ export function useApproveClaim() {
     trpc.admin.claim.approve.mutationOptions({
       onSuccess: () => {
         toast.success("Claim approved successfully");
-        queryClient.invalidateQueries({ queryKey: ["admin"] });
+        queryClient.invalidateQueries(trpc.admin.claim.pathFilter());
       },
       onError: (error) => {
         toast.error(error.message || "Failed to approve claim");
@@ -211,7 +211,7 @@ export function useRejectClaim() {
     trpc.admin.claim.reject.mutationOptions({
       onSuccess: () => {
         toast.success("Claim rejected");
-        queryClient.invalidateQueries({ queryKey: ["admin"] });
+        queryClient.invalidateQueries(trpc.admin.claim.pathFilter());
       },
       onError: (error) => {
         toast.error(error.message || "Failed to reject claim");

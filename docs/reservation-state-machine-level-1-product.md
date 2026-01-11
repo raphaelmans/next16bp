@@ -1,12 +1,12 @@
 # Reservation State Machine — Level 1 Product Narrative
 
 ## Narrative
-- Player selects a slot: free courts confirm instantly, paid courts start a 15-minute countdown.
-- Paid booking shows “Awaiting payment”, then “Payment marked” after the player marks payment.
-- Owner monitors active reservations and can take action quickly:
-  - While “Awaiting payment”: owner can view or cancel the reservation.
-  - While “Payment marked”: owner can confirm or reject the reservation.
-- If the TTL expires (even after payment is marked), the reservation expires and the slot is released.
+- Free bookings confirm immediately.
+- Paid bookings start a **court-specific payment window** (`paymentHoldMinutes`).
+- After payment is marked:
+  - If **owner confirmation is required**, the reservation waits for owner review (`ownerReviewMinutes`).
+  - If **owner confirmation is not required**, the reservation auto-confirms.
+- Player cancellation is allowed across all non-terminal states until the court’s cancellation cutoff window.
 
 ## Flow Diagram (Current)
 ```
@@ -25,33 +25,24 @@
 ├─────────────────────────────────────────────────────────────┤
 │  Player → Select Paid Slot → Reserve                         │
 │     ↓                                                        │
-│  Reservation: AWAITING_PAYMENT (expiresAt = NOW() + 15min)  │
+│  Reservation: AWAITING_PAYMENT                               │
+│  expiresAt = NOW() + paymentHoldMinutes (per court)          │
 │  Slot: AVAILABLE → HELD                                      │
-│     ↓                                                        │
-│  [15-Min Window]                                             │
 │     ↓                                                        │
 │  Player → /reservations/[id]/payment                         │
 │     → Enter reference/notes                                  │
 │     → Accept T&C                                             │
 │     → "I Have Paid"                                          │
 │     ↓                                                        │
-│  Reservation: PAYMENT_MARKED_BY_USER                         │
-│  Slot: HELD (unchanged)                                      │
-│     ↓                                                        │
-│  Owner → Monitor active reservations                         │
-│     - Slot list quick actions                                │
-│     - Floating alerts panel                                  │
-│     - /owner/reservations/active                             │
-│     - /owner/reservations/[id]                               │
-│     → Confirm Payment (only after "Payment marked")          │
-│     → Reject (after "Payment marked")                        │
-│     → Cancel (while "Awaiting payment")                      │
-│     ↓                                                        │
-│  Reservation: CONFIRMED                                      │
-│  Slot: HELD → BOOKED                                         │
-│  ✅ Done                                                     │
+│  If owner confirmation REQUIRED                              │
+│     Reservation: PAYMENT_MARKED_BY_USER                      │
+│     expiresAt = NOW() + ownerReviewMinutes                   │
+│     Owner confirms / rejects                                 │
+│  If owner confirmation NOT required                          │
+│     Reservation: CONFIRMED (auto)                            │
+│     Slot: HELD → BOOKED                                      │
 │                                                              │
-│  ⏱️ TTL Expiration (if 15 min passes):                      │
+│  ⏱️ TTL Expiration:                                           │
 │     Cron job (every minute)                                  │
 │     → Reservation: EXPIRED                                   │
 │     → Slot: HELD → AVAILABLE                                 │

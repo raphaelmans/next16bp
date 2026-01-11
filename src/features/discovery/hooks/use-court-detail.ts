@@ -34,6 +34,10 @@ export interface CourtDetail {
   pricePerHourCents?: number;
   currency?: string;
   coverImageUrl?: string;
+  requiresOwnerConfirmation?: boolean;
+  paymentHoldMinutes?: number;
+  ownerReviewMinutes?: number;
+  cancellationCutoffMinutes?: number;
 }
 
 interface UseCourtDetailOptions {
@@ -53,6 +57,10 @@ interface ReservableDetail {
   isFree: boolean;
   defaultPriceCents?: number | null;
   defaultCurrency?: string | null;
+  requiresOwnerConfirmation?: boolean | null;
+  paymentHoldMinutes?: number | null;
+  ownerReviewMinutes?: number | null;
+  cancellationCutoffMinutes?: number | null;
 }
 
 /**
@@ -121,6 +129,12 @@ export function useCourtDetail({ courtId }: UseCourtDetailOptions) {
                   ? undefined
                   : (detail.defaultPriceCents ?? undefined),
                 currency: detail.defaultCurrency ?? "PHP",
+                requiresOwnerConfirmation:
+                  detail.requiresOwnerConfirmation ?? true,
+                paymentHoldMinutes: detail.paymentHoldMinutes ?? 15,
+                ownerReviewMinutes: detail.ownerReviewMinutes ?? 15,
+                cancellationCutoffMinutes:
+                  detail.cancellationCutoffMinutes ?? 0,
               };
             })()
           : {}),

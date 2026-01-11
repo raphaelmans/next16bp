@@ -25,6 +25,8 @@ interface ReservationActionsCardProps {
     contactPhone?: string;
   };
   onCancel?: () => void;
+  canCancel?: boolean;
+  cancelDisabledReason?: string;
 }
 
 export function ReservationActionsCard({
@@ -33,12 +35,12 @@ export function ReservationActionsCard({
   court,
   organization,
   onCancel,
+  canCancel,
+  cancelDisabledReason,
 }: ReservationActionsCardProps) {
-  const canCancel = [
-    "CREATED",
-    "AWAITING_PAYMENT",
-    "PAYMENT_MARKED_BY_USER",
-  ].includes(status);
+  const resolvedCanCancel =
+    canCancel ??
+    ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"].includes(status);
 
   const hasCoordinates = court.latitude && court.longitude;
   const directionsUrl = hasCoordinates
@@ -106,17 +108,23 @@ export function ReservationActionsCard({
             </Button>
           )}
 
-          {canCancel && onCancel && (
+          {onCancel && (
             <>
               <Separator />
               <Button
                 variant="outline"
                 className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
                 onClick={onCancel}
+                disabled={!resolvedCanCancel}
               >
                 <X className="mr-2 h-4 w-4" />
                 Cancel Reservation
               </Button>
+              {!resolvedCanCancel && cancelDisabledReason && (
+                <p className="text-xs text-muted-foreground">
+                  {cancelDisabledReason}
+                </p>
+              )}
             </>
           )}
         </div>

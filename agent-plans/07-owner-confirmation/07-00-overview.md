@@ -9,36 +9,20 @@ This plan implements the owner confirmation flow for KudosCourts, including accu
 | Layer | Status | Notes |
 |-------|--------|-------|
 | Database | Complete | `reservation`, `reservation_event` tables exist |
-| Backend Service | Partial | `getForOrganization` returns basic data, missing slot/court details |
+| Backend Service | Complete | `getForOrganization` returns enriched data and supports filtering |
 | Backend Router | Complete | All endpoints exist (`confirmPayment`, `reject`, etc.) |
 | Frontend Hooks | Connected | `useConfirmReservation`, `useRejectReservation` work |
-| Frontend Page | Exists | `/owner/reservations` - displays placeholder data |
-| Slot List Actions | Not wired | `useConfirmBooking` and `useRejectBooking` are stubbed |
+| Frontend Page | Exists | `/owner/reservations` uses real backend data |
+| Slot List Actions | Wired | Slot list actions mapped from reservation state |
 
 ### Problem
 
-The `reservationOwner.getForOrganization` endpoint returns `ReservationRecord` without slot/court details:
+Owner reservation ops need to remain fast and accurate as an owner manages multiple courts.
 
-```typescript
-// Current response - INCOMPLETE
-{
-  id: "...",
-  status: "PAYMENT_MARKED_BY_USER",
-  playerNameSnapshot: "Juan Dela Cruz",
-  playerEmailSnapshot: "juan@email.com",
-  playerPhoneSnapshot: "0917-123-4567",
-  createdAt: "...",
-  // MISSING: courtName, slotStartTime, slotEndTime, amountCents
-}
-```
-
-The frontend hook (`useOwnerReservations`) compensates with placeholders:
-```typescript
-courtName: "Court",      // placeholder
-startTime: "--:--",      // placeholder
-endTime: "--:--",        // placeholder
-amountCents: 0,          // placeholder
-```
+Key needs:
+- Consistent court context (court name + optional court filter) across lists and alerts
+- Accurate reservation-state-driven labels and actions
+- Efficient filtering via existing `courtId` support
 
 ### Reference Documents
 
@@ -60,6 +44,7 @@ amountCents: 0,          // placeholder
 | 3 | UI Integration | Page, components | Depends on Phase 2 |
 | 4 | Active Reservations Ops | Slot list + TTL page | Partial |
 | 5 | Alerts Panel | Floating panel + polling | Yes |
+| 6 | Multi-Court Filtering | Court filter across reservation ops | Yes |
 
 ---
 
@@ -102,6 +87,13 @@ amountCents: 0,          // placeholder
 | 5A | Alerts Panel UI | Floating draggable list | `07-05-alerts-panel.md` |
 | 5B | Polling + New Highlight | 15s refresh + new badge | `07-05-alerts-panel.md` |
 
+### Phase 6: Multi-Court Filtering
+
+| ID | Module | Description | Plan File |
+|----|--------|-------------|-----------|
+| 6A | Shared Court Filter | URL + local storage selection | `07-06-court-filter.md` |
+| 6B | Reservation Ops Filter | Apply court filter across pages/panel | `07-06-court-filter.md` |
+
 ---
 
 ## Dependencies Graph
@@ -138,6 +130,7 @@ Phase 1 ─────────────── Phase 2 ──────
 | `07-03-ui-integration.md` | Phase 3: UI polish |
 | `07-04-active-reservations.md` | Phase 4: Slot status + TTL page |
 | `07-05-alerts-panel.md` | Phase 5: Floating alerts panel |
+| `07-06-court-filter.md` | Phase 6: Multi-court filtering |
 
 ---
 
@@ -148,6 +141,7 @@ Phase 1 ─────────────── Phase 2 ──────
 - [ ] Slot list shows accurate reservation states + actions
 - [ ] Active reservations page shows TTL countdowns
 - [ ] Alerts panel polls every 15 seconds and highlights new items
+- [ ] Court filter works across owner reservation ops
 - [ ] Confirm/reject actions work end-to-end
 - [ ] Pending count badge updates after actions
 - [ ] Empty states display appropriate messages

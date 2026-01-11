@@ -3,43 +3,36 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
-interface CancelReservationInput {
-  reservationId: string;
-  reason?: string;
-}
+import { appRoutes } from "@/shared/lib/app-routes";
+import { useTRPC } from "@/trpc/client";
 
 /**
  * Hook to cancel a reservation
- * TODO: Connect to actual tRPC endpoint when backend is ready
+ * Connected to reservation.cancel tRPC endpoint
  */
 export function useCancelReservation() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const trpc = useTRPC();
 
-  return useMutation({
-    mutationFn: async ({
-      reservationId: _reservationId,
-      reason: _reason,
-    }: CancelReservationInput) => {
-      // This will be replaced with actual API call
-      // await trpc.reservation.cancel.mutate({ reservationId, reason });
-      throw new Error("Not implemented");
-    },
-    onSuccess: (_, variables) => {
-      toast.success("Reservation cancelled successfully");
-      // Invalidate related queries
-      queryClient.invalidateQueries({
-        queryKey: ["reservation", variables.reservationId],
-      });
-      queryClient.invalidateQueries({ queryKey: ["reservations"] });
-      router.push("/reservations");
-    },
-    onError: (error) => {
-      toast.error("Failed to cancel reservation", {
-        description:
-          error instanceof Error ? error.message : "Please try again",
-      });
-    },
-  });
+  return useMutation(
+    trpc.reservation.cancel.mutationOptions({
+      onSuccess: (_, variables) => {
+        toast.success("Reservation cancelled successfully");
+        queryClient.invalidateQueries(
+          trpc.reservation.getById.queryFilter({
+            reservationId: variables.reservationId,
+          }),
+        );
+        queryClient.invalidateQueries(trpc.reservation.getMy.queryFilter());
+        router.push(appRoutes.reservations.base);
+      },
+      onError: (error) => {
+        toast.error("Failed to cancel reservation", {
+          description:
+            error instanceof Error ? error.message : "Please try again",
+        });
+      },
+    }),
+  );
 }

@@ -24,7 +24,11 @@ import {
 } from "@/features/owner/components";
 import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
 import { RejectModal } from "@/features/owner/components/reject-modal";
-import { useOwnerOrganization } from "@/features/owner/hooks/use-owner-organization";
+import {
+  useOwnerCourtFilter,
+  useOwnerCourts,
+  useOwnerOrganization,
+} from "@/features/owner/hooks";
 import {
   type Reservation,
   useConfirmReservation,
@@ -42,6 +46,8 @@ export default function OwnerActiveReservationsPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
   const { organization, organizations } = useOwnerOrganization();
+  const { data: courts = [] } = useOwnerCourts();
+  const { courtId, setCourtId } = useOwnerCourtFilter();
   const [filter, setFilter] = React.useState<ActiveFilter>("all");
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [rejectOpen, setRejectOpen] = React.useState(false);
@@ -68,6 +74,7 @@ export default function OwnerActiveReservationsPage() {
   const { data: reservations = [], isLoading } = useOwnerReservations(
     organization?.id ?? null,
     {
+      courtId: courtId || undefined,
       status: "all",
       refetchIntervalMs: 15000,
     },
@@ -206,12 +213,31 @@ export default function OwnerActiveReservationsPage() {
                   Updated every 15 seconds
                 </p>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <Select
+                  value={courtId || "all"}
+                  onValueChange={(value) =>
+                    setCourtId(value === "all" ? "" : value)
+                  }
+                >
+                  <SelectTrigger className="w-full sm:w-[220px]">
+                    <SelectValue placeholder="All Courts" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Courts</SelectItem>
+                    {courts.map((court) => (
+                      <SelectItem key={court.id} value={court.id}>
+                        {court.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
                 <Select
                   value={filter}
                   onValueChange={(value) => setFilter(value as ActiveFilter)}
                 >
-                  <SelectTrigger className="w-[220px]">
+                  <SelectTrigger className="w-full sm:w-[220px]">
                     <SelectValue placeholder="Filter" />
                   </SelectTrigger>
                   <SelectContent>
@@ -220,7 +246,8 @@ export default function OwnerActiveReservationsPage() {
                     <SelectItem value="marked">Payment Marked</SelectItem>
                   </SelectContent>
                 </Select>
-                <Button variant="outline" asChild>
+
+                <Button variant="outline" asChild className="w-full sm:w-auto">
                   <Link href={appRoutes.owner.reservations}>
                     View All Reservations
                     <ExternalLink className="ml-2 h-4 w-4" />

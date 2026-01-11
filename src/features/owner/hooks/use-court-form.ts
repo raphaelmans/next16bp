@@ -48,6 +48,10 @@ export function useCourtForm({
         isFree: data.isFree,
         defaultPriceCents: resolveDefaultPriceCents(data),
         defaultCurrency: data.currency,
+        requiresOwnerConfirmation: data.requiresOwnerConfirmation,
+        paymentHoldMinutes: data.paymentHoldMinutes,
+        ownerReviewMinutes: data.ownerReviewMinutes,
+        cancellationCutoffMinutes: data.cancellationCutoffMinutes,
         paymentInstructions: data.paymentInstructions?.trim() || undefined,
         gcashNumber: data.gcashEnabled
           ? data.gcashNumber || undefined
@@ -65,9 +69,9 @@ export function useCourtForm({
         amenities: data.amenities?.length ? data.amenities : undefined,
       }),
     onSuccess: (result) => {
-      queryClient.invalidateQueries({
-        queryKey: trpc.courtManagement.getMyCourts.queryKey(),
-      });
+      queryClient.invalidateQueries(
+        trpc.courtManagement.getMyCourts.queryFilter(),
+      );
       if (result) {
         onSuccess?.({ success: true, courtId: result.court.id });
       }
@@ -127,6 +131,10 @@ export function useCourtForm({
           isFree: data.isFree,
           defaultPriceCents: resolveDefaultPriceCents(data),
           defaultCurrency: data.currency,
+          requiresOwnerConfirmation: data.requiresOwnerConfirmation,
+          paymentHoldMinutes: data.paymentHoldMinutes,
+          ownerReviewMinutes: data.ownerReviewMinutes,
+          cancellationCutoffMinutes: data.cancellationCutoffMinutes,
           paymentInstructions: data.paymentInstructions?.trim() || null,
           gcashNumber: data.gcashEnabled ? data.gcashNumber || null : null,
           bankName: data.bankTransferEnabled ? data.bankName || null : null,
@@ -143,13 +151,13 @@ export function useCourtForm({
       return updatedCourt;
     },
     onSuccess: (result) => {
-      queryClient.invalidateQueries({
-        queryKey: trpc.courtManagement.getMyCourts.queryKey(),
-      });
+      queryClient.invalidateQueries(
+        trpc.courtManagement.getMyCourts.queryFilter(),
+      );
       if (courtId) {
-        queryClient.invalidateQueries({
-          queryKey: trpc.courtManagement.getById.queryKey({ courtId }),
-        });
+        queryClient.invalidateQueries(
+          trpc.courtManagement.getById.queryFilter({ courtId }),
+        );
       }
       if (result) {
         onSuccess?.({ success: true, courtId: result.id });
@@ -186,9 +194,9 @@ export function useCourtDraft() {
       return { success: true, courtId: "draft-court-id" };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: trpc.courtManagement.getMyCourts.queryKey(),
-      });
+      queryClient.invalidateQueries(
+        trpc.courtManagement.getMyCourts.queryFilter(),
+      );
     },
   });
 }

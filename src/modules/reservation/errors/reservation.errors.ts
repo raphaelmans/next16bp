@@ -34,6 +34,18 @@ export class ReservationExpiredError extends ValidationError {
   }
 }
 
+export class ReservationCancellationWindowError extends ValidationError {
+  readonly code = "RESERVATION_CANCELLATION_WINDOW_PASSED";
+
+  constructor(reservationId: string, cutoffMinutes: number, cutoffTime: Date) {
+    super("Reservation can no longer be cancelled", {
+      reservationId,
+      cutoffMinutes,
+      cutoffTime: cutoffTime.toISOString(),
+    });
+  }
+}
+
 export class InvalidReservationStatusError extends ValidationError {
   readonly code = "INVALID_RESERVATION_STATUS";
 

@@ -88,9 +88,9 @@ export function useDeactivateCourt() {
   return useMutation({
     ...trpc.courtManagement.deactivate.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: trpc.courtManagement.getMyCourts.queryKey(),
-      });
+      queryClient.invalidateQueries(
+        trpc.courtManagement.getMyCourts.queryFilter(),
+      );
     },
   });
 }

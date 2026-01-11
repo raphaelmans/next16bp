@@ -713,6 +713,34 @@
           "notNull": true,
           "default": "'PHP'"
         },
+        "requires_owner_confirmation": {
+          "name": "requires_owner_confirmation",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "payment_hold_minutes": {
+          "name": "payment_hold_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 15
+        },
+        "owner_review_minutes": {
+          "name": "owner_review_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 15
+        },
+        "cancellation_cutoff_minutes": {
+          "name": "cancellation_cutoff_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
         "payment_instructions": {
           "name": "payment_instructions",
           "type": "text",

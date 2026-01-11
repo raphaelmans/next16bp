@@ -32,7 +32,7 @@ export function useUpdateProfile() {
     trpc.profile.update.mutationOptions({
       onSuccess: () => {
         toast.success("Profile updated successfully");
-        queryClient.invalidateQueries({ queryKey: ["profile"] });
+        queryClient.invalidateQueries(trpc.profile.me.queryFilter());
       },
       onError: (error) => {
         toast.error(error.message || "Failed to update profile");
@@ -52,7 +52,7 @@ export function useUploadAvatar() {
     trpc.profile.uploadAvatar.mutationOptions({
       onSuccess: () => {
         toast.success("Avatar uploaded successfully");
-        queryClient.invalidateQueries({ queryKey: ["profile"] });
+        queryClient.invalidateQueries(trpc.profile.me.queryFilter());
       },
       onError: (error) => {
         toast.error(error.message || "Failed to upload avatar");

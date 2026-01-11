@@ -9,10 +9,21 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
 import { RejectModal } from "@/features/owner/components/reject-modal";
-import { useOwnerOrganization } from "@/features/owner/hooks";
+import {
+  useOwnerCourtFilter,
+  useOwnerCourts,
+  useOwnerOrganization,
+} from "@/features/owner/hooks";
 import {
   useConfirmReservation,
   useRejectReservation,
@@ -40,9 +51,20 @@ export function ReservationAlertsPanel({
   const lastPollRef = React.useRef<number | null>(null);
 
   const { organization } = useOwnerOrganization();
+  const { data: courts = [] } = useOwnerCourts();
+  const { courtId, setCourtId } = useOwnerCourtFilter();
   const effectiveOrganizationId = organizationId ?? organization?.id ?? null;
 
-  const alertsQuery = useReservationAlerts(effectiveOrganizationId);
+  const reservationsActiveHref = React.useMemo(() => {
+    if (!courtId) return appRoutes.owner.reservationsActive;
+    const params = new URLSearchParams({ courtId });
+    return `${appRoutes.owner.reservationsActive}?${params.toString()}`;
+  }, [courtId]);
+
+  const alertsQuery = useReservationAlerts(
+    effectiveOrganizationId,
+    courtId || undefined,
+  );
   const confirmMutation = useConfirmReservation();
   const rejectMutation = useRejectReservation();
 
@@ -165,15 +187,37 @@ export function ReservationAlertsPanel({
           </div>
         }
       >
-        <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
-          <span>Last updated: {lastUpdatedLabel}</span>
-          <Link
-            href={appRoutes.owner.reservationsActive}
-            className="flex items-center gap-1 text-accent hover:underline"
+        <div className="space-y-2 mb-3">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>Last updated: {lastUpdatedLabel}</span>
+            <Link
+              href={reservationsActiveHref}
+              className="flex items-center gap-1 text-accent hover:underline"
+            >
+              View all
+              <ExternalLink className="h-3 w-3" />
+            </Link>
+          </div>
+
+          <Select
+            value={courtId || "all"}
+            onValueChange={(value) => setCourtId(value === "all" ? "" : value)}
           >
-            View all
-            <ExternalLink className="h-3 w-3" />
-          </Link>
+            <SelectTrigger
+              className="h-8"
+              onPointerDown={(event) => event.stopPropagation()}
+            >
+              <SelectValue placeholder="All courts" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Courts</SelectItem>
+              {courts.map((court) => (
+                <SelectItem key={court.id} value={court.id}>
+                  {court.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {alertsQuery.isError && (
@@ -193,7 +237,7 @@ export function ReservationAlertsPanel({
           <div className="rounded-md border border-dashed p-4 text-center text-sm text-muted-foreground">
             No active reservations right now.
             <Link
-              href={appRoutes.owner.reservationsActive}
+              href={reservationsActiveHref}
               className="block mt-2 text-accent hover:underline"
             >
               Go to active reservations

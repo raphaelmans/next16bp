@@ -107,6 +107,14 @@ export const reservableCourtDetail = pgTable("reservable_court_detail", {
     .notNull()
     .default("PHP"),
   defaultPriceCents: integer("default_price_cents"),
+  requiresOwnerConfirmation: boolean("requires_owner_confirmation")
+    .notNull()
+    .default(true),
+  paymentHoldMinutes: integer("payment_hold_minutes").notNull().default(15),
+  ownerReviewMinutes: integer("owner_review_minutes").notNull().default(15),
+  cancellationCutoffMinutes: integer("cancellation_cutoff_minutes")
+    .notNull()
+    .default(0),
   paymentInstructions: text("payment_instructions"),
   gcashNumber: varchar("gcash_number", { length: 20 }),
   bankName: varchar("bank_name", { length: 100 }),

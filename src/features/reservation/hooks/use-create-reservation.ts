@@ -21,8 +21,8 @@ export function useCreateReservation() {
             ? "Reservation created! Please complete payment."
             : "Reservation confirmed!",
         );
-        queryClient.invalidateQueries({ queryKey: ["reservations"] });
-        queryClient.invalidateQueries({ queryKey: ["courts"] });
+        queryClient.invalidateQueries(trpc.reservation.getMy.queryFilter());
+        queryClient.invalidateQueries(trpc.court.search.queryFilter());
       },
       onError: (error) => {
         toast.error(error.message || "Failed to create reservation");

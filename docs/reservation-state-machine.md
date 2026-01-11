@@ -9,12 +9,13 @@ This documentation is split into multiple levels of detail so you can share the 
 - Level 3 (automation & ops): `docs/reservation-state-machine-level-3-ops.md`
 
 ## What changed recently
-- Owner ops now surface **active reservations** (`AWAITING_PAYMENT`, `PAYMENT_MARKED_BY_USER`) via:
+- Reservation policies are now **court-specific** (TTL windows, owner confirmation, cancellation cutoff).
+- Owner ops still surface **active reservations** (`AWAITING_PAYMENT`, `PAYMENT_MARKED_BY_USER`) via:
   - Slot list quick actions
   - Floating alerts panel
   - `/owner/reservations/active`
   - `/owner/reservations/[id]`
-- Owner can **cancel** while `AWAITING_PAYMENT`, and **confirm/reject** once `PAYMENT_MARKED_BY_USER`.
+- Player cancellation is allowed across all non-terminal states (subject to cutoff).
 
 ## Source references
 - `agent-contexts/00-06-feature-implementation-status.md`

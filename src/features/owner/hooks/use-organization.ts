@@ -100,12 +100,8 @@ export function useUpdateOrganization() {
     ...trpc.organization.updateProfile.mutationOptions(),
     onSuccess: () => {
       // Invalidate after profile update (last step)
-      queryClient.invalidateQueries({
-        queryKey: trpc.organization.my.queryKey(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["organization", "get"],
-      });
+      queryClient.invalidateQueries(trpc.organization.my.queryFilter());
+      queryClient.invalidateQueries(trpc.organization.get.queryFilter());
     },
   });
 
@@ -143,12 +139,10 @@ export function useUploadOrganizationLogo(organizationId: string) {
     trpc.organization.uploadLogo.mutationOptions({
       onSuccess: () => {
         toast.success("Logo uploaded successfully");
-        queryClient.invalidateQueries({
-          queryKey: trpc.organization.get.queryKey({ id: organizationId }),
-        });
-        queryClient.invalidateQueries({
-          queryKey: trpc.organization.my.queryKey(),
-        });
+        queryClient.invalidateQueries(
+          trpc.organization.get.queryFilter({ id: organizationId }),
+        );
+        queryClient.invalidateQueries(trpc.organization.my.queryFilter());
       },
       onError: (error) => {
         toast.error(error.message || "Failed to upload logo");

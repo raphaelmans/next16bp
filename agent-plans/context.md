@@ -12,6 +12,7 @@ References and context for planning artifacts.
 | 2025-01-09 | Added 08-p2p-reservation-confirmation user stories (11 total: 3 parent + 8 sub-stories) |
 | 2025-01-09 | Added 10-asset-uploads implementation plan with parallel dev checklists |
 | 2025-01-09 | Added 10-asset-uploads user stories for Supabase Storage integration |
+| 2026-01-11 | Added 12-reservation-policies user stories and implementation plan |
 | 2026-01-10 | Added 11-ui-revamp user stories and implementation plan |
 | 2025-01-08 | Added 08-admin-data-entry plan for US-02-03 and US-02-04 |
 | 2025-01-08 | Initial creation. Added all reference documents. |
@@ -51,6 +52,7 @@ References and context for planning artifacts.
 | 09-client-profile | `agent-plans/user-stories/09-client-profile/` | Client profile management |
 | 10-asset-uploads | `agent-plans/user-stories/10-asset-uploads/` | Supabase Storage file uploads |
 | 11-ui-revamp | `agent-plans/user-stories/11-ui-revamp/` | Navigation and layout consistency |
+| 12-reservation-policies | `agent-plans/user-stories/12-reservation-policies/` | Court-specific reservation policies |
 
 ---
 
@@ -65,6 +67,7 @@ References and context for planning artifacts.
 | 08-p2p-reservation-confirmation | `agent-plans/08-p2p-reservation-confirmation/` | Pending |
 | 10-asset-uploads | `agent-plans/10-asset-uploads/` | Pending |
 | 11-ui-revamp | `agent-plans/11-ui-revamp/` | Ready |
+| 12-reservation-policies | `agent-plans/12-reservation-policies/` | Pending |
 
 ---
 

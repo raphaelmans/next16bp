@@ -23,6 +23,10 @@ interface ReservableDetail {
   bankName?: string | null;
   bankAccountNumber?: string | null;
   bankAccountName?: string | null;
+  requiresOwnerConfirmation?: boolean | null;
+  paymentHoldMinutes?: number | null;
+  ownerReviewMinutes?: number | null;
+  cancellationCutoffMinutes?: number | null;
 }
 
 export default function EditCourtPage() {
@@ -111,6 +115,10 @@ export default function EditCourtPage() {
     bankName: detail?.bankName ?? "",
     bankAccountNumber: detail?.bankAccountNumber ?? "",
     bankAccountName: detail?.bankAccountName ?? "",
+    requiresOwnerConfirmation: detail?.requiresOwnerConfirmation ?? true,
+    paymentHoldMinutes: detail?.paymentHoldMinutes ?? 15,
+    ownerReviewMinutes: detail?.ownerReviewMinutes ?? 15,
+    cancellationCutoffMinutes: detail?.cancellationCutoffMinutes ?? 0,
   };
 
   return (

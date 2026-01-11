@@ -36,7 +36,11 @@ import {
   ReservationAlertsPanel,
   ReservationsTable,
 } from "@/features/owner/components";
-import { useOwnerCourts, useOwnerOrganization } from "@/features/owner/hooks";
+import {
+  useOwnerCourtFilter,
+  useOwnerCourts,
+  useOwnerOrganization,
+} from "@/features/owner/hooks";
 import {
   type Reservation,
   type ReservationStatus,
@@ -123,7 +127,7 @@ export default function OwnerReservationsPage() {
   const { data: courts = [] } = useOwnerCourts();
 
   // Filters state
-  const [courtId, setCourtId] = React.useState<string>("");
+  const { courtId, setCourtId } = useOwnerCourtFilter();
   const [search, setSearch] = React.useState("");
   const [dateFrom, setDateFrom] = React.useState<Date>();
   const [dateTo, setDateTo] = React.useState<Date>();
@@ -319,7 +323,7 @@ export default function OwnerReservationsPage() {
         {/* Filters */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <Select
-            value={courtId}
+            value={courtId || "all"}
             onValueChange={(value) => setCourtId(value === "all" ? "" : value)}
           >
             <SelectTrigger className="w-full sm:w-[180px]">

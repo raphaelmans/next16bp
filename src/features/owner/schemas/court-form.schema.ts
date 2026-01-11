@@ -31,6 +31,10 @@ export const courtFormSchema = z.object({
   bankName: z.string().optional(),
   bankAccountNumber: z.string().optional(),
   bankAccountName: z.string().optional(),
+  requiresOwnerConfirmation: z.boolean().default(true),
+  paymentHoldMinutes: z.number().int().min(1).max(1440).default(15),
+  ownerReviewMinutes: z.number().int().min(1).max(1440).default(15),
+  cancellationCutoffMinutes: z.number().int().min(0).max(1440).default(0),
 });
 
 export type CourtFormData = z.infer<typeof courtFormSchema>;
@@ -46,6 +50,10 @@ export const defaultCourtFormValues: Partial<CourtFormData> = {
   currency: "PHP",
   gcashEnabled: false,
   bankTransferEnabled: false,
+  requiresOwnerConfirmation: true,
+  paymentHoldMinutes: 15,
+  ownerReviewMinutes: 15,
+  cancellationCutoffMinutes: 0,
 };
 
 export const STANDARD_AMENITIES = [

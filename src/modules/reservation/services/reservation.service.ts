@@ -14,6 +14,7 @@ import type {
 import {
   InvalidReservationStatusError,
   NotReservationOwnerError,
+  ReservationCancellationWindowError,
   ReservationExpiredError,
   ReservationNotFoundError,
   TermsNotAcceptedError,
@@ -22,6 +23,11 @@ import type { IReservationRepository } from "../repositories/reservation.reposit
 import type { IReservationEventRepository } from "../repositories/reservation-event.repository";
 import type { ICreateFreeReservationUseCase } from "../use-cases/create-free-reservation.use-case";
 import type { ICreatePaidReservationUseCase } from "../use-cases/create-paid-reservation.use-case";
+
+const DEFAULT_PAYMENT_HOLD_MINUTES = 15;
+const DEFAULT_OWNER_REVIEW_MINUTES = 15;
+const DEFAULT_CANCELLATION_CUTOFF_MINUTES = 0;
+const DEFAULT_REQUIRES_OWNER_CONFIRMATION = true;
 
 export interface IReservationService {
   createReservation(
@@ -72,6 +78,8 @@ export class ReservationService implements IReservationService {
     const courtDetail =
       await this.reservableCourtDetailRepository.findByCourtId(slot.courtId);
     const defaultPriceCents = courtDetail?.defaultPriceCents ?? null;
+    const paymentHoldMinutes =
+      courtDetail?.paymentHoldMinutes ?? DEFAULT_PAYMENT_HOLD_MINUTES;
 
     // Free if court is marked free or both slot and default prices are missing
     const isFree =
@@ -88,6 +96,7 @@ export class ReservationService implements IReservationService {
         userId,
         profileId,
         timeSlotId,
+        paymentHoldMinutes,
       );
     }
   }
@@ -135,36 +144,103 @@ export class ReservationService implements IReservationService {
         throw new ReservationExpiredError(data.reservationId);
       }
 
-      // Update reservation status
+      const slot = await this.timeSlotRepository.findById(
+        reservation.timeSlotId,
+        ctx,
+      );
+      if (!slot) {
+        throw new SlotNotFoundError(reservation.timeSlotId);
+      }
+
+      const courtDetail =
+        await this.reservableCourtDetailRepository.findByCourtId(
+          slot.courtId,
+          ctx,
+        );
+
+      const requiresOwnerConfirmation =
+        courtDetail?.requiresOwnerConfirmation ??
+        DEFAULT_REQUIRES_OWNER_CONFIRMATION;
+      const ownerReviewMinutes =
+        courtDetail?.ownerReviewMinutes ?? DEFAULT_OWNER_REVIEW_MINUTES;
+      const now = new Date();
+
+      if (requiresOwnerConfirmation) {
+        const reviewExpiresAt = new Date(now);
+        reviewExpiresAt.setMinutes(
+          reviewExpiresAt.getMinutes() + ownerReviewMinutes,
+        );
+
+        const updated = await this.reservationRepository.update(
+          data.reservationId,
+          {
+            status: "PAYMENT_MARKED_BY_USER",
+            termsAcceptedAt: now,
+            expiresAt: reviewExpiresAt,
+          },
+          ctx,
+        );
+
+        await this.reservationEventRepository.create(
+          {
+            reservationId: data.reservationId,
+            fromStatus: "AWAITING_PAYMENT",
+            toStatus: "PAYMENT_MARKED_BY_USER",
+            triggeredByUserId: userId,
+            triggeredByRole: "PLAYER",
+            notes: "Player marked payment as complete",
+          },
+          ctx,
+        );
+
+        logger.info(
+          {
+            event: "reservation.payment_marked",
+            reservationId: data.reservationId,
+            playerId: profileId,
+          },
+          "Player marked payment",
+        );
+
+        return updated;
+      }
+
       const updated = await this.reservationRepository.update(
         data.reservationId,
         {
-          status: "PAYMENT_MARKED_BY_USER",
-          termsAcceptedAt: new Date(),
+          status: "CONFIRMED",
+          confirmedAt: now,
+          termsAcceptedAt: now,
+          expiresAt: null,
         },
         ctx,
       );
 
-      // Create audit event
+      await this.timeSlotRepository.update(
+        reservation.timeSlotId,
+        { status: "BOOKED" },
+        ctx,
+      );
+
       await this.reservationEventRepository.create(
         {
           reservationId: data.reservationId,
           fromStatus: "AWAITING_PAYMENT",
-          toStatus: "PAYMENT_MARKED_BY_USER",
+          toStatus: "CONFIRMED",
           triggeredByUserId: userId,
           triggeredByRole: "PLAYER",
-          notes: "Player marked payment as complete",
+          notes: "Auto-confirmed after payment",
         },
         ctx,
       );
 
       logger.info(
         {
-          event: "reservation.payment_marked",
+          event: "reservation.confirmed",
           reservationId: data.reservationId,
           playerId: profileId,
         },
-        "Player marked payment",
+        "Reservation auto-confirmed after payment",
       );
 
       return updated;
@@ -193,16 +269,49 @@ export class ReservationService implements IReservationService {
         throw new NotReservationOwnerError();
       }
 
-      // Cannot cancel confirmed or already cancelled/expired
+      // Block cancellation for terminal states
       if (
-        reservation.status === "CONFIRMED" ||
         reservation.status === "CANCELLED" ||
         reservation.status === "EXPIRED"
       ) {
         throw new InvalidReservationStatusError(
           data.reservationId,
           reservation.status,
-          ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"],
+          [
+            "CREATED",
+            "AWAITING_PAYMENT",
+            "PAYMENT_MARKED_BY_USER",
+            "CONFIRMED",
+          ],
+        );
+      }
+
+      const slot = await this.timeSlotRepository.findById(
+        reservation.timeSlotId,
+        ctx,
+      );
+      if (!slot) {
+        throw new SlotNotFoundError(reservation.timeSlotId);
+      }
+
+      const courtDetail =
+        await this.reservableCourtDetailRepository.findByCourtId(
+          slot.courtId,
+          ctx,
+        );
+      const cancellationCutoffMinutes =
+        courtDetail?.cancellationCutoffMinutes ??
+        DEFAULT_CANCELLATION_CUTOFF_MINUTES;
+      const cutoffTime = new Date(slot.startTime);
+      cutoffTime.setMinutes(
+        cutoffTime.getMinutes() - cancellationCutoffMinutes,
+      );
+
+      if (new Date() > cutoffTime) {
+        throw new ReservationCancellationWindowError(
+          data.reservationId,
+          cancellationCutoffMinutes,
+          cutoffTime,
         );
       }
 

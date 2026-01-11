@@ -21,6 +21,7 @@ import {
 import {
   InvalidReservationStatusError,
   NotReservationOwnerError,
+  ReservationCancellationWindowError,
   ReservationExpiredError,
   ReservationNotFoundError,
   SlotNotAvailableError,
@@ -52,6 +53,7 @@ function handleReservationError(error: unknown): never {
   }
   if (
     error instanceof ReservationExpiredError ||
+    error instanceof ReservationCancellationWindowError ||
     error instanceof InvalidReservationStatusError ||
     error instanceof TermsNotAcceptedError ||
     error instanceof SlotNotAvailableError ||

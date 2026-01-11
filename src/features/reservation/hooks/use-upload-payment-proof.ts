@@ -19,7 +19,7 @@ export function useUploadPaymentProof() {
           description: "The court owner will review your payment shortly.",
         });
         // Invalidate all reservation queries
-        queryClient.invalidateQueries({ queryKey: ["reservations"] });
+        queryClient.invalidateQueries(trpc.reservation.getMy.queryFilter());
       },
       onError: (error) => {
         toast.error(error.message || "Failed to upload payment proof");

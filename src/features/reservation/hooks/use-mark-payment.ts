@@ -14,14 +14,24 @@ export function useMarkPayment() {
 
   return useMutation(
     trpc.reservation.markPayment.mutationOptions({
-      onSuccess: (_, variables) => {
-        toast.success("Payment submitted successfully!", {
-          description: "The court owner will verify your payment shortly.",
-        });
-        queryClient.invalidateQueries({
-          queryKey: ["reservations", variables.reservationId],
-        });
-        queryClient.invalidateQueries({ queryKey: ["reservations"] });
+      onSuccess: (data, variables) => {
+        const isConfirmed = data.status === "CONFIRMED";
+        toast.success(
+          isConfirmed
+            ? "Reservation confirmed!"
+            : "Payment submitted successfully!",
+          {
+            description: isConfirmed
+              ? "Your reservation is confirmed."
+              : "The court owner will verify your payment shortly.",
+          },
+        );
+        queryClient.invalidateQueries(
+          trpc.reservation.getById.queryFilter({
+            reservationId: variables.reservationId,
+          }),
+        );
+        queryClient.invalidateQueries(trpc.reservation.getMy.queryFilter());
       },
       onError: (error) => {
         toast.error(error.message || "Failed to submit payment");

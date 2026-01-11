@@ -70,6 +70,10 @@ export class CreateSimpleCourtUseCase implements ICreateSimpleCourtUseCase {
           isFree,
           defaultCurrency: data.currency,
           defaultPriceCents: data.defaultPriceCents ?? null,
+          requiresOwnerConfirmation: true,
+          paymentHoldMinutes: 15,
+          ownerReviewMinutes: 15,
+          cancellationCutoffMinutes: 0,
           // Payment details can be added later through updateDetail
         },
         ctx,

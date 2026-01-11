@@ -115,6 +115,18 @@ export function CourtForm({
   const [bankAccountName, setBankAccountName] = useState(
     defaultValues?.bankAccountName ?? "",
   );
+  const [requiresOwnerConfirmation, setRequiresOwnerConfirmation] = useState(
+    defaultValues?.requiresOwnerConfirmation ?? true,
+  );
+  const [paymentHoldMinutes, setPaymentHoldMinutes] = useState(
+    defaultValues?.paymentHoldMinutes ?? 15,
+  );
+  const [ownerReviewMinutes, setOwnerReviewMinutes] = useState(
+    defaultValues?.ownerReviewMinutes ?? 15,
+  );
+  const [cancellationCutoffMinutes, setCancellationCutoffMinutes] = useState(
+    defaultValues?.cancellationCutoffMinutes ?? 0,
+  );
 
   useEffect(() => {
     if (!defaultValues) return;
@@ -137,6 +149,12 @@ export function CourtForm({
     setBankName(defaultValues.bankName ?? "");
     setBankAccountNumber(defaultValues.bankAccountNumber ?? "");
     setBankAccountName(defaultValues.bankAccountName ?? "");
+    setRequiresOwnerConfirmation(
+      defaultValues.requiresOwnerConfirmation ?? true,
+    );
+    setPaymentHoldMinutes(defaultValues.paymentHoldMinutes ?? 15);
+    setOwnerReviewMinutes(defaultValues.ownerReviewMinutes ?? 15);
+    setCancellationCutoffMinutes(defaultValues.cancellationCutoffMinutes ?? 0);
   }, [defaultValues]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -171,6 +189,10 @@ export function CourtForm({
       bankName,
       bankAccountNumber,
       bankAccountName,
+      requiresOwnerConfirmation,
+      paymentHoldMinutes,
+      ownerReviewMinutes,
+      cancellationCutoffMinutes,
     });
   };
 
@@ -195,9 +217,18 @@ export function CourtForm({
 
   const isBasicValid = name.trim().length > 0;
   const isLocationValid = address.trim().length > 0 && city.trim().length > 0;
+  const isPolicyValid =
+    Number.isFinite(paymentHoldMinutes) &&
+    paymentHoldMinutes > 0 &&
+    Number.isFinite(ownerReviewMinutes) &&
+    ownerReviewMinutes > 0 &&
+    Number.isFinite(cancellationCutoffMinutes) &&
+    cancellationCutoffMinutes >= 0;
+
   const isPaymentValid =
-    isFree ||
-    (defaultHourlyRate !== undefined && !Number.isNaN(defaultHourlyRate));
+    (isFree ||
+      (defaultHourlyRate !== undefined && !Number.isNaN(defaultHourlyRate))) &&
+    isPolicyValid;
 
   const stepValidity: Record<CourtFormStep, boolean> = {
     basic: isBasicValid,
@@ -609,6 +640,93 @@ export function CourtForm({
                   </div>
                 </>
               )}
+
+              <div className="border-t pt-6 space-y-4">
+                <div className="space-y-1">
+                  <h4 className="font-medium">Reservation Policies</h4>
+                  <p className="text-xs text-muted-foreground">
+                    These settings apply per court. Owner confirmation applies
+                    to paid reservations.
+                  </p>
+                </div>
+
+                <div className="flex items-start space-x-2">
+                  <Checkbox
+                    id="requiresOwnerConfirmation"
+                    checked={requiresOwnerConfirmation}
+                    onCheckedChange={(value) =>
+                      setRequiresOwnerConfirmation(value === true)
+                    }
+                  />
+                  <div className="space-y-1">
+                    <Label
+                      htmlFor="requiresOwnerConfirmation"
+                      className="font-normal"
+                    >
+                      Require owner confirmation for paid reservations
+                    </Label>
+                    <p className="text-xs text-muted-foreground">
+                      When off, paid reservations auto-confirm after payment.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="paymentHoldMinutes">
+                      Payment hold (minutes)
+                    </Label>
+                    <Input
+                      id="paymentHoldMinutes"
+                      type="number"
+                      min={1}
+                      value={paymentHoldMinutes}
+                      onChange={(event) =>
+                        setPaymentHoldMinutes(
+                          Number.parseInt(event.target.value, 10) || 0,
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="ownerReviewMinutes">
+                      Owner review (minutes)
+                    </Label>
+                    <Input
+                      id="ownerReviewMinutes"
+                      type="number"
+                      min={1}
+                      value={ownerReviewMinutes}
+                      onChange={(event) =>
+                        setOwnerReviewMinutes(
+                          Number.parseInt(event.target.value, 10) || 0,
+                        )
+                      }
+                      disabled={!requiresOwnerConfirmation}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="cancellationCutoffMinutes">
+                      Cancellation cutoff (minutes)
+                    </Label>
+                    <Input
+                      id="cancellationCutoffMinutes"
+                      type="number"
+                      min={0}
+                      value={cancellationCutoffMinutes}
+                      onChange={(event) =>
+                        setCancellationCutoffMinutes(
+                          Number.parseInt(event.target.value, 10) || 0,
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+
+                <p className="text-xs text-muted-foreground">
+                  Cancellation cutoff is measured from the slot start time.
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>

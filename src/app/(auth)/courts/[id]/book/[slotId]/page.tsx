@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { BookingSummaryCard } from "@/features/reservation/components/booking-summary-card";
 import { OrderSummary } from "@/features/reservation/components/order-summary";
@@ -14,7 +15,15 @@ import { useCreateReservation } from "@/features/reservation/hooks/use-create-re
 import { useProfile } from "@/features/reservation/hooks/use-profile";
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { formatDuration } from "@/shared/lib/format";
 import { useTRPC } from "@/trpc/client";
+
+interface ReservableDetail {
+  requiresOwnerConfirmation?: boolean | null;
+  paymentHoldMinutes?: number | null;
+  ownerReviewMinutes?: number | null;
+  cancellationCutoffMinutes?: number | null;
+}
 
 export default function BookSlotPage() {
   const params = useParams();
@@ -46,6 +55,11 @@ export default function BookSlotPage() {
       }
     : undefined;
 
+  const reservableDetail =
+    courtData?.court.courtType === "RESERVABLE"
+      ? (courtData.detail as ReservableDetail | null)
+      : null;
+
   const effectivePriceCents = slotData
     ? (slotData.priceCents ?? slotData.defaultPriceCents ?? 0)
     : 0;
@@ -53,6 +67,16 @@ export default function BookSlotPage() {
     ? (slotData.currency ?? slotData.defaultCurrency ?? "PHP")
     : "PHP";
   const isFreeSlot = slotData?.isFree || effectivePriceCents === 0;
+  const paymentHoldMinutes = reservableDetail?.paymentHoldMinutes ?? 15;
+  const requiresOwnerConfirmation =
+    reservableDetail?.requiresOwnerConfirmation ?? true;
+  const cancellationCutoffMinutes =
+    reservableDetail?.cancellationCutoffMinutes ?? 0;
+  const paymentHoldLabel = formatDuration(paymentHoldMinutes);
+  const cancellationCutoffLabel =
+    cancellationCutoffMinutes > 0
+      ? `${formatDuration(cancellationCutoffMinutes)} before start`
+      : "No cutoff (until start)";
 
   const timeSlot = slotData
     ? {
@@ -160,7 +184,42 @@ export default function BookSlotPage() {
           />
 
           {/* Payment Info (for paid courts) */}
-          {!isFreeSlot && <PaymentInfoCard paymentMethods={paymentMethods} />}
+          {!isFreeSlot && (
+            <PaymentInfoCard
+              paymentMethods={paymentMethods}
+              expiresInMinutes={paymentHoldMinutes}
+            />
+          )}
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Reservation Policy</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Payment window</span>
+                <span>{paymentHoldLabel}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  Owner confirmation
+                </span>
+                <span>
+                  {isFreeSlot
+                    ? "Not required (free booking)"
+                    : requiresOwnerConfirmation
+                      ? "Required"
+                      : "Auto-confirmed"}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">
+                  Cancellation cutoff
+                </span>
+                <span>{cancellationCutoffLabel}</span>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Right Column - Order Summary (sticky) */}

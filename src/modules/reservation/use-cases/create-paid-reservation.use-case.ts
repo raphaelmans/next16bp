@@ -13,14 +13,14 @@ import { SlotNotAvailableError } from "../errors/reservation.errors";
 import type { IReservationRepository } from "../repositories/reservation.repository";
 import type { IReservationEventRepository } from "../repositories/reservation-event.repository";
 
-// TTL for paid reservations: 15 minutes
-const RESERVATION_TTL_MINUTES = 15;
+const DEFAULT_PAYMENT_HOLD_MINUTES = 15;
 
 export interface ICreatePaidReservationUseCase {
   execute(
     userId: string,
     profileId: string,
     timeSlotId: string,
+    paymentHoldMinutes?: number,
   ): Promise<ReservationRecord>;
 }
 
@@ -39,6 +39,7 @@ export class CreatePaidReservationUseCase
     userId: string,
     profileId: string,
     timeSlotId: string,
+    paymentHoldMinutes: number = DEFAULT_PAYMENT_HOLD_MINUTES,
   ): Promise<ReservationRecord> {
     return this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
@@ -68,9 +69,14 @@ export class CreatePaidReservationUseCase
         throw new IncompleteProfileError();
       }
 
+      const resolvedHoldMinutes =
+        Number.isFinite(paymentHoldMinutes) && paymentHoldMinutes > 0
+          ? paymentHoldMinutes
+          : DEFAULT_PAYMENT_HOLD_MINUTES;
+
       // Calculate expiration time
       const expiresAt = new Date();
-      expiresAt.setMinutes(expiresAt.getMinutes() + RESERVATION_TTL_MINUTES);
+      expiresAt.setMinutes(expiresAt.getMinutes() + resolvedHoldMinutes);
 
       // Create reservation with AWAITING_PAYMENT status
       const reservation = await this.reservationRepository.create(

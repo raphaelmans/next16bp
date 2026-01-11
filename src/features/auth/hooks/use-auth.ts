@@ -27,7 +27,7 @@ export function useLogin() {
   return useMutation({
     ...trpc.auth.login.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
+      queryClient.invalidateQueries(trpc.auth.me.queryFilter());
     },
   });
 }
@@ -64,8 +64,8 @@ export function useLogout() {
   return useMutation({
     ...trpc.auth.logout.mutationOptions(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: trpc.auth.me.queryKey() });
-      queryClient.removeQueries({ queryKey: trpc.auth.me.queryKey() });
+      queryClient.invalidateQueries(trpc.auth.me.queryFilter());
+      queryClient.removeQueries(trpc.auth.me.queryFilter());
     },
   });
 }

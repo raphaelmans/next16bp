@@ -14,7 +14,7 @@ export {
   useUpdateOrganization,
   useUploadOrganizationLogo,
 } from "./use-organization";
-
+export { useOwnerCourtFilter } from "./use-owner-court-filter";
 export {
   useDeactivateCourt,
   useOwnerCourt,

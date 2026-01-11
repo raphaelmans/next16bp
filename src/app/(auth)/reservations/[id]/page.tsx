@@ -17,9 +17,17 @@ import { appRoutes } from "@/shared/lib/app-routes";
 import {
   formatCurrency,
   formatDateShort,
+  formatTime,
   formatTimeRange,
 } from "@/shared/lib/format";
 import { useTRPC } from "@/trpc/client";
+
+interface ReservableDetail {
+  requiresOwnerConfirmation?: boolean | null;
+  paymentHoldMinutes?: number | null;
+  ownerReviewMinutes?: number | null;
+  cancellationCutoffMinutes?: number | null;
+}
 
 export default function ReservationDetailPage() {
   const params = useParams();
@@ -94,6 +102,11 @@ export default function ReservationDetailPage() {
       }
     : undefined;
 
+  const reservableDetail =
+    courtData.court.courtType === "RESERVABLE"
+      ? (courtData.detail as ReservableDetail | null)
+      : null;
+
   const organization = {
     contactEmail: undefined,
     contactPhone: undefined,
@@ -112,6 +125,24 @@ export default function ReservationDetailPage() {
     priceCents: effectivePriceCents,
     currency: effectiveCurrency,
   };
+
+  const cancellationCutoffMinutes =
+    reservableDetail?.cancellationCutoffMinutes ?? 0;
+  const cancellationCutoffTime = new Date(transformedTimeSlot.startTime);
+  cancellationCutoffTime.setMinutes(
+    cancellationCutoffTime.getMinutes() - cancellationCutoffMinutes,
+  );
+  const isCutoffPassed = Date.now() > cancellationCutoffTime.getTime();
+  const isTerminalStatus =
+    reservation.status === "EXPIRED" || reservation.status === "CANCELLED";
+  const canCancel = !isTerminalStatus && !isCutoffPassed;
+  const cancelDisabledReason = isTerminalStatus
+    ? "This reservation is already closed."
+    : isCutoffPassed
+      ? `Cancellation window closed at ${formatTime(
+          cancellationCutoffTime,
+        )} on ${formatDateShort(cancellationCutoffTime)}.`
+      : undefined;
 
   const slotDate = formatDateShort(transformedTimeSlot.startTime);
   const slotTime = formatTimeRange(
@@ -230,6 +261,8 @@ export default function ReservationDetailPage() {
             court={court}
             organization={organization}
             onCancel={() => setShowCancelDialog(true)}
+            canCancel={canCancel}
+            cancelDisabledReason={cancelDisabledReason}
           />
         </div>
       </div>

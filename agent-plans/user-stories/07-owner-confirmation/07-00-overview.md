@@ -33,6 +33,7 @@ This domain implements a **simplified confirmation flow**:
 | US-07-03 | Owner Sees Accurate Slot Reservation Status | Active | Slot list reflects reservation state + actions |
 | US-07-04 | Owner Manages Active Reservations with TTL | Active | Dedicated active list with countdowns |
 | US-07-05 | Owner Reservation Alerts Panel | Active | Floating draggable alerts panel |
+| US-07-06 | Owner Filters Reservation Ops by Court | Active | Filter alerts/active/list by court |
 
 ---
 
@@ -95,29 +96,19 @@ This domain supersedes part of `03-court-reservation`:
 
 ## Backend Requirements
 
-### ENHANCE: `reservationOwner.getForOrganization`
+### `reservationOwner.getForOrganization` (Enriched)
 
-Current response is missing slot/court details. Need to enhance to include:
+The owner reservations list is backed by an enriched query that includes court + slot details and supports optional filters.
 
-| Field | Current | Enhanced |
-|-------|---------|----------|
-| `id` | Yes | Yes |
-| `status` | Yes | Yes |
-| `playerNameSnapshot` | Yes | Yes |
-| `playerEmailSnapshot` | Yes | Yes |
-| `playerPhoneSnapshot` | Yes | Yes |
-| `courtId` | No | **Add** |
-| `courtName` | No | **Add** |
-| `slotStartTime` | No | **Add** |
-| `slotEndTime` | No | **Add** |
-| `amountCents` | No | **Add** (from slot) |
-| `currency` | No | **Add** (from slot) |
-| `createdAt` | Yes | Yes |
+**Includes:**
+- Court: `courtId`, `courtName`
+- Slot: `slotStartTime`, `slotEndTime`
+- Amount: `amountCents`, `currency`
+- TTL: `expiresAt`
 
-**Implementation:**
-- Join `time_slot` table on `timeSlotId`
-- Join `court` table on slot's `courtId`
-- Return enriched DTO
+**Supports filters:**
+- `courtId` (multi-court owners)
+- `reservationId` (detail deep links)
 
 ### Existing Endpoints (Already Complete)
 
@@ -138,19 +129,7 @@ Current response is missing slot/court details. Need to enhance to include:
 | Backend Service | Complete | ReservationOwnerService implemented |
 | Backend Router | Complete | All endpoints exist |
 | Frontend Hooks | Connected | `useConfirmReservation`, `useRejectReservation` work |
-| Frontend Page | Exists | `/owner/reservations` - needs data enrichment |
-
-### Known Gap
-
-`useOwnerReservations` hook currently maps data with placeholders:
-```typescript
-courtName: "Court",      // placeholder
-startTime: "--:--",      // placeholder
-endTime: "--:--",        // placeholder
-amountCents: 0,          // placeholder
-```
-
-This will be fixed when backend is enhanced.
+| Frontend Page | Exists | `/owner/reservations` uses enriched backend data |
 
 ---
 
@@ -183,6 +162,6 @@ See `07-99-deferred.md` and `08-p2p-reservation-confirmation`:
 
 ## Summary
 
-- **Total Stories:** 5
-- **Active:** 5
+- **Total Stories:** 6
+- **Active:** 6
 - **Key Deliverable:** Accurate reservation states across slot list, active TTL workflow, and alerts panel visibility
