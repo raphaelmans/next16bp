@@ -1,9 +1,12 @@
 # Reservation State Machine — Level 1 Product Narrative
 
 ## Narrative
-- Player selects a slot: free courts confirm instantly, paid courts start a countdown.
-- Paid booking shows “Awaiting payment” and then “Awaiting confirmation” after payment is marked.
-- Owner manually confirms payment; rejection or timeout frees the slot.
+- Player selects a slot: free courts confirm instantly, paid courts start a 15-minute countdown.
+- Paid booking shows “Awaiting payment”, then “Payment marked” after the player marks payment.
+- Owner monitors active reservations and can take action quickly:
+  - While “Awaiting payment”: owner can view or cancel the reservation.
+  - While “Payment marked”: owner can confirm or reject the reservation.
+- If the TTL expires (even after payment is marked), the reservation expires and the slot is released.
 
 ## Flow Diagram (Current)
 ```
@@ -35,8 +38,14 @@
 │  Reservation: PAYMENT_MARKED_BY_USER                         │
 │  Slot: HELD (unchanged)                                      │
 │     ↓                                                        │
-│  Owner → /owner/reservations → View pending                  │
-│     → Confirm Payment                                        │
+│  Owner → Monitor active reservations                         │
+│     - Slot list quick actions                                │
+│     - Floating alerts panel                                  │
+│     - /owner/reservations/active                             │
+│     - /owner/reservations/[id]                               │
+│     → Confirm Payment (only after "Payment marked")          │
+│     → Reject (after "Payment marked")                        │
+│     → Cancel (while "Awaiting payment")                      │
 │     ↓                                                        │
 │  Reservation: CONFIRMED                                      │
 │  Slot: HELD → BOOKED                                         │

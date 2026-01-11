@@ -4,6 +4,15 @@
 - Vercel cron runs every minute (`* * * * *`).
 - Endpoint: `/api/cron/expire-reservations`.
 
+## Owner monitoring (UI)
+- Owner “Active Reservations” queue includes:
+  - `AWAITING_PAYMENT` (TTL countdown shown)
+  - `PAYMENT_MARKED_BY_USER`
+- Owner UI polls every 15 seconds for fresh data:
+  - Floating alerts panel and `/owner/reservations/active`.
+- Owner can deep-link to a reservation detail page:
+  - `/owner/reservations/[id]` (query supports `reservationId` filter).
+
 ## Expiration logic
 - Filter: `expiresAt < now` and status in `AWAITING_PAYMENT`, `PAYMENT_MARKED_BY_USER`.
 - Transaction updates:
@@ -22,8 +31,16 @@
 ## Implementation references
 - `agent-contexts/00-06-feature-implementation-status.md`
 - `agent-contexts/00-01-kudoscourts-server.md`
+- `agent-contexts/00-13-owner-reservation-ops.md`
 - `src/modules/reservation/use-cases/create-paid-reservation.use-case.ts`
 - `src/modules/reservation/services/reservation.service.ts`
 - `src/modules/reservation/services/reservation-owner.service.ts`
+- `src/modules/time-slot/repositories/time-slot.repository.ts`
+- `src/modules/reservation/dtos/reservation-owner.dto.ts`
+- `src/modules/reservation/repositories/reservation.repository.ts`
 - `src/app/api/cron/expire-reservations/route.ts`
+- `src/app/(owner)/owner/reservations/active/page.tsx`
+- `src/app/(owner)/owner/reservations/[id]/page.tsx`
+- `src/features/owner/components/reservation-alerts-panel.tsx`
+- `src/features/owner/components/slot-item.tsx`
 - `src/shared/infra/db/schema/enums.ts`

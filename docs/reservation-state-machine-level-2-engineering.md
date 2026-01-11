@@ -10,11 +10,26 @@
 
 ## Key transitions
 - `AWAITING_PAYMENT` → `PAYMENT_MARKED_BY_USER` (player marks payment).
-- `AWAITING_PAYMENT` → `CANCELLED` (player cancel or owner reject).
+- `AWAITING_PAYMENT` → `CANCELLED` (player cancels, or owner cancels via owner ops).
 - `AWAITING_PAYMENT` → `EXPIRED` (TTL cron).
 - `PAYMENT_MARKED_BY_USER` → `CONFIRMED` (owner confirms).
-- `PAYMENT_MARKED_BY_USER` → `CANCELLED` (player cancel or owner reject).
+- `PAYMENT_MARKED_BY_USER` → `CANCELLED` (player cancels, or owner rejects).
 - `PAYMENT_MARKED_BY_USER` → `EXPIRED` (TTL cron).
+
+## Owner ops (status → allowed actions)
+- `AWAITING_PAYMENT`
+  - Owner UI: label "Awaiting payment" with TTL countdown.
+  - Actions: view details, cancel (implemented via `reservationOwner.reject` → `CANCELLED`).
+- `PAYMENT_MARKED_BY_USER`
+  - Owner UI: label "Payment marked".
+  - Actions: view details, confirm (`reservationOwner.confirmPayment`), reject (`reservationOwner.reject` → `CANCELLED`).
+
+## Owner slot list enrichment
+- Owner slot list joins reservation fields into slots:
+  - `reservationId`, `reservationStatus`, `reservationExpiresAt`.
+- Slot status is still derived from time slot status (`AVAILABLE`/`HELD`/`BOOKED`/`BLOCKED`), but the UI label for `HELD` is driven by `reservationStatus`:
+  - `AWAITING_PAYMENT` → "Awaiting payment"
+  - `PAYMENT_MARKED_BY_USER` → "Payment marked"
 
 ## Reservation state diagram
 ```mermaid
@@ -25,7 +40,7 @@ stateDiagram-v2
   AWAITING_PAYMENT --> PAYMENT_MARKED_BY_USER: player marks payment
   PAYMENT_MARKED_BY_USER --> CONFIRMED: owner confirms
 
-  AWAITING_PAYMENT --> CANCELLED: owner rejects OR player cancels
+  AWAITING_PAYMENT --> CANCELLED: owner cancels OR player cancels
   PAYMENT_MARKED_BY_USER --> CANCELLED: owner rejects OR player cancels
 
   AWAITING_PAYMENT --> EXPIRED: TTL cron (expiresAt < now)
@@ -53,8 +68,9 @@ stateDiagram-v2
 - TTL window is fixed from creation; marking payment does not extend `expiresAt`.
 - Marking payment is allowed only for `AWAITING_PAYMENT` and only before `expiresAt`.
 - Owner confirmation transitions `PAYMENT_MARKED_BY_USER` → `CONFIRMED`.
-- Owner rejection is allowed for `AWAITING_PAYMENT` or `PAYMENT_MARKED_BY_USER`.
+- Owner rejection/cancellation uses `reservationOwner.reject` and is allowed for `AWAITING_PAYMENT` or `PAYMENT_MARKED_BY_USER`.
 - Player cancellation is allowed before `CONFIRMED` and moves to `CANCELLED`.
+- Cron expiration applies to both `AWAITING_PAYMENT` and `PAYMENT_MARKED_BY_USER`.
 
 ## Time slot coupling
 - `AVAILABLE` → `HELD` when paid reservation created.
