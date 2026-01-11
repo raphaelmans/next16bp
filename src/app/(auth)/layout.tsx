@@ -1,20 +1,23 @@
-"use client";
-
-import { usePathname } from "next/navigation";
+import { headers } from "next/headers";
 import { PlayerShell, PublicShell } from "@/shared/components/layout";
+import {
+  requireAdminSession,
+  requireSession,
+} from "@/shared/infra/auth/server-session";
+import { appRoutes, getRouteType } from "@/shared/lib/app-routes";
 
-const AUTH_ROUTES = ["/login", "/register", "/magic-link"];
+export const dynamic = "force-dynamic";
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isAuthRoute = AUTH_ROUTES.some((route) => pathname === route);
-  const isPublicDiscovery = pathname.startsWith("/courts");
+  const headerStore = await headers();
+  const pathname = headerStore.get("x-pathname") ?? appRoutes.index.base;
+  const routeType = getRouteType(pathname);
 
-  if (isAuthRoute) {
+  if (routeType === "guest") {
     return (
       <PublicShell>
         <div className="flex min-h-[calc(100vh-6rem)] items-center justify-center px-4 py-12">
@@ -24,8 +27,14 @@ export default function AuthLayout({
     );
   }
 
-  if (isPublicDiscovery) {
+  if (routeType === "public") {
     return <PublicShell>{children}</PublicShell>;
+  }
+
+  if (routeType === "admin") {
+    await requireAdminSession(pathname);
+  } else {
+    await requireSession(pathname);
   }
 
   return <PlayerShell>{children}</PlayerShell>;

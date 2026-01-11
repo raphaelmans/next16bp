@@ -12,6 +12,7 @@ import {
 } from "@/features/home/components";
 import type { Reservation } from "@/features/home/components/upcoming-reservations";
 import { useHomeData } from "@/features/home/hooks/use-home-data";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function HomePage() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function HomePage() {
   // Redirect if not authenticated
   useEffect(() => {
     if (!sessionLoading && !sessionUser) {
-      router.push("/login");
+      router.push(appRoutes.login.from(appRoutes.home.base));
     }
   }, [sessionUser, sessionLoading, router]);
 

@@ -4,6 +4,7 @@ import { AlertCircle, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface ProfileCompletionBannerProps {
   isProfileComplete: boolean;
@@ -46,7 +47,7 @@ export function ProfileCompletionBanner({
           className="border-primary/20 hover:bg-primary/20 text-primary"
           asChild
         >
-          <Link href="/account/profile">Complete Profile</Link>
+          <Link href={appRoutes.account.profile}>Complete Profile</Link>
         </Button>
       </div>
       <Button

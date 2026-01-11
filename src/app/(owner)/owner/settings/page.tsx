@@ -46,6 +46,7 @@ import {
 } from "@/features/owner/schemas/organization.schema";
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function OwnerSettingsPage() {
   const { data: user } = useSession();
@@ -95,7 +96,7 @@ export default function OwnerSettingsPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = "/login";
+    window.location.href = appRoutes.login.from(appRoutes.owner.settings);
   };
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

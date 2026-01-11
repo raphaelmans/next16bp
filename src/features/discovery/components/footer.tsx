@@ -1,17 +1,18 @@
 import Link from "next/link";
 import { KudosLogo } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 const FOOTER_LINKS = {
   discover: [
-    { name: "Browse Courts", href: "/courts" },
-    { name: "Map View", href: "/courts?view=map" },
-    { name: "Free Courts", href: "/courts?isFree=true" },
+    { name: "Browse Courts", href: appRoutes.courts.base },
+    { name: "Map View", href: `${appRoutes.courts.base}?view=map` },
+    { name: "Free Courts", href: `${appRoutes.courts.base}?isFree=true` },
   ],
   owners: [
-    { name: "List Your Court", href: "/owner/onboarding" },
-    { name: "Owner Dashboard", href: "/owner" },
-    { name: "Pricing", href: "/owner/pricing" },
+    { name: "List Your Court", href: appRoutes.owner.onboarding },
+    { name: "Owner Dashboard", href: appRoutes.owner.base },
+    { name: "Pricing", href: appRoutes.owner.pricing },
   ],
   company: [
     { name: "About Us", href: "/about" },
@@ -19,8 +20,8 @@ const FOOTER_LINKS = {
     { name: "Blog", href: "/blog" },
   ],
   legal: [
-    { name: "Terms of Service", href: "/terms" },
-    { name: "Privacy Policy", href: "/privacy" },
+    { name: "Terms of Service", href: appRoutes.terms.base },
+    { name: "Privacy Policy", href: appRoutes.privacy.base },
     { name: "Cookie Policy", href: "/cookies" },
   ],
 };
@@ -34,7 +35,7 @@ export function Footer() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
             {/* Brand */}
             <div className="col-span-2 md:col-span-1">
-              <Link href="/" className="inline-block">
+              <Link href={appRoutes.index.base} className="inline-block">
                 <KudosLogo size={40} variant="full" />
               </Link>
               <p className="mt-4 text-sm text-muted-foreground">

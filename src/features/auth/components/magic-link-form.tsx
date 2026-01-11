@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { type MagicLinkDTO, MagicLinkSchema } from "@/modules/auth/dtos";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { useMagicLink } from "../hooks/use-auth";
 
 export function MagicLinkForm() {
@@ -60,7 +61,10 @@ export function MagicLinkForm() {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Link href="/login" className="text-primary hover:underline text-sm">
+          <Link
+            href={appRoutes.login.base}
+            className="text-primary hover:underline text-sm"
+          >
             Back to sign in
           </Link>
         </CardFooter>
@@ -115,7 +119,10 @@ export function MagicLinkForm() {
             </Button>
 
             <div className="text-muted-foreground text-sm">
-              <Link href="/login" className="text-primary hover:underline">
+              <Link
+                href={appRoutes.login.base}
+                className="text-primary hover:underline"
+              >
                 Sign in with password
               </Link>
             </div>

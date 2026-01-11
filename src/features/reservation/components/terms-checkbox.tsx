@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface TermsCheckboxProps {
   checked: boolean;
@@ -25,7 +26,7 @@ export function TermsCheckbox({
           <label htmlFor="terms" className="cursor-pointer font-medium">
             I have read and accept the{" "}
             <Link
-              href="/terms"
+              href={appRoutes.terms.base}
               target="_blank"
               className="text-primary underline"
             >

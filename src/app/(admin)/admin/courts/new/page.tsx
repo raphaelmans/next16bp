@@ -45,6 +45,7 @@ import {
 } from "@/features/admin/schemas/curated-court.schema";
 import { useLogout, useSession } from "@/features/auth";
 import { AppShell } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function NewCuratedCourtPage() {
   const router = useRouter();
@@ -71,7 +72,7 @@ export default function NewCuratedCourtPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = "/login";
+    window.location.href = appRoutes.login.from(appRoutes.admin.courts.new);
   };
 
   const handleSubmit = form.handleSubmit((data) => {
@@ -86,7 +87,7 @@ export default function NewCuratedCourtPage() {
       {
         onSuccess: () => {
           toast.success("Court created successfully");
-          router.push("/admin/courts");
+          router.push(appRoutes.admin.courts.base);
         },
         onError: () => {
           toast.error("Failed to create court");
@@ -121,10 +122,10 @@ export default function NewCuratedCourtPage() {
           title="Add Curated Court"
           description="Add a new curated court to the platform"
           breadcrumbs={[
-            { label: "Courts", href: "/admin/courts" },
+            { label: "Courts", href: appRoutes.admin.courts.base },
             { label: "Create" },
           ]}
-          backHref="/admin/courts"
+          backHref={appRoutes.admin.courts.base}
         />
 
         <Form {...form}>
@@ -367,7 +368,7 @@ export default function NewCuratedCourtPage() {
             {/* Form Actions */}
             <div className="flex justify-end gap-4">
               <Button type="button" variant="outline" asChild>
-                <Link href="/admin/courts">Cancel</Link>
+                <Link href={appRoutes.admin.courts.base}>Cancel</Link>
               </Button>
               <Button type="submit" disabled={createMutation.isPending}>
                 {createMutation.isPending && (

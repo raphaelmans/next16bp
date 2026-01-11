@@ -21,6 +21,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useLogout, useSession } from "@/features/auth/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { KudosLogo } from "@/shared/components/kudos";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { useTRPC } from "@/trpc/client";
 import { UserDropdown } from "./user-dropdown";
 
@@ -62,25 +63,29 @@ export function Navbar({ className }: NavbarProps) {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/courts?q=${encodeURIComponent(searchQuery.trim())}`);
+      router.push(
+        `${appRoutes.courts.base}?q=${encodeURIComponent(searchQuery.trim())}`,
+      );
     }
+
     setIsOpen(false);
   };
 
   const handleSignOut = () => {
     logout(undefined, {
       onSuccess: () => {
-        router.push("/");
+        router.push(appRoutes.index.base);
         setIsOpen(false);
       },
     });
   };
 
   const handleListYourCourt = () => {
+    const target = appRoutes.owner.courts.new;
     if (isAuthenticated) {
-      router.push("/owner/courts/new");
+      router.push(target);
     } else {
-      router.push("/login?redirect=/owner/courts/new");
+      router.push(appRoutes.login.from(target));
     }
   };
 
@@ -98,7 +103,7 @@ export function Navbar({ className }: NavbarProps) {
     >
       {/* Logo */}
       <Link
-        href={isAuthenticated ? "/home" : "/"}
+        href={isAuthenticated ? appRoutes.home.base : appRoutes.index.base}
         className="flex items-center gap-2"
       >
         <KudosLogo size={36} variant="full" />
@@ -140,7 +145,7 @@ export function Navbar({ className }: NavbarProps) {
           />
         ) : (
           <Button variant="outline" asChild className="font-heading">
-            <Link href="/login">
+            <Link href={appRoutes.login.base}>
               <User className="h-4 w-4 mr-2" />
               Sign In
             </Link>
@@ -200,14 +205,14 @@ export function Navbar({ className }: NavbarProps) {
 
             {/* Mobile Navigation Links */}
             <Link
-              href="/"
+              href={appRoutes.index.base}
               className="py-2 text-lg font-heading font-semibold"
               onClick={() => setIsOpen(false)}
             >
               Home
             </Link>
             <Link
-              href="/courts"
+              href={appRoutes.courts.base}
               className="py-2 text-lg font-heading font-semibold"
               onClick={() => setIsOpen(false)}
             >
@@ -219,7 +224,7 @@ export function Navbar({ className }: NavbarProps) {
               <>
                 <Separator />
                 <Link
-                  href="/reservations"
+                  href={appRoutes.reservations.base}
                   className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
                   onClick={() => setIsOpen(false)}
                 >
@@ -227,7 +232,7 @@ export function Navbar({ className }: NavbarProps) {
                   My Reservations
                 </Link>
                 <Link
-                  href="/account/profile"
+                  href={appRoutes.account.profile}
                   className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
                   onClick={() => setIsOpen(false)}
                 >
@@ -243,7 +248,7 @@ export function Navbar({ className }: NavbarProps) {
                 <Separator />
                 {isOwner && (
                   <Link
-                    href="/owner"
+                    href={appRoutes.owner.base}
                     className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
                     onClick={() => setIsOpen(false)}
                   >
@@ -253,7 +258,7 @@ export function Navbar({ className }: NavbarProps) {
                 )}
                 {isAdmin && (
                   <Link
-                    href="/admin"
+                    href={appRoutes.admin.base}
                     className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
                     onClick={() => setIsOpen(false)}
                   >
@@ -293,7 +298,10 @@ export function Navbar({ className }: NavbarProps) {
             ) : (
               <>
                 <Button asChild className="w-full font-heading">
-                  <Link href="/login" onClick={() => setIsOpen(false)}>
+                  <Link
+                    href={appRoutes.login.base}
+                    onClick={() => setIsOpen(false)}
+                  >
                     Sign In
                   </Link>
                 </Button>
@@ -302,7 +310,10 @@ export function Navbar({ className }: NavbarProps) {
                   asChild
                   className="w-full font-heading"
                 >
-                  <Link href="/register" onClick={() => setIsOpen(false)}>
+                  <Link
+                    href={appRoutes.register.base}
+                    onClick={() => setIsOpen(false)}
+                  >
                     Create Account
                   </Link>
                 </Button>

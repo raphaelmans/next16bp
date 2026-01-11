@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import type { CourtCardCourt } from "@/shared/components/kudos";
 import { CourtCard, CourtCardSkeleton } from "@/shared/components/kudos";
 import { Container, PublicShell } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 // Popular locations for quick access
 const POPULAR_LOCATIONS = [
@@ -79,14 +80,16 @@ export default function HomePage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/courts?q=${encodeURIComponent(searchQuery.trim())}`);
+      router.push(
+        `${appRoutes.courts.base}?q=${encodeURIComponent(searchQuery.trim())}`,
+      );
     } else {
-      router.push("/courts");
+      router.push(appRoutes.courts.base);
     }
   };
 
   const handleLocationClick = (city: string) => {
-    router.push(`/courts?city=${encodeURIComponent(city)}`);
+    router.push(`${appRoutes.courts.base}?city=${encodeURIComponent(city)}`);
   };
 
   return (
@@ -157,8 +160,8 @@ export default function HomePage() {
               Featured Courts
             </h2>
             <Link
-              href="/courts"
-              className="flex items-center gap-1 text-accent hover:text-accent/80 font-medium transition-colors"
+              href={appRoutes.courts.base}
+              className="inline-flex items-center text-primary hover:underline"
             >
               View All
               <ArrowRight className="h-4 w-4" />
@@ -187,7 +190,7 @@ export default function HomePage() {
             <div className="text-center py-12 text-muted-foreground">
               <p>No featured courts available yet.</p>
               <Link
-                href="/courts"
+                href={appRoutes.courts.base}
                 className="text-accent hover:underline mt-2 inline-block"
               >
                 Browse all courts
@@ -252,7 +255,7 @@ export default function HomePage() {
                 variant="secondary"
                 className="h-14 px-10 rounded-xl font-heading font-semibold text-primary"
               >
-                <Link href="/courts">Browse All Courts</Link>
+                <Link href={appRoutes.courts.base}>Browse All Courts</Link>
               </Button>
             </div>
           </div>

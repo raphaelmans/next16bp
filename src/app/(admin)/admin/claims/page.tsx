@@ -43,6 +43,7 @@ import {
 } from "@/features/admin/hooks/use-claims";
 import { useLogout, useSession } from "@/features/auth";
 import { AppShell } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function AdminClaimsPage() {
   const router = useRouter();
@@ -68,7 +69,7 @@ export default function AdminClaimsPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = "/login";
+    window.location.href = appRoutes.login.from(appRoutes.admin.claims.base);
   };
 
   // Reset page when filters change
@@ -200,7 +201,7 @@ export default function AdminClaimsPage() {
                           key={claim.id}
                           className="cursor-pointer hover:bg-muted/50"
                           onClick={() =>
-                            router.push(`/admin/claims/${claim.id}`)
+                            router.push(appRoutes.admin.claims.detail(claim.id))
                           }
                         >
                           <TableCell>
@@ -253,7 +254,9 @@ export default function AdminClaimsPage() {
                             onClick={(e) => e.stopPropagation()}
                           >
                             <Button variant="outline" size="sm" asChild>
-                              <Link href={`/admin/claims/${claim.id}`}>
+                              <Link
+                                href={appRoutes.admin.claims.detail(claim.id)}
+                              >
                                 Review
                               </Link>
                             </Button>

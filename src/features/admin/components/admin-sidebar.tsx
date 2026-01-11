@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { appRoutes } from "@/shared/lib/app-routes";
 import {
   Sidebar,
   SidebarContent,
@@ -30,18 +31,18 @@ interface AdminSidebarProps {
 const navItems = [
   {
     title: "Dashboard",
-    href: "/admin",
+    href: appRoutes.admin.base,
     icon: LayoutDashboard,
   },
   {
     title: "Claims",
-    href: "/admin/claims",
+    href: appRoutes.admin.claims.base,
     icon: Tag,
     badge: true,
   },
   {
     title: "Courts",
-    href: "/admin/courts",
+    href: appRoutes.admin.courts.base,
     icon: Building2,
   },
 ];
@@ -53,8 +54,8 @@ export function AdminSidebar({
   const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === "/admin") {
-      return pathname === "/admin";
+    if (href === appRoutes.admin.base) {
+      return pathname === appRoutes.admin.base;
     }
     return pathname.startsWith(href);
   };

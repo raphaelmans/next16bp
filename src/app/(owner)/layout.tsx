@@ -1,8 +1,8 @@
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { env } from "@/lib/env";
 import { makeOrganizationService } from "@/modules/organization/factories/organization.factory";
-import { createClient } from "@/shared/infra/supabase/create-client";
+import { requireSession } from "@/shared/infra/auth/server-session";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 /**
  * Owner route group layout.
@@ -13,38 +13,18 @@ export default async function OwnerLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
+  const headerStore = await headers();
+  const pathname = headerStore.get("x-pathname") ?? appRoutes.owner.base;
 
-  const cookieMethods = {
-    getAll() {
-      return cookieStore.getAll();
-    },
-    setAll() {
-      // Read-only in layout
-    },
-  };
+  const session = await requireSession(pathname);
 
-  const supabase = createClient(
-    env.NEXT_PUBLIC_SUPABASE_URL,
-    env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-    cookieMethods,
+  const organizationService = makeOrganizationService();
+  const organizations = await organizationService.getMyOrganizations(
+    session.userId,
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Redirect to login if not authenticated
-  if (!user) {
-    redirect("/login?redirect=/owner");
-  }
-
-  // Check if user has an organization
-  const organizationService = makeOrganizationService();
-  const organizations = await organizationService.getMyOrganizations(user.id);
-
   if (organizations.length === 0) {
-    redirect("/owner/onboarding");
+    redirect(appRoutes.owner.onboarding);
   }
 
   return <>{children}</>;

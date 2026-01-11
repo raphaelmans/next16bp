@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -49,7 +50,7 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
   const router = useRouter();
 
   const handleRowClick = (courtId: string) => {
-    router.push(`/owner/courts/${courtId}/slots`);
+    router.push(appRoutes.owner.courts.slots(courtId));
   };
 
   return (
@@ -203,26 +204,26 @@ function CourtActionsDropdown({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
-          <Link href={`/owner/courts/${court.id}/edit`}>
+          <Link href={appRoutes.owner.courts.edit(court.id)}>
             <Pencil className="mr-2 h-4 w-4" />
             Edit Details
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href={`/owner/courts/${court.id}/slots`}>
+          <Link href={appRoutes.owner.courts.slots(court.id)}>
             <Clock className="mr-2 h-4 w-4" />
             Manage Slots
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href={`/owner/reservations?court=${court.id}`}>
+          <Link href={`${appRoutes.owner.reservations}?court=${court.id}`}>
             <CalendarDays className="mr-2 h-4 w-4" />
             View Bookings
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <a
-            href={`/courts/${court.id}`}
+            href={appRoutes.courts.detail(court.id)}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -230,6 +231,7 @@ function CourtActionsDropdown({
             View Public Page
           </a>
         </DropdownMenuItem>
+
         {court.status === "active" && (
           <>
             <DropdownMenuSeparator />

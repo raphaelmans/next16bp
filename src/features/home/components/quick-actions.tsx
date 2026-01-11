@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface QuickActionCardProps {
   title: string;
@@ -59,19 +60,19 @@ export function QuickActions({ isAdmin, isOwner }: QuickActionsProps) {
       <QuickActionCard
         title="Find Courts"
         icon={Search}
-        href="/courts"
+        href={appRoutes.courts.base}
         description="Browse available courts near you"
       />
       <QuickActionCard
         title="My Reservations"
         icon={CalendarDays}
-        href="/reservations"
+        href={appRoutes.reservations.base}
         description="View and manage your bookings"
       />
       <QuickActionCard
         title="Profile"
         icon={User}
-        href="/account/profile"
+        href={appRoutes.account.profile}
         description="Update your personal information"
       />
 
@@ -79,7 +80,7 @@ export function QuickActions({ isAdmin, isOwner }: QuickActionsProps) {
         <QuickActionCard
           title="Owner Dashboard"
           icon={Building2}
-          href="/owner"
+          href={appRoutes.owner.base}
           description="Manage your organization and courts"
           className="border-primary/20 bg-primary/5 hover:bg-primary/10"
           iconClassName="text-primary"
@@ -90,7 +91,7 @@ export function QuickActions({ isAdmin, isOwner }: QuickActionsProps) {
         <QuickActionCard
           title="Admin Dashboard"
           icon={Shield}
-          href="/admin"
+          href={appRoutes.admin.base}
           description="System administration and monitoring"
           className="border-destructive/20 bg-destructive/5 hover:bg-destructive/10"
           iconClassName="text-destructive"

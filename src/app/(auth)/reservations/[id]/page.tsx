@@ -18,6 +18,7 @@ import {
   formatDateShort,
   formatTimeRange,
 } from "@/shared/lib/format";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { useTRPC } from "@/trpc/client";
 
 export default function ReservationDetailPage() {
@@ -62,7 +63,7 @@ export default function ReservationDetailPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold">Reservation not found</h1>
           <Link
-            href="/reservations"
+            href={appRoutes.reservations.base}
             className="text-primary hover:underline mt-4 inline-block"
           >
             View all reservations
@@ -135,10 +136,10 @@ export default function ReservationDetailPage() {
       <PageHeader
         title="Reservation Details"
         breadcrumbs={[
-          { label: "My Reservations", href: "/reservations" },
+          { label: "My Reservations", href: appRoutes.reservations.base },
           { label: "Details" },
         ]}
-        backHref="/reservations"
+        backHref={appRoutes.reservations.base}
       />
 
       <StatusBanner

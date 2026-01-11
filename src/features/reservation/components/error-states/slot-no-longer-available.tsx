@@ -11,6 +11,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface SlotNoLongerAvailableProps {
   courtName?: string;
@@ -39,7 +40,7 @@ export function SlotNoLongerAvailable({
           <Button onClick={onFindNewSlot}>Find Another Slot</Button>
         ) : (
           <Button asChild>
-            <Link href="/courts">Browse Courts</Link>
+            <Link href={appRoutes.courts.base}>Browse Courts</Link>
           </Button>
         )}
       </EmptyContent>

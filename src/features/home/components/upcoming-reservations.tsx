@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 export interface Reservation {
   id: string;
@@ -58,7 +59,7 @@ export function UpcomingReservations({
             <CardDescription>Your next scheduled games</CardDescription>
           </div>
           <Button variant="outline" size="sm" asChild>
-            <Link href="/reservations">View All</Link>
+            <Link href={appRoutes.reservations.base}>View All</Link>
           </Button>
         </div>
       </CardHeader>
@@ -109,7 +110,7 @@ export function UpcomingReservations({
               </p>
             </div>
             <Button asChild>
-              <Link href="/courts">Browse Courts</Link>
+              <Link href={appRoutes.courts.base}>Browse Courts</Link>
             </Button>
           </div>
         )}

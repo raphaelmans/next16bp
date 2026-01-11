@@ -11,6 +11,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 export function CourtsEmptyState() {
   return (
@@ -27,14 +28,14 @@ export function CourtsEmptyState() {
       <EmptyContent>
         <div className="flex flex-col items-center gap-3">
           <Button asChild>
-            <Link href="/owner/courts/new">
+            <Link href={appRoutes.owner.courts.new}>
               <Plus className="mr-2 h-4 w-4" />
               Add Your First Court
             </Link>
           </Button>
           <span className="text-sm text-muted-foreground">- or -</span>
           <Button variant="outline" asChild>
-            <Link href="/courts">
+            <Link href={appRoutes.courts.base}>
               <Tag className="mr-2 h-4 w-4" />
               Claim an Existing Court
             </Link>

@@ -11,6 +11,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface ReservationNotFoundProps {
   reservationId?: string;
@@ -34,7 +35,7 @@ export function ReservationNotFound({
       </EmptyHeader>
       <EmptyContent>
         <Button asChild>
-          <Link href="/reservations">View My Reservations</Link>
+          <Link href={appRoutes.reservations.base}>View My Reservations</Link>
         </Button>
       </EmptyContent>
     </Empty>

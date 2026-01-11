@@ -2,6 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 type AdPlacement = "discovery" | "court-detail" | "search-results";
 
@@ -20,7 +21,7 @@ const AD_CONTENT: Record<
     description:
       "Reach thousands of pickleball players. Start accepting bookings today.",
     cta: "Get Started",
-    href: "/owner/onboarding",
+    href: appRoutes.owner.onboarding,
   },
   "court-detail": {
     title: "Premium Pickleball Gear",
@@ -33,7 +34,7 @@ const AD_CONTENT: Record<
     description:
       "Get a verified badge and priority placement in search results.",
     cta: "Learn More",
-    href: "/owner/verify",
+    href: appRoutes.owner.verify,
   },
 };
 

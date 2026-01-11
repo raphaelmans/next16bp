@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { formatTime } from "@/shared/lib/format";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 type BookingStatus = "booked" | "pending" | "available" | "blocked";
 
@@ -142,7 +143,7 @@ export function TodaysBookings({ bookings, className }: TodaysBookingsProps) {
         {/* View all link */}
         <div className="pt-3 border-t mt-2">
           <Link
-            href="/owner/reservations"
+            href={appRoutes.owner.reservations}
             className="text-sm text-primary hover:underline"
           >
             View all reservations

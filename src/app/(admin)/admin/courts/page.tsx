@@ -61,6 +61,7 @@ import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
 import { useLogout, useSession } from "@/features/auth";
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 const _claimStatusLabels: Record<ClaimStatusFilter, string> = {
   unclaimed: "Unclaimed",
@@ -100,7 +101,7 @@ export default function AdminCourtsPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = "/login";
+    window.location.href = appRoutes.login.from(appRoutes.admin.courts.base);
   };
 
   const handleToggleStatus = (courtId: string, currentStatus: CourtStatus) => {
@@ -164,7 +165,7 @@ export default function AdminCourtsPage() {
             </p>
           </div>
           <Button asChild>
-            <Link href="/admin/courts/new">
+            <Link href={appRoutes.admin.courts.new}>
               <Plus className="mr-2 h-4 w-4" />
               Add Curated Court
             </Link>
@@ -345,7 +346,7 @@ export default function AdminCourtsPage() {
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem asChild>
                               <Link
-                                href={`/courts/${court.id}`}
+                                href={appRoutes.courts.detail(court.id)}
                                 target="_blank"
                               >
                                 <ExternalLink className="h-4 w-4 mr-2" />
@@ -353,11 +354,14 @@ export default function AdminCourtsPage() {
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
-                              <Link href={`/admin/courts/${court.id}`}>
+                              <Link
+                                href={`${appRoutes.admin.courts.base}/${court.id}`}
+                              >
                                 <Edit className="h-4 w-4 mr-2" />
                                 Edit Court
                               </Link>
                             </DropdownMenuItem>
+
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               onClick={() =>

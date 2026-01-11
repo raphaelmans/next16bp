@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "@/features/auth/hooks/use-auth";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
 import { KudosLogo } from "@/shared/components/kudos";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { useTRPC } from "@/trpc/client";
 
 export default function OnboardingPage() {
@@ -23,23 +24,23 @@ export default function OnboardingPage() {
   // Redirect if not authenticated
   useEffect(() => {
     if (!sessionLoading && !sessionUser) {
-      router.push("/login?redirect=/owner/onboarding");
+      router.push(appRoutes.login.from(appRoutes.owner.onboarding));
     }
   }, [sessionUser, sessionLoading, router]);
 
   // Redirect if user already has an org
   useEffect(() => {
     if (!orgsLoading && orgs && orgs.length > 0) {
-      router.push("/owner");
+      router.push(appRoutes.owner.base);
     }
   }, [orgs, orgsLoading, router]);
 
   const handleSuccess = () => {
-    router.push("/owner");
+    router.push(appRoutes.owner.base);
   };
 
   const handleCancel = () => {
-    router.push("/home");
+    router.push(appRoutes.home.base);
   };
 
   if (sessionLoading || orgsLoading) {
@@ -77,11 +78,17 @@ export default function OnboardingPage() {
 
       <p className="text-sm text-muted-foreground">
         By creating an organization, you agree to our{" "}
-        <Link href="/terms" className="underline hover:text-foreground">
+        <Link
+          href={appRoutes.terms.base}
+          className="underline hover:text-foreground"
+        >
           Terms of Service
         </Link>{" "}
         and{" "}
-        <Link href="/privacy" className="underline hover:text-foreground">
+        <Link
+          href={appRoutes.privacy.base}
+          className="underline hover:text-foreground"
+        >
           Privacy Policy
         </Link>
         .

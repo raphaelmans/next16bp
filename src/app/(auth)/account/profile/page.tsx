@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { OwnerCtaSection } from "@/features/reservation/components/owner-cta-section";
 import { ProfileForm } from "@/features/reservation/components/profile-form";
 import { ProfileFormSkeleton } from "@/features/reservation/components/skeletons";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function ProfilePage() {
   return (
@@ -13,10 +14,10 @@ export default function ProfilePage() {
         title="Profile"
         description="Manage your profile and contact information"
         breadcrumbs={[
-          { label: "Account", href: "/account/profile" },
+          { label: "Account", href: appRoutes.account.profile },
           { label: "Profile" },
         ]}
-        backHref="/home"
+        backHref={appRoutes.home.base}
       />
 
       <div className="grid gap-6 lg:grid-cols-3">

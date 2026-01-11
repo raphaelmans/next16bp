@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface ProfilePreviewCardProps {
   profile: {
@@ -35,7 +36,7 @@ export function ProfilePreviewCard({
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Your Information</CardTitle>
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/account/profile">
+          <Link href={appRoutes.account.profile}>
             <Edit className="h-4 w-4 mr-1" />
             Edit
           </Link>

@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { type LoginDTO, LoginSchema } from "@/modules/auth/dtos";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { useLogin } from "../hooks/use-auth";
 
 export function LoginForm() {
@@ -31,7 +32,7 @@ export function LoginForm() {
   const loginMutation = useLogin();
 
   // Get redirect URL from query params, default to /home
-  const redirectUrl = searchParams.get("redirect") || "/home";
+  const redirectUrl = searchParams.get("redirect") || appRoutes.home.base;
 
   const form = useForm<LoginDTO>({
     resolver: zodResolver(LoginSchema),
@@ -58,14 +59,14 @@ export function LoginForm() {
 
   // Preserve redirect param when linking to register
   const registerHref =
-    redirectUrl !== "/home"
-      ? `/register?redirect=${encodeURIComponent(redirectUrl)}`
-      : "/register";
+    redirectUrl !== appRoutes.home.base
+      ? `${appRoutes.register.base}?redirect=${encodeURIComponent(redirectUrl)}`
+      : appRoutes.register.base;
 
   const magicLinkHref =
-    redirectUrl !== "/home"
-      ? `/magic-link?redirect=${encodeURIComponent(redirectUrl)}`
-      : "/magic-link";
+    redirectUrl !== appRoutes.home.base
+      ? `${appRoutes.magicLink.base}?redirect=${encodeURIComponent(redirectUrl)}`
+      : appRoutes.magicLink.base;
 
   return (
     <Card className="w-full max-w-md">

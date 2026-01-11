@@ -36,6 +36,7 @@ import { useLogout, useSession } from "@/features/auth";
 import { StatsCard } from "@/features/owner/components/stats-card";
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 const activityIcons = {
   claim_approved: CheckCircle2,
@@ -63,7 +64,7 @@ export default function AdminDashboardPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = "/login";
+    window.location.href = appRoutes.login.from(appRoutes.admin.base);
   };
 
   return (
@@ -112,14 +113,15 @@ export default function AdminDashboardPage() {
               title="Pending Claims"
               value={stats?.pendingClaims || 0}
               icon={Tag}
-              href="/admin/claims"
+              href={appRoutes.admin.claims.base}
             />
             <StatsCard
               title="Total Courts"
               value={stats?.totalCourts || 0}
               icon={Building2}
-              href="/admin/courts"
+              href={appRoutes.admin.courts.base}
             />
+
             <StatsCard
               title="Reservable Courts"
               value={stats?.reservableCourts || 0}
@@ -145,7 +147,7 @@ export default function AdminDashboardPage() {
                 <CardDescription>Claims awaiting your review</CardDescription>
               </div>
               <Button variant="outline" size="sm" asChild>
-                <Link href="/admin/claims">
+                <Link href={appRoutes.admin.claims.base}>
                   View All
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Link>
@@ -168,7 +170,7 @@ export default function AdminDashboardPage() {
                   {pendingClaims.map((claim) => (
                     <Link
                       key={claim.id}
-                      href={`/admin/claims/${claim.id}`}
+                      href={appRoutes.admin.claims.detail(claim.id)}
                       className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors cursor-pointer"
                     >
                       <div className="space-y-1">

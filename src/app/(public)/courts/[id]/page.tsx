@@ -23,6 +23,7 @@ import { useAvailableSlots, useCourtDetail } from "@/features/discovery/hooks";
 import type { TimeSlot } from "@/shared/components/kudos";
 import { AdBanner } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 const AMENITY_ICONS: Record<
   string,
@@ -62,7 +63,7 @@ export default function CourtDetailPage() {
             removed.
           </p>
           <Link
-            href="/courts"
+            href={appRoutes.courts.base}
             className="text-primary hover:underline mt-4 inline-block"
           >
             Browse all courts
@@ -81,8 +82,8 @@ export default function CourtDetailPage() {
       <PageHeader
         title={court.name}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Courts", href: "/courts" },
+          { label: "Home", href: appRoutes.index.base },
+          { label: "Courts", href: appRoutes.courts.base },
           { label: court.name },
         ]}
       />

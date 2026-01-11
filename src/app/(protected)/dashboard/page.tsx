@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 /**
  * Legacy dashboard route - redirects to /home
@@ -9,5 +10,5 @@ import { redirect } from "next/navigation";
  * @see agent-plans/user-stories/00-onboarding/00-08-bugfix-dashboard-redirect.md
  */
 export default function DashboardPage() {
-  redirect("/home");
+  redirect(appRoutes.home.base);
 }

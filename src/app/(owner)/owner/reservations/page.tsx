@@ -44,6 +44,7 @@ import {
 } from "@/features/owner/hooks/use-owner-reservations";
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 type TabValue = "pending" | "upcoming" | "past" | "cancelled";
 
@@ -160,7 +161,7 @@ export default function OwnerReservationsPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = "/login";
+    window.location.href = appRoutes.login.from(appRoutes.owner.reservations);
   };
 
   // Filter reservations for upcoming/past tabs

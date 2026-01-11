@@ -65,10 +65,10 @@ This plan implements file upload functionality using Supabase Storage with serve
 
 | Bucket | Access | Purpose |
 |--------|--------|---------|
-| `avatars` | Private | Player profile pictures |
-| `payment-proofs` | Private | Payment verification screenshots |
-| `court-photos` | Private | Court images |
-| `organization-assets` | Private | Organization logos |
+| `avatars` | Public (temporary) | Player profile pictures |
+| `payment-proofs` | Public (temporary) | Payment verification screenshots |
+| `court-photos` | Public (temporary) | Court images |
+| `organization-assets` | Public (temporary) | Organization logos |
 
 ---
 
@@ -140,7 +140,7 @@ Phase 1 (Infrastructure) [COMPLETE] ──────────────�
 | FormData handling | `zod-form-data` + tRPC v11 native | Type-safe, tRPC v11 handles FormData natively |
 | Storage module | `src/modules/storage/` | Follows backend-module architecture |
 | Upload endpoints | Separate from entity update | Simpler, reusable, better error handling |
-| Bucket access | All private initially | Simpler RLS, defer public optimization |
+| Bucket access | Public for now (temporary) | Faster iteration; tighten with RLS later |
 
 ---
 
@@ -199,4 +199,4 @@ Before implementing Phase 2, configure in Supabase Dashboard:
 
 2. **Configure RLS policies** (see `10-01-infrastructure.md` for SQL)
 
-3. **Set buckets to private** (default)
+3. **Set buckets to public for now** (temporary; tighten later)

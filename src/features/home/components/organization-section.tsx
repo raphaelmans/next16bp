@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface OrganizationSectionProps {
   organization: {
@@ -62,7 +63,7 @@ export function OrganizationSection({
             </div>
           </div>
           <Button className="w-full" asChild>
-            <Link href="/owner">
+            <Link href={appRoutes.owner.base}>
               Go to Dashboard
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -82,7 +83,7 @@ export function OrganizationSection({
       </CardHeader>
       <CardContent>
         <Button className="w-full" asChild>
-          <Link href="/owner/onboarding">
+          <Link href={appRoutes.owner.onboarding}>
             <Plus className="mr-2 h-4 w-4" />
             Become a Partner
           </Link>

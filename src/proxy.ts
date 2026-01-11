@@ -1,31 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
-
-/**
- * Routes that require authentication.
- * Users will be redirected to /login if not authenticated.
- */
-const PROTECTED_ROUTES = [
-  "/home",
-  "/settings",
-  "/account",
-  "/reservations",
-  "/owner",
-  "/admin",
-];
-
-/**
- * Routes that are only accessible to unauthenticated users.
- * Authenticated users will be redirected to /.
- */
-const AUTH_ROUTES = ["/login", "/register", "/magic-link"];
-
-/**
- * Check if path matches any of the given routes.
- */
-function matchesRoute(path: string, routes: string[]): boolean {
-  return routes.some((route) => path === route || path.startsWith(`${route}/`));
-}
+import {
+  appRoutes,
+  isGuestRoute,
+  isProtectedRoute,
+} from "@/shared/lib/app-routes";
 
 /**
  * Next.js proxy for session refresh and route protection.
@@ -37,7 +16,13 @@ function matchesRoute(path: string, routes: string[]): boolean {
  * The proxy runtime is nodejs-only (edge runtime not supported).
  */
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  const path = request.nextUrl.pathname;
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", path);
+
+  let supabaseResponse = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -55,7 +40,9 @@ export async function proxy(request: NextRequest) {
         cookiesToSet.forEach(({ name, value }) => {
           request.cookies.set(name, value);
         });
-        supabaseResponse = NextResponse.next({ request });
+        supabaseResponse = NextResponse.next({
+          request: { headers: requestHeaders },
+        });
         cookiesToSet.forEach(({ name, value, options }) => {
           supabaseResponse.cookies.set(name, value, options);
         });
@@ -68,18 +55,17 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const path = request.nextUrl.pathname;
-
   // Redirect unauthenticated users from protected routes
-  if (!user && matchesRoute(path, PROTECTED_ROUTES)) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", path);
-    return NextResponse.redirect(loginUrl);
+  if (!user && isProtectedRoute(path)) {
+    return NextResponse.redirect(
+      new URL(appRoutes.login.from(path), request.url),
+    );
   }
 
-  // Redirect authenticated users from auth routes
-  if (user && matchesRoute(path, AUTH_ROUTES)) {
-    const redirectTo = request.nextUrl.searchParams.get("redirect") || "/";
+  // Redirect authenticated users from guest routes
+  if (user && isGuestRoute(path)) {
+    const redirectTo =
+      request.nextUrl.searchParams.get("redirect") ?? appRoutes.home.base;
     return NextResponse.redirect(new URL(redirectTo, request.url));
   }
 

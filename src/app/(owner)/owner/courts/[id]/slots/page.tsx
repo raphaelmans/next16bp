@@ -24,6 +24,7 @@ import {
   useUnblockSlot,
 } from "@/features/owner/hooks/use-slots";
 import { AppShell } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { useTRPC } from "@/trpc/client";
 
 export default function ManageSlotsPage() {
@@ -63,7 +64,9 @@ export default function ManageSlotsPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = "/login";
+    window.location.href = appRoutes.login.from(
+      appRoutes.owner.courts.slots(courtId),
+    );
   };
 
   const handleBlockSlot = (slotId: string) => {
@@ -246,7 +249,7 @@ export default function ManageSlotsPage() {
         <div className="text-center py-12">
           <p className="text-muted-foreground">Court not found</p>
           <Button asChild className="mt-4">
-            <Link href="/owner/courts">Back to Courts</Link>
+            <Link href={appRoutes.owner.courts.base}>Back to Courts</Link>
           </Button>
         </div>
       </AppShell>
@@ -281,14 +284,14 @@ export default function ManageSlotsPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <Button variant="ghost" size="sm" asChild className="-ml-2">
-              <Link href="/owner/courts">
+              <Link href={appRoutes.owner.courts.base}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Courts
               </Link>
             </Button>
             <Button variant="outline" size="sm" asChild>
               <a
-                href={`/courts/${courtId}`}
+                href={appRoutes.courts.detail(courtId)}
                 target="_blank"
                 rel="noopener noreferrer"
               >

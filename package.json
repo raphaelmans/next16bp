@@ -13,7 +13,8 @@
     "db:migrate": "dotenvx run --env-file=.env.local -- drizzle-kit migrate",
     "db:push": "dotenvx run --env-file=.env.local -- drizzle-kit push",
     "db:studio": "dotenvx run --env-file=.env.local -- drizzle-kit studio",
-    "db:seed": "dotenvx run --env-file=.env.local -- tsx scripts/seed-courts.ts"
+    "db:seed": "dotenvx run --env-file=.env.local -- tsx scripts/seed-courts.ts",
+    "db:seed:buckets": "dotenvx run --env-file=.env.local -- tsx scripts/seed-storage-buckets.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

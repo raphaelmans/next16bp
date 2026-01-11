@@ -4,6 +4,7 @@ import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface PendingActionsProps {
   pendingCount: number;
@@ -30,7 +31,9 @@ export function PendingActions({ pendingCount }: PendingActionsProps) {
           size="sm"
           className="bg-amber-600 hover:bg-amber-700 text-white w-fit"
         >
-          <Link href="/owner/reservations?status=pending">Review Now</Link>
+          <Link href={`${appRoutes.owner.reservations}?status=pending`}>
+            Review Now
+          </Link>
         </Button>
       </AlertDescription>
     </Alert>

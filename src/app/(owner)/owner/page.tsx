@@ -12,6 +12,7 @@ import {
 } from "@/features/owner";
 import { useOwnerOrganization, useOwnerStats } from "@/features/owner/hooks";
 import { AppShell } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function OwnerDashboardPage() {
   const { data: user } = useSession();
@@ -27,7 +28,7 @@ export default function OwnerDashboardPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = "/login";
+    window.location.href = appRoutes.login.from(appRoutes.owner.base);
   };
 
   // Show loading skeleton while organization data loads
@@ -123,13 +124,13 @@ export default function OwnerDashboardPage() {
                 title="Active Courts"
                 value={stats?.activeCourts ?? 0}
                 icon={MapPin}
-                href="/owner/courts"
+                href={appRoutes.owner.courts.base}
               />
               <StatsCard
                 title="Pending Bookings"
                 value={stats?.pendingReservations ?? 0}
                 icon={CalendarDays}
-                href="/owner/reservations?status=pending"
+                href={`${appRoutes.owner.reservations}?status=pending`}
               />
               <ComingSoonCard title="Today's Bookings" />
               <ComingSoonCard title="Monthly Revenue" />

@@ -13,6 +13,7 @@ import { ProfilePreviewCard } from "@/features/reservation/components/profile-pr
 import { useCreateReservation } from "@/features/reservation/hooks/use-create-reservation";
 import { useProfile } from "@/features/reservation/hooks/use-profile";
 import { Container } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { useTRPC } from "@/trpc/client";
 
 export default function BookSlotPage() {
@@ -85,9 +86,9 @@ export default function BookSlotPage() {
       // Redirect based on whether payment is required
       const requiresPayment = result.status === "AWAITING_PAYMENT";
       if (requiresPayment) {
-        router.push(`/reservations/${result.id}/payment`);
+        router.push(appRoutes.reservations.payment(result.id));
       } else {
-        router.push(`/reservations/${result.id}`);
+        router.push(appRoutes.reservations.detail(result.id));
       }
     } catch (error) {
       // Show error toast
@@ -111,7 +112,7 @@ export default function BookSlotPage() {
             The court or time slot you&apos;re looking for doesn&apos;t exist.
           </p>
           <Link
-            href="/courts"
+            href={appRoutes.courts.base}
             className="text-primary hover:underline mt-4 inline-block"
           >
             Browse all courts
@@ -126,11 +127,11 @@ export default function BookSlotPage() {
       <PageHeader
         title="Complete Your Booking"
         breadcrumbs={[
-          { label: "Courts", href: "/courts" },
-          { label: court.name, href: `/courts/${courtId}` },
+          { label: "Courts", href: appRoutes.courts.base },
+          { label: court.name, href: appRoutes.courts.detail(courtId) },
           { label: "Book" },
         ]}
-        backHref={`/courts/${courtId}`}
+        backHref={appRoutes.courts.detail(courtId)}
       />
 
       <div className="grid gap-6 lg:grid-cols-3">

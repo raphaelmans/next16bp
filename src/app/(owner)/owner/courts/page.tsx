@@ -15,6 +15,7 @@ import {
   useOwnerCourts,
 } from "@/features/owner/hooks/use-owner-courts";
 import { AppShell } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function OwnerCourtsPage() {
   const { data: user } = useSession();
@@ -31,7 +32,7 @@ export default function OwnerCourtsPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = "/login";
+    window.location.href = appRoutes.login.from(appRoutes.owner.courts.base);
   };
 
   const handleDeactivate = (courtId: string) => {
@@ -122,7 +123,7 @@ export default function OwnerCourtsPage() {
             </p>
           </div>
           <Button asChild>
-            <Link href="/owner/courts/new">
+            <Link href={appRoutes.owner.courts.new}>
               <Plus className="mr-2 h-4 w-4" />
               Add New Court
             </Link>

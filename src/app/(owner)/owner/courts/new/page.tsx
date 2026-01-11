@@ -13,6 +13,7 @@ import {
   useCourtForm,
 } from "@/features/owner/hooks/use-court-form";
 import { AppShell } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { useTRPC } from "@/trpc/client";
 
 export default function NewCourtPage() {
@@ -34,7 +35,7 @@ export default function NewCourtPage() {
     onSuccess: (result) => {
       toast.success("Court created successfully!");
       // Redirect to slots page for the newly created court
-      router.push(`/owner/courts/${result.courtId}/slots`);
+      router.push(appRoutes.owner.courts.slots(result.courtId));
     },
   });
 
@@ -42,7 +43,7 @@ export default function NewCourtPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = "/login";
+    window.location.href = appRoutes.login.from(appRoutes.owner.courts.new);
   };
 
   const handleSaveDraft = (
@@ -56,7 +57,7 @@ export default function NewCourtPage() {
   };
 
   const handleCancel = () => {
-    router.push("/owner/courts");
+    router.push(appRoutes.owner.courts.base);
   };
 
   // Show loading state while fetching organization
@@ -70,7 +71,7 @@ export default function NewCourtPage() {
 
   // This shouldn't happen due to layout guard, but handle gracefully
   if (!organization) {
-    router.push("/owner/onboarding");
+    router.push(appRoutes.owner.onboarding);
     return null;
   }
 
@@ -102,10 +103,10 @@ export default function NewCourtPage() {
           title="Create New Court"
           description="Add a new court to your organization"
           breadcrumbs={[
-            { label: "My Courts", href: "/owner/courts" },
+            { label: "My Courts", href: appRoutes.owner.courts.base },
             { label: "Create" },
           ]}
-          backHref="/owner/courts"
+          backHref={appRoutes.owner.courts.base}
         />
 
         {/* Form */}

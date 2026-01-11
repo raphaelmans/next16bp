@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { UserDropdown } from "@/features/discovery/components/user-dropdown";
 import { KudosLogo } from "@/shared/components/kudos";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface PlayerNavbarProps {
   user: {
@@ -24,7 +25,10 @@ export function PlayerNavbar({
   return (
     <div className="flex flex-1 items-center justify-between">
       <div className="flex items-center gap-3">
-        <Link href="/home" className="flex items-center gap-2 hover:opacity-80">
+        <Link
+          href={appRoutes.home.base}
+          className="flex items-center gap-2 hover:opacity-80"
+        >
           <KudosLogo size={28} variant="icon" />
           <span className="hidden sm:inline text-sm font-heading font-semibold">
             KudosCourts

@@ -9,6 +9,7 @@ import {
   formatDateShort,
   formatTimeRange,
 } from "@/shared/lib/format";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface OrderSummaryProps {
   timeSlot: {
@@ -80,11 +81,17 @@ export function OrderSummary({
             className="text-sm leading-snug cursor-pointer"
           >
             I agree to the{" "}
-            <a href="/terms" className="text-primary hover:underline">
+            <a
+              href={appRoutes.terms.base}
+              className="text-primary hover:underline"
+            >
               Terms and Conditions
             </a>{" "}
             and{" "}
-            <a href="/privacy" className="text-primary hover:underline">
+            <a
+              href={appRoutes.privacy.base}
+              className="text-primary hover:underline"
+            >
               Privacy Policy
             </a>
           </Label>

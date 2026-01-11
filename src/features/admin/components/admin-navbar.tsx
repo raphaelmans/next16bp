@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { KudosLogo } from "@/shared/components/kudos";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface AdminNavbarProps {
   user?: {
@@ -37,7 +38,10 @@ export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
     <div className="flex flex-1 items-center justify-between">
       {/* Left side - Logo and Admin badge */}
       <div className="flex items-center gap-4">
-        <Link href="/home" className="flex items-center gap-2 hover:opacity-80">
+        <Link
+          href={appRoutes.home.base}
+          className="flex items-center gap-2 hover:opacity-80"
+        >
           <KudosLogo size={28} variant="icon" />
         </Link>
         <Badge
@@ -89,13 +93,13 @@ export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/courts">
+                <Link href={appRoutes.courts.base}>
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to Player View
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/reservations">
+                <Link href={appRoutes.reservations.base}>
                   <CalendarDays className="mr-2 h-4 w-4" />
                   My Reservations
                 </Link>
@@ -104,7 +108,7 @@ export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
               {/* TODO: Show conditionally based on user having an organization */}
               {isOwner && (
                 <DropdownMenuItem asChild>
-                  <Link href="/owner">
+                  <Link href={appRoutes.owner.base}>
                     <Building2 className="mr-2 h-4 w-4" />
                     Owner Dashboard
                   </Link>
@@ -112,7 +116,7 @@ export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
               )}
               {isOwner && <DropdownMenuSeparator />}
               <DropdownMenuItem asChild>
-                <Link href="/account/profile">
+                <Link href={appRoutes.account.profile}>
                   <User className="mr-2 h-4 w-4" />
                   Profile
                 </Link>

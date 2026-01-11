@@ -24,6 +24,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { KudosLogo } from "@/shared/components/kudos";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface PlayerSidebarProps {
   user?: {
@@ -36,10 +37,14 @@ interface PlayerSidebarProps {
 }
 
 const playerNavItems = [
-  { title: "Home", href: "/home", icon: Home },
-  { title: "Courts", href: "/courts", icon: MapPin },
-  { title: "Reservations", href: "/reservations", icon: CalendarDays },
-  { title: "Profile", href: "/account/profile", icon: User },
+  { title: "Home", href: appRoutes.home.base, icon: Home },
+  { title: "Courts", href: appRoutes.courts.base, icon: MapPin },
+  {
+    title: "Reservations",
+    href: appRoutes.reservations.base,
+    icon: CalendarDays,
+  },
+  { title: "Profile", href: appRoutes.account.profile, icon: User },
 ];
 
 export function PlayerSidebar({
@@ -50,8 +55,8 @@ export function PlayerSidebar({
   const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === "/home") {
-      return pathname === "/home";
+    if (href === appRoutes.home.base) {
+      return pathname === appRoutes.home.base;
     }
     return pathname.startsWith(href);
   };
@@ -106,14 +111,17 @@ export function PlayerSidebar({
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={pathname.startsWith("/owner")}
+                      isActive={pathname.startsWith(appRoutes.owner.base)}
                       className={
-                        pathname.startsWith("/owner")
+                        pathname.startsWith(appRoutes.owner.base)
                           ? "bg-primary/10 text-primary border-l-2 border-primary"
                           : ""
                       }
                     >
-                      <Link href="/owner" className="font-heading">
+                      <Link
+                        href={appRoutes.owner.base}
+                        className="font-heading"
+                      >
                         <Building2 className="h-4 w-4" />
                         <span>Owner Dashboard</span>
                       </Link>
@@ -124,14 +132,17 @@ export function PlayerSidebar({
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      isActive={pathname.startsWith("/admin")}
+                      isActive={pathname.startsWith(appRoutes.admin.base)}
                       className={
-                        pathname.startsWith("/admin")
+                        pathname.startsWith(appRoutes.admin.base)
                           ? "bg-primary/10 text-primary border-l-2 border-primary"
                           : ""
                       }
                     >
-                      <Link href="/admin" className="font-heading">
+                      <Link
+                        href={appRoutes.admin.base}
+                        className="font-heading"
+                      >
                         <Shield className="h-4 w-4" />
                         <span>Admin Dashboard</span>
                       </Link>

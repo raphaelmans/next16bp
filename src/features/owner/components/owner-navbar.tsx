@@ -21,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { KudosLogo } from "@/shared/components/kudos";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface OwnerNavbarProps {
   organizationName?: string;
@@ -43,7 +44,10 @@ export function OwnerNavbar({
     <div className="flex flex-1 items-center justify-between">
       {/* Left side - Logo and Organization name */}
       <div className="flex items-center gap-4">
-        <Link href="/home" className="flex items-center gap-2 hover:opacity-80">
+        <Link
+          href={appRoutes.home.base}
+          className="flex items-center gap-2 hover:opacity-80"
+        >
           <KudosLogo size={28} variant="icon" />
         </Link>
         {organizationName && (
@@ -93,13 +97,13 @@ export function OwnerNavbar({
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/courts">
+                <Link href={appRoutes.courts.base}>
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to Player View
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/reservations">
+                <Link href={appRoutes.reservations.base}>
                   <CalendarDays className="mr-2 h-4 w-4" />
                   My Reservations
                 </Link>
@@ -108,7 +112,7 @@ export function OwnerNavbar({
               {/* TODO: Show conditionally based on user role being admin */}
               {isAdmin && (
                 <DropdownMenuItem asChild>
-                  <Link href="/admin">
+                  <Link href={appRoutes.admin.base}>
                     <Shield className="mr-2 h-4 w-4" />
                     Admin Dashboard
                   </Link>
@@ -116,13 +120,13 @@ export function OwnerNavbar({
               )}
               {isAdmin && <DropdownMenuSeparator />}
               <DropdownMenuItem asChild>
-                <Link href="/account/profile">
+                <Link href={appRoutes.account.profile}>
                   <User className="mr-2 h-4 w-4" />
                   Profile
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/owner/settings">
+                <Link href={appRoutes.owner.settings}>
                   <Settings className="mr-2 h-4 w-4" />
                   Settings
                 </Link>

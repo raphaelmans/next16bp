@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { appRoutes } from "@/shared/lib/app-routes";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,22 +50,22 @@ interface OwnerSidebarProps {
 const navItems = [
   {
     title: "Dashboard",
-    href: "/owner",
+    href: appRoutes.owner.base,
     icon: LayoutDashboard,
   },
   {
     title: "My Courts",
-    href: "/owner/courts",
+    href: appRoutes.owner.courts.base,
     icon: MapPin,
   },
   {
     title: "Reservations",
-    href: "/owner/reservations",
+    href: appRoutes.owner.reservations,
     icon: CalendarDays,
   },
   {
     title: "Settings",
-    href: "/owner/settings",
+    href: appRoutes.owner.settings,
     icon: Settings,
   },
 ];
@@ -77,8 +78,8 @@ export function OwnerSidebar({
   const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === "/owner") {
-      return pathname === "/owner";
+    if (href === appRoutes.owner.base) {
+      return pathname === appRoutes.owner.base;
     }
     return pathname.startsWith(href);
   };
@@ -122,7 +123,7 @@ export function OwnerSidebar({
                 {organizations.map((org) => (
                   <DropdownMenuItem key={org.id} asChild>
                     <Link
-                      href={`/owner?org=${org.id}`}
+                      href={`${appRoutes.owner.base}?org=${org.id}`}
                       className="flex items-center gap-2"
                     >
                       <div className="flex h-6 w-6 items-center justify-center rounded bg-muted">

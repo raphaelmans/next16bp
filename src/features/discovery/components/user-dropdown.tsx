@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { appRoutes } from "@/shared/lib/app-routes";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -89,13 +90,13 @@ export function UserDropdown({
         {/* Player Links */}
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/reservations" className="cursor-pointer">
+            <Link href={appRoutes.reservations.base} className="cursor-pointer">
               <Calendar className="mr-2 h-4 w-4" />
               <span>My Reservations</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/account/profile" className="cursor-pointer">
+            <Link href={appRoutes.account.profile} className="cursor-pointer">
               <User className="mr-2 h-4 w-4" />
               <span>Profile</span>
             </Link>
@@ -109,7 +110,7 @@ export function UserDropdown({
             <DropdownMenuGroup>
               {isOwner && (
                 <DropdownMenuItem asChild>
-                  <Link href="/owner" className="cursor-pointer">
+                  <Link href={appRoutes.owner.base} className="cursor-pointer">
                     <Building className="mr-2 h-4 w-4" />
                     <span>Owner Dashboard</span>
                   </Link>
@@ -117,7 +118,7 @@ export function UserDropdown({
               )}
               {isAdmin && (
                 <DropdownMenuItem asChild>
-                  <Link href="/admin" className="cursor-pointer">
+                  <Link href={appRoutes.admin.base} className="cursor-pointer">
                     <Shield className="mr-2 h-4 w-4" />
                     <span>Admin Dashboard</span>
                   </Link>

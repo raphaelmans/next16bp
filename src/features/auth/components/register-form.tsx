@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { type RegisterDTO, RegisterSchema } from "@/modules/auth/dtos";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { useRegister } from "../hooks/use-auth";
 
 export function RegisterForm() {
@@ -32,7 +33,7 @@ export function RegisterForm() {
   const registerMutation = useRegister();
 
   // Get redirect URL from query params for preserving through auth flow
-  const redirectUrl = searchParams.get("redirect") || "/courts";
+  const redirectUrl = searchParams.get("redirect") || appRoutes.courts.base;
 
   const form = useForm<RegisterDTO>({
     resolver: zodResolver(RegisterSchema),
@@ -57,9 +58,9 @@ export function RegisterForm() {
 
   // Preserve redirect param when linking to login
   const loginHref =
-    redirectUrl !== "/courts"
-      ? `/login?redirect=${encodeURIComponent(redirectUrl)}`
-      : "/login";
+    redirectUrl !== appRoutes.courts.base
+      ? `${appRoutes.login.base}?redirect=${encodeURIComponent(redirectUrl)}`
+      : appRoutes.login.base;
 
   if (success) {
     return (

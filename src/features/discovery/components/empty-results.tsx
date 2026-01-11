@@ -2,6 +2,7 @@
 
 import { MapPin } from "lucide-react";
 import { EmptyState } from "@/shared/components/kudos";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface EmptyResultsProps {
   query?: string;
@@ -26,7 +27,7 @@ export function EmptyResults({ query, onClearFilters }: EmptyResultsProps) {
             }
           : {
               label: "Browse all courts",
-              href: "/courts",
+              href: appRoutes.courts.base,
             }
       }
     />

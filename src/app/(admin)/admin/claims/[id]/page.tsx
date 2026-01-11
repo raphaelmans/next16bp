@@ -53,6 +53,7 @@ import {
 import { useLogout, useSession } from "@/features/auth";
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 const statusConfig = {
   pending: {
@@ -94,7 +95,9 @@ export default function ClaimDetailPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = "/login";
+    window.location.href = appRoutes.login.from(
+      appRoutes.admin.claims.detail(claimId),
+    );
   };
 
   const handleApprove = (notes?: string) => {
@@ -103,7 +106,7 @@ export default function ClaimDetailPage() {
       {
         onSuccess: () => {
           toast.success("Claim approved successfully");
-          router.push("/admin/claims");
+          router.push(appRoutes.admin.claims.base);
         },
         onError: () => {
           toast.error("Failed to approve claim");
@@ -118,7 +121,7 @@ export default function ClaimDetailPage() {
       {
         onSuccess: () => {
           toast.success("Claim rejected");
-          router.push("/admin/claims");
+          router.push(appRoutes.admin.claims.base);
         },
         onError: () => {
           toast.error("Failed to reject claim");
@@ -178,7 +181,7 @@ export default function ClaimDetailPage() {
             The claim you&apos;re looking for doesn&apos;t exist.
           </p>
           <Button asChild>
-            <Link href="/admin/claims">Back to Claims</Link>
+            <Link href={appRoutes.admin.claims.base}>Back to Claims</Link>
           </Button>
         </div>
       </AppShell>
@@ -205,11 +208,13 @@ export default function ClaimDetailPage() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/admin">Admin</BreadcrumbLink>
+              <BreadcrumbLink href={appRoutes.admin.base}>Admin</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/admin/claims">Claims</BreadcrumbLink>
+              <BreadcrumbLink href={appRoutes.admin.claims.base}>
+                Claims
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -221,7 +226,7 @@ export default function ClaimDetailPage() {
         {/* Back button and header */}
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link href="/admin/claims">
+            <Link href={appRoutes.admin.claims.base}>
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>

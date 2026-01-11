@@ -11,6 +11,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { appRoutes } from "@/shared/lib/app-routes";
 
 interface PaymentExpiredProps {
   courtName?: string;
@@ -32,7 +33,7 @@ export function PaymentExpired({ courtName }: PaymentExpiredProps) {
       </EmptyHeader>
       <EmptyContent>
         <Button asChild>
-          <Link href="/courts">Book Another Slot</Link>
+          <Link href={appRoutes.courts.base}>Book Another Slot</Link>
         </Button>
       </EmptyContent>
     </Empty>

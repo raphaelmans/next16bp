@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { useTRPC } from "@/trpc/client";
 
 export function OwnerCtaSection() {
@@ -48,7 +49,7 @@ export function OwnerCtaSection() {
         </CardHeader>
         <CardContent>
           <Button className="w-full" asChild>
-            <Link href="/owner">
+            <Link href={appRoutes.owner.base}>
               Go to Dashboard
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -72,7 +73,7 @@ export function OwnerCtaSection() {
       </CardHeader>
       <CardContent>
         <Button className="w-full" asChild>
-          <Link href="/owner/onboarding">
+          <Link href={appRoutes.owner.onboarding}>
             <Plus className="mr-2 h-4 w-4" />
             Become a Partner
           </Link>

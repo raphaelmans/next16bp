@@ -11,6 +11,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { useMyReservations } from "../hooks/use-my-reservations";
 import {
   type ReservationTab,
@@ -81,7 +82,7 @@ export function ReservationList() {
         {tab === "upcoming" && (
           <EmptyContent>
             <Button asChild>
-              <Link href="/courts">
+              <Link href={appRoutes.courts.base}>
                 <Search className="mr-2 h-4 w-4" />
                 Find Courts
               </Link>
