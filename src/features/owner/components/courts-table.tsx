@@ -13,7 +13,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { appRoutes } from "@/shared/lib/app-routes";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -30,6 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { appRoutes } from "@/shared/lib/app-routes";
 import type { OwnerCourt } from "../hooks/use-owner-courts";
 
 interface CourtsTableProps {

@@ -1,8 +1,8 @@
 "use client";
 
 import { Image as ImageIcon, MapPin } from "lucide-react";
-import { useEffect, useState } from "react";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";

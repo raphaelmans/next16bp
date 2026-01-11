@@ -11,20 +11,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { useLogout, useSession } from "@/features/auth";
-import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
-import { RejectModal } from "@/features/owner/components/reject-modal";
 import {
   OwnerNavbar,
   OwnerSidebar,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
+import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
+import { RejectModal } from "@/features/owner/components/reject-modal";
+import { useOwnerOrganization } from "@/features/owner/hooks/use-owner-organization";
 import {
-  type Reservation,
   useConfirmReservation,
   useOwnerReservations,
   useRejectReservation,
 } from "@/features/owner/hooks/use-owner-reservations";
-import { useOwnerOrganization } from "@/features/owner/hooks/use-owner-organization";
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";

@@ -13,12 +13,12 @@ import { ReservationActionsCard } from "@/features/reservation/components/reserv
 import { ReservationExpired } from "@/features/reservation/components/reservation-expired";
 import { StatusBanner } from "@/features/reservation/components/status-banner";
 import { Container } from "@/shared/components/layout";
+import { appRoutes } from "@/shared/lib/app-routes";
 import {
   formatCurrency,
   formatDateShort,
   formatTimeRange,
 } from "@/shared/lib/format";
-import { appRoutes } from "@/shared/lib/app-routes";
 import { useTRPC } from "@/trpc/client";
 
 export default function ReservationDetailPage() {

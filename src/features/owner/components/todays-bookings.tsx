@@ -5,8 +5,8 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { formatTime } from "@/shared/lib/format";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { formatTime } from "@/shared/lib/format";
 
 type BookingStatus = "booked" | "pending" | "available" | "blocked";
 

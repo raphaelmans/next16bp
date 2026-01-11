@@ -1,5 +1,4 @@
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import { requireAdminSession } from "@/shared/infra/auth/server-session";
 import { appRoutes } from "@/shared/lib/app-routes";
 

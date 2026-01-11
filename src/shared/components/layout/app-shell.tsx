@@ -1,8 +1,8 @@
 "use client";
 
 import type * as React from "react";
-import { DashboardLayout } from "./dashboard-layout";
 import { cn } from "@/lib/utils";
+import { DashboardLayout } from "./dashboard-layout";
 
 interface AppShellProps {
   children: React.ReactNode;
