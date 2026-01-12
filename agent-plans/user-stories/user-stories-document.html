@@ -1,73 +1,626 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KudosCourts User Stories - Checkpoint 03</title>
-  <style>
-@page { margin: 20mm 15mm; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: "Segoe UI", Tahoma, sans-serif; line-height: 1.6; color: #333; background: #fff; padding: 20px; }
-    h1 { font-size: 28pt; font-weight: 700; margin: 40px 0 20px; border-bottom: 3px solid #2563eb; padding-bottom: 10px; }
-    h2 { font-size: 20pt; font-weight: 600; margin: 30px 0 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; }
-    h3 { font-size: 15pt; font-weight: 600; margin: 20px 0 10px; color: #2563eb; }
-    h4 { font-size: 12pt; font-weight: 600; margin: 15px 0 8px; color: #4b5563; }
-    p { margin: 10px 0; font-size: 11pt; }
-    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 10.5pt; }
-    th, td { border: 1px solid #e5e7eb; padding: 8px; text-align: left; }
-    th { background: #f3f4f6; font-weight: 600; }
-    .cover-page { text-align: center; padding: 80px 40px; page-break-after: always; }
-    .cover-title { font-size: 38pt; font-weight: 700; margin-bottom: 18px; }
-    .cover-subtitle { font-size: 20pt; color: #666; margin-bottom: 50px; }
-    .cover-meta { margin: 40px auto; padding: 30px; background: #f8f9fa; border-left: 4px solid #2563eb; max-width: 600px; }
-    .cover-meta-item { font-size: 12pt; margin: 12px 0; }
-    .cover-meta-label { font-weight: 600; display: inline-block; width: 140px; }
-    .toc { page-break-after: always; }
-    .toc-title { font-size: 24pt; font-weight: 700; margin-bottom: 20px; border-bottom: 3px solid #2563eb; padding-bottom: 10px; }
-    .toc-item { display: flex; justify-content: space-between; background: #f8f9fa; padding: 10px 14px; border-radius: 6px; margin: 10px 0; }
-    .domain-section { page-break-before: always; }
-    .domain-overview { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 24px; border-radius: 12px; margin: 20px 0; }
-    .domain-overview h3 { color: #fff; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 8px; }
-    .story-card { background: #f8f9fa; border-left: 5px solid #2563eb; padding: 20px; border-radius: 8px; margin: 20px 0; }
-    .story-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .story-id { font-size: 13pt; font-weight: 700; color: #2563eb; }
-    .story-status { padding: 4px 12px; border-radius: 16px; font-size: 9pt; font-weight: 600; }
-    .status-active { background: #dcfce7; color: #166534; }
-    .status-deferred { background: #fef9c3; color: #854d0e; }
-    .criteria-section { margin-top: 12px; }
-    .criterion { margin: 10px 0; }
-    .criterion-title { font-weight: 600; margin-bottom: 4px; }
-    .story-narrative { font-style: italic; margin: 8px 0 12px; }
-    .pill { display: inline-block; padding: 4px 10px; border-radius: 12px; background: #e5e7eb; font-size: 9pt; margin-right: 6px; }
-  </style>
-</head>
-<body>
-  <div class="cover-page">
-    <div class="cover-title">KudosCourts</div>
-    <div class="cover-subtitle">User Stories & Product Requirements</div>
-    <div class="cover-meta">
-      <div class="cover-meta-item"><span class="cover-meta-label">Checkpoint:</span> 03</div>
-      <div class="cover-meta-item"><span class="cover-meta-label">Date:</span> 2026-01-11</div>
-      <div class="cover-meta-item"><span class="cover-meta-label">Total Stories:</span> 12</div>
-      <div class="cover-meta-item"><span class="cover-meta-label">Status:</span> 12 Active</div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KudosCourts · User Stories · Checkpoint 04</title>
+    <style>
+/**
+ * User Story PDF Template Styles
+ *
+ * Professional styling for user story PDF exports.
+ * Copy this CSS into your HTML document's <style> tag.
+ */
+
+@page {
+    margin: 20mm 15mm;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: white;
+    padding: 20px;
+}
+
+/* Cover Page */
+.cover-page {
+    text-align: center;
+    padding: 100px 40px;
+    page-break-after: always;
+}
+
+.cover-title {
+    font-size: 42pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+}
+
+.cover-subtitle {
+    font-size: 24pt;
+    color: #666;
+    margin-bottom: 60px;
+    font-weight: 300;
+}
+
+.cover-meta {
+    margin: 60px 0;
+    padding: 40px;
+    background: #f8f9fa;
+    border-left: 4px solid #2563eb;
+}
+
+.cover-meta-item {
+    font-size: 14pt;
+    margin: 15px 0;
+    color: #555;
+}
+
+.cover-meta-label {
+    font-weight: 600;
+    color: #1a1a1a;
+    display: inline-block;
+    width: 120px;
+}
+
+/* Table of Contents */
+.toc {
+    page-break-after: always;
+}
+
+.toc-title {
+    font-size: 28pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #2563eb;
+    padding-bottom: 15px;
+}
+
+.toc-item {
+    margin: 15px 0;
+    padding: 10px 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.toc-item-title {
+    font-size: 12pt;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+/* Headings */
+h1 {
+    font-size: 32pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 40px 0 25px 0;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #2563eb;
+    page-break-after: avoid;
+}
+
+h2 {
+    font-size: 24pt;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 35px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e5e7eb;
+    page-break-after: avoid;
+}
+
+h3 {
+    font-size: 16pt;
+    font-weight: 600;
+    color: #2563eb;
+    margin: 25px 0 15px 0;
+    page-break-after: avoid;
+}
+
+h4 {
+    font-size: 13pt;
+    font-weight: 600;
+    color: #4b5563;
+    margin: 20px 0 12px 0;
+    page-break-after: avoid;
+}
+
+p {
+    margin: 12px 0;
+    text-align: justify;
+    font-size: 11pt;
+}
+
+/* Domain Sections */
+.domain-section {
+    page-break-before: always;
+    margin-bottom: 40px;
+}
+
+.domain-overview {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin: 30px 0;
+    page-break-inside: avoid;
+}
+
+.domain-overview h3 {
+    color: white;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+/* Story Cards */
+.story-card {
+    background: #f8f9fa;
+    border-left: 5px solid #2563eb;
+    padding: 25px;
+    margin: 25px 0;
+    border-radius: 8px;
+    page-break-inside: avoid;
+}
+
+.story-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 15px;
+}
+
+.story-id {
+    font-size: 14pt;
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.story-status {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 10pt;
+    font-weight: 600;
+}
+
+.status-active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-superseded {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-deferred {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-fixed {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.story-title {
+    font-size: 18pt;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 15px 0;
+}
+
+.story-narrative {
+    font-style: italic;
+    color: #4b5563;
+    padding: 15px;
+    background: white;
+    border-radius: 6px;
+    margin: 15px 0;
+    font-size: 11pt;
+}
+
+/* Acceptance Criteria */
+.criteria-section {
+    margin: 20px 0;
+}
+
+.criterion {
+    margin: 12px 0;
+    padding-left: 20px;
+    border-left: 3px solid #93c5fd;
+    page-break-inside: avoid;
+}
+
+.criterion-title {
+    font-weight: 600;
+    color: #1e40af;
+    font-size: 11pt;
+    margin-bottom: 8px;
+}
+
+.criterion-description {
+    color: #4b5563;
+    font-size: 10pt;
+    line-height: 1.6;
+    margin: 5px 0;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 10pt;
+    page-break-inside: avoid;
+}
+
+thead {
+    background: #1e40af;
+    color: white;
+}
+
+th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 10pt;
+}
+
+td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+tbody tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+tbody tr:hover {
+    background: #eff6ff;
+}
+
+/* Info Boxes */
+.info-box {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 6px;
+    page-break-inside: avoid;
+}
+
+/* Lists */
+ul, ol {
+    margin: 15px 0;
+    padding-left: 30px;
+}
+
+li {
+    margin: 8px 0;
+    font-size: 10pt;
+}
+
+/* Summary Stats */
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.stat-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    border-top: 4px solid #2563eb;
+}
+
+.stat-number {
+    font-size: 36pt;
+    font-weight: 700;
+    color: #2563eb;
+    margin: 10px 0;
+}
+
+.stat-label {
+    font-size: 11pt;
+    color: #666;
+    font-weight: 500;
+}
+
+/* Code */
+code {
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 9pt;
+    color: #e11d48;
+}
+
+/* Footer */
+.footer-note {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 9pt;
+    color: #666;
+    text-align: center;
+}
+
+.small-muted {
+  color: #6b7280;
+  font-size: 10pt;
+}
+</style>
+  </head>
+  <body>
+    <div class="cover-page">
+      <div class="cover-title">KudosCourts</div>
+      <div class="cover-subtitle">User Stories &amp; Product Requirements</div>
+      <div class="cover-meta">
+        <div class="cover-meta-item"><span class="cover-meta-label">Checkpoint:</span> 04</div>
+        <div class="cover-meta-item"><span class="cover-meta-label">Date:</span> 2026-01-12</div>
+        <div class="cover-meta-item"><span class="cover-meta-label">Total:</span> 11 stories</div>
+        <div class="cover-meta-item"><span class="cover-meta-label">Status:</span> 11 Active · 0 Superseded · 0 Deferred</div>
+      </div>
+      <div class="footer-note">Generated from `agent-plans/user-stories/checkpoint-04.md`</div>
     </div>
-  </div>
 
-  <div class="toc">
-    <div class="toc-title">Table of Contents</div>
-    <div class="toc-item"><span class="toc-item-title">Executive Summary</span><span>1</span></div><div class="toc-item"><span class="toc-item-title">Checkpoint Overview</span><span>2</span></div><div class="toc-item"><span class="toc-item-title">Domain 02-court-creation</span><span>3</span></div><div class="toc-item"><span class="toc-item-title">Domain 06-court-reservation</span><span>4</span></div><div class="toc-item"><span class="toc-item-title">Domain 07-owner-confirmation</span><span>5</span></div><div class="toc-item"><span class="toc-item-title">Domain 09-client-profile</span><span>6</span></div><div class="toc-item"><span class="toc-item-title">Domain 11-ui-revamp</span><span>7</span></div>
-  </div>
+    <div class="toc">
+      <div class="toc-title">Table of Contents</div>
+      <div class="toc-item"><span class="toc-item-title">Executive Summary</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">Checkpoint 04 Overview</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">Domain: 14-place-court-migration</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">US-14-01 · Player Discovers Places With Sport Filters</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">US-14-02 · Player Views Place Detail And Chooses Court Unit</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">US-14-03 · Player Chooses Duration In 60-Minute Increments</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">US-14-04 · Player Books A Specific Court (Mutual Confirmation)</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">US-14-05 · Player Books “Any Available Court” At A Place</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">US-14-06 · Owner Creates A Place With Multiple Courts</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">US-14-07 · Owner Configures Day-Specific Court Hours (Incl. Overnight)</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">US-14-08 · Owner Configures Hourly Pricing Rules Per Court</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">US-14-09 · Owner Publishes 60-Minute Slots With Prices</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">US-14-10 · Platform Migrates Existing Court Listings Into Place/Court Model</span><span class="small-muted">—</span></div>
+      <div class="toc-item"><span class="toc-item-title">US-14-11 · Owner Filters Slots/Reservations By Place And Court</span><span class="small-muted">—</span></div>
+    </div>
 
-  <h1>Executive Summary</h1>
-  <p>Captured new owner-focused court management and reservation ops stories (wizard creation, pricing visibility, active reservation handling, alerts), plus client profile and UI revamp story updates. These additions close UX gaps for pricing accuracy, owner action workflows, and navigation consistency.</p>
+    <h1>Executive Summary</h1>
+    <p>
+      This checkpoint captures the full v1.2 Place/Court migration domain. Player discovery and booking flows
+      operate on <strong>Places</strong> (venues) containing multiple <strong>Court units</strong> (bookable units),
+      with 60-minute slot granularity, time-window pricing, and support for “Any available court” selection.
+    </p>
 
-  <h1>Checkpoint Overview</h1>
-  <h3>Domains Touched</h3>
-  <table><thead><tr><th>Domain</th><th>Stories Added</th></tr></thead><tbody><tr><td>02-court-creation</td><td>2</td></tr><tr><td>06-court-reservation</td><td>1</td></tr><tr><td>07-owner-confirmation</td><td>3</td></tr><tr><td>09-client-profile</td><td>3</td></tr><tr><td>11-ui-revamp</td><td>3</td></tr></tbody></table>
+    <div class="summary-stats">
+      <div class="stat-card"><div class="stat-number">11</div><div class="stat-label">Total Stories</div></div>
+      <div class="stat-card"><div class="stat-number">11</div><div class="stat-label">Active</div></div>
+      <div class="stat-card"><div class="stat-number">0</div><div class="stat-label">Deferred/Superseded</div></div>
+    </div>
 
-  <h3>Key Decisions</h3>
-  <ul><li>Added explicit owner reservation operations stories to align slot list UX with the reservation state machine.</li><li>Introduced an always-available alerts panel concept with polling for active reservation workflows.</li><li>Scoped court management improvements to wizard creation and editable pricing defaults to prevent booking mismatches.</li></ul>
+    <h1>Checkpoint 04 Overview</h1>
 
-  <div class="domain-section"><h2>Domain 02-court-creation</h2><div class="story-card"><div class="story-header"><span class="story-id">US-02-05</span><span class="story-status status-active">Active</span></div><div class="story-title">Owner Creates Court via Setup Wizard</div><div class="story-narrative">As an **organization owner**, I want to **create a court using a guided setup wizard** so that **I can complete each required section step-by-step and avoid missing information**.</div><div class="criteria-section"><h4>Acceptance Criteria</h4><ul><li>Given I am an owner on `/owner/courts`</li><li>When I click &quot;Add New Court&quot;</li><li>Then I land on `/owner/courts/new` with a setup wizard</li><li>And the active step is stored in the `step` query param via nuqs</li><li>Given I am in the wizard</li><li>When I click Next or Back</li><li>Then the `step` query param updates</li><li>And browser back/forward preserves the current step</li><li>Given I am on the Basic step</li><li>When the court name is empty</li><li>Then Next is disabled and inline validation appears</li><li>Given I am on the Location step</li><li>When address or city is missing</li><li>Then Next is disabled and inline validation appears</li><li>Given I am on the Payment step for a paid court</li><li>When the default hourly rate is empty</li><li>Then submission is disabled and an error is shown</li><li>Given all steps are complete</li><li>When I submit the final step</li><li>Then the court is created with reservable settings</li><li>And I am redirected to `/owner/courts/[id]/slots` with a success toast</li><li>Given I am in the wizard</li><li>When I click Cancel</li><li>Then I return to `/owner/courts` without creating a court</li></ul></div><h4>Edge Cases</h4><table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Invalid or missing `step` param</td><td>Default to first step</td></tr><tr><td>Refresh mid-wizard</td><td>Stay on same step with data preserved</td></tr><tr><td>Navigate directly to later step</td><td>Show step but prevent submit until required fields complete</td></tr><tr><td>Network error on submit</td><td>Show error toast and keep data</td></tr></tbody></table><h4>Form Fields</h4><table><thead><tr><th>Field</th><th>Type</th><th>Required</th></tr></thead><tbody><tr><td>Name</td><td>text</td><td>Yes</td></tr><tr><td>Address</td><td>text</td><td>Yes</td></tr><tr><td>City</td><td>select</td><td>Yes</td></tr><tr><td>Latitude</td><td>number</td><td>No</td></tr><tr><td>Longitude</td><td>number</td><td>No</td></tr><tr><td>Amenities</td><td>multi-select</td><td>No</td></tr><tr><td>Default Hourly Rate</td><td>number</td><td>No (Yes if paid)</td></tr><tr><td>Currency</td><td>select</td><td>Yes</td></tr><tr><td>Payment Instructions</td><td>textarea</td><td>No</td></tr><tr><td>GCash Number</td><td>text</td><td>No</td></tr><tr><td>Bank Name</td><td>text</td><td>No</td></tr><tr><td>Bank Account Number</td><td>text</td><td>No</td></tr><tr><td>Bank Account Name</td><td>text</td><td>No</td></tr></tbody></table></div><div class="story-card"><div class="story-header"><span class="story-id">US-02-06</span><span class="story-status status-active">Active</span></div><div class="story-title">Owner Edits Court Details &amp; Pricing</div><div class="story-narrative">As an **organization owner**, I want to **edit my court details and pricing settings** so that **players always see accurate information and rates when booking**.</div><div class="criteria-section"><h4>Acceptance Criteria</h4><ul><li>Given I am on `/owner/courts`</li><li>When I open the actions menu and click &quot;Edit Details&quot;</li><li>Then I navigate to `/owner/courts/[id]/edit`</li><li>Given I am on the edit page</li><li>When the form loads</li><li>Then I see the current court name, address, city, location, amenities, and payment details pre-filled</li><li>Given I change basic information (name, address, city, coordinates)</li><li>When I save changes</li><li>Then the court details update and display on the public court page</li><li>Given I update payment settings (free vs paid, default hourly rate, currency, payment instructions, GCash, bank transfer)</li><li>When I save changes</li><li>Then the court pricing configuration updates successfully</li><li>Given I update the default hourly rate</li><li>When future time slots without a custom price exist</li><li>Then those slots reflect the new default rate in booking flows</li><li>And custom-priced slots keep their overridden price</li><li>Given I save changes</li><li>When the update succeeds</li><li>Then I see a success confirmation and stay on the edit page or return to `/owner/courts`</li></ul></div><h4>Edge Cases</h4><table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Court not found</td><td>Show 404 or redirect to courts list</td></tr><tr><td>Not court owner</td><td>Show forbidden error and redirect</td></tr><tr><td>Switch to free court</td><td>Default rate is cleared and pricing displays as Free</td></tr><tr><td>Disable payment methods</td><td>Corresponding details are cleared</td></tr><tr><td>Network error</td><td>Show error toast and keep form values</td></tr></tbody></table><h4>Form Fields</h4><table><thead><tr><th>Field</th><th>Type</th><th>Required</th></tr></thead><tbody><tr><td>Name</td><td>text</td><td>Yes</td></tr><tr><td>Address</td><td>text</td><td>Yes</td></tr><tr><td>City</td><td>select</td><td>Yes</td></tr><tr><td>Latitude</td><td>number</td><td>No</td></tr><tr><td>Longitude</td><td>number</td><td>No</td></tr><tr><td>Amenities</td><td>multi-select</td><td>No</td></tr><tr><td>Free vs Paid</td><td>radio</td><td>Yes</td></tr><tr><td>Default Hourly Rate</td><td>number</td><td>No (Yes if paid)</td></tr><tr><td>Currency</td><td>select</td><td>Yes</td></tr><tr><td>Payment Instructions</td><td>textarea</td><td>No</td></tr><tr><td>GCash Number</td><td>text</td><td>No</td></tr><tr><td>Bank Name</td><td>text</td><td>No</td></tr><tr><td>Bank Account Number</td><td>text</td><td>No</td></tr><tr><td>Bank Account Name</td><td>text</td><td>No</td></tr></tbody></table></div></div> <div class="domain-section"><h2>Domain 06-court-reservation</h2><div class="story-card"><div class="story-header"><span class="story-id">US-06-03</span><span class="story-status status-active">Active</span></div><div class="story-title">Player Sees Correct Pricing During Booking</div><div class="story-narrative">As a **player**, I want to **see accurate pricing for paid courts during discovery and booking** so that **I understand the correct amount due before confirming a reservation**.</div><div class="criteria-section"><h4>Acceptance Criteria</h4><ul><li>Given I am on a reservable court detail page</li><li>When the court has a default hourly rate</li><li>Then the booking sidebar shows the correct price per hour</li><li>Given a time slot has no custom price</li><li>When I view available slots</li><li>Then the slot price uses the court’s default hourly rate</li><li>Given a time slot has its own custom price</li><li>When I view available slots</li><li>Then the slot price shows the custom price instead of the default</li><li>Given I select a time slot</li><li>When I view the booking summary</li><li>Then the total amount uses the slot’s custom price or the court default</li><li>Given I complete a paid reservation</li><li>When I reach the payment page</li><li>Then the amount due reflects the slot’s custom price or the court default</li><li>Given the court is marked free</li><li>When I view the booking sidebar or slots</li><li>Then pricing displays as &quot;Free&quot; with no currency amount</li></ul></div><h4>Edge Cases</h4><table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Default rate updated after slots exist</td><td>Slots without custom price reflect the new rate</td></tr><tr><td>Slot missing currency</td><td>Use court default currency</td></tr><tr><td>Default rate missing and slot price missing</td><td>Treat as Free</td></tr><tr><td>Mixed custom and default prices</td><td>Each slot displays its effective price</td></tr></tbody></table></div></div> <div class="domain-section"><h2>Domain 07-owner-confirmation</h2><div class="story-card"><div class="story-header"><span class="story-id">US-07-03</span><span class="story-status status-active">Active</span></div><div class="story-title">Owner Sees Accurate Slot Reservation Status</div><div class="story-narrative">As an **organization owner**, I want **slot list rows to show the correct reservation status and quick actions** so that **I can respond quickly without misleading payment indicators**.</div><div class="criteria-section"><h4>Acceptance Criteria</h4><ul><li>Given a slot is `HELD` and the reservation status is `AWAITING_PAYMENT`</li><li>When I view the slot list</li><li>Then the status label reads &quot;Awaiting payment&quot;</li><li>And the payment marker is not shown</li><li>And quick actions show: **View Reservation** and **Cancel/Expire**</li><li>Given a slot is `HELD` and the reservation status is `PAYMENT_MARKED_BY_USER`</li><li>When I view the slot list</li><li>Then the status label reads &quot;Payment marked&quot;</li><li>And quick actions show: **Confirm** and **Reject**</li><li>And the reject action requires a reason before submission</li><li>Given a slot is `AVAILABLE`, `BOOKED`, or `BLOCKED`</li><li>When I view the slot list</li><li>Then no payment indicators or confirmation actions appear</li><li>Given I confirm, reject, or cancel from the slot list</li><li>When the action succeeds</li><li>Then the slot list refreshes with the updated status</li><li>And the pending badge count updates in the sidebar</li><li>Given the slot list is loaded</li><li>When a slot is `HELD`</li><li>Then the UI uses the reservation status from the backend (not just slot status)</li><li>And if no reservation is returned, the UI shows a neutral &quot;Held&quot; label with no actions</li></ul></div><h4>Edge Cases</h4><table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Reservation expired while viewing</td><td>Label updates to &quot;Expired&quot; on refresh/poll</td></tr><tr><td>Duplicate actions</td><td>Buttons disable while mutation is pending</td></tr><tr><td>Network error on action</td><td>Show error toast and keep current state</td></tr><tr><td>Missing reservation link</td><td>Hide quick actions and show &quot;Held&quot; badge</td></tr></tbody></table></div><div class="story-card"><div class="story-header"><span class="story-id">US-07-04</span><span class="story-status status-active">Active</span></div><div class="story-title">Owner Manages Active Reservations with TTL</div><div class="story-narrative">As an **organization owner**, I want a **dedicated page for active reservations with TTL** so that **I can track pending payments, confirm marked payments, and respond before reservations expire**.</div><div class="criteria-section"><h4>Acceptance Criteria</h4><ul><li>Given I am an owner</li><li>When I navigate to `/owner/reservations/active`</li><li>Then I see a list of active reservations grouped by status</li><li>And each reservation links to `/owner/reservations/[id]`</li><li>Given a reservation is `AWAITING_PAYMENT`</li><li>When I view the active list</li><li>Then it is labeled &quot;Awaiting payment&quot; with a visible TTL countdown</li><li>Given a reservation is `PAYMENT_MARKED_BY_USER`</li><li>When I view the active list</li><li>Then it is labeled &quot;Payment marked&quot; with the player details</li><li>Given a reservation is `AWAITING_PAYMENT`</li><li>When I view the active list</li><li>Then I can **View Reservation** or **Cancel/Expire**</li><li>Given a reservation is `PAYMENT_MARKED_BY_USER`</li><li>When I view the active list</li><li>Then I can **Confirm** or **Reject** with a required reason</li><li>Given the TTL expires</li><li>When the list refreshes or polls</li><li>Then the reservation is marked `EXPIRED` and removed from the active list</li><li>And the slot becomes available again</li><li>Given I am on the active reservations page</li><li>When I use the status filter</li><li>Then I can filter by `AWAITING_PAYMENT`, `PAYMENT_MARKED_BY_USER`, or `ALL`</li></ul></div><h4>Edge Cases</h4><table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>No active reservations</td><td>Show empty state message</td></tr><tr><td>Reservation updated by another owner</td><td>List reflects latest status on refresh</td></tr><tr><td>TTL missing</td><td>Hide countdown and show &quot;No TTL&quot; badge</td></tr><tr><td>Network error</td><td>Show retry action</td></tr></tbody></table></div><div class="story-card"><div class="story-header"><span class="story-id">US-07-05</span><span class="story-status status-active">Active</span></div><div class="story-title">Owner Reservation Alerts Panel</div><div class="story-narrative">As an **organization owner**, I want a **floating reservation alerts panel** so that **I can see active and newly created reservations, respond quickly, and jump to details when needed**.</div><div class="criteria-section"><h4>Acceptance Criteria</h4><ul><li>Given I am on any owner screen</li><li>When I open the alerts panel</li><li>Then a draggable floating card appears with active reservations</li><li>And the panel can be collapsed or dismissed</li><li>Given the panel is open</li><li>When 15 seconds pass</li><li>Then the list refreshes automatically</li><li>And reservations created since the last poll are highlighted as &quot;New&quot;</li><li>Given the panel lists reservations</li><li>Then each row shows: player name, court name, slot time, status badge, TTL countdown (if applicable)</li><li>And each row links to `/owner/reservations/[id]`</li><li>Given a reservation is `AWAITING_PAYMENT`</li><li>Then quick actions show **View** and **Cancel/Expire**</li><li>Given a reservation is `PAYMENT_MARKED_BY_USER`</li><li>Then quick actions show **Confirm** and **Reject** (requires reason)</li><li>Given there are no active reservations</li><li>Then the panel shows a friendly empty state with a link to `/owner/reservations/active`</li></ul></div><h4>Edge Cases</h4><table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Polling error</td><td>Show inline retry with last updated time</td></tr><tr><td>Drag off-screen</td><td>Panel snaps back within viewport</td></tr><tr><td>Multiple new reservations</td><td>Badge shows count of new items</td></tr></tbody></table></div></div> <div class="domain-section"><h2>Domain 09-client-profile</h2><div class="story-card"><div class="story-header"><span class="story-id">US-09-01</span><span class="story-status status-active">Active</span></div><div class="story-title">Player Views Profile</div><div class="story-narrative">As a **player**, I want to **view my profile information** so that **I can see what contact details will be shared with court owners**.</div><div class="criteria-section"><h4>Acceptance Criteria</h4><ul><li>Given I am authenticated</li><li>When I navigate to `/account/profile`</li><li>Then I see my profile page with current information</li><li>Given I am on the profile page</li><li>When my profile loads</li><li>Then I see:</li><li>Display Name (or placeholder if empty)</li><li>Email (or empty)</li><li>Phone Number (or empty)</li><li>Avatar (if set)</li><li>Given I navigate to the profile page</li><li>When the profile is loading</li><li>Then I see a skeleton loading state</li><li>And the form is not interactive</li><li>Given I am a new user without a profile</li><li>When I visit the profile page</li><li>Then a profile is automatically created for me</li><li>And I see empty fields ready to fill</li><li>Given I am on the profile page</li><li>When my profile is incomplete (missing name OR missing both email and phone)</li><li>Then I see a warning/info message</li><li>And the message explains what&#x27;s needed for booking</li></ul></div><h4>Edge Cases</h4><table><thead><tr><th>Scenario</th><th>Expected Behavior</th></tr></thead><tbody><tr><td>New user, no profile</td><td>Auto-create empty profile</td></tr><tr><td>Network error loading</td><td>Show error state with retry</td></tr><tr><td>Session expired</td><td>Redirect to login</td></tr></tbody></table></div><div class="story-card"><div class="story-header"><span class="story-id">US-09-02</span><span class="story-status status-active">Active</span></div><div class="story-title">Player Updates Profile</div><div class="story-narrative">As a **player**, I want to **update my profile information** so that **court owners have accurate contact details when I make reservations**.</div><div class="criteria-section"><h4>Acceptance Criteria</h4><ul><li>Given I am on the profile page</li><li>When I modify any field (displayName, email, phone)</li><li>Then the &quot;Save Changes&quot; button becomes enabled</li><li>Given I am editing my profile</li><li>When I enter invalid data:</li><li>Display name: empty or &gt; 100 chars</li><li>Email: invalid format</li><li>Phone: &gt; 20 chars</li><li>Then I see validation error messages</li><li>And I cannot save until fixed</li><li>Given I have made valid changes</li><li>When I click &quot;Save Changes&quot;</li><li>Then I see a loading indicator</li><li>And on success, I see a success toast &quot;Profile updated successfully&quot;</li><li>And the form resets to non-dirty state</li><li>Given I have unsaved changes</li><li>When I navigate away from the page</li><li>Then I can leave (no blocking)</li><li>Note: Optional UX enhancement to warn about unsaved changes</li><li>Given I am on the profile page</li><li>When I see the avatar section</li><li>Then I see my current avatar (or initials placeholder)</li><li>And I see an upload button (non-functional in this phase)</li><li>Note: Avatar upload deferred to future enhancement</li></ul></div><h4>Edge Cases</h4><table><thead><tr><th>Scenario</th><th>Expected Behavior</th></tr></thead><tbody><tr><td>Save with empty required field</td><td>Show validation error</td></tr><tr><td>Network error on save</td><td>Show error toast, keep form state</td></tr><tr><td>Concurrent update</td><td>Last write wins (acceptable for MVP)</td></tr><tr><td>Very long input</td><td>Truncate/reject at validation</td></tr></tbody></table></div><div class="story-card"><div class="story-header"><span class="story-id">US-09-03</span><span class="story-status status-active">Active</span></div><div class="story-title">Profile Completeness for Booking</div><div class="story-narrative">As a **player**, I want to **be guided to complete my profile before booking** so that **court owners can contact me about my reservation**.</div><div class="criteria-section"><h4>Acceptance Criteria</h4><ul><li>Given I have a complete profile (name + email or phone)</li><li>When I am on the booking page (`/courts/[id]/book/[slotId]`)</li><li>Then I see my profile information displayed</li><li>And the &quot;Reserve&quot; button is enabled</li><li>And I can complete my booking</li><li>Given I have an incomplete profile</li><li>When I am on the booking page</li><li>Then I see a warning message:</li><li>And I see a link/button to go to profile page</li><li>And the &quot;Reserve&quot; button is disabled</li><li>Given I am on the booking page with incomplete profile</li><li>When I click the link to complete my profile</li><li>Then I am taken to `/account/profile`</li><li>And after completing profile, I can navigate back to booking</li><li>Note: Optional enhancement to auto-redirect back</li><li>Given I attempt to create a reservation via API</li><li>When my profile is incomplete</li><li>Then the API returns error: `INCOMPLETE_PROFILE`</li><li>And the error message says: &quot;Please complete your profile before booking&quot;</li><li>Given the frontend check passes but backend rejects</li><li>When reservation creation fails due to incomplete profile</li><li>Then I see an error message guiding me to complete profile</li><li>And I am not charged or penalized</li></ul></div><h4>Edge Cases</h4><table><thead><tr><th>Scenario</th><th>Expected Behavior</th></tr></thead><tbody><tr><td>Profile null (not loaded yet)</td><td>Treat as incomplete, show loading</td></tr><tr><td>Name only, no contact</td><td>Show &quot;add email or phone&quot; message</td></tr><tr><td>Email only, no name</td><td>Show &quot;add display name&quot; message</td></tr><tr><td>Both email and phone missing</td><td>Show &quot;add email or phone&quot; message</td></tr><tr><td>Profile loads after page</td><td>Re-evaluate completeness</td></tr><tr><td>API race condition</td><td>Backend is source of truth</td></tr></tbody></table></div></div> <div class="domain-section"><h2>Domain 11-ui-revamp</h2><div class="story-card"><div class="story-header"><span class="story-id">US-11-01</span><span class="story-status status-active">Active</span></div><div class="story-title">Unified Navigation Shells</div><div class="story-narrative">As a **platform user**, I want **consistent navigation between public and authenticated areas** so that **I can move through the product without confusion**.</div><div class="criteria-section"><h4>Acceptance Criteria</h4><ul><li>Given I am on a public route (`/`, `/courts`, `/courts/[id]`)</li><li>When I view the header</li><li>Then I see a consistent navbar (logo, browse courts, auth/user actions)</li><li>And no sidebar is displayed on public routes</li><li>Given I am authenticated and on an app route (`/home`, `/reservations`, `/account/profile`, `/owner/*`, `/admin/*`)</li><li>When I view the layout</li><li>Then I see a sidebar with role-based navigation</li><li>And the active item is clearly highlighted</li><li>Given I am a player</li><li>When I view the sidebar</li><li>Then I see player routes only</li><li>Given I am an owner</li><li>When I view the sidebar</li><li>Then I see owner routes in addition to player routes</li><li>Given I am an admin</li><li>When I view the sidebar</li><li>Then I see admin routes in addition to player routes</li><li>Given I am on mobile</li><li>When I open the navigation</li><li>Then I see the same links as desktop without missing actions</li></ul></div><h4>Edge Cases</h4><table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Auth state changes</td><td>Navbar or sidebar updates without reload</td></tr><tr><td>Long org/user names</td><td>Truncate with ellipsis without layout shift</td></tr><tr><td>User has owner + admin</td><td>Both dashboards appear in navigation</td></tr><tr><td>Unrecognized role</td><td>Default to player navigation</td></tr></tbody></table></div><div class="story-card"><div class="story-header"><span class="story-id">US-11-02</span><span class="story-status status-active">Active</span></div><div class="story-title">Full-Width Responsive Layouts</div><div class="story-narrative">As a **user on any device**, I want **full-width layouts with consistent padding** so that **content remains readable and visually stable**.</div><div class="criteria-section"><h4>Acceptance Criteria</h4><ul><li>Given I am on any route</li><li>When I view the page layout</li><li>Then the main content spans the available width</li><li>And consistent horizontal padding is applied across breakpoints</li><li>Given I am on a discovery page using the bento grid</li><li>When I resize the screen</li><li>Then the grid adapts to 12 columns (desktop), 6 columns (tablet), and 1 column (mobile)</li><li>Given I am on mobile (320px width)</li><li>When I scroll the page</li><li>Then no horizontal scrolling is required</li></ul></div><h4>Edge Cases</h4><table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Long tables or cards</td><td>Content wraps or provides an internal scroll</td></tr><tr><td>Sticky headers</td><td>Header does not overlap page content</td></tr><tr><td>Drawer open</td><td>No layout shift on open/close</td></tr></tbody></table></div><div class="story-card"><div class="story-header"><span class="story-id">US-11-03</span><span class="story-status status-active">Active</span></div><div class="story-title">Cohesive Color + Typography</div><div class="story-narrative">As a **user**, I want **visual consistency in color and typography** so that **the product feels calm, professional, and easy to scan**.</div><div class="criteria-section"><h4>Acceptance Criteria</h4><ul><li>Given I view any page</li><li>When I scan headings and body text</li><li>Then headings and buttons use Outfit</li><li>And body content and inputs use Source Sans 3</li><li>Given I view any page</li><li>When primary actions are present</li><li>Then only 1–2 primary (teal) CTAs appear per screen</li><li>And orange is reserved for links, availability, and highlights</li><li>And red is reserved for destructive or error states</li><li>Given I view cards, panels, and navigation shells</li><li>When I inspect surfaces and borders</li><li>Then warm neutral backgrounds dominate</li><li>And focus rings use teal for consistency</li></ul></div><h4>Edge Cases</h4><table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Teal + orange actions adjacent</td><td>Avoid side-by-side brand buttons</td></tr><tr><td>Low-contrast text</td><td>Adjust to meet WCAG AA</td></tr><tr><td>Disabled states</td><td>Use muted neutrals, not brand colors</td></tr></tbody></table></div></div>
-</body>
+    <h3>Stories in This Checkpoint</h3>
+    <table>
+      <thead><tr><th>ID</th><th>Domain</th><th>Story</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>US-14-01</td><td>14-place-court-migration</td><td>Player Discovers Places With Sport Filters</td><td>Active</td></tr>
+        <tr><td>US-14-02</td><td>14-place-court-migration</td><td>Player Views Place Detail And Chooses Court Unit</td><td>Active</td></tr>
+        <tr><td>US-14-03</td><td>14-place-court-migration</td><td>Player Chooses Duration In 60-Minute Increments</td><td>Active</td></tr>
+        <tr><td>US-14-04</td><td>14-place-court-migration</td><td>Player Books A Specific Court (Mutual Confirmation)</td><td>Active</td></tr>
+        <tr><td>US-14-05</td><td>14-place-court-migration</td><td>Player Books “Any Available Court” At A Place</td><td>Active</td></tr>
+        <tr><td>US-14-06</td><td>14-place-court-migration</td><td>Owner Creates A Place With Multiple Courts</td><td>Active</td></tr>
+        <tr><td>US-14-07</td><td>14-place-court-migration</td><td>Owner Configures Day-Specific Court Hours (Incl. Overnight)</td><td>Active</td></tr>
+        <tr><td>US-14-08</td><td>14-place-court-migration</td><td>Owner Configures Hourly Pricing Rules Per Court</td><td>Active</td></tr>
+        <tr><td>US-14-09</td><td>14-place-court-migration</td><td>Owner Publishes 60-Minute Slots With Prices</td><td>Active</td></tr>
+        <tr><td>US-14-10</td><td>14-place-court-migration</td><td>Platform Migrates Existing Court Listings Into Place/Court Model</td><td>Active</td></tr>
+        <tr><td>US-14-11</td><td>14-place-court-migration</td><td>Owner Filters Slots/Reservations By Place And Court</td><td>Active</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Key Decisions</h3>
+    <div class="info-box">
+      <ul>
+        <li><strong>Model split:</strong> Place = venue/listing, Court = bookable unit (1 court = 1 sport).</li>
+        <li><strong>Granularity:</strong> Booking durations are multiples of 60; slots are published in 60-minute increments.</li>
+        <li><strong>Any-available selection:</strong> choose the <strong>lowest total price</strong> option across matching courts.</li>
+        <li><strong>Overnight support:</strong> court hours can span midnight and remain bookable.</li>
+      </ul>
+    </div>
+
+    <div class="domain-section">
+      <h1>Domain: 14-place-court-migration</h1>
+      <div class="domain-overview">
+        <h3>Overview</h3>
+        <p>
+          This domain covers the product and UX changes required to move from the legacy model where a single
+          “court” represented a location, into the v1.2 model:
+        </p>
+        <ul>
+          <li><strong>Place</strong> = venue/location listing (multi-sport capable)</li>
+          <li><strong>Court</strong> = a single bookable unit inside a place (1 court = 1 sport)</li>
+          <li><strong>Slot</strong> = availability for a specific court</li>
+        </ul>
+        <p>
+          It includes player-facing UX (choose sport → choose specific court or “Any available” → book),
+          owner tooling (manage places, courts, hours, pricing rules, slots), and migration continuity.
+        </p>
+      </div>
+
+      <div class="story-card">
+        <div class="story-header"><span class="story-id">US-14-01</span><span class="story-status status-active">Active</span></div>
+        <div class="story-title">Player Discovers Places With Sport Filters</div>
+        <div class="story-narrative">As a <strong>player</strong>, I want to <strong>discover places near me and filter by sport</strong> so that <strong>I can quickly find a venue that supports the sport I want to play</strong>.</div>
+        <div class="criteria-section">
+          <h4>Acceptance Criteria</h4>
+          <div class="criterion"><div class="criterion-title">Place Discovery Supports Sport Filtering</div><div class="criterion-description"><strong>Given</strong> I am browsing discovery results<br /><strong>When</strong> I apply a sport filter (e.g., Pickleball, Basketball)<br /><strong>Then</strong> the list/map shows places that have at least one court for that sport</div></div>
+          <div class="criterion"><div class="criterion-title">Place Card Communicates Sports Available</div><div class="criterion-description"><strong>Given</strong> a place appears in discovery results<br /><strong>When</strong> I view the place card<br /><strong>Then</strong> I can see which sports are available at that place</div></div>
+        </div>
+        <h4>Edge Cases</h4>
+        <table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Place has no active courts for a sport</td><td>Place does not appear for that sport filter</td></tr><tr><td>Sport data is incomplete during migration</td><td>Place still appears, but sport badges are omitted and UI remains usable</td></tr></tbody></table>
+      </div>
+
+      <div class="story-card">
+        <div class="story-header"><span class="story-id">US-14-02</span><span class="story-status status-active">Active</span></div>
+        <div class="story-title">Player Views Place Detail And Chooses Court Unit</div>
+        <div class="story-narrative">As a <strong>player</strong>, I want to <strong>view a place’s courts and choose a specific court</strong> so that <strong>I know exactly which physical court I am booking</strong>.</div>
+        <div class="criteria-section">
+          <h4>Acceptance Criteria</h4>
+          <div class="criterion"><div class="criterion-title">Place Detail Shows Courts</div><div class="criterion-description"><strong>Given</strong> I open a reservable place detail page<br /><strong>When</strong> the page loads<br /><strong>Then</strong> I can see a list of courts at the place</div></div>
+          <div class="criterion"><div class="criterion-title">Court List Shows Sport And Tier Label</div><div class="criterion-description"><strong>Given</strong> courts are displayed<br /><strong>When</strong> I view a court row/card<br /><strong>Then</strong> I can see the court’s sport and optional tier label (e.g., Premium)</div></div>
+          <div class="criterion"><div class="criterion-title">Court Selection Drives Availability</div><div class="criterion-description"><strong>Given</strong> I select a specific court<br /><strong>When</strong> I view availability<br /><strong>Then</strong> the slot list reflects availability for that court</div></div>
+        </div>
+        <h4>Edge Cases</h4>
+        <table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Court is inactive</td><td>Court is not selectable</td></tr><tr><td>Place is curated (view-only)</td><td>Court list may be shown as informational, but booking UI is not available</td></tr></tbody></table>
+      </div>
+
+      <div class="story-card">
+        <div class="story-header"><span class="story-id">US-14-03</span><span class="story-status status-active">Active</span></div>
+        <div class="story-title">Player Chooses Duration In 60-Minute Increments</div>
+        <div class="story-narrative">As a <strong>player</strong>, I want to <strong>choose a booking duration in 60-minute increments</strong> so that <strong>I can book longer sessions while keeping pricing and availability predictable</strong>.</div>
+        <div class="criteria-section">
+          <h4>Acceptance Criteria</h4>
+          <div class="criterion"><div class="criterion-title">Default Duration Is 60 Minutes</div><div class="criterion-description"><strong>Given</strong> I’m starting a booking flow for a court<br /><strong>When</strong> I view duration options<br /><strong>Then</strong> the default duration is 60 minutes</div></div>
+          <div class="criterion"><div class="criterion-title">Duration Options Are Multiples Of 60</div><div class="criterion-description"><strong>Given</strong> I’m selecting a duration<br /><strong>When</strong> I change the duration<br /><strong>Then</strong> the selectable durations are multiples of 60 minutes (e.g., 60/120/180)</div></div>
+          <div class="criterion"><div class="criterion-title">Longer Durations Require Continuous Availability</div><div class="criterion-description"><strong>Given</strong> I select a duration greater than 60 minutes<br /><strong>When</strong> I pick a start time<br /><strong>Then</strong> the system only allows booking if the full duration is available for that court</div></div>
+          <div class="criterion"><div class="criterion-title">Price Updates With Duration</div><div class="criterion-description"><strong>Given</strong> the court is paid<br /><strong>When</strong> I change the duration<br /><strong>Then</strong> the displayed total price updates to reflect the selected duration</div></div>
+        </div>
+        <h4>Edge Cases</h4>
+        <table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Court has availability gaps</td><td>UI prevents selecting durations that can’t be satisfied</td></tr><tr><td>Pricing windows change during the selected duration</td><td>Total price reflects the rules for each hour segment (documented behavior)</td></tr></tbody></table>
+      </div>
+
+      <div class="story-card">
+        <div class="story-header"><span class="story-id">US-14-04</span><span class="story-status status-active">Active</span></div>
+        <div class="story-title">Player Books A Specific Court (Mutual Confirmation)</div>
+        <div class="story-narrative">As a <strong>player</strong>, I want to <strong>book a specific court at a place</strong> so that <strong>my reservation is tied to a known physical court and follows the platform’s mutual-confirmation rules</strong>.</div>
+        <div class="criteria-section">
+          <h4>Acceptance Criteria</h4>
+          <div class="criterion"><div class="criterion-title">Booking Creates A Request And Holds The Slot</div><div class="criterion-description"><strong>Given</strong> I select a specific court and an available slot<br /><strong>When</strong> I request the booking<br /><strong>Then</strong> a reservation is created in <code>CREATED</code> (awaiting owner acceptance)<br /><strong>And</strong> the slot transitions to <code>HELD</code> immediately</div></div>
+          <div class="criterion"><div class="criterion-title">Owner Acceptance Is Required (Free And Paid)</div><div class="criterion-description"><strong>Given</strong> I requested a booking<br /><strong>When</strong> the owner accepts within the acceptance window<br /><strong>Then</strong> for free bookings: reservation becomes <code>CONFIRMED</code> and slot becomes <code>BOOKED</code><br /><strong>And</strong> for paid bookings: reservation becomes <code>AWAITING_PAYMENT</code> and a payment window starts</div></div>
+          <div class="criterion"><div class="criterion-title">Player Can See Assigned Court In Reservation Details</div><div class="criterion-description"><strong>Given</strong> a reservation exists<br /><strong>When</strong> I view reservation details<br /><strong>Then</strong> I can see the place name and the court label (e.g., Court 7)</div></div>
+        </div>
+        <h4>Edge Cases</h4>
+        <table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Owner does not accept in time</td><td>Reservation becomes <code>EXPIRED</code> and slot returns to <code>AVAILABLE</code></td></tr><tr><td>Slot becomes unavailable before request completes</td><td>Booking request fails with a clear error</td></tr></tbody></table>
+      </div>
+
+      <div class="story-card">
+        <div class="story-header"><span class="story-id">US-14-05</span><span class="story-status status-active">Active</span></div>
+        <div class="story-title">Player Books “Any Available Court” At A Place</div>
+        <div class="story-narrative">As a <strong>player</strong>, I want to <strong>book “any available court” at a place for a given sport</strong> so that <strong>I can reserve time even if I don’t care which exact court I get</strong>.</div>
+        <div class="criteria-section">
+          <h4>Acceptance Criteria</h4>
+          <div class="criterion"><div class="criterion-title">Any-Available Mode Is Offered</div><div class="criterion-description"><strong>Given</strong> a place has multiple courts for a sport<br /><strong>When</strong> I begin booking<br /><strong>Then</strong> I can choose “Any available court” instead of picking a specific court</div></div>
+          <div class="criterion"><div class="criterion-title">System Assigns A Specific Court For The Booking</div><div class="criterion-description"><strong>Given</strong> I chose “Any available court”<br /><strong>When</strong> I request a booking for a start time and duration<br /><strong>Then</strong> the system assigns a specific court that can satisfy the request<br /><strong>And</strong> the reservation details show the assigned court label</div></div>
+          <div class="criterion"><div class="criterion-title">Assignment Uses A Documented Rule</div><div class="criterion-description"><strong>Given</strong> multiple courts could satisfy the request<br /><strong>When</strong> the system chooses one<br /><strong>Then</strong> the selection follows a documented rule (deterministic and fair)</div></div>
+        </div>
+        <h4>Edge Cases</h4>
+        <table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>No courts can satisfy the request</td><td>Booking request fails with a clear “no availability” message</td></tr><tr><td>Two players attempt the same slot simultaneously</td><td>Only one booking request succeeds; the other receives a conflict/not-available error</td></tr></tbody></table>
+      </div>
+
+      <div class="story-card">
+        <div class="story-header"><span class="story-id">US-14-06</span><span class="story-status status-active">Active</span></div>
+        <div class="story-title">Owner Creates A Place With Multiple Courts</div>
+        <div class="story-narrative">As an <strong>organization owner</strong>, I want to <strong>create a place listing and add multiple courts (each with a sport)</strong> so that <strong>I can represent my real venue structure and accept bookings per court</strong>.</div>
+        <div class="criteria-section">
+          <h4>Acceptance Criteria</h4>
+          <div class="criterion"><div class="criterion-title">Owner Creates A Place Listing</div><div class="criterion-description"><strong>Given</strong> I am an authenticated organization owner<br /><strong>When</strong> I create a new place<br /><strong>Then</strong> the place is created with address/location details and is manageable in owner tools</div></div>
+          <div class="criterion"><div class="criterion-title">Owner Adds Courts To A Place</div><div class="criterion-description"><strong>Given</strong> I have a place<br /><strong>When</strong> I add a court to the place<br /><strong>Then</strong> I can set the court label, sport, and optional tier label</div></div>
+          <div class="criterion"><div class="criterion-title">One Court Has One Sport</div><div class="criterion-description"><strong>Given</strong> I am creating or editing a court<br /><strong>When</strong> I choose the sport<br /><strong>Then</strong> the court is saved with exactly one sport</div></div>
+        </div>
+        <h4>Edge Cases</h4>
+        <table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Duplicate court label within a place</td><td>Owner is prevented from saving duplicates and sees a clear message</td></tr><tr><td>Place is inactive/deactivated</td><td>Courts cannot be booked by players</td></tr></tbody></table>
+      </div>
+
+      <div class="story-card">
+        <div class="story-header"><span class="story-id">US-14-07</span><span class="story-status status-active">Active</span></div>
+        <div class="story-title">Owner Configures Day-Specific Court Hours (Incl. Overnight)</div>
+        <div class="story-narrative">As an <strong>organization owner</strong>, I want to <strong>configure day-specific operating hours for each court (including overnight)</strong> so that <strong>availability reflects real operations and bookings only happen during open windows</strong>.</div>
+        <div class="criteria-section">
+          <h4>Acceptance Criteria</h4>
+          <div class="criterion"><div class="criterion-title">Owner Sets Weekly Hours Per Court</div><div class="criterion-description"><strong>Given</strong> I am managing a specific court<br /><strong>When</strong> I configure operating hours<br /><strong>Then</strong> I can set hours per day-of-week</div></div>
+          <div class="criterion"><div class="criterion-title">Supports Multiple Windows And Breaks</div><div class="criterion-description"><strong>Given</strong> I am configuring hours for a day<br /><strong>When</strong> I add more than one window (e.g., morning + evening)<br /><strong>Then</strong> both windows are saved and reflected in availability guidance</div></div>
+          <div class="criterion"><div class="criterion-title">Supports Overnight By Splitting Across Days</div><div class="criterion-description"><strong>Given</strong> I want to set an overnight window (e.g., 22:00–02:00)<br /><strong>When</strong> I save operating hours<br /><strong>Then</strong> the system stores the schedule in a way that represents that overnight availability</div></div>
+        </div>
+        <h4>Edge Cases</h4>
+        <table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Court has no hours for a day</td><td>That day is treated as closed (not bookable)</td></tr><tr><td>Invalid window (end before start)</td><td>Owner is prevented from saving and sees a clear message</td></tr></tbody></table>
+      </div>
+
+      <div class="story-card">
+        <div class="story-header"><span class="story-id">US-14-08</span><span class="story-status status-active">Active</span></div>
+        <div class="story-title">Owner Configures Hourly Pricing Rules Per Court</div>
+        <div class="story-narrative">As an <strong>organization owner</strong>, I want to <strong>set hourly pricing by day-of-week and time windows per court</strong> so that <strong>I can charge different rates for morning/afternoon/evening and overnight</strong>.</div>
+        <div class="criteria-section">
+          <h4>Acceptance Criteria</h4>
+          <div class="criterion"><div class="criterion-title">Owner Sets Pricing Windows Per Court</div><div class="criterion-description"><strong>Given</strong> I am managing a specific court<br /><strong>When</strong> I configure pricing<br /><strong>Then</strong> I can set one or more price windows per day-of-week</div></div>
+          <div class="criterion"><div class="criterion-title">Pricing Is Expressed As An Hourly Rate</div><div class="criterion-description"><strong>Given</strong> I am setting a price window<br /><strong>When</strong> I save the configuration<br /><strong>Then</strong> the system stores an hourly rate and currency</div></div>
+          <div class="criterion"><div class="criterion-title">Pricing Supports Overnight</div><div class="criterion-description"><strong>Given</strong> I want a pricing rule that applies overnight<br /><strong>When</strong> I save pricing rules<br /><strong>Then</strong> the pricing can represent overnight periods in a consistent way</div></div>
+        </div>
+        <h4>Edge Cases</h4>
+        <table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Pricing windows overlap</td><td>Owner is prevented from saving overlaps (or overlaps require an explicit priority)</td></tr><tr><td>Pricing does not cover all open hours</td><td>Slots that fall outside coverage are not publishable as paid slots (documented behavior)</td></tr></tbody></table>
+      </div>
+
+      <div class="story-card">
+        <div class="story-header"><span class="story-id">US-14-09</span><span class="story-status status-active">Active</span></div>
+        <div class="story-title">Owner Publishes 60-Minute Slots With Prices</div>
+        <div class="story-narrative">As an <strong>organization owner</strong>, I want to <strong>publish 60-minute availability slots for a specific court with correct pricing</strong> so that <strong>players can book reliably and see accurate prices</strong>.</div>
+        <div class="criteria-section">
+          <h4>Acceptance Criteria</h4>
+          <div class="criterion"><div class="criterion-title">Slots Are Created In 60-Minute Increments</div><div class="criterion-description"><strong>Given</strong> I am creating slots for a court<br /><strong>When</strong> I create or bulk-create slots<br /><strong>Then</strong> each slot duration is a multiple of 60 minutes</div></div>
+          <div class="criterion"><div class="criterion-title">Slot Prices Are Available To Players</div><div class="criterion-description"><strong>Given</strong> a slot is available<br /><strong>When</strong> a player views it<br /><strong>Then</strong> the slot displays a price and currency (or clearly indicates free)</div></div>
+          <div class="criterion"><div class="criterion-title">Slot Prices Can Be Overridden</div><div class="criterion-description"><strong>Given</strong> a court has hourly pricing rules<br /><strong>When</strong> I set a specific slot price override<br /><strong>Then</strong> the overridden price is used for that slot’s display and booking</div></div>
+        </div>
+        <h4>Edge Cases</h4>
+        <table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Owner creates overlapping slots</td><td>Creation is rejected with a clear error</td></tr><tr><td>Owner creates slot outside operating hours</td><td>Creation is rejected (or flagged) with a clear message</td></tr></tbody></table>
+      </div>
+
+      <div class="story-card">
+        <div class="story-header"><span class="story-id">US-14-10</span><span class="story-status status-active">Active</span></div>
+        <div class="story-title">Platform Migrates Existing Court Listings Into Place/Court Model</div>
+        <div class="story-narrative">As a <strong>platform admin</strong>, I want <strong>existing data migrated into the new Place/Court model</strong> so that <strong>we can ship court-unit selection and multi-sport places without breaking existing users</strong>.</div>
+        <div class="criteria-section">
+          <h4>Acceptance Criteria</h4>
+          <div class="criterion"><div class="criterion-title">Existing Listings Remain Discoverable</div><div class="criterion-description"><strong>Given</strong> the platform has existing “court” listings from the legacy model<br /><strong>When</strong> migration is completed<br /><strong>Then</strong> those listings remain discoverable as places</div></div>
+          <div class="criterion"><div class="criterion-title">Existing Reservations Remain Visible And Correct</div><div class="criterion-description"><strong>Given</strong> a player has an existing reservation<br /><strong>When</strong> they view it after migration<br /><strong>Then</strong> reservation details still show the correct venue and booked time</div></div>
+          <div class="criterion"><div class="criterion-title">Existing Slots Preserve Availability</div><div class="criterion-description"><strong>Given</strong> existing time slots exist<br /><strong>When</strong> migration is completed<br /><strong>Then</strong> those slots remain available/held/booked consistently with their prior state</div></div>
+        </div>
+        <h4>Edge Cases</h4>
+        <table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Partial migration / mixed data state</td><td>The application remains usable and avoids broken pages</td></tr><tr><td>Legacy listing cannot map cleanly</td><td>The system assigns a default court unit and marks missing details for owner/admin follow-up</td></tr></tbody></table>
+      </div>
+
+      <div class="story-card">
+        <div class="story-header"><span class="story-id">US-14-11</span><span class="story-status status-active">Active</span></div>
+        <div class="story-title">Owner Filters Slots/Reservations By Place And Court</div>
+        <div class="story-narrative">As an <strong>organization owner</strong>, I want to <strong>filter slot management and reservations by place and court</strong> so that <strong>I can operate venues with many courts efficiently</strong>.</div>
+        <div class="criteria-section">
+          <h4>Acceptance Criteria</h4>
+          <div class="criterion"><div class="criterion-title">Owner Can Filter By Place</div><div class="criterion-description"><strong>Given</strong> I manage multiple places<br /><strong>When</strong> I open owner slot or reservation tools<br /><strong>Then</strong> I can filter/select a place</div></div>
+          <div class="criterion"><div class="criterion-title">Owner Can Filter By Court Within Place</div><div class="criterion-description"><strong>Given</strong> I selected a place<br /><strong>When</strong> I filter further<br /><strong>Then</strong> I can choose a specific court to manage</div></div>
+          <div class="criterion"><div class="criterion-title">Filters Are Reflected In Displayed Data</div><div class="criterion-description"><strong>Given</strong> I selected filters<br /><strong>When</strong> the page loads or refreshes<br /><strong>Then</strong> only slots/reservations for the selected place/court appear</div></div>
+        </div>
+        <h4>Edge Cases</h4>
+        <table><thead><tr><th>Scenario</th><th>Behavior</th></tr></thead><tbody><tr><td>Selected court becomes inactive</td><td>UI informs owner and prompts to select another court</td></tr><tr><td>User has no places/courts yet</td><td>UI shows an empty state with a clear next action</td></tr></tbody></table>
+      </div>
+
+      <div class="footer-note">KudosCourts · Checkpoint 04 · Place/Court migration domain</div>
+    </div>
+  </body>
 </html>
