@@ -14,21 +14,6 @@ import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { useTRPC } from "@/trpc/client";
 
-interface ReservableDetail {
-  isFree: boolean;
-  defaultCurrency?: string | null;
-  defaultPriceCents?: number | null;
-  paymentInstructions?: string | null;
-  gcashNumber?: string | null;
-  bankName?: string | null;
-  bankAccountNumber?: string | null;
-  bankAccountName?: string | null;
-  requiresOwnerConfirmation?: boolean | null;
-  paymentHoldMinutes?: number | null;
-  ownerReviewMinutes?: number | null;
-  cancellationCutoffMinutes?: number | null;
-}
-
 export default function EditCourtPage() {
   const params = useParams();
   const courtId = params.id as string;
@@ -42,17 +27,26 @@ export default function EditCourtPage() {
     trpc.organization.my.queryOptions(),
   );
 
+  const organization = organizations?.[0];
+
   const { data: courtData, isLoading: courtLoading } = useQuery({
     ...trpc.courtManagement.getById.queryOptions({ courtId }),
     enabled: !!courtId,
   });
 
-  const organization = organizations?.[0];
+  const { data: places = [], isLoading: placesLoading } = useQuery({
+    ...trpc.placeManagement.list.queryOptions({
+      organizationId: organization?.id ?? "",
+    }),
+    enabled: !!organization?.id,
+  });
+
+  const { data: sports = [], isLoading: sportsLoading } = useQuery(
+    trpc.sport.list.queryOptions({}),
+  );
 
   const { submit, isSubmitting } = useCourtForm({
-    organizationId: organization?.id ?? "",
     courtId,
-    initialAmenities: courtData?.amenities,
     onSuccess: () => {
       toast.success("Court updated successfully!");
     },
@@ -69,7 +63,7 @@ export default function EditCourtPage() {
     router.push(appRoutes.owner.courts.base);
   };
 
-  if (orgsLoading || courtLoading) {
+  if (orgsLoading || courtLoading || placesLoading || sportsLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -82,44 +76,24 @@ export default function EditCourtPage() {
     return null;
   }
 
-  const detail =
-    courtData.court.courtType === "RESERVABLE"
-      ? (courtData.detail as ReservableDetail | null)
-      : null;
-
   const defaultValues: Partial<CourtFormData> = {
-    name: courtData.court.name,
-    address: courtData.court.address,
-    city: courtData.court.city,
-    latitude: courtData.court.latitude
-      ? parseFloat(courtData.court.latitude)
-      : undefined,
-    longitude: courtData.court.longitude
-      ? parseFloat(courtData.court.longitude)
-      : undefined,
-    photos: courtData.photos?.map((photo) => photo.url) ?? [],
-    amenities: courtData.amenities?.map((amenity) => amenity.name) ?? [],
-    isFree: detail?.isFree ?? false,
-    defaultHourlyRate:
-      detail?.defaultPriceCents && detail.defaultPriceCents > 0
-        ? detail.defaultPriceCents / 100
-        : undefined,
-    currency: detail?.defaultCurrency ?? "PHP",
-    paymentInstructions: detail?.paymentInstructions ?? "",
-    gcashEnabled: !!detail?.gcashNumber,
-    gcashNumber: detail?.gcashNumber ?? "",
-    bankTransferEnabled:
-      !!detail?.bankName ||
-      !!detail?.bankAccountNumber ||
-      !!detail?.bankAccountName,
-    bankName: detail?.bankName ?? "",
-    bankAccountNumber: detail?.bankAccountNumber ?? "",
-    bankAccountName: detail?.bankAccountName ?? "",
-    requiresOwnerConfirmation: detail?.requiresOwnerConfirmation ?? true,
-    paymentHoldMinutes: detail?.paymentHoldMinutes ?? 15,
-    ownerReviewMinutes: detail?.ownerReviewMinutes ?? 15,
-    cancellationCutoffMinutes: detail?.cancellationCutoffMinutes ?? 0,
+    placeId: courtData.court.placeId,
+    sportId: courtData.sport.id,
+    label: courtData.court.label,
+    tierLabel: courtData.court.tierLabel,
+    isActive: courtData.court.isActive,
   };
+
+  const placeOptions = places.map((place) => ({
+    id: place.id,
+    name: place.name,
+    city: place.city,
+  }));
+
+  const sportOptions = sports.map((sport) => ({
+    id: sport.id,
+    name: sport.name,
+  }));
 
   return (
     <AppShell
@@ -151,11 +125,11 @@ export default function EditCourtPage() {
     >
       <div className="space-y-6">
         <PageHeader
-          title={`Edit Court: ${courtData.court.name}`}
-          description="Update your court details and pricing"
+          title={`Edit Court: ${courtData.court.label}`}
+          description="Update court details and sport assignments"
           breadcrumbs={[
             { label: "My Courts", href: appRoutes.owner.courts.base },
-            { label: courtData.court.name },
+            { label: courtData.court.label },
             { label: "Edit" },
           ]}
           backHref={appRoutes.owner.courts.base}
@@ -163,6 +137,8 @@ export default function EditCourtPage() {
 
         <CourtForm
           defaultValues={defaultValues}
+          placeOptions={placeOptions}
+          sportOptions={sportOptions}
           onSubmit={submit}
           onCancel={handleCancel}
           isSubmitting={isSubmitting}

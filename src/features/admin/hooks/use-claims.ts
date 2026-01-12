@@ -72,8 +72,8 @@ export function useClaims(options: UseClaimsOptions = {}) {
             ? "removal"
             : "claim") as ClaimType,
           status: item.status.toLowerCase() as ClaimStatus,
-          courtId: item.courtId,
-          courtName: `Court ${item.courtId.slice(0, 8)}...`,
+          courtId: item.placeId,
+          courtName: `Place ${item.placeId.slice(0, 8)}...`,
           courtAddress: "Address pending...",
           courtStatus: "curated" as const,
           organizationId: item.organizationId,
@@ -119,11 +119,11 @@ export function useClaim(claimId: string) {
           ? "removal"
           : "claim") as ClaimType,
         status: query.data.claimRequest.status.toLowerCase() as ClaimStatus,
-        courtId: query.data.court.id,
-        courtName: query.data.court.name,
-        courtAddress: query.data.court.address,
+        courtId: query.data.place.id,
+        courtName: query.data.place.name,
+        courtAddress: query.data.place.address,
         courtStatus:
-          query.data.court.courtType === "CURATED" ? "curated" : "reservable",
+          query.data.place.placeType === "CURATED" ? "curated" : "reservable",
         organizationId: query.data.organization.id,
         organizationName: query.data.organization.name,
         ownerName: query.data.organization.name,

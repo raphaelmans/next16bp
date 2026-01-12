@@ -14,12 +14,15 @@ import {
 import { AppError } from "@/shared/kernel/errors";
 import {
   CancelReservationSchema,
+  CreateReservationForAnyCourtSchema,
+  CreateReservationForCourtSchema,
   CreateReservationSchema,
   GetMyReservationsSchema,
   MarkPaymentSchema,
 } from "./dtos";
 import {
   InvalidReservationStatusError,
+  NoAvailabilityError,
   NotReservationOwnerError,
   ReservationCancellationWindowError,
   ReservationExpiredError,
@@ -57,6 +60,7 @@ function handleReservationError(error: unknown): never {
     error instanceof InvalidReservationStatusError ||
     error instanceof TermsNotAcceptedError ||
     error instanceof SlotNotAvailableError ||
+    error instanceof NoAvailabilityError ||
     error instanceof IncompleteProfileError
   ) {
     throw new TRPCError({
@@ -92,6 +96,42 @@ export const reservationRouter = router({
           ctx.userId,
           profile.id,
           input.timeSlotId,
+        );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
+  createForCourt: protectedRateLimitedProcedure("sensitive")
+    .input(CreateReservationForCourtSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const reservationService = makeReservationService();
+        return await reservationService.createReservationForCourt(
+          ctx.userId,
+          profile.id,
+          input,
+        );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
+  createForAnyCourt: protectedRateLimitedProcedure("sensitive")
+    .input(CreateReservationForAnyCourtSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const reservationService = makeReservationService();
+        return await reservationService.createReservationForAnyCourt(
+          ctx.userId,
+          profile.id,
+          input,
         );
       } catch (error) {
         handleReservationError(error);

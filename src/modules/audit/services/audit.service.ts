@@ -8,6 +8,7 @@ import {
   claimRequestEvent,
   court,
   organization,
+  place,
   profile,
   reservation,
   reservationEvent,
@@ -98,14 +99,22 @@ export class AuditService implements IAuditService {
         .where(eq(court.id, slotResult[0].courtId))
         .limit(1);
 
-      if (courtResult[0]?.organizationId) {
-        const orgResult = await client
+      if (courtResult[0]) {
+        const placeResult = await client
           .select()
-          .from(organization)
-          .where(eq(organization.id, courtResult[0].organizationId))
+          .from(place)
+          .where(eq(place.id, courtResult[0].placeId))
           .limit(1);
 
-        isOwner = orgResult[0]?.ownerUserId === userId;
+        if (placeResult[0]?.organizationId) {
+          const orgResult = await client
+            .select()
+            .from(organization)
+            .where(eq(organization.id, placeResult[0].organizationId))
+            .limit(1);
+
+          isOwner = orgResult[0]?.ownerUserId === userId;
+        }
       }
     }
 

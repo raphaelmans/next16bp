@@ -1,6 +1,6 @@
 import { getContainer } from "@/shared/infra/container";
 import {
-  ClaimCourtRepository,
+  ClaimPlaceRepository,
   ClaimRequestRepository,
   OrganizationRepository,
 } from "../repositories/claim-request.repository";
@@ -12,7 +12,7 @@ import { ApproveClaimRequestUseCase } from "../use-cases/approve-claim-request.u
 let claimRequestRepository: ClaimRequestRepository | null = null;
 let claimRequestEventRepository: ClaimRequestEventRepository | null = null;
 let organizationRepository: OrganizationRepository | null = null;
-let courtRepository: ClaimCourtRepository | null = null;
+let placeRepository: ClaimPlaceRepository | null = null;
 let claimRequestService: ClaimRequestService | null = null;
 let claimAdminService: ClaimAdminService | null = null;
 let approveClaimRequestUseCase: ApproveClaimRequestUseCase | null = null;
@@ -40,11 +40,11 @@ export function makeOrganizationRepository() {
   return organizationRepository;
 }
 
-export function makeClaimCourtRepository() {
-  if (!courtRepository) {
-    courtRepository = new ClaimCourtRepository(getContainer().db);
+export function makeClaimPlaceRepository() {
+  if (!placeRepository) {
+    placeRepository = new ClaimPlaceRepository(getContainer().db);
   }
-  return courtRepository;
+  return placeRepository;
 }
 
 export function makeClaimRequestService() {
@@ -53,7 +53,7 @@ export function makeClaimRequestService() {
       makeClaimRequestRepository(),
       makeClaimRequestEventRepository(),
       makeOrganizationRepository(),
-      makeClaimCourtRepository(),
+      makeClaimPlaceRepository(),
       getContainer().transactionManager,
     );
   }
@@ -64,7 +64,7 @@ export function makeApproveClaimRequestUseCase() {
   if (!approveClaimRequestUseCase) {
     approveClaimRequestUseCase = new ApproveClaimRequestUseCase(
       makeClaimRequestRepository(),
-      makeClaimCourtRepository(),
+      makeClaimPlaceRepository(),
       makeClaimRequestEventRepository(),
       getContainer().transactionManager,
       getContainer().db,
@@ -78,7 +78,7 @@ export function makeClaimAdminService() {
     claimAdminService = new ClaimAdminService(
       makeClaimRequestRepository(),
       makeClaimRequestEventRepository(),
-      makeClaimCourtRepository(),
+      makeClaimPlaceRepository(),
       makeOrganizationRepository(),
       makeApproveClaimRequestUseCase(),
       getContainer().transactionManager,

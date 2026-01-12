@@ -14,57 +14,57 @@ import { makeAdminCourtService } from "../factories/court.factory";
 
 export const adminCourtRouter = router({
   /**
-   * Create a new curated court
+   * Create a new curated place
    * Admin only + rate limited
    */
   createCurated: adminRateLimitedProcedure("mutation")
     .input(CreateCuratedCourtSchema)
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
-      return service.createCuratedCourt(ctx.userId, input);
+      return service.createCuratedPlace(ctx.userId, input);
     }),
 
   /**
-   * Update any court
+   * Update any place
    * Admin only
    */
   update: adminProcedure
     .input(AdminUpdateCourtSchema)
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
-      return service.updateCourt(ctx.userId, input);
+      return service.updatePlace(ctx.userId, input);
     }),
 
   /**
-   * Deactivate a court
+   * Deactivate a place
    * Admin only
    */
   deactivate: adminProcedure
     .input(DeactivateCourtSchema)
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
-      return service.deactivateCourt(ctx.userId, input.courtId, input.reason);
+      return service.deactivatePlace(ctx.userId, input.placeId, input.reason);
     }),
 
   /**
-   * Activate a court
+   * Activate a place
    * Admin only
    */
   activate: adminProcedure
     .input(ActivateCourtSchema)
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
-      return service.activateCourt(ctx.userId, input.courtId);
+      return service.activatePlace(ctx.userId, input.placeId);
     }),
 
   /**
-   * List all courts with filters (admin view)
+   * List all places with filters (admin view)
    * Admin only
    */
   list: adminProcedure
     .input(AdminCourtFiltersSchema)
     .query(async ({ input }) => {
       const service = makeAdminCourtService();
-      return service.listAllCourts(input);
+      return service.listAllPlaces(input);
     }),
 });

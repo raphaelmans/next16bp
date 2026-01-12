@@ -9,13 +9,17 @@ export {
   CourtCardSkeleton,
 } from "./court-card";
 export { KudosDatePicker } from "./date-picker";
-
 // UI Components
 export { EmptyState } from "./empty-state";
 export { FileUpload } from "./file-upload";
 export { LocationPin, MapMarker } from "./location-pin";
 // Branding
 export { KudosLogo, KudosLogoIcon } from "./logo";
+export {
+  PlaceCard,
+  type PlaceCardPlace,
+  PlaceCardSkeleton,
+} from "./place-card";
 export {
   KudosStatusBadge,
   type KudosStatusBadgeProps,

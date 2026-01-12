@@ -1,7 +1,7 @@
 import type {
   ClaimRequestEventRecord,
   ClaimRequestRecord,
-  CourtRecord,
+  PlaceRecord,
 } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
@@ -9,34 +9,28 @@ import type { TransactionManager } from "@/shared/kernel/transaction";
 import type { SubmitClaimRequestDTO, SubmitRemovalRequestDTO } from "../dtos";
 import {
   ClaimRequestNotFoundError,
-  CourtNotFoundError,
-  CourtNotUnclaimedError,
   InvalidClaimStatusError,
   NotClaimRequestOwnerError,
-  NotCuratedCourtError,
+  NotCuratedPlaceError,
   NotOrganizationOwnerError,
   OrganizationNotFoundError,
   PendingClaimExistsError,
+  PlaceNotFoundError,
+  PlaceNotUnclaimedError,
 } from "../errors/claim-request.errors";
 import type {
-  IClaimCourtRepository,
+  IClaimPlaceRepository,
   IClaimRequestRepository,
   IOrganizationRepository,
 } from "../repositories/claim-request.repository";
 import type { IClaimRequestEventRepository } from "../repositories/claim-request-event.repository";
 
-/**
- * Response type for claim request with court details
- */
-export interface ClaimRequestWithCourt {
+export interface ClaimRequestWithPlace {
   claimRequest: ClaimRequestRecord;
-  court: CourtRecord;
+  place: PlaceRecord;
 }
 
-/**
- * Response type for claim request with all details
- */
-export interface ClaimRequestWithDetails extends ClaimRequestWithCourt {
+export interface ClaimRequestWithDetails extends ClaimRequestWithPlace {
   events: ClaimRequestEventRecord[];
 }
 
@@ -72,7 +66,7 @@ export class ClaimRequestService implements IClaimRequestService {
     private claimRequestRepository: IClaimRequestRepository,
     private claimRequestEventRepository: IClaimRequestEventRepository,
     private organizationRepository: IOrganizationRepository,
-    private courtRepository: IClaimCourtRepository,
+    private placeRepository: IClaimPlaceRepository,
     private transactionManager: TransactionManager,
   ) {}
 
@@ -84,7 +78,6 @@ export class ClaimRequestService implements IClaimRequestService {
     return this.transactionManager.run(async (tx) => {
       const txCtx = { tx };
 
-      // 1. Verify user owns the organization
       const org = await this.organizationRepository.findById(
         data.organizationId,
         txCtx,
@@ -96,38 +89,33 @@ export class ClaimRequestService implements IClaimRequestService {
         throw new NotOrganizationOwnerError();
       }
 
-      // 2. Get court with lock
-      const court = await this.courtRepository.findByIdForUpdate(
-        data.courtId,
+      const place = await this.placeRepository.findByIdForUpdate(
+        data.placeId,
         txCtx,
       );
-      if (!court) {
-        throw new CourtNotFoundError(data.courtId);
+      if (!place) {
+        throw new PlaceNotFoundError(data.placeId);
       }
 
-      // 3. Verify court is curated
-      if (court.courtType !== "CURATED") {
-        throw new NotCuratedCourtError(data.courtId);
+      if (place.placeType !== "CURATED") {
+        throw new NotCuratedPlaceError(data.placeId);
       }
 
-      // 4. Verify court is unclaimed
-      if (court.claimStatus !== "UNCLAIMED") {
-        throw new CourtNotUnclaimedError(data.courtId);
+      if (place.claimStatus !== "UNCLAIMED") {
+        throw new PlaceNotUnclaimedError(data.placeId);
       }
 
-      // 5. Check for existing pending claim
-      const pending = await this.claimRequestRepository.findPendingByCourtId(
-        data.courtId,
+      const pending = await this.claimRequestRepository.findPendingByPlaceId(
+        data.placeId,
         txCtx,
       );
       if (pending) {
-        throw new PendingClaimExistsError(data.courtId);
+        throw new PendingClaimExistsError(data.placeId);
       }
 
-      // 6. Create claim request
       const claimRequest = await this.claimRequestRepository.create(
         {
-          courtId: data.courtId,
+          placeId: data.placeId,
           organizationId: data.organizationId,
           requestType: "CLAIM",
           status: "PENDING",
@@ -137,14 +125,12 @@ export class ClaimRequestService implements IClaimRequestService {
         txCtx,
       );
 
-      // 7. Update court claim status
-      await this.courtRepository.update(
-        data.courtId,
+      await this.placeRepository.update(
+        data.placeId,
         { claimStatus: "CLAIM_PENDING" },
         txCtx,
       );
 
-      // 8. Create audit event
       await this.claimRequestEventRepository.create(
         {
           claimRequestId: claimRequest.id,
@@ -159,7 +145,7 @@ export class ClaimRequestService implements IClaimRequestService {
         {
           event: "claim_request.submitted",
           claimRequestId: claimRequest.id,
-          courtId: data.courtId,
+          placeId: data.placeId,
           organizationId: data.organizationId,
           userId,
         },
@@ -178,7 +164,6 @@ export class ClaimRequestService implements IClaimRequestService {
     return this.transactionManager.run(async (tx) => {
       const txCtx = { tx };
 
-      // 1. Verify user owns the organization
       const org = await this.organizationRepository.findById(
         data.organizationId,
         txCtx,
@@ -190,33 +175,29 @@ export class ClaimRequestService implements IClaimRequestService {
         throw new NotOrganizationOwnerError();
       }
 
-      // 2. Get court with lock
-      const court = await this.courtRepository.findByIdForUpdate(
-        data.courtId,
+      const place = await this.placeRepository.findByIdForUpdate(
+        data.placeId,
         txCtx,
       );
-      if (!court) {
-        throw new CourtNotFoundError(data.courtId);
+      if (!place) {
+        throw new PlaceNotFoundError(data.placeId);
       }
 
-      // 3. Verify court belongs to the organization
-      if (court.organizationId !== data.organizationId) {
+      if (place.organizationId !== data.organizationId) {
         throw new NotOrganizationOwnerError();
       }
 
-      // 4. Check for existing pending claim
-      const pending = await this.claimRequestRepository.findPendingByCourtId(
-        data.courtId,
+      const pending = await this.claimRequestRepository.findPendingByPlaceId(
+        data.placeId,
         txCtx,
       );
       if (pending) {
-        throw new PendingClaimExistsError(data.courtId);
+        throw new PendingClaimExistsError(data.placeId);
       }
 
-      // 5. Create removal request
       const claimRequest = await this.claimRequestRepository.create(
         {
-          courtId: data.courtId,
+          placeId: data.placeId,
           organizationId: data.organizationId,
           requestType: "REMOVAL",
           status: "PENDING",
@@ -226,14 +207,12 @@ export class ClaimRequestService implements IClaimRequestService {
         txCtx,
       );
 
-      // 6. Update court claim status
-      await this.courtRepository.update(
-        data.courtId,
+      await this.placeRepository.update(
+        data.placeId,
         { claimStatus: "REMOVAL_REQUESTED" },
         txCtx,
       );
 
-      // 7. Create audit event
       await this.claimRequestEventRepository.create(
         {
           claimRequestId: claimRequest.id,
@@ -248,7 +227,7 @@ export class ClaimRequestService implements IClaimRequestService {
         {
           event: "removal_request.submitted",
           claimRequestId: claimRequest.id,
-          courtId: data.courtId,
+          placeId: data.placeId,
           organizationId: data.organizationId,
           userId,
         },
@@ -275,19 +254,16 @@ export class ClaimRequestService implements IClaimRequestService {
         throw new ClaimRequestNotFoundError(requestId);
       }
 
-      // Only requester can cancel
       if (request.requestedByUserId !== userId) {
         throw new NotClaimRequestOwnerError();
       }
 
-      // Can only cancel PENDING
       if (request.status !== "PENDING") {
         throw new InvalidClaimStatusError(
           `Cannot cancel claim request in ${request.status} status`,
         );
       }
 
-      // Update request (treat as rejected by self)
       const updated = await this.claimRequestRepository.update(
         requestId,
         {
@@ -297,16 +273,14 @@ export class ClaimRequestService implements IClaimRequestService {
         txCtx,
       );
 
-      // Revert court status based on request type
       const revertStatus =
         request.requestType === "CLAIM" ? "UNCLAIMED" : "CLAIMED";
-      await this.courtRepository.update(
-        request.courtId,
+      await this.placeRepository.update(
+        request.placeId,
         { claimStatus: revertStatus },
         txCtx,
       );
 
-      // Audit event
       await this.claimRequestEventRepository.create(
         {
           claimRequestId: requestId,
@@ -351,17 +325,16 @@ export class ClaimRequestService implements IClaimRequestService {
       throw new ClaimRequestNotFoundError(requestId);
     }
 
-    // Verify user has access (must be the requester)
     if (claimRequest.requestedByUserId !== userId) {
       throw new NotClaimRequestOwnerError();
     }
 
-    const court = await this.courtRepository.findById(
-      claimRequest.courtId,
+    const place = await this.placeRepository.findById(
+      claimRequest.placeId,
       ctx,
     );
-    if (!court) {
-      throw new CourtNotFoundError(claimRequest.courtId);
+    if (!place) {
+      throw new PlaceNotFoundError(claimRequest.placeId);
     }
 
     const events = await this.claimRequestEventRepository.findByClaimRequestId(
@@ -371,7 +344,7 @@ export class ClaimRequestService implements IClaimRequestService {
 
     return {
       claimRequest,
-      court,
+      place,
       events,
     };
   }

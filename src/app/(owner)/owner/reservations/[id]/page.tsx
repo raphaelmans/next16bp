@@ -20,6 +20,7 @@ import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
 import { RejectModal } from "@/features/owner/components/reject-modal";
 import { useOwnerOrganization } from "@/features/owner/hooks/use-owner-organization";
 import {
+  useAcceptReservation,
   useConfirmReservation,
   useOwnerReservations,
   useRejectReservation,
@@ -42,6 +43,7 @@ export default function OwnerReservationDetailPage() {
   );
 
   const reservation = reservations[0];
+  const acceptMutation = useAcceptReservation();
   const confirmMutation = useConfirmReservation();
   const rejectMutation = useRejectReservation();
 
@@ -58,20 +60,32 @@ export default function OwnerReservationDetailPage() {
     );
   };
 
+  const isCreated = reservation?.reservationStatus === "CREATED";
   const isAwaiting = reservation?.reservationStatus === "AWAITING_PAYMENT";
   const isMarked = reservation?.reservationStatus === "PAYMENT_MARKED_BY_USER";
+  const confirmTitle = isCreated ? "Accept Reservation" : "Confirm Payment";
+  const confirmLabel = isCreated ? "Accept" : "Confirm";
 
   const handleConfirmSubmit = () => {
     if (!reservation) return;
-    confirmMutation.mutate(
+    const isCreatedReservation = reservation.reservationStatus === "CREATED";
+    const mutation = isCreatedReservation ? acceptMutation : confirmMutation;
+    const successMessage = isCreatedReservation
+      ? "Reservation accepted"
+      : "Payment confirmed";
+    const errorMessage = isCreatedReservation
+      ? "Failed to accept reservation"
+      : "Failed to confirm payment";
+
+    mutation.mutate(
       { reservationId: reservation.id },
       {
         onSuccess: () => {
-          toast.success("Reservation confirmed");
+          toast.success(successMessage);
           setConfirmOpen(false);
         },
         onError: () => {
-          toast.error("Failed to confirm reservation");
+          toast.error(errorMessage);
         },
       },
     );
@@ -221,7 +235,7 @@ export default function OwnerReservationDetailPage() {
                 )}
               </div>
 
-              {(isAwaiting || isMarked) && (
+              {(isCreated || isAwaiting || isMarked) && (
                 <div className="flex flex-wrap gap-2">
                   {isAwaiting ? (
                     <Button
@@ -241,7 +255,7 @@ export default function OwnerReservationDetailPage() {
                         className="text-primary hover:text-primary hover:bg-primary/10"
                         onClick={() => setConfirmOpen(true)}
                       >
-                        Confirm Payment
+                        {isCreated ? "Accept Reservation" : "Confirm Payment"}
                       </Button>
                       <Button
                         variant="outline"
@@ -266,9 +280,9 @@ export default function OwnerReservationDetailPage() {
         open={confirmOpen}
         onOpenChange={setConfirmOpen}
         onConfirm={handleConfirmSubmit}
-        isLoading={confirmMutation.isPending}
-        title="Confirm Reservation"
-        confirmLabel="Confirm"
+        isLoading={confirmMutation.isPending || acceptMutation.isPending}
+        title={confirmTitle}
+        confirmLabel={confirmLabel}
       />
 
       <RejectModal

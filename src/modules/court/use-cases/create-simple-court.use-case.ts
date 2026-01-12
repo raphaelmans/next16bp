@@ -3,78 +3,50 @@ import {
   OrganizationNotFoundError,
 } from "@/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
+import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
 import type { CourtRecord } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
-import type { CreateSimpleCourtDTO } from "../dtos";
+import type { CreateCourtDTO } from "../dtos";
 import type { ICourtRepository } from "../repositories/court.repository";
-import type { IReservableCourtDetailRepository } from "../repositories/reservable-court-detail.repository";
 
 export interface ICreateSimpleCourtUseCase {
-  execute(userId: string, data: CreateSimpleCourtDTO): Promise<CourtRecord>;
+  execute(userId: string, data: CreateCourtDTO): Promise<CourtRecord>;
 }
 
 export class CreateSimpleCourtUseCase implements ICreateSimpleCourtUseCase {
   constructor(
     private courtRepository: ICourtRepository,
-    private reservableCourtDetailRepository: IReservableCourtDetailRepository,
+    private placeRepository: IPlaceRepository,
     private organizationRepository: IOrganizationRepository,
     private transactionManager: TransactionManager,
   ) {}
 
-  async execute(
-    userId: string,
-    data: CreateSimpleCourtDTO,
-  ): Promise<CourtRecord> {
+  async execute(userId: string, data: CreateCourtDTO): Promise<CourtRecord> {
     return this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
-      // Verify user owns the organization
-      const org = await this.organizationRepository.findById(
-        data.organizationId,
+      const place = await this.placeRepository.findById(data.placeId, ctx);
+      if (!place || !place.organizationId) {
+        throw new OrganizationNotFoundError(data.placeId);
+      }
+
+      const organization = await this.organizationRepository.findById(
+        place.organizationId,
         ctx,
       );
-      if (!org) {
-        throw new OrganizationNotFoundError(data.organizationId);
-      }
-      if (org.ownerUserId !== userId) {
+      if (!organization || organization.ownerUserId !== userId) {
         throw new NotOrganizationOwnerError();
       }
 
-      // Create the court with default coordinates (can be updated later)
       const court = await this.courtRepository.create(
         {
-          organizationId: data.organizationId,
-          name: data.name,
-          address: data.address,
-          city: data.city,
-          latitude: "0.0",
-          longitude: "0.0",
-          courtType: "RESERVABLE",
-          claimStatus: "CLAIMED", // Organization-created courts are already claimed
-        },
-        ctx,
-      );
-
-      // Determine if court is free based on default price
-      const isFree =
-        data.defaultPriceCents === null ||
-        data.defaultPriceCents === undefined ||
-        data.defaultPriceCents === 0;
-
-      // Create reservable court detail
-      await this.reservableCourtDetailRepository.create(
-        {
-          courtId: court.id,
-          isFree,
-          defaultCurrency: data.currency,
-          defaultPriceCents: data.defaultPriceCents ?? null,
-          requiresOwnerConfirmation: true,
-          paymentHoldMinutes: 15,
-          ownerReviewMinutes: 15,
-          cancellationCutoffMinutes: 0,
-          // Payment details can be added later through updateDetail
+          placeId: data.placeId,
+          sportId: data.sportId,
+          label: data.label,
+          tierLabel: data.tierLabel ?? null,
+          isActive: true,
         },
         ctx,
       );
@@ -83,8 +55,7 @@ export class CreateSimpleCourtUseCase implements ICreateSimpleCourtUseCase {
         {
           event: "court.created_simple",
           courtId: court.id,
-          organizationId: data.organizationId,
-          courtType: "RESERVABLE",
+          placeId: data.placeId,
           userId,
         },
         "Simple court created",

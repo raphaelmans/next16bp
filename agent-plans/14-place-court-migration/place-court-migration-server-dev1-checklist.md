@@ -7,33 +7,33 @@
 
 ## Phase 1: DB
 
-- [ ] Add `sport` table and seed pickleball
-- [ ] Add `place` tables (base + details/policy)
-- [ ] Add `court` table (unit) + constraints
-- [ ] Add `court_hours_window`
-- [ ] Add `court_rate_rule`
-- [ ] Update `time_slot` to reference court units
-- [ ] Add `reservation_time_slot` join table
+- [x] Add `sport` table and seed pickleball
+- [x] Add `place` tables (base + details/policy)
+- [x] Add `court` table (unit) + constraints
+- [x] Add `court_hours_window`
+- [x] Add `court_rate_rule`
+- [x] Update `time_slot` to reference court units
+- [x] Add `reservation_time_slot` join table
 
 ## Phase 2: APIs
 
 ### Place + Court
-- [ ] Public: `place.list` supports sport filtering
-- [ ] Public: `place.getById` returns courts + sports
-- [ ] Owner: `placeManagement.*`
-- [ ] Owner: `courtManagement.*`
+- [x] Public: `place.list` supports sport filtering
+- [x] Public: `place.getById` returns courts + sports
+- [x] Owner: `placeManagement.*`
+- [x] Owner: `courtManagement.*`
 
 ### Availability
-- [ ] `availability.getForCourt` returns valid start times for duration
-- [ ] `availability.getForPlaceSport` returns valid starts + min price
+- [x] `availability.getForCourt` returns valid start times for duration
+- [x] `availability.getForPlaceSport` returns valid starts + min price
 
 ### Reservations
-- [ ] `reservation.createForCourt` locks N consecutive slots
-- [ ] `reservation.createForAnyCourt` selects cheapest court then locks
-- [ ] Slot status updates apply to all linked slots
-- [ ] Expiration releases all linked slots
+- [x] `reservation.createForCourt` locks N consecutive slots
+- [x] `reservation.createForAnyCourt` selects cheapest court then locks
+- [x] Slot status updates apply to all linked slots
+- [x] Expiration releases all linked slots
 
 ## Validation
 
-- [ ] Run `pnpm lint`
-- [ ] Run `pnpm build`
+- [x] Run `pnpm lint`
+- [x] Run `pnpm build`

@@ -1,3 +1,4 @@
+import { addMinutes } from "date-fns";
 import {
   CourtNotFoundError,
   NotCourtOwnerError,
@@ -5,6 +6,9 @@ import {
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
 import { NotOrganizationOwnerError } from "@/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
+import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
+import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
+import type { IPlacePolicyRepository } from "@/modules/place/repositories/place-policy.repository";
 import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
 import type { ITimeSlotRepository } from "@/modules/time-slot/repositories/time-slot.repository";
 import type {
@@ -14,6 +18,7 @@ import type {
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
+import { summarizeSlotPricing } from "@/shared/lib/time-slot-availability";
 import type {
   ConfirmPaymentDTO,
   GetOrgReservationsDTO,
@@ -22,12 +27,19 @@ import type {
 } from "../dtos";
 import {
   InvalidReservationStatusError,
+  ReservationExpiredError,
   ReservationNotFoundError,
 } from "../errors/reservation.errors";
 import type { IReservationRepository } from "../repositories/reservation.repository";
 import type { IReservationEventRepository } from "../repositories/reservation-event.repository";
 
+const DEFAULT_PAYMENT_HOLD_MINUTES = 15;
+
 export interface IReservationOwnerService {
+  acceptReservation(
+    userId: string,
+    reservationId: string,
+  ): Promise<ReservationRecord>;
   confirmPayment(
     userId: string,
     data: ConfirmPaymentDTO,
@@ -53,12 +65,14 @@ export class ReservationOwnerService implements IReservationOwnerService {
     private reservationEventRepository: IReservationEventRepository,
     private timeSlotRepository: ITimeSlotRepository,
     private courtRepository: ICourtRepository,
+    private placeRepository: IPlaceRepository,
+    private placePolicyRepository: IPlacePolicyRepository,
     private organizationRepository: IOrganizationRepository,
     private transactionManager: TransactionManager,
   ) {}
 
   /**
-   * Verify that the user owns the court via organization ownership
+   * Verify that the user owns the place for a court
    * Returns the time slot for the reservation
    */
   private async verifyCourtOwnership(
@@ -76,12 +90,17 @@ export class ReservationOwnerService implements IReservationOwnerService {
       throw new CourtNotFoundError(slot.courtId);
     }
 
-    if (!court.organizationId) {
+    const place = await this.placeRepository.findById(court.placeId, ctx);
+    if (!place) {
+      throw new PlaceNotFoundError(court.placeId);
+    }
+
+    if (!place.organizationId) {
       throw new NotCourtOwnerError();
     }
 
     const org = await this.organizationRepository.findById(
-      court.organizationId,
+      place.organizationId,
       ctx,
     );
     if (!org || org.ownerUserId !== userId) {
@@ -89,6 +108,157 @@ export class ReservationOwnerService implements IReservationOwnerService {
     }
 
     return slot;
+  }
+
+  private async getPaymentHoldMinutes(
+    courtId: string,
+    ctx?: RequestContext,
+  ): Promise<number> {
+    const court = await this.courtRepository.findById(courtId, ctx);
+    if (!court) {
+      throw new CourtNotFoundError(courtId);
+    }
+
+    const policy = await this.placePolicyRepository.findByPlaceId(
+      court.placeId,
+      ctx,
+    );
+
+    return policy?.paymentHoldMinutes ?? DEFAULT_PAYMENT_HOLD_MINUTES;
+  }
+
+  async acceptReservation(
+    userId: string,
+    reservationId: string,
+  ): Promise<ReservationRecord> {
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+
+      const reservation = await this.reservationRepository.findByIdForUpdate(
+        reservationId,
+        ctx,
+      );
+
+      if (!reservation) {
+        throw new ReservationNotFoundError(reservationId);
+      }
+
+      await this.verifyCourtOwnership(userId, reservation.timeSlotId, ctx);
+
+      if (reservation.status !== "CREATED") {
+        throw new InvalidReservationStatusError(
+          reservationId,
+          reservation.status,
+          ["CREATED"],
+        );
+      }
+
+      if (
+        reservation.expiresAt &&
+        new Date(reservation.expiresAt) < new Date()
+      ) {
+        throw new ReservationExpiredError(reservationId);
+      }
+
+      const slotIds = await this.getReservationSlotIds(
+        reservation.id,
+        reservation.timeSlotId,
+        ctx,
+      );
+
+      const slots = await this.timeSlotRepository.findByIdsForUpdate(
+        slotIds,
+        ctx,
+      );
+      const slotMap = new Map(slots.map((slot) => [slot.id, slot]));
+      const orderedSlots = slotIds
+        .map((slotId) => slotMap.get(slotId))
+        .filter((slot): slot is TimeSlotRecord => !!slot);
+
+      if (orderedSlots.length !== slotIds.length) {
+        const missingId = slotIds.find((slotId) => !slotMap.has(slotId));
+        throw new SlotNotFoundError(missingId ?? "unknown");
+      }
+
+      const pricing = summarizeSlotPricing(orderedSlots);
+      const now = new Date();
+
+      if (pricing.totalPriceCents > 0) {
+        const paymentHoldMinutes = await this.getPaymentHoldMinutes(
+          orderedSlots[0].courtId,
+          ctx,
+        );
+        const expiresAt = addMinutes(now, paymentHoldMinutes);
+
+        const updated = await this.reservationRepository.update(
+          reservationId,
+          {
+            status: "AWAITING_PAYMENT",
+            expiresAt,
+          },
+          ctx,
+        );
+
+        await this.reservationEventRepository.create(
+          {
+            reservationId,
+            fromStatus: "CREATED",
+            toStatus: "AWAITING_PAYMENT",
+            triggeredByUserId: userId,
+            triggeredByRole: "OWNER",
+            notes: "Owner accepted reservation - awaiting payment",
+          },
+          ctx,
+        );
+
+        logger.info(
+          {
+            event: "reservation.accepted",
+            reservationId,
+            ownerId: userId,
+            status: "AWAITING_PAYMENT",
+          },
+          "Reservation accepted by owner",
+        );
+
+        return updated;
+      }
+
+      const updated = await this.reservationRepository.update(
+        reservationId,
+        {
+          status: "CONFIRMED",
+          confirmedAt: now,
+          expiresAt: null,
+        },
+        ctx,
+      );
+
+      await this.timeSlotRepository.updateManyStatus(slotIds, "BOOKED", ctx);
+
+      await this.reservationEventRepository.create(
+        {
+          reservationId,
+          fromStatus: "CREATED",
+          toStatus: "CONFIRMED",
+          triggeredByUserId: userId,
+          triggeredByRole: "OWNER",
+          notes: "Owner accepted reservation - free booking",
+        },
+        ctx,
+      );
+
+      logger.info(
+        {
+          event: "reservation.confirmed",
+          reservationId,
+          ownerId: userId,
+        },
+        "Reservation confirmed by owner",
+      );
+
+      return updated;
+    });
   }
 
   async confirmPayment(
@@ -119,22 +289,34 @@ export class ReservationOwnerService implements IReservationOwnerService {
         );
       }
 
+      if (
+        reservation.expiresAt &&
+        new Date(reservation.expiresAt) < new Date()
+      ) {
+        throw new ReservationExpiredError(data.reservationId);
+      }
+
+      const now = new Date();
+
       // Update reservation status to CONFIRMED
       const updated = await this.reservationRepository.update(
         data.reservationId,
         {
           status: "CONFIRMED",
-          confirmedAt: new Date(),
+          confirmedAt: now,
+          expiresAt: null,
         },
         ctx,
       );
 
       // Update slot status to BOOKED
-      await this.timeSlotRepository.update(
+      const slotIds = await this.getReservationSlotIds(
+        reservation.id,
         reservation.timeSlotId,
-        { status: "BOOKED" },
         ctx,
       );
+
+      await this.timeSlotRepository.updateManyStatus(slotIds, "BOOKED", ctx);
 
       // Create audit event
       await this.reservationEventRepository.create(
@@ -181,15 +363,15 @@ export class ReservationOwnerService implements IReservationOwnerService {
       // Verify ownership
       await this.verifyCourtOwnership(userId, reservation.timeSlotId, ctx);
 
-      // Verify status - can reject AWAITING_PAYMENT or PAYMENT_MARKED_BY_USER
       if (
+        reservation.status !== "CREATED" &&
         reservation.status !== "AWAITING_PAYMENT" &&
         reservation.status !== "PAYMENT_MARKED_BY_USER"
       ) {
         throw new InvalidReservationStatusError(
           data.reservationId,
           reservation.status,
-          ["AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"],
+          ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"],
         );
       }
 
@@ -207,11 +389,13 @@ export class ReservationOwnerService implements IReservationOwnerService {
       );
 
       // Release slot back to AVAILABLE
-      await this.timeSlotRepository.update(
+      const slotIds = await this.getReservationSlotIds(
+        reservation.id,
         reservation.timeSlotId,
-        { status: "AVAILABLE" },
         ctx,
       );
+
+      await this.timeSlotRepository.updateManyStatus(slotIds, "AVAILABLE", ctx);
 
       // Create audit event
       await this.reservationEventRepository.create(
@@ -250,37 +434,40 @@ export class ReservationOwnerService implements IReservationOwnerService {
       throw new CourtNotFoundError(courtId);
     }
 
-    if (!court.organizationId) {
+    const place = await this.placeRepository.findById(court.placeId);
+    if (!place) {
+      throw new PlaceNotFoundError(court.placeId);
+    }
+
+    if (!place.organizationId) {
       throw new NotCourtOwnerError();
     }
 
     const org = await this.organizationRepository.findById(
-      court.organizationId,
+      place.organizationId,
     );
     if (!org || org.ownerUserId !== userId) {
       throw new NotCourtOwnerError();
     }
 
-    // Get all time slots for this court
-    const slots = await this.timeSlotRepository.findByCourtAndDateRange(
+    const created = await this.reservationRepository.findByCourtIdAndStatus(
       courtId,
-      new Date(0), // From beginning
-      new Date(8640000000000000), // Max date
+      "CREATED",
+    );
+    const paymentMarked =
+      await this.reservationRepository.findByCourtIdAndStatus(
+        courtId,
+        "PAYMENT_MARKED_BY_USER",
+      );
+
+    const unique = new Map(
+      [...created, ...paymentMarked].map((reservation) => [
+        reservation.id,
+        reservation,
+      ]),
     );
 
-    // Get reservations with PAYMENT_MARKED_BY_USER status for these slots
-    const pendingReservations: ReservationRecord[] = [];
-    for (const slot of slots) {
-      const reservations = await this.reservationRepository.findByTimeSlotId(
-        slot.id,
-      );
-      const pending = reservations.filter(
-        (r) => r.status === "PAYMENT_MARKED_BY_USER",
-      );
-      pendingReservations.push(...pending);
-    }
-
-    return pendingReservations;
+    return Array.from(unique.values());
   }
 
   async getForOrganization(
@@ -324,7 +511,21 @@ export class ReservationOwnerService implements IReservationOwnerService {
     // Use the efficient repository method
     return this.reservationRepository.countByOrganizationAndStatuses(
       organizationId,
-      ["PAYMENT_MARKED_BY_USER"],
+      ["CREATED", "PAYMENT_MARKED_BY_USER"],
     );
+  }
+
+  private async getReservationSlotIds(
+    reservationId: string,
+    fallbackTimeSlotId: string,
+    ctx?: RequestContext,
+  ): Promise<string[]> {
+    const slotIds =
+      await this.reservationRepository.findTimeSlotIdsByReservationId(
+        reservationId,
+        ctx,
+      );
+
+    return slotIds.length > 0 ? slotIds : [fallbackTimeSlotId];
   }
 }

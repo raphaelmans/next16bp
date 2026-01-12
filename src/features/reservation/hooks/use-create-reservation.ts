@@ -15,14 +15,14 @@ export function useCreateReservation() {
   return useMutation(
     trpc.reservation.create.mutationOptions({
       onSuccess: (data) => {
-        const requiresPayment = data.status === "AWAITING_PAYMENT";
-        toast.success(
-          requiresPayment
-            ? "Reservation created! Please complete payment."
-            : "Reservation confirmed!",
-        );
+        const message =
+          data.status === "CREATED"
+            ? "Reservation request sent!"
+            : data.status === "AWAITING_PAYMENT"
+              ? "Reservation accepted! Please complete payment."
+              : "Reservation confirmed!";
+        toast.success(message);
         queryClient.invalidateQueries(trpc.reservation.getMy.queryFilter());
-        queryClient.invalidateQueries(trpc.court.search.queryFilter());
       },
       onError: (error) => {
         toast.error(error.message || "Failed to create reservation");

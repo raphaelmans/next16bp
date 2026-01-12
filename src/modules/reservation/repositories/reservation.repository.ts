@@ -3,9 +3,10 @@ import {
   court,
   type InsertReservation,
   paymentProof,
+  place,
   type ReservationRecord,
-  reservableCourtDetail,
   reservation,
+  reservationTimeSlot,
   timeSlot,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
@@ -18,6 +19,15 @@ export interface IReservationRepository {
     id: string,
     ctx: RequestContext,
   ): Promise<ReservationRecord | null>;
+  findTimeSlotIdsByReservationId(
+    reservationId: string,
+    ctx?: RequestContext,
+  ): Promise<string[]>;
+  createTimeSlotLinks(
+    reservationId: string,
+    timeSlotIds: string[],
+    ctx?: RequestContext,
+  ): Promise<void>;
   findByPlayerId(
     playerId: string,
     pagination: { limit: number; offset: number },
@@ -35,6 +45,17 @@ export interface IReservationRepository {
     timeSlotId: string,
     ctx?: RequestContext,
   ): Promise<ReservationRecord | null>;
+  findByCourtIdAndStatus(
+    courtId: string,
+    status:
+      | "CREATED"
+      | "AWAITING_PAYMENT"
+      | "PAYMENT_MARKED_BY_USER"
+      | "CONFIRMED"
+      | "EXPIRED"
+      | "CANCELLED",
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord[]>;
   countByOrganizationAndStatuses(
     organizationId: string,
     statuses: (
@@ -101,6 +122,36 @@ export class ReservationRepository implements IReservationRepository {
       .for("update")
       .limit(1);
     return result[0] ?? null;
+  }
+
+  async findTimeSlotIdsByReservationId(
+    reservationId: string,
+    ctx?: RequestContext,
+  ): Promise<string[]> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select({ timeSlotId: reservationTimeSlot.timeSlotId })
+      .from(reservationTimeSlot)
+      .where(eq(reservationTimeSlot.reservationId, reservationId))
+      .orderBy(reservationTimeSlot.sequence);
+
+    return result.map((row) => row.timeSlotId);
+  }
+
+  async createTimeSlotLinks(
+    reservationId: string,
+    timeSlotIds: string[],
+    ctx?: RequestContext,
+  ): Promise<void> {
+    if (timeSlotIds.length === 0) return;
+    const client = this.getClient(ctx);
+    await client.insert(reservationTimeSlot).values(
+      timeSlotIds.map((timeSlotId, index) => ({
+        reservationId,
+        timeSlotId,
+        sequence: index,
+      })),
+    );
   }
 
   async findByPlayerId(
@@ -189,6 +240,20 @@ export class ReservationRepository implements IReservationRepository {
     ctx?: RequestContext,
   ): Promise<ReservationRecord[]> {
     const client = this.getClient(ctx);
+    const results = await client
+      .select({ reservation })
+      .from(reservation)
+      .innerJoin(
+        reservationTimeSlot,
+        eq(reservationTimeSlot.reservationId, reservation.id),
+      )
+      .where(eq(reservationTimeSlot.timeSlotId, timeSlotId));
+
+    const linkedReservations = results.map((row) => row.reservation);
+    if (linkedReservations.length > 0) {
+      return linkedReservations;
+    }
+
     return client
       .select()
       .from(reservation)
@@ -200,23 +265,87 @@ export class ReservationRepository implements IReservationRepository {
     ctx?: RequestContext,
   ): Promise<ReservationRecord | null> {
     const client = this.getClient(ctx);
-    // Find non-cancelled, non-expired reservations for this slot
     const results = await client
+      .select({ reservation })
+      .from(reservation)
+      .innerJoin(
+        reservationTimeSlot,
+        eq(reservationTimeSlot.reservationId, reservation.id),
+      )
+      .where(eq(reservationTimeSlot.timeSlotId, timeSlotId));
+
+    const linkedReservations = results.map((row) => row.reservation);
+    const active = linkedReservations.find(
+      (record) =>
+        record.status !== "CANCELLED" &&
+        record.status !== "EXPIRED" &&
+        (record.status === "CONFIRMED" ||
+          !record.expiresAt ||
+          new Date(record.expiresAt) > new Date()),
+    );
+
+    if (active || linkedReservations.length > 0) {
+      return active ?? null;
+    }
+
+    const fallback = await client
       .select()
       .from(reservation)
       .where(eq(reservation.timeSlotId, timeSlotId));
 
-    // Filter to active reservations
-    const active = results.find(
-      (r) =>
-        r.status !== "CANCELLED" &&
-        r.status !== "EXPIRED" &&
-        (r.status === "CONFIRMED" ||
-          !r.expiresAt ||
-          new Date(r.expiresAt) > new Date()),
+    const fallbackActive = fallback.find(
+      (record) =>
+        record.status !== "CANCELLED" &&
+        record.status !== "EXPIRED" &&
+        (record.status === "CONFIRMED" ||
+          !record.expiresAt ||
+          new Date(record.expiresAt) > new Date()),
     );
 
-    return active ?? null;
+    return fallbackActive ?? null;
+  }
+
+  async findByCourtIdAndStatus(
+    courtId: string,
+    status:
+      | "CREATED"
+      | "AWAITING_PAYMENT"
+      | "PAYMENT_MARKED_BY_USER"
+      | "CONFIRMED"
+      | "EXPIRED"
+      | "CANCELLED",
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord[]> {
+    const client = this.getClient(ctx);
+    const results = await client
+      .select({ reservation })
+      .from(reservation)
+      .innerJoin(
+        reservationTimeSlot,
+        eq(reservationTimeSlot.reservationId, reservation.id),
+      )
+      .innerJoin(timeSlot, eq(timeSlot.id, reservationTimeSlot.timeSlotId))
+      .where(
+        and(eq(timeSlot.courtId, courtId), eq(reservation.status, status)),
+      );
+
+    const unique = new Map(
+      results.map((row) => [row.reservation.id, row.reservation]),
+    );
+
+    if (unique.size > 0) {
+      return Array.from(unique.values());
+    }
+
+    const fallback = await client
+      .select({ reservation })
+      .from(reservation)
+      .innerJoin(timeSlot, eq(reservation.timeSlotId, timeSlot.id))
+      .where(
+        and(eq(timeSlot.courtId, courtId), eq(reservation.status, status)),
+      );
+
+    return fallback.map((row) => row.reservation);
   }
 
   async create(
@@ -262,9 +391,10 @@ export class ReservationRepository implements IReservationRepository {
       .from(reservation)
       .innerJoin(timeSlot, eq(reservation.timeSlotId, timeSlot.id))
       .innerJoin(court, eq(timeSlot.courtId, court.id))
+      .innerJoin(place, eq(court.placeId, place.id))
       .where(
         and(
-          eq(court.organizationId, organizationId),
+          eq(place.organizationId, organizationId),
           inArray(reservation.status, statuses),
         ),
       );
@@ -290,7 +420,7 @@ export class ReservationRepository implements IReservationRepository {
     const client = this.getClient(ctx);
 
     // Build query with joins
-    const conditions = [eq(court.organizationId, organizationId)];
+    const conditions = [eq(place.organizationId, organizationId)];
 
     if (filters.courtId) {
       conditions.push(eq(court.id, filters.courtId));
@@ -326,15 +456,11 @@ export class ReservationRepository implements IReservationRepository {
         createdAt: reservation.createdAt,
         expiresAt: reservation.expiresAt,
         courtId: court.id,
-        courtName: court.name,
-        slotStartTime: timeSlot.startTime,
-        slotEndTime: timeSlot.endTime,
-        amountCents: sql<
-          number | null
-        >`coalesce(${timeSlot.priceCents}, ${reservableCourtDetail.defaultPriceCents})`,
-        currency: sql<
-          string | null
-        >`coalesce(${timeSlot.currency}, ${reservableCourtDetail.defaultCurrency})`,
+        courtName: sql<string>`concat(${place.name}, ' - ', ${court.label})`,
+        slotStartTime: sql<Date>`min(${timeSlot.startTime})`,
+        slotEndTime: sql<Date>`max(${timeSlot.endTime})`,
+        amountCents: sql<number>`sum(coalesce(${timeSlot.priceCents}, 0))`,
+        currency: sql<string>`max(${timeSlot.currency})`,
         paymentProof: {
           referenceNumber: paymentProof.referenceNumber,
           notes: paymentProof.notes,
@@ -343,14 +469,32 @@ export class ReservationRepository implements IReservationRepository {
         },
       })
       .from(reservation)
-      .innerJoin(timeSlot, eq(reservation.timeSlotId, timeSlot.id))
-      .innerJoin(court, eq(timeSlot.courtId, court.id))
-      .leftJoin(
-        reservableCourtDetail,
-        eq(reservableCourtDetail.courtId, court.id),
+      .innerJoin(
+        reservationTimeSlot,
+        eq(reservationTimeSlot.reservationId, reservation.id),
       )
+      .innerJoin(timeSlot, eq(timeSlot.id, reservationTimeSlot.timeSlotId))
+      .innerJoin(court, eq(timeSlot.courtId, court.id))
+      .innerJoin(place, eq(court.placeId, place.id))
       .leftJoin(paymentProof, eq(paymentProof.reservationId, reservation.id))
       .where(and(...conditions))
+      .groupBy(
+        reservation.id,
+        reservation.status,
+        reservation.playerNameSnapshot,
+        reservation.playerEmailSnapshot,
+        reservation.playerPhoneSnapshot,
+        reservation.cancellationReason,
+        reservation.createdAt,
+        reservation.expiresAt,
+        court.id,
+        court.label,
+        place.name,
+        paymentProof.referenceNumber,
+        paymentProof.notes,
+        paymentProof.fileUrl,
+        paymentProof.createdAt,
+      )
       .orderBy(desc(reservation.createdAt))
       .limit(filters.limit)
       .offset(filters.offset);

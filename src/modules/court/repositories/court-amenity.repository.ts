@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
 import {
-  type CourtAmenityRecord,
-  courtAmenity,
-  type InsertCourtAmenity,
+  type PlaceAmenityRecord as CourtAmenityRecord,
+  placeAmenity as courtAmenity,
+  type InsertPlaceAmenity as InsertCourtAmenity,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
 import type { RequestContext } from "@/shared/kernel/context";
@@ -39,7 +39,7 @@ export class CourtAmenityRepository implements ICourtAmenityRepository {
     return client
       .select()
       .from(courtAmenity)
-      .where(eq(courtAmenity.courtId, courtId));
+      .where(eq(courtAmenity.placeId, courtId));
   }
 
   async findById(
@@ -79,7 +79,7 @@ export class CourtAmenityRepository implements ICourtAmenityRepository {
       .select({ id: courtAmenity.id })
       .from(courtAmenity)
       .where(
-        and(eq(courtAmenity.courtId, courtId), eq(courtAmenity.name, name)),
+        and(eq(courtAmenity.placeId, courtId), eq(courtAmenity.name, name)),
       )
       .limit(1);
     return result.length > 0;

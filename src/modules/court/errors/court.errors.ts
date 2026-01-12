@@ -21,6 +21,14 @@ export class NotCourtOwnerError extends AuthorizationError {
   }
 }
 
+export class DuplicateCourtLabelError extends ConflictError {
+  readonly code = "DUPLICATE_COURT_LABEL";
+
+  constructor(placeId: string, label: string) {
+    super("Court label already exists for this place", { placeId, label });
+  }
+}
+
 export class InvalidCourtTypeError extends ValidationError {
   readonly code = "INVALID_COURT_TYPE";
 

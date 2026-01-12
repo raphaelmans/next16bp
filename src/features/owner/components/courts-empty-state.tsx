@@ -22,22 +22,22 @@ export function CourtsEmptyState() {
         </EmptyMedia>
         <EmptyTitle>No courts yet</EmptyTitle>
         <EmptyDescription>
-          Add your first court to start accepting bookings
+          Create a place and add courts to start accepting bookings
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
         <div className="flex flex-col items-center gap-3">
           <Button asChild>
-            <Link href={appRoutes.owner.courts.new}>
+            <Link href={appRoutes.owner.places.new}>
               <Plus className="mr-2 h-4 w-4" />
-              Add Your First Court
+              Create a Place
             </Link>
           </Button>
           <span className="text-sm text-muted-foreground">- or -</span>
           <Button variant="outline" asChild>
-            <Link href={appRoutes.courts.base}>
+            <Link href={appRoutes.owner.courts.new}>
               <Tag className="mr-2 h-4 w-4" />
-              Claim an Existing Court
+              Add a Court
             </Link>
           </Button>
         </div>

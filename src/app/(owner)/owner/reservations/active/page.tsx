@@ -18,19 +18,24 @@ import {
 } from "@/components/ui/select";
 import { useLogout, useSession } from "@/features/auth";
 import {
+  ConfirmDialog,
   OwnerNavbar,
   OwnerSidebar,
+  PlaceCourtFilter,
+  RejectModal,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
-import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
-import { RejectModal } from "@/features/owner/components/reject-modal";
 import {
   useOwnerCourtFilter,
   useOwnerCourts,
   useOwnerOrganization,
+  useOwnerPlaceFilter,
+  useOwnerPlaces,
 } from "@/features/owner/hooks";
+
 import {
   type Reservation,
+  useAcceptReservation,
   useConfirmReservation,
   useOwnerReservations,
   useRejectReservation,
@@ -46,7 +51,9 @@ export default function OwnerActiveReservationsPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
   const { organization, organizations } = useOwnerOrganization();
-  const { data: courts = [] } = useOwnerCourts();
+  const { data: places = [] } = useOwnerPlaces(organization?.id ?? null);
+  const { data: courts = [] } = useOwnerCourts(organization?.id ?? null);
+  const { placeId, setPlaceId } = useOwnerPlaceFilter();
   const { courtId, setCourtId } = useOwnerCourtFilter();
   const [filter, setFilter] = React.useState<ActiveFilter>("all");
   const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -56,8 +63,34 @@ export default function OwnerActiveReservationsPage() {
   );
   const [selectedReservation, setSelectedReservation] =
     React.useState<Reservation | null>(null);
+
+  const confirmTitle =
+    selectedReservation?.reservationStatus === "CREATED"
+      ? "Accept Reservation"
+      : "Confirm Payment";
+  const confirmLabel =
+    selectedReservation?.reservationStatus === "CREATED" ? "Accept" : "Confirm";
   const now = React.useMemo(() => Date.now(), []);
   const [tick, setTick] = React.useState(now);
+
+  const filteredCourts = React.useMemo(() => {
+    if (!placeId) return courts;
+    return courts.filter((court) => court.placeId === placeId);
+  }, [courts, placeId]);
+
+  const viewAllHref = React.useMemo(() => {
+    const params = new URLSearchParams();
+    if (placeId) {
+      params.set("placeId", placeId);
+    }
+    if (courtId) {
+      params.set("courtId", courtId);
+    }
+    const suffix = params.toString();
+    return suffix
+      ? `${appRoutes.owner.reservations}?${suffix}`
+      : appRoutes.owner.reservations;
+  }, [courtId, placeId]);
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -80,15 +113,21 @@ export default function OwnerActiveReservationsPage() {
     },
   );
 
+  const acceptMutation = useAcceptReservation();
   const confirmMutation = useConfirmReservation();
   const rejectMutation = useRejectReservation();
 
   const activeReservations = React.useMemo(() => {
-    const filtered = reservations.filter((reservation) =>
-      ["AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"].includes(
-        reservation.reservationStatus,
-      ),
-    );
+    const courtIds = new Set(filteredCourts.map((court) => court.id));
+    const filtered = reservations
+      .filter((reservation) =>
+        placeId ? courtIds.has(reservation.courtId) : true,
+      )
+      .filter((reservation) =>
+        ["AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"].includes(
+          reservation.reservationStatus,
+        ),
+      );
 
     if (filter === "awaiting") {
       return filtered.filter(
@@ -102,7 +141,7 @@ export default function OwnerActiveReservationsPage() {
       );
     }
     return filtered;
-  }, [reservations, filter]);
+  }, [filteredCourts, filter, placeId, reservations]);
 
   const handleConfirm = (reservation: Reservation) => {
     setSelectedReservation(reservation);
@@ -120,15 +159,24 @@ export default function OwnerActiveReservationsPage() {
 
   const handleConfirmSubmit = () => {
     if (!selectedReservation) return;
-    confirmMutation.mutate(
+    const isCreated = selectedReservation.reservationStatus === "CREATED";
+    const mutation = isCreated ? acceptMutation : confirmMutation;
+    const successMessage = isCreated
+      ? "Reservation accepted"
+      : "Payment confirmed";
+    const errorMessage = isCreated
+      ? "Failed to accept reservation"
+      : "Failed to confirm payment";
+
+    mutation.mutate(
       { reservationId: selectedReservation.id },
       {
         onSuccess: () => {
-          toast.success("Reservation confirmed");
+          toast.success(successMessage);
           setConfirmOpen(false);
         },
         onError: () => {
-          toast.error("Failed to confirm reservation");
+          toast.error(errorMessage);
         },
       },
     );
@@ -214,24 +262,18 @@ export default function OwnerActiveReservationsPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Select
-                  value={courtId || "all"}
-                  onValueChange={(value) =>
+                <PlaceCourtFilter
+                  places={places}
+                  courts={courts}
+                  placeId={placeId}
+                  courtId={courtId}
+                  onPlaceChange={(value) =>
+                    setPlaceId(value === "all" ? "" : value)
+                  }
+                  onCourtChange={(value) =>
                     setCourtId(value === "all" ? "" : value)
                   }
-                >
-                  <SelectTrigger className="w-full sm:w-[220px]">
-                    <SelectValue placeholder="All Courts" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Courts</SelectItem>
-                    {courts.map((court) => (
-                      <SelectItem key={court.id} value={court.id}>
-                        {court.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                />
 
                 <Select
                   value={filter}
@@ -248,7 +290,7 @@ export default function OwnerActiveReservationsPage() {
                 </Select>
 
                 <Button variant="outline" asChild className="w-full sm:w-auto">
-                  <Link href={appRoutes.owner.reservations}>
+                  <Link href={viewAllHref}>
                     View All Reservations
                     <ExternalLink className="ml-2 h-4 w-4" />
                   </Link>
@@ -386,9 +428,9 @@ export default function OwnerActiveReservationsPage() {
         open={confirmOpen}
         onOpenChange={setConfirmOpen}
         onConfirm={handleConfirmSubmit}
-        isLoading={confirmMutation.isPending}
-        title="Confirm Reservation"
-        confirmLabel="Confirm"
+        isLoading={confirmMutation.isPending || acceptMutation.isPending}
+        title={confirmTitle}
+        confirmLabel={confirmLabel}
       />
 
       <RejectModal

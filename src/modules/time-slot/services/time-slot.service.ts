@@ -1,9 +1,12 @@
+import { differenceInMinutes, getDay } from "date-fns";
 import {
   CourtNotFoundError,
   NotCourtOwnerError,
 } from "@/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
+import type { ICourtRateRuleRepository } from "@/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
+import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
 import type { TimeSlotRecord } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
@@ -16,11 +19,11 @@ import type {
   UpdateSlotPriceDTO,
 } from "../dtos";
 import {
-  CourtNotReservableError,
   SlotInUseError,
   SlotNotAvailableError,
   SlotNotFoundError,
   SlotOverlapError,
+  SlotPricingUnavailableError,
 } from "../errors/time-slot.errors";
 import type {
   ITimeSlotRepository,
@@ -56,6 +59,8 @@ export class TimeSlotService implements ITimeSlotService {
   constructor(
     private timeSlotRepository: ITimeSlotRepository,
     private courtRepository: ICourtRepository,
+    private courtRateRuleRepository: ICourtRateRuleRepository,
+    private placeRepository: IPlaceRepository,
     private organizationRepository: IOrganizationRepository,
     private transactionManager: TransactionManager,
   ) {}
@@ -73,16 +78,13 @@ export class TimeSlotService implements ITimeSlotService {
       throw new CourtNotFoundError(courtId);
     }
 
-    if (court.courtType !== "RESERVABLE") {
-      throw new CourtNotReservableError(courtId);
-    }
-
-    if (!court.organizationId) {
+    const place = await this.placeRepository.findById(court.placeId, ctx);
+    if (!place || !place.organizationId) {
       throw new NotCourtOwnerError();
     }
 
     const org = await this.organizationRepository.findById(
-      court.organizationId,
+      place.organizationId,
       ctx,
     );
     if (!org || org.ownerUserId !== userId) {
@@ -105,6 +107,46 @@ export class TimeSlotService implements ITimeSlotService {
 
     await this.verifyCourtOwnership(userId, slot.courtId, ctx);
     return slot;
+  }
+
+  private async resolveSlotPricing(options: {
+    courtId: string;
+    startTime: Date;
+    endTime: Date;
+    priceCents?: number | null;
+    currency?: string | null;
+    ctx?: RequestContext;
+  }): Promise<{ priceCents: number | null; currency: string | null }> {
+    const { courtId, startTime, endTime, priceCents, currency, ctx } = options;
+
+    if (priceCents === null && currency === null) {
+      return { priceCents: null, currency: null };
+    }
+
+    if (priceCents !== undefined || currency !== undefined) {
+      return { priceCents: priceCents ?? null, currency: currency ?? null };
+    }
+
+    const dayOfWeek = getDay(startTime);
+    const minuteOfDay = startTime.getHours() * 60 + startTime.getMinutes();
+    const rule = await this.courtRateRuleRepository.findMatchingRule(
+      courtId,
+      dayOfWeek,
+      minuteOfDay,
+      ctx,
+    );
+
+    if (!rule) {
+      throw new SlotPricingUnavailableError(courtId, startTime, endTime);
+    }
+
+    const durationMinutes = differenceInMinutes(endTime, startTime);
+    const multiplier = durationMinutes / 60;
+
+    return {
+      priceCents: rule.hourlyRateCents * multiplier,
+      currency: rule.currency,
+    };
   }
 
   async getAvailableSlots(
@@ -164,13 +206,22 @@ export class TimeSlotService implements ITimeSlotService {
         throw new SlotOverlapError(data.courtId, startTime, endTime);
       }
 
+      const pricing = await this.resolveSlotPricing({
+        courtId: data.courtId,
+        startTime,
+        endTime,
+        priceCents: data.priceCents,
+        currency: data.currency,
+        ctx,
+      });
+
       const slot = await this.timeSlotRepository.create(
         {
           courtId: data.courtId,
           startTime,
           endTime,
-          priceCents: data.priceCents,
-          currency: data.currency,
+          priceCents: pricing.priceCents,
+          currency: pricing.currency,
         },
         ctx,
       );
@@ -217,12 +268,21 @@ export class TimeSlotService implements ITimeSlotService {
           throw new SlotOverlapError(data.courtId, startTime, endTime);
         }
 
-        slotsToCreate.push({
+        const pricing = await this.resolveSlotPricing({
           courtId: data.courtId,
           startTime,
           endTime,
           priceCents: slotData.priceCents,
           currency: slotData.currency,
+          ctx,
+        });
+
+        slotsToCreate.push({
+          courtId: data.courtId,
+          startTime,
+          endTime,
+          priceCents: pricing.priceCents,
+          currency: pricing.currency,
         });
       }
 

@@ -4,44 +4,39 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import {
-  CourtCard,
-  type CourtCardCourt,
   MapMarker,
+  PlaceCard,
+  type PlaceCardPlace,
 } from "@/shared/components/kudos";
 
-// Note: This is a placeholder implementation.
-// In production, integrate with @react-google-maps/api or similar
-
-interface Court extends CourtCardCourt {
+interface PlaceMapItem extends PlaceCardPlace {
   lat: number;
   lng: number;
 }
 
-interface CourtMapProps {
-  courts: Court[];
+interface PlaceMapProps {
+  places: PlaceMapItem[];
   selectedId?: string;
-  onSelect?: (court: Court) => void;
+  onSelect?: (place: PlaceMapItem) => void;
   className?: string;
 }
 
-export function CourtMap({
-  courts,
+export function PlaceMap({
+  places,
   selectedId,
   onSelect,
   className,
-}: CourtMapProps) {
+}: PlaceMapProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-  const selectedCourt = courts.find((c) => c.id === selectedId);
+  const selectedPlace = places.find((place) => place.id === selectedId);
 
   return (
     <div
       className={cn("relative h-[600px] rounded-xl overflow-hidden", className)}
     >
-      {/* Map Container - Placeholder */}
       <div className="absolute inset-0 bg-muted">
         <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-          {/* In production, render Google Maps here */}
           <div className="text-center">
             <p className="text-lg font-medium">Map View</p>
             <p className="text-sm">
@@ -50,10 +45,8 @@ export function CourtMap({
           </div>
         </div>
 
-        {/* Marker Overlay (simulated positions) */}
         <div className="absolute inset-0 pointer-events-none">
-          {courts.map((court, index) => {
-            // Simulate marker positions in a grid
+          {places.map((place, index) => {
             const row = Math.floor(index / 4);
             const col = index % 4;
             const top = 20 + row * 25;
@@ -62,20 +55,20 @@ export function CourtMap({
             return (
               <button
                 type="button"
-                key={court.id}
+                key={place.id}
                 className="absolute pointer-events-auto bg-transparent border-none p-0"
                 style={{ top: `${top}%`, left: `${left}%` }}
-                onMouseEnter={() => setHoveredId(court.id)}
+                onMouseEnter={() => setHoveredId(place.id)}
                 onMouseLeave={() => setHoveredId(null)}
-                onClick={() => onSelect?.(court)}
+                onClick={() => onSelect?.(place)}
               >
                 <MapMarker
                   price={
-                    court.pricePerHourCents
-                      ? `${(court.pricePerHourCents / 100).toFixed(0)}`
-                      : "Free"
+                    place.lowestPriceCents !== undefined
+                      ? `${(place.lowestPriceCents / 100).toFixed(0)}`
+                      : "Rates"
                   }
-                  isSelected={court.id === selectedId || court.id === hoveredId}
+                  isSelected={place.id === selectedId || place.id === hoveredId}
                 />
               </button>
             );
@@ -83,41 +76,36 @@ export function CourtMap({
         </div>
       </div>
 
-      {/* Sidebar with court cards */}
       <div className="absolute top-4 left-4 bottom-4 w-80 overflow-auto space-y-3 z-10">
-        {courts.map((court) => (
+        {places.map((place) => (
           <button
             type="button"
-            key={court.id}
+            key={place.id}
             className={cn(
               "w-full text-left cursor-pointer transition-all bg-transparent border-none p-0",
-              court.id === selectedId && "ring-2 ring-primary rounded-xl",
+              place.id === selectedId && "ring-2 ring-primary rounded-xl",
             )}
-            onClick={() => onSelect?.(court)}
+            onClick={() => onSelect?.(place)}
           >
-            <CourtCard court={court} variant="compact" showCTA={false} />
+            <PlaceCard place={place} variant="compact" showCTA={false} />
           </button>
         ))}
       </div>
 
-      {/* Selected Court Detail (bottom panel) */}
-      {selectedCourt && (
+      {selectedPlace && (
         <Card className="absolute bottom-4 right-4 left-[352px] p-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-heading font-semibold">
-                {selectedCourt.name}
+                {selectedPlace.name}
               </h3>
               <p className="text-sm text-muted-foreground">
-                {selectedCourt.address}
+                {selectedPlace.address}
               </p>
             </div>
-            <a
-              href={`/courts/${selectedCourt.id}`}
-              className="text-sm font-medium text-primary hover:underline"
-            >
+            <span className="text-sm font-medium text-primary">
               View Details
-            </a>
+            </span>
           </div>
         </Card>
       )}

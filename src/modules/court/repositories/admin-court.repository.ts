@@ -1,71 +1,71 @@
 import { and, count, eq, ilike, type SQL } from "drizzle-orm";
 import {
-  type CourtAmenityRecord,
-  type CourtPhotoRecord,
-  type CourtRecord,
-  type CuratedCourtDetailRecord,
-  court,
-  courtAmenity,
-  courtPhoto,
-  curatedCourtDetail,
-  type InsertCourt,
-  type InsertCourtAmenity,
-  type InsertCourtPhoto,
-  type InsertCuratedCourtDetail,
+  type CuratedPlaceDetailRecord,
+  curatedPlaceDetail,
+  type InsertCuratedPlaceDetail,
+  type InsertPlace,
+  type InsertPlaceAmenity,
+  type InsertPlacePhoto,
+  type PlaceAmenityRecord,
+  type PlacePhotoRecord,
+  type PlaceRecord,
+  place,
+  placeAmenity,
+  placePhoto,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { AdminCourtFiltersDTO } from "../dtos";
 
 /**
- * Admin court list item
+ * Admin place list item
  */
-export interface AdminCourtListItem {
-  court: CourtRecord;
+export interface AdminPlaceListItem {
+  place: PlaceRecord;
 }
 
 /**
- * Paginated admin court result
+ * Paginated admin places result
  */
-export interface PaginatedAdminCourts {
-  items: AdminCourtListItem[];
+export interface PaginatedAdminPlaces {
+  items: AdminPlaceListItem[];
   total: number;
 }
 
 /**
- * Created curated court result
+ * Created curated place result
  */
-export interface CreatedCuratedCourt {
-  court: CourtRecord;
-  detail: CuratedCourtDetailRecord;
-  photos: CourtPhotoRecord[];
-  amenities: CourtAmenityRecord[];
+export interface CreatedCuratedPlace {
+  place: PlaceRecord;
+  detail: CuratedPlaceDetailRecord;
+  photos: PlacePhotoRecord[];
+  amenities: PlaceAmenityRecord[];
 }
 
 export interface IAdminCourtRepository {
-  create(data: InsertCourt, ctx?: RequestContext): Promise<CourtRecord>;
+  create(data: InsertPlace, ctx?: RequestContext): Promise<PlaceRecord>;
   update(
     id: string,
-    data: Partial<InsertCourt>,
+    data: Partial<InsertPlace>,
     ctx?: RequestContext,
-  ): Promise<CourtRecord>;
+  ): Promise<PlaceRecord>;
   createCuratedDetail(
-    data: InsertCuratedCourtDetail,
+    data: InsertCuratedPlaceDetail,
     ctx?: RequestContext,
-  ): Promise<CuratedCourtDetailRecord>;
+  ): Promise<CuratedPlaceDetailRecord>;
   createPhoto(
-    data: InsertCourtPhoto,
+    data: InsertPlacePhoto,
     ctx?: RequestContext,
-  ): Promise<CourtPhotoRecord>;
+  ): Promise<PlacePhotoRecord>;
   createAmenity(
-    data: InsertCourtAmenity,
+    data: InsertPlaceAmenity,
     ctx?: RequestContext,
-  ): Promise<CourtAmenityRecord>;
+  ): Promise<PlaceAmenityRecord>;
   findAll(
     filters: AdminCourtFiltersDTO,
     ctx?: RequestContext,
-  ): Promise<PaginatedAdminCourts>;
-  findById(id: string, ctx?: RequestContext): Promise<CourtRecord | null>;
+  ): Promise<PaginatedAdminPlaces>;
+  findById(id: string, ctx?: RequestContext): Promise<PlaceRecord | null>;
 }
 
 export class AdminCourtRepository implements IAdminCourtRepository {
@@ -75,83 +75,83 @@ export class AdminCourtRepository implements IAdminCourtRepository {
     return (ctx?.tx as DrizzleTransaction) ?? this.db;
   }
 
-  async create(data: InsertCourt, ctx?: RequestContext): Promise<CourtRecord> {
+  async create(data: InsertPlace, ctx?: RequestContext): Promise<PlaceRecord> {
     const client = this.getClient(ctx);
-    const result = await client.insert(court).values(data).returning();
+    const result = await client.insert(place).values(data).returning();
     return result[0];
   }
 
   async update(
     id: string,
-    data: Partial<InsertCourt>,
+    data: Partial<InsertPlace>,
     ctx?: RequestContext,
-  ): Promise<CourtRecord> {
+  ): Promise<PlaceRecord> {
     const client = this.getClient(ctx);
     const result = await client
-      .update(court)
+      .update(place)
       .set({ ...data, updatedAt: new Date() })
-      .where(eq(court.id, id))
+      .where(eq(place.id, id))
       .returning();
     return result[0];
   }
 
   async createCuratedDetail(
-    data: InsertCuratedCourtDetail,
+    data: InsertCuratedPlaceDetail,
     ctx?: RequestContext,
-  ): Promise<CuratedCourtDetailRecord> {
+  ): Promise<CuratedPlaceDetailRecord> {
     const client = this.getClient(ctx);
     const result = await client
-      .insert(curatedCourtDetail)
+      .insert(curatedPlaceDetail)
       .values(data)
       .returning();
     return result[0];
   }
 
   async createPhoto(
-    data: InsertCourtPhoto,
+    data: InsertPlacePhoto,
     ctx?: RequestContext,
-  ): Promise<CourtPhotoRecord> {
+  ): Promise<PlacePhotoRecord> {
     const client = this.getClient(ctx);
-    const result = await client.insert(courtPhoto).values(data).returning();
+    const result = await client.insert(placePhoto).values(data).returning();
     return result[0];
   }
 
   async createAmenity(
-    data: InsertCourtAmenity,
+    data: InsertPlaceAmenity,
     ctx?: RequestContext,
-  ): Promise<CourtAmenityRecord> {
+  ): Promise<PlaceAmenityRecord> {
     const client = this.getClient(ctx);
-    const result = await client.insert(courtAmenity).values(data).returning();
+    const result = await client.insert(placeAmenity).values(data).returning();
     return result[0];
   }
 
   async findAll(
     filters: AdminCourtFiltersDTO,
     ctx?: RequestContext,
-  ): Promise<PaginatedAdminCourts> {
+  ): Promise<PaginatedAdminPlaces> {
     const client = this.getClient(ctx);
 
     // Build conditions
     const conditions: SQL[] = [];
 
     if (filters.isActive !== undefined) {
-      conditions.push(eq(court.isActive, filters.isActive));
+      conditions.push(eq(place.isActive, filters.isActive));
     }
 
-    if (filters.courtType) {
-      conditions.push(eq(court.courtType, filters.courtType));
+    if (filters.placeType) {
+      conditions.push(eq(place.placeType, filters.placeType));
     }
 
     if (filters.claimStatus) {
-      conditions.push(eq(court.claimStatus, filters.claimStatus));
+      conditions.push(eq(place.claimStatus, filters.claimStatus));
     }
 
     if (filters.city) {
-      conditions.push(eq(court.city, filters.city));
+      conditions.push(eq(place.city, filters.city));
     }
 
     if (filters.search) {
-      conditions.push(ilike(court.name, `%${filters.search}%`));
+      conditions.push(ilike(place.name, `%${filters.search}%`));
     }
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
@@ -159,19 +159,19 @@ export class AdminCourtRepository implements IAdminCourtRepository {
     // Count
     const countResult = await client
       .select({ count: count() })
-      .from(court)
+      .from(place)
       .where(whereClause);
 
-    // Get courts
-    const courts = await client
+    // Get places
+    const places = await client
       .select()
-      .from(court)
+      .from(place)
       .where(whereClause)
       .limit(filters.limit)
       .offset(filters.offset);
 
     return {
-      items: courts.map((c) => ({ court: c })),
+      items: places.map((row) => ({ place: row })),
       total: countResult[0]?.count ?? 0,
     };
   }
@@ -179,12 +179,12 @@ export class AdminCourtRepository implements IAdminCourtRepository {
   async findById(
     id: string,
     ctx?: RequestContext,
-  ): Promise<CourtRecord | null> {
+  ): Promise<PlaceRecord | null> {
     const client = this.getClient(ctx);
     const result = await client
       .select()
-      .from(court)
-      .where(eq(court.id, id))
+      .from(place)
+      .where(eq(place.id, id))
       .limit(1);
     return result[0] ?? null;
   }

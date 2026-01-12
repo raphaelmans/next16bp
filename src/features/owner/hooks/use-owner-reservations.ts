@@ -64,21 +64,19 @@ function mapStatusToBackend(
   | "CANCELLED"
   | undefined {
   if (!status) return undefined;
+  if (status === "pending") {
+    return undefined;
+  }
+
   const map: Record<
-    ReservationStatus,
-    | "CREATED"
-    | "AWAITING_PAYMENT"
-    | "PAYMENT_MARKED_BY_USER"
-    | "CONFIRMED"
-    | "EXPIRED"
-    | "CANCELLED"
+    Exclude<ReservationStatus, "pending">,
+    "CONFIRMED" | "EXPIRED" | "CANCELLED"
   > = {
-    pending: "PAYMENT_MARKED_BY_USER",
     confirmed: "CONFIRMED",
     cancelled: "CANCELLED",
     completed: "CONFIRMED", // No separate completed status
   };
-  return map[status];
+  return map[status as Exclude<ReservationStatus, "pending">];
 }
 
 /**
@@ -179,6 +177,17 @@ export function useOwnerReservations(
         createdAt: r.createdAt ?? "",
       }));
 
+      if (status === "pending") {
+        const pendingStatuses = new Set([
+          "CREATED",
+          "AWAITING_PAYMENT",
+          "PAYMENT_MARKED_BY_USER",
+        ]);
+        reservations = reservations.filter((reservation) =>
+          pendingStatuses.has(reservation.reservationStatus),
+        );
+      }
+
       // Apply client-side search filter if provided
       if (search) {
         const searchLower = search.toLowerCase();
@@ -202,6 +211,23 @@ export function useOwnerReservations(
       }
 
       return reservations;
+    },
+  });
+}
+
+/**
+ * Accept a reservation (owner review)
+ */
+export function useAcceptReservation() {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    ...trpc.reservationOwner.accept.mutationOptions(),
+    onSuccess: () => {
+      queryClient.invalidateQueries(
+        trpc.reservationOwner.getForOrganization.queryFilter(),
+      );
     },
   });
 }

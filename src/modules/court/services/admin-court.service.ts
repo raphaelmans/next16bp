@@ -1,4 +1,5 @@
-import type { CourtRecord } from "@/shared/infra/db/schema";
+import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
+import type { PlaceRecord } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
@@ -7,32 +8,31 @@ import type {
   AdminUpdateCourtDTO,
   CreateCuratedCourtDTO,
 } from "../dtos";
-import { CourtNotFoundError } from "../errors/court.errors";
 import type {
-  CreatedCuratedCourt,
+  CreatedCuratedPlace,
   IAdminCourtRepository,
-  PaginatedAdminCourts,
+  PaginatedAdminPlaces,
 } from "../repositories/admin-court.repository";
 
 export interface IAdminCourtService {
-  createCuratedCourt(
+  createCuratedPlace(
     adminUserId: string,
     data: CreateCuratedCourtDTO,
-  ): Promise<CreatedCuratedCourt>;
-  updateCourt(
+  ): Promise<CreatedCuratedPlace>;
+  updatePlace(
     adminUserId: string,
     data: AdminUpdateCourtDTO,
-  ): Promise<CourtRecord>;
-  deactivateCourt(
+  ): Promise<PlaceRecord>;
+  deactivatePlace(
     adminUserId: string,
-    courtId: string,
+    placeId: string,
     reason: string,
-  ): Promise<CourtRecord>;
-  activateCourt(adminUserId: string, courtId: string): Promise<CourtRecord>;
-  listAllCourts(
+  ): Promise<PlaceRecord>;
+  activatePlace(adminUserId: string, placeId: string): Promise<PlaceRecord>;
+  listAllPlaces(
     filters: AdminCourtFiltersDTO,
     ctx?: RequestContext,
-  ): Promise<PaginatedAdminCourts>;
+  ): Promise<PaginatedAdminPlaces>;
 }
 
 export class AdminCourtService implements IAdminCourtService {
@@ -41,15 +41,15 @@ export class AdminCourtService implements IAdminCourtService {
     private transactionManager: TransactionManager,
   ) {}
 
-  async createCuratedCourt(
+  async createCuratedPlace(
     adminUserId: string,
     data: CreateCuratedCourtDTO,
-  ): Promise<CreatedCuratedCourt> {
+  ): Promise<CreatedCuratedPlace> {
     return this.transactionManager.run(async (tx) => {
       const ctx = { tx };
 
-      // 1. Create court (no organization - admin-created)
-      const courtRecord = await this.adminCourtRepository.create(
+      // 1. Create place (no organization - admin-created)
+      const placeRecord = await this.adminCourtRepository.create(
         {
           organizationId: null,
           name: data.name,
@@ -57,7 +57,8 @@ export class AdminCourtService implements IAdminCourtService {
           city: data.city,
           latitude: data.latitude,
           longitude: data.longitude,
-          courtType: "CURATED",
+          timeZone: data.timeZone ?? "Asia/Manila",
+          placeType: "CURATED",
           claimStatus: "UNCLAIMED",
           isActive: true,
         },
@@ -67,7 +68,7 @@ export class AdminCourtService implements IAdminCourtService {
       // 2. Create curated detail
       const detail = await this.adminCourtRepository.createCuratedDetail(
         {
-          courtId: courtRecord.id,
+          placeId: placeRecord.id,
           facebookUrl: data.facebookUrl,
           viberInfo: data.viberInfo,
           instagramUrl: data.instagramUrl,
@@ -84,7 +85,7 @@ export class AdminCourtService implements IAdminCourtService {
           const photo = data.photos[i];
           const created = await this.adminCourtRepository.createPhoto(
             {
-              courtId: courtRecord.id,
+              placeId: placeRecord.id,
               url: photo.url,
               displayOrder: photo.displayOrder ?? i,
             },
@@ -100,7 +101,7 @@ export class AdminCourtService implements IAdminCourtService {
         for (const name of data.amenities) {
           const created = await this.adminCourtRepository.createAmenity(
             {
-              courtId: courtRecord.id,
+              placeId: placeRecord.id,
               name,
             },
             ctx,
@@ -111,26 +112,26 @@ export class AdminCourtService implements IAdminCourtService {
 
       logger.info(
         {
-          event: "admin.court.created",
-          courtId: courtRecord.id,
+          event: "place.created",
+          placeId: placeRecord.id,
           adminUserId,
-          courtType: "CURATED",
+          placeType: "CURATED",
         },
-        "Admin created curated court",
+        "Admin created curated place",
       );
 
-      return { court: courtRecord, detail, photos, amenities };
+      return { place: placeRecord, detail, photos, amenities };
     });
   }
 
-  async updateCourt(
+  async updatePlace(
     adminUserId: string,
     data: AdminUpdateCourtDTO,
-  ): Promise<CourtRecord> {
-    // Verify court exists
-    const existing = await this.adminCourtRepository.findById(data.courtId);
+  ): Promise<PlaceRecord> {
+    // Verify place exists
+    const existing = await this.adminCourtRepository.findById(data.placeId);
     if (!existing) {
-      throw new CourtNotFoundError(data.courtId);
+      throw new PlaceNotFoundError(data.placeId);
     }
 
     // Build update data
@@ -140,82 +141,83 @@ export class AdminCourtService implements IAdminCourtService {
     if (data.city !== undefined) updateData.city = data.city;
     if (data.latitude !== undefined) updateData.latitude = data.latitude;
     if (data.longitude !== undefined) updateData.longitude = data.longitude;
+    if (data.timeZone !== undefined) updateData.timeZone = data.timeZone;
 
     const updated = await this.adminCourtRepository.update(
-      data.courtId,
+      data.placeId,
       updateData,
     );
 
     logger.info(
       {
-        event: "admin.court.updated",
-        courtId: data.courtId,
+        event: "place.updated",
+        placeId: data.placeId,
         adminUserId,
       },
-      "Admin updated court",
+      "Admin updated place",
     );
 
     return updated;
   }
 
-  async deactivateCourt(
+  async deactivatePlace(
     adminUserId: string,
-    courtId: string,
+    placeId: string,
     reason: string,
-  ): Promise<CourtRecord> {
-    // Verify court exists
-    const existing = await this.adminCourtRepository.findById(courtId);
+  ): Promise<PlaceRecord> {
+    // Verify place exists
+    const existing = await this.adminCourtRepository.findById(placeId);
     if (!existing) {
-      throw new CourtNotFoundError(courtId);
+      throw new PlaceNotFoundError(placeId);
     }
 
-    const updated = await this.adminCourtRepository.update(courtId, {
+    const updated = await this.adminCourtRepository.update(placeId, {
       isActive: false,
     });
 
     logger.info(
       {
-        event: "admin.court.deactivated",
-        courtId,
+        event: "place.deactivated",
+        placeId,
         adminUserId,
         reason,
       },
-      "Admin deactivated court",
+      "Admin deactivated place",
     );
 
     return updated;
   }
 
-  async activateCourt(
+  async activatePlace(
     adminUserId: string,
-    courtId: string,
-  ): Promise<CourtRecord> {
-    // Verify court exists
-    const existing = await this.adminCourtRepository.findById(courtId);
+    placeId: string,
+  ): Promise<PlaceRecord> {
+    // Verify place exists
+    const existing = await this.adminCourtRepository.findById(placeId);
     if (!existing) {
-      throw new CourtNotFoundError(courtId);
+      throw new PlaceNotFoundError(placeId);
     }
 
-    const updated = await this.adminCourtRepository.update(courtId, {
+    const updated = await this.adminCourtRepository.update(placeId, {
       isActive: true,
     });
 
     logger.info(
       {
-        event: "admin.court.activated",
-        courtId,
+        event: "place.activated",
+        placeId,
         adminUserId,
       },
-      "Admin activated court",
+      "Admin activated place",
     );
 
     return updated;
   }
 
-  async listAllCourts(
+  async listAllPlaces(
     filters: AdminCourtFiltersDTO,
     ctx?: RequestContext,
-  ): Promise<PaginatedAdminCourts> {
+  ): Promise<PaginatedAdminPlaces> {
     return this.adminCourtRepository.findAll(filters, ctx);
   }
 }

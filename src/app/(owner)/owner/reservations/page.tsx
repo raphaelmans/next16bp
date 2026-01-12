@@ -19,19 +19,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
   ConfirmDialog,
+  PlaceCourtFilter,
   RejectModal,
   ReservationAlertsPanel,
   ReservationsTable,
@@ -40,10 +34,13 @@ import {
   useOwnerCourtFilter,
   useOwnerCourts,
   useOwnerOrganization,
+  useOwnerPlaceFilter,
+  useOwnerPlaces,
 } from "@/features/owner/hooks";
 import {
   type Reservation,
   type ReservationStatus,
+  useAcceptReservation,
   useConfirmReservation,
   useOwnerReservations,
   useRejectReservation,
@@ -124,20 +121,33 @@ export default function OwnerReservationsPage() {
     organizations,
     isLoading: orgLoading,
   } = useOwnerOrganization();
-  const { data: courts = [] } = useOwnerCourts();
+  const { data: places = [] } = useOwnerPlaces(organization?.id ?? null);
+  const { data: courts = [] } = useOwnerCourts(organization?.id ?? null);
 
   // Filters state
+  const { placeId, setPlaceId } = useOwnerPlaceFilter();
   const { courtId, setCourtId } = useOwnerCourtFilter();
   const [search, setSearch] = React.useState("");
   const [dateFrom, setDateFrom] = React.useState<Date>();
   const [dateTo, setDateTo] = React.useState<Date>();
   const [activeTab, setActiveTab] = React.useState<TabValue>("pending");
 
+  const filteredCourts = React.useMemo(() => {
+    if (!placeId) return courts;
+    return courts.filter((court) => court.placeId === placeId);
+  }, [courts, placeId]);
+
   // Dialog state
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
   const [rejectModalOpen, setRejectModalOpen] = React.useState(false);
   const [selectedReservation, setSelectedReservation] =
     React.useState<Reservation | null>(null);
+  const confirmTitle =
+    selectedReservation?.reservationStatus === "CREATED"
+      ? "Accept Reservation"
+      : "Confirm Payment";
+  const confirmLabel =
+    selectedReservation?.reservationStatus === "CREATED" ? "Accept" : "Confirm";
 
   // Get status filter based on active tab
   const getStatusFilter = (tab: TabValue): ReservationStatus | "all" => {
@@ -162,7 +172,16 @@ export default function OwnerReservationsPage() {
     },
   );
 
+  const filteredByPlace = React.useMemo(() => {
+    if (!placeId) return reservations;
+    const courtIds = new Set(filteredCourts.map((court) => court.id));
+    return reservations.filter((reservation) =>
+      courtIds.has(reservation.courtId),
+    );
+  }, [filteredCourts, placeId, reservations]);
+
   const { data: counts } = useReservationCounts(organization?.id ?? null);
+  const acceptMutation = useAcceptReservation();
   const confirmMutation = useConfirmReservation();
   const rejectMutation = useRejectReservation();
 
@@ -177,7 +196,7 @@ export default function OwnerReservationsPage() {
     today.setHours(0, 0, 0, 0);
 
     if (activeTab === "upcoming") {
-      return reservations.filter((r) => {
+      return filteredByPlace.filter((r) => {
         const reservationDate = new Date(r.date);
         return (
           reservationDate >= today &&
@@ -187,14 +206,14 @@ export default function OwnerReservationsPage() {
     }
 
     if (activeTab === "past") {
-      return reservations.filter((r) => {
+      return filteredByPlace.filter((r) => {
         const reservationDate = new Date(r.date);
         return reservationDate < today || r.status === "completed";
       });
     }
 
-    return reservations;
-  }, [reservations, activeTab]);
+    return filteredByPlace;
+  }, [activeTab, filteredByPlace]);
 
   const handleConfirmClick = (reservationId: string) => {
     const reservation = reservations.find((r) => r.id === reservationId);
@@ -214,16 +233,25 @@ export default function OwnerReservationsPage() {
 
   const handleConfirm = () => {
     if (!selectedReservation) return;
-    confirmMutation.mutate(
+    const isCreated = selectedReservation.reservationStatus === "CREATED";
+    const mutation = isCreated ? acceptMutation : confirmMutation;
+    const successMessage = isCreated
+      ? "Reservation accepted"
+      : "Payment confirmed";
+    const errorMessage = isCreated
+      ? "Failed to accept reservation"
+      : "Failed to confirm payment";
+
+    mutation.mutate(
       { reservationId: selectedReservation.id },
       {
         onSuccess: () => {
-          toast.success("Booking confirmed successfully");
+          toast.success(successMessage);
           setConfirmDialogOpen(false);
           setSelectedReservation(null);
         },
         onError: () => {
-          toast.error("Failed to confirm booking");
+          toast.error(errorMessage);
         },
       },
     );
@@ -322,22 +350,14 @@ export default function OwnerReservationsPage() {
 
         {/* Filters */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <Select
-            value={courtId || "all"}
-            onValueChange={(value) => setCourtId(value === "all" ? "" : value)}
-          >
-            <SelectTrigger className="w-full sm:w-[180px]">
-              <SelectValue placeholder="All Courts" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Courts</SelectItem>
-              {courts.map((court) => (
-                <SelectItem key={court.id} value={court.id}>
-                  {court.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <PlaceCourtFilter
+            places={places}
+            courts={courts}
+            placeId={placeId}
+            courtId={courtId}
+            onPlaceChange={(value) => setPlaceId(value === "all" ? "" : value)}
+            onCourtChange={(value) => setCourtId(value === "all" ? "" : value)}
+          />
 
           <div className="flex gap-2">
             <Popover>
@@ -445,7 +465,9 @@ export default function OwnerReservationsPage() {
                 onConfirm={handleConfirmClick}
                 onReject={handleRejectClick}
                 isLoading={
-                  confirmMutation.isPending || rejectMutation.isPending
+                  confirmMutation.isPending ||
+                  acceptMutation.isPending ||
+                  rejectMutation.isPending
                 }
               />
             )}
@@ -458,7 +480,9 @@ export default function OwnerReservationsPage() {
         open={confirmDialogOpen}
         onOpenChange={setConfirmDialogOpen}
         onConfirm={handleConfirm}
-        isLoading={confirmMutation.isPending}
+        isLoading={confirmMutation.isPending || acceptMutation.isPending}
+        title={confirmTitle}
+        confirmLabel={confirmLabel}
         playerName={selectedReservation?.playerName}
         courtName={selectedReservation?.courtName}
         dateTime={

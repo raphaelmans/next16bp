@@ -26,6 +26,12 @@ export const appRoutes = {
     book: (courtId: string, slotId: string) =>
       `/courts/${courtId}/book/${slotId}`,
   },
+  places: {
+    base: "/places",
+    options: { type: "public" as const },
+    detail: (placeId: string) => `/places/${placeId}`,
+    book: (placeId: string) => `/places/${placeId}/book`,
+  },
   login: {
     base: "/login",
     options: { type: "guest" as const },
@@ -79,6 +85,23 @@ export const appRoutes = {
       edit: (courtId: string) => `/owner/courts/${courtId}/edit`,
       slots: (courtId: string) => `/owner/courts/${courtId}/slots`,
     },
+    places: {
+      base: "/owner/places",
+      new: "/owner/places/new",
+      edit: (placeId: string) => `/owner/places/${placeId}/edit`,
+      courts: {
+        base: (placeId: string) => `/owner/places/${placeId}/courts`,
+        new: (placeId: string) => `/owner/places/${placeId}/courts/new`,
+        edit: (placeId: string, courtId: string) =>
+          `/owner/places/${placeId}/courts/${courtId}/edit`,
+        hours: (placeId: string, courtId: string) =>
+          `/owner/places/${placeId}/courts/${courtId}/hours`,
+        pricing: (placeId: string, courtId: string) =>
+          `/owner/places/${placeId}/courts/${courtId}/pricing`,
+        slots: (placeId: string, courtId: string) =>
+          `/owner/places/${placeId}/courts/${courtId}/slots`,
+      },
+    },
     reservations: "/owner/reservations",
     reservationsActive: "/owner/reservations/active",
     reservationDetail: (reservationId: string) =>
@@ -100,7 +123,8 @@ export const appRoutes = {
   },
 } satisfies Record<string, RouteConfig | Record<string, unknown>>;
 
-const bookingRoutePattern = /^\/courts\/[^/]+\/book\/[^/]+$/;
+const bookingRoutePattern =
+  /^\/(courts\/[^/]+\/book\/[^/]+|places\/[^/]+\/book)$/;
 
 const exactOrChild = (path: string, base: string) =>
   path === base || path.startsWith(`${base}/`);
@@ -122,6 +146,7 @@ const guestBases = [
 const publicBases = [
   appRoutes.index.base,
   appRoutes.courts.base,
+  appRoutes.places.base,
   appRoutes.terms.base,
   appRoutes.privacy.base,
 ];

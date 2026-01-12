@@ -34,6 +34,20 @@ export class ReservationExpiredError extends ValidationError {
   }
 }
 
+export class NoAvailabilityError extends ValidationError {
+  readonly code = "NO_AVAILABILITY";
+
+  constructor(details?: {
+    courtId?: string;
+    placeId?: string;
+    sportId?: string;
+    startTime?: string;
+    durationMinutes?: number;
+  }) {
+    super("No availability for the selected time", details);
+  }
+}
+
 export class ReservationCancellationWindowError extends ValidationError {
   readonly code = "RESERVATION_CANCELLATION_WINDOW_PASSED";
 

@@ -22,19 +22,26 @@ export default function NewCourtPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
-  // Fetch the user's organizations
   const { data: organizations, isLoading: orgsLoading } = useQuery(
     trpc.organization.my.queryOptions(),
   );
 
-  // Get the first organization (owner layout guard ensures they have one)
   const organization = organizations?.[0];
 
+  const { data: places = [], isLoading: placesLoading } = useQuery({
+    ...trpc.placeManagement.list.queryOptions({
+      organizationId: organization?.id ?? "",
+    }),
+    enabled: !!organization?.id,
+  });
+
+  const { data: sports = [], isLoading: sportsLoading } = useQuery(
+    trpc.sport.list.queryOptions({}),
+  );
+
   const { submit, isSubmitting } = useCourtForm({
-    organizationId: organization?.id ?? "",
     onSuccess: (result) => {
       toast.success("Court created successfully!");
-      // Redirect to slots page for the newly created court
       router.push(appRoutes.owner.courts.slots(result.courtId));
     },
   });
@@ -60,8 +67,7 @@ export default function NewCourtPage() {
     router.push(appRoutes.owner.courts.base);
   };
 
-  // Show loading state while fetching organization
-  if (orgsLoading) {
+  if (orgsLoading || placesLoading || sportsLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -69,11 +75,21 @@ export default function NewCourtPage() {
     );
   }
 
-  // This shouldn't happen due to layout guard, but handle gracefully
   if (!organization) {
     router.push(appRoutes.owner.onboarding);
     return null;
   }
+
+  const placeOptions = places.map((place) => ({
+    id: place.id,
+    name: place.name,
+    city: place.city,
+  }));
+
+  const sportOptions = sports.map((sport) => ({
+    id: sport.id,
+    name: sport.name,
+  }));
 
   return (
     <AppShell
@@ -112,8 +128,9 @@ export default function NewCourtPage() {
           backHref={appRoutes.owner.courts.base}
         />
 
-        {/* Form */}
         <CourtForm
+          placeOptions={placeOptions}
+          sportOptions={sportOptions}
           onSubmit={submit}
           onSaveDraft={handleSaveDraft}
           onCancel={handleCancel}

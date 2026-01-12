@@ -9,19 +9,19 @@ import {
 import { authUsers } from "drizzle-orm/supabase";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
-import { court } from "./court";
 import { claimRequestStatusEnum, claimRequestTypeEnum } from "./enums";
 import { organization } from "./organization";
+import { place } from "./place";
 
 /**
  * Claim Request table
- * Tracks requests to claim or remove curated courts
+ * Tracks requests to claim or remove curated places
  */
 export const claimRequest = pgTable("claim_request", {
   id: uuid("id").primaryKey().defaultRandom(),
-  courtId: uuid("court_id")
+  placeId: uuid("place_id")
     .notNull()
-    .references(() => court.id, { onDelete: "cascade" }),
+    .references(() => place.id, { onDelete: "cascade" }),
   organizationId: uuid("organization_id")
     .notNull()
     .references(() => organization.id, { onDelete: "cascade" }),

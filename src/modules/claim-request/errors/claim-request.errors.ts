@@ -13,35 +13,35 @@ export class ClaimRequestNotFoundError extends NotFoundError {
   }
 }
 
-export class CourtAlreadyClaimedError extends ConflictError {
-  readonly code = "COURT_ALREADY_CLAIMED";
+export class PlaceAlreadyClaimedError extends ConflictError {
+  readonly code = "PLACE_ALREADY_CLAIMED";
 
-  constructor(courtId: string) {
-    super("This court has already been claimed", { courtId });
+  constructor(placeId: string) {
+    super("This place has already been claimed", { placeId });
   }
 }
 
 export class PendingClaimExistsError extends ConflictError {
   readonly code = "PENDING_CLAIM_EXISTS";
 
-  constructor(courtId: string) {
-    super("A pending claim request already exists for this court", { courtId });
+  constructor(placeId: string) {
+    super("A pending claim request already exists for this place", { placeId });
   }
 }
 
-export class NotCuratedCourtError extends ValidationError {
-  readonly code = "NOT_CURATED_COURT";
+export class NotCuratedPlaceError extends ValidationError {
+  readonly code = "NOT_CURATED_PLACE";
 
-  constructor(courtId: string) {
-    super("Only curated courts can be claimed", { courtId });
+  constructor(placeId: string) {
+    super("Only curated places can be claimed", { placeId });
   }
 }
 
-export class CourtNotUnclaimedError extends ValidationError {
-  readonly code = "COURT_NOT_UNCLAIMED";
+export class PlaceNotUnclaimedError extends ValidationError {
+  readonly code = "PLACE_NOT_UNCLAIMED";
 
-  constructor(courtId: string) {
-    super("This court is not available for claiming", { courtId });
+  constructor(placeId: string) {
+    super("This place is not available for claiming", { placeId });
   }
 }
 
@@ -76,10 +76,10 @@ export class OrganizationNotFoundError extends NotFoundError {
   }
 }
 
-export class CourtNotFoundError extends NotFoundError {
-  readonly code = "COURT_NOT_FOUND";
+export class PlaceNotFoundError extends NotFoundError {
+  readonly code = "PLACE_NOT_FOUND";
 
-  constructor(courtId?: string) {
-    super("Court not found", courtId ? { courtId } : undefined);
+  constructor(placeId?: string) {
+    super("Place not found", placeId ? { placeId } : undefined);
   }
 }

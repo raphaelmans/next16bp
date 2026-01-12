@@ -1,8 +1,8 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -19,150 +19,84 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { useTRPC } from "@/trpc/client";
 
-interface CourtFiltersProps {
+interface PlaceFiltersProps {
   city?: string;
-  type?: string;
-  isFree?: boolean;
-  amenities?: string[];
+  sportId?: string;
   onCityChange: (city: string | undefined) => void;
-  onTypeChange: (type: string | undefined) => void;
-  onIsFreeChange: (isFree: boolean | undefined) => void;
-  onAmenitiesChange: (amenities: string[]) => void;
+  onSportChange: (sportId: string | undefined) => void;
   onClearAll: () => void;
   className?: string;
 }
 
 const CITIES = [
-  { value: "manila", label: "Manila" },
-  { value: "cebu", label: "Cebu" },
-  { value: "davao", label: "Davao" },
-  { value: "makati", label: "Makati" },
-  { value: "quezon-city", label: "Quezon City" },
+  { value: "Makati", label: "Makati" },
+  { value: "Taguig City", label: "Taguig City" },
+  { value: "Cebu City", label: "Cebu City" },
+  { value: "Quezon City", label: "Quezon City" },
+  { value: "Davao", label: "Davao" },
 ];
 
-const COURT_TYPES = [
-  { value: "CURATED", label: "Curated" },
-  { value: "RESERVABLE", label: "Reservable" },
-];
-
-const AMENITIES = [
-  { value: "parking", label: "Parking" },
-  { value: "restrooms", label: "Restrooms" },
-  { value: "lights", label: "Lighting" },
-  { value: "equipment", label: "Equipment Rental" },
-  { value: "water", label: "Water Station" },
-];
-
-export function CourtFilters({
+export function PlaceFilters({
   city,
-  type,
-  isFree,
-  amenities = [],
+  sportId,
   onCityChange,
-  onTypeChange,
-  onIsFreeChange,
-  onAmenitiesChange,
+  onSportChange,
   onClearAll,
   className,
-}: CourtFiltersProps) {
-  const hasFilters =
-    city || type || isFree !== undefined || amenities.length > 0;
-
-  const handleAmenityToggle = (amenity: string) => {
-    if (amenities.includes(amenity)) {
-      onAmenitiesChange(amenities.filter((a) => a !== amenity));
-    } else {
-      onAmenitiesChange([...amenities, amenity]);
-    }
-  };
+}: PlaceFiltersProps) {
+  const hasFilters = city || sportId;
+  const trpc = useTRPC();
+  const { data: sports = [], isLoading: sportsLoading } = useQuery(
+    trpc.sport.list.queryOptions({}),
+  );
 
   const FilterContent = () => (
     <div className="space-y-6">
-      {/* City */}
       <div className="space-y-2">
         <Label>City</Label>
         <Select
           value={city}
-          onValueChange={(v) => onCityChange(v || undefined)}
+          onValueChange={(value) => onCityChange(value || undefined)}
         >
           <SelectTrigger>
             <SelectValue placeholder="All cities" />
           </SelectTrigger>
           <SelectContent>
-            {CITIES.map((c) => (
-              <SelectItem key={c.value} value={c.value}>
-                {c.label}
+            {CITIES.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
 
-      {/* Court Type */}
       <div className="space-y-2">
-        <Label>Court Type</Label>
+        <Label>Sport</Label>
         <Select
-          value={type}
-          onValueChange={(v) => onTypeChange(v || undefined)}
+          value={sportId}
+          onValueChange={(value) => onSportChange(value || undefined)}
+          disabled={sportsLoading}
         >
           <SelectTrigger>
-            <SelectValue placeholder="All types" />
+            <SelectValue placeholder="All sports" />
           </SelectTrigger>
           <SelectContent>
-            {COURT_TYPES.map((t) => (
-              <SelectItem key={t.value} value={t.value}>
-                {t.label}
+            {sports.map((sport) => (
+              <SelectItem key={sport.id} value={sport.id}>
+                {sport.name}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
 
-      {/* Price */}
-      <div className="space-y-2">
-        <Label>Price</Label>
-        <div className="flex items-center gap-2">
-          <Checkbox
-            id="free-courts"
-            checked={isFree === true}
-            onCheckedChange={(checked) =>
-              onIsFreeChange(checked === true ? true : undefined)
-            }
-          />
-          <Label htmlFor="free-courts" className="font-normal cursor-pointer">
-            Free courts only
-          </Label>
-        </div>
-      </div>
-
-      {/* Amenities */}
-      <div className="space-y-2">
-        <Label>Amenities</Label>
-        <div className="space-y-2">
-          {AMENITIES.map((amenity) => (
-            <div key={amenity.value} className="flex items-center gap-2">
-              <Checkbox
-                id={amenity.value}
-                checked={amenities.includes(amenity.value)}
-                onCheckedChange={() => handleAmenityToggle(amenity.value)}
-              />
-              <Label
-                htmlFor={amenity.value}
-                className="font-normal cursor-pointer"
-              >
-                {amenity.label}
-              </Label>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Clear All */}
       {hasFilters && (
         <Button variant="ghost" className="w-full" onClick={onClearAll}>
           <X className="h-4 w-4 mr-2" />
-          Clear all filters
+          Clear filters
         </Button>
       )}
     </div>
@@ -170,47 +104,39 @@ export function CourtFilters({
 
   return (
     <>
-      {/* Desktop Filters */}
       <div className={cn("hidden lg:flex items-center gap-3", className)}>
         <Select
           value={city}
-          onValueChange={(v) => onCityChange(v || undefined)}
+          onValueChange={(value) => onCityChange(value || undefined)}
         >
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-44">
             <SelectValue placeholder="City" />
           </SelectTrigger>
           <SelectContent>
-            {CITIES.map((c) => (
-              <SelectItem key={c.value} value={c.value}>
-                {c.label}
+            {CITIES.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
 
         <Select
-          value={type}
-          onValueChange={(v) => onTypeChange(v || undefined)}
+          value={sportId}
+          onValueChange={(value) => onSportChange(value || undefined)}
+          disabled={sportsLoading}
         >
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="Type" />
+          <SelectTrigger className="w-44">
+            <SelectValue placeholder="Sport" />
           </SelectTrigger>
           <SelectContent>
-            {COURT_TYPES.map((t) => (
-              <SelectItem key={t.value} value={t.value}>
-                {t.label}
+            {sports.map((sport) => (
+              <SelectItem key={sport.id} value={sport.id}>
+                {sport.name}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-
-        <Button
-          variant={isFree ? "default" : "outline"}
-          size="sm"
-          onClick={() => onIsFreeChange(isFree ? undefined : true)}
-        >
-          Free Only
-        </Button>
 
         {hasFilters && (
           <Button variant="ghost" size="sm" onClick={onClearAll}>
@@ -220,7 +146,6 @@ export function CourtFilters({
         )}
       </div>
 
-      {/* Mobile Filter Sheet */}
       <Sheet>
         <SheetTrigger asChild className="lg:hidden">
           <Button variant="outline" size="sm">
@@ -228,7 +153,7 @@ export function CourtFilters({
             Filters
             {hasFilters && (
               <span className="ml-2 rounded-full bg-primary text-primary-foreground text-xs px-1.5">
-                {[city, type, isFree, ...amenities].filter(Boolean).length}
+                {[city, sportId].filter(Boolean).length}
               </span>
             )}
           </Button>

@@ -1,7 +1,5 @@
 import {
   createSearchParamsCache,
-  parseAsArrayOf,
-  parseAsBoolean,
   parseAsInteger,
   parseAsString,
   parseAsStringLiteral,
@@ -16,9 +14,7 @@ export const searchParamsSchema = {
 
   // Filters
   city: parseAsString,
-  type: parseAsStringLiteral(["CURATED", "RESERVABLE"] as const),
-  isFree: parseAsBoolean,
-  amenities: parseAsArrayOf(parseAsString).withDefault([]),
+  sportId: parseAsString,
 
   // Pagination
   page: parseAsInteger.withDefault(1),
@@ -31,9 +27,7 @@ export type SearchParams = {
   view: "list" | "map";
   q: string | null;
   city: string | null;
-  type: "CURATED" | "RESERVABLE" | null;
-  isFree: boolean | null;
-  amenities: string[];
+  sportId: string | null;
   page: number;
   limit: number;
 };

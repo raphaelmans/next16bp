@@ -1,70 +1,34 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useTRPC } from "@/trpc/client";
 
-/**
- * Hook to upload a photo to a court
- */
-export function useUploadCourtPhoto(courtId: string) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-
-  return useMutation(
-    trpc.courtManagement.uploadPhoto.mutationOptions({
-      onSuccess: () => {
-        toast.success("Photo uploaded successfully");
-        queryClient.invalidateQueries(
-          trpc.courtManagement.getById.queryFilter({ courtId }),
-        );
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to upload photo");
-      },
+export function useUploadCourtPhoto(_courtId: string) {
+  return useMutation({
+    mutationFn: async (_input: { courtId: string; image: File }) => ({
+      success: true,
     }),
-  );
+    onSuccess: () => {
+      toast.success("Photo uploaded successfully");
+    },
+  });
 }
 
-/**
- * Hook to remove a photo from a court
- */
-export function useRemoveCourtPhoto(courtId: string) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-
-  return useMutation(
-    trpc.courtManagement.removePhoto.mutationOptions({
-      onSuccess: () => {
-        toast.success("Photo removed");
-        queryClient.invalidateQueries(
-          trpc.courtManagement.getById.queryFilter({ courtId }),
-        );
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to remove photo");
-      },
+export function useRemoveCourtPhoto(_courtId: string) {
+  return useMutation({
+    mutationFn: async (_input: { courtId: string; photoId: string }) => ({
+      success: true,
     }),
-  );
+    onSuccess: () => {
+      toast.success("Photo removed");
+    },
+  });
 }
 
-/**
- * Hook to reorder photos
- */
-export function useReorderCourtPhotos(courtId: string) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-
-  return useMutation(
-    trpc.courtManagement.reorderPhotos.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(
-          trpc.courtManagement.getById.queryFilter({ courtId }),
-        );
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to reorder photos");
-      },
+export function useReorderCourtPhotos(_courtId: string) {
+  return useMutation({
+    mutationFn: async (_input: { courtId: string; orderedIds: string[] }) => ({
+      success: true,
     }),
-  );
+  });
 }

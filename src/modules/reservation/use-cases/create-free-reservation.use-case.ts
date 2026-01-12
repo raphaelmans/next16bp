@@ -5,7 +5,10 @@ import {
 import type { IProfileRepository } from "@/modules/profile/repositories/profile.repository";
 import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
 import type { ITimeSlotRepository } from "@/modules/time-slot/repositories/time-slot.repository";
-import type { ReservationRecord } from "@/shared/infra/db/schema";
+import type {
+  ReservationRecord,
+  TimeSlotRecord,
+} from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
@@ -17,7 +20,8 @@ export interface ICreateFreeReservationUseCase {
   execute(
     userId: string,
     profileId: string,
-    timeSlotId: string,
+    timeSlotIds: string[],
+    expiresAt: Date,
   ): Promise<ReservationRecord>;
 }
 
@@ -35,66 +39,78 @@ export class CreateFreeReservationUseCase
   async execute(
     userId: string,
     profileId: string,
-    timeSlotId: string,
+    timeSlotIds: string[],
+    expiresAt: Date,
   ): Promise<ReservationRecord> {
     return this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
-      // Lock the time slot for update
-      const slot = await this.timeSlotRepository.findByIdForUpdate(
-        timeSlotId,
+      if (timeSlotIds.length === 0) {
+        throw new SlotNotFoundError("unknown");
+      }
+
+      const slots = await this.timeSlotRepository.findByIdsForUpdate(
+        timeSlotIds,
         ctx,
       );
-      if (!slot) {
-        throw new SlotNotFoundError(timeSlotId);
+      const slotMap = new Map(slots.map((slot) => [slot.id, slot]));
+      const orderedSlots = timeSlotIds
+        .map((slotId) => slotMap.get(slotId))
+        .filter((slot): slot is TimeSlotRecord => !!slot);
+
+      if (orderedSlots.length !== timeSlotIds.length) {
+        const missingId = timeSlotIds.find((slotId) => !slotMap.has(slotId));
+        throw new SlotNotFoundError(missingId ?? "unknown");
       }
 
-      // Verify slot is available
-      if (slot.status !== "AVAILABLE") {
-        throw new SlotNotAvailableError(timeSlotId, slot.status);
+      for (const slot of orderedSlots) {
+        if (slot.status !== "AVAILABLE") {
+          throw new SlotNotAvailableError(slot.id, slot.status);
+        }
       }
 
-      // Get player profile for snapshot
       const profile = await this.profileRepository.findById(profileId, ctx);
       if (!profile) {
         throw new ProfileNotFoundError(profileId);
       }
 
-      // Validate profile completeness
       if (!profile.displayName || (!profile.email && !profile.phoneNumber)) {
         throw new IncompleteProfileError();
       }
 
-      // Create reservation with immediate CONFIRMED status
       const reservation = await this.reservationRepository.create(
         {
-          timeSlotId,
+          timeSlotId: orderedSlots[0].id,
           playerId: profileId,
           playerNameSnapshot: profile.displayName,
           playerEmailSnapshot: profile.email,
           playerPhoneSnapshot: profile.phoneNumber,
-          status: "CONFIRMED",
-          confirmedAt: new Date(),
+          status: "CREATED",
+          expiresAt,
         },
         ctx,
       );
 
-      // Update slot status to BOOKED
-      await this.timeSlotRepository.update(
-        timeSlotId,
-        { status: "BOOKED" },
+      await this.reservationRepository.createTimeSlotLinks(
+        reservation.id,
+        orderedSlots.map((slot) => slot.id),
         ctx,
       );
 
-      // Create audit event
+      await this.timeSlotRepository.updateManyStatus(
+        orderedSlots.map((slot) => slot.id),
+        "HELD",
+        ctx,
+      );
+
       await this.reservationEventRepository.create(
         {
           reservationId: reservation.id,
           fromStatus: null,
-          toStatus: "CONFIRMED",
+          toStatus: "CREATED",
           triggeredByUserId: userId,
           triggeredByRole: "PLAYER",
-          notes: "Free reservation - immediately confirmed",
+          notes: "Reservation created - awaiting owner acceptance",
         },
         ctx,
       );
@@ -103,12 +119,12 @@ export class CreateFreeReservationUseCase
         {
           event: "reservation.created",
           reservationId: reservation.id,
-          timeSlotId,
+          timeSlotIds: orderedSlots.map((slot) => slot.id),
           playerId: profileId,
-          status: "CONFIRMED",
+          status: "CREATED",
           type: "free",
         },
-        "Free reservation created and confirmed",
+        "Reservation created and awaiting owner acceptance",
       );
 
       return reservation;

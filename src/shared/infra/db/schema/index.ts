@@ -7,14 +7,20 @@
 export * from "./claim-request";
 // Court-related tables
 export * from "./court";
-export * from "./court-amenity";
-export * from "./court-photo";
+export * from "./court-hours-window";
+export * from "./court-rate-rule";
 // Enums (must be exported first as they are referenced by other schemas)
 export * from "./enums";
-export * from "./organization";
-export * from "./profile";
-export * from "./reservation";
-// Reservation-related tables
-export * from "./time-slot";
 // Core tables
+export * from "./organization";
+// Place-related tables
+export * from "./place";
+export * from "./place-amenity";
+export * from "./place-photo";
+export * from "./profile";
+// Reservation-related tables
+export * from "./reservation";
+export * from "./reservation-time-slot";
+export * from "./sport";
+export * from "./time-slot";
 export * from "./user-roles";

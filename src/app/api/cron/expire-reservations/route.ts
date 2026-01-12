@@ -4,6 +4,7 @@ import { db } from "@/shared/infra/db/drizzle";
 import {
   reservation,
   reservationEvent,
+  reservationTimeSlot,
   timeSlot,
 } from "@/shared/infra/db/schema";
 
@@ -12,7 +13,7 @@ import {
  *
  * Per PRD Section 8.4, reservations have a 15-minute payment window.
  * This job runs every minute to:
- * 1. Find reservations where expiresAt < NOW() and status is AWAITING_PAYMENT or PAYMENT_MARKED_BY_USER
+ * 1. Find reservations where expiresAt < NOW() and status is CREATED, AWAITING_PAYMENT or PAYMENT_MARKED_BY_USER
  * 2. Update reservation status to EXPIRED
  * 3. Release the associated time slot (status -> AVAILABLE)
  * 4. Create audit event with triggeredByRole: SYSTEM
@@ -52,6 +53,7 @@ export async function GET(request: NextRequest) {
         and(
           lt(reservation.expiresAt, now),
           inArray(reservation.status, [
+            "CREATED",
             "AWAITING_PAYMENT",
             "PAYMENT_MARKED_BY_USER",
           ]),
@@ -81,14 +83,22 @@ export async function GET(request: NextRequest) {
             })
             .where(eq(reservation.id, expiredRes.id));
 
-          // 2. Release the time slot
+          const linkedSlots = await tx
+            .select({ timeSlotId: reservationTimeSlot.timeSlotId })
+            .from(reservationTimeSlot)
+            .where(eq(reservationTimeSlot.reservationId, expiredRes.id));
+
+          const slotIds = linkedSlots.map((slot) => slot.timeSlotId);
+          const targetSlotIds =
+            slotIds.length > 0 ? slotIds : [expiredRes.timeSlotId];
+
           await tx
             .update(timeSlot)
             .set({
               status: "AVAILABLE",
               updatedAt: now,
             })
-            .where(eq(timeSlot.id, expiredRes.timeSlotId));
+            .where(inArray(timeSlot.id, targetSlotIds));
 
           // 3. Create audit event
           await tx.insert(reservationEvent).values({

@@ -8,6 +8,7 @@ import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
 import { protectedProcedure, router } from "@/shared/infra/trpc/trpc";
 import { AppError } from "@/shared/kernel/errors";
 import {
+  AcceptReservationSchema,
   ConfirmPaymentSchema,
   GetOrgReservationsSchema,
   GetPendingCountSchema,
@@ -16,6 +17,7 @@ import {
 } from "./dtos";
 import {
   InvalidReservationStatusError,
+  ReservationExpiredError,
   ReservationNotFoundError,
 } from "./errors/reservation.errors";
 import { makeReservationOwnerService } from "./factories/reservation.factory";
@@ -45,7 +47,10 @@ function handleReservationOwnerError(error: unknown): never {
       cause: error,
     });
   }
-  if (error instanceof InvalidReservationStatusError) {
+  if (
+    error instanceof InvalidReservationStatusError ||
+    error instanceof ReservationExpiredError
+  ) {
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: error.message,
@@ -63,6 +68,20 @@ function handleReservationOwnerError(error: unknown): never {
 }
 
 export const reservationOwnerRouter = router({
+  /**
+   * Accept a reservation (owner only)
+   */
+  accept: protectedProcedure
+    .input(AcceptReservationSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationOwnerService();
+        return await service.acceptReservation(ctx.userId, input.reservationId);
+      } catch (error) {
+        handleReservationOwnerError(error);
+      }
+    }),
+
   /**
    * Confirm payment for a reservation (owner only)
    */

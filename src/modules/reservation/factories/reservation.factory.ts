@@ -1,8 +1,9 @@
-import {
-  makeCourtRepository,
-  makeReservableCourtDetailRepository,
-} from "@/modules/court/factories/court.factory";
+import { makeCourtRepository } from "@/modules/court/factories/court.factory";
 import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
+import {
+  makePlacePolicyRepository,
+  makePlaceRepository,
+} from "@/modules/place/factories/place.factory";
 import { makeProfileRepository } from "@/modules/profile/factories/profile.factory";
 import { makeTimeSlotRepository } from "@/modules/time-slot/factories/time-slot.factory";
 import { getContainer } from "@/shared/infra/container";
@@ -69,7 +70,9 @@ export function makeReservationService(): ReservationService {
       makeReservationEventRepository(),
       makeTimeSlotRepository(),
       makeProfileRepository(),
-      makeReservableCourtDetailRepository(),
+      makeCourtRepository(),
+      makePlaceRepository(),
+      makePlacePolicyRepository(),
       makeCreateFreeReservationUseCase(),
       makeCreatePaidReservationUseCase(),
       getContainer().transactionManager,
@@ -85,6 +88,8 @@ export function makeReservationOwnerService(): ReservationOwnerService {
       makeReservationEventRepository(),
       makeTimeSlotRepository(),
       makeCourtRepository(),
+      makePlaceRepository(),
+      makePlacePolicyRepository(),
       makeOrganizationRepository(),
       getContainer().transactionManager,
     );

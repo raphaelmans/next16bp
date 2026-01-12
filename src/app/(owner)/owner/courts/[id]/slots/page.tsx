@@ -7,13 +7,11 @@ import { useParams } from "next/navigation";
 import * as React from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import { ReservationAlertsPanel } from "@/features/owner/components";
 import { BulkSlotModal } from "@/features/owner/components/bulk-slot-modal";
 import { CalendarNavigation } from "@/features/owner/components/calendar-navigation";
-import { CourtPhotoUpload } from "@/features/owner/components/court-photo-upload";
 import { RejectModal } from "@/features/owner/components/reject-modal";
 import { SlotList } from "@/features/owner/components/slot-list";
 import {
@@ -31,7 +29,7 @@ import { useTRPC } from "@/trpc/client";
 
 export default function ManageSlotsPage() {
   const params = useParams();
-  const courtId = params.id as string;
+  const courtId = (params.courtId ?? params.id) as string;
 
   const { data: user } = useSession();
   const logoutMutation = useLogout();
@@ -211,17 +209,11 @@ export default function ManageSlotsPage() {
   const orgDisplay = currentOrg
     ? { id: currentOrg.id, name: currentOrg.name }
     : undefined;
-  const courtName = courtData?.court.name ?? "Loading...";
-  const reservableDetail =
-    courtData?.detail && courtData.court.courtType === "RESERVABLE"
-      ? (courtData.detail as {
-          defaultPriceCents?: number | null;
-          isFree?: boolean | null;
-        })
-      : null;
-  const defaultPriceCents = reservableDetail?.isFree
-    ? 0
-    : (reservableDetail?.defaultPriceCents ?? 0);
+  const courtName = courtData?.court.label ?? "Loading...";
+  const publicPlaceHref = courtData
+    ? appRoutes.places.detail(courtData.court.placeId)
+    : appRoutes.places.base;
+  const defaultPriceCents = 0;
 
   // Generate mock dates with slots for calendar indicators
   const datesWithSlots = React.useMemo(() => {
@@ -348,7 +340,7 @@ export default function ManageSlotsPage() {
             </Button>
             <Button variant="outline" size="sm" asChild>
               <a
-                href={appRoutes.courts.detail(courtId)}
+                href={publicPlaceHref}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -380,18 +372,6 @@ export default function ManageSlotsPage() {
 
           {/* Slots list */}
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Court Photos</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CourtPhotoUpload
-                  courtId={courtId}
-                  photos={courtData?.photos ?? []}
-                />
-              </CardContent>
-            </Card>
-
             <SlotList
               date={selectedDate}
               slots={slots}

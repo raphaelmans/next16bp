@@ -1,22 +1,12 @@
 import type { RequestContext } from "@/shared/kernel/context";
-import type { ListCourtsByCityDTO, SearchCourtsDTO } from "../dtos";
 import { CourtNotFoundError } from "../errors/court.errors";
 import type {
-  CourtWithDetails,
+  CourtWithSport,
   ICourtRepository,
-  PaginatedCourts,
 } from "../repositories/court.repository";
 
 export interface ICourtDiscoveryService {
-  getCourtById(id: string, ctx?: RequestContext): Promise<CourtWithDetails>;
-  searchCourts(
-    filters: SearchCourtsDTO,
-    ctx?: RequestContext,
-  ): Promise<PaginatedCourts>;
-  listCourtsByCity(
-    params: ListCourtsByCityDTO,
-    ctx?: RequestContext,
-  ): Promise<PaginatedCourts>;
+  getCourtById(id: string, ctx?: RequestContext): Promise<CourtWithSport>;
 }
 
 export class CourtDiscoveryService implements ICourtDiscoveryService {
@@ -25,39 +15,19 @@ export class CourtDiscoveryService implements ICourtDiscoveryService {
   async getCourtById(
     id: string,
     ctx?: RequestContext,
-  ): Promise<CourtWithDetails> {
-    const courtWithDetails = await this.courtRepository.findWithDetails(
+  ): Promise<CourtWithSport> {
+    const courtWithSport = await this.courtRepository.findByIdWithSport(
       id,
       ctx,
     );
-
-    if (!courtWithDetails) {
+    if (!courtWithSport) {
       throw new CourtNotFoundError(id);
     }
 
-    // Only return active courts
-    if (!courtWithDetails.court.isActive) {
+    if (!courtWithSport.court.isActive) {
       throw new CourtNotFoundError(id);
     }
 
-    return courtWithDetails;
-  }
-
-  async searchCourts(
-    filters: SearchCourtsDTO,
-    ctx?: RequestContext,
-  ): Promise<PaginatedCourts> {
-    return this.courtRepository.search(filters, ctx);
-  }
-
-  async listCourtsByCity(
-    params: ListCourtsByCityDTO,
-    ctx?: RequestContext,
-  ): Promise<PaginatedCourts> {
-    return this.courtRepository.listByCity(
-      params.city,
-      { limit: params.limit, offset: params.offset },
-      ctx,
-    );
+    return courtWithSport;
   }
 }

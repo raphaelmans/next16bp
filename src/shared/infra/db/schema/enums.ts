@@ -1,16 +1,16 @@
 import { pgEnum } from "drizzle-orm/pg-core";
 
 /**
- * Court type enum
- * Defines whether a court is curated (view-only) or reservable (bookable)
+ * Place type enum
+ * Defines whether a place is curated (view-only) or reservable (bookable)
  */
-export const courtTypeEnum = pgEnum("court_type", ["CURATED", "RESERVABLE"]);
+export const placeTypeEnum = pgEnum("place_type", ["CURATED", "RESERVABLE"]);
 
 /**
- * Claim status enum
- * Tracks the claiming lifecycle of a court
+ * Place claim status enum
+ * Tracks the claiming lifecycle of a place
  */
-export const claimStatusEnum = pgEnum("claim_status", [
+export const placeClaimStatusEnum = pgEnum("claim_status", [
   "UNCLAIMED",
   "CLAIM_PENDING",
   "CLAIMED",

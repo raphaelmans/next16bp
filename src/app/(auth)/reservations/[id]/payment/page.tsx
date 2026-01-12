@@ -105,8 +105,8 @@ export default function PaymentPage() {
 
   const isPaymentExpired =
     reservation?.status === "EXPIRED" || (reservation ? isExpired : false);
-  const effectivePriceCents = slot?.priceCents ?? slot?.defaultPriceCents;
-  const priceCurrency = slot?.currency ?? slot?.defaultCurrency ?? "PHP";
+  const effectivePriceCents = slot?.priceCents ?? 0;
+  const priceCurrency = slot?.currency ?? "PHP";
   const isFreeSlot =
     slot?.isFree ||
     effectivePriceCents === null ||

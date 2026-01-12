@@ -27,6 +27,7 @@ import {
   SlotNotAvailableError,
   SlotNotFoundError,
   SlotOverlapError,
+  SlotPricingUnavailableError,
 } from "./errors/time-slot.errors";
 import { makeTimeSlotService } from "./factories/time-slot.factory";
 
@@ -61,7 +62,8 @@ function handleTimeSlotError(error: unknown): never {
   if (
     error instanceof SlotNotAvailableError ||
     error instanceof CourtNotReservableError ||
-    error instanceof SlotInUseError
+    error instanceof SlotInUseError ||
+    error instanceof SlotPricingUnavailableError
   ) {
     throw new TRPCError({
       code: "BAD_REQUEST",

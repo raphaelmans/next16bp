@@ -1,129 +1,76 @@
-import { v4 as uuidv4 } from "uuid";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
-import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
-import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
-import type {
-  CourtAmenityRecord,
-  CourtPhotoRecord,
-  CourtRecord,
-  ReservableCourtDetailRecord,
-} from "@/shared/infra/db/schema";
+import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
+import type { CourtRecord } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
 import type {
-  AddAmenityDTO,
-  AddPhotoDTO,
-  RemoveAmenityDTO,
-  RemovePhotoDTO,
-  ReorderPhotosDTO,
+  CreateCourtDTO,
+  ListCourtsByPlaceDTO,
   UpdateCourtDTO,
-  UpdateReservableCourtDetailDTO,
 } from "../dtos";
 import {
-  AmenityNotFoundError,
   CourtNotFoundError,
-  CourtNotReservableError,
-  DuplicateAmenityError,
-  MaxPhotosExceededError,
+  DuplicateCourtLabelError,
   NotCourtOwnerError,
-  PhotoNotFoundError,
 } from "../errors/court.errors";
 import type {
-  CourtWithDetails,
+  CourtWithSport,
   ICourtRepository,
 } from "../repositories/court.repository";
-import type { ICourtAmenityRepository } from "../repositories/court-amenity.repository";
-import type { ICourtPhotoRepository } from "../repositories/court-photo.repository";
-import type { IReservableCourtDetailRepository } from "../repositories/reservable-court-detail.repository";
-
-const MAX_PHOTOS = 10;
 
 export interface ICourtManagementService {
-  // Court operations
-  getCourtById(courtId: string): Promise<CourtWithDetails>;
-  getMyCourts(userId: string): Promise<CourtRecord[]>;
+  createCourt(userId: string, data: CreateCourtDTO): Promise<CourtRecord>;
   updateCourt(userId: string, data: UpdateCourtDTO): Promise<CourtRecord>;
-  updateReservableCourtDetail(
+  getCourtById(userId: string, courtId: string): Promise<CourtWithSport>;
+  listCourtsByPlace(
     userId: string,
-    data: UpdateReservableCourtDetailDTO,
-  ): Promise<ReservableCourtDetailRecord>;
-  deactivateCourt(userId: string, courtId: string): Promise<CourtRecord>;
-
-  // Photo operations
-  uploadPhoto(
-    userId: string,
-    courtId: string,
-    file: File,
-  ): Promise<CourtPhotoRecord>;
-  addPhoto(userId: string, data: AddPhotoDTO): Promise<CourtPhotoRecord>;
-  removePhoto(userId: string, data: RemovePhotoDTO): Promise<void>;
-  reorderPhotos(userId: string, data: ReorderPhotosDTO): Promise<void>;
-
-  // Amenity operations
-  addAmenity(userId: string, data: AddAmenityDTO): Promise<CourtAmenityRecord>;
-  removeAmenity(userId: string, data: RemoveAmenityDTO): Promise<void>;
+    data: ListCourtsByPlaceDTO,
+  ): Promise<CourtWithSport[]>;
 }
 
 export class CourtManagementService implements ICourtManagementService {
   constructor(
     private courtRepository: ICourtRepository,
-    private reservableCourtDetailRepository: IReservableCourtDetailRepository,
-    private courtPhotoRepository: ICourtPhotoRepository,
-    private courtAmenityRepository: ICourtAmenityRepository,
+    private placeRepository: IPlaceRepository,
     private organizationRepository: IOrganizationRepository,
     private transactionManager: TransactionManager,
-    private storageService: IObjectStorageService,
   ) {}
 
-  /**
-   * Verify that the user owns the court via organization ownership
-   */
-  private async verifyCourtOwnership(
+  async createCourt(
     userId: string,
-    courtId: string,
-    ctx?: RequestContext,
+    data: CreateCourtDTO,
   ): Promise<CourtRecord> {
-    const court = await this.courtRepository.findById(courtId, ctx);
-    if (!court) {
-      throw new CourtNotFoundError(courtId);
-    }
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
 
-    if (!court.organizationId) {
-      throw new NotCourtOwnerError();
-    }
+      await this.verifyPlaceOwnership(userId, data.placeId, ctx);
+      await this.assertLabelUnique(data.placeId, data.label, undefined, ctx);
 
-    const org = await this.organizationRepository.findById(
-      court.organizationId,
-      ctx,
-    );
-    if (!org || org.ownerUserId !== userId) {
-      throw new NotCourtOwnerError();
-    }
+      const created = await this.courtRepository.create(
+        {
+          placeId: data.placeId,
+          sportId: data.sportId,
+          label: data.label,
+          tierLabel: data.tierLabel ?? null,
+          isActive: true,
+        },
+        ctx,
+      );
 
-    return court;
-  }
+      logger.info(
+        {
+          event: "court.created",
+          courtId: created.id,
+          placeId: data.placeId,
+          sportId: data.sportId,
+          userId,
+        },
+        "Court created",
+      );
 
-  async getCourtById(courtId: string): Promise<CourtWithDetails> {
-    const court = await this.courtRepository.findWithDetails(courtId);
-    if (!court) {
-      throw new CourtNotFoundError(courtId);
-    }
-    return court;
-  }
-
-  async getMyCourts(userId: string): Promise<CourtRecord[]> {
-    // Get all organizations owned by the user
-    const orgs = await this.organizationRepository.findByOwnerId(userId);
-
-    // Get all courts for those organizations
-    const allCourts: CourtRecord[] = [];
-    for (const org of orgs) {
-      const courts = await this.courtRepository.findByOrganizationId(org.id);
-      allCourts.push(...courts);
-    }
-
-    return allCourts;
+      return created;
+    });
   }
 
   async updateCourt(
@@ -133,7 +80,15 @@ export class CourtManagementService implements ICourtManagementService {
     return this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
-      await this.verifyCourtOwnership(userId, data.courtId, ctx);
+      const { court, placeId } = await this.verifyCourtOwnership(
+        userId,
+        data.courtId,
+        ctx,
+      );
+
+      if (data.label) {
+        await this.assertLabelUnique(placeId, data.label, court.id, ctx);
+      }
 
       const { courtId, ...updateData } = data;
       const updated = await this.courtRepository.update(
@@ -156,281 +111,71 @@ export class CourtManagementService implements ICourtManagementService {
     });
   }
 
-  async updateReservableCourtDetail(
-    userId: string,
-    data: UpdateReservableCourtDetailDTO,
-  ): Promise<ReservableCourtDetailRecord> {
-    return this.transactionManager.run(async (tx) => {
-      const ctx: RequestContext = { tx };
-
-      const court = await this.verifyCourtOwnership(userId, data.courtId, ctx);
-
-      if (court.courtType !== "RESERVABLE") {
-        throw new CourtNotReservableError(data.courtId);
-      }
-
-      const detail = await this.reservableCourtDetailRepository.findByCourtId(
-        data.courtId,
-        ctx,
-      );
-      if (!detail) {
-        throw new CourtNotFoundError(data.courtId);
-      }
-
-      const { courtId, ...updateData } = data;
-      const updated = await this.reservableCourtDetailRepository.update(
-        detail.id,
-        updateData,
-        ctx,
-      );
-
-      logger.info(
-        {
-          event: "court.detail_updated",
-          courtId,
-          userId,
-          fields: Object.keys(updateData),
-        },
-        "Court detail updated",
-      );
-
-      return updated;
-    });
-  }
-
-  async deactivateCourt(userId: string, courtId: string): Promise<CourtRecord> {
-    return this.transactionManager.run(async (tx) => {
-      const ctx: RequestContext = { tx };
-
-      await this.verifyCourtOwnership(userId, courtId, ctx);
-
-      const updated = await this.courtRepository.update(
-        courtId,
-        { isActive: false },
-        ctx,
-      );
-
-      logger.info(
-        {
-          event: "court.deactivated",
-          courtId,
-          userId,
-        },
-        "Court deactivated",
-      );
-
-      return updated;
-    });
-  }
-
-  /**
-   * Upload a photo to storage and add it to the court.
-   */
-  async uploadPhoto(
-    userId: string,
-    courtId: string,
-    file: File,
-  ): Promise<CourtPhotoRecord> {
-    // Verify ownership first (outside transaction for fail-fast)
+  async getCourtById(userId: string, courtId: string): Promise<CourtWithSport> {
     await this.verifyCourtOwnership(userId, courtId);
+    const court = await this.courtRepository.findByIdWithSport(courtId);
+    if (!court) {
+      throw new CourtNotFoundError(courtId);
+    }
+    return court;
+  }
 
-    // Check photo limit
-    const photoCount = await this.courtPhotoRepository.countByCourtId(courtId);
-    if (photoCount >= MAX_PHOTOS) {
-      throw new MaxPhotosExceededError(MAX_PHOTOS);
+  async listCourtsByPlace(
+    userId: string,
+    data: ListCourtsByPlaceDTO,
+  ): Promise<CourtWithSport[]> {
+    await this.verifyPlaceOwnership(userId, data.placeId);
+    return this.courtRepository.findByPlaceWithSport(data.placeId);
+  }
+
+  private async verifyPlaceOwnership(
+    userId: string,
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<void> {
+    const place = await this.placeRepository.findById(placeId, ctx);
+    if (!place || !place.organizationId) {
+      throw new NotCourtOwnerError();
     }
 
-    // Generate unique path: {courtId}/{uuid}.{ext}
-    const photoId = uuidv4();
-    const ext = file.name.split(".").pop() || "jpg";
-    const path = `${courtId}/${photoId}.${ext}`;
-
-    // Upload to storage
-    const result = await this.storageService.upload({
-      bucket: STORAGE_BUCKETS.COURT_PHOTOS,
-      path,
-      file,
-      upsert: false,
-    });
-
-    // Add photo record using existing logic
-    const photo = await this.addPhoto(userId, {
-      courtId,
-      url: result.url,
-    });
-
-    logger.info(
-      {
-        event: "court.photo_uploaded",
-        courtId,
-        photoId: photo.id,
-        url: result.url,
-      },
-      "Court photo uploaded",
+    const organization = await this.organizationRepository.findById(
+      place.organizationId,
+      ctx,
     );
-
-    return photo;
+    if (!organization || organization.ownerUserId !== userId) {
+      throw new NotCourtOwnerError();
+    }
   }
 
-  async addPhoto(userId: string, data: AddPhotoDTO): Promise<CourtPhotoRecord> {
-    return this.transactionManager.run(async (tx) => {
-      const ctx: RequestContext = { tx };
-
-      await this.verifyCourtOwnership(userId, data.courtId, ctx);
-
-      // Check photo limit
-      const photoCount = await this.courtPhotoRepository.countByCourtId(
-        data.courtId,
-        ctx,
-      );
-      if (photoCount >= MAX_PHOTOS) {
-        throw new MaxPhotosExceededError(MAX_PHOTOS);
-      }
-
-      // Determine display order
-      const displayOrder = data.displayOrder ?? photoCount;
-
-      const photo = await this.courtPhotoRepository.create(
-        {
-          courtId: data.courtId,
-          url: data.url,
-          displayOrder,
-        },
-        ctx,
-      );
-
-      logger.info(
-        {
-          event: "court.photo_added",
-          courtId: data.courtId,
-          photoId: photo.id,
-          userId,
-        },
-        "Photo added to court",
-      );
-
-      return photo;
-    });
-  }
-
-  async removePhoto(userId: string, data: RemovePhotoDTO): Promise<void> {
-    return this.transactionManager.run(async (tx) => {
-      const ctx: RequestContext = { tx };
-
-      await this.verifyCourtOwnership(userId, data.courtId, ctx);
-
-      const photo = await this.courtPhotoRepository.findById(data.photoId, ctx);
-      if (!photo || photo.courtId !== data.courtId) {
-        throw new PhotoNotFoundError(data.photoId);
-      }
-
-      await this.courtPhotoRepository.delete(data.photoId, ctx);
-
-      logger.info(
-        {
-          event: "court.photo_removed",
-          courtId: data.courtId,
-          photoId: data.photoId,
-          userId,
-        },
-        "Photo removed from court",
-      );
-    });
-  }
-
-  async reorderPhotos(userId: string, data: ReorderPhotosDTO): Promise<void> {
-    return this.transactionManager.run(async (tx) => {
-      const ctx: RequestContext = { tx };
-
-      await this.verifyCourtOwnership(userId, data.courtId, ctx);
-
-      // Update display order for each photo
-      for (let i = 0; i < data.photoIds.length; i++) {
-        await this.courtPhotoRepository.updateDisplayOrder(
-          data.photoIds[i],
-          i,
-          ctx,
-        );
-      }
-
-      logger.info(
-        {
-          event: "court.photos_reordered",
-          courtId: data.courtId,
-          userId,
-        },
-        "Photos reordered",
-      );
-    });
-  }
-
-  async addAmenity(
+  private async verifyCourtOwnership(
     userId: string,
-    data: AddAmenityDTO,
-  ): Promise<CourtAmenityRecord> {
-    return this.transactionManager.run(async (tx) => {
-      const ctx: RequestContext = { tx };
+    courtId: string,
+    ctx?: RequestContext,
+  ): Promise<{ court: CourtRecord; placeId: string }> {
+    const court = await this.courtRepository.findById(courtId, ctx);
+    if (!court) {
+      throw new CourtNotFoundError(courtId);
+    }
 
-      await this.verifyCourtOwnership(userId, data.courtId, ctx);
+    await this.verifyPlaceOwnership(userId, court.placeId, ctx);
 
-      // Check for duplicate
-      const exists = await this.courtAmenityRepository.exists(
-        data.courtId,
-        data.name,
-        ctx,
-      );
-      if (exists) {
-        throw new DuplicateAmenityError(data.courtId, data.name);
-      }
-
-      const amenity = await this.courtAmenityRepository.create(
-        {
-          courtId: data.courtId,
-          name: data.name,
-        },
-        ctx,
-      );
-
-      logger.info(
-        {
-          event: "court.amenity_added",
-          courtId: data.courtId,
-          amenityId: amenity.id,
-          amenityName: data.name,
-          userId,
-        },
-        "Amenity added to court",
-      );
-
-      return amenity;
-    });
+    return { court, placeId: court.placeId };
   }
 
-  async removeAmenity(userId: string, data: RemoveAmenityDTO): Promise<void> {
-    return this.transactionManager.run(async (tx) => {
-      const ctx: RequestContext = { tx };
-
-      await this.verifyCourtOwnership(userId, data.courtId, ctx);
-
-      const amenity = await this.courtAmenityRepository.findById(
-        data.amenityId,
-        ctx,
-      );
-      if (!amenity || amenity.courtId !== data.courtId) {
-        throw new AmenityNotFoundError(data.amenityId);
-      }
-
-      await this.courtAmenityRepository.delete(data.amenityId, ctx);
-
-      logger.info(
-        {
-          event: "court.amenity_removed",
-          courtId: data.courtId,
-          amenityId: data.amenityId,
-          userId,
-        },
-        "Amenity removed from court",
-      );
-    });
+  private async assertLabelUnique(
+    placeId: string,
+    label: string,
+    excludeCourtId?: string,
+    ctx?: RequestContext,
+  ): Promise<void> {
+    const courts = await this.courtRepository.findByPlaceId(placeId, ctx);
+    const exists = courts.some(
+      (court) =>
+        court.label.toLowerCase() === label.toLowerCase() &&
+        court.id !== excludeCourtId,
+    );
+    if (exists) {
+      throw new DuplicateCourtLabelError(placeId, label);
+    }
   }
 }

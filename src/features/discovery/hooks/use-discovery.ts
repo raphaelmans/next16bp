@@ -1,129 +1,143 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import type { CourtCardCourt } from "@/shared/components/kudos";
-import { useTRPC } from "@/trpc/client";
+import type { PlaceCardPlace } from "@/shared/components/kudos";
+import { useTRPCClient } from "@/trpc/client";
 
 interface UseDiscoveryOptions {
   q?: string;
   city?: string;
-  type?: "CURATED" | "RESERVABLE";
-  isFree?: boolean;
-  amenities?: string[];
+  sportId?: string;
   page?: number;
   limit?: number;
 }
 
+export interface PlaceSummary extends PlaceCardPlace {
+  latitude?: number;
+  longitude?: number;
+}
+
+interface PlaceListItem {
+  place: {
+    id: string;
+    name: string;
+    address: string;
+    city: string;
+    latitude: string;
+    longitude: string;
+  };
+  sports: { id: string; name: string; slug: string }[];
+  courtCount?: number;
+  lowestPriceCents?: number;
+  currency?: string | null;
+}
+
 interface DiscoveryResult {
-  courts: CourtCardCourt[];
+  places: PlaceSummary[];
   total: number;
   page: number;
   limit: number;
   hasMore: boolean;
 }
 
-/**
- * Transform backend court list item to CourtCardCourt
- */
-function transformCourtListItem(item: {
-  court: {
-    id: string;
-    name: string;
-    address: string;
-    city: string;
-    courtType: "CURATED" | "RESERVABLE";
-    latitude: string;
-    longitude: string;
-  };
-  photoUrl?: string;
-  amenityCount: number;
-  isFree?: boolean;
-}): CourtCardCourt {
+const mapPlaceSummary = (item: PlaceListItem): PlaceSummary => {
+  const latitude = Number.parseFloat(item.place.latitude);
+  const longitude = Number.parseFloat(item.place.longitude);
+
   return {
-    id: item.court.id,
-    name: item.court.name,
-    address: item.court.address,
-    city: item.court.city,
-    type: item.court.courtType,
-    coverImageUrl: item.photoUrl,
-    isFree: item.isFree ?? item.court.courtType === "CURATED",
+    id: item.place.id,
+    name: item.place.name,
+    address: item.place.address,
+    city: item.place.city,
+    coverImageUrl: undefined,
+    sports: item.sports.map((sport) => ({
+      id: sport.id,
+      name: sport.name,
+      slug: sport.slug,
+    })),
+    courtCount: item.courtCount,
+    lowestPriceCents: item.lowestPriceCents,
+    currency: item.currency ?? undefined,
+    latitude: Number.isFinite(latitude) ? latitude : undefined,
+    longitude: Number.isFinite(longitude) ? longitude : undefined,
   };
-}
+};
 
-/**
- * Hook to fetch courts for discovery page
- * Connected to court.search tRPC endpoint
- */
-export function useDiscovery(options: UseDiscoveryOptions = {}) {
-  const { city, type, isFree, page = 1, limit = 12 } = options;
+const matchesQuery = (place: PlaceSummary, query?: string) => {
+  if (!query) return true;
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return true;
+  return [place.name, place.address, place.city].some((value) =>
+    value.toLowerCase().includes(normalized),
+  );
+};
 
-  const trpc = useTRPC();
-
+export function useDiscoveryPlaces(options: UseDiscoveryOptions = {}) {
+  const { q, city, sportId, page = 1, limit = 12 } = options;
+  const trpcClient = useTRPCClient();
   const offset = (page - 1) * limit;
 
-  return useQuery(
-    trpc.court.search.queryOptions({
-      city: city || undefined,
-      courtType: type,
-      isFree,
-      limit,
-      offset,
-    }),
-  );
-}
-
-/**
- * Hook to fetch courts with transformed data for UI
- */
-export function useDiscoveryCourts(options: UseDiscoveryOptions = {}) {
-  const { city, type, isFree, page = 1, limit = 12 } = options;
-
-  const trpc = useTRPC();
-  const offset = (page - 1) * limit;
-
-  const query = useQuery(
-    trpc.court.search.queryOptions({
-      city: city || undefined,
-      courtType: type,
-      isFree,
-      limit,
-      offset,
-    }),
-  );
-
-  // Transform the data for UI consumption
-  const transformedData: DiscoveryResult | undefined = query.data
-    ? {
-        courts: query.data.items.map(transformCourtListItem),
-        total: query.data.total,
-        page,
+  const query = useQuery({
+    queryKey: ["place-discovery", q, city, sportId, page, limit],
+    queryFn: async () =>
+      trpcClient.place.list.query({
+        city,
+        sportId,
         limit,
-        hasMore: offset + query.data.items.length < query.data.total,
-      }
+        offset,
+      }),
+  });
+
+  const transformedData: DiscoveryResult | undefined = query.data
+    ? (() => {
+        const response = query.data as {
+          items: PlaceListItem[];
+          total: number;
+        };
+        const mappedPlaces = response.items.map(mapPlaceSummary);
+        const filteredPlaces = mappedPlaces.filter((place) =>
+          matchesQuery(place, q),
+        );
+        const total = q ? filteredPlaces.length : response.total;
+        const hasMore =
+          !q && (page - 1) * limit + response.items.length < response.total;
+
+        return {
+          places: filteredPlaces,
+          total,
+          page,
+          limit,
+          hasMore,
+        };
+      })()
     : undefined;
 
   return {
     ...query,
     data: transformedData,
-  };
+  } as typeof query & { data: DiscoveryResult | undefined };
 }
 
-/**
- * Hook to fetch featured courts for home page
- * Uses search with a limit to get recent active courts
- */
-export function useFeaturedCourts(limit = 6) {
-  const trpc = useTRPC();
+export function useFeaturedPlaces(limit = 6) {
+  const trpcClient = useTRPCClient();
 
-  const query = useQuery(
-    trpc.court.search.queryOptions({
-      limit,
-      offset: 0,
-    }),
-  );
+  const query = useQuery({
+    queryKey: ["place-featured", limit],
+    queryFn: async () =>
+      trpcClient.place.list.query({
+        limit,
+        offset: 0,
+      }),
+  });
+
+  const places: PlaceSummary[] = query.data
+    ? (query.data as { items: PlaceListItem[] }).items
+        .map(mapPlaceSummary)
+        .slice(0, limit)
+    : [];
 
   return {
     ...query,
-    data: query.data?.items.map(transformCourtListItem) ?? [],
-  };
+    data: places,
+  } as typeof query & { data: PlaceSummary[] };
 }

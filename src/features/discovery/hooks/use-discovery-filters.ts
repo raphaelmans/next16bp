@@ -15,9 +15,7 @@ export function useDiscoveryFilters() {
     setFilters({
       q: null,
       city: null,
-      type: null,
-      isFree: null,
-      amenities: [],
+      sportId: null,
       page: 1,
     });
   };
@@ -26,16 +24,8 @@ export function useDiscoveryFilters() {
     setFilters({ city: city || null, page: 1 });
   };
 
-  const setType = (type: "CURATED" | "RESERVABLE" | undefined) => {
-    setFilters({ type: type || null, page: 1 });
-  };
-
-  const setIsFree = (isFree: boolean | undefined) => {
-    setFilters({ isFree: isFree ?? null, page: 1 });
-  };
-
-  const setAmenities = (amenities: string[]) => {
-    setFilters({ amenities, page: 1 });
+  const setSportId = (sportId: string | undefined) => {
+    setFilters({ sportId: sportId || null, page: 1 });
   };
 
   const setView = (view: "list" | "map") => {
@@ -53,9 +43,7 @@ export function useDiscoveryFilters() {
   return {
     ...filters,
     setCity,
-    setType,
-    setIsFree,
-    setAmenities,
+    setSportId,
     setView,
     setPage,
     setQuery,

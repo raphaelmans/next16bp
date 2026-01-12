@@ -1,53 +1,54 @@
 import { z } from "zod";
 
 /**
- * Schema for admin updating any court
+ * Schema for admin updating any place
  */
 export const AdminUpdateCourtSchema = z.object({
-  courtId: z.string().uuid(),
-  // Court fields
+  placeId: z.string().uuid(),
+  // Place fields
   name: z.string().min(1).max(200).optional(),
   address: z.string().min(1).optional(),
   city: z.string().min(1).max(100).optional(),
   latitude: z
     .string()
-    .refine((val) => !Number.isNaN(parseFloat(val)), {
+    .refine((val) => !Number.isNaN(Number.parseFloat(val)), {
       message: "Latitude must be a valid decimal number",
     })
     .optional(),
   longitude: z
     .string()
-    .refine((val) => !Number.isNaN(parseFloat(val)), {
+    .refine((val) => !Number.isNaN(Number.parseFloat(val)), {
       message: "Longitude must be a valid decimal number",
     })
     .optional(),
+  timeZone: z.string().min(1).max(64).optional(),
 });
 
 export type AdminUpdateCourtDTO = z.infer<typeof AdminUpdateCourtSchema>;
 
 /**
- * Schema for deactivating a court
+ * Schema for deactivating a place
  */
 export const DeactivateCourtSchema = z.object({
-  courtId: z.string().uuid(),
+  placeId: z.string().uuid(),
   reason: z.string().min(1).max(500),
 });
 
 export type DeactivateCourtDTO = z.infer<typeof DeactivateCourtSchema>;
 
 /**
- * Schema for activating a court
+ * Schema for activating a place
  */
 export const ActivateCourtSchema = z.object({
-  courtId: z.string().uuid(),
+  placeId: z.string().uuid(),
 });
 
 export type ActivateCourtDTO = z.infer<typeof ActivateCourtSchema>;
 
 /**
- * Court type filter enum values
+ * Place type filter enum values
  */
-const CourtTypeFilterEnum = z.enum(["CURATED", "RESERVABLE"]);
+const PlaceTypeFilterEnum = z.enum(["CURATED", "RESERVABLE"]);
 
 /**
  * Claim status filter enum values
@@ -60,11 +61,11 @@ const ClaimStatusFilterEnum = z.enum([
 ]);
 
 /**
- * Schema for admin court list filters
+ * Schema for admin place list filters
  */
 export const AdminCourtFiltersSchema = z.object({
   isActive: z.boolean().optional(),
-  courtType: CourtTypeFilterEnum.optional(),
+  placeType: PlaceTypeFilterEnum.optional(),
   claimStatus: ClaimStatusFilterEnum.optional(),
   city: z.string().optional(),
   search: z.string().optional(),

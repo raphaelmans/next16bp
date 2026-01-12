@@ -10,70 +10,33 @@ interface CreateCourtResult {
 }
 
 interface UseCourtFormOptions {
-  organizationId: string;
   courtId?: string;
-  initialAmenities?: { id: string; name: string }[];
   onSuccess?: (result: CreateCourtResult) => void;
 }
 
-export function useCourtForm({
-  organizationId,
-  courtId,
-  initialAmenities,
-  onSuccess,
-}: UseCourtFormOptions) {
+const normalizeTierLabel = (value?: string | null) => {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : undefined;
+};
+
+export function useCourtForm({ courtId, onSuccess }: UseCourtFormOptions) {
   const trpc = useTRPC();
   const trpcClient = useTRPCClient();
   const queryClient = useQueryClient();
   const isEditing = !!courtId;
 
-  const formatCoordinate = (value?: number) =>
-    value === undefined || Number.isNaN(value) ? undefined : value.toFixed(6);
-
-  const toPriceCents = (value?: number) =>
-    value === undefined || Number.isNaN(value) ? null : Math.round(value * 100);
-
-  const resolveDefaultPriceCents = (data: CourtFormData) =>
-    data.isFree ? null : toPriceCents(data.defaultHourlyRate);
-
   const createMutation = useMutation({
     mutationFn: async (data: CourtFormData) =>
-      trpcClient.courtManagement.createReservable.mutate({
-        organizationId,
-        name: data.name,
-        address: data.address,
-        city: data.city,
-        latitude: formatCoordinate(data.latitude) ?? "0.0",
-        longitude: formatCoordinate(data.longitude) ?? "0.0",
-        isFree: data.isFree,
-        defaultPriceCents: resolveDefaultPriceCents(data),
-        defaultCurrency: data.currency,
-        requiresOwnerConfirmation: data.requiresOwnerConfirmation,
-        paymentHoldMinutes: data.paymentHoldMinutes,
-        ownerReviewMinutes: data.ownerReviewMinutes,
-        cancellationCutoffMinutes: data.cancellationCutoffMinutes,
-        paymentInstructions: data.paymentInstructions?.trim() || undefined,
-        gcashNumber: data.gcashEnabled
-          ? data.gcashNumber || undefined
-          : undefined,
-        bankName: data.bankTransferEnabled
-          ? data.bankName || undefined
-          : undefined,
-        bankAccountNumber: data.bankTransferEnabled
-          ? data.bankAccountNumber || undefined
-          : undefined,
-        bankAccountName: data.bankTransferEnabled
-          ? data.bankAccountName || undefined
-          : undefined,
-        photos: data.photos?.length ? data.photos : undefined,
-        amenities: data.amenities?.length ? data.amenities : undefined,
+      trpcClient.courtManagement.create.mutate({
+        placeId: data.placeId,
+        sportId: data.sportId,
+        label: data.label,
+        tierLabel: normalizeTierLabel(data.tierLabel),
       }),
     onSuccess: (result) => {
-      queryClient.invalidateQueries(
-        trpc.courtManagement.getMyCourts.queryFilter(),
-      );
+      queryClient.invalidateQueries({ queryKey: ["owner-courts"] });
       if (result) {
-        onSuccess?.({ success: true, courtId: result.court.id });
+        onSuccess?.({ success: true, courtId: result.id });
       }
     },
   });
@@ -84,76 +47,16 @@ export function useCourtForm({
         throw new Error("Court ID is required to update");
       }
 
-      const latitude = formatCoordinate(data.latitude);
-      const longitude = formatCoordinate(data.longitude);
-
-      const amenityOperations: Promise<unknown>[] = [];
-      if (initialAmenities) {
-        const amenityMap = new Map(
-          initialAmenities.map((amenity) => [amenity.name, amenity.id]),
-        );
-        const nextAmenities = data.amenities ?? [];
-        const amenitiesToAdd = nextAmenities.filter(
-          (name) => !amenityMap.has(name),
-        );
-        const amenitiesToRemove = [...amenityMap.keys()].filter(
-          (name) => !nextAmenities.includes(name),
-        );
-
-        amenityOperations.push(
-          ...amenitiesToAdd.map((name) =>
-            trpcClient.courtManagement.addAmenity.mutate({ courtId, name }),
-          ),
-        );
-        amenitiesToRemove.forEach((name) => {
-          const amenityId = amenityMap.get(name);
-          if (!amenityId) return;
-          amenityOperations.push(
-            trpcClient.courtManagement.removeAmenity.mutate({
-              courtId,
-              amenityId,
-            }),
-          );
-        });
-      }
-
-      const [updatedCourt] = await Promise.all([
-        trpcClient.courtManagement.update.mutate({
-          courtId,
-          name: data.name,
-          address: data.address,
-          city: data.city,
-          ...(latitude ? { latitude } : {}),
-          ...(longitude ? { longitude } : {}),
-        }),
-        trpcClient.courtManagement.updateDetail.mutate({
-          courtId,
-          isFree: data.isFree,
-          defaultPriceCents: resolveDefaultPriceCents(data),
-          defaultCurrency: data.currency,
-          requiresOwnerConfirmation: data.requiresOwnerConfirmation,
-          paymentHoldMinutes: data.paymentHoldMinutes,
-          ownerReviewMinutes: data.ownerReviewMinutes,
-          cancellationCutoffMinutes: data.cancellationCutoffMinutes,
-          paymentInstructions: data.paymentInstructions?.trim() || null,
-          gcashNumber: data.gcashEnabled ? data.gcashNumber || null : null,
-          bankName: data.bankTransferEnabled ? data.bankName || null : null,
-          bankAccountNumber: data.bankTransferEnabled
-            ? data.bankAccountNumber || null
-            : null,
-          bankAccountName: data.bankTransferEnabled
-            ? data.bankAccountName || null
-            : null,
-        }),
-        ...amenityOperations,
-      ]);
-
-      return updatedCourt;
+      return trpcClient.courtManagement.update.mutate({
+        courtId,
+        sportId: data.sportId,
+        label: data.label,
+        tierLabel: normalizeTierLabel(data.tierLabel),
+        isActive: data.isActive,
+      });
     },
     onSuccess: (result) => {
-      queryClient.invalidateQueries(
-        trpc.courtManagement.getMyCourts.queryFilter(),
-      );
+      queryClient.invalidateQueries({ queryKey: ["owner-courts"] });
       if (courtId) {
         queryClient.invalidateQueries(
           trpc.courtManagement.getById.queryFilter({ courtId }),
@@ -183,20 +86,15 @@ export function useCourtForm({
 }
 
 export function useCourtDraft() {
-  const trpc = useTRPC();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (_data: Partial<CourtFormData>) => {
-      // Draft saving is not yet implemented on the backend
-      // For now, just simulate the operation
       await new Promise((resolve) => setTimeout(resolve, 500));
       return { success: true, courtId: "draft-court-id" };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(
-        trpc.courtManagement.getMyCourts.queryFilter(),
-      );
+      queryClient.invalidateQueries({ queryKey: ["owner-courts"] });
     },
   });
 }

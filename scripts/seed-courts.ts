@@ -1,16 +1,16 @@
 /**
- * Seed script for courts data
+ * Seed script for places data
  *
- * Seeds the database with sample Philippine pickleball courts for development.
+ * Seeds the database with sample Philippine pickleball places for development.
  * Does NOT seed users, profiles, or organizations.
  *
  * Usage:
  *   npm run db:seed
  *
  * Features:
- *   - Idempotent: Safe to run multiple times (skips existing courts by name)
+ *   - Idempotent: Safe to run multiple times (skips existing places by name)
  *   - Transaction-safe: All inserts in single transaction
- *   - Creates curated courts with contact info, photos, and amenities
+ *   - Creates curated places with contact info, photos, and amenities
  */
 
 import { eq } from "drizzle-orm";
@@ -19,7 +19,7 @@ import postgres from "postgres";
 import * as schema from "../src/shared/infra/db/schema";
 
 // Types for seed data
-interface CuratedCourtSeed {
+interface CuratedPlaceSeed {
   name: string;
   address: string;
   city: string;
@@ -36,8 +36,8 @@ interface CuratedCourtSeed {
   photoCount: number;
 }
 
-// Sample curated courts data (Philippine locations)
-const curatedCourts: CuratedCourtSeed[] = [
+// Sample curated places data (Philippine locations)
+const curatedPlaces: CuratedPlaceSeed[] = [
   {
     name: "BGC Pickleball Courts",
     address: "5th Avenue corner 32nd Street, Bonifacio Global City",
@@ -144,11 +144,11 @@ const curatedCourts: CuratedCourtSeed[] = [
 ];
 
 // Generate placeholder photo URL
-const getPhotoUrl = (courtIndex: number, photoIndex: number): string =>
-  `https://picsum.photos/seed/court${courtIndex}photo${photoIndex}/800/600`;
+const getPhotoUrl = (placeIndex: number, photoIndex: number): string =>
+  `https://picsum.photos/seed/place${placeIndex}photo${photoIndex}/800/600`;
 
 async function seed() {
-  console.log("Starting court seed...\n");
+  console.log("Starting place seed...\n");
 
   // Create database connection
   const connectionString = process.env.DATABASE_URL;
@@ -160,59 +160,71 @@ async function seed() {
   const db = drizzle({ client, casing: "snake_case", schema });
 
   try {
-    let courtsCreated = 0;
-    let courtsSkipped = 0;
+    let placesCreated = 0;
+    let placesSkipped = 0;
     let photosCreated = 0;
     let amenitiesCreated = 0;
 
-    for (let i = 0; i < curatedCourts.length; i++) {
-      const courtData = curatedCourts[i];
+    const existingSport = await db.query.sport.findFirst({
+      where: eq(schema.sport.slug, "pickleball"),
+    });
 
-      // Check if court already exists by name
-      const existingCourt = await db.query.court.findFirst({
-        where: eq(schema.court.name, courtData.name),
+    if (!existingSport) {
+      await db.insert(schema.sport).values({
+        slug: "pickleball",
+        name: "Pickleball",
+      });
+      console.log("  Seeded sport: Pickleball");
+    }
+
+    for (let i = 0; i < curatedPlaces.length; i++) {
+      const placeData = curatedPlaces[i];
+
+      // Check if place already exists by name
+      const existingPlace = await db.query.place.findFirst({
+        where: eq(schema.place.name, placeData.name),
       });
 
-      if (existingCourt) {
-        console.log(`  Skipping: "${courtData.name}" (already exists)`);
-        courtsSkipped++;
+      if (existingPlace) {
+        console.log(`  Skipping: "${placeData.name}" (already exists)`);
+        placesSkipped++;
         continue;
       }
 
-      console.log(`  Creating: "${courtData.name}" in ${courtData.city}`);
+      console.log(`  Creating: "${placeData.name}" in ${placeData.city}`);
 
-      // Create court
-      const [newCourt] = await db
-        .insert(schema.court)
+      // Create place
+      const [newPlace] = await db
+        .insert(schema.place)
         .values({
-          name: courtData.name,
-          address: courtData.address,
-          city: courtData.city,
-          latitude: courtData.latitude.toString(),
-          longitude: courtData.longitude.toString(),
-          courtType: "CURATED",
+          name: placeData.name,
+          address: placeData.address,
+          city: placeData.city,
+          latitude: placeData.latitude.toString(),
+          longitude: placeData.longitude.toString(),
+          placeType: "CURATED",
           claimStatus: "UNCLAIMED",
           isActive: true,
           organizationId: null,
         })
         .returning();
 
-      courtsCreated++;
+      placesCreated++;
 
-      // Create curated court detail
-      await db.insert(schema.curatedCourtDetail).values({
-        courtId: newCourt.id,
-        facebookUrl: courtData.detail.facebookUrl ?? null,
-        viberInfo: courtData.detail.viberInfo ?? null,
-        instagramUrl: courtData.detail.instagramUrl ?? null,
-        websiteUrl: courtData.detail.websiteUrl ?? null,
-        otherContactInfo: courtData.detail.otherContactInfo ?? null,
+      // Create curated place detail
+      await db.insert(schema.curatedPlaceDetail).values({
+        placeId: newPlace.id,
+        facebookUrl: placeData.detail.facebookUrl ?? null,
+        viberInfo: placeData.detail.viberInfo ?? null,
+        instagramUrl: placeData.detail.instagramUrl ?? null,
+        websiteUrl: placeData.detail.websiteUrl ?? null,
+        otherContactInfo: placeData.detail.otherContactInfo ?? null,
       });
 
       // Create photos
-      for (let p = 0; p < courtData.photoCount; p++) {
-        await db.insert(schema.courtPhoto).values({
-          courtId: newCourt.id,
+      for (let p = 0; p < placeData.photoCount; p++) {
+        await db.insert(schema.placePhoto).values({
+          placeId: newPlace.id,
           url: getPhotoUrl(i, p),
           displayOrder: p,
         });
@@ -220,9 +232,9 @@ async function seed() {
       }
 
       // Create amenities
-      for (const amenityName of courtData.amenities) {
-        await db.insert(schema.courtAmenity).values({
-          courtId: newCourt.id,
+      for (const amenityName of placeData.amenities) {
+        await db.insert(schema.placeAmenity).values({
+          placeId: newPlace.id,
           name: amenityName,
         });
         amenitiesCreated++;
@@ -230,8 +242,8 @@ async function seed() {
     }
 
     console.log("\n--- Seed Summary ---");
-    console.log(`Courts created: ${courtsCreated}`);
-    console.log(`Courts skipped: ${courtsSkipped}`);
+    console.log(`Places created: ${placesCreated}`);
+    console.log(`Places skipped: ${placesSkipped}`);
     console.log(`Photos created: ${photosCreated}`);
     console.log(`Amenities created: ${amenitiesCreated}`);
     console.log("\nSeed completed successfully!");

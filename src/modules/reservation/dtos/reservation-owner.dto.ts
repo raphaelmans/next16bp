@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+export const AcceptReservationSchema = z.object({
+  reservationId: z.string().uuid(),
+});
+
+export type AcceptReservationDTO = z.infer<typeof AcceptReservationSchema>;
+
 export const ConfirmPaymentSchema = z.object({
   reservationId: z.string().uuid(),
   notes: z.string().max(500).optional(),

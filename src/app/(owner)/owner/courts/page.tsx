@@ -2,6 +2,7 @@
 
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import * as React from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,9 +11,15 @@ import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
   CourtsEmptyState,
   CourtsTable,
+  PlaceCourtFilter,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
-import { useOwnerOrganization } from "@/features/owner/hooks";
+import {
+  useOwnerCourtFilter,
+  useOwnerOrganization,
+  useOwnerPlaceFilter,
+  useOwnerPlaces,
+} from "@/features/owner/hooks";
 import {
   useDeactivateCourt,
   useOwnerCourts,
@@ -22,7 +29,6 @@ import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function OwnerCourtsPage() {
   const { data: user } = useSession();
-  const { data: courts, isLoading } = useOwnerCourts();
   const deactivateMutation = useDeactivateCourt();
   const logoutMutation = useLogout();
 
@@ -32,6 +38,19 @@ export default function OwnerCourtsPage() {
     organizations,
     isLoading: orgLoading,
   } = useOwnerOrganization();
+  const { data: places = [] } = useOwnerPlaces(organization?.id ?? null);
+  const { placeId, setPlaceId } = useOwnerPlaceFilter();
+  const { courtId, setCourtId } = useOwnerCourtFilter();
+
+  const { data: courts, isLoading } = useOwnerCourts(organization?.id ?? null);
+
+  const filteredCourts = React.useMemo(() => {
+    const base = courts ?? [];
+    const byPlace = placeId
+      ? base.filter((court) => court.placeId === placeId)
+      : base;
+    return courtId ? byPlace.filter((court) => court.id === courtId) : byPlace;
+  }, [courts, courtId, placeId]);
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -123,10 +142,10 @@ export default function OwnerCourtsPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight font-heading">
-              My Courts
+              Courts
             </h1>
             <p className="text-muted-foreground">
-              Manage your courts and time slots
+              View courts across your places
             </p>
           </div>
           <Button asChild>
@@ -137,6 +156,15 @@ export default function OwnerCourtsPage() {
           </Button>
         </div>
 
+        <PlaceCourtFilter
+          places={places}
+          courts={courts ?? []}
+          placeId={placeId}
+          courtId={courtId}
+          onPlaceChange={(value) => setPlaceId(value === "all" ? "" : value)}
+          onCourtChange={(value) => setCourtId(value === "all" ? "" : value)}
+        />
+
         {/* Courts list */}
         {isLoading ? (
           <div className="space-y-4">
@@ -145,8 +173,11 @@ export default function OwnerCourtsPage() {
             <Skeleton className="h-16 w-full" />
             <Skeleton className="h-16 w-full" />
           </div>
-        ) : courts && courts.length > 0 ? (
-          <CourtsTable courts={courts} onDeactivate={handleDeactivate} />
+        ) : filteredCourts.length > 0 ? (
+          <CourtsTable
+            courts={filteredCourts}
+            onDeactivate={handleDeactivate}
+          />
         ) : (
           <CourtsEmptyState />
         )}

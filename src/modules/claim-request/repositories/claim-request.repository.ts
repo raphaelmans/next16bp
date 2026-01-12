@@ -1,13 +1,13 @@
 import { and, eq } from "drizzle-orm";
 import {
   type ClaimRequestRecord,
-  type CourtRecord,
   claimRequest,
-  court,
   type InsertClaimRequest,
-  type InsertCourt,
+  type InsertPlace,
   type OrganizationRecord,
   organization,
+  type PlaceRecord,
+  place,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
 import type { RequestContext } from "@/shared/kernel/context";
@@ -21,12 +21,12 @@ export interface IClaimRequestRepository {
     id: string,
     ctx: RequestContext,
   ): Promise<ClaimRequestRecord | null>;
-  findByCourtId(
-    courtId: string,
+  findByPlaceId(
+    placeId: string,
     ctx?: RequestContext,
   ): Promise<ClaimRequestRecord[]>;
-  findPendingByCourtId(
-    courtId: string,
+  findPendingByPlaceId(
+    placeId: string,
     ctx?: RequestContext,
   ): Promise<ClaimRequestRecord | null>;
   findByOrganizationId(
@@ -88,19 +88,19 @@ export class ClaimRequestRepository implements IClaimRequestRepository {
     return result[0] ?? null;
   }
 
-  async findByCourtId(
-    courtId: string,
+  async findByPlaceId(
+    placeId: string,
     ctx?: RequestContext,
   ): Promise<ClaimRequestRecord[]> {
     const client = this.getClient(ctx);
     return client
       .select()
       .from(claimRequest)
-      .where(eq(claimRequest.courtId, courtId));
+      .where(eq(claimRequest.placeId, placeId));
   }
 
-  async findPendingByCourtId(
-    courtId: string,
+  async findPendingByPlaceId(
+    placeId: string,
     ctx?: RequestContext,
   ): Promise<ClaimRequestRecord | null> {
     const client = this.getClient(ctx);
@@ -109,7 +109,7 @@ export class ClaimRequestRepository implements IClaimRequestRepository {
       .from(claimRequest)
       .where(
         and(
-          eq(claimRequest.courtId, courtId),
+          eq(claimRequest.placeId, placeId),
           eq(claimRequest.status, "PENDING"),
         ),
       )
@@ -188,9 +188,6 @@ export class ClaimRequestRepository implements IClaimRequestRepository {
   }
 }
 
-/**
- * Organization repository for claim request module
- */
 export interface IOrganizationRepository {
   findById(
     id: string,
@@ -220,23 +217,20 @@ export class OrganizationRepository implements IOrganizationRepository {
   }
 }
 
-/**
- * Court repository for claim request module (extended with update)
- */
-export interface IClaimCourtRepository {
-  findById(id: string, ctx?: RequestContext): Promise<CourtRecord | null>;
+export interface IClaimPlaceRepository {
+  findById(id: string, ctx?: RequestContext): Promise<PlaceRecord | null>;
   findByIdForUpdate(
     id: string,
     ctx: RequestContext,
-  ): Promise<CourtRecord | null>;
+  ): Promise<PlaceRecord | null>;
   update(
     id: string,
-    data: Partial<InsertCourt>,
+    data: Partial<InsertPlace>,
     ctx?: RequestContext,
-  ): Promise<CourtRecord>;
+  ): Promise<PlaceRecord>;
 }
 
-export class ClaimCourtRepository implements IClaimCourtRepository {
+export class ClaimPlaceRepository implements IClaimPlaceRepository {
   constructor(private db: DbClient) {}
 
   private getClient(ctx?: RequestContext): DbClient | DrizzleTransaction {
@@ -246,12 +240,12 @@ export class ClaimCourtRepository implements IClaimCourtRepository {
   async findById(
     id: string,
     ctx?: RequestContext,
-  ): Promise<CourtRecord | null> {
+  ): Promise<PlaceRecord | null> {
     const client = this.getClient(ctx);
     const result = await client
       .select()
-      .from(court)
-      .where(eq(court.id, id))
+      .from(place)
+      .where(eq(place.id, id))
       .limit(1);
 
     return result[0] ?? null;
@@ -260,12 +254,12 @@ export class ClaimCourtRepository implements IClaimCourtRepository {
   async findByIdForUpdate(
     id: string,
     ctx: RequestContext,
-  ): Promise<CourtRecord | null> {
+  ): Promise<PlaceRecord | null> {
     const client = this.getClient(ctx) as DrizzleTransaction;
     const result = await client
       .select()
-      .from(court)
-      .where(eq(court.id, id))
+      .from(place)
+      .where(eq(place.id, id))
       .for("update")
       .limit(1);
 
@@ -274,14 +268,14 @@ export class ClaimCourtRepository implements IClaimCourtRepository {
 
   async update(
     id: string,
-    data: Partial<InsertCourt>,
+    data: Partial<InsertPlace>,
     ctx?: RequestContext,
-  ): Promise<CourtRecord> {
+  ): Promise<PlaceRecord> {
     const client = this.getClient(ctx);
     const result = await client
-      .update(court)
+      .update(place)
       .set({ ...data, updatedAt: new Date() })
-      .where(eq(court.id, id))
+      .where(eq(place.id, id))
       .returning();
     return result[0];
   }

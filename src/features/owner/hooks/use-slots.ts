@@ -149,14 +149,14 @@ function generateSlotsFromBulkData(
 ): Array<{
   startTime: string;
   endTime: string;
-  priceCents: number | null;
-  currency: string | null;
+  priceCents?: number | null;
+  currency?: string | null;
 }> {
   const slots: Array<{
     startTime: string;
     endTime: string;
-    priceCents: number | null;
-    currency: string | null;
+    priceCents?: number | null;
+    currency?: string | null;
   }> = [];
 
   const startDateObj = new Date(data.startDate);
@@ -185,16 +185,27 @@ function generateSlotsFromBulkData(
       while (slotStart < dayEnd) {
         const slotEnd = new Date(slotStart.getTime() + data.duration * 60000);
         if (slotEnd <= dayEnd) {
-          slots.push({
+          const slot: {
+            startTime: string;
+            endTime: string;
+            priceCents?: number | null;
+            currency?: string | null;
+          } = {
             startTime: slotStart.toISOString(),
             endTime: slotEnd.toISOString(),
-            priceCents: data.useDefaultPrice
-              ? null
-              : data.customPrice
-                ? Math.round(data.customPrice * 100)
-                : null,
-            currency: data.useDefaultPrice ? null : (data.currency ?? null),
-          });
+          };
+
+          if (!data.useDefaultPrice) {
+            if (data.customPrice !== undefined && data.customPrice !== null) {
+              slot.priceCents = Math.round(data.customPrice * 100);
+              slot.currency = data.currency ?? null;
+            } else {
+              slot.priceCents = null;
+              slot.currency = null;
+            }
+          }
+
+          slots.push(slot);
         }
         slotStart = slotEnd;
       }

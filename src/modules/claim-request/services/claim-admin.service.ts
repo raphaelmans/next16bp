@@ -1,8 +1,8 @@
 import type {
   ClaimRequestEventRecord,
   ClaimRequestRecord,
-  CourtRecord,
   OrganizationRecord,
+  PlaceRecord,
 } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
@@ -12,7 +12,7 @@ import {
   InvalidClaimStatusError,
 } from "../errors/claim-request.errors";
 import type {
-  IClaimCourtRepository,
+  IClaimPlaceRepository,
   IClaimRequestRepository,
   IOrganizationRepository,
 } from "../repositories/claim-request.repository";
@@ -24,7 +24,7 @@ import type { IApproveClaimRequestUseCase } from "../use-cases/approve-claim-req
  */
 export interface ClaimRequestAdminDetails {
   claimRequest: ClaimRequestRecord;
-  court: CourtRecord;
+  place: PlaceRecord;
   organization: OrganizationRecord;
   events: ClaimRequestEventRecord[];
 }
@@ -55,7 +55,7 @@ export class ClaimAdminService implements IClaimAdminService {
   constructor(
     private claimRequestRepository: IClaimRequestRepository,
     private claimRequestEventRepository: IClaimRequestEventRepository,
-    private courtRepository: IClaimCourtRepository,
+    private placeRepository: IClaimPlaceRepository,
     private organizationRepository: IOrganizationRepository,
     private approveClaimRequestUseCase: IApproveClaimRequestUseCase,
     private transactionManager: TransactionManager,
@@ -91,11 +91,11 @@ export class ClaimAdminService implements IClaimAdminService {
       throw new ClaimRequestNotFoundError(requestId);
     }
 
-    const court = await this.courtRepository.findById(
-      claimRequest.courtId,
+    const place = await this.placeRepository.findById(
+      claimRequest.placeId,
       ctx,
     );
-    if (!court) {
+    if (!place) {
       throw new ClaimRequestNotFoundError(requestId);
     }
 
@@ -114,7 +114,7 @@ export class ClaimAdminService implements IClaimAdminService {
 
     return {
       claimRequest,
-      court,
+      place,
       organization,
       events,
     };
@@ -166,11 +166,11 @@ export class ClaimAdminService implements IClaimAdminService {
         ctx,
       );
 
-      // Revert court status based on request type
+      // Revert place status based on request type
       const revertStatus =
         claimRequest.requestType === "CLAIM" ? "UNCLAIMED" : "CLAIMED";
-      await this.courtRepository.update(
-        claimRequest.courtId,
+      await this.placeRepository.update(
+        claimRequest.placeId,
         { claimStatus: revertStatus },
         ctx,
       );

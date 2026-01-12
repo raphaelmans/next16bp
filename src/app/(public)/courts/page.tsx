@@ -2,59 +2,54 @@
 
 import { Suspense } from "react";
 import {
-  CourtFilters,
-  CourtMap,
   EmptyResults,
+  PlaceFilters,
+  PlaceMap,
   ViewToggle,
 } from "@/features/discovery/components";
 import {
-  useDiscoveryCourts,
   useDiscoveryFilters,
+  useDiscoveryPlaces,
 } from "@/features/discovery/hooks";
 import {
   AdBanner,
-  CourtCard,
-  CourtCardSkeleton,
+  PlaceCard,
+  PlaceCardSkeleton,
 } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
 
-export default function CourtsPage() {
+export default function PlacesPage() {
   return (
-    <Suspense fallback={<CourtsPageSkeleton />}>
-      <CourtsPageContent />
+    <Suspense fallback={<PlacesPageSkeleton />}>
+      <PlacesPageContent />
     </Suspense>
   );
 }
 
-function CourtsPageContent() {
+function PlacesPageContent() {
   const filters = useDiscoveryFilters();
-  const { data, isLoading } = useDiscoveryCourts({
+  const { data, isLoading } = useDiscoveryPlaces({
     q: filters.q ?? undefined,
     city: filters.city ?? undefined,
-    type: filters.type ?? undefined,
-    isFree: filters.isFree ?? undefined,
-    amenities: filters.amenities,
+    sportId: filters.sportId ?? undefined,
     page: filters.page,
     limit: filters.limit,
   });
 
-  const courts = data?.courts ?? [];
+  const places = data?.places ?? [];
   const total = data?.total ?? 0;
 
   return (
     <Container>
       <div className="space-y-6">
-        {/* Page Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              {filters.city
-                ? `Courts in ${filters.city.charAt(0).toUpperCase() + filters.city.slice(1)}`
-                : "Browse Courts"}
+              {filters.city ? `Places in ${filters.city}` : "Browse Places"}
             </h1>
             {!isLoading && (
               <p className="text-muted-foreground">
-                {total} court{total !== 1 ? "s" : ""} found
+                {total} place{total !== 1 ? "s" : ""} found
               </p>
             )}
           </div>
@@ -64,50 +59,44 @@ function CourtsPageContent() {
           </div>
         </div>
 
-        {/* Filters */}
-        <CourtFilters
+        <PlaceFilters
           city={filters.city ?? undefined}
-          type={filters.type ?? undefined}
-          isFree={filters.isFree ?? undefined}
-          amenities={filters.amenities}
+          sportId={filters.sportId ?? undefined}
           onCityChange={filters.setCity}
-          onTypeChange={(t) =>
-            filters.setType(t as "CURATED" | "RESERVABLE" | undefined)
-          }
-          onIsFreeChange={filters.setIsFree}
-          onAmenitiesChange={filters.setAmenities}
+          onSportChange={filters.setSportId}
           onClearAll={filters.clearAll}
         />
 
-        {/* Content */}
         {filters.view === "map" ? (
-          <CourtMap
-            courts={courts.map((c) => ({
-              ...c,
-              lat: 14.5995 + Math.random() * 0.1,
-              lng: 120.9842 + Math.random() * 0.1,
-            }))}
+          <PlaceMap
+            places={places.map((place, index) => {
+              const fallbackLat = 14.5995 + index * 0.001;
+              const fallbackLng = 120.9842 + index * 0.001;
+              return {
+                ...place,
+                lat: place.latitude ?? fallbackLat,
+                lng: place.longitude ?? fallbackLng,
+              };
+            })}
           />
         ) : isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {["sk1", "sk2", "sk3", "sk4", "sk5", "sk6", "sk7", "sk8"].map(
               (id) => (
-                <CourtCardSkeleton key={id} />
+                <PlaceCardSkeleton key={id} />
               ),
             )}
           </div>
-        ) : courts.length > 0 ? (
+        ) : places.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {courts.map((court) => (
-                <CourtCard key={court.id} court={court} />
+              {places.map((place) => (
+                <PlaceCard key={place.id} place={place} />
               ))}
             </div>
 
-            {/* Ad Banner */}
             <AdBanner placement="search-results" className="mt-8" />
 
-            {/* Pagination placeholder */}
             {data?.hasMore && (
               <div className="flex justify-center pt-8">
                 <button
@@ -131,7 +120,7 @@ function CourtsPageContent() {
   );
 }
 
-function CourtsPageSkeleton() {
+function PlacesPageSkeleton() {
   return (
     <Container>
       <div className="space-y-6">
@@ -139,7 +128,7 @@ function CourtsPageSkeleton() {
         <div className="h-10 w-full bg-muted rounded animate-pulse" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8"].map((id) => (
-            <CourtCardSkeleton key={id} />
+            <PlaceCardSkeleton key={id} />
           ))}
         </div>
       </div>

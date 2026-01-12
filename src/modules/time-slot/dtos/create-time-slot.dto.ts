@@ -14,6 +14,17 @@ export const CreateTimeSlotSchema = z
   })
   .refine(
     (data) =>
+      ((new Date(data.endTime).getTime() - new Date(data.startTime).getTime()) /
+        60000) %
+        60 ===
+      0,
+    {
+      message: "Slot duration must be a multiple of 60 minutes",
+      path: ["endTime"],
+    },
+  )
+  .refine(
+    (data) =>
       (data.priceCents === null && data.currency === null) ||
       (data.priceCents === undefined && data.currency === undefined) ||
       (data.priceCents !== null &&
@@ -42,7 +53,19 @@ export const CreateBulkTimeSlotsSchema = z.object({
         .refine((data) => new Date(data.endTime) > new Date(data.startTime), {
           message: "End time must be after start time",
           path: ["endTime"],
-        }),
+        })
+        .refine(
+          (data) =>
+            ((new Date(data.endTime).getTime() -
+              new Date(data.startTime).getTime()) /
+              60000) %
+              60 ===
+            0,
+          {
+            message: "Slot duration must be a multiple of 60 minutes",
+            path: ["endTime"],
+          },
+        ),
     )
     .min(1)
     .max(100),

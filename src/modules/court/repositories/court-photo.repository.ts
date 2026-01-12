@@ -1,8 +1,8 @@
 import { asc, count, eq } from "drizzle-orm";
 import {
-  type CourtPhotoRecord,
-  courtPhoto,
-  type InsertCourtPhoto,
+  type PlacePhotoRecord as CourtPhotoRecord,
+  placePhoto as courtPhoto,
+  type InsertPlacePhoto as InsertCourtPhoto,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
 import type { RequestContext } from "@/shared/kernel/context";
@@ -41,7 +41,7 @@ export class CourtPhotoRepository implements ICourtPhotoRepository {
     return client
       .select()
       .from(courtPhoto)
-      .where(eq(courtPhoto.courtId, courtId))
+      .where(eq(courtPhoto.placeId, courtId))
       .orderBy(asc(courtPhoto.displayOrder));
   }
 
@@ -89,7 +89,7 @@ export class CourtPhotoRepository implements ICourtPhotoRepository {
     const result = await client
       .select({ count: count() })
       .from(courtPhoto)
-      .where(eq(courtPhoto.courtId, courtId));
+      .where(eq(courtPhoto.placeId, courtId));
     return result[0]?.count ?? 0;
   }
 }

@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 /**
- * Schema for submitting a removal request for a claimed court
+ * Schema for submitting a removal request for a claimed place
  */
 export const SubmitRemovalRequestSchema = z.object({
-  courtId: z.string().uuid(),
+  placeId: z.string().uuid(),
   organizationId: z.string().uuid(),
   requestNotes: z.string().min(1).max(1000), // Required for removal requests
 });

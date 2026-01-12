@@ -1,96 +1,131 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
+import type { PlaceRecord } from "@/shared/infra/db/schema";
+import { useTRPCClient } from "@/trpc/client";
 
-/**
- * Extended court type for owner dashboard display.
- * Maps from backend CourtRecord to UI-friendly format.
- */
 export interface OwnerCourt {
   id: string;
-  name: string;
-  address: string;
+  label: string;
+  placeId: string;
+  placeName: string;
   city: string;
+  sportId: string;
+  sportName: string;
+  tierLabel?: string | null;
   coverImageUrl?: string;
-  status: "active" | "draft" | "inactive";
+  status: "active" | "inactive";
   openSlots: number;
   totalSlots: number;
   createdAt: Date | string;
   isActive: boolean;
 }
 
-/**
- * Fetch all courts owned by the current user.
- * Uses the courtManagement.getMyCourts endpoint.
- */
-export function useOwnerCourts() {
-  const trpc = useTRPC();
+type TrpcClient = ReturnType<typeof useTRPCClient>;
+
+type OwnerPlace = Pick<PlaceRecord, "id" | "name" | "city">;
+
+type CourtWithSportPayload = {
+  court: {
+    id: string;
+    label: string;
+    placeId: string;
+    sportId: string;
+    tierLabel: string | null;
+    isActive: boolean;
+    createdAt: string | Date;
+  };
+  sport: {
+    id: string;
+    name: string;
+  };
+};
+
+function mapOwnerCourt(
+  court: CourtWithSportPayload,
+  place: OwnerPlace,
+): OwnerCourt {
+  return {
+    id: court.court.id,
+    label: court.court.label,
+    placeId: place.id,
+    placeName: place.name,
+    city: place.city,
+    sportId: court.sport.id,
+    sportName: court.sport.name,
+    tierLabel: court.court.tierLabel,
+    coverImageUrl: undefined,
+    status: court.court.isActive ? "active" : "inactive",
+    openSlots: 0,
+    totalSlots: 0,
+    createdAt: court.court.createdAt,
+    isActive: court.court.isActive,
+  };
+}
+
+async function fetchOwnerCourts(
+  trpcClient: TrpcClient,
+  organizationId: string,
+): Promise<OwnerCourt[]> {
+  const places = await trpcClient.placeManagement.list.query({
+    organizationId,
+  });
+
+  const courtGroups = await Promise.all(
+    places.map(async (place) => {
+      const courts = await trpcClient.courtManagement.listByPlace.query({
+        placeId: place.id,
+      });
+      return courts.map((court) => mapOwnerCourt(court, place));
+    }),
+  );
+
+  return courtGroups.flat();
+}
+
+export function useOwnerCourts(organizationId?: string | null) {
+  const trpcClient = useTRPCClient();
 
   return useQuery({
-    ...trpc.courtManagement.getMyCourts.queryOptions(),
-    select: (courts) =>
-      courts.map(
-        (court): OwnerCourt => ({
-          id: court.id,
-          name: court.name,
-          address: court.address,
-          city: court.city,
-          coverImageUrl: undefined, // TODO: Add when photos are loaded
-          status: court.isActive ? "active" : "inactive",
-          openSlots: 0, // TODO: Calculate from time slots
-          totalSlots: 0, // TODO: Calculate from time slots
-          createdAt: court.createdAt,
-          isActive: court.isActive,
-        }),
-      ),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    queryKey: ["owner-courts", organizationId],
+    queryFn: async () => {
+      if (!organizationId) return [];
+      return fetchOwnerCourts(trpcClient, organizationId);
+    },
+    enabled: !!organizationId,
+    staleTime: 1000 * 60 * 5,
   });
 }
 
-/**
- * Fetch a single court by ID.
- * Uses the courtManagement.getById endpoint.
- * Note: getById returns CourtWithDetails with nested 'court' property
- */
 export function useOwnerCourt(courtId: string) {
-  const trpc = useTRPC();
+  const trpcClient = useTRPCClient();
 
   return useQuery({
-    ...trpc.courtManagement.getById.queryOptions({ courtId }),
+    queryKey: ["owner-court", courtId],
+    queryFn: async () => {
+      if (!courtId) return null;
+      const court = await trpcClient.courtManagement.getById.query({ courtId });
+      const place = await trpcClient.placeManagement.getById.query({
+        placeId: court.court.placeId,
+      });
+      return mapOwnerCourt(court, place.place);
+    },
     enabled: !!courtId,
-    select: (data): OwnerCourt | null =>
-      data
-        ? {
-            id: data.court.id,
-            name: data.court.name,
-            address: data.court.address,
-            city: data.court.city,
-            coverImageUrl: data.photos?.[0]?.url,
-            status: data.court.isActive ? "active" : "inactive",
-            openSlots: 0,
-            totalSlots: 0,
-            createdAt: data.court.createdAt,
-            isActive: data.court.isActive,
-          }
-        : null,
   });
 }
 
-/**
- * Deactivate a court.
- * Uses the courtManagement.deactivate endpoint.
- */
 export function useDeactivateCourt() {
-  const trpc = useTRPC();
+  const trpcClient = useTRPCClient();
   const queryClient = useQueryClient();
 
   return useMutation({
-    ...trpc.courtManagement.deactivate.mutationOptions(),
+    mutationFn: async ({ courtId }: { courtId: string }) =>
+      trpcClient.courtManagement.update.mutate({
+        courtId,
+        isActive: false,
+      }),
     onSuccess: () => {
-      queryClient.invalidateQueries(
-        trpc.courtManagement.getMyCourts.queryFilter(),
-      );
+      queryClient.invalidateQueries({ queryKey: ["owner-courts"] });
     },
   });
 }

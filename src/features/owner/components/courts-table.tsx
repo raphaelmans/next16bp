@@ -42,15 +42,14 @@ const statusBadgeVariant: Record<
   "default" | "secondary" | "destructive"
 > = {
   active: "default",
-  draft: "secondary",
   inactive: "destructive",
 };
 
 export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
   const router = useRouter();
 
-  const handleRowClick = (courtId: string) => {
-    router.push(appRoutes.owner.courts.slots(courtId));
+  const handleRowClick = (courtId: string, placeId: string) => {
+    router.push(appRoutes.owner.places.courts.slots(placeId, courtId));
   };
 
   return (
@@ -73,14 +72,14 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
               <TableRow
                 key={court.id}
                 className="cursor-pointer hover:bg-muted/50"
-                onClick={() => handleRowClick(court.id)}
+                onClick={() => handleRowClick(court.id, court.placeId)}
               >
                 <TableCell>
                   <div className="relative h-12 w-12 overflow-hidden rounded-md bg-muted">
                     {court.coverImageUrl ? (
                       <Image
                         src={court.coverImageUrl}
-                        alt={court.name}
+                        alt={court.label}
                         fill
                         className="object-cover"
                       />
@@ -91,9 +90,16 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                     )}
                   </div>
                 </TableCell>
-                <TableCell className="font-medium">{court.name}</TableCell>
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="font-medium">{court.label}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {court.sportName}
+                    </span>
+                  </div>
+                </TableCell>
                 <TableCell className="text-muted-foreground">
-                  {court.city}
+                  {court.placeName} · {court.city}
                 </TableCell>
                 <TableCell>
                   <Badge
@@ -125,7 +131,7 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
           <Card
             key={court.id}
             className="cursor-pointer hover:bg-muted/50 transition-colors"
-            onClick={() => handleRowClick(court.id)}
+            onClick={() => handleRowClick(court.id, court.placeId)}
           >
             <CardContent className="p-4">
               <div className="flex gap-3">
@@ -133,7 +139,7 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                   {court.coverImageUrl ? (
                     <Image
                       src={court.coverImageUrl}
-                      alt={court.name}
+                      alt={court.label}
                       fill
                       className="object-cover"
                     />
@@ -146,9 +152,9 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <h3 className="font-medium truncate">{court.name}</h3>
+                      <h3 className="font-medium truncate">{court.label}</h3>
                       <p className="text-sm text-muted-foreground">
-                        {court.city}
+                        {court.placeName} · {court.city}
                       </p>
                     </div>
                     <CourtActionsDropdown
@@ -204,26 +210,51 @@ function CourtActionsDropdown({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
-          <Link href={appRoutes.owner.courts.edit(court.id)}>
+          <Link
+            href={appRoutes.owner.places.courts.edit(court.placeId, court.id)}
+          >
             <Pencil className="mr-2 h-4 w-4" />
             Edit Details
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href={appRoutes.owner.courts.slots(court.id)}>
+          <Link
+            href={appRoutes.owner.places.courts.hours(court.placeId, court.id)}
+          >
+            <Clock className="mr-2 h-4 w-4" />
+            Edit Hours
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link
+            href={appRoutes.owner.places.courts.pricing(
+              court.placeId,
+              court.id,
+            )}
+          >
+            <Clock className="mr-2 h-4 w-4" />
+            Pricing Rules
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link
+            href={appRoutes.owner.places.courts.slots(court.placeId, court.id)}
+          >
             <Clock className="mr-2 h-4 w-4" />
             Manage Slots
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href={`${appRoutes.owner.reservations}?court=${court.id}`}>
+          <Link
+            href={`${appRoutes.owner.reservations}?placeId=${court.placeId}&courtId=${court.id}`}
+          >
             <CalendarDays className="mr-2 h-4 w-4" />
             View Bookings
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <a
-            href={appRoutes.courts.detail(court.id)}
+            href={appRoutes.places.detail(court.placeId)}
             target="_blank"
             rel="noopener noreferrer"
           >

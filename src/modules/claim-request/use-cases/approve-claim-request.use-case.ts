@@ -1,19 +1,19 @@
 import { eq } from "drizzle-orm";
 import type { ClaimRequestRecord } from "@/shared/infra/db/schema";
 import {
-  curatedCourtDetail,
-  reservableCourtDetail,
+  curatedPlaceDetail,
+  reservablePlacePolicy,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
 import { logger } from "@/shared/infra/logger";
 import type { TransactionManager } from "@/shared/kernel/transaction";
 import {
   ClaimRequestNotFoundError,
-  CourtNotFoundError,
   InvalidClaimStatusError,
+  PlaceNotFoundError,
 } from "../errors/claim-request.errors";
 import type {
-  IClaimCourtRepository,
+  IClaimPlaceRepository,
   IClaimRequestRepository,
 } from "../repositories/claim-request.repository";
 import type { IClaimRequestEventRepository } from "../repositories/claim-request-event.repository";
@@ -29,7 +29,7 @@ export interface IApproveClaimRequestUseCase {
 export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
   constructor(
     private claimRequestRepository: IClaimRequestRepository,
-    private courtRepository: IClaimCourtRepository,
+    private placeRepository: IClaimPlaceRepository,
     private claimRequestEventRepository: IClaimRequestEventRepository,
     private transactionManager: TransactionManager,
     _db: DbClient,
@@ -44,7 +44,6 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
       const ctx = { tx };
       const txClient = tx as DrizzleTransaction;
 
-      // 1. Lock claim request
       const claimRequest = await this.claimRequestRepository.findByIdForUpdate(
         requestId,
         ctx,
@@ -59,24 +58,14 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
         );
       }
 
-      // 2. Lock court
-      const court = await this.courtRepository.findByIdForUpdate(
-        claimRequest.courtId,
+      const place = await this.placeRepository.findByIdForUpdate(
+        claimRequest.placeId,
         ctx,
       );
-      if (!court) {
-        throw new CourtNotFoundError(claimRequest.courtId);
+      if (!place) {
+        throw new PlaceNotFoundError(claimRequest.placeId);
       }
 
-      // 3. Get curated detail (to potentially preserve data)
-      const curatedDetailResult = await txClient
-        .select()
-        .from(curatedCourtDetail)
-        .where(eq(curatedCourtDetail.courtId, court.id))
-        .limit(1);
-      const existingCuratedDetail = curatedDetailResult[0];
-
-      // 4. Update claim request
       const updatedRequest = await this.claimRequestRepository.update(
         requestId,
         {
@@ -88,33 +77,25 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
         ctx,
       );
 
-      // 5. Update court - THIS IS THE KEY TRANSFORMATION
-      await this.courtRepository.update(
-        court.id,
+      await this.placeRepository.update(
+        place.id,
         {
           claimStatus: "CLAIMED",
-          courtType: "RESERVABLE",
+          placeType: "RESERVABLE",
           organizationId: claimRequest.organizationId,
         },
         ctx,
       );
 
-      // 6. Create reservable court detail
-      await txClient.insert(reservableCourtDetail).values({
-        courtId: court.id,
-        isFree: false,
-        defaultCurrency: "PHP",
-        // Could copy website from curated if desired
-      });
+      await txClient
+        .insert(reservablePlacePolicy)
+        .values({ placeId: place.id })
+        .onConflictDoNothing();
 
-      // 7. Delete curated court detail if exists
-      if (existingCuratedDetail) {
-        await txClient
-          .delete(curatedCourtDetail)
-          .where(eq(curatedCourtDetail.courtId, court.id));
-      }
+      await txClient
+        .delete(curatedPlaceDetail)
+        .where(eq(curatedPlaceDetail.placeId, place.id));
 
-      // 8. Create audit event
       await this.claimRequestEventRepository.create(
         {
           claimRequestId: requestId,
@@ -130,11 +111,11 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
         {
           event: "claim_request.approved",
           claimRequestId: requestId,
-          courtId: court.id,
+          placeId: place.id,
           organizationId: claimRequest.organizationId,
           adminUserId,
         },
-        "Claim request approved - court transformed to reservable",
+        "Claim request approved - place transformed to reservable",
       );
 
       return updatedRequest;

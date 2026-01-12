@@ -48,12 +48,33 @@ export default function ReservationDetailPage() {
 
   const { data: courtData, isLoading: isLoadingCourt } = useQuery({
     ...trpc.court.getById.queryOptions({
-      id: timeSlot?.courtId || "",
+      courtId: timeSlot?.courtId || "",
     }),
     enabled: !!timeSlot?.courtId,
   });
 
-  const isLoading = isLoadingReservation || isLoadingSlot || isLoadingCourt;
+  const { data: placeData, isLoading: isLoadingPlace } = useQuery({
+    ...trpc.place.getById.queryOptions({
+      placeId: courtData?.court.placeId || "",
+    }),
+    enabled: !!courtData?.court.placeId,
+  });
+
+  const { data: organizationData, isLoading: isLoadingOrganization } = useQuery(
+    {
+      ...trpc.organization.get.queryOptions({
+        id: placeData?.place.organizationId || "",
+      }),
+      enabled: !!placeData?.place.organizationId,
+    },
+  );
+
+  const isLoading =
+    isLoadingReservation ||
+    isLoadingSlot ||
+    isLoadingCourt ||
+    isLoadingPlace ||
+    isLoadingOrganization;
 
   if (isLoading) {
     return (
@@ -65,7 +86,7 @@ export default function ReservationDetailPage() {
     );
   }
 
-  if (!reservation || !timeSlot || !courtData) {
+  if (!reservation || !timeSlot || !courtData || !placeData) {
     return (
       <Container className="py-6">
         <div className="text-center">
@@ -81,41 +102,40 @@ export default function ReservationDetailPage() {
     );
   }
 
+  const courtName = `${placeData.place.name} - ${courtData.court.label}`;
   const court = {
     id: courtData.court.id,
-    name: courtData.court.name,
-    address: courtData.court.address,
-    city: courtData.court.city,
-    coverImageUrl: courtData.photos[0]?.url,
-    latitude: courtData.court.latitude
-      ? parseFloat(courtData.court.latitude)
+    name: courtName,
+    address: placeData.place.address,
+    city: placeData.place.city,
+    coverImageUrl: placeData.photos[0]?.url,
+    latitude: placeData.place.latitude
+      ? Number.parseFloat(placeData.place.latitude)
       : undefined,
-    longitude: courtData.court.longitude
-      ? parseFloat(courtData.court.longitude)
+    longitude: placeData.place.longitude
+      ? Number.parseFloat(placeData.place.longitude)
       : undefined,
   };
 
-  const organizationForDisplay = courtData.organization
+  const organizationForDisplay = organizationData
     ? {
-        id: courtData.organization.id,
-        name: courtData.organization.name,
+        id: organizationData.organization.id,
+        name: organizationData.organization.name,
       }
     : undefined;
 
   const reservableDetail =
-    courtData.court.courtType === "RESERVABLE"
-      ? (courtData.detail as ReservableDetail | null)
+    placeData.place.placeType === "RESERVABLE"
+      ? (placeData.detail as ReservableDetail | null)
       : null;
 
   const organization = {
-    contactEmail: undefined,
-    contactPhone: undefined,
+    contactEmail: organizationData?.profile?.contactEmail ?? undefined,
+    contactPhone: organizationData?.profile?.contactPhone ?? undefined,
   };
 
-  const effectivePriceCents =
-    timeSlot.priceCents ?? timeSlot.defaultPriceCents ?? 0;
-  const effectiveCurrency =
-    timeSlot.currency ?? timeSlot.defaultCurrency ?? "PHP";
+  const effectivePriceCents = timeSlot.priceCents ?? 0;
+  const effectiveCurrency = timeSlot.currency ?? "PHP";
   const isFreeSlot = timeSlot.isFree || effectivePriceCents === 0;
 
   const transformedTimeSlot = {

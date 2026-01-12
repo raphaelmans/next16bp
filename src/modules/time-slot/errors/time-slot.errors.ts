@@ -51,6 +51,21 @@ export class CourtNotReservableError extends ValidationError {
   }
 }
 
+export class SlotPricingUnavailableError extends ValidationError {
+  readonly code = "SLOT_PRICING_UNAVAILABLE";
+
+  constructor(courtId: string, startTime: Date, endTime: Date) {
+    super(
+      "No pricing rule covers this slot. Add a rate rule or set a custom price.",
+      {
+        courtId,
+        startTime: startTime.toISOString(),
+        endTime: endTime.toISOString(),
+      },
+    );
+  }
+}
+
 export class SlotInUseError extends ValidationError {
   readonly code = "SLOT_IN_USE";
 

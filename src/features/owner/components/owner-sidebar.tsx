@@ -54,8 +54,8 @@ const navItems = [
     icon: LayoutDashboard,
   },
   {
-    title: "My Courts",
-    href: appRoutes.owner.courts.base,
+    title: "Places",
+    href: appRoutes.owner.places.base,
     icon: MapPin,
   },
   {

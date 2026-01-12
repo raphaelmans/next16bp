@@ -1,9 +1,21 @@
-import { and, eq, gt, gte, lt, lte, ne, notInArray } from "drizzle-orm";
+import {
+  and,
+  eq,
+  gt,
+  gte,
+  inArray,
+  lt,
+  lte,
+  ne,
+  notInArray,
+} from "drizzle-orm";
 import {
   court,
   type InsertTimeSlot,
-  reservableCourtDetail,
+  place,
+  reservablePlacePolicy,
   reservation,
+  reservationTimeSlot,
   type TimeSlotRecord,
   timeSlot,
 } from "@/shared/infra/db/schema";
@@ -35,8 +47,6 @@ export interface TimeSlotPaymentDetails {
 
 export interface TimeSlotWithPaymentDetails extends TimeSlotRecord {
   paymentDetails: TimeSlotPaymentDetails | null;
-  defaultPriceCents?: number | null;
-  defaultCurrency?: string | null;
   isFree?: boolean | null;
 }
 
@@ -49,6 +59,10 @@ export interface ITimeSlotRepository {
     id: string,
     ctx: RequestContext,
   ): Promise<TimeSlotRecord | null>;
+  findByIdsForUpdate(
+    ids: string[],
+    ctx: RequestContext,
+  ): Promise<TimeSlotRecord[]>;
   findByCourtAndDateRange(
     courtId: string,
     startDate: Date,
@@ -85,6 +99,11 @@ export interface ITimeSlotRepository {
     data: Partial<InsertTimeSlot>,
     ctx?: RequestContext,
   ): Promise<TimeSlotRecord>;
+  updateManyStatus(
+    ids: string[],
+    status: "AVAILABLE" | "HELD" | "BOOKED" | "BLOCKED",
+    ctx?: RequestContext,
+  ): Promise<TimeSlotRecord[]>;
   delete(id: string, ctx?: RequestContext): Promise<void>;
 }
 
@@ -109,24 +128,22 @@ export class TimeSlotRepository implements ITimeSlotRepository {
         status: timeSlot.status,
         priceCents: timeSlot.priceCents,
         currency: timeSlot.currency,
-        defaultPriceCents: reservableCourtDetail.defaultPriceCents,
-        defaultCurrency: reservableCourtDetail.defaultCurrency,
-        isFree: reservableCourtDetail.isFree,
         createdAt: timeSlot.createdAt,
         updatedAt: timeSlot.updatedAt,
         paymentDetails: {
-          gcashNumber: reservableCourtDetail.gcashNumber,
-          bankName: reservableCourtDetail.bankName,
-          bankAccountNumber: reservableCourtDetail.bankAccountNumber,
-          bankAccountName: reservableCourtDetail.bankAccountName,
-          paymentInstructions: reservableCourtDetail.paymentInstructions,
+          gcashNumber: reservablePlacePolicy.gcashNumber,
+          bankName: reservablePlacePolicy.bankName,
+          bankAccountNumber: reservablePlacePolicy.bankAccountNumber,
+          bankAccountName: reservablePlacePolicy.bankAccountName,
+          paymentInstructions: reservablePlacePolicy.paymentInstructions,
         },
       })
       .from(timeSlot)
       .innerJoin(court, eq(court.id, timeSlot.courtId))
+      .innerJoin(place, eq(place.id, court.placeId))
       .leftJoin(
-        reservableCourtDetail,
-        eq(reservableCourtDetail.courtId, court.id),
+        reservablePlacePolicy,
+        eq(reservablePlacePolicy.placeId, place.id),
       )
       .where(eq(timeSlot.id, id))
       .limit(1);
@@ -147,6 +164,7 @@ export class TimeSlotRepository implements ITimeSlotRepository {
     return {
       ...slot,
       paymentDetails: hasDetails ? details : null,
+      isFree: slot.priceCents === null,
     };
   }
 
@@ -162,6 +180,19 @@ export class TimeSlotRepository implements ITimeSlotRepository {
       .for("update")
       .limit(1);
     return result[0] ?? null;
+  }
+
+  async findByIdsForUpdate(
+    ids: string[],
+    ctx: RequestContext,
+  ): Promise<TimeSlotRecord[]> {
+    if (ids.length === 0) return [];
+    const client = this.getClient(ctx) as DrizzleTransaction;
+    return client
+      .select()
+      .from(timeSlot)
+      .where(inArray(timeSlot.id, ids))
+      .for("update");
   }
 
   async findByCourtAndDateRange(
@@ -203,8 +234,6 @@ export class TimeSlotRepository implements ITimeSlotRepository {
   ): Promise<TimeSlotWithPlayerInfo[]> {
     const client = this.getClient(ctx);
 
-    // Left join with reservation to get player info for HELD/BOOKED slots
-    // Only join with active reservations (not EXPIRED or CANCELLED)
     const result = await client
       .select({
         id: timeSlot.id,
@@ -216,19 +245,21 @@ export class TimeSlotRepository implements ITimeSlotRepository {
         currency: timeSlot.currency,
         createdAt: timeSlot.createdAt,
         updatedAt: timeSlot.updatedAt,
-        // Reservation info
         reservationId: reservation.id,
         reservationStatus: reservation.status,
         reservationExpiresAt: reservation.expiresAt,
-        // Player info from reservation
         playerName: reservation.playerNameSnapshot,
         playerPhone: reservation.playerPhoneSnapshot,
       })
       .from(timeSlot)
       .leftJoin(
+        reservationTimeSlot,
+        eq(reservationTimeSlot.timeSlotId, timeSlot.id),
+      )
+      .leftJoin(
         reservation,
         and(
-          eq(reservation.timeSlotId, timeSlot.id),
+          eq(reservation.id, reservationTimeSlot.reservationId),
           notInArray(reservation.status, ["EXPIRED", "CANCELLED"]),
         ),
       )
@@ -264,10 +295,6 @@ export class TimeSlotRepository implements ITimeSlotRepository {
     );
   }
 
-  /**
-   * Find slots that overlap with the given time range.
-   * Overlap condition: existing.start < new.end AND existing.end > new.start
-   */
   async findOverlapping(
     courtId: string,
     startTime: Date,
@@ -324,6 +351,20 @@ export class TimeSlotRepository implements ITimeSlotRepository {
       .where(eq(timeSlot.id, id))
       .returning();
     return result[0];
+  }
+
+  async updateManyStatus(
+    ids: string[],
+    status: "AVAILABLE" | "HELD" | "BOOKED" | "BLOCKED",
+    ctx?: RequestContext,
+  ): Promise<TimeSlotRecord[]> {
+    if (ids.length === 0) return [];
+    const client = this.getClient(ctx);
+    return client
+      .update(timeSlot)
+      .set({ status, updatedAt: new Date() })
+      .where(inArray(timeSlot.id, ids))
+      .returning();
   }
 
   async delete(id: string, ctx?: RequestContext): Promise<void> {

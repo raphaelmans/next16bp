@@ -9,22 +9,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
+import { PlaceCourtFilter } from "@/features/owner/components/place-court-filter";
 import { RejectModal } from "@/features/owner/components/reject-modal";
 import {
   useOwnerCourtFilter,
   useOwnerCourts,
   useOwnerOrganization,
+  useOwnerPlaceFilter,
+  useOwnerPlaces,
 } from "@/features/owner/hooks";
 import {
+  useAcceptReservation,
   useConfirmReservation,
   useRejectReservation,
 } from "@/features/owner/hooks/use-owner-reservations";
@@ -51,32 +48,66 @@ export function ReservationAlertsPanel({
   const lastPollRef = React.useRef<number | null>(null);
 
   const { organization } = useOwnerOrganization();
-  const { data: courts = [] } = useOwnerCourts();
+  const { data: places = [] } = useOwnerPlaces(organization?.id ?? null);
+  const { data: courts = [] } = useOwnerCourts(organization?.id ?? null);
+  const { placeId, setPlaceId } = useOwnerPlaceFilter();
   const { courtId, setCourtId } = useOwnerCourtFilter();
   const effectiveOrganizationId = organizationId ?? organization?.id ?? null;
 
+  const filteredCourts = React.useMemo(() => {
+    if (!placeId) return courts;
+    return courts.filter((court) => court.placeId === placeId);
+  }, [courts, placeId]);
+
   const reservationsActiveHref = React.useMemo(() => {
-    if (!courtId) return appRoutes.owner.reservationsActive;
-    const params = new URLSearchParams({ courtId });
-    return `${appRoutes.owner.reservationsActive}?${params.toString()}`;
-  }, [courtId]);
+    const params = new URLSearchParams();
+    if (placeId) {
+      params.set("placeId", placeId);
+    }
+    if (courtId) {
+      params.set("courtId", courtId);
+    }
+    const suffix = params.toString();
+    return suffix
+      ? `${appRoutes.owner.reservationsActive}?${suffix}`
+      : appRoutes.owner.reservationsActive;
+  }, [courtId, placeId]);
 
   const alertsQuery = useReservationAlerts(
     effectiveOrganizationId,
     courtId || undefined,
   );
+  const acceptMutation = useAcceptReservation();
   const confirmMutation = useConfirmReservation();
   const rejectMutation = useRejectReservation();
 
-  const activeReservations = React.useMemo(
-    () =>
-      (alertsQuery.data ?? []).filter(
+  const activeReservations = React.useMemo(() => {
+    const courtIds = new Set(filteredCourts.map((court) => court.id));
+    return (alertsQuery.data ?? [])
+      .filter((reservation) =>
+        placeId ? courtIds.has(reservation.courtId) : true,
+      )
+      .filter(
         (reservation) =>
+          reservation.reservationStatus === "CREATED" ||
           reservation.reservationStatus === "AWAITING_PAYMENT" ||
           reservation.reservationStatus === "PAYMENT_MARKED_BY_USER",
-      ),
-    [alertsQuery.data],
+      );
+  }, [alertsQuery.data, filteredCourts, placeId]);
+
+  const selectedReservation = React.useMemo(
+    () =>
+      activeReservations.find(
+        (reservation) => reservation.id === selectedReservationId,
+      ) ?? null,
+    [activeReservations, selectedReservationId],
   );
+  const confirmTitle =
+    selectedReservation?.reservationStatus === "CREATED"
+      ? "Accept Reservation"
+      : "Confirm Payment";
+  const confirmLabel =
+    selectedReservation?.reservationStatus === "CREATED" ? "Accept" : "Confirm";
 
   React.useEffect(() => {
     if (!alertsQuery.dataUpdatedAt) return;
@@ -106,15 +137,24 @@ export function ReservationAlertsPanel({
 
   const handleConfirmSubmit = () => {
     if (!selectedReservationId) return;
-    confirmMutation.mutate(
+    const isCreated = selectedReservation?.reservationStatus === "CREATED";
+    const mutation = isCreated ? acceptMutation : confirmMutation;
+    const successMessage = isCreated
+      ? "Reservation accepted"
+      : "Payment confirmed";
+    const errorMessage = isCreated
+      ? "Failed to accept reservation"
+      : "Failed to confirm payment";
+
+    mutation.mutate(
       { reservationId: selectedReservationId },
       {
         onSuccess: () => {
-          toast.success("Reservation confirmed");
+          toast.success(successMessage);
           setConfirmOpen(false);
         },
         onError: () => {
-          toast.error("Failed to confirm reservation");
+          toast.error(errorMessage);
         },
       },
     );
@@ -199,25 +239,15 @@ export function ReservationAlertsPanel({
             </Link>
           </div>
 
-          <Select
-            value={courtId || "all"}
-            onValueChange={(value) => setCourtId(value === "all" ? "" : value)}
-          >
-            <SelectTrigger
-              className="h-8"
-              onPointerDown={(event) => event.stopPropagation()}
-            >
-              <SelectValue placeholder="All courts" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Courts</SelectItem>
-              {courts.map((court) => (
-                <SelectItem key={court.id} value={court.id}>
-                  {court.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <PlaceCourtFilter
+            compact
+            places={places}
+            courts={courts}
+            placeId={placeId}
+            courtId={courtId}
+            onPlaceChange={(value) => setPlaceId(value === "all" ? "" : value)}
+            onCourtChange={(value) => setCourtId(value === "all" ? "" : value)}
+          />
         </div>
 
         {alertsQuery.isError && (
@@ -363,9 +393,9 @@ export function ReservationAlertsPanel({
         open={confirmOpen}
         onOpenChange={setConfirmOpen}
         onConfirm={handleConfirmSubmit}
-        isLoading={confirmMutation.isPending}
-        title="Confirm Reservation"
-        confirmLabel="Confirm"
+        isLoading={confirmMutation.isPending || acceptMutation.isPending}
+        title={confirmTitle}
+        confirmLabel={confirmLabel}
       />
 
       <RejectModal

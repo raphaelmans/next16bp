@@ -64,7 +64,7 @@ export function Navbar({ className }: NavbarProps) {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(
-        `${appRoutes.courts.base}?q=${encodeURIComponent(searchQuery.trim())}`,
+        `${appRoutes.places.base}?q=${encodeURIComponent(searchQuery.trim())}`,
       );
     }
 
@@ -80,8 +80,8 @@ export function Navbar({ className }: NavbarProps) {
     });
   };
 
-  const handleListYourCourt = () => {
-    const target = appRoutes.owner.courts.new;
+  const handleListYourPlace = () => {
+    const target = appRoutes.owner.places.new;
     if (isAuthenticated) {
       router.push(target);
     } else {
@@ -118,7 +118,7 @@ export function Navbar({ className }: NavbarProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Search courts..."
+            placeholder="Search places..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 h-10 rounded-lg"
@@ -130,10 +130,10 @@ export function Navbar({ className }: NavbarProps) {
       <div className="hidden md:flex items-center gap-3">
         <Button
           variant="ghost"
-          onClick={handleListYourCourt}
+          onClick={handleListYourPlace}
           className="font-heading text-accent hover:text-accent/80"
         >
-          List Your Court
+          List Your Place
         </Button>
 
         {isAuthenticated ? (
@@ -168,7 +168,7 @@ export function Navbar({ className }: NavbarProps) {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder="Search courts..."
+                  placeholder="Search places..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -212,11 +212,11 @@ export function Navbar({ className }: NavbarProps) {
               Home
             </Link>
             <Link
-              href={appRoutes.courts.base}
+              href={appRoutes.places.base}
               className="py-2 text-lg font-heading font-semibold"
               onClick={() => setIsOpen(false)}
             >
-              Browse Courts
+              Browse Places
             </Link>
 
             {/* Authenticated User Links */}
@@ -271,16 +271,16 @@ export function Navbar({ className }: NavbarProps) {
 
             <Separator />
 
-            {/* List Your Court */}
+            {/* List Your Place */}
             <button
               type="button"
               onClick={() => {
-                handleListYourCourt();
+                handleListYourPlace();
                 setIsOpen(false);
               }}
               className="py-2 text-lg font-heading font-semibold text-accent text-left"
             >
-              List Your Court
+              List Your Place
             </button>
 
             <Separator />

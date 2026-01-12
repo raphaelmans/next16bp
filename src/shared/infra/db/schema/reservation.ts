@@ -50,7 +50,7 @@ export const reservation = pgTable(
     index("idx_reservation_expires")
       .on(table.expiresAt)
       .where(
-        sql`${table.status} IN ('AWAITING_PAYMENT', 'PAYMENT_MARKED_BY_USER')`,
+        sql`${table.status} IN ('CREATED', 'AWAITING_PAYMENT', 'PAYMENT_MARKED_BY_USER')`,
       ),
   ],
 );

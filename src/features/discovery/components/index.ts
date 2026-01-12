@@ -1,7 +1,7 @@
 export { BookingCard } from "./booking-card";
 export { ContactSection } from "./contact-section";
-export { CourtFilters } from "./court-filters";
-export { CourtMap } from "./court-map";
+export { PlaceFilters } from "./court-filters";
+export { PlaceMap } from "./court-map";
 export { EmptyResults } from "./empty-results";
 export { Footer } from "./footer";
 export { HeroSection } from "./hero-section";

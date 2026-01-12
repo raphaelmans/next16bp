@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { CourtCardCourt } from "@/shared/components/kudos";
-import { CourtCard, CourtCardSkeleton } from "@/shared/components/kudos";
+import { useFeaturedPlaces } from "@/features/discovery/hooks";
+import { PlaceCard, PlaceCardSkeleton } from "@/shared/components/kudos";
 import { Container, PublicShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 
@@ -26,7 +26,7 @@ const FEATURES = [
     icon: Search,
     title: "Discover",
     description:
-      "Find courts by location, see photos, amenities, and real-time availability all in one place.",
+      "Find places by location, see sports, amenities, and real-time availability in one view.",
   },
   {
     icon: Calendar,
@@ -42,54 +42,25 @@ const FEATURES = [
   },
 ];
 
-// TODO: Fetch featured courts from court.search API
-// For now, using mock data
-const MOCK_FEATURED_COURTS: CourtCardCourt[] = [
-  {
-    id: "featured-1",
-    name: "Kudos Sports Complex",
-    address: "123 Main St, Makati City",
-    city: "Makati",
-    type: "RESERVABLE",
-    isFree: false,
-    pricePerHourCents: 20000,
-    currency: "PHP",
-  },
-  {
-    id: "featured-2",
-    name: "BGC Pickleball Arena",
-    address: "456 High Street, Taguig",
-    city: "Taguig",
-    type: "RESERVABLE",
-    isFree: true,
-  },
-  {
-    id: "featured-3",
-    name: "Quezon City Sports Club",
-    address: "789 Commonwealth Ave",
-    city: "Quezon City",
-    type: "CURATED",
-  },
-];
-
 export default function HomePage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoadingFeatured] = useState(false);
+  const { data: featuredPlaces = [], isLoading: isLoadingFeatured } =
+    useFeaturedPlaces(3);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(
-        `${appRoutes.courts.base}?q=${encodeURIComponent(searchQuery.trim())}`,
+        `${appRoutes.places.base}?q=${encodeURIComponent(searchQuery.trim())}`,
       );
     } else {
-      router.push(appRoutes.courts.base);
+      router.push(appRoutes.places.base);
     }
   };
 
   const handleLocationClick = (city: string) => {
-    router.push(`${appRoutes.courts.base}?city=${encodeURIComponent(city)}`);
+    router.push(`${appRoutes.places.base}?city=${encodeURIComponent(city)}`);
   };
 
   return (
@@ -99,12 +70,12 @@ export default function HomePage() {
         <Container>
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="font-heading text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Discover Pickleball Courts{" "}
+              Discover Pickleball Places{" "}
               <span className="text-primary">Near You</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground sm:text-xl">
               Find and book courts in seconds. No more calls, no more waiting.
-              The unified platform for players and court owners.
+              The unified platform for players and venue owners.
             </p>
 
             {/* Search Bar */}
@@ -114,7 +85,7 @@ export default function HomePage() {
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input
                     type="text"
-                    placeholder="Search by city or court name..."
+                    placeholder="Search by city or place name..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="h-14 pl-12 text-base rounded-xl"
@@ -152,15 +123,15 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* Featured Courts Section */}
+      {/* Featured Places Section */}
       <section className="py-16 bg-muted/30">
         <Container>
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
-              Featured Courts
+              Featured Places
             </h2>
             <Link
-              href={appRoutes.courts.base}
+              href={appRoutes.places.base}
               className="inline-flex items-center text-primary hover:underline"
             >
               View All
@@ -171,29 +142,29 @@ export default function HomePage() {
           {isLoadingFeatured ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3].map((i) => (
-                <CourtCardSkeleton key={i} variant="featured" />
+                <PlaceCardSkeleton key={i} variant="featured" />
               ))}
             </div>
-          ) : MOCK_FEATURED_COURTS.length > 0 ? (
+          ) : featuredPlaces.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {MOCK_FEATURED_COURTS.map((court, index) => (
+              {featuredPlaces.map((place, index) => (
                 <div
-                  key={court.id}
+                  key={place.id}
                   className="animate-fade-in-up"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <CourtCard court={court} variant="featured" />
+                  <PlaceCard place={place} variant="featured" />
                 </div>
               ))}
             </div>
           ) : (
             <div className="text-center py-12 text-muted-foreground">
-              <p>No featured courts available yet.</p>
+              <p>No featured places available yet.</p>
               <Link
-                href={appRoutes.courts.base}
+                href={appRoutes.places.base}
                 className="text-accent hover:underline mt-2 inline-block"
               >
-                Browse all courts
+                Browse all places
               </Link>
             </div>
           )}
@@ -243,10 +214,10 @@ export default function HomePage() {
         <Container>
           <div className="text-center">
             <h2 className="font-heading text-3xl font-bold text-primary-foreground sm:text-4xl">
-              Ready to hit the court?
+              Ready to play?
             </h2>
             <p className="mt-4 text-lg text-primary-foreground/80 max-w-xl mx-auto">
-              Find available courts near you and book your next game in seconds.
+              Find available courts at top places and book your next game fast.
             </p>
             <div className="mt-8">
               <Button
@@ -255,7 +226,7 @@ export default function HomePage() {
                 variant="secondary"
                 className="h-14 px-10 rounded-xl font-heading font-semibold text-primary"
               >
-                <Link href={appRoutes.courts.base}>Browse All Courts</Link>
+                <Link href={appRoutes.places.base}>Browse All Places</Link>
               </Button>
             </div>
           </div>

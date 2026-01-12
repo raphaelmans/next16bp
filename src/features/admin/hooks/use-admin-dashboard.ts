@@ -12,7 +12,7 @@ export interface AdminStats {
 
 export interface PendingClaim {
   id: string;
-  courtId: string;
+  placeId: string;
   organizationId: string;
   submittedAt: string;
   type: "claim" | "removal";
@@ -86,7 +86,7 @@ export function useAdminStats() {
   // Fetch reservable courts count
   const reservableQuery = useQuery(
     trpc.admin.court.list.queryOptions({
-      courtType: "RESERVABLE",
+      placeType: "RESERVABLE",
       limit: 1,
       offset: 0,
     }),
@@ -134,12 +134,12 @@ export function usePendingClaims(limit = 5) {
   const transformedData: PendingClaim[] = (query.data?.items ?? []).map(
     (item) => ({
       id: item.id,
-      courtId: item.courtId,
+      placeId: item.placeId,
       organizationId: item.organizationId,
       submittedAt: item.createdAt,
       type: item.requestType === "REMOVAL" ? "removal" : "claim",
       // These would need to be fetched separately or backend enhanced
-      courtName: `Court ${item.courtId.slice(0, 8)}...`,
+      courtName: `Place ${item.placeId.slice(0, 8)}...`,
       organizationName: `Org ${item.organizationId.slice(0, 8)}...`,
     }),
   );
