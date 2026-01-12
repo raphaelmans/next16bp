@@ -1,117 +1,98 @@
 # Reservation State Machine — Level 2 Engineering States
 
+This level captures the state machine as a contract for engineering. It reflects the desired behavior for the mutual-confirmation flow.
+
 ## Reservation statuses
-- `AWAITING_PAYMENT`: paid reservation created; `expiresAt` set from `paymentHoldMinutes`.
-- `PAYMENT_MARKED_BY_USER`: player marked payment and owner confirmation is required; `expiresAt` set from `ownerReviewMinutes`.
-- `CONFIRMED`: free booking or paid booking confirmed (owner or auto-confirm).
-- `CANCELLED`: player cancelled (cutoff enforced) or owner rejected/cancelled.
-- `EXPIRED`: TTL expired via cron.
-- `CREATED`: enum value defined but not used in current flow.
+- `CREATED`
+  - Meaning: booking request created by player.
+  - Slot effect: slot is held immediately (`AVAILABLE` → `HELD`).
+  - TTL: `expiresAt` is set to `now + 15 minutes` (owner acceptance window).
+- `AWAITING_PAYMENT`
+  - Meaning: owner accepted a paid request; waiting for player payment.
+  - TTL: `expiresAt` is reset to `now + 15 minutes` (fresh payment window).
+- `PAYMENT_MARKED_BY_USER`
+  - Meaning: player marked payment complete; waiting for owner confirmation.
+  - TTL: uses the same `expiresAt` window (does not extend).
+- `CONFIRMED`
+  - Meaning: final state.
+  - Free: owner acceptance transitions directly to `CONFIRMED`.
+  - Paid: owner confirmation transitions to `CONFIRMED`.
+- `CANCELLED`
+  - Meaning: request/reservation was cancelled by player or cancelled/rejected by owner.
+- `EXPIRED`
+  - Meaning: TTL expired and system released the hold.
 
-## Court policy inputs (reservable court detail)
-- `requiresOwnerConfirmation` (boolean, paid bookings only)
-- `paymentHoldMinutes` (TTL for `AWAITING_PAYMENT`)
-- `ownerReviewMinutes` (TTL for `PAYMENT_MARKED_BY_USER`)
-- `cancellationCutoffMinutes` (minutes before slot start when cancellation is blocked)
+## Key transitions
+- `CREATED` → `AWAITING_PAYMENT` (owner accepts a paid request).
+- `CREATED` → `CONFIRMED` (owner accepts a free request).
+- `CREATED` → `CANCELLED` (player cancels or owner cancels/rejects).
+- `CREATED` → `EXPIRED` (TTL cron).
 
-## Key transitions (by code path)
+- `AWAITING_PAYMENT` → `PAYMENT_MARKED_BY_USER` (player marks payment).
+- `AWAITING_PAYMENT` → `CANCELLED` (player cancels or owner cancels).
+- `AWAITING_PAYMENT` → `EXPIRED` (TTL cron).
 
-| Transition | Trigger | Function | Data updates |
-|-----------|---------|----------|--------------|
-| `[*] → CONFIRMED` | Create free reservation | `CreateFreeReservationUseCase.execute` | `reservation.status=CONFIRMED`, `confirmedAt=now`, `time_slot.status=BOOKED`, `reservation_event` created |
-| `[*] → AWAITING_PAYMENT` | Create paid reservation | `CreatePaidReservationUseCase.execute` | `reservation.status=AWAITING_PAYMENT`, `expiresAt=now+paymentHoldMinutes`, `time_slot.status=HELD`, `reservation_event` created |
-| `AWAITING_PAYMENT → PAYMENT_MARKED_BY_USER` | Player marks payment (owner confirmation required) | `ReservationService.markPayment` | `reservation.status=PAYMENT_MARKED_BY_USER`, `termsAcceptedAt=now`, `expiresAt=now+ownerReviewMinutes`, `reservation_event` created |
-| `AWAITING_PAYMENT → CONFIRMED` | Player marks payment (auto-confirm) | `ReservationService.markPayment` | `reservation.status=CONFIRMED`, `confirmedAt=now`, `expiresAt=null`, `time_slot.status=BOOKED`, `reservation_event` created |
-| `PAYMENT_MARKED_BY_USER → CONFIRMED` | Owner confirms | `ReservationOwnerService.confirmPayment` | `reservation.status=CONFIRMED`, `confirmedAt=now`, `time_slot.status=BOOKED`, `reservation_event` created |
-| `AWAITING_PAYMENT → CANCELLED` | Owner rejects | `ReservationOwnerService.rejectReservation` | `reservation.status=CANCELLED`, `cancelledAt=now`, `time_slot.status=AVAILABLE`, `reservation_event` created |
-| `PAYMENT_MARKED_BY_USER → CANCELLED` | Owner rejects | `ReservationOwnerService.rejectReservation` | `reservation.status=CANCELLED`, `cancelledAt=now`, `time_slot.status=AVAILABLE`, `reservation_event` created |
-| `AWAITING_PAYMENT/PAYMENT_MARKED_BY_USER/CONFIRMED → CANCELLED` | Player cancels (cutoff enforced) | `ReservationService.cancelReservation` | `reservation.status=CANCELLED`, `cancelledAt=now`, `time_slot.status=AVAILABLE`, `reservation_event` created |
-| `AWAITING_PAYMENT/PAYMENT_MARKED_BY_USER → EXPIRED` | Cron (expiresAt < now) | `GET /api/cron/expire-reservations` | `reservation.status=EXPIRED`, `time_slot.status=AVAILABLE`, `reservation_event` created |
-
-## Transition rules (guards)
-- Reservation creation only allowed when `time_slot.status=AVAILABLE`.
-- Paid vs free detection: `ReservationService.createReservation` checks `reservable_court_detail.is_free` and slot/default price.
-- `markPayment` only allowed from `AWAITING_PAYMENT` and only before `expiresAt`.
-- Owner confirmation (`PAYMENT_MARKED_BY_USER`) is only used for **paid reservations** when `requiresOwnerConfirmation=true`.
-- Cancellation is allowed for all non-terminal statuses, but blocked if `now > slot.startTime - cancellationCutoffMinutes`.
-- Owner reject is allowed for `AWAITING_PAYMENT` and `PAYMENT_MARKED_BY_USER` only.
-
-## Database fields involved
-
-### `reservation`
-- `status`, `expiresAt`, `confirmedAt`, `cancelledAt`, `cancellationReason`, `termsAcceptedAt`, `timeSlotId`, `playerId`.
-
-### `time_slot`
-- `status` (`AVAILABLE`, `HELD`, `BOOKED`, `BLOCKED`).
-
-### `reservable_court_detail`
-- `requiresOwnerConfirmation`, `paymentHoldMinutes`, `ownerReviewMinutes`, `cancellationCutoffMinutes`.
-
-### `reservation_event`
-- Audit log per transition with `fromStatus`, `toStatus`, and `triggeredByRole` (`PLAYER`, `OWNER`, `SYSTEM`).
+- `PAYMENT_MARKED_BY_USER` → `CONFIRMED` (owner confirms payment).
+- `PAYMENT_MARKED_BY_USER` → `CANCELLED` (player cancels or owner rejects).
+- `PAYMENT_MARKED_BY_USER` → `EXPIRED` (TTL cron).
 
 ## Reservation state diagram
 ```mermaid
 stateDiagram-v2
-  direction LR
-  state "CREATED\n(enum only, unused)" as CREATED
+  [*] --> CREATED: player requests booking
 
-  [*] --> CONFIRMED: createFreeReservation
-  [*] --> AWAITING_PAYMENT: createPaidReservation
+  CREATED --> CONFIRMED: owner accepts (free)
+  CREATED --> AWAITING_PAYMENT: owner accepts (paid)
+  CREATED --> CANCELLED: player cancels OR owner cancels/rejects
+  CREATED --> EXPIRED: TTL cron (expiresAt < now)
 
-  AWAITING_PAYMENT --> PAYMENT_MARKED_BY_USER: markPayment (requiresOwnerConfirmation)
-  AWAITING_PAYMENT --> CONFIRMED: markPayment (auto-confirm)
-  PAYMENT_MARKED_BY_USER --> CONFIRMED: owner confirm
+  AWAITING_PAYMENT --> PAYMENT_MARKED_BY_USER: player marks payment
+  AWAITING_PAYMENT --> CANCELLED: player cancels OR owner cancels
+  AWAITING_PAYMENT --> EXPIRED: TTL cron (expiresAt < now)
 
-  AWAITING_PAYMENT --> CANCELLED: owner reject OR player cancel (before cutoff)
-  PAYMENT_MARKED_BY_USER --> CANCELLED: owner reject OR player cancel (before cutoff)
-  CONFIRMED --> CANCELLED: player cancel (before cutoff)
+  PAYMENT_MARKED_BY_USER --> CONFIRMED: owner confirms payment
+  PAYMENT_MARKED_BY_USER --> CANCELLED: player cancels OR owner rejects
+  PAYMENT_MARKED_BY_USER --> EXPIRED: TTL cron (expiresAt < now)
 
-  AWAITING_PAYMENT --> EXPIRED: cron expiresAt < now
-  PAYMENT_MARKED_BY_USER --> EXPIRED: cron expiresAt < now
-
-  note right of AWAITING_PAYMENT
-    expiresAt = now + paymentHoldMinutes
-    slot -> HELD
-  end note
-
-  note right of PAYMENT_MARKED_BY_USER
-    expiresAt = now + ownerReviewMinutes
-    owner confirmation required (paid only)
-  end note
-
-  note left of CANCELLED
-    cancellation allowed only if
-    now < slot.startTime - cancellationCutoffMinutes
-    slot -> AVAILABLE
-  end note
+  CONFIRMED --> [*]
+  CANCELLED --> [*]
+  EXPIRED --> [*]
 ```
 
 ## Time slot state diagram
 ```mermaid
 stateDiagram-v2
-  direction LR
   [*] --> AVAILABLE
 
-  AVAILABLE --> HELD: createPaidReservation
-  AVAILABLE --> BOOKED: createFreeReservation
+  AVAILABLE --> HELD: reservation request created (CREATED)
 
-  HELD --> BOOKED: owner confirm
-  HELD --> BOOKED: markPayment (auto-confirm)
-  HELD --> AVAILABLE: owner reject
-  HELD --> AVAILABLE: player cancel
-  HELD --> AVAILABLE: cron expire
+  HELD --> BOOKED: owner accepts free OR owner confirms paid
+  HELD --> AVAILABLE: cancelled / rejected / expired
 
-  BOOKED --> AVAILABLE: player cancel (before cutoff)
-
-  AVAILABLE --> BLOCKED: owner blocks slot
-  BLOCKED --> AVAILABLE: owner unblocks slot
+  AVAILABLE --> BLOCKED: owner blocks
+  BLOCKED --> AVAILABLE: owner unblocks
 ```
 
-## Implementation references
-- `src/modules/reservation/use-cases/create-free-reservation.use-case.ts`
-- `src/modules/reservation/use-cases/create-paid-reservation.use-case.ts`
-- `src/modules/reservation/services/reservation.service.ts`
-- `src/modules/reservation/services/reservation-owner.service.ts`
-- `src/app/api/cron/expire-reservations/route.ts`
+## TTL rules
+- **Owner acceptance window**
+  - On `CREATED`, set `expiresAt = now + 15 minutes`.
+  - If not accepted in time: expire and release.
+- **Payment window**
+  - When owner accepts a paid request: set `expiresAt = now + 15 minutes` (fresh).
+  - Marking payment does not extend the deadline.
+- **Expiration scope**
+  - Cron expiration applies to `CREATED`, `AWAITING_PAYMENT`, and `PAYMENT_MARKED_BY_USER` when `expiresAt < now`.
+
+## Owner ops (status → allowed actions)
+- `CREATED`
+  - Owner sees request immediately.
+  - Actions: accept, cancel/reject, view.
+- `AWAITING_PAYMENT`
+  - Actions: cancel, view.
+- `PAYMENT_MARKED_BY_USER`
+  - Actions: confirm, reject, view.
+
+## References
+- `agent-contexts/00-13-owner-reservation-ops.md`
 - `src/shared/infra/db/schema/enums.ts`
+- `src/shared/infra/db/schema/reservation.ts`

@@ -82,6 +82,7 @@ pnpm db:seed:buckets # seed storage buckets
 - Prefer `date-fns` for date formatting (no native `Date` formatting).
 - Use `react-hook-form` + `@hookform/resolvers` + Zod for forms.
 - Prefer shared formatting helpers in `src/shared/lib/format.ts`.
+- Cache invalidation: prefer `queryClient.invalidateQueries(trpc.<router>.<procedure>.queryFilter(input))` / `trpc.<router>.pathFilter()` over manual query keys.
 
 
 ## Backend Architecture (Modules)

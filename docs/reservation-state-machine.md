@@ -8,15 +8,11 @@ This documentation is split into multiple levels of detail so you can share the 
 - Level 2 (engineering states & diagrams): `docs/reservation-state-machine-level-2-engineering.md`
 - Level 3 (automation & ops): `docs/reservation-state-machine-level-3-ops.md`
 
-## What changed recently
-- Reservation policies are now **court-specific** (TTL windows, owner confirmation, cancellation cutoff).
-- Owner ops still surface **active reservations** (`AWAITING_PAYMENT`, `PAYMENT_MARKED_BY_USER`) via:
-  - Slot list quick actions
-  - Floating alerts panel
-  - `/owner/reservations/active`
-  - `/owner/reservations/[id]`
-- Player cancellation is allowed across all non-terminal states (subject to cutoff).
+## Changelog
+- `docs/reservation-state-machine-changelog.md`
 
-## Source references
-- `agent-contexts/00-06-feature-implementation-status.md`
-- `agent-contexts/00-13-owner-reservation-ops.md`
+## Current contract (mutual confirmation)
+- Player creates a booking request (`CREATED`) and the slot is held immediately.
+- Owner must accept within 15 minutes.
+- Paid bookings start a fresh 15-minute payment window on owner acceptance.
+- `PAYMENT_MARKED_BY_USER` can still expire if the TTL passes.

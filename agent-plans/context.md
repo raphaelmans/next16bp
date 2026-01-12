@@ -12,6 +12,7 @@ References and context for planning artifacts.
 | 2025-01-09 | Added 08-p2p-reservation-confirmation user stories (11 total: 3 parent + 8 sub-stories) |
 | 2025-01-09 | Added 10-asset-uploads implementation plan with parallel dev checklists |
 | 2025-01-09 | Added 10-asset-uploads user stories for Supabase Storage integration |
+| 2026-01-12 | Added PRD v1.2 + ERD spec v1.2 (Place/Court migration) |
 | 2026-01-11 | Added 12-reservation-policies user stories and implementation plan |
 | 2026-01-10 | Added 11-ui-revamp user stories and implementation plan |
 | 2025-01-08 | Added 08-admin-data-entry plan for US-02-03 and US-02-04 |
@@ -23,7 +24,9 @@ References and context for planning artifacts.
 
 | Document | Path | Description |
 |----------|------|-------------|
-| PRD | `business-contexts/kudoscourts-prd-v1.1.md` | Product requirements document v1.1 |
+| PRD (Current) | `business-contexts/kudoscourts-prd-v1.2.md` | Product requirements document v1.2 (Place/Court model) |
+| PRD (Previous) | `business-contexts/kudoscourts-prd-v1.1.md` | Product requirements document v1.1 |
+| ERD Spec (Current) | `business-contexts/kudoscourts-erd-specification-v1.2.md` | Database design v1.2 (Place/Court/Sport/Hours/Rate Rules) |
 
 ---
 
@@ -53,6 +56,7 @@ References and context for planning artifacts.
 | 10-asset-uploads | `agent-plans/user-stories/10-asset-uploads/` | Supabase Storage file uploads |
 | 11-ui-revamp | `agent-plans/user-stories/11-ui-revamp/` | Navigation and layout consistency |
 | 12-reservation-policies | `agent-plans/user-stories/12-reservation-policies/` | Court-specific reservation policies |
+| 14-place-court-migration | `agent-plans/user-stories/14-place-court-migration/` | Place→Court-unit migration and multi-sport venue support |
 
 ---
 

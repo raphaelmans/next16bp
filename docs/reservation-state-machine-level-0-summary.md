@@ -1,6 +1,9 @@
 # Reservation State Machine — Level 0 Summary
 
 ## One-minute summary
-- Reservation policies are court-specific (payment window, owner confirmation, cancellation cutoff).
-- Paid bookings hold slots for a court-defined window; they auto-confirm or wait for owner review based on policy.
-- Player cancellation is allowed in all non-terminal states until the cutoff; expired/cancelled reservations release the slot.
+- All bookings (free or paid) start as a **request** and require **owner acceptance**.
+- When a player requests a booking, the slot is **held immediately** and the owner has **15 minutes** to accept.
+- After owner acceptance:
+  - Free bookings become **confirmed** immediately.
+  - Paid bookings start a **fresh 15-minute payment window**.
+- If the relevant timer expires at any point, the reservation **expires** and the slot returns to **available**.
