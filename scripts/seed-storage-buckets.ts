@@ -14,6 +14,7 @@ const BUCKET_NAMES = {
   avatars: "avatars",
   paymentProofs: "payment-proofs",
   courtPhotos: "court-photos",
+  placePhotos: "place-photos",
   organizationAssets: "organization-assets",
 } as const;
 
@@ -33,6 +34,11 @@ const BUCKET_DEFINITIONS: BucketDefinition[] = [
   {
     id: BUCKET_NAMES.courtPhotos,
     name: BUCKET_NAMES.courtPhotos,
+    public: true,
+  },
+  {
+    id: BUCKET_NAMES.placePhotos,
+    name: BUCKET_NAMES.placePhotos,
     public: true,
   },
   {

@@ -14,6 +14,7 @@ import { ReservationExpired } from "@/features/reservation/components/reservatio
 import { StatusBanner } from "@/features/reservation/components/status-banner";
 import { Container } from "@/shared/components/layout";
 import type {
+  OrganizationReservationPolicyRecord,
   ReservationEventRecord,
   ReservationRecord,
 } from "@/shared/infra/db/schema";
@@ -25,13 +26,6 @@ import {
   formatTimeRange,
 } from "@/shared/lib/format";
 import { trpc } from "@/trpc/client";
-
-interface ReservableDetail {
-  requiresOwnerConfirmation?: boolean | null;
-  paymentHoldMinutes?: number | null;
-  ownerReviewMinutes?: number | null;
-  cancellationCutoffMinutes?: number | null;
-}
 
 interface ReservationEvent {
   id: string;
@@ -185,9 +179,9 @@ export default function ReservationDetailPage() {
       }
     : undefined;
 
-  const reservableDetail =
+  const reservationPolicy =
     placeData.place.placeType === "RESERVABLE"
-      ? (placeData.detail as ReservableDetail | null)
+      ? (placeData.detail as OrganizationReservationPolicyRecord | null)
       : null;
 
   const organization = {
@@ -208,7 +202,7 @@ export default function ReservationDetailPage() {
   };
 
   const cancellationCutoffMinutes =
-    reservableDetail?.cancellationCutoffMinutes ?? 0;
+    reservationPolicy?.cancellationCutoffMinutes ?? 0;
   const cancellationCutoffTime = new Date(transformedTimeSlot.startTime);
   cancellationCutoffTime.setMinutes(
     cancellationCutoffTime.getMinutes() - cancellationCutoffMinutes,

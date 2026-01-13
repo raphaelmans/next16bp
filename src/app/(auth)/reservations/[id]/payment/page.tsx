@@ -43,6 +43,15 @@ export default function PaymentPage() {
     { enabled: !!reservation?.timeSlotId },
   );
 
+  const { data: paymentInfo } = trpc.reservation.getPaymentInfo.useQuery(
+    { reservationId },
+    {
+      enabled:
+        reservation?.status === "AWAITING_PAYMENT" ||
+        reservation?.status === "PAYMENT_MARKED_BY_USER",
+    },
+  );
+
   const addPaymentProof = trpc.paymentProof.add.useMutation({
     onError: (error) => {
       toast.error(error.message || "Failed to submit payment proof");
@@ -66,12 +75,17 @@ export default function PaymentPage() {
       }
 
       if (proofFile) {
-        await uploadPaymentProof.mutateAsync({
-          reservationId,
-          image: proofFile,
-          referenceNumber: referenceNumber || undefined,
-          notes: notes || undefined,
-        });
+        const formData = new FormData();
+        formData.append("reservationId", reservationId);
+        formData.append("image", proofFile, proofFile.name);
+        if (referenceNumber) {
+          formData.append("referenceNumber", referenceNumber);
+        }
+        if (notes) {
+          formData.append("notes", notes);
+        }
+
+        await uploadPaymentProof.mutateAsync(formData);
       } else if (referenceNumber) {
         await addPaymentProof.mutateAsync({
           reservationId,
@@ -236,7 +250,7 @@ export default function PaymentPage() {
 
         <div className="mb-6">
           <PaymentInfoCard
-            paymentDetails={slot?.paymentDetails}
+            paymentMethods={paymentInfo?.methods}
             expiresInMinutes={expiresInMinutes}
           />
         </div>

@@ -4,11 +4,11 @@ import {
   courtRateRule,
   curatedPlaceDetail,
   type InsertPlace,
+  organizationReservationPolicy,
   type PlaceRecord,
   place,
   placeAmenity,
   placePhoto,
-  reservablePlacePolicy,
   sport,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
@@ -18,7 +18,7 @@ export interface PlaceWithDetails {
   place: PlaceRecord;
   detail:
     | typeof curatedPlaceDetail.$inferSelect
-    | typeof reservablePlacePolicy.$inferSelect
+    | typeof organizationReservationPolicy.$inferSelect
     | null;
   photos: (typeof placePhoto.$inferSelect)[];
   amenities: (typeof placeAmenity.$inferSelect)[];
@@ -120,7 +120,7 @@ export class PlaceRepository implements IPlaceRepository {
 
     let detail:
       | typeof curatedPlaceDetail.$inferSelect
-      | typeof reservablePlacePolicy.$inferSelect
+      | typeof organizationReservationPolicy.$inferSelect
       | null = null;
     if (placeRecord.placeType === "CURATED") {
       const curatedResult = await client
@@ -129,11 +129,16 @@ export class PlaceRepository implements IPlaceRepository {
         .where(eq(curatedPlaceDetail.placeId, id))
         .limit(1);
       detail = curatedResult[0] ?? null;
-    } else {
+    } else if (placeRecord.organizationId) {
       const policyResult = await client
         .select()
-        .from(reservablePlacePolicy)
-        .where(eq(reservablePlacePolicy.placeId, id))
+        .from(organizationReservationPolicy)
+        .where(
+          eq(
+            organizationReservationPolicy.organizationId,
+            placeRecord.organizationId,
+          ),
+        )
         .limit(1);
       detail = policyResult[0] ?? null;
     }

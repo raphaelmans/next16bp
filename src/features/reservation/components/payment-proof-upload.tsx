@@ -52,25 +52,27 @@ export function PaymentProofUpload({
     e.preventDefault();
     if (!selectedFile) return;
 
-    uploadPaymentProof.mutate(
-      {
-        reservationId,
-        image: selectedFile,
-        referenceNumber: referenceNumber || undefined,
-        notes: notes || undefined,
+    const formData = new FormData();
+    formData.append("reservationId", reservationId);
+    formData.append("image", selectedFile, selectedFile.name);
+    if (referenceNumber) {
+      formData.append("referenceNumber", referenceNumber);
+    }
+    if (notes) {
+      formData.append("notes", notes);
+    }
+
+    uploadPaymentProof.mutate(formData, {
+      onSuccess: () => {
+        setSelectedFile(null);
+        setReferenceNumber("");
+        setNotes("");
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        onSuccess?.();
       },
-      {
-        onSuccess: () => {
-          setSelectedFile(null);
-          setReferenceNumber("");
-          setNotes("");
-          if (fileInputRef.current) {
-            fileInputRef.current.value = "";
-          }
-          onSuccess?.();
-        },
-      },
-    );
+    });
   };
 
   return (

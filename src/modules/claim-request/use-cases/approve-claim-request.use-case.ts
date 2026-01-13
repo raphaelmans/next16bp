@@ -1,9 +1,6 @@
 import { eq } from "drizzle-orm";
 import type { ClaimRequestRecord } from "@/shared/infra/db/schema";
-import {
-  curatedPlaceDetail,
-  reservablePlacePolicy,
-} from "@/shared/infra/db/schema";
+import { curatedPlaceDetail } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
 import { logger } from "@/shared/infra/logger";
 import type { TransactionManager } from "@/shared/kernel/transaction";
@@ -86,11 +83,6 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
         },
         ctx,
       );
-
-      await txClient
-        .insert(reservablePlacePolicy)
-        .values({ placeId: place.id })
-        .onConflictDoNothing();
 
       await txClient
         .delete(curatedPlaceDetail)

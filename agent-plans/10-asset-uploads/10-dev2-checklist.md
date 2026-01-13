@@ -1,7 +1,7 @@
-# Developer 2 Checklist - Court Photos + Org Logo
+# Developer 2 Checklist - Court Photos + Org Logo + Place Photos
 
 **Focus Area:** Owner upload features
-**Modules:** 2B, 2D
+**Modules:** 2B, 2D, 2E
 **Status:** Phase 1 COMPLETE - Ready to start Phase 2
 
 ---
@@ -12,6 +12,7 @@
 - [ ] Create buckets in Supabase Dashboard:
   - [ ] `court-photos`
   - [ ] `organization-assets`
+  - [ ] `place-photos`
 - [ ] Configure bucket RLS (see `10-01-infrastructure.md`)
 
 ---
@@ -82,6 +83,32 @@ You're adding FormData upload that uses the existing infrastructure.
 - [ ] Owner can upload to own courts
 - [ ] Non-owner gets 403
 - [ ] Photo displayOrder correct
+
+---
+
+## Phase 2E: Place Photos Upload
+
+**Reference:** `10-06-place-photos.md`
+**User Story:** US-10-06
+
+### Backend
+
+- [ ] Add `PLACE_PHOTOS` bucket constant
+- [ ] Add place photo DTOs (upload/remove/reorder)
+- [ ] Add `uploadPhoto/removePhoto/reorderPhotos` to place management router
+- [ ] Implement storage upload + DB record creation in place management service
+- [ ] Implement delete (DB + storage object)
+
+### Frontend
+
+- [ ] Add a photo uploader section to place edit page
+- [ ] Support delete + set-as-cover (reorder)
+
+### Testing
+
+- [ ] Upload, delete, reorder happy paths
+- [ ] Reject non-image and >5MB
+- [ ] Non-owner cannot mutate
 
 ---
 
@@ -166,8 +193,8 @@ You're adding logo upload that updates the profile.
 
 ## Final Verification
 
-- [ ] `bun run typecheck` passes
-- [ ] `bun run build` succeeds
+- [ ] `pnpm lint` passes
+- [ ] `pnpm build` succeeds
 - [ ] Manual E2E: Court photo upload flow
 - [ ] Manual E2E: Org logo upload flow
 - [ ] Update `10-00-overview.md` to mark Phase 2B and 2D complete

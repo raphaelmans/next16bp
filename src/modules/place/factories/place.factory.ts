@@ -1,13 +1,14 @@
 import { makeCourtRepository } from "@/modules/court/factories/court.factory";
 import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
+import { makeObjectStorageService } from "@/modules/storage/factories/storage.factory";
 import { getContainer } from "@/shared/infra/container";
 import { PlaceRepository } from "../repositories/place.repository";
-import { PlacePolicyRepository } from "../repositories/place-policy.repository";
+import { PlacePhotoRepository } from "../repositories/place-photo.repository";
 import { PlaceDiscoveryService } from "../services/place-discovery.service";
 import { PlaceManagementService } from "../services/place-management.service";
 
 let placeRepository: PlaceRepository | null = null;
-let placePolicyRepository: PlacePolicyRepository | null = null;
+let placePhotoRepository: PlacePhotoRepository | null = null;
 let placeDiscoveryService: PlaceDiscoveryService | null = null;
 let placeManagementService: PlaceManagementService | null = null;
 
@@ -18,11 +19,11 @@ export function makePlaceRepository(): PlaceRepository {
   return placeRepository;
 }
 
-export function makePlacePolicyRepository(): PlacePolicyRepository {
-  if (!placePolicyRepository) {
-    placePolicyRepository = new PlacePolicyRepository(getContainer().db);
+export function makePlacePhotoRepository(): PlacePhotoRepository {
+  if (!placePhotoRepository) {
+    placePhotoRepository = new PlacePhotoRepository(getContainer().db);
   }
-  return placePolicyRepository;
+  return placePhotoRepository;
 }
 
 export function makePlaceDiscoveryService(): PlaceDiscoveryService {
@@ -39,9 +40,10 @@ export function makePlaceManagementService(): PlaceManagementService {
   if (!placeManagementService) {
     placeManagementService = new PlaceManagementService(
       makePlaceRepository(),
-      makePlacePolicyRepository(),
+      makePlacePhotoRepository(),
       makeOrganizationRepository(),
       getContainer().transactionManager,
+      makeObjectStorageService(),
     );
   }
   return placeManagementService;

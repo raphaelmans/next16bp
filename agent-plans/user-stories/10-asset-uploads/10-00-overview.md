@@ -32,6 +32,7 @@ This domain covers file upload functionality using Supabase Storage. It enables 
 | `payment-proofs` | Payment verification screenshots | Private (player + owner) |
 | `court-photos` | Court images | Private (owner + admin) |
 | `organization-assets` | Organization logos | Private (owner + admin) |
+| `place-photos` | Place images | Public (discovery + booking) |
 
 ### Path Conventions
 
@@ -41,6 +42,7 @@ This domain covers file upload functionality using Supabase Storage. It enables 
 | Payment Proof | `{reservationId}/{timestamp}.{ext}` | Multiple files per reservation |
 | Court Photo | `{courtId}/{photoId}.{ext}` | Multiple photos per court |
 | Organization Logo | `{organizationId}/logo.{ext}` | Single file, upsert allowed |
+| Place Photo | `{placeId}/{photoId}.{ext}` | Multiple photos per place |
 
 ### File Constraints
 
@@ -58,6 +60,7 @@ This domain covers file upload functionality using Supabase Storage. It enables 
 | `payment-proofs` | Player (own) + Owner | Player (own reservation) | - | - |
 | `court-photos` | Authenticated | Owner (own courts) + Admin | Owner + Admin | Owner + Admin |
 | `organization-assets` | Authenticated | Owner (own org) | Owner (own org) | Owner (own org) |
+| `place-photos` | Everyone (public) | Owner (own places) + Admin | Owner + Admin | Owner + Admin |
 
 ---
 
@@ -70,12 +73,13 @@ This domain covers file upload functionality using Supabase Storage. It enables 
 | US-10-03 | Owner Uploads Court Photos | Active | - |
 | US-10-04 | Owner Uploads Organization Logo | Active | - |
 | US-10-05 | Admin Uploads Court Photos | Active | - |
+| US-10-06 | Owner Uploads Place Photos | Active | - |
 | US-10-99 | Deferred: Public Buckets & Optimization | Deferred | - |
 
 ---
 
 ## Summary
 
-- Total: 6
-- Active: 5
+- Total: 7
+- Active: 6
 - Deferred: 1

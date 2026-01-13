@@ -6,7 +6,11 @@ import { toast } from "sonner";
 import { PageHeader } from "@/components/ui/page-header";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
-import { PlaceForm, ReservationAlertsPanel } from "@/features/owner/components";
+import {
+  PlaceForm,
+  PlacePhotoUpload,
+  ReservationAlertsPanel,
+} from "@/features/owner/components";
 import { useOwnerOrganization, usePlaceForm } from "@/features/owner/hooks";
 import type { PlaceFormData } from "@/features/owner/schemas/place-form.schema";
 import { AppShell } from "@/shared/components/layout";
@@ -119,6 +123,15 @@ export default function EditPlacePage() {
           onCancel={handleCancel}
           isSubmitting={isSubmitting}
           isEditing
+        />
+
+        <PlacePhotoUpload
+          placeId={placeId}
+          photos={(placeData.photos ?? []).map((photo) => ({
+            id: photo.id,
+            url: photo.url,
+            displayOrder: photo.displayOrder,
+          }))}
         />
       </div>
     </AppShell>

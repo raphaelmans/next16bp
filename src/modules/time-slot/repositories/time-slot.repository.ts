@@ -10,10 +10,7 @@ import {
   notInArray,
 } from "drizzle-orm";
 import {
-  court,
   type InsertTimeSlot,
-  place,
-  reservablePlacePolicy,
   reservation,
   reservationTimeSlot,
   type TimeSlotRecord,
@@ -46,16 +43,7 @@ export interface TimeSlotWithPlayerInfo extends TimeSlotRecord {
   reservationExpiresAt?: string | null;
 }
 
-export interface TimeSlotPaymentDetails {
-  gcashNumber: string | null;
-  bankName: string | null;
-  bankAccountNumber: string | null;
-  bankAccountName: string | null;
-  paymentInstructions: string | null;
-}
-
-export interface TimeSlotWithPaymentDetails extends TimeSlotRecord {
-  paymentDetails: TimeSlotPaymentDetails | null;
+export interface TimeSlotWithDetails extends TimeSlotRecord {
   isFree?: boolean | null;
 }
 
@@ -63,7 +51,7 @@ export interface ITimeSlotRepository {
   findById(
     id: string,
     ctx?: RequestContext,
-  ): Promise<TimeSlotWithPaymentDetails | null>;
+  ): Promise<TimeSlotWithDetails | null>;
   findByIdForUpdate(
     id: string,
     ctx: RequestContext,
@@ -126,34 +114,11 @@ export class TimeSlotRepository implements ITimeSlotRepository {
   async findById(
     id: string,
     ctx?: RequestContext,
-  ): Promise<TimeSlotWithPaymentDetails | null> {
+  ): Promise<TimeSlotWithDetails | null> {
     const client = this.getClient(ctx);
     const result = await client
-      .select({
-        id: timeSlot.id,
-        courtId: timeSlot.courtId,
-        startTime: timeSlot.startTime,
-        endTime: timeSlot.endTime,
-        status: timeSlot.status,
-        priceCents: timeSlot.priceCents,
-        currency: timeSlot.currency,
-        createdAt: timeSlot.createdAt,
-        updatedAt: timeSlot.updatedAt,
-        paymentDetails: {
-          gcashNumber: reservablePlacePolicy.gcashNumber,
-          bankName: reservablePlacePolicy.bankName,
-          bankAccountNumber: reservablePlacePolicy.bankAccountNumber,
-          bankAccountName: reservablePlacePolicy.bankAccountName,
-          paymentInstructions: reservablePlacePolicy.paymentInstructions,
-        },
-      })
+      .select()
       .from(timeSlot)
-      .innerJoin(court, eq(court.id, timeSlot.courtId))
-      .innerJoin(place, eq(place.id, court.placeId))
-      .leftJoin(
-        reservablePlacePolicy,
-        eq(reservablePlacePolicy.placeId, place.id),
-      )
       .where(eq(timeSlot.id, id))
       .limit(1);
 
@@ -162,17 +127,8 @@ export class TimeSlotRepository implements ITimeSlotRepository {
       return null;
     }
 
-    const details = slot.paymentDetails;
-    const hasDetails =
-      details?.gcashNumber ||
-      details?.bankName ||
-      details?.bankAccountNumber ||
-      details?.bankAccountName ||
-      details?.paymentInstructions;
-
     return {
       ...slot,
-      paymentDetails: hasDetails ? details : null,
       isFree: slot.priceCents === null,
     };
   }

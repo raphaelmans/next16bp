@@ -1,24 +1,31 @@
 "use client";
 
-import { Check, Copy } from "lucide-react";
+import { Building2, Check, Copy, Smartphone, Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+  PAYMENT_PROVIDER_LABELS,
+  type PaymentMethodProvider,
+  type PaymentMethodType,
+} from "@/shared/lib/payment-methods";
 
 interface PaymentMethodCardProps {
-  type: "gcash" | "bank";
+  type: PaymentMethodType;
+  provider: PaymentMethodProvider;
   accountName: string;
   accountNumber: string;
-  bankName?: string;
+  isDefault?: boolean;
   className?: string;
 }
 
 export function PaymentMethodCard({
   type,
+  provider,
   accountName,
   accountNumber,
-  bankName,
+  isDefault,
   className,
 }: PaymentMethodCardProps) {
   const [copied, setCopied] = useState(false);
@@ -30,7 +37,7 @@ export function PaymentMethodCard({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const icon = type === "gcash" ? GCashIcon : BankIcon;
+  const Icon = type === "MOBILE_WALLET" ? Smartphone : Building2;
 
   return (
     <div
@@ -40,24 +47,21 @@ export function PaymentMethodCard({
       )}
     >
       <div className="flex items-start gap-4">
-        {/* Icon */}
         <div
           className={cn(
             "h-12 w-12 rounded-lg flex items-center justify-center",
-            type === "gcash" ? "bg-[#007DFE]/10" : "bg-muted",
+            type === "MOBILE_WALLET" ? "bg-primary/10" : "bg-muted",
           )}
         >
-          {icon}
+          <Icon className="h-6 w-6 text-primary" />
         </div>
 
-        {/* Details */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h4 className="font-medium">
-              {type === "gcash" ? "GCash" : bankName || "Bank Transfer"}
-            </h4>
-            {type === "gcash" && (
-              <span className="text-[10px] font-medium bg-[#007DFE] text-white px-1.5 py-0.5 rounded">
+            <h4 className="font-medium">{PAYMENT_PROVIDER_LABELS[provider]}</h4>
+            {isDefault && (
+              <span className="text-[10px] font-medium bg-primary/10 text-primary px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                <Star className="h-3 w-3" />
                 RECOMMENDED
               </span>
             )}
@@ -85,48 +89,3 @@ export function PaymentMethodCard({
     </div>
   );
 }
-
-const GCashIcon = (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    aria-hidden="true"
-  >
-    <title>GCash</title>
-    <circle cx="12" cy="12" r="10" fill="#007DFE" />
-    <text
-      x="12"
-      y="16"
-      textAnchor="middle"
-      fill="white"
-      fontSize="10"
-      fontWeight="bold"
-    >
-      G
-    </text>
-  </svg>
-);
-
-const BankIcon = (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    className="text-muted-foreground"
-    aria-hidden="true"
-  >
-    <title>Bank</title>
-    <path d="M3 21h18" />
-    <path d="M3 10h18" />
-    <path d="M12 3l9 7H3l9-7z" />
-    <path d="M5 10v11" />
-    <path d="M9 10v11" />
-    <path d="M15 10v11" />
-    <path d="M19 10v11" />
-  </svg>
-);

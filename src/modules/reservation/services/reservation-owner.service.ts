@@ -6,9 +6,9 @@ import {
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
 import { NotOrganizationOwnerError } from "@/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
+import type { IOrganizationReservationPolicyRepository } from "@/modules/organization-payment/repositories/organization-reservation-policy.repository";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
-import type { IPlacePolicyRepository } from "@/modules/place/repositories/place-policy.repository";
 import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
 import type { ITimeSlotRepository } from "@/modules/time-slot/repositories/time-slot.repository";
 import type {
@@ -66,7 +66,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     private timeSlotRepository: ITimeSlotRepository,
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
-    private placePolicyRepository: IPlacePolicyRepository,
+    private organizationReservationPolicyRepository: IOrganizationReservationPolicyRepository,
     private organizationRepository: IOrganizationRepository,
     private transactionManager: TransactionManager,
   ) {}
@@ -119,12 +119,22 @@ export class ReservationOwnerService implements IReservationOwnerService {
       throw new CourtNotFoundError(courtId);
     }
 
-    const policy = await this.placePolicyRepository.findByPlaceId(
-      court.placeId,
-      ctx,
-    );
+    const place = await this.placeRepository.findById(court.placeId, ctx);
+    if (!place) {
+      throw new PlaceNotFoundError(court.placeId);
+    }
 
-    return policy?.paymentHoldMinutes ?? DEFAULT_PAYMENT_HOLD_MINUTES;
+    if (!place.organizationId) {
+      return DEFAULT_PAYMENT_HOLD_MINUTES;
+    }
+
+    const policy =
+      await this.organizationReservationPolicyRepository.ensureForOrganization(
+        place.organizationId,
+        ctx,
+      );
+
+    return policy.paymentHoldMinutes ?? DEFAULT_PAYMENT_HOLD_MINUTES;
   }
 
   async acceptReservation(

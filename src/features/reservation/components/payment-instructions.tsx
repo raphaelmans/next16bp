@@ -1,62 +1,30 @@
 "use client";
 
-import { Building2, Smartphone } from "lucide-react";
-import type { ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { CopyButton } from "./copy-button";
+import type {
+  PaymentMethodProvider,
+  PaymentMethodType,
+} from "@/shared/lib/payment-methods";
+import { PaymentMethodCard } from "./payment-method-card";
+
+interface PaymentMethod {
+  id: string;
+  type: PaymentMethodType;
+  provider: PaymentMethodProvider;
+  accountNumber: string;
+  accountName: string;
+  instructions?: string | null;
+  isDefault?: boolean;
+}
 
 interface PaymentInstructionsProps {
-  gcashNumber?: string | null;
-  bankName?: string | null;
-  bankAccountNumber?: string | null;
-  bankAccountName?: string | null;
-  paymentInstructions?: string | null;
-}
-
-interface PaymentMethodProps {
-  icon: ReactNode;
-  title: string;
-  accountNumber?: string | null;
-  accountName?: string | null;
-}
-
-function PaymentMethod({
-  icon,
-  title,
-  accountNumber,
-  accountName,
-}: PaymentMethodProps) {
-  if (!accountNumber) return null;
-
-  return (
-    <div className="rounded-lg border bg-background p-4">
-      <div className="mb-2 flex items-center gap-2">
-        {icon}
-        <span className="font-medium">{title}</span>
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="font-mono text-sm font-medium">{accountNumber}</span>
-        <CopyButton value={accountNumber} ariaLabel={`Copy ${title} number`} />
-      </div>
-      {accountName && (
-        <p className="text-sm text-muted-foreground">{accountName}</p>
-      )}
-    </div>
-  );
+  methods?: PaymentMethod[];
 }
 
 export function PaymentInstructions({
-  gcashNumber,
-  bankName,
-  bankAccountNumber,
-  bankAccountName,
-  paymentInstructions,
+  methods = [],
 }: PaymentInstructionsProps) {
-  const hasGcash = !!gcashNumber;
-  const hasBank = !!bankAccountNumber;
-  const hasCustom = !!paymentInstructions;
-
-  if (!hasGcash && !hasBank && !hasCustom) {
+  if (methods.length === 0) {
     return (
       <Card className="bg-muted/30">
         <CardContent className="p-6">
@@ -70,7 +38,7 @@ export function PaymentInstructions({
             </li>
             <li className="flex gap-2">
               <span className="font-medium text-foreground">2.</span>
-              Pay via GCash, bank transfer, or cash
+              Pay via mobile wallet or bank transfer
             </li>
             <li className="flex gap-2">
               <span className="font-medium text-foreground">3.</span>
@@ -93,30 +61,22 @@ export function PaymentInstructions({
           How to Pay
         </h3>
         <div className="space-y-4">
-          {hasGcash && (
-            <PaymentMethod
-              icon={<Smartphone className="h-5 w-5 text-primary" />}
-              title="GCash"
-              accountNumber={gcashNumber}
-              accountName={bankAccountName}
-            />
-          )}
-          {hasBank && (
-            <PaymentMethod
-              icon={<Building2 className="h-5 w-5 text-primary" />}
-              title={bankName || "Bank Transfer"}
-              accountNumber={bankAccountNumber}
-              accountName={bankAccountName}
-            />
-          )}
-          {hasCustom && (
-            <p className="text-sm text-muted-foreground">
-              {paymentInstructions}
-            </p>
-          )}
-          <p className="text-sm text-muted-foreground">
-            Or pay cash at the court before your reserved time.
-          </p>
+          {methods.map((method) => (
+            <div key={method.id} className="space-y-2">
+              <PaymentMethodCard
+                type={method.type}
+                provider={method.provider}
+                accountName={method.accountName}
+                accountNumber={method.accountNumber}
+                isDefault={method.isDefault}
+              />
+              {method.instructions && (
+                <p className="text-sm text-muted-foreground">
+                  {method.instructions}
+                </p>
+              )}
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

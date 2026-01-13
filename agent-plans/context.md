@@ -11,6 +11,7 @@ References and context for planning artifacts.
 | 2026-01-13 | Added 24-trpc-react-query-hooks implementation plan (hook API standardization) |
 | 2026-01-13 | Added public UI embed plan for Google Maps previews |
 | 2026-01-13 | Added 15-organization-payment-methods user stories (org payment methods + policy defaults) |
+| 2026-01-13 | Added 27-organization-payment-methods agent plan (org payment methods + org policy defaults) |
 | 2025-01-09 | Added 08-p2p-reservation-confirmation implementation plan with 4 phases |
 | 2025-01-09 | Added 08-p2p-reservation-confirmation user stories (11 total: 3 parent + 8 sub-stories) |
 | 2025-01-09 | Added 10-asset-uploads implementation plan with parallel dev checklists |
@@ -77,6 +78,7 @@ References and context for planning artifacts.
 | 11-ui-revamp | `agent-plans/11-ui-revamp/` | Ready |
 | 12-reservation-policies | `agent-plans/12-reservation-policies/` | Pending |
 | 24-trpc-react-query-hooks | `agent-plans/24-trpc-react-query-hooks/` | Pending |
+| 27-organization-payment-methods | `agent-plans/27-organization-payment-methods/` | Ready |
 
 ---
 

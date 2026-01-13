@@ -13,6 +13,7 @@ export { OwnerSidebar } from "./owner-sidebar";
 export { PendingActions } from "./pending-actions";
 export { PlaceCourtFilter } from "./place-court-filter";
 export { PlaceForm } from "./place-form";
+export { PlacePhotoUpload } from "./place-photo-upload";
 export { RecentActivity } from "./recent-activity";
 export { RejectModal } from "./reject-modal";
 export { RemovalRequestModal } from "./removal-request-modal";

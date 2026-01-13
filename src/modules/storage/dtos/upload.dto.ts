@@ -25,6 +25,7 @@ export const ALLOWED_IMAGE_TYPES = [
 export const FILE_SIZE_LIMITS_READABLE = {
   PROFILE_IMAGE: "5MB",
   COURT_PHOTO: "5MB",
+  PLACE_PHOTO: "5MB",
   ORG_LOGO: "5MB",
   PAYMENT_PROOF: "10MB",
 } as const;
@@ -36,6 +37,7 @@ export const STORAGE_BUCKETS = {
   AVATARS: "avatars",
   PAYMENT_PROOFS: "payment-proofs",
   COURT_PHOTOS: "court-photos",
+  PLACE_PHOTOS: "place-photos",
   ORGANIZATION_ASSETS: "organization-assets",
 } as const;
 

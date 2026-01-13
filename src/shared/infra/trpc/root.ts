@@ -10,6 +10,7 @@ import { courtHoursRouter } from "@/modules/court-hours/court-hours.router";
 import { courtRateRuleRouter } from "@/modules/court-rate-rule/court-rate-rule.router";
 import { healthRouter } from "@/modules/health/health.router";
 import { organizationRouter } from "@/modules/organization/organization.router";
+import { organizationPaymentRouter } from "@/modules/organization-payment/organization-payment.router";
 import { paymentProofRouter } from "@/modules/payment-proof/payment-proof.router";
 import { placeRouter } from "@/modules/place/place.router";
 import { placeManagementRouter } from "@/modules/place/place-management.router";
@@ -35,6 +36,7 @@ export const appRouter = router({
   sport: sportRouter,
   profile: profileRouter,
   organization: organizationRouter,
+  organizationPayment: organizationPaymentRouter,
   paymentProof: paymentProofRouter,
   claimRequest: claimRequestRouter,
   audit: auditRouter,

@@ -8,18 +8,27 @@ import {
   protectedRateLimitedProcedure,
   router,
 } from "@/shared/infra/trpc/trpc";
+import { AppError } from "@/shared/kernel/errors";
 import {
   CreatePlaceSchema,
   GetPlaceByIdSchema,
   ListMyPlacesSchema,
+  RemovePlacePhotoSchema,
+  ReorderPlacePhotosSchema,
   UpdatePlaceSchema,
+  UploadPlacePhotoSchema,
 } from "./dtos";
-import { NotPlaceOwnerError, PlaceNotFoundError } from "./errors/place.errors";
+import {
+  NotPlaceOwnerError,
+  PlaceNotFoundError,
+  PlacePhotoNotFoundError,
+} from "./errors/place.errors";
 import { makePlaceManagementService } from "./factories/place.factory";
 
 function handlePlaceManagementError(error: unknown): never {
   if (
     error instanceof PlaceNotFoundError ||
+    error instanceof PlacePhotoNotFoundError ||
     error instanceof OrganizationNotFoundError
   ) {
     throw new TRPCError({
@@ -34,6 +43,20 @@ function handlePlaceManagementError(error: unknown): never {
   ) {
     throw new TRPCError({
       code: "FORBIDDEN",
+      message: error.message,
+      cause: error,
+    });
+  }
+  if (error instanceof AppError) {
+    const code =
+      error.httpStatus === 409
+        ? "CONFLICT"
+        : error.httpStatus === 422
+          ? "UNPROCESSABLE_CONTENT"
+          : "BAD_REQUEST";
+
+    throw new TRPCError({
+      code,
       message: error.message,
       cause: error,
     });
@@ -78,6 +101,46 @@ export const placeManagementRouter = router({
       try {
         const service = makePlaceManagementService();
         return await service.getPlaceById(ctx.userId, input.placeId);
+      } catch (error) {
+        handlePlaceManagementError(error);
+      }
+    }),
+  uploadPhoto: protectedRateLimitedProcedure("mutation")
+    .input(UploadPlacePhotoSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makePlaceManagementService();
+        return await service.uploadPhoto(
+          ctx.userId,
+          input.placeId,
+          input.image,
+        );
+      } catch (error) {
+        handlePlaceManagementError(error);
+      }
+    }),
+  removePhoto: protectedProcedure
+    .input(RemovePlacePhotoSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makePlaceManagementService();
+        await service.removePhoto(ctx.userId, input.placeId, input.photoId);
+        return { success: true };
+      } catch (error) {
+        handlePlaceManagementError(error);
+      }
+    }),
+  reorderPhotos: protectedProcedure
+    .input(ReorderPlacePhotosSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makePlaceManagementService();
+        const photos = await service.reorderPhotos(
+          ctx.userId,
+          input.placeId,
+          input.orderedIds,
+        );
+        return { photos };
       } catch (error) {
         handlePlaceManagementError(error);
       }

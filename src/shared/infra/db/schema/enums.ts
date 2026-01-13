@@ -69,3 +69,31 @@ export const claimRequestStatusEnum = pgEnum("claim_request_status", [
   "APPROVED",
   "REJECTED",
 ]);
+
+/**
+ * Payment method type enum
+ * Defines supported payment rails for P2P payments
+ */
+export const paymentMethodTypeEnum = pgEnum("payment_method_type", [
+  "MOBILE_WALLET",
+  "BANK",
+]);
+
+/**
+ * Payment method provider enum (PH-only)
+ * Stores wallet/bank provider identifiers
+ */
+export const paymentMethodProviderEnum = pgEnum("payment_method_provider", [
+  "GCASH",
+  "MAYA",
+  "BPI",
+  "BDO",
+  "METROBANK",
+  "UNIONBANK",
+  "RCBC",
+  "LANDBANK",
+  "SECURITY_BANK",
+  "CHINABANK",
+  "PNB",
+  "EASTWEST",
+]);

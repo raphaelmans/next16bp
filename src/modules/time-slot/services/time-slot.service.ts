@@ -28,14 +28,14 @@ import {
 } from "../errors/time-slot.errors";
 import type {
   ITimeSlotRepository,
-  TimeSlotWithPaymentDetails,
+  TimeSlotWithDetails,
   TimeSlotWithPlayerInfo,
 } from "../repositories/time-slot.repository";
 
 export interface ITimeSlotService {
   // Public queries
   getAvailableSlots(data: GetAvailableSlotsDTO): Promise<TimeSlotRecord[]>;
-  getSlotById(slotId: string): Promise<TimeSlotWithPaymentDetails>;
+  getSlotById(slotId: string): Promise<TimeSlotWithDetails>;
 
   // Owner operations
   getSlotsForCourt(
@@ -167,7 +167,7 @@ export class TimeSlotService implements ITimeSlotService {
     );
   }
 
-  async getSlotById(slotId: string): Promise<TimeSlotWithPaymentDetails> {
+  async getSlotById(slotId: string): Promise<TimeSlotWithDetails> {
     const slot = await this.timeSlotRepository.findById(slotId);
     if (!slot) {
       throw new SlotNotFoundError(slotId);

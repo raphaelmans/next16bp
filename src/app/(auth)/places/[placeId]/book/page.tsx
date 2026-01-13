@@ -23,7 +23,7 @@ import {
 import { useProfile } from "@/features/reservation/hooks/use-profile";
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
-import { formatDuration } from "@/shared/lib/format";
+import { formatCurrency, formatDuration } from "@/shared/lib/format";
 import { getZonedDate } from "@/shared/lib/time-zone";
 
 const DURATIONS = [60, 120, 180];
@@ -246,8 +246,8 @@ export default function PlaceBookingPage() {
               <div className="flex items-center gap-2">
                 <CalendarCheck className="h-4 w-4 text-accent" />
                 <span>
-                  Duration: {formatDuration(durationMinutes)} · {currency}{" "}
-                  {totalPrice.toLocaleString()}
+                  Duration: {formatDuration(durationMinutes)} ·
+                  {formatCurrency(totalPrice, currency)}
                 </span>
               </div>
             </CardContent>

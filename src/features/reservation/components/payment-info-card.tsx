@@ -1,62 +1,40 @@
 "use client";
 
-import { Check, Clock, Copy } from "lucide-react";
+import { Building2, Check, Clock, Copy, Smartphone } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  PAYMENT_PROVIDER_LABELS,
+  type PaymentMethodProvider,
+  type PaymentMethodType,
+} from "@/shared/lib/payment-methods";
 
 interface PaymentMethod {
-  type: "gcash" | "bank";
+  id: string;
+  type: PaymentMethodType;
+  provider: PaymentMethodProvider;
   accountName: string;
   accountNumber: string;
-  bankName?: string;
-}
-
-interface PaymentDetails {
-  gcashNumber?: string | null;
-  bankName?: string | null;
-  bankAccountNumber?: string | null;
-  bankAccountName?: string | null;
-  paymentInstructions?: string | null;
+  instructions?: string | null;
+  isDefault?: boolean;
 }
 
 interface PaymentInfoCardProps {
   paymentMethods?: PaymentMethod[];
-  paymentDetails?: PaymentDetails | null;
   expiresInMinutes?: number;
   className?: string;
 }
 
 export function PaymentInfoCard({
-  paymentMethods,
-  paymentDetails,
+  paymentMethods = [],
   expiresInMinutes = 15,
   className,
 }: PaymentInfoCardProps) {
-  const derivedMethods: PaymentMethod[] = [];
-
-  if (paymentDetails?.gcashNumber) {
-    derivedMethods.push({
-      type: "gcash",
-      accountName: paymentDetails.bankAccountName ?? "GCash",
-      accountNumber: paymentDetails.gcashNumber,
-    });
-  }
-
-  if (paymentDetails?.bankAccountNumber) {
-    derivedMethods.push({
-      type: "bank",
-      accountName: paymentDetails.bankAccountName ?? "Bank Transfer",
-      accountNumber: paymentDetails.bankAccountNumber,
-      bankName: paymentDetails.bankName ?? "Bank Transfer",
-    });
-  }
-
-  const methodsToRender = paymentMethods ?? derivedMethods;
-  const hasMethods = methodsToRender.length > 0;
-  const hasInstructions = !!paymentDetails?.paymentInstructions;
+  const hasMethods = paymentMethods.length > 0;
 
   return (
     <Card className={className}>
@@ -74,25 +52,14 @@ export function PaymentInfoCard({
 
         {hasMethods ? (
           <div className="space-y-4">
-            {methodsToRender.map((method, index) => (
-              <PaymentMethodItem
-                key={`${method.type}-${index}`}
-                method={method}
-              />
+            {paymentMethods.map((method) => (
+              <PaymentMethodItem key={method.id} method={method} />
             ))}
-            {hasInstructions && (
-              <p className="text-sm text-muted-foreground">
-                {paymentDetails?.paymentInstructions}
-              </p>
-            )}
-            <p className="text-sm text-muted-foreground">
-              Or pay cash at the court before your reserved time.
-            </p>
           </div>
         ) : (
           <div className="space-y-3 text-sm text-muted-foreground">
             <p>Contact the court owner for payment details.</p>
-            <p>Pay via GCash, bank transfer, or cash.</p>
+            <p>Pay via mobile wallet or bank transfer.</p>
             <p>Share your payment proof below.</p>
           </div>
         )}
@@ -103,6 +70,8 @@ export function PaymentInfoCard({
 
 function PaymentMethodItem({ method }: { method: PaymentMethod }) {
   const [copied, setCopied] = useState(false);
+  const label = PAYMENT_PROVIDER_LABELS[method.provider];
+  const Icon = method.type === "MOBILE_WALLET" ? Smartphone : Building2;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(method.accountNumber);
@@ -112,36 +81,36 @@ function PaymentMethodItem({ method }: { method: PaymentMethod }) {
   };
 
   return (
-    <div className="rounded-lg border p-4">
-      <div className="flex items-center justify-between mb-2">
-        <span className="font-medium capitalize">
-          {method.type === "gcash"
-            ? "GCash"
-            : method.bankName || "Bank Transfer"}
-        </span>
-        {method.type === "gcash" && (
-          <span className="text-xs bg-[#007DFE]/10 text-[#007DFE] px-2 py-0.5 rounded-full">
-            GCash
-          </span>
-        )}
-      </div>
-      <div className="space-y-1 text-sm">
-        <p className="text-muted-foreground">Account Name</p>
-        <p className="font-medium">{method.accountName}</p>
-      </div>
-      <div className="flex items-center justify-between mt-2">
-        <div className="text-sm">
-          <p className="text-muted-foreground">Account Number</p>
-          <p className="font-mono font-medium">{method.accountNumber}</p>
+    <div className="rounded-lg border p-4 space-y-3">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2">
+          <Icon className="h-4 w-4 text-primary" />
+          <span className="font-medium">{label}</span>
+          {method.isDefault && <Badge variant="secondary">Recommended</Badge>}
         </div>
-        <Button variant="outline" size="sm" onClick={handleCopy}>
-          {copied ? (
-            <Check className="h-4 w-4 text-success" />
-          ) : (
-            <Copy className="h-4 w-4" />
-          )}
-        </Button>
       </div>
+      <div className="grid gap-3 text-sm sm:grid-cols-2">
+        <div>
+          <p className="text-muted-foreground">Account Name</p>
+          <p className="font-medium">{method.accountName}</p>
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-muted-foreground">Account Number</p>
+            <p className="font-mono font-medium">{method.accountNumber}</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={handleCopy}>
+            {copied ? (
+              <Check className="h-4 w-4 text-success" />
+            ) : (
+              <Copy className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      </div>
+      {method.instructions && (
+        <p className="text-sm text-muted-foreground">{method.instructions}</p>
+      )}
     </div>
   );
 }

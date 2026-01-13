@@ -13,6 +13,7 @@ export * from "./court-rate-rule";
 export * from "./enums";
 // Core tables
 export * from "./organization";
+export * from "./organization-payment";
 // Place-related tables
 export * from "./place";
 export * from "./place-amenity";

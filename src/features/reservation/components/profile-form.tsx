@@ -76,7 +76,9 @@ export function ProfileForm() {
   };
 
   const handleAvatarSelect = (file: File) => {
-    uploadAvatar.mutate({ image: file });
+    const formData = new FormData();
+    formData.append("image", file, file.name);
+    uploadAvatar.mutate(formData);
   };
 
   if (isLoading) {

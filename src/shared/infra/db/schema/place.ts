@@ -3,7 +3,6 @@ import {
   boolean,
   decimal,
   index,
-  integer,
   pgTable,
   text,
   timestamp,
@@ -97,49 +96,4 @@ export const InsertCuratedPlaceDetailSchema =
 export type CuratedPlaceDetailRecord = z.infer<typeof CuratedPlaceDetailSchema>;
 export type InsertCuratedPlaceDetail = z.infer<
   typeof InsertCuratedPlaceDetailSchema
->;
-
-/**
- * Reservable Place Policy table (Subclass)
- * Place-wide payment + policy configuration.
- */
-export const reservablePlacePolicy = pgTable("reservable_place_policy", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  placeId: uuid("place_id")
-    .notNull()
-    .unique()
-    .references(() => place.id, { onDelete: "cascade" }),
-  requiresOwnerConfirmation: boolean("requires_owner_confirmation")
-    .notNull()
-    .default(true),
-  paymentHoldMinutes: integer("payment_hold_minutes").notNull().default(15),
-  ownerReviewMinutes: integer("owner_review_minutes").notNull().default(15),
-  cancellationCutoffMinutes: integer("cancellation_cutoff_minutes")
-    .notNull()
-    .default(0),
-  paymentInstructions: text("payment_instructions"),
-  gcashNumber: varchar("gcash_number", { length: 20 }),
-  bankName: varchar("bank_name", { length: 100 }),
-  bankAccountNumber: varchar("bank_account_number", { length: 50 }),
-  bankAccountName: varchar("bank_account_name", { length: 150 }),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-});
-
-export const ReservablePlacePolicySchema = createSelectSchema(
-  reservablePlacePolicy,
-);
-export const InsertReservablePlacePolicySchema = createInsertSchema(
-  reservablePlacePolicy,
-);
-
-export type ReservablePlacePolicyRecord = z.infer<
-  typeof ReservablePlacePolicySchema
->;
-export type InsertReservablePlacePolicy = z.infer<
-  typeof InsertReservablePlacePolicySchema
 >;

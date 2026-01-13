@@ -13,6 +13,7 @@ This plan implements file upload functionality using Supabase Storage with serve
 | Phase 2B | Court Photos Upload | Pending |
 | Phase 2C | Payment Proof Upload | Pending |
 | Phase 2D | Organization Logo Upload | Pending |
+| Phase 2E | Place Photos Upload | Pending |
 
 ### User Stories
 
@@ -23,6 +24,7 @@ This plan implements file upload functionality using Supabase Storage with serve
 | US-10-03 | Owner Uploads Court Photos | High | Pending |
 | US-10-04 | Owner Uploads Organization Logo | Medium | Pending |
 | US-10-05 | Admin Uploads Court Photos | Medium | Pending |
+| US-10-06 | Owner Uploads Place Photos | High | Pending |
 
 ### Reference Documents
 
@@ -69,6 +71,7 @@ This plan implements file upload functionality using Supabase Storage with serve
 | `payment-proofs` | Public (temporary) | Payment verification screenshots |
 | `court-photos` | Public (temporary) | Court images |
 | `organization-assets` | Public (temporary) | Organization logos |
+| `place-photos` | Public (temporary) | Place images |
 
 ---
 
@@ -81,6 +84,7 @@ This plan implements file upload functionality using Supabase Storage with serve
 | 2B | Court Photos Upload | Phase 1 | Pending |
 | 2C | Payment Proof Upload | Phase 1 | Pending |
 | 2D | Organization Logo Upload | Phase 1 | Pending |
+| 2E | Place Photos Upload | Phase 1 | Pending |
 
 ---
 
@@ -101,6 +105,7 @@ This plan implements file upload functionality using Supabase Storage with serve
 | 2B | Court Photos Upload | Dev 2 | `10-03-court-photos.md` | Pending |
 | 2C | Payment Proof Upload | Dev 3 | `10-04-payment-proof.md` | Pending |
 | 2D | Organization Logo Upload | Dev 2 | `10-05-org-logo.md` | Pending |
+| 2E | Place Photos Upload | Dev 2 | `10-06-place-photos.md` | Pending |
 
 ---
 
@@ -109,7 +114,7 @@ This plan implements file upload functionality using Supabase Storage with serve
 | Developer | Modules | Focus Area |
 |-----------|---------|------------|
 | Dev 1 | ~~1A, 1B~~, 2A | ~~Infrastructure~~ + Profile |
-| Dev 2 | 2B, 2D | Owner Features (Court Photos, Org Logo) |
+| Dev 2 | 2B, 2D, 2E | Owner Features (Court Photos, Org Logo, Place Photos) |
 | Dev 3 | 2C | Player Features (Payment Proof) |
 
 ---
@@ -126,6 +131,8 @@ Phase 1 (Infrastructure) [COMPLETE] ──────────────�
          ├────────────► Phase 2C (Payment Proof) [Ready to Start]    │
          │                                                            │
          └────────────► Phase 2D (Org Logo) [Ready to Start]         │
+                                                                       │
+        └────────────► Phase 2E (Place Photos) [Ready to Start]      │
                                                                       │
                          (All Phase 2 can run in parallel)            │
 ```
@@ -168,6 +175,7 @@ Already installed:
 | `10-03-court-photos.md` | Phase 2B: Court photos upload | Ready |
 | `10-04-payment-proof.md` | Phase 2C: Payment proof upload | Ready |
 | `10-05-org-logo.md` | Phase 2D: Organization logo upload | Ready |
+| `10-06-place-photos.md` | Phase 2E: Place photos upload | Ready |
 | `10-dev1-checklist.md` | Developer 1 checklist | Updated |
 | `10-dev2-checklist.md` | Developer 2 checklist | Updated |
 | `10-dev3-checklist.md` | Developer 3 checklist | Updated |
@@ -196,6 +204,7 @@ Before implementing Phase 2, configure in Supabase Dashboard:
    - `payment-proofs`
    - `court-photos`
    - `organization-assets`
+   - `place-photos`
 
 2. **Configure RLS policies** (see `10-01-infrastructure.md` for SQL)
 

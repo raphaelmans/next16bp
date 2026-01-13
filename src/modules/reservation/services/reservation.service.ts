@@ -1,14 +1,16 @@
 import { addMinutes } from "date-fns";
 import { CourtNotFoundError } from "@/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
+import type { IOrganizationPaymentMethodRepository } from "@/modules/organization-payment/repositories/organization-payment-method.repository";
+import type { IOrganizationReservationPolicyRepository } from "@/modules/organization-payment/repositories/organization-reservation-policy.repository";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
-import type { IPlacePolicyRepository } from "@/modules/place/repositories/place-policy.repository";
 import type { IProfileRepository } from "@/modules/profile/repositories/profile.repository";
 import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
 import type { ITimeSlotRepository } from "@/modules/time-slot/repositories/time-slot.repository";
 import type {
-  ReservablePlacePolicyRecord,
+  OrganizationPaymentMethodRecord,
+  OrganizationReservationPolicyRecord,
   ReservationEventRecord,
   ReservationRecord,
   TimeSlotRecord,
@@ -60,6 +62,21 @@ export interface ReservationCreationResult extends ReservationRecord {
   currency: string | null;
 }
 
+export interface ReservationPaymentMethod {
+  id: string;
+  type: OrganizationPaymentMethodRecord["type"];
+  provider: OrganizationPaymentMethodRecord["provider"];
+  accountName: string;
+  accountNumber: string;
+  instructions: string | null;
+  isDefault: boolean;
+}
+
+export interface ReservationPaymentInfo {
+  methods: ReservationPaymentMethod[];
+  defaultMethodId: string | null;
+}
+
 export interface IReservationService {
   createReservation(
     userId: string,
@@ -86,6 +103,11 @@ export interface IReservationService {
     profileId: string,
     data: CancelReservationDTO,
   ): Promise<ReservationRecord>;
+  getPaymentInfo(
+    userId: string,
+    profileId: string,
+    reservationId: string,
+  ): Promise<ReservationPaymentInfo>;
   getReservationById(reservationId: string): Promise<{
     reservation: ReservationRecord;
     events: ReservationEventRecord[];
@@ -104,26 +126,42 @@ export class ReservationService implements IReservationService {
     _profileRepository: IProfileRepository,
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
-    private placePolicyRepository: IPlacePolicyRepository,
+    private organizationReservationPolicyRepository: IOrganizationReservationPolicyRepository,
+    private organizationPaymentMethodRepository: IOrganizationPaymentMethodRepository,
     private createFreeReservationUseCase: ICreateFreeReservationUseCase,
     private createPaidReservationUseCase: ICreatePaidReservationUseCase,
     private transactionManager: TransactionManager,
   ) {}
 
-  private async getPlacePolicyForCourt(courtId: string, ctx?: RequestContext) {
+  private async getOrganizationPolicyForCourt(
+    courtId: string,
+    ctx?: RequestContext,
+  ): Promise<OrganizationReservationPolicyRecord | null> {
     const court = await this.courtRepository.findById(courtId, ctx);
     if (!court) {
       throw new CourtNotFoundError(courtId);
     }
 
-    return this.placePolicyRepository.findByPlaceId(court.placeId, ctx);
+    const place = await this.placeRepository.findById(court.placeId, ctx);
+    if (!place) {
+      throw new PlaceNotFoundError(court.placeId);
+    }
+
+    if (!place.organizationId) {
+      return null;
+    }
+
+    return this.organizationReservationPolicyRepository.ensureForOrganization(
+      place.organizationId,
+      ctx,
+    );
   }
 
   private getOwnerAcceptanceExpiresAt(
-    placePolicy: ReservablePlacePolicyRecord | null,
+    policy: OrganizationReservationPolicyRecord | null,
   ): Date {
     const ownerReviewMinutes =
-      placePolicy?.ownerReviewMinutes ?? DEFAULT_OWNER_REVIEW_MINUTES;
+      policy?.ownerReviewMinutes ?? DEFAULT_OWNER_REVIEW_MINUTES;
     return addMinutes(new Date(), ownerReviewMinutes);
   }
 
@@ -137,8 +175,8 @@ export class ReservationService implements IReservationService {
       throw new SlotNotFoundError(timeSlotId);
     }
 
-    const placePolicy = await this.getPlacePolicyForCourt(slot.courtId);
-    const expiresAt = this.getOwnerAcceptanceExpiresAt(placePolicy);
+    const policy = await this.getOrganizationPolicyForCourt(slot.courtId);
+    const expiresAt = this.getOwnerAcceptanceExpiresAt(policy);
 
     const isFree = slot.priceCents === null;
 
@@ -186,8 +224,8 @@ export class ReservationService implements IReservationService {
 
     const pricing = summarizeSlotPricing(consecutiveSlots);
     const slotIds = consecutiveSlots.map((slot) => slot.id);
-    const placePolicy = await this.getPlacePolicyForCourt(data.courtId);
-    const expiresAt = this.getOwnerAcceptanceExpiresAt(placePolicy);
+    const policy = await this.getOrganizationPolicyForCourt(data.courtId);
+    const expiresAt = this.getOwnerAcceptanceExpiresAt(policy);
 
     const reservation =
       pricing.totalPriceCents > 0
@@ -276,8 +314,8 @@ export class ReservationService implements IReservationService {
       });
     }
 
-    const placePolicy = await this.getPlacePolicyForCourt(selected.courtId);
-    const expiresAt = this.getOwnerAcceptanceExpiresAt(placePolicy);
+    const policy = await this.getOrganizationPolicyForCourt(selected.courtId);
+    const expiresAt = this.getOwnerAcceptanceExpiresAt(policy);
 
     const reservation =
       selected.totalPriceCents > 0
@@ -425,9 +463,12 @@ export class ReservationService implements IReservationService {
         throw new SlotNotFoundError(reservation.timeSlotId);
       }
 
-      const placePolicy = await this.getPlacePolicyForCourt(slot.courtId, ctx);
+      const policy = await this.getOrganizationPolicyForCourt(
+        slot.courtId,
+        ctx,
+      );
       const cancellationCutoffMinutes =
-        placePolicy?.cancellationCutoffMinutes ??
+        policy?.cancellationCutoffMinutes ??
         DEFAULT_CANCELLATION_CUTOFF_MINUTES;
       const cutoffTime = new Date(slot.startTime);
       cutoffTime.setMinutes(
@@ -490,6 +531,72 @@ export class ReservationService implements IReservationService {
 
       return updated;
     });
+  }
+
+  async getPaymentInfo(
+    _userId: string,
+    profileId: string,
+    reservationId: string,
+  ): Promise<ReservationPaymentInfo> {
+    const reservation =
+      await this.reservationRepository.findById(reservationId);
+    if (!reservation) {
+      throw new ReservationNotFoundError(reservationId);
+    }
+
+    if (reservation.playerId !== profileId) {
+      throw new NotReservationOwnerError();
+    }
+
+    if (
+      reservation.status !== "AWAITING_PAYMENT" &&
+      reservation.status !== "PAYMENT_MARKED_BY_USER"
+    ) {
+      throw new InvalidReservationStatusError(
+        reservationId,
+        reservation.status,
+        ["AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"],
+      );
+    }
+
+    const slot = await this.timeSlotRepository.findById(reservation.timeSlotId);
+    if (!slot) {
+      throw new SlotNotFoundError(reservation.timeSlotId);
+    }
+
+    const court = await this.courtRepository.findById(slot.courtId);
+    if (!court) {
+      throw new CourtNotFoundError(slot.courtId);
+    }
+
+    const place = await this.placeRepository.findById(court.placeId);
+    if (!place) {
+      throw new PlaceNotFoundError(court.placeId);
+    }
+
+    if (!place.organizationId) {
+      return { methods: [], defaultMethodId: null };
+    }
+
+    const methods =
+      await this.organizationPaymentMethodRepository.findByOrganizationId(
+        place.organizationId,
+      );
+    const activeMethods = methods.filter((method) => method.isActive);
+    const defaultMethod = activeMethods.find((method) => method.isDefault);
+
+    return {
+      methods: activeMethods.map((method) => ({
+        id: method.id,
+        type: method.type,
+        provider: method.provider,
+        accountName: method.accountName,
+        accountNumber: method.accountNumber,
+        instructions: method.instructions,
+        isDefault: method.isDefault,
+      })),
+      defaultMethodId: defaultMethod?.id ?? null,
+    };
   }
 
   async getReservationById(reservationId: string): Promise<{

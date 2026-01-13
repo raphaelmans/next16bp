@@ -1,5 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { CourtNotFoundError } from "@/modules/court/errors/court.errors";
+import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
 import {
   IncompleteProfileError,
   ProfileNotFoundError,
@@ -18,6 +20,7 @@ import {
   CreateReservationForCourtSchema,
   CreateReservationSchema,
   GetMyReservationsSchema,
+  GetPaymentInfoSchema,
   MarkPaymentSchema,
 } from "./dtos";
 import {
@@ -39,7 +42,9 @@ function handleReservationError(error: unknown): never {
   if (
     error instanceof ReservationNotFoundError ||
     error instanceof SlotNotFoundError ||
-    error instanceof ProfileNotFoundError
+    error instanceof ProfileNotFoundError ||
+    error instanceof CourtNotFoundError ||
+    error instanceof PlaceNotFoundError
   ) {
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -191,6 +196,26 @@ export const reservationRouter = router({
       try {
         const reservationService = makeReservationService();
         return await reservationService.getReservationById(input.reservationId);
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
+  /**
+   * Get payment info for a reservation (player only)
+   */
+  getPaymentInfo: protectedProcedure
+    .input(GetPaymentInfoSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+        const reservationService = makeReservationService();
+        return await reservationService.getPaymentInfo(
+          ctx.userId,
+          profile.id,
+          input.reservationId,
+        );
       } catch (error) {
         handleReservationError(error);
       }
