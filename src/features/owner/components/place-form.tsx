@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { env } from "@/lib/env";
 import { cn } from "@/lib/utils";
 import {
   PLACE_TIME_ZONES,
@@ -71,6 +72,8 @@ export function PlaceForm({
   isSubmitting = false,
   isEditing = false,
 }: PlaceFormProps) {
+  const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
+
   const [name, setName] = useState(defaultValues?.name ?? "");
   const [address, setAddress] = useState(defaultValues?.address ?? "");
   const [city, setCity] = useState(defaultValues?.city ?? "");
@@ -94,14 +97,12 @@ export function PlaceForm({
   const [countriesError, setCountriesError] = useState<string | null>(null);
   const [isCountryOpen, setIsCountryOpen] = useState(false);
 
-  const [googleUrl, setGoogleUrl] = useState(SAMPLE_GOOGLE_URL);
+  const [googleUrl, setGoogleUrl] = useState("");
   const [isPreviewing, setIsPreviewing] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [previewResult, setPreviewResult] = useState<GoogleLocResult | null>(
     null,
   );
-  const [applyName, setApplyName] = useState(true);
-  const [applyCoords, setApplyCoords] = useState(true);
 
   useEffect(() => {
     if (!defaultValues) return;
@@ -238,6 +239,19 @@ export function PlaceForm({
 
       if ("warnings" in json) {
         setPreviewResult(json);
+        if (json.suggestedName) {
+          setName((current) =>
+            current.trim().length > 0
+              ? current
+              : (json.suggestedName ?? current),
+          );
+        }
+        if (json.lat !== undefined) {
+          setLatitude(json.lat);
+        }
+        if (json.lng !== undefined) {
+          setLongitude(json.lng);
+        }
       }
     } catch (error) {
       setPreviewError(
@@ -245,23 +259,6 @@ export function PlaceForm({
       );
     } finally {
       setIsPreviewing(false);
-    }
-  };
-
-  const handleApplyPreview = () => {
-    if (!previewResult) return;
-
-    if (applyName && name.trim().length === 0 && previewResult.suggestedName) {
-      setName(previewResult.suggestedName);
-    }
-
-    if (applyCoords) {
-      if (previewResult.lat !== undefined) {
-        setLatitude(previewResult.lat);
-      }
-      if (previewResult.lng !== undefined) {
-        setLongitude(previewResult.lng);
-      }
     }
   };
 
@@ -307,7 +304,7 @@ export function PlaceForm({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="province">Province / State (optional)</Label>
+              <Label htmlFor="province">Province / State</Label>
               <Input
                 id="province"
                 value={province}
@@ -375,39 +372,6 @@ export function PlaceForm({
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="latitude">Latitude (optional)</Label>
-              <Input
-                id="latitude"
-                type="number"
-                step="any"
-                value={latitude}
-                onChange={(event) =>
-                  setLatitude(
-                    event.target.value ? Number(event.target.value) : "",
-                  )
-                }
-                placeholder="e.g., 14.5547"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="longitude">Longitude (optional)</Label>
-              <Input
-                id="longitude"
-                type="number"
-                step="any"
-                value={longitude}
-                onChange={(event) =>
-                  setLongitude(
-                    event.target.value ? Number(event.target.value) : "",
-                  )
-                }
-                placeholder="e.g., 121.0244"
-              />
-            </div>
-          </div>
-
           <div className="space-y-2">
             <Label>Time Zone</Label>
             <Select value={timeZone} onValueChange={setTimeZone}>
@@ -455,21 +419,18 @@ export function PlaceForm({
               id="googleUrl"
               value={googleUrl}
               onChange={(event) => setGoogleUrl(event.target.value)}
-              placeholder="https://maps.app.goo.gl/..."
+              placeholder={SAMPLE_GOOGLE_URL}
               inputMode="url"
             />
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            {hasEmbedKey ? null : (
               <p className="text-xs text-muted-foreground">
-                Requires `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY` for previews.
+                Embed previews are disabled until a Google Maps key is
+                configured.
               </p>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setGoogleUrl(SAMPLE_GOOGLE_URL)}
-              >
-                Use sample
-              </Button>
-            </div>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Example: {SAMPLE_GOOGLE_URL}
+            </p>
           </div>
 
           <Button
@@ -488,6 +449,39 @@ export function PlaceForm({
               "Preview"
             )}
           </Button>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="latitude">Latitude (optional)</Label>
+              <Input
+                id="latitude"
+                type="number"
+                step="any"
+                value={latitude}
+                onChange={(event) =>
+                  setLatitude(
+                    event.target.value ? Number(event.target.value) : "",
+                  )
+                }
+                placeholder="e.g., 14.5547"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="longitude">Longitude (optional)</Label>
+              <Input
+                id="longitude"
+                type="number"
+                step="any"
+                value={longitude}
+                onChange={(event) =>
+                  setLongitude(
+                    event.target.value ? Number(event.target.value) : "",
+                  )
+                }
+                placeholder="e.g., 121.0244"
+              />
+            </div>
+          </div>
 
           {previewError && (
             <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
@@ -548,43 +542,6 @@ export function PlaceForm({
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="applyName"
-                      checked={applyName}
-                      onCheckedChange={(value) => setApplyName(value === true)}
-                    />
-                    <Label htmlFor="applyName" className="text-sm font-normal">
-                      Set name if empty
-                    </Label>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="applyCoords"
-                      checked={applyCoords}
-                      onCheckedChange={(value) =>
-                        setApplyCoords(value === true)
-                      }
-                    />
-                    <Label
-                      htmlFor="applyCoords"
-                      className="text-sm font-normal"
-                    >
-                      Set latitude/longitude
-                    </Label>
-                  </div>
-                </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleApplyPreview}
-                >
-                  Apply to form
-                </Button>
-              </div>
-
               {previewResult.warnings.length > 0 && (
                 <div className="rounded-lg border border-border/60 bg-muted/40 p-3">
                   <div className="text-xs font-medium">Warnings</div>
@@ -612,8 +569,9 @@ export function PlaceForm({
                 </div>
               ) : (
                 <div className="rounded-lg border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
-                  No embed preview available. Add
-                  `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY` and try again.
+                  {hasEmbedKey
+                    ? "No embed preview available for this link."
+                    : "Embed preview unavailable (missing Google Maps key)."}
                 </div>
               )}
             </div>

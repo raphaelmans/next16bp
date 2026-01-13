@@ -604,7 +604,10 @@ export default function CourtSetupWizardPage() {
                   </div>
                 )}
 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <Button variant="ghost" onClick={() => goToStep("schedule")}>
+                    Back to Schedule
+                  </Button>
                   <Button
                     asChild
                     className="w-full sm:w-auto"
@@ -613,9 +616,6 @@ export default function CourtSetupWizardPage() {
                     <Link href={appRoutes.owner.courts.slots(courtId)}>
                       Go to Manage Slots
                     </Link>
-                  </Button>
-                  <Button variant="ghost" onClick={() => goToStep("schedule")}>
-                    Back to Schedule
                   </Button>
                 </div>
               </div>
