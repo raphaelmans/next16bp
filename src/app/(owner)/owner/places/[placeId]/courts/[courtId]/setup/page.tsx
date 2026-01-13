@@ -192,7 +192,10 @@ export default function CourtSetupWizardPage() {
   ) => {
     createBulkSlots.mutate(data, {
       onSuccess: (result) => {
-        toast.success(`Created ${result.slotsCreated} slots successfully`);
+        const message = result.wasTrimmed
+          ? `Created ${result.slotsCreated} slots (trimmed from ${result.totalGenerated})`
+          : `Created ${result.slotsCreated} slots successfully`;
+        toast.success(message);
         setBulkModalOpen(false);
       },
       onError: (error) => {
@@ -446,6 +449,7 @@ export default function CourtSetupWizardPage() {
         isPrereqsLoading={isPrereqsLoading}
         hasHours={hasHours}
         hasPricingRules={hasPricingRules}
+        hoursWindows={hours}
         hoursHref={hoursHref}
         pricingHref={pricingHref}
         initialDate={new Date()}

@@ -1,6 +1,6 @@
 "use client";
 
-import { addDays, differenceInDays, format } from "date-fns";
+import { addDays, format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
@@ -15,7 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Popover,
@@ -24,7 +23,12 @@ import {
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
-import type { BulkSlotData } from "../hooks/use-slots";
+import {
+  type BulkSlotData,
+  type CourtHoursWindow,
+  generateSlotsFromCourtHours,
+  MAX_BULK_SLOTS,
+} from "../hooks/use-slots";
 
 interface BulkSlotModalProps {
   open: boolean;
@@ -34,6 +38,7 @@ interface BulkSlotModalProps {
   isPrereqsLoading: boolean;
   hasHours: boolean;
   hasPricingRules: boolean;
+  hoursWindows?: CourtHoursWindow[];
   hoursHref?: string;
   pricingHref?: string;
   initialDate?: Date;
@@ -49,6 +54,15 @@ const DAYS_OF_WEEK = [
   { value: 6, label: "Sat" },
 ];
 
+const getDayLabel = (dayOfWeek: number) =>
+  DAYS_OF_WEEK.find((day) => day.value === dayOfWeek)?.label ?? "Day";
+
+const toTimeString = (minutes: number) => {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`;
+};
+
 const SLOT_DURATION_MINUTES = 60;
 
 export function BulkSlotModal({
@@ -59,6 +73,7 @@ export function BulkSlotModal({
   isPrereqsLoading,
   hasHours,
   hasPricingRules,
+  hoursWindows,
   hoursHref,
   pricingHref,
   initialDate,
@@ -73,10 +88,45 @@ export function BulkSlotModal({
   const [selectedDays, setSelectedDays] = React.useState<number[]>([
     1, 2, 3, 4, 5,
   ]);
-  const [startTime, setStartTime] = React.useState("06:00");
-  const [endTime, setEndTime] = React.useState("22:00");
   const duration = SLOT_DURATION_MINUTES;
-  const canCreateSlots = !isPrereqsLoading && hasHours && hasPricingRules;
+  const normalizedHours = React.useMemo(
+    () => hoursWindows ?? [],
+    [hoursWindows],
+  );
+
+  const bulkData = React.useMemo<BulkSlotData>(
+    () => ({
+      startDate,
+      endDate: mode === "recurring" ? endDate : undefined,
+      daysOfWeek: mode === "recurring" ? selectedDays : undefined,
+      duration,
+      useDefaultPrice: true,
+      hoursWindows: normalizedHours,
+    }),
+    [startDate, endDate, mode, selectedDays, duration, normalizedHours],
+  );
+
+  const preview = React.useMemo(
+    () => generateSlotsFromCourtHours(bulkData),
+    [bulkData],
+  );
+
+  const canCreateSlots =
+    !isPrereqsLoading &&
+    hasHours &&
+    hasPricingRules &&
+    preview.slots.length > 0;
+
+  const daySummaries = React.useMemo(() => {
+    const displayDays = mode === "single" ? [startDate.getDay()] : selectedDays;
+
+    return displayDays.map((day) => {
+      const windows = normalizedHours
+        .filter((window) => window.dayOfWeek === day)
+        .sort((a, b) => a.startMinute - b.startMinute);
+      return { day, windows };
+    });
+  }, [mode, startDate, selectedDays, normalizedHours]);
 
   // Reset form when modal opens
   React.useEffect(() => {
@@ -86,49 +136,9 @@ export function BulkSlotModal({
     }
   }, [open, initialDate]);
 
-  // Calculate preview
-  const calculatePreview = () => {
-    const startHour = parseInt(startTime.split(":")[0], 10);
-    const endHour = parseInt(endTime.split(":")[0], 10);
-    const totalMinutes = (endHour - startHour) * 60;
-    const slotsPerDay = Math.floor(totalMinutes / duration);
-
-    if (mode === "single") {
-      return { slotsPerDay, totalDays: 1, totalSlots: slotsPerDay };
-    }
-
-    // For recurring, count the days that match selected days of week
-    let matchingDays = 0;
-    const totalDays = differenceInDays(endDate, startDate) + 1;
-
-    for (let i = 0; i < totalDays; i++) {
-      const currentDate = addDays(startDate, i);
-      if (selectedDays.includes(currentDate.getDay())) {
-        matchingDays++;
-      }
-    }
-
-    return {
-      slotsPerDay,
-      totalDays: matchingDays,
-      totalSlots: slotsPerDay * matchingDays,
-    };
-  };
-
-  const preview = calculatePreview();
-
   const handleSubmit = () => {
     if (!canCreateSlots) return;
-    const data: BulkSlotData = {
-      startDate,
-      endDate: mode === "recurring" ? endDate : undefined,
-      daysOfWeek: mode === "recurring" ? selectedDays : undefined,
-      startTime,
-      endTime,
-      duration,
-      useDefaultPrice: true,
-    };
-    onSubmit(data);
+    onSubmit(bulkData);
   };
 
   const toggleDay = (day: number) => {
@@ -293,26 +303,39 @@ export function BulkSlotModal({
             )}
           </div>
 
-          {/* Time Range */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="start-time">Start Time</Label>
-              <Input
-                id="start-time"
-                type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="end-time">End Time</Label>
-              <Input
-                id="end-time"
-                type="time"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-              />
-            </div>
+          {/* Court Hours */}
+          <div className="space-y-2">
+            <Label>Using court hours</Label>
+            {daySummaries.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                Select at least one day to preview hours.
+              </p>
+            ) : (
+              <div className="space-y-1">
+                {daySummaries.map((summary) => {
+                  const label = getDayLabel(summary.day);
+                  const ranges = summary.windows
+                    .map(
+                      (window) =>
+                        `${toTimeString(window.startMinute)}-${toTimeString(
+                          window.endMinute,
+                        )}`,
+                    )
+                    .join(", ");
+
+                  return (
+                    <p key={`hours-${summary.day}`} className="text-sm">
+                      <span className="font-medium">{label}:</span>{" "}
+                      {summary.windows.length === 0 ? (
+                        <span className="text-muted-foreground">No hours</span>
+                      ) : (
+                        <span>{ranges}</span>
+                      )}
+                    </p>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Prerequisites */}
@@ -375,25 +398,35 @@ export function BulkSlotModal({
           {/* Preview */}
           <div className="rounded-lg bg-muted p-4">
             <p className="text-sm font-medium mb-1">Preview</p>
-            <p className="text-sm text-muted-foreground">
-              This will create{" "}
-              <span className="font-semibold text-foreground">
-                {preview.slotsPerDay} slots per day
-              </span>
-              {mode === "recurring" && (
-                <>
-                  {" "}
-                  across{" "}
-                  <span className="font-semibold text-foreground">
-                    {preview.totalDays} days
-                  </span>
-                </>
-              )}
-              <br />
-              <span className="font-semibold text-foreground">
-                Total: {preview.totalSlots} slots
-              </span>
-            </p>
+            {preview.slots.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                No slots will be created for the selected dates.
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                <span className="font-semibold text-foreground">
+                  Total: {preview.slots.length} slots
+                </span>
+                {mode === "recurring" && preview.totalDaysWithSlots > 0 && (
+                  <>
+                    {" "}
+                    across{" "}
+                    <span className="font-semibold text-foreground">
+                      {preview.totalDaysWithSlots} days
+                    </span>
+                  </>
+                )}
+                {preview.wasTrimmed && (
+                  <>
+                    <br />
+                    <span className="text-muted-foreground">
+                      Auto-trimmed to {MAX_BULK_SLOTS} from{" "}
+                      {preview.totalGenerated} slots.
+                    </span>
+                  </>
+                )}
+              </p>
+            )}
           </div>
         </div>
 

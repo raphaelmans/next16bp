@@ -57,6 +57,8 @@ function calculateDuration(startTime: string, endTime: string): number {
   return Math.round((end.getTime() - start.getTime()) / (1000 * 60));
 }
 
+export const MAX_BULK_SLOTS = 100;
+
 export function useSlots({ courtId, date }: UseSlotsOptions) {
   const trpc = useTRPC();
 
@@ -128,69 +130,73 @@ export function useDeleteSlot() {
   });
 }
 
+export type CourtHoursWindow = {
+  dayOfWeek: number;
+  startMinute: number;
+  endMinute: number;
+};
+
 export interface BulkSlotData {
   startDate: Date;
   endDate?: Date;
   daysOfWeek?: number[];
-  startTime: string; // "HH:mm"
-  endTime: string; // "HH:mm"
   duration: number; // minutes
   useDefaultPrice: boolean;
   customPrice?: number;
   currency?: string;
+  hoursWindows: CourtHoursWindow[];
 }
 
-/**
- * Generate slot array from bulk configuration
- */
-function generateSlotsFromBulkData(
-  _courtId: string,
-  data: BulkSlotData,
-): Array<{
+type SlotPayload = {
   startTime: string;
   endTime: string;
   priceCents?: number | null;
   currency?: string | null;
-}> {
-  const slots: Array<{
-    startTime: string;
-    endTime: string;
-    priceCents?: number | null;
-    currency?: string | null;
-  }> = [];
+};
 
-  const startDateObj = new Date(data.startDate);
-  const endDateObj = data.endDate ? new Date(data.endDate) : startDateObj;
+export type BulkSlotPreview = {
+  slots: SlotPayload[];
+  totalGenerated: number;
+  totalDaysWithSlots: number;
+  wasTrimmed: boolean;
+};
 
-  // Parse time strings
-  const [startHour, startMin] = data.startTime.split(":").map(Number);
-  const [endHour, endMin] = data.endTime.split(":").map(Number);
+/**
+ * Generate slot array from court hours windows
+ */
+export function generateSlotsFromCourtHours(
+  data: BulkSlotData,
+): BulkSlotPreview {
+  const slots: SlotPayload[] = [];
+  const daysWithSlots = new Set<string>();
 
-  // Iterate through dates
-  const currentDate = new Date(startDateObj);
-  while (currentDate <= endDateObj) {
-    // Check if day of week matches (if specified)
-    if (
-      !data.daysOfWeek ||
-      data.daysOfWeek.length === 0 ||
-      data.daysOfWeek.includes(currentDate.getDay())
-    ) {
-      // Generate slots for this day
-      let slotStart = new Date(currentDate);
-      slotStart.setHours(startHour, startMin, 0, 0);
+  const rangeStart = startOfDay(data.startDate);
+  const rangeEnd = startOfDay(data.endDate ?? data.startDate);
 
-      const dayEnd = new Date(currentDate);
-      dayEnd.setHours(endHour, endMin, 0, 0);
+  const currentDate = new Date(rangeStart);
+  while (currentDate <= rangeEnd) {
+    const dayOfWeek = currentDate.getDay();
+    const isSelectedDay = data.daysOfWeek
+      ? data.daysOfWeek.includes(dayOfWeek)
+      : true;
 
-      while (slotStart < dayEnd) {
-        const slotEnd = new Date(slotStart.getTime() + data.duration * 60000);
-        if (slotEnd <= dayEnd) {
-          const slot: {
-            startTime: string;
-            endTime: string;
-            priceCents?: number | null;
-            currency?: string | null;
-          } = {
+    if (isSelectedDay) {
+      const dayWindows = data.hoursWindows
+        .filter((window) => window.dayOfWeek === dayOfWeek)
+        .sort((a, b) => a.startMinute - b.startMinute);
+
+      let daySlotCount = 0;
+      for (const window of dayWindows) {
+        for (
+          let minute = window.startMinute;
+          minute + data.duration <= window.endMinute;
+          minute += data.duration
+        ) {
+          const slotStart = new Date(currentDate);
+          slotStart.setHours(Math.floor(minute / 60), minute % 60, 0, 0);
+          const slotEnd = new Date(slotStart.getTime() + data.duration * 60000);
+
+          const slot: SlotPayload = {
             startTime: slotStart.toISOString(),
             endTime: slotEnd.toISOString(),
           };
@@ -206,14 +212,28 @@ function generateSlotsFromBulkData(
           }
 
           slots.push(slot);
+          daySlotCount += 1;
         }
-        slotStart = slotEnd;
+      }
+
+      if (daySlotCount > 0) {
+        daysWithSlots.add(currentDate.toDateString());
       }
     }
+
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
-  return slots;
+  const totalGenerated = slots.length;
+  const wasTrimmed = totalGenerated > MAX_BULK_SLOTS;
+  const trimmedSlots = wasTrimmed ? slots.slice(0, MAX_BULK_SLOTS) : slots;
+
+  return {
+    slots: trimmedSlots,
+    totalGenerated,
+    totalDaysWithSlots: daysWithSlots.size,
+    wasTrimmed,
+  };
 }
 
 export function useCreateBulkSlots(courtId: string) {
@@ -223,14 +243,11 @@ export function useCreateBulkSlots(courtId: string) {
 
   return useMutation({
     mutationFn: async (data: BulkSlotData) => {
-      const slots = generateSlotsFromBulkData(courtId, data);
+      const { slots, totalGenerated, wasTrimmed } =
+        generateSlotsFromCourtHours(data);
 
       if (slots.length === 0) {
         throw new Error("No slots to create with the given configuration");
-      }
-
-      if (slots.length > 100) {
-        throw new Error("Maximum 100 slots can be created at once");
       }
 
       // Call the tRPC mutation directly
@@ -239,7 +256,12 @@ export function useCreateBulkSlots(courtId: string) {
         slots,
       });
 
-      return { success: true, slotsCreated: result.length };
+      return {
+        success: true,
+        slotsCreated: result.length,
+        totalGenerated,
+        wasTrimmed,
+      };
     },
     onSuccess: () => {
       queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
