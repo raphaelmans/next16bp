@@ -22,6 +22,15 @@ import {
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
 import type { RequestContext } from "@/shared/kernel/context";
 
+const toIsoString = (
+  value: Date | string | null | undefined,
+): string | null => {
+  if (!value) return null;
+  if (value instanceof Date) return value.toISOString();
+  if (typeof value === "string") return new Date(value).toISOString();
+  return null;
+};
+
 export interface TimeSlotWithPlayerInfo extends TimeSlotRecord {
   playerName?: string | null;
   playerPhone?: string | null;
@@ -274,9 +283,7 @@ export class TimeSlotRepository implements ITimeSlotRepository {
 
     return result.map((slot) => ({
       ...slot,
-      reservationExpiresAt: slot.reservationExpiresAt
-        ? slot.reservationExpiresAt.toISOString()
-        : null,
+      reservationExpiresAt: toIsoString(slot.reservationExpiresAt),
     }));
   }
 

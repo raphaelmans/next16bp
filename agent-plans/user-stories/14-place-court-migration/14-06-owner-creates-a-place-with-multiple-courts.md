@@ -19,6 +19,7 @@ As an **organization owner**, I want to **create a place listing and add multipl
 - Given I am an authenticated organization owner
 - When I create a new place
 - Then the place is created with address/location details and is manageable in owner tools
+- And latitude/longitude are optional fields
 
 ### Owner Adds Courts To A Place
 
@@ -43,6 +44,7 @@ As an **organization owner**, I want to **create a place listing and add multipl
 |----------|----------|
 | Duplicate court label within a place | Owner is prevented from saving duplicates and sees a clear message |
 | Place is inactive/deactivated | Courts cannot be booked by players |
+| Coordinates omitted | Place is saved without map coordinates |
 
 ---
 

@@ -1,4 +1,4 @@
-# 14 - Place & Court Units Migration - Master Plan
+# Place/Court Migration (v1.2) - Master Plan
 
 **Version:** 1.0  
 **Created:** January 12, 2026  
@@ -36,6 +36,8 @@ This plan intentionally assumes a **dev reset / clean cutover** (no legacy data 
 | US-14-09 | Owner Publishes 60-Minute Slots With Prices | Client + Server + DB |
 | US-14-10 | Platform Migrates Existing Court Listings Into Place/Court Model | Simplified (dev cutover) |
 | US-14-11 | Owner Filters Slots/Reservations By Place And Court | Client + Server |
+| US-14-12 | Owner Navigates Court Actions Without Unintended Redirects | Client |
+| US-14-13 | Owner Is Guided To Configure Hours And Pricing Before Publishing Slots | Client + Server |
 
 ---
 
@@ -88,6 +90,8 @@ This plan intentionally assumes a **dev reset / clean cutover** (no legacy data 
 | 3A | Place management UI | List/create/edit places | `14-03-owner-ui.md` |
 | 3B | Court setup UI | Courts list + create/edit court | `14-03-owner-ui.md` |
 | 3C | Court ops UI | Hours + pricing + slots pages | `14-03-owner-ui.md` |
+| 3C-Addendum | Ops polish | Slot publish prereqs + nav fixes | `14-06-owner-slot-publishing-prereqs.md` |
+| 3D | Court setup wizard | Unified setup + copy config | `14-07-court-setup-wizard.md` |
 
 ### Phase 4: Player UI Revamp
 
@@ -160,6 +164,8 @@ Phase 1 (DB) ───► Phase 2 (APIs) ───► Phase 3 (Owner UI)
 | `14-03-owner-ui.md` | Phase 3: Owner flow UI plan |
 | `14-04-player-ui.md` | Phase 4: Player flow UI plan |
 | `14-05-cutover-qa.md` | Phase 5: QA + validation |
+| `14-06-owner-slot-publishing-prereqs.md` | Phase 3C addendum: owner ops polish |
+| `14-07-court-setup-wizard.md` | Phase 3D: setup wizard + copy config |
 | `place-court-migration-server-dev1-checklist.md` | Server/DB checklist |
 | `place-court-migration-client-dev1-checklist.md` | Client checklist |
 

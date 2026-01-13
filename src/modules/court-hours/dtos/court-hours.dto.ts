@@ -20,5 +20,11 @@ export const GetCourtHoursSchema = z.object({
   courtId: z.string().uuid(),
 });
 
+export const CopyCourtHoursSchema = z.object({
+  sourceCourtId: z.string().uuid(),
+  targetCourtId: z.string().uuid(),
+});
+
 export type SetCourtHoursDTO = z.infer<typeof SetCourtHoursSchema>;
 export type GetCourtHoursDTO = z.infer<typeof GetCourtHoursSchema>;
+export type CopyCourtHoursDTO = z.infer<typeof CopyCourtHoursSchema>;

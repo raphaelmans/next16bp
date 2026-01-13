@@ -62,23 +62,29 @@ export function PlaceForm({
   const canSubmit =
     name.trim().length > 0 &&
     address.trim().length > 0 &&
-    city.trim().length > 0 &&
-    latitude !== "" &&
-    longitude !== "";
+    city.trim().length > 0;
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (!canSubmit) return;
 
-    onSubmit({
+    const data: PlaceFormData = {
       name: name.trim(),
       address: address.trim(),
       city,
-      latitude: Number(latitude),
-      longitude: Number(longitude),
       timeZone,
       isActive,
-    });
+    };
+
+    if (latitude !== "") {
+      data.latitude = Number(latitude);
+    }
+
+    if (longitude !== "") {
+      data.longitude = Number(longitude);
+    }
+
+    onSubmit(data);
   };
 
   const cityHelper = useMemo(
@@ -134,7 +140,7 @@ export function PlaceForm({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="latitude">Latitude</Label>
+              <Label htmlFor="latitude">Latitude (optional)</Label>
               <Input
                 id="latitude"
                 type="number"
@@ -149,7 +155,7 @@ export function PlaceForm({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="longitude">Longitude</Label>
+              <Label htmlFor="longitude">Longitude (optional)</Label>
               <Input
                 id="longitude"
                 type="number"

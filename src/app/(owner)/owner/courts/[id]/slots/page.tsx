@@ -14,6 +14,7 @@ import { BulkSlotModal } from "@/features/owner/components/bulk-slot-modal";
 import { CalendarNavigation } from "@/features/owner/components/calendar-navigation";
 import { RejectModal } from "@/features/owner/components/reject-modal";
 import { SlotList } from "@/features/owner/components/slot-list";
+import { useCourtHours, useCourtRateRules } from "@/features/owner/hooks";
 import {
   useBlockSlot,
   useConfirmBooking,
@@ -60,6 +61,19 @@ export default function ManageSlotsPage() {
     courtId,
     date: selectedDate,
   });
+  const { data: hours = [], isLoading: hoursLoading } = useCourtHours(courtId);
+  const { data: pricingRules = [], isLoading: pricingLoading } =
+    useCourtRateRules(courtId);
+  const placeId = courtData?.court.placeId;
+  const isPrereqsLoading = hoursLoading || pricingLoading;
+  const hasHours = !hoursLoading && hours.length > 0;
+  const hasPricingRules = !pricingLoading && pricingRules.length > 0;
+  const hoursHref = placeId
+    ? appRoutes.owner.places.courts.hours(placeId, courtId)
+    : undefined;
+  const pricingHref = placeId
+    ? appRoutes.owner.places.courts.pricing(placeId, courtId)
+    : undefined;
 
   const blockSlot = useBlockSlot();
   const unblockSlot = useUnblockSlot();
@@ -198,8 +212,18 @@ export default function ManageSlotsPage() {
         toast.success(`Created ${result.slotsCreated} slots successfully`);
         setBulkModalOpen(false);
       },
-      onError: () => {
-        toast.error("Failed to create slots");
+      onError: (error) => {
+        const appCode = (error as { data?: { code?: string } } | null)?.data
+          ?.code;
+
+        if (appCode === "SLOT_PRICING_UNAVAILABLE") {
+          toast.error(
+            "Pricing rules don’t cover the selected time range. Update Pricing Rules and try again.",
+          );
+          return;
+        }
+
+        toast.error(error?.message ?? "Failed to create slots");
       },
     });
   };
@@ -213,7 +237,6 @@ export default function ManageSlotsPage() {
   const publicPlaceHref = courtData
     ? appRoutes.places.detail(courtData.court.placeId)
     : appRoutes.places.base;
-  const defaultPriceCents = 0;
 
   // Generate mock dates with slots for calendar indicators
   const datesWithSlots = React.useMemo(() => {
@@ -395,7 +418,11 @@ export default function ManageSlotsPage() {
         onOpenChange={setBulkModalOpen}
         onSubmit={handleBulkCreate}
         isLoading={createBulkSlots.isPending}
-        defaultPrice={defaultPriceCents}
+        isPrereqsLoading={isPrereqsLoading}
+        hasHours={hasHours}
+        hasPricingRules={hasPricingRules}
+        hoursHref={hoursHref}
+        pricingHref={pricingHref}
         initialDate={selectedDate}
       />
 

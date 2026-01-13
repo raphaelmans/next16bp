@@ -9,6 +9,7 @@ import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
 import type { ITimeSlotRepository } from "@/modules/time-slot/repositories/time-slot.repository";
 import type {
   ReservablePlacePolicyRecord,
+  ReservationEventRecord,
   ReservationRecord,
   TimeSlotRecord,
 } from "@/shared/infra/db/schema";
@@ -84,7 +85,10 @@ export interface IReservationService {
     profileId: string,
     data: CancelReservationDTO,
   ): Promise<ReservationRecord>;
-  getReservationById(reservationId: string): Promise<ReservationRecord>;
+  getReservationById(reservationId: string): Promise<{
+    reservation: ReservationRecord;
+    events: ReservationEventRecord[];
+  }>;
   getMyReservations(
     profileId: string,
     filters: GetMyReservationsDTO,
@@ -487,13 +491,18 @@ export class ReservationService implements IReservationService {
     });
   }
 
-  async getReservationById(reservationId: string): Promise<ReservationRecord> {
+  async getReservationById(reservationId: string): Promise<{
+    reservation: ReservationRecord;
+    events: ReservationEventRecord[];
+  }> {
     const reservation =
       await this.reservationRepository.findById(reservationId);
     if (!reservation) {
       throw new ReservationNotFoundError(reservationId);
     }
-    return reservation;
+    const events =
+      await this.reservationEventRepository.findByReservationId(reservationId);
+    return { reservation, events };
   }
 
   async getMyReservations(

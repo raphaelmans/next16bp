@@ -18,8 +18,14 @@ export const CreatePlaceSchema = z.object({
   name: z.string().min(1).max(200),
   address: z.string().min(1),
   city: z.string().min(1).max(100),
-  latitude: z.string().regex(/^-?\d+\.\d+$/, "Invalid latitude format"),
-  longitude: z.string().regex(/^-?\d+\.\d+$/, "Invalid longitude format"),
+  latitude: z
+    .string()
+    .regex(/^-?\d+\.\d+$/, "Invalid latitude format")
+    .optional(),
+  longitude: z
+    .string()
+    .regex(/^-?\d+\.\d+$/, "Invalid longitude format")
+    .optional(),
   timeZone: z.string().min(1).max(64).optional(),
 });
 

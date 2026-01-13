@@ -1,7 +1,8 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { differenceInSeconds, format } from "date-fns";
-import { Clock, ExternalLink } from "lucide-react";
+import { Clock, ExternalLink, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { toast } from "sonner";
@@ -44,12 +45,16 @@ import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { formatCurrency } from "@/shared/lib/format";
+import { useTRPC } from "@/trpc/client";
 
 type ActiveFilter = "all" | "awaiting" | "marked";
 
 export default function OwnerActiveReservationsPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
+  const queryClient = useQueryClient();
+  const trpc = useTRPC();
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
   const { organization, organizations } = useOwnerOrganization();
   const { data: places = [] } = useOwnerPlaces(organization?.id ?? null);
   const { data: courts = [] } = useOwnerCourts(organization?.id ?? null);
@@ -72,11 +77,6 @@ export default function OwnerActiveReservationsPage() {
     selectedReservation?.reservationStatus === "CREATED" ? "Accept" : "Confirm";
   const now = React.useMemo(() => Date.now(), []);
   const [tick, setTick] = React.useState(now);
-
-  const filteredCourts = React.useMemo(() => {
-    if (!placeId) return courts;
-    return courts.filter((court) => court.placeId === placeId);
-  }, [courts, placeId]);
 
   const viewAllHref = React.useMemo(() => {
     const params = new URLSearchParams();
@@ -104,30 +104,39 @@ export default function OwnerActiveReservationsPage() {
     return () => window.clearInterval(timer);
   }, []);
 
-  const { data: reservations = [], isLoading } = useOwnerReservations(
-    organization?.id ?? null,
-    {
-      courtId: courtId || undefined,
-      status: "all",
-      refetchIntervalMs: 15000,
-    },
-  );
+  const {
+    data: reservations = [],
+    isLoading,
+    isFetching,
+  } = useOwnerReservations(organization?.id ?? null, {
+    placeId: placeId || undefined,
+    courtId: courtId || undefined,
+    status: "all",
+    refetchIntervalMs: 15000,
+  });
 
   const acceptMutation = useAcceptReservation();
   const confirmMutation = useConfirmReservation();
   const rejectMutation = useRejectReservation();
 
-  const activeReservations = React.useMemo(() => {
-    const courtIds = new Set(filteredCourts.map((court) => court.id));
-    const filtered = reservations
-      .filter((reservation) =>
-        placeId ? courtIds.has(reservation.courtId) : true,
-      )
-      .filter((reservation) =>
-        ["AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"].includes(
-          reservation.reservationStatus,
-        ),
+  const handleRefresh = async () => {
+    if (!organization?.id) return;
+    setIsRefreshing(true);
+    try {
+      await queryClient.invalidateQueries(
+        trpc.reservationOwner.getForOrganization.queryFilter(),
       );
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  const activeReservations = React.useMemo(() => {
+    const filtered = reservations.filter((reservation) =>
+      ["AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"].includes(
+        reservation.reservationStatus,
+      ),
+    );
 
     if (filter === "awaiting") {
       return filtered.filter(
@@ -141,7 +150,7 @@ export default function OwnerActiveReservationsPage() {
       );
     }
     return filtered;
-  }, [filteredCourts, filter, placeId, reservations]);
+  }, [filter, reservations]);
 
   const handleConfirm = (reservation: Reservation) => {
     setSelectedReservation(reservation);
@@ -248,6 +257,21 @@ export default function OwnerActiveReservationsPage() {
             { label: "Reservations", href: appRoutes.owner.reservations },
             { label: "Active" },
           ]}
+          actions={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isRefreshing || isLoading || isFetching}
+            >
+              <RefreshCw
+                className={`h-4 w-4 mr-2 ${
+                  isRefreshing || isFetching ? "animate-spin" : ""
+                }`}
+              />
+              Refresh
+            </Button>
+          }
         />
 
         <Card>

@@ -236,7 +236,8 @@ export default function PlaceBookingPage() {
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-accent" />
                 <span>
-                  Your request is held while the owner confirms availability.
+                  After you confirm, your request is held while the owner
+                  reviews availability.
                 </span>
               </div>
               <div className="flex items-center gap-2">

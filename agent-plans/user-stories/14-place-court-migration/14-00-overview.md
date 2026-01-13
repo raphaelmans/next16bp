@@ -1,4 +1,4 @@
-# Place & Court Units Migration - User Stories
+# 14-place-court-migration - User Stories
 
 ## Overview
 
@@ -42,11 +42,15 @@ It includes both:
 | US-14-09 | Owner Publishes 60-Minute Slots With Prices | Active | - |
 | US-14-10 | Platform Migrates Existing Court Listings Into Place/Court Model | Active | - |
 | US-14-11 | Owner Filters Slots/Reservations By Place And Court | Active | - |
+| US-14-12 | Owner Navigates Court Actions Without Unintended Redirects | Active | - |
+| US-14-13 | Owner Is Guided To Configure Hours And Pricing Before Publishing Slots | Active | - |
+| US-14-14 | Owner Uses Court Setup Wizard | Active | - |
+| US-14-15 | Owner Copies Hours And Pricing From Another Court | Active | - |
 
 ---
 
 ## Summary
 
-- Total: 11
-- Active: 11
+- Total: 15
+- Active: 15
 - Superseded: 0

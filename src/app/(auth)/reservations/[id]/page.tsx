@@ -1,10 +1,11 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Loader2, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { BookingDetailsCard } from "@/features/reservation/components/booking-details-card";
@@ -13,6 +14,10 @@ import { ReservationActionsCard } from "@/features/reservation/components/reserv
 import { ReservationExpired } from "@/features/reservation/components/reservation-expired";
 import { StatusBanner } from "@/features/reservation/components/status-banner";
 import { Container } from "@/shared/components/layout";
+import type {
+  ReservationEventRecord,
+  ReservationRecord,
+} from "@/shared/infra/db/schema";
 import { appRoutes } from "@/shared/lib/app-routes";
 import {
   formatCurrency,
@@ -29,15 +34,44 @@ interface ReservableDetail {
   cancellationCutoffMinutes?: number | null;
 }
 
+interface ReservationEvent {
+  id: string;
+  fromStatus: string | null;
+  toStatus: string;
+  triggeredByRole: "PLAYER" | "OWNER" | "SYSTEM";
+  notes: string | null;
+  createdAt: Date | string;
+}
+
 export default function ReservationDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const queryClient = useQueryClient();
   const trpc = useTRPC();
 
-  const { data: reservation, isLoading: isLoadingReservation } = useQuery({
+  const {
+    data: reservationData,
+    isLoading: isLoadingReservation,
+    isFetching: isFetchingReservation,
+  } = useQuery({
     ...trpc.reservation.getById.queryOptions({ reservationId: id }),
   });
+
+  const parsedReservationData = reservationData as
+    | { reservation: ReservationRecord; events: ReservationEventRecord[] }
+    | ReservationRecord
+    | undefined;
+  const reservation = parsedReservationData
+    ? "reservation" in parsedReservationData
+      ? parsedReservationData.reservation
+      : parsedReservationData
+    : undefined;
+  const events: ReservationEvent[] =
+    parsedReservationData && "events" in parsedReservationData
+      ? parsedReservationData.events
+      : [];
 
   const { data: timeSlot, isLoading: isLoadingSlot } = useQuery({
     ...trpc.timeSlot.getById.queryOptions({
@@ -68,6 +102,55 @@ export default function ReservationDetailPage() {
       enabled: !!placeData?.place.organizationId,
     },
   );
+
+  const handleRefresh = async () => {
+    if (!id) return;
+    setIsRefreshing(true);
+    try {
+      const requests = [
+        queryClient.invalidateQueries(
+          trpc.reservation.getById.queryFilter({ reservationId: id }),
+        ),
+      ];
+      if (reservation?.timeSlotId) {
+        requests.push(
+          queryClient.invalidateQueries(
+            trpc.timeSlot.getById.queryFilter({
+              slotId: reservation.timeSlotId,
+            }),
+          ),
+        );
+      }
+      if (timeSlot?.courtId) {
+        requests.push(
+          queryClient.invalidateQueries(
+            trpc.court.getById.queryFilter({ courtId: timeSlot.courtId }),
+          ),
+        );
+      }
+      if (courtData?.court.placeId) {
+        requests.push(
+          queryClient.invalidateQueries(
+            trpc.place.getById.queryFilter({
+              placeId: courtData.court.placeId,
+            }),
+          ),
+        );
+      }
+      if (placeData?.place.organizationId) {
+        requests.push(
+          queryClient.invalidateQueries(
+            trpc.organization.get.queryFilter({
+              id: placeData.place.organizationId,
+            }),
+          ),
+        );
+      }
+      await Promise.all(requests);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const isLoading =
     isLoadingReservation ||
@@ -176,6 +259,24 @@ export default function ReservationDetailPage() {
         transformedTimeSlot.currency,
       );
 
+  const activityLabels: Record<string, string> = {
+    CREATED: "Reservation requested",
+    AWAITING_PAYMENT: "Owner accepted (awaiting payment)",
+    PAYMENT_MARKED_BY_USER: "Payment marked",
+    CONFIRMED: "Confirmed",
+    CANCELLED: "Cancelled",
+    EXPIRED: "Expired",
+  };
+
+  const activityNotes: Record<string, string> = {
+    CREATED: "Owner review in progress.",
+    AWAITING_PAYMENT: "Complete payment before the deadline.",
+    PAYMENT_MARKED_BY_USER: "Awaiting owner confirmation.",
+  };
+
+  const formatEventTimestamp = (timestamp: Date | string) =>
+    `${formatDateShort(timestamp)} · ${formatTime(timestamp)}`;
+
   if (reservation.status === "EXPIRED") {
     return (
       <Container className="py-6">
@@ -199,12 +300,27 @@ export default function ReservationDetailPage() {
           { label: "Details" },
         ]}
         backHref={appRoutes.reservations.base}
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isRefreshing || isFetchingReservation}
+          >
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${
+                isRefreshing || isFetchingReservation ? "animate-spin" : ""
+              }`}
+            />
+            Refresh
+          </Button>
+        }
       />
 
       <StatusBanner
         status={reservation.status}
         reservationId={reservation.id}
-        expiresAt={reservation.expiresAt ?? undefined}
+        expiresAt={reservation.expiresAt?.toISOString() ?? undefined}
         cancellationReason={reservation.cancellationReason ?? undefined}
       />
 
@@ -228,48 +344,55 @@ export default function ReservationDetailPage() {
               <CardTitle>Activity</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex gap-3">
-                  <div className="flex flex-col items-center">
-                    <div className="h-2 w-2 rounded-full bg-primary" />
-                    <div className="w-px flex-1 bg-border" />
-                  </div>
-                  <div className="pb-4">
-                    <p className="font-medium">Reservation Created</p>
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(reservation.createdAt).toLocaleString()}
-                    </p>
-                  </div>
+              {events.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  No activity yet.
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {events.map((event, index) => {
+                    const isLast = index === events.length - 1;
+                    const label =
+                      activityLabels[event.toStatus] ??
+                      `Status updated to ${event.toStatus}`;
+                    const note = event.notes ?? activityNotes[event.toStatus];
+                    const dotClassName =
+                      event.toStatus === "CONFIRMED"
+                        ? "bg-success"
+                        : event.toStatus === "CANCELLED" ||
+                            event.toStatus === "EXPIRED"
+                          ? "bg-destructive"
+                          : "bg-primary";
+
+                    return (
+                      <div key={event.id} className="flex gap-3">
+                        <div className="flex flex-col items-center">
+                          <div
+                            className={`h-2 w-2 rounded-full ${dotClassName}`}
+                          />
+                          {!isLast && <div className="w-px flex-1 bg-border" />}
+                        </div>
+                        <div className={isLast ? "" : "pb-4"}>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-medium">{label}</p>
+                            <span className="text-xs uppercase text-muted-foreground">
+                              {event.triggeredByRole}
+                            </span>
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            {formatEventTimestamp(event.createdAt)}
+                          </p>
+                          {note && (
+                            <p className="text-sm text-muted-foreground">
+                              {note}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-                {reservation.status === "PAYMENT_MARKED_BY_USER" && (
-                  <div className="flex gap-3">
-                    <div className="flex flex-col items-center">
-                      <div className="h-2 w-2 rounded-full bg-primary" />
-                      <div className="w-px flex-1 bg-border" />
-                    </div>
-                    <div className="pb-4">
-                      <p className="font-medium">Payment Marked</p>
-                      <p className="text-sm text-muted-foreground">
-                        Awaiting owner confirmation
-                      </p>
-                    </div>
-                  </div>
-                )}
-                {reservation.status === "CONFIRMED" &&
-                  reservation.confirmedAt && (
-                    <div className="flex gap-3">
-                      <div className="flex flex-col items-center">
-                        <div className="h-2 w-2 rounded-full bg-success" />
-                      </div>
-                      <div>
-                        <p className="font-medium">Confirmed</p>
-                        <p className="text-sm text-muted-foreground">
-                          {new Date(reservation.confirmedAt).toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-              </div>
+              )}
             </CardContent>
           </Card>
         </div>

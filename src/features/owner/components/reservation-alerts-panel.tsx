@@ -54,11 +54,6 @@ export function ReservationAlertsPanel({
   const { courtId, setCourtId } = useOwnerCourtFilter();
   const effectiveOrganizationId = organizationId ?? organization?.id ?? null;
 
-  const filteredCourts = React.useMemo(() => {
-    if (!placeId) return courts;
-    return courts.filter((court) => court.placeId === placeId);
-  }, [courts, placeId]);
-
   const reservationsActiveHref = React.useMemo(() => {
     const params = new URLSearchParams();
     if (placeId) {
@@ -73,27 +68,22 @@ export function ReservationAlertsPanel({
       : appRoutes.owner.reservationsActive;
   }, [courtId, placeId]);
 
-  const alertsQuery = useReservationAlerts(
-    effectiveOrganizationId,
-    courtId || undefined,
-  );
+  const alertsQuery = useReservationAlerts(effectiveOrganizationId, {
+    placeId: placeId || undefined,
+    courtId: courtId || undefined,
+  });
   const acceptMutation = useAcceptReservation();
   const confirmMutation = useConfirmReservation();
   const rejectMutation = useRejectReservation();
 
   const activeReservations = React.useMemo(() => {
-    const courtIds = new Set(filteredCourts.map((court) => court.id));
-    return (alertsQuery.data ?? [])
-      .filter((reservation) =>
-        placeId ? courtIds.has(reservation.courtId) : true,
-      )
-      .filter(
-        (reservation) =>
-          reservation.reservationStatus === "CREATED" ||
-          reservation.reservationStatus === "AWAITING_PAYMENT" ||
-          reservation.reservationStatus === "PAYMENT_MARKED_BY_USER",
-      );
-  }, [alertsQuery.data, filteredCourts, placeId]);
+    return (alertsQuery.data ?? []).filter(
+      (reservation) =>
+        reservation.reservationStatus === "CREATED" ||
+        reservation.reservationStatus === "AWAITING_PAYMENT" ||
+        reservation.reservationStatus === "PAYMENT_MARKED_BY_USER",
+    );
+  }, [alertsQuery.data]);
 
   const selectedReservation = React.useMemo(
     () =>
@@ -281,6 +271,21 @@ export function ReservationAlertsPanel({
               {activeReservations.map((reservation) => {
                 const isAwaiting =
                   reservation.reservationStatus === "AWAITING_PAYMENT";
+                const stageLabel =
+                  reservation.reservationStatus === "CREATED"
+                    ? "Needs acceptance"
+                    : reservation.reservationStatus === "AWAITING_PAYMENT"
+                      ? "Awaiting payment"
+                      : "Payment marked";
+                const confirmLabel =
+                  reservation.reservationStatus === "CREATED"
+                    ? "Accept"
+                    : "Confirm";
+                const stageClassName = isAwaiting
+                  ? "bg-warning/10 text-warning border border-warning/20"
+                  : reservation.reservationStatus === "CREATED"
+                    ? "bg-amber-50 text-amber-700 border border-amber-200"
+                    : "bg-primary/10 text-primary border border-primary/20";
                 const expiresAt = reservation.expiresAt
                   ? new Date(reservation.expiresAt)
                   : null;
@@ -313,15 +318,8 @@ export function ReservationAlertsPanel({
                           {reservation.endTime}
                         </p>
                       </div>
-                      <Badge
-                        className={cn(
-                          "text-xs",
-                          isAwaiting
-                            ? "bg-warning/10 text-warning border border-warning/20"
-                            : "bg-primary/10 text-primary border border-primary/20",
-                        )}
-                      >
-                        {isAwaiting ? "Awaiting payment" : "Payment marked"}
+                      <Badge className={cn("text-xs", stageClassName)}>
+                        {stageLabel}
                       </Badge>
                     </div>
 
@@ -366,7 +364,7 @@ export function ReservationAlertsPanel({
                             className="text-primary hover:text-primary hover:bg-primary/10 font-heading"
                             onClick={() => handleConfirm(reservation.id)}
                           >
-                            Confirm
+                            {confirmLabel}
                           </Button>
                           <Button
                             variant="outline"

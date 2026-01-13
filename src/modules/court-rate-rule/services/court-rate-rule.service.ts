@@ -1,5 +1,6 @@
 import {
   CourtNotFoundError,
+  CourtOrganizationMismatchError,
   NotCourtOwnerError,
 } from "@/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
@@ -18,6 +19,11 @@ export interface ICourtRateRuleService {
   setRules(
     userId: string,
     data: SetCourtRateRulesDTO,
+  ): Promise<CourtRateRuleRecord[]>;
+  copyFromCourt(
+    userId: string,
+    sourceCourtId: string,
+    targetCourtId: string,
   ): Promise<CourtRateRuleRecord[]>;
 }
 
@@ -66,6 +72,84 @@ export class CourtRateRuleService implements ICourtRateRuleService {
           ruleCount: created.length,
         },
         "Court rate rules updated",
+      );
+
+      return created;
+    });
+  }
+
+  async copyFromCourt(
+    userId: string,
+    sourceCourtId: string,
+    targetCourtId: string,
+  ): Promise<CourtRateRuleRecord[]> {
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+
+      const sourceCourt = await this.courtRepository.findById(
+        sourceCourtId,
+        ctx,
+      );
+      if (!sourceCourt) {
+        throw new CourtNotFoundError(sourceCourtId);
+      }
+
+      const targetCourt = await this.courtRepository.findById(
+        targetCourtId,
+        ctx,
+      );
+      if (!targetCourt) {
+        throw new CourtNotFoundError(targetCourtId);
+      }
+
+      await this.verifyCourtOwnership(userId, sourceCourtId, ctx);
+      await this.verifyCourtOwnership(userId, targetCourtId, ctx);
+
+      const sourcePlace = await this.placeRepository.findById(
+        sourceCourt.placeId,
+        ctx,
+      );
+      const targetPlace = await this.placeRepository.findById(
+        targetCourt.placeId,
+        ctx,
+      );
+
+      if (
+        !sourcePlace?.organizationId ||
+        !targetPlace?.organizationId ||
+        sourcePlace.organizationId !== targetPlace.organizationId
+      ) {
+        throw new CourtOrganizationMismatchError();
+      }
+
+      const sourceRules = await this.courtRateRuleRepository.findByCourtId(
+        sourceCourtId,
+        ctx,
+      );
+
+      await this.courtRateRuleRepository.deleteByCourtId(targetCourtId, ctx);
+
+      const created = await this.courtRateRuleRepository.createMany(
+        sourceRules.map((rule) => ({
+          courtId: targetCourtId,
+          dayOfWeek: rule.dayOfWeek,
+          startMinute: rule.startMinute,
+          endMinute: rule.endMinute,
+          currency: rule.currency,
+          hourlyRateCents: rule.hourlyRateCents,
+        })),
+        ctx,
+      );
+
+      logger.info(
+        {
+          event: "court_rate_rule.copied",
+          userId,
+          sourceCourtId,
+          targetCourtId,
+          ruleCount: created.length,
+        },
+        "Court rate rules copied",
       );
 
       return created;

@@ -85,6 +85,8 @@ Step indicator required.
 - name (text)
 - address (text)
 - city (select)
+- latitude (number, optional)
+- longitude (number, optional)
 - timeZone (select, default Asia/Manila)
 
 ### Court

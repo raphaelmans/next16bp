@@ -22,5 +22,11 @@ export const GetCourtRateRulesSchema = z.object({
   courtId: z.string().uuid(),
 });
 
+export const CopyCourtRateRulesSchema = z.object({
+  sourceCourtId: z.string().uuid(),
+  targetCourtId: z.string().uuid(),
+});
+
 export type SetCourtRateRulesDTO = z.infer<typeof SetCourtRateRulesSchema>;
 export type GetCourtRateRulesDTO = z.infer<typeof GetCourtRateRulesSchema>;
+export type CopyCourtRateRulesDTO = z.infer<typeof CopyCourtRateRulesSchema>;

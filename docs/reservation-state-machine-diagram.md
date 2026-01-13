@@ -1,36 +1,39 @@
 ```mermaid
 stateDiagram-v2
   direction LR
-  state "CREATED\n(enum only, unused)" as CREATED
+  [*] --> CREATED: player requests booking
 
-  [*] --> CONFIRMED: createFreeReservation
-  [*] --> AWAITING_PAYMENT: createPaidReservation
+  CREATED --> CONFIRMED: owner accepts (free)
+  CREATED --> AWAITING_PAYMENT: owner accepts (paid)
+  CREATED --> CANCELLED: owner reject OR player cancel
+  CREATED --> EXPIRED: cron expiresAt < now
 
-  AWAITING_PAYMENT --> PAYMENT_MARKED_BY_USER: markPayment (requiresOwnerConfirmation)
-  AWAITING_PAYMENT --> CONFIRMED: markPayment (auto-confirm)
-  PAYMENT_MARKED_BY_USER --> CONFIRMED: owner confirm
-
-  AWAITING_PAYMENT --> CANCELLED: owner reject OR player cancel (before cutoff)
-  PAYMENT_MARKED_BY_USER --> CANCELLED: owner reject OR player cancel (before cutoff)
-  CONFIRMED --> CANCELLED: player cancel (before cutoff)
-
+  AWAITING_PAYMENT --> PAYMENT_MARKED_BY_USER: markPayment
+  AWAITING_PAYMENT --> CANCELLED: owner reject OR player cancel
   AWAITING_PAYMENT --> EXPIRED: cron expiresAt < now
+
+  PAYMENT_MARKED_BY_USER --> CONFIRMED: owner confirm
+  PAYMENT_MARKED_BY_USER --> CANCELLED: owner reject OR player cancel
   PAYMENT_MARKED_BY_USER --> EXPIRED: cron expiresAt < now
+
+  note right of CREATED
+    expiresAt = now + ownerReviewMinutes
+    slot -> HELD
+  end note
 
   note right of AWAITING_PAYMENT
     expiresAt = now + paymentHoldMinutes
-    slot -> HELD
     markPayment allowed only before expiresAt
   end note
 
   note right of PAYMENT_MARKED_BY_USER
-    expiresAt = now + ownerReviewMinutes
+    expiresAt stays unchanged
     owner confirmation required (paid only)
   end note
 
   note right of CONFIRMED
-    free bookings confirm immediately
-    paid bookings auto-confirm when owner confirmation is off
+    free bookings confirm after owner accept
+    paid bookings confirm after owner payment confirm
     slot -> BOOKED
   end note
 
@@ -50,16 +53,11 @@ stateDiagram-v2
   direction LR
   [*] --> AVAILABLE
 
-  AVAILABLE --> HELD: createPaidReservation
-  AVAILABLE --> BOOKED: createFreeReservation
+  AVAILABLE --> HELD: reservation request created (CREATED)
 
-  HELD --> BOOKED: owner confirm
-  HELD --> BOOKED: markPayment (auto-confirm)
-  HELD --> AVAILABLE: owner reject
-  HELD --> AVAILABLE: player cancel
+  HELD --> BOOKED: owner accepts free OR owner confirms paid
+  HELD --> AVAILABLE: owner reject OR player cancel
   HELD --> AVAILABLE: cron expire
-
-  BOOKED --> AVAILABLE: player cancel (before cutoff)
 
   AVAILABLE --> BLOCKED: owner blocks slot
   BLOCKED --> AVAILABLE: owner unblocks slot

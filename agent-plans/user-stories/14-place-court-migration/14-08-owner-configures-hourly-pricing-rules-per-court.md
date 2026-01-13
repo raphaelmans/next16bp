@@ -26,6 +26,12 @@ As an **organization owner**, I want to **set hourly pricing by day-of-week and 
 - When I save the configuration
 - Then the system stores an hourly rate and currency
 
+### Zero-Rate Windows Represent Free
+
+- Given I want to offer free slots for a time window
+- When I set the hourly rate to 0
+- Then that window is treated as free pricing for slot publishing and booking
+
 ### Pricing Supports Overnight
 
 - Given I want a pricing rule that applies overnight
@@ -39,7 +45,7 @@ As an **organization owner**, I want to **set hourly pricing by day-of-week and 
 | Scenario | Behavior |
 |----------|----------|
 | Pricing windows overlap | Owner is prevented from saving overlaps (or overlaps require an explicit priority) |
-| Pricing does not cover all open hours | Slots that fall outside coverage are not publishable as paid slots (documented behavior) |
+| Pricing does not cover all open hours | Slots that fall outside coverage are not publishable (documented behavior) |
 
 ---
 

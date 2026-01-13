@@ -487,6 +487,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
       filters.organizationId,
       {
         reservationId: filters.reservationId,
+        placeId: filters.placeId,
         courtId: filters.courtId,
         status: filters.status,
         limit: filters.limit,

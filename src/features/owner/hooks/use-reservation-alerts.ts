@@ -4,10 +4,14 @@ import { useOwnerReservations } from "./use-owner-reservations";
 
 export function useReservationAlerts(
   organizationId: string | null,
-  courtId?: string,
+  options: {
+    placeId?: string;
+    courtId?: string;
+  } = {},
 ) {
   return useOwnerReservations(organizationId, {
-    courtId,
+    placeId: options.placeId,
+    courtId: options.courtId,
     status: "all",
     refetchIntervalMs: 15000,
   });

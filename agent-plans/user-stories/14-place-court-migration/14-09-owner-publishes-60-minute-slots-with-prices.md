@@ -26,11 +26,11 @@ As an **organization owner**, I want to **publish 60-minute availability slots f
 - When a player views it
 - Then the slot displays a price and currency (or clearly indicates free)
 
-### Slot Prices Can Be Overridden
+### Slot Prices Derive From Court Pricing Rules
 
-- Given a court has hourly pricing rules
-- When I set a specific slot price override
-- Then the overridden price is used for that slot’s display and booking
+- Given a court has configured hourly pricing rules
+- When I publish slots without specifying per-slot prices
+- Then the system derives each slot’s price from the configured pricing rules
 
 ---
 
@@ -39,7 +39,8 @@ As an **organization owner**, I want to **publish 60-minute availability slots f
 | Scenario | Behavior |
 |----------|----------|
 | Owner creates overlapping slots | Creation is rejected with a clear error |
-| Owner creates slot outside operating hours | Creation is rejected (or flagged) with a clear message |
+| Pricing rules do not cover the intended slot time | Slot publishing is prevented (or clearly blocked) with guidance to update pricing rules |
+| Court hours do not cover the intended slot time | Slot publishing is prevented (or clearly blocked) with guidance to update court hours |
 
 ---
 

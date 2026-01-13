@@ -23,10 +23,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import type {
-  Reservation,
-  ReservationStatus,
-} from "../hooks/use-owner-reservations";
+import type { Reservation } from "../hooks/use-owner-reservations";
 import { PaymentProofCard } from "./payment-proof-card";
 
 interface ReservationsTableProps {
@@ -36,31 +33,41 @@ interface ReservationsTableProps {
   isLoading?: boolean;
 }
 
-const statusConfig: Record<
-  ReservationStatus,
+const stageConfig: Record<
+  Reservation["reservationStatus"],
   {
     label: string;
     variant: "default" | "secondary" | "destructive" | "outline";
     className?: string;
   }
 > = {
-  pending: {
-    label: "Pending",
+  CREATED: {
+    label: "Needs Acceptance",
     variant: "outline",
     className: "bg-amber-50 text-amber-700 border-amber-200",
   },
-  confirmed: {
+  AWAITING_PAYMENT: {
+    label: "Awaiting Payment",
+    variant: "outline",
+    className: "bg-warning/10 text-warning border-warning/20",
+  },
+  PAYMENT_MARKED_BY_USER: {
+    label: "Payment Marked",
+    variant: "outline",
+    className: "bg-primary/10 text-primary border-primary/20",
+  },
+  CONFIRMED: {
     label: "Confirmed",
     variant: "outline",
     className: "bg-green-50 text-green-700 border-green-200",
   },
-  cancelled: {
-    label: "Cancelled",
+  EXPIRED: {
+    label: "Expired",
     variant: "outline",
     className: "bg-red-50 text-red-700 border-red-200",
   },
-  completed: {
-    label: "Completed",
+  CANCELLED: {
+    label: "Cancelled",
     variant: "outline",
     className: "bg-slate-50 text-slate-700 border-slate-200",
   },
@@ -87,8 +94,13 @@ export function ReservationsTable({
 
   // Mobile card view
   const MobileCard = ({ reservation }: { reservation: Reservation }) => {
-    const config = statusConfig[reservation.status];
+    const config = stageConfig[reservation.reservationStatus];
     const isExpanded = expandedRow === reservation.id;
+    const canAccept = reservation.reservationStatus === "CREATED";
+    const canConfirm =
+      reservation.reservationStatus === "PAYMENT_MARKED_BY_USER";
+    const canReject = canAccept || canConfirm;
+    const confirmLabel = canAccept ? "Accept" : "Confirm";
 
     return (
       <Card className="mb-3">
@@ -160,7 +172,7 @@ export function ReservationsTable({
                 </div>
               )}
 
-              {reservation.status === "pending" && (
+              {canReject && (
                 <div className="flex gap-2 pt-2">
                   <Button
                     size="sm"
@@ -169,7 +181,7 @@ export function ReservationsTable({
                     disabled={isLoading}
                   >
                     <Check className="h-4 w-4 mr-1" />
-                    Confirm
+                    {confirmLabel}
                   </Button>
                   <Button
                     size="sm"
@@ -209,14 +221,18 @@ export function ReservationsTable({
               <TableHead>Player</TableHead>
               <TableHead>Date/Time</TableHead>
               <TableHead>Amount</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Stage</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {reservations.map((reservation) => {
-              const config = statusConfig[reservation.status];
+              const config = stageConfig[reservation.reservationStatus];
               const isExpanded = expandedRow === reservation.id;
+              const canAccept = reservation.reservationStatus === "CREATED";
+              const canConfirm =
+                reservation.reservationStatus === "PAYMENT_MARKED_BY_USER";
+              const canReject = canAccept || canConfirm;
 
               return (
                 <React.Fragment key={reservation.id}>
@@ -270,7 +286,7 @@ export function ReservationsTable({
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      {reservation.status === "pending" && (
+                      {canReject && (
                         <div className="flex justify-end gap-2">
                           <Button
                             size="sm"

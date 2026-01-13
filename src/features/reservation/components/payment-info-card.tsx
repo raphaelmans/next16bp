@@ -34,8 +34,8 @@ export function PaymentInfoCard({
         <Alert>
           <Clock className="h-4 w-4" />
           <AlertDescription>
-            Complete your payment within {expiresInMinutes} minutes to secure
-            your reservation.
+            Owner acceptance is required. Once accepted, complete payment within
+            {expiresInMinutes} minutes to secure your reservation.
           </AlertDescription>
         </Alert>
 

@@ -94,6 +94,8 @@ export const appRoutes = {
         new: (placeId: string) => `/owner/places/${placeId}/courts/new`,
         edit: (placeId: string, courtId: string) =>
           `/owner/places/${placeId}/courts/${courtId}/edit`,
+        setup: (placeId: string, courtId: string) =>
+          `/owner/places/${placeId}/courts/${courtId}/setup`,
         hours: (placeId: string, courtId: string) =>
           `/owner/places/${placeId}/courts/${courtId}/hours`,
         pricing: (placeId: string, courtId: string) =>

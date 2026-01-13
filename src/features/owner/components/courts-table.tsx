@@ -3,6 +3,7 @@
 import {
   Ban,
   CalendarDays,
+  Clipboard,
   Clock,
   ExternalLink,
   MoreHorizontal,
@@ -49,7 +50,7 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
   const router = useRouter();
 
   const handleRowClick = (courtId: string, placeId: string) => {
-    router.push(appRoutes.owner.places.courts.slots(placeId, courtId));
+    router.push(appRoutes.owner.places.courts.setup(placeId, courtId));
   };
 
   return (
@@ -112,11 +113,14 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                 <TableCell className="text-right">
                   {court.openSlots}/{court.totalSlots}
                 </TableCell>
-                <TableCell>
+                <TableCell
+                  onClick={(event) => event.stopPropagation()}
+                  onPointerDown={(event) => event.stopPropagation()}
+                >
                   <CourtActionsDropdown
                     court={court}
                     onDeactivate={onDeactivate}
-                    onContainerClick={(e) => e.stopPropagation()}
+                    onContainerClick={(event) => event.stopPropagation()}
                   />
                 </TableCell>
               </TableRow>
@@ -203,6 +207,7 @@ function CourtActionsDropdown({
           size="icon"
           className="h-8 w-8"
           onClick={onContainerClick}
+          onPointerDown={onContainerClick}
         >
           <MoreHorizontal className="h-4 w-4" />
           <span className="sr-only">Open menu</span>
@@ -211,12 +216,21 @@ function CourtActionsDropdown({
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
           <Link
+            href={appRoutes.owner.places.courts.setup(court.placeId, court.id)}
+          >
+            <Clipboard className="mr-2 h-4 w-4" />
+            Setup Wizard
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link
             href={appRoutes.owner.places.courts.edit(court.placeId, court.id)}
           >
             <Pencil className="mr-2 h-4 w-4" />
             Edit Details
           </Link>
         </DropdownMenuItem>
+
         <DropdownMenuItem asChild>
           <Link
             href={appRoutes.owner.places.courts.hours(court.placeId, court.id)}

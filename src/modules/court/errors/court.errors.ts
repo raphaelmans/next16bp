@@ -21,6 +21,14 @@ export class NotCourtOwnerError extends AuthorizationError {
   }
 }
 
+export class CourtOrganizationMismatchError extends ValidationError {
+  readonly code = "COURT_ORGANIZATION_MISMATCH";
+
+  constructor() {
+    super("Courts must belong to the same organization");
+  }
+}
+
 export class DuplicateCourtLabelError extends ConflictError {
   readonly code = "DUPLICATE_COURT_LABEL";
 

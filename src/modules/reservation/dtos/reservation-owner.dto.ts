@@ -23,6 +23,7 @@ export type RejectReservationDTO = z.infer<typeof RejectReservationSchema>;
 export const GetOrgReservationsSchema = z.object({
   organizationId: z.string().uuid(),
   reservationId: z.string().uuid().optional(),
+  placeId: z.string().uuid().optional(),
   courtId: z.string().uuid().optional(),
   status: z
     .enum([

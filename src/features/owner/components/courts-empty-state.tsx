@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Plus, Tag } from "lucide-react";
+import { MapPin, Tag } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,13 +28,6 @@ export function CourtsEmptyState() {
       <EmptyContent>
         <div className="flex flex-col items-center gap-3">
           <Button asChild>
-            <Link href={appRoutes.owner.places.new}>
-              <Plus className="mr-2 h-4 w-4" />
-              Create a Place
-            </Link>
-          </Button>
-          <span className="text-sm text-muted-foreground">- or -</span>
-          <Button variant="outline" asChild>
             <Link href={appRoutes.owner.courts.new}>
               <Tag className="mr-2 h-4 w-4" />
               Add a Court

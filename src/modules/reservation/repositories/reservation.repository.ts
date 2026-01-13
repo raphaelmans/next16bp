@@ -72,6 +72,7 @@ export interface IReservationRepository {
     organizationId: string,
     filters: {
       reservationId?: string;
+      placeId?: string;
       courtId?: string;
       status?: string;
       limit: number;
@@ -89,6 +90,15 @@ export interface IReservationRepository {
     ctx?: RequestContext,
   ): Promise<ReservationRecord>;
 }
+
+const toIsoString = (
+  value: Date | string | null | undefined,
+): string | null => {
+  if (!value) return null;
+  if (value instanceof Date) return value.toISOString();
+  if (typeof value === "string") return new Date(value).toISOString();
+  return null;
+};
 
 export class ReservationRepository implements IReservationRepository {
   constructor(private db: DbClient) {}
@@ -410,6 +420,7 @@ export class ReservationRepository implements IReservationRepository {
     organizationId: string,
     filters: {
       reservationId?: string;
+      placeId?: string;
       courtId?: string;
       status?: string;
       limit: number;
@@ -421,6 +432,10 @@ export class ReservationRepository implements IReservationRepository {
 
     // Build query with joins
     const conditions = [eq(place.organizationId, organizationId)];
+
+    if (filters.placeId) {
+      conditions.push(eq(place.id, filters.placeId));
+    }
 
     if (filters.courtId) {
       conditions.push(eq(court.id, filters.courtId));
@@ -469,11 +484,14 @@ export class ReservationRepository implements IReservationRepository {
         },
       })
       .from(reservation)
-      .innerJoin(
+      .leftJoin(
         reservationTimeSlot,
         eq(reservationTimeSlot.reservationId, reservation.id),
       )
-      .innerJoin(timeSlot, eq(timeSlot.id, reservationTimeSlot.timeSlotId))
+      .innerJoin(
+        timeSlot,
+        sql`${timeSlot.id} = coalesce(${reservationTimeSlot.timeSlotId}, ${reservation.timeSlotId})`,
+      )
       .innerJoin(court, eq(timeSlot.courtId, court.id))
       .innerJoin(place, eq(court.placeId, place.id))
       .leftJoin(paymentProof, eq(paymentProof.reservationId, reservation.id))
@@ -511,16 +529,16 @@ export class ReservationRepository implements IReservationRepository {
 
       return {
         ...r,
-        slotStartTime: r.slotStartTime?.toISOString() ?? "",
-        slotEndTime: r.slotEndTime?.toISOString() ?? "",
-        createdAt: r.createdAt?.toISOString() ?? null,
-        expiresAt: r.expiresAt?.toISOString() ?? null,
+        slotStartTime: toIsoString(r.slotStartTime) ?? "",
+        slotEndTime: toIsoString(r.slotEndTime) ?? "",
+        createdAt: toIsoString(r.createdAt),
+        expiresAt: toIsoString(r.expiresAt),
         paymentProof: hasProof
           ? {
               referenceNumber: proof?.referenceNumber ?? null,
               notes: proof?.notes ?? null,
               fileUrl: proof?.fileUrl ?? null,
-              createdAt: proof?.createdAt?.toISOString() ?? "",
+              createdAt: toIsoString(proof?.createdAt) ?? "",
             }
           : null,
       };

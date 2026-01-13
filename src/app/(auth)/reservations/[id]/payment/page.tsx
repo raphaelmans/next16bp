@@ -34,9 +34,11 @@ export default function PaymentPage() {
   const [isExpired, setIsExpired] = useState(false);
 
   // Fetch reservation details
-  const { data: reservation, isLoading } = useQuery({
+  const { data: reservationData, isLoading } = useQuery({
     ...trpc.reservation.getById.queryOptions({ reservationId }),
   });
+
+  const reservation = reservationData?.reservation;
 
   // Fetch slot details for display
   const { data: slot } = useQuery({

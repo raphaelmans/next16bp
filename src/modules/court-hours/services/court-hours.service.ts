@@ -1,5 +1,6 @@
 import {
   CourtNotFoundError,
+  CourtOrganizationMismatchError,
   NotCourtOwnerError,
 } from "@/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
@@ -18,6 +19,11 @@ export interface ICourtHoursService {
   setHours(
     userId: string,
     data: SetCourtHoursDTO,
+  ): Promise<CourtHoursWindowRecord[]>;
+  copyFromCourt(
+    userId: string,
+    sourceCourtId: string,
+    targetCourtId: string,
   ): Promise<CourtHoursWindowRecord[]>;
 }
 
@@ -64,6 +70,82 @@ export class CourtHoursService implements ICourtHoursService {
           windowCount: created.length,
         },
         "Court hours updated",
+      );
+
+      return created;
+    });
+  }
+
+  async copyFromCourt(
+    userId: string,
+    sourceCourtId: string,
+    targetCourtId: string,
+  ): Promise<CourtHoursWindowRecord[]> {
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+
+      const sourceCourt = await this.courtRepository.findById(
+        sourceCourtId,
+        ctx,
+      );
+      if (!sourceCourt) {
+        throw new CourtNotFoundError(sourceCourtId);
+      }
+
+      const targetCourt = await this.courtRepository.findById(
+        targetCourtId,
+        ctx,
+      );
+      if (!targetCourt) {
+        throw new CourtNotFoundError(targetCourtId);
+      }
+
+      await this.verifyCourtOwnership(userId, sourceCourtId, ctx);
+      await this.verifyCourtOwnership(userId, targetCourtId, ctx);
+
+      const sourcePlace = await this.placeRepository.findById(
+        sourceCourt.placeId,
+        ctx,
+      );
+      const targetPlace = await this.placeRepository.findById(
+        targetCourt.placeId,
+        ctx,
+      );
+
+      if (
+        !sourcePlace?.organizationId ||
+        !targetPlace?.organizationId ||
+        sourcePlace.organizationId !== targetPlace.organizationId
+      ) {
+        throw new CourtOrganizationMismatchError();
+      }
+
+      const sourceHours = await this.courtHoursRepository.findByCourtId(
+        sourceCourtId,
+        ctx,
+      );
+
+      await this.courtHoursRepository.deleteByCourtId(targetCourtId, ctx);
+
+      const created = await this.courtHoursRepository.createMany(
+        sourceHours.map((window) => ({
+          courtId: targetCourtId,
+          dayOfWeek: window.dayOfWeek,
+          startMinute: window.startMinute,
+          endMinute: window.endMinute,
+        })),
+        ctx,
+      );
+
+      logger.info(
+        {
+          event: "court_hours.copied",
+          userId,
+          sourceCourtId,
+          targetCourtId,
+          windowCount: created.length,
+        },
+        "Court hours copied",
       );
 
       return created;

@@ -1,10 +1,12 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
   Calendar as CalendarIcon,
   CheckCircle,
   Clock,
+  RefreshCw,
   Search,
   XCircle,
 } from "lucide-react";
@@ -49,6 +51,7 @@ import {
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { useTRPC } from "@/trpc/client";
 
 type TabValue = "pending" | "upcoming" | "past" | "cancelled";
 
@@ -114,6 +117,9 @@ function ReservationsEmptyState({ type }: { type: TabValue | "all" }) {
 export default function OwnerReservationsPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
+  const queryClient = useQueryClient();
+  const trpc = useTRPC();
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
 
   // Get organization and courts from hooks
   const {
@@ -131,11 +137,6 @@ export default function OwnerReservationsPage() {
   const [dateFrom, setDateFrom] = React.useState<Date>();
   const [dateTo, setDateTo] = React.useState<Date>();
   const [activeTab, setActiveTab] = React.useState<TabValue>("pending");
-
-  const filteredCourts = React.useMemo(() => {
-    if (!placeId) return courts;
-    return courts.filter((court) => court.placeId === placeId);
-  }, [courts, placeId]);
 
   // Dialog state
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
@@ -164,6 +165,7 @@ export default function OwnerReservationsPage() {
   const { data: reservations = [], isLoading } = useOwnerReservations(
     organization?.id ?? null,
     {
+      placeId: placeId || undefined,
       courtId: courtId || undefined,
       status: getStatusFilter(activeTab),
       search: search || undefined,
@@ -172,18 +174,31 @@ export default function OwnerReservationsPage() {
     },
   );
 
-  const filteredByPlace = React.useMemo(() => {
-    if (!placeId) return reservations;
-    const courtIds = new Set(filteredCourts.map((court) => court.id));
-    return reservations.filter((reservation) =>
-      courtIds.has(reservation.courtId),
-    );
-  }, [filteredCourts, placeId, reservations]);
+  const filteredByPlace = reservations;
 
   const { data: counts } = useReservationCounts(organization?.id ?? null);
   const acceptMutation = useAcceptReservation();
   const confirmMutation = useConfirmReservation();
   const rejectMutation = useRejectReservation();
+
+  const handleRefresh = async () => {
+    if (!organization?.id) return;
+    setIsRefreshing(true);
+    try {
+      await Promise.all([
+        queryClient.invalidateQueries(
+          trpc.reservationOwner.getForOrganization.queryFilter(),
+        ),
+        queryClient.invalidateQueries(
+          trpc.reservationOwner.getPendingCount.queryFilter({
+            organizationId: organization.id,
+          }),
+        ),
+      ]);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -339,13 +354,26 @@ export default function OwnerReservationsPage() {
     >
       <div className="space-y-6">
         {/* Page header */}
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight font-heading">
-            Reservations
-          </h1>
-          <p className="text-muted-foreground">
-            Manage bookings for your courts
-          </p>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight font-heading">
+              Reservations
+            </h1>
+            <p className="text-muted-foreground">
+              Manage bookings for your courts
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isRefreshing || isLoading}
+          >
+            <RefreshCw
+              className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`}
+            />
+            Refresh
+          </Button>
         </div>
 
         {/* Filters */}

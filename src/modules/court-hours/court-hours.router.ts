@@ -2,9 +2,14 @@ import { TRPCError } from "@trpc/server";
 import { protectedProcedure, router } from "@/shared/infra/trpc/trpc";
 import {
   CourtNotFoundError,
+  CourtOrganizationMismatchError,
   NotCourtOwnerError,
 } from "../court/errors/court.errors";
-import { GetCourtHoursSchema, SetCourtHoursSchema } from "./dtos";
+import {
+  CopyCourtHoursSchema,
+  GetCourtHoursSchema,
+  SetCourtHoursSchema,
+} from "./dtos";
 import { CourtHoursOverlapError } from "./errors/court-hours.errors";
 import { makeCourtHoursService } from "./factories/court-hours.factory";
 
@@ -30,6 +35,13 @@ function handleCourtHoursError(error: unknown): never {
       cause: error,
     });
   }
+  if (error instanceof CourtOrganizationMismatchError) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: error.message,
+      cause: error,
+    });
+  }
   throw error;
 }
 
@@ -46,6 +58,20 @@ export const courtHoursRouter = router({
       try {
         const service = makeCourtHoursService();
         return await service.setHours(ctx.userId, input);
+      } catch (error) {
+        handleCourtHoursError(error);
+      }
+    }),
+  copyFromCourt: protectedProcedure
+    .input(CopyCourtHoursSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeCourtHoursService();
+        return await service.copyFromCourt(
+          ctx.userId,
+          input.sourceCourtId,
+          input.targetCourtId,
+        );
       } catch (error) {
         handleCourtHoursError(error);
       }

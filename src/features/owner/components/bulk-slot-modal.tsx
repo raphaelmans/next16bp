@@ -2,10 +2,11 @@
 
 import { addDays, differenceInDays, format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
+import Link from "next/link";
 import * as React from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -22,13 +23,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import type { BulkSlotData } from "../hooks/use-slots";
 
@@ -36,8 +30,12 @@ interface BulkSlotModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: BulkSlotData) => void;
-  isLoading?: boolean;
-  defaultPrice?: number;
+  isLoading: boolean;
+  isPrereqsLoading: boolean;
+  hasHours: boolean;
+  hasPricingRules: boolean;
+  hoursHref?: string;
+  pricingHref?: string;
   initialDate?: Date;
 }
 
@@ -51,19 +49,18 @@ const DAYS_OF_WEEK = [
   { value: 6, label: "Sat" },
 ];
 
-const DURATION_OPTIONS = [
-  { value: 30, label: "30 minutes" },
-  { value: 60, label: "1 hour" },
-  { value: 90, label: "1.5 hours" },
-  { value: 120, label: "2 hours" },
-];
+const SLOT_DURATION_MINUTES = 60;
 
 export function BulkSlotModal({
   open,
   onOpenChange,
   onSubmit,
   isLoading,
-  defaultPrice = 0,
+  isPrereqsLoading,
+  hasHours,
+  hasPricingRules,
+  hoursHref,
+  pricingHref,
   initialDate,
 }: BulkSlotModalProps) {
   const [mode, setMode] = React.useState<"single" | "recurring">("single");
@@ -78,11 +75,8 @@ export function BulkSlotModal({
   ]);
   const [startTime, setStartTime] = React.useState("06:00");
   const [endTime, setEndTime] = React.useState("22:00");
-  const [duration, setDuration] = React.useState(60);
-  const [useDefaultPrice, setUseDefaultPrice] = React.useState(true);
-  const [customPrice, setCustomPrice] = React.useState(defaultPrice / 100);
-  const defaultPriceLabel =
-    defaultPrice > 0 ? `${(defaultPrice / 100).toFixed(0)} PHP` : "Free";
+  const duration = SLOT_DURATION_MINUTES;
+  const canCreateSlots = !isPrereqsLoading && hasHours && hasPricingRules;
 
   // Reset form when modal opens
   React.useEffect(() => {
@@ -124,6 +118,7 @@ export function BulkSlotModal({
   const preview = calculatePreview();
 
   const handleSubmit = () => {
+    if (!canCreateSlots) return;
     const data: BulkSlotData = {
       startDate,
       endDate: mode === "recurring" ? endDate : undefined,
@@ -131,8 +126,7 @@ export function BulkSlotModal({
       startTime,
       endTime,
       duration,
-      useDefaultPrice,
-      customPrice: useDefaultPrice ? undefined : customPrice * 100,
+      useDefaultPrice: true,
     };
     onSubmit(data);
   };
@@ -149,7 +143,7 @@ export function BulkSlotModal({
         <DialogHeader>
           <DialogTitle>Create Time Slots</DialogTitle>
           <DialogDescription>
-            Create one or more time slots for your court
+            Create one or more 60-minute slots for your court
           </DialogDescription>
         </DialogHeader>
 
@@ -321,57 +315,60 @@ export function BulkSlotModal({
             </div>
           </div>
 
-          {/* Duration */}
-          <div className="space-y-2">
-            <Label>Slot Duration</Label>
-            <Select
-              value={duration.toString()}
-              onValueChange={(v) => setDuration(parseInt(v, 10))}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {DURATION_OPTIONS.map((option) => (
-                  <SelectItem
-                    key={option.value}
-                    value={option.value.toString()}
-                  >
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Pricing */}
+          {/* Prerequisites */}
           <div className="space-y-3">
-            <Label>Pricing</Label>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="use-default"
-                checked={useDefaultPrice}
-                onCheckedChange={(checked) =>
-                  setUseDefaultPrice(checked === true)
-                }
-              />
-              <label
-                htmlFor="use-default"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-              >
-                Use default price ({defaultPriceLabel})
-              </label>
-            </div>
-            {!useDefaultPrice && (
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">PHP</span>
-                <Input
-                  type="number"
-                  value={customPrice}
-                  onChange={(e) => setCustomPrice(parseFloat(e.target.value))}
-                  className="w-32"
-                />
-              </div>
+            <Label>Prerequisites</Label>
+            {isPrereqsLoading ? (
+              <Alert>
+                <AlertTitle>Checking configuration</AlertTitle>
+                <AlertDescription>
+                  <p>Loading court hours and pricing rules.</p>
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <>
+                {!hasHours && (
+                  <Alert variant="destructive">
+                    <AlertTitle>Set court hours</AlertTitle>
+                    <AlertDescription>
+                      <p>Hours are required before publishing slots.</p>
+                      {hoursHref && (
+                        <div className="mt-2">
+                          <Button asChild variant="outline" size="sm">
+                            <Link href={hoursHref}>Configure hours</Link>
+                          </Button>
+                        </div>
+                      )}
+                    </AlertDescription>
+                  </Alert>
+                )}
+                {!hasPricingRules && (
+                  <Alert variant="destructive">
+                    <AlertTitle>Set pricing rules</AlertTitle>
+                    <AlertDescription>
+                      <p>Pricing rules are required to derive slot prices.</p>
+                      {pricingHref && (
+                        <div className="mt-2">
+                          <Button asChild variant="outline" size="sm">
+                            <Link href={pricingHref}>Configure pricing</Link>
+                          </Button>
+                        </div>
+                      )}
+                    </AlertDescription>
+                  </Alert>
+                )}
+                {hasHours && hasPricingRules && (
+                  <Alert>
+                    <AlertTitle>Ready to publish</AlertTitle>
+                    <AlertDescription>
+                      <p>
+                        Slot prices are derived from pricing rules. Set hourly
+                        rate to 0 for free slots.
+                      </p>
+                    </AlertDescription>
+                  </Alert>
+                )}
+              </>
             )}
           </div>
 
@@ -408,7 +405,10 @@ export function BulkSlotModal({
           >
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={isLoading}>
+          <Button
+            onClick={handleSubmit}
+            disabled={isLoading || !canCreateSlots}
+          >
             {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
             Create Slots
           </Button>

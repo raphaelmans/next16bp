@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm dlx @react-grab/opencode@latest && next dev",
+    "dev:grab": "pnpm dlx @react-grab/opencode@latest && next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "biome check",

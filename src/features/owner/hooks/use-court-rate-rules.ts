@@ -25,3 +25,17 @@ export function useSaveCourtRateRules(courtId: string) {
     },
   });
 }
+
+export function useCopyCourtRateRules(targetCourtId: string) {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    ...trpc.courtRateRule.copyFromCourt.mutationOptions(),
+    onSuccess: () => {
+      queryClient.invalidateQueries(
+        trpc.courtRateRule.get.queryFilter({ courtId: targetCourtId }),
+      );
+    },
+  });
+}

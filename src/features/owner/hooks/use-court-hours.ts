@@ -25,3 +25,17 @@ export function useSaveCourtHours(courtId: string) {
     },
   });
 }
+
+export function useCopyCourtHours(targetCourtId: string) {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    ...trpc.courtHours.copyFromCourt.mutationOptions(),
+    onSuccess: () => {
+      queryClient.invalidateQueries(
+        trpc.courtHours.get.queryFilter({ courtId: targetCourtId }),
+      );
+    },
+  });
+}

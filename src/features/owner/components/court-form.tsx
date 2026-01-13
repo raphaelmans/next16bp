@@ -21,10 +21,13 @@ interface CourtFormProps {
   sportOptions: { id: string; name: string }[];
   onSubmit: (data: CourtFormData) => void;
   onSaveDraft?: (data: Partial<CourtFormData>) => void;
+  onStateChange?: (data: Partial<CourtFormData>) => void;
   onCancel: () => void;
   isSubmitting?: boolean;
   isEditing?: boolean;
   disablePlaceSelect?: boolean;
+  primaryActionLabel?: string;
+  showCancel?: boolean;
 }
 
 export function CourtForm({
@@ -33,10 +36,13 @@ export function CourtForm({
   sportOptions,
   onSubmit,
   onSaveDraft,
+  onStateChange,
   onCancel,
   isSubmitting = false,
   isEditing = false,
   disablePlaceSelect = false,
+  primaryActionLabel,
+  showCancel = true,
 }: CourtFormProps) {
   const [placeId, setPlaceId] = useState(defaultValues?.placeId ?? "");
   const [sportId, setSportId] = useState(defaultValues?.sportId ?? "");
@@ -52,6 +58,16 @@ export function CourtForm({
     setTierLabel(defaultValues.tierLabel ?? "");
     setIsActive(defaultValues.isActive ?? true);
   }, [defaultValues]);
+
+  useEffect(() => {
+    onStateChange?.({
+      placeId,
+      sportId,
+      label,
+      tierLabel: tierLabel.trim().length > 0 ? tierLabel : null,
+      isActive,
+    });
+  }, [isActive, label, onStateChange, placeId, sportId, tierLabel]);
 
   useEffect(() => {
     if (!placeId && placeOptions.length > 0) {
@@ -200,9 +216,13 @@ export function CourtForm({
       </Card>
 
       <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
+        {showCancel ? (
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+        ) : (
+          <div />
+        )}
         <div className="flex flex-col-reverse gap-2 sm:flex-row">
           {onSaveDraft && (
             <Button
@@ -219,9 +239,8 @@ export function CourtForm({
               ? isEditing
                 ? "Saving..."
                 : "Creating..."
-              : isEditing
-                ? "Save Changes"
-                : "Create Court"}
+              : (primaryActionLabel ??
+                (isEditing ? "Save Changes" : "Create Court"))}
           </Button>
         </div>
       </div>

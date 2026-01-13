@@ -42,6 +42,7 @@ export interface Reservation {
 
 interface UseOwnerReservationsOptions {
   reservationId?: string;
+  placeId?: string;
   courtId?: string;
   status?: ReservationStatus | "all";
   search?: string;
@@ -136,12 +137,14 @@ export function useOwnerReservations(
     search,
     reservationId,
     refetchIntervalMs,
+    placeId,
   } = options;
 
   return useQuery({
     ...trpc.reservationOwner.getForOrganization.queryOptions({
       organizationId: organizationId ?? "",
       reservationId: reservationId || undefined,
+      placeId: placeId || undefined,
       courtId: courtId || undefined,
       status:
         status && status !== "all" ? mapStatusToBackend(status) : undefined,

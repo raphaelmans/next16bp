@@ -7,6 +7,7 @@ This documentation is split into multiple levels of detail so you can share the 
 - Level 1 (product narrative): `docs/reservation-state-machine-level-1-product.md`
 - Level 2 (engineering states & diagrams): `docs/reservation-state-machine-level-2-engineering.md`
 - Level 3 (automation & ops): `docs/reservation-state-machine-level-3-ops.md`
+- ASCII diagram (quick reference): `docs/reservation-state-machine-ascii.md`
 
 ## Changelog
 - `docs/reservation-state-machine-changelog.md`
