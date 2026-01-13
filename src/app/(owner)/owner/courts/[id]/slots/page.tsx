@@ -26,6 +26,7 @@ import {
 } from "@/features/owner/hooks/use-slots";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { getZonedToday } from "@/shared/lib/time-zone";
 import { useTRPC } from "@/trpc/client";
 
 export default function ManageSlotsPage() {
@@ -36,7 +37,7 @@ export default function ManageSlotsPage() {
   const logoutMutation = useLogout();
   const trpc = useTRPC();
 
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [selectedDate, setSelectedDate] = React.useState<Date>(getZonedToday());
   const [bulkModalOpen, setBulkModalOpen] = React.useState(false);
   const [actionLoadingId, setActionLoadingId] = React.useState<string>();
   const [rejectModalOpen, setRejectModalOpen] = React.useState(false);
@@ -57,14 +58,28 @@ export default function ManageSlotsPage() {
     ...trpc.organization.my.queryOptions(),
   });
 
+  const placeId = courtData?.court.placeId;
+  const { data: placeData } = useQuery({
+    ...trpc.place.getById.queryOptions({ placeId: placeId ?? "" }),
+    enabled: !!placeId,
+  });
+  const placeTimeZone = placeData?.place.timeZone;
+  const [isDateInitialized, setIsDateInitialized] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!placeTimeZone || isDateInitialized) return;
+    setSelectedDate(getZonedToday(placeTimeZone));
+    setIsDateInitialized(true);
+  }, [placeTimeZone, isDateInitialized]);
+
   const { data: slots = [], isLoading: slotsLoading } = useSlots({
     courtId,
     date: selectedDate,
+    timeZone: placeTimeZone,
   });
   const { data: hours = [], isLoading: hoursLoading } = useCourtHours(courtId);
   const { data: pricingRules = [], isLoading: pricingLoading } =
     useCourtRateRules(courtId);
-  const placeId = courtData?.court.placeId;
   const isPrereqsLoading = hoursLoading || pricingLoading;
   const hasHours = !hoursLoading && hours.length > 0;
   const hasPricingRules = !pricingLoading && pricingRules.length > 0;
@@ -393,6 +408,7 @@ export default function ManageSlotsPage() {
               selectedDate={selectedDate}
               onDateChange={setSelectedDate}
               datesWithSlots={datesWithSlots}
+              timeZone={placeTimeZone}
             />
           </div>
 
@@ -428,6 +444,7 @@ export default function ManageSlotsPage() {
         hoursHref={hoursHref}
         pricingHref={pricingHref}
         initialDate={selectedDate}
+        timeZone={placeTimeZone}
       />
 
       <RejectModal

@@ -8,7 +8,9 @@ import { appRoutes } from "@/shared/lib/app-routes";
 import {
   formatCurrency,
   formatDateShort,
+  formatDateShortInTimeZone,
   formatTimeRange,
+  formatTimeRangeInTimeZone,
 } from "@/shared/lib/format";
 
 interface OrderSummaryProps {
@@ -18,6 +20,7 @@ interface OrderSummaryProps {
     priceCents: number;
     currency: string;
   };
+  timeZone?: string;
   termsAccepted: boolean;
   onTermsChange: (accepted: boolean) => void;
   onConfirm: () => void;
@@ -30,6 +33,7 @@ interface OrderSummaryProps {
 
 export function OrderSummary({
   timeSlot,
+  timeZone,
   termsAccepted,
   onTermsChange,
   onConfirm,
@@ -39,6 +43,12 @@ export function OrderSummary({
   disabled = false,
   className,
 }: OrderSummaryProps) {
+  const dateLabel = timeZone
+    ? formatDateShortInTimeZone(timeSlot.startTime, timeZone)
+    : formatDateShort(timeSlot.startTime);
+  const timeLabel = timeZone
+    ? formatTimeRangeInTimeZone(timeSlot.startTime, timeSlot.endTime, timeZone)
+    : formatTimeRange(timeSlot.startTime, timeSlot.endTime);
   return (
     <Card className={className}>
       <CardHeader>
@@ -61,11 +71,11 @@ export function OrderSummary({
         <div className="space-y-2 pb-4 border-b">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Date</span>
-            <span>{formatDateShort(timeSlot.startTime)}</span>
+            <span>{dateLabel}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Time</span>
-            <span>{formatTimeRange(timeSlot.startTime, timeSlot.endTime)}</span>
+            <span>{timeLabel}</span>
           </div>
         </div>
 

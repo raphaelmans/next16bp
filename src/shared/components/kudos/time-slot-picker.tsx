@@ -1,7 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { formatCurrency, formatTime } from "@/shared/lib/format";
+import {
+  formatCurrency,
+  formatTime,
+  formatTimeInTimeZone,
+} from "@/shared/lib/format";
 
 export type TimeSlotStatus = "available" | "booked" | "selected" | "held";
 
@@ -19,6 +23,7 @@ interface TimeSlotPickerProps {
   selectedId?: string;
   onSelect?: (slot: TimeSlot) => void;
   showPrice?: boolean;
+  timeZone?: string;
   className?: string;
 }
 
@@ -27,6 +32,7 @@ export function TimeSlotPicker({
   selectedId,
   onSelect,
   showPrice = false,
+  timeZone,
   className,
 }: TimeSlotPickerProps) {
   return (
@@ -43,6 +49,7 @@ export function TimeSlotPicker({
           isSelected={slot.id === selectedId}
           onClick={() => onSelect?.(slot)}
           showPrice={showPrice}
+          timeZone={timeZone}
         />
       ))}
     </div>
@@ -54,6 +61,7 @@ interface TimeSlotButtonProps {
   isSelected: boolean;
   onClick: () => void;
   showPrice?: boolean;
+  timeZone?: string;
 }
 
 function TimeSlotButton({
@@ -61,11 +69,18 @@ function TimeSlotButton({
   isSelected,
   onClick,
   showPrice,
+  timeZone,
 }: TimeSlotButtonProps) {
   const isAvailable = slot.status === "available";
   const isBooked = slot.status === "booked";
   const isHeld = slot.status === "held";
   const isDisabled = isBooked || isHeld;
+  const startLabel = timeZone
+    ? formatTimeInTimeZone(slot.startTime, timeZone)
+    : formatTime(slot.startTime);
+  const endLabel = timeZone
+    ? formatTimeInTimeZone(slot.endTime, timeZone)
+    : formatTime(slot.endTime);
 
   return (
     <button
@@ -90,7 +105,7 @@ function TimeSlotButton({
       )}
     >
       <span className="font-heading">
-        {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
+        {startLabel} - {endLabel}
       </span>
       {showPrice && slot.priceCents !== undefined && (
         <span className="text-xs mt-0.5 opacity-80">

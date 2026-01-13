@@ -1,4 +1,4 @@
-import { differenceInMinutes, getDay } from "date-fns";
+import { differenceInMinutes } from "date-fns";
 import {
   CourtNotFoundError,
   NotCourtOwnerError,
@@ -11,6 +11,7 @@ import type { TimeSlotRecord } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
+import { getZonedWeekdayMinuteOfDay } from "@/shared/lib/time-zone";
 import type {
   CreateBulkTimeSlotsDTO,
   CreateTimeSlotDTO,
@@ -127,8 +128,15 @@ export class TimeSlotService implements ITimeSlotService {
       return { priceCents: priceCents ?? null, currency: currency ?? null };
     }
 
-    const dayOfWeek = getDay(startTime);
-    const minuteOfDay = startTime.getHours() * 60 + startTime.getMinutes();
+    const court = await this.courtRepository.findById(courtId, ctx);
+    if (!court) {
+      throw new CourtNotFoundError(courtId);
+    }
+    const place = await this.placeRepository.findById(court.placeId, ctx);
+    const { dayOfWeek, minuteOfDay } = getZonedWeekdayMinuteOfDay(
+      startTime,
+      place?.timeZone,
+    );
     const rule = await this.courtRateRuleRepository.findMatchingRule(
       courtId,
       dayOfWeek,

@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import type { TimeSlot, TimeSlotStatus } from "@/shared/components/kudos";
+import { getZonedDayRangeForInstant } from "@/shared/lib/time-zone";
 import { useTRPC } from "@/trpc/client";
 
 export interface CourtDetail {
@@ -52,6 +53,7 @@ export function useCourtDetail({ courtId }: UseCourtDetailOptions) {
 interface UseAvailableSlotsOptions {
   courtId: string;
   date?: Date;
+  timeZone?: string;
 }
 
 function mapSlotStatus(backendStatus: string): TimeSlotStatus {
@@ -64,29 +66,18 @@ function mapSlotStatus(backendStatus: string): TimeSlotStatus {
   return statusMap[backendStatus] ?? "booked";
 }
 
-export function useAvailableSlots({ courtId, date }: UseAvailableSlotsOptions) {
+export function useAvailableSlots({
+  courtId,
+  date,
+  timeZone,
+}: UseAvailableSlotsOptions) {
   const trpc = useTRPC();
 
-  const startDate = date
-    ? new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        0,
-        0,
-        0,
-      ).toISOString()
+  const dayRange = date
+    ? getZonedDayRangeForInstant(date, timeZone)
     : undefined;
-  const endDate = date
-    ? new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        23,
-        59,
-        59,
-      ).toISOString()
-    : undefined;
+  const startDate = dayRange?.start.toISOString();
+  const endDate = dayRange?.end.toISOString();
 
   const query = useQuery(
     trpc.timeSlot.getAvailable.queryOptions(

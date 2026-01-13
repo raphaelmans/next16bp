@@ -1,4 +1,4 @@
-import { addMinutes, endOfDay, startOfDay } from "date-fns";
+import { addMinutes } from "date-fns";
 import { CourtNotFoundError } from "@/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
@@ -20,6 +20,7 @@ import {
   findConsecutiveSlots,
   summarizeSlotPricing,
 } from "@/shared/lib/time-slot-availability";
+import { getZonedDayRangeForInstant } from "@/shared/lib/time-zone";
 import type {
   CancelReservationDTO,
   CreateReservationForAnyCourtDTO,
@@ -521,8 +522,15 @@ export class ReservationService implements IReservationService {
     startTime: Date,
     durationMinutes: number,
   ): Promise<TimeSlotRecord[] | null> {
-    const start = startOfDay(startTime);
-    const end = endOfDay(startTime);
+    const court = await this.courtRepository.findById(courtId);
+    if (!court) {
+      throw new CourtNotFoundError(courtId);
+    }
+    const place = await this.placeRepository.findById(court.placeId);
+    const { start, end } = getZonedDayRangeForInstant(
+      startTime,
+      place?.timeZone,
+    );
     const slots = await this.timeSlotRepository.findAvailable(
       courtId,
       start,

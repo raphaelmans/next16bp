@@ -7,7 +7,6 @@ import {
   format,
   isSameDay,
   isSameMonth,
-  isToday,
   startOfMonth,
   subMonths,
 } from "date-fns";
@@ -16,6 +15,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
+import { getZonedToday } from "@/shared/lib/time-zone";
 
 type ViewMode = "day" | "week" | "month";
 
@@ -25,6 +25,7 @@ interface CalendarNavigationProps {
   viewMode?: ViewMode;
   onViewModeChange?: (mode: ViewMode) => void;
   datesWithSlots?: Date[];
+  timeZone?: string;
   className?: string;
 }
 
@@ -34,6 +35,7 @@ export function CalendarNavigation({
   viewMode = "day",
   onViewModeChange,
   datesWithSlots = [],
+  timeZone,
   className,
 }: CalendarNavigationProps) {
   const [currentMonth, setCurrentMonth] = React.useState(
@@ -43,6 +45,7 @@ export function CalendarNavigation({
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
   const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+  const today = getZonedToday(timeZone);
 
   // Get the starting day of the week for the first day of the month
   const startDayOfWeek = monthStart.getDay();
@@ -56,7 +59,6 @@ export function CalendarNavigation({
   };
 
   const handleToday = () => {
-    const today = new Date();
     setCurrentMonth(startOfMonth(today));
     onDateChange(today);
   };
@@ -134,7 +136,7 @@ export function CalendarNavigation({
           {/* Days of the month */}
           {daysInMonth.map((day) => {
             const isSelected = isSameDay(day, selectedDate);
-            const isTodayDate = isToday(day);
+            const isTodayDate = isSameDay(day, today);
             const hasSlotIndicator = hasSlots(day);
 
             return (

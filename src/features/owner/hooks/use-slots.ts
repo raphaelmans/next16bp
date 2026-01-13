@@ -1,7 +1,12 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { endOfDay, startOfDay } from "date-fns";
+import { addMinutes } from "date-fns";
+import {
+  getZonedDate,
+  getZonedDayRangeForInstant,
+  getZonedToday,
+} from "@/shared/lib/time-zone";
 import { useTRPC, useTRPCClient } from "@/trpc/client";
 
 export type SlotStatus = "available" | "booked" | "pending" | "blocked";
@@ -31,6 +36,7 @@ export interface TimeSlot {
 interface UseSlotsOptions {
   courtId: string;
   date?: Date;
+  timeZone?: string;
 }
 
 /**
@@ -59,12 +65,13 @@ function calculateDuration(startTime: string, endTime: string): number {
 
 export const MAX_BULK_SLOTS = 100;
 
-export function useSlots({ courtId, date }: UseSlotsOptions) {
+export function useSlots({ courtId, date, timeZone }: UseSlotsOptions) {
   const trpc = useTRPC();
 
-  const selectedDate = date ?? new Date();
-  const startDate = startOfDay(selectedDate);
-  const endDate = endOfDay(selectedDate);
+  const selectedDate = date ?? getZonedToday(timeZone);
+  const dayRange = getZonedDayRangeForInstant(selectedDate, timeZone);
+  const startDate = dayRange.start;
+  const endDate = dayRange.end;
 
   return useQuery({
     ...trpc.timeSlot.getForCourt.queryOptions({
@@ -145,6 +152,7 @@ export interface BulkSlotData {
   customPrice?: number;
   currency?: string;
   hoursWindows: CourtHoursWindow[];
+  timeZone?: string;
 }
 
 type SlotPayload = {
@@ -170,10 +178,16 @@ export function generateSlotsFromCourtHours(
   const slots: SlotPayload[] = [];
   const daysWithSlots = new Set<string>();
 
-  const rangeStart = startOfDay(data.startDate);
-  const rangeEnd = startOfDay(data.endDate ?? data.startDate);
+  const rangeStart = getZonedDayRangeForInstant(
+    data.startDate,
+    data.timeZone,
+  ).start;
+  const rangeEnd = getZonedDayRangeForInstant(
+    data.endDate ?? data.startDate,
+    data.timeZone,
+  ).start;
 
-  const currentDate = new Date(rangeStart);
+  const currentDate = getZonedDate(rangeStart, data.timeZone);
   while (currentDate <= rangeEnd) {
     const dayOfWeek = currentDate.getDay();
     const isSelectedDay = data.daysOfWeek
@@ -192,9 +206,9 @@ export function generateSlotsFromCourtHours(
           minute + data.duration <= window.endMinute;
           minute += data.duration
         ) {
-          const slotStart = new Date(currentDate);
+          const slotStart = getZonedDate(currentDate, data.timeZone);
           slotStart.setHours(Math.floor(minute / 60), minute % 60, 0, 0);
-          const slotEnd = new Date(slotStart.getTime() + data.duration * 60000);
+          const slotEnd = addMinutes(slotStart, data.duration);
 
           const slot: SlotPayload = {
             startTime: slotStart.toISOString(),

@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { getZonedToday } from "@/shared/lib/time-zone";
 
 interface KudosDatePickerProps {
   value?: Date;
@@ -19,17 +20,21 @@ interface KudosDatePickerProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  timeZone?: string;
 }
 
 export function KudosDatePicker({
   value,
   onChange,
-  minDate = new Date(),
+  minDate,
   maxDate,
   placeholder = "Select date",
   className,
   disabled = false,
+  timeZone,
 }: KudosDatePickerProps) {
+  const effectiveMinDate =
+    minDate ?? (timeZone ? getZonedToday(timeZone) : new Date());
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -52,10 +57,11 @@ export function KudosDatePicker({
           selected={value}
           onSelect={onChange}
           disabled={(date) => {
-            if (minDate && date < minDate) return true;
+            if (effectiveMinDate && date < effectiveMinDate) return true;
             if (maxDate && date > maxDate) return true;
             return false;
           }}
+          timeZone={timeZone}
           initialFocus
         />
       </PopoverContent>

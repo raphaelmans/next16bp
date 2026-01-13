@@ -26,6 +26,7 @@ interface BookingCardProps {
   onDateChange?: (date: Date | undefined) => void;
   selectedSlotId?: string;
   onSlotSelect?: (slot: TimeSlot) => void;
+  timeZone?: string;
   className?: string;
 }
 
@@ -40,6 +41,7 @@ export function BookingCard({
   onDateChange,
   selectedSlotId,
   onSlotSelect,
+  timeZone,
   className,
 }: BookingCardProps) {
   const router = useRouter();
@@ -98,6 +100,7 @@ export function BookingCard({
             value={selectedDate}
             onChange={onDateChange}
             placeholder="Choose a date"
+            timeZone={timeZone}
           />
         </div>
 
@@ -113,6 +116,7 @@ export function BookingCard({
                 selectedId={selectedSlotId}
                 onSelect={onSlotSelect}
                 showPrice={true}
+                timeZone={timeZone}
               />
             ) : (
               <p className="text-sm text-muted-foreground py-4 text-center">

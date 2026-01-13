@@ -1,6 +1,5 @@
 "use client";
 
-import { format } from "date-fns";
 import { Calendar, Clock, MapPin, Users } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -26,7 +25,11 @@ import {
 } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
-import { formatCurrency, formatDuration } from "@/shared/lib/format";
+import {
+  formatCurrency,
+  formatDuration,
+  formatInTimeZone,
+} from "@/shared/lib/format";
 
 const DURATIONS = [60, 120, 180];
 
@@ -73,6 +76,7 @@ export default function PlaceDetailPage() {
   );
 
   const { data: place, isLoading } = usePlaceDetail({ placeId });
+  const placeTimeZone = place?.timeZone ?? "Asia/Manila";
 
   const courtsForSport = React.useMemo(() => {
     if (!place || !selectedSportId) return [];
@@ -404,13 +408,15 @@ export default function PlaceDetailPage() {
                       resetSelection();
                     }}
                     placeholder="Choose a date"
+                    timeZone={placeTimeZone}
                   />
                 </div>
 
                 {selectedDate && (
                   <div className="space-y-2">
                     <p className="text-sm font-medium">
-                      Available times on {format(selectedDate, "MMM d")}
+                      Available times on{" "}
+                      {formatInTimeZone(selectedDate, placeTimeZone, "MMM d")}
                     </p>
                     {isLoadingAvailability ? (
                       <TimeSlotPickerSkeleton count={6} />
@@ -420,6 +426,7 @@ export default function PlaceDetailPage() {
                         selectedId={selectedSlotId}
                         onSelect={(slot) => setSelectedSlotId(slot.id)}
                         showPrice
+                        timeZone={placeTimeZone}
                       />
                     ) : (
                       <p className="text-sm text-muted-foreground py-4 text-center">
@@ -457,7 +464,12 @@ export default function PlaceDetailPage() {
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">Start time</p>
                   <p className="font-medium">
-                    {format(new Date(selectedSlot.startTime), "h:mm a")} ·{" "}
+                    {formatInTimeZone(
+                      selectedSlot.startTime,
+                      placeTimeZone,
+                      "h:mm a",
+                    )}{" "}
+                    ·{" "}
                     {formatCurrency(
                       selectedSlot.totalPriceCents,
                       selectedSlot.currency,

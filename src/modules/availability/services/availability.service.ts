@@ -1,4 +1,3 @@
-import { endOfDay, startOfDay } from "date-fns";
 import { CourtNotFoundError } from "@/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
@@ -10,6 +9,7 @@ import {
   collectConsecutiveSlots,
   summarizeSlotPricing,
 } from "@/shared/lib/time-slot-availability";
+import { getZonedDayRangeForInstant } from "@/shared/lib/time-zone";
 import type {
   GetAvailabilityForCourtDTO,
   GetAvailabilityForPlaceSportDTO,
@@ -59,7 +59,12 @@ export class AvailabilityService implements IAvailabilityService {
       return [];
     }
 
-    return this.getAvailabilityForCourt(court, data.date, data.durationMinutes);
+    return this.getAvailabilityForCourt(
+      court,
+      data.date,
+      data.durationMinutes,
+      place.timeZone,
+    );
   }
 
   async getForPlaceSport(
@@ -87,6 +92,7 @@ export class AvailabilityService implements IAvailabilityService {
         court,
         data.date,
         data.durationMinutes,
+        place.timeZone,
       );
 
       for (const option of availability) {
@@ -111,14 +117,13 @@ export class AvailabilityService implements IAvailabilityService {
     court: CourtRecord,
     date: string,
     durationMinutes: number,
+    timeZone: string,
   ): Promise<AvailabilityOption[]> {
     if (durationMinutes <= 0) {
       return [];
     }
 
-    const parsedDate = new Date(date);
-    const start = startOfDay(parsedDate);
-    const end = endOfDay(parsedDate);
+    const { start, end } = getZonedDayRangeForInstant(date, timeZone);
 
     const slots = await this.timeSlotRepository.findAvailable(
       court.id,

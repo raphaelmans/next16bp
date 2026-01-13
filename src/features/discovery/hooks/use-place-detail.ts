@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { getZonedStartOfDayIso } from "@/shared/lib/time-zone";
 import { useTRPCClient } from "@/trpc/client";
 
 export interface PlaceSport {
@@ -107,11 +108,9 @@ interface UsePlaceAvailabilityOptions {
   mode: "any" | "court";
 }
 
-const getDateIso = (date?: Date) => {
+const getDateIso = (date?: Date, timeZone?: string) => {
   if (!date) return "";
-  return new Date(
-    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
-  ).toISOString();
+  return getZonedStartOfDayIso(date, timeZone);
 };
 
 export function usePlaceAvailability({
@@ -123,13 +122,14 @@ export function usePlaceAvailability({
   mode,
 }: UsePlaceAvailabilityOptions) {
   const trpcClient = useTRPCClient();
-  const dateIso = getDateIso(date);
+  const dateIso = getDateIso(date, place?.timeZone);
   const safeDuration = Number.isFinite(durationMinutes) ? durationMinutes : 0;
 
   const courtQuery = useQuery({
     queryKey: [
       "place-availability",
       place?.id,
+      place?.timeZone,
       courtId,
       dateIso,
       safeDuration,
@@ -153,6 +153,7 @@ export function usePlaceAvailability({
     queryKey: [
       "place-availability",
       place?.id,
+      place?.timeZone,
       sportId,
       dateIso,
       safeDuration,

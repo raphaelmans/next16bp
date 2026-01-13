@@ -1,3 +1,4 @@
+import { TZDate } from "@date-fns/tz";
 import {
   format,
   formatDistanceToNow,
@@ -53,6 +54,41 @@ export function formatDateShort(date: Date | string): string {
 export function formatTime(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
   return format(d, "h:mm a");
+}
+
+export function formatInTimeZone(
+  date: Date | string,
+  timeZone: string,
+  pattern: string,
+): string {
+  const parsed = typeof date === "string" ? new Date(date) : date;
+  const zoned = new TZDate(parsed.getTime(), timeZone);
+  return format(zoned, pattern);
+}
+
+export function formatDateShortInTimeZone(
+  date: Date | string,
+  timeZone: string,
+): string {
+  return formatInTimeZone(date, timeZone, "MMM d, yyyy");
+}
+
+export function formatTimeInTimeZone(
+  date: Date | string,
+  timeZone: string,
+): string {
+  return formatInTimeZone(date, timeZone, "h:mm a");
+}
+
+export function formatTimeRangeInTimeZone(
+  start: Date | string,
+  end: Date | string,
+  timeZone: string,
+): string {
+  return `${formatTimeInTimeZone(start, timeZone)} - ${formatTimeInTimeZone(
+    end,
+    timeZone,
+  )}`;
 }
 
 /**

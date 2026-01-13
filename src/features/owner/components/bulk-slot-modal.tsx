@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
+import { formatInTimeZone } from "@/shared/lib/format";
+import { getZonedToday } from "@/shared/lib/time-zone";
 import {
   type BulkSlotData,
   type CourtHoursWindow,
@@ -42,6 +44,7 @@ interface BulkSlotModalProps {
   hoursHref?: string;
   pricingHref?: string;
   initialDate?: Date;
+  timeZone?: string;
 }
 
 const DAYS_OF_WEEK = [
@@ -77,13 +80,14 @@ export function BulkSlotModal({
   hoursHref,
   pricingHref,
   initialDate,
+  timeZone,
 }: BulkSlotModalProps) {
   const [mode, setMode] = React.useState<"single" | "recurring">("single");
   const [startDate, setStartDate] = React.useState<Date>(
-    initialDate ?? new Date(),
+    initialDate ?? getZonedToday(timeZone),
   );
   const [endDate, setEndDate] = React.useState<Date>(
-    addDays(initialDate ?? new Date(), 7),
+    addDays(initialDate ?? getZonedToday(timeZone), 7),
   );
   const [selectedDays, setSelectedDays] = React.useState<number[]>([
     1, 2, 3, 4, 5,
@@ -94,6 +98,14 @@ export function BulkSlotModal({
     [hoursWindows],
   );
 
+  const formatDateInZone = React.useCallback(
+    (date: Date, pattern: string) =>
+      timeZone
+        ? formatInTimeZone(date, timeZone, pattern)
+        : format(date, pattern),
+    [timeZone],
+  );
+
   const bulkData = React.useMemo<BulkSlotData>(
     () => ({
       startDate,
@@ -102,14 +114,25 @@ export function BulkSlotModal({
       duration,
       useDefaultPrice: true,
       hoursWindows: normalizedHours,
+      timeZone,
     }),
-    [startDate, endDate, mode, selectedDays, duration, normalizedHours],
+    [
+      startDate,
+      endDate,
+      mode,
+      selectedDays,
+      duration,
+      normalizedHours,
+      timeZone,
+    ],
   );
 
   const preview = React.useMemo(
     () => generateSlotsFromCourtHours(bulkData),
     [bulkData],
   );
+
+  const today = React.useMemo(() => getZonedToday(timeZone), [timeZone]);
 
   const canCreateSlots =
     !isPrereqsLoading &&
@@ -130,11 +153,11 @@ export function BulkSlotModal({
 
   // Reset form when modal opens
   React.useEffect(() => {
-    if (open && initialDate) {
-      setStartDate(initialDate);
-      setEndDate(addDays(initialDate, 7));
-    }
-  }, [open, initialDate]);
+    if (!open) return;
+    const baseDate = initialDate ?? getZonedToday(timeZone);
+    setStartDate(baseDate);
+    setEndDate(addDays(baseDate, 7));
+  }, [open, initialDate, timeZone]);
 
   const handleSubmit = () => {
     if (!canCreateSlots) return;
@@ -200,7 +223,7 @@ export function BulkSlotModal({
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {startDate ? (
-                        format(startDate, "PPP")
+                        formatDateInZone(startDate, "PPP")
                       ) : (
                         <span>Pick a date</span>
                       )}
@@ -211,6 +234,7 @@ export function BulkSlotModal({
                       mode="single"
                       selected={startDate}
                       onSelect={(date) => date && setStartDate(date)}
+                      timeZone={timeZone}
                     />
                   </PopoverContent>
                 </Popover>
@@ -231,7 +255,7 @@ export function BulkSlotModal({
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {startDate ? (
-                            format(startDate, "MMM d, yyyy")
+                            formatDateInZone(startDate, "MMM d, yyyy")
                           ) : (
                             <span>Start</span>
                           )}
@@ -242,6 +266,8 @@ export function BulkSlotModal({
                           mode="single"
                           selected={startDate}
                           onSelect={(date) => date && setStartDate(date)}
+                          disabled={(date) => date < today}
+                          timeZone={timeZone}
                         />
                       </PopoverContent>
                     </Popover>
@@ -259,7 +285,7 @@ export function BulkSlotModal({
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
                           {endDate ? (
-                            format(endDate, "MMM d, yyyy")
+                            formatDateInZone(endDate, "MMM d, yyyy")
                           ) : (
                             <span>End</span>
                           )}
@@ -271,6 +297,7 @@ export function BulkSlotModal({
                           selected={endDate}
                           onSelect={(date) => date && setEndDate(date)}
                           disabled={(date) => date < startDate}
+                          timeZone={timeZone}
                         />
                       </PopoverContent>
                     </Popover>

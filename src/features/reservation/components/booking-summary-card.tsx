@@ -3,7 +3,12 @@
 import { Calendar, Clock, MapPin } from "lucide-react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatDateShort, formatTimeRange } from "@/shared/lib/format";
+import {
+  formatDateShort,
+  formatDateShortInTimeZone,
+  formatTimeRange,
+  formatTimeRangeInTimeZone,
+} from "@/shared/lib/format";
 
 interface BookingSummaryCardProps {
   court: {
@@ -15,14 +20,23 @@ interface BookingSummaryCardProps {
     startTime: string;
     endTime: string;
   };
+  timeZone?: string;
   className?: string;
 }
 
 export function BookingSummaryCard({
   court,
   timeSlot,
+  timeZone,
   className,
 }: BookingSummaryCardProps) {
+  const dateLabel = timeZone
+    ? formatDateShortInTimeZone(timeSlot.startTime, timeZone)
+    : formatDateShort(timeSlot.startTime);
+  const timeLabel = timeZone
+    ? formatTimeRangeInTimeZone(timeSlot.startTime, timeSlot.endTime, timeZone)
+    : formatTimeRange(timeSlot.startTime, timeSlot.endTime);
+
   return (
     <Card className={className}>
       <CardHeader>
@@ -62,18 +76,14 @@ export function BookingSummaryCard({
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <div>
               <p className="text-xs text-muted-foreground">Date</p>
-              <p className="text-sm font-medium">
-                {formatDateShort(timeSlot.startTime)}
-              </p>
+              <p className="text-sm font-medium">{dateLabel}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-muted-foreground" />
             <div>
               <p className="text-xs text-muted-foreground">Time</p>
-              <p className="text-sm font-medium">
-                {formatTimeRange(timeSlot.startTime, timeSlot.endTime)}
-              </p>
+              <p className="text-sm font-medium">{timeLabel}</p>
             </div>
           </div>
         </div>

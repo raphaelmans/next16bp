@@ -24,6 +24,7 @@ import { useProfile } from "@/features/reservation/hooks/use-profile";
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { formatDuration } from "@/shared/lib/format";
+import { getZonedDate } from "@/shared/lib/time-zone";
 
 const DURATIONS = [60, 120, 180];
 
@@ -43,9 +44,12 @@ export default function PlaceBookingPage() {
     ? durationParam
     : DURATIONS[0];
 
-  const bookingDate = startTime ? new Date(startTime) : undefined;
-
   const { data: place, isLoading } = usePlaceDetail({ placeId });
+  const placeTimeZone = place?.timeZone ?? "Asia/Manila";
+  const bookingDate = React.useMemo(
+    () => (startTime ? getZonedDate(startTime, placeTimeZone) : undefined),
+    [startTime, placeTimeZone],
+  );
   const { data: profile, isLoading: isLoadingProfile } = useProfile();
   const createForCourt = useCreateReservationForCourt();
   const createForAnyCourt = useCreateReservationForAnyCourt();
@@ -193,7 +197,11 @@ export default function PlaceBookingPage() {
       <div className="grid gap-6 lg:grid-cols-3 mt-8">
         <div className="lg:col-span-2 space-y-6">
           <div ref={detailsSectionRef} className="scroll-mt-24">
-            <BookingSummaryCard court={courtSummary} timeSlot={timeSlot} />
+            <BookingSummaryCard
+              court={courtSummary}
+              timeSlot={timeSlot}
+              timeZone={placeTimeZone}
+            />
           </div>
 
           <Card>
@@ -249,6 +257,7 @@ export default function PlaceBookingPage() {
         <div>
           <OrderSummary
             timeSlot={timeSlot}
+            timeZone={placeTimeZone}
             termsAccepted={termsAccepted}
             onTermsChange={setTermsAccepted}
             onConfirm={handleConfirm}
