@@ -50,7 +50,9 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
   const router = useRouter();
 
   const handleRowClick = (courtId: string, placeId: string) => {
-    router.push(appRoutes.owner.places.courts.setup(placeId, courtId));
+    router.push(
+      appRoutes.owner.places.courts.setup(placeId, courtId, "details"),
+    );
   };
 
   return (
@@ -216,7 +218,11 @@ function CourtActionsDropdown({
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
           <Link
-            href={appRoutes.owner.places.courts.setup(court.placeId, court.id)}
+            href={appRoutes.owner.places.courts.setup(
+              court.placeId,
+              court.id,
+              "details",
+            )}
           >
             <Clipboard className="mr-2 h-4 w-4" />
             Setup Wizard
@@ -233,21 +239,13 @@ function CourtActionsDropdown({
 
         <DropdownMenuItem asChild>
           <Link
-            href={appRoutes.owner.places.courts.hours(court.placeId, court.id)}
-          >
-            <Clock className="mr-2 h-4 w-4" />
-            Edit Hours
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link
-            href={appRoutes.owner.places.courts.pricing(
+            href={appRoutes.owner.places.courts.schedule(
               court.placeId,
               court.id,
             )}
           >
             <Clock className="mr-2 h-4 w-4" />
-            Pricing Rules
+            Schedule & Pricing
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>

@@ -32,8 +32,10 @@ import { appRoutes } from "@/shared/lib/app-routes";
 
 export function ReservationAlertsPanel({
   organizationId,
+  syncToUrl = false,
 }: {
   organizationId?: string | null;
+  syncToUrl?: boolean;
 }) {
   const [isOpen, setIsOpen] = React.useState(true);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -50,8 +52,8 @@ export function ReservationAlertsPanel({
   const { organization } = useOwnerOrganization();
   const { data: places = [] } = useOwnerPlaces(organization?.id ?? null);
   const { data: courts = [] } = useOwnerCourts(organization?.id ?? null);
-  const { placeId, setPlaceId } = useOwnerPlaceFilter();
-  const { courtId, setCourtId } = useOwnerCourtFilter();
+  const { placeId, setPlaceId } = useOwnerPlaceFilter({ syncToUrl });
+  const { courtId, setCourtId } = useOwnerCourtFilter({ syncToUrl });
   const effectiveOrganizationId = organizationId ?? organization?.id ?? null;
 
   const reservationsActiveHref = React.useMemo(() => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
 
 const DEFAULT_STORAGE_KEY = "owner.selectedPlaceId";
@@ -26,15 +26,19 @@ function writeStoredPlaceId(storageKey: string, placeId: string) {
   }
 }
 
-export function useOwnerPlaceFilter(options?: { storageKey?: string }) {
+export function useOwnerPlaceFilter(options?: {
+  storageKey?: string;
+  syncToUrl?: boolean;
+}) {
   const storageKey = options?.storageKey ?? DEFAULT_STORAGE_KEY;
+  const syncToUrl = options?.syncToUrl ?? true;
 
-  const pathname = usePathname();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const searchParamsString = searchParams.toString();
+  const [queryPlaceId, setQueryPlaceId] = useQueryState(
+    PLACE_ID_PARAM,
+    parseAsString.withOptions({ history: "replace" }),
+  );
 
-  const paramPlaceId = searchParams.get(PLACE_ID_PARAM) ?? "";
+  const paramPlaceId = syncToUrl ? (queryPlaceId ?? "") : "";
   const [placeId, setPlaceIdState] = React.useState<string>("");
 
   React.useEffect(() => {
@@ -47,31 +51,23 @@ export function useOwnerPlaceFilter(options?: { storageKey?: string }) {
     const stored = readStoredPlaceId(storageKey);
     setPlaceIdState(stored);
 
-    if (stored) {
-      const params = new URLSearchParams(searchParamsString);
-      params.set(PLACE_ID_PARAM, stored);
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    if (stored && syncToUrl && !queryPlaceId) {
+      setQueryPlaceId(stored);
     }
-  }, [paramPlaceId, pathname, router, searchParamsString, storageKey]);
+  }, [paramPlaceId, queryPlaceId, setQueryPlaceId, storageKey, syncToUrl]);
 
   const setPlaceId = React.useCallback(
     (nextPlaceId: string) => {
       setPlaceIdState(nextPlaceId);
       writeStoredPlaceId(storageKey, nextPlaceId);
 
-      const params = new URLSearchParams(searchParamsString);
-      if (nextPlaceId) {
-        params.set(PLACE_ID_PARAM, nextPlaceId);
-      } else {
-        params.delete(PLACE_ID_PARAM);
+      if (!syncToUrl) {
+        return;
       }
 
-      const nextUrl = params.toString()
-        ? `${pathname}?${params.toString()}`
-        : pathname;
-      router.replace(nextUrl, { scroll: false });
+      setQueryPlaceId(nextPlaceId || null);
     },
-    [pathname, router, searchParamsString, storageKey],
+    [setQueryPlaceId, storageKey, syncToUrl],
   );
 
   return { placeId, setPlaceId };

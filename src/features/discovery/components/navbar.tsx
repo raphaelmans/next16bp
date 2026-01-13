@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import {
   Building,
   Calendar,
@@ -22,7 +21,7 @@ import { useLogout, useSession } from "@/features/auth/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { KudosLogo } from "@/shared/components/kudos";
 import { appRoutes } from "@/shared/lib/app-routes";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 import { UserDropdown } from "./user-dropdown";
 
 interface NavbarProps {
@@ -34,12 +33,10 @@ export function Navbar({ className }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const trpc = useTRPC();
   const { data: sessionUser } = useSession();
   const { mutate: logout } = useLogout();
 
-  const { data: orgs } = useQuery({
-    ...trpc.organization.my.queryOptions(),
+  const { data: orgs } = trpc.organization.my.useQuery(undefined, {
     enabled: !!sessionUser,
   });
 

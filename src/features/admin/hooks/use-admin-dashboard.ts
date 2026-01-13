@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export interface AdminStats {
   pendingClaims: number;
@@ -65,32 +65,24 @@ const mockRecentActivity: AdminActivity[] = [
  * Aggregates data from multiple endpoints
  */
 export function useAdminStats() {
-  const trpc = useTRPC();
-
   // Fetch pending claims count
-  const claimsQuery = useQuery(
-    trpc.admin.claim.getPending.queryOptions({
-      limit: 1,
-      offset: 0,
-    }),
-  );
+  const claimsQuery = trpc.admin.claim.getPending.useQuery({
+    limit: 1,
+    offset: 0,
+  });
 
   // Fetch courts count
-  const courtsQuery = useQuery(
-    trpc.admin.court.list.queryOptions({
-      limit: 1,
-      offset: 0,
-    }),
-  );
+  const courtsQuery = trpc.admin.court.list.useQuery({
+    limit: 1,
+    offset: 0,
+  });
 
   // Fetch reservable courts count
-  const reservableQuery = useQuery(
-    trpc.admin.court.list.queryOptions({
-      placeType: "RESERVABLE",
-      limit: 1,
-      offset: 0,
-    }),
-  );
+  const reservableQuery = trpc.admin.court.list.useQuery({
+    placeType: "RESERVABLE",
+    limit: 1,
+    offset: 0,
+  });
 
   // Calculate stats from responses
   const stats: AdminStats = {
@@ -121,14 +113,10 @@ export function useAdminStats() {
  * 2. Enhance the backend to return enriched data
  */
 export function usePendingClaims(limit = 5) {
-  const trpc = useTRPC();
-
-  const query = useQuery(
-    trpc.admin.claim.getPending.queryOptions({
-      limit,
-      offset: 0,
-    }),
-  );
+  const query = trpc.admin.claim.getPending.useQuery({
+    limit,
+    offset: 0,
+  });
 
   // Transform data to match the expected format
   const transformedData: PendingClaim[] = (query.data?.items ?? []).map(

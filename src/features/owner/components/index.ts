@@ -5,6 +5,7 @@ export { ConfirmDialog } from "./confirm-dialog";
 export { CourtForm } from "./court-form";
 export { CourtHoursEditor } from "./court-hours-editor";
 export { CourtPricingEditor } from "./court-pricing-editor";
+export { CourtScheduleEditor } from "./court-schedule-editor";
 export { CourtsEmptyState } from "./courts-empty-state";
 export { CourtsTable } from "./courts-table";
 export { OwnerNavbar } from "./owner-navbar";

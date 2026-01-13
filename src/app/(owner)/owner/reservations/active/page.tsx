@@ -1,6 +1,5 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { differenceInSeconds, format } from "date-fns";
 import { Clock, ExternalLink, RefreshCw } from "lucide-react";
 import Link from "next/link";
@@ -45,15 +44,14 @@ import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { formatCurrency } from "@/shared/lib/format";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 type ActiveFilter = "all" | "awaiting" | "marked";
 
 export default function OwnerActiveReservationsPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
-  const queryClient = useQueryClient();
-  const trpc = useTRPC();
+  const utils = trpc.useUtils();
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const { organization, organizations } = useOwnerOrganization();
   const { data: places = [] } = useOwnerPlaces(organization?.id ?? null);
@@ -123,9 +121,7 @@ export default function OwnerActiveReservationsPage() {
     if (!organization?.id) return;
     setIsRefreshing(true);
     try {
-      await queryClient.invalidateQueries(
-        trpc.reservationOwner.getForOrganization.queryFilter(),
-      );
+      await utils.reservationOwner.getForOrganization.invalidate();
     } finally {
       setIsRefreshing(false);
     }

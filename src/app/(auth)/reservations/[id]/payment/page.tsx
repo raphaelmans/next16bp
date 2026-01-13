@@ -1,6 +1,5 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { differenceInMinutes, format } from "date-fns";
 import { ArrowLeft, CheckCircle, Clock, Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -20,13 +19,12 @@ import {
 } from "@/features/reservation/hooks";
 import { Container } from "@/shared/components/layout";
 import { formatCurrency } from "@/shared/lib/format";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export default function PaymentPage() {
   const params = useParams();
   const router = useRouter();
   const reservationId = params.id as string;
-  const trpc = useTRPC();
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [referenceNumber, setReferenceNumber] = useState("");
   const [notes, setNotes] = useState("");
@@ -34,27 +32,22 @@ export default function PaymentPage() {
   const [isExpired, setIsExpired] = useState(false);
 
   // Fetch reservation details
-  const { data: reservationData, isLoading } = useQuery({
-    ...trpc.reservation.getById.queryOptions({ reservationId }),
-  });
+  const { data: reservationData, isLoading } =
+    trpc.reservation.getById.useQuery({ reservationId });
 
   const reservation = reservationData?.reservation;
 
   // Fetch slot details for display
-  const { data: slot } = useQuery({
-    ...trpc.timeSlot.getById.queryOptions({
-      slotId: reservation?.timeSlotId || "",
-    }),
-    enabled: !!reservation?.timeSlotId,
-  });
-
-  const addPaymentProof = useMutation(
-    trpc.paymentProof.add.mutationOptions({
-      onError: (error) => {
-        toast.error(error.message || "Failed to submit payment proof");
-      },
-    }),
+  const { data: slot } = trpc.timeSlot.getById.useQuery(
+    { slotId: reservation?.timeSlotId || "" },
+    { enabled: !!reservation?.timeSlotId },
   );
+
+  const addPaymentProof = trpc.paymentProof.add.useMutation({
+    onError: (error) => {
+      toast.error(error.message || "Failed to submit payment proof");
+    },
+  });
 
   const uploadPaymentProof = useUploadPaymentProof();
   const markPayment = useMarkPayment();

@@ -8,6 +8,7 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-13 | Added 24-trpc-react-query-hooks implementation plan (hook API standardization) |
 | 2025-01-09 | Added 08-p2p-reservation-confirmation implementation plan with 4 phases |
 | 2025-01-09 | Added 08-p2p-reservation-confirmation user stories (11 total: 3 parent + 8 sub-stories) |
 | 2025-01-09 | Added 10-asset-uploads implementation plan with parallel dev checklists |
@@ -72,6 +73,7 @@ References and context for planning artifacts.
 | 10-asset-uploads | `agent-plans/10-asset-uploads/` | Pending |
 | 11-ui-revamp | `agent-plans/11-ui-revamp/` | Ready |
 | 12-reservation-policies | `agent-plans/12-reservation-policies/` | Pending |
+| 24-trpc-react-query-hooks | `agent-plans/24-trpc-react-query-hooks/` | Pending |
 
 ---
 
@@ -123,4 +125,6 @@ src/modules/
 
 ## Captured Requirements
 
-None - all requirements documented in PRD and user stories.
+- Standardize client-side tRPC usage to `trpc.*.useQuery` / `trpc.*.useMutation` across the repo.
+- Replace mixed patterns (`useTRPC()+queryOptions`, `useTRPCClient()+manual queryKey/queryFn`) with a single hook-based API.
+- Migrate tRPC cache invalidation to `trpc.useUtils()` helpers wherever the data is tRPC-backed.

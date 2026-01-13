@@ -1,7 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 /**
  * Shared hook for fetching the current user's organization.
@@ -10,14 +9,12 @@ import { useTRPC } from "@/trpc/client";
  * Returns the first organization (owners currently can only have one).
  */
 export function useOwnerOrganization() {
-  const trpc = useTRPC();
-
   const {
     data: organizations,
     isLoading,
     error,
     refetch,
-  } = useQuery(trpc.organization.my.queryOptions());
+  } = trpc.organization.my.useQuery();
 
   const organization = organizations?.[0] ?? null;
 

@@ -1,41 +1,38 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 /**
  * Hook to mark payment as completed for a reservation
  * Connected to reservation.markPayment tRPC endpoint
  */
 export function useMarkPayment() {
-  const queryClient = useQueryClient();
-  const trpc = useTRPC();
+  const utils = trpc.useUtils();
 
-  return useMutation(
-    trpc.reservation.markPayment.mutationOptions({
-      onSuccess: (data, variables) => {
-        const isConfirmed = data.status === "CONFIRMED";
-        toast.success(
-          isConfirmed
-            ? "Reservation confirmed!"
-            : "Payment submitted successfully!",
-          {
-            description: isConfirmed
-              ? "Your reservation is confirmed."
-              : "The court owner will verify your payment shortly.",
-          },
-        );
-        queryClient.invalidateQueries(
-          trpc.reservation.getById.queryFilter({
-            reservationId: variables.reservationId,
-          }),
-        );
-        queryClient.invalidateQueries(trpc.reservation.getMy.queryFilter());
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to submit payment");
-      },
-    }),
-  );
+  return trpc.reservation.markPayment.useMutation({
+    onSuccess: async (data, variables) => {
+      const isConfirmed = data.status === "CONFIRMED";
+      toast.success(
+        isConfirmed
+          ? "Reservation confirmed!"
+          : "Payment submitted successfully!",
+        {
+          description: isConfirmed
+            ? "Your reservation is confirmed."
+            : "The court owner will verify your payment shortly.",
+        },
+      );
+
+      await Promise.all([
+        utils.reservation.getById.invalidate({
+          reservationId: variables.reservationId,
+        }),
+        utils.reservation.getMy.invalidate(),
+      ]);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to submit payment");
+    },
+  });
 }

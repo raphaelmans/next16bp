@@ -41,8 +41,7 @@ interface BulkSlotModalProps {
   hasHours: boolean;
   hasPricingRules: boolean;
   hoursWindows?: CourtHoursWindow[];
-  hoursHref?: string;
-  pricingHref?: string;
+  scheduleHref?: string;
   initialDate?: Date;
   timeZone?: string;
 }
@@ -77,8 +76,7 @@ export function BulkSlotModal({
   hasHours,
   hasPricingRules,
   hoursWindows,
-  hoursHref,
-  pricingHref,
+  scheduleHref,
   initialDate,
   timeZone,
 }: BulkSlotModalProps) {
@@ -139,6 +137,13 @@ export function BulkSlotModal({
     hasHours &&
     hasPricingRules &&
     preview.slots.length > 0;
+
+  const missingScheduleItems = [
+    !hasHours ? "hours" : null,
+    !hasPricingRules ? "pricing rules" : null,
+  ].filter(Boolean);
+
+  const missingScheduleLabel = missingScheduleItems.join(" and ");
 
   const daySummaries = React.useMemo(() => {
     const displayDays = mode === "single" ? [startDate.getDay()] : selectedDays;
@@ -377,30 +382,15 @@ export function BulkSlotModal({
               </Alert>
             ) : (
               <>
-                {!hasHours && (
+                {(!hasHours || !hasPricingRules) && (
                   <Alert variant="destructive">
-                    <AlertTitle>Set court hours</AlertTitle>
+                    <AlertTitle>Complete schedule</AlertTitle>
                     <AlertDescription>
-                      <p>Hours are required before publishing slots.</p>
-                      {hoursHref && (
+                      <p>Add {missingScheduleLabel} to publish slots.</p>
+                      {scheduleHref && (
                         <div className="mt-2">
                           <Button asChild variant="outline" size="sm">
-                            <Link href={hoursHref}>Configure hours</Link>
-                          </Button>
-                        </div>
-                      )}
-                    </AlertDescription>
-                  </Alert>
-                )}
-                {!hasPricingRules && (
-                  <Alert variant="destructive">
-                    <AlertTitle>Set pricing rules</AlertTitle>
-                    <AlertDescription>
-                      <p>Pricing rules are required to derive slot prices.</p>
-                      {pricingHref && (
-                        <div className="mt-2">
-                          <Button asChild variant="outline" size="sm">
-                            <Link href={pricingHref}>Configure pricing</Link>
+                            <Link href={scheduleHref}>Configure schedule</Link>
                           </Button>
                         </div>
                       )}

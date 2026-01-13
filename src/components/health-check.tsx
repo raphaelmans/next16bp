@@ -1,13 +1,9 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export function HealthCheck() {
-  const trpc = useTRPC();
-  const { data, isLoading, isError, error } = useQuery(
-    trpc.health.check.queryOptions(),
-  );
+  const { data, isLoading, isError, error } = trpc.health.check.useQuery();
 
   if (isLoading) {
     return (

@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -12,14 +11,13 @@ import { useCourtForm, useOwnerOrganization } from "@/features/owner/hooks";
 import type { CourtFormData } from "@/features/owner/schemas/court-form.schema";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export default function EditPlaceCourtPage() {
   const params = useParams();
   const placeId = params.placeId as string;
   const courtId = params.courtId as string;
   const router = useRouter();
-  const trpc = useTRPC();
 
   const { data: user } = useSession();
   const logoutMutation = useLogout();
@@ -29,19 +27,14 @@ export default function EditPlaceCourtPage() {
     isLoading: orgLoading,
   } = useOwnerOrganization();
 
-  const { data: courtData, isLoading: courtLoading } = useQuery({
-    ...trpc.courtManagement.getById.queryOptions({ courtId }),
-    enabled: !!courtId,
-  });
+  const { data: courtData, isLoading: courtLoading } =
+    trpc.courtManagement.getById.useQuery({ courtId }, { enabled: !!courtId });
 
-  const { data: placeData, isLoading: placeLoading } = useQuery({
-    ...trpc.placeManagement.getById.queryOptions({ placeId }),
-    enabled: !!placeId,
-  });
+  const { data: placeData, isLoading: placeLoading } =
+    trpc.placeManagement.getById.useQuery({ placeId }, { enabled: !!placeId });
 
-  const { data: sports = [], isLoading: sportsLoading } = useQuery(
-    trpc.sport.list.queryOptions({}),
-  );
+  const { data: sports = [], isLoading: sportsLoading } =
+    trpc.sport.list.useQuery({});
 
   const { submit, isSubmitting } = useCourtForm({
     courtId,

@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Building2, Plus } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -13,14 +12,10 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { appRoutes } from "@/shared/lib/app-routes";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export function OwnerCtaSection() {
-  const trpc = useTRPC();
-
-  const { data: orgs, isLoading } = useQuery(
-    trpc.organization.my.queryOptions(),
-  );
+  const { data: orgs, isLoading } = trpc.organization.my.useQuery();
 
   if (isLoading) {
     return (

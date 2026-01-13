@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -19,7 +18,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 interface PlaceFiltersProps {
   city?: string;
@@ -47,10 +46,8 @@ export function PlaceFilters({
   className,
 }: PlaceFiltersProps) {
   const hasFilters = city || sportId;
-  const trpc = useTRPC();
-  const { data: sports = [], isLoading: sportsLoading } = useQuery(
-    trpc.sport.list.queryOptions({}),
-  );
+  const { data: sports = [], isLoading: sportsLoading } =
+    trpc.sport.list.useQuery({});
 
   const FilterContent = () => (
     <div className="space-y-6">

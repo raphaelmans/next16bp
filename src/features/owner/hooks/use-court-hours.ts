@@ -1,41 +1,27 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export function useCourtHours(courtId: string) {
-  const trpc = useTRPC();
-
-  return useQuery({
-    ...trpc.courtHours.get.queryOptions({ courtId }),
-    enabled: !!courtId,
-  });
+  return trpc.courtHours.get.useQuery({ courtId }, { enabled: !!courtId });
 }
 
 export function useSaveCourtHours(courtId: string) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    ...trpc.courtHours.set.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(
-        trpc.courtHours.get.queryFilter({ courtId }),
-      );
+  return trpc.courtHours.set.useMutation({
+    onSuccess: async () => {
+      await utils.courtHours.get.invalidate({ courtId });
     },
   });
 }
 
 export function useCopyCourtHours(targetCourtId: string) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    ...trpc.courtHours.copyFromCourt.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(
-        trpc.courtHours.get.queryFilter({ courtId: targetCourtId }),
-      );
+  return trpc.courtHours.copyFromCourt.useMutation({
+    onSuccess: async () => {
+      await utils.courtHours.get.invalidate({ courtId: targetCourtId });
     },
   });
 }

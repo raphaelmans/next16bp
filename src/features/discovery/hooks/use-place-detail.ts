@@ -1,8 +1,7 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { getZonedStartOfDayIso } from "@/shared/lib/time-zone";
-import { useTRPCClient } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export interface PlaceSport {
   id: string;
@@ -61,42 +60,41 @@ const mapCourtsToSports = (courts: PlaceCourt[]) => {
 };
 
 export function usePlaceDetail({ placeId }: UsePlaceDetailOptions) {
-  const trpcClient = useTRPCClient();
+  return trpc.place.getById.useQuery(
+    { placeId },
+    {
+      enabled: !!placeId,
+      select: (response) => {
+        const courts: PlaceCourt[] = response.courts.map((court) => ({
+          id: court.court.id,
+          label: court.court.label,
+          sportId: court.sport.id,
+          sportName: court.sport.name,
+          tierLabel: court.court.tierLabel ?? undefined,
+          isActive: court.court.isActive,
+        }));
 
-  return useQuery({
-    queryKey: ["place", placeId],
-    queryFn: async () => {
-      if (!placeId) return undefined;
-      const response = await trpcClient.place.getById.query({ placeId });
-      const courts: PlaceCourt[] = response.courts.map((court) => ({
-        id: court.court.id,
-        label: court.court.label,
-        sportId: court.sport.id,
-        sportName: court.sport.name,
-        tierLabel: court.court.tierLabel ?? undefined,
-        isActive: court.court.isActive,
-      }));
-      const photos = response.photos.map((photo, index) => ({
-        id: photo.id,
-        url: photo.url,
-        alt: `${response.place.name} photo ${index + 1}`,
-      }));
+        const photos = response.photos.map((photo, index) => ({
+          id: photo.id,
+          url: photo.url,
+          alt: `${response.place.name} photo ${index + 1}`,
+        }));
 
-      return {
-        id: response.place.id,
-        name: response.place.name,
-        address: response.place.address,
-        city: response.place.city,
-        timeZone: response.place.timeZone,
-        description: undefined,
-        coverImageUrl: photos[0]?.url,
-        courts,
-        photos,
-        sports: mapCourtsToSports(courts),
-      } satisfies PlaceDetail;
+        return {
+          id: response.place.id,
+          name: response.place.name,
+          address: response.place.address,
+          city: response.place.city,
+          timeZone: response.place.timeZone,
+          description: undefined,
+          coverImageUrl: photos[0]?.url,
+          courts,
+          photos,
+          sports: mapCourtsToSports(courts),
+        } satisfies PlaceDetail;
+      },
     },
-    enabled: !!placeId,
-  });
+  );
 }
 
 interface UsePlaceAvailabilityOptions {
@@ -121,54 +119,41 @@ export function usePlaceAvailability({
   durationMinutes,
   mode,
 }: UsePlaceAvailabilityOptions) {
-  const trpcClient = useTRPCClient();
   const dateIso = getDateIso(date, place?.timeZone);
   const safeDuration = Number.isFinite(durationMinutes) ? durationMinutes : 0;
 
-  const courtQuery = useQuery({
-    queryKey: [
-      "place-availability",
-      place?.id,
-      place?.timeZone,
-      courtId,
-      dateIso,
-      safeDuration,
-      "court",
-    ],
-    queryFn: async () =>
-      trpcClient.availability.getForCourt.query({
-        courtId: courtId ?? "",
-        date: dateIso,
-        durationMinutes: safeDuration,
-      }),
-    enabled:
-      !!courtId &&
-      !!date &&
-      safeDuration > 0 &&
-      mode === "court" &&
-      !!place?.id,
-  });
+  const courtQuery = trpc.availability.getForCourt.useQuery(
+    {
+      courtId: courtId ?? "",
+      date: dateIso,
+      durationMinutes: safeDuration,
+    },
+    {
+      enabled:
+        !!courtId &&
+        !!date &&
+        safeDuration > 0 &&
+        mode === "court" &&
+        !!place?.id,
+    },
+  );
 
-  const placeQuery = useQuery({
-    queryKey: [
-      "place-availability",
-      place?.id,
-      place?.timeZone,
-      sportId,
-      dateIso,
-      safeDuration,
-      "any",
-    ],
-    queryFn: async () =>
-      trpcClient.availability.getForPlaceSport.query({
-        placeId: place?.id ?? "",
-        sportId: sportId ?? "",
-        date: dateIso,
-        durationMinutes: safeDuration,
-      }),
-    enabled:
-      !!place?.id && !!sportId && !!date && safeDuration > 0 && mode === "any",
-  });
+  const placeQuery = trpc.availability.getForPlaceSport.useQuery(
+    {
+      placeId: place?.id ?? "",
+      sportId: sportId ?? "",
+      date: dateIso,
+      durationMinutes: safeDuration,
+    },
+    {
+      enabled:
+        !!place?.id &&
+        !!sportId &&
+        !!date &&
+        safeDuration > 0 &&
+        mode === "any",
+    },
+  );
 
   const activeQuery = mode === "court" ? courtQuery : placeQuery;
   const data = (activeQuery.data ?? []).map((option) => ({

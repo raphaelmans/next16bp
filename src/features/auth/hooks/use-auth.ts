@@ -1,17 +1,13 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
-import { getQueryClient } from "@/trpc/query-client";
+import { trpc } from "@/trpc/client";
 
 /**
  * Hook to get current user session via tRPC.
  * Returns null if not authenticated.
  */
 export function useSession() {
-  const trpc = useTRPC();
-  return useQuery({
-    ...trpc.auth.me.queryOptions(),
+  return trpc.auth.me.useQuery(undefined, {
     retry: false,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
@@ -21,13 +17,11 @@ export function useSession() {
  * Hook for login mutation.
  */
 export function useLogin() {
-  const trpc = useTRPC();
-  const queryClient = getQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    ...trpc.auth.login.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(trpc.auth.me.queryFilter());
+  return trpc.auth.login.useMutation({
+    onSuccess: async () => {
+      await utils.auth.me.invalidate();
     },
   });
 }
@@ -36,36 +30,26 @@ export function useLogin() {
  * Hook for register mutation.
  */
 export function useRegister() {
-  const trpc = useTRPC();
-
-  return useMutation({
-    ...trpc.auth.register.mutationOptions(),
-  });
+  return trpc.auth.register.useMutation();
 }
 
 /**
  * Hook for magic link login mutation.
  */
 export function useMagicLink() {
-  const trpc = useTRPC();
-
-  return useMutation({
-    ...trpc.auth.loginWithMagicLink.mutationOptions(),
-  });
+  return trpc.auth.loginWithMagicLink.useMutation();
 }
 
 /**
  * Hook for logout mutation.
  */
 export function useLogout() {
-  const trpc = useTRPC();
-  const queryClient = getQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    ...trpc.auth.logout.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(trpc.auth.me.queryFilter());
-      queryClient.removeQueries(trpc.auth.me.queryFilter());
+  return trpc.auth.logout.useMutation({
+    onSuccess: async () => {
+      await utils.auth.me.invalidate();
+      utils.auth.me.setData(undefined, undefined);
     },
   });
 }

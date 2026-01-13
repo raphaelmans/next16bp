@@ -1,13 +1,13 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addMinutes } from "date-fns";
 import {
   getZonedDate,
   getZonedDayRangeForInstant,
   getZonedToday,
+  toUtcISOString,
 } from "@/shared/lib/time-zone";
-import { useTRPC, useTRPCClient } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export type SlotStatus = "available" | "booked" | "pending" | "blocked";
 
@@ -66,73 +66,67 @@ function calculateDuration(startTime: string, endTime: string): number {
 export const MAX_BULK_SLOTS = 100;
 
 export function useSlots({ courtId, date, timeZone }: UseSlotsOptions) {
-  const trpc = useTRPC();
-
   const selectedDate = date ?? getZonedToday(timeZone);
   const dayRange = getZonedDayRangeForInstant(selectedDate, timeZone);
-  const startDate = dayRange.start;
-  const endDate = dayRange.end;
+  const startDateIso = toUtcISOString(dayRange.start);
+  const endDateIso = toUtcISOString(dayRange.end);
 
-  return useQuery({
-    ...trpc.timeSlot.getForCourt.queryOptions({
+  return trpc.timeSlot.getForCourt.useQuery(
+    {
       courtId,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-    }),
-    enabled: !!courtId,
-    select: (data): TimeSlot[] =>
-      data.map((slot) => ({
-        id: slot.id,
-        startTime: slot.startTime,
-        endTime: slot.endTime,
-        durationMinutes: calculateDuration(
-          slot.startTime as string,
-          slot.endTime as string,
-        ),
-        status: mapStatusFromBackend(slot.status),
-        priceCents: slot.priceCents,
-        currency: slot.currency,
-        playerName: slot.playerName,
-        playerPhone: slot.playerPhone,
-        reservationId: slot.reservationId ?? null,
-        reservationStatus: slot.reservationStatus ?? null,
-        reservationExpiresAt: slot.reservationExpiresAt ?? null,
-      })),
-  });
+      startDate: startDateIso,
+      endDate: endDateIso,
+    },
+    {
+      enabled: !!courtId,
+      select: (data): TimeSlot[] =>
+        data.map((slot) => ({
+          id: slot.id,
+          startTime: slot.startTime,
+          endTime: slot.endTime,
+          durationMinutes: calculateDuration(
+            slot.startTime as string,
+            slot.endTime as string,
+          ),
+          status: mapStatusFromBackend(slot.status),
+          priceCents: slot.priceCents,
+          currency: slot.currency,
+          playerName: slot.playerName,
+          playerPhone: slot.playerPhone,
+          reservationId: slot.reservationId ?? null,
+          reservationStatus: slot.reservationStatus ?? null,
+          reservationExpiresAt: slot.reservationExpiresAt ?? null,
+        })),
+    },
+  );
 }
 
 export function useBlockSlot() {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    ...trpc.timeSlot.block.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
+  return trpc.timeSlot.block.useMutation({
+    onSuccess: async () => {
+      await utils.timeSlot.getForCourt.invalidate();
     },
   });
 }
 
 export function useUnblockSlot() {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    ...trpc.timeSlot.unblock.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
+  return trpc.timeSlot.unblock.useMutation({
+    onSuccess: async () => {
+      await utils.timeSlot.getForCourt.invalidate();
     },
   });
 }
 
 export function useDeleteSlot() {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    ...trpc.timeSlot.delete.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
+  return trpc.timeSlot.delete.useMutation({
+    onSuccess: async () => {
+      await utils.timeSlot.getForCourt.invalidate();
     },
   });
 }
@@ -168,6 +162,13 @@ export type BulkSlotPreview = {
   totalDaysWithSlots: number;
   wasTrimmed: boolean;
 };
+
+export interface BulkSlotResult {
+  success: boolean;
+  slotsCreated: number;
+  totalGenerated: number;
+  wasTrimmed: boolean;
+}
 
 /**
  * Generate slot array from court hours windows
@@ -211,8 +212,8 @@ export function generateSlotsFromCourtHours(
           const slotEnd = addMinutes(slotStart, data.duration);
 
           const slot: SlotPayload = {
-            startTime: slotStart.toISOString(),
-            endTime: slotEnd.toISOString(),
+            startTime: toUtcISOString(slotStart),
+            endTime: toUtcISOString(slotEnd),
           };
 
           if (!data.useDefaultPrice) {
@@ -251,67 +252,99 @@ export function generateSlotsFromCourtHours(
 }
 
 export function useCreateBulkSlots(courtId: string) {
-  const client = useTRPCClient();
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (data: BulkSlotData) => {
-      const { slots, totalGenerated, wasTrimmed } =
-        generateSlotsFromCourtHours(data);
-
-      if (slots.length === 0) {
-        throw new Error("No slots to create with the given configuration");
-      }
-
-      // Call the tRPC mutation directly
-      const result = await client.timeSlot.createBulk.mutate({
-        courtId,
-        slots,
-      });
-
-      return {
-        success: true,
-        slotsCreated: result.length,
-        totalGenerated,
-        wasTrimmed,
-      };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
+  const utils = trpc.useUtils();
+  const mutation = trpc.timeSlot.createBulk.useMutation({
+    onSuccess: async () => {
+      await utils.timeSlot.getForCourt.invalidate();
     },
   });
+
+  const mutate = (
+    data: BulkSlotData,
+    options?: {
+      onSuccess?: (result: BulkSlotResult) => void;
+      onError?: (error: unknown) => void;
+    },
+  ) => {
+    const { slots, totalGenerated, wasTrimmed } =
+      generateSlotsFromCourtHours(data);
+
+    if (slots.length === 0) {
+      const error = new Error(
+        "No slots to create with the given configuration",
+      );
+      options?.onError?.(error);
+      return;
+    }
+
+    mutation.mutate(
+      { courtId, slots },
+      {
+        onSuccess: (result) => {
+          options?.onSuccess?.({
+            success: true,
+            slotsCreated: result.length,
+            totalGenerated,
+            wasTrimmed,
+          });
+        },
+        onError: (error) => {
+          options?.onError?.(error);
+        },
+      },
+    );
+  };
+
+  const mutateAsync = async (data: BulkSlotData) => {
+    const { slots, totalGenerated, wasTrimmed } =
+      generateSlotsFromCourtHours(data);
+
+    if (slots.length === 0) {
+      throw new Error("No slots to create with the given configuration");
+    }
+
+    const result = await mutation.mutateAsync({ courtId, slots });
+
+    return {
+      success: true,
+      slotsCreated: result.length,
+      totalGenerated,
+      wasTrimmed,
+    } satisfies BulkSlotResult;
+  };
+
+  return {
+    ...mutation,
+    mutate,
+    mutateAsync,
+  };
 }
 
 // DEFERRED: These will be wired in 07-owner-confirmation
 // They call reservation endpoints, not time-slot endpoints
 
 export function useConfirmBooking() {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    ...trpc.reservationOwner.confirmPayment.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
-      queryClient.invalidateQueries(
-        trpc.reservationOwner.getForOrganization.queryFilter(),
-      );
+  return trpc.reservationOwner.confirmPayment.useMutation({
+    onSuccess: async () => {
+      await Promise.all([
+        utils.timeSlot.getForCourt.invalidate(),
+        utils.reservationOwner.getForOrganization.invalidate(),
+      ]);
     },
   });
 }
 
 export function useRejectBooking() {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    ...trpc.reservationOwner.reject.mutationOptions(),
-    onSuccess: () => {
-      queryClient.invalidateQueries(trpc.timeSlot.getForCourt.queryFilter());
-      queryClient.invalidateQueries(
-        trpc.reservationOwner.getForOrganization.queryFilter(),
-      );
+  return trpc.reservationOwner.reject.useMutation({
+    onSuccess: async () => {
+      await Promise.all([
+        utils.timeSlot.getForCourt.invalidate(),
+        utils.reservationOwner.getForOrganization.invalidate(),
+      ]);
     },
   });
 }

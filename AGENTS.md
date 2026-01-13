@@ -82,7 +82,16 @@ pnpm db:seed:buckets # seed storage buckets
 - Prefer `date-fns` for date formatting (no native `Date` formatting).
 - Use `react-hook-form` + `@hookform/resolvers` + Zod for forms.
 - Prefer shared formatting helpers in `src/shared/lib/format.ts`.
-- Cache invalidation: prefer `queryClient.invalidateQueries(trpc.<router>.<procedure>.queryFilter(input))` / `trpc.<router>.pathFilter()` over manual query keys.
+- Query params: use `nuqs` (`useQueryState` / `useQueryStates`) and avoid manual `router.replace` or `useSearchParams` reconciliation.
+- Cache invalidation: use `trpc.useUtils()` helpers; avoid manual query keys for tRPC data (use `QueryClient` only for non-tRPC caches).
+
+## tRPC (React Query Hooks)
+- Client: import `trpc` from `@/trpc/client` (created via `createTRPCReact<AppRouter>()`).
+- Queries: `trpc.<router>.<procedure>.useQuery(input?, opts?)`.
+- Mutations: `trpc.<router>.<procedure>.useMutation({ onSuccess, onError })`, then call `mutate` / `mutateAsync`.
+- Parallel queries: `trpc.useQueries((t) => [t.foo.bar(input), ...])`.
+- Cache helpers: `const utils = trpc.useUtils()` then `utils.<router>.<procedure>.invalidate(input?)` or `utils.<router>.invalidate()`.
+- Avoid legacy APIs: `useTRPC`, `useTRPCClient`, `queryOptions`, `mutationOptions`, and manual tRPC query keys.
 
 ## Time Zones (Place-Canonical)
 - Production runtimes often run in UTC; always treat `place.timeZone` (IANA) as canonical for booking/availability/pricing.

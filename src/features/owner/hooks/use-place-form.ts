@@ -1,7 +1,6 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTRPC, useTRPCClient } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 import type { PlaceFormData } from "../schemas/place-form.schema";
 
 interface PlaceFormResult {
@@ -23,48 +22,36 @@ export function usePlaceForm({
   placeId,
   onSuccess,
 }: UsePlaceFormOptions) {
-  const trpc = useTRPC();
-  const trpcClient = useTRPCClient();
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
   const isEditing = !!placeId;
 
-  const createMutation = useMutation({
-    mutationFn: async (data: PlaceFormData) => {
-      if (!organizationId) {
-        throw new Error("Organization is required to create a place");
-      }
-      const latitude = formatCoordinate(data.latitude) ?? "0.0";
-      const longitude = formatCoordinate(data.longitude) ?? "0.0";
-      return trpcClient.placeManagement.create.mutate({
-        organizationId,
-        name: data.name,
-        address: data.address,
-        city: data.city,
-        latitude,
-        longitude,
-        timeZone: data.timeZone,
-      });
-    },
-    onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ["owner-places"] });
+  const createMutation = trpc.placeManagement.create.useMutation({
+    onSuccess: async (result) => {
       if (organizationId) {
-        queryClient.invalidateQueries(
-          trpc.placeManagement.list.queryFilter({ organizationId }),
-        );
+        await utils.placeManagement.list.invalidate({ organizationId });
       }
+      await utils.placeManagement.invalidate();
       if (result) {
         onSuccess?.({ success: true, placeId: result.id });
       }
     },
   });
 
-  const updateMutation = useMutation({
-    mutationFn: async (data: PlaceFormData) => {
-      if (!placeId) {
-        throw new Error("Place ID is required to update");
+  const updateMutation = trpc.placeManagement.update.useMutation({
+    onSuccess: async (result) => {
+      if (placeId) {
+        await utils.placeManagement.getById.invalidate({ placeId });
       }
+      await utils.placeManagement.invalidate();
+      if (result) {
+        onSuccess?.({ success: true, placeId: result.id });
+      }
+    },
+  });
 
-      return trpcClient.placeManagement.update.mutate({
+  const submit = (data: PlaceFormData) => {
+    if (isEditing && placeId) {
+      updateMutation.mutate({
         placeId,
         name: data.name,
         address: data.address,
@@ -74,27 +61,25 @@ export function usePlaceForm({
         timeZone: data.timeZone,
         isActive: data.isActive,
       });
-    },
-    onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ["owner-places"] });
-      if (placeId) {
-        queryClient.invalidateQueries(
-          trpc.placeManagement.getById.queryFilter({ placeId }),
-        );
-      }
-      if (result) {
-        onSuccess?.({ success: true, placeId: result.id });
-      }
-    },
-  });
-
-  const submit = (data: PlaceFormData) => {
-    if (isEditing && placeId) {
-      updateMutation.mutate(data);
       return;
     }
 
-    createMutation.mutate(data);
+    if (!organizationId) {
+      throw new Error("Organization is required to create a place");
+    }
+
+    const latitude = formatCoordinate(data.latitude) ?? "0.0";
+    const longitude = formatCoordinate(data.longitude) ?? "0.0";
+
+    createMutation.mutate({
+      organizationId,
+      name: data.name,
+      address: data.address,
+      city: data.city,
+      latitude,
+      longitude,
+      timeZone: data.timeZone,
+    });
   };
 
   return {

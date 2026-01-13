@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -25,7 +24,7 @@ import {
   formatTime,
   formatTimeRange,
 } from "@/shared/lib/format";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 interface ReservableDetail {
   requiresOwnerConfirmation?: boolean | null;
@@ -48,16 +47,13 @@ export default function ReservationDetailPage() {
   const id = params.id as string;
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const queryClient = useQueryClient();
-  const trpc = useTRPC();
+  const utils = trpc.useUtils();
 
   const {
     data: reservationData,
     isLoading: isLoadingReservation,
     isFetching: isFetchingReservation,
-  } = useQuery({
-    ...trpc.reservation.getById.queryOptions({ reservationId: id }),
-  });
+  } = trpc.reservation.getById.useQuery({ reservationId: id });
 
   const parsedReservationData = reservationData as
     | { reservation: ReservationRecord; events: ReservationEventRecord[] }
@@ -73,77 +69,59 @@ export default function ReservationDetailPage() {
       ? parsedReservationData.events
       : [];
 
-  const { data: timeSlot, isLoading: isLoadingSlot } = useQuery({
-    ...trpc.timeSlot.getById.queryOptions({
-      slotId: reservation?.timeSlotId || "",
-    }),
-    enabled: !!reservation?.timeSlotId,
-  });
+  const { data: timeSlot, isLoading: isLoadingSlot } =
+    trpc.timeSlot.getById.useQuery(
+      { slotId: reservation?.timeSlotId || "" },
+      { enabled: !!reservation?.timeSlotId },
+    );
 
-  const { data: courtData, isLoading: isLoadingCourt } = useQuery({
-    ...trpc.court.getById.queryOptions({
-      courtId: timeSlot?.courtId || "",
-    }),
-    enabled: !!timeSlot?.courtId,
-  });
+  const { data: courtData, isLoading: isLoadingCourt } =
+    trpc.court.getById.useQuery(
+      { courtId: timeSlot?.courtId || "" },
+      { enabled: !!timeSlot?.courtId },
+    );
 
-  const { data: placeData, isLoading: isLoadingPlace } = useQuery({
-    ...trpc.place.getById.queryOptions({
-      placeId: courtData?.court.placeId || "",
-    }),
-    enabled: !!courtData?.court.placeId,
-  });
+  const { data: placeData, isLoading: isLoadingPlace } =
+    trpc.place.getById.useQuery(
+      { placeId: courtData?.court.placeId || "" },
+      { enabled: !!courtData?.court.placeId },
+    );
 
-  const { data: organizationData, isLoading: isLoadingOrganization } = useQuery(
-    {
-      ...trpc.organization.get.queryOptions({
-        id: placeData?.place.organizationId || "",
-      }),
-      enabled: !!placeData?.place.organizationId,
-    },
-  );
+  const { data: organizationData, isLoading: isLoadingOrganization } =
+    trpc.organization.get.useQuery(
+      { id: placeData?.place.organizationId || "" },
+      { enabled: !!placeData?.place.organizationId },
+    );
 
   const handleRefresh = async () => {
     if (!id) return;
     setIsRefreshing(true);
     try {
       const requests = [
-        queryClient.invalidateQueries(
-          trpc.reservation.getById.queryFilter({ reservationId: id }),
-        ),
+        utils.reservation.getById.invalidate({ reservationId: id }),
       ];
       if (reservation?.timeSlotId) {
         requests.push(
-          queryClient.invalidateQueries(
-            trpc.timeSlot.getById.queryFilter({
-              slotId: reservation.timeSlotId,
-            }),
-          ),
+          utils.timeSlot.getById.invalidate({
+            slotId: reservation.timeSlotId,
+          }),
         );
       }
       if (timeSlot?.courtId) {
         requests.push(
-          queryClient.invalidateQueries(
-            trpc.court.getById.queryFilter({ courtId: timeSlot.courtId }),
-          ),
+          utils.court.getById.invalidate({ courtId: timeSlot.courtId }),
         );
       }
       if (courtData?.court.placeId) {
         requests.push(
-          queryClient.invalidateQueries(
-            trpc.place.getById.queryFilter({
-              placeId: courtData.court.placeId,
-            }),
-          ),
+          utils.place.getById.invalidate({ placeId: courtData.court.placeId }),
         );
       }
       if (placeData?.place.organizationId) {
         requests.push(
-          queryClient.invalidateQueries(
-            trpc.organization.get.queryFilter({
-              id: placeData.place.organizationId,
-            }),
-          ),
+          utils.organization.get.invalidate({
+            id: placeData.place.organizationId,
+          }),
         );
       }
       await Promise.all(requests);

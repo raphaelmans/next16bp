@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Building2, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -16,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 const organizationFormSchema = z.object({
   name: z.string().min(1, "Name is required").max(150),
@@ -40,14 +39,12 @@ export function OrganizationForm({
   onSuccess,
   onCancel,
 }: OrganizationFormProps) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
   const [_slugPreview, _setSlugPreview] = useState<string>("");
 
-  const createMutation = useMutation({
-    ...trpc.organization.create.mutationOptions(),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries(trpc.organization.my.queryFilter());
+  const createMutation = trpc.organization.create.useMutation({
+    onSuccess: async (data) => {
+      await utils.organization.my.invalidate();
       onSuccess?.({ id: data.organization.id });
     },
   });

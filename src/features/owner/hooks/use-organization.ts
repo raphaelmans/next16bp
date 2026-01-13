@@ -1,8 +1,8 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export interface Organization {
   id: string;
@@ -30,12 +30,10 @@ export interface UpdateOrganizationData {
  * Fetch an organization by ID
  */
 export function useOrganization(orgId?: string) {
-  const trpc = useTRPC();
-
-  return useQuery({
-    ...trpc.organization.get.queryOptions({ id: orgId ?? "" }),
-    enabled: !!orgId,
-  });
+  return trpc.organization.get.useQuery(
+    { id: orgId ?? "" },
+    { enabled: !!orgId },
+  );
 }
 
 /**
@@ -44,22 +42,21 @@ export function useOrganization(orgId?: string) {
  * We need to fetch the full org data including profile via organization.get
  */
 export function useCurrentOrganization() {
-  const trpc = useTRPC();
-
   // First get the list of organizations
   const {
     data: organizations,
     isLoading: listLoading,
     ...rest
-  } = useQuery(trpc.organization.my.queryOptions());
+  } = trpc.organization.my.useQuery();
 
   const firstOrgId = organizations?.[0]?.id;
 
   // Then fetch the first organization with full details including profile
-  const { data: fullOrg, isLoading: fullLoading } = useQuery({
-    ...trpc.organization.get.queryOptions({ id: firstOrgId ?? "" }),
-    enabled: !!firstOrgId,
-  });
+  const { data: fullOrg, isLoading: fullLoading } =
+    trpc.organization.get.useQuery(
+      { id: firstOrgId ?? "" },
+      { enabled: !!firstOrgId },
+    );
 
   const org = fullOrg?.organization;
   const profile = fullOrg?.profile;
@@ -88,33 +85,26 @@ export function useCurrentOrganization() {
  * Makes two mutation calls: one for basic info, one for profile
  */
 export function useUpdateOrganization() {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  // Create separate mutation options for each endpoint
-  const updateOrgMutation = useMutation({
-    ...trpc.organization.update.mutationOptions(),
-  });
-
-  const updateProfileMutation = useMutation({
-    ...trpc.organization.updateProfile.mutationOptions(),
-    onSuccess: () => {
-      // Invalidate after profile update (last step)
-      queryClient.invalidateQueries(trpc.organization.my.queryFilter());
-      queryClient.invalidateQueries(trpc.organization.get.queryFilter());
+  const updateOrgMutation = trpc.organization.update.useMutation();
+  const updateProfileMutation = trpc.organization.updateProfile.useMutation({
+    onSuccess: async () => {
+      await Promise.all([
+        utils.organization.my.invalidate(),
+        utils.organization.get.invalidate(),
+      ]);
     },
   });
 
   return useMutation({
     mutationFn: async (data: UpdateOrganizationData) => {
-      // Update basic org info
       await updateOrgMutation.mutateAsync({
         id: data.organizationId,
         name: data.name,
         slug: data.slug,
       });
 
-      // Update profile
       await updateProfileMutation.mutateAsync({
         organizationId: data.organizationId,
         description: data.description,
@@ -132,23 +122,20 @@ export function useUpdateOrganization() {
  * Upload organization logo
  */
 export function useUploadOrganizationLogo(organizationId: string) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation(
-    trpc.organization.uploadLogo.mutationOptions({
-      onSuccess: () => {
-        toast.success("Logo uploaded successfully");
-        queryClient.invalidateQueries(
-          trpc.organization.get.queryFilter({ id: organizationId }),
-        );
-        queryClient.invalidateQueries(trpc.organization.my.queryFilter());
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to upload logo");
-      },
-    }),
-  );
+  return trpc.organization.uploadLogo.useMutation({
+    onSuccess: async () => {
+      toast.success("Logo uploaded successfully");
+      await Promise.all([
+        utils.organization.get.invalidate({ id: organizationId }),
+        utils.organization.my.invalidate(),
+      ]);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to upload logo");
+    },
+  });
 }
 
 export interface RemovalRequestData {

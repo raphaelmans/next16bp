@@ -1,8 +1,5 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
 import type { PlaceCardPlace } from "@/shared/components/kudos";
-import { useTRPCClient } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 interface UseDiscoveryOptions {
   q?: string;
@@ -23,8 +20,8 @@ interface PlaceListItem {
     name: string;
     address: string;
     city: string;
-    latitude: string;
-    longitude: string;
+    latitude: string | null;
+    longitude: string | null;
   };
   sports: { id: string; name: string; slug: string }[];
   courtCount?: number;
@@ -41,8 +38,8 @@ interface DiscoveryResult {
 }
 
 const mapPlaceSummary = (item: PlaceListItem): PlaceSummary => {
-  const latitude = Number.parseFloat(item.place.latitude);
-  const longitude = Number.parseFloat(item.place.longitude);
+  const latitude = Number.parseFloat(item.place.latitude ?? "");
+  const longitude = Number.parseFloat(item.place.longitude ?? "");
 
   return {
     id: item.place.id,
@@ -74,33 +71,24 @@ const matchesQuery = (place: PlaceSummary, query?: string) => {
 
 export function useDiscoveryPlaces(options: UseDiscoveryOptions = {}) {
   const { q, city, sportId, page = 1, limit = 12 } = options;
-  const trpcClient = useTRPCClient();
   const offset = (page - 1) * limit;
 
-  const query = useQuery({
-    queryKey: ["place-discovery", q, city, sportId, page, limit],
-    queryFn: async () =>
-      trpcClient.place.list.query({
-        city,
-        sportId,
-        limit,
-        offset,
-      }),
+  const query = trpc.place.list.useQuery({
+    city,
+    sportId,
+    limit,
+    offset,
   });
 
   const transformedData: DiscoveryResult | undefined = query.data
     ? (() => {
-        const response = query.data as {
-          items: PlaceListItem[];
-          total: number;
-        };
-        const mappedPlaces = response.items.map(mapPlaceSummary);
+        const mappedPlaces = query.data.items.map(mapPlaceSummary);
         const filteredPlaces = mappedPlaces.filter((place) =>
           matchesQuery(place, q),
         );
-        const total = q ? filteredPlaces.length : response.total;
+        const total = q ? filteredPlaces.length : query.data.total;
         const hasMore =
-          !q && (page - 1) * limit + response.items.length < response.total;
+          !q && (page - 1) * limit + query.data.items.length < query.data.total;
 
         return {
           places: filteredPlaces,
@@ -119,21 +107,13 @@ export function useDiscoveryPlaces(options: UseDiscoveryOptions = {}) {
 }
 
 export function useFeaturedPlaces(limit = 6) {
-  const trpcClient = useTRPCClient();
-
-  const query = useQuery({
-    queryKey: ["place-featured", limit],
-    queryFn: async () =>
-      trpcClient.place.list.query({
-        limit,
-        offset: 0,
-      }),
+  const query = trpc.place.list.useQuery({
+    limit,
+    offset: 0,
   });
 
   const places: PlaceSummary[] = query.data
-    ? (query.data as { items: PlaceListItem[] }).items
-        .map(mapPlaceSummary)
-        .slice(0, limit)
+    ? query.data.items.map(mapPlaceSummary).slice(0, limit)
     : [];
 
   return {

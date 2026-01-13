@@ -1,8 +1,8 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import type { PlaceRecord } from "@/shared/infra/db/schema";
-import { useTRPCClient } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 import type { OwnerCourt } from "./use-owner-courts";
 
 export interface OwnerPlaceSport {
@@ -21,8 +21,6 @@ export interface OwnerPlace {
   sports: OwnerPlaceSport[];
   isActive: boolean;
 }
-
-type TrpcClient = ReturnType<typeof useTRPCClient>;
 
 type OwnerPlaceRecord = Pick<
   PlaceRecord,
@@ -88,61 +86,79 @@ const mapOwnerCourt = (
   isActive: court.court.isActive,
 });
 
-async function fetchCourtsByPlace(trpcClient: TrpcClient, placeId: string) {
-  return trpcClient.courtManagement.listByPlace.query({ placeId });
-}
-
 export function useOwnerPlaces(organizationId?: string | null) {
-  const trpcClient = useTRPCClient();
+  const placesQuery = trpc.placeManagement.list.useQuery(
+    { organizationId: organizationId ?? "" },
+    { enabled: !!organizationId },
+  );
 
-  return useQuery({
-    queryKey: ["owner-places", organizationId],
-    queryFn: async () => {
-      if (!organizationId) return [];
-      const places = await trpcClient.placeManagement.list.query({
-        organizationId,
-      });
-      const courtsByPlace = await Promise.all(
-        places.map((place) => fetchCourtsByPlace(trpcClient, place.id)),
-      );
-      return places.map((place, index) =>
-        mapOwnerPlace(place, courtsByPlace[index] ?? []),
-      );
-    },
-    enabled: !!organizationId,
-  });
+  const courtQueries = trpc.useQueries((t) =>
+    (placesQuery.data ?? []).map((place) =>
+      t.courtManagement.listByPlace({ placeId: place.id }),
+    ),
+  );
+
+  const isCourtsLoading = courtQueries.some((query) => query.isLoading);
+
+  const data = useMemo(() => {
+    if (!placesQuery.data) return [];
+
+    return placesQuery.data.map((place, index) =>
+      mapOwnerPlace(place, courtQueries[index]?.data ?? []),
+    );
+  }, [courtQueries, placesQuery.data]);
+
+  return {
+    ...placesQuery,
+    data,
+    isLoading: placesQuery.isLoading || isCourtsLoading,
+  };
 }
 
 export function useOwnerPlace(placeId: string) {
-  const trpcClient = useTRPCClient();
+  const placeQuery = trpc.placeManagement.getById.useQuery(
+    { placeId },
+    { enabled: !!placeId },
+  );
 
-  return useQuery({
-    queryKey: ["owner-place", placeId],
-    queryFn: async () => {
-      if (!placeId) return undefined;
-      const placeResponse = await trpcClient.placeManagement.getById.query({
-        placeId,
-      });
-      const courts = await fetchCourtsByPlace(trpcClient, placeId);
-      return mapOwnerPlace(placeResponse.place, courts);
-    },
-    enabled: !!placeId,
-  });
+  const courtsQuery = trpc.courtManagement.listByPlace.useQuery(
+    { placeId },
+    { enabled: !!placeId },
+  );
+
+  const data = useMemo(() => {
+    if (!placeQuery.data) return undefined;
+    return mapOwnerPlace(placeQuery.data.place, courtsQuery.data ?? []);
+  }, [courtsQuery.data, placeQuery.data]);
+
+  return {
+    ...placeQuery,
+    data,
+    isLoading: placeQuery.isLoading || courtsQuery.isLoading,
+  };
 }
 
 export function useOwnerCourtsByPlace(placeId: string) {
-  const trpcClient = useTRPCClient();
+  const placeQuery = trpc.placeManagement.getById.useQuery(
+    { placeId },
+    { enabled: !!placeId },
+  );
 
-  return useQuery({
-    queryKey: ["owner-place-courts", placeId],
-    queryFn: async () => {
-      if (!placeId) return [] as OwnerCourt[];
-      const [placeResponse, courts] = await Promise.all([
-        trpcClient.placeManagement.getById.query({ placeId }),
-        fetchCourtsByPlace(trpcClient, placeId),
-      ]);
-      return courts.map((court) => mapOwnerCourt(court, placeResponse.place));
-    },
-    enabled: !!placeId,
-  });
+  const courtsQuery = trpc.courtManagement.listByPlace.useQuery(
+    { placeId },
+    { enabled: !!placeId },
+  );
+
+  const data = useMemo(() => {
+    if (!placeQuery.data) return [] as OwnerCourt[];
+    return (courtsQuery.data ?? []).map((court) =>
+      mapOwnerCourt(court, placeQuery.data.place),
+    );
+  }, [courtsQuery.data, placeQuery.data]);
+
+  return {
+    ...courtsQuery,
+    data,
+    isLoading: placeQuery.isLoading || courtsQuery.isLoading,
+  };
 }

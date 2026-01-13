@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 import { useOwnerCourts } from "./use-owner-courts";
 
 /**
@@ -9,17 +9,14 @@ import { useOwnerCourts } from "./use-owner-courts";
  * Simplified to only show available data.
  */
 export function useOwnerStats(organizationId: string | null) {
-  const trpc = useTRPC();
-
   const { data: courts = [], isLoading: courtsLoading } =
     useOwnerCourts(organizationId);
 
-  const { data: pendingCount, isLoading: pendingLoading } = useQuery({
-    ...trpc.reservationOwner.getPendingCount.queryOptions({
-      organizationId: organizationId ?? "",
-    }),
-    enabled: !!organizationId,
-  });
+  const { data: pendingCount, isLoading: pendingLoading } =
+    trpc.reservationOwner.getPendingCount.useQuery(
+      { organizationId: organizationId ?? "" },
+      { enabled: !!organizationId },
+    );
 
   return {
     data: {

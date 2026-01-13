@@ -1,7 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 import type { ReservationTab } from "./use-reservations-tabs";
 
 interface UseMyReservationsOptions {
@@ -36,18 +35,15 @@ const TAB_STATUS_MAP: Record<
  */
 export function useMyReservations(options: UseMyReservationsOptions = {}) {
   const { tab = "upcoming", page = 1, limit = 10 } = options;
-  const trpc = useTRPC();
   const offset = (page - 1) * limit;
 
   const status = tab === "cancelled" ? undefined : TAB_STATUS_MAP[tab];
 
-  const query = useQuery(
-    trpc.reservation.getMy.queryOptions({
-      status,
-      limit,
-      offset,
-    }),
-  );
+  const query = trpc.reservation.getMy.useQuery({
+    status,
+    limit,
+    offset,
+  });
 
   // Transform the array data to paginated format with UI-friendly structure
   // Note: Backend returns plain reservation records, we enrich with placeholder structure
@@ -104,40 +100,29 @@ export function useMyReservations(options: UseMyReservationsOptions = {}) {
  * This fetches counts for each tab to display badges
  */
 export function useReservationCounts() {
-  const trpc = useTRPC();
-
-  // Fetch counts for each status category
-  const upcomingQuery = useQuery(
-    trpc.reservation.getMy.queryOptions({
-      status: "AWAITING_PAYMENT",
-      limit: 100,
-      offset: 0,
-    }),
-  );
-
-  const pastQuery = useQuery(
-    trpc.reservation.getMy.queryOptions({
-      status: "CONFIRMED",
-      limit: 100,
-      offset: 0,
-    }),
-  );
-
-  const cancelledQuery = useQuery(
-    trpc.reservation.getMy.queryOptions({
-      status: "CANCELLED",
-      limit: 100,
-      offset: 0,
-    }),
-  );
-
-  const expiredQuery = useQuery(
-    trpc.reservation.getMy.queryOptions({
-      status: "EXPIRED",
-      limit: 100,
-      offset: 0,
-    }),
-  );
+  const [upcomingQuery, pastQuery, cancelledQuery, expiredQuery] =
+    trpc.useQueries((t) => [
+      t.reservation.getMy({
+        status: "AWAITING_PAYMENT",
+        limit: 100,
+        offset: 0,
+      }),
+      t.reservation.getMy({
+        status: "CONFIRMED",
+        limit: 100,
+        offset: 0,
+      }),
+      t.reservation.getMy({
+        status: "CANCELLED",
+        limit: 100,
+        offset: 0,
+      }),
+      t.reservation.getMy({
+        status: "EXPIRED",
+        limit: 100,
+        offset: 0,
+      }),
+    ]);
 
   return {
     data: {

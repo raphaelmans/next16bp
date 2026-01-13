@@ -1,6 +1,5 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
   Calendar as CalendarIcon,
@@ -51,7 +50,7 @@ import {
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 type TabValue = "pending" | "upcoming" | "past" | "cancelled";
 
@@ -117,8 +116,7 @@ function ReservationsEmptyState({ type }: { type: TabValue | "all" }) {
 export default function OwnerReservationsPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
-  const queryClient = useQueryClient();
-  const trpc = useTRPC();
+  const utils = trpc.useUtils();
   const [isRefreshing, setIsRefreshing] = React.useState(false);
 
   // Get organization and courts from hooks
@@ -186,39 +184,16 @@ export default function OwnerReservationsPage() {
     setIsRefreshing(true);
     try {
       await Promise.all([
-        queryClient.invalidateQueries(
-          trpc.reservationOwner.getForOrganization.queryFilter(),
-        ),
-        queryClient.invalidateQueries(
-          trpc.reservationOwner.getPendingCount.queryFilter({
-            organizationId: organization.id,
-          }),
-        ),
+        utils.reservationOwner.getForOrganization.invalidate(),
+        utils.reservationOwner.getPendingCount.invalidate(),
       ]);
     } finally {
       setIsRefreshing(false);
     }
   };
 
-  const handleLogout = async () => {
-    await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(appRoutes.owner.reservations);
-  };
-
-  // Filter reservations for upcoming/past tabs
   const filteredReservations = React.useMemo(() => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    if (activeTab === "upcoming") {
-      return filteredByPlace.filter((r) => {
-        const reservationDate = new Date(r.date);
-        return (
-          reservationDate >= today &&
-          (r.status === "confirmed" || r.status === "pending")
-        );
-      });
-    }
 
     if (activeTab === "past") {
       return filteredByPlace.filter((r) => {
@@ -229,6 +204,11 @@ export default function OwnerReservationsPage() {
 
     return filteredByPlace;
   }, [activeTab, filteredByPlace]);
+
+  const handleLogout = async () => {
+    await logoutMutation.mutateAsync();
+    window.location.href = appRoutes.login.from(appRoutes.owner.reservations);
+  };
 
   const handleConfirmClick = (reservationId: string) => {
     const reservation = reservations.find((r) => r.id === reservationId);

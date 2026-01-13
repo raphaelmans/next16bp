@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,30 +15,26 @@ import { useCourtForm } from "@/features/owner/hooks";
 import type { CourtFormData } from "@/features/owner/schemas/court-form.schema";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export default function CreateCourtSetupPage() {
   const router = useRouter();
-  const trpc = useTRPC();
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
-  const { data: organizations, isLoading: orgsLoading } = useQuery(
-    trpc.organization.my.queryOptions(),
-  );
+  const { data: organizations, isLoading: orgsLoading } =
+    trpc.organization.my.useQuery();
 
   const organization = organizations?.[0];
 
-  const { data: places = [], isLoading: placesLoading } = useQuery({
-    ...trpc.placeManagement.list.queryOptions({
-      organizationId: organization?.id ?? "",
-    }),
-    enabled: !!organization?.id,
-  });
+  const { data: places = [], isLoading: placesLoading } =
+    trpc.placeManagement.list.useQuery(
+      { organizationId: organization?.id ?? "" },
+      { enabled: !!organization?.id },
+    );
 
-  const { data: sports = [], isLoading: sportsLoading } = useQuery(
-    trpc.sport.list.queryOptions({}),
-  );
+  const { data: sports = [], isLoading: sportsLoading } =
+    trpc.sport.list.useQuery({});
 
   const selectedPlaceIdRef = React.useRef<string>("");
   const [draft, setDraft] = React.useState<Partial<CourtFormData>>({});
@@ -54,7 +49,11 @@ export default function CreateCourtSetupPage() {
         return;
       }
       router.push(
-        `${appRoutes.owner.places.courts.setup(targetPlaceId, result.courtId)}?step=hours`,
+        appRoutes.owner.places.courts.setup(
+          targetPlaceId,
+          result.courtId,
+          "schedule",
+        ),
       );
     },
   });

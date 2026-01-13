@@ -1,8 +1,8 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
 import type { PlaceRecord } from "@/shared/infra/db/schema";
-import { useTRPCClient } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export interface OwnerCourt {
   id: string;
@@ -20,8 +20,6 @@ export interface OwnerCourt {
   createdAt: Date | string;
   isActive: boolean;
 }
-
-type TrpcClient = ReturnType<typeof useTRPCClient>;
 
 type OwnerPlace = Pick<PlaceRecord, "id" | "name" | "city">;
 
@@ -63,69 +61,72 @@ function mapOwnerCourt(
   };
 }
 
-async function fetchOwnerCourts(
-  trpcClient: TrpcClient,
-  organizationId: string,
-): Promise<OwnerCourt[]> {
-  const places = await trpcClient.placeManagement.list.query({
-    organizationId,
-  });
-
-  const courtGroups = await Promise.all(
-    places.map(async (place) => {
-      const courts = await trpcClient.courtManagement.listByPlace.query({
-        placeId: place.id,
-      });
-      return courts.map((court) => mapOwnerCourt(court, place));
-    }),
+export function useOwnerCourts(organizationId?: string | null) {
+  const placesQuery = trpc.placeManagement.list.useQuery(
+    { organizationId: organizationId ?? "" },
+    {
+      enabled: !!organizationId,
+      staleTime: 1000 * 60 * 5,
+    },
   );
 
-  return courtGroups.flat();
-}
+  const courtQueries = trpc.useQueries((t) =>
+    (placesQuery.data ?? []).map((place) =>
+      t.courtManagement.listByPlace({ placeId: place.id }),
+    ),
+  );
 
-export function useOwnerCourts(organizationId?: string | null) {
-  const trpcClient = useTRPCClient();
+  const isCourtsLoading = courtQueries.some((query) => query.isLoading);
 
-  return useQuery({
-    queryKey: ["owner-courts", organizationId],
-    queryFn: async () => {
-      if (!organizationId) return [];
-      return fetchOwnerCourts(trpcClient, organizationId);
-    },
-    enabled: !!organizationId,
-    staleTime: 1000 * 60 * 5,
-  });
+  const data = useMemo(() => {
+    if (!placesQuery.data) return [];
+
+    return courtQueries.flatMap((query, index) => {
+      const place = placesQuery.data[index];
+      if (!place) return [];
+
+      return (query.data ?? []).map((court) => mapOwnerCourt(court, place));
+    });
+  }, [courtQueries, placesQuery.data]);
+
+  return {
+    ...placesQuery,
+    data,
+    isLoading: placesQuery.isLoading || isCourtsLoading,
+  };
 }
 
 export function useOwnerCourt(courtId: string) {
-  const trpcClient = useTRPCClient();
+  const courtQuery = trpc.courtManagement.getById.useQuery(
+    { courtId },
+    { enabled: !!courtId },
+  );
 
-  return useQuery({
-    queryKey: ["owner-court", courtId],
-    queryFn: async () => {
-      if (!courtId) return null;
-      const court = await trpcClient.courtManagement.getById.query({ courtId });
-      const place = await trpcClient.placeManagement.getById.query({
-        placeId: court.court.placeId,
-      });
-      return mapOwnerCourt(court, place.place);
-    },
-    enabled: !!courtId,
-  });
+  const placeId = courtQuery.data?.court.placeId ?? "";
+
+  const placeQuery = trpc.placeManagement.getById.useQuery(
+    { placeId },
+    { enabled: !!placeId },
+  );
+
+  const data = useMemo(() => {
+    if (!courtQuery.data || !placeQuery.data) return null;
+    return mapOwnerCourt(courtQuery.data, placeQuery.data.place);
+  }, [courtQuery.data, placeQuery.data]);
+
+  return {
+    ...courtQuery,
+    data,
+    isLoading: courtQuery.isLoading || placeQuery.isLoading,
+  };
 }
 
 export function useDeactivateCourt() {
-  const trpcClient = useTRPCClient();
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    mutationFn: async ({ courtId }: { courtId: string }) =>
-      trpcClient.courtManagement.update.mutate({
-        courtId,
-        isActive: false,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["owner-courts"] });
+  return trpc.courtManagement.update.useMutation({
+    onSuccess: async () => {
+      await utils.courtManagement.invalidate();
     },
   });
 }

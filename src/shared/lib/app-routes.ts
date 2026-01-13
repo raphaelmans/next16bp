@@ -95,8 +95,15 @@ export const appRoutes = {
           `/owner/places/${placeId}/courts/setup`,
         edit: (placeId: string, courtId: string) =>
           `/owner/places/${placeId}/courts/${courtId}/edit`,
-        setup: (placeId: string, courtId: string) =>
-          `/owner/places/${placeId}/courts/${courtId}/setup`,
+        setup: (placeId: string, courtId: string, step?: string) => {
+          const params = new URLSearchParams({ courtId });
+          if (step) {
+            params.set("step", step);
+          }
+          return `/owner/places/${placeId}/courts/setup?${params.toString()}`;
+        },
+        schedule: (placeId: string, courtId: string) =>
+          `/owner/places/${placeId}/courts/${courtId}/schedule`,
         hours: (placeId: string, courtId: string) =>
           `/owner/places/${placeId}/courts/${courtId}/hours`,
         pricing: (placeId: string, courtId: string) =>

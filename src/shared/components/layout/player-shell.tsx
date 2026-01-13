@@ -1,9 +1,8 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useLogout, useSession } from "@/features/auth";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 import { AppShell } from "./app-shell";
 import { PlayerNavbar } from "./player-navbar";
 import { PlayerSidebar } from "./player-sidebar";
@@ -16,10 +15,8 @@ export function PlayerShell({ children }: PlayerShellProps) {
   const router = useRouter();
   const { data: sessionUser } = useSession();
   const logoutMutation = useLogout();
-  const trpc = useTRPC();
 
-  const { data: orgs } = useQuery({
-    ...trpc.organization.my.queryOptions(),
+  const { data: orgs } = trpc.organization.my.useQuery(undefined, {
     enabled: !!sessionUser,
   });
 

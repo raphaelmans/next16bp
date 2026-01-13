@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
 
 const DEFAULT_STORAGE_KEY = "owner.selectedCourtId";
@@ -26,15 +26,19 @@ function writeStoredCourtId(storageKey: string, courtId: string) {
   }
 }
 
-export function useOwnerCourtFilter(options?: { storageKey?: string }) {
+export function useOwnerCourtFilter(options?: {
+  storageKey?: string;
+  syncToUrl?: boolean;
+}) {
   const storageKey = options?.storageKey ?? DEFAULT_STORAGE_KEY;
+  const syncToUrl = options?.syncToUrl ?? true;
 
-  const pathname = usePathname();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const searchParamsString = searchParams.toString();
+  const [queryCourtId, setQueryCourtId] = useQueryState(
+    COURT_ID_PARAM,
+    parseAsString.withOptions({ history: "replace" }),
+  );
 
-  const paramCourtId = searchParams.get(COURT_ID_PARAM) ?? "";
+  const paramCourtId = syncToUrl ? (queryCourtId ?? "") : "";
   const [courtId, setCourtIdState] = React.useState<string>("");
 
   React.useEffect(() => {
@@ -47,31 +51,23 @@ export function useOwnerCourtFilter(options?: { storageKey?: string }) {
     const stored = readStoredCourtId(storageKey);
     setCourtIdState(stored);
 
-    if (stored) {
-      const params = new URLSearchParams(searchParamsString);
-      params.set(COURT_ID_PARAM, stored);
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    if (stored && syncToUrl && !queryCourtId) {
+      setQueryCourtId(stored);
     }
-  }, [paramCourtId, pathname, router, searchParamsString, storageKey]);
+  }, [paramCourtId, queryCourtId, setQueryCourtId, storageKey, syncToUrl]);
 
   const setCourtId = React.useCallback(
     (nextCourtId: string) => {
       setCourtIdState(nextCourtId);
       writeStoredCourtId(storageKey, nextCourtId);
 
-      const params = new URLSearchParams(searchParamsString);
-      if (nextCourtId) {
-        params.set(COURT_ID_PARAM, nextCourtId);
-      } else {
-        params.delete(COURT_ID_PARAM);
+      if (!syncToUrl) {
+        return;
       }
 
-      const nextUrl = params.toString()
-        ? `${pathname}?${params.toString()}`
-        : pathname;
-      router.replace(nextUrl, { scroll: false });
+      setQueryCourtId(nextCourtId || null);
     },
-    [pathname, router, searchParamsString, storageKey],
+    [setQueryCourtId, storageKey, syncToUrl],
   );
 
   return { courtId, setCourtId };

@@ -6,6 +6,11 @@ const DEFAULT_TIME_ZONE = "Asia/Manila";
 const normalizeTimeZone = (timeZone?: string) =>
   timeZone?.trim() || DEFAULT_TIME_ZONE;
 
+export const toUtcISOString = (instant: Date | string) => {
+  const parsed = typeof instant === "string" ? new Date(instant) : instant;
+  return new Date(parsed.getTime()).toISOString();
+};
+
 export const getZonedDate = (instant: Date | string, timeZone?: string) => {
   const parsed = typeof instant === "string" ? new Date(instant) : instant;
   return new TZDate(parsed.getTime(), normalizeTimeZone(timeZone));
@@ -58,7 +63,7 @@ export const getZonedWeekdayMinuteOfDay = (
 export const getZonedStartOfDayIso = (
   instant: Date | string,
   timeZone?: string,
-) => getZonedDayRangeForInstant(instant, timeZone).start.toISOString();
+) => toUtcISOString(getZonedDayRangeForInstant(instant, timeZone).start);
 
 export const getZonedToday = (timeZone?: string) => {
   const tz = normalizeTimeZone(timeZone);

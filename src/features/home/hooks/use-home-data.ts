@@ -1,18 +1,13 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export function useHomeData() {
-  const trpc = useTRPC();
+  const profileQuery = trpc.profile.me.useQuery();
 
-  const profileQuery = useQuery(trpc.profile.me.queryOptions());
+  const reservationsQuery = trpc.reservation.getMy.useQuery({ limit: 3 });
 
-  const reservationsQuery = useQuery(
-    trpc.reservation.getMy.queryOptions({ limit: 3 }),
-  );
-
-  const orgsQuery = useQuery(trpc.organization.my.queryOptions());
+  const orgsQuery = trpc.organization.my.useQuery();
 
   const organization = orgsQuery.data?.[0] ?? null;
 

@@ -1,9 +1,11 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import type { TimeSlot, TimeSlotStatus } from "@/shared/components/kudos";
-import { getZonedDayRangeForInstant } from "@/shared/lib/time-zone";
-import { useTRPC } from "@/trpc/client";
+import {
+  getZonedDayRangeForInstant,
+  toUtcISOString,
+} from "@/shared/lib/time-zone";
+import { trpc } from "@/trpc/client";
 
 export interface CourtDetail {
   id: string;
@@ -23,10 +25,9 @@ interface UseCourtDetailOptions {
 }
 
 export function useCourtDetail({ courtId }: UseCourtDetailOptions) {
-  const trpc = useTRPC();
-
-  const query = useQuery(
-    trpc.court.getById.queryOptions({ courtId }, { enabled: !!courtId }),
+  const query = trpc.court.getById.useQuery(
+    { courtId },
+    { enabled: !!courtId },
   );
 
   const transformedData: CourtDetail | undefined = query.data
@@ -71,23 +72,19 @@ export function useAvailableSlots({
   date,
   timeZone,
 }: UseAvailableSlotsOptions) {
-  const trpc = useTRPC();
-
   const dayRange = date
     ? getZonedDayRangeForInstant(date, timeZone)
     : undefined;
-  const startDate = dayRange?.start.toISOString();
-  const endDate = dayRange?.end.toISOString();
+  const startDate = dayRange ? toUtcISOString(dayRange.start) : undefined;
+  const endDate = dayRange ? toUtcISOString(dayRange.end) : undefined;
 
-  const query = useQuery(
-    trpc.timeSlot.getAvailable.queryOptions(
-      {
-        courtId,
-        startDate: startDate ?? "",
-        endDate: endDate ?? "",
-      },
-      { enabled: !!courtId && !!date },
-    ),
+  const query = trpc.timeSlot.getAvailable.useQuery(
+    {
+      courtId,
+      startDate: startDate ?? "",
+      endDate: endDate ?? "",
+    },
+    { enabled: !!courtId && !!date },
   );
 
   const transformedData: TimeSlot[] = (query.data ?? []).map((slot) => ({

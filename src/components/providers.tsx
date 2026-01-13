@@ -2,7 +2,6 @@
 
 import { QueryClientProvider } from "@tanstack/react-query";
 import {
-  createTRPCClient,
   httpBatchLink,
   httpLink,
   isNonJsonSerializable,
@@ -10,8 +9,7 @@ import {
 } from "@trpc/client";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { useState } from "react";
-import type { AppRouter } from "@/shared/infra/trpc/root";
-import { TRPCProvider } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 import { getQueryClient } from "@/trpc/query-client";
 
 /**
@@ -29,13 +27,13 @@ function getBaseUrl() {
 
 /**
  * Root providers component.
- * Wraps the application with QueryClientProvider and TRPCProvider.
+ * Wraps the application with QueryClientProvider and tRPC Provider.
  */
 export function Providers({ children }: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
 
   const [trpcClient] = useState(() =>
-    createTRPCClient<AppRouter>({
+    trpc.createClient({
       links: [
         splitLink({
           // Route FormData/File/Blob to non-batched endpoint
@@ -55,11 +53,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <NuqsAdapter>
-      <QueryClientProvider client={queryClient}>
-        <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
+      <trpc.Provider client={trpcClient} queryClient={queryClient}>
+        <QueryClientProvider client={queryClient}>
           {children}
-        </TRPCProvider>
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </trpc.Provider>
     </NuqsAdapter>
   );
 }

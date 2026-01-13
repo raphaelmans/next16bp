@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ArrowLeft, Clock } from "lucide-react";
 import Link from "next/link";
@@ -30,7 +29,7 @@ import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { formatCurrency } from "@/shared/lib/format";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 const stageConfig = {
   CREATED: {
@@ -80,17 +79,17 @@ export default function OwnerReservationDetailPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
   const { organization, organizations } = useOwnerOrganization();
-  const trpc = useTRPC();
 
   const { data: reservations = [], isLoading } = useOwnerReservations(
     organization?.id ?? null,
     { reservationId },
   );
 
-  const { data: history = [], isLoading: historyLoading } = useQuery({
-    ...trpc.audit.reservationHistory.queryOptions({ reservationId }),
-    enabled: !!reservationId,
-  });
+  const { data: history = [], isLoading: historyLoading } =
+    trpc.audit.reservationHistory.useQuery(
+      { reservationId },
+      { enabled: !!reservationId },
+    );
 
   const reservation = reservations[0];
   const acceptMutation = useAcceptReservation();

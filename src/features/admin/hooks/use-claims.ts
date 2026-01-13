@@ -1,8 +1,7 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export type ClaimType = "claim" | "removal";
 export type ClaimStatus = "pending" | "approved" | "rejected";
@@ -52,16 +51,13 @@ interface UseClaimsOptions {
  */
 export function useClaims(options: UseClaimsOptions = {}) {
   const { status: _status, page = 1, limit = 10 } = options;
-  const trpc = useTRPC();
   const offset = (page - 1) * limit;
 
   // Only fetch pending claims for now (backend only supports pending filter)
-  const query = useQuery(
-    trpc.admin.claim.getPending.queryOptions({
-      limit,
-      offset,
-    }),
-  );
+  const query = trpc.admin.claim.getPending.useQuery({
+    limit,
+    offset,
+  });
 
   // Transform to expected format
   const transformedData = query.data
@@ -102,13 +98,9 @@ export function useClaims(options: UseClaimsOptions = {}) {
  * Connected to admin.claim.getById tRPC endpoint
  */
 export function useClaim(claimId: string) {
-  const trpc = useTRPC();
-
-  const query = useQuery(
-    trpc.admin.claim.getById.queryOptions(
-      { id: claimId },
-      { enabled: !!claimId },
-    ),
+  const query = trpc.admin.claim.getById.useQuery(
+    { id: claimId },
+    { enabled: !!claimId },
   );
 
   // Transform to expected format
@@ -147,13 +139,9 @@ export function useClaim(claimId: string) {
  * Uses events from the claim detail response
  */
 export function useClaimEvents(claimId: string) {
-  const trpc = useTRPC();
-
-  const query = useQuery(
-    trpc.admin.claim.getById.queryOptions(
-      { id: claimId },
-      { enabled: !!claimId },
-    ),
+  const query = trpc.admin.claim.getById.useQuery(
+    { id: claimId },
+    { enabled: !!claimId },
   );
 
   // Transform events to expected format
@@ -183,20 +171,17 @@ export function useClaimEvents(claimId: string) {
  * Connected to admin.claim.approve tRPC endpoint
  */
 export function useApproveClaim() {
-  const queryClient = useQueryClient();
-  const trpc = useTRPC();
+  const utils = trpc.useUtils();
 
-  return useMutation(
-    trpc.admin.claim.approve.mutationOptions({
-      onSuccess: () => {
-        toast.success("Claim approved successfully");
-        queryClient.invalidateQueries(trpc.admin.claim.pathFilter());
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to approve claim");
-      },
-    }),
-  );
+  return trpc.admin.claim.approve.useMutation({
+    onSuccess: async () => {
+      toast.success("Claim approved successfully");
+      await utils.admin.claim.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to approve claim");
+    },
+  });
 }
 
 /**
@@ -204,34 +189,27 @@ export function useApproveClaim() {
  * Connected to admin.claim.reject tRPC endpoint
  */
 export function useRejectClaim() {
-  const queryClient = useQueryClient();
-  const trpc = useTRPC();
+  const utils = trpc.useUtils();
 
-  return useMutation(
-    trpc.admin.claim.reject.mutationOptions({
-      onSuccess: () => {
-        toast.success("Claim rejected");
-        queryClient.invalidateQueries(trpc.admin.claim.pathFilter());
-      },
-      onError: (error) => {
-        toast.error(error.message || "Failed to reject claim");
-      },
-    }),
-  );
+  return trpc.admin.claim.reject.useMutation({
+    onSuccess: async () => {
+      toast.success("Claim rejected");
+      await utils.admin.claim.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to reject claim");
+    },
+  });
 }
 
 /**
  * Hook to get claim counts by status
  */
 export function useClaimCounts() {
-  const trpc = useTRPC();
-
-  const pendingQuery = useQuery(
-    trpc.admin.claim.getPending.queryOptions({
-      limit: 1,
-      offset: 0,
-    }),
-  );
+  const pendingQuery = trpc.admin.claim.getPending.useQuery({
+    limit: 1,
+    offset: 0,
+  });
 
   return {
     data: {

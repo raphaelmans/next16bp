@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -12,13 +11,12 @@ import { useOwnerOrganization, usePlaceForm } from "@/features/owner/hooks";
 import type { PlaceFormData } from "@/features/owner/schemas/place-form.schema";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export default function EditPlacePage() {
   const params = useParams();
   const placeId = params.placeId as string;
   const router = useRouter();
-  const trpc = useTRPC();
 
   const { data: user } = useSession();
   const logoutMutation = useLogout();
@@ -28,10 +26,8 @@ export default function EditPlacePage() {
     isLoading: orgLoading,
   } = useOwnerOrganization();
 
-  const { data: placeData, isLoading: placeLoading } = useQuery({
-    ...trpc.placeManagement.getById.queryOptions({ placeId }),
-    enabled: !!placeId,
-  });
+  const { data: placeData, isLoading: placeLoading } =
+    trpc.placeManagement.getById.useQuery({ placeId }, { enabled: !!placeId });
 
   const { submit, isSubmitting } = usePlaceForm({
     placeId,

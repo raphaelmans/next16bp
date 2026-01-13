@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -27,7 +26,7 @@ import {
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { getZonedToday } from "@/shared/lib/time-zone";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export default function ManageSlotsPage() {
   const params = useParams();
@@ -35,7 +34,6 @@ export default function ManageSlotsPage() {
 
   const { data: user } = useSession();
   const logoutMutation = useLogout();
-  const trpc = useTRPC();
 
   const [selectedDate, setSelectedDate] = React.useState<Date>(getZonedToday());
   const [bulkModalOpen, setBulkModalOpen] = React.useState(false);
@@ -48,21 +46,17 @@ export default function ManageSlotsPage() {
   } | null>(null);
 
   // Fetch court data
-  const { data: courtData, isLoading: courtLoading } = useQuery({
-    ...trpc.courtManagement.getById.queryOptions({ courtId }),
-    enabled: !!courtId,
-  });
+  const { data: courtData, isLoading: courtLoading } =
+    trpc.courtManagement.getById.useQuery({ courtId }, { enabled: !!courtId });
 
   // Fetch organization (for sidebar)
-  const { data: organization } = useQuery({
-    ...trpc.organization.my.queryOptions(),
-  });
+  const { data: organization } = trpc.organization.my.useQuery();
 
   const placeId = courtData?.court.placeId;
-  const { data: placeData } = useQuery({
-    ...trpc.place.getById.queryOptions({ placeId: placeId ?? "" }),
-    enabled: !!placeId,
-  });
+  const { data: placeData } = trpc.place.getById.useQuery(
+    { placeId: placeId ?? "" },
+    { enabled: !!placeId },
+  );
   const placeTimeZone = placeData?.place.timeZone;
   const [isDateInitialized, setIsDateInitialized] = React.useState(false);
 
@@ -83,11 +77,8 @@ export default function ManageSlotsPage() {
   const isPrereqsLoading = hoursLoading || pricingLoading;
   const hasHours = !hoursLoading && hours.length > 0;
   const hasPricingRules = !pricingLoading && pricingRules.length > 0;
-  const hoursHref = placeId
-    ? appRoutes.owner.places.courts.hours(placeId, courtId)
-    : undefined;
-  const pricingHref = placeId
-    ? appRoutes.owner.places.courts.pricing(placeId, courtId)
+  const scheduleHref = placeId
+    ? appRoutes.owner.places.courts.schedule(placeId, courtId)
     : undefined;
 
   const blockSlot = useBlockSlot();
@@ -236,7 +227,7 @@ export default function ManageSlotsPage() {
 
         if (appCode === "SLOT_PRICING_UNAVAILABLE") {
           toast.error(
-            "Pricing rules don’t cover the selected time range. Update Pricing Rules and try again.",
+            "Pricing blocks don’t cover the selected time range. Update the schedule and try again.",
           );
           return;
         }
@@ -441,8 +432,7 @@ export default function ManageSlotsPage() {
         hasHours={hasHours}
         hasPricingRules={hasPricingRules}
         hoursWindows={hours}
-        hoursHref={hoursHref}
-        pricingHref={pricingHref}
+        scheduleHref={scheduleHref}
         initialDate={selectedDate}
         timeZone={placeTimeZone}
       />

@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -12,38 +11,32 @@ import { useCourtForm } from "@/features/owner/hooks/use-court-form";
 import type { CourtFormData } from "@/features/owner/schemas/court-form.schema";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
-import { useTRPC } from "@/trpc/client";
+import { trpc } from "@/trpc/client";
 
 export default function EditCourtPage() {
   const params = useParams();
   const courtId = params.id as string;
   const router = useRouter();
-  const trpc = useTRPC();
 
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
-  const { data: organizations, isLoading: orgsLoading } = useQuery(
-    trpc.organization.my.queryOptions(),
-  );
+  const { data: organizations, isLoading: orgsLoading } =
+    trpc.organization.my.useQuery();
 
   const organization = organizations?.[0];
 
-  const { data: courtData, isLoading: courtLoading } = useQuery({
-    ...trpc.courtManagement.getById.queryOptions({ courtId }),
-    enabled: !!courtId,
-  });
+  const { data: courtData, isLoading: courtLoading } =
+    trpc.courtManagement.getById.useQuery({ courtId }, { enabled: !!courtId });
 
-  const { data: places = [], isLoading: placesLoading } = useQuery({
-    ...trpc.placeManagement.list.queryOptions({
-      organizationId: organization?.id ?? "",
-    }),
-    enabled: !!organization?.id,
-  });
+  const { data: places = [], isLoading: placesLoading } =
+    trpc.placeManagement.list.useQuery(
+      { organizationId: organization?.id ?? "" },
+      { enabled: !!organization?.id },
+    );
 
-  const { data: sports = [], isLoading: sportsLoading } = useQuery(
-    trpc.sport.list.queryOptions({}),
-  );
+  const { data: sports = [], isLoading: sportsLoading } =
+    trpc.sport.list.useQuery({});
 
   const { submit, isSubmitting } = useCourtForm({
     courtId,
