@@ -1,8 +1,11 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
@@ -47,8 +50,47 @@ export default function NewPlacePage() {
   }
 
   if (!organization) {
-    router.push(appRoutes.owner.onboarding);
-    return null;
+    return (
+      <AppShell
+        sidebar={
+          <OwnerSidebar
+            currentOrganization={{ id: "", name: "No Organization" }}
+            organizations={organizations}
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+          />
+        }
+        navbar={
+          <OwnerNavbar
+            organizationName="No Organization"
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+            onLogout={handleLogout}
+          />
+        }
+        floatingPanel={<ReservationAlertsPanel organizationId={null} />}
+      >
+        <div className="flex items-center justify-center py-12">
+          <Card className="w-full max-w-xl">
+            <CardContent className="p-8 text-center space-y-4">
+              <h2 className="text-xl font-heading font-semibold">
+                Create an organization first
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                You need an organization before adding places.
+              </p>
+              <Button asChild>
+                <Link href={appRoutes.owner.onboarding}>Go to onboarding</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </AppShell>
+    );
   }
 
   return (

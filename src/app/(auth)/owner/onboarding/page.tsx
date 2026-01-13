@@ -1,61 +1,35 @@
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
+import { TRPCError } from "@trpc/server";
 import { X } from "lucide-react";
+import { headers } from "next/headers";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { useSession } from "@/features/auth/hooks/use-auth";
-import { OrganizationForm } from "@/features/organization/components/organization-form";
-import { KudosLogo } from "@/shared/components/kudos";
+import { createServerCaller } from "@/shared/infra/trpc/server";
 import { appRoutes } from "@/shared/lib/app-routes";
-import { useTRPC } from "@/trpc/client";
+import { OrganizationFormClient } from "./organization-form-client";
 
-export default function OnboardingPage() {
-  const router = useRouter();
-  const trpc = useTRPC();
-  const { data: sessionUser, isLoading: sessionLoading } = useSession();
-  const { data: orgs, isLoading: orgsLoading } = useQuery({
-    ...trpc.organization.my.queryOptions(),
-    enabled: !!sessionUser,
-  });
+export const dynamic = "force-dynamic";
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!sessionLoading && !sessionUser) {
-      router.push(appRoutes.login.from(appRoutes.owner.onboarding));
+const checkOnboardingRedirect = async () => {
+  const headerStore = await headers();
+  const pathname = headerStore.get("x-pathname") ?? appRoutes.owner.onboarding;
+  const caller = await createServerCaller(pathname);
+
+  try {
+    const organizations = await caller.organization.my();
+    if (organizations.length > 0) {
+      redirect(appRoutes.owner.places.new);
     }
-  }, [sessionUser, sessionLoading, router]);
-
-  // Redirect if user already has an org
-  useEffect(() => {
-    if (!orgsLoading && orgs && orgs.length > 0) {
-      router.push(appRoutes.owner.base);
+  } catch (error) {
+    if (error instanceof TRPCError && error.code === "UNAUTHORIZED") {
+      redirect(appRoutes.login.from(pathname));
     }
-  }, [orgs, orgsLoading, router]);
-
-  const handleSuccess = () => {
-    router.push(appRoutes.owner.base);
-  };
-
-  const handleCancel = () => {
-    router.push(appRoutes.home.base);
-  };
-
-  if (sessionLoading || orgsLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse">
-          <KudosLogo size={48} variant="icon" />
-        </div>
-      </div>
-    );
+    console.error("[owner-onboarding] Redirect check failed", error);
   }
+};
 
-  if (!sessionUser) {
-    return null;
-  }
+export default async function OnboardingPage() {
+  await checkOnboardingRedirect();
 
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -68,13 +42,15 @@ export default function OnboardingPage() {
             Set up your organization profile to start listing courts.
           </p>
         </div>
-        <Button variant="ghost" size="icon" onClick={handleCancel}>
-          <X className="h-5 w-5" />
-          <span className="sr-only">Cancel</span>
+        <Button variant="ghost" size="icon" asChild>
+          <Link href={appRoutes.home.base}>
+            <X className="h-5 w-5" />
+            <span className="sr-only">Cancel</span>
+          </Link>
         </Button>
       </div>
 
-      <OrganizationForm onSuccess={handleSuccess} onCancel={handleCancel} />
+      <OrganizationFormClient />
 
       <p className="text-sm text-muted-foreground">
         By creating an organization, you agree to our{" "}

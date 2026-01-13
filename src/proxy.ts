@@ -17,6 +17,7 @@ import {
  */
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
+  const redirectPath = `${request.nextUrl.pathname}${request.nextUrl.search}`;
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", path);
 
@@ -58,7 +59,7 @@ export async function proxy(request: NextRequest) {
   // Redirect unauthenticated users from protected routes
   if (!user && isProtectedRoute(path)) {
     return NextResponse.redirect(
-      new URL(appRoutes.login.from(path), request.url),
+      new URL(appRoutes.login.from(redirectPath), request.url),
     );
   }
 
