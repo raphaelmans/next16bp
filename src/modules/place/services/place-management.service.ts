@@ -54,6 +54,8 @@ export class PlaceManagementService implements IPlaceManagementService {
           name: data.name,
           address: data.address,
           city: data.city,
+          province: data.province,
+          country: data.country ?? "PH",
           latitude: data.latitude,
           longitude: data.longitude,
           timeZone: data.timeZone ?? "Asia/Manila",

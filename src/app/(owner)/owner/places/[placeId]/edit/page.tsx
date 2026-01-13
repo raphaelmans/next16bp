@@ -65,6 +65,8 @@ export default function EditPlacePage() {
     name: place.name,
     address: place.address,
     city: place.city,
+    province: place.province ?? "",
+    country: place.country ?? "PH",
     latitude: place.latitude ? Number.parseFloat(place.latitude) : undefined,
     longitude: place.longitude ? Number.parseFloat(place.longitude) : undefined,
     timeZone: place.timeZone,

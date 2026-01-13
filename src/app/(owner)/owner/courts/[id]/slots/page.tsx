@@ -232,7 +232,8 @@ export default function ManageSlotsPage() {
           return;
         }
 
-        toast.error(error?.message ?? "Failed to create slots");
+        const errorMessage = error instanceof Error ? error.message : undefined;
+        toast.error(errorMessage ?? "Failed to create slots");
       },
     });
   };

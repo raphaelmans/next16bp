@@ -56,6 +56,8 @@ export function usePlaceForm({
         name: data.name,
         address: data.address,
         city: data.city,
+        province: data.province?.trim() || undefined,
+        country: data.country,
         latitude: formatCoordinate(data.latitude),
         longitude: formatCoordinate(data.longitude),
         timeZone: data.timeZone,
@@ -68,14 +70,16 @@ export function usePlaceForm({
       throw new Error("Organization is required to create a place");
     }
 
-    const latitude = formatCoordinate(data.latitude) ?? "0.0";
-    const longitude = formatCoordinate(data.longitude) ?? "0.0";
+    const latitude = formatCoordinate(data.latitude);
+    const longitude = formatCoordinate(data.longitude);
 
     createMutation.mutate({
       organizationId,
       name: data.name,
       address: data.address,
       city: data.city,
+      province: data.province?.trim() || undefined,
+      country: data.country ?? "PH",
       latitude,
       longitude,
       timeZone: data.timeZone,

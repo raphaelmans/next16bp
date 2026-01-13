@@ -468,85 +468,13 @@ export default function CourtSetupWizardPage() {
                         </AlertDescription>
                       </Alert>
                     )}
-                    <div className="grid gap-4 lg:grid-cols-2">
+                    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
                       <Card>
                         <CardContent className="p-4 space-y-3">
                           <div className="flex items-center justify-between gap-2">
-                            <div className="space-y-1">
-                              <p className="text-sm font-semibold">
-                                Court details
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                Review what you configured in step 1.
-                              </p>
-                            </div>
-                            <Badge
-                              variant={
-                                courtData?.court.isActive
-                                  ? "success"
-                                  : "secondary"
-                              }
-                            >
-                              {courtData?.court.isActive
-                                ? "Active"
-                                : "Inactive"}
-                            </Badge>
-                          </div>
-                          <div className="space-y-2 text-sm">
-                            <div className="flex items-center justify-between gap-4">
-                              <span className="text-muted-foreground">
-                                Court
-                              </span>
-                              <span className="font-medium">
-                                {courtData?.court.label ?? "—"}
-                              </span>
-                            </div>
-                            <div className="flex items-center justify-between gap-4">
-                              <span className="text-muted-foreground">
-                                Sport
-                              </span>
-                              <span className="font-medium">
-                                {courtData?.sport.name ?? "—"}
-                              </span>
-                            </div>
-                            <div className="flex items-center justify-between gap-4">
-                              <span className="text-muted-foreground">
-                                Tier
-                              </span>
-                              <span className="font-medium">
-                                {courtData?.court.tierLabel?.trim() || "—"}
-                              </span>
-                            </div>
-                            <div className="flex items-center justify-between gap-4">
-                              <span className="text-muted-foreground">
-                                Place
-                              </span>
-                              <span className="font-medium">
-                                {placeData.place.name}
-                              </span>
-                            </div>
-                            <div className="flex items-center justify-between gap-4">
-                              <span className="text-muted-foreground">
-                                Time zone
-                              </span>
-                              <span className="font-medium">
-                                {placeData.place.timeZone}
-                              </span>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                      <Card>
-                        <CardContent className="p-4 space-y-3">
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="space-y-1">
-                              <p className="text-sm font-semibold">
-                                Schedule & pricing
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                Review hours and rates by day.
-                              </p>
-                            </div>
+                            <p className="text-sm font-semibold">
+                              Schedule & pricing
+                            </p>
                             <span className="text-xs text-muted-foreground">
                               {placeData.place.timeZone}
                             </span>
@@ -607,6 +535,68 @@ export default function CourtSetupWizardPage() {
                                 </div>
                               </div>
                             ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardContent className="p-4 space-y-3">
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="text-sm font-semibold">
+                              Court details
+                            </p>
+                            <Badge
+                              variant={
+                                courtData?.court.isActive
+                                  ? "success"
+                                  : "secondary"
+                              }
+                            >
+                              {courtData?.court.isActive
+                                ? "Active"
+                                : "Inactive"}
+                            </Badge>
+                          </div>
+                          <div className="space-y-3 text-sm">
+                            <div className="space-y-1">
+                              <span className="text-xs uppercase text-muted-foreground">
+                                Court
+                              </span>
+                              <p className="font-medium">
+                                {courtData?.court.label ?? "—"}
+                              </p>
+                            </div>
+                            <div className="space-y-1">
+                              <span className="text-xs uppercase text-muted-foreground">
+                                Sport
+                              </span>
+                              <p className="font-medium">
+                                {courtData?.sport.name ?? "—"}
+                              </p>
+                            </div>
+                            <div className="space-y-1">
+                              <span className="text-xs uppercase text-muted-foreground">
+                                Tier
+                              </span>
+                              <p className="font-medium">
+                                {courtData?.court.tierLabel?.trim() || "—"}
+                              </p>
+                            </div>
+                            <div className="space-y-1">
+                              <span className="text-xs uppercase text-muted-foreground">
+                                Place
+                              </span>
+                              <p className="font-medium">
+                                {placeData.place.name}
+                              </p>
+                            </div>
+                            <div className="space-y-1">
+                              <span className="text-xs uppercase text-muted-foreground">
+                                Time zone
+                              </span>
+                              <p className="font-medium">
+                                {placeData.place.timeZone}
+                              </p>
+                            </div>
                           </div>
                         </CardContent>
                       </Card>

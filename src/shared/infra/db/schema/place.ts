@@ -29,6 +29,8 @@ export const place = pgTable(
     name: varchar("name", { length: 200 }).notNull(),
     address: text("address").notNull(),
     city: varchar("city", { length: 100 }).notNull(),
+    province: varchar("province", { length: 100 }),
+    country: varchar("country", { length: 2 }).notNull().default("PH"),
     latitude: decimal("latitude", { precision: 10, scale: 8 }),
     longitude: decimal("longitude", { precision: 11, scale: 8 }),
     timeZone: varchar("time_zone", { length: 64 })
