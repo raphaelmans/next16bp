@@ -84,6 +84,15 @@ pnpm db:seed:buckets # seed storage buckets
 - Prefer shared formatting helpers in `src/shared/lib/format.ts`.
 - Cache invalidation: prefer `queryClient.invalidateQueries(trpc.<router>.<procedure>.queryFilter(input))` / `trpc.<router>.pathFilter()` over manual query keys.
 
+## Time Zones (Place-Canonical)
+- Production runtimes often run in UTC; always treat `place.timeZone` (IANA) as canonical for booking/availability/pricing.
+- Avoid “day math” via `new Date(y, m, d).toISOString()` or `.toISOString().split("T")[0]` (timezone-dependent).
+- Use shared helpers:
+  - `src/shared/lib/time-zone.ts` for place-local day bounds + weekday/minute-of-day calculations.
+  - `src/shared/lib/format.ts` for place-local display (`formatInTimeZone`, `formatTimeInTimeZone`, `formatTimeRangeInTimeZone`).
+- UI date picking: pass `timeZone` through to `KudosDatePicker`/`Calendar` so the calendar day is interpreted in the place timezone.
+- Validation: run `TZ=UTC pnpm build` (in addition to `pnpm lint`) to catch timezone regressions.
+
 
 ## Backend Architecture (Modules)
 `src/modules/<module>/` generally uses this layering:
