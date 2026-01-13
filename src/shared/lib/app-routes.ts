@@ -81,7 +81,7 @@ export const appRoutes = {
     verify: "/owner/verify",
     courts: {
       base: "/owner/courts",
-      new: "/owner/courts/new",
+      setupCreate: "/owner/courts/setup",
       edit: (courtId: string) => `/owner/courts/${courtId}/edit`,
       slots: (courtId: string) => `/owner/courts/${courtId}/slots`,
     },
@@ -91,7 +91,8 @@ export const appRoutes = {
       edit: (placeId: string) => `/owner/places/${placeId}/edit`,
       courts: {
         base: (placeId: string) => `/owner/places/${placeId}/courts`,
-        new: (placeId: string) => `/owner/places/${placeId}/courts/new`,
+        setupCreate: (placeId: string) =>
+          `/owner/places/${placeId}/courts/setup`,
         edit: (placeId: string, courtId: string) =>
           `/owner/places/${placeId}/courts/${courtId}/edit`,
         setup: (placeId: string, courtId: string) =>

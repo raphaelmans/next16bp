@@ -11,7 +11,7 @@ import { formatRelative } from "@/shared/lib/format";
 interface StatusBannerProps {
   status: ReservationStatus;
   reservationId: string;
-  expiresAt?: string;
+  expiresAt?: Date | string;
   cancellationReason?: string;
   className?: string;
 }

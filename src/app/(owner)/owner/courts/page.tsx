@@ -149,7 +149,7 @@ export default function OwnerCourtsPage() {
             </p>
           </div>
           <Button asChild>
-            <Link href={appRoutes.owner.courts.new}>
+            <Link href={appRoutes.owner.courts.setupCreate}>
               <Plus className="mr-2 h-4 w-4" />
               Add New Court
             </Link>

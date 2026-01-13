@@ -16,12 +16,14 @@ interface Photo {
 interface PhotoGalleryProps {
   photos: Photo[];
   courtName: string;
+  mainOverlay?: React.ReactNode;
   className?: string;
 }
 
 export function PhotoGallery({
   photos,
   courtName,
+  mainOverlay,
   className,
 }: PhotoGalleryProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -66,7 +68,7 @@ export function PhotoGallery({
             setActiveIndex(0);
             setLightboxOpen(true);
           }}
-          className="relative w-full aspect-[4/3] md:aspect-[16/9] rounded-xl overflow-hidden bg-muted cursor-pointer"
+          className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[2/1] lg:aspect-[21/9] rounded-xl overflow-hidden bg-muted cursor-pointer"
         >
           <Image
             src={photos[0].url}
@@ -75,6 +77,11 @@ export function PhotoGallery({
             className="object-cover transition-transform hover:scale-105"
             priority
           />
+          {mainOverlay && (
+            <div className="absolute inset-x-3 bottom-3">
+              <div className="pointer-events-auto">{mainOverlay}</div>
+            </div>
+          )}
         </button>
 
         {/* Thumbnails */}

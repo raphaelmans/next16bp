@@ -15,7 +15,6 @@ import {
 } from "@/features/discovery/hooks";
 import { BookingSummaryCard } from "@/features/reservation/components/booking-summary-card";
 import { OrderSummary } from "@/features/reservation/components/order-summary";
-import { PaymentInfoCard } from "@/features/reservation/components/payment-info-card";
 import { ProfilePreviewCard } from "@/features/reservation/components/profile-preview-card";
 import {
   useCreateReservationForAnyCourt,
@@ -25,20 +24,6 @@ import { useProfile } from "@/features/reservation/hooks/use-profile";
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { formatDuration } from "@/shared/lib/format";
-
-const PAYMENT_METHODS = [
-  {
-    type: "gcash" as const,
-    accountName: "KudosCourts",
-    accountNumber: "09123456789",
-  },
-  {
-    type: "bank" as const,
-    accountName: "KudosCourts Inc.",
-    accountNumber: "1234567890",
-    bankName: "BDO",
-  },
-];
 
 const DURATIONS = [60, 120, 180];
 
@@ -95,13 +80,28 @@ export default function PlaceBookingPage() {
 
   const totalPrice = selectedSlot?.totalPriceCents ?? 0;
   const currency = selectedSlot?.currency ?? "PHP";
-  const isFree = totalPrice === 0;
 
   const [termsAccepted, setTermsAccepted] = React.useState(false);
+  const detailsSectionRef = React.useRef<HTMLDivElement | null>(null);
   const isSubmitting = createForCourt.isPending || createForAnyCourt.isPending;
 
   const isProfileComplete =
     !!profile?.displayName && (!!profile?.email || !!profile?.phoneNumber);
+
+  const scrollToSection = React.useCallback(
+    (ref: React.RefObject<HTMLElement | null>) => {
+      const element = ref.current;
+      if (!element || typeof window === "undefined") return;
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      element.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    },
+    [],
+  );
 
   const handleConfirm = async () => {
     if (!selectedSlot || isSubmitting) return;
@@ -192,7 +192,9 @@ export default function PlaceBookingPage() {
 
       <div className="grid gap-6 lg:grid-cols-3 mt-8">
         <div className="lg:col-span-2 space-y-6">
-          <BookingSummaryCard court={courtSummary} timeSlot={timeSlot} />
+          <div ref={detailsSectionRef} className="scroll-mt-24">
+            <BookingSummaryCard court={courtSummary} timeSlot={timeSlot} />
+          </div>
 
           <Card>
             <CardHeader>
@@ -220,13 +222,6 @@ export default function PlaceBookingPage() {
             }}
             isComplete={isProfileComplete}
           />
-
-          {!isFree && (
-            <PaymentInfoCard
-              paymentMethods={PAYMENT_METHODS}
-              expiresInMinutes={15}
-            />
-          )}
 
           <Card>
             <CardHeader>
@@ -257,6 +252,8 @@ export default function PlaceBookingPage() {
             termsAccepted={termsAccepted}
             onTermsChange={setTermsAccepted}
             onConfirm={handleConfirm}
+            onReviewDetails={() => scrollToSection(detailsSectionRef)}
+            reviewLabel="Review booking details"
             isSubmitting={isSubmitting}
             disabled={!isProfileComplete}
             className="sticky top-24"

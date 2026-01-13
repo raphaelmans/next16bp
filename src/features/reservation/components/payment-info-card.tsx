@@ -14,17 +14,50 @@ interface PaymentMethod {
   bankName?: string;
 }
 
+interface PaymentDetails {
+  gcashNumber?: string | null;
+  bankName?: string | null;
+  bankAccountNumber?: string | null;
+  bankAccountName?: string | null;
+  paymentInstructions?: string | null;
+}
+
 interface PaymentInfoCardProps {
-  paymentMethods: PaymentMethod[];
+  paymentMethods?: PaymentMethod[];
+  paymentDetails?: PaymentDetails | null;
   expiresInMinutes?: number;
   className?: string;
 }
 
 export function PaymentInfoCard({
   paymentMethods,
+  paymentDetails,
   expiresInMinutes = 15,
   className,
 }: PaymentInfoCardProps) {
+  const derivedMethods: PaymentMethod[] = [];
+
+  if (paymentDetails?.gcashNumber) {
+    derivedMethods.push({
+      type: "gcash",
+      accountName: paymentDetails.bankAccountName ?? "GCash",
+      accountNumber: paymentDetails.gcashNumber,
+    });
+  }
+
+  if (paymentDetails?.bankAccountNumber) {
+    derivedMethods.push({
+      type: "bank",
+      accountName: paymentDetails.bankAccountName ?? "Bank Transfer",
+      accountNumber: paymentDetails.bankAccountNumber,
+      bankName: paymentDetails.bankName ?? "Bank Transfer",
+    });
+  }
+
+  const methodsToRender = paymentMethods ?? derivedMethods;
+  const hasMethods = methodsToRender.length > 0;
+  const hasInstructions = !!paymentDetails?.paymentInstructions;
+
   return (
     <Card className={className}>
       <CardHeader>
@@ -34,19 +67,35 @@ export function PaymentInfoCard({
         <Alert>
           <Clock className="h-4 w-4" />
           <AlertDescription>
-            Owner acceptance is required. Once accepted, complete payment within
+            Owner acceptance is required. Once accepted, complete payment within{" "}
             {expiresInMinutes} minutes to secure your reservation.
           </AlertDescription>
         </Alert>
 
-        <div className="space-y-4">
-          {paymentMethods.map((method, index) => (
-            <PaymentMethodItem
-              key={`${method.type}-${index}`}
-              method={method}
-            />
-          ))}
-        </div>
+        {hasMethods ? (
+          <div className="space-y-4">
+            {methodsToRender.map((method, index) => (
+              <PaymentMethodItem
+                key={`${method.type}-${index}`}
+                method={method}
+              />
+            ))}
+            {hasInstructions && (
+              <p className="text-sm text-muted-foreground">
+                {paymentDetails?.paymentInstructions}
+              </p>
+            )}
+            <p className="text-sm text-muted-foreground">
+              Or pay cash at the court before your reserved time.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3 text-sm text-muted-foreground">
+            <p>Contact the court owner for payment details.</p>
+            <p>Pay via GCash, bank transfer, or cash.</p>
+            <p>Share your payment proof below.</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

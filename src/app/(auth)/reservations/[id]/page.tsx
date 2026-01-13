@@ -320,7 +320,7 @@ export default function ReservationDetailPage() {
       <StatusBanner
         status={reservation.status}
         reservationId={reservation.id}
-        expiresAt={reservation.expiresAt?.toISOString() ?? undefined}
+        expiresAt={reservation.expiresAt ?? undefined}
         cancellationReason={reservation.cancellationReason ?? undefined}
       />
 

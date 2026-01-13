@@ -47,9 +47,30 @@ export default function PlaceDetailPage() {
   const [selectedCourtId, setSelectedCourtId] = React.useState<string>();
   const [selectedSlotId, setSelectedSlotId] = React.useState<string>();
 
+  const sportSectionRef = React.useRef<HTMLDivElement | null>(null);
+  const courtSectionRef = React.useRef<HTMLDivElement | null>(null);
+  const durationSectionRef = React.useRef<HTMLDivElement | null>(null);
+  const dateSectionRef = React.useRef<HTMLDivElement | null>(null);
+  const timesSectionRef = React.useRef<HTMLDivElement | null>(null);
+
   const resetSelection = React.useCallback(() => {
     setSelectedSlotId(undefined);
   }, []);
+
+  const scrollToSection = React.useCallback(
+    (ref: React.RefObject<HTMLElement | null>) => {
+      const element = ref.current;
+      if (!element || typeof window === "undefined") return;
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      element.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    },
+    [],
+  );
 
   const { data: place, isLoading } = usePlaceDetail({ placeId });
 
@@ -96,6 +117,8 @@ export default function PlaceDetailPage() {
   }));
 
   const selectedSlot = availability.find((slot) => slot.id === selectedSlotId);
+  const hasSelectedDate = !!selectedDate;
+  const hasSelectedSlot = !!selectedSlot;
 
   const handleReserve = () => {
     if (!selectedSlot || !selectedSportId) return;
@@ -116,6 +139,38 @@ export default function PlaceDetailPage() {
     } else {
       router.push(appRoutes.login.from(appRoutes.places.detail(placeId)));
     }
+  };
+
+  const summaryCtaLabel = hasSelectedSlot
+    ? isAuthenticated
+      ? "Continue to review"
+      : "Sign in to reserve"
+    : hasSelectedDate
+      ? "Choose a start time"
+      : "Pick a date";
+
+  const summaryCtaVariant = hasSelectedSlot ? "default" : "outline";
+
+  const handleSummaryAction = () => {
+    if (hasSelectedSlot) {
+      handleReserve();
+      return;
+    }
+
+    if (!hasSelectedDate) {
+      scrollToSection(dateSectionRef);
+      return;
+    }
+
+    scrollToSection(timesSectionRef);
+  };
+
+  const handleScrollToAvailability = (event?: React.MouseEvent) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    scrollToSection(dateSectionRef);
   };
 
   if (isLoading) {
@@ -171,168 +226,214 @@ export default function PlaceDetailPage() {
 
       <div className="grid gap-8 lg:grid-cols-3 mt-8">
         <div className="lg:col-span-2 space-y-6">
-          <PhotoGallery photos={place.photos} courtName={place.name} />
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Choose a sport</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs
-                value={selectedSportId}
-                onValueChange={(value) => {
-                  setSelectedSportId(value);
-                  setSelectedCourtId(undefined);
-                  setSelectionMode("any");
-                  resetSelection();
-                }}
+          <PhotoGallery
+            photos={place.photos}
+            courtName={place.name}
+            mainOverlay={
+              <Button
+                type="button"
+                variant="outline"
+                className="h-auto w-full items-start gap-2 rounded-xl border-border/60 bg-background/95 p-3 text-left shadow-md backdrop-blur"
+                onClick={handleScrollToAvailability}
               >
-                <TabsList>
-                  {place.sports.map((sport) => (
-                    <TabsTrigger key={sport.id} value={sport.id}>
-                      {sport.name}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Choose court</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <RadioGroup
-                value={selectionMode === "any" ? "any" : selectedCourtId}
-                onValueChange={(value) => {
-                  if (value === "any") {
-                    setSelectionMode("any");
-                    setSelectedCourtId(undefined);
-                    resetSelection();
-                    return;
-                  }
-                  setSelectionMode("court");
-                  setSelectedCourtId(value);
-                  resetSelection();
-                }}
-                className="space-y-3"
-              >
-                <div className="flex items-start gap-3 rounded-lg border px-4 py-3">
-                  <RadioGroupItem value="any" id="any" className="mt-1" />
-                  <Label htmlFor="any" className="space-y-1 cursor-pointer">
-                    <div className="font-medium">Any available court</div>
-                    <div className="text-sm text-muted-foreground">
-                      Lowest total price across courts for the selected sport.
-                    </div>
-                  </Label>
+                <div className="flex items-center gap-2 text-sm font-medium">
+                  <Calendar className="h-4 w-4 text-accent" />
+                  Check availability
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  Pick a date and start time below.
+                </p>
+                <span className="text-xs font-medium text-accent">
+                  Jump to times
+                </span>
+              </Button>
+            }
+          />
 
-                {courtsForSport.map((court) => (
-                  <div
-                    key={court.id}
-                    className="flex items-start gap-3 rounded-lg border px-4 py-3"
-                  >
-                    <RadioGroupItem
-                      value={court.id}
-                      id={court.id}
-                      className="mt-1"
-                      disabled={!court.isActive}
-                    />
-                    <Label
-                      htmlFor={court.id}
-                      className="flex-1 cursor-pointer space-y-1"
-                    >
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-medium">{court.label}</span>
-                        <Badge variant="outline" className="text-[10px]">
-                          {court.sportName}
-                        </Badge>
-                        {court.tierLabel && (
-                          <Badge variant="secondary" className="text-[10px]">
-                            {court.tierLabel}
-                          </Badge>
-                        )}
-                        {!court.isActive && (
-                          <Badge variant="destructive" className="text-[10px]">
-                            Inactive
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Pricing shown after selecting a time.
-                      </div>
-                    </Label>
-                  </div>
-                ))}
-              </RadioGroup>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Duration</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-wrap gap-3">
-              {DURATIONS.map((duration) => (
-                <Button
-                  key={duration}
-                  type="button"
-                  variant={durationMinutes === duration ? "default" : "outline"}
-                  onClick={() => {
-                    setDurationMinutes(duration);
+          <div ref={sportSectionRef} className="scroll-mt-24">
+            <Card>
+              <CardHeader>
+                <CardTitle>Choose a sport</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Tabs
+                  value={selectedSportId}
+                  onValueChange={(value) => {
+                    setSelectedSportId(value);
+                    setSelectedCourtId(undefined);
+                    setSelectionMode("any");
                     resetSelection();
                   }}
                 >
-                  {formatDuration(duration)}
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
+                  <TabsList>
+                    {place.sports.map((sport) => (
+                      <TabsTrigger key={sport.id} value={sport.id}>
+                        {sport.name}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Available start times</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <p className="text-sm font-medium">Select date</p>
-                <KudosDatePicker
-                  value={selectedDate}
-                  onChange={(date) => {
-                    setSelectedDate(date);
+          <div ref={courtSectionRef} className="scroll-mt-24">
+            <Card>
+              <CardHeader>
+                <CardTitle>Choose court</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <RadioGroup
+                  value={selectionMode === "any" ? "any" : selectedCourtId}
+                  onValueChange={(value) => {
+                    if (value === "any") {
+                      setSelectionMode("any");
+                      setSelectedCourtId(undefined);
+                      resetSelection();
+                      return;
+                    }
+                    setSelectionMode("court");
+                    setSelectedCourtId(value);
                     resetSelection();
                   }}
-                  placeholder="Choose a date"
-                />
-              </div>
+                  className="space-y-3"
+                >
+                  <div className="flex items-start gap-3 rounded-lg border px-4 py-3">
+                    <RadioGroupItem value="any" id="any" className="mt-1" />
+                    <Label htmlFor="any" className="space-y-1 cursor-pointer">
+                      <div className="font-medium">Any available court</div>
+                      <div className="text-sm text-muted-foreground">
+                        Lowest total price across courts for the selected sport.
+                      </div>
+                    </Label>
+                  </div>
 
-              {selectedDate && (
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">
-                    Available times on {format(selectedDate, "MMM d")}
-                  </p>
-                  {isLoadingAvailability ? (
-                    <TimeSlotPickerSkeleton count={6} />
-                  ) : timeSlots.length > 0 ? (
-                    <TimeSlotPicker
-                      slots={timeSlots}
-                      selectedId={selectedSlotId}
-                      onSelect={(slot) => setSelectedSlotId(slot.id)}
-                      showPrice
-                    />
-                  ) : (
-                    <p className="text-sm text-muted-foreground py-4 text-center">
-                      No available start times for this date.
-                    </p>
-                  )}
+                  {courtsForSport.map((court) => (
+                    <div
+                      key={court.id}
+                      className="flex items-start gap-3 rounded-lg border px-4 py-3"
+                    >
+                      <RadioGroupItem
+                        value={court.id}
+                        id={court.id}
+                        className="mt-1"
+                        disabled={!court.isActive}
+                      />
+                      <Label
+                        htmlFor={court.id}
+                        className="flex-1 cursor-pointer space-y-1"
+                      >
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-medium">{court.label}</span>
+                          <Badge variant="outline" className="text-[10px]">
+                            {court.sportName}
+                          </Badge>
+                          {court.tierLabel && (
+                            <Badge variant="secondary" className="text-[10px]">
+                              {court.tierLabel}
+                            </Badge>
+                          )}
+                          {!court.isActive && (
+                            <Badge
+                              variant="destructive"
+                              className="text-[10px]"
+                            >
+                              Inactive
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Pricing shown after selecting a time.
+                        </div>
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div ref={durationSectionRef} className="scroll-mt-24">
+            <Card>
+              <CardHeader>
+                <CardTitle>Duration</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-3">
+                {DURATIONS.map((duration) => (
+                  <Button
+                    key={duration}
+                    type="button"
+                    variant={
+                      durationMinutes === duration ? "default" : "outline"
+                    }
+                    onClick={() => {
+                      setDurationMinutes(duration);
+                      resetSelection();
+                    }}
+                  >
+                    {formatDuration(duration)}
+                  </Button>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+
+          <div ref={timesSectionRef} className="scroll-mt-24">
+            <Card>
+              <CardHeader className="space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <CardTitle>Available start times</CardTitle>
+                  <Badge
+                    className="bg-accent/10 text-accent"
+                    variant="secondary"
+                  >
+                    Next step
+                  </Badge>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+                <p className="text-sm text-muted-foreground">
+                  Pick a date and start time to continue.
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div ref={dateSectionRef} className="space-y-2 scroll-mt-24">
+                  <p className="text-sm font-medium">Select date</p>
+                  <KudosDatePicker
+                    value={selectedDate}
+                    onChange={(date) => {
+                      setSelectedDate(date);
+                      resetSelection();
+                    }}
+                    placeholder="Choose a date"
+                  />
+                </div>
+
+                {selectedDate && (
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">
+                      Available times on {format(selectedDate, "MMM d")}
+                    </p>
+                    {isLoadingAvailability ? (
+                      <TimeSlotPickerSkeleton count={6} />
+                    ) : timeSlots.length > 0 ? (
+                      <TimeSlotPicker
+                        slots={timeSlots}
+                        selectedId={selectedSlotId}
+                        onSelect={(slot) => setSelectedSlotId(slot.id)}
+                        showPrice
+                      />
+                    ) : (
+                      <p className="text-sm text-muted-foreground py-4 text-center">
+                        No available start times for this date.
+                      </p>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           <Card>
             <CardHeader>
               <CardTitle>Booking summary</CardTitle>
@@ -369,17 +470,50 @@ export default function PlaceDetailPage() {
                 </div>
               )}
 
+              <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                <span className="font-medium text-muted-foreground">
+                  Jump to:
+                </span>
+                <button
+                  type="button"
+                  className="text-accent hover:underline"
+                  onClick={() => scrollToSection(sportSectionRef)}
+                >
+                  Sport
+                </button>
+                <span>·</span>
+                <button
+                  type="button"
+                  className="text-accent hover:underline"
+                  onClick={() => scrollToSection(courtSectionRef)}
+                >
+                  Court
+                </button>
+                <span>·</span>
+                <button
+                  type="button"
+                  className="text-accent hover:underline"
+                  onClick={() => scrollToSection(durationSectionRef)}
+                >
+                  Duration
+                </button>
+                <span>·</span>
+                <button
+                  type="button"
+                  className="text-accent hover:underline"
+                  onClick={() => scrollToSection(timesSectionRef)}
+                >
+                  Times
+                </button>
+              </div>
+
               <Button
                 size="lg"
                 className="w-full"
-                disabled={!selectedSlot}
-                onClick={handleReserve}
+                variant={summaryCtaVariant}
+                onClick={handleSummaryAction}
               >
-                {selectedSlot
-                  ? isAuthenticated
-                    ? "Continue to review"
-                    : "Sign in to reserve"
-                  : "Select a start time"}
+                {summaryCtaLabel}
               </Button>
               {!isAuthenticated && selectedSlot && (
                 <p className="text-xs text-muted-foreground text-center">
@@ -421,7 +555,7 @@ function PlaceDetailSkeleton() {
       </div>
       <div className="grid gap-8 lg:grid-cols-3 mt-8">
         <div className="lg:col-span-2 space-y-6">
-          <div className="aspect-[16/9] bg-muted rounded-xl animate-pulse" />
+          <div className="aspect-[4/3] sm:aspect-[16/10] md:aspect-[2/1] lg:aspect-[21/9] bg-muted rounded-xl animate-pulse" />
           <div className="h-48 bg-muted rounded-xl animate-pulse" />
         </div>
         <div>

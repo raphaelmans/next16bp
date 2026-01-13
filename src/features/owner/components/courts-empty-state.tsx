@@ -28,7 +28,7 @@ export function CourtsEmptyState() {
       <EmptyContent>
         <div className="flex flex-col items-center gap-3">
           <Button asChild>
-            <Link href={appRoutes.owner.courts.new}>
+            <Link href={appRoutes.owner.courts.setupCreate}>
               <Tag className="mr-2 h-4 w-4" />
               Add a Court
             </Link>

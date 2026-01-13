@@ -103,19 +103,10 @@ export default function CourtSetupWizardPage() {
   >({});
 
   const stepParam = searchParams.get("step") as StepKey | null;
-  const currentStep = steps.some((step) => step.key === stepParam)
-    ? (stepParam as StepKey)
-    : "details";
-  const stepIndex = steps.findIndex((step) => step.key === currentStep);
 
   const goToStep = (step: StepKey) => {
     router.push(`${pathname}?step=${step}`);
   };
-
-  const backHref =
-    currentStep === "details"
-      ? appRoutes.owner.places.courts.base(placeId)
-      : `${pathname}?step=${steps[Math.max(stepIndex - 1, 0)].key}`;
 
   const { submit, isSubmitting } = useCourtForm({
     courtId,
@@ -166,6 +157,27 @@ export default function CourtSetupWizardPage() {
   const hasPricingRules = !pricingLoading && pricingRules.length > 0;
   const hoursHref = appRoutes.owner.places.courts.hours(placeId, courtId);
   const pricingHref = appRoutes.owner.places.courts.pricing(placeId, courtId);
+
+  const hasExplicitStep = steps.some((step) => step.key === stepParam);
+  const defaultStep: StepKey = isPrereqsLoading
+    ? "details"
+    : !hasHours
+      ? "hours"
+      : !hasPricingRules
+        ? "pricing"
+        : "publish";
+  const currentStep = hasExplicitStep ? (stepParam as StepKey) : defaultStep;
+  const stepIndex = steps.findIndex((step) => step.key === currentStep);
+
+  const backHref =
+    currentStep === "details"
+      ? appRoutes.owner.places.courts.base(placeId)
+      : `${pathname}?step=${steps[Math.max(stepIndex - 1, 0)].key}`;
+
+  React.useEffect(() => {
+    if (hasExplicitStep || isPrereqsLoading) return;
+    router.replace(`${pathname}?step=${defaultStep}`);
+  }, [defaultStep, hasExplicitStep, isPrereqsLoading, pathname, router]);
 
   const handleDetailsSubmit = (data: CourtFormData) => {
     if (!isDetailsDirty) {

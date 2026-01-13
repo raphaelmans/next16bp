@@ -21,6 +21,8 @@ interface OrderSummaryProps {
   termsAccepted: boolean;
   onTermsChange: (accepted: boolean) => void;
   onConfirm: () => void;
+  onReviewDetails?: () => void;
+  reviewLabel?: string;
   isSubmitting?: boolean;
   disabled?: boolean;
   className?: string;
@@ -31,6 +33,8 @@ export function OrderSummary({
   termsAccepted,
   onTermsChange,
   onConfirm,
+  onReviewDetails,
+  reviewLabel = "Review details",
   isSubmitting = false,
   disabled = false,
   className,
@@ -41,6 +45,18 @@ export function OrderSummary({
         <CardTitle>Order Summary</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {onReviewDetails && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start text-accent hover:text-accent"
+            onClick={onReviewDetails}
+          >
+            {reviewLabel}
+          </Button>
+        )}
+
         {/* Date and Time */}
         <div className="space-y-2 pb-4 border-b">
           <div className="flex justify-between text-sm">

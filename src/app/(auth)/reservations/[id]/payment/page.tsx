@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
+import { differenceInMinutes, format } from "date-fns";
 import { ArrowLeft, CheckCircle, Clock, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CountdownTimer } from "@/features/reservation/components/countdown-timer";
-import { PaymentInstructions } from "@/features/reservation/components/payment-instructions";
+import { PaymentInfoCard } from "@/features/reservation/components/payment-info-card";
 import { PaymentProofForm } from "@/features/reservation/components/payment-proof-form";
 import { ReservationExpired } from "@/features/reservation/components/reservation-expired";
 import { TermsCheckbox } from "@/features/reservation/components/terms-checkbox";
@@ -132,6 +132,13 @@ export default function PaymentPage() {
     uploadPaymentProof.isPending ||
     addPaymentProof.isPending;
 
+  const expiresInMinutes = reservation?.expiresAt
+    ? Math.max(
+        1,
+        differenceInMinutes(new Date(reservation.expiresAt), new Date()),
+      )
+    : 15;
+
   if (isPaymentExpired) {
     return (
       <Container className="py-6">
@@ -235,12 +242,9 @@ export default function PaymentPage() {
         </Card>
 
         <div className="mb-6">
-          <PaymentInstructions
-            gcashNumber={slot?.paymentDetails?.gcashNumber}
-            bankName={slot?.paymentDetails?.bankName}
-            bankAccountNumber={slot?.paymentDetails?.bankAccountNumber}
-            bankAccountName={slot?.paymentDetails?.bankAccountName}
-            paymentInstructions={slot?.paymentDetails?.paymentInstructions}
+          <PaymentInfoCard
+            paymentDetails={slot?.paymentDetails}
+            expiresInMinutes={expiresInMinutes}
           />
         </div>
 
