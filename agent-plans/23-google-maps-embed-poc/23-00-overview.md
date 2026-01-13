@@ -29,6 +29,7 @@ This plan intentionally targets the **lowest ongoing cost** setup:
 | 2 | Server API | 2A | Yes |
 | 3 | PoC UI | 3A | Partial |
 | 4 | Hardening | 4A | No |
+| 5 | Public UI embeds | 5A | Partial |
 
 ---
 
@@ -58,6 +59,12 @@ This plan intentionally targets the **lowest ongoing cost** setup:
 |----|--------|----------|
 | 4A | SSRF / validation / UX polish | `23-01-poc-route.md` |
 
+### Phase 5: Public UI embeds
+
+| ID | Module | Plan File |
+|----|--------|----------|
+| 5A | Discovery + reservation embed UI | `23-02-embed-ui.md` |
+
 ---
 
 ## Key Decisions
@@ -76,4 +83,5 @@ This plan intentionally targets the **lowest ongoing cost** setup:
 - [ ] `/poc/google-loc` loads and can preview the sample short link
 - [ ] API rejects non-Google redirect targets
 - [ ] Missing `NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY` shows a clear warning
+- [ ] Map embeds appear in discovery map view and reservation details
 - [ ] `pnpm lint` and `pnpm build` pass

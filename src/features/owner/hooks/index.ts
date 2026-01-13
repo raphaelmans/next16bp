@@ -53,6 +53,7 @@ export {
   useRejectReservation,
   useReservationCounts,
 } from "./use-owner-reservations";
+export { useOwnerSidebarQuickLinks } from "./use-owner-sidebar-quick-links";
 export { usePlaceForm } from "./use-place-form";
 export { useReservationAlerts } from "./use-reservation-alerts";
 export {

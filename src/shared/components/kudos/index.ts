@@ -12,6 +12,7 @@ export { KudosDatePicker } from "./date-picker";
 // UI Components
 export { EmptyState } from "./empty-state";
 export { FileUpload } from "./file-upload";
+export { GoogleMapsEmbed } from "./google-maps-embed";
 export { LocationPin, MapMarker } from "./location-pin";
 // Branding
 export { KudosLogo, KudosLogoIcon } from "./logo";

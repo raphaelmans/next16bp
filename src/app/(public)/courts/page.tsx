@@ -69,15 +69,11 @@ function PlacesPageContent() {
 
         {filters.view === "map" ? (
           <PlaceMap
-            places={places.map((place, index) => {
-              const fallbackLat = 14.5995 + index * 0.001;
-              const fallbackLng = 120.9842 + index * 0.001;
-              return {
-                ...place,
-                lat: place.latitude ?? fallbackLat,
-                lng: place.longitude ?? fallbackLng,
-              };
-            })}
+            places={places.map((place) => ({
+              ...place,
+              lat: place.latitude,
+              lng: place.longitude,
+            }))}
           />
         ) : isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

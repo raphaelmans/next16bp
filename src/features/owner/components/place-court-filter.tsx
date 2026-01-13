@@ -31,17 +31,25 @@ export function PlaceCourtFilter({
   compact = false,
 }: PlaceCourtFilterProps) {
   const filteredCourts = React.useMemo(() => {
-    if (!placeId) return courts;
+    if (!placeId || placeId === "all") return courts;
     return courts.filter((court) => court.placeId === placeId);
   }, [courts, placeId]);
 
   React.useEffect(() => {
-    if (!courtId) return;
+    if (!courtId || courtId === "all") return;
     const exists = filteredCourts.some((court) => court.id === courtId);
     if (!exists) {
       onCourtChange("");
     }
   }, [courtId, filteredCourts, onCourtChange]);
+
+  const handlePlaceValueChange = (value: string) => {
+    onPlaceChange(value === "all" ? "" : value);
+  };
+
+  const handleCourtValueChange = (value: string) => {
+    onCourtChange(value === "all" ? "" : value);
+  };
 
   return (
     <div
@@ -49,7 +57,7 @@ export function PlaceCourtFilter({
         compact ? "grid gap-2" : "grid gap-3 sm:grid-cols-[220px_220px]"
       }
     >
-      <Select value={placeId || "all"} onValueChange={onPlaceChange}>
+      <Select value={placeId || "all"} onValueChange={handlePlaceValueChange}>
         <SelectTrigger className={compact ? "h-8 w-full" : "w-full"}>
           <SelectValue placeholder="All places" />
         </SelectTrigger>
@@ -63,7 +71,7 @@ export function PlaceCourtFilter({
         </SelectContent>
       </Select>
 
-      <Select value={courtId || "all"} onValueChange={onCourtChange}>
+      <Select value={courtId || "all"} onValueChange={handleCourtValueChange}>
         <SelectTrigger className={compact ? "h-8 w-full" : "w-full"}>
           <SelectValue placeholder="All courts" />
         </SelectTrigger>

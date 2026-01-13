@@ -70,13 +70,13 @@ export function CourtForm({
   }, [isActive, label, onStateChange, placeId, sportId, tierLabel]);
 
   useEffect(() => {
-    if (!placeId && placeOptions.length > 0) {
+    if (!placeId && placeOptions.length === 1) {
       setPlaceId(placeOptions[0].id);
     }
   }, [placeId, placeOptions]);
 
   useEffect(() => {
-    if (!sportId && sportOptions.length > 0) {
+    if (!sportId && sportOptions.length === 1) {
       setSportId(sportOptions[0].id);
     }
   }, [sportId, sportOptions]);

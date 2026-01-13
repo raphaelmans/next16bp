@@ -1,17 +1,20 @@
 "use client";
 
+import { ExternalLink } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import {
-  MapMarker,
+  GoogleMapsEmbed,
+  LocationPin,
   PlaceCard,
   type PlaceCardPlace,
 } from "@/shared/components/kudos";
 
 interface PlaceMapItem extends PlaceCardPlace {
-  lat: number;
-  lng: number;
+  lat?: number | null;
+  lng?: number | null;
 }
 
 interface PlaceMapProps {
@@ -27,54 +30,93 @@ export function PlaceMap({
   onSelect,
   className,
 }: PlaceMapProps) {
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [internalSelectedId, setInternalSelectedId] = useState<string | null>(
+    null,
+  );
+  const selectedPlaceId = selectedId ?? internalSelectedId ?? places[0]?.id;
+  const selectedPlace = places.find((place) => place.id === selectedPlaceId);
+  const hasPlaces = places.length > 0;
 
-  const selectedPlace = places.find((place) => place.id === selectedId);
+  const handleSelect = (place: PlaceMapItem) => {
+    if (onSelect) {
+      onSelect(place);
+      return;
+    }
+    setInternalSelectedId(place.id);
+  };
+
+  const hasCoordinates =
+    typeof selectedPlace?.lat === "number" &&
+    Number.isFinite(selectedPlace.lat) &&
+    typeof selectedPlace?.lng === "number" &&
+    Number.isFinite(selectedPlace.lng);
+
+  const mapQuery = selectedPlace
+    ? `${selectedPlace.name} ${selectedPlace.address} ${selectedPlace.city}`
+    : undefined;
+
+  const openInMapsUrl = selectedPlace
+    ? hasCoordinates
+      ? `https://www.google.com/maps/search/?api=1&query=${selectedPlace.lat},${selectedPlace.lng}`
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery ?? "")}`
+    : undefined;
+
+  const mapTitle = selectedPlace ? `${selectedPlace.name} map preview` : "Map";
+
+  if (!hasPlaces) {
+    return (
+      <div
+        className={cn(
+          "relative h-[600px] rounded-xl overflow-hidden border border-border/60",
+          className,
+        )}
+      >
+        <div className="flex h-full items-center justify-center text-muted-foreground">
+          <div className="text-center">
+            <p className="text-lg font-medium">Map View</p>
+            <p className="text-sm">No places available to preview.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
       className={cn("relative h-[600px] rounded-xl overflow-hidden", className)}
     >
-      <div className="absolute inset-0 bg-muted">
-        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-          <div className="text-center">
-            <p className="text-lg font-medium">Map View</p>
-            <p className="text-sm">
-              Google Maps integration will be added here
-            </p>
+      <div className="absolute inset-0">
+        <GoogleMapsEmbed
+          title={mapTitle}
+          lat={selectedPlace?.lat}
+          lng={selectedPlace?.lng}
+          query={mapQuery}
+          zoom={15}
+          allowInteraction={false}
+          className="absolute inset-0 h-full w-full rounded-none border-0"
+        />
+        {selectedPlace && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <LocationPin size={48} className="text-accent drop-shadow-lg" />
           </div>
-        </div>
-
-        <div className="absolute inset-0 pointer-events-none">
-          {places.map((place, index) => {
-            const row = Math.floor(index / 4);
-            const col = index % 4;
-            const top = 20 + row * 25;
-            const left = 15 + col * 20;
-
-            return (
-              <button
-                type="button"
-                key={place.id}
-                className="absolute pointer-events-auto bg-transparent border-none p-0"
-                style={{ top: `${top}%`, left: `${left}%` }}
-                onMouseEnter={() => setHoveredId(place.id)}
-                onMouseLeave={() => setHoveredId(null)}
-                onClick={() => onSelect?.(place)}
-              >
-                <MapMarker
-                  price={
-                    place.lowestPriceCents !== undefined
-                      ? `${(place.lowestPriceCents / 100).toFixed(0)}`
-                      : "Rates"
-                  }
-                  isSelected={place.id === selectedId || place.id === hoveredId}
-                />
-              </button>
-            );
-          })}
-        </div>
+        )}
       </div>
+
+      {openInMapsUrl && (
+        <div className="absolute top-4 right-4 z-10">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="bg-background/90 backdrop-blur"
+          >
+            <a href={openInMapsUrl} target="_blank" rel="noopener noreferrer">
+              Open in Google Maps
+              <ExternalLink className="ml-2 h-3 w-3" />
+            </a>
+          </Button>
+        </div>
+      )}
 
       <div className="absolute top-4 left-4 bottom-4 w-80 overflow-auto space-y-3 z-10">
         {places.map((place) => (
@@ -83,9 +125,9 @@ export function PlaceMap({
             key={place.id}
             className={cn(
               "w-full text-left cursor-pointer transition-all bg-transparent border-none p-0",
-              place.id === selectedId && "ring-2 ring-primary rounded-xl",
+              place.id === selectedPlaceId && "ring-2 ring-primary rounded-xl",
             )}
-            onClick={() => onSelect?.(place)}
+            onClick={() => handleSelect(place)}
           >
             <PlaceCard place={place} variant="compact" showCTA={false} />
           </button>

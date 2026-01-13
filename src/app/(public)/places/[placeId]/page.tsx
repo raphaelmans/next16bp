@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, Clock, MapPin, Users } from "lucide-react";
+import { Calendar, Clock, ExternalLink, MapPin, Users } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import * as React from "react";
@@ -18,6 +18,7 @@ import {
   usePlaceDetail,
 } from "@/features/discovery/hooks";
 import {
+  GoogleMapsEmbed,
   KudosDatePicker,
   type TimeSlot,
   TimeSlotPicker,
@@ -200,6 +201,19 @@ export default function PlaceDetailPage() {
       </Container>
     );
   }
+
+  const hasCoordinates =
+    typeof place.latitude === "number" &&
+    Number.isFinite(place.latitude) &&
+    typeof place.longitude === "number" &&
+    Number.isFinite(place.longitude);
+  const mapQuery = `${place.name} ${place.address} ${place.city}`;
+  const directionsUrl = hasCoordinates
+    ? `https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+  const openInMapsUrl = hasCoordinates
+    ? `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
 
   return (
     <Container className="py-6">
@@ -532,6 +546,54 @@ export default function PlaceDetailPage() {
                   Sign in to complete your booking request.
                 </p>
               )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Location</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <GoogleMapsEmbed
+                title={`${place.name} location`}
+                lat={place.latitude}
+                lng={place.longitude}
+                query={mapQuery}
+                className="aspect-[16/9] w-full"
+                allowInteraction={false}
+              />
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  asChild
+                >
+                  <a
+                    href={directionsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <MapPin className="mr-2 h-4 w-4" />
+                    Get Directions
+                  </a>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full sm:w-auto"
+                  asChild
+                >
+                  <a
+                    href={openInMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Open in Google Maps
+                    <ExternalLink className="ml-2 h-3 w-3" />
+                  </a>
+                </Button>
+              </div>
             </CardContent>
           </Card>
 

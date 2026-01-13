@@ -1,8 +1,9 @@
 # US-08-01-02: Payment Page - Display Payment Instructions
 
-**Status:** Active  
+**Status:** Superseded  
 **Domain:** 08-p2p-reservation-confirmation  
 **Parent:** US-08-01 (Player Completes P2P Payment Flow)  
+**Superseded By:** US-15-03  
 **PRD Reference:** Section 7 Journey 3 Step 5
 
 ---

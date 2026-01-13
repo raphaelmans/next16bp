@@ -4,6 +4,7 @@ import { Calendar, Clock, ExternalLink, MapPin } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GoogleMapsEmbed } from "@/shared/components/kudos";
 import {
   formatCurrency,
   formatDate,
@@ -31,10 +32,18 @@ export function BookingDetailsCard({
   court,
   timeSlot,
 }: BookingDetailsCardProps) {
-  const hasCoordinates = court.latitude && court.longitude;
+  const hasCoordinates =
+    typeof court.latitude === "number" &&
+    Number.isFinite(court.latitude) &&
+    typeof court.longitude === "number" &&
+    Number.isFinite(court.longitude);
+  const mapQuery = `${court.name} ${court.address} ${court.city}`;
   const directionsUrl = hasCoordinates
     ? `https://www.google.com/maps/dir/?api=1&destination=${court.latitude},${court.longitude}`
-    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${court.name} ${court.address} ${court.city}`)}`;
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+  const openInMapsUrl = hasCoordinates
+    ? `https://www.google.com/maps/search/?api=1&query=${court.latitude},${court.longitude}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
 
   return (
     <Card>
@@ -97,14 +106,33 @@ export function BookingDetailsCard({
           </div>
         </div>
 
-        {/* Get directions button */}
-        <Button variant="outline" className="w-full sm:w-auto" asChild>
-          <a href={directionsUrl} target="_blank" rel="noopener noreferrer">
-            <MapPin className="mr-2 h-4 w-4" />
-            Get Directions
-            <ExternalLink className="ml-2 h-3 w-3" />
-          </a>
-        </Button>
+        <div className="space-y-2">
+          <div className="text-xs text-muted-foreground uppercase tracking-wide">
+            Location
+          </div>
+          <GoogleMapsEmbed
+            title={`${court.name} location`}
+            lat={court.latitude}
+            lng={court.longitude}
+            query={mapQuery}
+            className="aspect-[16/9] w-full"
+          />
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" className="w-full sm:w-auto" asChild>
+            <a href={directionsUrl} target="_blank" rel="noopener noreferrer">
+              <MapPin className="mr-2 h-4 w-4" />
+              Get Directions
+            </a>
+          </Button>
+          <Button variant="outline" className="w-full sm:w-auto" asChild>
+            <a href={openInMapsUrl} target="_blank" rel="noopener noreferrer">
+              Open in Google Maps
+              <ExternalLink className="ml-2 h-3 w-3" />
+            </a>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

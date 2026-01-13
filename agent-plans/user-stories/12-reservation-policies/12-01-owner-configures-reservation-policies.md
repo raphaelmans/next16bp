@@ -1,8 +1,8 @@
 # US-12-01: Owner Configures Reservation Policies Per Court
 
-**Status:** Active  
+**Status:** Superseded  
 **Supersedes:** -  
-**Superseded By:** -
+**Superseded By:** US-15-05
 
 ---
 

@@ -9,6 +9,8 @@ References and context for planning artifacts.
 | Date | Change |
 |------|--------|
 | 2026-01-13 | Added 24-trpc-react-query-hooks implementation plan (hook API standardization) |
+| 2026-01-13 | Added public UI embed plan for Google Maps previews |
+| 2026-01-13 | Added 15-organization-payment-methods user stories (org payment methods + policy defaults) |
 | 2025-01-09 | Added 08-p2p-reservation-confirmation implementation plan with 4 phases |
 | 2025-01-09 | Added 08-p2p-reservation-confirmation user stories (11 total: 3 parent + 8 sub-stories) |
 | 2025-01-09 | Added 10-asset-uploads implementation plan with parallel dev checklists |
@@ -58,6 +60,7 @@ References and context for planning artifacts.
 | 11-ui-revamp | `agent-plans/user-stories/11-ui-revamp/` | Navigation and layout consistency |
 | 12-reservation-policies | `agent-plans/user-stories/12-reservation-policies/` | Court-specific reservation policies |
 | 14-place-court-migration | `agent-plans/user-stories/14-place-court-migration/` | Place→Court-unit migration and multi-sport venue support |
+| 15-organization-payment-methods | `agent-plans/user-stories/15-organization-payment-methods/` | Org-scoped payment methods + reservation policy defaults |
 
 ---
 
@@ -128,3 +131,11 @@ src/modules/
 - Standardize client-side tRPC usage to `trpc.*.useQuery` / `trpc.*.useMutation` across the repo.
 - Replace mixed patterns (`useTRPC()+queryOptions`, `useTRPCClient()+manual queryKey/queryFn`) with a single hook-based API.
 - Migrate tRPC cache invalidation to `trpc.useUtils()` helpers wherever the data is tRPC-backed.
+
+### Organization Payment Methods (New)
+
+- Organization owners can manage multiple payment methods: mobile wallet or bank.
+- Each payment method has a provider (PH-only constants), account name, account number, and optional per-method instructions.
+- Exactly one payment method can be set as the default.
+- Players see payment methods only in the reservation payment context; avoid public exposure via time slot endpoints.
+- Reservation timing rules are stored at the organization scope with default values (editable later).

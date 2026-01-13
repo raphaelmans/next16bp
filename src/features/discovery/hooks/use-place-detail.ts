@@ -29,6 +29,8 @@ export interface PlaceDetail {
   name: string;
   address: string;
   city: string;
+  latitude?: number;
+  longitude?: number;
   description?: string;
   timeZone: string;
   coverImageUrl?: string;
@@ -80,11 +82,24 @@ export function usePlaceDetail({ placeId }: UsePlaceDetailOptions) {
           alt: `${response.place.name} photo ${index + 1}`,
         }));
 
+        const latitudeRaw = response.place.latitude;
+        const longitudeRaw = response.place.longitude;
+        const latitude =
+          latitudeRaw === null || latitudeRaw === undefined
+            ? undefined
+            : Number.parseFloat(latitudeRaw.toString());
+        const longitude =
+          longitudeRaw === null || longitudeRaw === undefined
+            ? undefined
+            : Number.parseFloat(longitudeRaw.toString());
+
         return {
           id: response.place.id,
           name: response.place.name,
           address: response.place.address,
           city: response.place.city,
+          latitude: Number.isFinite(latitude) ? latitude : undefined,
+          longitude: Number.isFinite(longitude) ? longitude : undefined,
           timeZone: response.place.timeZone,
           description: undefined,
           coverImageUrl: photos[0]?.url,
