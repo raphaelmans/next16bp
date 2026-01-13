@@ -110,9 +110,7 @@ interface UsePlaceAvailabilityOptions {
 const getDateIso = (date?: Date) => {
   if (!date) return "";
   return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()),
   ).toISOString();
 };
 
