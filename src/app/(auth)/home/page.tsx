@@ -38,15 +38,55 @@ export default function HomePage() {
 
   if (!sessionUser) return null;
 
+  const now = new Date();
+  const upcomingReservations = rawReservations
+    .filter(
+      (reservation) =>
+        reservation.status !== "CANCELLED" && reservation.status !== "EXPIRED",
+    )
+    .filter((reservation) => {
+      const endTime = reservation.slotEndTime
+        ? new Date(reservation.slotEndTime)
+        : reservation.createdAt
+          ? new Date(reservation.createdAt)
+          : null;
+      return !endTime || endTime >= now;
+    })
+    .sort((a, b) => {
+      const aStart = a.slotStartTime
+        ? new Date(a.slotStartTime)
+        : a.createdAt
+          ? new Date(a.createdAt)
+          : new Date(0);
+      const bStart = b.slotStartTime
+        ? new Date(b.slotStartTime)
+        : b.createdAt
+          ? new Date(b.createdAt)
+          : new Date(0);
+      return aStart.getTime() - bStart.getTime();
+    })
+    .slice(0, 3);
+
   // Transform reservations to match UI component
-  const reservations: Reservation[] = rawReservations.map((reservation) => ({
-    id: reservation.id,
-    startTime: reservation.createdAt
-      ? new Date(reservation.createdAt)
-      : new Date(),
-    status: reservation.status,
-    court: { name: "Court details loading...", address: "" },
-  }));
+  const reservations: Reservation[] = upcomingReservations.map(
+    (reservation) => {
+      const startTime = reservation.slotStartTime
+        ? new Date(reservation.slotStartTime)
+        : reservation.createdAt
+          ? new Date(reservation.createdAt)
+          : new Date();
+
+      return {
+        id: reservation.id,
+        startTime,
+        status: reservation.status,
+        court: {
+          name: reservation.courtName || "Court",
+          address: reservation.placeAddress || undefined,
+        },
+      };
+    },
+  );
 
   // Use mock data if no reservations found (for demo purposes if needed, otherwise just empty)
   // Per checklist, we might want to mock if endpoints aren't ready, but let's show empty state if truly empty

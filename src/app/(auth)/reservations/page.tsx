@@ -1,9 +1,7 @@
 import { Suspense } from "react";
 import { PageHeader } from "@/components/ui/page-header";
 import { OwnerPaymentMethodReminder } from "@/features/owner/components";
-import { ReservationList } from "@/features/reservation/components/reservation-list";
 import { ReservationTabs } from "@/features/reservation/components/reservation-tabs";
-import { ReservationListSkeleton } from "@/features/reservation/components/skeletons";
 import { appRoutes } from "@/shared/lib/app-routes";
 
 export const metadata = {
@@ -22,14 +20,9 @@ export default function MyReservationsPage() {
 
       <OwnerPaymentMethodReminder />
 
-      {/* Tabs */}
+      {/* Tabs + list */}
       <Suspense fallback={null}>
         <ReservationTabs />
-      </Suspense>
-
-      {/* Reservation list */}
-      <Suspense fallback={<ReservationListSkeleton />}>
-        <ReservationList />
       </Suspense>
     </div>
   );

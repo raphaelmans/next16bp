@@ -15,7 +15,10 @@ export function useCreateReservationForCourt() {
             ? "Reservation accepted! Please complete payment."
             : "Reservation confirmed!";
       toast.success(message);
-      await utils.reservation.getMy.invalidate();
+      await Promise.all([
+        utils.reservation.getMy.invalidate(),
+        utils.reservation.getMyWithDetails.invalidate(),
+      ]);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to create reservation");

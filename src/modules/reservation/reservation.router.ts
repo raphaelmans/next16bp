@@ -238,4 +238,24 @@ export const reservationRouter = router({
         handleReservationError(error);
       }
     }),
+
+  /**
+   * Get my reservations with details
+   */
+  getMyWithDetails: protectedProcedure
+    .input(GetMyReservationsSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const reservationService = makeReservationService();
+        return await reservationService.getMyReservationsWithDetails(
+          profile.id,
+          input,
+        );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
 });

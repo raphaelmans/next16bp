@@ -9,6 +9,7 @@ import {
 } from "@trpc/client";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { useState } from "react";
+import { Toaster } from "@/components/ui/sonner";
 import { trpc } from "@/trpc/client";
 import { getQueryClient } from "@/trpc/query-client";
 
@@ -56,6 +57,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           {children}
+          <Toaster />
         </QueryClientProvider>
       </trpc.Provider>
     </NuqsAdapter>

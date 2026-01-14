@@ -8,6 +8,8 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-14 | Added 16-reservation-list-enrichment user stories and 30-reservation-list-enrichment plan |
+| 2026-01-14 | Added US-06-04 (My Reservations tabs filtering + accessibility) and 29-my-reservations-tabs plan | 
 | 2026-01-13 | Added 24-trpc-react-query-hooks implementation plan (hook API standardization) |
 | 2026-01-13 | Added public UI embed plan for Google Maps previews |
 | 2026-01-13 | Added 15-organization-payment-methods user stories (org payment methods + policy defaults) |
@@ -62,6 +64,7 @@ References and context for planning artifacts.
 | 12-reservation-policies | `agent-plans/user-stories/12-reservation-policies/` | Court-specific reservation policies |
 | 14-place-court-migration | `agent-plans/user-stories/14-place-court-migration/` | Place→Court-unit migration and multi-sport venue support |
 | 15-organization-payment-methods | `agent-plans/user-stories/15-organization-payment-methods/` | Org-scoped payment methods + reservation policy defaults |
+| 16-reservation-list-enrichment | `agent-plans/user-stories/16-reservation-list-enrichment/` | Player reservation lists with real court + slot data |
 
 ---
 
@@ -79,6 +82,8 @@ References and context for planning artifacts.
 | 12-reservation-policies | `agent-plans/12-reservation-policies/` | Pending |
 | 24-trpc-react-query-hooks | `agent-plans/24-trpc-react-query-hooks/` | Pending |
 | 27-organization-payment-methods | `agent-plans/27-organization-payment-methods/` | Ready |
+| 29-my-reservations-tabs | `agent-plans/29-my-reservations-tabs/` | Pending |
+| 30-reservation-list-enrichment | `agent-plans/30-reservation-list-enrichment/` | Pending |
 
 ---
 

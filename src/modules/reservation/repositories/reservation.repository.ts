@@ -1,9 +1,10 @@
-import { and, count, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import {
   court,
   type InsertReservation,
   paymentProof,
   place,
+  placePhoto,
   type ReservationRecord,
   reservation,
   reservationTimeSlot,
@@ -11,6 +12,7 @@ import {
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
 import type { RequestContext } from "@/shared/kernel/context";
+import type { ReservationListItemRecord } from "../dtos/reservation-list.dto";
 import type { ReservationWithDetails } from "../dtos/reservation-owner.dto";
 
 export interface IReservationRepository {
@@ -37,6 +39,16 @@ export interface IReservationRepository {
     },
     ctx?: RequestContext,
   ): Promise<ReservationRecord[]>;
+  findWithDetailsByPlayerId(
+    playerId: string,
+    filters: {
+      status?: string;
+      upcoming?: boolean;
+      limit: number;
+      offset: number;
+    },
+    ctx?: RequestContext,
+  ): Promise<ReservationListItemRecord[]>;
   findByTimeSlotId(
     timeSlotId: string,
     ctx?: RequestContext,
@@ -243,6 +255,106 @@ export class ReservationRepository implements IReservationRepository {
       .orderBy(desc(reservation.createdAt))
       .limit(pagination.limit)
       .offset(pagination.offset);
+  }
+
+  async findWithDetailsByPlayerId(
+    playerId: string,
+    filters: {
+      status?: string;
+      upcoming?: boolean;
+      limit: number;
+      offset: number;
+    },
+    ctx?: RequestContext,
+  ): Promise<ReservationListItemRecord[]> {
+    const client = this.getClient(ctx);
+    const conditions = [eq(reservation.playerId, playerId)];
+
+    if (filters.status) {
+      conditions.push(
+        eq(
+          reservation.status,
+          filters.status as
+            | "CREATED"
+            | "AWAITING_PAYMENT"
+            | "PAYMENT_MARKED_BY_USER"
+            | "CONFIRMED"
+            | "EXPIRED"
+            | "CANCELLED",
+        ),
+      );
+    }
+
+    let query = client
+      .select({
+        id: reservation.id,
+        status: reservation.status,
+        playerNameSnapshot: reservation.playerNameSnapshot,
+        playerPhoneSnapshot: reservation.playerPhoneSnapshot,
+        createdAt: reservation.createdAt,
+        expiresAt: reservation.expiresAt,
+        timeSlotId: reservation.timeSlotId,
+        courtId: court.id,
+        courtName: sql<string>`concat(${place.name}, ' - ', ${court.label})`,
+        placeId: place.id,
+        placeName: place.name,
+        placeAddress: place.address,
+        placeCity: place.city,
+        coverImageUrl: sql<
+          string | null
+        >`(array_agg(${placePhoto.url} order by ${placePhoto.displayOrder}))[1]`,
+        slotStartTime: sql<Date>`min(${timeSlot.startTime})`,
+        slotEndTime: sql<Date>`max(${timeSlot.endTime})`,
+        amountCents: sql<number>`sum(coalesce(${timeSlot.priceCents}, 0))`,
+        currency: sql<string>`max(${timeSlot.currency})`,
+      })
+      .from(reservation)
+      .leftJoin(
+        reservationTimeSlot,
+        eq(reservationTimeSlot.reservationId, reservation.id),
+      )
+      .innerJoin(
+        timeSlot,
+        sql`${timeSlot.id} = coalesce(${reservationTimeSlot.timeSlotId}, ${reservation.timeSlotId})`,
+      )
+      .innerJoin(court, eq(timeSlot.courtId, court.id))
+      .innerJoin(place, eq(court.placeId, place.id))
+      .leftJoin(placePhoto, eq(placePhoto.placeId, place.id))
+      .where(and(...conditions))
+      .groupBy(
+        reservation.id,
+        reservation.status,
+        reservation.playerNameSnapshot,
+        reservation.playerPhoneSnapshot,
+        reservation.createdAt,
+        reservation.expiresAt,
+        reservation.timeSlotId,
+        court.id,
+        court.label,
+        place.id,
+        place.name,
+        place.address,
+        place.city,
+      )
+      .$dynamic();
+
+    if (filters.upcoming) {
+      query = query.having(sql`min(${timeSlot.startTime}) > now()`);
+      query = query.orderBy(asc(sql`min(${timeSlot.startTime})`));
+    } else {
+      query = query.orderBy(desc(reservation.createdAt));
+    }
+
+    const results = await query.limit(filters.limit).offset(filters.offset);
+
+    return results.map((row) => ({
+      ...row,
+      coverImageUrl: row.coverImageUrl ?? null,
+      createdAt: toIsoString(row.createdAt),
+      expiresAt: toIsoString(row.expiresAt),
+      slotStartTime: toIsoString(row.slotStartTime) ?? "",
+      slotEndTime: toIsoString(row.slotEndTime) ?? "",
+    }));
   }
 
   async findByTimeSlotId(

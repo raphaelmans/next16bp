@@ -28,6 +28,7 @@ import type { CourtFormData } from "@/features/owner/schemas/court-form.schema";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { formatCurrency } from "@/shared/lib/format";
+import { useCatchErrorToast } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 const stepKeys = [
@@ -159,7 +160,7 @@ export default function CourtSetupWizardPage() {
     }
   }, [courtData, placeId, setCourtIdParam, setStep]);
 
-  const { submit, isSubmitting } = useCourtForm({
+  const { submitAsync, isSubmitting } = useCourtForm({
     courtId: courtIdParam ?? undefined,
     onSuccess: (result) => {
       if (!courtIdParam) {
@@ -172,6 +173,8 @@ export default function CourtSetupWizardPage() {
       setStep("schedule");
     },
   });
+
+  const catchErrorToast = useCatchErrorToast();
 
   const defaultValues = React.useMemo<Partial<CourtFormData>>(() => {
     if (!courtData) return {};
@@ -262,16 +265,26 @@ export default function CourtSetupWizardPage() {
     setStep(nextStep);
   };
 
+  const handleCreateSubmit = (data: CourtFormData) => {
+    void catchErrorToast(() => submitAsync(data), {
+      errorTitle: "Unable to create court",
+      errorFallback: "Please try again",
+    });
+  };
+
   const handleDetailsSubmit = (data: CourtFormData) => {
     if (!courtIdParam) {
-      submit(data);
+      handleCreateSubmit(data);
       return;
     }
     if (!isDetailsDirty) {
       goToStep("schedule");
       return;
     }
-    submit(data);
+    void catchErrorToast(() => submitAsync(data), {
+      errorTitle: "Unable to save court",
+      errorFallback: "Please try again",
+    });
   };
 
   const handleLogout = async () => {
@@ -399,7 +412,7 @@ export default function CourtSetupWizardPage() {
             defaultValues={{ placeId }}
             placeOptions={placeOptions}
             sportOptions={sportOptions}
-            onSubmit={submit}
+            onSubmit={handleCreateSubmit}
             onCancel={handleCancel}
             isSubmitting={isSubmitting}
             disablePlaceSelect

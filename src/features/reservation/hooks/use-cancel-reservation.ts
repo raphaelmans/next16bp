@@ -22,6 +22,7 @@ export function useCancelReservation() {
           reservationId: variables.reservationId,
         }),
         utils.reservation.getMy.invalidate(),
+        utils.reservation.getMyWithDetails.invalidate(),
       ]);
 
       router.push(appRoutes.reservations.base);

@@ -29,6 +29,7 @@ import type {
   CreateReservationForCourtDTO,
   GetMyReservationsDTO,
   MarkPaymentDTO,
+  ReservationListItemRecord,
 } from "../dtos";
 import {
   InvalidReservationStatusError,
@@ -116,6 +117,10 @@ export interface IReservationService {
     profileId: string,
     filters: GetMyReservationsDTO,
   ): Promise<ReservationRecord[]>;
+  getMyReservationsWithDetails(
+    profileId: string,
+    filters: GetMyReservationsDTO,
+  ): Promise<ReservationListItemRecord[]>;
 }
 
 export class ReservationService implements IReservationService {
@@ -622,6 +627,18 @@ export class ReservationService implements IReservationService {
       { limit: filters.limit, offset: filters.offset },
       { status: filters.status, upcoming: filters.upcoming },
     );
+  }
+
+  async getMyReservationsWithDetails(
+    profileId: string,
+    filters: GetMyReservationsDTO,
+  ): Promise<ReservationListItemRecord[]> {
+    return this.reservationRepository.findWithDetailsByPlayerId(profileId, {
+      status: filters.status,
+      upcoming: filters.upcoming,
+      limit: filters.limit,
+      offset: filters.offset,
+    });
   }
 
   private async findConsecutiveSlotsForCourt(

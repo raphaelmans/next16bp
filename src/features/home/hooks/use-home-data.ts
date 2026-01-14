@@ -5,7 +5,10 @@ import { trpc } from "@/trpc/client";
 export function useHomeData() {
   const profileQuery = trpc.profile.me.useQuery();
 
-  const reservationsQuery = trpc.reservation.getMy.useQuery({ limit: 3 });
+  const reservationsQuery = trpc.reservation.getMyWithDetails.useQuery({
+    limit: 10,
+    offset: 0,
+  });
 
   const orgsQuery = trpc.organization.my.useQuery();
 

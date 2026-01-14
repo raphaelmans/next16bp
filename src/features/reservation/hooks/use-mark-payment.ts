@@ -29,6 +29,7 @@ export function useMarkPayment() {
           reservationId: variables.reservationId,
         }),
         utils.reservation.getMy.invalidate(),
+        utils.reservation.getMyWithDetails.invalidate(),
       ]);
     },
     onError: (error) => {

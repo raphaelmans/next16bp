@@ -41,9 +41,23 @@ const emptyStateConfig: Record<
   },
 };
 
-export function ReservationList() {
-  const { tab } = useReservationsTabs();
-  const { data, isLoading, isError } = useMyReservations({ tab });
+interface ReservationListProps {
+  tab?: ReservationTab;
+  isActive?: boolean;
+}
+
+export function ReservationList({ tab, isActive }: ReservationListProps) {
+  const { tab: activeTab } = useReservationsTabs();
+  const effectiveTab = tab ?? activeTab;
+  const isEnabled = isActive ?? effectiveTab === activeTab;
+  const { data, isLoading, isError } = useMyReservations({
+    tab: effectiveTab,
+    enabled: isEnabled,
+  });
+
+  if (!isEnabled) {
+    return null;
+  }
 
   if (isLoading) {
     return <ReservationListSkeleton />;
@@ -69,7 +83,7 @@ export function ReservationList() {
   const reservations = data?.items ?? [];
 
   if (reservations.length === 0) {
-    const emptyState = emptyStateConfig[tab];
+    const emptyState = emptyStateConfig[effectiveTab];
     return (
       <Empty className="border">
         <EmptyHeader>
@@ -79,7 +93,7 @@ export function ReservationList() {
           <EmptyTitle>{emptyState.title}</EmptyTitle>
           <EmptyDescription>{emptyState.description}</EmptyDescription>
         </EmptyHeader>
-        {tab === "upcoming" && (
+        {effectiveTab === "upcoming" && (
           <EmptyContent>
             <Button asChild>
               <Link href={appRoutes.courts.base}>

@@ -42,9 +42,9 @@ export function useCourtForm({ courtId, onSuccess }: UseCourtFormOptions) {
     },
   });
 
-  const submit = (data: CourtFormData) => {
+  const submitAsync = async (data: CourtFormData) => {
     if (isEditing && courtId) {
-      updateMutation.mutate({
+      await updateMutation.mutateAsync({
         courtId,
         sportId: data.sportId,
         label: data.label,
@@ -54,7 +54,7 @@ export function useCourtForm({ courtId, onSuccess }: UseCourtFormOptions) {
       return;
     }
 
-    createMutation.mutate({
+    await createMutation.mutateAsync({
       placeId: data.placeId,
       sportId: data.sportId,
       label: data.label,
@@ -62,8 +62,13 @@ export function useCourtForm({ courtId, onSuccess }: UseCourtFormOptions) {
     });
   };
 
+  const submit = (data: CourtFormData) => {
+    void submitAsync(data).catch(() => undefined);
+  };
+
   return {
     submit,
+    submitAsync,
     isSubmitting: createMutation.isPending || updateMutation.isPending,
     error: createMutation.error || updateMutation.error,
     isEditing,

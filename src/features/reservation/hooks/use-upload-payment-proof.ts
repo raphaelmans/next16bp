@@ -16,7 +16,10 @@ export function useUploadPaymentProof() {
         description: "The court owner will review your payment shortly.",
       });
 
-      await utils.reservation.getMy.invalidate();
+      await Promise.all([
+        utils.reservation.getMy.invalidate(),
+        utils.reservation.getMyWithDetails.invalidate(),
+      ]);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to upload payment proof");
