@@ -17,31 +17,31 @@ Track every form that must migrate to the StandardForm + RHF pattern. Use this c
 ### Owner
 
 - [x] `src/features/owner/components/court-form.tsx` (reference implementation)
-- [ ] `src/features/owner/components/place-form.tsx`
-- [ ] `src/features/owner/components/removal-request-modal.tsx`
-- [ ] `src/app/(owner)/owner/settings/page.tsx` (multiple forms: profile + payment methods)
-- [ ] `src/app/(owner)/owner/courts/setup/page.tsx` (uses CourtForm; ensure wrapper aligns with new patterns)
-- [ ] `src/app/(owner)/owner/places/[placeId]/courts/setup/page.tsx` (uses CourtForm; ensure wrapper aligns with new patterns)
+- [x] `src/features/owner/components/place-form.tsx`
+- [x] `src/features/owner/components/removal-request-modal.tsx`
+- [x] `src/app/(owner)/owner/settings/page.tsx` (multiple forms: profile + payment methods)
+- [x] `src/app/(owner)/owner/courts/setup/page.tsx` (uses CourtForm; ensure wrapper aligns with new patterns)
+- [x] `src/app/(owner)/owner/places/[placeId]/courts/setup/page.tsx` (uses CourtForm; ensure wrapper aligns with new patterns)
 
 ### Admin
 
-- [ ] `src/app/(admin)/admin/courts/new/page.tsx`
+- [x] `src/app/(admin)/admin/courts/new/page.tsx`
 
 ### Organization
 
-- [ ] `src/features/organization/components/organization-form.tsx`
-- [ ] `src/app/(auth)/owner/onboarding/organization-form-client.tsx`
+- [x] `src/features/organization/components/organization-form.tsx`
+- [x] `src/app/(auth)/owner/onboarding/organization-form-client.tsx`
 
 ### Auth
 
-- [ ] `src/features/auth/components/login-form.tsx`
-- [ ] `src/features/auth/components/register-form.tsx`
-- [ ] `src/features/auth/components/magic-link-form.tsx`
+- [x] `src/features/auth/components/login-form.tsx`
+- [x] `src/features/auth/components/register-form.tsx`
+- [x] `src/features/auth/components/magic-link-form.tsx`
 
 ### Reservation / Client
 
-- [ ] `src/features/reservation/components/profile-form.tsx`
-- [ ] `src/features/reservation/components/payment-proof-form.tsx`
+- [x] `src/features/reservation/components/profile-form.tsx`
+- [x] `src/features/reservation/components/payment-proof-form.tsx`
 
 ---
 

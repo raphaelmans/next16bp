@@ -33,7 +33,7 @@ export default function NewPlacePage() {
     isLoading: orgLoading,
   } = useOwnerOrganization();
 
-  const { submit, isSubmitting } = usePlaceForm({
+  const { submitAsync, isSubmitting } = usePlaceForm({
     organizationId: organization?.id,
     onSuccess: (result) => {
       toast.success("Place created successfully!");
@@ -158,7 +158,7 @@ export default function NewPlacePage() {
         )}
 
         <PlaceForm
-          onSubmit={submit}
+          onSubmit={submitAsync}
           onCancel={handleCancel}
           isSubmitting={isSubmitting}
         />

@@ -4,9 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import {
+  StandardFormCheckbox,
+  StandardFormField,
+  StandardFormProvider,
+} from "@/components/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -15,15 +20,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import {
   type RemovalRequestFormData,
   removalRequestSchema,
@@ -32,7 +30,7 @@ import {
 interface RemovalRequestModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: RemovalRequestFormData) => void;
+  onSubmit: (data: RemovalRequestFormData) => Promise<void> | void;
   isLoading?: boolean;
 }
 
@@ -44,6 +42,7 @@ export function RemovalRequestModal({
 }: RemovalRequestModalProps) {
   const form = useForm<RemovalRequestFormData>({
     resolver: zodResolver(removalRequestSchema),
+    mode: "onChange",
     defaultValues: {
       reason: "",
       acknowledgeReservations: false,
@@ -51,16 +50,30 @@ export function RemovalRequestModal({
     },
   });
 
-  // Reset form when modal closes
+  const {
+    reset,
+    formState: { isDirty, isValid, isSubmitting },
+  } = form;
+
   React.useEffect(() => {
     if (!open) {
-      form.reset();
+      reset();
     }
-  }, [open, form]);
+  }, [open, reset]);
 
-  const handleSubmit = form.handleSubmit((data) => {
-    onSubmit(data);
-  });
+  const handleSubmit = async (data: RemovalRequestFormData) => {
+    try {
+      await onSubmit(data);
+      reset();
+    } catch (error) {
+      toast.error("Unable to submit removal request", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
+
+  const submitting = Boolean(isLoading || isSubmitting);
+  const isSubmitDisabled = submitting || !isValid || !isDirty;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -76,102 +89,71 @@ export function RemovalRequestModal({
           </DialogDescription>
         </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <Alert variant="destructive">
-              <AlertTriangle className="h-4 w-4" />
-              <AlertDescription>
-                <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li>All pending reservations will be cancelled</li>
-                  <li>Your courts will be removed from public search</li>
-                  <li>This request requires admin approval</li>
-                </ul>
-              </AlertDescription>
-            </Alert>
+        <StandardFormProvider
+          form={form}
+          onSubmit={handleSubmit}
+          className="space-y-6"
+        >
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              <ul className="list-disc list-inside space-y-1 text-sm">
+                <li>All pending reservations will be cancelled</li>
+                <li>Your courts will be removed from public search</li>
+                <li>This request requires admin approval</li>
+              </ul>
+            </AlertDescription>
+          </Alert>
 
-            <FormField
-              control={form.control}
-              name="reason"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Reason for leaving{" "}
-                    <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Please tell us why you're requesting removal..."
-                      rows={4}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+          <StandardFormField<RemovalRequestFormData>
+            name="reason"
+            label="Reason for leaving"
+            required
+          >
+            {({ field }) => (
+              <Textarea
+                placeholder="Please tell us why you're requesting removal..."
+                rows={4}
+                value={typeof field.value === "string" ? field.value : ""}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                name={field.name}
+                ref={field.ref}
+              />
+            )}
+          </StandardFormField>
+
+          <div className="space-y-4">
+            <StandardFormCheckbox<RemovalRequestFormData>
+              name="acknowledgeReservations"
+              label="I understand that all pending reservations will be cancelled and affected players will be notified"
             />
 
-            <div className="space-y-4">
-              <FormField
-                control={form.control}
-                name="acknowledgeReservations"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel className="font-normal cursor-pointer">
-                        I understand that all pending reservations will be
-                        cancelled and affected players will be notified
-                      </FormLabel>
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
+            <StandardFormCheckbox<RemovalRequestFormData>
+              name="acknowledgeApproval"
+              label="I understand that this request requires admin approval and may take 24-48 hours to process"
+            />
+          </div>
 
-              <FormField
-                control={form.control}
-                name="acknowledgeApproval"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel className="font-normal cursor-pointer">
-                        I understand that this request requires admin approval
-                        and may take 24-48 hours to process
-                      </FormLabel>
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isLoading}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" variant="destructive" disabled={isLoading}>
-                {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Submit Request
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={submitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="destructive"
+              disabled={isSubmitDisabled}
+            >
+              {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Submit Request
+            </Button>
+          </DialogFooter>
+        </StandardFormProvider>
       </DialogContent>
     </Dialog>
   );

@@ -82,6 +82,7 @@ pnpm db:seed:buckets # seed storage buckets
 - Prefer `date-fns` for date formatting (no native `Date` formatting).
 - Use `react-hook-form` + `@hookform/resolvers` + Zod for forms.
 - Prefer StandardForm components in `src/components/form` (StandardFormProvider, StandardFormInput/Select/Checkbox/Field).
+- Destructure `formState` values and helpers like `setValue`/`reset` from the form; avoid `form.formState.*` in inline expressions and `form.setValue(...)`.
 - Form submissions: use `mutateAsync`, show server errors via toast only, reset on success.
 - Prefer shared formatting helpers in `src/shared/lib/format.ts`.
 - Query params: use `nuqs` (`useQueryState` / `useQueryStates`) and avoid manual `router.replace` or `useSearchParams` reconciliation.

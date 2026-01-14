@@ -1,10 +1,20 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
+import type { z } from "zod";
+import {
+  StandardFormCheckbox,
+  StandardFormField,
+  StandardFormInput,
+  StandardFormProvider,
+  StandardFormSelect,
+} from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -19,23 +29,21 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { env } from "@/lib/env";
 import { cn } from "@/lib/utils";
+import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import {
+  defaultPlaceFormValues,
   PLACE_TIME_ZONES,
   type PlaceFormData,
+  placeFormSchema,
 } from "../schemas/place-form.schema";
 
+type PlaceFormValues = z.input<typeof placeFormSchema>;
+
 interface PlaceFormProps {
-  defaultValues?: Partial<PlaceFormData>;
-  onSubmit: (data: PlaceFormData) => void;
+  defaultValues?: Partial<PlaceFormValues>;
+  onSubmit: (data: PlaceFormData) => Promise<void> | void;
   onCancel: () => void;
   isSubmitting?: boolean;
   isEditing?: boolean;
@@ -65,6 +73,39 @@ interface GoogleLocResult {
 const DEFAULT_COUNTRY = "PH";
 const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 
+const buildFormDefaults = (
+  values?: Partial<PlaceFormValues>,
+): PlaceFormValues => ({
+  name: values?.name ?? "",
+  address: values?.address ?? "",
+  city: values?.city ?? "",
+  province: values?.province ?? "",
+  country: values?.country ?? defaultPlaceFormValues.country ?? DEFAULT_COUNTRY,
+  latitude: values?.latitude,
+  longitude: values?.longitude,
+  timeZone:
+    values?.timeZone ?? defaultPlaceFormValues.timeZone ?? "Asia/Manila",
+  isActive: values?.isActive ?? defaultPlaceFormValues.isActive ?? true,
+});
+
+const normalizeFormValues = (values: PlaceFormValues): PlaceFormData => ({
+  name: values.name.trim(),
+  address: values.address.trim(),
+  city: values.city.trim(),
+  country: (values.country ?? DEFAULT_COUNTRY).trim().toUpperCase(),
+  province: values.province?.trim() ? values.province.trim() : undefined,
+  latitude:
+    values.latitude === undefined || Number.isNaN(values.latitude)
+      ? undefined
+      : values.latitude,
+  longitude:
+    values.longitude === undefined || Number.isNaN(values.longitude)
+      ? undefined
+      : values.longitude,
+  timeZone: values.timeZone ?? defaultPlaceFormValues.timeZone ?? "Asia/Manila",
+  isActive: values.isActive ?? defaultPlaceFormValues.isActive ?? true,
+});
+
 export function PlaceForm({
   defaultValues,
   onSubmit,
@@ -73,24 +114,6 @@ export function PlaceForm({
   isEditing = false,
 }: PlaceFormProps) {
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
-
-  const [name, setName] = useState(defaultValues?.name ?? "");
-  const [address, setAddress] = useState(defaultValues?.address ?? "");
-  const [city, setCity] = useState(defaultValues?.city ?? "");
-  const [province, setProvince] = useState(defaultValues?.province ?? "");
-  const [country, setCountry] = useState(
-    defaultValues?.country ?? DEFAULT_COUNTRY,
-  );
-  const [latitude, setLatitude] = useState<number | "">(
-    defaultValues?.latitude ?? "",
-  );
-  const [longitude, setLongitude] = useState<number | "">(
-    defaultValues?.longitude ?? "",
-  );
-  const [timeZone, setTimeZone] = useState(
-    defaultValues?.timeZone ?? "Asia/Manila",
-  );
-  const [isActive, setIsActive] = useState(defaultValues?.isActive ?? true);
 
   const [countries, setCountries] = useState<CountryOption[]>([]);
   const [isCountriesLoading, setIsCountriesLoading] = useState(false);
@@ -104,18 +127,32 @@ export function PlaceForm({
     null,
   );
 
+  const resolvedDefaults = useMemo(
+    () => buildFormDefaults(defaultValues),
+    [defaultValues],
+  );
+
+  const form = useForm<PlaceFormValues>({
+    resolver: zodResolver(placeFormSchema),
+    mode: "onChange",
+    defaultValues: resolvedDefaults,
+  });
+
+  const {
+    control,
+    reset,
+    setValue,
+    formState: { isDirty, isSubmitting: formSubmitting, isValid },
+  } = form;
+
+  const countryValue = useWatch({ control, name: "country" });
+  const nameValue = useWatch({ control, name: "name" });
+
   useEffect(() => {
     if (!defaultValues) return;
-    setName(defaultValues.name ?? "");
-    setAddress(defaultValues.address ?? "");
-    setCity(defaultValues.city ?? "");
-    setProvince(defaultValues.province ?? "");
-    setCountry(defaultValues.country ?? DEFAULT_COUNTRY);
-    setLatitude(defaultValues.latitude ?? "");
-    setLongitude(defaultValues.longitude ?? "");
-    setTimeZone(defaultValues.timeZone ?? "Asia/Manila");
-    setIsActive(defaultValues.isActive ?? true);
-  }, [defaultValues]);
+    if (isDirty) return;
+    reset(resolvedDefaults);
+  }, [defaultValues, isDirty, reset, resolvedDefaults]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -159,13 +196,13 @@ export function PlaceForm({
   }, []);
 
   const selectedCountry = useMemo(
-    () => countries.find((item) => item.cca2 === country),
-    [countries, country],
+    () => countries.find((item) => item.cca2 === countryValue),
+    [countries, countryValue],
   );
 
   const countryLabel = selectedCountry
     ? `${selectedCountry.name} (${selectedCountry.cca2})`
-    : country || "Select a country";
+    : countryValue || "Select a country";
 
   const coordinateLabel = useMemo(() => {
     if (previewResult?.lat === undefined || previewResult?.lng === undefined) {
@@ -174,41 +211,25 @@ export function PlaceForm({
     return `${previewResult.lat.toFixed(6)}, ${previewResult.lng.toFixed(6)}`;
   }, [previewResult?.lat, previewResult?.lng]);
 
-  const canSubmit =
-    name.trim().length > 0 &&
-    address.trim().length > 0 &&
-    city.trim().length > 0 &&
-    country.trim().length > 0;
+  const timeZoneOptions = useMemo(
+    () => PLACE_TIME_ZONES.map((zone) => ({ label: zone, value: zone })),
+    [],
+  );
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!canSubmit) return;
+  const handleSubmit = async (values: PlaceFormValues) => {
+    const normalized = normalizeFormValues(values);
 
-    const normalizedCountry = country.trim().toUpperCase();
-    const trimmedProvince = province.trim();
-
-    const data: PlaceFormData = {
-      name: name.trim(),
-      address: address.trim(),
-      city: city.trim(),
-      country: normalizedCountry,
-      timeZone,
-      isActive,
-    };
-
-    if (trimmedProvince.length > 0) {
-      data.province = trimmedProvince;
+    try {
+      await onSubmit(normalized);
+      reset(buildFormDefaults(normalized));
+    } catch (error) {
+      toast.error(
+        isEditing ? "Unable to save place" : "Unable to create place",
+        {
+          description: getClientErrorMessage(error, "Please try again"),
+        },
+      );
     }
-
-    if (latitude !== "") {
-      data.latitude = Number(latitude);
-    }
-
-    if (longitude !== "") {
-      data.longitude = Number(longitude);
-    }
-
-    onSubmit(data);
   };
 
   const handlePreview = async () => {
@@ -239,18 +260,26 @@ export function PlaceForm({
 
       if ("warnings" in json) {
         setPreviewResult(json);
-        if (json.suggestedName) {
-          setName((current) =>
-            current.trim().length > 0
-              ? current
-              : (json.suggestedName ?? current),
-          );
+        if (json.suggestedName && !nameValue.trim()) {
+          setValue("name", json.suggestedName, {
+            shouldDirty: true,
+            shouldTouch: true,
+            shouldValidate: true,
+          });
         }
         if (json.lat !== undefined) {
-          setLatitude(json.lat);
+          setValue("latitude", json.lat, {
+            shouldDirty: true,
+            shouldTouch: true,
+            shouldValidate: true,
+          });
         }
         if (json.lng !== undefined) {
-          setLongitude(json.lng);
+          setValue("longitude", json.lng, {
+            shouldDirty: true,
+            shouldTouch: true,
+            shouldValidate: true,
+          });
         }
       }
     } catch (error) {
@@ -262,143 +291,131 @@ export function PlaceForm({
     }
   };
 
+  const submitting = Boolean(isSubmitting || formSubmitting);
+  const isSubmitDisabled = submitting || !isValid || !isDirty;
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <StandardFormProvider<PlaceFormValues>
+      form={form}
+      onSubmit={handleSubmit}
+      className="space-y-6"
+    >
       <Card>
         <CardHeader>
           <CardTitle>Place Details</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Place Name</Label>
-            <Input
-              id="name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder="e.g., Kudos Sports Complex"
-              required
-            />
-          </div>
+          <StandardFormInput<PlaceFormValues>
+            name="name"
+            label="Place Name"
+            placeholder="e.g., Kudos Sports Complex"
+            required
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="address">Street Address</Label>
-            <Input
-              id="address"
-              value={address}
-              onChange={(event) => setAddress(event.target.value)}
-              placeholder="e.g., 123 Sports Avenue"
-              required
-            />
-          </div>
+          <StandardFormInput<PlaceFormValues>
+            name="address"
+            label="Street Address"
+            placeholder="e.g., 123 Sports Avenue"
+            required
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="city">City</Label>
-            <Input
-              id="city"
-              value={city}
-              onChange={(event) => setCity(event.target.value)}
-              placeholder="e.g., Cebu City"
-              required
-            />
-          </div>
+          <StandardFormInput<PlaceFormValues>
+            name="city"
+            label="City"
+            placeholder="e.g., Cebu City"
+            required
+          />
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="province">Province / State</Label>
-              <Input
-                id="province"
-                value={province}
-                onChange={(event) => setProvince(event.target.value)}
-                placeholder="e.g., Cebu"
-              />
-            </div>
+            <StandardFormInput<PlaceFormValues>
+              name="province"
+              label="Province / State"
+              placeholder="e.g., Cebu"
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="country">Country</Label>
-              <Popover open={isCountryOpen} onOpenChange={setIsCountryOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    type="button"
-                    id="country"
-                    variant="outline"
-                    role="combobox"
-                    className="w-full justify-between"
-                    aria-expanded={isCountryOpen}
-                  >
-                    <span className="truncate text-left">{countryLabel}</span>
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-                  <Command>
-                    <CommandInput placeholder="Search country..." />
-                    <CommandList>
-                      {isCountriesLoading ? (
-                        <CommandEmpty>Loading countries...</CommandEmpty>
-                      ) : countries.length === 0 ? (
-                        <CommandEmpty>No countries found.</CommandEmpty>
-                      ) : (
-                        countries.map((item) => (
-                          <CommandItem
-                            key={item.cca2}
-                            value={`${item.name} ${item.cca2}`}
-                            onSelect={() => {
-                              setCountry(item.cca2);
-                              setIsCountryOpen(false);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                item.cca2 === country
-                                  ? "opacity-100"
-                                  : "opacity-0",
-                              )}
-                            />
-                            <span className="flex-1 truncate">{item.name}</span>
-                            <span className="text-xs text-muted-foreground">
-                              {item.cca2}
-                            </span>
-                          </CommandItem>
-                        ))
-                      )}
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              {countriesError && (
-                <p className="text-xs text-destructive">{countriesError}</p>
+            <StandardFormField<PlaceFormValues>
+              name="country"
+              label="Country"
+              required
+            >
+              {({ field }) => (
+                <div className="space-y-2">
+                  <Popover open={isCountryOpen} onOpenChange={setIsCountryOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        type="button"
+                        id="country"
+                        variant="outline"
+                        role="combobox"
+                        className="w-full justify-between"
+                        aria-expanded={isCountryOpen}
+                      >
+                        <span className="truncate text-left">
+                          {countryLabel}
+                        </span>
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
+                      <Command>
+                        <CommandInput placeholder="Search country..." />
+                        <CommandList>
+                          {isCountriesLoading ? (
+                            <CommandEmpty>Loading countries...</CommandEmpty>
+                          ) : countries.length === 0 ? (
+                            <CommandEmpty>No countries found.</CommandEmpty>
+                          ) : (
+                            countries.map((item) => (
+                              <CommandItem
+                                key={item.cca2}
+                                value={`${item.name} ${item.cca2}`}
+                                onSelect={() => {
+                                  field.onChange(item.cca2);
+                                  setIsCountryOpen(false);
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    item.cca2 === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0",
+                                  )}
+                                />
+                                <span className="flex-1 truncate">
+                                  {item.name}
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  {item.cca2}
+                                </span>
+                              </CommandItem>
+                            ))
+                          )}
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                  {countriesError && (
+                    <p className="text-xs text-destructive">{countriesError}</p>
+                  )}
+                </div>
               )}
-            </div>
+            </StandardFormField>
           </div>
 
-          <div className="space-y-2">
-            <Label>Time Zone</Label>
-            <Select value={timeZone} onValueChange={setTimeZone}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {PLACE_TIME_ZONES.map((zone) => (
-                  <SelectItem key={zone} value={zone}>
-                    {zone}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <StandardFormSelect<PlaceFormValues>
+            name="timeZone"
+            label="Time Zone"
+            options={timeZoneOptions}
+            placeholder="Select a time zone"
+            required
+          />
 
           {isEditing && (
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="isActive"
-                checked={isActive}
-                onCheckedChange={(value) => setIsActive(value === true)}
-              />
-              <Label htmlFor="isActive" className="font-normal">
-                Place is active
-              </Label>
-            </div>
+            <StandardFormCheckbox<PlaceFormValues>
+              name="isActive"
+              label="Place is active"
+            />
           )}
         </CardContent>
       </Card>
@@ -451,36 +468,51 @@ export function PlaceForm({
           </Button>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="latitude">Latitude (optional)</Label>
-              <Input
-                id="latitude"
-                type="number"
-                step="any"
-                value={latitude}
-                onChange={(event) =>
-                  setLatitude(
-                    event.target.value ? Number(event.target.value) : "",
-                  )
-                }
-                placeholder="e.g., 14.5547"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="longitude">Longitude (optional)</Label>
-              <Input
-                id="longitude"
-                type="number"
-                step="any"
-                value={longitude}
-                onChange={(event) =>
-                  setLongitude(
-                    event.target.value ? Number(event.target.value) : "",
-                  )
-                }
-                placeholder="e.g., 121.0244"
-              />
-            </div>
+            <StandardFormField<PlaceFormValues>
+              name="latitude"
+              label="Latitude (optional)"
+            >
+              {({ field }) => (
+                <Input
+                  type="number"
+                  step="any"
+                  value={typeof field.value === "number" ? field.value : ""}
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    if (!value) {
+                      field.onChange(undefined);
+                      return;
+                    }
+                    const parsed = Number(value);
+                    field.onChange(Number.isNaN(parsed) ? undefined : parsed);
+                  }}
+                  placeholder="e.g., 14.5547"
+                />
+              )}
+            </StandardFormField>
+
+            <StandardFormField<PlaceFormValues>
+              name="longitude"
+              label="Longitude (optional)"
+            >
+              {({ field }) => (
+                <Input
+                  type="number"
+                  step="any"
+                  value={typeof field.value === "number" ? field.value : ""}
+                  onChange={(event) => {
+                    const value = event.target.value;
+                    if (!value) {
+                      field.onChange(undefined);
+                      return;
+                    }
+                    const parsed = Number(value);
+                    field.onChange(Number.isNaN(parsed) ? undefined : parsed);
+                  }}
+                  placeholder="e.g., 121.0244"
+                />
+              )}
+            </StandardFormField>
           </div>
 
           {previewError && (
@@ -583,8 +615,8 @@ export function PlaceForm({
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" disabled={!canSubmit || isSubmitting}>
-          {isSubmitting
+        <Button type="submit" disabled={isSubmitDisabled}>
+          {submitting
             ? isEditing
               ? "Saving..."
               : "Creating..."
@@ -593,6 +625,6 @@ export function PlaceForm({
               : "Create Place"}
         </Button>
       </div>
-    </form>
+    </StandardFormProvider>
   );
 }

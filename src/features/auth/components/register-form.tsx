@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,17 +16,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { type RegisterDTO, RegisterSchema } from "@/modules/auth/dtos";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { useRegister } from "../hooks/use-auth";
 
 export function RegisterForm() {
@@ -32,31 +26,37 @@ export function RegisterForm() {
   const [success, setSuccess] = useState(false);
   const registerMutation = useRegister();
 
-  // Get redirect URL from query params for preserving through auth flow
   const redirectUrl = searchParams.get("redirect") || appRoutes.courts.base;
 
   const form = useForm<RegisterDTO>({
     resolver: zodResolver(RegisterSchema),
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
+  const {
+    reset,
+    formState: { isDirty, isValid, isSubmitting },
+  } = form;
+
+  const submitting = registerMutation.isPending || isSubmitting;
+  const isSubmitDisabled = submitting || !isDirty || !isValid;
+
   const onSubmit = async (data: RegisterDTO) => {
     try {
       await registerMutation.mutateAsync(data);
+      reset(data);
       setSuccess(true);
     } catch (error) {
-      if (error instanceof Error) {
-        form.setError("root", { message: error.message });
-      } else {
-        form.setError("root", { message: "An unexpected error occurred" });
-      }
+      toast.error("Unable to create account", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
     }
   };
 
-  // Preserve redirect param when linking to login
   const loginHref =
     redirectUrl !== appRoutes.courts.base
       ? `${appRoutes.login.base}?redirect=${encodeURIComponent(redirectUrl)}`
@@ -92,74 +92,40 @@ export function RegisterForm() {
           Enter your details to create an account
         </CardDescription>
       </CardHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
-            {form.formState.errors.root && (
-              <div className="text-destructive text-sm">
-                {form.formState.errors.root.message}
-              </div>
-            )}
+      <StandardFormProvider form={form} onSubmit={onSubmit}>
+        <CardContent className="space-y-4">
+          <StandardFormInput<RegisterDTO>
+            name="email"
+            label="Email"
+            type="email"
+            placeholder="you@example.com"
+            autoComplete="email"
+            required
+          />
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="you@example.com"
-                      autoComplete="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <StandardFormInput<RegisterDTO>
+            name="password"
+            label="Password"
+            type="password"
+            placeholder="At least 8 characters"
+            autoComplete="new-password"
+            required
+          />
+        </CardContent>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="At least 8 characters"
-                      autoComplete="new-password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
+        <CardFooter className="mt-6 flex flex-col gap-4">
+          <Button type="submit" className="w-full" disabled={isSubmitDisabled}>
+            {submitting ? "Creating account..." : "Create Account"}
+          </Button>
 
-          <CardFooter className="mt-6 flex flex-col gap-4">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={registerMutation.isPending}
-            >
-              {registerMutation.isPending
-                ? "Creating account..."
-                : "Create Account"}
-            </Button>
-
-            <div className="text-muted-foreground text-sm">
-              Already have an account?{" "}
-              <Link href={loginHref} className="text-primary hover:underline">
-                Sign in
-              </Link>
-            </div>
-          </CardFooter>
-        </form>
-      </Form>
+          <div className="text-muted-foreground text-sm">
+            Already have an account?{" "}
+            <Link href={loginHref} className="text-primary hover:underline">
+              Sign in
+            </Link>
+          </div>
+        </CardFooter>
+      </StandardFormProvider>
     </Card>
   );
 }

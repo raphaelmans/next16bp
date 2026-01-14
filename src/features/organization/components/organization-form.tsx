@@ -2,9 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2, Loader2 } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
+import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,8 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 const organizationFormSchema = z.object({
@@ -35,12 +36,18 @@ interface OrganizationFormProps {
   onCancel?: () => void;
 }
 
+const generateSlug = (name: string) => {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+};
+
 export function OrganizationForm({
   onSuccess,
   onCancel,
 }: OrganizationFormProps) {
   const utils = trpc.useUtils();
-  const [_slugPreview, _setSlugPreview] = useState<string>("");
 
   const createMutation = trpc.organization.create.useMutation({
     onSuccess: async (data) => {
@@ -49,38 +56,43 @@ export function OrganizationForm({
     },
   });
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<OrganizationFormValues>({
+  const form = useForm<OrganizationFormValues>({
     resolver: zodResolver(organizationFormSchema),
+    mode: "onChange",
     defaultValues: {
       name: "",
       slug: "",
     },
   });
 
-  const nameValue = watch("name");
-  const slugValue = watch("slug");
+  const {
+    control,
+    reset,
+    formState: { isDirty, isSubmitting, isValid },
+  } = form;
+  const nameValue = useWatch({ control, name: "name" });
+  const slugValue = useWatch({ control, name: "slug" });
 
-  // Generate slug preview from name
-  const generateSlug = (name: string) => {
-    return name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  };
+  const previewSlug = useMemo(
+    () => slugValue || (nameValue ? generateSlug(nameValue) : "your-org-slug"),
+    [nameValue, slugValue],
+  );
 
-  const previewSlug =
-    slugValue || (nameValue ? generateSlug(nameValue) : "your-org-slug");
+  const submitting = createMutation.isPending || isSubmitting;
+  const isSubmitDisabled = submitting || !isValid || !isDirty;
 
-  const onSubmit = (data: OrganizationFormValues) => {
-    createMutation.mutate({
-      name: data.name,
-      slug: data.slug || undefined,
-    });
+  const onSubmit = async (data: OrganizationFormValues) => {
+    try {
+      await createMutation.mutateAsync({
+        name: data.name,
+        slug: data.slug || undefined,
+      });
+      reset({ name: data.name, slug: data.slug ?? "" });
+    } catch (error) {
+      toast.error("Unable to create organization", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
   };
 
   return (
@@ -95,46 +107,28 @@ export function OrganizationForm({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="name">
-              Organization Name <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="name"
-              placeholder="My Pickleball Club"
-              {...register("name")}
-            />
-            {errors.name && (
-              <p className="text-sm text-destructive">{errors.name.message}</p>
-            )}
-          </div>
+        <StandardFormProvider
+          form={form}
+          onSubmit={onSubmit}
+          className="space-y-6"
+        >
+          <StandardFormInput<OrganizationFormValues>
+            name="name"
+            label="Organization Name"
+            placeholder="My Pickleball Club"
+            required
+          />
 
           <div className="space-y-2">
-            <Label htmlFor="slug">Custom URL (optional)</Label>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">
-                kudoscourts.com/
-              </span>
-              <Input
-                id="slug"
-                placeholder={previewSlug}
-                {...register("slug")}
-              />
-            </div>
-            {errors.slug && (
-              <p className="text-sm text-destructive">{errors.slug.message}</p>
-            )}
+            <StandardFormInput<OrganizationFormValues>
+              name="slug"
+              label="Custom URL (optional)"
+              placeholder={previewSlug}
+            />
             <p className="text-xs text-muted-foreground">
               Preview: kudoscourts.com/{previewSlug}
             </p>
           </div>
-
-          {createMutation.error && (
-            <p className="text-sm text-destructive">
-              {createMutation.error.message}
-            </p>
-          )}
 
           <div className="flex gap-4">
             {onCancel && (
@@ -150,15 +144,13 @@ export function OrganizationForm({
             <Button
               type="submit"
               className="flex-1"
-              disabled={createMutation.isPending}
+              disabled={isSubmitDisabled}
             >
-              {createMutation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
+              {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Create Organization
             </Button>
           </div>
-        </form>
+        </StandardFormProvider>
       </CardContent>
     </Card>
   );

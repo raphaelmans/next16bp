@@ -1,16 +1,23 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { differenceInMinutes, format } from "date-fns";
 import { ArrowLeft, CheckCircle, Clock, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CountdownTimer } from "@/features/reservation/components/countdown-timer";
 import { PaymentInfoCard } from "@/features/reservation/components/payment-info-card";
-import { PaymentProofForm } from "@/features/reservation/components/payment-proof-form";
+import {
+  PaymentProofForm,
+  type PaymentProofFormValues,
+  paymentProofFormSchema,
+} from "@/features/reservation/components/payment-proof-form";
 import { ReservationExpired } from "@/features/reservation/components/reservation-expired";
 import { TermsCheckbox } from "@/features/reservation/components/terms-checkbox";
 import {
@@ -26,10 +33,22 @@ export default function PaymentPage() {
   const router = useRouter();
   const reservationId = params.id as string;
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [referenceNumber, setReferenceNumber] = useState("");
-  const [notes, setNotes] = useState("");
-  const [proofFile, setProofFile] = useState<File | null>(null);
   const [isExpired, setIsExpired] = useState(false);
+
+  const form = useForm<PaymentProofFormValues>({
+    resolver: zodResolver(paymentProofFormSchema),
+    mode: "onChange",
+    defaultValues: {
+      referenceNumber: "",
+      notes: "",
+      proofFile: null,
+    },
+  });
+
+  const {
+    reset,
+    formState: { isSubmitting: formSubmitting },
+  } = form;
 
   // Fetch reservation details
   const { data: reservationData, isLoading } =
@@ -67,8 +86,13 @@ export default function PaymentPage() {
     }
   }, [reservation?.expiresAt]);
 
-  const handleMarkPaid = async () => {
+  const handleMarkPaid = async (values: PaymentProofFormValues) => {
     try {
+      const referenceNumber = values.referenceNumber?.trim() ?? "";
+      const notes = values.notes?.trim() ?? "";
+      const proofFile =
+        values.proofFile instanceof File ? values.proofFile : null;
+
       if (!proofFile && notes && !referenceNumber) {
         toast.error("Reference number required when adding notes");
         return;
@@ -95,6 +119,11 @@ export default function PaymentPage() {
       }
 
       await markPayment.mutateAsync({ reservationId, termsAccepted: true });
+      reset({
+        referenceNumber: values.referenceNumber ?? "",
+        notes: values.notes ?? "",
+        proofFile: null,
+      });
       router.push(`/reservations/${reservationId}`);
     } catch (_error) {
       toast.error("Failed to submit payment");
@@ -137,7 +166,10 @@ export default function PaymentPage() {
   const isSubmitting =
     markPayment.isPending ||
     uploadPaymentProof.isPending ||
-    addPaymentProof.isPending;
+    addPaymentProof.isPending ||
+    formSubmitting;
+
+  const isSubmitDisabled = isSubmitting || !termsAccepted || isExpired;
 
   const expiresInMinutes = reservation?.expiresAt
     ? Math.max(
@@ -255,58 +287,50 @@ export default function PaymentPage() {
           />
         </div>
 
-        <div className="mb-6">
-          <PaymentProofForm
-            referenceNumber={referenceNumber}
-            notes={notes}
-            file={proofFile}
-            onReferenceChange={setReferenceNumber}
-            onNotesChange={setNotes}
-            onFileChange={setProofFile}
-          />
-        </div>
+        <StandardFormProvider
+          form={form}
+          onSubmit={handleMarkPaid}
+          className="space-y-6"
+        >
+          <PaymentProofForm />
 
-        <div className="mb-6">
           <TermsCheckbox
             checked={termsAccepted}
             onCheckedChange={setTermsAccepted}
           />
-        </div>
 
-        {/* Mark Paid Button */}
-        <Button
-          onClick={handleMarkPaid}
-          disabled={isSubmitting || !termsAccepted || isExpired}
-          className="w-full"
-          size="lg"
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Processing...
-            </>
-          ) : (
-            <>
-              <CheckCircle className="h-4 w-4 mr-2" />I Have Paid
-            </>
-          )}
-        </Button>
-
-        {/* Disclaimer */}
-        <p className="text-xs text-muted-foreground text-center mt-4">
-          By clicking "I Have Paid", you confirm that you have completed the
-          payment to the court owner. The owner will verify your payment and
-          confirm your reservation.
-        </p>
-
-        {/* Cancel Option */}
-        <div className="text-center mt-6">
-          <Button variant="link" asChild className="text-muted-foreground">
-            <Link href={`/reservations/${reservationId}`}>
-              Cancel and view reservation
-            </Link>
+          <Button
+            type="submit"
+            disabled={isSubmitDisabled}
+            className="w-full"
+            size="lg"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              <>
+                <CheckCircle className="h-4 w-4 mr-2" />I Have Paid
+              </>
+            )}
           </Button>
-        </div>
+
+          <p className="text-xs text-muted-foreground text-center">
+            By clicking "I Have Paid", you confirm that you have completed the
+            payment to the court owner. The owner will verify your payment and
+            confirm your reservation.
+          </p>
+
+          <div className="text-center">
+            <Button variant="link" asChild className="text-muted-foreground">
+              <Link href={`/reservations/${reservationId}`}>
+                Cancel and view reservation
+              </Link>
+            </Button>
+          </div>
+        </StandardFormProvider>
       </div>
     </Container>
   );

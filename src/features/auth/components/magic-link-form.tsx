@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,17 +15,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { type MagicLinkDTO, MagicLinkSchema } from "@/modules/auth/dtos";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { useMagicLink } from "../hooks/use-auth";
 
 export function MagicLinkForm() {
@@ -32,21 +26,29 @@ export function MagicLinkForm() {
 
   const form = useForm<MagicLinkDTO>({
     resolver: zodResolver(MagicLinkSchema),
+    mode: "onChange",
     defaultValues: {
       email: "",
     },
   });
 
+  const {
+    reset,
+    formState: { isDirty, isValid, isSubmitting },
+  } = form;
+
+  const submitting = magicLinkMutation.isPending || isSubmitting;
+  const isSubmitDisabled = submitting || !isDirty || !isValid;
+
   const onSubmit = async (data: MagicLinkDTO) => {
     try {
       await magicLinkMutation.mutateAsync(data);
+      reset(data);
       setSuccess(true);
     } catch (error) {
-      if (error instanceof Error) {
-        form.setError("root", { message: error.message });
-      } else {
-        form.setError("root", { message: "An unexpected error occurred" });
-      }
+      toast.error("Unable to send magic link", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
     }
   };
 
@@ -80,55 +82,33 @@ export function MagicLinkForm() {
           Enter your email and we&apos;ll send you a link to sign in
         </CardDescription>
       </CardHeader>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4">
-            {form.formState.errors.root && (
-              <div className="text-destructive text-sm">
-                {form.formState.errors.root.message}
-              </div>
-            )}
+      <StandardFormProvider form={form} onSubmit={onSubmit}>
+        <CardContent className="space-y-4">
+          <StandardFormInput<MagicLinkDTO>
+            name="email"
+            label="Email"
+            type="email"
+            placeholder="you@example.com"
+            autoComplete="email"
+            required
+          />
+        </CardContent>
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="you@example.com"
-                      autoComplete="email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
+        <CardFooter className="mt-6 flex flex-col gap-4">
+          <Button type="submit" className="w-full" disabled={isSubmitDisabled}>
+            {submitting ? "Sending..." : "Send Magic Link"}
+          </Button>
 
-          <CardFooter className="mt-6 flex flex-col gap-4">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={magicLinkMutation.isPending}
+          <div className="text-muted-foreground text-sm">
+            <Link
+              href={appRoutes.login.base}
+              className="text-primary hover:underline"
             >
-              {magicLinkMutation.isPending ? "Sending..." : "Send Magic Link"}
-            </Button>
-
-            <div className="text-muted-foreground text-sm">
-              <Link
-                href={appRoutes.login.base}
-                className="text-primary hover:underline"
-              >
-                Sign in with password
-              </Link>
-            </div>
-          </CardFooter>
-        </form>
-      </Form>
+              Sign in with password
+            </Link>
+          </div>
+        </CardFooter>
+      </StandardFormProvider>
     </Card>
   );
 }

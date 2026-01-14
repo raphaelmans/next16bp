@@ -33,7 +33,7 @@ export default function EditPlacePage() {
   const { data: placeData, isLoading: placeLoading } =
     trpc.placeManagement.getById.useQuery({ placeId }, { enabled: !!placeId });
 
-  const { submit, isSubmitting } = usePlaceForm({
+  const { submitAsync, isSubmitting } = usePlaceForm({
     placeId,
     onSuccess: () => {
       toast.success("Place updated successfully!");
@@ -119,7 +119,7 @@ export default function EditPlacePage() {
 
         <PlaceForm
           defaultValues={defaultValues}
-          onSubmit={submit}
+          onSubmit={submitAsync}
           onCancel={handleCancel}
           isSubmitting={isSubmitting}
           isEditing

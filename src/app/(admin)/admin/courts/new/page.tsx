@@ -6,6 +6,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import {
+  StandardFormField,
+  StandardFormInput,
+  StandardFormProvider,
+  StandardFormSelect,
+} from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,24 +21,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/page-header";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import { useCreateCuratedCourt } from "@/features/admin/hooks/use-admin-courts";
@@ -46,6 +35,7 @@ import {
 import { useLogout, useSession } from "@/features/auth";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 
 export default function NewCuratedCourtPage() {
   const router = useRouter();
@@ -57,6 +47,7 @@ export default function NewCuratedCourtPage() {
 
   const form = useForm<CuratedCourtFormData>({
     resolver: zodResolver(curatedCourtSchema),
+    mode: "onChange",
     defaultValues: {
       name: "",
       address: "",
@@ -70,31 +61,38 @@ export default function NewCuratedCourtPage() {
     },
   });
 
+  const {
+    reset,
+    formState: { isDirty, isValid, isSubmitting },
+  } = form;
+
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(appRoutes.admin.courts.new);
   };
 
-  const handleSubmit = form.handleSubmit((data) => {
-    createMutation.mutate(
-      {
+  const handleSubmit = async (data: CuratedCourtFormData) => {
+    try {
+      await createMutation.mutateAsync({
         ...data,
         facebookUrl: data.facebookUrl || undefined,
         instagramUrl: data.instagramUrl || undefined,
         viberContact: data.viberContact || undefined,
         websiteUrl: data.websiteUrl || undefined,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Court created successfully");
-          router.push(appRoutes.admin.courts.base);
-        },
-        onError: () => {
-          toast.error("Failed to create court");
-        },
-      },
-    );
-  });
+      });
+      reset(data);
+      toast.success("Court created successfully");
+      router.push(appRoutes.admin.courts.base);
+    } catch (error) {
+      toast.error("Failed to create court", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
+
+  const cityOptions = CITIES.map((city) => ({ label: city, value: city }));
+  const submitting = createMutation.isPending || isSubmitting;
+  const isSubmitDisabled = submitting || !isDirty || !isValid;
 
   return (
     <AppShell
@@ -128,257 +126,161 @@ export default function NewCuratedCourtPage() {
           backHref={appRoutes.admin.courts.base}
         />
 
-        <Form {...form}>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Basic Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Basic Information</CardTitle>
-                <CardDescription>
-                  Enter the court&apos;s basic details
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Court Name <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Makati Pickleball Club"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+        <StandardFormProvider
+          form={form}
+          onSubmit={handleSubmit}
+          className="space-y-6"
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle>Basic Information</CardTitle>
+              <CardDescription>
+                Enter the court&apos;s basic details
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <StandardFormInput<CuratedCourtFormData>
+                name="name"
+                label="Court Name"
+                placeholder="Makati Pickleball Club"
+                required
+              />
 
-                <FormField
-                  control={form.control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Address <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="123 Sports Avenue, Barangay San Lorenzo"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <StandardFormInput<CuratedCourtFormData>
+                name="address"
+                label="Address"
+                placeholder="123 Sports Avenue, Barangay San Lorenzo"
+                required
+              />
 
-                <FormField
-                  control={form.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        City <span className="text-destructive">*</span>
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a city" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {CITIES.map((city) => (
-                            <SelectItem key={city} value={city}>
-                              {city}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <StandardFormSelect<CuratedCourtFormData>
+                name="city"
+                label="City"
+                placeholder="Select a city"
+                options={cityOptions}
+                required
+              />
 
-                {/* Map placeholder */}
-                <div className="space-y-2">
-                  <FormLabel>Map Location</FormLabel>
-                  <div className="h-48 rounded-lg border bg-muted flex items-center justify-center">
-                    <div className="text-center text-muted-foreground">
-                      <MapPin className="h-8 w-8 mx-auto mb-2" />
-                      <p className="text-sm">Map picker coming soon</p>
-                      <p className="text-xs">Click to set location</p>
-                    </div>
+              <div className="space-y-2">
+                <div className="text-sm font-medium">Map Location</div>
+                <div className="h-48 rounded-lg border bg-muted flex items-center justify-center">
+                  <div className="text-center text-muted-foreground">
+                    <MapPin className="h-8 w-8 mx-auto mb-2" />
+                    <p className="text-sm">Map picker coming soon</p>
+                    <p className="text-xs">Click to set location</p>
                   </div>
-                  <FormDescription>
-                    Click on the map to set the exact location
-                  </FormDescription>
                 </div>
-              </CardContent>
-            </Card>
+                <p className="text-sm text-muted-foreground">
+                  Click on the map to set the exact location
+                </p>
+              </div>
+            </CardContent>
+          </Card>
 
-            {/* Contact Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Contact Information</CardTitle>
-                <CardDescription>
-                  How players can reach or find this court
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="facebookUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Facebook Page</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="https://facebook.com/..."
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="instagramUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Instagram</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="https://instagram.com/..."
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="viberContact"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Viber Contact</FormLabel>
-                        <FormControl>
-                          <Input placeholder="0917 123 4567" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="websiteUrl"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Website</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://example.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="otherContactInfo"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Other Contact Information</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Any additional contact information..."
-                          rows={3}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+          <Card>
+            <CardHeader>
+              <CardTitle>Contact Information</CardTitle>
+              <CardDescription>
+                How players can reach or find this court
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid gap-6 sm:grid-cols-2">
+                <StandardFormInput<CuratedCourtFormData>
+                  name="facebookUrl"
+                  label="Facebook Page"
+                  placeholder="https://facebook.com/..."
                 />
-              </CardContent>
-            </Card>
 
-            {/* Amenities */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Amenities</CardTitle>
-                <CardDescription>
-                  Select the amenities available at this court
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <FormField
-                  control={form.control}
-                  name="amenities"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                        {AMENITIES.map((amenity) => (
-                          <FormItem
-                            key={amenity}
-                            className="flex flex-row items-start space-x-3 space-y-0"
-                          >
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(amenity)}
-                                onCheckedChange={(checked) => {
-                                  const current = field.value || [];
-                                  if (checked) {
-                                    field.onChange([...current, amenity]);
-                                  } else {
-                                    field.onChange(
-                                      current.filter((v) => v !== amenity),
-                                    );
-                                  }
-                                }}
-                              />
-                            </FormControl>
-                            <FormLabel className="font-normal cursor-pointer">
-                              {amenity}
-                            </FormLabel>
-                          </FormItem>
-                        ))}
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                <StandardFormInput<CuratedCourtFormData>
+                  name="instagramUrl"
+                  label="Instagram"
+                  placeholder="https://instagram.com/..."
                 />
-              </CardContent>
-            </Card>
 
-            {/* Form Actions */}
-            <div className="flex justify-end gap-4">
-              <Button type="button" variant="outline" asChild>
-                <Link href={appRoutes.admin.courts.base}>Cancel</Link>
-              </Button>
-              <Button type="submit" disabled={createMutation.isPending}>
-                {createMutation.isPending && (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <StandardFormInput<CuratedCourtFormData>
+                  name="viberContact"
+                  label="Viber Contact"
+                  placeholder="0917 123 4567"
+                />
+
+                <StandardFormInput<CuratedCourtFormData>
+                  name="websiteUrl"
+                  label="Website"
+                  placeholder="https://example.com"
+                />
+              </div>
+
+              <StandardFormField<CuratedCourtFormData>
+                name="otherContactInfo"
+                label="Other Contact Information"
+              >
+                {({ field }) => (
+                  <Textarea
+                    placeholder="Any additional contact information..."
+                    rows={3}
+                    value={typeof field.value === "string" ? field.value : ""}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
+                  />
                 )}
-                Create Court
-              </Button>
-            </div>
-          </form>
-        </Form>
+              </StandardFormField>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Amenities</CardTitle>
+              <CardDescription>
+                Select the amenities available at this court
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <StandardFormField<CuratedCourtFormData> name="amenities">
+                {({ field }) => {
+                  const current = Array.isArray(field.value) ? field.value : [];
+
+                  return (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                      {AMENITIES.map((amenity) => (
+                        <div
+                          key={amenity}
+                          className="flex items-start gap-3 text-sm font-normal"
+                        >
+                          <Checkbox
+                            checked={current.includes(amenity)}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                field.onChange([...current, amenity]);
+                              } else {
+                                field.onChange(
+                                  current.filter((value) => value !== amenity),
+                                );
+                              }
+                            }}
+                          />
+                          <span>{amenity}</span>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                }}
+              </StandardFormField>
+            </CardContent>
+          </Card>
+
+          <div className="flex justify-end gap-4">
+            <Button type="button" variant="outline" asChild>
+              <Link href={appRoutes.admin.courts.base}>Cancel</Link>
+            </Button>
+            <Button type="submit" disabled={isSubmitDisabled}>
+              {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              Create Court
+            </Button>
+          </div>
+        </StandardFormProvider>
       </div>
     </AppShell>
   );

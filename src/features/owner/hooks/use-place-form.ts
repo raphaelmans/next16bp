@@ -49,9 +49,9 @@ export function usePlaceForm({
     },
   });
 
-  const submit = (data: PlaceFormData) => {
+  const submitAsync = async (data: PlaceFormData) => {
     if (isEditing && placeId) {
-      updateMutation.mutate({
+      await updateMutation.mutateAsync({
         placeId,
         name: data.name,
         address: data.address,
@@ -73,7 +73,7 @@ export function usePlaceForm({
     const latitude = formatCoordinate(data.latitude);
     const longitude = formatCoordinate(data.longitude);
 
-    createMutation.mutate({
+    await createMutation.mutateAsync({
       organizationId,
       name: data.name,
       address: data.address,
@@ -86,8 +86,13 @@ export function usePlaceForm({
     });
   };
 
+  const submit = (data: PlaceFormData) => {
+    void submitAsync(data).catch(() => undefined);
+  };
+
   return {
     submit,
+    submitAsync,
     isSubmitting: createMutation.isPending || updateMutation.isPending,
     error: createMutation.error || updateMutation.error,
     isEditing,

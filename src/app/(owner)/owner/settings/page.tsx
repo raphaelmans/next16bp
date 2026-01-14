@@ -3,17 +3,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertTriangle,
-  Check,
   Loader2,
   Pencil,
   Plus,
   Star,
   Trash2,
-  Upload,
 } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import {
+  StandardFormField,
+  StandardFormInput,
+  StandardFormProvider,
+  StandardFormSelect,
+  StandardFormSwitch,
+} from "@/components/form";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,7 +29,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,27 +46,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
@@ -79,11 +63,9 @@ import {
   useUpdateOrganizationPaymentMethod,
 } from "@/features/owner/hooks";
 import {
-  useCheckSlug,
   useCurrentOrganization,
   useRequestRemoval,
   useUpdateOrganization,
-  useUploadOrganizationLogo,
 } from "@/features/owner/hooks/use-organization";
 import {
   type OrganizationFormData,
@@ -94,7 +76,6 @@ import {
   type OrganizationPaymentMethodFormData,
   organizationPaymentMethodSchema,
 } from "@/features/owner/schemas/organization-payment-method.schema";
-import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import {
@@ -106,6 +87,7 @@ import {
   type PaymentMethodType,
 } from "@/shared/lib/payment-methods";
 import { SETTINGS_SECTION_IDS } from "@/shared/lib/section-hashes";
+import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 
 interface OrganizationPaymentMethodItem {
   id: string;
@@ -122,11 +104,7 @@ interface OrganizationPaymentMethodItem {
 export default function OwnerSettingsPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [removalModalOpen, setRemovalModalOpen] = React.useState(false);
-  const [slugStatus, setSlugStatus] = React.useState<
-    "idle" | "checking" | "available" | "taken"
-  >("idle");
 
   // Use the shared organization hook for sidebar
   const { organization: navOrg, organizations } = useOwnerOrganization();
@@ -136,8 +114,6 @@ export default function OwnerSettingsPage() {
     useCurrentOrganization();
   const updateOrg = useUpdateOrganization();
   const requestRemoval = useRequestRemoval();
-  const checkSlug = useCheckSlug();
-  const uploadLogo = useUploadOrganizationLogo(organization?.id ?? "");
 
   const paymentMethodsQuery = useOrganizationPaymentMethods(organization?.id);
   const createPaymentMethod = useCreateOrganizationPaymentMethod(
@@ -172,11 +148,13 @@ export default function OwnerSettingsPage() {
 
   const paymentForm = useForm<OrganizationPaymentMethodFormData>({
     resolver: zodResolver(organizationPaymentMethodSchema),
+    mode: "onChange",
     defaultValues: defaultPaymentMethodValues,
   });
 
   const form = useForm<OrganizationFormData>({
     resolver: zodResolver(organizationSchema),
+    mode: "onChange",
     defaultValues: {
       name: "",
       slug: "",
@@ -186,6 +164,26 @@ export default function OwnerSettingsPage() {
       address: "",
     },
   });
+
+  const {
+    reset: resetOrgForm,
+    formState: {
+      isDirty: isOrgDirty,
+      isValid: isOrgValid,
+      isSubmitting: isOrgSubmitting,
+    },
+  } = form;
+
+  const {
+    getValues: getPaymentValues,
+    reset: resetPaymentForm,
+    setValue: setPaymentValue,
+    formState: {
+      isDirty: isPaymentDirty,
+      isValid: isPaymentValid,
+      isSubmitting: isPaymentSubmitting,
+    },
+  } = paymentForm;
 
   const organizationId = organization?.id;
   const organizationName = organization?.name ?? "";
@@ -217,10 +215,10 @@ export default function OwnerSettingsPage() {
 
   // Update form when organization data loads
   React.useEffect(() => {
-    if (organizationFormValues) {
-      form.reset(organizationFormValues);
-    }
-  }, [form.reset, organizationFormValues]);
+    if (!organizationFormValues) return;
+    if (isOrgDirty) return;
+    resetOrgForm(organizationFormValues);
+  }, [isOrgDirty, organizationFormValues, resetOrgForm]);
 
   const selectedPaymentType = paymentForm.watch("type");
   const providerOptions: PaymentMethodProvider[] =
@@ -229,69 +227,33 @@ export default function OwnerSettingsPage() {
       : [...MOBILE_WALLET_PROVIDERS];
 
   React.useEffect(() => {
-    const currentProvider = paymentForm.getValues("provider");
+    const currentProvider = getPaymentValues("provider");
     if (!providerOptions.includes(currentProvider)) {
-      paymentForm.setValue("provider", providerOptions[0]);
+      setPaymentValue("provider", providerOptions[0], {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
     }
-  }, [paymentForm, providerOptions]);
+  }, [getPaymentValues, providerOptions, setPaymentValue]);
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(appRoutes.owner.settings);
   };
 
-  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const file = e.target.files?.[0];
-    if (!file || !organization?.id) {
-      return;
-    }
-
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please upload a valid image file");
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Logo must be smaller than 5MB");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("organizationId", organization.id);
-    formData.append("image", file, file.name);
-    uploadLogo.mutate(formData);
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  };
-
-  const handleSlugChange = (slug: string) => {
-    form.setValue("slug", slug);
-
-    if (slug.length >= 3 && slug !== organization?.slug) {
-      setSlugStatus("checking");
-      checkSlug.mutate(slug, {
-        onSuccess: (result) => {
-          setSlugStatus(result.available ? "available" : "taken");
-        },
-        onError: () => {
-          setSlugStatus("idle");
-        },
-      });
-    } else {
-      setSlugStatus("idle");
-    }
-  };
-
   const paymentMethods = (paymentMethodsQuery.data?.methods ??
     []) as OrganizationPaymentMethodItem[];
   const isSavingPaymentMethod =
     createPaymentMethod.isPending || updatePaymentMethod.isPending;
+  const paymentSubmitting = isSavingPaymentMethod || isPaymentSubmitting;
+  const isPaymentSubmitDisabled =
+    paymentSubmitting || !isPaymentDirty || !isPaymentValid;
+  const orgSubmitting = updateOrg.isPending || isOrgSubmitting;
+  const isOrgSubmitDisabled = orgSubmitting || !isOrgDirty || !isOrgValid;
 
   const resetPaymentMethodForm = () => {
-    paymentForm.reset(defaultPaymentMethodValues);
+    resetPaymentForm(defaultPaymentMethodValues);
     setEditingPaymentMethod(null);
   };
 
@@ -309,7 +271,7 @@ export default function OwnerSettingsPage() {
 
   const handleEditPaymentMethod = (method: OrganizationPaymentMethodItem) => {
     setEditingPaymentMethod(method);
-    paymentForm.reset({
+    resetPaymentForm({
       type: method.type,
       provider: method.provider,
       accountName: method.accountName,
@@ -321,7 +283,9 @@ export default function OwnerSettingsPage() {
     setPaymentMethodDialogOpen(true);
   };
 
-  const handleSavePaymentMethod = paymentForm.handleSubmit(async (values) => {
+  const handleSavePaymentMethod = async (
+    values: OrganizationPaymentMethodFormData,
+  ) => {
     if (!organization?.id) return;
     const payload = {
       type: values.type,
@@ -351,13 +315,11 @@ export default function OwnerSettingsPage() {
       resetPaymentMethodForm();
       setPaymentMethodDialogOpen(false);
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Failed to save payment method";
-      toast.error(message);
+      toast.error("Failed to save payment method", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
     }
-  });
+  };
 
   const handleTogglePaymentMethod = async (
     method: OrganizationPaymentMethodItem,
@@ -413,10 +375,11 @@ export default function OwnerSettingsPage() {
     }
   };
 
-  const handleSubmit = form.handleSubmit((data) => {
+  const handleSubmit = async (data: OrganizationFormData) => {
     if (!organization?.id) return;
-    updateOrg.mutate(
-      {
+
+    try {
+      await updateOrg.mutateAsync({
         organizationId: organization.id,
         name: data.name,
         slug: data.slug,
@@ -424,28 +387,26 @@ export default function OwnerSettingsPage() {
         email: data.email,
         phone: data.phone,
         address: data.address,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Settings saved successfully");
-        },
-        onError: () => {
-          toast.error("Failed to save settings");
-        },
-      },
-    );
-  });
+      });
+      resetOrgForm(data);
+      toast.success("Settings saved successfully");
+    } catch (error) {
+      toast.error("Failed to save settings", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
 
-  const handleRemovalRequest = (data: RemovalRequestFormData) => {
-    requestRemoval.mutate(data, {
-      onSuccess: () => {
-        toast.success("Removal request submitted successfully");
-        setRemovalModalOpen(false);
-      },
-      onError: () => {
-        toast.error("Failed to submit removal request");
-      },
-    });
+  const handleRemovalRequest = async (data: RemovalRequestFormData) => {
+    try {
+      await requestRemoval.mutateAsync(data);
+      toast.success("Removal request submitted successfully");
+      setRemovalModalOpen(false);
+    } catch (error) {
+      toast.error("Failed to submit removal request", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
   };
 
   if (orgLoading) {
@@ -506,84 +467,53 @@ export default function OwnerSettingsPage() {
           </p>
         </div>
 
-        <Form {...form}>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Contact Information Card */}
-            <Card id={SETTINGS_SECTION_IDS.contactInformation}>
-              <CardHeader>
-                <CardTitle>Contact Information</CardTitle>
-                <CardDescription>
-                  How players can reach your organization
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="contact@example.com"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone</FormLabel>
-                        <FormControl>
-                          <Input placeholder="0917 123 4567" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="123 Sports Ave, Makati City"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+        <StandardFormProvider
+          form={form}
+          onSubmit={handleSubmit}
+          className="space-y-6"
+        >
+          {/* Contact Information Card */}
+          <Card id={SETTINGS_SECTION_IDS.contactInformation}>
+            <CardHeader>
+              <CardTitle>Contact Information</CardTitle>
+              <CardDescription>
+                How players can reach your organization
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid gap-6 sm:grid-cols-2">
+                <StandardFormInput<OrganizationFormData>
+                  name="email"
+                  label="Email"
+                  type="email"
+                  placeholder="contact@example.com"
                 />
-              </CardContent>
-            </Card>
 
-            {/* Save Button */}
-            <div className="flex justify-end">
-              <Button
-                type="submit"
-                disabled={updateOrg.isPending || slugStatus === "taken"}
-              >
-                {updateOrg.isPending && (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                )}
-                Save Changes
-              </Button>
-            </div>
-          </form>
-        </Form>
+                <StandardFormInput<OrganizationFormData>
+                  name="phone"
+                  label="Phone"
+                  placeholder="0917 123 4567"
+                />
+              </div>
+
+              <StandardFormInput<OrganizationFormData>
+                name="address"
+                label="Address"
+                placeholder="123 Sports Ave, Makati City"
+              />
+            </CardContent>
+          </Card>
+
+          {/* Save Button */}
+          <div className="flex justify-end">
+            <Button type="submit" disabled={isOrgSubmitDisabled}>
+              {orgSubmitting && (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              )}
+              Save Changes
+            </Button>
+          </div>
+        </StandardFormProvider>
 
         <Card id={SETTINGS_SECTION_IDS.paymentMethods}>
           <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -717,162 +647,90 @@ export default function OwnerSettingsPage() {
                 Add a mobile wallet or bank account for player payments.
               </DialogDescription>
             </DialogHeader>
-            <Form {...paymentForm}>
-              <form onSubmit={handleSavePaymentMethod} className="space-y-4">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <FormField
-                    control={paymentForm.control}
-                    name="type"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Method Type</FormLabel>
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select type" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {Object.entries(PAYMENT_METHOD_TYPE_LABELS).map(
-                              ([value, label]) => (
-                                <SelectItem key={value} value={value}>
-                                  {label}
-                                </SelectItem>
-                              ),
-                            )}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={paymentForm.control}
-                    name="provider"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Provider</FormLabel>
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select provider" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {providerOptions.map((provider) => (
-                              <SelectItem key={provider} value={provider}>
-                                {PAYMENT_PROVIDER_LABELS[provider]}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <FormField
-                  control={paymentForm.control}
-                  name="accountName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Account Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Juan Dela Cruz" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+            <StandardFormProvider
+              form={paymentForm}
+              onSubmit={handleSavePaymentMethod}
+              className="space-y-4"
+            >
+              <div className="grid gap-4 sm:grid-cols-2">
+                <StandardFormSelect<OrganizationPaymentMethodFormData>
+                  name="type"
+                  label="Method Type"
+                  placeholder="Select type"
+                  options={Object.entries(PAYMENT_METHOD_TYPE_LABELS).map(
+                    ([value, label]) => ({
+                      value,
+                      label,
+                    }),
                   )}
+                  required
                 />
-                <FormField
-                  control={paymentForm.control}
-                  name="accountNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Account Number</FormLabel>
-                      <FormControl>
-                        <Input placeholder="0917 123 4567" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                <StandardFormSelect<OrganizationPaymentMethodFormData>
+                  name="provider"
+                  label="Provider"
+                  placeholder="Select provider"
+                  options={providerOptions.map((provider) => ({
+                    value: provider,
+                    label: PAYMENT_PROVIDER_LABELS[provider],
+                  }))}
+                  required
                 />
-                <FormField
-                  control={paymentForm.control}
-                  name="instructions"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Instructions (optional)</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          rows={3}
-                          placeholder="Include reservation ID in the payment note."
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Shown to players for this payment method.
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                />
-                <div className="flex flex-wrap items-center gap-6">
-                  <FormField
-                    control={paymentForm.control}
-                    name="isDefault"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-2 space-y-0">
-                        <FormControl>
-                          <Switch
-                            checked={field.value ?? false}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          Set as default
-                        </FormLabel>
-                      </FormItem>
-                    )}
+              </div>
+              <StandardFormInput<OrganizationPaymentMethodFormData>
+                name="accountName"
+                label="Account Name"
+                placeholder="Juan Dela Cruz"
+                required
+              />
+              <StandardFormInput<OrganizationPaymentMethodFormData>
+                name="accountNumber"
+                label="Account Number"
+                placeholder="0917 123 4567"
+                required
+              />
+              <StandardFormField<OrganizationPaymentMethodFormData>
+                name="instructions"
+                label="Instructions (optional)"
+                description="Shown to players for this payment method."
+              >
+                {({ field }) => (
+                  <Textarea
+                    rows={3}
+                    placeholder="Include reservation ID in the payment note."
+                    value={typeof field.value === "string" ? field.value : ""}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    ref={field.ref}
                   />
-                  <FormField
-                    control={paymentForm.control}
-                    name="isActive"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center gap-2 space-y-0">
-                        <FormControl>
-                          <Switch
-                            checked={field.value ?? true}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">Active</FormLabel>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <DialogFooter className="gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => handlePaymentDialogChange(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={isSavingPaymentMethod}>
-                    {isSavingPaymentMethod && (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    )}
-                    {editingPaymentMethod ? "Save Changes" : "Add Method"}
-                  </Button>
-                </DialogFooter>
-              </form>
-            </Form>
+                )}
+              </StandardFormField>
+              <div className="flex flex-wrap items-center gap-6">
+                <StandardFormSwitch<OrganizationPaymentMethodFormData>
+                  name="isDefault"
+                  label="Set as default"
+                />
+                <StandardFormSwitch<OrganizationPaymentMethodFormData>
+                  name="isActive"
+                  label="Active"
+                />
+              </div>
+              <DialogFooter className="gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => handlePaymentDialogChange(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isPaymentSubmitDisabled}>
+                  {paymentSubmitting && (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  )}
+                  {editingPaymentMethod ? "Save Changes" : "Add Method"}
+                </Button>
+              </DialogFooter>
+            </StandardFormProvider>
           </DialogContent>
         </Dialog>
 
@@ -942,8 +800,6 @@ export default function OwnerSettingsPage() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Removal Request Modal */}
       <RemovalRequestModal
         open={removalModalOpen}
         onOpenChange={setRemovalModalOpen}

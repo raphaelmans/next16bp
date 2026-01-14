@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Info } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,8 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import {
   useProfile,
   useUpdateProfile,
@@ -34,6 +35,7 @@ export function ProfileForm() {
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
+    mode: "onChange",
     defaultValues: {
       displayName: "",
       email: "",
@@ -43,13 +45,10 @@ export function ProfileForm() {
   });
 
   const {
-    register,
-    handleSubmit,
     reset,
-    formState: { errors, isDirty },
+    formState: { isDirty, isValid, isSubmitting },
   } = form;
 
-  // Sync profile data to form (only when profile ID changes)
   useEffect(() => {
     if (profile) {
       reset({
@@ -59,20 +58,21 @@ export function ProfileForm() {
         avatarUrl: profile.avatarUrl || "",
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile, reset]); // Only reset when profile changes, not on every profile update
+  }, [profile, reset]);
 
-  const onSubmit = (data: ProfileFormValues) => {
-    // Filter out empty strings to avoid validation errors
+  const onSubmit = async (data: ProfileFormValues) => {
     const cleanedData = Object.fromEntries(
       Object.entries(data).filter(([_, value]) => value !== ""),
     ) as ProfileFormValues;
 
-    updateProfile.mutate(cleanedData, {
-      onSuccess: () => {
-        // Form will be reset when profile refetches via useEffect
-      },
-    });
+    try {
+      await updateProfile.mutateAsync(cleanedData);
+      reset(cleanedData);
+    } catch (error) {
+      toast.error("Unable to update profile", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
   };
 
   const handleAvatarSelect = (file: File) => {
@@ -85,6 +85,9 @@ export function ProfileForm() {
     return <ProfileFormSkeleton />;
   }
 
+  const submitting = updateProfile.isPending || isSubmitting;
+  const isSubmitDisabled = submitting || !isDirty || !isValid;
+
   return (
     <Card>
       <CardHeader>
@@ -95,8 +98,11 @@ export function ProfileForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Avatar section */}
+        <StandardFormProvider
+          form={form}
+          onSubmit={onSubmit}
+          className="space-y-6"
+        >
           <AvatarUpload
             currentAvatarUrl={profile?.avatarUrl ?? undefined}
             displayName={profile?.displayName ?? undefined}
@@ -104,56 +110,29 @@ export function ProfileForm() {
             isUploading={uploadAvatar.isPending}
           />
 
-          {/* Form fields */}
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="displayName">
-                Display Name <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="displayName"
-                placeholder="Enter your name"
-                {...register("displayName")}
-              />
-              {errors.displayName && (
-                <p className="text-sm text-destructive">
-                  {errors.displayName.message}
-                </p>
-              )}
-            </div>
+            <StandardFormInput<ProfileFormValues>
+              name="displayName"
+              label="Display Name"
+              placeholder="Enter your name"
+              required
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="your@email.com"
-                {...register("email")}
-              />
-              {errors.email && (
-                <p className="text-sm text-destructive">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
+            <StandardFormInput<ProfileFormValues>
+              name="email"
+              label="Email"
+              type="email"
+              placeholder="your@email.com"
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="phoneNumber">Phone Number</Label>
-              <Input
-                id="phoneNumber"
-                type="tel"
-                placeholder="09XX XXX XXXX"
-                {...register("phoneNumber")}
-              />
-              {errors.phoneNumber && (
-                <p className="text-sm text-destructive">
-                  {errors.phoneNumber.message}
-                </p>
-              )}
-            </div>
+            <StandardFormInput<ProfileFormValues>
+              name="phoneNumber"
+              label="Phone Number"
+              type="tel"
+              placeholder="09XX XXX XXXX"
+            />
           </div>
 
-          {/* Info note */}
           <Alert>
             <Info className="h-4 w-4" />
             <AlertDescription>
@@ -162,21 +141,17 @@ export function ProfileForm() {
             </AlertDescription>
           </Alert>
 
-          {/* Submit button */}
           <div className="flex flex-col items-end gap-2">
             {process.env.NODE_ENV === "development" && (
               <p className="text-xs text-muted-foreground">
                 Form dirty: {isDirty ? "Yes" : "No"}
               </p>
             )}
-            <Button
-              type="submit"
-              disabled={!isDirty || updateProfile.isPending}
-            >
-              {updateProfile.isPending ? "Saving..." : "Save Changes"}
+            <Button type="submit" disabled={isSubmitDisabled}>
+              {submitting ? "Saving..." : "Save Changes"}
             </Button>
           </div>
-        </form>
+        </StandardFormProvider>
       </CardContent>
     </Card>
   );
