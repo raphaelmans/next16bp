@@ -8,6 +8,7 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-14 | Added 31-owner-reservations-inbox plan (owner triage UX) |
 | 2026-01-14 | Added 16-reservation-list-enrichment user stories and 30-reservation-list-enrichment plan |
 | 2026-01-14 | Added US-06-04 (My Reservations tabs filtering + accessibility) and 29-my-reservations-tabs plan | 
 | 2026-01-13 | Added 24-trpc-react-query-hooks implementation plan (hook API standardization) |
@@ -84,6 +85,7 @@ References and context for planning artifacts.
 | 27-organization-payment-methods | `agent-plans/27-organization-payment-methods/` | Ready |
 | 29-my-reservations-tabs | `agent-plans/29-my-reservations-tabs/` | Pending |
 | 30-reservation-list-enrichment | `agent-plans/30-reservation-list-enrichment/` | Pending |
+| 31-owner-reservations-inbox | `agent-plans/31-owner-reservations-inbox/` | Pending |
 
 ---
 

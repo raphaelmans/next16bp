@@ -56,7 +56,7 @@ export function ReservationTabs() {
         })}
       </TabsList>
       {reservationTabs.map((tabKey) => (
-        <TabsContent key={tabKey} value={tabKey}>
+        <TabsContent key={tabKey} value={tabKey} forceMount>
           <ReservationList tab={tabKey} isActive={tab === tabKey} />
         </TabsContent>
       ))}

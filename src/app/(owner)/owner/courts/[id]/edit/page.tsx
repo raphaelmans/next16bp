@@ -38,7 +38,7 @@ export default function EditCourtPage() {
   const { data: sports = [], isLoading: sportsLoading } =
     trpc.sport.list.useQuery({});
 
-  const { submit, isSubmitting } = useCourtForm({
+  const { submitAsync, isSubmitting } = useCourtForm({
     courtId,
     onSuccess: () => {
       toast.success("Court updated successfully!");
@@ -132,7 +132,7 @@ export default function EditCourtPage() {
           defaultValues={defaultValues}
           placeOptions={placeOptions}
           sportOptions={sportOptions}
-          onSubmit={submit}
+          onSubmit={submitAsync}
           onCancel={handleCancel}
           isSubmitting={isSubmitting}
           isEditing

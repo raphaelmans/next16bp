@@ -3,8 +3,8 @@ import { z } from "zod";
 export const courtFormSchema = z.object({
   placeId: z.string().uuid("Place is required"),
   sportId: z.string().uuid("Sport is required"),
-  label: z.string().min(1, "Court label is required").max(100),
-  tierLabel: z.string().max(20).optional().nullable(),
+  label: z.string().trim().min(1, "Court label is required").max(100),
+  tierLabel: z.string().trim().max(20).optional().nullable(),
   isActive: z.boolean().default(true),
 });
 

@@ -1,34 +1,65 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
+import type { z } from "zod";
+import {
+  StandardFormCheckbox,
+  StandardFormInput,
+  StandardFormProvider,
+  StandardFormSelect,
+} from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import type { CourtFormData } from "../schemas/court-form.schema";
+  type CourtFormData,
+  courtFormSchema,
+  defaultCourtFormValues,
+} from "../schemas/court-form.schema";
+
+type CourtFormValues = z.input<typeof courtFormSchema>;
 
 interface CourtFormProps {
   defaultValues?: Partial<CourtFormData>;
   placeOptions: { id: string; name: string; city: string }[];
   sportOptions: { id: string; name: string }[];
-  onSubmit: (data: CourtFormData) => void;
+  onSubmit: (data: CourtFormData) => Promise<void> | void;
   onSaveDraft?: (data: Partial<CourtFormData>) => void;
   onStateChange?: (data: Partial<CourtFormData>) => void;
   onCancel: () => void;
   isSubmitting?: boolean;
   isEditing?: boolean;
   disablePlaceSelect?: boolean;
+  allowPristineSubmit?: boolean;
   primaryActionLabel?: string;
   showCancel?: boolean;
 }
+
+const normalizeTierLabel = (value?: string | null) => {
+  const trimmed = value?.trim();
+  return trimmed && trimmed.length > 0 ? trimmed : null;
+};
+
+const buildFormDefaults = (
+  defaultValues?: Partial<CourtFormValues>,
+): CourtFormValues => ({
+  placeId: defaultValues?.placeId ?? "",
+  sportId: defaultValues?.sportId ?? "",
+  label: defaultValues?.label ?? "",
+  tierLabel: defaultValues?.tierLabel ?? "",
+  isActive: defaultValues?.isActive ?? defaultCourtFormValues.isActive ?? true,
+});
+
+const normalizeFormValues = (values: CourtFormValues): CourtFormData => ({
+  placeId: values.placeId,
+  sportId: values.sportId,
+  label: values.label.trim(),
+  tierLabel: normalizeTierLabel(values.tierLabel),
+  isActive: values.isActive ?? defaultCourtFormValues.isActive ?? true,
+});
 
 export function CourtForm({
   defaultValues,
@@ -38,54 +69,85 @@ export function CourtForm({
   onSaveDraft,
   onStateChange,
   onCancel,
-  isSubmitting = false,
+  isSubmitting,
   isEditing = false,
   disablePlaceSelect = false,
+  allowPristineSubmit = false,
   primaryActionLabel,
   showCancel = true,
 }: CourtFormProps) {
-  const [placeId, setPlaceId] = useState(defaultValues?.placeId ?? "");
-  const [sportId, setSportId] = useState(defaultValues?.sportId ?? "");
-  const [label, setLabel] = useState(defaultValues?.label ?? "");
-  const [tierLabel, setTierLabel] = useState(defaultValues?.tierLabel ?? "");
-  const [isActive, setIsActive] = useState(defaultValues?.isActive ?? true);
+  const resolvedDefaults = useMemo(
+    () => buildFormDefaults(defaultValues),
+    [defaultValues],
+  );
+
+  const form = useForm<CourtFormValues>({
+    resolver: zodResolver(courtFormSchema),
+    mode: "onChange",
+    defaultValues: resolvedDefaults,
+  });
+
+  const {
+    control,
+    reset,
+    setValue,
+    getValues,
+    trigger,
+    formState: { isDirty, isSubmitting: formSubmitting, isValid },
+  } = form;
+
+  const placeId = useWatch({ control, name: "placeId" });
+  const sportId = useWatch({ control, name: "sportId" });
+  const watchedValues = useWatch({ control });
 
   useEffect(() => {
     if (!defaultValues) return;
-    setPlaceId(defaultValues.placeId ?? "");
-    setSportId(defaultValues.sportId ?? "");
-    setLabel(defaultValues.label ?? "");
-    setTierLabel(defaultValues.tierLabel ?? "");
-    setIsActive(defaultValues.isActive ?? true);
-  }, [defaultValues]);
-
-  useEffect(() => {
-    onStateChange?.({
-      placeId,
-      sportId,
-      label,
-      tierLabel: tierLabel.trim().length > 0 ? tierLabel : null,
-      isActive,
-    });
-  }, [isActive, label, onStateChange, placeId, sportId, tierLabel]);
+    if (isDirty) return;
+    reset(resolvedDefaults);
+    if (isEditing || allowPristineSubmit) {
+      void trigger();
+    }
+  }, [
+    allowPristineSubmit,
+    defaultValues,
+    isDirty,
+    isEditing,
+    reset,
+    resolvedDefaults,
+    trigger,
+  ]);
 
   useEffect(() => {
     if (!placeId && placeOptions.length === 1) {
-      setPlaceId(placeOptions[0].id);
+      setValue("placeId", placeOptions[0].id, {
+        shouldDirty: false,
+        shouldTouch: false,
+        shouldValidate: true,
+      });
     }
-  }, [placeId, placeOptions]);
+  }, [placeId, placeOptions, setValue]);
 
   useEffect(() => {
     if (!sportId && sportOptions.length === 1) {
-      setSportId(sportOptions[0].id);
+      setValue("sportId", sportOptions[0].id, {
+        shouldDirty: false,
+        shouldTouch: false,
+        shouldValidate: true,
+      });
     }
-  }, [sportId, sportOptions]);
+  }, [setValue, sportId, sportOptions]);
 
-  const trimmedLabel = label.trim();
-  const trimmedTier = tierLabel.trim();
+  useEffect(() => {
+    if (!onStateChange) return;
 
-  const canSubmit =
-    placeId.length > 0 && sportId.length > 0 && trimmedLabel.length > 0;
+    const values = buildFormDefaults(watchedValues ?? {});
+
+    onStateChange({
+      ...values,
+      label: values.label.trim(),
+      tierLabel: normalizeTierLabel(values.tierLabel),
+    });
+  }, [onStateChange, watchedValues]);
 
   const placeHelper = useMemo(() => {
     if (placeOptions.length === 0) {
@@ -101,116 +163,103 @@ export function CourtForm({
     return "Choose the sport for this court.";
   }, [sportOptions.length]);
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const placeSelectDisabled =
+    isEditing || disablePlaceSelect || placeOptions.length === 0;
+  const sportSelectDisabled = sportOptions.length === 0;
+  const submitting = Boolean(isSubmitting || formSubmitting);
 
-    if (!canSubmit) return;
+  const placeOptionItems = useMemo(
+    () =>
+      placeOptions.map((place) => ({
+        label: `${place.name} · ${place.city}`,
+        value: place.id,
+      })),
+    [placeOptions],
+  );
 
-    onSubmit({
-      placeId,
-      sportId,
-      label: trimmedLabel,
-      tierLabel: trimmedTier.length > 0 ? trimmedTier : null,
-      isActive,
-    });
+  const sportOptionItems = useMemo(
+    () =>
+      sportOptions.map((sport) => ({
+        label: sport.name,
+        value: sport.id,
+      })),
+    [sportOptions],
+  );
+
+  const handleSubmit = async (values: CourtFormValues) => {
+    const normalized = normalizeFormValues(values);
+
+    try {
+      await onSubmit(normalized);
+      reset(buildFormDefaults(normalized));
+    } catch (error) {
+      toast.error(
+        isEditing ? "Unable to save court" : "Unable to create court",
+        {
+          description: getClientErrorMessage(error, "Please try again"),
+        },
+      );
+    }
   };
 
   const handleSaveDraft = () => {
-    onSaveDraft?.({
-      placeId,
-      sportId,
-      label: trimmedLabel,
-      tierLabel: trimmedTier.length > 0 ? trimmedTier : null,
-      isActive,
-    });
+    const values = normalizeFormValues(getValues());
+    onSaveDraft?.(values);
   };
 
+  const isSubmitDisabled =
+    submitting || !isValid || (!allowPristineSubmit && !isDirty);
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <StandardFormProvider<CourtFormValues>
+      form={form}
+      onSubmit={handleSubmit}
+      className="space-y-6"
+    >
       <Card>
         <CardHeader>
           <CardTitle>Court Details</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Place</Label>
-            <Select
-              value={placeId}
-              onValueChange={setPlaceId}
-              disabled={
-                isEditing || disablePlaceSelect || placeOptions.length === 0
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a place" />
-              </SelectTrigger>
-              <SelectContent>
-                {placeOptions.map((place) => (
-                  <SelectItem key={place.id} value={place.id}>
-                    {place.name} · {place.city}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground">{placeHelper}</p>
-          </div>
+          <StandardFormSelect<CourtFormValues>
+            name="placeId"
+            label="Place"
+            placeholder="Select a place"
+            options={placeOptionItems}
+            description={placeHelper}
+            disabled={placeSelectDisabled}
+            required
+          />
 
-          <div className="space-y-2">
-            <Label>Sport</Label>
-            <Select
-              value={sportId}
-              onValueChange={setSportId}
-              disabled={sportOptions.length === 0}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a sport" />
-              </SelectTrigger>
-              <SelectContent>
-                {sportOptions.map((sport) => (
-                  <SelectItem key={sport.id} value={sport.id}>
-                    {sport.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground">{sportHelper}</p>
-          </div>
+          <StandardFormSelect<CourtFormValues>
+            name="sportId"
+            label="Sport"
+            placeholder="Select a sport"
+            options={sportOptionItems}
+            description={sportHelper}
+            disabled={sportSelectDisabled}
+            required
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="label">Court Label</Label>
-            <Input
-              id="label"
-              placeholder="e.g., Court A"
-              value={label}
-              onChange={(event) => setLabel(event.target.value)}
-              required
-            />
-          </div>
+          <StandardFormInput<CourtFormValues>
+            name="label"
+            label="Court Label"
+            placeholder="e.g., Court A"
+            required
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="tierLabel">Tier Label</Label>
-            <Input
-              id="tierLabel"
-              placeholder="e.g., Premium"
-              value={tierLabel}
-              onChange={(event) => setTierLabel(event.target.value)}
-            />
-            <p className="text-xs text-muted-foreground">
-              Optional label to distinguish premium or standard courts.
-            </p>
-          </div>
+          <StandardFormInput<CourtFormValues>
+            name="tierLabel"
+            label="Tier Label"
+            placeholder="e.g., Premium"
+            description="Optional label to distinguish premium or standard courts."
+          />
 
           {isEditing && (
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="isActive"
-                checked={isActive}
-                onCheckedChange={(value) => setIsActive(value === true)}
-              />
-              <Label htmlFor="isActive" className="font-normal">
-                Court is active
-              </Label>
-            </div>
+            <StandardFormCheckbox<CourtFormValues>
+              name="isActive"
+              label="Court is active"
+            />
           )}
         </CardContent>
       </Card>
@@ -229,13 +278,13 @@ export function CourtForm({
               type="button"
               variant="secondary"
               onClick={handleSaveDraft}
-              disabled={isSubmitting}
+              disabled={submitting}
             >
               Save as Draft
             </Button>
           )}
-          <Button type="submit" disabled={!canSubmit || isSubmitting}>
-            {isSubmitting
+          <Button type="submit" disabled={isSubmitDisabled}>
+            {submitting
               ? isEditing
                 ? "Saving..."
                 : "Creating..."
@@ -244,6 +293,6 @@ export function CourtForm({
           </Button>
         </div>
       </div>
-    </form>
+    </StandardFormProvider>
   );
 }

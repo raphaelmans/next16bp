@@ -39,7 +39,7 @@ export default function CreateCourtSetupPage() {
   const selectedPlaceIdRef = React.useRef<string>("");
   const [draft, setDraft] = React.useState<Partial<CourtFormData>>({});
 
-  const { submit, isSubmitting } = useCourtForm({
+  const { submitAsync, isSubmitting } = useCourtForm({
     onSuccess: (result) => {
       toast.success("Court created successfully!");
       const targetPlaceId = selectedPlaceIdRef.current || draft.placeId || "";
@@ -172,7 +172,7 @@ export default function CreateCourtSetupPage() {
         <CourtForm
           placeOptions={placeOptions}
           sportOptions={sportOptions}
-          onSubmit={submit}
+          onSubmit={submitAsync}
           onCancel={handleCancel}
           isSubmitting={isSubmitting}
           primaryActionLabel="Create & Continue"

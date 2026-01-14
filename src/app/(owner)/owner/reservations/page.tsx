@@ -40,12 +40,10 @@ import {
 } from "@/features/owner/hooks";
 import {
   type Reservation,
-  type ReservationStatus,
   useAcceptReservation,
   useConfirmReservation,
   useOwnerReservations,
   useRejectReservation,
-  useReservationCounts,
 } from "@/features/owner/hooks/use-owner-reservations";
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
@@ -53,6 +51,18 @@ import { appRoutes } from "@/shared/lib/app-routes";
 import { trpc } from "@/trpc/client";
 
 type TabValue = "pending" | "upcoming" | "past" | "cancelled";
+
+type PendingFilter =
+  | "all"
+  | "needs-acceptance"
+  | "awaiting-payment"
+  | "payment-marked";
+
+const PENDING_STATUSES = new Set([
+  "CREATED",
+  "AWAITING_PAYMENT",
+  "PAYMENT_MARKED_BY_USER",
+]);
 
 /**
  * Format price in Philippine Peso
@@ -79,7 +89,7 @@ function ReservationsEmptyState({ type }: { type: TabValue | "all" }) {
     },
     pending: {
       icon: CheckCircle,
-      title: "No pending reservations",
+      title: "Inbox cleared",
       description:
         "All caught up! No reservations need your attention right now.",
     },
@@ -135,6 +145,8 @@ export default function OwnerReservationsPage() {
   const [dateFrom, setDateFrom] = React.useState<Date>();
   const [dateTo, setDateTo] = React.useState<Date>();
   const [activeTab, setActiveTab] = React.useState<TabValue>("pending");
+  const [pendingFilter, setPendingFilter] =
+    React.useState<PendingFilter>("all");
 
   // Dialog state
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
@@ -148,33 +160,17 @@ export default function OwnerReservationsPage() {
   const confirmLabel =
     selectedReservation?.reservationStatus === "CREATED" ? "Accept" : "Confirm";
 
-  // Get status filter based on active tab
-  const getStatusFilter = (tab: TabValue): ReservationStatus | "all" => {
-    switch (tab) {
-      case "pending":
-        return "pending";
-      case "cancelled":
-        return "cancelled";
-      default:
-        return "all";
-    }
-  };
-
   const { data: reservations = [], isLoading } = useOwnerReservations(
     organization?.id ?? null,
     {
       placeId: placeId || undefined,
       courtId: courtId || undefined,
-      status: getStatusFilter(activeTab),
+      status: "all",
       search: search || undefined,
       dateFrom,
       dateTo,
     },
   );
-
-  const filteredByPlace = reservations;
-
-  const { data: counts } = useReservationCounts(organization?.id ?? null);
   const acceptMutation = useAcceptReservation();
   const confirmMutation = useConfirmReservation();
   const rejectMutation = useRejectReservation();
@@ -192,18 +188,150 @@ export default function OwnerReservationsPage() {
     }
   };
 
-  const filteredReservations = React.useMemo(() => {
-    const today = new Date();
+  const reservationGroups = React.useMemo(() => {
+    const now = new Date();
 
-    if (activeTab === "past") {
-      return filteredByPlace.filter((r) => {
-        const reservationDate = new Date(r.date);
-        return reservationDate < today || r.status === "completed";
+    const parseDate = (value: string | null | undefined) => {
+      if (!value) return null;
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.getTime()) ? null : parsed;
+    };
+
+    const getStartTime = (reservation: Reservation) =>
+      parseDate(reservation.slotStartTime ?? reservation.createdAt);
+
+    const getEndTime = (reservation: Reservation) =>
+      parseDate(reservation.slotEndTime ?? reservation.createdAt);
+
+    const pending = reservations.filter((reservation) =>
+      PENDING_STATUSES.has(reservation.reservationStatus),
+    );
+    const needsAcceptance = pending.filter(
+      (reservation) => reservation.reservationStatus === "CREATED",
+    );
+    const awaitingPayment = pending.filter(
+      (reservation) => reservation.reservationStatus === "AWAITING_PAYMENT",
+    );
+    const paymentMarked = pending.filter(
+      (reservation) =>
+        reservation.reservationStatus === "PAYMENT_MARKED_BY_USER",
+    );
+
+    const pendingFiltered = (() => {
+      switch (pendingFilter) {
+        case "needs-acceptance":
+          return needsAcceptance;
+        case "awaiting-payment":
+          return awaitingPayment;
+        case "payment-marked":
+          return paymentMarked;
+        default:
+          return pending;
+      }
+    })();
+
+    const pendingPriority: Record<string, number> = {
+      PAYMENT_MARKED_BY_USER: 0,
+      CREATED: 1,
+      AWAITING_PAYMENT: 2,
+    };
+
+    const pendingSorted = [...pendingFiltered].sort((a, b) => {
+      const priority =
+        (pendingPriority[a.reservationStatus] ?? 3) -
+        (pendingPriority[b.reservationStatus] ?? 3);
+      if (priority !== 0) return priority;
+      const aStart = getStartTime(a)?.getTime() ?? 0;
+      const bStart = getStartTime(b)?.getTime() ?? 0;
+      return aStart - bStart;
+    });
+
+    const confirmed = reservations.filter(
+      (reservation) => reservation.reservationStatus === "CONFIRMED",
+    );
+
+    const upcoming = confirmed
+      .filter((reservation) => {
+        const endTime = getEndTime(reservation);
+        return !endTime || endTime >= now;
+      })
+      .sort((a, b) => {
+        const aStart = getStartTime(a)?.getTime() ?? 0;
+        const bStart = getStartTime(b)?.getTime() ?? 0;
+        return aStart - bStart;
       });
-    }
 
-    return filteredByPlace;
-  }, [activeTab, filteredByPlace]);
+    const past = confirmed
+      .filter((reservation) => {
+        const endTime = getEndTime(reservation);
+        return endTime ? endTime < now : false;
+      })
+      .sort((a, b) => {
+        const aStart = getStartTime(a)?.getTime() ?? 0;
+        const bStart = getStartTime(b)?.getTime() ?? 0;
+        return bStart - aStart;
+      });
+
+    const cancelled = reservations.filter(
+      (reservation) =>
+        reservation.reservationStatus === "CANCELLED" ||
+        reservation.reservationStatus === "EXPIRED",
+    );
+
+    return {
+      groups: {
+        pending: pendingSorted,
+        upcoming,
+        past,
+        cancelled,
+      },
+      tabCounts: {
+        pending: pending.length,
+        upcoming: upcoming.length,
+        past: past.length,
+        cancelled: cancelled.length,
+      },
+      pendingCounts: {
+        all: pending.length,
+        needsAcceptance: needsAcceptance.length,
+        awaitingPayment: awaitingPayment.length,
+        paymentMarked: paymentMarked.length,
+      },
+    };
+  }, [pendingFilter, reservations]);
+
+  const tabCounts = reservationGroups.tabCounts;
+  const pendingCounts = reservationGroups.pendingCounts;
+
+  const tabConfig: { value: TabValue; label: string }[] = [
+    { value: "pending", label: "Inbox" },
+    { value: "upcoming", label: "Upcoming" },
+    { value: "past", label: "Past" },
+    { value: "cancelled", label: "Cancelled" },
+  ];
+
+  const pendingFilterOptions: {
+    value: PendingFilter;
+    label: string;
+    count: number;
+  }[] = [
+    { value: "all", label: "All", count: pendingCounts.all },
+    {
+      value: "needs-acceptance",
+      label: "Needs acceptance",
+      count: pendingCounts.needsAcceptance,
+    },
+    {
+      value: "awaiting-payment",
+      label: "Awaiting payment",
+      count: pendingCounts.awaitingPayment,
+    },
+    {
+      value: "payment-marked",
+      label: "Payment marked",
+      count: pendingCounts.paymentMarked,
+    },
+  ];
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -444,42 +572,94 @@ export default function OwnerReservationsPage() {
           onValueChange={(v) => setActiveTab(v as TabValue)}
         >
           <TabsList>
-            <TabsTrigger value="pending" className="gap-2">
-              Pending Action
-              {counts?.pending ? (
-                <Badge variant="secondary" className="ml-1">
-                  {counts.pending}
-                </Badge>
-              ) : null}
-            </TabsTrigger>
-            <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-            <TabsTrigger value="past">Past</TabsTrigger>
-            <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
+            {tabConfig.map((tabItem) => {
+              const count = tabCounts[tabItem.value];
+              const accessibleLabel =
+                count > 0 ? `${tabItem.label}, ${count}` : tabItem.label;
+              return (
+                <TabsTrigger
+                  key={tabItem.value}
+                  value={tabItem.value}
+                  className="gap-2"
+                  aria-label={accessibleLabel}
+                >
+                  {tabItem.label}
+                  {count > 0 ? (
+                    <Badge
+                      variant={
+                        activeTab === tabItem.value ? "default" : "secondary"
+                      }
+                      className="ml-1"
+                    >
+                      {count}
+                    </Badge>
+                  ) : null}
+                </TabsTrigger>
+              );
+            })}
           </TabsList>
 
-          <TabsContent value={activeTab} className="mt-6">
-            {isLoading ? (
-              <div className="space-y-4">
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-16 w-full" />
-                <Skeleton className="h-16 w-full" />
-                <Skeleton className="h-16 w-full" />
-              </div>
-            ) : filteredReservations.length === 0 ? (
-              <ReservationsEmptyState type={activeTab} />
-            ) : (
-              <ReservationsTable
-                reservations={filteredReservations}
-                onConfirm={handleConfirmClick}
-                onReject={handleRejectClick}
-                isLoading={
-                  confirmMutation.isPending ||
-                  acceptMutation.isPending ||
-                  rejectMutation.isPending
-                }
-              />
-            )}
-          </TabsContent>
+          {tabConfig.map((tabItem) => {
+            const tabReservations = reservationGroups.groups[tabItem.value];
+            const showPendingFilters = tabItem.value === "pending";
+
+            return (
+              <TabsContent
+                key={tabItem.value}
+                value={tabItem.value}
+                className="mt-6"
+                forceMount
+              >
+                {showPendingFilters && (
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
+                    {pendingFilterOptions.map((option) => {
+                      const isActive = pendingFilter === option.value;
+                      return (
+                        <Button
+                          key={option.value}
+                          type="button"
+                          size="sm"
+                          variant={isActive ? "secondary" : "ghost"}
+                          className="gap-2"
+                          aria-pressed={isActive}
+                          onClick={() => setPendingFilter(option.value)}
+                        >
+                          {option.label}
+                          {option.count > 0 ? (
+                            <Badge variant="outline" className="h-5 px-1.5">
+                              {option.count}
+                            </Badge>
+                          ) : null}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {isLoading ? (
+                  <div className="space-y-4">
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-16 w-full" />
+                    <Skeleton className="h-16 w-full" />
+                    <Skeleton className="h-16 w-full" />
+                  </div>
+                ) : tabReservations.length === 0 ? (
+                  <ReservationsEmptyState type={tabItem.value} />
+                ) : (
+                  <ReservationsTable
+                    reservations={tabReservations}
+                    onConfirm={handleConfirmClick}
+                    onReject={handleRejectClick}
+                    isLoading={
+                      confirmMutation.isPending ||
+                      acceptMutation.isPending ||
+                      rejectMutation.isPending
+                    }
+                  />
+                )}
+              </TabsContent>
+            );
+          })}
         </Tabs>
       </div>
 

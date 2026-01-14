@@ -28,7 +28,6 @@ import type { CourtFormData } from "@/features/owner/schemas/court-form.schema";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { formatCurrency } from "@/shared/lib/format";
-import { useCatchErrorToast } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 const stepKeys = [
@@ -174,8 +173,6 @@ export default function CourtSetupWizardPage() {
     },
   });
 
-  const catchErrorToast = useCatchErrorToast();
-
   const defaultValues = React.useMemo<Partial<CourtFormData>>(() => {
     if (!courtData) return {};
     return {
@@ -265,26 +262,20 @@ export default function CourtSetupWizardPage() {
     setStep(nextStep);
   };
 
-  const handleCreateSubmit = (data: CourtFormData) => {
-    void catchErrorToast(() => submitAsync(data), {
-      errorTitle: "Unable to create court",
-      errorFallback: "Please try again",
-    });
+  const handleCreateSubmit = async (data: CourtFormData) => {
+    await submitAsync(data);
   };
 
-  const handleDetailsSubmit = (data: CourtFormData) => {
+  const handleDetailsSubmit = async (data: CourtFormData) => {
     if (!courtIdParam) {
-      handleCreateSubmit(data);
+      await handleCreateSubmit(data);
       return;
     }
     if (!isDetailsDirty) {
       goToStep("schedule");
       return;
     }
-    void catchErrorToast(() => submitAsync(data), {
-      errorTitle: "Unable to save court",
-      errorFallback: "Please try again",
-    });
+    await submitAsync(data);
   };
 
   const handleLogout = async () => {
@@ -429,9 +420,7 @@ export default function CourtSetupWizardPage() {
                 onCancel={handleCancel}
                 isSubmitting={isSubmitting}
                 isEditing
-                disablePlaceSelect
-                primaryActionLabel="Save & Continue"
-                showCancel={false}
+                allowPristineSubmit
                 onStateChange={setDetailsDraft}
               />
             )}

@@ -18,6 +18,8 @@ export interface Reservation {
   date: string;
   startTime: string;
   endTime: string;
+  slotStartTime?: string | null;
+  slotEndTime?: string | null;
   amountCents: number;
   currency: string;
   status: ReservationStatus;
@@ -169,6 +171,8 @@ export function useOwnerReservations(
               : "",
           startTime: r.slotStartTime ? formatTime(r.slotStartTime) : "--:--",
           endTime: r.slotEndTime ? formatTime(r.slotEndTime) : "--:--",
+          slotStartTime: r.slotStartTime ?? null,
+          slotEndTime: r.slotEndTime ?? null,
           amountCents: r.amountCents ?? 0,
           currency: r.currency ?? "PHP",
           status: mapStatusFromBackend(r.status),

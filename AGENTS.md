@@ -81,6 +81,8 @@ pnpm db:seed:buckets # seed storage buckets
 - App Router lives in `src/app`; add "use client" at the top of client components/hooks.
 - Prefer `date-fns` for date formatting (no native `Date` formatting).
 - Use `react-hook-form` + `@hookform/resolvers` + Zod for forms.
+- Prefer StandardForm components in `src/components/form` (StandardFormProvider, StandardFormInput/Select/Checkbox/Field).
+- Form submissions: use `mutateAsync`, show server errors via toast only, reset on success.
 - Prefer shared formatting helpers in `src/shared/lib/format.ts`.
 - Query params: use `nuqs` (`useQueryState` / `useQueryStates`) and avoid manual `router.replace` or `useSearchParams` reconciliation.
 - Cache invalidation: use `trpc.useUtils()` helpers; avoid manual query keys for tRPC data (use `QueryClient` only for non-tRPC caches).
