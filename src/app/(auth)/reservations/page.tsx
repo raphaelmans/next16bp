@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { PageHeader } from "@/components/ui/page-header";
+import { OwnerPaymentMethodReminder } from "@/features/owner/components";
 import { ReservationList } from "@/features/reservation/components/reservation-list";
 import { ReservationTabs } from "@/features/reservation/components/reservation-tabs";
 import { ReservationListSkeleton } from "@/features/reservation/components/skeletons";
@@ -18,6 +19,8 @@ export default function MyReservationsPage() {
         description="View and manage your court bookings"
         backHref={appRoutes.home.base}
       />
+
+      <OwnerPaymentMethodReminder />
 
       {/* Tabs */}
       <Suspense fallback={null}>

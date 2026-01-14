@@ -9,10 +9,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
-import { PlaceForm, ReservationAlertsPanel } from "@/features/owner/components";
-import { useOwnerOrganization, usePlaceForm } from "@/features/owner/hooks";
+import {
+  PaymentMethodReminderCard,
+  PlaceForm,
+  ReservationAlertsPanel,
+} from "@/features/owner/components";
+import {
+  useOrganizationPaymentMethods,
+  useOwnerOrganization,
+  usePlaceForm,
+} from "@/features/owner/hooks";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { SETTINGS_SECTION_HASHES } from "@/shared/lib/section-hashes";
 
 export default function NewPlacePage() {
   const router = useRouter();
@@ -31,6 +40,15 @@ export default function NewPlacePage() {
       router.push(appRoutes.owner.places.courts.base(result.placeId));
     },
   });
+
+  const paymentMethodsQuery = useOrganizationPaymentMethods(organization?.id);
+  const paymentMethods = paymentMethodsQuery.data?.methods ?? [];
+  const showPaymentMethodReminder =
+    !!organization?.id &&
+    !paymentMethodsQuery.isLoading &&
+    !paymentMethodsQuery.isError &&
+    paymentMethods.length === 0;
+  const paymentMethodsHref = `${appRoutes.owner.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`;
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -129,6 +147,15 @@ export default function NewPlacePage() {
           ]}
           backHref={appRoutes.owner.places.base}
         />
+
+        {showPaymentMethodReminder && (
+          <PaymentMethodReminderCard
+            title="Payment methods missing"
+            description="Add at least one payment method so players can complete payments once reservations are accepted."
+            actionLabel="Add payment method"
+            actionHref={paymentMethodsHref}
+          />
+        )}
 
         <PlaceForm
           onSubmit={submit}

@@ -32,11 +32,12 @@ This domain also introduces an **organization-scoped reservation policy** (syste
 | US-15-03 | Player Sees Organization Payment Methods On Payment Page | Active | US-08-01-02 |
 | US-15-04 | Payment Methods Are Visible Only To Authorized Players | Active | - |
 | US-15-05 | Platform Applies Organization Reservation Policy Defaults | Active | US-12-01 |
+| US-15-06 | Owner Sees Payment Method Setup Reminders | Active | - |
 
 ---
 
 ## Summary
 
-- Total: 5
-- Active: 5
+- Total: 6
+- Active: 6
 - Superseded: 0

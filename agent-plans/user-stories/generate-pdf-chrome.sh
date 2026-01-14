@@ -6,19 +6,30 @@
 set -e
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-HTML_FILE="$SCRIPT_DIR/user-stories-document.html"
-OUTPUT_FILE="$SCRIPT_DIR/KudosCourts-User-Stories-Checkpoint-01.pdf"
+CHECKPOINT="${1:-07}"
+
+BASE_HTML_FILE="$SCRIPT_DIR/user-stories-document.html"
+HTML_FILE="$SCRIPT_DIR/user-stories-document-checkpoint-$CHECKPOINT.html"
+OUTPUT_FILE="$SCRIPT_DIR/KudosCourts-User-Stories-Checkpoint-$CHECKPOINT.pdf"
 CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 echo "🚀 Starting PDF generation..."
 
-# Check if HTML file exists
-if [ ! -f "$HTML_FILE" ]; then
-    echo "❌ Error: user-stories-document.html not found"
+# Check if base HTML template exists
+if [ ! -f "$BASE_HTML_FILE" ]; then
+    echo "❌ Error: base HTML template not found at $BASE_HTML_FILE"
     exit 1
 fi
 
-echo "📄 HTML file found: $HTML_FILE"
+# Generate checkpoint-specific HTML (derived from checkpoint + stories)
+echo "🧩 Generating HTML for checkpoint $CHECKPOINT..."
+node "$SCRIPT_DIR/generate-checkpoint-html.js" \
+    --checkpoint "$CHECKPOINT" \
+    --checkpoint-path "$SCRIPT_DIR/checkpoint-$CHECKPOINT.md" \
+    --base-html "$BASE_HTML_FILE" \
+    --out-html "$HTML_FILE" > /dev/null
+
+echo "📄 HTML generated: $HTML_FILE"
 
 # Check if Chrome exists
 if [ ! -f "$CHROME" ]; then
