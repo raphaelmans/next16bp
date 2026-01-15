@@ -65,7 +65,7 @@ export function GoogleMapsEmbed({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border border-border/60 bg-muted",
+        "relative w-full min-w-0 max-w-full overflow-hidden rounded-xl border border-border/60 bg-muted",
         className,
       )}
     >
@@ -77,7 +77,7 @@ export function GoogleMapsEmbed({
           referrerPolicy="no-referrer-when-downgrade"
           allowFullScreen
           className={cn(
-            "h-full w-full border-0",
+            "block h-full w-full max-w-full border-0",
             !allowInteraction && "pointer-events-none",
             iframeClassName,
           )}
