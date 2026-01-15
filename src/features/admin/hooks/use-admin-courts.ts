@@ -204,6 +204,12 @@ export interface CuratedCourtPhotoInput {
   displayOrder?: number;
 }
 
+export interface CuratedCourtUnitInput {
+  label: string;
+  sportId: string;
+  tierLabel?: string | null;
+}
+
 export interface CuratedCourtData {
   name: string;
   address: string;
@@ -218,6 +224,7 @@ export interface CuratedCourtData {
   otherContactInfo?: string;
   photos?: CuratedCourtPhotoInput[];
   amenities?: string[];
+  courts: CuratedCourtUnitInput[];
 }
 
 export interface CuratedCourtBatchResultItem {

@@ -62,6 +62,11 @@ export function usePlaceForm({
         longitude: formatCoordinate(data.longitude),
         timeZone: data.timeZone,
         isActive: data.isActive,
+        websiteUrl: data.websiteUrl || undefined,
+        facebookUrl: data.facebookUrl || undefined,
+        instagramUrl: data.instagramUrl || undefined,
+        viberInfo: data.viberInfo || undefined,
+        otherContactInfo: data.otherContactInfo || undefined,
       });
       return;
     }
@@ -83,6 +88,11 @@ export function usePlaceForm({
       latitude,
       longitude,
       timeZone: data.timeZone,
+      websiteUrl: data.websiteUrl || undefined,
+      facebookUrl: data.facebookUrl || undefined,
+      instagramUrl: data.instagramUrl || undefined,
+      viberInfo: data.viberInfo || undefined,
+      otherContactInfo: data.otherContactInfo || undefined,
     });
   };
 

@@ -29,6 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
 import { env } from "@/lib/env";
 import { cn } from "@/lib/utils";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
@@ -86,6 +87,11 @@ const buildFormDefaults = (
   timeZone:
     values?.timeZone ?? defaultPlaceFormValues.timeZone ?? "Asia/Manila",
   isActive: values?.isActive ?? defaultPlaceFormValues.isActive ?? true,
+  websiteUrl: values?.websiteUrl ?? "",
+  facebookUrl: values?.facebookUrl ?? "",
+  instagramUrl: values?.instagramUrl ?? "",
+  viberInfo: values?.viberInfo ?? "",
+  otherContactInfo: values?.otherContactInfo ?? "",
 });
 
 const normalizeFormValues = (values: PlaceFormValues): PlaceFormData => ({
@@ -104,6 +110,17 @@ const normalizeFormValues = (values: PlaceFormValues): PlaceFormData => ({
       : values.longitude,
   timeZone: values.timeZone ?? defaultPlaceFormValues.timeZone ?? "Asia/Manila",
   isActive: values.isActive ?? defaultPlaceFormValues.isActive ?? true,
+  websiteUrl: values.websiteUrl?.trim() ? values.websiteUrl.trim() : undefined,
+  facebookUrl: values.facebookUrl?.trim()
+    ? values.facebookUrl.trim()
+    : undefined,
+  instagramUrl: values.instagramUrl?.trim()
+    ? values.instagramUrl.trim()
+    : undefined,
+  viberInfo: values.viberInfo?.trim() ? values.viberInfo.trim() : undefined,
+  otherContactInfo: values.otherContactInfo?.trim()
+    ? values.otherContactInfo.trim()
+    : undefined,
 });
 
 export function PlaceForm({
@@ -417,6 +434,53 @@ export function PlaceForm({
               label="Place is active"
             />
           )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Contact Info</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <StandardFormInput<PlaceFormValues>
+              name="websiteUrl"
+              label="Website"
+              placeholder="https://example.com"
+            />
+            <StandardFormInput<PlaceFormValues>
+              name="facebookUrl"
+              label="Facebook"
+              placeholder="https://facebook.com/..."
+            />
+            <StandardFormInput<PlaceFormValues>
+              name="instagramUrl"
+              label="Instagram"
+              placeholder="https://instagram.com/..."
+            />
+            <StandardFormInput<PlaceFormValues>
+              name="viberInfo"
+              label="Viber Info"
+              placeholder="0917 123 4567"
+            />
+          </div>
+
+          <StandardFormField<PlaceFormValues>
+            name="otherContactInfo"
+            label="Other Contact Info"
+          >
+            {({ field }) => (
+              <Textarea
+                rows={3}
+                placeholder="Any additional contact details..."
+                value={typeof field.value === "string" ? field.value : ""}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                name={field.name}
+                ref={field.ref}
+              />
+            )}
+          </StandardFormField>
         </CardContent>
       </Card>
 

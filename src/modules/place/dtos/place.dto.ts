@@ -29,6 +29,11 @@ export const CreatePlaceSchema = z.object({
     .regex(/^-?\d+\.\d+$/, "Invalid longitude format")
     .optional(),
   timeZone: z.string().min(1).max(64).optional(),
+  websiteUrl: z.string().url().optional(),
+  facebookUrl: z.string().url().optional(),
+  instagramUrl: z.string().url().optional(),
+  viberInfo: z.string().max(100).optional(),
+  otherContactInfo: z.string().max(500).optional(),
 });
 
 export const UpdatePlaceSchema = z.object({
@@ -47,6 +52,11 @@ export const UpdatePlaceSchema = z.object({
     .regex(/^-?\d+\.\d+$/, "Invalid longitude format")
     .optional(),
   timeZone: z.string().min(1).max(64).optional(),
+  websiteUrl: z.string().url().optional(),
+  facebookUrl: z.string().url().optional(),
+  instagramUrl: z.string().url().optional(),
+  viberInfo: z.string().max(100).optional(),
+  otherContactInfo: z.string().max(500).optional(),
   isActive: z.boolean().optional(),
 });
 

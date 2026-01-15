@@ -30,6 +30,19 @@ export const AMENITIES = [
   "Covered Courts",
 ];
 
+const courtSchema = z.object({
+  label: z
+    .string()
+    .min(1, "Court label is required")
+    .max(100, "Court label must be less than 100 characters"),
+  sportId: z.string().uuid("Sport is required"),
+  tierLabel: z
+    .string()
+    .max(20, "Tier label must be less than 20 characters")
+    .optional()
+    .nullable(),
+});
+
 export const curatedCourtSchema = z.object({
   name: z
     .string()
@@ -55,6 +68,7 @@ export const curatedCourtSchema = z.object({
     .max(500, "Contact info must be less than 500 characters")
     .optional(),
   amenities: z.array(z.string()),
+  courts: z.array(courtSchema).min(1, "Add at least one court for this place"),
 });
 
 export type CuratedCourtFormData = z.infer<typeof curatedCourtSchema>;

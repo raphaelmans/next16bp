@@ -2,12 +2,14 @@ import { and, count, eq, inArray } from "drizzle-orm";
 import {
   court,
   courtRateRule,
-  curatedPlaceDetail,
   type InsertPlace,
+  type InsertPlaceContactDetail,
   organizationReservationPolicy,
+  type PlaceContactDetailRecord,
   type PlaceRecord,
   place,
   placeAmenity,
+  placeContactDetail,
   placePhoto,
   sport,
 } from "@/shared/infra/db/schema";
@@ -16,10 +18,8 @@ import type { RequestContext } from "@/shared/kernel/context";
 
 export interface PlaceWithDetails {
   place: PlaceRecord;
-  detail:
-    | typeof curatedPlaceDetail.$inferSelect
-    | typeof organizationReservationPolicy.$inferSelect
-    | null;
+  contactDetail: typeof placeContactDetail.$inferSelect | null;
+  reservationPolicy: typeof organizationReservationPolicy.$inferSelect | null;
   photos: (typeof placePhoto.$inferSelect)[];
   amenities: (typeof placeAmenity.$inferSelect)[];
 }
@@ -66,6 +66,10 @@ export interface IPlaceRepository {
     data: Partial<InsertPlace>,
     ctx?: RequestContext,
   ): Promise<PlaceRecord>;
+  upsertContactDetail(
+    data: InsertPlaceContactDetail,
+    ctx?: RequestContext,
+  ): Promise<PlaceContactDetailRecord>;
 }
 
 export class PlaceRepository implements IPlaceRepository {
@@ -118,18 +122,17 @@ export class PlaceRepository implements IPlaceRepository {
     const placeRecord = placeResult[0];
     if (!placeRecord) return null;
 
-    let detail:
-      | typeof curatedPlaceDetail.$inferSelect
+    const contactResult = await client
+      .select()
+      .from(placeContactDetail)
+      .where(eq(placeContactDetail.placeId, id))
+      .limit(1);
+    const contactDetail = contactResult[0] ?? null;
+
+    let reservationPolicy:
       | typeof organizationReservationPolicy.$inferSelect
       | null = null;
-    if (placeRecord.placeType === "CURATED") {
-      const curatedResult = await client
-        .select()
-        .from(curatedPlaceDetail)
-        .where(eq(curatedPlaceDetail.placeId, id))
-        .limit(1);
-      detail = curatedResult[0] ?? null;
-    } else if (placeRecord.organizationId) {
+    if (placeRecord.organizationId) {
       const policyResult = await client
         .select()
         .from(organizationReservationPolicy)
@@ -140,7 +143,7 @@ export class PlaceRepository implements IPlaceRepository {
           ),
         )
         .limit(1);
-      detail = policyResult[0] ?? null;
+      reservationPolicy = policyResult[0] ?? null;
     }
 
     const photos = await client
@@ -156,7 +159,8 @@ export class PlaceRepository implements IPlaceRepository {
 
     return {
       place: placeRecord,
-      detail,
+      contactDetail,
+      reservationPolicy,
       photos,
       amenities,
     };
@@ -295,6 +299,30 @@ export class PlaceRepository implements IPlaceRepository {
       .update(place)
       .set({ ...data, updatedAt: new Date() })
       .where(eq(place.id, id))
+      .returning();
+
+    return result[0];
+  }
+
+  async upsertContactDetail(
+    data: InsertPlaceContactDetail,
+    ctx?: RequestContext,
+  ): Promise<PlaceContactDetailRecord> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .insert(placeContactDetail)
+      .values(data)
+      .onConflictDoUpdate({
+        target: placeContactDetail.placeId,
+        set: {
+          facebookUrl: data.facebookUrl ?? null,
+          instagramUrl: data.instagramUrl ?? null,
+          websiteUrl: data.websiteUrl ?? null,
+          viberInfo: data.viberInfo ?? null,
+          otherContactInfo: data.otherContactInfo ?? null,
+          updatedAt: new Date(),
+        },
+      })
       .returning();
 
     return result[0];

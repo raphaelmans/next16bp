@@ -181,7 +181,7 @@ export default function ReservationDetailPage() {
 
   const reservationPolicy =
     placeData.place.placeType === "RESERVABLE"
-      ? (placeData.detail as OrganizationReservationPolicyRecord | null)
+      ? (placeData.reservationPolicy as OrganizationReservationPolicyRecord | null)
       : null;
 
   const organization = {

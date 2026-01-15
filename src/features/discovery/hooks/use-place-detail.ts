@@ -24,6 +24,21 @@ export interface PlacePhoto {
   alt?: string;
 }
 
+export type PlaceType = "CURATED" | "RESERVABLE";
+export type PlaceClaimStatus =
+  | "UNCLAIMED"
+  | "CLAIM_PENDING"
+  | "CLAIMED"
+  | "REMOVAL_REQUESTED";
+
+export interface PlaceContactDetail {
+  websiteUrl?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
+  viberInfo?: string;
+  otherContactInfo?: string;
+}
+
 export interface PlaceDetail {
   id: string;
   name: string;
@@ -37,6 +52,9 @@ export interface PlaceDetail {
   sports: PlaceSport[];
   courts: PlaceCourt[];
   photos: PlacePhoto[];
+  placeType: PlaceType;
+  claimStatus: PlaceClaimStatus;
+  contactDetail?: PlaceContactDetail;
 }
 
 export interface AvailabilityOption {
@@ -93,6 +111,17 @@ export function usePlaceDetail({ placeId }: UsePlaceDetailOptions) {
             ? undefined
             : Number.parseFloat(longitudeRaw.toString());
 
+        const contactDetail = response.contactDetail
+          ? {
+              websiteUrl: response.contactDetail.websiteUrl ?? undefined,
+              facebookUrl: response.contactDetail.facebookUrl ?? undefined,
+              instagramUrl: response.contactDetail.instagramUrl ?? undefined,
+              viberInfo: response.contactDetail.viberInfo ?? undefined,
+              otherContactInfo:
+                response.contactDetail.otherContactInfo ?? undefined,
+            }
+          : undefined;
+
         return {
           id: response.place.id,
           name: response.place.name,
@@ -106,6 +135,9 @@ export function usePlaceDetail({ placeId }: UsePlaceDetailOptions) {
           courts,
           photos,
           sports: mapCourtsToSports(courts),
+          placeType: response.place.placeType,
+          claimStatus: response.place.claimStatus,
+          contactDetail,
         } satisfies PlaceDetail;
       },
     },

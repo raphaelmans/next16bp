@@ -1,10 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, MapPin } from "lucide-react";
+import { Loader2, MapPin, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
   StandardFormField,
@@ -36,6 +36,7 @@ import { useLogout, useSession } from "@/features/auth";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
+import { trpc } from "@/trpc/client";
 
 export default function NewCuratedCourtPage() {
   const router = useRouter();
@@ -44,6 +45,8 @@ export default function NewCuratedCourtPage() {
 
   const { data: stats } = useAdminStats();
   const createMutation = useCreateCuratedCourt();
+  const { data: sports = [], isLoading: sportsLoading } =
+    trpc.sport.list.useQuery({});
 
   const form = useForm<CuratedCourtFormData>({
     resolver: zodResolver(curatedCourtSchema),
@@ -58,7 +61,17 @@ export default function NewCuratedCourtPage() {
       websiteUrl: "",
       otherContactInfo: "",
       amenities: [],
+      courts: [{ label: "Court 1", sportId: "", tierLabel: "" }],
     },
+  });
+
+  const {
+    fields: courtFields,
+    append: appendCourt,
+    remove: removeCourt,
+  } = useFieldArray({
+    control: form.control,
+    name: "courts",
   });
 
   const {
@@ -85,6 +98,11 @@ export default function NewCuratedCourtPage() {
         websiteUrl: data.websiteUrl || undefined,
         otherContactInfo: data.otherContactInfo || undefined,
         amenities: data.amenities.length > 0 ? data.amenities : undefined,
+        courts: data.courts.map((court) => ({
+          label: court.label,
+          sportId: court.sportId,
+          tierLabel: court.tierLabel || undefined,
+        })),
       });
       reset(data);
       toast.success("Court created successfully");
@@ -97,6 +115,10 @@ export default function NewCuratedCourtPage() {
   };
 
   const cityOptions = CITIES.map((city) => ({ label: city, value: city }));
+  const sportOptions = sports.map((sport) => ({
+    label: sport.name,
+    value: sport.id,
+  }));
   const submitting = createMutation.isPending || isSubmitting;
   const isSubmitDisabled = submitting || !isDirty || !isValid;
 
@@ -185,6 +207,74 @@ export default function NewCuratedCourtPage() {
 
           <Card>
             <CardHeader>
+              <CardTitle>Court Inventory</CardTitle>
+              <CardDescription>
+                Define each court unit and its sport
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-4">
+                {courtFields.map((field, index) => (
+                  <div
+                    key={field.id}
+                    className="rounded-lg border border-border/60 bg-background p-4 shadow-sm"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="text-sm font-medium">{`Court ${index + 1}`}</div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeCourt(index)}
+                        disabled={courtFields.length === 1}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Remove
+                      </Button>
+                    </div>
+                    <div className="mt-4 grid gap-4 md:grid-cols-3">
+                      <StandardFormInput<CuratedCourtFormData>
+                        name={`courts.${index}.label`}
+                        label="Court Label"
+                        placeholder="Court 1"
+                        required
+                      />
+                      <StandardFormSelect<CuratedCourtFormData>
+                        name={`courts.${index}.sportId`}
+                        label="Sport"
+                        placeholder="Select a sport"
+                        options={sportOptions}
+                        required
+                        disabled={sportsLoading}
+                      />
+                      <StandardFormInput<CuratedCourtFormData>
+                        name={`courts.${index}.tierLabel`}
+                        label="Tier Label"
+                        placeholder="VIP"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  appendCourt({
+                    label: `Court ${courtFields.length + 1}`,
+                    sportId: "",
+                    tierLabel: "",
+                  })
+                }
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Court
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle>Contact Information</CardTitle>
               <CardDescription>
                 How players can reach or find this court
@@ -246,7 +336,9 @@ export default function NewCuratedCourtPage() {
             <CardContent>
               <StandardFormField<CuratedCourtFormData> name="amenities">
                 {({ field }) => {
-                  const current = Array.isArray(field.value) ? field.value : [];
+                  const current = Array.isArray(field.value)
+                    ? (field.value as string[])
+                    : [];
 
                   return (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">

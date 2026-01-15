@@ -101,6 +101,18 @@ export class PlaceManagementService implements IPlaceManagementService {
         ctx,
       );
 
+      await this.placeRepository.upsertContactDetail(
+        {
+          placeId: created.id,
+          facebookUrl: data.facebookUrl ?? null,
+          instagramUrl: data.instagramUrl ?? null,
+          websiteUrl: data.websiteUrl ?? null,
+          viberInfo: data.viberInfo ?? null,
+          otherContactInfo: data.otherContactInfo ?? null,
+        },
+        ctx,
+      );
+
       logger.info(
         {
           event: "place.created",
@@ -129,10 +141,30 @@ export class PlaceManagementService implements IPlaceManagementService {
 
       await this.assertOwner(userId, place.organizationId, ctx);
 
-      const { placeId, ...updateData } = data;
+      const {
+        placeId,
+        facebookUrl,
+        instagramUrl,
+        websiteUrl,
+        viberInfo,
+        otherContactInfo,
+        ...updateData
+      } = data;
       const updated = await this.placeRepository.update(
         placeId,
         updateData,
+        ctx,
+      );
+
+      await this.placeRepository.upsertContactDetail(
+        {
+          placeId,
+          facebookUrl: facebookUrl ?? null,
+          instagramUrl: instagramUrl ?? null,
+          websiteUrl: websiteUrl ?? null,
+          viberInfo: viberInfo ?? null,
+          otherContactInfo: otherContactInfo ?? null,
+        },
         ctx,
       );
 

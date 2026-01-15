@@ -9,6 +9,15 @@ const PhotoInputSchema = z.object({
 });
 
 /**
+ * Court input for curated places
+ */
+const CourtInputSchema = z.object({
+  label: z.string().min(1).max(100),
+  sportId: z.string().uuid(),
+  tierLabel: z.string().max(20).optional().nullable(),
+});
+
+/**
  * Coordinate schema that accepts string or number inputs.
  */
 const CoordinateSchema = z.preprocess(
@@ -48,6 +57,7 @@ export const CreateCuratedCourtSchema = z.object({
   // Related data
   photos: z.array(PhotoInputSchema).optional(),
   amenities: z.array(z.string().min(1).max(100)).optional(),
+  courts: z.array(CourtInputSchema).min(1),
 });
 
 export type CreateCuratedCourtDTO = z.infer<typeof CreateCuratedCourtSchema>;

@@ -1,7 +1,5 @@
-import { eq } from "drizzle-orm";
 import type { ClaimRequestRecord } from "@/shared/infra/db/schema";
-import { curatedPlaceDetail } from "@/shared/infra/db/schema";
-import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
+import type { DbClient } from "@/shared/infra/db/types";
 import { logger } from "@/shared/infra/logger";
 import type { TransactionManager } from "@/shared/kernel/transaction";
 import {
@@ -39,7 +37,6 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
   ): Promise<ClaimRequestRecord> {
     return this.transactionManager.run(async (tx) => {
       const ctx = { tx };
-      const txClient = tx as DrizzleTransaction;
 
       const claimRequest = await this.claimRequestRepository.findByIdForUpdate(
         requestId,
@@ -83,10 +80,6 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
         },
         ctx,
       );
-
-      await txClient
-        .delete(curatedPlaceDetail)
-        .where(eq(curatedPlaceDetail.placeId, place.id));
 
       await this.claimRequestEventRepository.create(
         {

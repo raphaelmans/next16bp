@@ -67,10 +67,10 @@ export type PlaceRecord = z.infer<typeof PlaceSchema>;
 export type InsertPlace = z.infer<typeof InsertPlaceSchema>;
 
 /**
- * Curated Place Detail table (Subclass)
- * Additional details for manually curated (view-only) places.
+ * Place Contact Detail table
+ * Contact details for curated and reservable places.
  */
-export const curatedPlaceDetail = pgTable("curated_place_detail", {
+export const placeContactDetail = pgTable("place_contact_detail", {
   id: uuid("id").primaryKey().defaultRandom(),
   placeId: uuid("place_id")
     .notNull()
@@ -89,11 +89,11 @@ export const curatedPlaceDetail = pgTable("curated_place_detail", {
     .notNull(),
 });
 
-export const CuratedPlaceDetailSchema = createSelectSchema(curatedPlaceDetail);
-export const InsertCuratedPlaceDetailSchema =
-  createInsertSchema(curatedPlaceDetail);
+export const PlaceContactDetailSchema = createSelectSchema(placeContactDetail);
+export const InsertPlaceContactDetailSchema =
+  createInsertSchema(placeContactDetail);
 
-export type CuratedPlaceDetailRecord = z.infer<typeof CuratedPlaceDetailSchema>;
-export type InsertCuratedPlaceDetail = z.infer<
-  typeof InsertCuratedPlaceDetailSchema
+export type PlaceContactDetailRecord = z.infer<typeof PlaceContactDetailSchema>;
+export type InsertPlaceContactDetail = z.infer<
+  typeof InsertPlaceContactDetailSchema
 >;

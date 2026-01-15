@@ -10,6 +10,19 @@ export const placeFormSchema = z.object({
   longitude: z.number().min(-180).max(180).optional(),
   timeZone: z.string().min(1).default("Asia/Manila"),
   isActive: z.boolean().default(true),
+  websiteUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
+  facebookUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
+  instagramUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
+  viberInfo: z
+    .string()
+    .max(100, "Viber info must be less than 100 characters")
+    .optional()
+    .or(z.literal("")),
+  otherContactInfo: z
+    .string()
+    .max(500, "Contact info must be less than 500 characters")
+    .optional()
+    .or(z.literal("")),
 });
 
 export type PlaceFormData = z.infer<typeof placeFormSchema>;

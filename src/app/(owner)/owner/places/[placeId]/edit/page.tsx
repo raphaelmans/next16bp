@@ -75,6 +75,11 @@ export default function EditPlacePage() {
     longitude: place.longitude ? Number.parseFloat(place.longitude) : undefined,
     timeZone: place.timeZone,
     isActive: place.isActive,
+    websiteUrl: placeData.contactDetail?.websiteUrl ?? "",
+    facebookUrl: placeData.contactDetail?.facebookUrl ?? "",
+    instagramUrl: placeData.contactDetail?.instagramUrl ?? "",
+    viberInfo: placeData.contactDetail?.viberInfo ?? "",
+    otherContactInfo: placeData.contactDetail?.otherContactInfo ?? "",
   };
 
   return (

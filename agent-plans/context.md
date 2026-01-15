@@ -8,6 +8,8 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-15 | Added 33-place-claiming implementation plan (curated → claim → reservable) |
+| 2026-01-15 | Added 17-place-claiming user stories (claim curated places) |
 | 2026-01-14 | Added 31-owner-reservations-inbox plan (owner triage UX) |
 | 2026-01-14 | Added 16-reservation-list-enrichment user stories and 30-reservation-list-enrichment plan |
 | 2026-01-14 | Added US-06-04 (My Reservations tabs filtering + accessibility) and 29-my-reservations-tabs plan | 
@@ -66,6 +68,7 @@ References and context for planning artifacts.
 | 14-place-court-migration | `agent-plans/user-stories/14-place-court-migration/` | Place→Court-unit migration and multi-sport venue support |
 | 15-organization-payment-methods | `agent-plans/user-stories/15-organization-payment-methods/` | Org-scoped payment methods + reservation policy defaults |
 | 16-reservation-list-enrichment | `agent-plans/user-stories/16-reservation-list-enrichment/` | Player reservation lists with real court + slot data |
+| 17-place-claiming | `agent-plans/user-stories/17-place-claiming/` | Claim curated places and transfer courts to organizations |
 
 ---
 
@@ -86,6 +89,7 @@ References and context for planning artifacts.
 | 29-my-reservations-tabs | `agent-plans/29-my-reservations-tabs/` | Pending |
 | 30-reservation-list-enrichment | `agent-plans/30-reservation-list-enrichment/` | Pending |
 | 31-owner-reservations-inbox | `agent-plans/31-owner-reservations-inbox/` | Pending |
+| 33-place-claiming | `agent-plans/33-place-claiming/` | Ready |
 
 ---
 

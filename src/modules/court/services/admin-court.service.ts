@@ -138,6 +138,22 @@ export class AdminCourtService implements IAdminCourtService {
         }
       }
 
+      // 5. Create courts
+      if (data.courts.length > 0) {
+        for (const court of data.courts) {
+          await this.adminCourtRepository.createCourt(
+            {
+              placeId: placeRecord.id,
+              sportId: court.sportId,
+              label: court.label,
+              tierLabel: court.tierLabel ?? null,
+              isActive: true,
+            },
+            ctx,
+          );
+        }
+      }
+
       logger.info(
         {
           event: "place.created",

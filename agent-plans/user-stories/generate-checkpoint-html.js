@@ -69,7 +69,7 @@ function extractTagContents(html, tagName) {
   return match[1];
 }
 
-function splitSections(markdown) {
+function _splitSections(markdown) {
   return markdown.split(/\n---\n/);
 }
 

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { type Control, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
   StandardFormField,
@@ -40,6 +40,13 @@ import { useLogout, useSession } from "@/features/auth";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
+import { trpc } from "@/trpc/client";
+
+const DEFAULT_COURT_UNIT = {
+  label: "Court 1",
+  sportId: "",
+  tierLabel: "",
+};
 
 const DEFAULT_COURT = {
   name: "",
@@ -54,6 +61,7 @@ const DEFAULT_COURT = {
   otherContactInfo: "",
   amenities: [] as string[],
   photoUrls: "",
+  courts: [DEFAULT_COURT_UNIT],
 };
 
 const statusLabels = {
@@ -78,12 +86,100 @@ const parsePhotoUrls = (value?: string) => {
     .map((url, index) => ({ url, displayOrder: index }));
 };
 
+interface CourtListProps {
+  control: Control<CuratedCourtBatchFormData>;
+  placeIndex: number;
+  sportOptions: { label: string; value: string }[];
+  sportsLoading: boolean;
+}
+
+function CourtList({
+  control,
+  placeIndex,
+  sportOptions,
+  sportsLoading,
+}: CourtListProps) {
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: `courts.${placeIndex}.courts` as const,
+  });
+
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="text-sm font-medium">Courts</div>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            append({
+              label: `Court ${fields.length + 1}`,
+              sportId: "",
+              tierLabel: "",
+            })
+          }
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          Add Court
+        </Button>
+      </div>
+
+      <div className="space-y-3">
+        {fields.map((field, courtIndex) => (
+          <div
+            key={field.id}
+            className="rounded-lg border border-border/60 bg-background p-4 shadow-sm"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="text-sm font-medium">{`Court ${courtIndex + 1}`}</div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => remove(courtIndex)}
+                disabled={fields.length === 1}
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Remove
+              </Button>
+            </div>
+            <div className="mt-4 grid gap-4 md:grid-cols-3">
+              <StandardFormInput<CuratedCourtBatchFormData>
+                name={`courts.${placeIndex}.courts.${courtIndex}.label`}
+                label="Court Label"
+                placeholder="Court 1"
+                required
+              />
+              <StandardFormSelect<CuratedCourtBatchFormData>
+                name={`courts.${placeIndex}.courts.${courtIndex}.sportId`}
+                label="Sport"
+                placeholder="Select a sport"
+                options={sportOptions}
+                required
+                disabled={sportsLoading}
+              />
+              <StandardFormInput<CuratedCourtBatchFormData>
+                name={`courts.${placeIndex}.courts.${courtIndex}.tierLabel`}
+                label="Tier Label"
+                placeholder="VIP"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminCourtsBatchPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
   const { data: stats } = useAdminStats();
   const createBatchMutation = useCreateCuratedCourtsBatch();
+  const { data: sports = [], isLoading: sportsLoading } =
+    trpc.sport.list.useQuery({});
   const [batchResult, setBatchResult] =
     React.useState<CuratedCourtBatchResult | null>(null);
 
@@ -134,6 +230,11 @@ export default function AdminCourtsBatchPage() {
           otherContactInfo: court.otherContactInfo || undefined,
           amenities: court.amenities.length > 0 ? court.amenities : undefined,
           photos: photos.length > 0 ? photos : undefined,
+          courts: court.courts.map((courtItem) => ({
+            label: courtItem.label,
+            sportId: courtItem.sportId,
+            tierLabel: courtItem.tierLabel || undefined,
+          })),
         };
       });
 
@@ -151,6 +252,10 @@ export default function AdminCourtsBatchPage() {
   };
 
   const cityOptions = CITIES.map((city) => ({ label: city, value: city }));
+  const sportOptions = sports.map((sport) => ({
+    label: sport.name,
+    value: sport.id,
+  }));
   const courts = watch("courts");
   const submitting = createBatchMutation.isPending || isSubmitting;
   const isSubmitDisabled = submitting || !isDirty || !isValid;
@@ -268,6 +373,13 @@ export default function AdminCourtsBatchPage() {
                       />
                     </div>
                   </div>
+
+                  <CourtList
+                    control={form.control}
+                    placeIndex={index}
+                    sportOptions={sportOptions}
+                    sportsLoading={sportsLoading}
+                  />
 
                   <div className="grid gap-6 sm:grid-cols-2">
                     <StandardFormInput<CuratedCourtBatchFormData>

@@ -1,16 +1,19 @@
 import { and, count, eq, ilike, type SQL } from "drizzle-orm";
 import {
-  type CuratedPlaceDetailRecord,
-  curatedPlaceDetail,
-  type InsertCuratedPlaceDetail,
+  type CourtRecord,
+  court,
+  type InsertCourt,
   type InsertPlace,
   type InsertPlaceAmenity,
+  type InsertPlaceContactDetail,
   type InsertPlacePhoto,
   type PlaceAmenityRecord,
+  type PlaceContactDetailRecord,
   type PlacePhotoRecord,
   type PlaceRecord,
   place,
   placeAmenity,
+  placeContactDetail,
   placePhoto,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
@@ -37,7 +40,7 @@ export interface PaginatedAdminPlaces {
  */
 export interface CreatedCuratedPlace {
   place: PlaceRecord;
-  detail: CuratedPlaceDetailRecord;
+  detail: PlaceContactDetailRecord;
   photos: PlacePhotoRecord[];
   amenities: PlaceAmenityRecord[];
 }
@@ -50,9 +53,9 @@ export interface IAdminCourtRepository {
     ctx?: RequestContext,
   ): Promise<PlaceRecord>;
   createCuratedDetail(
-    data: InsertCuratedPlaceDetail,
+    data: InsertPlaceContactDetail,
     ctx?: RequestContext,
-  ): Promise<CuratedPlaceDetailRecord>;
+  ): Promise<PlaceContactDetailRecord>;
   createPhoto(
     data: InsertPlacePhoto,
     ctx?: RequestContext,
@@ -61,6 +64,7 @@ export interface IAdminCourtRepository {
     data: InsertPlaceAmenity,
     ctx?: RequestContext,
   ): Promise<PlaceAmenityRecord>;
+  createCourt(data: InsertCourt, ctx?: RequestContext): Promise<CourtRecord>;
   findAll(
     filters: AdminCourtFiltersDTO,
     ctx?: RequestContext,
@@ -101,12 +105,12 @@ export class AdminCourtRepository implements IAdminCourtRepository {
   }
 
   async createCuratedDetail(
-    data: InsertCuratedPlaceDetail,
+    data: InsertPlaceContactDetail,
     ctx?: RequestContext,
-  ): Promise<CuratedPlaceDetailRecord> {
+  ): Promise<PlaceContactDetailRecord> {
     const client = this.getClient(ctx);
     const result = await client
-      .insert(curatedPlaceDetail)
+      .insert(placeContactDetail)
       .values(data)
       .returning();
     return result[0];
@@ -127,6 +131,15 @@ export class AdminCourtRepository implements IAdminCourtRepository {
   ): Promise<PlaceAmenityRecord> {
     const client = this.getClient(ctx);
     const result = await client.insert(placeAmenity).values(data).returning();
+    return result[0];
+  }
+
+  async createCourt(
+    data: InsertCourt,
+    ctx?: RequestContext,
+  ): Promise<CourtRecord> {
+    const client = this.getClient(ctx);
+    const result = await client.insert(court).values(data).returning();
     return result[0];
   }
 

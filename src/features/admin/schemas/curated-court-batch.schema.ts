@@ -8,6 +8,19 @@ const optionalUrlSchema = z
   .optional()
   .or(z.literal(""));
 
+const courtSchema = z.object({
+  label: z
+    .string()
+    .min(1, "Court label is required")
+    .max(100, "Court label must be less than 100 characters"),
+  sportId: z.string().uuid("Sport is required"),
+  tierLabel: z
+    .string()
+    .max(20, "Tier label must be less than 20 characters")
+    .optional()
+    .nullable(),
+});
+
 const coordinateSchema = z
   .string()
   .optional()
@@ -68,6 +81,7 @@ export const curatedCourtBatchItemSchema = z.object({
     .or(z.literal("")),
   amenities: z.array(z.string()),
   photoUrls: photoUrlsSchema,
+  courts: z.array(courtSchema).min(1, "Add at least one court for this place"),
 });
 
 export const curatedCourtBatchSchema = z.object({
