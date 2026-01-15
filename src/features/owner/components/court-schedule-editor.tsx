@@ -248,9 +248,36 @@ const buildRowsByDay = (hours: HoursWindow[], rules: RateRule[]) => {
   return result;
 };
 
+const DEFAULT_OPEN_DAY = 1;
+
+const MONDAY_FIRST_DAY_ORDER = [1, 2, 3, 4, 5, 6, 0] as const;
+
 const getDefaultDay = (rowsByDay: Record<number, BlockRow[]>) => {
-  const dayWithBlocks = DAY_KEYS.find((day) => rowsByDay[day]?.length > 0);
-  return dayWithBlocks ?? new Date().getDay();
+  const dayWithBlocks = MONDAY_FIRST_DAY_ORDER.find(
+    (day) => (rowsByDay[day] ?? []).length > 0,
+  );
+  return dayWithBlocks ?? DEFAULT_OPEN_DAY;
+};
+
+const isRowsByDayEmpty = (rowsByDay: Record<number, BlockRow[]>) =>
+  DAY_KEYS.every((day) => (rowsByDay[day] ?? []).length === 0);
+
+const createDefaultRowsByDay = (): Record<number, BlockRow[]> => {
+  const seeded: Record<number, BlockRow[]> = {
+    0: [],
+    1: [],
+    2: [],
+    3: [],
+    4: [],
+    5: [],
+    6: [],
+  };
+
+  DAY_KEYS.forEach((day) => {
+    seeded[day] = [createEmptyRow(day)];
+  });
+
+  return seeded;
 };
 
 const getErrorMessage = (error: unknown, fallback: string) =>
@@ -287,7 +314,11 @@ export function CourtScheduleEditor({
 
   React.useEffect(() => {
     if (hoursLoading || rulesLoading || hasInitialized) return;
-    const nextRows = buildRowsByDay(hours, rules);
+    const baseRows = buildRowsByDay(hours, rules);
+    const nextRows = isRowsByDayEmpty(baseRows)
+      ? createDefaultRowsByDay()
+      : baseRows;
+
     setRowsByDay(nextRows);
     setOpenDays([getDefaultDay(nextRows)]);
     setHasInitialized(true);
@@ -420,6 +451,60 @@ export function CourtScheduleEditor({
           : row,
       ),
     );
+  };
+
+  const handleHourlyRateInput = (
+    day: number,
+    rowId: string,
+    rawValue: string,
+  ) => {
+    const parsed = rawValue === "" ? "" : Number(rawValue);
+    const hourlyRate = parsed === "" || Number.isNaN(parsed) ? "" : parsed;
+
+    setRowsByDay((prev) => {
+      const hadAnyPriceBefore = Object.values(prev).some((rows) =>
+        rows.some((row) => row.hourlyRate !== ""),
+      );
+      const sourceRow = (prev[day] ?? []).find((row) => row.id === rowId);
+      const sourceCurrency = sourceRow?.currency ?? DEFAULT_CURRENCY;
+      const shouldBulkFill =
+        !hadAnyPriceBefore && hourlyRate !== "" && Boolean(sourceRow?.isOpen);
+
+      const next: Record<number, BlockRow[]> = {
+        0: [],
+        1: [],
+        2: [],
+        3: [],
+        4: [],
+        5: [],
+        6: [],
+      };
+
+      DAY_KEYS.forEach((currentDay) => {
+        next[currentDay] = (prev[currentDay] ?? []).map((row) => {
+          if (currentDay === day && row.id === rowId) {
+            return {
+              ...row,
+              hourlyRate,
+              allowPricing: true,
+            };
+          }
+
+          if (shouldBulkFill && row.isOpen && row.hourlyRate === "") {
+            return {
+              ...row,
+              hourlyRate,
+              currency: sourceCurrency,
+              allowPricing: true,
+            };
+          }
+
+          return row;
+        });
+      });
+
+      return next;
+    });
   };
 
   const handleFillMissingPrices = (day: number) => {
@@ -779,13 +864,11 @@ export function CourtScheduleEditor({
                                         min={0}
                                         value={row.hourlyRate}
                                         onChange={(event) =>
-                                          handleRowChange(day.value, row.id, {
-                                            hourlyRate:
-                                              event.target.value === ""
-                                                ? ""
-                                                : Number(event.target.value),
-                                            allowPricing: true,
-                                          })
+                                          handleHourlyRateInput(
+                                            day.value,
+                                            row.id,
+                                            event.target.value,
+                                          )
                                         }
                                         className={cn(
                                           hasError &&
