@@ -15,7 +15,13 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
-import { getZonedToday } from "@/shared/lib/time-zone";
+import {
+  getZonedDayKey,
+  getZonedDayRangeForInstant,
+  getZonedToday,
+  toUtcISOString,
+} from "@/shared/lib/time-zone";
+import { trpc } from "@/trpc/client";
 
 type ViewMode = "day" | "week" | "month";
 
@@ -24,7 +30,7 @@ interface CalendarNavigationProps {
   onDateChange: (date: Date) => void;
   viewMode?: ViewMode;
   onViewModeChange?: (mode: ViewMode) => void;
-  datesWithSlots?: Date[];
+  courtId?: string;
   timeZone?: string;
   className?: string;
 }
@@ -34,7 +40,7 @@ export function CalendarNavigation({
   onDateChange,
   viewMode = "day",
   onViewModeChange,
-  datesWithSlots = [],
+  courtId,
   timeZone,
   className,
 }: CalendarNavigationProps) {
@@ -46,6 +52,29 @@ export function CalendarNavigation({
   const monthEnd = endOfMonth(currentMonth);
   const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
   const today = getZonedToday(timeZone);
+  const monthStartRange = getZonedDayRangeForInstant(monthStart, timeZone);
+  const monthEndRange = getZonedDayRangeForInstant(monthEnd, timeZone);
+  const monthStartIso = toUtcISOString(monthStartRange.start);
+  const monthEndIso = toUtcISOString(monthEndRange.end);
+
+  const { data: monthSlots = [] } = trpc.timeSlot.getForCourt.useQuery(
+    {
+      courtId: courtId ?? "",
+      startDate: monthStartIso,
+      endDate: monthEndIso,
+    },
+    {
+      enabled: Boolean(courtId),
+    },
+  );
+
+  const daysWithSlots = React.useMemo(() => {
+    const dayKeys = new Set<string>();
+    for (const slot of monthSlots) {
+      dayKeys.add(getZonedDayKey(slot.startTime, timeZone));
+    }
+    return dayKeys;
+  }, [monthSlots, timeZone]);
 
   // Get the starting day of the week for the first day of the month
   const startDayOfWeek = monthStart.getDay();
@@ -64,7 +93,10 @@ export function CalendarNavigation({
   };
 
   const hasSlots = (date: Date) => {
-    return datesWithSlots.some((d) => isSameDay(d, date));
+    if (daysWithSlots.size === 0) {
+      return false;
+    }
+    return daysWithSlots.has(getZonedDayKey(date, timeZone));
   };
 
   return (

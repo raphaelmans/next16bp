@@ -28,6 +28,7 @@ export const AMENITIES = [
   "WiFi",
   "Air Conditioning",
   "Covered Courts",
+  "Pet Friendly",
 ];
 
 const courtSchema = z.object({

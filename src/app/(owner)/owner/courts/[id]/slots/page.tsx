@@ -248,20 +248,6 @@ export default function ManageSlotsPage() {
     ? appRoutes.places.detail(courtData.court.placeId)
     : appRoutes.places.base;
 
-  // Generate mock dates with slots for calendar indicators
-  const datesWithSlots = React.useMemo(() => {
-    const dates: Date[] = [];
-    const today = new Date();
-    for (let i = 0; i < 20; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      if (Math.random() > 0.3) {
-        dates.push(date);
-      }
-    }
-    return dates;
-  }, []);
-
   // Show loading state while court is loading
   if (courtLoading) {
     return (
@@ -399,7 +385,7 @@ export default function ManageSlotsPage() {
             <CalendarNavigation
               selectedDate={selectedDate}
               onDateChange={setSelectedDate}
-              datesWithSlots={datesWithSlots}
+              courtId={courtId}
               timeZone={placeTimeZone}
             />
           </div>
