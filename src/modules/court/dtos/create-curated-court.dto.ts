@@ -9,18 +9,35 @@ const PhotoInputSchema = z.object({
 });
 
 /**
+ * Coordinate schema that accepts string or number inputs.
+ */
+const CoordinateSchema = z.preprocess(
+  (value) => {
+    if (value === "" || value === null || value === undefined) {
+      return undefined;
+    }
+    if (typeof value === "number") {
+      return value.toString();
+    }
+    return value;
+  },
+  z
+    .string()
+    .refine((val) => !Number.isNaN(Number.parseFloat(val)), {
+      message: "Coordinate must be a valid decimal number",
+    })
+    .optional(),
+);
+
+/**
  * Schema for creating a curated place (admin only)
  */
 export const CreateCuratedCourtSchema = z.object({
   name: z.string().min(1).max(200),
   address: z.string().min(1),
   city: z.string().min(1).max(100),
-  latitude: z.string().refine((val) => !Number.isNaN(Number.parseFloat(val)), {
-    message: "Latitude must be a valid decimal number",
-  }),
-  longitude: z.string().refine((val) => !Number.isNaN(Number.parseFloat(val)), {
-    message: "Longitude must be a valid decimal number",
-  }),
+  latitude: CoordinateSchema,
+  longitude: CoordinateSchema,
   timeZone: z.string().min(1).max(64).optional(),
   // Curated detail fields
   facebookUrl: z.string().url().optional(),

@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/table";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
+  type AdminCourt,
   type ClaimStatusFilter,
   type CourtStatus,
   type CourtType,
@@ -164,12 +165,20 @@ export default function AdminCourtsPage() {
               Manage all courts on the platform
             </p>
           </div>
-          <Button asChild>
-            <Link href={appRoutes.admin.courts.new}>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Curated Court
-            </Link>
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" asChild>
+              <Link href={appRoutes.admin.courts.batch}>
+                <Plus className="mr-2 h-4 w-4" />
+                Batch Add Courts
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link href={appRoutes.admin.courts.new}>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Curated Court
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
@@ -273,7 +282,7 @@ export default function AdminCourtsPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {courtsData.courts.map((court) => (
+                  {courtsData.courts.map((court: AdminCourt) => (
                     <TableRow
                       key={court.id}
                       className="cursor-pointer hover:bg-muted/50"

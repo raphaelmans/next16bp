@@ -14,11 +14,39 @@ import type {
   PaginatedAdminPlaces,
 } from "../repositories/admin-court.repository";
 
+export type CuratedBatchResultStatus =
+  | "created"
+  | "skipped_duplicate"
+  | "error";
+
+export interface CuratedBatchResultItem {
+  index: number;
+  status: CuratedBatchResultStatus;
+  placeId?: string;
+  message?: string;
+}
+
+export interface CuratedBatchResultSummary {
+  total: number;
+  created: number;
+  skipped: number;
+  failed: number;
+}
+
+export interface CuratedBatchResult {
+  summary: CuratedBatchResultSummary;
+  items: CuratedBatchResultItem[];
+}
+
 export interface IAdminCourtService {
   createCuratedPlace(
     adminUserId: string,
     data: CreateCuratedCourtDTO,
   ): Promise<CreatedCuratedPlace>;
+  createCuratedPlacesBatch(
+    adminUserId: string,
+    items: CreateCuratedCourtDTO[],
+  ): Promise<CuratedBatchResult>;
   updatePlace(
     adminUserId: string,
     data: AdminUpdateCourtDTO,
@@ -55,8 +83,8 @@ export class AdminCourtService implements IAdminCourtService {
           name: data.name,
           address: data.address,
           city: data.city,
-          latitude: data.latitude,
-          longitude: data.longitude,
+          latitude: data.latitude ?? null,
+          longitude: data.longitude ?? null,
           timeZone: data.timeZone ?? "Asia/Manila",
           placeType: "CURATED",
           claimStatus: "UNCLAIMED",
@@ -122,6 +150,94 @@ export class AdminCourtService implements IAdminCourtService {
 
       return { place: placeRecord, detail, photos, amenities };
     });
+  }
+
+  async createCuratedPlacesBatch(
+    adminUserId: string,
+    items: CreateCuratedCourtDTO[],
+  ): Promise<CuratedBatchResult> {
+    const results: CuratedBatchResultItem[] = [];
+    const seenKeys = new Set<string>();
+    let created = 0;
+    let skipped = 0;
+    let failed = 0;
+
+    for (let index = 0; index < items.length; index++) {
+      const item = items[index];
+      const normalizedName = item.name.trim();
+      const normalizedCity = item.city.trim();
+      const key = `${normalizedName.toLowerCase()}|${normalizedCity.toLowerCase()}`;
+
+      if (seenKeys.has(key)) {
+        skipped += 1;
+        results.push({
+          index,
+          status: "skipped_duplicate",
+          message: "Duplicate entry in batch",
+        });
+        continue;
+      }
+
+      seenKeys.add(key);
+
+      const existing = await this.adminCourtRepository.findByNameCity(
+        normalizedName,
+        normalizedCity,
+      );
+
+      if (existing) {
+        skipped += 1;
+        results.push({
+          index,
+          status: "skipped_duplicate",
+          placeId: existing.id,
+          message: "Duplicate place already exists",
+        });
+        continue;
+      }
+
+      try {
+        const createdPlace = await this.createCuratedPlace(adminUserId, {
+          ...item,
+          name: normalizedName,
+          city: normalizedCity,
+          address: item.address.trim(),
+        });
+        created += 1;
+        results.push({
+          index,
+          status: "created",
+          placeId: createdPlace.place.id,
+        });
+      } catch (error) {
+        failed += 1;
+        logger.warn(
+          {
+            err: error,
+            adminUserId,
+            placeName: normalizedName,
+            placeCity: normalizedCity,
+          },
+          "Batch curated place creation failed",
+        );
+        results.push({
+          index,
+          status: "error",
+          message:
+            error instanceof Error ? error.message : "Failed to create place",
+        });
+      }
+    }
+
+    return {
+      summary: {
+        total: items.length,
+        created,
+        skipped,
+        failed,
+      },
+      items: results,
+    };
   }
 
   async updatePlace(

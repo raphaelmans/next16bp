@@ -1,6 +1,8 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { CITIES } from "@/features/admin/schemas/curated-court.schema";
+import { trpc } from "@/trpc/client";
 
 export type CourtType = "curated" | "reservable";
 export type CourtStatus = "active" | "inactive";
@@ -35,54 +37,55 @@ interface UseAdminCourtsOptions {
   limit?: number;
 }
 
-// Mock data
-const CITIES = ["Makati", "BGC", "Pasig", "Quezon City", "Manila", "Taguig"];
-
-const generateMockAdminCourts = (): AdminCourt[] => {
-  const types: CourtType[] = ["curated", "reservable"];
-  const statuses: CourtStatus[] = ["active", "inactive"];
-  const claimStatuses: (ClaimStatusFilter | undefined)[] = [
-    "unclaimed",
-    "claim_pending",
-    "claimed",
-    "removal_requested",
-    undefined,
-  ];
-
-  const courts: AdminCourt[] = [];
-
-  for (let i = 0; i < 30; i++) {
-    const type = types[i % 2];
-    const status = statuses[i % 5 === 0 ? 1 : 0]; // 20% inactive
-    const city = CITIES[i % CITIES.length];
-    const claimStatus =
-      type === "curated"
-        ? claimStatuses[i % 3]
-        : i % 4 === 0
-          ? "removal_requested"
-          : "claimed";
-
-    courts.push({
-      id: `court-${i + 1}`,
-      name: `${city} Pickleball Court ${i + 1}`,
-      address: `${100 + i} Main Street, ${city}`,
-      city,
-      type,
-      status,
-      imageUrl: `https://placehold.co/400x300?text=Court+${i + 1}`,
-      organizationId: type === "reservable" ? `org-${(i % 5) + 1}` : undefined,
-      organizationName:
-        type === "reservable"
-          ? `Sports Organization ${(i % 5) + 1}`
-          : undefined,
-      claimStatus: claimStatus,
-      createdAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-      updatedAt: new Date(Date.now() - i * 12 * 60 * 60 * 1000).toISOString(),
-    });
-  }
-
-  return courts;
+const claimStatusMap: Record<
+  ClaimStatusFilter,
+  "UNCLAIMED" | "CLAIM_PENDING" | "CLAIMED" | "REMOVAL_REQUESTED"
+> = {
+  unclaimed: "UNCLAIMED",
+  claim_pending: "CLAIM_PENDING",
+  claimed: "CLAIMED",
+  removal_requested: "REMOVAL_REQUESTED",
 };
+
+const toClaimStatusFilter = (value: string | null | undefined) => {
+  if (!value) return undefined;
+  const normalized = value.toLowerCase();
+  if (normalized === "claim_pending") return "claim_pending" as const;
+  if (normalized === "removal_requested") return "removal_requested" as const;
+  if (normalized === "unclaimed") return "unclaimed" as const;
+  if (normalized === "claimed") return "claimed" as const;
+  return undefined;
+};
+
+const toIsoString = (value: string | Date) =>
+  value instanceof Date ? value.toISOString() : value;
+
+const toAdminCourt = (place: {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  placeType: "CURATED" | "RESERVABLE";
+  claimStatus: "UNCLAIMED" | "CLAIM_PENDING" | "CLAIMED" | "REMOVAL_REQUESTED";
+  isActive: boolean;
+  organizationId: string | null;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+}): AdminCourt => ({
+  id: place.id,
+  name: place.name,
+  address: place.address,
+  city: place.city,
+  type: place.placeType === "CURATED" ? "curated" : "reservable",
+  status: place.isActive ? "active" : "inactive",
+  organizationId: place.organizationId ?? undefined,
+  claimStatus: toClaimStatusFilter(place.claimStatus),
+  createdAt: toIsoString(place.createdAt),
+  updatedAt: toIsoString(place.updatedAt),
+});
+
+type AdminCourtPlace = Parameters<typeof toAdminCourt>[0];
+type AdminCourtListItem = { place: AdminCourtPlace };
 
 export function useAdminCourts(options: UseAdminCourtsOptions = {}) {
   const {
@@ -95,146 +98,175 @@ export function useAdminCourts(options: UseAdminCourtsOptions = {}) {
     limit = 10,
   } = options;
 
-  return useQuery({
-    queryKey: [
-      "admin",
-      "courts",
-      type,
-      status,
-      city,
-      claimStatus,
-      search,
-      page,
-      limit,
-    ],
-    queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      let courts = generateMockAdminCourts();
+  const offset = (page - 1) * limit;
+  const placeTypeInput =
+    type && type !== "all"
+      ? type === "curated"
+        ? "CURATED"
+        : "RESERVABLE"
+      : undefined;
+  const claimStatusInput =
+    claimStatus && claimStatus !== "all"
+      ? claimStatusMap[claimStatus]
+      : undefined;
 
-      // Apply filters
-      if (type && type !== "all") {
-        courts = courts.filter((c) => c.type === type);
-      }
-      if (status && status !== "all") {
-        courts = courts.filter((c) => c.status === status);
-      }
-      if (city && city !== "all") {
-        courts = courts.filter((c) => c.city === city);
-      }
-      if (claimStatus && claimStatus !== "all") {
-        courts = courts.filter((c) => c.claimStatus === claimStatus);
-      }
-      if (search) {
-        const searchLower = search.toLowerCase();
-        courts = courts.filter(
-          (c) =>
-            c.name.toLowerCase().includes(searchLower) ||
-            c.address.toLowerCase().includes(searchLower) ||
-            c.organizationName?.toLowerCase().includes(searchLower),
-        );
-      }
-
-      // Pagination
-      const total = courts.length;
-      const totalPages = Math.ceil(total / limit);
-      const start = (page - 1) * limit;
-      const end = start + limit;
-      const paginatedCourts = courts.slice(start, end);
-
-      return {
-        courts: paginatedCourts,
-        total,
-        page,
-        totalPages,
-      };
-    },
+  const query = trpc.admin.court.list.useQuery({
+    limit,
+    offset,
+    placeType: placeTypeInput,
+    isActive: status && status !== "all" ? status === "active" : undefined,
+    city: city && city !== "all" ? city : undefined,
+    claimStatus: claimStatusInput,
+    search: search || undefined,
   });
+
+  const total = query.data?.total ?? 0;
+  const courts =
+    query.data?.items.map((item: AdminCourtListItem) =>
+      toAdminCourt(item.place),
+    ) ?? [];
+
+  return {
+    ...query,
+    data: query.data
+      ? {
+          courts,
+          total,
+          page,
+          totalPages: Math.ceil(total / limit),
+        }
+      : undefined,
+  };
 }
 
 export function useAdminCourt(courtId: string) {
-  return useQuery({
-    queryKey: ["admin", "courts", courtId],
-    queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      const courts = generateMockAdminCourts();
-      const court = courts.find((c) => c.id === courtId);
-      if (!court) throw new Error("Court not found");
-      return court;
-    },
-    enabled: !!courtId,
-  });
+  const query = trpc.admin.court.list.useQuery(
+    { limit: 100, offset: 0 },
+    { enabled: !!courtId },
+  );
+
+  const court = query.data?.items.find(
+    (item: AdminCourtListItem) => item.place.id === courtId,
+  );
+
+  return {
+    ...query,
+    data: court ? toAdminCourt(court.place) : undefined,
+  };
 }
 
 export function useToggleCourtStatus() {
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
+  const activateMutation = trpc.admin.court.activate.useMutation({
+    onSuccess: async () => {
+      await utils.admin.court.list.invalidate();
+    },
+  });
+  const deactivateMutation = trpc.admin.court.deactivate.useMutation({
+    onSuccess: async () => {
+      await utils.admin.court.list.invalidate();
+    },
+  });
 
-  return useMutation({
-    mutationFn: async ({
+  type ToggleOptions = Parameters<typeof activateMutation.mutate>[1];
+
+  const mutate = (
+    {
       courtId,
       status,
     }: {
       courtId: string;
       status: CourtStatus;
-    }) => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return { success: true, courtId, status };
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "courts"] });
-    },
-  });
+    options?: ToggleOptions,
+  ) => {
+    if (status === "active") {
+      return deactivateMutation.mutate(
+        {
+          placeId: courtId,
+          reason: "Admin deactivated via dashboard",
+        },
+        options,
+      );
+    }
+
+    return activateMutation.mutate({ placeId: courtId }, options);
+  };
+
+  return {
+    mutate,
+    isPending: activateMutation.isPending || deactivateMutation.isPending,
+  };
+}
+
+export interface CuratedCourtPhotoInput {
+  url: string;
+  displayOrder?: number;
 }
 
 export interface CuratedCourtData {
   name: string;
   address: string;
   city: string;
-  lat?: number;
-  lng?: number;
+  latitude?: string | number;
+  longitude?: string | number;
+  timeZone?: string;
   facebookUrl?: string;
   instagramUrl?: string;
-  viberContact?: string;
+  viberInfo?: string;
   websiteUrl?: string;
   otherContactInfo?: string;
-  amenities: string[];
+  photos?: CuratedCourtPhotoInput[];
+  amenities?: string[];
+}
+
+export interface CuratedCourtBatchResultItem {
+  index: number;
+  status: "created" | "skipped_duplicate" | "error";
+  placeId?: string;
+  message?: string;
+}
+
+export interface CuratedCourtBatchResult {
+  summary: {
+    total: number;
+    created: number;
+    skipped: number;
+    failed: number;
+  };
+  items: CuratedCourtBatchResultItem[];
 }
 
 export function useCreateCuratedCourt() {
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    mutationFn: async (_data: CuratedCourtData) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      return { success: true, courtId: `court-new-${Date.now()}` };
+  return trpc.admin.court.createCurated.useMutation({
+    onSuccess: async () => {
+      await utils.admin.court.list.invalidate();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "courts"] });
-      queryClient.invalidateQueries({ queryKey: ["admin", "stats"] });
+  });
+}
+
+export function useCreateCuratedCourtsBatch() {
+  const utils = trpc.useUtils();
+
+  return trpc.admin.court.createCuratedBatch.useMutation({
+    onSuccess: async () => {
+      await utils.admin.court.list.invalidate();
     },
   });
 }
 
 export function useUpdateCuratedCourt() {
-  const queryClient = useQueryClient();
+  const utils = trpc.useUtils();
 
-  return useMutation({
-    mutationFn: async ({
-      courtId,
-      data: _data,
-    }: {
-      courtId: string;
-      data: Partial<CuratedCourtData>;
-    }) => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      return { success: true, courtId };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "courts"] });
+  return trpc.admin.court.update.useMutation({
+    onSuccess: async () => {
+      await utils.admin.court.list.invalidate();
     },
   });
 }
 
-// Get available cities for filter dropdown
 export function useCities() {
   return useQuery({
     queryKey: ["cities"],

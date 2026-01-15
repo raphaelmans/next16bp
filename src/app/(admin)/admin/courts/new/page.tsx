@@ -74,11 +74,17 @@ export default function NewCuratedCourtPage() {
   const handleSubmit = async (data: CuratedCourtFormData) => {
     try {
       await createMutation.mutateAsync({
-        ...data,
+        name: data.name,
+        address: data.address,
+        city: data.city,
+        latitude: data.lat,
+        longitude: data.lng,
         facebookUrl: data.facebookUrl || undefined,
         instagramUrl: data.instagramUrl || undefined,
-        viberContact: data.viberContact || undefined,
+        viberInfo: data.viberContact || undefined,
         websiteUrl: data.websiteUrl || undefined,
+        otherContactInfo: data.otherContactInfo || undefined,
+        amenities: data.amenities.length > 0 ? data.amenities : undefined,
       });
       reset(data);
       toast.success("Court created successfully");

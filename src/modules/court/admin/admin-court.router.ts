@@ -7,6 +7,7 @@ import {
   ActivateCourtSchema,
   AdminCourtFiltersSchema,
   AdminUpdateCourtSchema,
+  CreateCuratedCourtBatchSchema,
   CreateCuratedCourtSchema,
   DeactivateCourtSchema,
 } from "../dtos";
@@ -22,6 +23,17 @@ export const adminCourtRouter = router({
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
       return service.createCuratedPlace(ctx.userId, input);
+    }),
+
+  /**
+   * Create curated places in batch
+   * Admin only + rate limited
+   */
+  createCuratedBatch: adminRateLimitedProcedure("mutation")
+    .input(CreateCuratedCourtBatchSchema)
+    .mutation(async ({ input, ctx }) => {
+      const service = makeAdminCourtService();
+      return service.createCuratedPlacesBatch(ctx.userId, input.items);
     }),
 
   /**

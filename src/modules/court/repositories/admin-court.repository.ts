@@ -66,6 +66,11 @@ export interface IAdminCourtRepository {
     ctx?: RequestContext,
   ): Promise<PaginatedAdminPlaces>;
   findById(id: string, ctx?: RequestContext): Promise<PlaceRecord | null>;
+  findByNameCity(
+    name: string,
+    city: string,
+    ctx?: RequestContext,
+  ): Promise<PlaceRecord | null>;
 }
 
 export class AdminCourtRepository implements IAdminCourtRepository {
@@ -174,6 +179,20 @@ export class AdminCourtRepository implements IAdminCourtRepository {
       items: places.map((row) => ({ place: row })),
       total: countResult[0]?.count ?? 0,
     };
+  }
+
+  async findByNameCity(
+    name: string,
+    city: string,
+    ctx?: RequestContext,
+  ): Promise<PlaceRecord | null> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select()
+      .from(place)
+      .where(and(ilike(place.name, name), eq(place.city, city)))
+      .limit(1);
+    return result[0] ?? null;
   }
 
   async findById(

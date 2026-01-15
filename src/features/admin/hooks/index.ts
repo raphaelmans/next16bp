@@ -3,11 +3,13 @@ export {
   type ClaimStatusFilter,
   type CourtStatus,
   type CourtType,
+  type CuratedCourtBatchResult,
   type CuratedCourtData,
   useAdminCourt,
   useAdminCourts,
   useCities,
   useCreateCuratedCourt,
+  useCreateCuratedCourtsBatch,
   useToggleCourtStatus,
   useUpdateCuratedCourt,
 } from "./use-admin-courts";

@@ -28,6 +28,7 @@ Both methods create curated courts with `type: CURATED` and `claimStatus: UNCLAI
 | 1 | Admin Components | 1A, 1B | Yes |
 | 2 | Data Entry Form | 2A, 2B | Partial |
 | 3 | CSV Import Script | 3A | No |
+| 4 | Batch Curated Courts | 4A, 4B | Partial |
 
 ---
 
@@ -53,6 +54,13 @@ Both methods create curated courts with `type: CURATED` and `claimStatus: UNCLAI
 |----|--------|-------------|-----------|
 | 3A | Import Script | CLI script with transaction support | `08-03-csv-import-script.md` |
 
+### Phase 4: Batch Curated Courts
+
+| ID | Module | Description | Plan File |
+|----|--------|-------------|-----------|
+| 4A | Batch Create API | Batch curated court tRPC endpoint | `08-04-batch-curated-courts.md` |
+| 4B | Batch Entry Page | Admin page at /admin/courts/batch | `08-04-batch-curated-courts.md` |
+
 ---
 
 ## Dependencies Graph
@@ -66,14 +74,19 @@ Phase 1 ──────────── Phase 2 ─────────
                           │         │
                           │         ▼
                           └── 2B (Data Entry Page)
-                                    
+                                     │
+                                     ▼
+                          4A/4B (Batch Entry)
+
                           3A (CSV Script) ── Independent
 ```
 
 **Notes:**
 - Phase 1 components are prerequisites for Phase 2
+- Phase 4 depends on Phase 2 hook wiring
 - Phase 3 is independent and can be done in parallel with Phase 2
 - CSV script uses direct Drizzle (no tRPC), so no dependency on hook wiring
+
 
 ---
 
@@ -98,6 +111,7 @@ Phase 1 ──────────── Phase 2 ─────────
 | `08-01-admin-components.md` | Phase 1: Modular admin components |
 | `08-02-data-entry-form.md` | Phase 2: Data entry form and API wiring |
 | `08-03-csv-import-script.md` | Phase 3: CSV import script |
+| `08-04-batch-curated-courts.md` | Phase 4: Batch curated court entry |
 | `08-dev-checklist.md` | Developer implementation checklist |
 
 ---
@@ -109,6 +123,7 @@ Phase 1 ──────────── Phase 2 ─────────
 - [ ] Data entry form works end-to-end
 - [ ] "Create Another" flow works
 - [ ] CSV import script imports courts successfully
+- [ ] Batch entry portal creates multiple courts
 - [ ] Duplicates are skipped with warning
 - [ ] Transaction rollback works on error
 - [ ] Build passes with no TypeScript errors

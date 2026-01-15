@@ -108,6 +108,31 @@
 
 ---
 
+## Phase 4: Batch Curated Courts
+
+**Reference:** `08-04-batch-curated-courts.md`  
+**Dependencies:** Phase 2 complete
+
+### Backend
+
+- [ ] Add `CreateCuratedCourtBatchSchema` DTO
+- [ ] Add `admin.court.createCuratedBatch` tRPC mutation
+- [ ] Add duplicate check by name + city
+
+### Frontend
+
+- [ ] Create batch form schema
+- [ ] Create `/admin/courts/batch` page
+- [ ] Add `useCreateCuratedCourtsBatch` hook
+- [ ] Add "Batch Add" button in courts list
+
+### Verify
+
+- [ ] Submit multiple rows successfully
+- [ ] Duplicates are skipped and reported
+
+---
+
 ## Final Verification
 
 - [ ] Run `npm run build` - no errors

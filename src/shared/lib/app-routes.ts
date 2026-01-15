@@ -128,6 +128,7 @@ export const appRoutes = {
     courts: {
       base: "/admin/courts",
       new: "/admin/courts/new",
+      batch: "/admin/courts/batch",
       detail: (courtId: string) => `/admin/courts/${courtId}`,
     },
   },

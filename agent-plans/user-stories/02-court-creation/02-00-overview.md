@@ -16,7 +16,7 @@ This domain depends on the organization flow (01-organization) and feeds into th
 
 | Document | Location |
 |----------|----------|
-| PRD | `business-contexts/kudoscourts-prd-v1.1.md` Section 5 |
+| PRD | `business-contexts/kudoscourts-prd-v1.2.md` Sections 4.3, 5.2 |
 | Design System | `business-contexts/kudoscourts-design-system.md` |
 | Server Context | `agent-contexts/00-01-kudoscourts-server.md` |
 
@@ -32,13 +32,14 @@ This domain depends on the organization flow (01-organization) and feeds into th
 | US-02-04 | CSV Import Script | Active | - |
 | US-02-05 | Owner Creates Court via Setup Wizard | Active | US-02-02 |
 | US-02-06 | Owner Edits Court Details & Pricing | Active | - |
+| US-02-07 | Admin Batch Curated Court Entry | Active | - |
 
 ---
 
 ## Summary
 
-- Total: 6
-- Active: 6
+- Total: 7
+- Active: 7
 - Superseded: 0
 
 ---
@@ -69,6 +70,17 @@ A CLI script at `scripts/import-curated-courts.ts` for bulk importing courts fro
 ```bash
 npx tsx scripts/import-curated-courts.ts --file ./data/courts.csv
 ```
+
+### US-02-07: Admin Batch Curated Court Entry
+
+A batch admin portal at `/admin/courts/batch` for adding multiple curated courts in one submission.
+
+**Key Features:**
+- Multi-row batch form with add/remove rows
+- Per-row validation and results summary
+- Optional coordinates stored as null when omitted
+- Full metadata support (contacts, amenities, photo URLs)
+- Duplicate skipping by name + city
 
 ---
 
