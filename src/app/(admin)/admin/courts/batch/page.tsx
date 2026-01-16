@@ -32,7 +32,6 @@ import {
 import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
 import {
   AMENITIES,
-  CITIES,
   type CuratedCourtBatchFormData,
   curatedCourtBatchSchema,
 } from "@/features/admin/schemas/curated-court-batch.schema";
@@ -251,7 +250,6 @@ export default function AdminCourtsBatchPage() {
     }
   };
 
-  const cityOptions = CITIES.map((city) => ({ label: city, value: city }));
   const sportOptions = sports.map((sport) => ({
     label: sport.name,
     value: sport.id,
@@ -353,11 +351,10 @@ export default function AdminCourtsBatchPage() {
                       placeholder="123 Sports Avenue"
                       required
                     />
-                    <StandardFormSelect<CuratedCourtBatchFormData>
+                    <StandardFormInput<CuratedCourtBatchFormData>
                       name={`courts.${index}.city`}
                       label="City"
-                      placeholder="Select a city"
-                      options={cityOptions}
+                      placeholder="e.g., Makati"
                       required
                     />
                     <div className="grid gap-4 sm:grid-cols-2">

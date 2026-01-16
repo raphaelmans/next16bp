@@ -14,7 +14,13 @@ import {
   StandardFormSelect,
 } from "@/components/form";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Command,
   CommandEmpty,
@@ -32,6 +38,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { env } from "@/lib/env";
 import { cn } from "@/lib/utils";
+import { useGoogleLocPreviewMutation } from "@/shared/lib/clients/google-loc-client";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import {
   defaultPlaceFormValues,
@@ -57,18 +64,6 @@ interface CountryOption {
 
 interface CountriesResponse {
   data: CountryOption[];
-}
-
-interface GoogleLocResult {
-  inputUrl: string;
-  resolvedUrl?: string;
-  suggestedName?: string;
-  lat?: number;
-  lng?: number;
-  zoom?: number;
-  source?: "marker" | "center";
-  embedSrc?: string;
-  warnings: string[];
 }
 
 const DEFAULT_COUNTRY = "PH";
@@ -138,11 +133,6 @@ export function PlaceForm({
   const [isCountryOpen, setIsCountryOpen] = useState(false);
 
   const [googleUrl, setGoogleUrl] = useState("");
-  const [isPreviewing, setIsPreviewing] = useState(false);
-  const [previewError, setPreviewError] = useState<string | null>(null);
-  const [previewResult, setPreviewResult] = useState<GoogleLocResult | null>(
-    null,
-  );
 
   const resolvedDefaults = useMemo(
     () => buildFormDefaults(defaultValues),
@@ -164,6 +154,41 @@ export function PlaceForm({
 
   const countryValue = useWatch({ control, name: "country" });
   const nameValue = useWatch({ control, name: "name" });
+
+  const previewMutation = useGoogleLocPreviewMutation({
+    onSuccess: (data) => {
+      if (data.suggestedName && !nameValue.trim()) {
+        setValue("name", data.suggestedName, {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }
+
+      if (data.lat !== undefined) {
+        setValue("latitude", data.lat, {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }
+
+      if (data.lng !== undefined) {
+        setValue("longitude", data.lng, {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }
+    },
+  });
+
+  const previewResult = previewMutation.data;
+  const previewError = previewMutation.error;
+  const previewErrorMessage = previewError
+    ? getClientErrorMessage(previewError, "Request failed")
+    : null;
+  const isPreviewing = previewMutation.isPending;
 
   useEffect(() => {
     if (!defaultValues) return;
@@ -249,63 +274,10 @@ export function PlaceForm({
     }
   };
 
-  const handlePreview = async () => {
-    setPreviewError(null);
-    setIsPreviewing(true);
-    setPreviewResult(null);
-
-    try {
-      const response = await fetch("/api/poc/google-loc", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url: googleUrl }),
-      });
-
-      const json = (await response.json()) as
-        | GoogleLocResult
-        | { error?: string };
-
-      if (!response.ok) {
-        setPreviewError(
-          "error" in json && typeof json.error === "string"
-            ? json.error
-            : "Request failed",
-        );
-      }
-
-      if ("warnings" in json) {
-        setPreviewResult(json);
-        if (json.suggestedName && !nameValue.trim()) {
-          setValue("name", json.suggestedName, {
-            shouldDirty: true,
-            shouldTouch: true,
-            shouldValidate: true,
-          });
-        }
-        if (json.lat !== undefined) {
-          setValue("latitude", json.lat, {
-            shouldDirty: true,
-            shouldTouch: true,
-            shouldValidate: true,
-          });
-        }
-        if (json.lng !== undefined) {
-          setValue("longitude", json.lng, {
-            shouldDirty: true,
-            shouldTouch: true,
-            shouldValidate: true,
-          });
-        }
-      }
-    } catch (error) {
-      setPreviewError(
-        error instanceof Error ? error.message : "Request failed",
-      );
-    } finally {
-      setIsPreviewing(false);
-    }
+  const handlePreview = () => {
+    if (!googleUrl.trim()) return;
+    previewMutation.reset();
+    previewMutation.mutate({ url: googleUrl });
   };
 
   const submitting = Boolean(isSubmitting || formSubmitting);
@@ -487,13 +459,12 @@ export function PlaceForm({
       <Card>
         <CardHeader>
           <CardTitle>Map (optional)</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground">
+          <CardDescription>
             Paste a Google Maps link to auto-fill coordinates. Address and city
             still require confirmation.
-          </p>
-
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="googleUrl">Google Maps URL</Label>
             <Input
@@ -579,9 +550,9 @@ export function PlaceForm({
             </StandardFormField>
           </div>
 
-          {previewError && (
+          {previewErrorMessage && (
             <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
-              {previewError}
+              {previewErrorMessage}
             </div>
           )}
 
@@ -642,7 +613,7 @@ export function PlaceForm({
                 <div className="rounded-lg border border-border/60 bg-muted/40 p-3">
                   <div className="text-xs font-medium">Warnings</div>
                   <ul className="mt-1 list-disc pl-5 text-xs text-muted-foreground">
-                    {previewResult.warnings.map((warning) => (
+                    {previewResult.warnings.map((warning: string) => (
                       <li key={warning}>{warning}</li>
                     ))}
                   </ul>

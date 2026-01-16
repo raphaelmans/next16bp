@@ -150,6 +150,21 @@ src/
     └── utils.ts                            # Utility functions
 ```
 
+## Shared API Clients (Non-tRPC)
+
+Some features need plain HTTP clients (not tRPC), usually backed by Next.js `route.ts` handlers.
+
+Place these clients under `src/shared/lib/clients/<client>/`:
+
+```
+src/shared/lib/clients/
+└── <client>/
+    ├── index.ts       # Client functions + React Query hooks
+    └── query-keys.ts  # @lukemorales/query-key-factory keys
+```
+
+Implementation details live in `client/nextjs/ky-fetch.md` and `client/nextjs/query-keys.md`.
+
 ## Route Groups
 
 | Group             | Purpose         | Auth Required |

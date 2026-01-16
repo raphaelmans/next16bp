@@ -248,17 +248,6 @@ const buildRowsByDay = (hours: HoursWindow[], rules: RateRule[]) => {
   return result;
 };
 
-const DEFAULT_OPEN_DAY = 1;
-
-const MONDAY_FIRST_DAY_ORDER = [1, 2, 3, 4, 5, 6, 0] as const;
-
-const getDefaultDay = (rowsByDay: Record<number, BlockRow[]>) => {
-  const dayWithBlocks = MONDAY_FIRST_DAY_ORDER.find(
-    (day) => (rowsByDay[day] ?? []).length > 0,
-  );
-  return dayWithBlocks ?? DEFAULT_OPEN_DAY;
-};
-
 const isRowsByDayEmpty = (rowsByDay: Record<number, BlockRow[]>) =>
   DAY_KEYS.every((day) => (rowsByDay[day] ?? []).length === 0);
 
@@ -309,7 +298,7 @@ export function CourtScheduleEditor({
     6: [],
   });
   const [hasInitialized, setHasInitialized] = React.useState(false);
-  const [openDays, setOpenDays] = React.useState<number[]>([]);
+  const [openDays, setOpenDays] = React.useState<number[]>(() => [...DAY_KEYS]);
   const [copyOpen, setCopyOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -320,7 +309,8 @@ export function CourtScheduleEditor({
       : baseRows;
 
     setRowsByDay(nextRows);
-    setOpenDays([getDefaultDay(nextRows)]);
+    setOpenDays([...DAY_KEYS]);
+
     setHasInitialized(true);
   }, [hasInitialized, hours, hoursLoading, rules, rulesLoading]);
 
@@ -507,27 +497,6 @@ export function CourtScheduleEditor({
     });
   };
 
-  const handleFillMissingPrices = (day: number) => {
-    const dayRows = rowsByDay[day] ?? [];
-    const reference = dayRows.find((row) => row.hourlyRate !== "");
-    if (!reference || reference.hourlyRate === "") {
-      toast.error("Add a priced block first to fill gaps.");
-      return;
-    }
-    setDayRows(day, (rows) =>
-      rows.map((row) =>
-        row.isOpen && row.hourlyRate === ""
-          ? {
-              ...row,
-              hourlyRate: reference.hourlyRate,
-              currency: reference.currency,
-              allowPricing: true,
-            }
-          : row,
-      ),
-    );
-  };
-
   const handleCopySchedule = async (sourceCourtId: string) => {
     try {
       const [copiedHours, copiedRules] = await Promise.all([
@@ -536,7 +505,8 @@ export function CourtScheduleEditor({
       ]);
       const nextRows = buildRowsByDay(copiedHours, copiedRules);
       setRowsByDay(nextRows);
-      setOpenDays([getDefaultDay(nextRows)]);
+      setOpenDays([...DAY_KEYS]);
+
       setCopyOpen(false);
       toast.success("Schedule copied");
     } catch (error) {
@@ -721,13 +691,6 @@ export function CourtScheduleEditor({
                       >
                         <Plus className="mr-2 h-4 w-4" />
                         Add block
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => handleFillMissingPrices(day.value)}
-                      >
-                        Fill missing prices
                       </Button>
                     </div>
 

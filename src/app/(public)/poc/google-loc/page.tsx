@@ -7,26 +7,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Container } from "@/shared/components/layout";
-
-interface GoogleLocResult {
-  inputUrl: string;
-  resolvedUrl?: string;
-  suggestedName?: string;
-  lat?: number;
-  lng?: number;
-  zoom?: number;
-  source?: "marker" | "center";
-  embedSrc?: string;
-  warnings: string[];
-}
+import { useGoogleLocPreviewMutation } from "@/shared/lib/clients/google-loc-client";
 
 const SAMPLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 
 export default function GoogleLocPocPage() {
   const [url, setUrl] = useState(SAMPLE_URL);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<GoogleLocResult | null>(null);
+  const previewMutation = useGoogleLocPreviewMutation();
+  const result = previewMutation.data;
+  const errorMessage = previewMutation.error?.message ?? null;
+  const isLoading = previewMutation.isPending;
 
   const canSubmit = url.trim().length > 0;
 
@@ -37,40 +27,10 @@ export default function GoogleLocPocPage() {
     return `${result.lat.toFixed(6)}, ${result.lng.toFixed(6)}`;
   }, [result?.lat, result?.lng]);
 
-  const handlePreview = async () => {
-    setError(null);
-    setIsLoading(true);
-    setResult(null);
-
-    try {
-      const response = await fetch("/api/poc/google-loc", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url }),
-      });
-
-      const json = (await response.json()) as
-        | GoogleLocResult
-        | { error?: string };
-
-      if (!response.ok) {
-        setError(
-          "error" in json && typeof json.error === "string"
-            ? json.error
-            : "Request failed",
-        );
-      }
-
-      if ("warnings" in json) {
-        setResult(json);
-      }
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Request failed");
-    } finally {
-      setIsLoading(false);
-    }
+  const handlePreview = () => {
+    if (!url.trim()) return;
+    previewMutation.reset();
+    previewMutation.mutate({ url });
   };
 
   return (
@@ -132,9 +92,9 @@ export default function GoogleLocPocPage() {
               )}
             </Button>
 
-            {error && (
+            {errorMessage && (
               <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
-                {error}
+                {errorMessage}
               </div>
             )}
           </CardContent>
@@ -202,7 +162,7 @@ export default function GoogleLocPocPage() {
                   <div className="rounded-xl border border-border/60 bg-muted/30 p-3">
                     <div className="text-xs font-medium">Warnings</div>
                     <ul className="mt-1 list-disc pl-5 text-xs text-muted-foreground">
-                      {result.warnings.map((warning) => (
+                      {result.warnings.map((warning: string) => (
                         <li key={warning}>{warning}</li>
                       ))}
                     </ul>

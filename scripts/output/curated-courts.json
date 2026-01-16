@@ -1,0 +1,214 @@
+[
+  {
+    "index": 0,
+    "data": {
+      "name": "Street Pickleball",
+      "address": "Emerald Avenue, Ortigas Center",
+      "city": "Pasig",
+      "province": "Metro Manila",
+      "country": "Philippines",
+      "timeZone": "UTC+8",
+      "latitude": "",
+      "longitude": "",
+      "facebookUrl": "https://www.facebook.com/groups/philippinepickleballfederation",
+      "instagramUrl": "https://www.instagram.com/globalpickleballfederation/",
+      "viberContact": "",
+      "websiteUrl": "https://www.pickleball.ph/",
+      "otherContactInfo": "For more details, contact info@pickleball.ph.",
+      "amenities": ["free_parking", "free_equipment", "safe_play"],
+      "courts": ["pickleball", "pickleball|outdoor", "outdoor|pickleball"],
+      "photoUrls": [
+        "https://www.pickleball.ph/uploads/1/2/5/9/125919777/img-1912_6.jpg",
+        "https://www.pickleball.ph/uploads/1/2/5/9/125919777/phil-pb-tour4-jun-2022.jpeg"
+      ],
+      "sourceUrl": "https://www.pickleball.ph/street-pickleball.html"
+    }
+  },
+  {
+    "index": 1,
+    "data": {
+      "name": "Paco Pickleball Crew",
+      "address": "",
+      "city": "Metro Manila",
+      "province": "",
+      "country": "Philippines",
+      "timeZone": "Asia/Manila",
+      "latitude": "",
+      "longitude": "",
+      "facebookUrl": "",
+      "instagramUrl": "",
+      "viberContact": "",
+      "websiteUrl": "",
+      "otherContactInfo": "",
+      "amenities": ["Tape Lines", "Portable Nets"],
+      "courts": [
+        "pickleball",
+        "pickleball|3",
+        "Paco Pickleball Crew|pickleball|3"
+      ],
+      "photoUrls": [
+        "https://cdn.filestackcontent.com/resize=w:296,h:200,fit:crop/auto_image/DbUVsr5R8OZKbPsZC5UV"
+      ],
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/manila/paco-pickleball-crew"
+    }
+  },
+  {
+    "index": 2,
+    "data": {
+      "name": "Quest Adventure Camp",
+      "address": "Quest Adventure Camp, near Ortigas and East Wood City",
+      "city": "Masinag",
+      "province": "Rizal",
+      "country": "Philippines",
+      "timeZone": "PHT",
+      "latitude": "null",
+      "longitude": "null",
+      "facebookUrl": "null",
+      "instagramUrl": "null",
+      "viberContact": "null",
+      "websiteUrl": "http://www.questadventure.ph",
+      "otherContactInfo": "Contact us for quotes and inquiries",
+      "amenities": [
+        "Professional Staff",
+        "High Impact Experience",
+        "Swimming Pools",
+        "New & Clean Facilities",
+        "Safe & Medic-Ready",
+        "Accessible Location",
+        "Adventure Facilities",
+        "Organized Activities",
+        "Clean Shower Rooms",
+        "Food Services",
+        "Always Open 24/7"
+      ],
+      "courts": [
+        "pickleball",
+        "pickleball|premium",
+        "pickleball|indoor",
+        "pickleball|outdoor"
+      ],
+      "photoUrls": [
+        "https://www.questadventure.ph/wp-content/uploads/2025/02/Untitled-14-x-9-in-14-x-6-in.png",
+        "https://www.questadventure.ph/wp-content/uploads/2025/02/Untitled-design-25.png"
+      ],
+      "sourceUrl": "https://www.questadventure.ph/pickleball/#"
+    }
+  },
+  {
+    "index": 3,
+    "data": {
+      "name": "Manila Pickleball Club",
+      "address": "Dakota Playgrounds HX8Q+PPF, Quirino Ave, Malate, Manila, 1004 Metro Manila",
+      "city": "Manila",
+      "province": "Metro Manila",
+      "country": "Philippines",
+      "timeZone": "PHT",
+      "latitude": "",
+      "longitude": "",
+      "facebookUrl": "https://www.facebook.com/manilapickleball/about",
+      "instagramUrl": "",
+      "viberContact": "",
+      "websiteUrl": "",
+      "otherContactInfo": "",
+      "amenities": ["Court Rentals", "Coaching", "Open Play"],
+      "courts": ["pickleball"],
+      "photoUrls": [
+        "https://od2-image-api.abs-cbn.com/prod/editorImage/1750065904541aleksander-saks-KO6QJcddk28-unsplash.jpg",
+        "https://od2-image-api.abs-cbn.com/prod/editorImage/1750067328082492547318_1059443042871392_9158955965677695472_n.jpg",
+        "https://od2-image-api.abs-cbn.com/prod/editorImage/1750067703400downloadgram.org_286410245_385539076883697_4317138972561678207_n.jpg",
+        "https://od2-image-api.abs-cbn.com/prod/editorImage/1750068197521491232756_9693916470690590_2850906112607758234_n.jpg",
+        "https://od2-image-api.abs-cbn.com/prod/editorImage/1750068413665Parqal.jpg",
+        "https://od2-image-api.abs-cbn.com/prod/editorImage/175006888122731st.jpg",
+        "https://od2-image-api.abs-cbn.com/prod/editorImage/1750069072608Screen%20Shot%202025-06-16%20at%206.17.19%20PM.png",
+        "https://od2-image-api.abs-cbn.com/prod/editorImage/1750069110951Screen%20Shot%202025-06-16%20at%206.18.22%20PM.png"
+      ],
+      "sourceUrl": "https://metro.style/wellness/pickleball-courts-in-manila-1820"
+    }
+  },
+  {
+    "index": 4,
+    "data": {
+      "name": "Manila Polo Club",
+      "address": "35 McKinley Road, Forbes Park",
+      "city": "Makati City",
+      "province": "",
+      "country": "Philippines",
+      "timeZone": "Asia/Manila",
+      "latitude": "",
+      "longitude": "",
+      "facebookUrl": "",
+      "instagramUrl": "https://www.instagram.com/manilapoloclub1909/",
+      "viberContact": "",
+      "websiteUrl": "https://manilapolo.com.ph/",
+      "otherContactInfo": "(632) 8817 0951 to 57/59/61 / mails@manilapolo.com.ph",
+      "amenities": ["Pickleball Courts", "Reservable"],
+      "courts": [
+        "pickleball",
+        "pickleball|tier_label",
+        "label|pickleball|tier_label"
+      ],
+      "photoUrls": [
+        "https://manilapolo.com.ph/wp-content/uploads/2025/06/Pickleball-4-768x432.png",
+        "https://manilapolo.com.ph/wp-content/uploads/2025/06/Pickleball-1-768x432.png",
+        "https://manilapolo.com.ph/wp-content/uploads/2025/06/Pickleball-2-768x432.png",
+        "https://manilapolo.com.ph/wp-content/uploads/2025/06/Pickleball-3-768x432.png",
+        "https://manilapolo.com.ph/wp-content/uploads/2025/06/Pickleball-4-768x432.png",
+        "https://manilapolo.com.ph/wp-content/uploads/2025/06/Pickleball-1-768x432.png"
+      ],
+      "sourceUrl": "https://manilapolo.com.ph/facilities/pickleball/#content"
+    }
+  },
+  {
+    "index": 5,
+    "data": {
+      "name": "Philippine Pickleball Federation Courts",
+      "address": "Ayala Malls, Multiple Locations",
+      "city": "Manila",
+      "province": "Metro Manila",
+      "country": "Philippines",
+      "timeZone": "PHT",
+      "latitude": "14.5995",
+      "longitude": "121.0366",
+      "facebookUrl": "https://www.facebook.com/p/Global-Pickleball-Federation-61550461021165/",
+      "instagramUrl": "https://www.instagram.com/globalpickleballfederation/",
+      "viberContact": "null",
+      "websiteUrl": "https://globalpickleballfederation.org/",
+      "otherContactInfo": "null",
+      "amenities": ["Indoor Play", "Outdoor Play", "Dining", "Parking"],
+      "courts": ["pickleball", "pickleball|indoor", "pickleball|outdoor"],
+      "photoUrls": [
+        "https://www.rappler.com/tachyon/2024/09/20240713_211344-1-scaled.jpg",
+        "https://globalpickleballfederation.org/wp-content/uploads/2024/04/manish-r-gpf-board-hs.png"
+      ],
+      "sourceUrl": "https://globalpickleballfederation.org/news/by-popular-demand-philippine-malls-add-pickleball-courts-for-active-healthier-living/#"
+    }
+  },
+  {
+    "index": 6,
+    "data": {
+      "name": "The Zone",
+      "address": ": BP2, Makati City, Philippines",
+      "city": "Makati",
+      "province": "Metro Manila",
+      "country": "Philippines",
+      "timeZone": "Asia/Manila",
+      "latitude": "",
+      "longitude": "",
+      "facebookUrl": "https://www.facebook.com/bp2asia",
+      "instagramUrl": "https://www.instagram.com/bp2asia",
+      "viberContact": "",
+      "websiteUrl": "https://www.instagram.com/bp2asia",
+      "otherContactInfo": "info@bp2asia.org",
+      "amenities": ["indoor courts", "high nets", "parking"],
+      "courts": [
+        "pickleball",
+        "pickleball|court",
+        "label|pickleball|tier_label"
+      ],
+      "photoUrls": [
+        "https://yt3.ggpht.com/0tTvrPeGnR3Hn3eJGgiezWnfWHoL9v6fVR0P8WX7e5aSXCs8TtMZc9b0BzlhNeZ9UATRudSv=s88-c-k-c0x00ffffff-no-rj"
+      ],
+      "sourceUrl": "https://www.youtube.com/watch?v=MZBDjgRVJcY"
+    }
+  }
+]

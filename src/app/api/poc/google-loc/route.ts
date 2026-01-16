@@ -1,4 +1,8 @@
 import { NextResponse } from "next/server";
+import { handleError } from "@/shared/infra/http/error-handler";
+import { ValidationError } from "@/shared/kernel/errors";
+import type { ApiErrorResponse, ApiResponse } from "@/shared/kernel/response";
+import { wrapResponse } from "@/shared/utils/response";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,7 +16,7 @@ const MAX_REDIRECT_HOPS = 5;
 
 type LocationSource = "marker" | "center";
 
-interface GoogleLocResponse {
+export interface GoogleLocResponse {
   inputUrl: string;
   resolvedUrl?: string;
   suggestedName?: string;
@@ -120,7 +124,9 @@ async function fetchHeadOrGet(url: URL): Promise<Response> {
 
 async function resolveGoogleMapsUrl(inputUrl: URL): Promise<URL> {
   if (!isAllowedUrl(inputUrl)) {
-    throw new Error("URL host not allowed");
+    throw new ValidationError("URL host not allowed", {
+      host: inputUrl.hostname,
+    });
   }
 
   let current = inputUrl;
@@ -134,7 +140,9 @@ async function resolveGoogleMapsUrl(inputUrl: URL): Promise<URL> {
 
       const next = new URL(location, current);
       if (!isAllowedUrl(next)) {
-        throw new Error("Redirect target host not allowed");
+        throw new ValidationError("Redirect target host not allowed", {
+          host: next.hostname,
+        });
       }
 
       current = next;
@@ -163,37 +171,40 @@ function buildEmbedSrc(args: {
 }
 
 export async function POST(req: Request) {
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-  }
-
-  const inputUrlRaw =
-    typeof body === "object" && body !== null && "url" in body
-      ? (body as { url?: unknown }).url
-      : undefined;
-
-  if (typeof inputUrlRaw !== "string" || inputUrlRaw.trim().length === 0) {
-    return NextResponse.json({ error: "Missing 'url'" }, { status: 400 });
-  }
-
-  const inputUrlString = inputUrlRaw.trim();
-
-  let inputUrl: URL;
-  try {
-    inputUrl = new URL(inputUrlString);
-  } catch {
-    return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
-  }
-
-  const response: GoogleLocResponse = {
-    inputUrl: inputUrlString,
-    warnings: [],
-  };
+  const requestId =
+    req.headers.get("x-request-id") ?? globalThis.crypto.randomUUID();
 
   try {
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      throw new ValidationError("Invalid JSON body");
+    }
+
+    const inputUrlRaw =
+      typeof body === "object" && body !== null && "url" in body
+        ? (body as { url?: unknown }).url
+        : undefined;
+
+    if (typeof inputUrlRaw !== "string" || inputUrlRaw.trim().length === 0) {
+      throw new ValidationError("Missing 'url'");
+    }
+
+    const inputUrlString = inputUrlRaw.trim();
+
+    let inputUrl: URL;
+    try {
+      inputUrl = new URL(inputUrlString);
+    } catch {
+      throw new ValidationError("Invalid URL");
+    }
+
+    const response: GoogleLocResponse = {
+      inputUrl: inputUrlString,
+      warnings: [],
+    };
+
     const resolved = await resolveGoogleMapsUrl(inputUrl);
     response.resolvedUrl = resolved.toString();
     response.suggestedName = parseSuggestedNameFromPathname(resolved.pathname);
@@ -201,7 +212,9 @@ export async function POST(req: Request) {
     const parsed = parseLatLngZoom(resolved.toString());
     if (!parsed) {
       response.warnings.push("Could not parse coordinates from resolved URL");
-      return NextResponse.json(response);
+      return NextResponse.json<ApiResponse<GoogleLocResponse>>(
+        wrapResponse(response),
+      );
     }
 
     response.lat = parsed.lat;
@@ -212,7 +225,9 @@ export async function POST(req: Request) {
     const embedKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY;
     if (!embedKey) {
       response.warnings.push("Missing NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY");
-      return NextResponse.json(response);
+      return NextResponse.json<ApiResponse<GoogleLocResponse>>(
+        wrapResponse(response),
+      );
     }
 
     response.embedSrc = buildEmbedSrc({
@@ -222,11 +237,11 @@ export async function POST(req: Request) {
       zoom: parsed.zoom,
     });
 
-    return NextResponse.json(response);
-  } catch (error) {
-    response.warnings.push(
-      error instanceof Error ? error.message : "Unknown error",
+    return NextResponse.json<ApiResponse<GoogleLocResponse>>(
+      wrapResponse(response),
     );
-    return NextResponse.json(response, { status: 400 });
+  } catch (error) {
+    const { status, body } = handleError(error, requestId);
+    return NextResponse.json<ApiErrorResponse>(body, { status });
   }
 }

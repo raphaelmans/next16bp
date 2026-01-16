@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import type { CookieMethodsServer } from "@supabase/ssr";
 import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import { cookies, headers } from "next/headers";
@@ -29,7 +28,8 @@ export interface AuthenticatedContext extends Context {
 export async function createContext({
   req,
 }: FetchCreateContextFnOptions): Promise<Context> {
-  const requestId = req.headers.get("x-request-id") ?? randomUUID();
+  const requestId =
+    req.headers.get("x-request-id") ?? globalThis.crypto.randomUUID();
   const cookieStore = await cookies();
   const headerStore = await headers();
 

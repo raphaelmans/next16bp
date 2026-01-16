@@ -86,7 +86,7 @@ pnpm db:seed:buckets # seed storage buckets
 - Form submissions: use `mutateAsync`, show server errors via toast only, reset on success.
 - Prefer shared formatting helpers in `src/shared/lib/format.ts`.
 - Query params: use `nuqs` (`useQueryState` / `useQueryStates`) and avoid manual `router.replace` or `useSearchParams` reconciliation.
-- Cache invalidation: use `trpc.useUtils()` helpers; avoid manual query keys for tRPC data (use `QueryClient` only for non-tRPC caches).
+- Cache invalidation: use `trpc.useUtils()` for tRPC data; for non-tRPC caches, use Query Key Factory (`@lukemorales/query-key-factory`) keys + `useQueryClient()`.
 
 ## tRPC (React Query Hooks)
 - Client: import `trpc` from `@/trpc/client` (created via `createTRPCReact<AppRouter>()`).
@@ -95,6 +95,12 @@ pnpm db:seed:buckets # seed storage buckets
 - Parallel queries: `trpc.useQueries((t) => [t.foo.bar(input), ...])`.
 - Cache helpers: `const utils = trpc.useUtils()` then `utils.<router>.<procedure>.invalidate(input?)` or `utils.<router>.invalidate()`.
 - Avoid legacy APIs: `useTRPC`, `useTRPCClient`, `queryOptions`, `mutationOptions`, and manual tRPC query keys.
+
+## Non-tRPC HTTP (Ky + Query Keys)
+- Shared clients live in `src/shared/lib/clients/<client>/` (e.g., `google-loc-client/`).
+- Query keys: use `@lukemorales/query-key-factory` in `query-keys.ts` (avoid ad-hoc array keys).
+- HTTP: use `ky` and parse `ApiResponse<T>` / `ApiErrorResponse` from `src/shared/kernel/response.ts` (add if missing).
+- Errors: throw a typed `ApiClientError` (`code`, `requestId`, `httpStatus`, `details?`) so TanStack Query can surface structured failures.
 
 ## Time Zones (Place-Canonical)
 - Production runtimes often run in UTC; always treat `place.timeZone` (IANA) as canonical for booking/availability/pricing.
@@ -168,6 +174,9 @@ pnpm db:seed:buckets # seed storage buckets
 - Error handling: `guides/server/core/error-handling.md`.
 - Logging: `guides/server/core/logging.md`.
 - Date handling: `guides/client/references/12-date-handling.md`.
+- Non-tRPC route handlers: `guides/server/nextjs/route-handlers.md`.
+- Non-tRPC ky client: `guides/client/nextjs/ky-fetch.md`.
+- Non-tRPC query keys: `guides/client/nextjs/query-keys.md`.
 
 ## Update This File When
 - A test runner is added.

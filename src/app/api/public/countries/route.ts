@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NextResponse } from "next/server";
@@ -58,7 +57,8 @@ function buildListResponse(countries: Country[]) {
 }
 
 export async function GET(req: Request) {
-  const requestId = req.headers.get("x-request-id") ?? randomUUID();
+  const requestId =
+    req.headers.get("x-request-id") ?? globalThis.crypto.randomUUID();
 
   try {
     const countries = await loadCountries();

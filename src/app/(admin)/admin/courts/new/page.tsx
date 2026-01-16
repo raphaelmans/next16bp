@@ -1,9 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, MapPin, Plus, Trash2 } from "lucide-react";
+import { Loader2, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import * as React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
@@ -21,6 +22,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/ui/page-header";
 import { Textarea } from "@/components/ui/textarea";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
@@ -28,15 +31,18 @@ import { useCreateCuratedCourt } from "@/features/admin/hooks/use-admin-courts";
 import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
 import {
   AMENITIES,
-  CITIES,
   type CuratedCourtFormData,
   curatedCourtSchema,
 } from "@/features/admin/schemas/curated-court.schema";
 import { useLogout, useSession } from "@/features/auth";
+import { env } from "@/lib/env";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { useGoogleLocPreviewMutation } from "@/shared/lib/clients/google-loc-client";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
+
+const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 
 export default function NewCuratedCourtPage() {
   const router = useRouter();
@@ -47,6 +53,9 @@ export default function NewCuratedCourtPage() {
   const createMutation = useCreateCuratedCourt();
   const { data: sports = [], isLoading: sportsLoading } =
     trpc.sport.list.useQuery({});
+
+  const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
+  const [googleUrl, setGoogleUrl] = React.useState("");
 
   const form = useForm<CuratedCourtFormData>({
     resolver: zodResolver(curatedCourtSchema),
@@ -76,8 +85,54 @@ export default function NewCuratedCourtPage() {
 
   const {
     reset,
+    setValue,
+    watch,
     formState: { isDirty, isValid, isSubmitting },
   } = form;
+
+  const nameValue = watch("name");
+
+  const previewMutation = useGoogleLocPreviewMutation({
+    onSuccess: (data) => {
+      if (data.suggestedName && !nameValue.trim()) {
+        setValue("name", data.suggestedName, {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }
+
+      if (data.lat !== undefined) {
+        setValue("lat", data.lat, {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }
+
+      if (data.lng !== undefined) {
+        setValue("lng", data.lng, {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }
+    },
+  });
+
+  const previewResult = previewMutation.data;
+  const previewError = previewMutation.error;
+  const isPreviewing = previewMutation.isPending;
+  const previewErrorMessage = previewError
+    ? getClientErrorMessage(previewError, "Request failed")
+    : null;
+
+  const coordinateLabel = React.useMemo(() => {
+    if (previewResult?.lat === undefined || previewResult?.lng === undefined) {
+      return "";
+    }
+    return `${previewResult.lat.toFixed(6)}, ${previewResult.lng.toFixed(6)}`;
+  }, [previewResult?.lat, previewResult?.lng]);
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -114,7 +169,12 @@ export default function NewCuratedCourtPage() {
     }
   };
 
-  const cityOptions = CITIES.map((city) => ({ label: city, value: city }));
+  const handlePreview = () => {
+    if (!googleUrl.trim()) return;
+    previewMutation.reset();
+    previewMutation.mutate({ url: googleUrl });
+  };
+
   const sportOptions = sports.map((sport) => ({
     label: sport.name,
     value: sport.id,
@@ -181,27 +241,206 @@ export default function NewCuratedCourtPage() {
                 required
               />
 
-              <StandardFormSelect<CuratedCourtFormData>
+              <StandardFormInput<CuratedCourtFormData>
                 name="city"
                 label="City"
-                placeholder="Select a city"
-                options={cityOptions}
+                placeholder="e.g., Makati"
                 required
               />
+            </CardContent>
+          </Card>
 
+          <Card>
+            <CardHeader>
+              <CardTitle>Map (optional)</CardTitle>
+              <CardDescription>
+                Paste a Google Maps link to auto-fill coordinates. Address and
+                city still require confirmation.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
               <div className="space-y-2">
-                <div className="text-sm font-medium">Map Location</div>
-                <div className="h-48 rounded-lg border bg-muted flex items-center justify-center">
-                  <div className="text-center text-muted-foreground">
-                    <MapPin className="h-8 w-8 mx-auto mb-2" />
-                    <p className="text-sm">Map picker coming soon</p>
-                    <p className="text-xs">Click to set location</p>
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Click on the map to set the exact location
+                <Label htmlFor="googleUrl">Google Maps URL</Label>
+                <Input
+                  id="googleUrl"
+                  value={googleUrl}
+                  onChange={(event) => setGoogleUrl(event.target.value)}
+                  placeholder={SAMPLE_GOOGLE_URL}
+                  inputMode="url"
+                />
+                {hasEmbedKey ? null : (
+                  <p className="text-xs text-muted-foreground">
+                    Embed previews are disabled until a Google Maps key is
+                    configured.
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  Example: {SAMPLE_GOOGLE_URL}
                 </p>
               </div>
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handlePreview}
+                disabled={googleUrl.trim().length === 0 || isPreviewing}
+                className="w-full"
+              >
+                {isPreviewing ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Resolving…
+                  </span>
+                ) : (
+                  "Preview"
+                )}
+              </Button>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <StandardFormField<CuratedCourtFormData>
+                  name="lat"
+                  label="Latitude (optional)"
+                >
+                  {({ field }) => (
+                    <Input
+                      type="number"
+                      step="any"
+                      value={typeof field.value === "number" ? field.value : ""}
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        if (!value) {
+                          field.onChange(undefined);
+                          return;
+                        }
+                        const parsed = Number(value);
+                        field.onChange(
+                          Number.isNaN(parsed) ? undefined : parsed,
+                        );
+                      }}
+                      placeholder="e.g., 14.5547"
+                    />
+                  )}
+                </StandardFormField>
+
+                <StandardFormField<CuratedCourtFormData>
+                  name="lng"
+                  label="Longitude (optional)"
+                >
+                  {({ field }) => (
+                    <Input
+                      type="number"
+                      step="any"
+                      value={typeof field.value === "number" ? field.value : ""}
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        if (!value) {
+                          field.onChange(undefined);
+                          return;
+                        }
+                        const parsed = Number(value);
+                        field.onChange(
+                          Number.isNaN(parsed) ? undefined : parsed,
+                        );
+                      }}
+                      placeholder="e.g., 121.0244"
+                    />
+                  )}
+                </StandardFormField>
+              </div>
+
+              {previewErrorMessage && (
+                <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+                  {previewErrorMessage}
+                </div>
+              )}
+
+              {previewResult && (
+                <div className="space-y-4 rounded-xl border border-border/60 bg-muted/20 p-4">
+                  <div className="space-y-3 text-sm">
+                    <div>
+                      <div className="text-xs text-muted-foreground">
+                        Resolved URL
+                      </div>
+                      {previewResult.resolvedUrl ? (
+                        <a
+                          href={previewResult.resolvedUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="break-all text-accent hover:underline"
+                        >
+                          {previewResult.resolvedUrl}
+                        </a>
+                      ) : (
+                        <span className="text-muted-foreground">(none)</span>
+                      )}
+                    </div>
+
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div>
+                        <div className="text-xs text-muted-foreground">
+                          Suggested name
+                        </div>
+                        <div>{previewResult.suggestedName ?? "(none)"}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-muted-foreground">
+                          Coordinates
+                        </div>
+                        <div>
+                          {coordinateLabel ? (
+                            <span className="font-mono">{coordinateLabel}</span>
+                          ) : (
+                            "(none)"
+                          )}
+                          {previewResult.zoom !== undefined && (
+                            <span className="text-muted-foreground">
+                              {` · z${previewResult.zoom}`}
+                            </span>
+                          )}
+                          {previewResult.source && (
+                            <span className="text-muted-foreground">
+                              {` · ${previewResult.source}`}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {previewResult.warnings.length > 0 && (
+                    <div className="rounded-lg border border-border/60 bg-muted/40 p-3">
+                      <div className="text-xs font-medium">Warnings</div>
+                      <ul className="mt-1 list-disc pl-5 text-xs text-muted-foreground">
+                        {previewResult.warnings.map((warning: string) => (
+                          <li key={warning}>{warning}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {previewResult.embedSrc ? (
+                    <div className="space-y-2">
+                      <div className="text-sm font-medium">Embed preview</div>
+                      <div className="aspect-video overflow-hidden rounded-xl border border-border/60 bg-muted">
+                        <iframe
+                          title="Google Maps Embed"
+                          src={previewResult.embedSrc}
+                          className="h-full w-full"
+                          loading="lazy"
+                          allowFullScreen
+                          referrerPolicy="no-referrer-when-downgrade"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="rounded-lg border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
+                      {hasEmbedKey
+                        ? "No embed preview available for this link."
+                        : "Embed preview unavailable (missing Google Maps key)."}
+                    </div>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
 

@@ -15,11 +15,14 @@
     "db:push": "dotenvx run --env-file=.env.local -- drizzle-kit push",
     "db:studio": "dotenvx run --env-file=.env.local -- drizzle-kit studio",
     "db:seed:sports": "dotenvx run --env-file=.env.local -- tsx scripts/seed-sports.ts",
-    "db:seed:buckets": "dotenvx run --env-file=.env.local -- tsx scripts/seed-storage-buckets.ts"
+    "db:seed:buckets": "dotenvx run --env-file=.env.local -- tsx scripts/seed-storage-buckets.ts",
+    "db:import:curated-courts": "dotenvx run --env-file=.env.local -- tsx scripts/import-curated-courts.ts --file scripts/templates/curated-courts-template.csv",
+    "scrape:curated-courts": "dotenvx run --env-file=.env.local -- tsx scripts/firecrawl-curated-courts.ts --input scripts/templates/curated-courts-urls.txt --query \"pickleball courts\" --location \"Cebu, Philippines\" --country PH --limit 25 --output scripts/output/curated-courts.csv --json scripts/output/curated-courts.json"
   },
   "dependencies": {
     "@date-fns/tz": "^1.2.0",
     "@hookform/resolvers": "^5.2.2",
+    "@lukemorales/query-key-factory": "^1.3.4",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.8",
@@ -65,10 +68,12 @@
     "drizzle-zod": "^0.8.3",
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
+    "ky": "^1.14.2",
     "lucide-react": "^0.562.0",
     "next": "16.1.0",
     "next-themes": "^0.4.6",
     "nuqs": "^2.8.6",
+    "p-retry": "^7.1.1",
     "pino": "^10.1.0",
     "pino-pretty": "^13.1.3",
     "postgres": "^3.4.7",
