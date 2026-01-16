@@ -83,6 +83,8 @@ export class AdminCourtService implements IAdminCourtService {
           name: data.name,
           address: data.address,
           city: data.city,
+          province: data.province,
+          country: "PH",
           latitude: data.latitude ?? null,
           longitude: data.longitude ?? null,
           timeZone: data.timeZone ?? "Asia/Manila",
@@ -182,6 +184,7 @@ export class AdminCourtService implements IAdminCourtService {
       const item = items[index];
       const normalizedName = item.name.trim();
       const normalizedCity = item.city.trim();
+      const normalizedProvince = item.province.trim();
       const key = `${normalizedName.toLowerCase()}|${normalizedCity.toLowerCase()}`;
 
       if (seenKeys.has(key)) {
@@ -217,6 +220,7 @@ export class AdminCourtService implements IAdminCourtService {
           ...item,
           name: normalizedName,
           city: normalizedCity,
+          province: normalizedProvince,
           address: item.address.trim(),
         });
         created += 1;

@@ -39,9 +39,11 @@ import { env } from "@/lib/env";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { useGoogleLocPreviewMutation } from "@/shared/lib/clients/google-loc-client";
+import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
+const DEFAULT_COUNTRY = "PH";
 const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 
 export default function NewCuratedCourtPage() {
@@ -56,6 +58,7 @@ export default function NewCuratedCourtPage() {
 
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
   const [googleUrl, setGoogleUrl] = React.useState("");
+  const provincesCitiesQuery = usePHProvincesCitiesQuery();
 
   const form = useForm<CuratedCourtFormData>({
     resolver: zodResolver(curatedCourtSchema),
@@ -64,6 +67,8 @@ export default function NewCuratedCourtPage() {
       name: "",
       address: "",
       city: "",
+      province: "",
+      country: DEFAULT_COUNTRY,
       facebookUrl: "",
       instagramUrl: "",
       viberContact: "",
@@ -91,6 +96,9 @@ export default function NewCuratedCourtPage() {
   } = form;
 
   const nameValue = watch("name");
+  const provinceValue = watch("province");
+  const cityValue = watch("city");
+  const countryValue = watch("country");
 
   const previewMutation = useGoogleLocPreviewMutation({
     onSuccess: (data) => {
@@ -127,6 +135,90 @@ export default function NewCuratedCourtPage() {
     ? getClientErrorMessage(previewError, "Request failed")
     : null;
 
+  React.useEffect(() => {
+    if (countryValue !== DEFAULT_COUNTRY) {
+      setValue("country", DEFAULT_COUNTRY, {
+        shouldDirty: false,
+        shouldTouch: false,
+        shouldValidate: true,
+      });
+    }
+  }, [countryValue, setValue]);
+
+  const provincesCities = provincesCitiesQuery.data ?? null;
+
+  const provinceOptions = React.useMemo(() => {
+    if (!provincesCities) return [];
+
+    return Object.keys(provincesCities)
+      .sort((left, right) => left.localeCompare(right))
+      .map((province) => ({ label: province, value: province }));
+  }, [provincesCities]);
+
+  const cityOptions = React.useMemo(() => {
+    if (!provincesCities || !provinceValue) return [];
+
+    const cities = provincesCities[provinceValue] ?? [];
+
+    return cities.map((city) => ({ label: city, value: city }));
+  }, [provincesCities, provinceValue]);
+
+  const countryOptions = React.useMemo(
+    () => [{ label: "Philippines (PH)", value: DEFAULT_COUNTRY }],
+    [],
+  );
+
+  const provincePlaceholder = provincesCitiesQuery.isLoading
+    ? "Loading provinces..."
+    : "Select province";
+
+  const cityPlaceholder = !provinceValue
+    ? "Select a province first"
+    : provincesCitiesQuery.isLoading
+      ? "Loading cities..."
+      : "Select city";
+
+  const isProvinceDisabled = provincesCitiesQuery.isLoading || !provincesCities;
+  const isCityDisabled = isProvinceDisabled || !provinceValue;
+
+  React.useEffect(() => {
+    if (!provincesCities) return;
+
+    if (provinceValue && !Object.hasOwn(provincesCities, provinceValue)) {
+      setValue("province", "", {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+      setValue("city", "", {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+      return;
+    }
+
+    if (!provinceValue) {
+      if (cityValue) {
+        setValue("city", "", {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }
+      return;
+    }
+
+    const availableCities = provincesCities[provinceValue] ?? [];
+    if (cityValue && !availableCities.includes(cityValue)) {
+      setValue("city", "", {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    }
+  }, [cityValue, provinceValue, provincesCities, setValue]);
+
   const coordinateLabel = React.useMemo(() => {
     if (previewResult?.lat === undefined || previewResult?.lng === undefined) {
       return "";
@@ -145,6 +237,8 @@ export default function NewCuratedCourtPage() {
         name: data.name,
         address: data.address,
         city: data.city,
+        province: data.province,
+        country: data.country,
         latitude: data.lat,
         longitude: data.lng,
         facebookUrl: data.facebookUrl || undefined,
@@ -241,11 +335,32 @@ export default function NewCuratedCourtPage() {
                 required
               />
 
-              <StandardFormInput<CuratedCourtFormData>
-                name="city"
-                label="City"
-                placeholder="e.g., Makati"
+              <div className="grid gap-4 sm:grid-cols-2">
+                <StandardFormSelect<CuratedCourtFormData>
+                  name="province"
+                  label="Province"
+                  options={provinceOptions}
+                  placeholder={provincePlaceholder}
+                  required
+                  disabled={isProvinceDisabled}
+                />
+                <StandardFormSelect<CuratedCourtFormData>
+                  name="city"
+                  label="City"
+                  options={cityOptions}
+                  placeholder={cityPlaceholder}
+                  required
+                  disabled={isCityDisabled}
+                />
+              </div>
+
+              <StandardFormSelect<CuratedCourtFormData>
+                name="country"
+                label="Country"
+                options={countryOptions}
+                placeholder="Philippines (PH)"
                 required
+                disabled
               />
             </CardContent>
           </Card>

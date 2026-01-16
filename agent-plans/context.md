@@ -8,6 +8,7 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-16 | Added 34-place-location-standardization plan (PH province/city enforcement) |
 | 2026-01-15 | Added 33-place-claiming implementation plan (curated → claim → reservable) |
 | 2026-01-15 | Added 17-place-claiming user stories (claim curated places) |
 | 2026-01-14 | Added 31-owner-reservations-inbox plan (owner triage UX) |
@@ -90,6 +91,7 @@ References and context for planning artifacts.
 | 30-reservation-list-enrichment | `agent-plans/30-reservation-list-enrichment/` | Pending |
 | 31-owner-reservations-inbox | `agent-plans/31-owner-reservations-inbox/` | Pending |
 | 33-place-claiming | `agent-plans/33-place-claiming/` | Ready |
+| 34-place-location-standardization | `agent-plans/34-place-location-standardization/` | Ready |
 
 ---
 

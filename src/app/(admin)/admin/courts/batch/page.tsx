@@ -38,8 +38,11 @@ import {
 import { useLogout, useSession } from "@/features/auth";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
+
+const DEFAULT_COUNTRY = "PH";
 
 const DEFAULT_COURT_UNIT = {
   label: "Court 1",
@@ -51,6 +54,8 @@ const DEFAULT_COURT = {
   name: "",
   address: "",
   city: "",
+  province: "",
+  country: DEFAULT_COUNTRY,
   latitude: "",
   longitude: "",
   facebookUrl: "",
@@ -181,6 +186,7 @@ export default function AdminCourtsBatchPage() {
     trpc.sport.list.useQuery({});
   const [batchResult, setBatchResult] =
     React.useState<CuratedCourtBatchResult | null>(null);
+  const provincesCitiesQuery = usePHProvincesCitiesQuery();
 
   const form = useForm<CuratedCourtBatchFormData>({
     resolver: zodResolver(curatedCourtBatchSchema),
@@ -197,6 +203,7 @@ export default function AdminCourtsBatchPage() {
 
   const {
     reset,
+    setValue,
     watch,
     formState: { isDirty, isValid, isSubmitting },
   } = form;
@@ -211,6 +218,108 @@ export default function AdminCourtsBatchPage() {
     setBatchResult(null);
   };
 
+  const provincesCities = provincesCitiesQuery.data ?? null;
+
+  const provinceOptions = React.useMemo(() => {
+    if (!provincesCities) return [];
+
+    return Object.keys(provincesCities)
+      .sort((left, right) => left.localeCompare(right))
+      .map((province) => ({ label: province, value: province }));
+  }, [provincesCities]);
+
+  const countryOptions = React.useMemo(
+    () => [{ label: "Philippines (PH)", value: DEFAULT_COUNTRY }],
+    [],
+  );
+
+  const provincePlaceholder = provincesCitiesQuery.isLoading
+    ? "Loading provinces..."
+    : "Select province";
+
+  const isProvinceDisabled = provincesCitiesQuery.isLoading || !provincesCities;
+
+  const getCityOptions = React.useCallback(
+    (province?: string) => {
+      if (!provincesCities || !province) return [];
+
+      const cities = provincesCities[province] ?? [];
+      return cities.map((city) => ({ label: city, value: city }));
+    },
+    [provincesCities],
+  );
+
+  const getCityPlaceholder = React.useCallback(
+    (province?: string) => {
+      if (!province) return "Select a province first";
+      return provincesCitiesQuery.isLoading
+        ? "Loading cities..."
+        : "Select city";
+    },
+    [provincesCitiesQuery.isLoading],
+  );
+
+  const isCityDisabled = (province?: string) => isProvinceDisabled || !province;
+
+  const courts = watch("courts");
+
+  React.useEffect(() => {
+    if (!courts) return;
+
+    courts.forEach((court, index) => {
+      if (court.country !== DEFAULT_COUNTRY) {
+        setValue(`courts.${index}.country`, DEFAULT_COUNTRY, {
+          shouldDirty: false,
+          shouldTouch: false,
+          shouldValidate: true,
+        });
+      }
+    });
+  }, [courts, setValue]);
+
+  React.useEffect(() => {
+    if (!courts || !provincesCities) return;
+
+    courts.forEach((court, index) => {
+      const province = court.province;
+      const city = court.city;
+
+      if (province && !Object.hasOwn(provincesCities, province)) {
+        setValue(`courts.${index}.province`, "", {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+        setValue(`courts.${index}.city`, "", {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+        return;
+      }
+
+      if (!province) {
+        if (city) {
+          setValue(`courts.${index}.city`, "", {
+            shouldDirty: true,
+            shouldTouch: true,
+            shouldValidate: true,
+          });
+        }
+        return;
+      }
+
+      const availableCities = provincesCities[province] ?? [];
+      if (city && !availableCities.includes(city)) {
+        setValue(`courts.${index}.city`, "", {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }
+    });
+  }, [courts, provincesCities, setValue]);
+
   const handleSubmit = async (data: CuratedCourtBatchFormData) => {
     try {
       const items = data.courts.map((court) => {
@@ -220,6 +329,8 @@ export default function AdminCourtsBatchPage() {
           name: court.name,
           address: court.address,
           city: court.city,
+          province: court.province,
+          country: court.country,
           latitude: court.latitude || undefined,
           longitude: court.longitude || undefined,
           facebookUrl: court.facebookUrl || undefined,
@@ -254,7 +365,6 @@ export default function AdminCourtsBatchPage() {
     label: sport.name,
     value: sport.id,
   }));
-  const courts = watch("courts");
   const submitting = createBatchMutation.isPending || isSubmitting;
   const isSubmitDisabled = submitting || !isDirty || !isValid;
 
@@ -317,146 +427,172 @@ export default function AdminCourtsBatchPage() {
           </div>
 
           <div className="space-y-6">
-            {fields.map((field, index) => (
-              <Card key={field.id}>
-                <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <CardTitle>{`Court ${index + 1}`}</CardTitle>
-                    <CardDescription>
-                      {courts?.[index]?.name?.trim() || "Enter court details"}
-                    </CardDescription>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => remove(index)}
-                    disabled={fields.length === 1}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Remove
-                  </Button>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <StandardFormInput<CuratedCourtBatchFormData>
-                      name={`courts.${index}.name`}
-                      label="Court Name"
-                      placeholder="Makati Pickleball Club"
-                      required
-                    />
-                    <StandardFormInput<CuratedCourtBatchFormData>
-                      name={`courts.${index}.address`}
-                      label="Address"
-                      placeholder="123 Sports Avenue"
-                      required
-                    />
-                    <StandardFormInput<CuratedCourtBatchFormData>
-                      name={`courts.${index}.city`}
-                      label="City"
-                      placeholder="e.g., Makati"
-                      required
-                    />
-                    <div className="grid gap-4 sm:grid-cols-2">
+            {fields.map((field, index) => {
+              const provinceValue = courts?.[index]?.province;
+              const cityOptions = getCityOptions(provinceValue);
+              const cityPlaceholder = getCityPlaceholder(provinceValue);
+              const cityDisabled = isCityDisabled(provinceValue);
+
+              return (
+                <Card key={field.id}>
+                  <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <CardTitle>{`Court ${index + 1}`}</CardTitle>
+                      <CardDescription>
+                        {courts?.[index]?.name?.trim() || "Enter court details"}
+                      </CardDescription>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => remove(index)}
+                      disabled={fields.length === 1}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Remove
+                    </Button>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid gap-6 md:grid-cols-2">
                       <StandardFormInput<CuratedCourtBatchFormData>
-                        name={`courts.${index}.latitude`}
-                        label="Latitude"
-                        placeholder="14.5995"
+                        name={`courts.${index}.name`}
+                        label="Court Name"
+                        placeholder="Makati Pickleball Club"
+                        required
                       />
                       <StandardFormInput<CuratedCourtBatchFormData>
-                        name={`courts.${index}.longitude`}
-                        label="Longitude"
-                        placeholder="120.9842"
+                        name={`courts.${index}.address`}
+                        label="Address"
+                        placeholder="123 Sports Avenue"
+                        required
+                      />
+                      <StandardFormSelect<CuratedCourtBatchFormData>
+                        name={`courts.${index}.province`}
+                        label="Province"
+                        options={provinceOptions}
+                        placeholder={provincePlaceholder}
+                        required
+                        disabled={isProvinceDisabled}
+                      />
+                      <StandardFormSelect<CuratedCourtBatchFormData>
+                        name={`courts.${index}.city`}
+                        label="City"
+                        options={cityOptions}
+                        placeholder={cityPlaceholder}
+                        required
+                        disabled={cityDisabled}
+                      />
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <StandardFormInput<CuratedCourtBatchFormData>
+                          name={`courts.${index}.latitude`}
+                          label="Latitude"
+                          placeholder="14.5995"
+                        />
+                        <StandardFormInput<CuratedCourtBatchFormData>
+                          name={`courts.${index}.longitude`}
+                          label="Longitude"
+                          placeholder="120.9842"
+                        />
+                      </div>
+                    </div>
+
+                    <StandardFormSelect<CuratedCourtBatchFormData>
+                      name={`courts.${index}.country`}
+                      label="Country"
+                      options={countryOptions}
+                      placeholder="Philippines (PH)"
+                      required
+                      disabled
+                    />
+
+                    <CourtList
+                      control={form.control}
+                      placeIndex={index}
+                      sportOptions={sportOptions}
+                      sportsLoading={sportsLoading}
+                    />
+
+                    <div className="grid gap-6 sm:grid-cols-2">
+                      <StandardFormInput<CuratedCourtBatchFormData>
+                        name={`courts.${index}.facebookUrl`}
+                        label="Facebook Page"
+                        placeholder="https://facebook.com/..."
+                      />
+                      <StandardFormInput<CuratedCourtBatchFormData>
+                        name={`courts.${index}.instagramUrl`}
+                        label="Instagram"
+                        placeholder="https://instagram.com/..."
+                      />
+                      <StandardFormInput<CuratedCourtBatchFormData>
+                        name={`courts.${index}.viberContact`}
+                        label="Viber Contact"
+                        placeholder="0917 123 4567"
+                      />
+                      <StandardFormInput<CuratedCourtBatchFormData>
+                        name={`courts.${index}.websiteUrl`}
+                        label="Website"
+                        placeholder="https://example.com"
                       />
                     </div>
-                  </div>
 
-                  <CourtList
-                    control={form.control}
-                    placeIndex={index}
-                    sportOptions={sportOptions}
-                    sportsLoading={sportsLoading}
-                  />
-
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <StandardFormInput<CuratedCourtBatchFormData>
-                      name={`courts.${index}.facebookUrl`}
-                      label="Facebook Page"
-                      placeholder="https://facebook.com/..."
+                    <StandardFormTextarea<CuratedCourtBatchFormData>
+                      name={`courts.${index}.otherContactInfo`}
+                      label="Other Contact Information"
+                      placeholder="Any additional contact details..."
                     />
-                    <StandardFormInput<CuratedCourtBatchFormData>
-                      name={`courts.${index}.instagramUrl`}
-                      label="Instagram"
-                      placeholder="https://instagram.com/..."
+
+                    <StandardFormField<CuratedCourtBatchFormData>
+                      name={`courts.${index}.amenities`}
+                      label="Amenities"
+                    >
+                      {({ field }) => {
+                        const current = Array.isArray(field.value)
+                          ? (field.value as string[])
+                          : [];
+                        const updateAmenities = (values: string[]) => {
+                          field.onChange(values as typeof field.value);
+                        };
+
+                        return (
+                          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                            {AMENITIES.map((amenity) => (
+                              <div
+                                key={amenity}
+                                className="flex items-start gap-3 text-sm"
+                              >
+                                <Checkbox
+                                  checked={current.includes(amenity)}
+                                  onCheckedChange={(checked) => {
+                                    if (checked) {
+                                      updateAmenities([...current, amenity]);
+                                    } else {
+                                      updateAmenities(
+                                        current.filter(
+                                          (value) => value !== amenity,
+                                        ),
+                                      );
+                                    }
+                                  }}
+                                />
+                                <span>{amenity}</span>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }}
+                    </StandardFormField>
+
+                    <StandardFormTextarea<CuratedCourtBatchFormData>
+                      name={`courts.${index}.photoUrls`}
+                      label="Photo URLs"
+                      placeholder="https://...\nhttps://..."
+                      description="Add one URL per line or comma-separated"
                     />
-                    <StandardFormInput<CuratedCourtBatchFormData>
-                      name={`courts.${index}.viberContact`}
-                      label="Viber Contact"
-                      placeholder="0917 123 4567"
-                    />
-                    <StandardFormInput<CuratedCourtBatchFormData>
-                      name={`courts.${index}.websiteUrl`}
-                      label="Website"
-                      placeholder="https://example.com"
-                    />
-                  </div>
-
-                  <StandardFormTextarea<CuratedCourtBatchFormData>
-                    name={`courts.${index}.otherContactInfo`}
-                    label="Other Contact Information"
-                    placeholder="Any additional contact details..."
-                  />
-
-                  <StandardFormField<CuratedCourtBatchFormData>
-                    name={`courts.${index}.amenities`}
-                    label="Amenities"
-                  >
-                    {({ field }) => {
-                      const current = Array.isArray(field.value)
-                        ? (field.value as string[])
-                        : [];
-                      const updateAmenities = (values: string[]) => {
-                        field.onChange(values as typeof field.value);
-                      };
-
-                      return (
-                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-                          {AMENITIES.map((amenity) => (
-                            <div
-                              key={amenity}
-                              className="flex items-start gap-3 text-sm"
-                            >
-                              <Checkbox
-                                checked={current.includes(amenity)}
-                                onCheckedChange={(checked) => {
-                                  if (checked) {
-                                    updateAmenities([...current, amenity]);
-                                  } else {
-                                    updateAmenities(
-                                      current.filter(
-                                        (value) => value !== amenity,
-                                      ),
-                                    );
-                                  }
-                                }}
-                              />
-                              <span>{amenity}</span>
-                            </div>
-                          ))}
-                        </div>
-                      );
-                    }}
-                  </StandardFormField>
-
-                  <StandardFormTextarea<CuratedCourtBatchFormData>
-                    name={`courts.${index}.photoUrls`}
-                    label="Photo URLs"
-                    placeholder="https://...\nhttps://..."
-                    description="Add one URL per line or comma-separated"
-                  />
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3">

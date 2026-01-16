@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -21,24 +21,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { env } from "@/lib/env";
-import { cn } from "@/lib/utils";
 import { useGoogleLocPreviewMutation } from "@/shared/lib/clients/google-loc-client";
+import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import {
   defaultPlaceFormValues,
@@ -55,15 +43,6 @@ interface PlaceFormProps {
   onCancel: () => void;
   isSubmitting?: boolean;
   isEditing?: boolean;
-}
-
-interface CountryOption {
-  name: string;
-  cca2: string;
-}
-
-interface CountriesResponse {
-  data: CountryOption[];
 }
 
 const DEFAULT_COUNTRY = "PH";
@@ -93,8 +72,8 @@ const normalizeFormValues = (values: PlaceFormValues): PlaceFormData => ({
   name: values.name.trim(),
   address: values.address.trim(),
   city: values.city.trim(),
-  country: (values.country ?? DEFAULT_COUNTRY).trim().toUpperCase(),
-  province: values.province?.trim() ? values.province.trim() : undefined,
+  province: values.province.trim(),
+  country: DEFAULT_COUNTRY,
   latitude:
     values.latitude === undefined || Number.isNaN(values.latitude)
       ? undefined
@@ -127,10 +106,7 @@ export function PlaceForm({
 }: PlaceFormProps) {
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
 
-  const [countries, setCountries] = useState<CountryOption[]>([]);
-  const [isCountriesLoading, setIsCountriesLoading] = useState(false);
-  const [countriesError, setCountriesError] = useState<string | null>(null);
-  const [isCountryOpen, setIsCountryOpen] = useState(false);
+  const provincesCitiesQuery = usePHProvincesCitiesQuery();
 
   const [googleUrl, setGoogleUrl] = useState("");
 
@@ -153,6 +129,8 @@ export function PlaceForm({
   } = form;
 
   const countryValue = useWatch({ control, name: "country" });
+  const provinceValue = useWatch({ control, name: "province" });
+  const cityValue = useWatch({ control, name: "city" });
   const nameValue = useWatch({ control, name: "name" });
 
   const previewMutation = useGoogleLocPreviewMutation({
@@ -197,54 +175,88 @@ export function PlaceForm({
   }, [defaultValues, isDirty, reset, resolvedDefaults]);
 
   useEffect(() => {
-    const controller = new AbortController();
+    if (countryValue !== DEFAULT_COUNTRY) {
+      setValue("country", DEFAULT_COUNTRY, {
+        shouldDirty: false,
+        shouldTouch: false,
+        shouldValidate: true,
+      });
+    }
+  }, [countryValue, setValue]);
 
-    const loadCountries = async () => {
-      setIsCountriesLoading(true);
-      setCountriesError(null);
+  const provincesCities = provincesCitiesQuery.data ?? null;
 
-      try {
-        const response = await fetch("/api/public/countries", {
-          signal: controller.signal,
-        });
-        const payload = (await response.json()) as CountriesResponse;
+  const provinceOptions = useMemo(() => {
+    if (!provincesCities) return [];
 
-        if (!response.ok) {
-          throw new Error("Failed to load countries");
-        }
+    return Object.keys(provincesCities)
+      .sort((left, right) => left.localeCompare(right))
+      .map((province) => ({ label: province, value: province }));
+  }, [provincesCities]);
 
-        if (!payload?.data) {
-          throw new Error("Invalid countries response");
-        }
+  const cityOptions = useMemo(() => {
+    if (!provincesCities || !provinceValue) return [];
 
-        setCountries(payload.data);
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
-        setCountriesError(
-          error instanceof Error ? error.message : "Unable to load countries",
-        );
-      } finally {
-        if (!controller.signal.aborted) {
-          setIsCountriesLoading(false);
-        }
-      }
-    };
+    const cities = provincesCities[provinceValue] ?? [];
 
-    loadCountries();
+    return cities.map((city) => ({ label: city, value: city }));
+  }, [provincesCities, provinceValue]);
 
-    return () => controller.abort();
-  }, []);
-
-  const selectedCountry = useMemo(
-    () => countries.find((item) => item.cca2 === countryValue),
-    [countries, countryValue],
+  const countryOptions = useMemo(
+    () => [{ label: "Philippines (PH)", value: DEFAULT_COUNTRY }],
+    [],
   );
 
-  const countryLabel = selectedCountry
-    ? `${selectedCountry.name} (${selectedCountry.cca2})`
-    : countryValue || "Select a country";
+  const provincePlaceholder = provincesCitiesQuery.isLoading
+    ? "Loading provinces..."
+    : "Select province";
+
+  const cityPlaceholder = !provinceValue
+    ? "Select a province first"
+    : provincesCitiesQuery.isLoading
+      ? "Loading cities..."
+      : "Select city";
+
+  const isProvinceDisabled = provincesCitiesQuery.isLoading || !provincesCities;
+  const isCityDisabled = isProvinceDisabled || !provinceValue;
+
+  useEffect(() => {
+    if (!provincesCities) return;
+
+    if (provinceValue && !Object.hasOwn(provincesCities, provinceValue)) {
+      setValue("province", "", {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+      setValue("city", "", {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+      return;
+    }
+
+    if (!provinceValue) {
+      if (cityValue) {
+        setValue("city", "", {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }
+      return;
+    }
+
+    const availableCities = provincesCities[provinceValue] ?? [];
+    if (cityValue && !availableCities.includes(cityValue)) {
+      setValue("city", "", {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    }
+  }, [cityValue, provinceValue, provincesCities, setValue]);
 
   const coordinateLabel = useMemo(() => {
     if (previewResult?.lat === undefined || previewResult?.lng === undefined) {
@@ -308,89 +320,33 @@ export function PlaceForm({
             required
           />
 
-          <StandardFormInput<PlaceFormValues>
-            name="city"
-            label="City"
-            placeholder="e.g., Cebu City"
-            required
-          />
-
           <div className="grid gap-4 sm:grid-cols-2">
-            <StandardFormInput<PlaceFormValues>
+            <StandardFormSelect<PlaceFormValues>
               name="province"
-              label="Province / State"
-              placeholder="e.g., Cebu"
-            />
-
-            <StandardFormField<PlaceFormValues>
-              name="country"
-              label="Country"
+              label="Province"
+              options={provinceOptions}
+              placeholder={provincePlaceholder}
               required
-            >
-              {({ field }) => (
-                <div className="space-y-2">
-                  <Popover open={isCountryOpen} onOpenChange={setIsCountryOpen}>
-                    <PopoverTrigger asChild>
-                      <Button
-                        type="button"
-                        id="country"
-                        variant="outline"
-                        role="combobox"
-                        className="w-full justify-between"
-                        aria-expanded={isCountryOpen}
-                      >
-                        <span className="truncate text-left">
-                          {countryLabel}
-                        </span>
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-                      <Command>
-                        <CommandInput placeholder="Search country..." />
-                        <CommandList>
-                          {isCountriesLoading ? (
-                            <CommandEmpty>Loading countries...</CommandEmpty>
-                          ) : countries.length === 0 ? (
-                            <CommandEmpty>No countries found.</CommandEmpty>
-                          ) : (
-                            countries.map((item) => (
-                              <CommandItem
-                                key={item.cca2}
-                                value={`${item.name} ${item.cca2}`}
-                                onSelect={() => {
-                                  field.onChange(item.cca2);
-                                  setIsCountryOpen(false);
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    item.cca2 === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0",
-                                  )}
-                                />
-                                <span className="flex-1 truncate">
-                                  {item.name}
-                                </span>
-                                <span className="text-xs text-muted-foreground">
-                                  {item.cca2}
-                                </span>
-                              </CommandItem>
-                            ))
-                          )}
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  {countriesError && (
-                    <p className="text-xs text-destructive">{countriesError}</p>
-                  )}
-                </div>
-              )}
-            </StandardFormField>
+              disabled={isProvinceDisabled}
+            />
+            <StandardFormSelect<PlaceFormValues>
+              name="city"
+              label="City"
+              options={cityOptions}
+              placeholder={cityPlaceholder}
+              required
+              disabled={isCityDisabled}
+            />
           </div>
+
+          <StandardFormSelect<PlaceFormValues>
+            name="country"
+            label="Country"
+            options={countryOptions}
+            placeholder="Philippines (PH)"
+            required
+            disabled
+          />
 
           <StandardFormSelect<PlaceFormValues>
             name="timeZone"

@@ -18,7 +18,7 @@ export const CreatePlaceSchema = z.object({
   name: z.string().min(1).max(200),
   address: z.string().min(1),
   city: z.string().min(1).max(100),
-  province: z.string().max(100).optional(),
+  province: z.string().min(1).max(100),
   country: z.string().length(2).optional(),
   latitude: z
     .string()
@@ -41,7 +41,7 @@ export const UpdatePlaceSchema = z.object({
   name: z.string().min(1).max(200).optional(),
   address: z.string().min(1).optional(),
   city: z.string().min(1).max(100).optional(),
-  province: z.string().max(100).optional(),
+  province: z.string().min(1).max(100).optional(),
   country: z.string().length(2).optional(),
   latitude: z
     .string()

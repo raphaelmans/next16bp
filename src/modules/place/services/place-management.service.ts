@@ -90,7 +90,7 @@ export class PlaceManagementService implements IPlaceManagementService {
           address: data.address,
           city: data.city,
           province: data.province,
-          country: data.country ?? "PH",
+          country: "PH",
           latitude: data.latitude,
           longitude: data.longitude,
           timeZone: data.timeZone ?? "Asia/Manila",
@@ -148,11 +148,16 @@ export class PlaceManagementService implements IPlaceManagementService {
         websiteUrl,
         viberInfo,
         otherContactInfo,
+        country: _country,
         ...updateData
       } = data;
+      const normalizedUpdateData = {
+        ...updateData,
+        country: "PH",
+      };
       const updated = await this.placeRepository.update(
         placeId,
-        updateData,
+        normalizedUpdateData,
         ctx,
       );
 
@@ -173,7 +178,7 @@ export class PlaceManagementService implements IPlaceManagementService {
           event: "place.updated",
           placeId,
           userId,
-          fields: Object.keys(updateData),
+          fields: Object.keys(normalizedUpdateData),
         },
         "Place updated",
       );

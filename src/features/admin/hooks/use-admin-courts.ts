@@ -1,7 +1,7 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { CITIES } from "@/features/admin/schemas/curated-court.schema";
+import { useMemo } from "react";
+import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
 import { trpc } from "@/trpc/client";
 
 export type CourtType = "curated" | "reservable";
@@ -275,11 +275,17 @@ export function useUpdateCuratedCourt() {
 }
 
 export function useCities() {
-  return useQuery({
-    queryKey: ["cities"],
-    queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      return CITIES;
-    },
-  });
+  const query = usePHProvincesCitiesQuery();
+
+  const cities = useMemo(() => {
+    if (!query.data) return [];
+
+    const allCities = Object.values(query.data).flat();
+    return Array.from(new Set(allCities)).sort((a, b) => a.localeCompare(b));
+  }, [query.data]);
+
+  return {
+    ...query,
+    data: cities,
+  };
 }

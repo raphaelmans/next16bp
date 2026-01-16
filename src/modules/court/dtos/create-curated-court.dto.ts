@@ -45,6 +45,8 @@ export const CreateCuratedCourtSchema = z.object({
   name: z.string().min(1).max(200),
   address: z.string().min(1),
   city: z.string().min(1).max(100),
+  province: z.string().min(1).max(100),
+  country: z.string().length(2).optional(),
   latitude: CoordinateSchema,
   longitude: CoordinateSchema,
   timeZone: z.string().min(1).max(64).optional(),

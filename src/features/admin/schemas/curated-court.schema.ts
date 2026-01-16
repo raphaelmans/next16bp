@@ -54,6 +54,8 @@ export const curatedCourtSchema = z.object({
     .min(10, "Address must be at least 10 characters")
     .max(200, "Address must be less than 200 characters"),
   city: z.string().min(1, "City is required"),
+  province: z.string().min(1, "Province is required").max(100),
+  country: z.string().length(2),
   lat: z.number().optional(),
   lng: z.number().optional(),
   facebookUrl: z.string().url("Invalid URL").optional().or(z.literal("")),

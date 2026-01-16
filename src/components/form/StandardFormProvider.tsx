@@ -32,7 +32,7 @@ export function StandardFormProvider<TFieldValues extends FieldValues>({
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit, onError)}
-          className={cn("space-y-4", className)}
+          className={cn("w-full space-y-4", className)}
         >
           {children}
         </form>
