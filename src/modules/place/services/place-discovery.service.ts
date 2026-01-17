@@ -59,6 +59,8 @@ export class PlaceDiscoveryService implements IPlaceDiscoveryService {
     total: number;
   }> {
     return this.placeRepository.list({
+      q: filters.q,
+      province: filters.province,
       city: filters.city,
       sportId: filters.sportId,
       limit: filters.limit,

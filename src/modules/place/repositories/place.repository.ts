@@ -1,4 +1,4 @@
-import { and, count, eq, inArray } from "drizzle-orm";
+import { and, count, eq, ilike, inArray, or } from "drizzle-orm";
 import {
   court,
   courtRateRule,
@@ -53,6 +53,8 @@ export interface IPlaceRepository {
   ): Promise<PlaceRecord[]>;
   list(
     filters: {
+      q?: string;
+      province?: string;
       city?: string;
       sportId?: string;
       limit: number;
@@ -179,6 +181,8 @@ export class PlaceRepository implements IPlaceRepository {
 
   async list(
     filters: {
+      q?: string;
+      province?: string;
       city?: string;
       sportId?: string;
       limit: number;
@@ -188,9 +192,28 @@ export class PlaceRepository implements IPlaceRepository {
   ): Promise<PaginatedPlaces> {
     const client = this.getClient(ctx);
     const conditions = [eq(place.isActive, true)];
+    const searchValue = filters.q?.trim();
+    const searchPattern = searchValue ? `%${searchValue}%` : undefined;
+
+    if (filters.province) {
+      conditions.push(ilike(place.province, filters.province));
+    }
 
     if (filters.city) {
-      conditions.push(eq(place.city, filters.city));
+      conditions.push(ilike(place.city, filters.city));
+    }
+
+    if (searchPattern) {
+      const searchCondition = or(
+        ilike(place.name, searchPattern),
+        ilike(place.address, searchPattern),
+        ilike(place.city, searchPattern),
+        ilike(place.province, searchPattern),
+      );
+
+      if (searchCondition) {
+        conditions.push(searchCondition);
+      }
     }
 
     const baseCondition = and(...conditions);

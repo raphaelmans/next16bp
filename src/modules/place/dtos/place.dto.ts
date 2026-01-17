@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 export const ListPlacesSchema = z.object({
+  q: z.string().trim().min(1).max(100).optional(),
+  province: z.string().min(1).max(100).optional(),
   city: z.string().optional(),
   lat: z.number().optional(),
   lng: z.number().optional(),

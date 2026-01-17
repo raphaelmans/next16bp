@@ -30,6 +30,7 @@ function PlacesPageContent() {
   const filters = useDiscoveryFilters();
   const { data, isLoading } = useDiscoveryPlaces({
     q: filters.q ?? undefined,
+    province: filters.province ?? undefined,
     city: filters.city ?? undefined,
     sportId: filters.sportId ?? undefined,
     page: filters.page,
@@ -38,6 +39,7 @@ function PlacesPageContent() {
 
   const places = data?.places ?? [];
   const total = data?.total ?? 0;
+  const locationLabel = filters.city ?? filters.province;
 
   return (
     <Container>
@@ -45,7 +47,7 @@ function PlacesPageContent() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              {filters.city ? `Places in ${filters.city}` : "Browse Places"}
+              {locationLabel ? `Places in ${locationLabel}` : "Browse Places"}
             </h1>
             {!isLoading && (
               <p className="text-muted-foreground">
@@ -60,8 +62,10 @@ function PlacesPageContent() {
         </div>
 
         <PlaceFilters
+          province={filters.province ?? undefined}
           city={filters.city ?? undefined}
           sportId={filters.sportId ?? undefined}
+          onProvinceChange={filters.setProvince}
           onCityChange={filters.setCity}
           onSportChange={filters.setSportId}
           onClearAll={filters.clearAll}

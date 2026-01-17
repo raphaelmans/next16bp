@@ -13,6 +13,7 @@ export const searchParamsSchema = {
   q: parseAsString,
 
   // Filters
+  province: parseAsString,
   city: parseAsString,
   sportId: parseAsString,
 
@@ -26,6 +27,7 @@ export const searchParamsCache = createSearchParamsCache(searchParamsSchema);
 export type SearchParams = {
   view: "list" | "map";
   q: string | null;
+  province: string | null;
   city: string | null;
   sportId: string | null;
   page: number;

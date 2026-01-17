@@ -18,6 +18,7 @@ export { LocationPin, MapMarker } from "./location-pin";
 export { KudosLogo, KudosLogoIcon } from "./logo";
 export {
   PlaceCard,
+  type PlaceCardLinkScope,
   type PlaceCardPlace,
   PlaceCardSkeleton,
 } from "./place-card";

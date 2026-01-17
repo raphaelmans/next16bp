@@ -61,7 +61,7 @@ export function Navbar({ className }: NavbarProps) {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(
-        `${appRoutes.places.base}?q=${encodeURIComponent(searchQuery.trim())}`,
+        `${appRoutes.courts.base}?q=${encodeURIComponent(searchQuery.trim())}`,
       );
     }
 

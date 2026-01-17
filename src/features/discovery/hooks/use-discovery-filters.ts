@@ -14,10 +14,15 @@ export function useDiscoveryFilters() {
   const clearAll = () => {
     setFilters({
       q: null,
+      province: null,
       city: null,
       sportId: null,
       page: 1,
     });
+  };
+
+  const setProvince = (province: string | undefined) => {
+    setFilters({ province: province || null, city: null, page: 1 });
   };
 
   const setCity = (city: string | undefined) => {
@@ -42,6 +47,7 @@ export function useDiscoveryFilters() {
 
   return {
     ...filters,
+    setProvince,
     setCity,
     setSportId,
     setView,

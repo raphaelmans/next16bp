@@ -9,6 +9,7 @@ import {
   GoogleMapsEmbed,
   LocationPin,
   PlaceCard,
+  type PlaceCardLinkScope,
   type PlaceCardPlace,
 } from "@/shared/components/kudos";
 
@@ -81,6 +82,8 @@ export function PlaceMap({
     );
   }
 
+  const cardLinkScope: PlaceCardLinkScope = "title";
+
   return (
     <div
       className={cn("relative h-[600px] rounded-xl overflow-hidden", className)}
@@ -129,7 +132,12 @@ export function PlaceMap({
             )}
             onClick={() => handleSelect(place)}
           >
-            <PlaceCard place={place} variant="compact" showCTA={false} />
+            <PlaceCard
+              place={place}
+              variant="compact"
+              showCTA={false}
+              linkScope={cardLinkScope}
+            />
           </button>
         ))}
       </div>

@@ -8,6 +8,7 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-17 | Added 35-courts-discovery-filters plan (province/city discovery filters + search) |
 | 2026-01-16 | Added 34-place-location-standardization plan (PH province/city enforcement) |
 | 2026-01-15 | Added 33-place-claiming implementation plan (curated → claim → reservable) |
 | 2026-01-15 | Added 17-place-claiming user stories (claim curated places) |
@@ -92,6 +93,7 @@ References and context for planning artifacts.
 | 31-owner-reservations-inbox | `agent-plans/31-owner-reservations-inbox/` | Pending |
 | 33-place-claiming | `agent-plans/33-place-claiming/` | Ready |
 | 34-place-location-standardization | `agent-plans/34-place-location-standardization/` | Ready |
+| 35-courts-discovery-filters | `agent-plans/35-courts-discovery-filters/` | Ready |
 
 ---
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { Filter, X } from "lucide-react";
+import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -18,50 +19,141 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
 import { trpc } from "@/trpc/client";
 
 interface PlaceFiltersProps {
+  province?: string;
   city?: string;
   sportId?: string;
+  onProvinceChange: (province: string | undefined) => void;
   onCityChange: (city: string | undefined) => void;
   onSportChange: (sportId: string | undefined) => void;
   onClearAll: () => void;
   className?: string;
 }
 
-const CITIES = [
-  { value: "Makati", label: "Makati" },
-  { value: "Taguig City", label: "Taguig City" },
-  { value: "Cebu City", label: "Cebu City" },
-  { value: "Quezon City", label: "Quezon City" },
-  { value: "Davao", label: "Davao" },
-];
-
 export function PlaceFilters({
+  province,
   city,
   sportId,
+  onProvinceChange,
   onCityChange,
   onSportChange,
   onClearAll,
   className,
 }: PlaceFiltersProps) {
-  const hasFilters = city || sportId;
+  const hasFilters = province || city || sportId;
   const { data: sports = [], isLoading: sportsLoading } =
     trpc.sport.list.useQuery({});
+  const provincesCitiesQuery = usePHProvincesCitiesQuery();
+  const provincesCities = provincesCitiesQuery.data ?? null;
+
+  const provinceOptions = useMemo(() => {
+    if (!provincesCities) return [];
+    return Object.keys(provincesCities)
+      .sort((left, right) => left.localeCompare(right))
+      .map((value) => ({ value, label: value }));
+  }, [provincesCities]);
+
+  const cityOptions = useMemo(() => {
+    if (!provincesCities || !province) return [];
+
+    const cities = provincesCities[province] ?? [];
+    return cities.map((value) => ({ value, label: value }));
+  }, [provincesCities, province]);
+
+  const provincePlaceholder = provincesCitiesQuery.isLoading
+    ? "Loading provinces..."
+    : "All provinces";
+
+  const cityPlaceholder = !province
+    ? "Select a province first"
+    : provincesCitiesQuery.isLoading
+      ? "Loading cities..."
+      : "All cities";
+
+  const isProvinceDisabled = provincesCitiesQuery.isLoading || !provincesCities;
+  const isCityDisabled = isProvinceDisabled || !province;
+
+  const handleProvinceChange = (value: string) => {
+    const nextProvince = value === "all" ? undefined : value;
+    onProvinceChange(nextProvince);
+    if (nextProvince !== province) {
+      onCityChange(undefined);
+    }
+  };
+
+  const handleCityChange = (value: string) => {
+    onCityChange(value === "all" ? undefined : value);
+  };
+
+  useEffect(() => {
+    if (!provincesCities) return;
+
+    if (province && !Object.hasOwn(provincesCities, province)) {
+      onProvinceChange(undefined);
+      onCityChange(undefined);
+      return;
+    }
+
+    if (!province && city) {
+      const matchingEntry = Object.entries(provincesCities).find(([, cities]) =>
+        cities.includes(city),
+      );
+
+      if (matchingEntry) {
+        onProvinceChange(matchingEntry[0]);
+      } else {
+        onCityChange(undefined);
+      }
+      return;
+    }
+
+    if (province && city) {
+      const availableCities = provincesCities[province] ?? [];
+      if (!availableCities.includes(city)) {
+        onCityChange(undefined);
+      }
+    }
+  }, [city, province, provincesCities, onCityChange, onProvinceChange]);
 
   const FilterContent = () => (
     <div className="space-y-6">
       <div className="space-y-2">
-        <Label>City</Label>
+        <Label>Province</Label>
         <Select
-          value={city}
-          onValueChange={(value) => onCityChange(value || undefined)}
+          value={province ?? "all"}
+          onValueChange={handleProvinceChange}
+          disabled={isProvinceDisabled}
         >
           <SelectTrigger>
-            <SelectValue placeholder="All cities" />
+            <SelectValue placeholder={provincePlaceholder} />
           </SelectTrigger>
           <SelectContent>
-            {CITIES.map((item) => (
+            <SelectItem value="all">All provinces</SelectItem>
+            {provinceOptions.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
+        <Label>City</Label>
+        <Select
+          value={province ? (city ?? "all") : ""}
+          onValueChange={handleCityChange}
+          disabled={isCityDisabled}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={cityPlaceholder} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All cities</SelectItem>
+            {cityOptions.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
@@ -101,16 +193,38 @@ export function PlaceFilters({
 
   return (
     <>
-      <div className={cn("hidden lg:flex items-center gap-3", className)}>
+      <div
+        className={cn("hidden lg:flex flex-wrap items-center gap-3", className)}
+      >
         <Select
-          value={city}
-          onValueChange={(value) => onCityChange(value || undefined)}
+          value={province ?? "all"}
+          onValueChange={handleProvinceChange}
+          disabled={isProvinceDisabled}
         >
           <SelectTrigger className="w-44">
-            <SelectValue placeholder="City" />
+            <SelectValue placeholder="Province" />
           </SelectTrigger>
           <SelectContent>
-            {CITIES.map((item) => (
+            <SelectItem value="all">All provinces</SelectItem>
+            {provinceOptions.map((item) => (
+              <SelectItem key={item.value} value={item.value}>
+                {item.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select
+          value={province ? (city ?? "all") : ""}
+          onValueChange={handleCityChange}
+          disabled={isCityDisabled}
+        >
+          <SelectTrigger className="w-44">
+            <SelectValue placeholder={cityPlaceholder} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All cities</SelectItem>
+            {cityOptions.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
@@ -150,7 +264,7 @@ export function PlaceFilters({
             Filters
             {hasFilters && (
               <span className="ml-2 rounded-full bg-primary text-primary-foreground text-xs px-1.5">
-                {[city, sportId].filter(Boolean).length}
+                {[province, city, sportId].filter(Boolean).length}
               </span>
             )}
           </Button>

@@ -3,6 +3,7 @@ import { trpc } from "@/trpc/client";
 
 interface UseDiscoveryOptions {
   q?: string;
+  province?: string;
   city?: string;
   sportId?: string;
   page?: number;
@@ -60,20 +61,13 @@ const mapPlaceSummary = (item: PlaceListItem): PlaceSummary => {
   };
 };
 
-const matchesQuery = (place: PlaceSummary, query?: string) => {
-  if (!query) return true;
-  const normalized = query.trim().toLowerCase();
-  if (!normalized) return true;
-  return [place.name, place.address, place.city].some((value) =>
-    value.toLowerCase().includes(normalized),
-  );
-};
-
 export function useDiscoveryPlaces(options: UseDiscoveryOptions = {}) {
-  const { q, city, sportId, page = 1, limit = 12 } = options;
+  const { q, province, city, sportId, page = 1, limit = 12 } = options;
   const offset = (page - 1) * limit;
 
   const query = trpc.place.list.useQuery({
+    q,
+    province,
     city,
     sportId,
     limit,
@@ -81,23 +75,13 @@ export function useDiscoveryPlaces(options: UseDiscoveryOptions = {}) {
   });
 
   const transformedData: DiscoveryResult | undefined = query.data
-    ? (() => {
-        const mappedPlaces = query.data.items.map(mapPlaceSummary);
-        const filteredPlaces = mappedPlaces.filter((place) =>
-          matchesQuery(place, q),
-        );
-        const total = q ? filteredPlaces.length : query.data.total;
-        const hasMore =
-          !q && (page - 1) * limit + query.data.items.length < query.data.total;
-
-        return {
-          places: filteredPlaces,
-          total,
-          page,
-          limit,
-          hasMore,
-        };
-      })()
+    ? {
+        places: query.data.items.map(mapPlaceSummary),
+        total: query.data.total,
+        page,
+        limit,
+        hasMore: offset + query.data.items.length < query.data.total,
+      }
     : undefined;
 
   return {
