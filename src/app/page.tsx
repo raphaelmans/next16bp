@@ -26,7 +26,7 @@ const FEATURES = [
     icon: Search,
     title: "Discover",
     description:
-      "Find places by location, see sports, amenities, and real-time availability in one view.",
+      "Find courts by location, see sports, amenities, and real-time availability in one view.",
   },
   {
     icon: Calendar,
@@ -52,15 +52,15 @@ export default function HomePage() {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(
-        `${appRoutes.places.base}?q=${encodeURIComponent(searchQuery.trim())}`,
+        `${appRoutes.courts.base}?q=${encodeURIComponent(searchQuery.trim())}`,
       );
     } else {
-      router.push(appRoutes.places.base);
+      router.push(appRoutes.courts.base);
     }
   };
 
   const handleLocationClick = (city: string) => {
-    router.push(`${appRoutes.places.base}?city=${encodeURIComponent(city)}`);
+    router.push(`${appRoutes.courts.base}?city=${encodeURIComponent(city)}`);
   };
 
   return (
@@ -70,7 +70,7 @@ export default function HomePage() {
         <Container>
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="font-heading text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Discover Pickleball Places{" "}
+              Discover Pickleball Courts{" "}
               <span className="text-primary">Near You</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground sm:text-xl">
@@ -85,7 +85,7 @@ export default function HomePage() {
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                   <Input
                     type="text"
-                    placeholder="Search by city or place name..."
+                    placeholder="Search by city, court, or venue name..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="h-14 pl-12 text-base rounded-xl"
@@ -128,10 +128,10 @@ export default function HomePage() {
         <Container>
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-heading text-2xl font-bold text-foreground sm:text-3xl">
-              Featured Places
+              Featured Courts
             </h2>
             <Link
-              href={appRoutes.places.base}
+              href={appRoutes.courts.base}
               className="inline-flex items-center text-primary hover:underline"
             >
               View All
@@ -159,12 +159,12 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="text-center py-12 text-muted-foreground">
-              <p>No featured places available yet.</p>
+              <p>No featured courts available yet.</p>
               <Link
-                href={appRoutes.places.base}
+                href={appRoutes.courts.base}
                 className="text-accent hover:underline mt-2 inline-block"
               >
-                Browse all places
+                Browse all courts
               </Link>
             </div>
           )}
@@ -217,7 +217,7 @@ export default function HomePage() {
               Ready to play?
             </h2>
             <p className="mt-4 text-lg text-primary-foreground/80 max-w-xl mx-auto">
-              Find available courts at top places and book your next game fast.
+              Find available courts at top venues and book your next game fast.
             </p>
             <div className="mt-8">
               <Button
@@ -226,7 +226,7 @@ export default function HomePage() {
                 variant="secondary"
                 className="h-14 px-10 rounded-xl font-heading font-semibold text-primary"
               >
-                <Link href={appRoutes.places.base}>Browse All Places</Link>
+                <Link href={appRoutes.courts.base}>Browse All Courts</Link>
               </Button>
             </div>
           </div>

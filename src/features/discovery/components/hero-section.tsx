@@ -25,12 +25,12 @@ export function HeroSection({ className }: HeroSectionProps) {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/places?q=${encodeURIComponent(searchQuery.trim())}`);
+      router.push(`/courts?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
   const handleLocationClick = (slug: string) => {
-    router.push(`/places?city=${slug}`);
+    router.push(`/courts?city=${slug}`);
   };
 
   return (
@@ -44,13 +44,13 @@ export function HeroSection({ className }: HeroSectionProps) {
       <div className="text-center max-w-4xl mx-auto px-4">
         {/* Title */}
         <h1 className="font-heading font-extrabold text-4xl sm:text-5xl md:text-6xl text-foreground tracking-tight">
-          Find Your Perfect Place
+          Find Courts Near You
         </h1>
 
         {/* Subtitle */}
         <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
           Discover and book courts near you. Compare venues, sports, and
-          real-time availability in one place.
+          real-time availability in one spot.
         </p>
 
         {/* Search Bar */}
@@ -59,7 +59,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search by location, place name..."
+              placeholder="Search by city, court, or venue..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="h-14 pl-12 pr-32 text-lg rounded-xl shadow-md border-border/50"

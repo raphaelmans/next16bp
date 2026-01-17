@@ -53,7 +53,7 @@ export function PlaceCard({
   const aspectRatio = variant === "featured" ? "aspect-[4/3]" : "aspect-[16/9]";
   const visibleSports = place.sports.slice(0, MAX_BADGES);
   const hiddenCount = Math.max(0, place.sports.length - MAX_BADGES);
-  const placeHref = appRoutes.places.detail(place.id);
+  const placeHref = appRoutes.courts.detail(place.id);
 
   const title =
     linkScope === "title" ? (

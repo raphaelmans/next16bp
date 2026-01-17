@@ -8,6 +8,7 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-17 | Noted deferred rename from place → venue (pending explicit request) |
 | 2026-01-17 | Added 35-courts-discovery-filters plan (province/city discovery filters + search) |
 | 2026-01-16 | Added 34-place-location-standardization plan (PH province/city enforcement) |
 | 2026-01-15 | Added 33-place-claiming implementation plan (curated → claim → reservable) |

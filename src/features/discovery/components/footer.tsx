@@ -5,15 +5,15 @@ import { appRoutes } from "@/shared/lib/app-routes";
 
 const FOOTER_LINKS = {
   discover: [
-    { name: "Browse Places", href: appRoutes.places.base },
-    { name: "Map View", href: `${appRoutes.places.base}?view=map` },
+    { name: "Browse Courts", href: appRoutes.courts.base },
+    { name: "Map View", href: `${appRoutes.courts.base}?view=map` },
     {
-      name: "Pickleball Places",
-      href: `${appRoutes.places.base}?sportId=pickleball`,
+      name: "Pickleball Courts",
+      href: `${appRoutes.courts.base}?sportId=pickleball`,
     },
   ],
   owners: [
-    { name: "List Your Place", href: appRoutes.owner.places.new },
+    { name: "List Your Venue", href: appRoutes.owner.places.new },
     { name: "Owner Dashboard", href: appRoutes.owner.base },
     { name: "Pricing", href: appRoutes.owner.pricing },
   ],
@@ -42,7 +42,7 @@ export function Footer() {
                 <KudosLogo size={40} variant="full" />
               </Link>
               <p className="mt-4 text-sm text-muted-foreground">
-                The unified platform for place discovery and court booking.
+                The unified platform for court discovery and venue booking.
               </p>
             </div>
 

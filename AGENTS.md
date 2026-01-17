@@ -74,6 +74,7 @@ pnpm db:seed:buckets # seed storage buckets
 - React components: PascalCase.
 - Hooks: `useX` prefix.
 - Types/interfaces: PascalCase.
+- Feature helpers: prefer `src/features/<feature>/helpers.ts` (single file exporting multiple helpers).
 - Error classes: `<Entity><ErrorType>Error`.
 - Error codes: `<MODULE>_<ERROR_TYPE>` in SCREAMING_SNAKE_CASE.
 
@@ -87,6 +88,12 @@ pnpm db:seed:buckets # seed storage buckets
 - Prefer shared formatting helpers in `src/shared/lib/format.ts`.
 - Query params: use `nuqs` (`useQueryState` / `useQueryStates`) and avoid manual `router.replace` or `useSearchParams` reconciliation.
 - Cache invalidation: use `trpc.useUtils()` for tRPC data; for non-tRPC caches, use Query Key Factory (`@lukemorales/query-key-factory`) keys + `useQueryClient()`.
+
+### Client Logic Extraction
+- Keep non-trivial transforms out of TSX.
+- Prefer `src/features/<feature>/helpers.ts` for pure-ish functions (filter/sort/group/count, status mapping, option builders, DTO shaping).
+- Hooks can call helpers and return UI-ready data; TSX should mostly render and wire events.
+- `helpers.ts` may import from `src/shared/lib/*`; promote helpers to `src/shared/lib/*` when cross-feature.
 
 ## tRPC (React Query Hooks)
 - Client: import `trpc` from `@/trpc/client` (created via `createTRPCReact<AppRouter>()`).

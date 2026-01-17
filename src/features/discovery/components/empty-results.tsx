@@ -13,11 +13,11 @@ export function EmptyResults({ query, onClearFilters }: EmptyResultsProps) {
   return (
     <EmptyState
       icon={MapPin}
-      title="No places found"
+      title="No courts found"
       description={
         query
-          ? `We couldn't find any places matching "${query}". Try adjusting your search or filters.`
-          : "No places match your current filters. Try adjusting your search criteria."
+          ? `We couldn't find any courts matching "${query}". Try adjusting your search or filters.`
+          : "No courts match your current filters. Try adjusting your search criteria."
       }
       action={
         onClearFilters
@@ -26,8 +26,8 @@ export function EmptyResults({ query, onClearFilters }: EmptyResultsProps) {
               onClick: onClearFilters,
             }
           : {
-              label: "Browse all places",
-              href: appRoutes.places.base,
+              label: "Browse all courts",
+              href: appRoutes.courts.base,
             }
       }
     />

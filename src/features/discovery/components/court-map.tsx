@@ -75,7 +75,7 @@ export function PlaceMap({
         <div className="flex h-full items-center justify-center text-muted-foreground">
           <div className="text-center">
             <p className="text-lg font-medium">Map View</p>
-            <p className="text-sm">No places available to preview.</p>
+            <p className="text-sm">No courts available to preview.</p>
           </div>
         </div>
       </div>

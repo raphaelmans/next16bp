@@ -115,7 +115,7 @@ export function Navbar({ className }: NavbarProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Search places..."
+            placeholder="Search courts..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 h-10 rounded-lg"
@@ -130,7 +130,7 @@ export function Navbar({ className }: NavbarProps) {
           onClick={handleListYourPlace}
           className="font-heading text-accent hover:text-accent/80"
         >
-          List Your Place
+          List Your Venue
         </Button>
 
         {isAuthenticated ? (
@@ -165,7 +165,7 @@ export function Navbar({ className }: NavbarProps) {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder="Search places..."
+                  placeholder="Search courts..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -209,11 +209,11 @@ export function Navbar({ className }: NavbarProps) {
               Home
             </Link>
             <Link
-              href={appRoutes.places.base}
+              href={appRoutes.courts.base}
               className="py-2 text-lg font-heading font-semibold"
               onClick={() => setIsOpen(false)}
             >
-              Browse Places
+              Browse Courts
             </Link>
 
             {/* Authenticated User Links */}
@@ -268,7 +268,7 @@ export function Navbar({ className }: NavbarProps) {
 
             <Separator />
 
-            {/* List Your Place */}
+            {/* List Your Venue */}
             <button
               type="button"
               onClick={() => {
@@ -277,7 +277,7 @@ export function Navbar({ className }: NavbarProps) {
               }}
               className="py-2 text-lg font-heading font-semibold text-accent text-left"
             >
-              List Your Place
+              List Your Venue
             </button>
 
             <Separator />

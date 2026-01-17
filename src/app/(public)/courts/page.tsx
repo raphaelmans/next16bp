@@ -47,11 +47,11 @@ function PlacesPageContent() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">
-              {locationLabel ? `Places in ${locationLabel}` : "Browse Places"}
+              {locationLabel ? `Courts in ${locationLabel}` : "Browse Courts"}
             </h1>
             {!isLoading && (
               <p className="text-muted-foreground">
-                {total} place{total !== 1 ? "s" : ""} found
+                {total} court{total !== 1 ? "s" : ""} found
               </p>
             )}
           </div>

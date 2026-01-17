@@ -307,16 +307,16 @@ export default function PlaceDetailPage() {
     return (
       <Container className="py-12">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Place not found</h1>
+          <h1 className="text-2xl font-bold">Venue not found</h1>
           <p className="text-muted-foreground mt-2">
-            The place you&apos;re looking for doesn&apos;t exist or has been
+            The venue you&apos;re looking for doesn&apos;t exist or has been
             removed.
           </p>
           <Link
-            href={appRoutes.places.base}
+            href={appRoutes.courts.base}
             className="text-primary hover:underline mt-4 inline-block"
           >
-            Browse all places
+            Browse all courts
           </Link>
         </div>
       </Container>
@@ -340,15 +340,15 @@ export default function PlaceDetailPage() {
     place.claimStatus === "CLAIM_PENDING"
       ? "A claim request is pending admin review."
       : place.claimStatus === "CLAIMED"
-        ? "This place has already been claimed."
+        ? "This venue has already been claimed."
         : place.claimStatus === "REMOVAL_REQUESTED"
-          ? "This place is pending removal review."
+          ? "This venue is pending removal review."
           : null;
   const claimHelperText = !isAuthenticated
-    ? "Sign in to claim this place."
+    ? "Sign in to claim this venue."
     : !isOwner
-      ? "Create an organization to claim this place."
-      : "This place is not currently available to claim.";
+      ? "Create an organization to claim this venue."
+      : "This venue is not currently available to claim.";
   const mapQuery = `${place.name} ${place.address} ${place.city}`;
   const directionsUrl = hasCoordinates
     ? `https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`
@@ -924,7 +924,7 @@ export default function PlaceDetailPage() {
             <>
               <Card>
                 <CardHeader>
-                  <CardTitle>Claim this place</CardTitle>
+                  <CardTitle>Claim this venue</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm">
                   <p className="text-muted-foreground">
@@ -937,7 +937,7 @@ export default function PlaceDetailPage() {
                   ) : canSubmitClaim ? (
                     <Dialog open={isClaimOpen} onOpenChange={setIsClaimOpen}>
                       <DialogTrigger asChild>
-                        <Button className="w-full">Claim this place</Button>
+                        <Button className="w-full">Claim this venue</Button>
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[520px]">
                         <DialogHeader>
