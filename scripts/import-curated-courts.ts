@@ -38,7 +38,7 @@ interface ParsedRow {
   name: string;
   address: string;
   city: string;
-  province: string | null;
+  province: string;
   country: string;
   timeZone: string;
   latitude: number | null;
@@ -54,7 +54,13 @@ interface ParsedRow {
 }
 
 const DEFAULT_FILE = "scripts/templates/curated-courts-template.csv";
-const REQUIRED_COLUMNS = ["name", "address", "city", "courts"] as const;
+const REQUIRED_COLUMNS = [
+  "name",
+  "address",
+  "city",
+  "province",
+  "courts",
+] as const;
 
 function parseArgs(): ImportOptions {
   const args = process.argv.slice(2);
@@ -280,11 +286,13 @@ function parseRow(
   const address = getValue(row, headerMap, "address");
   const city = getValue(row, headerMap, "city");
 
-  if (!name || !address || !city) {
-    throw new Error(`${rowLabel}: name, address, and city are required`);
-  }
-
   const province = getValue(row, headerMap, "province");
+
+  if (!name || !address || !city || !province) {
+    throw new Error(
+      `${rowLabel}: name, address, city, and province are required`,
+    );
+  }
   const country = getValue(row, headerMap, "country") || "PH";
   const timeZone = getValue(row, headerMap, "time_zone") || "Asia/Manila";
   const latitude = parseOptionalNumber(
@@ -321,7 +329,7 @@ function parseRow(
     name,
     address,
     city,
-    province: province || null,
+    province,
     country,
     timeZone,
     latitude,
@@ -421,7 +429,7 @@ async function importCuratedCourts() {
             name: parsed.name,
             address: parsed.address,
             city: parsed.city,
-            province: parsed.province ?? undefined,
+            province: parsed.province,
             country: parsed.country,
             latitude:
               parsed.latitude !== null ? parsed.latitude.toString() : undefined,
