@@ -59,14 +59,14 @@ export function StandardFormSelect<
               {required && <span className="ml-1 text-destructive">*</span>}
             </FormLabel>
           )}
-          <div className="flex-1">
+          <div className="flex-1 w-full">
             <Select
               value={field.value ?? ""}
               onValueChange={field.onChange}
               disabled={disabled}
             >
               <FormControl>
-                <SelectTrigger>
+                <SelectTrigger className='w-full'>
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>
