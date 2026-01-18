@@ -10,6 +10,7 @@ import { useFeaturedPlaces } from "@/features/discovery/hooks";
 import { PlaceCard, PlaceCardSkeleton } from "@/shared/components/kudos";
 import { Container, PublicShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { URLQueryBuilder } from "@/shared/lib/url-query-builder";
 
 // Popular locations for quick access
 const POPULAR_LOCATIONS = [
@@ -68,23 +69,25 @@ export default function HomePage() {
   const { data: featuredPlaces = [], isLoading: isLoadingFeatured } =
     useFeaturedPlaces(3);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(
-        `${appRoutes.courts.base}?q=${encodeURIComponent(searchQuery.trim())}`,
-      );
+    const query = searchQuery.trim();
+    if (query) {
+      const search = new URLQueryBuilder().addParams({ q: query }).build();
+      router.push(`${appRoutes.courts.base}?${search}`);
     } else {
       router.push(appRoutes.courts.base);
     }
   };
 
   const handleLocationClick = (provinceSlug: string, citySlug: string) => {
-    const params = new URLSearchParams({
-      province: provinceSlug,
-      city: citySlug,
-    });
-    router.push(`${appRoutes.courts.base}?${params.toString()}`);
+    const search = new URLQueryBuilder()
+      .addParams({
+        province: provinceSlug,
+        city: citySlug,
+      })
+      .build();
+    router.push(`${appRoutes.courts.base}?${search}`);
   };
 
   return (

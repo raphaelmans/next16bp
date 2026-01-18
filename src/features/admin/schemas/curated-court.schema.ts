@@ -44,6 +44,10 @@ const courtSchema = z.object({
     .nullable(),
 });
 
+const photoSchema = z.object({
+  url: z.string().url("Invalid URL").optional().or(z.literal("")),
+});
+
 export const curatedCourtSchema = z.object({
   name: z
     .string()
@@ -56,6 +60,7 @@ export const curatedCourtSchema = z.object({
   city: z.string().min(1, "City is required"),
   province: z.string().min(1, "Province is required").max(100),
   country: z.string().length(2),
+  timeZone: z.string().min(1).max(64).optional(),
   lat: z.number().optional(),
   lng: z.number().optional(),
   facebookUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
@@ -71,6 +76,7 @@ export const curatedCourtSchema = z.object({
     .max(500, "Contact info must be less than 500 characters")
     .optional(),
   amenities: z.array(z.string()),
+  photos: z.array(photoSchema).optional(),
   courts: z.array(courtSchema).min(1, "Add at least one court for this place"),
 });
 

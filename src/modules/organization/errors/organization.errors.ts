@@ -16,6 +16,12 @@ export class SlugAlreadyExistsError extends ConflictError {
   }
 }
 
+export class UserAlreadyHasOrganizationError extends ConflictError {
+  constructor() {
+    super("You already have an organization");
+  }
+}
+
 export class NotOrganizationOwnerError extends AuthorizationError {
   constructor() {
     super("You are not the owner of this organization");

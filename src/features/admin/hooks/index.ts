@@ -1,5 +1,6 @@
 export {
   type AdminCourt,
+  type AdminCourtDetail,
   type ClaimStatusFilter,
   type CourtStatus,
   type CourtType,

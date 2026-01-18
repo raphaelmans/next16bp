@@ -23,6 +23,7 @@ export const appRoutes = {
     base: "/courts",
     options: { type: "public" as const },
     detail: (courtId: string) => `/courts/${courtId}`,
+    schedule: (courtId: string) => `/courts/${courtId}/schedule`,
     book: (courtId: string, slotId: string) =>
       `/courts/${courtId}/book/${slotId}`,
   },
@@ -30,6 +31,7 @@ export const appRoutes = {
     base: "/places",
     options: { type: "public" as const },
     detail: (placeId: string) => `/places/${placeId}`,
+    schedule: (placeId: string) => `/places/${placeId}/schedule`,
     book: (placeId: string) => `/places/${placeId}/book`,
   },
   login: {

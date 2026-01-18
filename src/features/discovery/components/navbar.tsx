@@ -21,6 +21,7 @@ import { useLogout, useSession } from "@/features/auth/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { KudosLogo } from "@/shared/components/kudos";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { URLQueryBuilder } from "@/shared/lib/url-query-builder";
 import { trpc } from "@/trpc/client";
 import { UserDropdown } from "./user-dropdown";
 
@@ -57,14 +58,15 @@ export function Navbar({ className }: NavbarProps) {
   const isOwner = (orgs?.length ?? 0) > 0;
   const isAdmin = sessionUser?.role === "admin";
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(
-        `${appRoutes.courts.base}?q=${encodeURIComponent(searchQuery.trim())}`,
-      );
-    }
+    const query = searchQuery.trim();
+    const search = new URLQueryBuilder().addParams({ q: query }).build();
+    const destination = search
+      ? `${appRoutes.courts.base}?${search}`
+      : appRoutes.courts.base;
 
+    router.push(destination);
     setIsOpen(false);
   };
 
@@ -99,21 +101,21 @@ export function Navbar({ className }: NavbarProps) {
       )}
     >
       {/* Logo */}
-      <Link
-        href={isAuthenticated ? appRoutes.home.base : appRoutes.index.base}
-        className="flex items-center gap-2"
-      >
+      <Link href={appRoutes.index.base} className="flex items-center gap-2">
         <KudosLogo size={36} variant="full" />
       </Link>
 
       {/* Desktop Search */}
       <form
+        action={appRoutes.courts.base}
+        method="GET"
         onSubmit={handleSearch}
         className="hidden md:flex flex-1 max-w-md mx-8"
       >
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
+            name="q"
             type="search"
             placeholder="Search courts..."
             value={searchQuery}
@@ -160,10 +162,15 @@ export function Navbar({ className }: NavbarProps) {
         <SheetContent side="right" className="w-80">
           <div className="flex flex-col gap-4 mt-8">
             {/* Mobile Search */}
-            <form onSubmit={handleSearch}>
+            <form
+              action={appRoutes.courts.base}
+              method="GET"
+              onSubmit={handleSearch}
+            >
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
+                  name="q"
                   type="search"
                   placeholder="Search courts..."
                   value={searchQuery}

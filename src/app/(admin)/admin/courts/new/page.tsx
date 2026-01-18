@@ -35,6 +35,7 @@ import {
   curatedCourtSchema,
 } from "@/features/admin/schemas/curated-court.schema";
 import { useLogout, useSession } from "@/features/auth";
+import { PLACE_TIME_ZONES } from "@/features/owner/schemas/place-form.schema";
 import { env } from "@/lib/env";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
@@ -81,6 +82,8 @@ export default function NewCuratedCourtPage() {
       websiteUrl: "",
       otherContactInfo: "",
       amenities: [],
+      timeZone: "Asia/Manila",
+      photos: [{ url: "" }],
       courts: [{ label: "Court 1", sportId: "", tierLabel: "" }],
     },
   });
@@ -89,9 +92,18 @@ export default function NewCuratedCourtPage() {
     fields: courtFields,
     append: appendCourt,
     remove: removeCourt,
-  } = useFieldArray({
+  } = useFieldArray<CuratedCourtFormData, "courts">({
     control: form.control,
     name: "courts",
+  });
+
+  const {
+    fields: photoFields,
+    append: appendPhoto,
+    remove: removePhoto,
+  } = useFieldArray<CuratedCourtFormData, "photos">({
+    control: form.control,
+    name: "photos",
   });
 
   const {
@@ -178,6 +190,11 @@ export default function NewCuratedCourtPage() {
     [],
   );
 
+  const timeZoneOptions = React.useMemo(
+    () => PLACE_TIME_ZONES.map((zone) => ({ label: zone, value: zone })),
+    [],
+  );
+
   const provincePlaceholder = provincesCitiesQuery.isLoading
     ? "Loading provinces..."
     : "Select province";
@@ -251,12 +268,19 @@ export default function NewCuratedCourtPage() {
         country: data.country,
         latitude: data.lat,
         longitude: data.lng,
+        timeZone: data.timeZone || undefined,
         facebookUrl: data.facebookUrl || undefined,
         instagramUrl: data.instagramUrl || undefined,
         viberInfo: data.viberContact || undefined,
         websiteUrl: data.websiteUrl || undefined,
         otherContactInfo: data.otherContactInfo || undefined,
         amenities: data.amenities.length > 0 ? data.amenities : undefined,
+        photos: data.photos
+          ?.map((photo, index) => ({
+            url: photo.url?.trim() ?? "",
+            displayOrder: index,
+          }))
+          .filter((photo) => photo.url.length > 0),
         courts: data.courts.map((court) => ({
           label: court.label,
           sportId: court.sportId,
@@ -371,6 +395,13 @@ export default function NewCuratedCourtPage() {
                 placeholder="Philippines (PH)"
                 required
                 disabled
+              />
+
+              <StandardFormSelect<CuratedCourtFormData>
+                name="timeZone"
+                label="Time Zone"
+                options={timeZoneOptions}
+                placeholder="Select a time zone"
               />
             </CardContent>
           </Card>
@@ -730,6 +761,42 @@ export default function NewCuratedCourtPage() {
                   );
                 }}
               </StandardFormField>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Photos</CardTitle>
+              <CardDescription>Add photo URLs for this listing</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {photoFields.map((field, index) => (
+                <div key={field.id} className="flex items-center gap-3">
+                  <StandardFormInput<CuratedCourtFormData>
+                    name={`photos.${index}.url`}
+                    label={index === 0 ? "Photo URL" : undefined}
+                    placeholder="https://..."
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => removePhoto(index)}
+                    disabled={photoFields.length === 1}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => appendPhoto({ url: "" })}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Photo
+              </Button>
             </CardContent>
           </Card>
 

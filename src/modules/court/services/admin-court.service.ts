@@ -4,11 +4,13 @@ import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
 import type {
+  AdminCourtDetailDTO,
   AdminCourtFiltersDTO,
   AdminUpdateCourtDTO,
   CreateCuratedCourtDTO,
 } from "../dtos";
 import type {
+  AdminPlaceDetails,
   CreatedCuratedPlace,
   IAdminCourtRepository,
   PaginatedAdminPlaces,
@@ -47,6 +49,11 @@ export interface IAdminCourtService {
     adminUserId: string,
     items: CreateCuratedCourtDTO[],
   ): Promise<CuratedBatchResult>;
+  getPlaceById(
+    adminUserId: string,
+    data: AdminCourtDetailDTO,
+    ctx?: RequestContext,
+  ): Promise<AdminPlaceDetails>;
   updatePlace(
     adminUserId: string,
     data: AdminUpdateCourtDTO,
@@ -260,40 +267,174 @@ export class AdminCourtService implements IAdminCourtService {
     };
   }
 
+  async getPlaceById(
+    adminUserId: string,
+    data: AdminCourtDetailDTO,
+    ctx?: RequestContext,
+  ): Promise<AdminPlaceDetails> {
+    const detail = await this.adminCourtRepository.findDetailsById(
+      data.placeId,
+      ctx,
+    );
+    if (!detail) {
+      throw new PlaceNotFoundError(data.placeId);
+    }
+
+    logger.info(
+      {
+        event: "place.viewed",
+        placeId: data.placeId,
+        adminUserId,
+      },
+      "Admin viewed place details",
+    );
+
+    return detail;
+  }
+
   async updatePlace(
     adminUserId: string,
     data: AdminUpdateCourtDTO,
   ): Promise<PlaceRecord> {
-    // Verify place exists
-    const existing = await this.adminCourtRepository.findById(data.placeId);
-    if (!existing) {
-      throw new PlaceNotFoundError(data.placeId);
-    }
+    return this.transactionManager.run(async (tx) => {
+      const ctx = { tx };
+      // Verify place exists
+      const existing = await this.adminCourtRepository.findById(
+        data.placeId,
+        ctx,
+      );
+      if (!existing) {
+        throw new PlaceNotFoundError(data.placeId);
+      }
 
-    // Build update data
-    const updateData: Record<string, unknown> = {};
-    if (data.name !== undefined) updateData.name = data.name;
-    if (data.address !== undefined) updateData.address = data.address;
-    if (data.city !== undefined) updateData.city = data.city;
-    if (data.latitude !== undefined) updateData.latitude = data.latitude;
-    if (data.longitude !== undefined) updateData.longitude = data.longitude;
-    if (data.timeZone !== undefined) updateData.timeZone = data.timeZone;
+      // Build update data
+      const updateData: Record<string, unknown> = {};
+      if (data.name !== undefined) updateData.name = data.name;
+      if (data.address !== undefined) updateData.address = data.address;
+      if (data.city !== undefined) updateData.city = data.city;
+      if (data.province !== undefined) updateData.province = data.province;
+      if (data.country !== undefined) updateData.country = data.country;
+      if (data.latitude !== undefined) updateData.latitude = data.latitude;
+      if (data.longitude !== undefined) updateData.longitude = data.longitude;
+      if (data.timeZone !== undefined) updateData.timeZone = data.timeZone;
 
-    const updated = await this.adminCourtRepository.update(
-      data.placeId,
-      updateData,
-    );
+      const updated = await this.adminCourtRepository.update(
+        data.placeId,
+        updateData,
+        ctx,
+      );
 
-    logger.info(
-      {
-        event: "place.updated",
-        placeId: data.placeId,
-        adminUserId,
-      },
-      "Admin updated place",
-    );
+      await this.adminCourtRepository.upsertContactDetail(
+        {
+          placeId: data.placeId,
+          facebookUrl: data.facebookUrl || null,
+          instagramUrl: data.instagramUrl || null,
+          websiteUrl: data.websiteUrl || null,
+          viberInfo: data.viberInfo || null,
+          otherContactInfo: data.otherContactInfo || null,
+        },
+        ctx,
+      );
 
-    return updated;
+      if (data.photos) {
+        const normalizedPhotos = data.photos
+          .map((photo, index) => ({
+            url: photo.url?.trim() ?? "",
+            displayOrder: photo.displayOrder ?? index,
+          }))
+          .filter((photo) => photo.url.length > 0);
+
+        await this.adminCourtRepository.deletePhotosByPlaceId(
+          data.placeId,
+          ctx,
+        );
+        for (const photo of normalizedPhotos) {
+          await this.adminCourtRepository.createPhoto(
+            {
+              placeId: data.placeId,
+              url: photo.url,
+              displayOrder: photo.displayOrder,
+            },
+            ctx,
+          );
+        }
+      }
+
+      if (data.amenities) {
+        await this.adminCourtRepository.deleteAmenitiesByPlaceId(
+          data.placeId,
+          ctx,
+        );
+        for (const name of data.amenities) {
+          await this.adminCourtRepository.createAmenity(
+            {
+              placeId: data.placeId,
+              name,
+            },
+            ctx,
+          );
+        }
+      }
+
+      if (data.courts) {
+        const existingCourts =
+          await this.adminCourtRepository.findCourtsByPlaceId(
+            data.placeId,
+            ctx,
+          );
+        const existingById = new Map(
+          existingCourts.map((court) => [court.id, court]),
+        );
+        const incomingIds = new Set(
+          data.courts.map((court) => court.id).filter(Boolean) as string[],
+        );
+
+        for (const court of data.courts) {
+          if (court.id && existingById.has(court.id)) {
+            await this.adminCourtRepository.updateCourt(
+              court.id,
+              {
+                sportId: court.sportId,
+                label: court.label,
+                tierLabel: court.tierLabel ?? null,
+              },
+              ctx,
+            );
+          } else {
+            await this.adminCourtRepository.createCourt(
+              {
+                placeId: data.placeId,
+                sportId: court.sportId,
+                label: court.label,
+                tierLabel: court.tierLabel ?? null,
+                isActive: true,
+              },
+              ctx,
+            );
+          }
+        }
+
+        for (const courtRecord of existingCourts) {
+          if (!incomingIds.has(courtRecord.id)) {
+            await this.adminCourtRepository.deleteCourtById(
+              courtRecord.id,
+              ctx,
+            );
+          }
+        }
+      }
+
+      logger.info(
+        {
+          event: "place.updated",
+          placeId: data.placeId,
+          adminUserId,
+        },
+        "Admin updated place",
+      );
+
+      return updated;
+    });
   }
 
   async deactivatePlace(

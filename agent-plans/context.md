@@ -9,6 +9,10 @@ References and context for planning artifacts.
 | Date | Change |
 |------|--------|
 | 2026-01-17 | Noted deferred rename from place → venue (pending explicit request) |
+| 2026-01-18 | Added 39-public-navbar-consistency plan (public logo + search routing) |
+| 2026-01-18 | Added 40-public-schedule-view plan (public detail CTA + schedule route) |
+| 2026-01-18 | Added 41-owner-onboarding-revalidation plan (prevent duplicate orgs; client guard + backend conflict) |
+| 2026-01-18 | Added 37-admin-courts-filters plan (province -> city admin filters) |
 | 2026-01-17 | Added 35-courts-discovery-filters plan (province/city discovery filters + search) |
 | 2026-01-16 | Added 34-place-location-standardization plan (PH province/city enforcement) |
 | 2026-01-15 | Added 33-place-claiming implementation plan (curated → claim → reservable) |
@@ -57,7 +61,7 @@ References and context for planning artifacts.
 |--------|------|-------------|
 | 00-onboarding | `agent-plans/user-stories/00-onboarding/` | Auth, profile, navigation |
 | 01-organization | `agent-plans/user-stories/01-organization/` | Owner registration |
-| 02-court-creation | `agent-plans/user-stories/02-court-creation/` | Admin/owner court creation |
+| 02-court-creation | `agent-plans/user-stories/02-court-creation/` | Admin/owner court creation (includes admin filters) |
 | 03-court-reservation | `agent-plans/user-stories/03-court-reservation/` | Original player booking (superseded) |
 | 04-owner-dashboard | `agent-plans/user-stories/04-owner-dashboard/` | Dashboard data wiring |
 | 05-availability-management | `agent-plans/user-stories/05-availability-management/` | Owner time slot management |
@@ -95,6 +99,7 @@ References and context for planning artifacts.
 | 33-place-claiming | `agent-plans/33-place-claiming/` | Ready |
 | 34-place-location-standardization | `agent-plans/34-place-location-standardization/` | Ready |
 | 35-courts-discovery-filters | `agent-plans/35-courts-discovery-filters/` | Ready |
+| 37-admin-courts-filters | `agent-plans/37-admin-courts-filters/` | Ready |
 
 ---
 

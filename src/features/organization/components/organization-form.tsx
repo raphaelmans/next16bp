@@ -51,7 +51,8 @@ export function OrganizationForm({
 
   const createMutation = trpc.organization.create.useMutation({
     onSuccess: async (data) => {
-      await utils.organization.my.invalidate();
+      utils.organization.my.setData(undefined, [data.organization]);
+      await utils.organization.invalidate();
       onSuccess?.({ id: data.organization.id });
     },
   });

@@ -6,6 +6,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { appRoutes } from "@/shared/lib/app-routes";
+import { URLQueryBuilder } from "@/shared/lib/url-query-builder";
 
 const POPULAR_LOCATIONS = [
   { name: "Manila", slug: "manila" },
@@ -22,15 +24,20 @@ export function HeroSection({ className }: HeroSectionProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/courts?q=${encodeURIComponent(searchQuery.trim())}`);
+    const query = searchQuery.trim();
+    if (query) {
+      const search = new URLQueryBuilder().addParams({ q: query }).build();
+      router.push(`${appRoutes.courts.base}?${search}`);
+    } else {
+      router.push(appRoutes.courts.base);
     }
   };
 
   const handleLocationClick = (slug: string) => {
-    router.push(`/courts?city=${slug}`);
+    const search = new URLQueryBuilder().addParams({ city: slug }).build();
+    router.push(`${appRoutes.courts.base}?${search}`);
   };
 
   return (

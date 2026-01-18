@@ -55,7 +55,6 @@ import {
   type CourtStatus,
   type CourtType,
   useAdminCourts,
-  useCities,
   useToggleCourtStatus,
 } from "@/features/admin/hooks/use-admin-courts";
 import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
@@ -63,6 +62,12 @@ import { useLogout, useSession } from "@/features/auth";
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
+import {
+  buildCityOptions,
+  buildProvinceOptions,
+  findProvinceByName,
+} from "@/shared/lib/ph-location-data";
 
 const _claimStatusLabels: Record<ClaimStatusFilter, string> = {
   unclaimed: "Unclaimed",
@@ -79,6 +84,7 @@ export default function AdminCourtsPage() {
   const [statusFilter, setStatusFilter] = React.useState<CourtStatus | "all">(
     "all",
   );
+  const [provinceFilter, setProvinceFilter] = React.useState<string>("all");
   const [cityFilter, setCityFilter] = React.useState<string>("all");
   const [claimStatusFilter, setClaimStatusFilter] = React.useState<
     ClaimStatusFilter | "all"
@@ -87,10 +93,47 @@ export default function AdminCourtsPage() {
   const [page, setPage] = React.useState(1);
 
   const { data: stats } = useAdminStats();
-  const { data: cities = [] } = useCities();
+  const provincesCitiesQuery = usePHProvincesCitiesQuery();
+  const provincesCities = provincesCitiesQuery.data ?? null;
+
+  type LocationOption = { label: string; value: string };
+
+  const provinceOptions = React.useMemo<LocationOption[]>(() => {
+    if (!provincesCities) return [];
+    return buildProvinceOptions(provincesCities, "name");
+  }, [provincesCities]);
+
+  const selectedProvince = React.useMemo(
+    () =>
+      provincesCities && provinceFilter !== "all"
+        ? findProvinceByName(provincesCities, provinceFilter)
+        : null,
+    [provinceFilter, provincesCities],
+  );
+
+  const cityOptions = React.useMemo<LocationOption[]>(() => {
+    if (!selectedProvince) return [];
+    return buildCityOptions(selectedProvince, "name");
+  }, [selectedProvince]);
+
+  const provincePlaceholder = provincesCitiesQuery.isLoading
+    ? "Loading provinces..."
+    : "All Provinces";
+
+  const cityPlaceholder =
+    provinceFilter === "all"
+      ? "Select a province first"
+      : provincesCitiesQuery.isLoading
+        ? "Loading cities..."
+        : "All Cities";
+
+  const isProvinceDisabled = provincesCitiesQuery.isLoading || !provincesCities;
+  const isCityDisabled = isProvinceDisabled || provinceFilter === "all";
+
   const { data: courtsData, isLoading } = useAdminCourts({
     type: typeFilter,
     status: statusFilter,
+    province: provinceFilter,
     city: cityFilter,
     claimStatus: claimStatusFilter,
     search: search || undefined,
@@ -123,7 +166,7 @@ export default function AdminCourtsPage() {
   };
 
   // Reset page when filters change
-  const filterKey = `${typeFilter}-${statusFilter}-${cityFilter}-${claimStatusFilter}-${search}`;
+  const filterKey = `${typeFilter}-${statusFilter}-${provinceFilter}-${cityFilter}-${claimStatusFilter}-${search}`;
   const prevFilterKey = React.useRef(filterKey);
 
   if (filterKey !== prevFilterKey.current) {
@@ -211,15 +254,42 @@ export default function AdminCourtsPage() {
             </SelectContent>
           </Select>
 
-          <Select value={cityFilter} onValueChange={setCityFilter}>
-            <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="All Cities" />
+          <Select
+            value={provinceFilter}
+            onValueChange={(value) => {
+              setProvinceFilter(value);
+              if (value !== provinceFilter) {
+                setCityFilter("all");
+              }
+            }}
+            disabled={isProvinceDisabled}
+          >
+            <SelectTrigger className="w-[170px]">
+              <SelectValue placeholder={provincePlaceholder} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Provinces</SelectItem>
+              {provinceOptions.map((province) => (
+                <SelectItem key={province.value} value={province.value}>
+                  {province.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={provinceFilter === "all" ? "" : cityFilter}
+            onValueChange={(value) => setCityFilter(value)}
+            disabled={isCityDisabled}
+          >
+            <SelectTrigger className="w-[170px]">
+              <SelectValue placeholder={cityPlaceholder} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Cities</SelectItem>
-              {cities.map((city) => (
-                <SelectItem key={city.name} value={city.name}>
-                  {city.displayName}
+              {cityOptions.map((city) => (
+                <SelectItem key={city.value} value={city.value}>
+                  {city.label}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -283,14 +353,7 @@ export default function AdminCourtsPage() {
                 </TableHeader>
                 <TableBody>
                   {courtsData.courts.map((court: AdminCourt) => (
-                    <TableRow
-                      key={court.id}
-                      className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => {
-                        // TODO: Navigate to /admin/courts/[id] when the page exists
-                        toast.info("Court detail page coming soon");
-                      }}
-                    >
+                    <TableRow key={court.id} className="hover:bg-muted/50">
                       <TableCell>
                         <div className="flex items-center gap-3">
                           {court.imageUrl && (

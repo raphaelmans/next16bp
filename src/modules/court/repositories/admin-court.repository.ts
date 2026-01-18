@@ -1,4 +1,4 @@
-import { and, count, eq, ilike, type SQL } from "drizzle-orm";
+import { and, asc, count, eq, ilike, type SQL } from "drizzle-orm";
 import {
   type CourtRecord,
   court,
@@ -15,6 +15,7 @@ import {
   placeAmenity,
   placeContactDetail,
   placePhoto,
+  sport,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
 import type { RequestContext } from "@/shared/kernel/context";
@@ -25,6 +26,17 @@ import type { AdminCourtFiltersDTO } from "../dtos";
  */
 export interface AdminPlaceListItem {
   place: PlaceRecord;
+}
+
+export interface AdminPlaceDetails {
+  place: PlaceRecord;
+  contactDetail: PlaceContactDetailRecord | null;
+  photos: PlacePhotoRecord[];
+  amenities: PlaceAmenityRecord[];
+  courts: Array<{
+    court: CourtRecord;
+    sport: { id: string; name: string };
+  }>;
 }
 
 /**
@@ -65,6 +77,16 @@ export interface IAdminCourtRepository {
     ctx?: RequestContext,
   ): Promise<PlaceAmenityRecord>;
   createCourt(data: InsertCourt, ctx?: RequestContext): Promise<CourtRecord>;
+  updateCourt(
+    id: string,
+    data: Partial<InsertCourt>,
+    ctx?: RequestContext,
+  ): Promise<CourtRecord>;
+  deleteCourtById(id: string, ctx?: RequestContext): Promise<void>;
+  findCourtsByPlaceId(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<CourtRecord[]>;
   findAll(
     filters: AdminCourtFiltersDTO,
     ctx?: RequestContext,
@@ -75,6 +97,20 @@ export interface IAdminCourtRepository {
     city: string,
     ctx?: RequestContext,
   ): Promise<PlaceRecord | null>;
+  findDetailsById(
+    id: string,
+    ctx?: RequestContext,
+  ): Promise<AdminPlaceDetails | null>;
+  upsertContactDetail(
+    data: InsertPlaceContactDetail,
+    ctx?: RequestContext,
+  ): Promise<PlaceContactDetailRecord>;
+  deletePhotosByPlaceId(placeId: string, ctx?: RequestContext): Promise<void>;
+  deleteAmenitiesByPlaceId(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<void>;
+  deleteCourtsByPlaceId(placeId: string, ctx?: RequestContext): Promise<void>;
 }
 
 export class AdminCourtRepository implements IAdminCourtRepository {
@@ -143,6 +179,80 @@ export class AdminCourtRepository implements IAdminCourtRepository {
     return result[0];
   }
 
+  async updateCourt(
+    id: string,
+    data: Partial<InsertCourt>,
+    ctx?: RequestContext,
+  ): Promise<CourtRecord> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .update(court)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(court.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deleteCourtById(id: string, ctx?: RequestContext): Promise<void> {
+    const client = this.getClient(ctx);
+    await client.delete(court).where(eq(court.id, id));
+  }
+
+  async findCourtsByPlaceId(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<CourtRecord[]> {
+    const client = this.getClient(ctx);
+    return client.select().from(court).where(eq(court.placeId, placeId));
+  }
+
+  async upsertContactDetail(
+    data: InsertPlaceContactDetail,
+    ctx?: RequestContext,
+  ): Promise<PlaceContactDetailRecord> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .insert(placeContactDetail)
+      .values(data)
+      .onConflictDoUpdate({
+        target: placeContactDetail.placeId,
+        set: {
+          facebookUrl: data.facebookUrl ?? null,
+          instagramUrl: data.instagramUrl ?? null,
+          websiteUrl: data.websiteUrl ?? null,
+          viberInfo: data.viberInfo ?? null,
+          otherContactInfo: data.otherContactInfo ?? null,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return result[0];
+  }
+
+  async deletePhotosByPlaceId(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<void> {
+    const client = this.getClient(ctx);
+    await client.delete(placePhoto).where(eq(placePhoto.placeId, placeId));
+  }
+
+  async deleteAmenitiesByPlaceId(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<void> {
+    const client = this.getClient(ctx);
+    await client.delete(placeAmenity).where(eq(placeAmenity.placeId, placeId));
+  }
+
+  async deleteCourtsByPlaceId(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<void> {
+    const client = this.getClient(ctx);
+    await client.delete(court).where(eq(court.placeId, placeId));
+  }
+
   async findAll(
     filters: AdminCourtFiltersDTO,
     ctx?: RequestContext,
@@ -164,8 +274,12 @@ export class AdminCourtRepository implements IAdminCourtRepository {
       conditions.push(eq(place.claimStatus, filters.claimStatus));
     }
 
+    if (filters.province) {
+      conditions.push(ilike(place.province, filters.province));
+    }
+
     if (filters.city) {
-      conditions.push(eq(place.city, filters.city));
+      conditions.push(ilike(place.city, filters.city));
     }
 
     if (filters.search) {
@@ -219,5 +333,58 @@ export class AdminCourtRepository implements IAdminCourtRepository {
       .where(eq(place.id, id))
       .limit(1);
     return result[0] ?? null;
+  }
+
+  async findDetailsById(
+    id: string,
+    ctx?: RequestContext,
+  ): Promise<AdminPlaceDetails | null> {
+    const client = this.getClient(ctx);
+    const placeResult = await client
+      .select()
+      .from(place)
+      .where(eq(place.id, id))
+      .limit(1);
+    const placeRecord = placeResult[0];
+    if (!placeRecord) return null;
+
+    const contactResult = await client
+      .select()
+      .from(placeContactDetail)
+      .where(eq(placeContactDetail.placeId, id))
+      .limit(1);
+    const contactDetail = contactResult[0] ?? null;
+
+    const photos = await client
+      .select()
+      .from(placePhoto)
+      .where(eq(placePhoto.placeId, id))
+      .orderBy(asc(placePhoto.displayOrder));
+
+    const amenities = await client
+      .select()
+      .from(placeAmenity)
+      .where(eq(placeAmenity.placeId, id));
+
+    const courts = await client
+      .select({
+        court,
+        sport: {
+          id: sport.id,
+          name: sport.name,
+        },
+      })
+      .from(court)
+      .innerJoin(sport, eq(court.sportId, sport.id))
+      .where(eq(court.placeId, id))
+      .orderBy(court.label);
+
+    return {
+      place: placeRecord,
+      contactDetail,
+      photos,
+      amenities,
+      courts,
+    };
   }
 }

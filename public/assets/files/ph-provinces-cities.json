@@ -165,14 +165,7 @@
     "PILAR",
     "SAMAL"
   ],
-  "BATANES": [
-    "BASCO",
-    "ITBAYAT",
-    "IVANA",
-    "MAHATAO",
-    "SABTANG",
-    "UYUGAN"
-  ],
+  "BATANES": ["BASCO", "ITBAYAT", "IVANA", "MAHATAO", "SABTANG", "UYUGAN"],
   "BATANGAS": [
     "AGONCILLO",
     "ALITAGTAG",
@@ -419,13 +412,7 @@
     "TIGAON",
     "TINAMBAC"
   ],
-  "CAMIGUIN": [
-    "CATARMAN",
-    "GUINSILIBAN",
-    "MAHINOG",
-    "MAMBAJAO",
-    "SAGAY"
-  ],
+  "CAMIGUIN": ["CATARMAN", "GUINSILIBAN", "MAHINOG", "MAMBAJAO", "SAGAY"],
   "CAPIZ": [
     "CUARTERO",
     "DAO",
@@ -1688,10 +1675,7 @@
     "TAGO",
     "TANDAG CITY"
   ],
-  "TAGUIG - PATEROS": [
-    "PATEROS",
-    "TAGUIG"
-  ],
+  "TAGUIG - PATEROS": ["PATEROS", "TAGUIG"],
   "TARLAC": [
     "ANAO",
     "BAMBAN",

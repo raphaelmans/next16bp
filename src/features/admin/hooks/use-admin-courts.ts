@@ -27,9 +27,49 @@ export interface AdminCourt {
   updatedAt: string;
 }
 
+export interface AdminCourtDetail {
+  place: {
+    id: string;
+    name: string;
+    address: string;
+    city: string;
+    province: string;
+    country: string;
+    latitude: string | null;
+    longitude: string | null;
+    timeZone: string;
+    placeType: "CURATED" | "RESERVABLE";
+    claimStatus:
+      | "UNCLAIMED"
+      | "CLAIM_PENDING"
+      | "CLAIMED"
+      | "REMOVAL_REQUESTED";
+    isActive: boolean;
+  };
+  contactDetail: {
+    facebookUrl: string | null;
+    instagramUrl: string | null;
+    viberInfo: string | null;
+    websiteUrl: string | null;
+    otherContactInfo: string | null;
+  } | null;
+  photos: Array<{ id: string; url: string; displayOrder: number }>;
+  amenities: Array<{ id: string; name: string }>;
+  courts: Array<{
+    court: {
+      id: string;
+      label: string;
+      sportId: string;
+      tierLabel: string | null;
+    };
+    sport: { id: string; name: string };
+  }>;
+}
+
 interface UseAdminCourtsOptions {
   type?: CourtType | "all";
   status?: CourtStatus | "all";
+  province?: string | "all";
   city?: string | "all";
   claimStatus?: ClaimStatusFilter | "all";
   search?: string;
@@ -91,6 +131,7 @@ export function useAdminCourts(options: UseAdminCourtsOptions = {}) {
   const {
     type,
     status,
+    province,
     city,
     claimStatus,
     search,
@@ -115,6 +156,7 @@ export function useAdminCourts(options: UseAdminCourtsOptions = {}) {
     offset,
     placeType: placeTypeInput,
     isActive: status && status !== "all" ? status === "active" : undefined,
+    province: province && province !== "all" ? province : undefined,
     city: city && city !== "all" ? city : undefined,
     claimStatus: claimStatusInput,
     search: search || undefined,
@@ -140,18 +182,14 @@ export function useAdminCourts(options: UseAdminCourtsOptions = {}) {
 }
 
 export function useAdminCourt(courtId: string) {
-  const query = trpc.admin.court.list.useQuery(
-    { limit: 100, offset: 0 },
+  const query = trpc.admin.court.getById.useQuery(
+    { placeId: courtId },
     { enabled: !!courtId },
-  );
-
-  const court = query.data?.items.find(
-    (item: AdminCourtListItem) => item.place.id === courtId,
   );
 
   return {
     ...query,
-    data: court ? toAdminCourt(court.place) : undefined,
+    data: query.data as AdminCourtDetail | undefined,
   };
 }
 
@@ -159,12 +197,18 @@ export function useToggleCourtStatus() {
   const utils = trpc.useUtils();
   const activateMutation = trpc.admin.court.activate.useMutation({
     onSuccess: async () => {
-      await utils.admin.court.list.invalidate();
+      await Promise.all([
+        utils.admin.court.list.invalidate(),
+        utils.admin.court.getById.invalidate(),
+      ]);
     },
   });
   const deactivateMutation = trpc.admin.court.deactivate.useMutation({
     onSuccess: async () => {
-      await utils.admin.court.list.invalidate();
+      await Promise.all([
+        utils.admin.court.list.invalidate(),
+        utils.admin.court.getById.invalidate(),
+      ]);
     },
   });
 
@@ -269,7 +313,10 @@ export function useUpdateCuratedCourt() {
 
   return trpc.admin.court.update.useMutation({
     onSuccess: async () => {
-      await utils.admin.court.list.invalidate();
+      await Promise.all([
+        utils.admin.court.list.invalidate(),
+        utils.admin.court.getById.invalidate(),
+      ]);
     },
   });
 }

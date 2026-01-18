@@ -17,6 +17,7 @@ import {
   NotOrganizationOwnerError,
   OrganizationNotFoundError,
   SlugAlreadyExistsError,
+  UserAlreadyHasOrganizationError,
 } from "./errors/organization.errors";
 import { makeOrganizationService } from "./factories/organization.factory";
 
@@ -32,6 +33,13 @@ function handleOrganizationError(error: unknown): never {
     });
   }
   if (error instanceof SlugAlreadyExistsError) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: error.message,
+      cause: error,
+    });
+  }
+  if (error instanceof UserAlreadyHasOrganizationError) {
     throw new TRPCError({
       code: "CONFLICT",
       message: error.message,

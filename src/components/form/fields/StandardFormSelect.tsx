@@ -66,7 +66,7 @@ export function StandardFormSelect<
               disabled={disabled}
             >
               <FormControl>
-                <SelectTrigger className='w-full'>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>

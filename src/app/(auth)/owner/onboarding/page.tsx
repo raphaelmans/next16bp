@@ -18,7 +18,7 @@ const checkOnboardingRedirect = async () => {
   try {
     const organizations = await caller.organization.my();
     if (organizations.length > 0) {
-      redirect(appRoutes.owner.places.new);
+      redirect(appRoutes.owner.base);
     }
   } catch (error) {
     if (error instanceof TRPCError && error.code === "UNAUTHORIZED") {

@@ -56,6 +56,7 @@ import {
   formatDuration,
   formatInTimeZone,
 } from "@/shared/lib/format";
+import { getZonedDayKey } from "@/shared/lib/time-zone";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
@@ -151,26 +152,32 @@ export default function PlaceDetailPage() {
     label: organization.name,
     value: organization.id,
   }));
+  const defaultOrganizationId = organizations[0]?.id ?? "";
 
   const claimMutation = trpc.claimRequest.submitClaim.useMutation();
 
   React.useEffect(() => {
-    if (organizations.length === 0) return;
+    if (!defaultOrganizationId) return;
     const currentOrgId = getClaimValues("organizationId");
     if (currentOrgId) return;
-    setClaimValue("organizationId", organizations[0].id, {
+    setClaimValue("organizationId", defaultOrganizationId, {
       shouldDirty: false,
       shouldValidate: true,
     });
-  }, [organizations, getClaimValues, setClaimValue]);
+  }, [defaultOrganizationId, getClaimValues, setClaimValue]);
 
   React.useEffect(() => {
     if (isClaimOpen) return;
+    const currentOrgId = getClaimValues("organizationId") ?? "";
+    const currentNotes = getClaimValues("requestNotes") ?? "";
+    if (currentOrgId === defaultOrganizationId && currentNotes === "") {
+      return;
+    }
     resetClaimForm({
-      organizationId: organizations[0]?.id ?? "",
+      organizationId: defaultOrganizationId,
       requestNotes: "",
     });
-  }, [isClaimOpen, organizations, resetClaimForm]);
+  }, [defaultOrganizationId, getClaimValues, isClaimOpen, resetClaimForm]);
 
   const courtsForSport = React.useMemo(() => {
     if (!place || !selectedSportId) return [];
@@ -219,26 +226,52 @@ export default function PlaceDetailPage() {
   const hasSelectedDate = !!selectedDate;
   const hasSelectedSlot = !!selectedSlot;
 
-  const handleReserve = () => {
-    if (!selectedSlot || !selectedSportId || !isBookable) return;
-    const params = new URLSearchParams({
-      startTime: selectedSlot.startTime,
-      duration: durationMinutes.toString(),
-      sportId: selectedSportId,
-      mode: selectionMode,
-    });
+  const scheduleHref = React.useMemo(() => {
+    if (!isBookable || !place) return undefined;
+    const params = new URLSearchParams();
+
+    params.set("duration", String(durationMinutes));
+    params.set("mode", selectionMode);
+
+    if (selectedSportId) {
+      params.set("sportId", selectedSportId);
+    }
+
+    if (selectedDate) {
+      params.set("date", getZonedDayKey(selectedDate, placeTimeZone));
+    }
 
     if (selectionMode === "court" && selectedCourtId) {
       params.set("courtId", selectedCourtId);
     }
 
-    const destination = `${appRoutes.places.book(placeId)}?${params.toString()}`;
-    if (isAuthenticated) {
-      router.push(destination);
-    } else {
-      router.push(appRoutes.login.from(appRoutes.places.detail(placeId)));
+    if (selectedSlot) {
+      params.set("startTime", selectedSlot.startTime);
     }
-  };
+
+    const query = params.toString();
+    return query
+      ? `${appRoutes.places.schedule(placeId)}?${query}`
+      : appRoutes.places.schedule(placeId);
+  }, [
+    durationMinutes,
+    isBookable,
+    place,
+    placeId,
+    placeTimeZone,
+    selectedCourtId,
+    selectedDate,
+    selectedSlot,
+    selectedSportId,
+    selectionMode,
+  ]);
+
+  const summaryCtaVariant = hasSelectedSlot ? "default" : "outline";
+  const summaryCtaLabel = hasSelectedSlot
+    ? "Reserve now"
+    : hasSelectedDate
+      ? "See available times"
+      : "Choose a date";
 
   const handleClaimSubmit = async (data: ClaimFormData) => {
     try {
@@ -266,15 +299,36 @@ export default function PlaceDetailPage() {
   const claimSubmitting = claimMutation.isPending || isClaimSubmitting;
   const claimDisabled = claimSubmitting || !isClaimValid;
 
-  const summaryCtaLabel = hasSelectedSlot
-    ? isAuthenticated
-      ? "Continue to review"
-      : "Sign in to reserve"
-    : hasSelectedDate
-      ? "Choose a start time"
-      : "Pick a date";
+  const handleReserve = () => {
+    if (!place) return;
+    const params = new URLSearchParams();
 
-  const summaryCtaVariant = hasSelectedSlot ? "default" : "outline";
+    params.set("duration", String(durationMinutes));
+    params.set("mode", selectionMode);
+
+    if (selectedSportId) {
+      params.set("sportId", selectedSportId);
+    }
+
+    if (selectedDate) {
+      params.set("date", getZonedDayKey(selectedDate, placeTimeZone));
+    }
+
+    if (selectionMode === "court" && selectedCourtId) {
+      params.set("courtId", selectedCourtId);
+    }
+
+    if (selectedSlot) {
+      params.set("startTime", selectedSlot.startTime);
+    }
+
+    const destination = `${appRoutes.places.book(placeId)}?${params.toString()}`;
+    if (isAuthenticated) {
+      router.push(destination);
+    } else {
+      router.push(appRoutes.login.from(appRoutes.places.detail(placeId)));
+    }
+  };
 
   const handleSummaryAction = () => {
     if (hasSelectedSlot) {
@@ -846,6 +900,18 @@ export default function PlaceDetailPage() {
                   >
                     {summaryCtaLabel}
                   </Button>
+
+                  {scheduleHref && (
+                    <Button
+                      asChild
+                      variant="link"
+                      size="sm"
+                      className="w-full justify-center"
+                    >
+                      <Link href={scheduleHref}>See full schedule</Link>
+                    </Button>
+                  )}
+
                   {!isAuthenticated && selectedSlot && (
                     <p className="text-xs text-muted-foreground text-center">
                       Sign in to complete your booking request.

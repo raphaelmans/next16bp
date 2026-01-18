@@ -16,6 +16,7 @@ import {
   NotOrganizationOwnerError,
   OrganizationNotFoundError,
   SlugAlreadyExistsError,
+  UserAlreadyHasOrganizationError,
 } from "../errors/organization.errors";
 import type { IOrganizationRepository } from "../repositories/organization.repository";
 import type { IOrganizationProfileRepository } from "../repositories/organization-profile.repository";
@@ -63,6 +64,12 @@ export class OrganizationService implements IOrganizationService {
   ): Promise<OrganizationWithProfile> {
     return this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
+
+      const existingOrganizations =
+        await this.organizationRepository.findByOwnerId(ownerId, ctx);
+      if (existingOrganizations.length > 0) {
+        throw new UserAlreadyHasOrganizationError();
+      }
 
       // Generate or validate slug
       let slug: string;

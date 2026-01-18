@@ -13,6 +13,12 @@ import {
   StandardFormSelect,
   StandardFormTextarea,
 } from "@/components/form";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +30,6 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/ui/page-header";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
@@ -217,7 +222,7 @@ export default function AdminCourtsBatchPage() {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, insert, remove } = useFieldArray({
     control: form.control,
     name: "courts",
   });
@@ -307,6 +312,10 @@ export default function AdminCourtsBatchPage() {
       return next;
     });
     setPreviewingId((current) => (current === fieldId ? null : current));
+  };
+
+  const handleInsertCourtAfter = (index: number) => {
+    insert(index + 1, { ...DEFAULT_COURT });
   };
 
   const handlePreview = (fieldId: string, index: number) => {
@@ -524,7 +533,7 @@ export default function AdminCourtsBatchPage() {
             </div>
           </div>
 
-          <div className="space-y-10">
+          <Accordion type="multiple" className="space-y-4">
             {fields.map((field, index) => {
               const provinceValue = courts?.[index]?.province;
               const cityOptions = getCityOptions(provinceValue);
@@ -542,205 +551,156 @@ export default function AdminCourtsBatchPage() {
                   : "";
 
               return (
-                <div key={field.id} className="space-y-6">
-                  <Card>
-                    <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <CardTitle>{`Court ${index + 1}`}</CardTitle>
-                        <CardDescription>
-                          {courts?.[index]?.name?.trim() ||
-                            "Enter court details"}
-                        </CardDescription>
+                <AccordionItem
+                  key={field.id}
+                  value={field.id}
+                  className="rounded-xl border border-border/60 bg-background px-4"
+                >
+                  <AccordionTrigger className="text-base font-semibold">
+                    <div className="space-y-1 text-left">
+                      <div>{`Court ${index + 1}`}</div>
+                      <div className="text-sm font-normal text-muted-foreground">
+                        {courts?.[index]?.name?.trim() || "Enter court details"}
                       </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleRemoveCourt(index, field.id)}
-                        disabled={fields.length === 1}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Remove
-                      </Button>
-                    </CardHeader>
-                  </Card>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-6">
+                    <div className="space-y-6">
+                      <Card>
+                        <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                          <div>
+                            <CardTitle>{`Court ${index + 1}`}</CardTitle>
+                            <CardDescription>
+                              {courts?.[index]?.name?.trim() ||
+                                "Enter court details"}
+                            </CardDescription>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemoveCourt(index, field.id)}
+                            disabled={fields.length === 1}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Remove
+                          </Button>
+                        </CardHeader>
+                      </Card>
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Basic Information</CardTitle>
-                      <CardDescription>
-                        Enter the court&apos;s basic details
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <StandardFormInput<CuratedCourtBatchFormData>
-                        name={`courts.${index}.name`}
-                        label="Court Name"
-                        placeholder="Makati Pickleball Club"
-                        required
-                      />
-                      <StandardFormInput<CuratedCourtBatchFormData>
-                        name={`courts.${index}.address`}
-                        label="Address"
-                        placeholder="123 Sports Avenue, Barangay San Lorenzo"
-                        required
-                      />
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <StandardFormSelect<CuratedCourtBatchFormData>
-                          name={`courts.${index}.province`}
-                          label="Province"
-                          options={provinceOptions}
-                          placeholder={provincePlaceholder}
-                          required
-                          disabled={isProvinceDisabled}
-                        />
-                        <StandardFormSelect<CuratedCourtBatchFormData>
-                          name={`courts.${index}.city`}
-                          label="City"
-                          options={cityOptions}
-                          placeholder={cityPlaceholder}
-                          required
-                          disabled={cityDisabled}
-                        />
-                      </div>
-                      <StandardFormSelect<CuratedCourtBatchFormData>
-                        name={`courts.${index}.country`}
-                        label="Country"
-                        options={countryOptions}
-                        placeholder="Philippines (PH)"
-                        required
-                        disabled
-                      />
-                    </CardContent>
-                  </Card>
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Basic Information</CardTitle>
+                          <CardDescription>
+                            Enter the court&apos;s basic details
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <StandardFormInput<CuratedCourtBatchFormData>
+                            name={`courts.${index}.name`}
+                            label="Court Name"
+                            placeholder="Makati Pickleball Club"
+                            required
+                          />
+                          <StandardFormInput<CuratedCourtBatchFormData>
+                            name={`courts.${index}.address`}
+                            label="Address"
+                            placeholder="123 Sports Avenue, Barangay San Lorenzo"
+                            required
+                          />
+                          <div className="grid gap-4 sm:grid-cols-2">
+                            <StandardFormSelect<CuratedCourtBatchFormData>
+                              name={`courts.${index}.province`}
+                              label="Province"
+                              options={provinceOptions}
+                              placeholder={provincePlaceholder}
+                              required
+                              disabled={isProvinceDisabled}
+                            />
+                            <StandardFormSelect<CuratedCourtBatchFormData>
+                              name={`courts.${index}.city`}
+                              label="City"
+                              options={cityOptions}
+                              placeholder={cityPlaceholder}
+                              required
+                              disabled={cityDisabled}
+                            />
+                          </div>
+                          <StandardFormSelect<CuratedCourtBatchFormData>
+                            name={`courts.${index}.country`}
+                            label="Country"
+                            options={countryOptions}
+                            required
+                            disabled
+                          />
+                        </CardContent>
+                      </Card>
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Map (optional)</CardTitle>
-                      <CardDescription>
-                        Paste a Google Maps link to auto-fill coordinates.
-                        Address and city still require confirmation.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="space-y-2">
-                        <Label htmlFor={`googleUrl-${field.id}`}>
-                          Google Maps URL
-                        </Label>
-                        <Input
-                          id={`googleUrl-${field.id}`}
-                          value={googleUrlValue}
-                          onChange={(event) => {
-                            const value = event.target.value;
-                            setGoogleUrls((prev) => ({
-                              ...prev,
-                              [field.id]: value,
-                            }));
-                            setPreviewResults((prev) => ({
-                              ...prev,
-                              [field.id]: null,
-                            }));
-                            setPreviewErrors((prev) => ({
-                              ...prev,
-                              [field.id]: null,
-                            }));
-                          }}
-                          placeholder={SAMPLE_GOOGLE_URL}
-                          inputMode="url"
-                        />
-                        {hasEmbedKey ? null : (
-                          <p className="text-xs text-muted-foreground">
-                            Embed previews are disabled until a Google Maps key
-                            is configured.
-                          </p>
-                        )}
-                        <p className="text-xs text-muted-foreground">
-                          Example: {SAMPLE_GOOGLE_URL}
-                        </p>
-                      </div>
-
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => handlePreview(field.id, index)}
-                        disabled={
-                          !googleUrlValue.trim() || previewMutation.isPending
-                        }
-                        className="w-full"
-                      >
-                        {isPreviewing ? (
-                          <span className="inline-flex items-center gap-2">
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            Resolving…
-                          </span>
-                        ) : (
-                          "Locate"
-                        )}
-                      </Button>
-
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <StandardFormInput<CuratedCourtBatchFormData>
-                          name={`courts.${index}.latitude`}
-                          label="Latitude (optional)"
-                          placeholder="e.g., 14.5547"
-                        />
-                        <StandardFormInput<CuratedCourtBatchFormData>
-                          name={`courts.${index}.longitude`}
-                          label="Longitude (optional)"
-                          placeholder="e.g., 121.0244"
-                        />
-                      </div>
-
-                      {previewErrorMessage && (
-                        <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
-                          {previewErrorMessage}
-                        </div>
-                      )}
-
-                      {previewResult && (
-                        <div className="space-y-4 rounded-xl border border-border/60 bg-muted/20 p-4">
-                          <div className="space-y-3 text-sm">
-                            <div>
-                              <div className="text-xs text-muted-foreground">
-                                Resolved URL
-                              </div>
-                              {previewResult.resolvedUrl ? (
-                                <a
-                                  href={previewResult.resolvedUrl}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="break-all text-accent hover:underline"
-                                >
-                                  {previewResult.resolvedUrl}
-                                </a>
-                              ) : (
-                                <span className="text-muted-foreground">
-                                  (none)
-                                </span>
-                              )}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Google Maps</CardTitle>
+                          <CardDescription>
+                            Paste a Google Maps link to preview
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <div className="space-y-3">
+                            <div className="flex flex-wrap items-center gap-3">
+                              <Input
+                                value={googleUrlValue}
+                                onChange={(event) =>
+                                  setGoogleUrls((prev) => ({
+                                    ...prev,
+                                    [field.id]: event.target.value,
+                                  }))
+                                }
+                                placeholder={SAMPLE_GOOGLE_URL}
+                                className="min-w-[240px] flex-1"
+                              />
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => handlePreview(field.id, index)}
+                                disabled={!googleUrlValue || isPreviewing}
+                              >
+                                {isPreviewing ? (
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Plus className="mr-2 h-4 w-4" />
+                                )}
+                                Preview
+                              </Button>
                             </div>
 
-                            <div className="grid gap-3 sm:grid-cols-2">
-                              <div>
-                                <div className="text-xs text-muted-foreground">
-                                  Suggested name
-                                </div>
-                                <div>
-                                  {previewResult.suggestedName ?? "(none)"}
-                                </div>
+                            {previewErrorMessage && (
+                              <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+                                {previewErrorMessage}
                               </div>
-                              <div>
-                                <div className="text-xs text-muted-foreground">
-                                  Coordinates
+                            )}
+                          </div>
+
+                          {previewResult && (
+                            <div className="space-y-4">
+                              <div className="rounded-lg border border-border/60 bg-muted/40 p-4">
+                                <div className="flex flex-wrap items-center justify-between gap-3">
+                                  <div>
+                                    <div className="text-xs uppercase text-muted-foreground">
+                                      Location Preview
+                                    </div>
+                                    <div className="text-sm font-medium">
+                                      {previewResult.suggestedName ||
+                                        "Unknown location"}
+                                    </div>
+                                  </div>
+                                  <div className="text-sm text-muted-foreground">
+                                    {coordinateLabel || "No coordinates"}
+                                  </div>
                                 </div>
-                                <div>
-                                  {coordinateLabel ? (
-                                    <span className="font-mono">
-                                      {coordinateLabel}
-                                    </span>
-                                  ) : (
-                                    "(none)"
-                                  )}
+                                <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+                                  <span className="rounded-full bg-muted px-2 py-1 break-all">
+                                    {previewResult.resolvedUrl ||
+                                      previewResult.inputUrl}
+                                  </span>
                                   {previewResult.zoom !== undefined && (
                                     <span className="text-muted-foreground">
                                       {` · z${previewResult.zoom}`}
@@ -753,173 +713,197 @@ export default function AdminCourtsBatchPage() {
                                   )}
                                 </div>
                               </div>
+
+                              {previewResult.warnings.length > 0 && (
+                                <div className="rounded-lg border border-border/60 bg-muted/40 p-3">
+                                  <div className="text-xs font-medium">
+                                    Warnings
+                                  </div>
+                                  <ul className="mt-1 list-disc pl-5 text-xs text-muted-foreground">
+                                    {previewResult.warnings.map((warning) => (
+                                      <li key={warning}>{warning}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {previewResult.embedSrc ? (
+                                <div className="space-y-2">
+                                  <div className="text-sm font-medium">
+                                    Embed preview
+                                  </div>
+                                  <div className="aspect-video overflow-hidden rounded-xl border border-border/60 bg-muted">
+                                    <iframe
+                                      title="Google Maps Embed"
+                                      src={previewResult.embedSrc}
+                                      className="h-full w-full"
+                                      loading="lazy"
+                                      allowFullScreen
+                                      referrerPolicy="no-referrer-when-downgrade"
+                                    />
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="rounded-lg border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
+                                  {hasEmbedKey
+                                    ? "No embed preview available for this link."
+                                    : "Embed preview unavailable (missing Google Maps key)."}
+                                </div>
+                              )}
                             </div>
+                          )}
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Court Inventory</CardTitle>
+                          <CardDescription>
+                            Define each court unit and its sport
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <CourtList
+                            control={form.control}
+                            placeIndex={index}
+                            sportOptions={sportOptions}
+                            sportsLoading={sportsLoading}
+                          />
+                        </CardContent>
+                      </Card>
+
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Contact Information</CardTitle>
+                          <CardDescription>
+                            How players can reach or find this court
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <div className="grid gap-6 sm:grid-cols-2">
+                            <StandardFormInput<CuratedCourtBatchFormData>
+                              name={`courts.${index}.facebookUrl`}
+                              label="Facebook Page"
+                              placeholder="https://facebook.com/..."
+                            />
+                            <StandardFormInput<CuratedCourtBatchFormData>
+                              name={`courts.${index}.instagramUrl`}
+                              label="Instagram"
+                              placeholder="https://instagram.com/..."
+                            />
+                            <StandardFormInput<CuratedCourtBatchFormData>
+                              name={`courts.${index}.viberContact`}
+                              label="Viber Contact"
+                              placeholder="0917 123 4567"
+                            />
+                            <StandardFormInput<CuratedCourtBatchFormData>
+                              name={`courts.${index}.websiteUrl`}
+                              label="Website"
+                              placeholder="https://example.com"
+                            />
                           </div>
 
-                          {previewResult.warnings.length > 0 && (
-                            <div className="rounded-lg border border-border/60 bg-muted/40 p-3">
-                              <div className="text-xs font-medium">
-                                Warnings
-                              </div>
-                              <ul className="mt-1 list-disc pl-5 text-xs text-muted-foreground">
-                                {previewResult.warnings.map((warning) => (
-                                  <li key={warning}>{warning}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
+                          <StandardFormTextarea<CuratedCourtBatchFormData>
+                            name={`courts.${index}.otherContactInfo`}
+                            label="Other Contact Information"
+                            placeholder="Any additional contact details..."
+                          />
+                        </CardContent>
+                      </Card>
 
-                          {previewResult.embedSrc ? (
-                            <div className="space-y-2">
-                              <div className="text-sm font-medium">
-                                Embed preview
-                              </div>
-                              <div className="aspect-video overflow-hidden rounded-xl border border-border/60 bg-muted">
-                                <iframe
-                                  title="Google Maps Embed"
-                                  src={previewResult.embedSrc}
-                                  className="h-full w-full"
-                                  loading="lazy"
-                                  allowFullScreen
-                                  referrerPolicy="no-referrer-when-downgrade"
-                                />
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="rounded-lg border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
-                              {hasEmbedKey
-                                ? "No embed preview available for this link."
-                                : "Embed preview unavailable (missing Google Maps key)."}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Amenities</CardTitle>
+                          <CardDescription>
+                            Select the amenities available at this court
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <StandardFormField<CuratedCourtBatchFormData>
+                            name={`courts.${index}.amenities`}
+                          >
+                            {({ field }) => {
+                              const current = Array.isArray(field.value)
+                                ? (field.value as string[])
+                                : [];
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Court Inventory</CardTitle>
-                      <CardDescription>
-                        Define each court unit and its sport
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <CourtList
-                        control={form.control}
-                        placeIndex={index}
-                        sportOptions={sportOptions}
-                        sportsLoading={sportsLoading}
-                      />
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Contact Information</CardTitle>
-                      <CardDescription>
-                        How players can reach or find this court
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="grid gap-6 sm:grid-cols-2">
-                        <StandardFormInput<CuratedCourtBatchFormData>
-                          name={`courts.${index}.facebookUrl`}
-                          label="Facebook Page"
-                          placeholder="https://facebook.com/..."
-                        />
-                        <StandardFormInput<CuratedCourtBatchFormData>
-                          name={`courts.${index}.instagramUrl`}
-                          label="Instagram"
-                          placeholder="https://instagram.com/..."
-                        />
-                        <StandardFormInput<CuratedCourtBatchFormData>
-                          name={`courts.${index}.viberContact`}
-                          label="Viber Contact"
-                          placeholder="0917 123 4567"
-                        />
-                        <StandardFormInput<CuratedCourtBatchFormData>
-                          name={`courts.${index}.websiteUrl`}
-                          label="Website"
-                          placeholder="https://example.com"
-                        />
-                      </div>
-
-                      <StandardFormTextarea<CuratedCourtBatchFormData>
-                        name={`courts.${index}.otherContactInfo`}
-                        label="Other Contact Information"
-                        placeholder="Any additional contact details..."
-                      />
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Amenities</CardTitle>
-                      <CardDescription>
-                        Select the amenities available at this court
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <StandardFormField<CuratedCourtBatchFormData>
-                        name={`courts.${index}.amenities`}
-                      >
-                        {({ field }) => {
-                          const current = Array.isArray(field.value)
-                            ? (field.value as string[])
-                            : [];
-
-                          return (
-                            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-                              {AMENITIES.map((amenity) => (
-                                <div
-                                  key={amenity}
-                                  className="flex items-start gap-3 text-sm font-normal"
-                                >
-                                  <Checkbox
-                                    checked={current.includes(amenity)}
-                                    onCheckedChange={(checked) => {
-                                      if (checked) {
-                                        field.onChange([...current, amenity]);
-                                      } else {
-                                        field.onChange(
-                                          current.filter(
-                                            (value) => value !== amenity,
-                                          ),
-                                        );
-                                      }
-                                    }}
-                                  />
-                                  <span>{amenity}</span>
+                              return (
+                                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                                  {AMENITIES.map((amenity) => (
+                                    <div
+                                      key={amenity}
+                                      className="flex items-start gap-3 text-sm font-normal"
+                                    >
+                                      <Checkbox
+                                        checked={current.includes(amenity)}
+                                        onCheckedChange={(checked) => {
+                                          if (checked) {
+                                            field.onChange([
+                                              ...current,
+                                              amenity,
+                                            ]);
+                                          } else {
+                                            field.onChange(
+                                              current.filter(
+                                                (value) => value !== amenity,
+                                              ),
+                                            );
+                                          }
+                                        }}
+                                      />
+                                      <span>{amenity}</span>
+                                    </div>
+                                  ))}
                                 </div>
-                              ))}
-                            </div>
-                          );
-                        }}
-                      </StandardFormField>
-                    </CardContent>
-                  </Card>
+                              );
+                            }}
+                          </StandardFormField>
+                        </CardContent>
+                      </Card>
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Photos</CardTitle>
-                      <CardDescription>
-                        Add photo URLs for this listing
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <StandardFormTextarea<CuratedCourtBatchFormData>
-                        name={`courts.${index}.photoUrls`}
-                        label="Photo URLs"
-                        placeholder="https://...\nhttps://..."
-                        description="Add one URL per line or comma-separated"
-                      />
-                    </CardContent>
-                  </Card>
-                </div>
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Photos</CardTitle>
+                          <CardDescription>
+                            Add photo URLs for this listing
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <StandardFormTextarea<CuratedCourtBatchFormData>
+                            name={`courts.${index}.photoUrls`}
+                            label="Photo URLs"
+                            placeholder="https://...\nhttps://..."
+                            description="Add one URL per line or comma-separated"
+                          />
+                        </CardContent>
+                      </Card>
+
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => handleInsertCourtAfter(index)}
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          Add Row Below
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveCourt(index, field.id)}
+                          disabled={fields.length === 1}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
               );
             })}
-          </div>
+          </Accordion>
 
           <div className="flex flex-wrap items-center justify-between gap-3">
             <Button variant="outline" asChild>

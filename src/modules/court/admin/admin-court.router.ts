@@ -5,6 +5,7 @@ import {
 } from "@/shared/infra/trpc/trpc";
 import {
   ActivateCourtSchema,
+  AdminCourtDetailSchema,
   AdminCourtFiltersSchema,
   AdminUpdateCourtSchema,
   CreateCuratedCourtBatchSchema,
@@ -34,6 +35,17 @@ export const adminCourtRouter = router({
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
       return service.createCuratedPlacesBatch(ctx.userId, input.items);
+    }),
+
+  /**
+   * Get any place details
+   * Admin only
+   */
+  getById: adminProcedure
+    .input(AdminCourtDetailSchema)
+    .query(async ({ input, ctx }) => {
+      const service = makeAdminCourtService();
+      return service.getPlaceById(ctx.userId, input);
     }),
 
   /**
