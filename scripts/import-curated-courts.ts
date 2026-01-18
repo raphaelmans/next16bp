@@ -9,6 +9,13 @@
  *   name,address,city,province,country,time_zone,latitude,longitude,facebook_url,instagram_url,
  *   viber_contact,website_url,other_contact_info,amenities,courts,photo_urls
  *
+ * Notes:
+ *   - country is forced to "PH" (any provided value is ignored)
+ *   - time_zone is forced to "Asia/Manila" (any provided value is ignored)
+ *   - duplicates are detected by (name, city, province) case-insensitive
+ *   - duplicate checks only consider existing CURATED places
+ *   - photo_urls may be comma- or newline-separated
+ *
  * Courts format (semicolon separated):
  *   - sport_slug
  *   - sport_slug|tier_label
@@ -17,7 +24,7 @@
 
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { and, ilike } from "drizzle-orm";
+import { and, eq, ilike } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "../src/shared/infra/db/schema";
@@ -186,7 +193,7 @@ function parseOptionalNumber(
   return parsed;
 }
 
-function parseList(value: string, separator: string): string[] {
+function parseList(value: string, separator: string | RegExp): string[] {
   if (!value) return [];
   return value
     .split(separator)
@@ -285,7 +292,6 @@ function parseRow(
   const name = getValue(row, headerMap, "name");
   const address = getValue(row, headerMap, "address");
   const city = getValue(row, headerMap, "city");
-
   const province = getValue(row, headerMap, "province");
 
   if (!name || !address || !city || !province) {
@@ -293,8 +299,17 @@ function parseRow(
       `${rowLabel}: name, address, city, and province are required`,
     );
   }
-  const country = getValue(row, headerMap, "country") || "PH";
-  const timeZone = getValue(row, headerMap, "time_zone") || "Asia/Manila";
+
+  const rawCountry = getValue(row, headerMap, "country");
+  if (rawCountry && rawCountry.toUpperCase() !== "PH") {
+    console.warn(
+      `${rowLabel}: country overridden to PH (received "${rawCountry}")`,
+    );
+  }
+
+  const country = "PH";
+  const timeZone = "Asia/Manila";
+
   const latitude = parseOptionalNumber(
     getValue(row, headerMap, "latitude"),
     "latitude",
@@ -308,17 +323,35 @@ function parseRow(
 
   const facebookUrl = getValue(row, headerMap, "facebook_url");
   const instagramUrl = getValue(row, headerMap, "instagram_url");
-  const viberInfo = getValue(row, headerMap, "viber_contact");
   const websiteUrl = getValue(row, headerMap, "website_url");
+
+  if (facebookUrl && !isValidUrl(facebookUrl)) {
+    throw new Error(`${rowLabel}: facebook_url must be a valid URL`);
+  }
+
+  if (instagramUrl && !isValidUrl(instagramUrl)) {
+    throw new Error(`${rowLabel}: instagram_url must be a valid URL`);
+  }
+
+  if (websiteUrl && !isValidUrl(websiteUrl)) {
+    throw new Error(`${rowLabel}: website_url must be a valid URL`);
+  }
+
+  const viberInfo = getValue(row, headerMap, "viber_contact");
   const otherContactInfo = getValue(row, headerMap, "other_contact_info");
 
-  const amenities = parseList(getValue(row, headerMap, "amenities"), ";");
+  const amenitiesRaw = parseList(getValue(row, headerMap, "amenities"), ";");
+  const amenities = Array.from(
+    new Set(amenitiesRaw.map((item) => item.trim()).filter(Boolean)),
+  );
+
   const courts = parseCourts(
     getValue(row, headerMap, "courts"),
     rowLabel,
     sportIdsBySlug,
   );
-  const photoUrls = parseList(getValue(row, headerMap, "photo_urls"), ",");
+
+  const photoUrls = parseList(getValue(row, headerMap, "photo_urls"), /[\n,]/);
 
   const invalidPhotoUrls = photoUrls.filter((url) => !isValidUrl(url));
   if (invalidPhotoUrls.length > 0) {
@@ -395,6 +428,7 @@ async function importCuratedCourts() {
     let skipped = 0;
     let failed = 0;
     let validated = 0;
+    const seenKeys = new Set<string>();
 
     for (let i = 1; i < rows.length; i += 1) {
       const row = rows[i];
@@ -405,32 +439,53 @@ async function importCuratedCourts() {
       try {
         const parsed = parseRow(row, headerMap, sportIdsBySlug, rowLabel);
 
+        const normalizedName = parsed.name.trim();
+        const normalizedCity = parsed.city.trim();
+        const normalizedProvince = parsed.province.trim();
+        const dedupeKey = `${normalizedName.toLowerCase()}|${normalizedCity.toLowerCase()}|${normalizedProvince.toLowerCase()}`;
+
+        if (seenKeys.has(dedupeKey)) {
+          console.log(
+            `  Skipped duplicate in file: ${normalizedName} (${normalizedCity}, ${normalizedProvince})`,
+          );
+          skipped += 1;
+          continue;
+        }
+
+        seenKeys.add(dedupeKey);
+
         const existing = await db.query.place.findFirst({
           where: and(
-            ilike(schema.place.name, parsed.name),
-            ilike(schema.place.city, parsed.city),
+            eq(schema.place.placeType, "CURATED"),
+            ilike(schema.place.name, normalizedName),
+            ilike(schema.place.city, normalizedCity),
+            ilike(schema.place.province, normalizedProvince),
           ),
         });
 
         if (existing) {
-          console.log(`  Skipped duplicate: ${parsed.name} (${parsed.city})`);
+          console.log(
+            `  Skipped duplicate: ${parsed.name} (${parsed.city}, ${parsed.province})`,
+          );
           skipped += 1;
           continue;
         }
 
         if (options.dryRun) {
-          console.log(`  Validated: ${parsed.name} (${parsed.city})`);
+          console.log(
+            `  Validated: ${parsed.name} (${parsed.city}, ${parsed.province})`,
+          );
           validated += 1;
           continue;
         }
 
         await db.transaction(async (tx) => {
           const placeValues: typeof schema.place.$inferInsert = {
-            name: parsed.name,
-            address: parsed.address,
-            city: parsed.city,
-            province: parsed.province,
-            country: parsed.country,
+            name: normalizedName,
+            address: parsed.address.trim(),
+            city: normalizedCity,
+            province: normalizedProvince,
+            country: "PH",
             latitude:
               parsed.latitude !== null ? parsed.latitude.toString() : undefined,
             longitude:
@@ -452,48 +507,33 @@ async function importCuratedCourts() {
             throw new Error(`${rowLabel}: failed to create place record`);
           }
 
-          const hasContactDetail =
-            parsed.facebookUrl ||
-            parsed.instagramUrl ||
-            parsed.viberInfo ||
-            parsed.websiteUrl ||
-            parsed.otherContactInfo;
-
-          if (hasContactDetail) {
-            await tx.insert(schema.placeContactDetail).values({
-              placeId: placeRecord.id,
-              facebookUrl: parsed.facebookUrl ?? undefined,
-              instagramUrl: parsed.instagramUrl ?? undefined,
-              viberInfo: parsed.viberInfo ?? undefined,
-              websiteUrl: parsed.websiteUrl ?? undefined,
-              otherContactInfo: parsed.otherContactInfo ?? undefined,
-            });
-          }
+          await tx.insert(schema.placeContactDetail).values({
+            placeId: placeRecord.id,
+            facebookUrl: parsed.facebookUrl ?? undefined,
+            instagramUrl: parsed.instagramUrl ?? undefined,
+            viberInfo: parsed.viberInfo ?? undefined,
+            websiteUrl: parsed.websiteUrl ?? undefined,
+            otherContactInfo: parsed.otherContactInfo ?? undefined,
+          });
 
           if (parsed.amenities.length > 0) {
-            await tx
-              .insert(schema.placeAmenity)
-              .values(
-                parsed.amenities.map((name) => ({
-                  placeId: placeRecord.id,
-                  name,
-                })),
-              )
-              .onConflictDoNothing();
+            await tx.insert(schema.placeAmenity).values(
+              parsed.amenities.map((name) => ({
+                placeId: placeRecord.id,
+                name,
+              })),
+            );
           }
 
-          await tx
-            .insert(schema.court)
-            .values(
-              parsed.courts.map((court) => ({
-                placeId: placeRecord.id,
-                sportId: court.sportId,
-                label: court.label,
-                tierLabel: court.tierLabel,
-                isActive: true,
-              })),
-            )
-            .onConflictDoNothing();
+          await tx.insert(schema.court).values(
+            parsed.courts.map((court) => ({
+              placeId: placeRecord.id,
+              sportId: court.sportId,
+              label: court.label,
+              tierLabel: court.tierLabel,
+              isActive: true,
+            })),
+          );
 
           if (parsed.photoUrls.length > 0) {
             await tx.insert(schema.placePhoto).values(
@@ -506,7 +546,9 @@ async function importCuratedCourts() {
           }
         });
 
-        console.log(`  Created: ${parsed.name} (${parsed.city})`);
+        console.log(
+          `  Created: ${parsed.name} (${parsed.city}, ${parsed.province})`,
+        );
         created += 1;
       } catch (error) {
         failed += 1;

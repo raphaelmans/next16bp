@@ -180,7 +180,7 @@ export function useToggleCourtStatus() {
     },
     options?: ToggleOptions,
   ) => {
-    if (status === "active") {
+    if (status === "inactive") {
       return deactivateMutation.mutate(
         {
           placeId: courtId,
@@ -280,8 +280,16 @@ export function useCities() {
   const cities = useMemo(() => {
     if (!query.data) return [];
 
-    const allCities = Object.values(query.data).flat();
-    return Array.from(new Set(allCities)).sort((a, b) => a.localeCompare(b));
+    const allCities = query.data.flatMap((province) =>
+      province.cities.map((city) => ({
+        name: city.name,
+        displayName: city.displayName,
+      })),
+    );
+
+    return Array.from(
+      new Map(allCities.map((city) => [city.name, city])).values(),
+    ).sort((a, b) => a.displayName.localeCompare(b.displayName));
   }, [query.data]);
 
   return {

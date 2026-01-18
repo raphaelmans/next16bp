@@ -27,6 +27,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { env } from "@/lib/env";
 import { useGoogleLocPreviewMutation } from "@/shared/lib/clients/google-loc-client";
 import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
+import {
+  buildCityOptions,
+  buildProvinceOptions,
+  findCityByName,
+  findProvinceByName,
+} from "@/shared/lib/ph-location-data";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import {
   defaultPlaceFormValues,
@@ -189,18 +195,22 @@ export function PlaceForm({
   const provinceOptions = useMemo(() => {
     if (!provincesCities) return [];
 
-    return Object.keys(provincesCities)
-      .sort((left, right) => left.localeCompare(right))
-      .map((province) => ({ label: province, value: province }));
+    return buildProvinceOptions(provincesCities, "name");
   }, [provincesCities]);
 
+  const selectedProvince = useMemo(
+    () =>
+      provincesCities
+        ? findProvinceByName(provincesCities, provinceValue)
+        : null,
+    [provinceValue, provincesCities],
+  );
+
   const cityOptions = useMemo(() => {
-    if (!provincesCities || !provinceValue) return [];
+    if (!provincesCities || !selectedProvince) return [];
 
-    const cities = provincesCities[provinceValue] ?? [];
-
-    return cities.map((city) => ({ label: city, value: city }));
-  }, [provincesCities, provinceValue]);
+    return buildCityOptions(selectedProvince, "name");
+  }, [provincesCities, selectedProvince]);
 
   const countryOptions = useMemo(
     () => [{ label: "Philippines (PH)", value: DEFAULT_COUNTRY }],
@@ -223,7 +233,7 @@ export function PlaceForm({
   useEffect(() => {
     if (!provincesCities) return;
 
-    if (provinceValue && !Object.hasOwn(provincesCities, provinceValue)) {
+    if (provinceValue && !selectedProvince) {
       setValue("province", "", {
         shouldDirty: true,
         shouldTouch: true,
@@ -248,15 +258,15 @@ export function PlaceForm({
       return;
     }
 
-    const availableCities = provincesCities[provinceValue] ?? [];
-    if (cityValue && !availableCities.includes(cityValue)) {
+    const selectedCity = findCityByName(selectedProvince, cityValue);
+    if (cityValue && !selectedCity) {
       setValue("city", "", {
         shouldDirty: true,
         shouldTouch: true,
         shouldValidate: true,
       });
     }
-  }, [cityValue, provinceValue, provincesCities, setValue]);
+  }, [cityValue, provinceValue, provincesCities, selectedProvince, setValue]);
 
   const coordinateLabel = useMemo(() => {
     if (previewResult?.lat === undefined || previewResult?.lng === undefined) {

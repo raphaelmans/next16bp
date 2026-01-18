@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import {
   EmptyResults,
   PlaceFilters,
@@ -17,6 +17,12 @@ import {
   PlaceCardSkeleton,
 } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
+import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
+import {
+  findCityBySlug,
+  findCityBySlugAcrossProvinces,
+  findProvinceBySlug,
+} from "@/shared/lib/ph-location-data";
 
 export default function PlacesPage() {
   return (
@@ -39,7 +45,22 @@ function PlacesPageContent() {
 
   const places = data?.places ?? [];
   const total = data?.total ?? 0;
-  const locationLabel = filters.city ?? filters.province;
+  const { data: provincesCities } = usePHProvincesCitiesQuery();
+
+  const locationLabel = useMemo(() => {
+    if (!provincesCities) return filters.city ?? filters.province;
+
+    const province = filters.province
+      ? findProvinceBySlug(provincesCities, filters.province)
+      : null;
+    const city = filters.city
+      ? (findCityBySlug(province, filters.city) ??
+        findCityBySlugAcrossProvinces(provincesCities, filters.city)?.city ??
+        null)
+      : null;
+
+    return city?.displayName ?? province?.displayName ?? null;
+  }, [filters.city, filters.province, provincesCities]);
 
   return (
     <Container>

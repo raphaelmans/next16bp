@@ -40,6 +40,12 @@ import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { useGoogleLocPreviewMutation } from "@/shared/lib/clients/google-loc-client";
 import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
+import {
+  buildCityOptions,
+  buildProvinceOptions,
+  findCityByName,
+  findProvinceByName,
+} from "@/shared/lib/ph-location-data";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
@@ -150,18 +156,22 @@ export default function NewCuratedCourtPage() {
   const provinceOptions = React.useMemo(() => {
     if (!provincesCities) return [];
 
-    return Object.keys(provincesCities)
-      .sort((left, right) => left.localeCompare(right))
-      .map((province) => ({ label: province, value: province }));
+    return buildProvinceOptions(provincesCities, "name");
   }, [provincesCities]);
 
+  const selectedProvince = React.useMemo(
+    () =>
+      provincesCities
+        ? findProvinceByName(provincesCities, provinceValue)
+        : null,
+    [provinceValue, provincesCities],
+  );
+
   const cityOptions = React.useMemo(() => {
-    if (!provincesCities || !provinceValue) return [];
+    if (!provincesCities || !selectedProvince) return [];
 
-    const cities = provincesCities[provinceValue] ?? [];
-
-    return cities.map((city) => ({ label: city, value: city }));
-  }, [provincesCities, provinceValue]);
+    return buildCityOptions(selectedProvince, "name");
+  }, [provincesCities, selectedProvince]);
 
   const countryOptions = React.useMemo(
     () => [{ label: "Philippines (PH)", value: DEFAULT_COUNTRY }],
@@ -184,7 +194,7 @@ export default function NewCuratedCourtPage() {
   React.useEffect(() => {
     if (!provincesCities) return;
 
-    if (provinceValue && !Object.hasOwn(provincesCities, provinceValue)) {
+    if (provinceValue && !selectedProvince) {
       setValue("province", "", {
         shouldDirty: true,
         shouldTouch: true,
@@ -209,15 +219,15 @@ export default function NewCuratedCourtPage() {
       return;
     }
 
-    const availableCities = provincesCities[provinceValue] ?? [];
-    if (cityValue && !availableCities.includes(cityValue)) {
+    const selectedCity = findCityByName(selectedProvince, cityValue);
+    if (cityValue && !selectedCity) {
       setValue("city", "", {
         shouldDirty: true,
         shouldTouch: true,
         shouldValidate: true,
       });
     }
-  }, [cityValue, provinceValue, provincesCities, setValue]);
+  }, [cityValue, provinceValue, provincesCities, selectedProvince, setValue]);
 
   const coordinateLabel = React.useMemo(() => {
     if (previewResult?.lat === undefined || previewResult?.lng === undefined) {
@@ -407,7 +417,7 @@ export default function NewCuratedCourtPage() {
                     Resolving…
                   </span>
                 ) : (
-                  "Preview"
+                  "Locate"
                 )}
               </Button>
 

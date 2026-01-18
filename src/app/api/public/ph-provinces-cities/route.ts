@@ -6,7 +6,17 @@ export const runtime = "nodejs";
 export const dynamic = "force-static";
 export const revalidate = false;
 
-type ProvincesCities = Record<string, string[]>;
+type ProvinceCity = {
+  name: string;
+  displayName: string;
+  slug: string;
+};
+
+type ProvincesCities = Array<
+  ProvinceCity & {
+    cities: ProvinceCity[];
+  }
+>;
 
 let cachedProvincesCities: ProvincesCities | null = null;
 
@@ -18,31 +28,45 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
+const isProvinceCity = (value: unknown): value is ProvinceCity =>
+  isRecord(value) &&
+  typeof value.name === "string" &&
+  typeof value.displayName === "string" &&
+  typeof value.slug === "string";
+
 function normalizeProvincesCities(value: unknown): ProvincesCities {
-  if (!isRecord(value)) {
+  if (!Array.isArray(value)) {
     throw new Error("Invalid provinces/cities JSON shape");
   }
 
-  const entries: Array<[string, string[]]> = [];
+  const entries = value
+    .filter((item) => isRecord(item))
+    .map((item) => {
+      const cities = Array.isArray(item.cities)
+        ? item.cities.filter(isProvinceCity)
+        : [];
 
-  for (const [province, rawCities] of Object.entries(value)) {
-    if (typeof province !== "string" || province.trim().length === 0) continue;
-    if (!Array.isArray(rawCities)) continue;
+      if (!isProvinceCity(item) || cities.length === 0) {
+        return null;
+      }
 
-    const cities = rawCities
-      .filter((city): city is string => typeof city === "string")
-      .map((city) => city.trim())
-      .filter((city) => city.length > 0)
-      .sort((a, b) => a.localeCompare(b));
+      return {
+        name: item.name.trim(),
+        displayName: item.displayName.trim(),
+        slug: item.slug.trim(),
+        cities: cities
+          .map((city) => ({
+            name: city.name.trim(),
+            displayName: city.displayName.trim(),
+            slug: city.slug.trim(),
+          }))
+          .filter((city) => city.name.length > 0 && city.slug.length > 0)
+          .sort((a, b) => a.displayName.localeCompare(b.displayName)),
+      };
+    })
+    .filter((item): item is ProvincesCities[number] => item !== null);
 
-    if (cities.length === 0) continue;
-
-    entries.push([province, Array.from(new Set(cities))]);
-  }
-
-  entries.sort(([a], [b]) => a.localeCompare(b));
-
-  return Object.fromEntries(entries);
+  return entries.sort((a, b) => a.displayName.localeCompare(b.displayName));
 }
 
 async function loadProvincesCities(): Promise<ProvincesCities> {
@@ -53,7 +77,7 @@ async function loadProvincesCities(): Promise<ProvincesCities> {
     "public",
     "assets",
     "files",
-    "ph-provinces-cities.json",
+    "ph-provinces-cities.enriched.json",
   );
   const raw = await readFile(filePath, "utf-8");
   const parsed = JSON.parse(raw) as unknown;
@@ -73,7 +97,7 @@ export async function GET(req: Request) {
       {
         data: provincesCities,
         meta: {
-          totalProvinces: Object.keys(provincesCities).length,
+          totalProvinces: provincesCities.length,
         },
       },
       {

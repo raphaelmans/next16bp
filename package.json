@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
+    "generate:ph-locations": "tsx scripts/generate-ph-location-slugs.ts",
     "db:pull": "dotenvx run --env-file=.env.local -- drizzle-kit pull",
     "db:generate": "dotenvx run --env-file=.env.local -- drizzle-kit generate",
     "db:migrate": "dotenvx run --env-file=.env.local -- drizzle-kit migrate",

@@ -128,7 +128,7 @@ export function Navbar({ className }: NavbarProps) {
         <Button
           variant="ghost"
           onClick={handleListYourPlace}
-          className="font-heading text-accent hover:text-accent/80"
+          className="font-heading text-accent"
         >
           List Your Venue
         </Button>
@@ -275,7 +275,7 @@ export function Navbar({ className }: NavbarProps) {
                 handleListYourPlace();
                 setIsOpen(false);
               }}
-              className="py-2 text-lg font-heading font-semibold text-accent text-left"
+              className="py-2 text-lg font-heading font-semibold text-accent hover:text-accent/80 text-left"
             >
               List Your Venue
             </button>

@@ -71,7 +71,7 @@ export function PlaceCard({
   const cardContent = (
     <Card
       className={cn(
-        "group overflow-hidden p-0 gap-0",
+        "group h-full overflow-hidden p-0 gap-0",
         variant === "compact" && "flex flex-row",
         className,
       )}
@@ -97,7 +97,12 @@ export function PlaceCard({
         )}
       </div>
 
-      <div className={cn("p-4", variant === "compact" && "flex-1 py-2 px-3")}>
+      <div
+        className={cn(
+          "flex h-full flex-col p-4",
+          variant === "compact" && "flex-1 py-2 px-3",
+        )}
+      >
         <div className="flex items-start justify-between gap-2">
           <h3
             className={cn(
@@ -144,22 +149,22 @@ export function PlaceCard({
           </div>
         )}
 
-        {showPrice && place.lowestPriceCents !== undefined && (
-          <div className="mt-3">
-            <span className="font-heading font-bold text-foreground">
-              From {formatCurrency(place.lowestPriceCents, place.currency)}
-            </span>
-            <span className="text-muted-foreground text-sm"> /hour</span>
-          </div>
-        )}
+        <div className="mt-auto space-y-4">
+          {showPrice && place.lowestPriceCents !== undefined && (
+            <div>
+              <span className="font-heading font-bold text-foreground">
+                From {formatCurrency(place.lowestPriceCents, place.currency)}
+              </span>
+              <span className="text-muted-foreground text-sm"> /hour</span>
+            </div>
+          )}
 
-        {showCTA && variant !== "compact" && (
-          <div className="mt-4">
+          {showCTA && variant !== "compact" && (
             <Button size="sm" className="w-full">
               View Courts
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </Card>
   );

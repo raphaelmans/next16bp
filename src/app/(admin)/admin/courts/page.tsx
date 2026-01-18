@@ -218,8 +218,8 @@ export default function AdminCourtsPage() {
             <SelectContent>
               <SelectItem value="all">All Cities</SelectItem>
               {cities.map((city) => (
-                <SelectItem key={city} value={city}>
-                  {city}
+                <SelectItem key={city.name} value={city.name}>
+                  {city.displayName}
                 </SelectItem>
               ))}
             </SelectContent>

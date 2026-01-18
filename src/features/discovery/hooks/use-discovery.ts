@@ -1,4 +1,11 @@
+import { useMemo } from "react";
 import type { PlaceCardPlace } from "@/shared/components/kudos";
+import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
+import {
+  findCityBySlug,
+  findCityBySlugAcrossProvinces,
+  findProvinceBySlug,
+} from "@/shared/lib/ph-location-data";
 import { trpc } from "@/trpc/client";
 
 interface UseDiscoveryOptions {
@@ -64,11 +71,30 @@ const mapPlaceSummary = (item: PlaceListItem): PlaceSummary => {
 export function useDiscoveryPlaces(options: UseDiscoveryOptions = {}) {
   const { q, province, city, sportId, page = 1, limit = 12 } = options;
   const offset = (page - 1) * limit;
+  const { data: provincesCities } = usePHProvincesCitiesQuery();
+
+  const resolvedLocation = useMemo(() => {
+    if (!provincesCities) return null;
+
+    const resolvedProvince = province
+      ? findProvinceBySlug(provincesCities, province)
+      : null;
+    const resolvedCity = city
+      ? (findCityBySlug(resolvedProvince, city) ??
+        findCityBySlugAcrossProvinces(provincesCities, city)?.city ??
+        null)
+      : null;
+
+    return {
+      province: resolvedProvince?.name,
+      city: resolvedCity?.name,
+    };
+  }, [city, province, provincesCities]);
 
   const query = trpc.place.list.useQuery({
     q,
-    province,
-    city,
+    province: resolvedLocation?.province ?? undefined,
+    city: resolvedLocation?.city ?? undefined,
     sportId,
     limit,
     offset,

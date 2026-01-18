@@ -1,11 +1,19 @@
 import { z } from "zod";
 
-export const phProvincesCitiesSchema = z.record(
-  z.string(),
-  z.array(z.string()),
+const phProvinceCitySchema = z.object({
+  name: z.string(),
+  displayName: z.string(),
+  slug: z.string(),
+});
+
+export const phProvincesCitiesSchema = z.array(
+  phProvinceCitySchema.extend({
+    cities: z.array(phProvinceCitySchema),
+  }),
 );
 
 export type PHProvincesCities = z.infer<typeof phProvincesCitiesSchema>;
+export type PHProvinceCity = z.infer<typeof phProvinceCitySchema>;
 
 export const phProvincesCitiesResponseSchema = z.object({
   data: phProvincesCitiesSchema,

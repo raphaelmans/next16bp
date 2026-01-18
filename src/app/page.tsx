@@ -13,11 +13,31 @@ import { appRoutes } from "@/shared/lib/app-routes";
 
 // Popular locations for quick access
 const POPULAR_LOCATIONS = [
-  { name: "Metro Manila", city: "metro-manila" },
-  { name: "Cebu", city: "cebu" },
-  { name: "Davao", city: "davao" },
-  { name: "Laguna", city: "laguna" },
-  { name: "Pampanga", city: "pampanga" },
+  {
+    label: "Manila",
+    provinceSlug: "metro-manila",
+    citySlug: "manila",
+  },
+  {
+    label: "Davao City",
+    provinceSlug: "davao-del-sur",
+    citySlug: "davao-city",
+  },
+  {
+    label: "Cebu City",
+    provinceSlug: "cebu",
+    citySlug: "cebu-city",
+  },
+  {
+    label: "Dumaguete",
+    provinceSlug: "negros-oriental",
+    citySlug: "dumaguete-city",
+  },
+  {
+    label: "Quezon City",
+    provinceSlug: "metro-manila",
+    citySlug: "quezon-city",
+  },
 ];
 
 // Value proposition features
@@ -59,8 +79,12 @@ export default function HomePage() {
     }
   };
 
-  const handleLocationClick = (city: string) => {
-    router.push(`${appRoutes.courts.base}?city=${encodeURIComponent(city)}`);
+  const handleLocationClick = (provinceSlug: string, citySlug: string) => {
+    const params = new URLSearchParams({
+      province: provinceSlug,
+      city: citySlug,
+    });
+    router.push(`${appRoutes.courts.base}?${params.toString()}`);
   };
 
   return (
@@ -105,13 +129,21 @@ export default function HomePage() {
             <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-sm">
               <span className="text-muted-foreground">Popular:</span>
               {POPULAR_LOCATIONS.map((location, index) => (
-                <span key={location.city} className="flex items-center">
+                <span
+                  key={`${location.provinceSlug}-${location.citySlug}`}
+                  className="flex items-center"
+                >
                   <button
                     type="button"
-                    onClick={() => handleLocationClick(location.city)}
+                    onClick={() =>
+                      handleLocationClick(
+                        location.provinceSlug,
+                        location.citySlug,
+                      )
+                    }
                     className="text-accent hover:text-accent/80 hover:underline transition-colors cursor-pointer"
                   >
-                    {location.name}
+                    {location.label}
                   </button>
                   {index < POPULAR_LOCATIONS.length - 1 && (
                     <span className="text-muted-foreground ml-2">-</span>

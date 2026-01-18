@@ -6,9 +6,12 @@ import ky from "ky";
 import type { ApiErrorResponse } from "@/shared/kernel/response";
 import { phProvincesCitiesQueryKeys } from "./query-keys";
 import {
+  type PHProvinceCity,
   type PHProvincesCities,
   phProvincesCitiesResponseSchema,
 } from "./schemas";
+
+export type { PHProvinceCity, PHProvincesCities };
 
 export class ApiClientError extends Error {
   readonly code: string;
