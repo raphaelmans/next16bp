@@ -58,6 +58,7 @@ export const phProvincesCitiesClient = {
       "/api/public/ph-provinces-cities",
       {
         signal: args?.signal,
+        cache: "no-store",
       },
     );
 
@@ -103,6 +104,6 @@ export function usePHProvincesCitiesQuery() {
   return useQuery({
     queryKey: phProvincesCitiesQueryKeys.list.queryKey,
     queryFn: ({ signal }) => phProvincesCitiesClient.list({ signal }),
-    staleTime: Number.POSITIVE_INFINITY,
+    staleTime: 5 * 60 * 1000,
   });
 }

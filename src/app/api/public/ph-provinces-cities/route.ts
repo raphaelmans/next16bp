@@ -3,8 +3,7 @@ import path from "node:path";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
-export const dynamic = "force-static";
-export const revalidate = false;
+export const dynamic = "force-dynamic";
 
 type ProvinceCity = {
   name: string;
@@ -70,7 +69,11 @@ function normalizeProvincesCities(value: unknown): ProvincesCities {
 }
 
 async function loadProvincesCities(): Promise<ProvincesCities> {
-  if (cachedProvincesCities) return cachedProvincesCities;
+  if (cachedProvincesCities && Array.isArray(cachedProvincesCities)) {
+    return cachedProvincesCities;
+  }
+
+  cachedProvincesCities = null;
 
   const filePath = path.join(
     process.cwd(),
