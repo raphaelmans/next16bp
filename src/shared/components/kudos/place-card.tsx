@@ -201,6 +201,7 @@ export function PlaceCardSkeleton({
           variant === "compact" && "w-24 h-24 shrink-0",
         )}
       />
+
       <div
         className={cn(
           "p-4 space-y-2",

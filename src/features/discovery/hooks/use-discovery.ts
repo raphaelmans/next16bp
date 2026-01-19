@@ -32,6 +32,7 @@ interface PlaceListItem {
     latitude: string | null;
     longitude: string | null;
   };
+  coverImageUrl?: string | null;
   sports: { id: string; name: string; slug: string }[];
   courtCount?: number;
   lowestPriceCents?: number;
@@ -55,7 +56,7 @@ const mapPlaceSummary = (item: PlaceListItem): PlaceSummary => {
     name: item.place.name,
     address: item.place.address,
     city: item.place.city,
-    coverImageUrl: undefined,
+    coverImageUrl: item.coverImageUrl ?? undefined,
     sports: item.sports.map((sport) => ({
       id: sport.id,
       name: sport.name,

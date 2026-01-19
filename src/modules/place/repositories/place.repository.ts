@@ -26,6 +26,7 @@ export interface PlaceWithDetails {
 
 export interface PlaceListItem {
   place: PlaceRecord;
+  coverImageUrl?: string | null;
   sports: { id: string; slug: string; name: string }[];
   courtCount: number;
   lowestPriceCents?: number;
@@ -288,11 +289,17 @@ export class PlaceRepository implements IPlaceRepository {
           client,
         );
 
+        const coverImageUrls = await this.getCoverImageByPlaceIds(
+          placeIds,
+          client,
+        );
+
         return {
           items: orderedPlaces.map((placeRecord) => {
             const lowestPrice = lowestPrices.get(placeRecord.id);
             return {
               place: placeRecord,
+              coverImageUrl: coverImageUrls.get(placeRecord.id) ?? null,
               sports: sportsByPlace.get(placeRecord.id) ?? [],
               courtCount: courtCounts.get(placeRecord.id) ?? 0,
               lowestPriceCents: lowestPrice?.priceCents,
@@ -334,11 +341,17 @@ export class PlaceRepository implements IPlaceRepository {
         client,
       );
 
+      const coverImageUrls = await this.getCoverImageByPlaceIds(
+        placeIds,
+        client,
+      );
+
       return {
         items: uniquePlaces.map((placeRecord) => {
           const lowestPrice = lowestPrices.get(placeRecord.id);
           return {
             place: placeRecord,
+            coverImageUrl: coverImageUrls.get(placeRecord.id) ?? null,
             sports: sportsByPlace.get(placeRecord.id) ?? [],
             courtCount: courtCounts.get(placeRecord.id) ?? 0,
             lowestPriceCents: lowestPrice?.priceCents,
@@ -412,12 +425,14 @@ export class PlaceRepository implements IPlaceRepository {
       undefined,
       client,
     );
+    const coverImageUrls = await this.getCoverImageByPlaceIds(placeIds, client);
 
     return {
       items: placeRecords.map((placeRecord) => {
         const lowestPrice = lowestPrices.get(placeRecord.id);
         return {
           place: placeRecord,
+          coverImageUrl: coverImageUrls.get(placeRecord.id) ?? null,
           sports: sportsByPlace.get(placeRecord.id) ?? [],
           courtCount: courtCounts.get(placeRecord.id) ?? 0,
           lowestPriceCents: lowestPrice?.priceCents,
@@ -583,5 +598,27 @@ export class PlaceRepository implements IPlaceRepository {
     }
 
     return prices;
+  }
+
+  private async getCoverImageByPlaceIds(
+    placeIds: string[],
+    client: DbClient | DrizzleTransaction,
+  ): Promise<Map<string, string | null>> {
+    if (placeIds.length === 0) {
+      return new Map();
+    }
+
+    const rows = await client
+      .select({
+        placeId: placePhoto.placeId,
+        url: sql<
+          string | null
+        >`(array_agg(${placePhoto.url} order by ${placePhoto.displayOrder}))[1]`,
+      })
+      .from(placePhoto)
+      .where(inArray(placePhoto.placeId, placeIds))
+      .groupBy(placePhoto.placeId);
+
+    return new Map(rows.map((row) => [row.placeId, row.url]));
   }
 }
