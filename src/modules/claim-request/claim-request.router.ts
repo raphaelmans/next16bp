@@ -1,8 +1,13 @@
-import { protectedProcedure, router } from "@/shared/infra/trpc/trpc";
+import {
+  protectedProcedure,
+  rateLimitedProcedure,
+  router,
+} from "@/shared/infra/trpc/trpc";
 import {
   CancelClaimRequestSchema,
   GetClaimRequestByIdSchema,
   SubmitClaimRequestSchema,
+  SubmitGuestRemovalRequestSchema,
   SubmitRemovalRequestSchema,
 } from "./dtos";
 import { makeClaimRequestService } from "./factories/claim-request.factory";
@@ -30,6 +35,19 @@ export const claimRequestRouter = router({
     .mutation(async ({ input, ctx }) => {
       const service = makeClaimRequestService();
       return service.submitRemovalRequest(ctx.userId, input);
+    }),
+
+  /**
+   * Submit a removal request for a curated place (guest)
+   * Public + rate limited
+   */
+  submitGuestRemoval: rateLimitedProcedure("sensitive")
+    .input(SubmitGuestRemovalRequestSchema)
+    .mutation(async ({ input, ctx }) => {
+      const service = makeClaimRequestService();
+      return service.submitGuestRemovalRequest(input, {
+        requestId: ctx.requestId,
+      });
     }),
 
   /**

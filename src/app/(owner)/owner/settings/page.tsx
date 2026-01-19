@@ -167,22 +167,14 @@ export default function OwnerSettingsPage() {
 
   const {
     reset: resetOrgForm,
-    formState: {
-      isDirty: isOrgDirty,
-      isValid: isOrgValid,
-      isSubmitting: isOrgSubmitting,
-    },
+    formState: { isDirty: isOrgDirty, isSubmitting: isOrgSubmitting },
   } = form;
 
   const {
     getValues: getPaymentValues,
     reset: resetPaymentForm,
     setValue: setPaymentValue,
-    formState: {
-      isDirty: isPaymentDirty,
-      isValid: isPaymentValid,
-      isSubmitting: isPaymentSubmitting,
-    },
+    formState: { isDirty: isPaymentDirty, isSubmitting: isPaymentSubmitting },
   } = paymentForm;
 
   const organizationId = organization?.id;
@@ -247,10 +239,9 @@ export default function OwnerSettingsPage() {
   const isSavingPaymentMethod =
     createPaymentMethod.isPending || updatePaymentMethod.isPending;
   const paymentSubmitting = isSavingPaymentMethod || isPaymentSubmitting;
-  const isPaymentSubmitDisabled =
-    paymentSubmitting || !isPaymentDirty || !isPaymentValid;
+  const isPaymentSubmitDisabled = paymentSubmitting || !isPaymentDirty;
   const orgSubmitting = updateOrg.isPending || isOrgSubmitting;
-  const isOrgSubmitDisabled = orgSubmitting || !isOrgDirty || !isOrgValid;
+  const isOrgSubmitDisabled = orgSubmitting || !isOrgDirty;
 
   const resetPaymentMethodForm = () => {
     resetPaymentForm(defaultPaymentMethodValues);

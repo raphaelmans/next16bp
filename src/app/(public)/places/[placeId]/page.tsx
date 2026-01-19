@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
+  StandardFormInput,
   StandardFormProvider,
   StandardFormSelect,
   StandardFormTextarea,
@@ -67,7 +68,15 @@ const claimFormSchema = z.object({
   requestNotes: z.string().max(1000).optional(),
 });
 
+const removalFormSchema = z.object({
+  guestName: z.string().min(2, "Name is required").max(150),
+  guestEmail: z.string().email("Enter a valid email").max(255),
+  requestNotes: z.string().min(10, "Please share more details").max(1000),
+});
+
 type ClaimFormData = z.infer<typeof claimFormSchema>;
+
+type RemovalFormData = z.infer<typeof removalFormSchema>;
 
 export default function PlaceDetailPage() {
   const params = useParams();
@@ -94,6 +103,16 @@ export default function PlaceDetailPage() {
     },
   });
 
+  const removalForm = useForm<RemovalFormData>({
+    resolver: zodResolver(removalFormSchema),
+    mode: "onChange",
+    defaultValues: {
+      guestName: "",
+      guestEmail: "",
+      requestNotes: "",
+    },
+  });
+
   const {
     setValue: setClaimValue,
     reset: resetClaimForm,
@@ -101,7 +120,13 @@ export default function PlaceDetailPage() {
     formState: { isValid: isClaimValid, isSubmitting: isClaimSubmitting },
   } = claimForm;
 
+  const {
+    reset: resetRemovalForm,
+    formState: { isValid: isRemovalValid, isSubmitting: isRemovalSubmitting },
+  } = removalForm;
+
   const [isClaimOpen, setIsClaimOpen] = React.useState(false);
+  const [isRemovalOpen, setIsRemovalOpen] = React.useState(false);
 
   const [selectedDate, setSelectedDate] = React.useState<Date>();
   const [durationMinutes, setDurationMinutes] = React.useState(60);
@@ -155,6 +180,7 @@ export default function PlaceDetailPage() {
   const defaultOrganizationId = organizations[0]?.id ?? "";
 
   const claimMutation = trpc.claimRequest.submitClaim.useMutation();
+  const removalMutation = trpc.claimRequest.submitGuestRemoval.useMutation();
 
   React.useEffect(() => {
     if (!defaultOrganizationId) return;
@@ -280,15 +306,15 @@ export default function PlaceDetailPage() {
         organizationId: data.organizationId,
         requestNotes: data.requestNotes?.trim() || undefined,
       });
-      await utils.place.getById.invalidate({ placeId });
       toast.success("Claim submitted", {
-        description: "Your request is pending admin review.",
+        description: "We will review your request within 48 hours.",
       });
       resetClaimForm({
-        organizationId: data.organizationId,
+        organizationId: defaultOrganizationId,
         requestNotes: "",
       });
       setIsClaimOpen(false);
+      await utils.place.getById.invalidate({ placeId });
     } catch (error) {
       toast.error("Unable to submit claim", {
         description: getClientErrorMessage(error, "Please try again"),
@@ -296,8 +322,35 @@ export default function PlaceDetailPage() {
     }
   };
 
+  const handleRemovalSubmit = async (data: RemovalFormData) => {
+    try {
+      await removalMutation.mutateAsync({
+        placeId,
+        guestName: data.guestName.trim(),
+        guestEmail: data.guestEmail.trim(),
+        requestNotes: data.requestNotes.trim(),
+      });
+      toast.success("Removal request submitted", {
+        description: "We will review your request shortly.",
+      });
+      resetRemovalForm({
+        guestName: "",
+        guestEmail: "",
+        requestNotes: "",
+      });
+      setIsRemovalOpen(false);
+      await utils.place.getById.invalidate({ placeId });
+    } catch (error) {
+      toast.error("Unable to submit removal request", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
+
   const claimSubmitting = claimMutation.isPending || isClaimSubmitting;
   const claimDisabled = claimSubmitting || !isClaimValid;
+  const removalSubmitting = removalMutation.isPending || isRemovalSubmitting;
+  const removalDisabled = removalSubmitting || !isRemovalValid;
 
   const handleReserve = () => {
     if (!place) return;
@@ -403,6 +456,10 @@ export default function PlaceDetailPage() {
     : !isOwner
       ? "Create an organization to claim this venue."
       : "This venue is not currently available to claim.";
+  const removalHelperText =
+    place.claimStatus === "REMOVAL_REQUESTED"
+      ? "A removal request is already pending review."
+      : "Request removal if this listing is inaccurate or should be removed.";
   const mapQuery = `${place.name} ${place.address} ${place.city}`;
   const directionsUrl = hasCoordinates
     ? `https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`
@@ -1054,6 +1111,80 @@ export default function PlaceDetailPage() {
                     <p className="text-sm text-muted-foreground">
                       {claimHelperText}
                     </p>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Request listing removal</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm">
+                  <p className="text-muted-foreground">{removalHelperText}</p>
+                  {place.claimStatus === "REMOVAL_REQUESTED" ? (
+                    <div className="rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
+                      Removal request submitted. We will review shortly.
+                    </div>
+                  ) : (
+                    <Dialog
+                      open={isRemovalOpen}
+                      onOpenChange={setIsRemovalOpen}
+                    >
+                      <DialogTrigger asChild>
+                        <Button variant="outline" className="w-full">
+                          Request removal
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[520px]">
+                        <DialogHeader>
+                          <DialogTitle>Request listing removal</DialogTitle>
+                          <DialogDescription>
+                            Share your contact details so we can follow up
+                            during review.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <StandardFormProvider
+                          form={removalForm}
+                          onSubmit={handleRemovalSubmit}
+                          className="space-y-4"
+                        >
+                          <StandardFormInput<RemovalFormData>
+                            name="guestName"
+                            label="Full name"
+                            placeholder="Your name"
+                            required
+                          />
+                          <StandardFormInput<RemovalFormData>
+                            name="guestEmail"
+                            label="Email"
+                            placeholder="you@example.com"
+                            required
+                          />
+                          <StandardFormTextarea<RemovalFormData>
+                            name="requestNotes"
+                            label="Reason"
+                            placeholder="Let us know why this listing should be removed."
+                            required
+                          />
+                          <DialogFooter className="gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => setIsRemovalOpen(false)}
+                              disabled={removalSubmitting}
+                            >
+                              Cancel
+                            </Button>
+                            <Button type="submit" disabled={removalDisabled}>
+                              {removalSubmitting && (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              )}
+                              Submit request
+                            </Button>
+                          </DialogFooter>
+                        </StandardFormProvider>
+                      </DialogContent>
+                    </Dialog>
                   )}
                 </CardContent>
               </Card>

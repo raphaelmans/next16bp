@@ -6,7 +6,7 @@ import { z } from "zod";
 export const SubmitRemovalRequestSchema = z.object({
   placeId: z.string().uuid(),
   organizationId: z.string().uuid(),
-  requestNotes: z.string().min(1).max(1000), // Required for removal requests
+  requestNotes: z.string().min(10).max(1000), // Required for removal requests
 });
 
 export type SubmitRemovalRequestDTO = z.infer<

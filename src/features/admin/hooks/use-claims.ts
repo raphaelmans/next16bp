@@ -15,12 +15,13 @@ export interface Claim {
   courtAddress: string;
   courtImageUrl?: string;
   courtStatus: "curated" | "reservable";
-  organizationId: string;
+  organizationId: string | null;
   organizationName: string;
-  organizationLogoUrl?: string;
   ownerName: string;
   ownerEmail: string;
   ownerPhone?: string;
+  guestName?: string;
+  guestEmail?: string;
   courtsOwnedCount: number;
   notes?: string;
   reviewNotes?: string;
@@ -72,10 +73,15 @@ export function useClaims(options: UseClaimsOptions = {}) {
           courtName: `Place ${item.placeId.slice(0, 8)}...`,
           courtAddress: "Address pending...",
           courtStatus: "curated" as const,
-          organizationId: item.organizationId,
-          organizationName: `Org ${item.organizationId.slice(0, 8)}...`,
+          organizationId: item.organizationId ?? null,
+          organizationName: item.organizationId
+            ? `Org ${item.organizationId.slice(0, 8)}...`
+            : "Guest request",
           ownerName: "Loading...",
           ownerEmail: "loading@example.com",
+          guestName: item.guestName ?? undefined,
+          guestEmail: item.guestEmail ?? undefined,
+          reviewedBy: item.reviewerUserId ?? undefined,
           notes: item.requestNotes ?? undefined,
           reviewNotes: item.reviewNotes ?? undefined,
           submittedAt: item.createdAt,
@@ -116,10 +122,13 @@ export function useClaim(claimId: string) {
         courtAddress: query.data.place.address,
         courtStatus:
           query.data.place.placeType === "CURATED" ? "curated" : "reservable",
-        organizationId: query.data.organization.id,
-        organizationName: query.data.organization.name,
-        ownerName: query.data.organization.name,
-        ownerEmail: "owner@example.com", // Not in the response
+        organizationId: query.data.organization?.id ?? null,
+        organizationName: query.data.organization?.name ?? "Guest request",
+        ownerName: query.data.organization?.name ?? "Guest",
+        ownerEmail: "", // Not in the response
+        guestName: query.data.claimRequest.guestName ?? undefined,
+        guestEmail: query.data.claimRequest.guestEmail ?? undefined,
+        reviewedBy: query.data.claimRequest.reviewerUserId ?? undefined,
         notes: query.data.claimRequest.requestNotes ?? undefined,
         reviewNotes: query.data.claimRequest.reviewNotes ?? undefined,
         submittedAt: query.data.claimRequest.createdAt,

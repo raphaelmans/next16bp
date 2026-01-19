@@ -131,7 +131,7 @@ export function PlaceForm({
     control,
     reset,
     setValue,
-    formState: { isDirty, isSubmitting: formSubmitting, isValid },
+    formState: { isDirty, isSubmitting: formSubmitting },
   } = form;
 
   const countryValue = useWatch({ control, name: "country" });
@@ -303,7 +303,7 @@ export function PlaceForm({
   };
 
   const submitting = Boolean(isSubmitting || formSubmitting);
-  const isSubmitDisabled = submitting || !isValid || !isDirty;
+  const isSubmitDisabled = submitting || !isDirty;
 
   return (
     <StandardFormProvider<PlaceFormValues>

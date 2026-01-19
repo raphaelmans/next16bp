@@ -97,7 +97,7 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
           event: "claim_request.approved",
           claimRequestId: requestId,
           placeId: place.id,
-          organizationId: claimRequest.organizationId,
+          organizationId: claimRequest.organizationId ?? place.organizationId,
           adminUserId,
         },
         "Claim request approved - place transformed to reservable",

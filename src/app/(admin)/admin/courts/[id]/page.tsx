@@ -14,6 +14,16 @@ import {
   StandardFormProvider,
   StandardFormSelect,
 } from "@/components/form";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,6 +41,7 @@ import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
   type AdminCourtDetail,
   useAdminCourt,
+  useRemoveAdminCourtPhoto,
   useUpdateCuratedCourt,
   useUploadAdminCourtPhoto,
 } from "@/features/admin/hooks/use-admin-courts";
@@ -72,6 +83,11 @@ export default function AdminCourtEditPage() {
   const { data: courtData, isLoading: courtLoading } = useAdminCourt(courtId);
   const updateMutation = useUpdateCuratedCourt();
   const uploadPhotoMutation = useUploadAdminCourtPhoto(courtId);
+  const removePhotoMutation = useRemoveAdminCourtPhoto(courtId);
+
+  const [pendingPhotoId, setPendingPhotoId] = React.useState<string | null>(
+    null,
+  );
 
   const { data: sports = [], isLoading: sportsLoading } =
     trpc.sport.list.useQuery({});
@@ -117,7 +133,7 @@ export default function AdminCourtEditPage() {
     setValue,
     watch,
     register,
-    formState: { isDirty, isValid, isSubmitting },
+    formState: { isDirty, isSubmitting },
   } = form;
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -357,7 +373,7 @@ export default function AdminCourtEditPage() {
   }));
 
   const submitting = updateMutation.isPending || isSubmitting;
-  const isSubmitDisabled = submitting || !isDirty || !isValid;
+  const isSubmitDisabled = submitting || !isDirty;
 
   if (courtLoading) {
     return (
@@ -409,6 +425,62 @@ export default function AdminCourtEditPage() {
           onSubmit={handleSubmit}
           className="space-y-6"
         >
+          <AlertDialog
+            open={!!pendingPhotoId}
+            onOpenChange={(open) => {
+              if (!open) {
+                setPendingPhotoId(null);
+              }
+            }}
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Remove Photo</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will remove the photo from this court and cannot be
+                  undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel
+                  type="button"
+                  disabled={removePhotoMutation.isPending}
+                >
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  type="button"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    if (!pendingPhotoId) return;
+                    removePhotoMutation.mutate(
+                      { placeId: courtId, photoId: pendingPhotoId },
+                      {
+                        onSuccess: () => {
+                          toast.success("Photo removed");
+                          setPendingPhotoId(null);
+                        },
+                        onError: (error) => {
+                          toast.error(
+                            error.message || "Failed to remove court photo",
+                          );
+                        },
+                      },
+                    );
+                  }}
+                  disabled={removePhotoMutation.isPending || !pendingPhotoId}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  {removePhotoMutation.isPending ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="mr-2 h-4 w-4" />
+                  )}
+                  Remove Photo
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <Card>
             <CardHeader>
               <CardTitle>Basic Information</CardTitle>
@@ -858,6 +930,22 @@ export default function AdminCourtEditPage() {
                         Cover
                       </span>
                     )}
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      className="absolute right-2 top-2 h-8 w-8 rounded-full"
+                      onClick={() => setPendingPhotoId(photo.id)}
+                      disabled={removePhotoMutation.isPending}
+                      aria-label="Remove photo"
+                    >
+                      {removePhotoMutation.isPending &&
+                      pendingPhotoId === photo.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-4 w-4" />
+                      )}
+                    </Button>
                   </div>
                 ))}
               </div>

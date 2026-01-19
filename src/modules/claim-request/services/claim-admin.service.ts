@@ -25,7 +25,7 @@ import type { IApproveClaimRequestUseCase } from "../use-cases/approve-claim-req
 export interface ClaimRequestAdminDetails {
   claimRequest: ClaimRequestRecord;
   place: PlaceRecord;
-  organization: OrganizationRecord;
+  organization: OrganizationRecord | null;
   events: ClaimRequestEventRecord[];
 }
 
@@ -99,13 +99,12 @@ export class ClaimAdminService implements IClaimAdminService {
       throw new ClaimRequestNotFoundError(requestId);
     }
 
-    const organization = await this.organizationRepository.findById(
-      claimRequest.organizationId,
-      ctx,
-    );
-    if (!organization) {
-      throw new ClaimRequestNotFoundError(requestId);
-    }
+    const organization = claimRequest.organizationId
+      ? await this.organizationRepository.findById(
+          claimRequest.organizationId,
+          ctx,
+        )
+      : null;
 
     const events = await this.claimRequestEventRepository.findByClaimRequestId(
       requestId,

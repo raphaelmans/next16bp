@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { trpc } from "@/trpc/client";
 
 /**
@@ -51,12 +52,12 @@ export function useLoginWithGoogle() {
  * Hook for logout mutation.
  */
 export function useLogout() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return trpc.auth.logout.useMutation({
     onSuccess: async () => {
-      await utils.auth.me.invalidate();
-      utils.auth.me.setData(undefined, undefined);
+      await queryClient.cancelQueries(undefined, { silent: true });
+      queryClient.clear();
     },
   });
 }

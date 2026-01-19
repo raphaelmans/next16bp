@@ -50,6 +50,16 @@ export interface IClaimRequestRepository {
     data: Partial<InsertClaimRequest>,
     ctx?: RequestContext,
   ): Promise<ClaimRequestRecord>;
+  countByPlaceAndRequester(
+    placeId: string,
+    requestedByUserId: string,
+    ctx?: RequestContext,
+  ): Promise<number>;
+  countByPlaceAndGuestEmail(
+    placeId: string,
+    guestEmail: string,
+    ctx?: RequestContext,
+  ): Promise<number>;
 }
 
 export class ClaimRequestRepository implements IClaimRequestRepository {
@@ -185,6 +195,42 @@ export class ClaimRequestRepository implements IClaimRequestRepository {
       .where(eq(claimRequest.id, id))
       .returning();
     return result[0];
+  }
+
+  async countByPlaceAndRequester(
+    placeId: string,
+    requestedByUserId: string,
+    ctx?: RequestContext,
+  ): Promise<number> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select({ id: claimRequest.id })
+      .from(claimRequest)
+      .where(
+        and(
+          eq(claimRequest.placeId, placeId),
+          eq(claimRequest.requestedByUserId, requestedByUserId),
+        ),
+      );
+    return result.length;
+  }
+
+  async countByPlaceAndGuestEmail(
+    placeId: string,
+    guestEmail: string,
+    ctx?: RequestContext,
+  ): Promise<number> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select({ id: claimRequest.id })
+      .from(claimRequest)
+      .where(
+        and(
+          eq(claimRequest.placeId, placeId),
+          eq(claimRequest.guestEmail, guestEmail),
+        ),
+      );
+    return result.length;
   }
 }
 

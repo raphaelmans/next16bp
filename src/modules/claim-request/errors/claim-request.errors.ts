@@ -25,7 +25,7 @@ export class PendingClaimExistsError extends ConflictError {
   readonly code = "PENDING_CLAIM_EXISTS";
 
   constructor(placeId: string) {
-    super("A pending claim request already exists for this place", { placeId });
+    super("A pending request already exists for this place", { placeId });
   }
 }
 

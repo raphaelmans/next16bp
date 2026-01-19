@@ -11,6 +11,7 @@ import {
   CreateCuratedCourtBatchSchema,
   CreateCuratedCourtSchema,
   DeactivateCourtSchema,
+  RemoveCourtPhotoSchema,
   UploadCourtPhotoSchema,
 } from "../dtos";
 import { makeAdminCourtService } from "../factories/court.factory";
@@ -57,6 +58,17 @@ export const adminCourtRouter = router({
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
       return service.uploadPhoto(ctx.userId, input);
+    }),
+
+  /**
+   * Remove a place photo (admin)
+   */
+  removePhoto: adminProcedure
+    .input(RemoveCourtPhotoSchema)
+    .mutation(async ({ input, ctx }) => {
+      const service = makeAdminCourtService();
+      await service.removePhoto(ctx.userId, input);
+      return { success: true };
     }),
 
   /**

@@ -6,7 +6,11 @@ import type {
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
-import type { SubmitClaimRequestDTO, SubmitRemovalRequestDTO } from "../dtos";
+import type {
+  SubmitClaimRequestDTO,
+  SubmitGuestRemovalRequestDTO,
+  SubmitRemovalRequestDTO,
+} from "../dtos";
 import {
   ClaimRequestNotFoundError,
   InvalidClaimStatusError,
@@ -43,6 +47,10 @@ export interface IClaimRequestService {
   submitRemovalRequest(
     userId: string,
     data: SubmitRemovalRequestDTO,
+    ctx?: RequestContext,
+  ): Promise<ClaimRequestRecord>;
+  submitGuestRemovalRequest(
+    data: SubmitGuestRemovalRequestDTO,
     ctx?: RequestContext,
   ): Promise<ClaimRequestRecord>;
   cancelRequest(
@@ -232,6 +240,88 @@ export class ClaimRequestService implements IClaimRequestService {
           userId,
         },
         "Removal request submitted",
+      );
+
+      return claimRequest;
+    });
+  }
+
+  async submitGuestRemovalRequest(
+    data: SubmitGuestRemovalRequestDTO,
+    ctx?: RequestContext,
+  ): Promise<ClaimRequestRecord> {
+    return this.transactionManager.run(async (tx) => {
+      const txCtx: RequestContext = { ...(ctx ?? {}), tx };
+
+      const place = await this.placeRepository.findByIdForUpdate(
+        data.placeId,
+        txCtx,
+      );
+      if (!place) {
+        throw new PlaceNotFoundError(data.placeId);
+      }
+
+      if (place.placeType !== "CURATED") {
+        throw new NotCuratedPlaceError(data.placeId);
+      }
+
+      const pending = await this.claimRequestRepository.findPendingByPlaceId(
+        data.placeId,
+        txCtx,
+      );
+      if (pending) {
+        throw new PendingClaimExistsError(data.placeId);
+      }
+
+      const guestCount =
+        await this.claimRequestRepository.countByPlaceAndGuestEmail(
+          data.placeId,
+          data.guestEmail,
+          txCtx,
+        );
+      if (guestCount > 0) {
+        throw new PendingClaimExistsError(data.placeId);
+      }
+
+      const claimRequest = await this.claimRequestRepository.create(
+        {
+          placeId: data.placeId,
+          organizationId: place.organizationId ?? null,
+          requestType: "REMOVAL",
+          status: "PENDING",
+          requestedByUserId: null,
+          requestNotes: data.requestNotes,
+          guestName: data.guestName,
+          guestEmail: data.guestEmail,
+        },
+        txCtx,
+      );
+
+      await this.placeRepository.update(
+        data.placeId,
+        { claimStatus: "REMOVAL_REQUESTED" },
+        txCtx,
+      );
+
+      await this.claimRequestEventRepository.create(
+        {
+          claimRequestId: claimRequest.id,
+          fromStatus: null,
+          toStatus: "PENDING",
+          triggeredByUserId: null,
+          notes: "Submitted by guest",
+        },
+        txCtx,
+      );
+
+      logger.info(
+        {
+          event: "removal_request.guest_submitted",
+          claimRequestId: claimRequest.id,
+          placeId: data.placeId,
+          guestEmail: data.guestEmail,
+        },
+        "Guest removal request submitted",
       );
 
       return claimRequest;

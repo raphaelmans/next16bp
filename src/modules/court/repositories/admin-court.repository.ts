@@ -91,6 +91,11 @@ export interface IAdminCourtRepository {
     placeId: string,
     ctx?: RequestContext,
   ): Promise<PlacePhotoRecord[]>;
+  findPhotoById(
+    id: string,
+    ctx?: RequestContext,
+  ): Promise<PlacePhotoRecord | null>;
+  deletePhotoById(id: string, ctx?: RequestContext): Promise<void>;
   countPhotosByPlaceId(placeId: string, ctx?: RequestContext): Promise<number>;
   findAll(
     filters: AdminCourtFiltersDTO,
@@ -221,6 +226,24 @@ export class AdminCourtRepository implements IAdminCourtRepository {
       .from(placePhoto)
       .where(eq(placePhoto.placeId, placeId))
       .orderBy(asc(placePhoto.displayOrder));
+  }
+
+  async findPhotoById(
+    id: string,
+    ctx?: RequestContext,
+  ): Promise<PlacePhotoRecord | null> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select()
+      .from(placePhoto)
+      .where(eq(placePhoto.id, id))
+      .limit(1);
+    return result[0] ?? null;
+  }
+
+  async deletePhotoById(id: string, ctx?: RequestContext): Promise<void> {
+    const client = this.getClient(ctx);
+    await client.delete(placePhoto).where(eq(placePhoto.id, id));
   }
 
   async countPhotosByPlaceId(

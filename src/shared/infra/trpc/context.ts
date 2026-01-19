@@ -90,21 +90,36 @@ export async function createContext({
 
   // Determine the origin URL for redirects
   const getOriginUrl = (): string => {
+    const forwardedHost = headerStore.get("x-forwarded-host");
+    const forwardedProto = headerStore.get("x-forwarded-proto");
+    const host = headerStore.get("host");
+
+    const isLocalHost = (value?: string | null) =>
+      Boolean(
+        value &&
+          (value.includes("localhost") ||
+            value.startsWith("127.0.0.1") ||
+            value.startsWith("0.0.0.0")),
+      );
+
+    const detectedHost = forwardedHost ?? host;
+    if (isLocalHost(detectedHost)) {
+      const protocol = forwardedProto || "http";
+      return `${protocol}://${detectedHost}`;
+    }
+
     // 1. Use explicit APP_URL from env if set (production)
     if (env.NEXT_PUBLIC_APP_URL) {
       return env.NEXT_PUBLIC_APP_URL;
     }
 
     // 2. Build from x-forwarded-host (Vercel, proxies)
-    const forwardedHost = headerStore.get("x-forwarded-host");
-    const forwardedProto = headerStore.get("x-forwarded-proto");
     if (forwardedHost) {
       const protocol = forwardedProto || "https";
       return `${protocol}://${forwardedHost}`;
     }
 
     // 3. Build from host header
-    const host = headerStore.get("host");
     if (host) {
       const protocol = host.includes("localhost") ? "http" : "https";
       return `${protocol}://${host}`;

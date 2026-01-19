@@ -1,6 +1,20 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+const isLocalUrl = (value?: string) =>
+  Boolean(
+    value &&
+      (value.includes("localhost") ||
+        value.includes("127.0.0.1") ||
+        value.includes("0.0.0.0")),
+  );
+
+const runtimeAppUrl =
+  process.env.NODE_ENV === "development" &&
+  !isLocalUrl(process.env.NEXT_PUBLIC_APP_URL)
+    ? undefined
+    : process.env.NEXT_PUBLIC_APP_URL;
+
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string(),
@@ -17,7 +31,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_APP_URL: runtimeAppUrl,
     NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY:
       process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY,
   },

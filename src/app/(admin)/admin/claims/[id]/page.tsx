@@ -21,7 +21,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
@@ -335,7 +335,6 @@ export default function ClaimDetailPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-start gap-4">
                   <Avatar className="h-12 w-12">
-                    <AvatarImage src={claim.organizationLogoUrl} />
                     <AvatarFallback>
                       {claim.organizationName.charAt(0)}
                     </AvatarFallback>
@@ -362,6 +361,18 @@ export default function ClaimDetailPage() {
                     <div className="flex items-center gap-2">
                       <Phone className="h-4 w-4 text-muted-foreground" />
                       <span>{claim.ownerPhone}</span>
+                    </div>
+                  )}
+                  {claim.guestName && (
+                    <div className="flex items-center gap-2">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      <span>Guest: {claim.guestName}</span>
+                    </div>
+                  )}
+                  {claim.guestEmail && (
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <span>{claim.guestEmail}</span>
                     </div>
                   )}
                 </div>

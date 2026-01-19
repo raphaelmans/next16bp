@@ -2,6 +2,8 @@ import { randomUUID } from "node:crypto";
 import {
   MaxPlacePhotosExceededError,
   PlaceNotFoundError,
+  PlacePhotoNotFoundError,
+  PlacePhotoOrderInvalidError,
 } from "@/modules/place/errors/place.errors";
 import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
 import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
@@ -14,6 +16,7 @@ import type {
   AdminCourtFiltersDTO,
   AdminUpdateCourtDTO,
   CreateCuratedCourtDTO,
+  RemoveCourtPhotoDTO,
   UploadCourtPhotoInput,
 } from "../dtos";
 import type {
@@ -65,6 +68,7 @@ export interface IAdminCourtService {
     adminUserId: string,
     data: UploadCourtPhotoInput,
   ): Promise<{ url: string }>;
+  removePhoto(adminUserId: string, data: RemoveCourtPhotoDTO): Promise<void>;
   updatePlace(
     adminUserId: string,
     data: AdminUpdateCourtDTO,
@@ -87,6 +91,13 @@ export class AdminCourtService implements IAdminCourtService {
     private transactionManager: TransactionManager,
     private storageService: IObjectStorageService,
   ) {}
+
+  private extractPublicStoragePath(url: string, bucket: string): string | null {
+    const marker = `/storage/v1/object/public/${bucket}/`;
+    const index = url.indexOf(marker);
+    if (index === -1) return null;
+    return url.slice(index + marker.length);
+  }
 
   async createCuratedPlace(
     adminUserId: string,
@@ -362,6 +373,46 @@ export class AdminCourtService implements IAdminCourtService {
     );
 
     return { url: result.url };
+  }
+
+  async removePhoto(
+    adminUserId: string,
+    data: RemoveCourtPhotoDTO,
+  ): Promise<void> {
+    const place = await this.adminCourtRepository.findById(data.placeId);
+    if (!place) {
+      throw new PlaceNotFoundError(data.placeId);
+    }
+
+    const photo = await this.adminCourtRepository.findPhotoById(data.photoId);
+    if (!photo || photo.placeId !== data.placeId) {
+      throw new PlacePhotoNotFoundError(data.photoId);
+    }
+
+    const path = this.extractPublicStoragePath(
+      photo.url,
+      STORAGE_BUCKETS.PLACE_PHOTOS,
+    );
+    if (!path) {
+      throw new PlacePhotoOrderInvalidError();
+    }
+
+    await this.storageService.delete(STORAGE_BUCKETS.PLACE_PHOTOS, path);
+
+    await this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+      await this.adminCourtRepository.deletePhotoById(data.photoId, ctx);
+    });
+
+    logger.info(
+      {
+        event: "place.photo_removed",
+        placeId: data.placeId,
+        photoId: data.photoId,
+        adminUserId,
+      },
+      "Admin removed place photo",
+    );
   }
 
   async updatePlace(

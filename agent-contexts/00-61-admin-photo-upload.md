@@ -5,7 +5,7 @@
 
 ## Summary
 
-Switched the admin court edit photos section to file uploads with a dedicated admin upload endpoint, and wired storage-backed uploads for place photos.
+Switched the admin court edit page from URL-based photo inputs to a file upload flow and added a dedicated admin upload endpoint for place photos.
 
 ## Changes Made
 
@@ -13,33 +13,32 @@ Switched the admin court edit photos section to file uploads with a dedicated ad
 
 | File | Change |
 |------|--------|
-| `src/modules/court/dtos/upload-photo.dto.ts` | Updated upload DTO to accept `placeId` and image file. |
-| `src/modules/court/dtos/index.ts` | Re-exported upload DTOs. |
-| `src/modules/court/admin/admin-court.router.ts` | Added `uploadPhoto` admin endpoint. |
-| `src/modules/court/services/admin-court.service.ts` | Added storage-backed photo upload workflow for admin. |
-| `src/modules/court/repositories/admin-court.repository.ts` | Added photo lookup/count helpers for uploads. |
-| `src/modules/court/factories/court.factory.ts` | Injected storage service into admin court service. |
+| `src/modules/court/dtos/upload-photo.dto.ts` | Updated upload schema to accept `placeId` for admin uploads. |
+| `src/modules/court/dtos/index.ts` | Exported upload photo DTO. |
+| `src/modules/court/admin/admin-court.router.ts` | Added `uploadPhoto` admin mutation. |
+| `src/modules/court/services/admin-court.service.ts` | Implemented storage upload flow and photo creation. |
+| `src/modules/court/repositories/admin-court.repository.ts` | Added photo lookup/count helpers. |
+| `src/modules/court/factories/court.factory.ts` | Wired storage service into admin court service. |
 
 ### Admin UI
 
 | File | Change |
 |------|--------|
-| `src/app/(admin)/admin/courts/[id]/page.tsx` | Replaced photo URL inputs with file picker uploads and gallery preview. |
-| `src/features/admin/hooks/use-admin-courts.ts` | Added upload hook for admin court photos. |
-| `src/features/admin/hooks/index.ts` | Re-exported new upload hook. |
+| `src/app/(admin)/admin/courts/[id]/page.tsx` | Replaced URL inputs with file picker upload and preview grid. |
+| `src/features/admin/hooks/use-admin-courts.ts` | Added `useUploadAdminCourtPhoto` hook for admin uploads. |
+| `src/features/admin/hooks/index.ts` | Re-exported admin upload hook. |
 
 ## Key Decisions
 
-- Use a dedicated admin upload endpoint instead of URL inputs for consistent storage validation.
-- Keep photo uploads out of the edit mutation to avoid mixing file and JSON payloads.
+- Use a dedicated admin upload mutation for court photos instead of URL entry, matching existing FormData upload patterns.
+- Keep photo deletion/reordering out of scope for now; focus on upload and display in the admin edit page.
 
 ## Next Steps
 
-- [ ] Add admin photo removal and reorder controls if needed.
+- [ ] Add admin photo remove/reorder actions if needed.
 
 ## Commands to Continue
 
 ```bash
 pnpm lint
-pnpm build
 ```
