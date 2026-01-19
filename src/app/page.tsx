@@ -111,19 +111,13 @@ export default function HomePage() {
           {isLoadingFeatured ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3].map((i) => (
-                <PlaceCardSkeleton key={i} variant="featured" />
+                <PlaceCardSkeleton key={i} />
               ))}
             </div>
           ) : featuredPlaces.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredPlaces.map((place, index) => (
-                <div
-                  key={place.id}
-                  className="animate-fade-in-up"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <PlaceCard place={place} variant="featured" />
-                </div>
+              {featuredPlaces.map((place) => (
+                <PlaceCard key={place.id} place={place} />
               ))}
             </div>
           ) : (
