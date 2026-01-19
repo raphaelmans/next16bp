@@ -32,6 +32,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { useAmenitiesQuery } from "@/shared/lib/clients/amenities-client";
 import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
 import {
   buildCityOptions,
@@ -43,9 +44,11 @@ import {
 import { trpc } from "@/trpc/client";
 
 interface PlaceFiltersProps {
+  amenities?: string[];
   province?: string;
   city?: string;
   sportId?: string;
+  onAmenitiesChange: (amenities: string[] | undefined) => void;
   onProvinceChange: (province: string | undefined) => void;
   onCityChange: (city: string | undefined) => void;
   onSportChange: (sportId: string | undefined) => void;
@@ -54,18 +57,23 @@ interface PlaceFiltersProps {
 }
 
 export function PlaceFilters({
+  amenities,
   province,
   city,
   sportId,
+  onAmenitiesChange,
   onProvinceChange,
   onCityChange,
   onSportChange,
   onClearAll,
   className,
 }: PlaceFiltersProps) {
-  const hasFilters = province || city || sportId;
+  const hasFilters =
+    (amenities && amenities.length > 0) || province || city || sportId;
   const { data: sports = [], isLoading: sportsLoading } =
     trpc.sport.list.useQuery({});
+  const amenitiesQuery = useAmenitiesQuery();
+  const amenitiesList = amenitiesQuery.data ?? [];
   const provincesCitiesQuery = usePHProvincesCitiesQuery();
   const provincesCities = provincesCitiesQuery.data ?? null;
   const selectedProvince = useMemo(
@@ -78,6 +86,36 @@ export function PlaceFilters({
 
   type LocationOption = { label: string; value: string };
 
+  const amenitiesOptions = useMemo(
+    () =>
+      amenitiesList
+        .map((item) => item.trim())
+        .filter((item) => item.length > 0)
+        .sort((a, b) => a.localeCompare(b)),
+    [amenitiesList],
+  );
+
+  const selectedAmenities = useMemo(
+    () => (amenities ?? []).filter((item) => amenitiesOptions.includes(item)),
+    [amenities, amenitiesOptions],
+  );
+
+  useEffect(() => {
+    if (!amenities || amenities.length === 0 || amenitiesOptions.length === 0) {
+      return;
+    }
+
+    const next = Array.from(
+      new Set(amenities.filter((item) => amenitiesOptions.includes(item))),
+    );
+
+    if (next.length !== amenities.length) {
+      onAmenitiesChange(
+        next.length > 0 ? next.sort((a, b) => a.localeCompare(b)) : undefined,
+      );
+    }
+  }, [amenities, amenitiesOptions, onAmenitiesChange]);
+
   const provinceOptions = useMemo<LocationOption[]>(() => {
     if (!provincesCities) return [];
     return buildProvinceOptions(provincesCities);
@@ -87,6 +125,10 @@ export function PlaceFilters({
     if (!provincesCities || !selectedProvince) return [];
     return buildCityOptions(selectedProvince);
   }, [provincesCities, selectedProvince]);
+
+  const amenitiesPlaceholder = amenitiesQuery.isLoading
+    ? "Loading amenities..."
+    : "All amenities";
 
   const provincePlaceholder = provincesCitiesQuery.isLoading
     ? "Loading provinces..."
@@ -98,6 +140,12 @@ export function PlaceFilters({
       ? "Loading cities..."
       : "All cities";
 
+  const amenitiesTriggerLabel =
+    selectedAmenities.length > 0
+      ? `${selectedAmenities.length} ${
+          selectedAmenities.length === 1 ? "amenity" : "amenities"
+        }`
+      : amenitiesPlaceholder;
   const provinceTriggerLabel = provinceOptions.find(
     (item: LocationOption) => item.value === province,
   )?.label;
@@ -105,11 +153,24 @@ export function PlaceFilters({
     (item: LocationOption) => item.value === city,
   )?.label;
 
+  const isAmenitiesDisabled = amenitiesQuery.isLoading;
   const isProvinceDisabled = provincesCitiesQuery.isLoading || !provincesCities;
   const isCityDisabled = isProvinceDisabled || !province;
 
+  const [amenitiesOpen, setAmenitiesOpen] = useState(false);
   const [provinceOpen, setProvinceOpen] = useState(false);
   const [cityOpen, setCityOpen] = useState(false);
+
+  const handleAmenitiesChange = (amenity: string) => {
+    const current = new Set(selectedAmenities);
+    if (current.has(amenity)) {
+      current.delete(amenity);
+    } else {
+      current.add(amenity);
+    }
+    const next = Array.from(current).sort((a, b) => a.localeCompare(b));
+    onAmenitiesChange(next.length > 0 ? next : undefined);
+  };
 
   const handleProvinceChange = (value: string) => {
     const nextProvince = value === "all" ? undefined : value;
@@ -165,6 +226,64 @@ export function PlaceFilters({
 
   const FilterContent = () => (
     <div className="space-y-6">
+      <div className="space-y-2">
+        <Label>Amenities</Label>
+        <Popover open={amenitiesOpen} onOpenChange={setAmenitiesOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={amenitiesOpen}
+              disabled={isAmenitiesDisabled}
+              className="w-full justify-between"
+            >
+              <span className="truncate">{amenitiesTriggerLabel}</span>
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-0" align="start">
+            <Command>
+              <CommandInput placeholder="Search amenities..." />
+              <CommandList>
+                <CommandEmpty>No amenities found.</CommandEmpty>
+                <CommandGroup>
+                  {amenitiesOptions.map((amenity) => (
+                    <CommandItem
+                      key={amenity}
+                      value={amenity}
+                      onSelect={(value) => {
+                        handleAmenitiesChange(value);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          selectedAmenities.includes(amenity)
+                            ? "opacity-100"
+                            : "opacity-0",
+                        )}
+                      />
+                      {amenity}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+        {selectedAmenities.length > 0 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start px-2"
+            onClick={() => onAmenitiesChange(undefined)}
+          >
+            <X className="h-4 w-4 mr-2" />
+            Clear amenities
+          </Button>
+        )}
+      </div>
+
       <div className="space-y-2">
         <Label>Province</Label>
         <Select
@@ -241,6 +360,50 @@ export function PlaceFilters({
       <div
         className={cn("hidden lg:flex flex-wrap items-center gap-3", className)}
       >
+        <Popover open={amenitiesOpen} onOpenChange={setAmenitiesOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={amenitiesOpen}
+              disabled={isAmenitiesDisabled}
+              className="w-56 justify-between"
+            >
+              <span className="truncate">{amenitiesTriggerLabel}</span>
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-56 p-0" align="start">
+            <Command>
+              <CommandInput placeholder="Search amenities..." />
+              <CommandList>
+                <CommandEmpty>No amenities found.</CommandEmpty>
+                <CommandGroup>
+                  {amenitiesOptions.map((amenity) => (
+                    <CommandItem
+                      key={amenity}
+                      value={amenity}
+                      onSelect={(value) => {
+                        handleAmenitiesChange(value);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          selectedAmenities.includes(amenity)
+                            ? "opacity-100"
+                            : "opacity-0",
+                        )}
+                      />
+                      {amenity}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+
         <Popover open={provinceOpen} onOpenChange={setProvinceOpen}>
           <PopoverTrigger asChild>
             <Button
@@ -394,7 +557,11 @@ export function PlaceFilters({
             Filters
             {hasFilters && (
               <span className="ml-2 rounded-full bg-primary text-primary-foreground text-xs px-1.5">
-                {[province, city, sportId].filter(Boolean).length}
+                {
+                  [province, city, sportId, ...(amenities ?? [])].filter(
+                    Boolean,
+                  ).length
+                }
               </span>
             )}
           </Button>

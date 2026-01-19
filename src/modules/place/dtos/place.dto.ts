@@ -7,6 +7,7 @@ export const ListPlacesSchema = z.object({
   lat: z.number().optional(),
   lng: z.number().optional(),
   sportId: z.string().uuid().optional(),
+  amenities: z.array(z.string().min(1).max(100)).optional(),
   limit: z.number().int().min(1).max(100).default(20),
   offset: z.number().int().min(0).default(0),
 });

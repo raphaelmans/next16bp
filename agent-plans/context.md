@@ -8,10 +8,12 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-18 | Added 43-google-oauth-auth plan (server tRPC OAuth + login/register buttons) |
 | 2026-01-17 | Noted deferred rename from place → venue (pending explicit request) |
 | 2026-01-18 | Added 39-public-navbar-consistency plan (public logo + search routing) |
 | 2026-01-18 | Added 40-public-schedule-view plan (public detail CTA + schedule route) |
 | 2026-01-18 | Added 41-owner-onboarding-revalidation plan (prevent duplicate orgs; client guard + backend conflict) |
+| 2026-01-18 | Added 42-amenities-discovery-filters plan (aggregated amenities filter on /courts) |
 | 2026-01-18 | Added 37-admin-courts-filters plan (province -> city admin filters) |
 | 2026-01-17 | Added 35-courts-discovery-filters plan (province/city discovery filters + search) |
 | 2026-01-16 | Added 34-place-location-standardization plan (PH province/city enforcement) |

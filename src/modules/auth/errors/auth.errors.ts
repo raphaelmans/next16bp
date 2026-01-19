@@ -43,3 +43,11 @@ export class AuthRegistrationFailedError extends InternalError {
     super("Failed to complete registration", { email });
   }
 }
+
+export class AuthOAuthStartFailedError extends InternalError {
+  readonly code = "AUTH_OAUTH_START_FAILED";
+
+  constructor(provider: string) {
+    super("Failed to start OAuth sign-in", { provider });
+  }
+}

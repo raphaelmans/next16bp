@@ -13,6 +13,7 @@ export {
   useCreateCuratedCourtsBatch,
   useToggleCourtStatus,
   useUpdateCuratedCourt,
+  useUploadAdminCourtPhoto,
 } from "./use-admin-courts";
 export {
   type AdminActivity,

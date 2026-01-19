@@ -41,6 +41,13 @@ export function useMagicLink() {
 }
 
 /**
+ * Hook for Google OAuth login mutation.
+ */
+export function useLoginWithGoogle() {
+  return trpc.auth.loginWithGoogle.useMutation();
+}
+
+/**
  * Hook for logout mutation.
  */
 export function useLogout() {

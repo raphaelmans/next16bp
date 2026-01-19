@@ -1,4 +1,10 @@
-import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
+import { randomUUID } from "node:crypto";
+import {
+  MaxPlacePhotosExceededError,
+  PlaceNotFoundError,
+} from "@/modules/place/errors/place.errors";
+import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
+import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
 import type { PlaceRecord } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
@@ -8,6 +14,7 @@ import type {
   AdminCourtFiltersDTO,
   AdminUpdateCourtDTO,
   CreateCuratedCourtDTO,
+  UploadCourtPhotoInput,
 } from "../dtos";
 import type {
   AdminPlaceDetails,
@@ -54,6 +61,10 @@ export interface IAdminCourtService {
     data: AdminCourtDetailDTO,
     ctx?: RequestContext,
   ): Promise<AdminPlaceDetails>;
+  uploadPhoto(
+    adminUserId: string,
+    data: UploadCourtPhotoInput,
+  ): Promise<{ url: string }>;
   updatePlace(
     adminUserId: string,
     data: AdminUpdateCourtDTO,
@@ -74,6 +85,7 @@ export class AdminCourtService implements IAdminCourtService {
   constructor(
     private adminCourtRepository: IAdminCourtRepository,
     private transactionManager: TransactionManager,
+    private storageService: IObjectStorageService,
   ) {}
 
   async createCuratedPlace(
@@ -290,6 +302,66 @@ export class AdminCourtService implements IAdminCourtService {
     );
 
     return detail;
+  }
+
+  async uploadPhoto(
+    adminUserId: string,
+    data: UploadCourtPhotoInput,
+  ): Promise<{ url: string }> {
+    const place = await this.adminCourtRepository.findById(data.placeId);
+    if (!place) {
+      throw new PlaceNotFoundError(data.placeId);
+    }
+
+    const photoCount = await this.adminCourtRepository.countPhotosByPlaceId(
+      data.placeId,
+    );
+    if (photoCount >= 10) {
+      throw new MaxPlacePhotosExceededError(10);
+    }
+
+    const ext = data.image.name.split(".").pop() || "jpg";
+    const photoId = randomUUID();
+    const path = `${data.placeId}/${photoId}.${ext}`;
+
+    const result = await this.storageService.upload({
+      bucket: STORAGE_BUCKETS.PLACE_PHOTOS,
+      path,
+      file: data.image,
+      upsert: false,
+    });
+
+    const created = await this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+      const photos = await this.adminCourtRepository.findPhotosByPlaceId(
+        data.placeId,
+        ctx,
+      );
+      const nextOrder =
+        photos.length > 0
+          ? Math.max(...photos.map((photo) => photo.displayOrder)) + 1
+          : 0;
+      return this.adminCourtRepository.createPhoto(
+        {
+          placeId: data.placeId,
+          url: result.url,
+          displayOrder: nextOrder,
+        },
+        ctx,
+      );
+    });
+
+    logger.info(
+      {
+        event: "place.photo_uploaded",
+        placeId: data.placeId,
+        photoId: created.id,
+        adminUserId,
+      },
+      "Admin uploaded place photo",
+    );
+
+    return { url: result.url };
   }
 
   async updatePlace(

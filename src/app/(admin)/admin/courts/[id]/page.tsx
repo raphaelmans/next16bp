@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus, Trash2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import * as React from "react";
@@ -31,6 +32,7 @@ import {
   type AdminCourtDetail,
   useAdminCourt,
   useUpdateCuratedCourt,
+  useUploadAdminCourtPhoto,
 } from "@/features/admin/hooks/use-admin-courts";
 import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
 import {
@@ -57,7 +59,6 @@ import { trpc } from "@/trpc/client";
 const DEFAULT_COUNTRY = "PH";
 const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 const DEFAULT_COURT_UNIT = { label: "Court 1", sportId: "", tierLabel: "" };
-const DEFAULT_PHOTO = { url: "" };
 
 export default function AdminCourtEditPage() {
   const params = useParams();
@@ -70,6 +71,7 @@ export default function AdminCourtEditPage() {
   const { data: stats } = useAdminStats();
   const { data: courtData, isLoading: courtLoading } = useAdminCourt(courtId);
   const updateMutation = useUpdateCuratedCourt();
+  const uploadPhotoMutation = useUploadAdminCourtPhoto(courtId);
 
   const { data: sports = [], isLoading: sportsLoading } =
     trpc.sport.list.useQuery({});
@@ -96,7 +98,6 @@ export default function AdminCourtEditPage() {
       websiteUrl: "",
       otherContactInfo: "",
       amenities: [],
-      photos: [DEFAULT_PHOTO],
       courts: [DEFAULT_COURT_UNIT],
     },
   });
@@ -112,22 +113,14 @@ export default function AdminCourtEditPage() {
   });
 
   const {
-    fields: photoFields,
-    append: appendPhoto,
-    remove: removePhoto,
-  } = useFieldArray<AdminCourtEditFormData, "photos", "fieldId">({
-    control: form.control,
-    name: "photos",
-    keyName: "fieldId",
-  });
-
-  const {
     reset,
     setValue,
     watch,
     register,
     formState: { isDirty, isValid, isSubmitting },
   } = form;
+
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const nameValue = watch("name");
   const provinceValue = watch("province");
@@ -271,7 +264,6 @@ export default function AdminCourtEditPage() {
 
   const buildDefaultValues = React.useCallback(
     (detail: AdminCourtDetail): AdminCourtEditFormData => {
-      const photos = detail.photos.map((photo) => ({ url: photo.url }));
       const courts = detail.courts.map((court) => ({
         id: court.court.id,
         label: court.court.label,
@@ -294,7 +286,6 @@ export default function AdminCourtEditPage() {
         websiteUrl: detail.contactDetail?.websiteUrl ?? "",
         otherContactInfo: detail.contactDetail?.otherContactInfo ?? "",
         amenities: detail.amenities.map((amenity) => amenity.name),
-        photos: photos.length > 0 ? photos : [DEFAULT_PHOTO],
         courts: courts.length > 0 ? courts : [DEFAULT_COURT_UNIT],
       };
     },
@@ -321,13 +312,6 @@ export default function AdminCourtEditPage() {
 
   const handleSubmit = async (data: AdminCourtEditFormData) => {
     try {
-      const photos = data.photos
-        .map((photo, index) => ({
-          url: photo.url?.trim() ?? "",
-          displayOrder: index,
-        }))
-        .filter((photo) => photo.url.length > 0);
-
       await updateMutation.mutateAsync({
         placeId: courtId,
         name: data.name,
@@ -344,7 +328,6 @@ export default function AdminCourtEditPage() {
         websiteUrl: data.websiteUrl || undefined,
         otherContactInfo: data.otherContactInfo || undefined,
         amenities: data.amenities,
-        photos,
         courts: data.courts.map((court) => ({
           id: court.id,
           label: court.label,
@@ -807,36 +790,77 @@ export default function AdminCourtEditPage() {
           <Card>
             <CardHeader>
               <CardTitle>Photos</CardTitle>
-              <CardDescription>Add photo URLs for this listing</CardDescription>
+              <CardDescription>Upload court photos</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {photoFields.map((field, index) => (
-                <div key={field.fieldId} className="flex items-center gap-3">
-                  <StandardFormInput<AdminCourtEditFormData>
-                    name={`photos.${index}.url`}
-                    label={index === 0 ? "Photo URL" : undefined}
-                    placeholder="https://..."
-                    className="flex-1"
+              <div className="flex items-center justify-between gap-4">
+                <div className="text-sm text-muted-foreground">
+                  First photo is used as the cover image.
+                </div>
+                <div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (!file) return;
+                      const formData = new FormData();
+                      formData.append("placeId", courtId);
+                      formData.append("image", file, file.name);
+                      uploadPhotoMutation.mutate(formData, {
+                        onError: (error) => {
+                          toast.error(
+                            error.message || "Failed to upload court photo",
+                          );
+                        },
+                      });
+                      if (fileInputRef.current) {
+                        fileInputRef.current.value = "";
+                      }
+                    }}
+                    className="hidden"
                   />
                   <Button
                     type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removePhoto(index)}
-                    disabled={photoFields.length === 1}
+                    variant="outline"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadPhotoMutation.isPending}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    {uploadPhotoMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Plus className="h-4 w-4" />
+                    )}
+                    <span className="ml-2">
+                      {uploadPhotoMutation.isPending
+                        ? "Uploading..."
+                        : "Add photo"}
+                    </span>
                   </Button>
                 </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => appendPhoto({ ...DEFAULT_PHOTO })}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Photo
-              </Button>
+              </div>
+
+              <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                {courtData.photos.map((photo, index) => (
+                  <div
+                    key={photo.id}
+                    className="relative aspect-square overflow-hidden rounded-lg border bg-muted/20"
+                  >
+                    <Image
+                      src={photo.url}
+                      alt="Court photo"
+                      fill
+                      className="object-cover"
+                    />
+                    {index === 0 && (
+                      <span className="absolute top-2 left-2 rounded bg-primary px-2 py-1 text-xs text-primary-foreground">
+                        Cover
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
 

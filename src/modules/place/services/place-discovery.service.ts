@@ -21,6 +21,7 @@ export interface IPlaceDiscoveryService {
     items: PlaceListItem[];
     total: number;
   }>;
+  listAmenities(): Promise<string[]>;
 }
 
 export class PlaceDiscoveryService implements IPlaceDiscoveryService {
@@ -63,8 +64,13 @@ export class PlaceDiscoveryService implements IPlaceDiscoveryService {
       province: filters.province,
       city: filters.city,
       sportId: filters.sportId,
+      amenities: filters.amenities,
       limit: filters.limit,
       offset: filters.offset,
     });
+  }
+
+  async listAmenities(): Promise<string[]> {
+    return this.placeRepository.listAmenities();
   }
 }

@@ -321,6 +321,16 @@ export function useUpdateCuratedCourt() {
   });
 }
 
+export function useUploadAdminCourtPhoto(placeId: string) {
+  const utils = trpc.useUtils();
+
+  return trpc.admin.court.uploadPhoto.useMutation({
+    onSuccess: async () => {
+      await utils.admin.court.getById.invalidate({ placeId });
+    },
+  });
+}
+
 export function useCities() {
   const query = usePHProvincesCitiesQuery();
 

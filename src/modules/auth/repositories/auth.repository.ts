@@ -1,6 +1,7 @@
 import type { Session, User } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@/shared/infra/supabase/types";
 import {
+  AuthOAuthStartFailedError,
   EmailNotVerifiedError,
   InvalidCredentialsError,
   UserAlreadyExistsError,
@@ -20,6 +21,7 @@ export interface IAuthRepository {
     email: string,
     redirectTo: string,
   ): Promise<{ user: User | null; session: Session | null }>;
+  signInWithGoogleOAuth(redirectTo: string): Promise<{ url: string }>;
   signUp(
     email: string,
     password: string,
@@ -87,6 +89,22 @@ export class AuthRepository implements IAuthRepository {
 
     if (error) throw error;
     return data;
+  }
+
+  async signInWithGoogleOAuth(redirectTo: string): Promise<{ url: string }> {
+    const { data, error } = await this.client.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo,
+      },
+    });
+
+    if (error) throw error;
+    if (!data.url) {
+      throw new AuthOAuthStartFailedError("google");
+    }
+
+    return { url: data.url };
   }
 
   async signUp(

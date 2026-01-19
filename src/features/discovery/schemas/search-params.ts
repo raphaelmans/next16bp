@@ -1,5 +1,6 @@
 import {
   createSearchParamsCache,
+  parseAsArrayOf,
   parseAsInteger,
   parseAsString,
   parseAsStringLiteral,
@@ -16,6 +17,7 @@ export const searchParamsSchema = {
   province: parseAsString,
   city: parseAsString,
   sportId: parseAsString,
+  amenities: parseAsArrayOf(parseAsString),
 
   // Pagination
   page: parseAsInteger.withDefault(1),
@@ -30,6 +32,7 @@ export type SearchParams = {
   province: string | null;
   city: string | null;
   sportId: string | null;
+  amenities: string[] | null;
   page: number;
   limit: number;
 };

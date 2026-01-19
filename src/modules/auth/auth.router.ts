@@ -7,6 +7,7 @@ import {
   LoginSchema,
   MagicLinkSchema,
   RegisterSchema,
+  StartGoogleOAuthSchema,
   VerifyTokenHashSchema,
 } from "./dtos";
 import {
@@ -27,6 +28,14 @@ export const authRouter = router({
       const authService = makeAuthService(ctx.cookies);
       await authService.signInWithMagicLink(input.email, ctx.origin);
       return { success: true, message: "Magic link sent to email" };
+    }),
+
+  loginWithGoogle: publicProcedure
+    .input(StartGoogleOAuthSchema)
+    .mutation(async ({ input, ctx }) => {
+      const authService = makeAuthService(ctx.cookies);
+      const result = await authService.startGoogleOAuth(ctx.origin, input.next);
+      return { url: result.url };
     }),
 
   register: publicProcedure

@@ -16,6 +16,7 @@ export interface IAuthService {
     email: string,
     baseUrl: string,
   ): Promise<{ user: User | null; session: Session | null }>;
+  startGoogleOAuth(baseUrl: string, next?: string): Promise<{ url: string }>;
   signUp(
     email: string,
     password: string,
@@ -73,6 +74,19 @@ export class AuthService implements IAuthService {
       { event: "user.magic_link_requested", email },
       "Magic link requested",
     );
+
+    return result;
+  }
+
+  async startGoogleOAuth(
+    baseUrl: string,
+    next?: string,
+  ): Promise<{ url: string }> {
+    const safeNext = next?.startsWith("/") ? next : "/";
+    const redirectTo = `${baseUrl}/auth/callback?next=${encodeURIComponent(safeNext)}`;
+    const result = await this.authRepository.signInWithGoogleOAuth(redirectTo);
+
+    logger.info({ event: "user.oauth_started", provider: "google" });
 
     return result;
   }

@@ -13,6 +13,7 @@ interface UseDiscoveryOptions {
   province?: string;
   city?: string;
   sportId?: string;
+  amenities?: string[];
   page?: number;
   limit?: number;
 }
@@ -69,7 +70,15 @@ const mapPlaceSummary = (item: PlaceListItem): PlaceSummary => {
 };
 
 export function useDiscoveryPlaces(options: UseDiscoveryOptions = {}) {
-  const { q, province, city, sportId, page = 1, limit = 12 } = options;
+  const {
+    q,
+    province,
+    city,
+    sportId,
+    amenities,
+    page = 1,
+    limit = 12,
+  } = options;
   const offset = (page - 1) * limit;
   const { data: provincesCities } = usePHProvincesCitiesQuery();
 
@@ -96,6 +105,7 @@ export function useDiscoveryPlaces(options: UseDiscoveryOptions = {}) {
     province: resolvedLocation?.province ?? undefined,
     city: resolvedLocation?.city ?? undefined,
     sportId,
+    amenities,
     limit,
     offset,
   });

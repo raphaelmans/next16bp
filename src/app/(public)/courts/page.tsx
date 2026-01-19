@@ -39,6 +39,7 @@ function PlacesPageContent() {
     province: filters.province ?? undefined,
     city: filters.city ?? undefined,
     sportId: filters.sportId ?? undefined,
+    amenities: filters.amenities ?? undefined,
     page: filters.page,
     limit: filters.limit,
   });
@@ -83,9 +84,11 @@ function PlacesPageContent() {
         </div>
 
         <PlaceFilters
+          amenities={filters.amenities ?? undefined}
           province={filters.province ?? undefined}
           city={filters.city ?? undefined}
           sportId={filters.sportId ?? undefined}
+          onAmenitiesChange={filters.setAmenities}
           onProvinceChange={filters.setProvince}
           onCityChange={filters.setCity}
           onSportChange={filters.setSportId}

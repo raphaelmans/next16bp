@@ -6,11 +6,11 @@ import { imageFileSchema } from "@/modules/storage/dtos";
  * Schema for court photo upload FormData.
  */
 export const UploadCourtPhotoSchema = zfd.formData({
-  courtId: zfd.text(z.string().uuid()),
+  placeId: zfd.text(z.string().uuid()),
   image: imageFileSchema,
 });
 
 export type UploadCourtPhotoInput = {
-  courtId: string;
+  placeId: string;
   image: File;
 };

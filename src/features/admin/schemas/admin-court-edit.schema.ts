@@ -23,10 +23,6 @@ const coordinateSchema = z
     },
   );
 
-const photoSchema = z.object({
-  url: z.string().url("Invalid URL").optional().or(z.literal("")),
-});
-
 const courtSchema = z.object({
   id: z.string().uuid().optional(),
   label: z
@@ -62,7 +58,6 @@ export const adminCourtEditSchema = z.object({
   websiteUrl: optionalUrlSchema,
   otherContactInfo: optionalTextSchema(500),
   amenities: z.array(z.string()),
-  photos: z.array(photoSchema),
   courts: z.array(courtSchema).min(1, "Add at least one court"),
 });
 

@@ -1,4 +1,4 @@
-import { and, count, eq, ilike, inArray, or } from "drizzle-orm";
+import { and, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import {
   court,
   courtRateRule,
@@ -57,11 +57,13 @@ export interface IPlaceRepository {
       province?: string;
       city?: string;
       sportId?: string;
+      amenities?: string[];
       limit: number;
       offset: number;
     },
     ctx?: RequestContext,
   ): Promise<PaginatedPlaces>;
+  listAmenities(ctx?: RequestContext): Promise<string[]>;
   create(data: InsertPlace, ctx?: RequestContext): Promise<PlaceRecord>;
   update(
     id: string,
@@ -185,6 +187,7 @@ export class PlaceRepository implements IPlaceRepository {
       province?: string;
       city?: string;
       sportId?: string;
+      amenities?: string[];
       limit: number;
       offset: number;
     },
@@ -194,6 +197,13 @@ export class PlaceRepository implements IPlaceRepository {
     const conditions = [eq(place.isActive, true)];
     const searchValue = filters.q?.trim();
     const searchPattern = searchValue ? `%${searchValue}%` : undefined;
+    const amenitiesFilter = Array.from(
+      new Set(
+        (filters.amenities ?? [])
+          .map((amenity) => amenity.trim())
+          .filter((amenity) => amenity.length > 0),
+      ),
+    );
 
     if (filters.province) {
       conditions.push(ilike(place.province, filters.province));
@@ -219,6 +229,80 @@ export class PlaceRepository implements IPlaceRepository {
     const baseCondition = and(...conditions);
 
     if (filters.sportId) {
+      if (amenitiesFilter.length > 0) {
+        const amenitiesCount = amenitiesFilter.length;
+        const countResult = await client
+          .select({ placeId: place.id })
+          .from(place)
+          .innerJoin(court, eq(court.placeId, place.id))
+          .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
+          .where(
+            and(
+              baseCondition,
+              eq(court.sportId, filters.sportId),
+              inArray(placeAmenity.name, amenitiesFilter),
+            ),
+          )
+          .groupBy(place.id)
+          .having(
+            sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`,
+          );
+
+        const pageRows = await client
+          .select({ placeId: place.id })
+          .from(place)
+          .innerJoin(court, eq(court.placeId, place.id))
+          .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
+          .where(
+            and(
+              baseCondition,
+              eq(court.sportId, filters.sportId),
+              inArray(placeAmenity.name, amenitiesFilter),
+            ),
+          )
+          .groupBy(place.id)
+          .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
+          .limit(filters.limit)
+          .offset(filters.offset);
+
+        const placeIds = pageRows.map((row) => row.placeId);
+        const placeRecords = placeIds.length
+          ? await client.select().from(place).where(inArray(place.id, placeIds))
+          : [];
+        const placeById = new Map(
+          placeRecords.map((record) => [record.id, record]),
+        );
+        const orderedPlaces = placeIds
+          .map((placeId) => placeById.get(placeId))
+          .filter((record): record is PlaceRecord => Boolean(record));
+
+        const sportsByPlace = await this.getSportsByPlaceIds(placeIds, client);
+        const courtCounts = await this.getCourtCountsByPlaceIds(
+          placeIds,
+          filters.sportId,
+          client,
+        );
+        const lowestPrices = await this.getLowestPriceByPlaceIds(
+          placeIds,
+          filters.sportId,
+          client,
+        );
+
+        return {
+          items: orderedPlaces.map((placeRecord) => {
+            const lowestPrice = lowestPrices.get(placeRecord.id);
+            return {
+              place: placeRecord,
+              sports: sportsByPlace.get(placeRecord.id) ?? [],
+              courtCount: courtCounts.get(placeRecord.id) ?? 0,
+              lowestPriceCents: lowestPrice?.priceCents,
+              currency: lowestPrice?.currency,
+            };
+          }),
+          total: countResult.length,
+        };
+      }
+
       const countResult = await client
         .select({ count: count() })
         .from(place)
@@ -265,17 +349,55 @@ export class PlaceRepository implements IPlaceRepository {
       };
     }
 
-    const countResult = await client
-      .select({ count: count() })
-      .from(place)
-      .where(baseCondition);
+    let placeRecords: PlaceRecord[] = [];
+    let total = 0;
 
-    const placeRecords = await client
-      .select()
-      .from(place)
-      .where(baseCondition)
-      .limit(filters.limit)
-      .offset(filters.offset);
+    if (amenitiesFilter.length > 0) {
+      const amenitiesCount = amenitiesFilter.length;
+      const countResult = await client
+        .select({ placeId: place.id })
+        .from(place)
+        .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
+        .where(and(baseCondition, inArray(placeAmenity.name, amenitiesFilter)))
+        .groupBy(place.id)
+        .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`);
+
+      const pageRows = await client
+        .select({ placeId: place.id })
+        .from(place)
+        .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
+        .where(and(baseCondition, inArray(placeAmenity.name, amenitiesFilter)))
+        .groupBy(place.id)
+        .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
+        .limit(filters.limit)
+        .offset(filters.offset);
+
+      const placeIds = pageRows.map((row) => row.placeId);
+      placeRecords = placeIds.length
+        ? await client.select().from(place).where(inArray(place.id, placeIds))
+        : [];
+      const placeById = new Map(
+        placeRecords.map((record) => [record.id, record]),
+      );
+      placeRecords = placeIds
+        .map((placeId) => placeById.get(placeId))
+        .filter((record): record is PlaceRecord => Boolean(record));
+      total = countResult.length;
+    } else {
+      const countResult = await client
+        .select({ count: count() })
+        .from(place)
+        .where(baseCondition);
+
+      placeRecords = await client
+        .select()
+        .from(place)
+        .where(baseCondition)
+        .limit(filters.limit)
+        .offset(filters.offset);
+
+      total = countResult[0]?.count ?? 0;
+    }
 
     const placeIds = placeRecords.map((placeRecord) => placeRecord.id);
 
@@ -302,8 +424,22 @@ export class PlaceRepository implements IPlaceRepository {
           currency: lowestPrice?.currency,
         };
       }),
-      total: countResult[0]?.count ?? 0,
+      total,
     };
+  }
+
+  async listAmenities(ctx?: RequestContext): Promise<string[]> {
+    const client = this.getClient(ctx);
+    const rows = await client
+      .select({ name: placeAmenity.name })
+      .from(placeAmenity)
+      .groupBy(placeAmenity.name);
+
+    const normalized = rows
+      .map((row) => row.name.trim())
+      .filter((name) => name.length > 0);
+
+    return Array.from(new Set(normalized)).sort((a, b) => a.localeCompare(b));
   }
 
   async create(data: InsertPlace, ctx?: RequestContext): Promise<PlaceRecord> {

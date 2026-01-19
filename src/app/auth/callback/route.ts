@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { env } from "@/lib/env";
+import { UserRoleAlreadyExistsError } from "@/modules/user-role/errors/user-role.errors";
+import { makeUserRoleService } from "@/modules/user-role/factories/user-role.factory";
 import { createClient } from "@/shared/infra/supabase/create-client";
 
 /**
@@ -10,7 +12,8 @@ import { createClient } from "@/shared/infra/supabase/create-client";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/";
+  const nextParam = searchParams.get("next") ?? "/";
+  const next = nextParam.startsWith("/") ? nextParam : "/";
 
   if (code) {
     const cookieStore = await cookies();
@@ -29,9 +32,22 @@ export async function GET(request: Request) {
       },
     );
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
+      if (data.user) {
+        try {
+          await makeUserRoleService().create({
+            userId: data.user.id,
+            role: "member",
+          });
+        } catch (roleError) {
+          if (!(roleError instanceof UserRoleAlreadyExistsError)) {
+            throw roleError;
+          }
+        }
+      }
+
       const forwardedHost = request.headers.get("x-forwarded-host");
       const isLocalEnv = process.env.NODE_ENV === "development";
 

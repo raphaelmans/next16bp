@@ -87,6 +87,11 @@ export interface IAdminCourtRepository {
     placeId: string,
     ctx?: RequestContext,
   ): Promise<CourtRecord[]>;
+  findPhotosByPlaceId(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<PlacePhotoRecord[]>;
+  countPhotosByPlaceId(placeId: string, ctx?: RequestContext): Promise<number>;
   findAll(
     filters: AdminCourtFiltersDTO,
     ctx?: RequestContext,
@@ -204,6 +209,30 @@ export class AdminCourtRepository implements IAdminCourtRepository {
   ): Promise<CourtRecord[]> {
     const client = this.getClient(ctx);
     return client.select().from(court).where(eq(court.placeId, placeId));
+  }
+
+  async findPhotosByPlaceId(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<PlacePhotoRecord[]> {
+    const client = this.getClient(ctx);
+    return client
+      .select()
+      .from(placePhoto)
+      .where(eq(placePhoto.placeId, placeId))
+      .orderBy(asc(placePhoto.displayOrder));
+  }
+
+  async countPhotosByPlaceId(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<number> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select({ count: count() })
+      .from(placePhoto)
+      .where(eq(placePhoto.placeId, placeId));
+    return result[0]?.count ?? 0;
   }
 
   async upsertContactDetail(

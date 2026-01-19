@@ -17,6 +17,7 @@ export function useDiscoveryFilters() {
       province: null,
       city: null,
       sportId: null,
+      amenities: null,
       page: 1,
     });
   };
@@ -31,6 +32,13 @@ export function useDiscoveryFilters() {
 
   const setSportId = (sportId: string | undefined) => {
     setFilters({ sportId: sportId || null, page: 1 });
+  };
+
+  const setAmenities = (amenities: string[] | undefined) => {
+    setFilters({
+      amenities: amenities && amenities.length > 0 ? amenities : null,
+      page: 1,
+    });
   };
 
   const setView = (view: "list" | "map") => {
@@ -50,6 +58,7 @@ export function useDiscoveryFilters() {
     setProvince,
     setCity,
     setSportId,
+    setAmenities,
     setView,
     setPage,
     setQuery,

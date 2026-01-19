@@ -16,15 +16,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/ui/spinner";
 import { type RegisterDTO, RegisterSchema } from "@/modules/auth/dtos";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
-import { useRegister } from "../hooks/use-auth";
+import { useLoginWithGoogle, useRegister } from "../hooks/use-auth";
 
 export function RegisterForm() {
   const searchParams = useSearchParams();
   const [success, setSuccess] = useState(false);
   const registerMutation = useRegister();
+  const googleLoginMutation = useLoginWithGoogle();
 
   const redirectUrl = searchParams.get("redirect") || appRoutes.courts.base;
 
@@ -43,6 +46,7 @@ export function RegisterForm() {
   } = form;
 
   const submitting = registerMutation.isPending || isSubmitting;
+  const googleSubmitting = googleLoginMutation.isPending;
   const isSubmitDisabled = submitting || !isDirty || !isValid;
 
   const onSubmit = async (data: RegisterDTO) => {
@@ -52,6 +56,19 @@ export function RegisterForm() {
       setSuccess(true);
     } catch (error) {
       toast.error("Unable to create account", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
+
+  const onGoogleLogin = async () => {
+    try {
+      const result = await googleLoginMutation.mutateAsync({
+        next: redirectUrl,
+      });
+      window.location.assign(result.url);
+    } catch (error) {
+      toast.error("Unable to continue with Google", {
         description: getClientErrorMessage(error, "Please try again"),
       });
     }
@@ -94,6 +111,27 @@ export function RegisterForm() {
       </CardHeader>
       <StandardFormProvider form={form} onSubmit={onSubmit}>
         <CardContent className="space-y-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            disabled={googleSubmitting}
+            onClick={onGoogleLogin}
+          >
+            {googleSubmitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <Spinner className="text-muted-foreground" />
+                Redirecting...
+              </span>
+            ) : (
+              "Continue with Google"
+            )}
+          </Button>
+
+          <div className="py-2">
+            <Separator />
+          </div>
+
           <StandardFormInput<RegisterDTO>
             name="email"
             label="Email"

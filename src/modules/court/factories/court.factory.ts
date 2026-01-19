@@ -1,5 +1,6 @@
 import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
 import { makePlaceRepository } from "@/modules/place/factories/place.factory";
+import { makeObjectStorageService } from "@/modules/storage/factories/storage.factory";
 import { getContainer } from "@/shared/infra/container";
 import { AdminCourtRepository } from "../repositories/admin-court.repository";
 import { CourtRepository } from "../repositories/court.repository";
@@ -39,6 +40,7 @@ export function makeAdminCourtService(): AdminCourtService {
     adminCourtService = new AdminCourtService(
       makeAdminCourtRepository(),
       getContainer().transactionManager,
+      makeObjectStorageService(),
     );
   }
   return adminCourtService;
