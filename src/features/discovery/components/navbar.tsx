@@ -21,6 +21,7 @@ import { useLogout, useSession } from "@/features/auth/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import { KudosLogo } from "@/shared/components/kudos";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { trackEvent } from "@/shared/lib/clients/telemetry-client";
 import { URLQueryBuilder } from "@/shared/lib/url-query-builder";
 import { trpc } from "@/trpc/client";
 import { UserDropdown } from "./user-dropdown";
@@ -61,6 +62,10 @@ export function Navbar({ className }: NavbarProps) {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const query = searchQuery.trim();
+    trackEvent({
+      event: "funnel.landing_search_submitted",
+      properties: { query: query || undefined },
+    });
     const search = new URLQueryBuilder().addParams({ q: query }).build();
     const destination = search
       ? `${appRoutes.courts.base}?${search}`

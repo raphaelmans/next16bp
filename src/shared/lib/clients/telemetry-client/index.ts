@@ -1,0 +1,30 @@
+"use client";
+
+import ky from "ky";
+
+const telemetryKy = ky.create({
+  throwHttpErrors: false,
+  timeout: 10_000,
+});
+
+export type TelemetryEventName =
+  | "funnel.landing_search_submitted"
+  | "funnel.discovery_place_clicked"
+  | "funnel.schedule_slot_selected"
+  | "funnel.reserve_clicked"
+  | "funnel.login_started";
+
+export type TelemetryPayload = {
+  event: TelemetryEventName;
+  properties?: Record<string, unknown>;
+};
+
+export async function trackEvent(payload: TelemetryPayload) {
+  try {
+    await telemetryKy.post("/api/public/track", {
+      json: payload,
+    });
+  } catch {
+    // Best-effort telemetry; ignore failures.
+  }
+}

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { trackEvent } from "@/shared/lib/clients/telemetry-client";
 import { formatCurrency } from "@/shared/lib/format";
 
 export interface PlaceSport {
@@ -55,11 +56,20 @@ export function PlaceCard({
   const hiddenCount = Math.max(0, place.sports.length - MAX_BADGES);
   const placeHref = appRoutes.courts.detail(place.id);
 
+  const handlePlaceClick = () =>
+    trackEvent({
+      event: "funnel.discovery_place_clicked",
+      properties: { placeId: place.id },
+    });
+
   const title =
     linkScope === "title" ? (
       <Link
         href={placeHref}
-        onClick={(event) => event.stopPropagation()}
+        onClick={(event) => {
+          event.stopPropagation();
+          handlePlaceClick();
+        }}
         className="block"
       >
         {place.name}
@@ -171,7 +181,7 @@ export function PlaceCard({
 
   if (linkScope === "card") {
     return (
-      <Link href={placeHref} className="block">
+      <Link href={placeHref} className="block" onClick={handlePlaceClick}>
         {cardContent}
       </Link>
     );

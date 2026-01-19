@@ -16,12 +16,14 @@ interface ProfilePreviewCardProps {
     avatarUrl?: string;
   };
   isComplete: boolean;
+  redirectTo?: string;
   className?: string;
 }
 
 export function ProfilePreviewCard({
   profile,
   isComplete,
+  redirectTo,
   className,
 }: ProfilePreviewCardProps) {
   const initials = profile.displayName
@@ -31,12 +33,16 @@ export function ProfilePreviewCard({
     .toUpperCase()
     .slice(0, 2);
 
+  const editHref = redirectTo
+    ? `${appRoutes.account.profile}?redirect=${encodeURIComponent(redirectTo)}`
+    : appRoutes.account.profile;
+
   return (
     <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Your Information</CardTitle>
         <Button variant="ghost" size="sm" asChild>
-          <Link href={appRoutes.account.profile}>
+          <Link href={editHref}>
             <Edit className="h-4 w-4 mr-1" />
             Edit
           </Link>

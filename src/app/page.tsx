@@ -1,15 +1,15 @@
 "use client";
 
-import { ArrowRight, Calendar, CheckCircle, Search } from "lucide-react";
+import { ArrowRight, Calendar, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useFeaturedPlaces } from "@/features/discovery/hooks";
 import { PlaceCard, PlaceCardSkeleton } from "@/shared/components/kudos";
 import { Container, PublicShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { trackEvent } from "@/shared/lib/clients/telemetry-client";
 import { URLQueryBuilder } from "@/shared/lib/url-query-builder";
 
 // Popular locations for quick access
@@ -44,7 +44,7 @@ const POPULAR_LOCATIONS = [
 // Value proposition features
 const FEATURES = [
   {
-    icon: Search,
+    icon: ArrowRight,
     title: "Discover",
     description:
       "Find courts by location, see sports, amenities, and real-time availability in one view.",
@@ -72,6 +72,10 @@ export default function HomePage() {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const query = searchQuery.trim();
+    trackEvent({
+      event: "funnel.landing_search_submitted",
+      properties: { query: query || undefined },
+    });
     if (query) {
       const search = new URLQueryBuilder().addParams({ q: query }).build();
       router.push(`${appRoutes.courts.base}?${search}`);
@@ -81,6 +85,13 @@ export default function HomePage() {
   };
 
   const handleLocationClick = (provinceSlug: string, citySlug: string) => {
+    trackEvent({
+      event: "funnel.landing_search_submitted",
+      properties: {
+        province: provinceSlug,
+        city: citySlug,
+      },
+    });
     const search = new URLQueryBuilder()
       .addParams({
         province: provinceSlug,
@@ -102,11 +113,48 @@ export default function HomePage() {
             <Link
               href={appRoutes.courts.base}
               className="inline-flex items-center text-primary hover:underline"
+              onClick={() =>
+                trackEvent({ event: "funnel.landing_search_submitted" })
+              }
             >
               View All
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
+
+          <form onSubmit={handleSearch} className="mb-6">
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search by city, court, or venue..."
+                className="h-12 flex-1 rounded-xl border border-border/60 bg-background px-4 text-base shadow-sm"
+              />
+              <div className="flex flex-wrap gap-2">
+                <Button type="submit" className="h-12 px-6">
+                  Search
+                </Button>
+                {POPULAR_LOCATIONS.map((location) => (
+                  <Button
+                    key={location.label}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="h-12"
+                    onClick={() =>
+                      handleLocationClick(
+                        location.provinceSlug,
+                        location.citySlug,
+                      )
+                    }
+                  >
+                    {location.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </form>
 
           {isLoadingFeatured ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -126,6 +174,9 @@ export default function HomePage() {
               <Link
                 href={appRoutes.courts.base}
                 className="text-accent hover:underline mt-2 inline-block"
+                onClick={() =>
+                  trackEvent({ event: "funnel.landing_search_submitted" })
+                }
               >
                 Browse all courts
               </Link>

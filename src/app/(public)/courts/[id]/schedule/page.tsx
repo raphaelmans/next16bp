@@ -27,7 +27,12 @@ import {
 } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
-import { formatDuration, formatInTimeZone } from "@/shared/lib/format";
+import { trackEvent } from "@/shared/lib/clients/telemetry-client";
+import {
+  formatCurrency,
+  formatDuration,
+  formatInTimeZone,
+} from "@/shared/lib/format";
 import {
   getZonedDayKey,
   getZonedDayRangeFromDayKey,
@@ -257,8 +262,34 @@ export default function CourtSchedulePage() {
         )
     : undefined;
 
+  React.useEffect(() => {
+    if (!selectedOption) return;
+
+    trackEvent({
+      event: "funnel.schedule_slot_selected",
+      properties: {
+        placeId,
+        mode: modeParam,
+        durationMinutes,
+        startTime: selectedOption.startTime,
+        courtId: selectedOption.courtId,
+      },
+    });
+  }, [durationMinutes, modeParam, placeId, selectedOption]);
+
   const handleReserve = () => {
     if (!selectedOption || !sportIdParam) return;
+
+    trackEvent({
+      event: "funnel.reserve_clicked",
+      properties: {
+        placeId,
+        mode: modeParam,
+        durationMinutes,
+        startTime: selectedOption.startTime,
+        courtId: selectedOption.courtId,
+      },
+    });
 
     const bookingParams = new URLSearchParams({
       startTime: selectedOption.startTime,
@@ -287,6 +318,14 @@ export default function CourtSchedulePage() {
       selectedCourtId:
         modeParam === "court" ? selectedOption.courtId : undefined,
       startTime: selectedOption.startTime,
+    });
+
+    trackEvent({
+      event: "funnel.login_started",
+      properties: {
+        placeId,
+        redirect: returnTo,
+      },
     });
 
     router.push(appRoutes.login.from(returnTo));
@@ -360,7 +399,7 @@ export default function CourtSchedulePage() {
 
   return (
     <Container className="py-6">
-      <div className="space-y-6">
+      <div className="space-y-6 pb-24">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
             <Button variant="ghost" size="sm" asChild className="-ml-2">
@@ -646,6 +685,32 @@ export default function CourtSchedulePage() {
           </CardContent>
         </Card>
       </div>
+
+      {selectedOption && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 p-4 shadow-lg backdrop-blur sm:hidden">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-sm font-medium">
+                {formatInTimeZone(
+                  new Date(selectedOption.startTime),
+                  placeTimeZone,
+                  "MMM d, h:mm a",
+                )}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {formatDuration(durationMinutes)} ·{" "}
+                {formatCurrency(
+                  selectedOption.totalPriceCents,
+                  selectedOption.currency ?? "PHP",
+                )}
+              </p>
+            </div>
+            <Button size="sm" onClick={handleReserve}>
+              Continue
+            </Button>
+          </div>
+        </div>
+      )}
     </Container>
   );
 }

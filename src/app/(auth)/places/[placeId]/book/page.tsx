@@ -3,7 +3,13 @@
 import { addMinutes } from "date-fns";
 import { CalendarCheck, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import {
+  parseAsInteger,
+  parseAsString,
+  parseAsStringLiteral,
+  useQueryStates,
+} from "nuqs";
 import * as React from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -27,21 +33,33 @@ import { formatCurrency, formatDuration } from "@/shared/lib/format";
 import { getZonedDate } from "@/shared/lib/time-zone";
 
 const DURATIONS = [60, 120, 180];
+const selectionModeSchema = ["any", "court"] as const;
 
 export default function PlaceBookingPage() {
   const params = useParams();
-  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const router = useRouter();
 
   const placeId = (params.placeId ?? params.id) as string;
-  const startTime = searchParams.get("startTime");
-  const durationParam = Number(searchParams.get("duration") ?? "60");
-  const sportId = searchParams.get("sportId") ?? undefined;
-  const mode = (searchParams.get("mode") as "any" | "court" | null) ?? "any";
-  const courtId = searchParams.get("courtId") ?? undefined;
 
-  const durationMinutes = DURATIONS.includes(durationParam)
-    ? durationParam
+  const [bookingParams] = useQueryStates({
+    startTime: parseAsString,
+    duration: parseAsInteger,
+    sportId: parseAsString,
+    mode: parseAsStringLiteral(selectionModeSchema),
+    courtId: parseAsString,
+  });
+
+  const startTime = bookingParams.startTime ?? undefined;
+  const durationParam = bookingParams.duration ?? undefined;
+  const durationValue = durationParam ?? 60;
+  const sportId = bookingParams.sportId ?? undefined;
+  const modeParam = bookingParams.mode ?? undefined;
+  const mode = modeParam ?? "any";
+  const courtId = bookingParams.courtId ?? undefined;
+
+  const durationMinutes = DURATIONS.includes(durationValue)
+    ? durationValue
     : DURATIONS[0];
 
   const { data: place, isLoading } = usePlaceDetail({ placeId });
@@ -50,6 +68,29 @@ export default function PlaceBookingPage() {
     () => (startTime ? getZonedDate(startTime, placeTimeZone) : undefined),
     [startTime, placeTimeZone],
   );
+
+  const bookingRedirect = React.useMemo(() => {
+    const params = new URLSearchParams();
+
+    if (startTime) {
+      params.set("startTime", startTime);
+    }
+    if (durationParam != null) {
+      params.set("duration", String(durationParam));
+    }
+    if (sportId) {
+      params.set("sportId", sportId);
+    }
+    if (modeParam) {
+      params.set("mode", modeParam);
+    }
+    if (courtId) {
+      params.set("courtId", courtId);
+    }
+
+    const query = params.toString();
+    return query ? `${pathname}?${query}` : pathname;
+  }, [courtId, durationParam, modeParam, pathname, sportId, startTime]);
   const { data: profile, isLoading: isLoadingProfile } = useProfile();
   const createForCourt = useCreateReservationForCourt();
   const createForAnyCourt = useCreateReservationForAnyCourt();
@@ -229,6 +270,7 @@ export default function PlaceBookingPage() {
               avatarUrl: profile?.avatarUrl ?? undefined,
             }}
             isComplete={isProfileComplete}
+            redirectTo={bookingRedirect}
           />
 
           <Card>

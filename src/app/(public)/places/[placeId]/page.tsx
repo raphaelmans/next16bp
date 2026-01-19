@@ -1,14 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Calendar,
-  Clock,
-  ExternalLink,
-  Loader2,
-  MapPin,
-  Users,
-} from "lucide-react";
+import { Calendar, Clock, ExternalLink, Loader2, MapPin } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import * as React from "react";
@@ -34,7 +27,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSession } from "@/features/auth";
@@ -52,6 +44,7 @@ import {
 } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { trackEvent } from "@/shared/lib/clients/telemetry-client";
 import {
   formatCurrency,
   formatDuration,
@@ -252,6 +245,21 @@ export default function PlaceDetailPage() {
   const hasSelectedDate = !!selectedDate;
   const hasSelectedSlot = !!selectedSlot;
 
+  React.useEffect(() => {
+    if (!selectedSlot) return;
+
+    trackEvent({
+      event: "funnel.schedule_slot_selected",
+      properties: {
+        placeId,
+        mode: selectionMode,
+        durationMinutes,
+        startTime: selectedSlot.startTime,
+        courtId: selectedCourtId,
+      },
+    });
+  }, [durationMinutes, placeId, selectedCourtId, selectedSlot, selectionMode]);
+
   const scheduleHref = React.useMemo(() => {
     if (!isBookable || !place) return undefined;
     const params = new URLSearchParams();
@@ -294,6 +302,12 @@ export default function PlaceDetailPage() {
 
   const summaryCtaVariant = hasSelectedSlot ? "default" : "outline";
   const summaryCtaLabel = hasSelectedSlot
+    ? "Reserve now"
+    : hasSelectedDate
+      ? "See available times"
+      : "Choose a date";
+
+  const stickyCtaLabel = hasSelectedSlot
     ? "Reserve now"
     : hasSelectedDate
       ? "See available times"
@@ -376,14 +390,48 @@ export default function PlaceDetailPage() {
     }
 
     const destination = `${appRoutes.places.book(placeId)}?${params.toString()}`;
+
+    trackEvent({
+      event: "funnel.reserve_clicked",
+      properties: {
+        placeId,
+        mode: selectionMode,
+        durationMinutes,
+        startTime: selectedSlot?.startTime,
+        courtId: selectedCourtId,
+      },
+    });
+
     if (isAuthenticated) {
       router.push(destination);
     } else {
-      router.push(appRoutes.login.from(appRoutes.places.detail(placeId)));
+      const returnTo = scheduleHref ?? appRoutes.places.schedule(placeId);
+      trackEvent({
+        event: "funnel.login_started",
+        properties: {
+          placeId,
+          redirect: returnTo,
+        },
+      });
+      router.push(appRoutes.login.from(returnTo));
     }
   };
 
   const handleSummaryAction = () => {
+    if (hasSelectedSlot) {
+      handleReserve();
+      return;
+    }
+
+    if (!hasSelectedDate) {
+      scrollToSection(dateSectionRef);
+      return;
+    }
+
+    scrollToSection(timesSectionRef);
+  };
+
+  const handleStickyCta = () => {
     if (hasSelectedSlot) {
       handleReserve();
       return;
@@ -470,58 +518,7 @@ export default function PlaceDetailPage() {
 
   return (
     <Container className="py-6">
-      <div className="space-y-6">
-        {isBookable ? (
-          <div className="space-y-2">
-            <Progress value={50} className="h-2" />
-            <p className="text-xs text-muted-foreground">
-              Step 1 of 2 · Select your court and time
-            </p>
-          </div>
-        ) : (
-          <Card className="border-warning/20 bg-warning/5">
-            <CardHeader className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge
-                  variant="secondary"
-                  className="bg-warning/10 text-warning"
-                >
-                  Curated listing
-                </Badge>
-                {place.claimStatus === "CLAIM_PENDING" && (
-                  <Badge variant="outline">Claim pending</Badge>
-                )}
-                {place.claimStatus === "CLAIMED" && (
-                  <Badge variant="outline">Claimed</Badge>
-                )}
-              </div>
-              <CardTitle className="text-base">Not bookable yet</CardTitle>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground">
-              Bookings open once an organization claim is approved by the admin
-              team.
-            </CardContent>
-          </Card>
-        )}
-
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight font-heading">
-            {place.name}
-          </h1>
-          <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <MapPin className="h-4 w-4 text-accent" />
-              {place.address}
-            </span>
-            <span className="flex items-center gap-1">
-              <Users className="h-4 w-4" />
-              {place.courts.length} courts
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid gap-8 lg:grid-cols-3 mt-8">
+      <div className="grid gap-8 lg:grid-cols-3 mt-8 pb-24">
         <div className="lg:col-span-2 space-y-6">
           <PhotoGallery
             photos={place.photos}
@@ -1240,6 +1237,41 @@ export default function PlaceDetailPage() {
           )}
         </div>
       </div>
+
+      {(hasSelectedDate || hasSelectedSlot) && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 p-4 shadow-lg backdrop-blur sm:hidden">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-sm font-medium">
+                {hasSelectedSlot && selectedSlot
+                  ? formatInTimeZone(
+                      new Date(selectedSlot.startTime),
+                      placeTimeZone,
+                      "MMM d, h:mm a",
+                    )
+                  : "Select a time"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {hasSelectedSlot && selectedSlot
+                  ? `${formatDuration(durationMinutes)} · ${formatCurrency(
+                      selectedSlot.totalPriceCents,
+                      selectedSlot.currency,
+                    )}`
+                  : hasSelectedDate
+                    ? "Continue to see available times"
+                    : "Choose a date to continue"}
+              </p>
+            </div>
+            <Button
+              size="sm"
+              variant={summaryCtaVariant}
+              onClick={handleStickyCta}
+            >
+              {stickyCtaLabel}
+            </Button>
+          </div>
+        </div>
+      )}
     </Container>
   );
 }

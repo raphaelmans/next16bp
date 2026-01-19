@@ -30,6 +30,7 @@ export function RegisterForm() {
   const googleLoginMutation = useLoginWithGoogle();
 
   const redirectUrl = searchParams.get("redirect") || appRoutes.courts.base;
+  const showBookingContext = redirectUrl.includes("/schedule");
 
   const form = useForm<RegisterDTO>({
     resolver: zodResolver(RegisterSchema),
@@ -108,6 +109,11 @@ export function RegisterForm() {
         <CardDescription>
           Enter your details to create an account
         </CardDescription>
+        {showBookingContext && (
+          <p className="text-sm text-muted-foreground">
+            You&apos;ll return to your reservation after signing in.
+          </p>
+        )}
       </CardHeader>
       <StandardFormProvider form={form} onSubmit={onSubmit}>
         <CardContent className="space-y-4">

@@ -2,6 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Info } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { parseAsString, useQueryState } from "nuqs";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -29,7 +31,9 @@ import { AvatarUpload } from "./avatar-upload";
 import { ProfileFormSkeleton } from "./skeletons";
 
 export function ProfileForm() {
+  const router = useRouter();
   const { data: profile, isLoading } = useProfile();
+  const [redirect] = useQueryState("redirect", parseAsString);
   const updateProfile = useUpdateProfile();
   const uploadAvatar = useUploadAvatar();
 
@@ -68,6 +72,11 @@ export function ProfileForm() {
     try {
       await updateProfile.mutateAsync(cleanedData);
       reset(cleanedData);
+
+      if (redirect) {
+        router.push(redirect);
+        return;
+      }
     } catch (error) {
       toast.error("Unable to update profile", {
         description: getClientErrorMessage(error, "Please try again"),

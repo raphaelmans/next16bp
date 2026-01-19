@@ -29,6 +29,7 @@ export function LoginForm() {
   const googleLoginMutation = useLoginWithGoogle();
 
   const redirectUrl = searchParams.get("redirect") || appRoutes.home.base;
+  const showBookingContext = redirectUrl.includes("/schedule");
 
   const form = useForm<LoginDTO>({
     resolver: zodResolver(LoginSchema),
@@ -91,6 +92,11 @@ export function LoginForm() {
         <CardDescription>
           Enter your credentials to access your account
         </CardDescription>
+        {showBookingContext && (
+          <p className="text-sm text-muted-foreground">
+            You&apos;ll return to your reservation after signing in.
+          </p>
+        )}
       </CardHeader>
       <StandardFormProvider form={form} onSubmit={onSubmit}>
         <CardContent className="space-y-4">
