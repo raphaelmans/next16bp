@@ -13,7 +13,7 @@ export interface AdminStats {
 export interface PendingClaim {
   id: string;
   placeId: string;
-  organizationId: string;
+  organizationId: string | null;
   submittedAt: string;
   type: "claim" | "removal";
   // Note: courtName and organizationName would need to be fetched separately
@@ -128,7 +128,9 @@ export function usePendingClaims(limit = 5) {
       type: item.requestType === "REMOVAL" ? "removal" : "claim",
       // These would need to be fetched separately or backend enhanced
       courtName: `Place ${item.placeId.slice(0, 8)}...`,
-      organizationName: `Org ${item.organizationId.slice(0, 8)}...`,
+      organizationName: item.organizationId
+        ? `Org ${item.organizationId.slice(0, 8)}...`
+        : "Unassigned organization",
     }),
   );
 
