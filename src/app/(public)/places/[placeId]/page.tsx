@@ -171,6 +171,7 @@ export default function PlaceDetailPage() {
   const reservationsEnabled = place?.verification?.reservationsEnabled ?? false;
   const isVerified = verificationStatus === "VERIFIED";
   const showBooking = isBookable && isVerified && reservationsEnabled;
+  const showBookingVerificationUi = !showBooking && !isCurated;
   const canSubmitClaim = Boolean(
     place &&
       isCurated &&
@@ -562,11 +563,11 @@ export default function PlaceDetailPage() {
                     Jump to times
                   </span>
                 </Button>
-              ) : (
+              ) : showBookingVerificationUi ? (
                 <div className="rounded-xl border border-dashed bg-background/95 p-3 text-left text-xs text-muted-foreground shadow-md backdrop-blur">
                   {verificationMessage}
                 </div>
-              )
+              ) : null
             }
           />
 
@@ -844,22 +845,24 @@ export default function PlaceDetailPage() {
                 <CardTitle>Courts</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2 font-medium text-foreground">
-                    {verificationStatus === "PENDING" ? (
-                      <Clock className="h-4 w-4 text-warning" />
-                    ) : verificationStatus === "REJECTED" ? (
-                      <XCircle className="h-4 w-4 text-destructive" />
-                    ) : (
-                      <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                    )}
-                    {verificationMessage}
+                {showBookingVerificationUi && (
+                  <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2 font-medium text-foreground">
+                      {verificationStatus === "PENDING" ? (
+                        <Clock className="h-4 w-4 text-warning" />
+                      ) : verificationStatus === "REJECTED" ? (
+                        <XCircle className="h-4 w-4 text-destructive" />
+                      ) : (
+                        <AlertCircle className="h-4 w-4 text-muted-foreground" />
+                      )}
+                      {verificationMessage}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      This venue must be verified and enabled by the owner
+                      before online reservations become available.
+                    </p>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">
-                    This venue must be verified and enabled by the owner before
-                    online reservations become available.
-                  </p>
-                </div>
+                )}
                 {place.courts.length === 0 ? (
                   <p className="text-sm text-muted-foreground">
                     Court inventory has not been added yet.
@@ -1082,27 +1085,29 @@ export default function PlaceDetailPage() {
             </>
           ) : (
             <>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Booking status</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    {verificationStatus === "PENDING" ? (
-                      <Clock className="h-4 w-4 text-warning" />
-                    ) : verificationStatus === "REJECTED" ? (
-                      <XCircle className="h-4 w-4 text-destructive" />
-                    ) : (
-                      <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                    )}
-                    <span>{verificationMessage}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Owners must complete verification and enable reservations
-                    before bookings are available.
-                  </p>
-                </CardContent>
-              </Card>
+              {showBookingVerificationUi && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Booking status</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      {verificationStatus === "PENDING" ? (
+                        <Clock className="h-4 w-4 text-warning" />
+                      ) : verificationStatus === "REJECTED" ? (
+                        <XCircle className="h-4 w-4 text-destructive" />
+                      ) : (
+                        <AlertCircle className="h-4 w-4 text-muted-foreground" />
+                      )}
+                      <span>{verificationMessage}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Owners must complete verification and enable reservations
+                      before bookings are available.
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
               <Card>
                 <CardHeader>
                   <CardTitle>Claim this venue</CardTitle>

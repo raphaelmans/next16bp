@@ -38,9 +38,11 @@ const buildDescription = (
 export async function generateMetadata({
   params,
 }: {
-  params: CourtPageParams;
+  params: Promise<CourtPageParams>;
 }): Promise<Metadata> {
-  const canonicalPath = appRoutes.courts.detail(params.id);
+  const { id } = await params;
+
+  const canonicalPath = appRoutes.courts.detail(id);
   const openGraphImagePath = `${canonicalPath}/opengraph-image`;
 
   let title = "Court details";
@@ -49,7 +51,7 @@ export async function generateMetadata({
 
   try {
     const caller = await createServerCaller(canonicalPath);
-    const placeDetails = await caller.place.getById({ placeId: params.id });
+    const placeDetails = await caller.place.getById({ placeId: id });
     const place = placeDetails.place;
     const sports = placeDetails.sports
       .map((sport) => sport.name)
