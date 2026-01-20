@@ -9,6 +9,7 @@ import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
   PlaceForm,
   PlacePhotoUpload,
+  PlaceVerificationPanel,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
 import { useOwnerOrganization, usePlaceForm } from "@/features/owner/hooks";
@@ -113,7 +114,7 @@ export default function EditPlacePage() {
       <div className="space-y-6">
         <PageHeader
           title={`Edit Place: ${place.name}`}
-          description="Update place details and availability"
+          description="Update place details and verification status"
           breadcrumbs={[
             { label: "My Places", href: appRoutes.owner.places.base },
             { label: place.name },
@@ -128,6 +129,12 @@ export default function EditPlacePage() {
           onCancel={handleCancel}
           isSubmitting={isSubmitting}
           isEditing
+        />
+
+        <PlaceVerificationPanel
+          placeId={placeId}
+          placeName={place.name}
+          reservationCapable={place.placeType === "RESERVABLE"}
         />
 
         <PlacePhotoUpload

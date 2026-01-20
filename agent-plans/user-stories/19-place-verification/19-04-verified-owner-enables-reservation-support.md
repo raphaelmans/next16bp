@@ -8,7 +8,7 @@
 
 ## Story
 
-As an **organization owner**, I want to **enable reservation support for a verified place** so that **players can start booking once I'm ready to accept reservations**.
+As an **organization owner**, I want to **enable reservation support for a verified place** so that **players can start booking once I am ready to accept reservations**.
 
 ---
 

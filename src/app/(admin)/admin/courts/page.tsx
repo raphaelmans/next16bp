@@ -185,6 +185,7 @@ export default function AdminCourtsPage() {
             email: user?.email,
           }}
           pendingClaimsCount={stats?.pendingClaims || 0}
+          pendingVerificationsCount={stats?.pendingVerifications || 0}
         />
       }
       navbar={

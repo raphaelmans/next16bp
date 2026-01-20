@@ -92,7 +92,7 @@ Phase 1 -----+----- Phase 2
 |----------|--------|-----------|
 | Verification granularity | Per-place | A single org can own multiple venues with different proof requirements |
 | Public visibility | Discoverable even when unverified | Maintain discovery value while preventing untrusted bookings |
-| Booking gate | `place.verification_status` + `place.reservations_enabled` | Allows "verified but not ready" and "ready but blocked" states |
+| Booking gate | `place_verification.status` + `place_verification.reservations_enabled` | Allows "verified but not ready" and "ready but blocked" states |
 | Docs storage | Request-scoped documents table | Keeps audit trail and supports resubmission |
 
 ---

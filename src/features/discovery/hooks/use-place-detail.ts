@@ -54,6 +54,10 @@ export interface PlaceDetail {
   photos: PlacePhoto[];
   placeType: PlaceType;
   claimStatus: PlaceClaimStatus;
+  verification?: {
+    status: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
+    reservationsEnabled: boolean;
+  } | null;
   contactDetail?: PlaceContactDetail;
 }
 
@@ -137,6 +141,16 @@ export function usePlaceDetail({ placeId }: UsePlaceDetailOptions) {
           sports: mapCourtsToSports(courts),
           placeType: response.place.placeType,
           claimStatus: response.place.claimStatus,
+          verification: response.verification
+            ? {
+                status: response.verification.status as
+                  | "UNVERIFIED"
+                  | "PENDING"
+                  | "VERIFIED"
+                  | "REJECTED",
+                reservationsEnabled: response.verification.reservationsEnabled,
+              }
+            : null,
           contactDetail,
         } satisfies PlaceDetail;
       },

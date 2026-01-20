@@ -140,6 +140,11 @@ export default function CourtSchedulePage() {
   const placeQuery = usePlaceDetail({ placeId });
   const place = placeQuery.data;
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";
+  const verificationStatus = place?.verification?.status ?? "UNVERIFIED";
+  const reservationsEnabled = place?.verification?.reservationsEnabled ?? false;
+  const isVerified = verificationStatus === "VERIFIED";
+  const showBooking =
+    place?.placeType === "RESERVABLE" && isVerified && reservationsEnabled;
 
   const selectedDate = React.useMemo(() => {
     if (!dayKeyParam) return undefined;
@@ -363,14 +368,21 @@ export default function CourtSchedulePage() {
     );
   }
 
-  if (place.placeType !== "RESERVABLE") {
+  if (!showBooking) {
+    const heading =
+      place.placeType === "RESERVABLE"
+        ? "Bookings not available yet"
+        : "Not bookable yet";
+    const description =
+      place.placeType === "RESERVABLE"
+        ? "This venue must be verified and enabled by the owner before bookings open."
+        : "This listing doesn&apos;t have a public booking schedule yet.";
+
     return (
       <Container className="py-12">
         <div className="space-y-4 text-center">
-          <h1 className="text-2xl font-bold">Not bookable yet</h1>
-          <p className="text-muted-foreground">
-            This listing doesn&apos;t have a public booking schedule yet.
-          </p>
+          <h1 className="text-2xl font-bold">{heading}</h1>
+          <p className="text-muted-foreground">{description}</p>
           <Button asChild variant="outline" className="mx-auto">
             <Link href={appRoutes.courts.detail(placeId)}>Back to details</Link>
           </Button>

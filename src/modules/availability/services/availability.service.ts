@@ -2,8 +2,13 @@ import { CourtNotFoundError } from "@/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
+import type { IPlaceVerificationRepository } from "@/modules/place-verification/repositories/place-verification.repository";
 import type { ITimeSlotRepository } from "@/modules/time-slot/repositories/time-slot.repository";
-import type { CourtRecord, TimeSlotRecord } from "@/shared/infra/db/schema";
+import type {
+  CourtRecord,
+  PlaceVerificationRecord,
+  TimeSlotRecord,
+} from "@/shared/infra/db/schema";
 import {
   buildSlotStartMap,
   collectConsecutiveSlots,
@@ -35,6 +40,7 @@ export class AvailabilityService implements IAvailabilityService {
   constructor(
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
+    private placeVerificationRepository: IPlaceVerificationRepository,
     private timeSlotRepository: ITimeSlotRepository,
   ) {}
 
@@ -59,6 +65,13 @@ export class AvailabilityService implements IAvailabilityService {
       return [];
     }
 
+    const verification = await this.placeVerificationRepository.findByPlaceId(
+      place.id,
+    );
+    if (!this.isPlaceBookable(verification)) {
+      return [];
+    }
+
     return this.getAvailabilityForCourt(
       court,
       data.date,
@@ -76,6 +89,13 @@ export class AvailabilityService implements IAvailabilityService {
     }
 
     if (!place.isActive || place.placeType !== "RESERVABLE") {
+      return [];
+    }
+
+    const verification = await this.placeVerificationRepository.findByPlaceId(
+      place.id,
+    );
+    if (!this.isPlaceBookable(verification)) {
       return [];
     }
 
@@ -110,6 +130,15 @@ export class AvailabilityService implements IAvailabilityService {
 
     return Array.from(optionsByStart.values()).sort((a, b) =>
       a.startTime.localeCompare(b.startTime),
+    );
+  }
+
+  private isPlaceBookable(
+    verification: PlaceVerificationRecord | null,
+  ): boolean {
+    if (!verification) return false;
+    return (
+      verification.status === "VERIFIED" && verification.reservationsEnabled
     );
   }
 

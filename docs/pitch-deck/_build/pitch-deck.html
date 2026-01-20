@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KudosCourts Pitch Deck</title>
+    <style>
+      @page {
+        size: 13.333in 7.5in;
+        margin: 0;
+      }
+
+      :root {
+        --bg: #ffffff;
+        --text: #0f172a;
+        --muted: #475569;
+        --teal: #0d9488;
+        --orange: #f97316;
+        --border: #e2e8f0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Apple Color Emoji",
+          "Segoe UI Emoji";
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      body {
+        counter-reset: slide;
+      }
+
+      .slide {
+        position: relative;
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        padding: 0.85in 0.95in;
+        overflow: hidden;
+        break-after: page;
+        page-break-after: always;
+        counter-increment: slide;
+      }
+
+      .slide:last-child {
+        break-after: auto;
+        page-break-after: auto;
+      }
+
+      .slide::after {
+        content: counter(slide);
+        position: absolute;
+        right: 0.5in;
+        bottom: 0.35in;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      h1 {
+        font-size: 56px;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.35in;
+      }
+
+      h2 {
+        font-size: 40px;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.25in;
+      }
+
+      h3 {
+        font-size: 28px;
+        line-height: 1.15;
+        margin: 0 0 0.2in;
+      }
+
+      p {
+        margin: 0 0 0.18in;
+        font-size: 22px;
+        line-height: 1.35;
+        color: var(--text);
+      }
+
+      ul,
+      ol {
+        margin: 0 0 0.18in;
+        padding-left: 1.1em;
+        font-size: 22px;
+        line-height: 1.35;
+      }
+
+      li {
+        margin: 0.07in 0;
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+          monospace;
+        font-size: 0.95em;
+        background: #f1f5f9;
+        border: 1px solid var(--border);
+        padding: 0.08em 0.3em;
+        border-radius: 6px;
+      }
+
+      .accent {
+        color: var(--orange);
+      }
+
+      .primary {
+        color: var(--teal);
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 0.25in 0;
+      }
+    </style>
+  </head>
+  <body>
+  <section class="slide" data-file="00-cover.md">
+<h1>KudosCourts</h1>
+<p>Player-first discovery + reservations for sports venues.</p>
+<p>Draft pitch deck (Markdown only) Date: 2026-01-20</p>
+  </section>
+  <section class="slide" data-file="01-vision.md">
+<h1>Vision</h1>
+<p>KudosCourts is a player-first, location-based sports venue discovery and reservation platform.</p>
+<ul>
+<li>For players: find the right place, see real availability, and request a booking in minutes.
+</li>
+<li>For owners: publish hours, pricing, and slots - then manage bookings with lightweight ops tools.
+</li>
+<li>For the platform: stay neutral (no in-app payments, no in-app messaging) while still enabling trust and accountability.
+</li>
+</ul>
+  </section>
+  <section class="slide" data-file="02-problem.md">
+<h1>Problem</h1>
+<p>Players</p>
+<ul>
+<li>Discovery is fragmented: social pages, chat threads, screenshots, and outdated pins.
+</li>
+<li>Availability is unclear: "Is this court actually free?" often requires messaging/calls.
+</li>
+<li>Booking is inconsistent: every venue has a different process, rules, and pricing.
+</li>
+</ul>
+<p>Owners</p>
+<ul>
+<li>Scheduling is manual: spreadsheets + DMs + phone calls = errors and double-booking risk.
+</li>
+<li>Pricing and policies are hard to communicate consistently.
+</li>
+<li>"Going digital" typically means expensive custom software or awkward tools.
+</li>
+</ul>
+  </section>
+  <section class="slide" data-file="03-solution.md">
+<h1>Solution</h1>
+<p>A single platform that connects discovery to bookable inventory.</p>
+<ul>
+<li>Public discovery layer: places, courts, sport filters, location filters, amenities, and schedule views.
+</li>
+<li>Standardized reservation engine: timeboxed requests, clear statuses, and an owner confirmation loop.
+</li>
+<li>Curated-to-bookable pipeline: seed inventory via curation, then convert venues through claiming and verification.
+</li>
+<li>Owner ops: hours, pricing rules, slot publishing, and a reservations inbox for fast triage.
+</li>
+</ul>
+  </section>
+  <section class="slide" data-file="04-product-model.md">
+<h1>Product Model (How The Platform Thinks)</h1>
+<p>Core entities (v1.2)</p>
+<ul>
+<li>Place: a venue/listing (address, map pin, photos, amenities). Can contain multiple courts.
+</li>
+<li>Court: a bookable unit inside a place. Constraint: 1 court = 1 sport.
+</li>
+<li>TimeSlot: 60-minute inventory rows per court.
+</li>
+<li>Reservation: a booking request that follows a mutual-confirmation contract.
+</li>
+</ul>
+<p>Key mechanics</p>
+<ul>
+<li>Duration is built from consecutive 60-minute slots (60/120/180+ minutes).
+</li>
+<li>"Any available" can select the lowest total price across eligible courts.
+</li>
+<li>Bookability is gated (curated, claimed, verified, enabled) to prevent low-trust bookings.
+</li>
+</ul>
+  </section>
+  <section class="slide" data-file="05-player-journey.md">
+<h1>Player Journey</h1>
+<p>Discovery to booking</p>
+<ol>
+<li>Discover places by sport + location (and optionally amenities).
+</li>
+<li>Open a place detail page and choose:
+<ul>
+<li>A specific court, or
+</li>
+<li>"Any available" (best price option).
+</li>
+</ul>
+</li>
+<li>Choose duration (60/120/180+), then select a start time.
+</li>
+<li>Request booking (clear reservation status + next steps).
+</li>
+</ol>
+<p>Paid bookings (P2P-style)</p>
+<ul>
+<li>The platform does not process payments.
+</li>
+<li>Players receive venue payment instructions in the reservation context.
+</li>
+<li>Payment is timeboxed, then the player marks payment and the owner confirms.
+</li>
+</ul>
+  </section>
+  <section class="slide" data-file="06-owner-journey.md">
+<h1>Owner Journey</h1>
+<p>From setup to daily ops</p>
+<ol>
+<li>Create an organization.
+</li>
+<li>Add a place (venue) and one or more courts.
+</li>
+<li>Configure:
+<ul>
+<li>Day-specific hours (including overnight)
+</li>
+<li>Hourly pricing rules
+</li>
+</ul>
+</li>
+<li>Publish 60-minute slots (inventory).
+</li>
+<li>Manage reservations:
+<ul>
+<li>Inbox-first workflow
+</li>
+<li>Court/place filters
+</li>
+<li>Fast confirm/reject actions
+</li>
+</ul>
+</li>
+</ol>
+<p>Payment methods (org-scoped)</p>
+<ul>
+<li>Owners can define one or more payment methods (wallet/bank), with per-method instructions.
+</li>
+<li>A single default method is highlighted to reduce player confusion.
+</li>
+</ul>
+  </section>
+  <section class="slide" data-file="07-trust-and-safety.md">
+<h1>Trust, Safety, And Quality Control</h1>
+<p>A staged supply pipeline (reduces platform risk)</p>
+<ul>
+<li>Curated places: discoverable, read-only, contact info visible, not bookable.
+</li>
+<li>Claiming: owners can claim curated places through an admin-reviewed workflow.
+</li>
+<li>Verification: owner-created places can require admin verification (documents) before bookings are enabled.
+</li>
+</ul>
+<p>Privacy and enforcement</p>
+<ul>
+<li>Payment account details are never exposed via public endpoints.
+</li>
+<li>Payment methods are shown only in the reservation payment context.
+</li>
+<li>Booking is server-enforced: unverified or disabled places cannot be booked.
+</li>
+</ul>
+<p>Liability posture</p>
+<ul>
+<li>No in-app payment processing.
+</li>
+<li>No in-app messaging.
+</li>
+<li>Clear expectations via reservation status + audit trail.
+</li>
+</ul>
+  </section>
+  <section class="slide" data-file="08-go-to-market.md">
+<h1>Go-To-Market (Draft)</h1>
+<p>Wedge</p>
+<ul>
+<li>Start with one sport focus (pickleball), multi-sport ready by design.
+</li>
+<li>Seed supply through curated venue listings to win discovery early.
+</li>
+</ul>
+<p>Conversion loop</p>
+<ul>
+<li>Players use discovery and drive demand.
+</li>
+<li>Owners see demand and claim listings to unlock bookings.
+</li>
+<li>Verified + enabled venues publish real inventory, improving the discovery experience.
+</li>
+</ul>
+<p>Channels (examples)</p>
+<ul>
+<li>Local club partnerships, tournaments, community groups.
+</li>
+<li>SEO for "courts near me" and city/province discovery pages.
+</li>
+<li>Venue outreach: "claim your place" and "get bookable" onboarding.
+</li>
+</ul>
+  </section>
+  <section class="slide" data-file="09-business-model.md">
+<h1>Business Model (Draft)</h1>
+<p>Near-term focus</p>
+<ul>
+<li>Win on discovery and booking conversion (player-first).
+</li>
+<li>Convert supply through curated listings -&gt; claim -&gt; verify -&gt; enable bookings.
+</li>
+</ul>
+<p>Monetization options (choose/sequence)</p>
+<ul>
+<li>Sponsored placements / featured venues in discovery.
+</li>
+<li>Owner subscription for advanced ops (multi-user staff, analytics, automation).
+</li>
+<li>Booking fees / payments (only if the product later chooses to take on payment processing).
+</li>
+<li>Advertising (if/when it fits the UX).
+</li>
+</ul>
+<p>MVP</p>
+<ul>
+<li>Monetization is intentionally flexible while we validate supply + repeat bookings.
+</li>
+</ul>
+  </section>
+  <section class="slide" data-file="10-roadmap.md">
+<h1>Roadmap (Highlights From Current Plans)</h1>
+<p>Top-of-funnel improvements</p>
+<ul>
+<li>Province/city discovery filters + search routing.
+</li>
+<li>Amenities filtering.
+</li>
+<li>Public schedule view + mobile sticky CTAs.
+</li>
+<li>Resume-after-login so guests can return to their selection.
+</li>
+</ul>
+<p>Trust + supply expansion</p>
+<ul>
+<li>Place claiming improvements.
+</li>
+<li>Place verification (owner request -&gt; admin review -&gt; enable bookings).
+</li>
+<li>Guest removal requests (quality control).
+</li>
+</ul>
+<p>Booking + ops depth</p>
+<ul>
+<li>Organization payment methods + reminders.
+</li>
+<li>Reservations inbox UX (owner triage).
+</li>
+<li>Court setup wizard (hours/pricing/slots flow).
+</li>
+</ul>
+  </section>
+  <section class="slide" data-file="11-ask.md">
+<h1>The Ask (Fill In)</h1>
+<p>What we want to achieve next</p>
+<ul>
+<li>Pilot venues: [TBD] places onboarded and publishing live inventory.
+</li>
+<li>Player adoption: [TBD] monthly active bookers.
+</li>
+<li>Product milestones: [TBD] (verification, payments UX, owner ops).
+</li>
+</ul>
+<p>What we need</p>
+<ul>
+<li>Design partners (venue owners/operators).
+</li>
+<li>Distribution partners (clubs, communities, events).
+</li>
+<li>Capital and/or team support (if fundraising): [TBD].
+</li>
+</ul>
+  </section>
+  </body>
+</html>

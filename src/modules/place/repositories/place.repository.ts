@@ -11,6 +11,7 @@ import {
   placeAmenity,
   placeContactDetail,
   placePhoto,
+  placeVerification,
   sport,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
@@ -20,6 +21,7 @@ export interface PlaceWithDetails {
   place: PlaceRecord;
   contactDetail: typeof placeContactDetail.$inferSelect | null;
   reservationPolicy: typeof organizationReservationPolicy.$inferSelect | null;
+  verification: typeof placeVerification.$inferSelect | null;
   photos: (typeof placePhoto.$inferSelect)[];
   amenities: (typeof placeAmenity.$inferSelect)[];
 }
@@ -151,6 +153,13 @@ export class PlaceRepository implements IPlaceRepository {
       reservationPolicy = policyResult[0] ?? null;
     }
 
+    const verificationResult = await client
+      .select()
+      .from(placeVerification)
+      .where(eq(placeVerification.placeId, id))
+      .limit(1);
+    const verification = verificationResult[0] ?? null;
+
     const photos = await client
       .select()
       .from(placePhoto)
@@ -166,6 +175,7 @@ export class PlaceRepository implements IPlaceRepository {
       place: placeRecord,
       contactDetail,
       reservationPolicy,
+      verification,
       photos,
       amenities,
     };

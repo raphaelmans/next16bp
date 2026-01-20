@@ -87,11 +87,9 @@ export default function AdminClaimsPage() {
     <AppShell
       sidebar={
         <AdminSidebar
-          user={{
-            name: user?.email?.split("@")[0],
-            email: user?.email,
-          }}
+          user={{ name: user?.email?.split("@")[0], email: user?.email }}
           pendingClaimsCount={stats?.pendingClaims || 0}
+          pendingVerificationsCount={stats?.pendingVerifications || 0}
         />
       }
       navbar={

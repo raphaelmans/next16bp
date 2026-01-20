@@ -11,12 +11,25 @@ export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const MAX_PAYMENT_PROOF_SIZE = 10 * 1024 * 1024;
 
 /**
+ * Maximum file size for verification documents (10MB)
+ */
+export const MAX_VERIFICATION_DOCUMENT_SIZE = 10 * 1024 * 1024;
+
+/**
  * Allowed image MIME types
  */
 export const ALLOWED_IMAGE_TYPES = [
   "image/jpeg",
   "image/png",
   "image/webp",
+] as const;
+
+/**
+ * Allowed verification document MIME types
+ */
+export const ALLOWED_VERIFICATION_DOCUMENT_TYPES = [
+  ...ALLOWED_IMAGE_TYPES,
+  "application/pdf",
 ] as const;
 
 /**
@@ -28,6 +41,7 @@ export const FILE_SIZE_LIMITS_READABLE = {
   PLACE_PHOTO: "5MB",
   ORG_LOGO: "5MB",
   PAYMENT_PROOF: "10MB",
+  VERIFICATION_DOCUMENT: "10MB",
 } as const;
 
 /**
@@ -39,6 +53,7 @@ export const STORAGE_BUCKETS = {
   COURT_PHOTOS: "court-photos",
   PLACE_PHOTOS: "place-photos",
   ORGANIZATION_ASSETS: "organization-assets",
+  PLACE_VERIFICATION_DOCS: "place-verification-docs",
 } as const;
 
 export type StorageBucket =
@@ -78,6 +93,24 @@ export const paymentProofFileSchema = zfd
       ),
     {
       message: "File must be JPEG, PNG, or WebP",
+    },
+  );
+
+/**
+ * Place verification document validation schema (images + PDF, 10MB).
+ */
+export const verificationDocumentFileSchema = zfd
+  .file()
+  .refine((file) => file.size <= MAX_VERIFICATION_DOCUMENT_SIZE, {
+    message: `File must be less than ${FILE_SIZE_LIMITS_READABLE.VERIFICATION_DOCUMENT}`,
+  })
+  .refine(
+    (file) =>
+      ALLOWED_VERIFICATION_DOCUMENT_TYPES.includes(
+        file.type as (typeof ALLOWED_VERIFICATION_DOCUMENT_TYPES)[number],
+      ),
+    {
+      message: "File must be JPEG, PNG, WebP, or PDF",
     },
   );
 

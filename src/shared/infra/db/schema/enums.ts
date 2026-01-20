@@ -97,3 +97,14 @@ export const paymentMethodProviderEnum = pgEnum("payment_method_provider", [
   "PNB",
   "EASTWEST",
 ]);
+
+/**
+ * Place verification status enum
+ * Tracks if a place is verified for reservations.
+ */
+export const placeVerificationStatusEnum = pgEnum("place_verification_status", [
+  "UNVERIFIED",
+  "PENDING",
+  "VERIFIED",
+  "REJECTED",
+]);

@@ -1,7 +1,15 @@
 "use client";
 
-import { Plus, Settings2 } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  Plus,
+  Settings2,
+  ShieldCheck,
+  XCircle,
+} from "lucide-react";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -62,6 +70,22 @@ export default function OwnerPlacesPage() {
     );
   }
 
+  const verificationCounts = places.reduce(
+    (acc, place) => {
+      const status = place.verificationStatus ?? "UNVERIFIED";
+      acc.total += 1;
+      acc[status] += 1;
+      return acc;
+    },
+    {
+      total: 0,
+      UNVERIFIED: 0,
+      PENDING: 0,
+      VERIFIED: 0,
+      REJECTED: 0,
+    },
+  );
+
   return (
     <AppShell
       sidebar={
@@ -108,6 +132,34 @@ export default function OwnerPlacesPage() {
           </Button>
         </div>
 
+        <Card className="border-dashed">
+          <CardContent className="p-4 sm:p-5">
+            <div className="flex flex-wrap items-center gap-3 text-sm">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-primary" />
+                <span className="font-medium">Verification status</span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant="secondary" className="gap-1">
+                  <Clock className="h-3 w-3" />
+                  {verificationCounts.PENDING} pending
+                </Badge>
+                <Badge variant="success" className="gap-1">
+                  <CheckCircle2 className="h-3 w-3" />
+                  {verificationCounts.VERIFIED} verified
+                </Badge>
+                <Badge variant="destructive" className="gap-1">
+                  <XCircle className="h-3 w-3" />
+                  {verificationCounts.REJECTED} rejected
+                </Badge>
+                <Badge variant="outline" className="gap-1">
+                  {verificationCounts.UNVERIFIED} unverified
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {placesLoading ? (
           <div className="grid gap-4 sm:grid-cols-2">
             <Skeleton className="h-36 w-full" />
@@ -135,16 +187,58 @@ export default function OwnerPlacesPage() {
             {places.map((place) => (
               <Card key={place.id} className="border shadow-sm">
                 <CardContent className="p-5 space-y-4">
-                  <div>
-                    <h2 className="font-heading font-semibold text-lg">
-                      {place.name}
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      {place.address}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {place.city} · {place.timeZone}
-                    </p>
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <h2 className="font-heading font-semibold text-lg">
+                        {place.name}
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        {place.address}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {place.city} · {place.timeZone}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end gap-2">
+                      <Badge
+                        variant={
+                          place.verificationStatus === "VERIFIED"
+                            ? "success"
+                            : place.verificationStatus === "PENDING"
+                              ? "warning"
+                              : place.verificationStatus === "REJECTED"
+                                ? "destructive"
+                                : "secondary"
+                        }
+                        className="gap-1"
+                      >
+                        {place.verificationStatus === "VERIFIED" && (
+                          <ShieldCheck className="h-3 w-3" />
+                        )}
+                        {place.verificationStatus === "PENDING" && (
+                          <Clock className="h-3 w-3" />
+                        )}
+                        {place.verificationStatus === "REJECTED" && (
+                          <XCircle className="h-3 w-3" />
+                        )}
+                        {place.verificationStatus === "UNVERIFIED" && (
+                          <ShieldCheck className="h-3 w-3" />
+                        )}
+                        {place.verificationStatus ?? "UNVERIFIED"}
+                      </Badge>
+                      {place.verificationStatus === "VERIFIED" && (
+                        <Badge
+                          variant={
+                            place.reservationsEnabled ? "success" : "secondary"
+                          }
+                          className="gap-1"
+                        >
+                          {place.reservationsEnabled
+                            ? "Reservations on"
+                            : "Reservations off"}
+                        </Badge>
+                      )}
+                    </div>
                   </div>
 
                   <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
@@ -168,6 +262,12 @@ export default function OwnerPlacesPage() {
                         Edit Place
                       </Link>
                     </Button>
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link href={appRoutes.owner.verification.place(place.id)}>
+                        Verification
+                      </Link>
+                    </Button>
+
                     <Button variant="ghost" size="sm" asChild>
                       <Link href={appRoutes.places.detail(place.id)}>
                         View Public Page

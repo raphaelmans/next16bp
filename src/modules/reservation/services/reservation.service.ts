@@ -5,6 +5,8 @@ import type { IOrganizationPaymentMethodRepository } from "@/modules/organizatio
 import type { IOrganizationReservationPolicyRepository } from "@/modules/organization-payment/repositories/organization-reservation-policy.repository";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
+import { PlaceNotBookableError } from "@/modules/place-verification/errors/place-verification.errors";
+import type { IPlaceVerificationRepository } from "@/modules/place-verification/repositories/place-verification.repository";
 import type { IProfileRepository } from "@/modules/profile/repositories/profile.repository";
 import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
 import type { ITimeSlotRepository } from "@/modules/time-slot/repositories/time-slot.repository";
@@ -131,6 +133,7 @@ export class ReservationService implements IReservationService {
     _profileRepository: IProfileRepository,
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
+    private placeVerificationRepository: IPlaceVerificationRepository,
     private organizationReservationPolicyRepository: IOrganizationReservationPolicyRepository,
     private organizationPaymentMethodRepository: IOrganizationPaymentMethodRepository,
     private createFreeReservationUseCase: ICreateFreeReservationUseCase,
@@ -170,6 +173,25 @@ export class ReservationService implements IReservationService {
     return addMinutes(new Date(), ownerReviewMinutes);
   }
 
+  private async assertPlaceBookable(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<void> {
+    const verification = await this.placeVerificationRepository.findByPlaceId(
+      placeId,
+      ctx,
+    );
+    if (!verification) {
+      throw new PlaceNotBookableError(placeId);
+    }
+    if (
+      verification.status !== "VERIFIED" ||
+      !verification.reservationsEnabled
+    ) {
+      throw new PlaceNotBookableError(placeId);
+    }
+  }
+
   async createReservation(
     userId: string,
     profileId: string,
@@ -179,6 +201,13 @@ export class ReservationService implements IReservationService {
     if (!slot) {
       throw new SlotNotFoundError(timeSlotId);
     }
+
+    const court = await this.courtRepository.findById(slot.courtId);
+    if (!court) {
+      throw new CourtNotFoundError(slot.courtId);
+    }
+
+    await this.assertPlaceBookable(court.placeId);
 
     const policy = await this.getOrganizationPolicyForCourt(slot.courtId);
     const expiresAt = this.getOwnerAcceptanceExpiresAt(policy);
@@ -211,6 +240,8 @@ export class ReservationService implements IReservationService {
     if (!court || !court.isActive) {
       throw new CourtNotFoundError(data.courtId);
     }
+
+    await this.assertPlaceBookable(court.placeId);
 
     const startTime = new Date(data.startTime);
     const consecutiveSlots = await this.findConsecutiveSlotsForCourt(
@@ -274,6 +305,8 @@ export class ReservationService implements IReservationService {
         durationMinutes: data.durationMinutes,
       });
     }
+
+    await this.assertPlaceBookable(place.id);
 
     const courts = await this.courtRepository.findByPlaceAndSport(
       data.placeId,

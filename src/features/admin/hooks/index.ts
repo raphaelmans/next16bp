@@ -35,3 +35,10 @@ export {
   useClaims,
   useRejectClaim,
 } from "./use-claims";
+export {
+  type PlaceVerificationRequestListItem,
+  useApprovePlaceVerification,
+  usePlaceVerificationQueue,
+  usePlaceVerificationRequest,
+  useRejectPlaceVerification,
+} from "./use-place-verification";

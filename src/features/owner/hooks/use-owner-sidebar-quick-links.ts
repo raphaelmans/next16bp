@@ -15,7 +15,12 @@ export interface OwnerSidebarPlace {
   courts: OwnerSidebarCourt[];
 }
 
-type OwnerSidebarPlaceRecord = Pick<PlaceRecord, "id" | "name">;
+type OwnerSidebarPlaceRecord = Pick<PlaceRecord, "id" | "name"> & {
+  verification?: {
+    status: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED" | null;
+    reservationsEnabled: boolean | null;
+  } | null;
+};
 
 type CourtWithSportPayload = {
   court: {
@@ -47,7 +52,14 @@ const mapOwnerSidebarPlace = (
 export function useOwnerSidebarQuickLinks(organizationId?: string | null) {
   const placesQuery = trpc.placeManagement.list.useQuery(
     { organizationId: organizationId ?? "" },
-    { enabled: !!organizationId },
+    {
+      enabled: !!organizationId,
+      select: (data) =>
+        data.map((place) => ({
+          ...place,
+          verification: null,
+        })),
+    },
   );
 
   const courtQueries = trpc.useQueries((t) =>

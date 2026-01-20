@@ -64,6 +64,11 @@ export default function PlaceBookingPage() {
 
   const { data: place, isLoading } = usePlaceDetail({ placeId });
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";
+  const verificationStatus = place?.verification?.status ?? "UNVERIFIED";
+  const reservationsEnabled = place?.verification?.reservationsEnabled ?? false;
+  const isVerified = verificationStatus === "VERIFIED";
+  const showBooking =
+    place?.placeType === "RESERVABLE" && isVerified && reservationsEnabled;
   const bookingDate = React.useMemo(
     () => (startTime ? getZonedDate(startTime, placeTimeZone) : undefined),
     [startTime, placeTimeZone],
@@ -191,7 +196,26 @@ export default function PlaceBookingPage() {
     return <PlaceBookingSkeleton />;
   }
 
-  if (!place || !selectedSlot || !endTime) {
+  if (!place || !showBooking) {
+    return (
+      <Container className="py-12">
+        <div className="text-center space-y-3">
+          <h1 className="text-2xl font-bold">Bookings not available</h1>
+          <p className="text-muted-foreground">
+            This venue is not accepting reservations yet.
+          </p>
+          <Link
+            href={appRoutes.places.detail(placeId)}
+            className="text-primary hover:underline inline-block"
+          >
+            Back to place
+          </Link>
+        </div>
+      </Container>
+    );
+  }
+
+  if (!selectedSlot || !endTime) {
     return (
       <Container className="py-12">
         <div className="text-center">

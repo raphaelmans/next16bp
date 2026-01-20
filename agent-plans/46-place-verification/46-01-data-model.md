@@ -14,13 +14,16 @@ Introduce per-place verification state, verification request tables (with audit 
 
 ## Modules
 
-### Module 1A: Place Verification + Reservation Enable Fields
+### Module 1A: Place Verification Gate Table
 
 **User Stories:** `US-19-03`, `US-19-04`
 
-Add fields to `place`:
+Add a new 1:1 table: `place_verification`.
 
-- `verification_status` (enum)
+Fields:
+
+- `place_id` (PK, FK -> place.id)
+- `status` (enum)
 - `verified_at` (timestamptz, nullable)
 - `verified_by_user_id` (uuid -> auth.users, nullable)
 - `reservations_enabled` (boolean)
@@ -28,11 +31,16 @@ Add fields to `place`:
 
 Recommended constraint:
 
-- `CHECK (reservations_enabled = false OR verification_status = 'VERIFIED')`
+- `CHECK (reservations_enabled = false OR status = 'VERIFIED')`
 
-Data migration guidance:
+Data migration guidance (no grandfathering):
 
-- Existing `RESERVABLE` places should be backfilled to `verification_status = VERIFIED` and `reservations_enabled = true` to avoid breaking existing booking flows.
+- Create a `place_verification` row for every existing place with:
+  - `status = UNVERIFIED`
+  - `reservations_enabled = false`
+
+This ensures existing reservable places must go through verification + enable again to become bookable.
+
 
 ---
 
@@ -69,7 +77,7 @@ Add a dedicated bucket for verification docs (recommended name):
 
 Notes:
 
-- MVP can store images only (JPEG/PNG/WebP) to reuse existing upload validation.
+- MVP supports images (JPEG/PNG/WebP) and PDF (application/pdf).
 - Consider making the bucket private and serving signed URLs to admins/owners. If that adds too much complexity for v1, keep bucket public but do not expose URLs publicly in the UI.
 
 ---
@@ -77,5 +85,5 @@ Notes:
 ## Testing Checklist
 
 - [ ] Migration applies cleanly.
-- [ ] Backfill does not break existing reservable booking flows.
+- [ ] All existing places receive an UNVERIFIED place_verification row.
 - [ ] Unique pending constraint prevents duplicates.

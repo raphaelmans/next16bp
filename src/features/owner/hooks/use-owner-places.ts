@@ -20,12 +20,19 @@ export interface OwnerPlace {
   courtCount: number;
   sports: OwnerPlaceSport[];
   isActive: boolean;
+  verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
+  reservationsEnabled?: boolean;
 }
 
 type OwnerPlaceRecord = Pick<
   PlaceRecord,
   "id" | "name" | "address" | "city" | "timeZone" | "isActive"
->;
+> & {
+  verification?: {
+    status: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED" | null;
+    reservationsEnabled: boolean | null;
+  } | null;
+};
 
 type CourtWithSportPayload = {
   court: {
@@ -54,6 +61,10 @@ const mapSports = (courts: CourtWithSportPayload[]): OwnerPlaceSport[] => {
 const mapOwnerPlace = (
   place: OwnerPlaceRecord,
   courts: CourtWithSportPayload[],
+  verification?: {
+    status: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED" | null;
+    reservationsEnabled: boolean | null;
+  } | null,
 ): OwnerPlace => ({
   id: place.id,
   name: place.name,
@@ -64,6 +75,8 @@ const mapOwnerPlace = (
   courtCount: courts.length,
   sports: mapSports(courts),
   isActive: place.isActive,
+  verificationStatus: verification?.status ?? undefined,
+  reservationsEnabled: verification?.reservationsEnabled ?? undefined,
 });
 
 const mapOwnerCourt = (
@@ -89,7 +102,14 @@ const mapOwnerCourt = (
 export function useOwnerPlaces(organizationId?: string | null) {
   const placesQuery = trpc.placeManagement.list.useQuery(
     { organizationId: organizationId ?? "" },
-    { enabled: !!organizationId },
+    {
+      enabled: !!organizationId,
+      select: (data) =>
+        data.map((place) => ({
+          ...place,
+          verification: null,
+        })),
+    },
   );
 
   const courtQueries = trpc.useQueries((t) =>
@@ -104,7 +124,7 @@ export function useOwnerPlaces(organizationId?: string | null) {
     if (!placesQuery.data) return [];
 
     return placesQuery.data.map((place, index) =>
-      mapOwnerPlace(place, courtQueries[index]?.data ?? []),
+      mapOwnerPlace(place, courtQueries[index]?.data ?? [], place.verification),
     );
   }, [courtQueries, placesQuery.data]);
 
@@ -128,7 +148,11 @@ export function useOwnerPlace(placeId: string) {
 
   const data = useMemo(() => {
     if (!placeQuery.data) return undefined;
-    return mapOwnerPlace(placeQuery.data.place, courtsQuery.data ?? []);
+    return mapOwnerPlace(
+      { ...placeQuery.data.place, verification: placeQuery.data.verification },
+      courtsQuery.data ?? [],
+      placeQuery.data.verification,
+    );
   }, [courtsQuery.data, placeQuery.data]);
 
   return {

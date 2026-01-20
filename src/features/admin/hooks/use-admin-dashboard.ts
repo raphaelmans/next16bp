@@ -5,6 +5,7 @@ import { trpc } from "@/trpc/client";
 
 export interface AdminStats {
   pendingClaims: number;
+  pendingVerifications: number;
   totalCourts: number;
   reservableCourts: number;
   activeOrganizations: number;
@@ -77,6 +78,12 @@ export function useAdminStats() {
     offset: 0,
   });
 
+  // Fetch verification queue count
+  const verificationsQuery = trpc.admin.placeVerification.getPending.useQuery({
+    limit: 1,
+    offset: 0,
+  });
+
   // Fetch reservable courts count
   const reservableQuery = trpc.admin.court.list.useQuery({
     placeType: "RESERVABLE",
@@ -87,6 +94,7 @@ export function useAdminStats() {
   // Calculate stats from responses
   const stats: AdminStats = {
     pendingClaims: claimsQuery.data?.total ?? 0,
+    pendingVerifications: verificationsQuery.data?.total ?? 0,
     totalCourts: courtsQuery.data?.total ?? 0,
     reservableCourts: reservableQuery.data?.total ?? 0,
     activeOrganizations: 0, // Would need a separate endpoint
@@ -96,10 +104,14 @@ export function useAdminStats() {
     data: stats,
     isLoading:
       claimsQuery.isLoading ||
+      verificationsQuery.isLoading ||
       courtsQuery.isLoading ||
       reservableQuery.isLoading,
     isError:
-      claimsQuery.isError || courtsQuery.isError || reservableQuery.isError,
+      claimsQuery.isError ||
+      verificationsQuery.isError ||
+      courtsQuery.isError ||
+      reservableQuery.isError,
   };
 }
 

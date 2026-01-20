@@ -16,6 +16,7 @@ const BUCKET_NAMES = {
   courtPhotos: "court-photos",
   placePhotos: "place-photos",
   organizationAssets: "organization-assets",
+  placeVerificationDocs: "place-verification-docs",
 } as const;
 
 interface BucketDefinition {
@@ -44,6 +45,11 @@ const BUCKET_DEFINITIONS: BucketDefinition[] = [
   {
     id: BUCKET_NAMES.organizationAssets,
     name: BUCKET_NAMES.organizationAssets,
+    public: true,
+  },
+  {
+    id: BUCKET_NAMES.placeVerificationDocs,
+    name: BUCKET_NAMES.placeVerificationDocs,
     public: true,
   },
 ];

@@ -9,6 +9,7 @@ import {
   Calendar,
   CheckCircle2,
   Plus,
+  ShieldCheck,
   Tag,
   Trash2,
   Users,
@@ -76,6 +77,7 @@ export default function AdminDashboardPage() {
             email: user?.email,
           }}
           pendingClaimsCount={stats?.pendingClaims || 0}
+          pendingVerificationsCount={stats?.pendingVerifications || 0}
         />
       }
       navbar={
@@ -116,12 +118,17 @@ export default function AdminDashboardPage() {
               href={appRoutes.admin.claims.base}
             />
             <StatsCard
+              title="Pending Verification"
+              value={stats?.pendingVerifications || 0}
+              icon={ShieldCheck}
+              href={appRoutes.admin.placeVerification.base}
+            />
+            <StatsCard
               title="Total Courts"
               value={stats?.totalCourts || 0}
               icon={Building2}
               href={appRoutes.admin.courts.base}
             />
-
             <StatsCard
               title="Reservable Courts"
               value={stats?.reservableCourts || 0}

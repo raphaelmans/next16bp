@@ -14,6 +14,8 @@ import { organizationPaymentRouter } from "@/modules/organization-payment/organi
 import { paymentProofRouter } from "@/modules/payment-proof/payment-proof.router";
 import { placeRouter } from "@/modules/place/place.router";
 import { placeManagementRouter } from "@/modules/place/place-management.router";
+import { placeVerificationAdminRouter } from "@/modules/place-verification/admin/place-verification-admin.router";
+import { placeVerificationRouter } from "@/modules/place-verification/place-verification.router";
 import { profileRouter } from "@/modules/profile/profile.router";
 import { reservationRouter } from "@/modules/reservation/reservation.router";
 import { reservationOwnerRouter } from "@/modules/reservation/reservation-owner.router";
@@ -33,6 +35,7 @@ export const appRouter = router({
   courtRateRule: courtRateRuleRouter,
   place: placeRouter,
   placeManagement: placeManagementRouter,
+  placeVerification: placeVerificationRouter,
   sport: sportRouter,
   profile: profileRouter,
   organization: organizationRouter,
@@ -47,6 +50,7 @@ export const appRouter = router({
   admin: router({
     claim: claimAdminRouter,
     court: adminCourtRouter,
+    placeVerification: placeVerificationAdminRouter,
   }),
 });
 

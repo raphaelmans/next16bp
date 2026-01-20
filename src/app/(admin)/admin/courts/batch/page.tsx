@@ -484,6 +484,7 @@ export default function AdminCourtsBatchPage() {
             email: user?.email,
           }}
           pendingClaimsCount={stats?.pendingClaims || 0}
+          pendingVerificationsCount={stats?.pendingVerifications || 0}
         />
       }
       navbar={

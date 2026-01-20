@@ -5,12 +5,12 @@
 
 ---
 
-## Module 1A: Place Verification Fields
+## Module 1A: Place Verification Gate Table
 
 - [ ] Add `place_verification_status` enum
-- [ ] Add place columns: `verificationStatus`, `verifiedAt`, `verifiedByUserId`, `reservationsEnabled`, `reservationsEnabledAt`
+- [ ] Create `place_verification` 1:1 table (PK = place_id)
 - [ ] Add DB constraint preventing enabling reservations unless verified
-- [ ] Backfill existing reservable places to verified + enabled
+- [ ] Create `place_verification` rows for all existing places with UNVERIFIED + reservations disabled
 
 ## Module 1B: Verification Request Tables
 
@@ -29,14 +29,14 @@
 
 - [ ] Implement submit request (ownership check)
 - [ ] Upload docs + persist document rows
-- [ ] Set place verification status to pending
+- [ ] Upsert `place_verification` and set status to PENDING
 
 ## Module 2B: Admin APIs
 
 - [ ] List pending
 - [ ] Get detail
-- [ ] Approve (updates place + request + event)
-- [ ] Reject (updates place + request + event)
+- [ ] Approve (updates place_verification + request + event)
+- [ ] Reject (updates place_verification + request + event)
 
 ## Module 2C: Booking Enforcement
 

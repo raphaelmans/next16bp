@@ -32,7 +32,7 @@ Rules:
 - User must own the place via organization ownership.
 - Create request in `PENDING`.
 - Create initial event row (`toStatus = PENDING`).
-- Set `place.verification_status = PENDING`.
+- Upsert `place_verification` row and set `place_verification.status = PENDING`.
 - Upload documents to storage and persist `place_verification_request_document` rows.
 
 Implementation note:
@@ -62,16 +62,18 @@ Approval behavior:
 
 - Update request status -> `APPROVED`
 - Insert event row
-- Update place:
-  - `verification_status = VERIFIED`
+- Update `place_verification`:
+  - `status = VERIFIED`
   - `verified_at = now()`
   - `verified_by_user_id = adminUserId`
+  - Note: do not auto-enable reservations; owner must explicitly set `place_verification.reservations_enabled = true` via a separate action.
 
 Rejection behavior:
 
 - Update request status -> `REJECTED`
 - Insert event row with notes
-- Update place: `verification_status = REJECTED`
+- Update `place_verification`: `status = REJECTED`
+- Ensure `place_verification.reservations_enabled = false` (defense-in-depth)
 
 ---
 
@@ -82,7 +84,7 @@ Rejection behavior:
 Enforce server-side gating in all booking entry points:
 
 - Availability:
-  - Block/return empty for places where `verification_status != VERIFIED` OR `reservations_enabled = false`.
+  - Block/return empty for places where `place_verification.status != VERIFIED` OR `place_verification.reservations_enabled = false`.
 - Reservation creation:
   - Validate place is bookable even for `reservation.create(timeSlotId)` and `reservation.createForCourt`.
 

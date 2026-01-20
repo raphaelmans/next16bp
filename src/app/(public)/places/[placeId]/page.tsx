@@ -1,7 +1,17 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Calendar, Clock, ExternalLink, Loader2, MapPin } from "lucide-react";
+import {
+  AlertCircle,
+  Calendar,
+  CheckCircle2,
+  Clock,
+  ExternalLink,
+  Loader2,
+  MapPin,
+  ShieldCheck,
+  XCircle,
+} from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import * as React from "react";
@@ -159,6 +169,10 @@ export default function PlaceDetailPage() {
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";
   const isBookable = place?.placeType === "RESERVABLE";
   const isCurated = place?.placeType === "CURATED";
+  const verificationStatus = place?.verification?.status ?? "UNVERIFIED";
+  const reservationsEnabled = place?.verification?.reservationsEnabled ?? false;
+  const isVerified = verificationStatus === "VERIFIED";
+  const showBooking = isBookable && isVerified && reservationsEnabled;
   const canSubmitClaim = Boolean(
     place &&
       isCurated &&
@@ -221,7 +235,7 @@ export default function PlaceDetailPage() {
   }, [courtsForSport, selectedCourtId, selectionMode, isBookable]);
 
   const availabilityQuery = usePlaceAvailability({
-    place: isBookable ? (place ?? undefined) : undefined,
+    place: showBooking ? (place ?? undefined) : undefined,
     sportId: selectedSportId,
     courtId: selectionMode === "court" ? selectedCourtId : undefined,
     date: selectedDate,
@@ -261,7 +275,7 @@ export default function PlaceDetailPage() {
   }, [durationMinutes, placeId, selectedCourtId, selectedSlot, selectionMode]);
 
   const scheduleHref = React.useMemo(() => {
-    if (!isBookable || !place) return undefined;
+    if (!showBooking || !place) return undefined;
     const params = new URLSearchParams();
 
     params.set("duration", String(durationMinutes));
@@ -289,7 +303,6 @@ export default function PlaceDetailPage() {
       : appRoutes.places.schedule(placeId);
   }, [
     durationMinutes,
-    isBookable,
     place,
     placeId,
     placeTimeZone,
@@ -298,6 +311,7 @@ export default function PlaceDetailPage() {
     selectedSlot,
     selectedSportId,
     selectionMode,
+    showBooking,
   ]);
 
   const summaryCtaVariant = hasSelectedSlot ? "default" : "outline";
@@ -478,6 +492,14 @@ export default function PlaceDetailPage() {
     );
   }
 
+  const verificationMessage = showBooking
+    ? "Verified for reservations"
+    : verificationStatus === "PENDING"
+      ? "Verification pending"
+      : verificationStatus === "REJECTED"
+        ? "Verification needs updates"
+        : "Verification required to book";
+
   const hasCoordinates =
     typeof place.latitude === "number" &&
     Number.isFinite(place.latitude) &&
@@ -524,7 +546,7 @@ export default function PlaceDetailPage() {
             photos={place.photos}
             courtName={place.name}
             mainOverlay={
-              isBookable ? (
+              showBooking ? (
                 <Button
                   type="button"
                   variant="outline"
@@ -542,7 +564,11 @@ export default function PlaceDetailPage() {
                     Jump to times
                   </span>
                 </Button>
-              ) : undefined
+              ) : (
+                <div className="rounded-xl border border-dashed bg-background/95 p-3 text-left text-xs text-muted-foreground shadow-md backdrop-blur">
+                  {verificationMessage}
+                </div>
+              )
             }
           />
 
@@ -613,7 +639,7 @@ export default function PlaceDetailPage() {
             </CardContent>
           </Card>
 
-          {isBookable ? (
+          {showBooking ? (
             <>
               <div ref={sportSectionRef} className="scroll-mt-24">
                 <Card>
@@ -819,7 +845,23 @@ export default function PlaceDetailPage() {
               <CardHeader>
                 <CardTitle>Courts</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-4">
+                <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2 font-medium text-foreground">
+                    {verificationStatus === "PENDING" ? (
+                      <Clock className="h-4 w-4 text-warning" />
+                    ) : verificationStatus === "REJECTED" ? (
+                      <XCircle className="h-4 w-4 text-destructive" />
+                    ) : (
+                      <AlertCircle className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    {verificationMessage}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    This venue must be verified and enabled by the owner before
+                    online reservations become available.
+                  </p>
+                </div>
                 {place.courts.length === 0 ? (
                   <p className="text-sm text-muted-foreground">
                     Court inventory has not been added yet.
@@ -860,7 +902,7 @@ export default function PlaceDetailPage() {
         </div>
 
         <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
-          {isBookable ? (
+          {showBooking ? (
             <>
               <Card>
                 <CardHeader>
@@ -1044,6 +1086,27 @@ export default function PlaceDetailPage() {
             <>
               <Card>
                 <CardHeader>
+                  <CardTitle>Booking status</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    {verificationStatus === "PENDING" ? (
+                      <Clock className="h-4 w-4 text-warning" />
+                    ) : verificationStatus === "REJECTED" ? (
+                      <XCircle className="h-4 w-4 text-destructive" />
+                    ) : (
+                      <AlertCircle className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    <span>{verificationMessage}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Owners must complete verification and enable reservations
+                    before bookings are available.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
                   <CardTitle>Claim this venue</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm">
@@ -1111,7 +1174,6 @@ export default function PlaceDetailPage() {
                   )}
                 </CardContent>
               </Card>
-
               <Card>
                 <CardHeader>
                   <CardTitle>Request listing removal</CardTitle>
@@ -1185,7 +1247,6 @@ export default function PlaceDetailPage() {
                   )}
                 </CardContent>
               </Card>
-
               <Card>
                 <CardHeader>
                   <CardTitle>Location</CardTitle>

@@ -18,6 +18,7 @@ export * from "./organization-payment";
 export * from "./place";
 export * from "./place-amenity";
 export * from "./place-photo";
+export * from "./place-verification";
 export * from "./profile";
 // Reservation-related tables
 export * from "./reservation";

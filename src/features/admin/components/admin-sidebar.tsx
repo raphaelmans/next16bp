@@ -1,6 +1,12 @@
 "use client";
 
-import { Building2, LayoutDashboard, Shield, Tag } from "lucide-react";
+import {
+  Building2,
+  LayoutDashboard,
+  Shield,
+  ShieldCheck,
+  Tag,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,6 +32,7 @@ interface AdminSidebarProps {
     avatarUrl?: string;
   };
   pendingClaimsCount?: number;
+  pendingVerificationsCount?: number;
 }
 
 const navItems = [
@@ -33,23 +40,36 @@ const navItems = [
     title: "Dashboard",
     href: appRoutes.admin.base,
     icon: LayoutDashboard,
+    badge: false,
+    badgeKey: "none" as const,
   },
   {
     title: "Claims",
     href: appRoutes.admin.claims.base,
     icon: Tag,
     badge: true,
+    badgeKey: "claims" as const,
+  },
+  {
+    title: "Verification",
+    href: appRoutes.admin.placeVerification.base,
+    icon: ShieldCheck,
+    badge: true,
+    badgeKey: "verifications" as const,
   },
   {
     title: "Courts",
     href: appRoutes.admin.courts.base,
     icon: Building2,
+    badge: false,
+    badgeKey: "none" as const,
   },
-];
+] as const;
 
 export function AdminSidebar({
   user,
   pendingClaimsCount = 0,
+  pendingVerificationsCount = 0,
 }: AdminSidebarProps) {
   const pathname = usePathname();
 
@@ -94,14 +114,26 @@ export function AdminSidebar({
                     <Link href={item.href} className="font-heading">
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
-                      {item.badge && pendingClaimsCount > 0 && (
-                        <Badge
-                          variant="secondary"
-                          className="ml-auto bg-warning/10 text-warning border border-warning/20"
-                        >
-                          {pendingClaimsCount}
-                        </Badge>
-                      )}
+                      {item.badge &&
+                        item.badgeKey === "claims" &&
+                        pendingClaimsCount > 0 && (
+                          <Badge
+                            variant="secondary"
+                            className="ml-auto bg-warning/10 text-warning border border-warning/20"
+                          >
+                            {pendingClaimsCount}
+                          </Badge>
+                        )}
+                      {item.badge &&
+                        item.badgeKey === "verifications" &&
+                        pendingVerificationsCount > 0 && (
+                          <Badge
+                            variant="secondary"
+                            className="ml-auto bg-warning/10 text-warning border border-warning/20"
+                          >
+                            {pendingVerificationsCount}
+                          </Badge>
+                        )}
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

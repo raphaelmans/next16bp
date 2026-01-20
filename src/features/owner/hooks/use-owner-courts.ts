@@ -67,6 +67,11 @@ export function useOwnerCourts(organizationId?: string | null) {
     {
       enabled: !!organizationId,
       staleTime: 1000 * 60 * 5,
+      select: (data) =>
+        data.map((place) => ({
+          ...place,
+          verification: null,
+        })),
     },
   );
 

@@ -6,6 +6,7 @@ import {
   CalendarDays,
   ChevronDown,
   LogOut,
+  ShieldCheck,
   User,
 } from "lucide-react";
 import Link from "next/link";
@@ -102,6 +103,12 @@ export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
                 <Link href={appRoutes.reservations.base}>
                   <CalendarDays className="mr-2 h-4 w-4" />
                   My Reservations
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={appRoutes.admin.placeVerification.base}>
+                  <ShieldCheck className="mr-2 h-4 w-4" />
+                  Verification Queue
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />

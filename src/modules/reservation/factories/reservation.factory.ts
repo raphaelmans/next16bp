@@ -5,6 +5,7 @@ import {
   makeOrganizationReservationPolicyRepository,
 } from "@/modules/organization-payment/factories/organization-payment.factory";
 import { makePlaceRepository } from "@/modules/place/factories/place.factory";
+import { makePlaceVerificationRepository } from "@/modules/place-verification/factories/place-verification.factory";
 import { makeProfileRepository } from "@/modules/profile/factories/profile.factory";
 import { makeTimeSlotRepository } from "@/modules/time-slot/factories/time-slot.factory";
 import { getContainer } from "@/shared/infra/container";
@@ -73,6 +74,7 @@ export function makeReservationService(): ReservationService {
       makeProfileRepository(),
       makeCourtRepository(),
       makePlaceRepository(),
+      makePlaceVerificationRepository(),
       makeOrganizationReservationPolicyRepository(),
       makeOrganizationPaymentMethodRepository(),
       makeCreateFreeReservationUseCase(),

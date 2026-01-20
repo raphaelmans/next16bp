@@ -67,6 +67,11 @@ export {
   useReorderPlacePhotos,
   useUploadPlacePhoto,
 } from "./use-place-photos";
+export {
+  usePlaceVerification,
+  useSubmitPlaceVerification,
+  useTogglePlaceReservations,
+} from "./use-place-verification";
 export { useReservationAlerts } from "./use-reservation-alerts";
 export {
   type BulkSlotData,

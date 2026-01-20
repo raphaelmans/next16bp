@@ -81,6 +81,10 @@ export const appRoutes = {
     onboarding: "/owner/onboarding",
     pricing: "/owner/pricing",
     verify: "/owner/verify",
+    verification: {
+      base: "/owner/verify",
+      place: (placeId: string) => `/owner/verify/${placeId}`,
+    },
     courts: {
       base: "/owner/courts",
       setupCreate: "/owner/courts/setup",
@@ -132,6 +136,10 @@ export const appRoutes = {
       new: "/admin/courts/new",
       batch: "/admin/courts/batch",
       detail: (courtId: string) => `/admin/courts/${courtId}`,
+    },
+    placeVerification: {
+      base: "/admin/verification",
+      detail: (requestId: string) => `/admin/verification/${requestId}`,
     },
   },
 } satisfies Record<string, RouteConfig | Record<string, unknown>>;
