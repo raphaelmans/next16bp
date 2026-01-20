@@ -6,7 +6,11 @@ import {
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
 import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
 import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
-import type { PlacePhotoRecord, PlaceRecord } from "@/shared/infra/db/schema";
+import type {
+  PlacePhotoRecord,
+  PlaceRecord,
+  PlaceVerificationRecord,
+} from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
@@ -41,7 +45,12 @@ function extractPublicStoragePath(url: string, bucket: string): string | null {
 export interface IPlaceManagementService {
   createPlace(userId: string, data: CreatePlaceDTO): Promise<PlaceRecord>;
   updatePlace(userId: string, data: UpdatePlaceDTO): Promise<PlaceRecord>;
-  listMyPlaces(userId: string, data: ListMyPlacesDTO): Promise<PlaceRecord[]>;
+  listMyPlaces(
+    userId: string,
+    data: ListMyPlacesDTO,
+  ): Promise<
+    (PlaceRecord & { verification: PlaceVerificationRecord | null })[]
+  >;
   getPlaceById(userId: string, placeId: string): Promise<PlaceWithDetails>;
   uploadPhoto(
     userId: string,
@@ -190,9 +199,13 @@ export class PlaceManagementService implements IPlaceManagementService {
   async listMyPlaces(
     userId: string,
     data: ListMyPlacesDTO,
-  ): Promise<PlaceRecord[]> {
+  ): Promise<
+    (PlaceRecord & { verification: PlaceVerificationRecord | null })[]
+  > {
     await this.assertOwner(userId, data.organizationId);
-    return this.placeRepository.findByOrganizationId(data.organizationId);
+    return this.placeRepository.findByOrganizationIdWithVerification(
+      data.organizationId,
+    );
   }
 
   async getPlaceById(

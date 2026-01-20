@@ -54,11 +54,6 @@ export function useOwnerSidebarQuickLinks(organizationId?: string | null) {
     { organizationId: organizationId ?? "" },
     {
       enabled: !!organizationId,
-      select: (data) =>
-        data.map((place) => ({
-          ...place,
-          verification: null,
-        })),
     },
   );
 

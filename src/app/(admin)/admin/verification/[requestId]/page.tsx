@@ -26,7 +26,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import { PlaceVerificationReviewActions } from "@/features/admin/components/place-verification-review-actions";
@@ -276,7 +275,7 @@ export default function AdminVerificationDetailPage() {
                 {request.reviewerUserId ? ` by ${request.reviewerUserId}` : ""}
               </>
             ) : (
-              <>Reviewed</>
+              "Reviewed"
             )}
           </AlertDescription>
         </Alert>

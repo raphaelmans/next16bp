@@ -14,8 +14,7 @@ import {
 import { authUsers } from "drizzle-orm/supabase";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
-import { claimRequestStatusEnum } from "./enums";
-import { placeVerificationStatusEnum } from "./enums";
+import { claimRequestStatusEnum, placeVerificationStatusEnum } from "./enums";
 import { organization } from "./organization";
 import { place } from "./place";
 

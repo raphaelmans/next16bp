@@ -4,12 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertCircle,
   Calendar,
-  CheckCircle2,
   Clock,
   ExternalLink,
   Loader2,
   MapPin,
-  ShieldCheck,
   XCircle,
 } from "lucide-react";
 import Link from "next/link";

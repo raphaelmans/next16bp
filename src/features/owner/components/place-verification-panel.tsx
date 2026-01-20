@@ -114,7 +114,7 @@ export function PlaceVerificationPanel({
   const {
     watch,
     reset,
-    formState: { isSubmitting, isValid },
+    formState: { isValid },
   } = form;
 
   const requestNotes = watch("requestNotes");

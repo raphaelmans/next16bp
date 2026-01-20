@@ -54,6 +54,14 @@ export interface IPlaceRepository {
     organizationId: string,
     ctx?: RequestContext,
   ): Promise<PlaceRecord[]>;
+  findByOrganizationIdWithVerification(
+    organizationId: string,
+    ctx?: RequestContext,
+  ): Promise<
+    (PlaceRecord & {
+      verification: typeof placeVerification.$inferSelect | null;
+    })[]
+  >;
   list(
     filters: {
       q?: string;
@@ -190,6 +198,30 @@ export class PlaceRepository implements IPlaceRepository {
       .select()
       .from(place)
       .where(eq(place.organizationId, organizationId));
+  }
+
+  async findByOrganizationIdWithVerification(
+    organizationId: string,
+    ctx?: RequestContext,
+  ): Promise<
+    (PlaceRecord & {
+      verification: typeof placeVerification.$inferSelect | null;
+    })[]
+  > {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select({
+        place,
+        verification: placeVerification,
+      })
+      .from(place)
+      .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+      .where(eq(place.organizationId, organizationId));
+
+    return result.map((row) => ({
+      ...row.place,
+      verification: row.verification ?? null,
+    }));
   }
 
   async list(
