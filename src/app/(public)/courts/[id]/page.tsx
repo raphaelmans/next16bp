@@ -43,11 +43,9 @@ export async function generateMetadata({
   const { id } = await params;
 
   const canonicalPath = appRoutes.courts.detail(id);
-  const openGraphImagePath = `${canonicalPath}/opengraph-image`;
 
   let title = "Court details";
   let description = "View court details on KudosCourts.";
-  let imageAlt = "KudosCourts court listing";
 
   try {
     const caller = await createServerCaller(canonicalPath);
@@ -59,7 +57,6 @@ export async function generateMetadata({
 
     title = place.name;
     description = buildDescription(place, placeDetails.courts.length, sports);
-    imageAlt = `${place.name} on KudosCourts`;
   } catch {}
 
   return {
@@ -74,20 +71,11 @@ export async function generateMetadata({
       url: canonicalPath,
       siteName: "KudosCourts",
       type: "website",
-      images: [
-        {
-          url: openGraphImagePath,
-          width: 1200,
-          height: 630,
-          alt: imageAlt,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [openGraphImagePath],
     },
   };
 }

@@ -1,4 +1,15 @@
-import { and, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
+import {
+  and,
+  asc,
+  count,
+  eq,
+  ilike,
+  inArray,
+  isNull,
+  ne,
+  or,
+  sql,
+} from "drizzle-orm";
 import {
   court,
   courtRateRule,
@@ -33,6 +44,8 @@ export interface PlaceListItem {
   courtCount: number;
   lowestPriceCents?: number;
   currency?: string;
+  verificationStatus?: typeof placeVerification.$inferSelect.status | null;
+  reservationsEnabled?: boolean | null;
 }
 
 export interface PaginatedPlaces {
@@ -231,6 +244,10 @@ export class PlaceRepository implements IPlaceRepository {
       city?: string;
       sportId?: string;
       amenities?: string[];
+      verificationTier?:
+        | "verified_reservable"
+        | "curated"
+        | "unverified_reservable";
       limit: number;
       offset: number;
     },
@@ -238,6 +255,7 @@ export class PlaceRepository implements IPlaceRepository {
   ): Promise<PaginatedPlaces> {
     const client = this.getClient(ctx);
     const conditions = [eq(place.isActive, true)];
+
     const searchValue = filters.q?.trim();
     const searchPattern = searchValue ? `%${searchValue}%` : undefined;
     const amenitiesFilter = Array.from(
@@ -247,6 +265,15 @@ export class PlaceRepository implements IPlaceRepository {
           .filter((amenity) => amenity.length > 0),
       ),
     );
+    const verificationTier = filters.verificationTier;
+    const verificationJoin = placeVerification;
+    const verificationRank = sql<number>`case
+      when ${place.placeType} = 'RESERVABLE'
+        and ${verificationJoin.status} = 'VERIFIED'
+        then 0
+      when ${place.placeType} = 'CURATED' then 1
+      else 2
+    end`;
 
     if (filters.province) {
       conditions.push(ilike(place.province, filters.province));
@@ -269,14 +296,35 @@ export class PlaceRepository implements IPlaceRepository {
       }
     }
 
+    if (verificationTier === "verified_reservable") {
+      conditions.push(eq(place.placeType, "RESERVABLE"));
+      conditions.push(eq(verificationJoin.status, "VERIFIED"));
+    }
+
+    if (verificationTier === "curated") {
+      conditions.push(eq(place.placeType, "CURATED"));
+    }
+
+    if (verificationTier === "unverified_reservable") {
+      conditions.push(eq(place.placeType, "RESERVABLE"));
+      const unverifiedCondition = or(
+        isNull(verificationJoin.status),
+        ne(verificationJoin.status, "VERIFIED"),
+      );
+      if (unverifiedCondition) {
+        conditions.push(unverifiedCondition);
+      }
+    }
+
     const baseCondition = and(...conditions);
 
     if (filters.sportId) {
       if (amenitiesFilter.length > 0) {
         const amenitiesCount = amenitiesFilter.length;
         const countResult = await client
-          .select({ placeId: place.id })
+          .select({ count: count() })
           .from(place)
+          .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
           .innerJoin(court, eq(court.placeId, place.id))
           .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
           .where(
@@ -294,6 +342,7 @@ export class PlaceRepository implements IPlaceRepository {
         const pageRows = await client
           .select({ placeId: place.id })
           .from(place)
+          .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
           .innerJoin(court, eq(court.placeId, place.id))
           .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
           .where(
@@ -305,6 +354,7 @@ export class PlaceRepository implements IPlaceRepository {
           )
           .groupBy(place.id)
           .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
+          .orderBy(verificationRank, asc(place.name), asc(place.id))
           .limit(filters.limit)
           .offset(filters.offset);
 
@@ -336,9 +386,27 @@ export class PlaceRepository implements IPlaceRepository {
           client,
         );
 
+        const verificationRows = await client
+          .select({
+            placeId: placeVerification.placeId,
+            status: placeVerification.status,
+            reservationsEnabled: placeVerification.reservationsEnabled,
+          })
+          .from(placeVerification)
+          .where(inArray(placeVerification.placeId, placeIds));
+
+        const verificationByPlaceId = new Map(
+          verificationRows.map((row) => [row.placeId, row]),
+        );
+        const totalMatches = countResult.reduce(
+          (sum, row) => sum + (row.count ?? 0),
+          0,
+        );
+
         return {
           items: orderedPlaces.map((placeRecord) => {
             const lowestPrice = lowestPrices.get(placeRecord.id);
+            const verification = verificationByPlaceId.get(placeRecord.id);
             return {
               place: placeRecord,
               coverImageUrl: coverImageUrls.get(placeRecord.id) ?? null,
@@ -346,23 +414,29 @@ export class PlaceRepository implements IPlaceRepository {
               courtCount: courtCounts.get(placeRecord.id) ?? 0,
               lowestPriceCents: lowestPrice?.priceCents,
               currency: lowestPrice?.currency,
+              verificationStatus: verification?.status ?? null,
+              reservationsEnabled: verification?.reservationsEnabled ?? null,
             };
           }),
-          total: countResult.length,
+          total: totalMatches,
         };
       }
 
       const countResult = await client
         .select({ count: count() })
         .from(place)
+        .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .innerJoin(court, eq(court.placeId, place.id))
-        .where(and(baseCondition, eq(court.sportId, filters.sportId)));
+        .where(and(baseCondition, eq(court.sportId, filters.sportId)))
+        .groupBy(place.id);
 
       const placeRows = await client
         .select({ place })
         .from(place)
+        .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .innerJoin(court, eq(court.placeId, place.id))
         .where(and(baseCondition, eq(court.sportId, filters.sportId)))
+        .orderBy(verificationRank, asc(place.name), asc(place.id))
         .limit(filters.limit)
         .offset(filters.offset);
 
@@ -388,9 +462,28 @@ export class PlaceRepository implements IPlaceRepository {
         client,
       );
 
+      const verificationRows = await client
+        .select({
+          placeId: placeVerification.placeId,
+          status: placeVerification.status,
+          reservationsEnabled: placeVerification.reservationsEnabled,
+        })
+        .from(placeVerification)
+        .where(inArray(placeVerification.placeId, placeIds));
+
+      const verificationByPlaceId = new Map(
+        verificationRows.map((row) => [row.placeId, row]),
+      );
+
+      const totalMatches = countResult.reduce(
+        (sum, row) => sum + (row.count ?? 0),
+        0,
+      );
+
       return {
         items: uniquePlaces.map((placeRecord) => {
           const lowestPrice = lowestPrices.get(placeRecord.id);
+          const verification = verificationByPlaceId.get(placeRecord.id);
           return {
             place: placeRecord,
             coverImageUrl: coverImageUrls.get(placeRecord.id) ?? null,
@@ -398,9 +491,11 @@ export class PlaceRepository implements IPlaceRepository {
             courtCount: courtCounts.get(placeRecord.id) ?? 0,
             lowestPriceCents: lowestPrice?.priceCents,
             currency: lowestPrice?.currency,
+            verificationStatus: verification?.status ?? null,
+            reservationsEnabled: verification?.reservationsEnabled ?? null,
           };
         }),
-        total: countResult[0]?.count ?? 0,
+        total: totalMatches,
       };
     }
 
@@ -410,8 +505,9 @@ export class PlaceRepository implements IPlaceRepository {
     if (amenitiesFilter.length > 0) {
       const amenitiesCount = amenitiesFilter.length;
       const countResult = await client
-        .select({ placeId: place.id })
+        .select({ count: count() })
         .from(place)
+        .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
         .where(and(baseCondition, inArray(placeAmenity.name, amenitiesFilter)))
         .groupBy(place.id)
@@ -420,10 +516,12 @@ export class PlaceRepository implements IPlaceRepository {
       const pageRows = await client
         .select({ placeId: place.id })
         .from(place)
+        .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
         .where(and(baseCondition, inArray(placeAmenity.name, amenitiesFilter)))
         .groupBy(place.id)
         .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
+        .orderBy(verificationRank, asc(place.name), asc(place.id))
         .limit(filters.limit)
         .offset(filters.offset);
 
@@ -437,21 +535,27 @@ export class PlaceRepository implements IPlaceRepository {
       placeRecords = placeIds
         .map((placeId) => placeById.get(placeId))
         .filter((record): record is PlaceRecord => Boolean(record));
-      total = countResult.length;
+      total = countResult.reduce((sum, row) => sum + (row.count ?? 0), 0);
     } else {
       const countResult = await client
         .select({ count: count() })
         .from(place)
-        .where(baseCondition);
-
-      placeRecords = await client
-        .select()
-        .from(place)
+        .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .where(baseCondition)
+        .groupBy(place.id);
+
+      const placeRows = await client
+        .select({ place })
+        .from(place)
+        .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .where(baseCondition)
+        .orderBy(verificationRank, asc(place.name), asc(place.id))
         .limit(filters.limit)
         .offset(filters.offset);
 
-      total = countResult[0]?.count ?? 0;
+      placeRecords = placeRows.map((row) => row.place);
+
+      total = countResult.reduce((sum, row) => sum + (row.count ?? 0), 0);
     }
 
     const placeIds = placeRecords.map((placeRecord) => placeRecord.id);
@@ -468,10 +572,23 @@ export class PlaceRepository implements IPlaceRepository {
       client,
     );
     const coverImageUrls = await this.getCoverImageByPlaceIds(placeIds, client);
+    const verificationRows = await client
+      .select({
+        placeId: placeVerification.placeId,
+        status: placeVerification.status,
+        reservationsEnabled: placeVerification.reservationsEnabled,
+      })
+      .from(placeVerification)
+      .where(inArray(placeVerification.placeId, placeIds));
+
+    const verificationByPlaceId = new Map(
+      verificationRows.map((row) => [row.placeId, row]),
+    );
 
     return {
       items: placeRecords.map((placeRecord) => {
         const lowestPrice = lowestPrices.get(placeRecord.id);
+        const verification = verificationByPlaceId.get(placeRecord.id);
         return {
           place: placeRecord,
           coverImageUrl: coverImageUrls.get(placeRecord.id) ?? null,
@@ -479,6 +596,8 @@ export class PlaceRepository implements IPlaceRepository {
           courtCount: courtCounts.get(placeRecord.id) ?? 0,
           lowestPriceCents: lowestPrice?.priceCents,
           currency: lowestPrice?.currency,
+          verificationStatus: verification?.status ?? null,
+          reservationsEnabled: verification?.reservationsEnabled ?? null,
         };
       }),
       total,

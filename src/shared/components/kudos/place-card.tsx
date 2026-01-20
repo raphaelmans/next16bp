@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin } from "lucide-react";
+import { MapPin, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +27,9 @@ export interface PlaceCardPlace {
   courtCount?: number;
   lowestPriceCents?: number;
   currency?: string;
+  placeType?: "CURATED" | "RESERVABLE";
+  verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
+  reservationsEnabled?: boolean;
 }
 
 export type PlaceCardLinkScope = "card" | "title" | "none";
@@ -78,6 +81,10 @@ export function PlaceCard({
       place.name
     );
 
+  const isVerifiedReservable =
+    place.placeType === "RESERVABLE" && place.verificationStatus === "VERIFIED";
+  const isCurated = place.placeType === "CURATED";
+
   const cardContent = (
     <Card
       className={cn(
@@ -114,15 +121,32 @@ export function PlaceCard({
         )}
       >
         <div className="flex items-start justify-between gap-2">
-          <h3
-            className={cn(
-              "font-heading font-semibold text-foreground line-clamp-1 group-hover:text-primary transition-colors",
-              variant === "featured" ? "text-lg" : "text-base",
-              variant === "compact" && "text-sm",
+          <div className="space-y-2">
+            <h3
+              className={cn(
+                "font-heading font-semibold text-foreground line-clamp-1 group-hover:text-primary transition-colors",
+                variant === "featured" ? "text-lg" : "text-base",
+                variant === "compact" && "text-sm",
+              )}
+            >
+              {title}
+            </h3>
+            {(isVerifiedReservable || isCurated) && variant !== "compact" && (
+              <div className="flex flex-wrap items-center gap-2">
+                {isVerifiedReservable && (
+                  <Badge variant="success" className="gap-1 text-[10px]">
+                    <ShieldCheck className="h-3 w-3" />
+                    Verified
+                  </Badge>
+                )}
+                {isCurated && (
+                  <Badge variant="secondary" className="text-[10px]">
+                    Curated
+                  </Badge>
+                )}
+              </div>
             )}
-          >
-            {title}
-          </h3>
+          </div>
           {variant !== "compact" &&
             place.courtCount !== undefined &&
             place.courtCount > 0 && (

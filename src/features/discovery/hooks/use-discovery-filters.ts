@@ -18,6 +18,7 @@ export function useDiscoveryFilters() {
       city: null,
       sportId: null,
       amenities: null,
+      verification: null,
       page: 1,
     });
   };
@@ -41,6 +42,16 @@ export function useDiscoveryFilters() {
     });
   };
 
+  const setVerification = (
+    verification:
+      | "verified_reservable"
+      | "curated"
+      | "unverified_reservable"
+      | undefined,
+  ) => {
+    setFilters({ verification: verification ?? null, page: 1 });
+  };
+
   const setView = (view: "list" | "map") => {
     setFilters({ view });
   };
@@ -59,6 +70,7 @@ export function useDiscoveryFilters() {
     setCity,
     setSportId,
     setAmenities,
+    setVerification,
     setView,
     setPage,
     setQuery,

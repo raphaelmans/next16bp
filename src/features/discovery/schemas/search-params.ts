@@ -18,6 +18,11 @@ export const searchParamsSchema = {
   city: parseAsString,
   sportId: parseAsString,
   amenities: parseAsArrayOf(parseAsString),
+  verification: parseAsStringLiteral([
+    "verified_reservable",
+    "curated",
+    "unverified_reservable",
+  ] as const),
 
   // Pagination
   page: parseAsInteger.withDefault(1),
@@ -33,6 +38,11 @@ export type SearchParams = {
   city: string | null;
   sportId: string | null;
   amenities: string[] | null;
+  verification:
+    | "verified_reservable"
+    | "curated"
+    | "unverified_reservable"
+    | null;
   page: number;
   limit: number;
 };

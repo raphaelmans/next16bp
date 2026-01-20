@@ -4,7 +4,11 @@
 
 Enable authenticated users to suggest a curated court listing via a public-facing route (`/courts/suggest`).
 
+This also serves as a supply-growth funnel for players: when a player cannot find a venue they already play at, they can suggest it so it can be added to the platform.
+
 Suggestions are not visible publicly until an admin approves them. Admins can review/approve/reject submissions and see the submitter email.
+
+Out of scope (handled in a later session): notifying the submitter when their suggestion is approved/rejected.
 
 ---
 

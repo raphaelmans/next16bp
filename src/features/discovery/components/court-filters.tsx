@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, ChevronsUpDown, Filter, X } from "lucide-react";
+import { Check, ChevronsUpDown, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +11,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
@@ -24,13 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import { useAmenitiesQuery } from "@/shared/lib/clients/amenities-client";
 import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
@@ -48,10 +41,18 @@ interface PlaceFiltersProps {
   province?: string;
   city?: string;
   sportId?: string;
+  verification?: "verified_reservable" | "curated" | "unverified_reservable";
   onAmenitiesChange: (amenities: string[] | undefined) => void;
   onProvinceChange: (province: string | undefined) => void;
   onCityChange: (city: string | undefined) => void;
   onSportChange: (sportId: string | undefined) => void;
+  onVerificationChange: (
+    verification:
+      | "verified_reservable"
+      | "curated"
+      | "unverified_reservable"
+      | undefined,
+  ) => void;
   onClearAll: () => void;
   className?: string;
 }
@@ -61,15 +62,21 @@ export function PlaceFilters({
   province,
   city,
   sportId,
+  verification,
   onAmenitiesChange,
   onProvinceChange,
   onCityChange,
   onSportChange,
+  onVerificationChange,
   onClearAll,
   className,
 }: PlaceFiltersProps) {
   const hasFilters =
-    (amenities && amenities.length > 0) || province || city || sportId;
+    (amenities && amenities.length > 0) ||
+    province ||
+    city ||
+    sportId ||
+    verification;
   const { data: sports = [], isLoading: sportsLoading } =
     trpc.sport.list.useQuery({});
   const amenitiesQuery = useAmenitiesQuery();
@@ -224,127 +231,212 @@ export function PlaceFilters({
     }
   }, [province]);
 
-  const FilterContent = () => (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <Label>Amenities</Label>
-        <Popover open={amenitiesOpen} onOpenChange={setAmenitiesOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={amenitiesOpen}
-              disabled={isAmenitiesDisabled}
-              className="w-full justify-between"
-            >
-              <span className="truncate">{amenitiesTriggerLabel}</span>
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-full p-0" align="start">
-            <Command>
-              <CommandInput placeholder="Search amenities..." />
-              <CommandList>
-                <CommandEmpty>No amenities found.</CommandEmpty>
-                <CommandGroup>
-                  {amenitiesOptions.map((amenity) => (
-                    <CommandItem
-                      key={amenity}
-                      value={amenity}
-                      onSelect={(value) => {
-                        handleAmenitiesChange(value);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          selectedAmenities.includes(amenity)
-                            ? "opacity-100"
-                            : "opacity-0",
-                        )}
-                      />
-                      {amenity}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-        {selectedAmenities.length > 0 && (
+  return (
+    <div
+      className={cn("hidden lg:flex flex-wrap items-center gap-3", className)}
+    >
+      <Popover open={amenitiesOpen} onOpenChange={setAmenitiesOpen}>
+        <PopoverTrigger asChild>
           <Button
-            variant="ghost"
-            size="sm"
-            className="w-full justify-start px-2"
-            onClick={() => onAmenitiesChange(undefined)}
+            variant="outline"
+            role="combobox"
+            aria-expanded={amenitiesOpen}
+            disabled={isAmenitiesDisabled}
+            className="w-56 justify-between"
           >
-            <X className="h-4 w-4 mr-2" />
-            Clear amenities
+            <span className="truncate">{amenitiesTriggerLabel}</span>
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
-        )}
-      </div>
+        </PopoverTrigger>
+        <PopoverContent className="w-56 p-0" align="start">
+          <Command>
+            <CommandInput placeholder="Search amenities..." />
+            <CommandList>
+              <CommandEmpty>No amenities found.</CommandEmpty>
+              <CommandGroup>
+                {amenitiesOptions.map((amenity) => (
+                  <CommandItem
+                    key={amenity}
+                    value={amenity}
+                    onSelect={(value) => {
+                      handleAmenitiesChange(value);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        selectedAmenities.includes(amenity)
+                          ? "opacity-100"
+                          : "opacity-0",
+                      )}
+                    />
+                    {amenity}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
 
-      <div className="space-y-2">
-        <Label>Province</Label>
-        <Select
-          value={province ?? "all"}
-          onValueChange={handleProvinceChange}
-          disabled={isProvinceDisabled}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={provincePlaceholder} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All provinces</SelectItem>
-            {provinceOptions.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
-                {item.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <Popover open={provinceOpen} onOpenChange={setProvinceOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={provinceOpen}
+            disabled={isProvinceDisabled}
+            className="w-48 justify-between"
+          >
+            {provinceTriggerLabel ?? provincePlaceholder}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-48 p-0" align="start">
+          <Command>
+            <CommandInput placeholder="Search provinces..." />
+            <CommandList>
+              <CommandEmpty>No province found.</CommandEmpty>
+              <CommandGroup>
+                <CommandItem
+                  value="all"
+                  onSelect={() => {
+                    handleProvinceChange("all");
+                    setProvinceOpen(false);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      province ? "opacity-0" : "opacity-100",
+                    )}
+                  />
+                  All provinces
+                </CommandItem>
+                {provinceOptions.map((item) => (
+                  <CommandItem
+                    key={item.value}
+                    value={item.value}
+                    onSelect={(value) => {
+                      handleProvinceChange(value);
+                      setProvinceOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        province === item.value ? "opacity-100" : "opacity-0",
+                      )}
+                    />
+                    {item.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
 
-      <div className="space-y-2">
-        <Label>City</Label>
-        <Select
-          value={province ? (city ?? "all") : ""}
-          onValueChange={handleCityChange}
-          disabled={isCityDisabled}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={cityPlaceholder} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All cities</SelectItem>
-            {cityOptions.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
-                {item.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <Popover open={cityOpen} onOpenChange={setCityOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={cityOpen}
+            disabled={isCityDisabled}
+            className="w-48 justify-between"
+          >
+            {cityTriggerLabel ?? cityPlaceholder}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-48 p-0" align="start">
+          <Command>
+            <CommandInput
+              placeholder={province ? "Search cities..." : "Select a province"}
+              disabled={!province}
+            />
+            <CommandList>
+              <CommandEmpty>No city found.</CommandEmpty>
+              <CommandGroup>
+                <CommandItem
+                  value="all"
+                  onSelect={() => {
+                    handleCityChange("all");
+                    setCityOpen(false);
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      city ? "opacity-0" : "opacity-100",
+                    )}
+                  />
+                  All cities
+                </CommandItem>
+                {cityOptions.map((item) => (
+                  <CommandItem
+                    key={item.value}
+                    value={item.value}
+                    onSelect={(value) => {
+                      handleCityChange(value);
+                      setCityOpen(false);
+                    }}
+                  >
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        city === item.value ? "opacity-100" : "opacity-0",
+                      )}
+                    />
+                    {item.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
 
-      <div className="space-y-2">
-        <Label>Sport</Label>
-        <Select
-          value={sportId}
-          onValueChange={(value) => onSportChange(value || undefined)}
-          disabled={sportsLoading}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="All sports" />
-          </SelectTrigger>
-          <SelectContent>
-            {sports.map((sport) => (
-              <SelectItem key={sport.id} value={sport.id}>
-                {sport.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <Select
+        value={sportId}
+        onValueChange={(value) => onSportChange(value || undefined)}
+        disabled={sportsLoading}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="All sports" />
+        </SelectTrigger>
+        <SelectContent>
+          {sports.map((sport) => (
+            <SelectItem key={sport.id} value={sport.id}>
+              {sport.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      <ToggleGroup
+        type="single"
+        value={verification}
+        onValueChange={(value) =>
+          onVerificationChange(
+            value
+              ? (value as
+                  | "verified_reservable"
+                  | "curated"
+                  | "unverified_reservable")
+              : undefined,
+          )
+        }
+        variant="outline"
+        size="sm"
+      >
+        <ToggleGroupItem value="verified_reservable">Verified</ToggleGroupItem>
+        <ToggleGroupItem value="curated">Curated</ToggleGroupItem>
+        <ToggleGroupItem value="unverified_reservable">
+          Unverified
+        </ToggleGroupItem>
+      </ToggleGroup>
 
       {hasFilters && (
         <Button variant="ghost" className="w-full" onClick={onClearAll}>
@@ -353,228 +445,5 @@ export function PlaceFilters({
         </Button>
       )}
     </div>
-  );
-
-  return (
-    <>
-      <div
-        className={cn("hidden lg:flex flex-wrap items-center gap-3", className)}
-      >
-        <Popover open={amenitiesOpen} onOpenChange={setAmenitiesOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={amenitiesOpen}
-              disabled={isAmenitiesDisabled}
-              className="w-56 justify-between"
-            >
-              <span className="truncate">{amenitiesTriggerLabel}</span>
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-56 p-0" align="start">
-            <Command>
-              <CommandInput placeholder="Search amenities..." />
-              <CommandList>
-                <CommandEmpty>No amenities found.</CommandEmpty>
-                <CommandGroup>
-                  {amenitiesOptions.map((amenity) => (
-                    <CommandItem
-                      key={amenity}
-                      value={amenity}
-                      onSelect={(value) => {
-                        handleAmenitiesChange(value);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          selectedAmenities.includes(amenity)
-                            ? "opacity-100"
-                            : "opacity-0",
-                        )}
-                      />
-                      {amenity}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-
-        <Popover open={provinceOpen} onOpenChange={setProvinceOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={provinceOpen}
-              disabled={isProvinceDisabled}
-              className="w-48 justify-between"
-            >
-              {provinceTriggerLabel ?? provincePlaceholder}
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-48 p-0" align="start">
-            <Command>
-              <CommandInput placeholder="Search provinces..." />
-              <CommandList>
-                <CommandEmpty>No province found.</CommandEmpty>
-                <CommandGroup>
-                  <CommandItem
-                    value="all"
-                    onSelect={() => {
-                      handleProvinceChange("all");
-                      setProvinceOpen(false);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        province ? "opacity-0" : "opacity-100",
-                      )}
-                    />
-                    All provinces
-                  </CommandItem>
-                  {provinceOptions.map((item) => (
-                    <CommandItem
-                      key={item.value}
-                      value={item.value}
-                      onSelect={(value) => {
-                        handleProvinceChange(value);
-                        setProvinceOpen(false);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          province === item.value ? "opacity-100" : "opacity-0",
-                        )}
-                      />
-                      {item.label}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-
-        <Popover open={cityOpen} onOpenChange={setCityOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={cityOpen}
-              disabled={isCityDisabled}
-              className="w-48 justify-between"
-            >
-              {cityTriggerLabel ?? cityPlaceholder}
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-48 p-0" align="start">
-            <Command>
-              <CommandInput
-                placeholder={
-                  province ? "Search cities..." : "Select a province"
-                }
-                disabled={!province}
-              />
-              <CommandList>
-                <CommandEmpty>No city found.</CommandEmpty>
-                <CommandGroup>
-                  <CommandItem
-                    value="all"
-                    onSelect={() => {
-                      handleCityChange("all");
-                      setCityOpen(false);
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        city ? "opacity-0" : "opacity-100",
-                      )}
-                    />
-                    All cities
-                  </CommandItem>
-                  {cityOptions.map((item) => (
-                    <CommandItem
-                      key={item.value}
-                      value={item.value}
-                      onSelect={(value) => {
-                        handleCityChange(value);
-                        setCityOpen(false);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          city === item.value ? "opacity-100" : "opacity-0",
-                        )}
-                      />
-                      {item.label}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-
-        <Select
-          value={sportId}
-          onValueChange={(value) => onSportChange(value || undefined)}
-          disabled={sportsLoading}
-        >
-          <SelectTrigger className="w-44">
-            <SelectValue placeholder="Sport" />
-          </SelectTrigger>
-          <SelectContent>
-            {sports.map((sport) => (
-              <SelectItem key={sport.id} value={sport.id}>
-                {sport.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {hasFilters && (
-          <Button variant="ghost" size="sm" onClick={onClearAll}>
-            <X className="h-4 w-4 mr-1" />
-            Clear
-          </Button>
-        )}
-      </div>
-
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="outline" size="sm" className="lg:hidden">
-            <Filter className="h-4 w-4 mr-2" />
-            Filters
-            {hasFilters && (
-              <span className="ml-2 rounded-full bg-primary text-primary-foreground text-xs px-1.5">
-                {
-                  [province, city, sportId, ...(amenities ?? [])].filter(
-                    Boolean,
-                  ).length
-                }
-              </span>
-            )}
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-[320px] sm:w-[360px]">
-          <SheetHeader>
-            <SheetTitle>Filters</SheetTitle>
-          </SheetHeader>
-          <div className="mt-6">
-            <FilterContent />
-          </div>
-        </SheetContent>
-      </Sheet>
-    </>
   );
 }

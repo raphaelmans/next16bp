@@ -14,6 +14,10 @@ interface UseDiscoveryOptions {
   city?: string;
   sportId?: string;
   amenities?: string[];
+  verificationTier?:
+    | "verified_reservable"
+    | "curated"
+    | "unverified_reservable";
   page?: number;
   limit?: number;
 }
@@ -31,12 +35,20 @@ interface PlaceListItem {
     city: string;
     latitude: string | null;
     longitude: string | null;
+    placeType?: "CURATED" | "RESERVABLE";
   };
   coverImageUrl?: string | null;
   sports: { id: string; name: string; slug: string }[];
   courtCount?: number;
   lowestPriceCents?: number;
   currency?: string | null;
+  verificationStatus?:
+    | "UNVERIFIED"
+    | "PENDING"
+    | "VERIFIED"
+    | "REJECTED"
+    | null;
+  reservationsEnabled?: boolean | null;
 }
 
 interface DiscoveryResult {
@@ -65,6 +77,9 @@ const mapPlaceSummary = (item: PlaceListItem): PlaceSummary => {
     courtCount: item.courtCount,
     lowestPriceCents: item.lowestPriceCents,
     currency: item.currency ?? undefined,
+    placeType: item.place.placeType,
+    verificationStatus: item.verificationStatus ?? undefined,
+    reservationsEnabled: item.reservationsEnabled ?? undefined,
     latitude: Number.isFinite(latitude) ? latitude : undefined,
     longitude: Number.isFinite(longitude) ? longitude : undefined,
   };
@@ -77,6 +92,7 @@ export function useDiscoveryPlaces(options: UseDiscoveryOptions = {}) {
     city,
     sportId,
     amenities,
+    verificationTier,
     page = 1,
     limit = 12,
   } = options;
@@ -107,6 +123,7 @@ export function useDiscoveryPlaces(options: UseDiscoveryOptions = {}) {
     city: resolvedLocation?.city ?? undefined,
     sportId,
     amenities,
+    verificationTier,
     limit,
     offset,
   });

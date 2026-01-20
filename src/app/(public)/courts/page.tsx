@@ -40,6 +40,7 @@ function PlacesPageContent() {
     city: filters.city ?? undefined,
     sportId: filters.sportId ?? undefined,
     amenities: filters.amenities ?? undefined,
+    verificationTier: filters.verification ?? undefined,
     page: filters.page,
     limit: filters.limit,
   });
@@ -88,10 +89,12 @@ function PlacesPageContent() {
           province={filters.province ?? undefined}
           city={filters.city ?? undefined}
           sportId={filters.sportId ?? undefined}
+          verification={filters.verification ?? undefined}
           onAmenitiesChange={filters.setAmenities}
           onProvinceChange={filters.setProvince}
           onCityChange={filters.setCity}
           onSportChange={filters.setSportId}
+          onVerificationChange={filters.setVerification}
           onClearAll={filters.clearAll}
         />
 
