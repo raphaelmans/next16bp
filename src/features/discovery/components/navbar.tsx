@@ -159,12 +159,17 @@ export function Navbar({ className }: NavbarProps) {
 
       {/* Mobile Menu */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild className="md:hidden">
-          <Button variant="ghost" size="icon" aria-label="Open menu">
+        <SheetTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Open menu"
+            className="md:hidden"
+          >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="w-80">
+        <SheetContent side="right" className="w-[320px] sm:w-[360px]">
           <div className="flex flex-col gap-4 mt-8">
             {/* Mobile Search */}
             <form

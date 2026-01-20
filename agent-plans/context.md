@@ -9,16 +9,17 @@ References and context for planning artifacts.
 | Date | Change |
 |------|--------|
 | 2026-01-18 | Added 43-google-oauth-auth plan (server tRPC OAuth + login/register buttons) |
-| 2026-01-17 | Noted deferred rename from place → venue (pending explicit request) |
+| 2026-01-17 | Noted deferred rename from place -> venue (pending explicit request) |
 | 2026-01-18 | Added 39-public-navbar-consistency plan (public logo + search routing) |
 | 2026-01-18 | Added 40-public-schedule-view plan (public detail CTA + schedule route) |
 | 2026-01-18 | Added 41-owner-onboarding-revalidation plan (prevent duplicate orgs; client guard + backend conflict) |
 | 2026-01-18 | Added 42-amenities-discovery-filters plan (aggregated amenities filter on /courts) |
 | 2026-01-19 | Added 45-booking-conversion-ux plan (conversion funnel: resume-after-login, sticky CTA, discovery polish) |
+| 2026-01-20 | Added 46-place-verification plan (per-place verification request + bookability gating) |
 | 2026-01-18 | Added 37-admin-courts-filters plan (province -> city admin filters) |
 | 2026-01-17 | Added 35-courts-discovery-filters plan (province/city discovery filters + search) |
 | 2026-01-16 | Added 34-place-location-standardization plan (PH province/city enforcement) |
-| 2026-01-15 | Added 33-place-claiming implementation plan (curated → claim → reservable) |
+| 2026-01-15 | Added 33-place-claiming implementation plan (curated -> claim -> reservable) |
 | 2026-01-15 | Added 17-place-claiming user stories (claim curated places) |
 | 2026-01-14 | Added 31-owner-reservations-inbox plan (owner triage UX) |
 | 2026-01-14 | Added 16-reservation-list-enrichment user stories and 30-reservation-list-enrichment plan |
@@ -75,10 +76,11 @@ References and context for planning artifacts.
 | 10-asset-uploads | `agent-plans/user-stories/10-asset-uploads/` | Supabase Storage file uploads |
 | 11-ui-revamp | `agent-plans/user-stories/11-ui-revamp/` | Navigation and layout consistency |
 | 12-reservation-policies | `agent-plans/user-stories/12-reservation-policies/` | Court-specific reservation policies |
-| 14-place-court-migration | `agent-plans/user-stories/14-place-court-migration/` | Place→Court-unit migration and multi-sport venue support |
+| 14-place-court-migration | `agent-plans/user-stories/14-place-court-migration/` | Place->Court-unit migration and multi-sport venue support |
 | 15-organization-payment-methods | `agent-plans/user-stories/15-organization-payment-methods/` | Org-scoped payment methods + reservation policy defaults |
 | 16-reservation-list-enrichment | `agent-plans/user-stories/16-reservation-list-enrichment/` | Player reservation lists with real court + slot data |
 | 17-place-claiming | `agent-plans/user-stories/17-place-claiming/` | Claim curated places and transfer courts to organizations |
+| 19-place-verification | `agent-plans/user-stories/19-place-verification/` | Per-place owner verification before enabling reservations |
 
 ---
 
@@ -103,6 +105,7 @@ References and context for planning artifacts.
 | 34-place-location-standardization | `agent-plans/34-place-location-standardization/` | Ready |
 | 35-courts-discovery-filters | `agent-plans/35-courts-discovery-filters/` | Ready |
 | 37-admin-courts-filters | `agent-plans/37-admin-courts-filters/` | Ready |
+| 46-place-verification | `agent-plans/46-place-verification/` | Draft |
 
 ---
 

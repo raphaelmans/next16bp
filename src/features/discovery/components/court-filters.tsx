@@ -551,8 +551,8 @@ export function PlaceFilters({
       </div>
 
       <Sheet>
-        <SheetTrigger asChild className="lg:hidden">
-          <Button variant="outline" size="sm">
+        <SheetTrigger asChild>
+          <Button variant="outline" size="sm" className="lg:hidden">
             <Filter className="h-4 w-4 mr-2" />
             Filters
             {hasFilters && (
@@ -566,7 +566,7 @@ export function PlaceFilters({
             )}
           </Button>
         </SheetTrigger>
-        <SheetContent side="left">
+        <SheetContent side="left" className="w-[320px] sm:w-[360px]">
           <SheetHeader>
             <SheetTitle>Filters</SheetTitle>
           </SheetHeader>
