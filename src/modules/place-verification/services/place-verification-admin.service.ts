@@ -50,7 +50,10 @@ export class PlaceVerificationAdminService {
     pagination: ListPlaceVerificationRequestsDTO,
     ctx?: RequestContext,
   ): Promise<{
-    items: PlaceVerificationRequestRecord[];
+    items: {
+      request: PlaceVerificationRequestRecord;
+      placeName: string;
+    }[];
     total: number;
   }> {
     return this.placeVerificationRequestRepository.findPending(pagination, ctx);
@@ -156,6 +159,12 @@ export class PlaceVerificationAdminService {
           reservationsEnabled: false,
           reservationsEnabledAt: null,
         },
+        ctx,
+      );
+
+      await this.placeRepository.update(
+        request.placeId,
+        { placeType: "RESERVABLE" },
         ctx,
       );
 

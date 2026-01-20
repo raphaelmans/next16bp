@@ -1,26 +1,23 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
-  PlaceForm,
-  PlacePhotoUpload,
+  PlaceVerificationPanel,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
-import { useOwnerOrganization, usePlaceForm } from "@/features/owner/hooks";
-import type { PlaceFormData } from "@/features/owner/schemas/place-form.schema";
+import { useOwnerOrganization } from "@/features/owner/hooks";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { trpc } from "@/trpc/client";
 
-export default function EditPlacePage() {
+export default function OwnerVerificationPlacePage() {
   const params = useParams();
   const placeId = params.placeId as string;
   const router = useRouter();
@@ -36,22 +33,11 @@ export default function EditPlacePage() {
   const { data: placeData, isLoading: placeLoading } =
     trpc.placeManagement.getById.useQuery({ placeId }, { enabled: !!placeId });
 
-  const { submitAsync, isSubmitting } = usePlaceForm({
-    placeId,
-    onSuccess: () => {
-      toast.success("Place updated successfully!");
-    },
-  });
-
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.owner.places.edit(placeId),
+      appRoutes.owner.verification.place(placeId),
     );
-  };
-
-  const handleCancel = () => {
-    router.push(appRoutes.owner.places.base);
   };
 
   if (orgLoading || placeLoading) {
@@ -68,22 +54,6 @@ export default function EditPlacePage() {
   }
 
   const place = placeData.place;
-  const defaultValues: Partial<PlaceFormData> = {
-    name: place.name,
-    address: place.address,
-    city: place.city,
-    province: place.province ?? "",
-    country: place.country ?? "PH",
-    latitude: place.latitude ? Number.parseFloat(place.latitude) : undefined,
-    longitude: place.longitude ? Number.parseFloat(place.longitude) : undefined,
-    timeZone: place.timeZone,
-    isActive: place.isActive,
-    websiteUrl: placeData.contactDetail?.websiteUrl ?? "",
-    facebookUrl: placeData.contactDetail?.facebookUrl ?? "",
-    instagramUrl: placeData.contactDetail?.instagramUrl ?? "",
-    viberInfo: placeData.contactDetail?.viberInfo ?? "",
-    otherContactInfo: placeData.contactDetail?.otherContactInfo ?? "",
-  };
 
   return (
     <AppShell
@@ -115,48 +85,46 @@ export default function EditPlacePage() {
     >
       <div className="space-y-6">
         <PageHeader
-          title={`Edit Place: ${place.name}`}
-          description="Update place details and verification status"
+          title={`Verify ${place.name}`}
+          description="Submit documents and enable reservations when approved."
           breadcrumbs={[
             { label: "My Places", href: appRoutes.owner.places.base },
-            { label: place.name },
-            { label: "Edit" },
+            { label: place.name, href: appRoutes.owner.places.edit(place.id) },
+            { label: "Verification" },
           ]}
-          backHref={appRoutes.owner.places.base}
-        />
-
-        <PlaceForm
-          defaultValues={defaultValues}
-          onSubmit={submitAsync}
-          onCancel={handleCancel}
-          isSubmitting={isSubmitting}
-          isEditing
+          backHref={appRoutes.owner.places.edit(place.id)}
+          backLabel="Back to edit"
+          actions={
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link href={appRoutes.owner.places.edit(place.id)}>
+                  Edit place
+                </Link>
+              </Button>
+              <Button variant="ghost" size="sm" asChild>
+                <Link href={appRoutes.places.detail(place.id)}>
+                  View public page
+                </Link>
+              </Button>
+            </div>
+          }
         />
 
         <Card className="border-dashed">
-          <CardHeader>
-            <CardTitle>Place verification</CardTitle>
+          <CardHeader className="flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-primary" />
+            <CardTitle>Verification overview</CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col gap-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-            <p>
-              Verify {place.name} to unlock reservations and build trust with
-              players.
-            </p>
-            <Button asChild>
-              <Link href={appRoutes.owner.verification.place(placeId)}>
-                Go to verification
-              </Link>
-            </Button>
+          <CardContent className="text-sm text-muted-foreground">
+            Verify {place.name} to unlock reservations and show players this
+            venue is trusted.
           </CardContent>
         </Card>
 
-        <PlacePhotoUpload
+        <PlaceVerificationPanel
           placeId={placeId}
-          photos={(placeData.photos ?? []).map((photo) => ({
-            id: photo.id,
-            url: photo.url,
-            displayOrder: photo.displayOrder,
-          }))}
+          placeName={place.name}
+          reservationCapable={place.placeType === "RESERVABLE"}
         />
       </div>
     </AppShell>

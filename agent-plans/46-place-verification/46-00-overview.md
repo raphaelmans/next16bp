@@ -30,6 +30,7 @@ This mirrors the existing `claim_request` pattern (request table + event/audit t
 | 3 | Owner UX (request + enable toggle) | 3A, 3B | Yes |
 | 4 | Admin UX (queue + review) | 4A | Yes |
 | 5 | Public UX (status + disabled booking) | 5A | Yes |
+| 6 | Owner routing (verification pages) | 6A | Yes |
 
 ---
 
@@ -70,6 +71,12 @@ This mirrors the existing `claim_request` pattern (request table + event/audit t
 |----|--------|-----------|
 | 5A | Public place detail: show status + disable booking | `46-05-public-ui.md` |
 
+### Phase 6: Owner routing
+
+| ID | Module | Plan File |
+|----|--------|-----------|
+| 6A | Owner verification landing + detail page | `46-06-owner-verification-routing.md` |
+
 ---
 
 ## Dependencies Graph
@@ -107,6 +114,7 @@ Phase 1 -----+----- Phase 2
 | `46-03-owner-ui.md` | Owner flows |
 | `46-04-admin-ui.md` | Admin flows |
 | `46-05-public-ui.md` | Public gating UX |
+| `46-06-owner-verification-routing.md` | Owner verification routing |
 
 ---
 

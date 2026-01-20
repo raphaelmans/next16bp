@@ -79,6 +79,7 @@ const ACCEPTED_TYPES = [
   "image/png",
   "image/webp",
   "application/pdf",
+  "application/x-pdf",
 ];
 
 interface PlaceVerificationPanelProps {

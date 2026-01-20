@@ -8,6 +8,7 @@ import {
   type PlaceVerificationRequestDocumentRecord,
   type PlaceVerificationRequestEventRecord,
   type PlaceVerificationRequestRecord,
+  place,
   placeVerification,
   placeVerificationRequest,
   placeVerificationRequestDocument,
@@ -52,7 +53,13 @@ export interface IPlaceVerificationRequestRepository {
   findPending(
     pagination: { limit: number; offset: number },
     ctx?: RequestContext,
-  ): Promise<{ items: PlaceVerificationRequestRecord[]; total: number }>;
+  ): Promise<{
+    items: {
+      request: PlaceVerificationRequestRecord;
+      placeName: string;
+    }[];
+    total: number;
+  }>;
   create(
     data: InsertPlaceVerificationRequest,
     ctx?: RequestContext,
@@ -220,12 +227,22 @@ export class PlaceVerificationRequestRepository
   async findPending(
     pagination: { limit: number; offset: number },
     ctx?: RequestContext,
-  ): Promise<{ items: PlaceVerificationRequestRecord[]; total: number }> {
+  ): Promise<{
+    items: {
+      request: PlaceVerificationRequestRecord;
+      placeName: string;
+    }[];
+    total: number;
+  }> {
     const client = this.getClient(ctx);
 
     const items = await client
-      .select()
+      .select({
+        request: placeVerificationRequest,
+        placeName: place.name,
+      })
       .from(placeVerificationRequest)
+      .innerJoin(place, eq(place.id, placeVerificationRequest.placeId))
       .where(eq(placeVerificationRequest.status, "PENDING"))
       .limit(pagination.limit)
       .offset(pagination.offset);
@@ -236,7 +253,10 @@ export class PlaceVerificationRequestRepository
       .where(eq(placeVerificationRequest.status, "PENDING"));
 
     return {
-      items,
+      items: items.map((item) => ({
+        request: item.request,
+        placeName: item.placeName,
+      })),
       total: countResult.length,
     };
   }

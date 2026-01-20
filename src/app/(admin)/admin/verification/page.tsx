@@ -149,7 +149,10 @@ export default function AdminVerificationPage() {
                         <div className="flex items-start justify-between gap-3">
                           <div className="space-y-1">
                             <p className="text-sm font-medium">
-                              Place {item.placeId.slice(0, 8)}
+                              {item.placeName}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              Verification request
                             </p>
                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
                               <MapPin className="h-3 w-3" />

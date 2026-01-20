@@ -6,6 +6,7 @@ import { trpc } from "@/trpc/client";
 export interface PlaceVerificationRequestListItem {
   id: string;
   placeId: string;
+  placeName: string;
   organizationId: string | null;
   status: "pending" | "approved" | "rejected";
   requestedByUserId: string | null;
@@ -31,18 +32,19 @@ export function usePlaceVerificationQueue(options: {
   const data = query.data
     ? {
         items: query.data.items.map((item) => ({
-          id: item.id,
-          placeId: item.placeId,
-          organizationId: item.organizationId,
-          status: item.status.toLowerCase() as
+          id: item.request.id,
+          placeId: item.request.placeId,
+          placeName: item.placeName,
+          organizationId: item.request.organizationId,
+          status: item.request.status.toLowerCase() as
             | "pending"
             | "approved"
             | "rejected",
-          requestedByUserId: item.requestedByUserId,
-          requestNotes: item.requestNotes,
-          createdAt: item.createdAt,
-          reviewedAt: item.reviewedAt,
-          reviewerUserId: item.reviewerUserId,
+          requestedByUserId: item.request.requestedByUserId,
+          requestNotes: item.request.requestNotes,
+          createdAt: item.request.createdAt,
+          reviewedAt: item.request.reviewedAt,
+          reviewerUserId: item.request.reviewerUserId,
         })),
         total: query.data.total,
         totalPages: Math.ceil(query.data.total / limit),

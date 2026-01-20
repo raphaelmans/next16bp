@@ -30,6 +30,7 @@ export const ALLOWED_IMAGE_TYPES = [
 export const ALLOWED_VERIFICATION_DOCUMENT_TYPES = [
   ...ALLOWED_IMAGE_TYPES,
   "application/pdf",
+  "application/x-pdf",
 ] as const;
 
 /**
