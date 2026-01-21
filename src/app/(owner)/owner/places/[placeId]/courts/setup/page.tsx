@@ -176,13 +176,13 @@ export default function CourtSetupWizardPage() {
   const defaultValues = React.useMemo<Partial<CourtFormData>>(() => {
     if (!courtData) return {};
     return {
-      placeId: courtData.court.placeId,
+      placeId: courtData.court.placeId ?? placeId,
       sportId: courtData.sport.id,
       label: courtData.court.label,
       tierLabel: courtData.court.tierLabel ?? "",
       isActive: courtData.court.isActive,
     };
-  }, [courtData]);
+  }, [courtData, placeId]);
 
   React.useEffect(() => {
     if (!courtData) return;

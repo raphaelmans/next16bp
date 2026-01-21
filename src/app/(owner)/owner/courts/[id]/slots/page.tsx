@@ -244,7 +244,7 @@ export default function ManageSlotsPage() {
     ? { id: currentOrg.id, name: currentOrg.name }
     : undefined;
   const courtName = courtData?.court.label ?? "Loading...";
-  const publicPlaceHref = courtData
+  const publicPlaceHref = courtData?.court.placeId
     ? appRoutes.places.detail(courtData.court.placeId)
     : appRoutes.places.base;
 

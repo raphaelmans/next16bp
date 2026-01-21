@@ -68,7 +68,7 @@ export default function EditPlaceCourtPage() {
   }
 
   const defaultValues: Partial<CourtFormData> = {
-    placeId: courtData.court.placeId,
+    placeId: courtData.court.placeId ?? placeId,
     sportId: courtData.sport.id,
     label: courtData.court.label,
     tierLabel: courtData.court.tierLabel,

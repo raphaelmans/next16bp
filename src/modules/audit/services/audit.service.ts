@@ -99,7 +99,7 @@ export class AuditService implements IAuditService {
         .where(eq(court.id, slotResult[0].courtId))
         .limit(1);
 
-      if (courtResult[0]) {
+      if (courtResult[0]?.placeId) {
         const placeResult = await client
           .select()
           .from(place)

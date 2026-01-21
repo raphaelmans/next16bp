@@ -27,7 +27,7 @@ type CourtWithSportPayload = {
   court: {
     id: string;
     label: string;
-    placeId: string;
+    placeId: string | null;
     sportId: string;
     tierLabel: string | null;
     isActive: boolean;
