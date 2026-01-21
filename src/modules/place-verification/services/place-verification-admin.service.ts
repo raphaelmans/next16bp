@@ -175,7 +175,7 @@ export class PlaceVerificationAdminService {
           placeId: request.placeId,
           adminUserId,
         },
-        "Place verification approved",
+        "Venue verification approved",
       );
     });
   }
@@ -240,7 +240,7 @@ export class PlaceVerificationAdminService {
           placeId: request.placeId,
           adminUserId,
         },
-        "Place verification rejected",
+        "Venue verification rejected",
       );
     });
   }

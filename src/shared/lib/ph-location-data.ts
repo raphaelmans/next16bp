@@ -101,7 +101,16 @@ export const findCityBySlugAcrossProvinces = (
 export const findCityByNameAcrossProvinces = (
   provinces: PHProvince[],
   cityName?: string | null,
-) => findCityByKeyAcrossProvinces(provinces, "name", cityName);
+) => {
+  if (!cityName) return null;
+
+  for (const province of provinces) {
+    const city = findCityByName(province, cityName);
+    if (city) return { province, city };
+  }
+
+  return null;
+};
 
 const findCityByKeyAcrossProvinces = (
   provinces: PHProvince[],
@@ -116,4 +125,39 @@ const findCityByKeyAcrossProvinces = (
   }
 
   return null;
+};
+
+export const resolveProvinceCityValues = (
+  provinces: PHProvince[] | null | undefined,
+  provinceName?: string | null,
+  cityName?: string | null,
+) => {
+  const resolved = {
+    province: provinceName ?? "",
+    city: cityName ?? "",
+  };
+
+  if (!provinces) return resolved;
+
+  const matchedProvince = findProvinceByName(provinces, provinceName);
+  if (matchedProvince) {
+    resolved.province = matchedProvince.name;
+    const matchedCity = findCityByName(matchedProvince, cityName);
+    if (matchedCity) {
+      resolved.city = matchedCity.name;
+      return resolved;
+    }
+  }
+
+  if (cityName) {
+    const acrossMatch = findCityByNameAcrossProvinces(provinces, cityName);
+    if (acrossMatch) {
+      if (!matchedProvince) {
+        resolved.province = acrossMatch.province.name;
+      }
+      resolved.city = acrossMatch.city.name;
+    }
+  }
+
+  return resolved;
 };

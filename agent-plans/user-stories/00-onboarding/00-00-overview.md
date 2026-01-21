@@ -32,13 +32,14 @@ Navigation is consistent across three distinct areas: public discovery, authenti
 | US-00-05 | Owner Navigates Dashboard | Active | - |
 | US-00-06 | Admin Navigates Dashboard | Active | - |
 | US-00-07 | Home Page for Authenticated Users | Active | - |
+| US-00-09 | Owner Uses "List Your Venue" Landing | Active | - |
 | 00-08 | Bug Fix: Legacy Dashboard Redirect | ✅ Fixed | - |
 
 ---
 
 ## Summary
 
-- Total: 7 user stories + 1 bug fix
-- Active: 7
+- Total: 8 user stories + 1 bug fix
+- Active: 8
 - Superseded: 0
 - Fixed: 1

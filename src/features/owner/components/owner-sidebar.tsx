@@ -65,7 +65,7 @@ const navItems = [
     icon: LayoutDashboard,
   },
   {
-    title: "Places",
+    title: "Venues",
     href: appRoutes.owner.places.base,
     icon: MapPin,
   },
@@ -221,7 +221,7 @@ export function OwnerSidebar({
                     aria-disabled
                     className="cursor-default text-muted-foreground"
                   >
-                    <span>No places yet</span>
+                    <span>No venues yet</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ) : (

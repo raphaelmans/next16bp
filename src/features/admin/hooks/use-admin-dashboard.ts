@@ -139,7 +139,7 @@ export function usePendingClaims(limit = 5) {
       submittedAt: item.createdAt,
       type: item.requestType === "REMOVAL" ? "removal" : "claim",
       // These would need to be fetched separately or backend enhanced
-      courtName: `Place ${item.placeId.slice(0, 8)}...`,
+      courtName: `Venue ${item.placeId.slice(0, 8)}...`,
       organizationName: item.organizationId
         ? `Org ${item.organizationId.slice(0, 8)}...`
         : "Unassigned organization",

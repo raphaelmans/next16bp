@@ -92,8 +92,8 @@ import {
   buildCityOptions,
   buildProvinceOptions,
   findCityByName,
-  findCityByNameAcrossProvinces,
   findProvinceByName,
+  resolveProvinceCityValues,
 } from "@/shared/lib/ph-location-data";
 
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
@@ -190,29 +190,12 @@ export default function AdminCourtEditPage() {
       tierLabel: court.court.tierLabel ?? "",
     }));
 
-    let resolvedProvince = courtData.place.province;
-    let resolvedCity = courtData.place.city;
-
-    const matchedProvince = findProvinceByName(
-      provincesCities,
-      courtData.place.province,
-    );
-    if (matchedProvince) {
-      resolvedProvince = matchedProvince.name;
-      const matchedCity = findCityByName(matchedProvince, courtData.place.city);
-      if (matchedCity) {
-        resolvedCity = matchedCity.name;
-      }
-    }
-    if (!resolvedCity && courtData.place.city) {
-      const acrossMatch = findCityByNameAcrossProvinces(
+    const { province: resolvedProvince, city: resolvedCity } =
+      resolveProvinceCityValues(
         provincesCities,
+        courtData.place.province,
         courtData.place.city,
       );
-      if (acrossMatch) {
-        resolvedCity = acrossMatch.city.name;
-      }
-    }
 
     return {
       name: courtData.place.name,
@@ -450,7 +433,7 @@ export default function AdminCourtEditPage() {
         autoVerifyAndEnable,
       });
       toast.success("Ownership transferred", {
-        description: `${courtData?.place.name ?? "Place"} now belongs to ${selectedOrganization.name}.`,
+        description: `${courtData?.place.name ?? "Venue"} now belongs to ${selectedOrganization.name}.`,
       });
       setIsTransferOpen(false);
     } catch (error) {
@@ -570,7 +553,7 @@ export default function AdminCourtEditPage() {
           <CardHeader>
             <CardTitle>Ownership & Transfer</CardTitle>
             <CardDescription>
-              Assign this place to an organization and enable reservations.
+              Assign this venue to an organization and enable reservations.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -622,7 +605,7 @@ export default function AdminCourtEditPage() {
                   <DialogHeader>
                     <DialogTitle>Transfer to organization</DialogTitle>
                     <DialogDescription>
-                      Move this place and its courts to another organization.
+                      Move this venue and its courts to another organization.
                       Reservations stay intact.
                     </DialogDescription>
                   </DialogHeader>
@@ -721,7 +704,7 @@ export default function AdminCourtEditPage() {
                           Auto-verify and enable reservations
                         </Label>
                         <p className="text-xs text-muted-foreground">
-                          Marks the place as VERIFIED and enables booking
+                          Marks the venue as VERIFIED and enables booking
                           immediately.
                         </p>
                       </div>
@@ -761,7 +744,7 @@ export default function AdminCourtEditPage() {
             </div>
             <p className="text-xs text-muted-foreground">
               Transfers keep existing reservations and move all courts under
-              this place.
+              this venue.
             </p>
           </CardContent>
         </Card>
@@ -838,7 +821,7 @@ export default function AdminCourtEditPage() {
               <StandardFormInput<AdminCourtEditFormData>
                 name="name"
                 label="Court Name"
-                placeholder="Makati Pickleball Club"
+                placeholder="Makati Sports Club (Pickleball)"
                 required
               />
 

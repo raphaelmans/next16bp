@@ -36,7 +36,7 @@ export default function NewPlacePage() {
   const { submitAsync, isSubmitting } = usePlaceForm({
     organizationId: organization?.id,
     onSuccess: (result) => {
-      toast.success("Place created successfully!");
+      toast.success("Venue created successfully!");
       router.push(appRoutes.owner.places.courts.new(result.placeId));
     },
   });
@@ -99,10 +99,16 @@ export default function NewPlacePage() {
                 Create an organization first
               </h2>
               <p className="text-sm text-muted-foreground">
-                You need an organization before adding places.
+                You need an organization before adding venues.
               </p>
               <Button asChild>
-                <Link href={appRoutes.owner.onboarding}>Go to onboarding</Link>
+                <Link
+                  href={`${appRoutes.owner.onboarding}?next=${encodeURIComponent(
+                    appRoutes.owner.places.new,
+                  )}`}
+                >
+                  Go to onboarding
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -139,10 +145,10 @@ export default function NewPlacePage() {
     >
       <div className="space-y-6">
         <PageHeader
-          title="Create New Place"
-          description="Add a new place for players to discover"
+          title="Create New Venue"
+          description="Add a new venue for players to discover"
           breadcrumbs={[
-            { label: "My Places", href: appRoutes.owner.places.base },
+            { label: "My Venues", href: appRoutes.owner.places.base },
             { label: "Create" },
           ]}
           backHref={appRoutes.owner.places.base}

@@ -106,7 +106,7 @@ export default function AdminVerificationPage() {
               Verification Queue
             </h1>
             <p className="text-muted-foreground">
-              Review place verification requests and keep listings trusted.
+              Review venue verification requests and keep listings trusted.
             </p>
           </div>
           <div className="flex items-center gap-3 text-sm">

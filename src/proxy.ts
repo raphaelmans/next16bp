@@ -21,9 +21,53 @@ export async function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", path);
 
-  let supabaseResponse = NextResponse.next({
-    request: { headers: requestHeaders },
-  });
+  const isExactOrChild = (pathname: string, base: string) =>
+    pathname === base || pathname.startsWith(`${base}/`);
+
+  const swapBase = (pathname: string, fromBase: string, toBase: string) => {
+    const suffix = pathname.slice(fromBase.length);
+    return `${toBase}${suffix}`;
+  };
+
+  // Canonical redirects: keep legacy URLs working but always send users
+  // to the new /venues paths.
+  if (isExactOrChild(path, "/owner/places")) {
+    const nextPath = swapBase(path, "/owner/places", "/owner/venues");
+    const url = request.nextUrl.clone();
+    url.pathname = nextPath;
+    return NextResponse.redirect(url, 308);
+  }
+
+  if (isExactOrChild(path, "/places")) {
+    const nextPath = swapBase(path, "/places", "/venues");
+    const url = request.nextUrl.clone();
+    url.pathname = nextPath;
+    return NextResponse.redirect(url, 308);
+  }
+
+  // Internal rewrites: serve the canonical /venues URLs using existing
+  // filesystem routes under /places.
+  const rewritePath = (() => {
+    if (isExactOrChild(path, "/owner/venues")) {
+      return swapBase(path, "/owner/venues", "/owner/places");
+    }
+    if (isExactOrChild(path, "/venues")) {
+      return swapBase(path, "/venues", "/places");
+    }
+    return null;
+  })();
+
+  const makeResponse = () => {
+    if (!rewritePath) {
+      return NextResponse.next({ request: { headers: requestHeaders } });
+    }
+
+    const url = request.nextUrl.clone();
+    url.pathname = rewritePath;
+    return NextResponse.rewrite(url, { request: { headers: requestHeaders } });
+  };
+
+  let supabaseResponse = makeResponse();
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -41,9 +85,7 @@ export async function proxy(request: NextRequest) {
         cookiesToSet.forEach(({ name, value }) => {
           request.cookies.set(name, value);
         });
-        supabaseResponse = NextResponse.next({
-          request: { headers: requestHeaders },
-        });
+        supabaseResponse = makeResponse();
         cookiesToSet.forEach(({ name, value, options }) => {
           supabaseResponse.cookies.set(name, value, options);
         });

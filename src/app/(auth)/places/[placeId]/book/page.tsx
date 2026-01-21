@@ -209,7 +209,7 @@ export default function PlaceBookingPage() {
             href={appRoutes.places.detail(placeId)}
             className="text-primary hover:underline inline-block"
           >
-            Back to place
+            Back to venue
           </Link>
         </div>
       </Container>
@@ -222,13 +222,13 @@ export default function PlaceBookingPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold">Booking details missing</h1>
           <p className="text-muted-foreground mt-2">
-            Please return to the place page and select a valid time slot.
+            Please return to the venue page and select a valid time slot.
           </p>
           <Link
             href={appRoutes.places.detail(placeId)}
             className="text-primary hover:underline mt-4 inline-block"
           >
-            Back to place
+            Back to venue
           </Link>
         </div>
       </Container>

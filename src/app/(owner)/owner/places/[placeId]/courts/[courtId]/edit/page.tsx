@@ -121,7 +121,7 @@ export default function EditPlaceCourtPage() {
           title={`Edit Court · ${courtData.court.label}`}
           description="Update court details and pricing tier"
           breadcrumbs={[
-            { label: "My Places", href: appRoutes.owner.places.base },
+            { label: "My Venues", href: appRoutes.owner.places.base },
             {
               label: placeData.place.name,
               href: appRoutes.owner.places.courts.base(placeId),

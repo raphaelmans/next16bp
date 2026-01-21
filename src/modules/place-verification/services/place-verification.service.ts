@@ -181,7 +181,7 @@ export class PlaceVerificationService implements IPlaceVerificationService {
           placeId: data.placeId,
           userId,
         },
-        "Place verification request submitted",
+        "Venue verification request submitted",
       );
     });
   }

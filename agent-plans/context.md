@@ -8,6 +8,8 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-21 | Added US-00-09 + 55-owner-partner-landing plan (public /list-your-venue + onboarding continuation) |
+| 2026-01-21 | Added 54-public-schedule-month-view plan (month schedule browsing) |
 | 2026-01-21 | Added US-02-09 + 52-owner-place-deletion plan (owner delete place + detach courts) |
 | 2026-01-21 | Added US-17-06 + 51-admin-place-transfer plan (admin ownership transfer) |
 | 2026-01-21 | Added US-02-08 + 48-owner-onboarding-court-verification plan (place -> one-time court -> verification) |
@@ -114,6 +116,7 @@ References and context for planning artifacts.
 | 48-owner-onboarding-court-verification | `agent-plans/48-owner-onboarding-court-verification/` | Draft |
 | 51-admin-place-transfer | `agent-plans/51-admin-place-transfer/` | Complete |
 | 52-owner-place-deletion | `agent-plans/52-owner-place-deletion/` | Draft |
+| 55-owner-partner-landing | `agent-plans/55-owner-partner-landing/` | Draft |
 
 ---
 

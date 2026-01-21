@@ -73,7 +73,7 @@ export function usePlaceForm({
     }
 
     if (!organizationId) {
-      throw new Error("Organization is required to create a place");
+      throw new Error("Organization is required to create a venue");
     }
 
     const latitude = formatCoordinate(data.latitude);

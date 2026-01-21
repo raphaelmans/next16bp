@@ -12,7 +12,11 @@ export type TelemetryEventName =
   | "funnel.discovery_place_clicked"
   | "funnel.schedule_slot_selected"
   | "funnel.reserve_clicked"
-  | "funnel.login_started";
+  | "funnel.login_started"
+  | "funnel.owner_list_your_venue_viewed"
+  | "funnel.owner_list_your_venue_cta_clicked"
+  | "funnel.owner_list_your_venue_signin_clicked"
+  | "funnel.owner_list_your_venue_nav_clicked";
 
 export type TelemetryPayload = {
   event: TelemetryEventName;

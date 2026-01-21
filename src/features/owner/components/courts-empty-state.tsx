@@ -22,7 +22,7 @@ export function CourtsEmptyState() {
         </EmptyMedia>
         <EmptyTitle>No courts yet</EmptyTitle>
         <EmptyDescription>
-          Create a place and add courts to start accepting bookings
+          Create a venue and add courts to start accepting bookings
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>

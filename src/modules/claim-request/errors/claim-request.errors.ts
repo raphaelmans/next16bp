@@ -17,7 +17,7 @@ export class PlaceAlreadyClaimedError extends ConflictError {
   readonly code = "PLACE_ALREADY_CLAIMED";
 
   constructor(placeId: string) {
-    super("This place has already been claimed", { placeId });
+    super("This venue has already been claimed", { placeId });
   }
 }
 
@@ -25,7 +25,7 @@ export class PendingClaimExistsError extends ConflictError {
   readonly code = "PENDING_CLAIM_EXISTS";
 
   constructor(placeId: string) {
-    super("A pending request already exists for this place", { placeId });
+    super("A pending request already exists for this venue", { placeId });
   }
 }
 
@@ -33,7 +33,7 @@ export class NotCuratedPlaceError extends ValidationError {
   readonly code = "NOT_CURATED_PLACE";
 
   constructor(placeId: string) {
-    super("Only curated places can be claimed", { placeId });
+    super("Only curated venues can be claimed", { placeId });
   }
 }
 
@@ -41,7 +41,7 @@ export class PlaceNotUnclaimedError extends ValidationError {
   readonly code = "PLACE_NOT_UNCLAIMED";
 
   constructor(placeId: string) {
-    super("This place is not available for claiming", { placeId });
+    super("This venue is not available for claiming", { placeId });
   }
 }
 
@@ -80,6 +80,6 @@ export class PlaceNotFoundError extends NotFoundError {
   readonly code = "PLACE_NOT_FOUND";
 
   constructor(placeId?: string) {
-    super("Place not found", placeId ? { placeId } : undefined);
+    super("Venue not found", placeId ? { placeId } : undefined);
   }
 }

@@ -59,10 +59,10 @@ export function PlaceCourtFilter({
     >
       <Select value={placeId || "all"} onValueChange={handlePlaceValueChange}>
         <SelectTrigger className={compact ? "h-8 w-full" : "w-full"}>
-          <SelectValue placeholder="All places" />
+          <SelectValue placeholder="All venues" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">All Places</SelectItem>
+          <SelectItem value="all">All Venues</SelectItem>
           {places.map((place) => (
             <SelectItem key={place.id} value={place.id}>
               {place.name}

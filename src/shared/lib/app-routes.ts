@@ -19,6 +19,10 @@ export const appRoutes = {
     base: "/",
     options: { type: "public" as const },
   },
+  listYourVenue: {
+    base: "/list-your-venue",
+    options: { type: "public" as const },
+  },
   courts: {
     base: "/courts",
     options: { type: "public" as const },
@@ -28,11 +32,11 @@ export const appRoutes = {
       `/courts/${courtId}/book/${slotId}`,
   },
   places: {
-    base: "/places",
+    base: "/venues",
     options: { type: "public" as const },
-    detail: (placeId: string) => `/places/${placeId}`,
-    schedule: (placeId: string) => `/places/${placeId}/schedule`,
-    book: (placeId: string) => `/places/${placeId}/book`,
+    detail: (placeId: string) => `/venues/${placeId}`,
+    schedule: (placeId: string) => `/venues/${placeId}/schedule`,
+    book: (placeId: string) => `/venues/${placeId}/book`,
   },
   login: {
     base: "/login",
@@ -92,31 +96,31 @@ export const appRoutes = {
       slots: (courtId: string) => `/owner/courts/${courtId}/slots`,
     },
     places: {
-      base: "/owner/places",
-      new: "/owner/places/new",
-      edit: (placeId: string) => `/owner/places/${placeId}/edit`,
+      base: "/owner/venues",
+      new: "/owner/venues/new",
+      edit: (placeId: string) => `/owner/venues/${placeId}/edit`,
       courts: {
-        base: (placeId: string) => `/owner/places/${placeId}/courts`,
-        new: (placeId: string) => `/owner/places/${placeId}/courts/new`,
+        base: (placeId: string) => `/owner/venues/${placeId}/courts`,
+        new: (placeId: string) => `/owner/venues/${placeId}/courts/new`,
         setupCreate: (placeId: string) =>
-          `/owner/places/${placeId}/courts/setup`,
+          `/owner/venues/${placeId}/courts/setup`,
         edit: (placeId: string, courtId: string) =>
-          `/owner/places/${placeId}/courts/${courtId}/edit`,
+          `/owner/venues/${placeId}/courts/${courtId}/edit`,
         setup: (placeId: string, courtId: string, step?: string) => {
           const params = new URLSearchParams({ courtId });
           if (step) {
             params.set("step", step);
           }
-          return `/owner/places/${placeId}/courts/setup?${params.toString()}`;
+          return `/owner/venues/${placeId}/courts/setup?${params.toString()}`;
         },
         schedule: (placeId: string, courtId: string) =>
-          `/owner/places/${placeId}/courts/${courtId}/schedule`,
+          `/owner/venues/${placeId}/courts/${courtId}/schedule`,
         hours: (placeId: string, courtId: string) =>
-          `/owner/places/${placeId}/courts/${courtId}/hours`,
+          `/owner/venues/${placeId}/courts/${courtId}/hours`,
         pricing: (placeId: string, courtId: string) =>
-          `/owner/places/${placeId}/courts/${courtId}/pricing`,
+          `/owner/venues/${placeId}/courts/${courtId}/pricing`,
         slots: (placeId: string, courtId: string) =>
-          `/owner/places/${placeId}/courts/${courtId}/slots`,
+          `/owner/venues/${placeId}/courts/${courtId}/slots`,
       },
     },
     reservations: "/owner/reservations",
@@ -146,7 +150,7 @@ export const appRoutes = {
 } satisfies Record<string, RouteConfig | Record<string, unknown>>;
 
 const bookingRoutePattern =
-  /^\/(courts\/[^/]+\/book\/[^/]+|places\/[^/]+\/book)$/;
+  /^\/(courts\/[^/]+\/book\/[^/]+|venues\/[^/]+\/book|places\/[^/]+\/book)$/;
 
 const exactOrChild = (path: string, base: string) =>
   path === base || path.startsWith(`${base}/`);
@@ -167,6 +171,7 @@ const guestBases = [
 
 const publicBases = [
   appRoutes.index.base,
+  appRoutes.listYourVenue.base,
   appRoutes.courts.base,
   appRoutes.places.base,
   appRoutes.terms.base,

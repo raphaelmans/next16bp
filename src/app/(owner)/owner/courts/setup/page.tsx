@@ -44,7 +44,7 @@ export default function CreateCourtSetupPage() {
       toast.success("Court created successfully!");
       const targetPlaceId = selectedPlaceIdRef.current || draft.placeId || "";
       if (!targetPlaceId) {
-        toast.error("Select a place to continue setup.");
+        toast.error("Select a venue to continue setup.");
         router.push(appRoutes.owner.courts.base);
         return;
       }
@@ -112,7 +112,13 @@ export default function CreateCourtSetupPage() {
                 You need an organization before creating courts.
               </p>
               <Button asChild>
-                <Link href={appRoutes.owner.onboarding}>Go to onboarding</Link>
+                <Link
+                  href={`${appRoutes.owner.onboarding}?next=${encodeURIComponent(
+                    appRoutes.owner.courts.setupCreate,
+                  )}`}
+                >
+                  Go to onboarding
+                </Link>
               </Button>
             </CardContent>
           </Card>

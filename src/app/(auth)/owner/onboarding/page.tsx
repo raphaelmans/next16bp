@@ -10,7 +10,7 @@ import { OrganizationFormClient } from "./organization-form-client";
 
 export const dynamic = "force-dynamic";
 
-const checkOnboardingRedirect = async () => {
+const checkOnboardingRedirect = async (nextHref: string) => {
   const headerStore = await headers();
   const pathname = headerStore.get("x-pathname") ?? appRoutes.owner.onboarding;
   const caller = await createServerCaller(pathname);
@@ -18,7 +18,7 @@ const checkOnboardingRedirect = async () => {
   try {
     const organizations = await caller.organization.my();
     if (organizations.length > 0) {
-      redirect(appRoutes.owner.base);
+      redirect(nextHref);
     }
   } catch (error) {
     if (error instanceof TRPCError && error.code === "UNAUTHORIZED") {
@@ -28,8 +28,40 @@ const checkOnboardingRedirect = async () => {
   }
 };
 
-export default async function OnboardingPage() {
-  await checkOnboardingRedirect();
+const getSafeNextHref = (nextHref: string | undefined) => {
+  if (!nextHref) {
+    return appRoutes.owner.places.new;
+  }
+
+  if (!nextHref.startsWith("/") || nextHref.startsWith("//")) {
+    return appRoutes.owner.places.new;
+  }
+
+  const ownerBase = appRoutes.owner.base;
+  const isOwnerPath =
+    nextHref === ownerBase || nextHref.startsWith(`${ownerBase}/`);
+  if (!isOwnerPath) {
+    return appRoutes.owner.places.new;
+  }
+
+  return nextHref;
+};
+
+type OnboardingPageProps = {
+  searchParams?: {
+    next?: string | string[];
+  };
+};
+
+export default async function OnboardingPage({
+  searchParams,
+}: OnboardingPageProps) {
+  const nextParam = Array.isArray(searchParams?.next)
+    ? searchParams?.next[0]
+    : searchParams?.next;
+  const nextHref = getSafeNextHref(nextParam);
+
+  await checkOnboardingRedirect(nextHref);
 
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8 py-8 space-y-6">
@@ -50,7 +82,7 @@ export default async function OnboardingPage() {
         </Button>
       </div>
 
-      <OrganizationFormClient />
+      <OrganizationFormClient nextHref={nextHref} />
 
       <p className="text-sm text-muted-foreground">
         By creating an organization, you agree to our{" "}

@@ -3,7 +3,9 @@ import { CourtNotFoundError } from "@/modules/court/errors/court.errors";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
 import { publicProcedure, router } from "@/shared/infra/trpc/trpc";
 import {
+  GetAvailabilityForCourtRangeSchema,
   GetAvailabilityForCourtSchema,
+  GetAvailabilityForPlaceSportRangeSchema,
   GetAvailabilityForPlaceSportSchema,
 } from "./dtos";
 import { makeAvailabilityService } from "./factories/availability.factory";
@@ -40,6 +42,26 @@ export const availabilityRouter = router({
       try {
         const service = makeAvailabilityService();
         return await service.getForPlaceSport(input);
+      } catch (error) {
+        handleAvailabilityError(error);
+      }
+    }),
+  getForCourtRange: publicProcedure
+    .input(GetAvailabilityForCourtRangeSchema)
+    .query(async ({ input }) => {
+      try {
+        const service = makeAvailabilityService();
+        return await service.getForCourtRange(input);
+      } catch (error) {
+        handleAvailabilityError(error);
+      }
+    }),
+  getForPlaceSportRange: publicProcedure
+    .input(GetAvailabilityForPlaceSportRangeSchema)
+    .query(async ({ input }) => {
+      try {
+        const service = makeAvailabilityService();
+        return await service.getForPlaceSportRange(input);
       } catch (error) {
         handleAvailabilityError(error);
       }

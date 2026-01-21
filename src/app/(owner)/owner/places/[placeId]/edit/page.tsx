@@ -68,7 +68,7 @@ export default function EditPlacePage() {
   const { submitAsync, isSubmitting } = usePlaceForm({
     placeId,
     onSuccess: () => {
-      toast.success("Place updated successfully!");
+      toast.success("Venue updated successfully!");
     },
   });
 
@@ -80,12 +80,12 @@ export default function EditPlacePage() {
         });
       }
       await utils.placeManagement.invalidate();
-      toast.success("Place deleted successfully.");
+      toast.success("Venue deleted successfully.");
       setDeleteDialogOpen(false);
       router.push(appRoutes.owner.places.base);
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to delete place.");
+      toast.error(error.message || "Failed to delete venue.");
     },
   });
 
@@ -155,8 +155,7 @@ export default function EditPlacePage() {
     viberInfo: placeData.contactDetail?.viberInfo ?? "",
     otherContactInfo: placeData.contactDetail?.otherContactInfo ?? "",
   };
-  const deleteConfirmationMatches =
-    deleteConfirmValue.trim() === place.name;
+  const deleteConfirmationMatches = deleteConfirmValue.trim() === place.name;
 
   return (
     <AppShell
@@ -188,10 +187,10 @@ export default function EditPlacePage() {
     >
       <div className="space-y-6">
         <PageHeader
-          title={`Edit Place: ${place.name}`}
-          description="Update place details and verification status"
+          title={`Edit Venue: ${place.name}`}
+          description="Update venue details and verification status"
           breadcrumbs={[
-            { label: "My Places", href: appRoutes.owner.places.base },
+            { label: "My Venues", href: appRoutes.owner.places.base },
             { label: place.name },
             { label: "Edit" },
           ]}
@@ -208,7 +207,7 @@ export default function EditPlacePage() {
 
         <Card className="border-dashed">
           <CardHeader>
-            <CardTitle>Place verification</CardTitle>
+            <CardTitle>Venue verification</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <p>
@@ -239,13 +238,13 @@ export default function EditPlacePage() {
               Danger Zone
             </CardTitle>
             <CardDescription>
-              Deleting a place removes its listing and detaches courts. Existing
+              Deleting a venue removes its listing and detaches courts. Existing
               reservations remain for audit purposes.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h4 className="font-medium">Delete place</h4>
+              <h4 className="font-medium">Delete venue</h4>
               <p className="text-sm text-muted-foreground">
                 This action cannot be undone.
               </p>
@@ -260,19 +259,23 @@ export default function EditPlacePage() {
               }}
             >
               <AlertDialogTrigger asChild>
-                <Button variant="destructive">Delete place</Button>
+                <Button variant="destructive">Delete venue</Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Delete {place.name}?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will delete the place listing and detach courts. Stored
+                    This will delete the venue listing and detach courts. Stored
                     reservation history remains available for audit.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">
-                    Type <span className="font-semibold text-foreground">{place.name}</span> to confirm.
+                    Type{" "}
+                    <span className="font-semibold text-foreground">
+                      {place.name}
+                    </span>{" "}
+                    to confirm.
                   </p>
                   <Input
                     value={deleteConfirmValue}
@@ -300,7 +303,7 @@ export default function EditPlacePage() {
                     {deletePlaceMutation.isPending && (
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     )}
-                    Delete place
+                    Delete venue
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

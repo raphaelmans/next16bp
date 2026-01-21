@@ -205,7 +205,7 @@ export class AdminCourtService implements IAdminCourtService {
           adminUserId,
           placeType: "CURATED",
         },
-        "Admin created curated place",
+        "Admin created curated venue",
       );
 
       return { place: placeRecord, detail, photos, amenities };
@@ -252,7 +252,7 @@ export class AdminCourtService implements IAdminCourtService {
           index,
           status: "skipped_duplicate",
           placeId: existing.id,
-          message: "Duplicate place already exists",
+          message: "Duplicate venue already exists",
         });
         continue;
       }
@@ -280,13 +280,13 @@ export class AdminCourtService implements IAdminCourtService {
             placeName: normalizedName,
             placeCity: normalizedCity,
           },
-          "Batch curated place creation failed",
+          "Batch curated venue creation failed",
         );
         results.push({
           index,
           status: "error",
           message:
-            error instanceof Error ? error.message : "Failed to create place",
+            error instanceof Error ? error.message : "Failed to create venue",
         });
       }
     }
@@ -321,7 +321,7 @@ export class AdminCourtService implements IAdminCourtService {
         placeId: data.placeId,
         adminUserId,
       },
-      "Admin viewed place details",
+      "Admin viewed venue details",
     );
 
     return detail;
@@ -381,7 +381,7 @@ export class AdminCourtService implements IAdminCourtService {
         photoId: created.id,
         adminUserId,
       },
-      "Admin uploaded place photo",
+      "Admin uploaded venue photo",
     );
 
     return { url: result.url };
@@ -423,7 +423,7 @@ export class AdminCourtService implements IAdminCourtService {
         photoId: data.photoId,
         adminUserId,
       },
-      "Admin removed place photo",
+      "Admin removed venue photo",
     );
   }
 
@@ -566,7 +566,7 @@ export class AdminCourtService implements IAdminCourtService {
           placeId: data.placeId,
           adminUserId,
         },
-        "Admin updated place",
+        "Admin updated venue",
       );
 
       return updated;
@@ -595,7 +595,7 @@ export class AdminCourtService implements IAdminCourtService {
         adminUserId,
         reason,
       },
-      "Admin deactivated place",
+      "Admin deactivated venue",
     );
 
     return updated;
@@ -621,7 +621,7 @@ export class AdminCourtService implements IAdminCourtService {
         placeId,
         adminUserId,
       },
-      "Admin activated place",
+      "Admin activated venue",
     );
 
     return updated;
@@ -693,7 +693,7 @@ export class AdminCourtService implements IAdminCourtService {
           autoVerifyAndEnable: data.autoVerifyAndEnable,
           adminUserId,
         },
-        "Admin transferred place to organization",
+        "Admin transferred venue to organization",
       );
 
       return updated;

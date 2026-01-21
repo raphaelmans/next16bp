@@ -520,7 +520,7 @@ export default function AdminCourtsBatchPage() {
             formData.append("image", file, file.name);
             try {
               await uploadPhotoMutation.mutateAsync(formData);
-            } catch (error) {
+            } catch (_error) {
               failedUploads += 1;
             }
           }
@@ -679,7 +679,7 @@ export default function AdminCourtsBatchPage() {
                           <StandardFormInput<CuratedCourtBatchFormData>
                             name={`courts.${index}.name`}
                             label="Court Name"
-                            placeholder="Makati Pickleball Club"
+                            placeholder="Makati Sports Club (Pickleball)"
                             required
                           />
                           <StandardFormInput<CuratedCourtBatchFormData>
@@ -990,7 +990,9 @@ export default function AdminCourtsBatchPage() {
                               >
                                 <ImageIcon className="h-4 w-4" />
                                 <span className="ml-2">
-                                  {canAddMorePhotos ? "Add photos" : "Max photos"}
+                                  {canAddMorePhotos
+                                    ? "Add photos"
+                                    : "Max photos"}
                                 </span>
                               </Button>
                             </div>
@@ -1018,7 +1020,10 @@ export default function AdminCourtsBatchPage() {
                                     variant="ghost"
                                     size="sm"
                                     onClick={() =>
-                                      handleRemovePhotoFile(field.id, photoIndex)
+                                      handleRemovePhotoFile(
+                                        field.id,
+                                        photoIndex,
+                                      )
                                     }
                                   >
                                     <Trash2 className="h-4 w-4" />

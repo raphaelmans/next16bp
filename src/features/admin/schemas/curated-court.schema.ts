@@ -82,7 +82,7 @@ export const curatedCourtSchema = z.object({
     .optional(),
   amenities: z.array(z.string()),
   photos: z.array(photoSchema).optional(),
-  courts: z.array(courtSchema).min(1, "Add at least one court for this place"),
+  courts: z.array(courtSchema).min(1, "Add at least one court for this venue"),
 });
 
 export type CuratedCourtFormData = z.infer<typeof curatedCourtSchema>;

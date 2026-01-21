@@ -82,10 +82,10 @@ export default function OwnerVerificationLandingPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight font-heading">
-            Place Verification
+            Venue Verification
           </h1>
           <p className="text-muted-foreground">
-            Submit verification documents for each place to unlock bookings.
+            Submit verification documents for each venue to unlock bookings.
           </p>
         </div>
 
@@ -93,16 +93,16 @@ export default function OwnerVerificationLandingPage() {
           <Card className="border-dashed">
             <CardHeader className="flex items-center gap-2">
               <ShieldCheck className="h-5 w-5 text-primary" />
-              <CardTitle>No places yet</CardTitle>
+              <CardTitle>No venues yet</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
-              Create your first place to submit verification documents.
+              Create your first venue to submit verification documents.
               <div className="mt-4">
                 <Link
                   href={appRoutes.owner.places.new}
                   className="text-primary hover:underline"
                 >
-                  Create a place
+                  Create a venue
                 </Link>
               </div>
             </CardContent>
@@ -156,7 +156,7 @@ export default function OwnerVerificationLandingPage() {
                     </Button>
                     <Button variant="outline" size="sm" asChild>
                       <Link href={appRoutes.owner.places.edit(place.id)}>
-                        Edit place
+                        Edit venue
                       </Link>
                     </Button>
                     <Button variant="ghost" size="sm" asChild>

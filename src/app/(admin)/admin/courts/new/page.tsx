@@ -312,7 +312,7 @@ export default function NewCuratedCourtPage() {
           formData.append("image", file, file.name);
           try {
             await uploadPhotoMutation.mutateAsync(formData);
-          } catch (error) {
+          } catch (_error) {
             failedUploads += 1;
           }
         }
@@ -397,7 +397,7 @@ export default function NewCuratedCourtPage() {
               <StandardFormInput<CuratedCourtFormData>
                 name="name"
                 label="Court Name"
-                placeholder="Makati Pickleball Club"
+                placeholder="Makati Sports Club (Pickleball)"
                 required
               />
 
@@ -879,8 +879,8 @@ export default function NewCuratedCourtPage() {
               )}
 
               <p className="text-xs text-muted-foreground">
-                Photos upload after the court is created. The first photo becomes
-                the cover image.
+                Photos upload after the court is created. The first photo
+                becomes the cover image.
               </p>
             </CardContent>
           </Card>

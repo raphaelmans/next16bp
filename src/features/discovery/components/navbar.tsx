@@ -85,12 +85,26 @@ export function Navbar({ className }: NavbarProps) {
   };
 
   const handleListYourPlace = () => {
-    const target = appRoutes.owner.places.new;
-    if (isAuthenticated) {
-      router.push(target);
-    } else {
-      router.push(appRoutes.login.from(target));
+    trackEvent({
+      event: "funnel.owner_list_your_venue_nav_clicked",
+      properties: {
+        authenticated: isAuthenticated,
+        owner: isOwner,
+      },
+    });
+
+    if (!isAuthenticated) {
+      router.push(appRoutes.listYourVenue.base);
+      return;
     }
+
+    if (isOwner) {
+      router.push(appRoutes.owner.places.new);
+      return;
+    }
+
+    const params = new URLSearchParams({ next: appRoutes.owner.places.new });
+    router.push(`${appRoutes.owner.onboarding}?${params.toString()}`);
   };
 
   return (

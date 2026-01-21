@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const placeFormSchema = z.object({
-  name: z.string().min(1, "Place name is required").max(200),
+  name: z.string().min(1, "Venue name is required").max(200),
   address: z.string().min(1, "Address is required"),
   city: z.string().min(1, "City is required").max(100),
   province: z.string().min(1, "Province is required").max(100),

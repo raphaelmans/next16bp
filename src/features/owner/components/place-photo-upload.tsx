@@ -161,7 +161,7 @@ export function PlacePhotoUpload({
             >
               <Image
                 src={photo.url}
-                alt="Place photo"
+                alt="Venue photo"
                 fill
                 className="object-cover"
               />

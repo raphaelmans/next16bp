@@ -151,9 +151,9 @@ export function CourtForm({
 
   const placeHelper = useMemo(() => {
     if (placeOptions.length === 0) {
-      return "Create a place first to add courts.";
+      return "Create a venue first to add courts.";
     }
-    return "Select the place where this court belongs.";
+    return "Select the venue where this court belongs.";
   }, [placeOptions.length]);
 
   const sportHelper = useMemo(() => {
@@ -223,8 +223,8 @@ export function CourtForm({
         <CardContent className="space-y-4">
           <StandardFormSelect<CourtFormValues>
             name="placeId"
-            label="Place"
-            placeholder="Select a place"
+            label="Venue"
+            placeholder="Select a venue"
             options={placeOptionItems}
             description={placeHelper}
             disabled={placeSelectDisabled}

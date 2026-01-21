@@ -35,7 +35,6 @@ const coordinateSchema = z
     },
   );
 
-
 export const curatedCourtBatchItemSchema = z.object({
   name: z
     .string()
@@ -69,7 +68,7 @@ export const curatedCourtBatchItemSchema = z.object({
     .optional()
     .or(z.literal("")),
   amenities: z.array(z.string()),
-  courts: z.array(courtSchema).min(1, "Add at least one court for this place"),
+  courts: z.array(courtSchema).min(1, "Add at least one court for this venue"),
 });
 
 export const curatedCourtBatchSchema = z.object({

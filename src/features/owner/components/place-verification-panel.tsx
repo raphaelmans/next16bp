@@ -60,7 +60,7 @@ const STATUS_CONFIG: Record<
   },
   VERIFIED: {
     label: "Verified",
-    helper: "Your place is verified. Enable reservations when ready.",
+    helper: "Your venue is verified. Enable reservations when ready.",
     icon: ShieldCheck,
     badgeVariant: "success",
     toneClass: "text-success",
@@ -191,7 +191,7 @@ export function PlaceVerificationPanel({
           <div>
             <CardTitle className="flex items-center gap-2">
               <ShieldCheck className="h-5 w-5 text-primary" />
-              Place verification
+              Venue verification
             </CardTitle>
             <p className="text-sm text-muted-foreground">
               Verify {placeName} to unlock reservations and build trust.

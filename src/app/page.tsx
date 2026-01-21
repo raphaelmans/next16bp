@@ -193,8 +193,9 @@ export default function HomePage() {
               Why KudosCourts
             </h2>
             <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
-              We&apos;re solving the fragmentation in the pickleball community.
-              No more messaging 5 different Facebook pages to find an open slot.
+              We&apos;re solving the fragmentation in court sports, starting
+              with pickleball. No more messaging 5 different Facebook pages to
+              find an open slot.
             </p>
           </div>
 

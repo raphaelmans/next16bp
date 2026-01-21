@@ -87,7 +87,7 @@ export default function CourtSchedulePage() {
           title={`Schedule & Pricing · ${courtData.court.label}`}
           description="Define open hours and pricing blocks for each day"
           breadcrumbs={[
-            { label: "My Places", href: appRoutes.owner.places.base },
+            { label: "My Venues", href: appRoutes.owner.places.base },
             {
               label: placeData.place.name,
               href: appRoutes.owner.places.courts.base(placeId),

@@ -3,10 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertCircle,
+  ArrowRight,
+  BadgeCheck,
   Calendar,
+  CircleHelp,
   Clock,
   Copy,
   ExternalLink,
+  Flag,
   Loader2,
   MapPin,
   Minus,
@@ -237,9 +241,7 @@ export default function PlaceDetailPage() {
       const draftValue = durationHoursDraft.trim();
       const parsed = Number(draftValue);
       const baseHours =
-        draftValue !== "" &&
-          Number.isFinite(parsed) &&
-          Number.isInteger(parsed)
+        draftValue !== "" && Number.isFinite(parsed) && Number.isInteger(parsed)
           ? parsed
           : durationHours;
       const nextHours =
@@ -261,10 +263,10 @@ export default function PlaceDetailPage() {
   const showBookingVerificationUi = !showBooking && !isCurated;
   const canSubmitClaim = Boolean(
     place &&
-    isCurated &&
-    place.claimStatus === "UNCLAIMED" &&
-    isAuthenticated &&
-    isOwner,
+      isCurated &&
+      place.claimStatus === "UNCLAIMED" &&
+      isAuthenticated &&
+      isOwner,
   );
   const organizationOptions = organizations.map((organization) => ({
     label: organization.name,
@@ -595,14 +597,20 @@ export default function PlaceDetailPage() {
   const phoneNumber = contactDetail?.phoneNumber?.trim();
   const viberNumber = contactDetail?.viberInfo?.trim();
   const dialablePhone = phoneNumber ? toDialablePhone(phoneNumber) : "";
+  const callHref = dialablePhone
+    ? `tel:${dialablePhone}`
+    : phoneNumber
+      ? `tel:${phoneNumber}`
+      : "";
+  const hasCallCta = Boolean(callHref);
   const viberLink = viberNumber ? buildViberDeepLink(viberNumber) : "";
   const hasContactDetail = Boolean(
     contactDetail?.phoneNumber ||
-    contactDetail?.websiteUrl ||
-    contactDetail?.facebookUrl ||
-    contactDetail?.instagramUrl ||
-    contactDetail?.viberInfo ||
-    contactDetail?.otherContactInfo,
+      contactDetail?.websiteUrl ||
+      contactDetail?.facebookUrl ||
+      contactDetail?.instagramUrl ||
+      contactDetail?.viberInfo ||
+      contactDetail?.otherContactInfo,
   );
   const claimStatusMessage =
     place.claimStatus === "CLAIM_PENDING"
@@ -620,7 +628,7 @@ export default function PlaceDetailPage() {
   const removalHelperText =
     place.claimStatus === "REMOVAL_REQUESTED"
       ? "A removal request is already pending review."
-      : "Request removal if this listing is inaccurate or should be removed.";
+      : "Flag incorrect info or request removal.";
   const mapQuery = `${place.name} ${place.address} ${place.city}`;
   const directionsUrl = hasCoordinates
     ? `https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`
@@ -698,11 +706,49 @@ export default function PlaceDetailPage() {
                     Check availability
                   </div>
                 </Button>
-              ) : showBookingVerificationUi ? (
-                <div className="rounded-xl border border-dashed bg-background/95 p-3 text-left text-xs text-muted-foreground shadow-md backdrop-blur">
-                  {verificationMessage}
+              ) : (
+                <div className="space-y-2">
+                  <div
+                    className={
+                      hasCallCta ? "grid gap-2 sm:grid-cols-2" : "grid gap-2"
+                    }
+                  >
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="w-full hover:translate-y-0"
+                    >
+                      <a
+                        href={directionsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <MapPin className="h-4 w-4" />
+                        Get directions
+                      </a>
+                    </Button>
+                    {hasCallCta && (
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="w-full hover:translate-y-0"
+                      >
+                        <a href={callHref}>
+                          <Phone className="h-4 w-4" />
+                          Call venue
+                        </a>
+                      </Button>
+                    )}
+                  </div>
+                  {showBookingVerificationUi && (
+                    <div className="rounded-lg border border-dashed bg-background/95 p-3 text-left text-xs text-muted-foreground shadow-sm backdrop-blur">
+                      {verificationMessage}
+                    </div>
+                  )}
                 </div>
-              ) : null
+              )
             }
           />
 
@@ -1121,8 +1167,8 @@ export default function PlaceDetailPage() {
                       {selectionMode === "any"
                         ? "Any available court"
                         : (courtsForSport.find(
-                          (court) => court.id === selectedCourtId,
-                        )?.label ?? "Select a court")}
+                            (court) => court.id === selectedCourtId,
+                          )?.label ?? "Select a court")}
                     </p>
                   </div>
                   <div className="space-y-1">
@@ -1313,148 +1359,6 @@ export default function PlaceDetailPage() {
               )}
               <Card>
                 <CardHeader>
-                  <CardTitle>Claim this venue</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 text-sm">
-                  <p className="text-muted-foreground">
-                    Claim this listing to manage courts and enable bookings.
-                  </p>
-                  {claimStatusMessage ? (
-                    <div className="rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
-                      {claimStatusMessage}
-                    </div>
-                  ) : canSubmitClaim ? (
-                    <Dialog open={isClaimOpen} onOpenChange={setIsClaimOpen}>
-                      <DialogTrigger asChild>
-                        <Button className="w-full">Claim this venue</Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[520px]">
-                        <DialogHeader>
-                          <DialogTitle>Submit claim request</DialogTitle>
-                          <DialogDescription>
-                            Share your organization and any context for the
-                            admin review.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <StandardFormProvider
-                          form={claimForm}
-                          onSubmit={handleClaimSubmit}
-                          className="space-y-4"
-                        >
-                          <StandardFormSelect<ClaimFormData>
-                            name="organizationId"
-                            label="Organization"
-                            placeholder="Select organization"
-                            options={organizationOptions}
-                            required
-                            disabled={organizationOptions.length === 1}
-                          />
-                          <StandardFormTextarea<ClaimFormData>
-                            name="requestNotes"
-                            label="Notes (optional)"
-                            placeholder="Share any context that helps verify ownership."
-                          />
-                          <DialogFooter className="gap-2">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={() => setIsClaimOpen(false)}
-                              disabled={claimSubmitting}
-                            >
-                              Cancel
-                            </Button>
-                            <Button type="submit" disabled={claimDisabled}>
-                              {claimSubmitting && (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              )}
-                              Submit claim
-                            </Button>
-                          </DialogFooter>
-                        </StandardFormProvider>
-                      </DialogContent>
-                    </Dialog>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      {claimHelperText}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Request listing removal</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 text-sm">
-                  <p className="text-muted-foreground">{removalHelperText}</p>
-                  {place.claimStatus === "REMOVAL_REQUESTED" ? (
-                    <div className="rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
-                      Removal request submitted. We will review shortly.
-                    </div>
-                  ) : (
-                    <Dialog
-                      open={isRemovalOpen}
-                      onOpenChange={setIsRemovalOpen}
-                    >
-                      <DialogTrigger asChild>
-                        <Button variant="outline" className="w-full">
-                          Request removal
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[520px]">
-                        <DialogHeader>
-                          <DialogTitle>Request listing removal</DialogTitle>
-                          <DialogDescription>
-                            Share your contact details so we can follow up
-                            during review.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <StandardFormProvider
-                          form={removalForm}
-                          onSubmit={handleRemovalSubmit}
-                          className="space-y-4"
-                        >
-                          <StandardFormInput<RemovalFormData>
-                            name="guestName"
-                            label="Full name"
-                            placeholder="Your name"
-                            required
-                          />
-                          <StandardFormInput<RemovalFormData>
-                            name="guestEmail"
-                            label="Email"
-                            placeholder="you@example.com"
-                            required
-                          />
-                          <StandardFormTextarea<RemovalFormData>
-                            name="requestNotes"
-                            label="Reason"
-                            placeholder="Let us know why this listing should be removed."
-                            required
-                          />
-                          <DialogFooter className="gap-2">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={() => setIsRemovalOpen(false)}
-                              disabled={removalSubmitting}
-                            >
-                              Cancel
-                            </Button>
-                            <Button type="submit" disabled={removalDisabled}>
-                              {removalSubmitting && (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              )}
-                              Submit request
-                            </Button>
-                          </DialogFooter>
-                        </StandardFormProvider>
-                      </DialogContent>
-                    </Dialog>
-                  )}
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
                   <CardTitle>Location</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
@@ -1500,6 +1404,199 @@ export default function PlaceDetailPage() {
                   </div>
                 </CardContent>
               </Card>
+              <div className="rounded-xl border border-dashed border-border/60 bg-transparent p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
+                    <CircleHelp className="h-4 w-4" />
+                    <span>Listing help</span>
+                  </div>
+                  <span className="text-[11px] text-muted-foreground">
+                    For owners
+                  </span>
+                </div>
+
+                <div className="mt-3 space-y-3">
+                  <div className="rounded-lg bg-background/60 p-3">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-3">
+                        <BadgeCheck className="mt-0.5 h-4 w-4 text-muted-foreground" />
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium text-foreground">
+                            Claim this listing
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Manage courts and enable bookings.
+                          </p>
+                        </div>
+                      </div>
+
+                      {canSubmitClaim && !claimStatusMessage && (
+                        <Dialog
+                          open={isClaimOpen}
+                          onOpenChange={setIsClaimOpen}
+                        >
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="link"
+                              size="sm"
+                              className="h-auto p-0 text-xs hover:translate-y-0"
+                            >
+                              Start claim
+                              <ArrowRight className="h-4 w-4" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[520px]">
+                            <DialogHeader>
+                              <DialogTitle>Submit claim request</DialogTitle>
+                              <DialogDescription>
+                                Share your organization and any context for the
+                                admin review.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <StandardFormProvider
+                              form={claimForm}
+                              onSubmit={handleClaimSubmit}
+                              className="space-y-4"
+                            >
+                              <StandardFormSelect<ClaimFormData>
+                                name="organizationId"
+                                label="Organization"
+                                placeholder="Select organization"
+                                options={organizationOptions}
+                                required
+                                disabled={organizationOptions.length === 1}
+                              />
+                              <StandardFormTextarea<ClaimFormData>
+                                name="requestNotes"
+                                label="Notes (optional)"
+                                placeholder="Share any context that helps verify ownership."
+                              />
+                              <DialogFooter className="gap-2">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  onClick={() => setIsClaimOpen(false)}
+                                  disabled={claimSubmitting}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button type="submit" disabled={claimDisabled}>
+                                  {claimSubmitting && (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  )}
+                                  Submit claim
+                                </Button>
+                              </DialogFooter>
+                            </StandardFormProvider>
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                    </div>
+
+                    {claimStatusMessage ? (
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        {claimStatusMessage}
+                      </p>
+                    ) : !canSubmitClaim ? (
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        {claimHelperText}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="rounded-lg bg-background/60 p-3">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-3">
+                        <Flag className="mt-0.5 h-4 w-4 text-muted-foreground" />
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium text-foreground">
+                            Report an issue
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {removalHelperText}
+                          </p>
+                        </div>
+                      </div>
+
+                      {place.claimStatus !== "REMOVAL_REQUESTED" && (
+                        <Dialog
+                          open={isRemovalOpen}
+                          onOpenChange={setIsRemovalOpen}
+                        >
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="link"
+                              size="sm"
+                              className="h-auto p-0 text-xs hover:translate-y-0"
+                            >
+                              Send report
+                              <ArrowRight className="h-4 w-4" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[520px]">
+                            <DialogHeader>
+                              <DialogTitle>Request listing removal</DialogTitle>
+                              <DialogDescription>
+                                Share your contact details so we can follow up
+                                during review.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <StandardFormProvider
+                              form={removalForm}
+                              onSubmit={handleRemovalSubmit}
+                              className="space-y-4"
+                            >
+                              <StandardFormInput<RemovalFormData>
+                                name="guestName"
+                                label="Full name"
+                                placeholder="Your name"
+                                required
+                              />
+                              <StandardFormInput<RemovalFormData>
+                                name="guestEmail"
+                                label="Email"
+                                placeholder="you@example.com"
+                                required
+                              />
+                              <StandardFormTextarea<RemovalFormData>
+                                name="requestNotes"
+                                label="Reason"
+                                placeholder="Let us know why this listing should be removed."
+                                required
+                              />
+                              <DialogFooter className="gap-2">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  onClick={() => setIsRemovalOpen(false)}
+                                  disabled={removalSubmitting}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  type="submit"
+                                  disabled={removalDisabled}
+                                >
+                                  {removalSubmitting && (
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  )}
+                                  Submit request
+                                </Button>
+                              </DialogFooter>
+                            </StandardFormProvider>
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                    </div>
+
+                    {place.claimStatus === "REMOVAL_REQUESTED" && (
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        Removal request submitted. We will review shortly.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
             </>
           )}
         </div>
@@ -1512,18 +1609,18 @@ export default function PlaceDetailPage() {
               <p className="text-sm font-medium">
                 {hasSelectedSlot && selectedSlot
                   ? formatInTimeZone(
-                    new Date(selectedSlot.startTime),
-                    placeTimeZone,
-                    "MMM d, h:mm a",
-                  )
+                      new Date(selectedSlot.startTime),
+                      placeTimeZone,
+                      "MMM d, h:mm a",
+                    )
                   : "Select a time"}
               </p>
               <p className="text-xs text-muted-foreground">
                 {hasSelectedSlot && selectedSlot
                   ? `${formatDuration(durationMinutes)} · ${formatCurrency(
-                    selectedSlot.totalPriceCents,
-                    selectedSlot.currency,
-                  )}`
+                      selectedSlot.totalPriceCents,
+                      selectedSlot.currency,
+                    )}`
                   : hasSelectedDate
                     ? "Continue to see available times"
                     : "Choose a date to continue"}

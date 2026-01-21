@@ -68,7 +68,7 @@ export default function TwitterImage() {
             lineHeight: 1.5,
           }}
         >
-          Find pickleball courts near you and book your next game in seconds.
+          Find pickleball and other sports courts near you and book in seconds.
           The unified platform for players.
         </div>
 

@@ -241,7 +241,7 @@ export default function AdminVerificationDetailPage() {
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-3">
               <h1 className="text-2xl font-bold tracking-tight font-heading">
-                Place verification
+                Venue verification
               </h1>
               <Badge
                 variant={config.variant}
@@ -286,7 +286,7 @@ export default function AdminVerificationDetailPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5" />
-                  Place details
+                  Venue details
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -297,7 +297,7 @@ export default function AdminVerificationDetailPage() {
                   </p>
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Place ID: {place.id}
+                  Venue ID: {place.id}
                 </div>
               </CardContent>
             </Card>
@@ -475,7 +475,7 @@ export default function AdminVerificationDetailPage() {
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <div className="flex items-start gap-2">
                   <ShieldCheck className="h-4 w-4 text-accent" />
-                  <span>Place is marked verified for players.</span>
+                  <span>Venue is marked verified for players.</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <AlertCircle className="h-4 w-4 text-accent" />

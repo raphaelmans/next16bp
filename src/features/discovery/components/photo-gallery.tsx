@@ -69,32 +69,34 @@ export function PhotoGallery({
     <>
       <div className={cn("space-y-2", className)}>
         {/* Main Photo */}
-        <button
-          type="button"
-          onClick={() => {
-            setActiveIndex(0);
-            setLightboxOpen(true);
-          }}
-          className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[2/1] lg:aspect-[21/9] rounded-xl overflow-hidden bg-muted cursor-pointer"
-        >
+        <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[2/1] lg:aspect-[21/9] rounded-xl overflow-hidden bg-muted group">
           <Image
             src={photos[0].url}
             alt={photos[0].alt || courtName}
             fill
-            className="object-cover transition-transform hover:scale-105"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
             priority
           />
           {topOverlay && (
-            <div className="absolute top-3 left-3 right-3 pointer-events-none">
+            <div className="absolute top-3 left-3 right-3 z-20 pointer-events-none">
               {topOverlay}
             </div>
           )}
           {mainOverlay && (
-            <div className="absolute inset-x-3 bottom-3">
+            <div className="absolute inset-x-3 bottom-3 z-20">
               <div className="pointer-events-auto">{mainOverlay}</div>
             </div>
           )}
-        </button>
+          <button
+            type="button"
+            aria-label="Open photo gallery"
+            onClick={() => {
+              setActiveIndex(0);
+              setLightboxOpen(true);
+            }}
+            className="absolute inset-0 z-10 cursor-pointer rounded-xl border-0 bg-transparent p-0 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] focus-visible:outline-none"
+          />
+        </div>
 
         {/* Thumbnails */}
         {photos.length > 1 && (

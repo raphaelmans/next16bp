@@ -32,6 +32,7 @@ import {
   buildProvinceOptions,
   findCityByName,
   findProvinceByName,
+  resolveProvinceCityValues,
 } from "@/shared/lib/ph-location-data";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import {
@@ -117,18 +118,35 @@ export function PlaceForm({
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
 
   const provincesCitiesQuery = usePHProvincesCitiesQuery();
+  const provincesCities = provincesCitiesQuery.data ?? null;
 
   const [googleUrl, setGoogleUrl] = useState("");
 
-  const resolvedDefaults = useMemo(
-    () => buildFormDefaults(defaultValues),
-    [defaultValues],
-  );
+  const emptyDefaults = useMemo(() => buildFormDefaults(), []);
+
+  const resolvedDefaults = useMemo<PlaceFormValues | null>(() => {
+    if (!defaultValues || !provincesCities) {
+      return null;
+    }
+
+    const baseDefaults = buildFormDefaults(defaultValues);
+    const { province, city } = resolveProvinceCityValues(
+      provincesCities,
+      baseDefaults.province,
+      baseDefaults.city,
+    );
+
+    return {
+      ...baseDefaults,
+      province,
+      city,
+    };
+  }, [defaultValues, provincesCities]);
 
   const form = useForm<PlaceFormValues>({
     resolver: zodResolver(placeFormSchema),
     mode: "onChange",
-    defaultValues: resolvedDefaults,
+    defaultValues: emptyDefaults,
   });
 
   const {
@@ -137,6 +155,9 @@ export function PlaceForm({
     setValue,
     formState: { isDirty, isSubmitting: formSubmitting },
   } = form;
+
+  const shouldHydrateDefaults = Boolean(defaultValues);
+  const [isFormReady, setIsFormReady] = useState(!shouldHydrateDefaults);
 
   const countryValue = useWatch({ control, name: "country" });
   const provinceValue = useWatch({ control, name: "province" });
@@ -179,10 +200,14 @@ export function PlaceForm({
   const isPreviewing = previewMutation.isPending;
 
   useEffect(() => {
-    if (!defaultValues) return;
-    if (isDirty) return;
+    if (!shouldHydrateDefaults) {
+      setIsFormReady(true);
+      return;
+    }
+    if (!resolvedDefaults) return;
     reset(resolvedDefaults);
-  }, [defaultValues, isDirty, reset, resolvedDefaults]);
+    setIsFormReady(true);
+  }, [reset, resolvedDefaults, shouldHydrateDefaults]);
 
   useEffect(() => {
     if (countryValue !== DEFAULT_COUNTRY) {
@@ -193,8 +218,6 @@ export function PlaceForm({
       });
     }
   }, [countryValue, setValue]);
-
-  const provincesCities = provincesCitiesQuery.data ?? null;
 
   const provinceOptions = useMemo(() => {
     if (!provincesCities) return [];
@@ -292,7 +315,7 @@ export function PlaceForm({
       reset(buildFormDefaults(normalized));
     } catch (error) {
       toast.error(
-        isEditing ? "Unable to save place" : "Unable to create place",
+        isEditing ? "Unable to save venue" : "Unable to create venue",
         {
           description: getClientErrorMessage(error, "Please try again"),
         },
@@ -309,6 +332,14 @@ export function PlaceForm({
   const submitting = Boolean(isSubmitting || formSubmitting);
   const isSubmitDisabled = submitting || !isDirty;
 
+  if (shouldHydrateDefaults && !isFormReady) {
+    return (
+      <div className="flex min-h-[240px] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
   return (
     <StandardFormProvider<PlaceFormValues>
       form={form}
@@ -317,12 +348,12 @@ export function PlaceForm({
     >
       <Card>
         <CardHeader>
-          <CardTitle>Place Details</CardTitle>
+          <CardTitle>Venue Details</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <StandardFormInput<PlaceFormValues>
             name="name"
-            label="Place Name"
+            label="Venue Name"
             placeholder="e.g., Kudos Sports Complex"
             required
           />
@@ -373,7 +404,7 @@ export function PlaceForm({
           {isEditing && (
             <StandardFormCheckbox<PlaceFormValues>
               name="isActive"
-              label="Place is active"
+              label="Venue is active"
             />
           )}
         </CardContent>
@@ -636,7 +667,7 @@ export function PlaceForm({
               : "Creating..."
             : isEditing
               ? "Save Changes"
-              : "Create Place"}
+              : "Create Venue"}
         </Button>
       </div>
     </StandardFormProvider>

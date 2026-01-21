@@ -62,13 +62,13 @@ export function OwnerCtaSection() {
           Own a Court?
         </CardTitle>
         <CardDescription>
-          List your pickleball facility on Kudos and start managing reservations
-          easily.
+          List your pickleball or multi-sport venue on Kudos and start managing
+          reservations easily.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Button className="w-full" asChild>
-          <Link href={appRoutes.owner.onboarding}>
+          <Link href={appRoutes.listYourVenue.base}>
             <Plus className="mr-2 h-4 w-4" />
             Become a Partner
           </Link>

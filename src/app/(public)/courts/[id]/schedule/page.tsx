@@ -1,8 +1,9 @@
 "use client";
 
+import { endOfMonth, startOfMonth } from "date-fns";
 import {
   ArrowLeft,
-  Calendar,
+  Calendar as CalendarIcon,
   Clock,
   ExternalLink,
   Minus,
@@ -19,6 +20,7 @@ import {
 import * as React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   InputGroup,
@@ -26,6 +28,13 @@ import {
   InputGroupInput,
   InputGroupText,
 } from "@/components/ui/input-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useSession } from "@/features/auth";
 import {
@@ -41,16 +50,19 @@ import {
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { trackEvent } from "@/shared/lib/clients/telemetry-client";
+import { normalizeDurationMinutes } from "@/shared/lib/duration";
 import {
   formatCurrency,
   formatDuration,
   formatInTimeZone,
 } from "@/shared/lib/format";
-import { normalizeDurationMinutes } from "@/shared/lib/duration";
 import {
   getZonedDayKey,
+  getZonedDayRangeForInstant,
   getZonedDayRangeFromDayKey,
   getZonedStartOfDayIso,
+  getZonedToday,
+  toUtcISOString,
 } from "@/shared/lib/time-zone";
 import { trpc } from "@/trpc/client";
 
@@ -58,10 +70,12 @@ const MIN_DURATION_HOURS = 1;
 const MAX_DURATION_HOURS = 24;
 const DEFAULT_DURATION_MINUTES = 60;
 const selectionModeSchema = ["any", "court"] as const;
+const viewModeSchema = ["day", "month"] as const;
 const clampDurationHours = (value: number) =>
   Math.min(Math.max(Math.round(value), MIN_DURATION_HOURS), MAX_DURATION_HOURS);
 
 type SelectionMode = (typeof selectionModeSchema)[number];
+type ViewMode = (typeof viewModeSchema)[number];
 
 type CourtAvailabilityOption = {
   id?: string;
@@ -73,9 +87,32 @@ type CourtAvailabilityOption = {
   courtLabel: string;
 };
 
+type MonthDayAvailability = {
+  dayKey: string;
+  date: Date;
+  slots: TimeSlot[];
+};
+
 function parseDayKeyToDate(dayKey: string, timeZone?: string) {
   const range = getZonedDayRangeFromDayKey(dayKey, timeZone);
   return range.start;
+}
+
+function getMonthKeyFromDate(date: Date, timeZone?: string) {
+  return formatInTimeZone(date, timeZone ?? "Asia/Manila", "yyyy-MM");
+}
+
+function parseMonthKeyToDate(monthKey: string, timeZone?: string) {
+  return parseDayKeyToDate(`${monthKey}-01`, timeZone);
+}
+
+function isValidMonthKey(value?: string | null): value is string {
+  if (!value) return false;
+  const [yearRaw, monthRaw] = value.split("-");
+  const year = Number(yearRaw);
+  const month = Number(monthRaw);
+  if (!Number.isInteger(year) || !Number.isInteger(month)) return false;
+  return month >= 1 && month <= 12;
 }
 
 function buildSchedulePath({
@@ -84,6 +121,8 @@ function buildSchedulePath({
   duration,
   sportId,
   mode,
+  view,
+  month,
   selectedCourtId,
   startTime,
 }: {
@@ -92,6 +131,8 @@ function buildSchedulePath({
   duration?: number;
   sportId?: string;
   mode?: SelectionMode;
+  view?: ViewMode;
+  month?: string;
   selectedCourtId?: string;
   startTime?: string;
 }) {
@@ -100,6 +141,8 @@ function buildSchedulePath({
   if (duration) params.set("duration", String(duration));
   if (sportId) params.set("sportId", sportId);
   if (mode) params.set("mode", mode);
+  if (view) params.set("view", view);
+  if (month) params.set("month", month);
   if (selectedCourtId) params.set("courtId", selectedCourtId);
   if (startTime) params.set("startTime", startTime);
 
@@ -126,6 +169,16 @@ export default function CourtSchedulePage() {
   const isAuthenticated = !!session;
 
   const [dayKeyParam, setDayKeyParam] = useQueryState("date", parseAsString);
+  const [viewParam, setViewParam] = useQueryState(
+    "view",
+    parseAsStringLiteral(viewModeSchema)
+      .withDefault("month")
+      .withOptions({ history: "replace" }),
+  );
+  const [monthParam, setMonthParam] = useQueryState(
+    "month",
+    parseAsString.withOptions({ history: "replace" }),
+  );
   const [sportIdParam, setSportIdParam] = useQueryState(
     "sportId",
     parseAsString.withOptions({ history: "replace" }),
@@ -208,9 +261,7 @@ export default function CourtSchedulePage() {
       const draftValue = durationHoursDraft.trim();
       const parsed = Number(draftValue);
       const baseHours =
-        draftValue !== "" &&
-        Number.isFinite(parsed) &&
-        Number.isInteger(parsed)
+        draftValue !== "" && Number.isFinite(parsed) && Number.isInteger(parsed)
           ? parsed
           : durationHours;
       const nextHours =
@@ -228,6 +279,25 @@ export default function CourtSchedulePage() {
   const isVerified = verificationStatus === "VERIFIED";
   const showBooking =
     place?.placeType === "RESERVABLE" && isVerified && reservationsEnabled;
+  const isMonthView = viewParam === "month";
+
+  const today = React.useMemo(
+    () => getZonedToday(placeTimeZone),
+    [placeTimeZone],
+  );
+  const todayDayKey = React.useMemo(
+    () => getZonedDayKey(today, placeTimeZone),
+    [placeTimeZone, today],
+  );
+  const todayRange = React.useMemo(
+    () => getZonedDayRangeForInstant(today, placeTimeZone),
+    [placeTimeZone, today],
+  );
+  const currentMonthKey = React.useMemo(
+    () => getMonthKeyFromDate(today, placeTimeZone),
+    [placeTimeZone, today],
+  );
+  const minMonthStart = React.useMemo(() => startOfMonth(today), [today]);
 
   const selectedDate = React.useMemo(() => {
     if (!dayKeyParam) return undefined;
@@ -242,15 +312,45 @@ export default function CourtSchedulePage() {
     }
 
     if (!dayKeyParam) {
-      setDayKeyParam(getZonedDayKey(new Date(), placeTimeZone));
+      setDayKeyParam(todayDayKey);
+    } else if (selectedDate) {
+      const selectedRange = getZonedDayRangeForInstant(
+        selectedDate,
+        placeTimeZone,
+      );
+      if (selectedRange.start < todayRange.start) {
+        setDayKeyParam(todayDayKey);
+      }
+    }
+
+    if (!isValidMonthKey(monthParam)) {
+      const fallbackMonthKey = getMonthKeyFromDate(
+        selectedDate ?? today,
+        placeTimeZone,
+      );
+      setMonthParam(fallbackMonthKey);
+      return;
+    }
+
+    const monthStart = parseMonthKeyToDate(monthParam, placeTimeZone);
+    if (monthStart < minMonthStart) {
+      setMonthParam(currentMonthKey);
     }
   }, [
+    currentMonthKey,
     dayKeyParam,
+    minMonthStart,
+    monthParam,
     place,
     placeTimeZone,
+    selectedDate,
     setDayKeyParam,
+    setMonthParam,
     setSportIdParam,
     sportIdParam,
+    today,
+    todayDayKey,
+    todayRange.start,
   ]);
 
   const courtsForSport = React.useMemo(() => {
@@ -274,16 +374,136 @@ export default function CourtSchedulePage() {
     setSelectedCourtIdParam,
   ]);
 
-  const dateIso = React.useMemo(() => {
-    if (!selectedDate) return undefined;
-    return getZonedStartOfDayIso(selectedDate, placeTimeZone);
-  }, [placeTimeZone, selectedDate]);
+  const dayViewDate = isMonthView ? undefined : selectedDate;
+
+  const dayViewDateIso = React.useMemo(() => {
+    if (!dayViewDate) return undefined;
+    return getZonedStartOfDayIso(dayViewDate, placeTimeZone);
+  }, [dayViewDate, placeTimeZone]);
+
+  const resolvedMonthKey = isValidMonthKey(monthParam)
+    ? monthParam
+    : currentMonthKey;
+  const monthStart = React.useMemo(
+    () => parseMonthKeyToDate(resolvedMonthKey, placeTimeZone),
+    [placeTimeZone, resolvedMonthKey],
+  );
+  const monthEnd = React.useMemo(() => endOfMonth(monthStart), [monthStart]);
+  const monthRangeStart = React.useMemo(() => {
+    const rangeStart = getZonedDayRangeForInstant(
+      monthStart,
+      placeTimeZone,
+    ).start;
+    return rangeStart < todayRange.start ? todayRange.start : rangeStart;
+  }, [monthStart, placeTimeZone, todayRange.start]);
+  const monthRangeEnd = React.useMemo(
+    () => getZonedDayRangeForInstant(monthEnd, placeTimeZone).end,
+    [monthEnd, placeTimeZone],
+  );
+  const monthRangeStartIso = React.useMemo(
+    () => toUtcISOString(monthRangeStart),
+    [monthRangeStart],
+  );
+  const monthRangeEndIso = React.useMemo(
+    () => toUtcISOString(monthRangeEnd),
+    [monthRangeEnd],
+  );
+
+  const scrollToDayKey = React.useCallback((dayKey: string) => {
+    if (typeof window === "undefined") return;
+    const element = document.getElementById(`day-${dayKey}`);
+    if (!element) return;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    element.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  }, []);
+
+  const handleMonthSelect = React.useCallback(
+    (date?: Date) => {
+      if (!date) return;
+      const nextDayKey = getZonedDayKey(date, placeTimeZone);
+      setDayKeyParam(nextDayKey);
+      setMonthParam(getMonthKeyFromDate(date, placeTimeZone));
+      setStartTimeParam(null);
+      scrollToDayKey(nextDayKey);
+    },
+    [
+      placeTimeZone,
+      scrollToDayKey,
+      setDayKeyParam,
+      setMonthParam,
+      setStartTimeParam,
+    ],
+  );
+
+  const handleMonthChange = React.useCallback(
+    (date: Date) => {
+      const nextMonthKey = getMonthKeyFromDate(date, placeTimeZone);
+      const nextMonthStart = parseMonthKeyToDate(nextMonthKey, placeTimeZone);
+      const nextDayKey =
+        nextMonthStart < todayRange.start
+          ? todayDayKey
+          : getZonedDayKey(nextMonthStart, placeTimeZone);
+      setMonthParam(nextMonthKey);
+      setDayKeyParam(nextDayKey);
+      setStartTimeParam(null);
+    },
+    [
+      placeTimeZone,
+      setDayKeyParam,
+      setMonthParam,
+      setStartTimeParam,
+      todayDayKey,
+      todayRange.start,
+    ],
+  );
+
+  const handleMonthToday = React.useCallback(() => {
+    setMonthParam(currentMonthKey);
+    setDayKeyParam(todayDayKey);
+    setStartTimeParam(null);
+    scrollToDayKey(todayDayKey);
+  }, [
+    currentMonthKey,
+    scrollToDayKey,
+    setDayKeyParam,
+    setMonthParam,
+    setStartTimeParam,
+    todayDayKey,
+  ]);
+
+  const handleViewChange = React.useCallback(
+    (value: string) => {
+      if (!value) return;
+      const nextView = value as ViewMode;
+      setViewParam(nextView);
+      setStartTimeParam(null);
+
+      if (nextView === "month") {
+        const baseDate = selectedDate ?? today;
+        const nextMonthKey = getMonthKeyFromDate(baseDate, placeTimeZone);
+        setMonthParam(nextMonthKey);
+      }
+    },
+    [
+      placeTimeZone,
+      selectedDate,
+      setMonthParam,
+      setStartTimeParam,
+      setViewParam,
+      today,
+    ],
+  );
 
   const cheapestAvailabilityQuery = usePlaceAvailability({
     place: modeParam === "any" ? (place ?? undefined) : undefined,
     sportId: sportIdParam ?? undefined,
     courtId: undefined,
-    date: selectedDate,
+    date: dayViewDate,
     durationMinutes,
     mode: "any",
   });
@@ -291,18 +511,78 @@ export default function CourtSchedulePage() {
   const cheapestAvailability = cheapestAvailabilityQuery.data ?? [];
 
   const courtAvailabilityQueries = trpc.useQueries((t) => {
+    if (isMonthView) return [];
     if (modeParam !== "court") return [];
-    if (!dateIso) return [];
+    if (!dayViewDateIso) return [];
     if (!courtsForSport.length) return [];
 
     return courtsForSport.map((court) =>
       t.availability.getForCourt({
         courtId: court.id,
-        date: dateIso,
+        date: dayViewDateIso,
         durationMinutes,
       }),
     );
   });
+
+  const monthAvailabilityQuery =
+    trpc.availability.getForPlaceSportRange.useQuery(
+      {
+        placeId: place?.id ?? "",
+        sportId: sportIdParam ?? "",
+        startDate: monthRangeStartIso,
+        endDate: monthRangeEndIso,
+        durationMinutes,
+      },
+      {
+        enabled:
+          isMonthView &&
+          modeParam === "any" &&
+          !!place?.id &&
+          !!sportIdParam &&
+          durationMinutes > 0,
+      },
+    );
+
+  const courtMonthAvailabilityQuery =
+    trpc.availability.getForCourtRange.useQuery(
+      {
+        courtId: selectedCourtIdParam ?? "",
+        startDate: monthRangeStartIso,
+        endDate: monthRangeEndIso,
+        durationMinutes,
+      },
+      {
+        enabled:
+          isMonthView &&
+          modeParam === "court" &&
+          !!selectedCourtIdParam &&
+          durationMinutes > 0,
+      },
+    );
+
+  const monthAvailabilityOptions = React.useMemo(() => {
+    if (!isMonthView) return [];
+    const data =
+      modeParam === "any"
+        ? monthAvailabilityQuery.data
+        : courtMonthAvailabilityQuery.data;
+    if (!data) return [];
+    return data.map((option) => ({
+      ...option,
+      id: buildAvailabilityId(
+        option.courtId,
+        option.startTime,
+        durationMinutes,
+      ),
+    }));
+  }, [
+    courtMonthAvailabilityQuery.data,
+    durationMinutes,
+    isMonthView,
+    modeParam,
+    monthAvailabilityQuery.data,
+  ]);
 
   const isLoadingCourtAvailability = courtAvailabilityQueries.some(
     (query) => query.isLoading,
@@ -311,6 +591,12 @@ export default function CourtSchedulePage() {
   const selectedOption: CourtAvailabilityOption | undefined =
     React.useMemo(() => {
       if (!startTimeParam) return undefined;
+
+      if (isMonthView) {
+        return monthAvailabilityOptions.find(
+          (option) => option.startTime === startTimeParam,
+        );
+      }
 
       if (modeParam === "any") {
         return cheapestAvailability.find(
@@ -335,20 +621,62 @@ export default function CourtSchedulePage() {
       cheapestAvailability,
       courtAvailabilityQueries,
       courtsForSport,
+      isMonthView,
       modeParam,
+      monthAvailabilityOptions,
       selectedCourtIdParam,
       startTimeParam,
     ]);
 
   const selectedOptionId = selectedOption
-    ? modeParam === "any"
-      ? selectedOption.id
-      : buildAvailabilityId(
-          selectedOption.courtId,
-          selectedOption.startTime,
-          durationMinutes,
-        )
+    ? buildAvailabilityId(
+        selectedOption.courtId,
+        selectedOption.startTime,
+        durationMinutes,
+      )
     : undefined;
+
+  const monthAvailabilityByDay = React.useMemo<MonthDayAvailability[]>(() => {
+    if (!isMonthView) return [];
+    const slotsByDay = new Map<string, TimeSlot[]>();
+
+    for (const option of monthAvailabilityOptions) {
+      const dayKey = getZonedDayKey(option.startTime, placeTimeZone);
+      const slot: TimeSlot = {
+        id: buildAvailabilityId(
+          option.courtId,
+          option.startTime,
+          durationMinutes,
+        ),
+        startTime: option.startTime,
+        endTime: option.endTime,
+        priceCents: option.totalPriceCents,
+        currency: option.currency ?? "PHP",
+        status: "available",
+      };
+      const existing = slotsByDay.get(dayKey);
+      if (existing) {
+        existing.push(slot);
+      } else {
+        slotsByDay.set(dayKey, [slot]);
+      }
+    }
+
+    return Array.from(slotsByDay.entries())
+      .map(([dayKey, slots]) => ({
+        dayKey,
+        date: parseDayKeyToDate(dayKey, placeTimeZone),
+        slots: [...slots].sort((a, b) =>
+          a.startTime.localeCompare(b.startTime),
+        ),
+      }))
+      .sort((a, b) => a.dayKey.localeCompare(b.dayKey));
+  }, [durationMinutes, isMonthView, monthAvailabilityOptions, placeTimeZone]);
+
+  const availableMonthDates = React.useMemo(
+    () => monthAvailabilityByDay.map((day) => day.date),
+    [monthAvailabilityByDay],
+  );
 
   React.useEffect(() => {
     if (!selectedOption) return;
@@ -403,6 +731,8 @@ export default function CourtSchedulePage() {
       duration: durationMinutes,
       sportId: sportIdParam,
       mode: modeParam,
+      view: viewParam,
+      month: isValidMonthKey(monthParam) ? monthParam : undefined,
       selectedCourtId:
         modeParam === "court" ? selectedOption.courtId : undefined,
       startTime: selectedOption.startTime,
@@ -478,8 +808,15 @@ export default function CourtSchedulePage() {
     ? formatInTimeZone(selectedDate, placeTimeZone, "MMM d, yyyy")
     : "";
 
-  const isLoadingTimes =
-    modeParam === "any"
+  const isLoadingMonthAvailability =
+    isMonthView &&
+    (modeParam === "any"
+      ? monthAvailabilityQuery.isLoading
+      : courtMonthAvailabilityQuery.isLoading);
+
+  const isLoadingTimes = isMonthView
+    ? isLoadingMonthAvailability
+    : modeParam === "any"
       ? cheapestAvailabilityQuery.isLoading
       : isLoadingCourtAvailability;
 
@@ -555,21 +892,19 @@ export default function CourtSchedulePage() {
               </div>
 
               <div className="space-y-2">
-                <p className="text-sm font-medium">Date</p>
-                <KudosDatePicker
-                  value={selectedDate}
-                  onChange={(date) => {
-                    if (!date) {
-                      setDayKeyParam(null);
-                      setStartTimeParam(null);
-                      return;
-                    }
-                    setDayKeyParam(getZonedDayKey(date, placeTimeZone));
-                    setStartTimeParam(null);
-                  }}
-                  placeholder="Choose a date"
-                  timeZone={placeTimeZone}
-                />
+                <p className="text-sm font-medium">Calendar view</p>
+                <ToggleGroup
+                  type="single"
+                  value={viewParam}
+                  onValueChange={handleViewChange}
+                >
+                  <ToggleGroupItem value="month" size="sm">
+                    Month
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="day" size="sm">
+                    Day
+                  </ToggleGroupItem>
+                </ToggleGroup>
               </div>
             </div>
 
@@ -642,12 +977,57 @@ export default function CourtSchedulePage() {
                 </ToggleGroup>
               </div>
             </div>
+
+            {!isMonthView ? (
+              <div className="space-y-2 max-w-[260px]">
+                <p className="text-sm font-medium">Date</p>
+                <KudosDatePicker
+                  value={selectedDate}
+                  onChange={(date) => {
+                    if (!date) {
+                      setDayKeyParam(null);
+                      setStartTimeParam(null);
+                      return;
+                    }
+                    const nextDayKey = getZonedDayKey(date, placeTimeZone);
+                    setDayKeyParam(nextDayKey);
+                    setMonthParam(getMonthKeyFromDate(date, placeTimeZone));
+                    setStartTimeParam(null);
+                  }}
+                  placeholder="Choose a date"
+                  timeZone={placeTimeZone}
+                />
+              </div>
+            ) : modeParam === "court" ? (
+              <div className="space-y-2 max-w-[320px]">
+                <p className="text-sm font-medium">Court</p>
+                <Select
+                  value={selectedCourtIdParam ?? ""}
+                  onValueChange={(value) => {
+                    setSelectedCourtIdParam(value || null);
+                    setStartTimeParam(null);
+                  }}
+                  disabled={!courtsForSport.length}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a court" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {courtsForSport.map((court) => (
+                      <SelectItem key={court.id} value={court.id}>
+                        {court.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : null}
           </CardHeader>
 
           <CardContent className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/30 p-3">
               <div className="flex items-start gap-2">
-                <Calendar className="h-4 w-4 text-accent mt-0.5" />
+                <CalendarIcon className="h-4 w-4 text-accent mt-0.5" />
                 <div>
                   <p className="text-sm font-medium">
                     {formattedDateLabel || "Pick a date"}
@@ -682,7 +1062,80 @@ export default function CourtSchedulePage() {
               </div>
             </div>
 
-            {!selectedDate ? (
+            {isMonthView ? (
+              <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium">Browse month</p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleMonthToday}
+                    >
+                      Today
+                    </Button>
+                  </div>
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={handleMonthSelect}
+                    month={monthStart}
+                    onMonthChange={handleMonthChange}
+                    fromMonth={minMonthStart}
+                    disabled={(date) => date < todayRange.start}
+                    modifiers={{ available: availableMonthDates }}
+                    modifiersClassNames={{
+                      available: "ring-1 ring-primary/40",
+                    }}
+                    timeZone={placeTimeZone}
+                  />
+                </div>
+                <div className="space-y-4">
+                  {modeParam === "court" && courtsForSport.length === 0 ? (
+                    <p className="text-sm text-muted-foreground py-6 text-center">
+                      No active courts for this sport.
+                    </p>
+                  ) : isLoadingTimes ? (
+                    <div className="space-y-3">
+                      <div className="h-4 w-32 rounded bg-muted animate-pulse" />
+                      <TimeSlotPickerSkeleton count={8} />
+                    </div>
+                  ) : monthAvailabilityByDay.length > 0 ? (
+                    monthAvailabilityByDay.map((day) => (
+                      <div
+                        key={day.dayKey}
+                        id={`day-${day.dayKey}`}
+                        className="space-y-2 scroll-mt-24"
+                      >
+                        <p className="text-sm font-medium">
+                          {formatInTimeZone(
+                            day.date,
+                            placeTimeZone,
+                            "EEE, MMM d",
+                          )}
+                        </p>
+                        <TimeSlotPicker
+                          slots={day.slots}
+                          selectedId={selectedOptionId}
+                          onSelect={(slot) => {
+                            setDayKeyParam(day.dayKey);
+                            setMonthParam(day.dayKey.slice(0, 7));
+                            setStartTimeParam(slot.startTime);
+                          }}
+                          showPrice
+                          timeZone={placeTimeZone}
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-muted-foreground py-6 text-center">
+                      No available start times for this month.
+                    </p>
+                  )}
+                </div>
+              </div>
+            ) : !selectedDate ? (
               <p className="text-sm text-muted-foreground py-6 text-center">
                 Select a date to see available start times.
               </p>

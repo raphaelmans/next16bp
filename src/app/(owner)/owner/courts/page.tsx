@@ -145,7 +145,7 @@ export default function OwnerCourtsPage() {
               Courts
             </h1>
             <p className="text-muted-foreground">
-              View courts across your places
+              View courts across your venues
             </p>
           </div>
           <Button asChild>

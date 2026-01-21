@@ -88,7 +88,7 @@ export default function OwnerVerificationPlacePage() {
           title={`Verify ${place.name}`}
           description="Submit documents and enable reservations when approved."
           breadcrumbs={[
-            { label: "My Places", href: appRoutes.owner.places.base },
+            { label: "My Venues", href: appRoutes.owner.places.base },
             { label: place.name, href: appRoutes.owner.places.edit(place.id) },
             { label: "Verification" },
           ]}
@@ -98,7 +98,7 @@ export default function OwnerVerificationPlacePage() {
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" size="sm" asChild>
                 <Link href={appRoutes.owner.places.edit(place.id)}>
-                  Edit place
+                  Edit venue
                 </Link>
               </Button>
               <Button variant="ghost" size="sm" asChild>

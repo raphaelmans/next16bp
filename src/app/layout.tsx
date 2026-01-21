@@ -29,12 +29,14 @@ export const metadata: Metadata = {
     template: "%s | KudosCourts",
   },
   description:
-    "Find pickleball courts near you and book your next game in seconds. The unified platform for players and court owners.",
+    "Find pickleball and other sports courts near you and book your next game in seconds. The unified platform for players and court owners.",
   keywords: [
     "pickleball",
+    "basketball courts",
+    "tennis courts",
+    "badminton courts",
     "court booking",
     "court reservation",
-    "pickleball courts",
     "sports booking",
     "court discovery",
   ],
@@ -50,13 +52,13 @@ export const metadata: Metadata = {
     siteName: "KudosCourts",
     title: "KudosCourts - Discover. Reserve. Play.",
     description:
-      "Find pickleball courts near you and book your next game in seconds. The unified platform for players and court owners.",
+      "Find pickleball and other sports courts near you and book your next game in seconds. The unified platform for players and court owners.",
   },
   twitter: {
     card: "summary_large_image",
     title: "KudosCourts - Discover. Reserve. Play.",
     description:
-      "Find pickleball courts near you and book your next game in seconds.",
+      "Find pickleball and other sports courts near you and book your next game in seconds.",
     creator: "@kudoscourts",
     site: "@kudoscourts",
   },

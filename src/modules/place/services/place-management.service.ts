@@ -131,7 +131,7 @@ export class PlaceManagementService implements IPlaceManagementService {
           organizationId: data.organizationId,
           userId,
         },
-        "Place created",
+        "Venue created",
       );
 
       return created;
@@ -193,7 +193,7 @@ export class PlaceManagementService implements IPlaceManagementService {
           userId,
           fields: Object.keys(normalizedUpdateData),
         },
-        "Place updated",
+        "Venue updated",
       );
 
       return updated;
@@ -220,7 +220,7 @@ export class PlaceManagementService implements IPlaceManagementService {
           organizationId: place.organizationId,
           userId,
         },
-        "Place deleted",
+        "Venue deleted",
       );
     });
   }
@@ -307,7 +307,7 @@ export class PlaceManagementService implements IPlaceManagementService {
           photoId: created.id,
           userId,
         },
-        "Place photo uploaded",
+        "Venue photo uploaded",
       );
 
       return created;
@@ -365,7 +365,7 @@ export class PlaceManagementService implements IPlaceManagementService {
         photoId,
         userId,
       },
-      "Place photo removed",
+      "Venue photo removed",
     );
   }
 

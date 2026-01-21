@@ -33,7 +33,7 @@ export class DuplicateCourtLabelError extends ConflictError {
   readonly code = "DUPLICATE_COURT_LABEL";
 
   constructor(placeId: string, label: string) {
-    super("Court label already exists for this place", { placeId, label });
+    super("Court label already exists for this venue", { placeId, label });
   }
 }
 

@@ -354,7 +354,7 @@ export default function CourtSetupWizardPage() {
           title={headerTitle}
           description="Configure details, schedule, and publishing in one flow"
           breadcrumbs={[
-            { label: "My Places", href: appRoutes.owner.places.base },
+            { label: "My Venues", href: appRoutes.owner.places.base },
             {
               label: placeData.place.name,
               href: appRoutes.owner.places.courts.base(placeId),
@@ -585,7 +585,7 @@ export default function CourtSetupWizardPage() {
                             </div>
                             <div className="space-y-1">
                               <span className="text-xs uppercase text-muted-foreground">
-                                Place
+                                Venue
                               </span>
                               <p className="font-medium">
                                 {placeData.place.name}

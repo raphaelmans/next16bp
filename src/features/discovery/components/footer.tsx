@@ -8,12 +8,12 @@ const FOOTER_LINKS = {
     { name: "Browse Courts", href: appRoutes.courts.base },
     { name: "Map View", href: `${appRoutes.courts.base}?view=map` },
     {
-      name: "Pickleball Courts",
-      href: `${appRoutes.courts.base}?sportId=pickleball`,
+      name: "Pickleball (and more sports)",
+      href: `${appRoutes.courts.base}?q=pickleball`,
     },
   ],
   owners: [
-    { name: "List Your Venue", href: appRoutes.owner.places.new },
+    { name: "List Your Venue", href: appRoutes.listYourVenue.base },
     { name: "Owner Dashboard", href: appRoutes.owner.base },
     { name: "Pricing", href: appRoutes.owner.pricing },
   ],

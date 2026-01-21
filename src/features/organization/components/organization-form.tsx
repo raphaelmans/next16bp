@@ -116,7 +116,7 @@ export function OrganizationForm({
           <StandardFormInput<OrganizationFormValues>
             name="name"
             label="Organization Name"
-            placeholder="My Pickleball Club"
+            placeholder="My Sports Club (Pickleball)"
             required
           />
 

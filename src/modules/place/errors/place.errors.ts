@@ -6,7 +6,7 @@ export class PlaceNotFoundError extends NotFoundError {
   readonly code = "PLACE_NOT_FOUND";
 
   constructor(placeId?: string) {
-    super("Place not found", placeId ? { placeId } : undefined);
+    super("Venue not found", placeId ? { placeId } : undefined);
   }
 }
 
@@ -14,6 +14,6 @@ export class NotPlaceOwnerError extends AuthorizationError {
   readonly code = "NOT_PLACE_OWNER";
 
   constructor() {
-    super("You are not the owner of this place");
+    super("You are not the owner of this venue");
   }
 }

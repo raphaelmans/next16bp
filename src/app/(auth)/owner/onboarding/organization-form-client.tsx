@@ -16,7 +16,7 @@ const withCacheBust = (href: string) => {
   return `${url.pathname}${url.search}`;
 };
 
-export function OrganizationFormClient() {
+export function OrganizationFormClient({ nextHref }: { nextHref: string }) {
   const router = useRouter();
 
   const { data: organizations } = trpc.organization.my.useQuery(undefined, {
@@ -31,8 +31,8 @@ export function OrganizationFormClient() {
       return;
     }
 
-    router.replace(withCacheBust(appRoutes.owner.base));
-  }, [hasOrganization, router]);
+    router.replace(withCacheBust(nextHref));
+  }, [hasOrganization, nextHref, router]);
 
   return <OrganizationForm onCancel={() => router.push(appRoutes.home.base)} />;
 }

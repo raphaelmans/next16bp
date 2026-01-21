@@ -120,7 +120,7 @@ export default function OwnerPlaceCourtsPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight font-heading">
-              Courts at {place?.name ?? "Place"}
+              Courts at {place?.name ?? "Venue"}
             </h1>
             <p className="text-muted-foreground">
               Manage courts, hours, and pricing rules

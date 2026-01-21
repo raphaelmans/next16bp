@@ -10,7 +10,7 @@ export class PlaceVerificationRequestNotFoundError extends NotFoundError {
 
   constructor(requestId?: string) {
     super(
-      "Place verification request not found",
+      "Venue verification request not found",
       requestId ? { requestId } : undefined,
     );
   }
@@ -20,7 +20,7 @@ export class PlaceVerificationNotFoundError extends NotFoundError {
   readonly code = "PLACE_VERIFICATION_NOT_FOUND";
 
   constructor(placeId?: string) {
-    super("Place verification not found", placeId ? { placeId } : undefined);
+    super("Venue verification not found", placeId ? { placeId } : undefined);
   }
 }
 
@@ -44,7 +44,7 @@ export class NotPlaceOwnerError extends AuthorizationError {
   readonly code = "NOT_PLACE_OWNER";
 
   constructor() {
-    super("You are not the owner of this place");
+    super("You are not the owner of this venue");
   }
 }
 
@@ -60,6 +60,6 @@ export class PlaceNotBookableError extends ValidationError {
   readonly code = "PLACE_NOT_BOOKABLE";
 
   constructor(placeId: string) {
-    super("Reservations are not enabled for this place", { placeId });
+    super("Reservations are not enabled for this venue", { placeId });
   }
 }

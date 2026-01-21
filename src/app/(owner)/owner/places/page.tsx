@@ -188,7 +188,7 @@ export default function OwnerPlacesPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-heading font-bold tracking-tight">
-              My Places
+              My Venues
             </h1>
             <p className="text-muted-foreground">
               Manage your locations and courts
@@ -197,7 +197,7 @@ export default function OwnerPlacesPage() {
           <Button asChild>
             <Link href={appRoutes.owner.places.new}>
               <Plus className="mr-2 h-4 w-4" />
-              Add New Place
+              Add New Venue
             </Link>
           </Button>
         </div>
@@ -207,7 +207,7 @@ export default function OwnerPlacesPage() {
             <div className="space-y-1">
               <CardTitle>Organization Logo</CardTitle>
               <CardDescription>
-                Shown on all your places and public pages.
+                Shown on all your venues and public pages.
               </CardDescription>
             </div>
             <Button
@@ -293,13 +293,13 @@ export default function OwnerPlacesPage() {
                 <Settings2 className="h-5 w-5 text-muted-foreground" />
               </div>
               <div className="space-y-1">
-                <p className="font-heading font-semibold">No places yet</p>
+                <p className="font-heading font-semibold">No venues yet</p>
                 <p className="text-sm text-muted-foreground">
-                  Create your first place to add courts and hours.
+                  Create your first venue to add courts and hours.
                 </p>
               </div>
               <Button asChild>
-                <Link href={appRoutes.owner.places.new}>Create a place</Link>
+                <Link href={appRoutes.owner.places.new}>Create a venue</Link>
               </Button>
             </CardContent>
           </Card>
@@ -380,7 +380,7 @@ export default function OwnerPlacesPage() {
                     </Button>
                     <Button variant="outline" size="sm" asChild>
                       <Link href={appRoutes.owner.places.edit(place.id)}>
-                        Edit Place
+                        Edit Venue
                       </Link>
                     </Button>
                     <Button variant="ghost" size="sm" asChild>

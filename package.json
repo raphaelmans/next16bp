@@ -18,7 +18,7 @@
     "db:seed:sports": "dotenvx run --env-file=.env.local -- tsx scripts/seed-sports.ts",
     "db:seed:buckets": "dotenvx run --env-file=.env.local -- tsx scripts/seed-storage-buckets.ts",
     "db:import:curated-courts": "dotenvx run --env-file=.env.local -- tsx scripts/import-curated-courts.ts --file scripts/templates/curated-courts-template.csv",
-    "scrape:curated-courts": "dotenvx run --env-file=.env.local -- tsx scripts/firecrawl-curated-courts.ts --input scripts/templates/curated-courts-urls.txt --query \"pickleball courts\" --location \"Cebu, Philippines\" --country PH --limit 25 --output scripts/output/curated-courts.csv --json scripts/output/curated-courts.json"
+    "db:export:curated-places": "dotenvx run --env-file=.env.local -- tsx scripts/export-curated-places.ts"
   },
   "dependencies": {
     "@date-fns/tz": "^1.2.0",

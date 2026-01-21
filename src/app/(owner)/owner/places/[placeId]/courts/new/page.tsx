@@ -97,7 +97,13 @@ export default function NewPlaceCourtPage() {
                 You need an organization before creating courts.
               </p>
               <Button asChild>
-                <Link href={appRoutes.owner.onboarding}>Go to onboarding</Link>
+                <Link
+                  href={`${appRoutes.owner.onboarding}?next=${encodeURIComponent(
+                    appRoutes.owner.places.courts.new(placeId),
+                  )}`}
+                >
+                  Go to onboarding
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -157,7 +163,7 @@ export default function NewPlaceCourtPage() {
           title="Step 2 of 3 · Add a Court"
           description="Create at least one court for this venue. Next: verification."
           breadcrumbs={[
-            { label: "My Places", href: appRoutes.owner.places.base },
+            { label: "My Venues", href: appRoutes.owner.places.base },
             { label: place.name, href: appRoutes.owner.places.edit(place.id) },
             { label: "Add court" },
           ]}

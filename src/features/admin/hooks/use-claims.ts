@@ -70,7 +70,7 @@ export function useClaims(options: UseClaimsOptions = {}) {
             : "claim") as ClaimType,
           status: item.status.toLowerCase() as ClaimStatus,
           courtId: item.placeId,
-          courtName: `Place ${item.placeId.slice(0, 8)}...`,
+          courtName: `Venue ${item.placeId.slice(0, 8)}...`,
           courtAddress: "Address pending...",
           courtStatus: "curated" as const,
           organizationId: item.organizationId ?? null,

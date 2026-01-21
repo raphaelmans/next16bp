@@ -142,7 +142,7 @@ export default function OpenGraphImage() {
           lineHeight: 1.4,
         }}
       >
-        Find pickleball courts near you and book your next game in seconds
+        Find pickleball and other sports courts near you and book in seconds
       </div>
 
       {/* Bottom accent bar */}
