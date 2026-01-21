@@ -5,6 +5,7 @@ import {
   isGuestRoute,
   isProtectedRoute,
 } from "@/shared/lib/app-routes";
+import { getSafeRedirectPath } from "@/shared/lib/redirects";
 
 /**
  * Next.js proxy for session refresh and route protection.
@@ -107,8 +108,13 @@ export async function proxy(request: NextRequest) {
 
   // Redirect authenticated users from guest routes
   if (user && isGuestRoute(path)) {
-    const redirectTo =
-      request.nextUrl.searchParams.get("redirect") ?? appRoutes.home.base;
+    const redirectTo = getSafeRedirectPath(
+      request.nextUrl.searchParams.get("redirect"),
+      {
+        fallback: appRoutes.home.base,
+        origin: request.nextUrl.origin,
+      },
+    );
     return NextResponse.redirect(new URL(redirectTo, request.url));
   }
 

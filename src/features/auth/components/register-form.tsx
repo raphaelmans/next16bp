@@ -52,7 +52,10 @@ export function RegisterForm() {
 
   const onSubmit = async (data: RegisterDTO) => {
     try {
-      await registerMutation.mutateAsync(data);
+      await registerMutation.mutateAsync({
+        ...data,
+        redirect: redirectUrl,
+      });
       reset(data);
       setSuccess(true);
     } catch (error) {
@@ -65,7 +68,7 @@ export function RegisterForm() {
   const onGoogleLogin = async () => {
     try {
       const result = await googleLoginMutation.mutateAsync({
-        next: redirectUrl,
+        redirect: redirectUrl,
       });
       window.location.assign(result.url);
     } catch (error) {

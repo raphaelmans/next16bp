@@ -4,6 +4,8 @@ import { type NextRequest, NextResponse } from "next/server";
 import { env } from "@/lib/env";
 import { logger } from "@/shared/infra/logger";
 import { createClient } from "@/shared/infra/supabase/create-client";
+import { appRoutes } from "@/shared/lib/app-routes";
+import { getSafeRedirectPath } from "@/shared/lib/redirects";
 
 /**
  * Auth confirm route handler for PKCE flow (magic link, signup, recovery).
@@ -14,20 +16,19 @@ export async function GET(request: NextRequest) {
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
 
-  const redirectTo = request.nextUrl.clone();
-  redirectTo.searchParams.delete("token_hash");
-  redirectTo.searchParams.delete("type");
-
-  // Default redirect to home
-  redirectTo.pathname = "/home";
+  const redirectPath = getSafeRedirectPath(searchParams.get("redirect"), {
+    fallback: appRoutes.home.base,
+    origin: request.nextUrl.origin,
+  });
+  const redirectUrl = new URL(redirectPath, request.url);
+  const fallbackUrl = new URL(appRoutes.index.base, request.url);
 
   if (!token_hash || !type) {
     logger.warn(
       { scope: "auth:confirm", token_hash: !!token_hash, type },
       "Missing token_hash or type parameter",
     );
-    redirectTo.pathname = "/";
-    return NextResponse.redirect(redirectTo);
+    return NextResponse.redirect(fallbackUrl);
   }
 
   const cookieStore = await cookies();
@@ -63,7 +64,7 @@ export async function GET(request: NextRequest) {
           );
         }
 
-        return NextResponse.redirect(redirectTo);
+        return NextResponse.redirect(redirectUrl);
       } catch (error) {
         logger.error(
           {
@@ -91,7 +92,7 @@ export async function GET(request: NextRequest) {
           );
         }
 
-        return NextResponse.redirect(redirectTo);
+        return NextResponse.redirect(redirectUrl);
       } catch (error) {
         logger.error(
           {
@@ -117,9 +118,7 @@ export async function GET(request: NextRequest) {
           "Password recovery verified",
         );
 
-        // For recovery, redirect to home page
-        redirectTo.pathname = "/home";
-        return NextResponse.redirect(redirectTo);
+        return NextResponse.redirect(redirectUrl);
       } catch (error) {
         logger.error(
           {
@@ -136,6 +135,5 @@ export async function GET(request: NextRequest) {
   }
 
   // Fallback: redirect to home on error
-  redirectTo.pathname = "/";
-  return NextResponse.redirect(redirectTo);
+  return NextResponse.redirect(fallbackUrl);
 }

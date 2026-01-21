@@ -8,6 +8,7 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-21 | Added US-00-10 + 56-auth-redirect-continuity plan (standardized auth redirect + list-your-venue metadata) |
 | 2026-01-21 | Added US-00-09 + 55-owner-partner-landing plan (public /list-your-venue + onboarding continuation) |
 | 2026-01-21 | Added 54-public-schedule-month-view plan (month schedule browsing) |
 | 2026-01-21 | Added US-02-09 + 52-owner-place-deletion plan (owner delete place + detach courts) |
@@ -117,6 +118,7 @@ References and context for planning artifacts.
 | 51-admin-place-transfer | `agent-plans/51-admin-place-transfer/` | Complete |
 | 52-owner-place-deletion | `agent-plans/52-owner-place-deletion/` | Draft |
 | 55-owner-partner-landing | `agent-plans/55-owner-partner-landing/` | Draft |
+| 56-auth-redirect-continuity | `agent-plans/56-auth-redirect-continuity/` | Draft |
 
 ---
 

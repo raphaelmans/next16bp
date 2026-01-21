@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -21,8 +22,11 @@ import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { useMagicLink } from "../hooks/use-auth";
 
 export function MagicLinkForm() {
+  const searchParams = useSearchParams();
   const [success, setSuccess] = useState(false);
   const magicLinkMutation = useMagicLink();
+  const redirectUrl = searchParams.get("redirect") ?? appRoutes.home.base;
+  const loginHref = appRoutes.login.from(redirectUrl);
 
   const form = useForm<MagicLinkDTO>({
     resolver: zodResolver(MagicLinkSchema),
@@ -42,7 +46,10 @@ export function MagicLinkForm() {
 
   const onSubmit = async (data: MagicLinkDTO) => {
     try {
-      await magicLinkMutation.mutateAsync(data);
+      await magicLinkMutation.mutateAsync({
+        ...data,
+        redirect: redirectUrl,
+      });
       reset(data);
       setSuccess(true);
     } catch (error) {
@@ -64,7 +71,7 @@ export function MagicLinkForm() {
         </CardHeader>
         <CardFooter>
           <Link
-            href={appRoutes.login.base}
+            href={loginHref}
             className="text-primary hover:underline text-sm"
           >
             Back to sign in
@@ -100,10 +107,7 @@ export function MagicLinkForm() {
           </Button>
 
           <div className="text-muted-foreground text-sm">
-            <Link
-              href={appRoutes.login.base}
-              className="text-primary hover:underline"
-            >
+            <Link href={loginHref} className="text-primary hover:underline">
               Sign in with password
             </Link>
           </div>

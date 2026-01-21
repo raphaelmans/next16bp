@@ -34,6 +34,10 @@ const sports: SportSeed[] = [
     slug: "badminton",
     name: "Badminton",
   },
+  {
+    slug: "tennis",
+    name: "Tennis",
+  },
 ];
 
 async function seed() {

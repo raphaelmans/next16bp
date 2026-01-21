@@ -23,6 +23,7 @@ export class RegisterUserUseCase {
       input.email,
       input.password,
       baseUrl,
+      input.redirect,
     );
 
     const user = result.user;

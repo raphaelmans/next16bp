@@ -9,6 +9,7 @@ export type LoginDTO = z.infer<typeof LoginSchema>;
 
 export const MagicLinkSchema = z.object({
   email: z.string().email(),
+  redirect: z.string().optional(),
 });
 
 export type MagicLinkDTO = z.infer<typeof MagicLinkSchema>;

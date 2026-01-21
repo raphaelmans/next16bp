@@ -26,7 +26,11 @@ export const authRouter = router({
     .input(MagicLinkSchema)
     .mutation(async ({ input, ctx }) => {
       const authService = makeAuthService(ctx.cookies);
-      await authService.signInWithMagicLink(input.email, ctx.origin);
+      await authService.signInWithMagicLink(
+        input.email,
+        ctx.origin,
+        input.redirect,
+      );
       return { success: true, message: "Magic link sent to email" };
     }),
 
@@ -34,7 +38,10 @@ export const authRouter = router({
     .input(StartGoogleOAuthSchema)
     .mutation(async ({ input, ctx }) => {
       const authService = makeAuthService(ctx.cookies);
-      const result = await authService.startGoogleOAuth(ctx.origin, input.next);
+      const result = await authService.startGoogleOAuth(
+        ctx.origin,
+        input.redirect,
+      );
       return { url: result.url };
     }),
 

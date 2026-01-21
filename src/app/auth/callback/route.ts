@@ -4,6 +4,8 @@ import { env } from "@/lib/env";
 import { UserRoleAlreadyExistsError } from "@/modules/user-role/errors/user-role.errors";
 import { makeUserRoleService } from "@/modules/user-role/factories/user-role.factory";
 import { createClient } from "@/shared/infra/supabase/create-client";
+import { appRoutes } from "@/shared/lib/app-routes";
+import { getSafeRedirectPath } from "@/shared/lib/redirects";
 
 /**
  * Auth callback route handler for OAuth and magic link flows.
@@ -12,8 +14,10 @@ import { createClient } from "@/shared/infra/supabase/create-client";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const nextParam = searchParams.get("next") ?? "/";
-  const next = nextParam.startsWith("/") ? nextParam : "/";
+  const redirectPath = getSafeRedirectPath(searchParams.get("redirect"), {
+    fallback: appRoutes.home.base,
+    origin,
+  });
 
   if (code) {
     const cookieStore = await cookies();
@@ -52,15 +56,15 @@ export async function GET(request: Request) {
       const isLocalEnv = process.env.NODE_ENV === "development";
 
       if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`);
+        return NextResponse.redirect(`${origin}${redirectPath}`);
       }
       if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`);
+        return NextResponse.redirect(`https://${forwardedHost}${redirectPath}`);
       }
-      return NextResponse.redirect(`${origin}${next}`);
+      return NextResponse.redirect(`${origin}${redirectPath}`);
     }
   }
 
   // Redirect to index on error (as requested)
-  return NextResponse.redirect(`${origin}/`);
+  return NextResponse.redirect(`${origin}${appRoutes.index.base}`);
 }

@@ -65,7 +65,7 @@ export function LoginForm() {
   const onGoogleLogin = async () => {
     try {
       const result = await googleLoginMutation.mutateAsync({
-        next: redirectUrl,
+        redirect: redirectUrl,
       });
       window.location.assign(result.url);
     } catch (error) {
