@@ -35,6 +35,7 @@ export interface PlaceContactDetail {
   websiteUrl?: string;
   facebookUrl?: string;
   instagramUrl?: string;
+  phoneNumber?: string;
   viberInfo?: string;
   otherContactInfo?: string;
 }
@@ -49,6 +50,7 @@ export interface PlaceDetail {
   description?: string;
   timeZone: string;
   coverImageUrl?: string;
+  logoUrl?: string;
   sports: PlaceSport[];
   courts: PlaceCourt[];
   photos: PlacePhoto[];
@@ -120,6 +122,7 @@ export function usePlaceDetail({ placeId }: UsePlaceDetailOptions) {
               websiteUrl: response.contactDetail.websiteUrl ?? undefined,
               facebookUrl: response.contactDetail.facebookUrl ?? undefined,
               instagramUrl: response.contactDetail.instagramUrl ?? undefined,
+              phoneNumber: response.contactDetail.phoneNumber ?? undefined,
               viberInfo: response.contactDetail.viberInfo ?? undefined,
               otherContactInfo:
                 response.contactDetail.otherContactInfo ?? undefined,
@@ -136,6 +139,7 @@ export function usePlaceDetail({ placeId }: UsePlaceDetailOptions) {
           timeZone: response.place.timeZone,
           description: undefined,
           coverImageUrl: photos[0]?.url,
+          logoUrl: response.organizationLogoUrl ?? undefined,
           courts,
           photos,
           sports: mapCourtsToSports(courts),

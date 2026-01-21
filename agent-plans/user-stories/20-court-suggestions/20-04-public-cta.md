@@ -8,7 +8,7 @@
 
 ## Story
 
-As a **user browsing courts**, I want a **“Suggest a court” entry point** so that **I can contribute listings when I don’t see a venue**.
+As a **user browsing courts**, I want a **“Suggest a court” entry point** so that **I can contribute listings when I don’t see a venue that I already play at**.
 
 ---
 
@@ -19,6 +19,12 @@ As a **user browsing courts**, I want a **“Suggest a court” entry point** so
 - Given I am on `/courts`
 - When I view the page header and/or empty results state
 - Then I see a “Suggest a court” action
+
+### CTA Supports Funnel From Search/Empty State
+
+- Given I am searching or filtering on `/courts`
+- When I cannot find the venue I am looking for
+- Then “Suggest a court” remains available so I can submit a new listing
 
 ### Unauthenticated Behavior
 

@@ -4,9 +4,13 @@
 
 Enable authenticated users to suggest curated courts from the public courts experience (`/courts/suggest`).
 
+This acts as a supply-growth funnel: players can add venues they already play at when those venues are not yet available on the platform.
+
 Submissions are created as real `place` + placeholder `court` records but remain fully hidden from public discovery until approved by an admin.
 
 Admin can review pending submissions, see submitter email attribution, and approve or reject (rejection deactivates the place).
+
+Out of scope (handled in a later session): notifying the submitter when their suggestion is approved/rejected.
 
 ### Reference Documents
 

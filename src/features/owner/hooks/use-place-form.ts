@@ -65,6 +65,7 @@ export function usePlaceForm({
         websiteUrl: data.websiteUrl || undefined,
         facebookUrl: data.facebookUrl || undefined,
         instagramUrl: data.instagramUrl || undefined,
+        phoneNumber: data.phoneNumber || undefined,
         viberInfo: data.viberInfo || undefined,
         otherContactInfo: data.otherContactInfo || undefined,
       });
@@ -91,6 +92,7 @@ export function usePlaceForm({
       websiteUrl: data.websiteUrl || undefined,
       facebookUrl: data.facebookUrl || undefined,
       instagramUrl: data.instagramUrl || undefined,
+      phoneNumber: data.phoneNumber || undefined,
       viberInfo: data.viberInfo || undefined,
       otherContactInfo: data.otherContactInfo || undefined,
     });

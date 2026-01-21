@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Image as ImageIcon, Loader2, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { type Control, useFieldArray, useForm } from "react-hook-form";
@@ -62,6 +62,7 @@ import { trpc } from "@/trpc/client";
 
 const DEFAULT_COUNTRY = "PH";
 const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
+const MAX_PHOTOS = 10;
 
 const DEFAULT_COURT_UNIT = {
   label: "Court 1",
@@ -79,11 +80,11 @@ const DEFAULT_COURT = {
   longitude: "",
   facebookUrl: "",
   instagramUrl: "",
+  phoneNumber: "",
   viberContact: "",
   websiteUrl: "",
   otherContactInfo: "",
   amenities: [] as string[],
-  photoUrls: "",
   courts: [DEFAULT_COURT_UNIT],
 };
 
@@ -98,16 +99,6 @@ const statusVariants = {
   skipped_duplicate: "warning",
   error: "destructive",
 } as const;
-
-const parsePhotoUrls = (value?: string) => {
-  if (!value) return [];
-
-  return value
-    .split(/[\n,]/)
-    .map((url) => url.trim())
-    .filter(Boolean)
-    .map((url, index) => ({ url, displayOrder: index }));
-};
 
 interface CourtListProps {
   control: Control<CuratedCourtBatchFormData>;
@@ -196,6 +187,7 @@ export default function AdminCourtsBatchPage() {
 
   const { data: stats } = useAdminStats();
   const createBatchMutation = useCreateCuratedCourtsBatch();
+  const uploadPhotoMutation = trpc.admin.court.uploadPhoto.useMutation();
   const previewMutation = useGoogleLocPreviewMutation();
   const { data: sports = [], isLoading: sportsLoading } =
     trpc.sport.list.useQuery({});
@@ -211,6 +203,13 @@ export default function AdminCourtsBatchPage() {
     Record<string, string | null>
   >({});
   const [previewingId, setPreviewingId] = React.useState<string | null>(null);
+  const [photoFilesById, setPhotoFilesById] = React.useState<
+    Record<string, File[]>
+  >({});
+  const [isUploadingPhotos, setIsUploadingPhotos] = React.useState(false);
+  const photoInputRefs = React.useRef<Record<string, HTMLInputElement | null>>(
+    {},
+  );
   const provincesCitiesQuery = usePHProvincesCitiesQuery();
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
 
@@ -246,6 +245,8 @@ export default function AdminCourtsBatchPage() {
     setPreviewResults({});
     setPreviewErrors({});
     setPreviewingId(null);
+    setPhotoFilesById({});
+    photoInputRefs.current = {};
   };
 
   const provincesCities = provincesCitiesQuery.data ?? null;
@@ -291,6 +292,42 @@ export default function AdminCourtsBatchPage() {
 
   const courts = watch("courts");
 
+  const handlePhotoFilesChange = (
+    fieldId: string,
+    fileList: FileList | null,
+  ) => {
+    if (!fileList || fileList.length === 0) return;
+
+    setPhotoFilesById((prev) => {
+      const current = prev[fieldId] ?? [];
+      const next = [...current, ...Array.from(fileList)];
+      if (next.length > MAX_PHOTOS) {
+        toast.error(`Maximum ${MAX_PHOTOS} photos per court`);
+      }
+      return {
+        ...prev,
+        [fieldId]: next.slice(0, MAX_PHOTOS),
+      };
+    });
+
+    const input = photoInputRefs.current[fieldId];
+    if (input) {
+      input.value = "";
+    }
+  };
+
+  const handleRemovePhotoFile = (fieldId: string, index: number) => {
+    setPhotoFilesById((prev) => {
+      const current = prev[fieldId] ?? [];
+      const next = current.filter((_file, fileIndex) => fileIndex !== index);
+      if (next.length === 0) {
+        const { [fieldId]: _removed, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [fieldId]: next };
+    });
+  };
+
   const handleRemoveCourt = (index: number, fieldId: string) => {
     remove(index);
     setGoogleUrls((prev) => {
@@ -312,6 +349,13 @@ export default function AdminCourtsBatchPage() {
       return next;
     });
     setPreviewingId((current) => (current === fieldId ? null : current));
+    setPhotoFilesById((prev) => {
+      if (!prev[fieldId]) return prev;
+      const next = { ...prev };
+      delete next[fieldId];
+      return next;
+    });
+    delete photoInputRefs.current[fieldId];
   };
 
   const handleInsertCourtAfter = (index: number) => {
@@ -428,10 +472,9 @@ export default function AdminCourtsBatchPage() {
   }, [courts, provincesCities, setValue]);
 
   const handleSubmit = async (data: CuratedCourtBatchFormData) => {
+    const fieldIds = fields.map((field) => field.id);
     try {
       const items = data.courts.map((court) => {
-        const photos = parsePhotoUrls(court.photoUrls);
-
         return {
           name: court.name,
           address: court.address,
@@ -442,11 +485,11 @@ export default function AdminCourtsBatchPage() {
           longitude: court.longitude || undefined,
           facebookUrl: court.facebookUrl || undefined,
           instagramUrl: court.instagramUrl || undefined,
+          phoneNumber: court.phoneNumber || undefined,
           viberInfo: court.viberContact || undefined,
           websiteUrl: court.websiteUrl || undefined,
           otherContactInfo: court.otherContactInfo || undefined,
           amenities: court.amenities.length > 0 ? court.amenities : undefined,
-          photos: photos.length > 0 ? photos : undefined,
           courts: court.courts.map((courtItem) => ({
             label: courtItem.label,
             sportId: courtItem.sportId,
@@ -458,13 +501,46 @@ export default function AdminCourtsBatchPage() {
       setBatchResult(null);
       const result = await createBatchMutation.mutateAsync({ items });
       setBatchResult(result);
+
+      let failedUploads = 0;
+      const createdItems = result.items.filter(
+        (item) => item.status === "created" && item.placeId,
+      );
+
+      if (createdItems.length > 0) {
+        setIsUploadingPhotos(true);
+        for (const item of createdItems) {
+          const fieldId = fieldIds[item.index];
+          if (!fieldId || !item.placeId) continue;
+          const files = photoFilesById[fieldId] ?? [];
+
+          for (const file of files) {
+            const formData = new FormData();
+            formData.append("placeId", item.placeId);
+            formData.append("image", file, file.name);
+            try {
+              await uploadPhotoMutation.mutateAsync(formData);
+            } catch (error) {
+              failedUploads += 1;
+            }
+          }
+        }
+      }
+
       toast.success("Batch processed", {
         description: `${result.summary.created} created, ${result.summary.skipped} skipped, ${result.summary.failed} failed`,
       });
+      if (failedUploads > 0) {
+        toast.error("Some photos failed to upload", {
+          description: "You can retry uploads from each court detail page.",
+        });
+      }
     } catch (error) {
       toast.error("Failed to process batch", {
         description: getClientErrorMessage(error, "Please try again"),
       });
+    } finally {
+      setIsUploadingPhotos(false);
     }
   };
 
@@ -472,7 +548,8 @@ export default function AdminCourtsBatchPage() {
     label: sport.name,
     value: sport.id,
   }));
-  const submitting = createBatchMutation.isPending || isSubmitting;
+  const submitting =
+    createBatchMutation.isPending || isSubmitting || isUploadingPhotos;
   const isSubmitDisabled = submitting || !isDirty || !isValid;
 
   return (
@@ -545,6 +622,8 @@ export default function AdminCourtsBatchPage() {
               const previewErrorMessage = previewErrors[field.id] ?? null;
               const isPreviewing =
                 previewMutation.isPending && previewingId === field.id;
+              const selectedPhotos = photoFilesById[field.id] ?? [];
+              const canAddMorePhotos = selectedPhotos.length < MAX_PHOTOS;
               const coordinateLabel =
                 previewResult?.lat !== undefined &&
                 previewResult?.lng !== undefined
@@ -793,9 +872,18 @@ export default function AdminCourtsBatchPage() {
                               placeholder="https://instagram.com/..."
                             />
                             <StandardFormInput<CuratedCourtBatchFormData>
-                              name={`courts.${index}.viberContact`}
-                              label="Viber Contact"
+                              name={`courts.${index}.phoneNumber`}
+                              label="Phone Number"
                               placeholder="0917 123 4567"
+                              type="tel"
+                              autoComplete="tel"
+                            />
+                            <StandardFormInput<CuratedCourtBatchFormData>
+                              name={`courts.${index}.viberContact`}
+                              label="Viber Number"
+                              placeholder="0917 123 4567"
+                              type="tel"
+                              autoComplete="tel"
                             />
                             <StandardFormInput<CuratedCourtBatchFormData>
                               name={`courts.${index}.websiteUrl`}
@@ -866,16 +954,84 @@ export default function AdminCourtsBatchPage() {
                         <CardHeader>
                           <CardTitle>Photos</CardTitle>
                           <CardDescription>
-                            Add photo URLs for this listing
+                            Upload court photos for this listing
                           </CardDescription>
                         </CardHeader>
-                        <CardContent>
-                          <StandardFormTextarea<CuratedCourtBatchFormData>
-                            name={`courts.${index}.photoUrls`}
-                            label="Photo URLs"
-                            placeholder="https://...\nhttps://..."
-                            description="Add one URL per line or comma-separated"
-                          />
+                        <CardContent className="space-y-4">
+                          <div className="flex flex-wrap items-center justify-between gap-3">
+                            <div className="text-sm text-muted-foreground">
+                              {selectedPhotos.length > 0
+                                ? `${selectedPhotos.length} selected`
+                                : `Select up to ${MAX_PHOTOS} photos.`}
+                            </div>
+                            <div>
+                              <input
+                                ref={(node) => {
+                                  photoInputRefs.current[field.id] = node;
+                                }}
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={(event) =>
+                                  handlePhotoFilesChange(
+                                    field.id,
+                                    event.target.files,
+                                  )
+                                }
+                                className="hidden"
+                              />
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() =>
+                                  photoInputRefs.current[field.id]?.click()
+                                }
+                                disabled={!canAddMorePhotos}
+                              >
+                                <ImageIcon className="h-4 w-4" />
+                                <span className="ml-2">
+                                  {canAddMorePhotos ? "Add photos" : "Max photos"}
+                                </span>
+                              </Button>
+                            </div>
+                          </div>
+
+                          {selectedPhotos.length > 0 && (
+                            <div className="space-y-2">
+                              {selectedPhotos.map((file, photoIndex) => (
+                                <div
+                                  key={`${file.name}-${photoIndex}`}
+                                  className="flex items-center justify-between gap-3 rounded-md border px-3 py-2 text-sm"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-medium">
+                                      {file.name}
+                                    </span>
+                                    {photoIndex === 0 && (
+                                      <span className="rounded bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                                        Cover
+                                      </span>
+                                    )}
+                                  </div>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() =>
+                                      handleRemovePhotoFile(field.id, photoIndex)
+                                    }
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          <p className="text-xs text-muted-foreground">
+                            Photos upload after the batch is created. Skipped
+                            entries won&apos;t upload.
+                          </p>
                         </CardContent>
                       </Card>
 

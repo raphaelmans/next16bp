@@ -1,7 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import {
+  Check,
+  ChevronsUpDown,
+  Copy,
+  Loader2,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -24,6 +31,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,15 +41,37 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/ui/page-header";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
-  type AdminCourtDetail,
   useAdminCourt,
   useRemoveAdminCourtPhoto,
+  useTransferPlaceToOrganization,
   useUpdateCuratedCourt,
   useUploadAdminCourtPhoto,
 } from "@/features/admin/hooks/use-admin-courts";
@@ -62,14 +92,23 @@ import {
   buildCityOptions,
   buildProvinceOptions,
   findCityByName,
+  findCityByNameAcrossProvinces,
   findProvinceByName,
 } from "@/shared/lib/ph-location-data";
+
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 const DEFAULT_COUNTRY = "PH";
 const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 const DEFAULT_COURT_UNIT = { label: "Court 1", sportId: "", tierLabel: "" };
+
+type OrganizationSearchItem = {
+  id: string;
+  name: string;
+  slug: string;
+  isActive: boolean;
+};
 
 export default function AdminCourtEditPage() {
   const params = useParams();
@@ -84,22 +123,41 @@ export default function AdminCourtEditPage() {
   const updateMutation = useUpdateCuratedCourt();
   const uploadPhotoMutation = useUploadAdminCourtPhoto(courtId);
   const removePhotoMutation = useRemoveAdminCourtPhoto(courtId);
+  const transferMutation = useTransferPlaceToOrganization();
 
   const [pendingPhotoId, setPendingPhotoId] = React.useState<string | null>(
     null,
   );
+  const [isTransferOpen, setIsTransferOpen] = React.useState(false);
+  const [isOrgPopoverOpen, setIsOrgPopoverOpen] = React.useState(false);
+  const [orgSearch, setOrgSearch] = React.useState("");
+  const [selectedOrganization, setSelectedOrganization] = React.useState<
+    OrganizationSearchItem | undefined
+  >(undefined);
+  const [autoVerifyAndEnable, setAutoVerifyAndEnable] = React.useState(true);
 
   const { data: sports = [], isLoading: sportsLoading } =
     trpc.sport.list.useQuery({});
 
+  const deferredOrgSearch = React.useDeferredValue(orgSearch);
+  const orgSearchQuery = trpc.admin.organization.search.useQuery(
+    {
+      query: deferredOrgSearch.trim() || undefined,
+      limit: 20,
+      offset: 0,
+    },
+    {
+      enabled: isTransferOpen,
+    },
+  );
+
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
   const [googleUrl, setGoogleUrl] = React.useState("");
   const provincesCitiesQuery = usePHProvincesCitiesQuery();
+  const provincesCities = provincesCitiesQuery.data ?? null;
 
-  const form = useForm<AdminCourtEditFormData>({
-    resolver: zodResolver(adminCourtEditSchema),
-    mode: "onChange",
-    defaultValues: {
+  const emptyDefaults = React.useMemo<AdminCourtEditFormData>(
+    () => ({
       name: "",
       address: "",
       city: "",
@@ -110,12 +168,76 @@ export default function AdminCourtEditPage() {
       timeZone: "Asia/Manila",
       facebookUrl: "",
       instagramUrl: "",
+      phoneNumber: "",
       viberInfo: "",
       websiteUrl: "",
       otherContactInfo: "",
       amenities: [],
-      courts: [DEFAULT_COURT_UNIT],
-    },
+      courts: [{ ...DEFAULT_COURT_UNIT }],
+    }),
+    [],
+  );
+
+  const resolvedDefaults = React.useMemo<AdminCourtEditFormData | null>(() => {
+    if (!courtData || !provincesCities) {
+      return null;
+    }
+
+    const courts = courtData.courts.map((court) => ({
+      id: court.court.id,
+      label: court.court.label,
+      sportId: court.court.sportId,
+      tierLabel: court.court.tierLabel ?? "",
+    }));
+
+    let resolvedProvince = courtData.place.province;
+    let resolvedCity = courtData.place.city;
+
+    const matchedProvince = findProvinceByName(
+      provincesCities,
+      courtData.place.province,
+    );
+    if (matchedProvince) {
+      resolvedProvince = matchedProvince.name;
+      const matchedCity = findCityByName(matchedProvince, courtData.place.city);
+      if (matchedCity) {
+        resolvedCity = matchedCity.name;
+      }
+    }
+    if (!resolvedCity && courtData.place.city) {
+      const acrossMatch = findCityByNameAcrossProvinces(
+        provincesCities,
+        courtData.place.city,
+      );
+      if (acrossMatch) {
+        resolvedCity = acrossMatch.city.name;
+      }
+    }
+
+    return {
+      name: courtData.place.name,
+      address: courtData.place.address,
+      city: resolvedCity,
+      province: resolvedProvince,
+      country: courtData.place.country ?? DEFAULT_COUNTRY,
+      latitude: courtData.place.latitude ?? "",
+      longitude: courtData.place.longitude ?? "",
+      timeZone: courtData.place.timeZone ?? "Asia/Manila",
+      facebookUrl: courtData.contactDetail?.facebookUrl ?? "",
+      instagramUrl: courtData.contactDetail?.instagramUrl ?? "",
+      phoneNumber: courtData.contactDetail?.phoneNumber ?? "",
+      viberInfo: courtData.contactDetail?.viberInfo ?? "",
+      websiteUrl: courtData.contactDetail?.websiteUrl ?? "",
+      otherContactInfo: courtData.contactDetail?.otherContactInfo ?? "",
+      amenities: courtData.amenities.map((amenity) => amenity.name),
+      courts: courts.length > 0 ? courts : [{ ...DEFAULT_COURT_UNIT }],
+    };
+  }, [courtData, provincesCities]);
+
+  const form = useForm<AdminCourtEditFormData>({
+    resolver: zodResolver(adminCourtEditSchema),
+    mode: "onChange",
+    defaultValues: emptyDefaults,
   });
 
   const {
@@ -137,6 +259,13 @@ export default function AdminCourtEditPage() {
   } = form;
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [isFormReady, setIsFormReady] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!resolvedDefaults) return;
+    reset(resolvedDefaults);
+    setIsFormReady(true);
+  }, [reset, resolvedDefaults]);
 
   const nameValue = watch("name");
   const provinceValue = watch("province");
@@ -178,6 +307,18 @@ export default function AdminCourtEditPage() {
     ? getClientErrorMessage(previewError, "Request failed")
     : null;
 
+  const organizationOptions = orgSearchQuery.data?.items ?? [];
+
+  React.useEffect(() => {
+    if (!isTransferOpen) {
+      setIsOrgPopoverOpen(false);
+      return;
+    }
+    setOrgSearch("");
+    setSelectedOrganization(undefined);
+    setAutoVerifyAndEnable(true);
+  }, [isTransferOpen]);
+
   React.useEffect(() => {
     if (countryValue !== DEFAULT_COUNTRY) {
       setValue("country", DEFAULT_COUNTRY, {
@@ -187,8 +328,6 @@ export default function AdminCourtEditPage() {
       });
     }
   }, [countryValue, setValue]);
-
-  const provincesCities = provincesCitiesQuery.data ?? null;
 
   const provinceOptions = React.useMemo(() => {
     if (!provincesCities) return [];
@@ -203,6 +342,12 @@ export default function AdminCourtEditPage() {
         : null,
     [provinceValue, provincesCities],
   );
+
+  const _resolvedProvinceValue = React.useMemo(() => {
+    if (!provinceValue) return "";
+    if (!selectedProvince) return provinceValue;
+    return selectedProvince.name;
+  }, [provinceValue, selectedProvince]);
 
   const cityOptions = React.useMemo(() => {
     if (!provincesCities || !selectedProvince) return [];
@@ -233,43 +378,31 @@ export default function AdminCourtEditPage() {
   const isProvinceDisabled = provincesCitiesQuery.isLoading || !provincesCities;
   const isCityDisabled = isProvinceDisabled || !provinceValue;
 
+  // Sync city when province changes (user interaction)
   React.useEffect(() => {
-    if (!provincesCities) return;
+    if (!provincesCities || !provinceValue) return;
 
-    if (provinceValue && !selectedProvince) {
-      setValue("province", "", {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      });
-      setValue("city", "", {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      });
-      return;
-    }
+    const freshSelectedProvince = findProvinceByName(
+      provincesCities,
+      provinceValue,
+    );
+    if (!freshSelectedProvince) return;
 
-    if (!provinceValue) {
-      if (cityValue) {
+    // If city is set but not valid for the selected province, clear it
+    if (cityValue) {
+      const freshSelectedCity = findCityByName(
+        freshSelectedProvince,
+        cityValue,
+      );
+      if (!freshSelectedCity) {
         setValue("city", "", {
           shouldDirty: true,
           shouldTouch: true,
           shouldValidate: true,
         });
       }
-      return;
     }
-
-    const selectedCity = findCityByName(selectedProvince, cityValue);
-    if (cityValue && !selectedCity) {
-      setValue("city", "", {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      });
-    }
-  }, [cityValue, provinceValue, provincesCities, selectedProvince, setValue]);
+  }, [cityValue, provinceValue, provincesCities, setValue]);
 
   const coordinateLabel = React.useMemo(() => {
     if (previewResult?.lat === undefined || previewResult?.lng === undefined) {
@@ -277,41 +410,6 @@ export default function AdminCourtEditPage() {
     }
     return `${previewResult.lat.toFixed(6)}, ${previewResult.lng.toFixed(6)}`;
   }, [previewResult?.lat, previewResult?.lng]);
-
-  const buildDefaultValues = React.useCallback(
-    (detail: AdminCourtDetail): AdminCourtEditFormData => {
-      const courts = detail.courts.map((court) => ({
-        id: court.court.id,
-        label: court.court.label,
-        sportId: court.court.sportId,
-        tierLabel: court.court.tierLabel ?? "",
-      }));
-
-      return {
-        name: detail.place.name,
-        address: detail.place.address,
-        city: detail.place.city,
-        province: detail.place.province,
-        country: detail.place.country ?? DEFAULT_COUNTRY,
-        latitude: detail.place.latitude ?? "",
-        longitude: detail.place.longitude ?? "",
-        timeZone: detail.place.timeZone ?? "Asia/Manila",
-        facebookUrl: detail.contactDetail?.facebookUrl ?? "",
-        instagramUrl: detail.contactDetail?.instagramUrl ?? "",
-        viberInfo: detail.contactDetail?.viberInfo ?? "",
-        websiteUrl: detail.contactDetail?.websiteUrl ?? "",
-        otherContactInfo: detail.contactDetail?.otherContactInfo ?? "",
-        amenities: detail.amenities.map((amenity) => amenity.name),
-        courts: courts.length > 0 ? courts : [DEFAULT_COURT_UNIT],
-      };
-    },
-    [],
-  );
-
-  React.useEffect(() => {
-    if (!courtData) return;
-    reset(buildDefaultValues(courtData));
-  }, [buildDefaultValues, courtData, reset]);
 
   React.useEffect(() => {
     if (!courtLoading && !courtData) {
@@ -324,6 +422,42 @@ export default function AdminCourtEditPage() {
     window.location.href = appRoutes.login.from(
       appRoutes.admin.courts.detail(courtId),
     );
+  };
+
+  const handleCopyOwnerLink = async () => {
+    try {
+      const ownerPath = appRoutes.login.from(
+        appRoutes.owner.places.edit(courtId),
+      );
+      const url = `${window.location.origin}${ownerPath}`;
+      await navigator.clipboard.writeText(url);
+      toast.success("Owner link copied", {
+        description: "Share this to open the owner portal after login.",
+      });
+    } catch (error) {
+      toast.error("Unable to copy owner link", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
+
+  const handleTransfer = async () => {
+    if (!selectedOrganization) return;
+    try {
+      await transferMutation.mutateAsync({
+        placeId: courtId,
+        targetOrganizationId: selectedOrganization.id,
+        autoVerifyAndEnable,
+      });
+      toast.success("Ownership transferred", {
+        description: `${courtData?.place.name ?? "Place"} now belongs to ${selectedOrganization.name}.`,
+      });
+      setIsTransferOpen(false);
+    } catch (error) {
+      toast.error("Failed to transfer ownership", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
   };
 
   const handleSubmit = async (data: AdminCourtEditFormData) => {
@@ -340,6 +474,7 @@ export default function AdminCourtEditPage() {
         timeZone: data.timeZone || undefined,
         facebookUrl: data.facebookUrl || undefined,
         instagramUrl: data.instagramUrl || undefined,
+        phoneNumber: data.phoneNumber || undefined,
         viberInfo: data.viberInfo || undefined,
         websiteUrl: data.websiteUrl || undefined,
         otherContactInfo: data.otherContactInfo || undefined,
@@ -375,7 +510,7 @@ export default function AdminCourtEditPage() {
   const submitting = updateMutation.isPending || isSubmitting;
   const isSubmitDisabled = submitting || !isDirty;
 
-  if (courtLoading) {
+  if (courtLoading || provincesCitiesQuery.isLoading || !isFormReady) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -386,6 +521,16 @@ export default function AdminCourtEditPage() {
   if (!courtData) {
     return null;
   }
+
+  const currentOrganization = courtData.organization;
+  const selectedOrganizationId = selectedOrganization?.id;
+  const isSameOrganization =
+    !!selectedOrganizationId &&
+    selectedOrganizationId === currentOrganization?.id;
+  const transferDisabled =
+    !selectedOrganization || isSameOrganization || transferMutation.isPending;
+  const orgSearchLoading =
+    orgSearchQuery.isLoading || orgSearchQuery.isFetching;
 
   return (
     <AppShell
@@ -420,6 +565,206 @@ export default function AdminCourtEditPage() {
           ]}
           backHref={appRoutes.admin.courts.base}
         />
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Ownership & Transfer</CardTitle>
+            <CardDescription>
+              Assign this place to an organization and enable reservations.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground">
+                  Current organization
+                </p>
+                <p className="text-sm font-medium">
+                  {currentOrganization?.name ?? "Unassigned"}
+                </p>
+                {currentOrganization?.slug ? (
+                  <p className="text-xs text-muted-foreground">
+                    {currentOrganization.slug}
+                  </p>
+                ) : null}
+              </div>
+              <div className="space-y-2">
+                <p className="text-xs text-muted-foreground">Status</p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge
+                    variant={
+                      courtData.place.placeType === "RESERVABLE"
+                        ? "default"
+                        : "secondary"
+                    }
+                  >
+                    {courtData.place.placeType}
+                  </Badge>
+                  <Badge
+                    variant={
+                      courtData.place.claimStatus === "CLAIMED"
+                        ? "success"
+                        : "warning"
+                    }
+                  >
+                    {courtData.place.claimStatus}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Dialog open={isTransferOpen} onOpenChange={setIsTransferOpen}>
+                <DialogTrigger asChild>
+                  <Button type="button">Transfer</Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-lg">
+                  <DialogHeader>
+                    <DialogTitle>Transfer to organization</DialogTitle>
+                    <DialogDescription>
+                      Move this place and its courts to another organization.
+                      Reservations stay intact.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Organization</Label>
+                      <Popover
+                        open={isOrgPopoverOpen}
+                        onOpenChange={setIsOrgPopoverOpen}
+                      >
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={isOrgPopoverOpen}
+                            className="w-full justify-between"
+                          >
+                            <span className="truncate">
+                              {selectedOrganization
+                                ? selectedOrganization.name
+                                : "Select organization"}
+                            </span>
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[320px] p-0" align="start">
+                          <Command>
+                            <CommandInput
+                              placeholder="Search organizations..."
+                              value={orgSearch}
+                              onValueChange={setOrgSearch}
+                            />
+                            <CommandList>
+                              <CommandEmpty>
+                                {orgSearchLoading
+                                  ? "Loading organizations..."
+                                  : "No organizations found."}
+                              </CommandEmpty>
+                              <CommandGroup>
+                                {organizationOptions.map((org) => (
+                                  <CommandItem
+                                    key={org.id}
+                                    value={`${org.name} ${org.slug}`}
+                                    onSelect={() => {
+                                      setSelectedOrganization(org);
+                                      setIsOrgPopoverOpen(false);
+                                    }}
+                                  >
+                                    <Check
+                                      className={
+                                        selectedOrganization?.id === org.id
+                                          ? "mr-2 h-4 w-4 opacity-100"
+                                          : "mr-2 h-4 w-4 opacity-0"
+                                      }
+                                    />
+                                    <div className="flex flex-col text-left">
+                                      <span className="text-sm font-medium">
+                                        {org.name}
+                                      </span>
+                                      <span className="text-xs text-muted-foreground">
+                                        {org.slug}
+                                      </span>
+                                    </div>
+                                    {!org.isActive ? (
+                                      <Badge
+                                        variant="warning"
+                                        className="ml-auto"
+                                      >
+                                        Inactive
+                                      </Badge>
+                                    ) : null}
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      {isSameOrganization ? (
+                        <p className="text-xs text-destructive">
+                          Select a different organization to transfer.
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="flex items-start gap-3 rounded-lg border border-border/60 p-3">
+                      <Checkbox
+                        id="auto-verify"
+                        checked={autoVerifyAndEnable}
+                        onCheckedChange={(checked) =>
+                          setAutoVerifyAndEnable(Boolean(checked))
+                        }
+                      />
+                      <div className="space-y-1">
+                        <Label htmlFor="auto-verify" className="text-sm">
+                          Auto-verify and enable reservations
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Marks the place as VERIFIED and enables booking
+                          immediately.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsTransferOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={handleTransfer}
+                      disabled={transferDisabled}
+                    >
+                      {transferMutation.isPending && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
+                      Transfer
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCopyOwnerLink}
+                disabled={!currentOrganization}
+              >
+                <Copy className="mr-2 h-4 w-4" />
+                Copy owner link
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Transfers keep existing reservations and move all courts under
+              this place.
+            </p>
+          </CardContent>
+        </Card>
 
         <StandardFormProvider
           form={form}
@@ -786,9 +1131,19 @@ export default function AdminCourtEditPage() {
                 />
 
                 <StandardFormInput<AdminCourtEditFormData>
-                  name="viberInfo"
-                  label="Viber Contact"
+                  name="phoneNumber"
+                  label="Phone Number"
                   placeholder="0917 123 4567"
+                  type="tel"
+                  autoComplete="tel"
+                />
+
+                <StandardFormInput<AdminCourtEditFormData>
+                  name="viberInfo"
+                  label="Viber Number"
+                  placeholder="0917 123 4567"
+                  type="tel"
+                  autoComplete="tel"
                 />
 
                 <StandardFormInput<AdminCourtEditFormData>

@@ -15,6 +15,7 @@ import {
   courtRateRule,
   type InsertPlace,
   type InsertPlaceContactDetail,
+  organizationProfile,
   organizationReservationPolicy,
   type PlaceContactDetailRecord,
   type PlaceRecord,
@@ -35,11 +36,13 @@ export interface PlaceWithDetails {
   verification: typeof placeVerification.$inferSelect | null;
   photos: (typeof placePhoto.$inferSelect)[];
   amenities: (typeof placeAmenity.$inferSelect)[];
+  organizationLogoUrl?: string | null;
 }
 
 export interface PlaceListItem {
   place: PlaceRecord;
   coverImageUrl?: string | null;
+  organizationLogoUrl?: string | null;
   sports: { id: string; slug: string; name: string }[];
   courtCount: number;
   lowestPriceCents?: number;
@@ -82,6 +85,10 @@ export interface IPlaceRepository {
       city?: string;
       sportId?: string;
       amenities?: string[];
+      verificationTier?:
+        | "verified_reservable"
+        | "curated"
+        | "unverified_reservable";
       limit: number;
       offset: number;
     },
@@ -94,6 +101,7 @@ export interface IPlaceRepository {
     data: Partial<InsertPlace>,
     ctx?: RequestContext,
   ): Promise<PlaceRecord>;
+  delete(id: string, ctx?: RequestContext): Promise<void>;
   upsertContactDetail(
     data: InsertPlaceContactDetail,
     ctx?: RequestContext,
@@ -181,6 +189,18 @@ export class PlaceRepository implements IPlaceRepository {
       .limit(1);
     const verification = verificationResult[0] ?? null;
 
+    let organizationLogoUrl: string | null = null;
+    if (placeRecord.organizationId) {
+      const profileResult = await client
+        .select({ logoUrl: organizationProfile.logoUrl })
+        .from(organizationProfile)
+        .where(
+          eq(organizationProfile.organizationId, placeRecord.organizationId),
+        )
+        .limit(1);
+      organizationLogoUrl = profileResult[0]?.logoUrl ?? null;
+    }
+
     const photos = await client
       .select()
       .from(placePhoto)
@@ -199,6 +219,7 @@ export class PlaceRepository implements IPlaceRepository {
       verification,
       photos,
       amenities,
+      organizationLogoUrl,
     };
   }
 
@@ -322,7 +343,7 @@ export class PlaceRepository implements IPlaceRepository {
       if (amenitiesFilter.length > 0) {
         const amenitiesCount = amenitiesFilter.length;
         const countResult = await client
-          .select({ count: count() })
+          .select({ placeId: place.id })
           .from(place)
           .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
           .innerJoin(court, eq(court.placeId, place.id))
@@ -385,6 +406,8 @@ export class PlaceRepository implements IPlaceRepository {
           placeIds,
           client,
         );
+        const organizationLogos =
+          await this.getOrganizationLogoByOrganizationIds(placeIds, client);
 
         const verificationRows = await client
           .select({
@@ -398,11 +421,6 @@ export class PlaceRepository implements IPlaceRepository {
         const verificationByPlaceId = new Map(
           verificationRows.map((row) => [row.placeId, row]),
         );
-        const totalMatches = countResult.reduce(
-          (sum, row) => sum + (row.count ?? 0),
-          0,
-        );
-
         return {
           items: orderedPlaces.map((placeRecord) => {
             const lowestPrice = lowestPrices.get(placeRecord.id);
@@ -410,6 +428,8 @@ export class PlaceRepository implements IPlaceRepository {
             return {
               place: placeRecord,
               coverImageUrl: coverImageUrls.get(placeRecord.id) ?? null,
+              organizationLogoUrl:
+                organizationLogos.get(placeRecord.id) ?? null,
               sports: sportsByPlace.get(placeRecord.id) ?? [],
               courtCount: courtCounts.get(placeRecord.id) ?? 0,
               lowestPriceCents: lowestPrice?.priceCents,
@@ -418,7 +438,7 @@ export class PlaceRepository implements IPlaceRepository {
               reservationsEnabled: verification?.reservationsEnabled ?? null,
             };
           }),
-          total: totalMatches,
+          total: countResult.length,
         };
       }
 
@@ -427,8 +447,7 @@ export class PlaceRepository implements IPlaceRepository {
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .innerJoin(court, eq(court.placeId, place.id))
-        .where(and(baseCondition, eq(court.sportId, filters.sportId)))
-        .groupBy(place.id);
+        .where(and(baseCondition, eq(court.sportId, filters.sportId)));
 
       const placeRows = await client
         .select({ place })
@@ -461,6 +480,10 @@ export class PlaceRepository implements IPlaceRepository {
         placeIds,
         client,
       );
+      const organizationLogos = await this.getOrganizationLogoByOrganizationIds(
+        placeIds,
+        client,
+      );
 
       const verificationRows = await client
         .select({
@@ -475,11 +498,6 @@ export class PlaceRepository implements IPlaceRepository {
         verificationRows.map((row) => [row.placeId, row]),
       );
 
-      const totalMatches = countResult.reduce(
-        (sum, row) => sum + (row.count ?? 0),
-        0,
-      );
-
       return {
         items: uniquePlaces.map((placeRecord) => {
           const lowestPrice = lowestPrices.get(placeRecord.id);
@@ -487,6 +505,7 @@ export class PlaceRepository implements IPlaceRepository {
           return {
             place: placeRecord,
             coverImageUrl: coverImageUrls.get(placeRecord.id) ?? null,
+            organizationLogoUrl: organizationLogos.get(placeRecord.id) ?? null,
             sports: sportsByPlace.get(placeRecord.id) ?? [],
             courtCount: courtCounts.get(placeRecord.id) ?? 0,
             lowestPriceCents: lowestPrice?.priceCents,
@@ -495,7 +514,7 @@ export class PlaceRepository implements IPlaceRepository {
             reservationsEnabled: verification?.reservationsEnabled ?? null,
           };
         }),
-        total: totalMatches,
+        total: countResult[0]?.count ?? 0,
       };
     }
 
@@ -505,7 +524,7 @@ export class PlaceRepository implements IPlaceRepository {
     if (amenitiesFilter.length > 0) {
       const amenitiesCount = amenitiesFilter.length;
       const countResult = await client
-        .select({ count: count() })
+        .select({ placeId: place.id })
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
@@ -535,14 +554,13 @@ export class PlaceRepository implements IPlaceRepository {
       placeRecords = placeIds
         .map((placeId) => placeById.get(placeId))
         .filter((record): record is PlaceRecord => Boolean(record));
-      total = countResult.reduce((sum, row) => sum + (row.count ?? 0), 0);
+      total = countResult.length;
     } else {
       const countResult = await client
         .select({ count: count() })
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
-        .where(baseCondition)
-        .groupBy(place.id);
+        .where(baseCondition);
 
       const placeRows = await client
         .select({ place })
@@ -555,7 +573,7 @@ export class PlaceRepository implements IPlaceRepository {
 
       placeRecords = placeRows.map((row) => row.place);
 
-      total = countResult.reduce((sum, row) => sum + (row.count ?? 0), 0);
+      total = countResult[0]?.count ?? 0;
     }
 
     const placeIds = placeRecords.map((placeRecord) => placeRecord.id);
@@ -572,6 +590,10 @@ export class PlaceRepository implements IPlaceRepository {
       client,
     );
     const coverImageUrls = await this.getCoverImageByPlaceIds(placeIds, client);
+    const organizationLogos = await this.getOrganizationLogoByOrganizationIds(
+      placeIds,
+      client,
+    );
     const verificationRows = await client
       .select({
         placeId: placeVerification.placeId,
@@ -592,6 +614,7 @@ export class PlaceRepository implements IPlaceRepository {
         return {
           place: placeRecord,
           coverImageUrl: coverImageUrls.get(placeRecord.id) ?? null,
+          organizationLogoUrl: organizationLogos.get(placeRecord.id) ?? null,
           sports: sportsByPlace.get(placeRecord.id) ?? [],
           courtCount: courtCounts.get(placeRecord.id) ?? 0,
           lowestPriceCents: lowestPrice?.priceCents,
@@ -639,6 +662,11 @@ export class PlaceRepository implements IPlaceRepository {
     return result[0];
   }
 
+  async delete(id: string, ctx?: RequestContext): Promise<void> {
+    const client = this.getClient(ctx);
+    await client.delete(place).where(eq(place.id, id));
+  }
+
   async upsertContactDetail(
     data: InsertPlaceContactDetail,
     ctx?: RequestContext,
@@ -653,6 +681,7 @@ export class PlaceRepository implements IPlaceRepository {
           facebookUrl: data.facebookUrl ?? null,
           instagramUrl: data.instagramUrl ?? null,
           websiteUrl: data.websiteUrl ?? null,
+          phoneNumber: data.phoneNumber ?? null,
           viberInfo: data.viberInfo ?? null,
           otherContactInfo: data.otherContactInfo ?? null,
           updatedAt: new Date(),
@@ -687,6 +716,9 @@ export class PlaceRepository implements IPlaceRepository {
       { id: string; slug: string; name: string }[]
     >();
     for (const row of rows) {
+      if (!row.placeId) {
+        continue;
+      }
       const existing = grouped.get(row.placeId) ?? [];
       if (!existing.find((s) => s.id === row.sportId)) {
         existing.push({ id: row.sportId, slug: row.slug, name: row.name });
@@ -720,7 +752,10 @@ export class PlaceRepository implements IPlaceRepository {
       .where(and(...conditions))
       .groupBy(court.placeId);
 
-    return new Map(rows.map((row) => [row.placeId, row.count]));
+    const normalized = rows.flatMap((row) =>
+      row.placeId ? ([[row.placeId, row.count]] as const) : [],
+    );
+    return new Map(normalized);
   }
 
   private async getLowestPriceByPlaceIds(
@@ -749,6 +784,9 @@ export class PlaceRepository implements IPlaceRepository {
 
     const prices = new Map<string, { priceCents: number; currency: string }>();
     for (const row of rows) {
+      if (!row.placeId) {
+        continue;
+      }
       const existing = prices.get(row.placeId);
       if (!existing || row.hourlyRateCents < existing.priceCents) {
         prices.set(row.placeId, {
@@ -781,5 +819,28 @@ export class PlaceRepository implements IPlaceRepository {
       .groupBy(placePhoto.placeId);
 
     return new Map(rows.map((row) => [row.placeId, row.url]));
+  }
+
+  private async getOrganizationLogoByOrganizationIds(
+    placeIds: string[],
+    client: DbClient | DrizzleTransaction,
+  ): Promise<Map<string, string | null>> {
+    if (placeIds.length === 0) {
+      return new Map();
+    }
+
+    const rows = await client
+      .select({
+        placeId: place.id,
+        logoUrl: organizationProfile.logoUrl,
+      })
+      .from(place)
+      .leftJoin(
+        organizationProfile,
+        eq(organizationProfile.organizationId, place.organizationId),
+      )
+      .where(inArray(place.id, placeIds));
+
+    return new Map(rows.map((row) => [row.placeId, row.logoUrl ?? null]));
   }
 }

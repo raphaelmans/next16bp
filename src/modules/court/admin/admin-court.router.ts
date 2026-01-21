@@ -12,6 +12,7 @@ import {
   CreateCuratedCourtSchema,
   DeactivateCourtSchema,
   RemoveCourtPhotoSchema,
+  TransferPlaceSchema,
   UploadCourtPhotoSchema,
 } from "../dtos";
 import { makeAdminCourtService } from "../factories/court.factory";
@@ -102,6 +103,17 @@ export const adminCourtRouter = router({
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
       return service.activatePlace(ctx.userId, input.placeId);
+    }),
+
+  /**
+   * Transfer place ownership to an organization
+   * Admin only + rate limited
+   */
+  transfer: adminRateLimitedProcedure("mutation")
+    .input(TransferPlaceSchema)
+    .mutation(async ({ input, ctx }) => {
+      const service = makeAdminCourtService();
+      return service.transferPlaceToOrganization(ctx.userId, input);
     }),
 
   /**

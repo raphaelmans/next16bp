@@ -52,6 +52,7 @@ export const CreateCuratedCourtSchema = z.object({
   timeZone: z.string().min(1).max(64).optional(),
   // Curated detail fields
   facebookUrl: z.string().url().optional(),
+  phoneNumber: z.string().max(20).optional(),
   viberInfo: z.string().max(100).optional(),
   instagramUrl: z.string().url().optional(),
   websiteUrl: z.string().url().optional(),

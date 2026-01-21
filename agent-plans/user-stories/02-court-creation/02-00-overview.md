@@ -33,13 +33,15 @@ This domain depends on the organization flow (01-organization) and feeds into th
 | US-02-05 | Owner Creates Court via Setup Wizard | Active | US-02-02 |
 | US-02-06 | Owner Edits Court Details & Pricing | Active | - |
 | US-02-07 | Admin Batch Curated Court Entry | Active | - |
+| US-02-08 | Owner Onboards Place With One-Time Court Creation | Active | - |
+| US-02-09 | Owner Deletes Place | Active | - |
 
 ---
 
 ## Summary
 
-- Total: 7
-- Active: 7
+- Total: 9
+- Active: 9
 - Superseded: 0
 
 ---

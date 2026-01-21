@@ -9,6 +9,7 @@ import { courtManagementRouter } from "@/modules/court/court-management.router";
 import { courtHoursRouter } from "@/modules/court-hours/court-hours.router";
 import { courtRateRuleRouter } from "@/modules/court-rate-rule/court-rate-rule.router";
 import { healthRouter } from "@/modules/health/health.router";
+import { organizationAdminRouter } from "@/modules/organization/admin/organization-admin.router";
 import { organizationRouter } from "@/modules/organization/organization.router";
 import { organizationPaymentRouter } from "@/modules/organization-payment/organization-payment.router";
 import { paymentProofRouter } from "@/modules/payment-proof/payment-proof.router";
@@ -50,6 +51,7 @@ export const appRouter = router({
   admin: router({
     claim: claimAdminRouter,
     court: adminCourtRouter,
+    organization: organizationAdminRouter,
     placeVerification: placeVerificationAdminRouter,
   }),
 });

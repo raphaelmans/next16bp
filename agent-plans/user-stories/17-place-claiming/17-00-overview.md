@@ -29,11 +29,12 @@ Once a claim is approved, the place becomes reservable under the organization, a
 | US-17-03 | Owner Submits Place Claim Request From Public Page | Active | - |
 | US-17-04 | Admin Reviews and Approves Place Claim | Active | - |
 | US-17-05 | Owner Edits Place Contact Details After Claim | Active | - |
+| US-17-06 | Admin Transfers Place to Organization | Active | - |
 
 ---
 
 ## Summary
 
-- Total: 5
-- Active: 5
+- Total: 6
+- Active: 6
 - Superseded: 0

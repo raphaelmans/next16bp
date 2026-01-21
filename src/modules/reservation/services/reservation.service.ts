@@ -150,9 +150,10 @@ export class ReservationService implements IReservationService {
       throw new CourtNotFoundError(courtId);
     }
 
-    const place = await this.placeRepository.findById(court.placeId, ctx);
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    const place = await this.placeRepository.findById(placeId, ctx);
     if (!place) {
-      throw new PlaceNotFoundError(court.placeId);
+      throw new PlaceNotFoundError(placeId);
     }
 
     if (!place.organizationId) {
@@ -192,6 +193,13 @@ export class ReservationService implements IReservationService {
     }
   }
 
+  private requireCourtPlaceId(placeId: string | null): string {
+    if (!placeId) {
+      throw new PlaceNotFoundError();
+    }
+    return placeId;
+  }
+
   async createReservation(
     userId: string,
     profileId: string,
@@ -207,7 +215,8 @@ export class ReservationService implements IReservationService {
       throw new CourtNotFoundError(slot.courtId);
     }
 
-    await this.assertPlaceBookable(court.placeId);
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    await this.assertPlaceBookable(placeId);
 
     const policy = await this.getOrganizationPolicyForCourt(slot.courtId);
     const expiresAt = this.getOwnerAcceptanceExpiresAt(policy);
@@ -241,7 +250,8 @@ export class ReservationService implements IReservationService {
       throw new CourtNotFoundError(data.courtId);
     }
 
-    await this.assertPlaceBookable(court.placeId);
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    await this.assertPlaceBookable(placeId);
 
     const startTime = new Date(data.startTime);
     const consecutiveSlots = await this.findConsecutiveSlotsForCourt(
@@ -607,9 +617,10 @@ export class ReservationService implements IReservationService {
       throw new CourtNotFoundError(slot.courtId);
     }
 
-    const place = await this.placeRepository.findById(court.placeId);
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    const place = await this.placeRepository.findById(placeId);
     if (!place) {
-      throw new PlaceNotFoundError(court.placeId);
+      throw new PlaceNotFoundError(placeId);
     }
 
     if (!place.organizationId) {
@@ -683,10 +694,14 @@ export class ReservationService implements IReservationService {
     if (!court) {
       throw new CourtNotFoundError(courtId);
     }
-    const place = await this.placeRepository.findById(court.placeId);
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    const place = await this.placeRepository.findById(placeId);
+    if (!place) {
+      throw new PlaceNotFoundError(placeId);
+    }
     const { start, end } = getZonedDayRangeForInstant(
       startTime,
-      place?.timeZone,
+      place.timeZone,
     );
     const slots = await this.timeSlotRepository.findAvailable(
       courtId,

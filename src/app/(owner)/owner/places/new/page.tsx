@@ -37,7 +37,7 @@ export default function NewPlacePage() {
     organizationId: organization?.id,
     onSuccess: (result) => {
       toast.success("Place created successfully!");
-      router.push(appRoutes.owner.places.courts.base(result.placeId));
+      router.push(appRoutes.owner.places.courts.new(result.placeId));
     },
   });
 

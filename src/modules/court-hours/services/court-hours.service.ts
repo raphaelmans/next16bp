@@ -36,6 +36,13 @@ export class CourtHoursService implements ICourtHoursService {
     private transactionManager: TransactionManager,
   ) {}
 
+  private requireCourtPlaceId(placeId: string | null): string {
+    if (!placeId) {
+      throw new NotCourtOwnerError();
+    }
+    return placeId;
+  }
+
   async getHours(courtId: string): Promise<CourtHoursWindowRecord[]> {
     return this.courtHoursRepository.findByCourtId(courtId);
   }
@@ -103,12 +110,14 @@ export class CourtHoursService implements ICourtHoursService {
       await this.verifyCourtOwnership(userId, sourceCourtId, ctx);
       await this.verifyCourtOwnership(userId, targetCourtId, ctx);
 
+      const sourcePlaceId = this.requireCourtPlaceId(sourceCourt.placeId);
+      const targetPlaceId = this.requireCourtPlaceId(targetCourt.placeId);
       const sourcePlace = await this.placeRepository.findById(
-        sourceCourt.placeId,
+        sourcePlaceId,
         ctx,
       );
       const targetPlace = await this.placeRepository.findById(
-        targetCourt.placeId,
+        targetPlaceId,
         ctx,
       );
 
@@ -162,7 +171,8 @@ export class CourtHoursService implements ICourtHoursService {
       throw new CourtNotFoundError(courtId);
     }
 
-    const place = await this.placeRepository.findById(court.placeId, ctx);
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    const place = await this.placeRepository.findById(placeId, ctx);
     if (!place || !place.organizationId) {
       throw new NotCourtOwnerError();
     }

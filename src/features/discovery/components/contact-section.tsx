@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { buildViberDeepLink, toDialablePhone } from "@/shared/lib/phone";
 
 interface SocialLinks {
   facebook?: string;
@@ -26,6 +27,12 @@ export function ContactSection({
   className,
 }: ContactSectionProps) {
   const hasAnyLink = Object.values(socialLinks).some(Boolean);
+  const dialablePhone = socialLinks.phone
+    ? toDialablePhone(socialLinks.phone)
+    : "";
+  const viberLink = socialLinks.viber
+    ? buildViberDeepLink(socialLinks.viber)
+    : "";
 
   if (!hasAnyLink) {
     return null;
@@ -46,7 +53,7 @@ export function ContactSection({
       <CardContent className="space-y-3">
         {socialLinks.phone && (
           <Button variant="outline" className="w-full justify-start" asChild>
-            <a href={`tel:${socialLinks.phone}`}>
+            <a href={`tel:${dialablePhone || socialLinks.phone}`}>
               <Phone className="h-4 w-4 mr-3" />
               {socialLinks.phone}
             </a>
@@ -95,7 +102,7 @@ export function ContactSection({
             className="w-full justify-start group"
             asChild
           >
-            <a href={`viber://chat?number=${socialLinks.viber}`}>
+            <a href={viberLink || `viber://chat?number=${socialLinks.viber}`}>
               <Phone className="h-4 w-4 mr-3 group-hover:text-[#7360F2]" />
               Viber
               <ExternalLink className="h-3 w-3 ml-auto" />

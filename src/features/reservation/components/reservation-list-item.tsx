@@ -29,6 +29,7 @@ interface ReservationListItemProps {
 
 export function ReservationListItem({ reservation }: ReservationListItemProps) {
   const { court, timeSlot, status, id } = reservation;
+  const imageUrl = court.coverImageUrl?.trim();
   const canPay = status === "AWAITING_PAYMENT";
   const canCancel = [
     "CREATED",
@@ -41,16 +42,16 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
       <div className="flex flex-col sm:flex-row gap-4">
         {/* Court image */}
         <div className="relative h-32 sm:h-20 sm:w-20 w-full shrink-0 overflow-hidden rounded-lg bg-muted">
-          {court.coverImageUrl ? (
+          {imageUrl ? (
             <Image
-              src={court.coverImageUrl}
+              src={imageUrl}
               alt={court.name}
               fill
               className="object-cover"
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-muted-foreground text-xs">
-              No image
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
+              <div className="text-primary/40 font-heading text-lg">KC</div>
             </div>
           )}
         </div>

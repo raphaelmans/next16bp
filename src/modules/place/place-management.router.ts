@@ -11,6 +11,7 @@ import {
 import { AppError } from "@/shared/kernel/errors";
 import {
   CreatePlaceSchema,
+  DeletePlaceSchema,
   GetPlaceByIdSchema,
   ListMyPlacesSchema,
   RemovePlacePhotoSchema,
@@ -81,6 +82,17 @@ export const placeManagementRouter = router({
       try {
         const service = makePlaceManagementService();
         return await service.updatePlace(ctx.userId, input);
+      } catch (error) {
+        handlePlaceManagementError(error);
+      }
+    }),
+  delete: protectedProcedure
+    .input(DeletePlaceSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makePlaceManagementService();
+        await service.deletePlace(ctx.userId, input.placeId);
+        return { success: true };
       } catch (error) {
         handlePlaceManagementError(error);
       }

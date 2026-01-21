@@ -8,6 +8,7 @@ import {
   Clock,
   FileCheck2,
   MapPin,
+  RefreshCw,
   ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
@@ -54,7 +55,12 @@ export default function AdminVerificationPage() {
   const logoutMutation = useLogout();
 
   const { data: stats } = useAdminStats();
-  const { data: verificationQueue, isLoading } = usePlaceVerificationQueue({
+  const {
+    data: verificationQueue,
+    isLoading,
+    isFetching,
+    refetch,
+  } = usePlaceVerificationQueue({
     page: 1,
     limit: 12,
   });
@@ -108,6 +114,17 @@ export default function AdminVerificationPage() {
             <span className="text-muted-foreground">
               {verificationQueue?.total ?? 0} requests
             </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => refetch()}
+              disabled={isFetching}
+            >
+              <RefreshCw
+                className={cn("mr-2 h-4 w-4", isFetching && "animate-spin")}
+              />
+              {isFetching ? "Refreshing" : "Refresh"}
+            </Button>
           </div>
         </div>
 

@@ -12,6 +12,10 @@ Provide a public-facing submission form for authenticated users at `/courts/sugg
 
 Provide entry points from the public courts discovery page.
 
+This is also a supply-growth funnel: when players cannot find a venue they already play at, they can suggest it for review.
+
+Out of scope (handled in a later session): notifying the submitter when their suggestion is approved/rejected.
+
 ---
 
 ## Route

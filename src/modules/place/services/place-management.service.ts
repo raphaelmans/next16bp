@@ -45,6 +45,7 @@ function extractPublicStoragePath(url: string, bucket: string): string | null {
 export interface IPlaceManagementService {
   createPlace(userId: string, data: CreatePlaceDTO): Promise<PlaceRecord>;
   updatePlace(userId: string, data: UpdatePlaceDTO): Promise<PlaceRecord>;
+  deletePlace(userId: string, placeId: string): Promise<void>;
   listMyPlaces(
     userId: string,
     data: ListMyPlacesDTO,
@@ -116,6 +117,7 @@ export class PlaceManagementService implements IPlaceManagementService {
           facebookUrl: data.facebookUrl ?? null,
           instagramUrl: data.instagramUrl ?? null,
           websiteUrl: data.websiteUrl ?? null,
+          phoneNumber: data.phoneNumber ?? null,
           viberInfo: data.viberInfo ?? null,
           otherContactInfo: data.otherContactInfo ?? null,
         },
@@ -155,6 +157,7 @@ export class PlaceManagementService implements IPlaceManagementService {
         facebookUrl,
         instagramUrl,
         websiteUrl,
+        phoneNumber,
         viberInfo,
         otherContactInfo,
         country: _country,
@@ -176,6 +179,7 @@ export class PlaceManagementService implements IPlaceManagementService {
           facebookUrl: facebookUrl ?? null,
           instagramUrl: instagramUrl ?? null,
           websiteUrl: websiteUrl ?? null,
+          phoneNumber: phoneNumber ?? null,
           viberInfo: viberInfo ?? null,
           otherContactInfo: otherContactInfo ?? null,
         },
@@ -193,6 +197,31 @@ export class PlaceManagementService implements IPlaceManagementService {
       );
 
       return updated;
+    });
+  }
+
+  async deletePlace(userId: string, placeId: string): Promise<void> {
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+
+      const place = await this.placeRepository.findByIdForUpdate(placeId, ctx);
+      if (!place) {
+        throw new PlaceNotFoundError(placeId);
+      }
+
+      await this.assertOwner(userId, place.organizationId, ctx);
+
+      await this.placeRepository.delete(placeId, ctx);
+
+      logger.info(
+        {
+          event: "place.deleted",
+          placeId,
+          organizationId: place.organizationId,
+          userId,
+        },
+        "Place deleted",
+      );
     });
   }
 

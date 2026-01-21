@@ -157,6 +157,10 @@ export class CourtManagementService implements ICourtManagementService {
       throw new CourtNotFoundError(courtId);
     }
 
+    if (!court.placeId) {
+      throw new NotCourtOwnerError();
+    }
+
     await this.verifyPlaceOwnership(userId, court.placeId, ctx);
 
     return { court, placeId: court.placeId };

@@ -5,6 +5,16 @@ Near-term focus
 - Win on discovery and booking conversion (player-first).
 - Convert supply through curated listings -> claim -> verify -> enable bookings.
 
+Subscription model (owner)
+
+- Free: discovery listing (curated/claimed), read-only profile, no reservations.
+- Basic: PHP 500 / venue / month (or ~$10) to enable the reservation engine (publish slots + accept/confirm requests).
+
+Early supply offer
+
+- First 100 verified venues: 6 months of Basic free.
+- Subsequent verified venues: 1 month Basic free trial.
+
 Monetization options (choose/sequence)
 
 - Sponsored placements / featured venues in discovery.

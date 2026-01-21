@@ -52,6 +52,7 @@ import { trpc } from "@/trpc/client";
 
 const DEFAULT_COUNTRY = "PH";
 const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
+const MAX_PHOTOS = 10;
 
 export default function NewCuratedCourtPage() {
   const router = useRouter();
@@ -60,12 +61,16 @@ export default function NewCuratedCourtPage() {
 
   const { data: stats } = useAdminStats();
   const createMutation = useCreateCuratedCourt();
+  const uploadPhotoMutation = trpc.admin.court.uploadPhoto.useMutation();
   const { data: sports = [], isLoading: sportsLoading } =
     trpc.sport.list.useQuery({});
 
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
   const [googleUrl, setGoogleUrl] = React.useState("");
   const provincesCitiesQuery = usePHProvincesCitiesQuery();
+  const [pendingPhotos, setPendingPhotos] = React.useState<File[]>([]);
+  const [isUploadingPhotos, setIsUploadingPhotos] = React.useState(false);
+  const photoInputRef = React.useRef<HTMLInputElement>(null);
 
   const form = useForm<CuratedCourtFormData>({
     resolver: zodResolver(curatedCourtSchema),
@@ -78,12 +83,12 @@ export default function NewCuratedCourtPage() {
       country: DEFAULT_COUNTRY,
       facebookUrl: "",
       instagramUrl: "",
+      phoneNumber: "",
       viberContact: "",
       websiteUrl: "",
       otherContactInfo: "",
       amenities: [],
       timeZone: "Asia/Manila",
-      photos: [{ url: "" }],
       courts: [{ label: "Court 1", sportId: "", tierLabel: "" }],
     },
   });
@@ -98,16 +103,6 @@ export default function NewCuratedCourtPage() {
   });
 
   const {
-    fields: photoFields,
-    append: appendPhoto,
-    remove: removePhoto,
-  } = useFieldArray<CuratedCourtFormData, "photos">({
-    control: form.control,
-    name: "photos",
-  });
-
-  const {
-    reset,
     setValue,
     watch,
     formState: { isDirty, isValid, isSubmitting },
@@ -253,6 +248,31 @@ export default function NewCuratedCourtPage() {
     return `${previewResult.lat.toFixed(6)}, ${previewResult.lng.toFixed(6)}`;
   }, [previewResult?.lat, previewResult?.lng]);
 
+  const canAddMorePhotos = pendingPhotos.length < MAX_PHOTOS;
+
+  const handlePhotoSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files ?? []);
+    if (files.length === 0) return;
+
+    setPendingPhotos((current) => {
+      const next = [...current, ...files];
+      if (next.length > MAX_PHOTOS) {
+        toast.error(`Maximum ${MAX_PHOTOS} photos per court`);
+      }
+      return next.slice(0, MAX_PHOTOS);
+    });
+
+    if (photoInputRef.current) {
+      photoInputRef.current.value = "";
+    }
+  };
+
+  const handleRemovePendingPhoto = (index: number) => {
+    setPendingPhotos((current) =>
+      current.filter((_photo, photoIndex) => photoIndex !== index),
+    );
+  };
+
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(appRoutes.admin.courts.new);
@@ -260,7 +280,7 @@ export default function NewCuratedCourtPage() {
 
   const handleSubmit = async (data: CuratedCourtFormData) => {
     try {
-      await createMutation.mutateAsync({
+      const created = await createMutation.mutateAsync({
         name: data.name,
         address: data.address,
         city: data.city,
@@ -271,29 +291,46 @@ export default function NewCuratedCourtPage() {
         timeZone: data.timeZone || undefined,
         facebookUrl: data.facebookUrl || undefined,
         instagramUrl: data.instagramUrl || undefined,
+        phoneNumber: data.phoneNumber || undefined,
         viberInfo: data.viberContact || undefined,
         websiteUrl: data.websiteUrl || undefined,
         otherContactInfo: data.otherContactInfo || undefined,
         amenities: data.amenities.length > 0 ? data.amenities : undefined,
-        photos: data.photos
-          ?.map((photo, index) => ({
-            url: photo.url?.trim() ?? "",
-            displayOrder: index,
-          }))
-          .filter((photo) => photo.url.length > 0),
         courts: data.courts.map((court) => ({
           label: court.label,
           sportId: court.sportId,
           tierLabel: court.tierLabel || undefined,
         })),
       });
-      reset(data);
+
+      let failedUploads = 0;
+      if (pendingPhotos.length > 0) {
+        setIsUploadingPhotos(true);
+        for (const file of pendingPhotos) {
+          const formData = new FormData();
+          formData.append("placeId", created.place.id);
+          formData.append("image", file, file.name);
+          try {
+            await uploadPhotoMutation.mutateAsync(formData);
+          } catch (error) {
+            failedUploads += 1;
+          }
+        }
+      }
+
       toast.success("Court created successfully");
-      router.push(appRoutes.admin.courts.base);
+      if (failedUploads > 0) {
+        toast.error("Some photos failed to upload", {
+          description: "You can retry uploads from the court detail page.",
+        });
+      }
+      router.push(appRoutes.admin.courts.detail(created.place.id));
     } catch (error) {
       toast.error("Failed to create court", {
         description: getClientErrorMessage(error, "Please try again"),
       });
+    } finally {
+      setIsUploadingPhotos(false);
     }
   };
 
@@ -307,7 +344,8 @@ export default function NewCuratedCourtPage() {
     label: sport.name,
     value: sport.id,
   }));
-  const submitting = createMutation.isPending || isSubmitting;
+  const submitting =
+    createMutation.isPending || isSubmitting || isUploadingPhotos;
   const isSubmitDisabled = submitting || !isDirty || !isValid;
 
   return (
@@ -691,9 +729,19 @@ export default function NewCuratedCourtPage() {
                 />
 
                 <StandardFormInput<CuratedCourtFormData>
-                  name="viberContact"
-                  label="Viber Contact"
+                  name="phoneNumber"
+                  label="Phone Number"
                   placeholder="0917 123 4567"
+                  type="tel"
+                  autoComplete="tel"
+                />
+
+                <StandardFormInput<CuratedCourtFormData>
+                  name="viberContact"
+                  label="Viber Number"
+                  placeholder="0917 123 4567"
+                  type="tel"
+                  autoComplete="tel"
                 />
 
                 <StandardFormInput<CuratedCourtFormData>
@@ -768,36 +816,72 @@ export default function NewCuratedCourtPage() {
           <Card>
             <CardHeader>
               <CardTitle>Photos</CardTitle>
-              <CardDescription>Add photo URLs for this listing</CardDescription>
+              <CardDescription>
+                Upload photos for this court listing
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {photoFields.map((field, index) => (
-                <div key={field.id} className="flex items-center gap-3">
-                  <StandardFormInput<CuratedCourtFormData>
-                    name={`photos.${index}.url`}
-                    label={index === 0 ? "Photo URL" : undefined}
-                    placeholder="https://..."
-                    className="flex-1"
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="text-sm text-muted-foreground">
+                  {pendingPhotos.length > 0
+                    ? `${pendingPhotos.length} selected`
+                    : `Select up to ${MAX_PHOTOS} photos to upload after creation.`}
+                </div>
+                <div>
+                  <input
+                    ref={photoInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handlePhotoSelect}
+                    className="hidden"
                   />
                   <Button
                     type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removePhoto(index)}
-                    disabled={photoFields.length === 1}
+                    variant="outline"
+                    onClick={() => photoInputRef.current?.click()}
+                    disabled={!canAddMorePhotos}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Plus className="h-4 w-4" />
+                    <span className="ml-2">
+                      {canAddMorePhotos ? "Add photos" : "Max photos"}
+                    </span>
                   </Button>
                 </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => appendPhoto({ url: "" })}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Photo
-              </Button>
+              </div>
+
+              {pendingPhotos.length > 0 && (
+                <div className="space-y-2">
+                  {pendingPhotos.map((file, index) => (
+                    <div
+                      key={`${file.name}-${index}`}
+                      className="flex items-center justify-between gap-3 rounded-md border px-3 py-2 text-sm"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{file.name}</span>
+                        {index === 0 && (
+                          <span className="rounded bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+                            Cover
+                          </span>
+                        )}
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleRemovePendingPhoto(index)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <p className="text-xs text-muted-foreground">
+                Photos upload after the court is created. The first photo becomes
+                the cover image.
+              </p>
             </CardContent>
           </Card>
 

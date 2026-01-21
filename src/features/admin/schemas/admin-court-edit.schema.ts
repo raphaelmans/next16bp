@@ -54,6 +54,7 @@ export const adminCourtEditSchema = z.object({
   timeZone: z.string().min(1).max(64).optional(),
   facebookUrl: optionalUrlSchema,
   instagramUrl: optionalUrlSchema,
+  phoneNumber: optionalTextSchema(20),
   viberInfo: optionalTextSchema(100),
   websiteUrl: optionalUrlSchema,
   otherContactInfo: optionalTextSchema(500),

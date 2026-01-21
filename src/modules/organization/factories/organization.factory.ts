@@ -1,5 +1,7 @@
 import { makeObjectStorageService } from "@/modules/storage/factories/storage.factory";
 import { getContainer } from "@/shared/infra/container";
+import { OrganizationAdminRepository } from "../admin/repositories/organization-admin.repository";
+import { OrganizationAdminService } from "../admin/services/organization-admin.service";
 import { OrganizationRepository } from "../repositories/organization.repository";
 import { OrganizationProfileRepository } from "../repositories/organization-profile.repository";
 import { OrganizationService } from "../services/organization.service";
@@ -7,6 +9,8 @@ import { OrganizationService } from "../services/organization.service";
 let organizationRepository: OrganizationRepository | null = null;
 let organizationProfileRepository: OrganizationProfileRepository | null = null;
 let organizationService: OrganizationService | null = null;
+let organizationAdminRepository: OrganizationAdminRepository | null = null;
+let organizationAdminService: OrganizationAdminService | null = null;
 
 export function makeOrganizationRepository(): OrganizationRepository {
   if (!organizationRepository) {
@@ -34,4 +38,22 @@ export function makeOrganizationService(): OrganizationService {
     );
   }
   return organizationService;
+}
+
+export function makeOrganizationAdminRepository(): OrganizationAdminRepository {
+  if (!organizationAdminRepository) {
+    organizationAdminRepository = new OrganizationAdminRepository(
+      getContainer().db,
+    );
+  }
+  return organizationAdminRepository;
+}
+
+export function makeOrganizationAdminService(): OrganizationAdminService {
+  if (!organizationAdminService) {
+    organizationAdminService = new OrganizationAdminService(
+      makeOrganizationAdminRepository(),
+    );
+  }
+  return organizationAdminService;
 }

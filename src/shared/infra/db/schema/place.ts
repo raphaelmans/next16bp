@@ -77,6 +77,7 @@ export const placeContactDetail = pgTable("place_contact_detail", {
     .unique()
     .references(() => place.id, { onDelete: "cascade" }),
   facebookUrl: text("facebook_url"),
+  phoneNumber: varchar("phone_number", { length: 20 }),
   viberInfo: varchar("viber_info", { length: 100 }),
   instagramUrl: text("instagram_url"),
   websiteUrl: text("website_url"),

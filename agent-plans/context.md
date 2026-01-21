@@ -8,6 +8,9 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-21 | Added US-02-09 + 52-owner-place-deletion plan (owner delete place + detach courts) |
+| 2026-01-21 | Added US-17-06 + 51-admin-place-transfer plan (admin ownership transfer) |
+| 2026-01-21 | Added US-02-08 + 48-owner-onboarding-court-verification plan (place -> one-time court -> verification) |
 | 2026-01-18 | Added 43-google-oauth-auth plan (server tRPC OAuth + login/register buttons) |
 | 2026-01-17 | Noted deferred rename from place -> venue (pending explicit request) |
 | 2026-01-18 | Added 39-public-navbar-consistency plan (public logo + search routing) |
@@ -108,6 +111,9 @@ References and context for planning artifacts.
 | 35-courts-discovery-filters | `agent-plans/35-courts-discovery-filters/` | Ready |
 | 37-admin-courts-filters | `agent-plans/37-admin-courts-filters/` | Ready |
 | 46-place-verification | `agent-plans/46-place-verification/` | Draft |
+| 48-owner-onboarding-court-verification | `agent-plans/48-owner-onboarding-court-verification/` | Draft |
+| 51-admin-place-transfer | `agent-plans/51-admin-place-transfer/` | Complete |
+| 52-owner-place-deletion | `agent-plans/52-owner-place-deletion/` | Draft |
 
 ---
 

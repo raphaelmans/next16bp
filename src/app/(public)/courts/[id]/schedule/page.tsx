@@ -1,6 +1,13 @@
 "use client";
 
-import { ArrowLeft, Calendar, Clock, ExternalLink } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  ExternalLink,
+  Minus,
+  Plus,
+} from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -13,6 +20,12 @@ import * as React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  InputGroup,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useSession } from "@/features/auth";
 import {
@@ -33,6 +46,7 @@ import {
   formatDuration,
   formatInTimeZone,
 } from "@/shared/lib/format";
+import { normalizeDurationMinutes } from "@/shared/lib/duration";
 import {
   getZonedDayKey,
   getZonedDayRangeFromDayKey,
@@ -40,8 +54,12 @@ import {
 } from "@/shared/lib/time-zone";
 import { trpc } from "@/trpc/client";
 
-const DURATIONS = [60, 120, 180] as const;
+const MIN_DURATION_HOURS = 1;
+const MAX_DURATION_HOURS = 24;
+const DEFAULT_DURATION_MINUTES = 60;
 const selectionModeSchema = ["any", "court"] as const;
+const clampDurationHours = (value: number) =>
+  Math.min(Math.max(Math.round(value), MIN_DURATION_HOURS), MAX_DURATION_HOURS);
 
 type SelectionMode = (typeof selectionModeSchema)[number];
 
@@ -124,18 +142,83 @@ export default function CourtSchedulePage() {
   );
   const [durationParam, setDurationParam] = useQueryState(
     "duration",
-    parseAsInteger.withDefault(60).withOptions({ history: "replace" }),
+    parseAsInteger
+      .withDefault(DEFAULT_DURATION_MINUTES)
+      .withOptions({ history: "replace" }),
   );
   const [startTimeParam, setStartTimeParam] = useQueryState(
     "startTime",
     parseAsString.withOptions({ history: "replace" }),
   );
 
-  const durationMinutes = DURATIONS.includes(
-    durationParam as (typeof DURATIONS)[number],
-  )
-    ? (durationParam as (typeof DURATIONS)[number])
-    : 60;
+  const durationMinutes = normalizeDurationMinutes(
+    durationParam,
+    DEFAULT_DURATION_MINUTES,
+  );
+  const [durationHoursDraft, setDurationHoursDraft] = React.useState(
+    String(durationMinutes / 60),
+  );
+  const durationHours = durationMinutes / 60;
+
+  const commitDurationHours = React.useCallback(
+    (hours: number) => {
+      const clampedHours = clampDurationHours(hours);
+      const nextMinutes = clampedHours * 60;
+      if (nextMinutes !== durationMinutes) {
+        setDurationParam(nextMinutes);
+        setStartTimeParam(null);
+      }
+      setDurationHoursDraft(String(clampedHours));
+    },
+    [durationMinutes, setDurationParam, setStartTimeParam],
+  );
+
+  React.useEffect(() => {
+    setDurationHoursDraft(String(durationMinutes / 60));
+  }, [durationMinutes]);
+
+  const handleDurationDraftChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+      setDurationHoursDraft(value);
+      if (!value) return;
+      const parsed = Number(value);
+      if (!Number.isFinite(parsed) || !Number.isInteger(parsed)) return;
+      if (parsed < MIN_DURATION_HOURS || parsed > MAX_DURATION_HOURS) return;
+      commitDurationHours(parsed);
+    },
+    [commitDurationHours],
+  );
+
+  const handleDurationBlur = React.useCallback(() => {
+    if (!durationHoursDraft.trim()) {
+      commitDurationHours(MIN_DURATION_HOURS);
+      return;
+    }
+    const parsed = Number(durationHoursDraft);
+    if (!Number.isFinite(parsed)) {
+      commitDurationHours(MIN_DURATION_HOURS);
+      return;
+    }
+    commitDurationHours(parsed);
+  }, [commitDurationHours, durationHoursDraft]);
+
+  const handleDurationStep = React.useCallback(
+    (direction: "increase" | "decrease") => {
+      const draftValue = durationHoursDraft.trim();
+      const parsed = Number(draftValue);
+      const baseHours =
+        draftValue !== "" &&
+        Number.isFinite(parsed) &&
+        Number.isInteger(parsed)
+          ? parsed
+          : durationHours;
+      const nextHours =
+        direction === "increase" ? baseHours + 1 : baseHours - 1;
+      commitDurationHours(nextHours);
+    },
+    [commitDurationHours, durationHours, durationHoursDraft],
+  );
 
   const placeQuery = usePlaceDetail({ placeId });
   const place = placeQuery.data;
@@ -493,23 +576,46 @@ export default function CourtSchedulePage() {
             <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
               <div className="space-y-2">
                 <p className="text-sm font-medium">Duration</p>
-                <div className="flex flex-wrap gap-2">
-                  {DURATIONS.map((duration) => (
-                    <Button
-                      key={duration}
+                <div className="space-y-2">
+                  <InputGroup className="max-w-[240px]">
+                    <InputGroupButton
                       type="button"
-                      size="sm"
-                      variant={
-                        durationMinutes === duration ? "default" : "outline"
-                      }
-                      onClick={() => {
-                        setDurationParam(duration);
-                        setStartTimeParam(null);
-                      }}
+                      size="icon-sm"
+                      aria-label="Decrease duration"
+                      onClick={() => handleDurationStep("decrease")}
+                      disabled={durationHours <= MIN_DURATION_HOURS}
                     >
-                      {formatDuration(duration)}
-                    </Button>
-                  ))}
+                      <Minus className="h-4 w-4" />
+                    </InputGroupButton>
+                    <InputGroupInput
+                      type="number"
+                      inputMode="numeric"
+                      min={MIN_DURATION_HOURS}
+                      max={MAX_DURATION_HOURS}
+                      step={1}
+                      value={durationHoursDraft}
+                      onChange={handleDurationDraftChange}
+                      onBlur={handleDurationBlur}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") {
+                          event.currentTarget.blur();
+                        }
+                      }}
+                      className="text-center"
+                      aria-label="Duration in hours"
+                    />
+                    <InputGroupText className="px-2">hours</InputGroupText>
+                    <InputGroupButton
+                      type="button"
+                      size="icon-sm"
+                      aria-label="Increase duration"
+                      onClick={() => handleDurationStep("increase")}
+                      disabled={durationHours >= MAX_DURATION_HOURS}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </InputGroupButton>
+                  </InputGroup>
+                  <p className="text-xs text-muted-foreground">1-24 hours</p>
                 </div>
               </div>
 

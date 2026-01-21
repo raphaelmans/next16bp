@@ -10,6 +10,8 @@
 
 As an **admin**, I want to **review suggested curated courts and approve/reject them** so that **public discovery remains curated and high quality**.
 
+Out of scope (handled in a later session): notifying the submitter when their suggestion is approved/rejected.
+
 ---
 
 ## Acceptance Criteria

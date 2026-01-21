@@ -23,6 +23,7 @@ export interface PlaceCardPlace {
   address: string;
   city: string;
   coverImageUrl?: string;
+  logoUrl?: string;
   sports: PlaceSport[];
   courtCount?: number;
   lowestPriceCents?: number;
@@ -45,6 +46,15 @@ interface PlaceCardProps {
 
 const MAX_BADGES = 3;
 
+const getInitials = (name: string) =>
+  name
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
 export function PlaceCard({
   place,
   variant = "default",
@@ -54,10 +64,16 @@ export function PlaceCard({
   className,
 }: PlaceCardProps) {
   const imageUrl = place.coverImageUrl;
+  const logoUrl = place.logoUrl?.trim();
+  const logoFallback = getInitials(place.name);
   const aspectRatio = variant === "featured" ? "aspect-[4/3]" : "aspect-[16/9]";
   const visibleSports = place.sports.slice(0, MAX_BADGES);
   const hiddenCount = Math.max(0, place.sports.length - MAX_BADGES);
   const placeHref = appRoutes.courts.detail(place.id);
+  const logoSize = variant === "compact" ? "h-7 w-7" : "h-10 w-10";
+  const logoPadding = variant === "compact" ? "p-1" : "p-1.5";
+  const logoText = variant === "compact" ? "text-[10px]" : "text-xs";
+  const logoOffset = variant === "compact" ? "top-2 left-2" : "top-3 left-3";
 
   const handlePlaceClick = () =>
     trackEvent({
@@ -88,7 +104,7 @@ export function PlaceCard({
   const cardContent = (
     <Card
       className={cn(
-        "group h-full overflow-hidden p-0 gap-0",
+        "group h-full overflow-hidden p-0 gap-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-md",
         variant === "compact" && "flex flex-row",
         className,
       )}
@@ -105,13 +121,41 @@ export function PlaceCard({
             src={imageUrl}
             alt={place.name}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
             <div className="text-primary/40 font-heading text-2xl">KC</div>
           </div>
         )}
+        <div
+          className={cn(
+            "absolute flex items-center justify-center rounded-full border border-border/60 bg-background/85 shadow-md backdrop-blur",
+            logoSize,
+            logoPadding,
+            logoOffset,
+          )}
+        >
+          {logoUrl ? (
+            <div className="relative h-full w-full">
+              <Image
+                src={logoUrl}
+                alt={`${place.name} logo`}
+                fill
+                className="object-contain"
+              />
+            </div>
+          ) : (
+            <span
+              className={cn(
+                "font-heading font-semibold text-foreground",
+                logoText,
+              )}
+            >
+              {logoFallback}
+            </span>
+          )}
+        </div>
       </div>
 
       <div
@@ -230,11 +274,20 @@ export function PlaceCardSkeleton({
     >
       <div
         className={cn(
-          "bg-muted",
+          "relative bg-muted",
           aspectRatio,
           variant === "compact" && "w-24 h-24 shrink-0",
         )}
-      />
+      >
+        <div
+          className={cn(
+            "absolute rounded-full bg-muted-foreground/10",
+            variant === "compact"
+              ? "h-6 w-6 top-2 left-2"
+              : "h-9 w-9 top-3 left-3",
+          )}
+        />
+      </div>
 
       <div
         className={cn(

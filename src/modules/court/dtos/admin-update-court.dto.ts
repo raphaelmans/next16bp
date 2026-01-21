@@ -65,6 +65,7 @@ export const AdminUpdateCourtSchema = z.object({
   // Contact details
   facebookUrl: optionalUrlSchema,
   instagramUrl: optionalUrlSchema,
+  phoneNumber: optionalTextSchema(20),
   viberInfo: optionalTextSchema(100),
   websiteUrl: optionalUrlSchema,
   otherContactInfo: optionalTextSchema(500),

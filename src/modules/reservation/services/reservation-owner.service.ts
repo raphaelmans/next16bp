@@ -71,6 +71,13 @@ export class ReservationOwnerService implements IReservationOwnerService {
     private transactionManager: TransactionManager,
   ) {}
 
+  private requireCourtPlaceId(placeId: string | null): string {
+    if (!placeId) {
+      throw new PlaceNotFoundError();
+    }
+    return placeId;
+  }
+
   /**
    * Verify that the user owns the place for a court
    * Returns the time slot for the reservation
@@ -90,9 +97,10 @@ export class ReservationOwnerService implements IReservationOwnerService {
       throw new CourtNotFoundError(slot.courtId);
     }
 
-    const place = await this.placeRepository.findById(court.placeId, ctx);
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    const place = await this.placeRepository.findById(placeId, ctx);
     if (!place) {
-      throw new PlaceNotFoundError(court.placeId);
+      throw new PlaceNotFoundError(placeId);
     }
 
     if (!place.organizationId) {
@@ -119,9 +127,10 @@ export class ReservationOwnerService implements IReservationOwnerService {
       throw new CourtNotFoundError(courtId);
     }
 
-    const place = await this.placeRepository.findById(court.placeId, ctx);
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    const place = await this.placeRepository.findById(placeId, ctx);
     if (!place) {
-      throw new PlaceNotFoundError(court.placeId);
+      throw new PlaceNotFoundError(placeId);
     }
 
     if (!place.organizationId) {
@@ -444,9 +453,10 @@ export class ReservationOwnerService implements IReservationOwnerService {
       throw new CourtNotFoundError(courtId);
     }
 
-    const place = await this.placeRepository.findById(court.placeId);
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    const place = await this.placeRepository.findById(placeId);
     if (!place) {
-      throw new PlaceNotFoundError(court.placeId);
+      throw new PlaceNotFoundError(placeId);
     }
 
     if (!place.organizationId) {

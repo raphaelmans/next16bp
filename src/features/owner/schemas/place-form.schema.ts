@@ -13,6 +13,11 @@ export const placeFormSchema = z.object({
   websiteUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
   facebookUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
   instagramUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
+  phoneNumber: z
+    .string()
+    .max(20, "Phone number must be less than 20 characters")
+    .optional()
+    .or(z.literal("")),
   viberInfo: z
     .string()
     .max(100, "Viber info must be less than 100 characters")

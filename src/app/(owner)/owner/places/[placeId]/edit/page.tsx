@@ -1,11 +1,30 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/page-header";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
@@ -22,7 +41,8 @@ import { trpc } from "@/trpc/client";
 
 export default function EditPlacePage() {
   const params = useParams();
-  const placeId = params.placeId as string;
+  const rawPlaceId = params.placeId;
+  const placeId = Array.isArray(rawPlaceId) ? rawPlaceId[0] : rawPlaceId;
   const router = useRouter();
 
   const { data: user } = useSession();
@@ -33,8 +53,17 @@ export default function EditPlacePage() {
     isLoading: orgLoading,
   } = useOwnerOrganization();
 
+  const isRouteReady = typeof placeId === "string" && placeId.length > 0;
+  const resolvedPlaceId = (placeId ?? "") as string;
+  const utils = trpc.useUtils();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteConfirmValue, setDeleteConfirmValue] = useState("");
+
   const { data: placeData, isLoading: placeLoading } =
-    trpc.placeManagement.getById.useQuery({ placeId }, { enabled: !!placeId });
+    trpc.placeManagement.getById.useQuery(
+      { placeId: resolvedPlaceId },
+      { enabled: isRouteReady },
+    );
 
   const { submitAsync, isSubmitting } = usePlaceForm({
     placeId,
@@ -43,18 +72,56 @@ export default function EditPlacePage() {
     },
   });
 
+  const deletePlaceMutation = trpc.placeManagement.delete.useMutation({
+    onSuccess: async () => {
+      if (organization?.id) {
+        await utils.placeManagement.list.invalidate({
+          organizationId: organization.id,
+        });
+      }
+      await utils.placeManagement.invalidate();
+      toast.success("Place deleted successfully.");
+      setDeleteDialogOpen(false);
+      router.push(appRoutes.owner.places.base);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete place.");
+    },
+  });
+
+  const handleDeletePlace = async () => {
+    if (!resolvedPlaceId) {
+      return;
+    }
+    try {
+      await deletePlaceMutation.mutateAsync({ placeId: resolvedPlaceId });
+    } catch {
+      return;
+    }
+  };
+
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(
-      appRoutes.owner.places.edit(placeId),
-    );
+    const redirectTo = isRouteReady
+      ? appRoutes.owner.places.edit(resolvedPlaceId)
+      : appRoutes.owner.places.base;
+    window.location.href = appRoutes.login.from(redirectTo);
   };
 
   const handleCancel = () => {
     router.push(appRoutes.owner.places.base);
   };
 
-  if (orgLoading || placeLoading) {
+  const shouldRedirect = isRouteReady && !placeLoading && !placeData;
+
+  useEffect(() => {
+    if (!shouldRedirect) {
+      return;
+    }
+    void router.replace(appRoutes.owner.places.base);
+  }, [router, shouldRedirect]);
+
+  if (orgLoading || placeLoading || !isRouteReady) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -62,8 +129,11 @@ export default function EditPlacePage() {
     );
   }
 
+  if (shouldRedirect) {
+    return null;
+  }
+
   if (!placeData) {
-    router.push(appRoutes.owner.places.base);
     return null;
   }
 
@@ -81,9 +151,12 @@ export default function EditPlacePage() {
     websiteUrl: placeData.contactDetail?.websiteUrl ?? "",
     facebookUrl: placeData.contactDetail?.facebookUrl ?? "",
     instagramUrl: placeData.contactDetail?.instagramUrl ?? "",
+    phoneNumber: placeData.contactDetail?.phoneNumber ?? "",
     viberInfo: placeData.contactDetail?.viberInfo ?? "",
     otherContactInfo: placeData.contactDetail?.otherContactInfo ?? "",
   };
+  const deleteConfirmationMatches =
+    deleteConfirmValue.trim() === place.name;
 
   return (
     <AppShell
@@ -143,7 +216,7 @@ export default function EditPlacePage() {
               players.
             </p>
             <Button asChild>
-              <Link href={appRoutes.owner.verification.place(placeId)}>
+              <Link href={appRoutes.owner.verification.place(resolvedPlaceId)}>
                 Go to verification
               </Link>
             </Button>
@@ -151,13 +224,89 @@ export default function EditPlacePage() {
         </Card>
 
         <PlacePhotoUpload
-          placeId={placeId}
+          placeId={resolvedPlaceId}
           photos={(placeData.photos ?? []).map((photo) => ({
             id: photo.id,
             url: photo.url,
             displayOrder: photo.displayOrder,
           }))}
         />
+
+        <Card className="border-destructive/60">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="h-5 w-5" />
+              Danger Zone
+            </CardTitle>
+            <CardDescription>
+              Deleting a place removes its listing and detaches courts. Existing
+              reservations remain for audit purposes.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h4 className="font-medium">Delete place</h4>
+              <p className="text-sm text-muted-foreground">
+                This action cannot be undone.
+              </p>
+            </div>
+            <AlertDialog
+              open={deleteDialogOpen}
+              onOpenChange={(open) => {
+                setDeleteDialogOpen(open);
+                if (!open) {
+                  setDeleteConfirmValue("");
+                }
+              }}
+            >
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive">Delete place</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete {place.name}?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will delete the place listing and detach courts. Stored
+                    reservation history remains available for audit.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    Type <span className="font-semibold text-foreground">{place.name}</span> to confirm.
+                  </p>
+                  <Input
+                    value={deleteConfirmValue}
+                    onChange={(event) =>
+                      setDeleteConfirmValue(event.target.value)
+                    }
+                    placeholder={place.name}
+                  />
+                </div>
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={deletePlaceMutation.isPending}>
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={(event) => {
+                      event.preventDefault();
+                      void handleDeletePlace();
+                    }}
+                    disabled={
+                      deletePlaceMutation.isPending ||
+                      !deleteConfirmationMatches
+                    }
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {deletePlaceMutation.isPending && (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    )}
+                    Delete place
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </CardContent>
+        </Card>
       </div>
     </AppShell>
   );

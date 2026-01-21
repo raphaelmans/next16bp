@@ -65,6 +65,11 @@ export const curatedCourtSchema = z.object({
   lng: z.number().optional(),
   facebookUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
   instagramUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
+  phoneNumber: z
+    .string()
+    .max(20, "Phone number must be less than 20 characters")
+    .optional()
+    .or(z.literal("")),
   viberContact: z
     .string()
     .max(50, "Viber contact must be less than 50 characters")

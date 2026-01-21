@@ -32,6 +32,7 @@ export function BookingDetailsCard({
   court,
   timeSlot,
 }: BookingDetailsCardProps) {
+  const imageUrl = court.coverImageUrl?.trim();
   const hasCoordinates =
     typeof court.latitude === "number" &&
     Number.isFinite(court.latitude) &&
@@ -54,16 +55,16 @@ export function BookingDetailsCard({
         {/* Court info */}
         <div className="flex gap-4">
           <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-muted">
-            {court.coverImageUrl ? (
+            {imageUrl ? (
               <Image
-                src={court.coverImageUrl}
+                src={imageUrl}
                 alt={court.name}
                 fill
                 className="object-cover"
               />
             ) : (
-              <div className="flex h-full items-center justify-center text-muted-foreground text-xs">
-                No image
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
+                <div className="text-primary/40 font-heading text-xl">KC</div>
               </div>
             )}
           </div>

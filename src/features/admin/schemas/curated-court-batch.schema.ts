@@ -35,24 +35,6 @@ const coordinateSchema = z
     },
   );
 
-const photoUrlsSchema = z
-  .string()
-  .optional()
-  .or(z.literal(""))
-  .refine(
-    (value) => {
-      if (!value) return true;
-      const urls = value
-        .split(/[\n,]/)
-        .map((entry) => entry.trim())
-        .filter(Boolean);
-      if (urls.length === 0) return true;
-      return urls.every((url) => z.string().url().safeParse(url).success);
-    },
-    {
-      message: "Photo URLs must be valid URLs",
-    },
-  );
 
 export const curatedCourtBatchItemSchema = z.object({
   name: z
@@ -70,6 +52,11 @@ export const curatedCourtBatchItemSchema = z.object({
   longitude: coordinateSchema,
   facebookUrl: optionalUrlSchema,
   instagramUrl: optionalUrlSchema,
+  phoneNumber: z
+    .string()
+    .max(20, "Phone number must be less than 20 characters")
+    .optional()
+    .or(z.literal("")),
   viberContact: z
     .string()
     .max(50, "Viber contact must be less than 50 characters")
@@ -82,7 +69,6 @@ export const curatedCourtBatchItemSchema = z.object({
     .optional()
     .or(z.literal("")),
   amenities: z.array(z.string()),
-  photoUrls: photoUrlsSchema,
   courts: z.array(courtSchema).min(1, "Add at least one court for this place"),
 });
 

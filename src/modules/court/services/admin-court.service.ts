@@ -1,10 +1,13 @@
 import { randomUUID } from "node:crypto";
+import { OrganizationNotFoundError } from "@/modules/organization/errors/organization.errors";
+import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
 import {
   MaxPlacePhotosExceededError,
   PlaceNotFoundError,
   PlacePhotoNotFoundError,
   PlacePhotoOrderInvalidError,
 } from "@/modules/place/errors/place.errors";
+import type { IPlaceVerificationRepository } from "@/modules/place-verification/repositories/place-verification.repository";
 import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
 import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
 import type { PlaceRecord } from "@/shared/infra/db/schema";
@@ -17,6 +20,7 @@ import type {
   AdminUpdateCourtDTO,
   CreateCuratedCourtDTO,
   RemoveCourtPhotoDTO,
+  TransferPlaceDTO,
   UploadCourtPhotoInput,
 } from "../dtos";
 import type {
@@ -83,6 +87,11 @@ export interface IAdminCourtService {
     filters: AdminCourtFiltersDTO,
     ctx?: RequestContext,
   ): Promise<PaginatedAdminPlaces>;
+
+  transferPlaceToOrganization(
+    adminUserId: string,
+    data: TransferPlaceDTO,
+  ): Promise<PlaceRecord>;
 }
 
 export class AdminCourtService implements IAdminCourtService {
@@ -90,6 +99,8 @@ export class AdminCourtService implements IAdminCourtService {
     private adminCourtRepository: IAdminCourtRepository,
     private transactionManager: TransactionManager,
     private storageService: IObjectStorageService,
+    private organizationRepository: IOrganizationRepository,
+    private placeVerificationRepository: IPlaceVerificationRepository,
   ) {}
 
   private extractPublicStoragePath(url: string, bucket: string): string | null {
@@ -130,6 +141,7 @@ export class AdminCourtService implements IAdminCourtService {
         {
           placeId: placeRecord.id,
           facebookUrl: data.facebookUrl,
+          phoneNumber: data.phoneNumber,
           viberInfo: data.viberInfo,
           instagramUrl: data.instagramUrl,
           websiteUrl: data.websiteUrl,
@@ -453,6 +465,7 @@ export class AdminCourtService implements IAdminCourtService {
           facebookUrl: data.facebookUrl || null,
           instagramUrl: data.instagramUrl || null,
           websiteUrl: data.websiteUrl || null,
+          phoneNumber: data.phoneNumber || null,
           viberInfo: data.viberInfo || null,
           otherContactInfo: data.otherContactInfo || null,
         },
@@ -619,5 +632,71 @@ export class AdminCourtService implements IAdminCourtService {
     ctx?: RequestContext,
   ): Promise<PaginatedAdminPlaces> {
     return this.adminCourtRepository.findAll(filters, ctx);
+  }
+
+  async transferPlaceToOrganization(
+    adminUserId: string,
+    data: TransferPlaceDTO,
+  ): Promise<PlaceRecord> {
+    return this.transactionManager.run(async (tx) => {
+      const ctx = { tx };
+
+      const place = await this.adminCourtRepository.findByIdForUpdate(
+        data.placeId,
+        ctx,
+      );
+      if (!place) {
+        throw new PlaceNotFoundError(data.placeId);
+      }
+
+      const targetOrg = await this.organizationRepository.findById(
+        data.targetOrganizationId,
+        ctx,
+      );
+      if (!targetOrg) {
+        throw new OrganizationNotFoundError(data.targetOrganizationId);
+      }
+
+      const fromOrganizationId = place.organizationId ?? null;
+      const now = new Date();
+
+      const updated = await this.adminCourtRepository.update(
+        place.id,
+        {
+          organizationId: targetOrg.id,
+          placeType: "RESERVABLE",
+          claimStatus: "CLAIMED",
+        },
+        ctx,
+      );
+
+      if (data.autoVerifyAndEnable) {
+        await this.placeVerificationRepository.upsert(
+          {
+            placeId: place.id,
+            status: "VERIFIED",
+            verifiedAt: now,
+            verifiedByUserId: adminUserId,
+            reservationsEnabled: true,
+            reservationsEnabledAt: now,
+          },
+          ctx,
+        );
+      }
+
+      logger.info(
+        {
+          event: "place.transferred",
+          placeId: place.id,
+          fromOrganizationId,
+          toOrganizationId: targetOrg.id,
+          autoVerifyAndEnable: data.autoVerifyAndEnable,
+          adminUserId,
+        },
+        "Admin transferred place to organization",
+      );
+
+      return updated;
+    });
   }
 }

@@ -66,6 +66,13 @@ export class TimeSlotService implements ITimeSlotService {
     private transactionManager: TransactionManager,
   ) {}
 
+  private requireCourtPlaceId(placeId: string | null): string {
+    if (!placeId) {
+      throw new NotCourtOwnerError();
+    }
+    return placeId;
+  }
+
   /**
    * Verify that the user owns the court via organization ownership
    */
@@ -79,7 +86,8 @@ export class TimeSlotService implements ITimeSlotService {
       throw new CourtNotFoundError(courtId);
     }
 
-    const place = await this.placeRepository.findById(court.placeId, ctx);
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    const place = await this.placeRepository.findById(placeId, ctx);
     if (!place || !place.organizationId) {
       throw new NotCourtOwnerError();
     }
@@ -132,7 +140,8 @@ export class TimeSlotService implements ITimeSlotService {
     if (!court) {
       throw new CourtNotFoundError(courtId);
     }
-    const place = await this.placeRepository.findById(court.placeId, ctx);
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    const place = await this.placeRepository.findById(placeId, ctx);
     const { dayOfWeek, minuteOfDay } = getZonedWeekdayMinuteOfDay(
       startTime,
       place?.timeZone,

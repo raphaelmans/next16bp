@@ -10,6 +10,8 @@
 
 Add lightweight admin moderation controls for user-submitted curated courts.
 
+Out of scope (handled in a later session): notifying the submitter when their suggestion is approved/rejected.
+
 Admins can:
 - filter for pending/approved/rejected submissions
 - see submitter email

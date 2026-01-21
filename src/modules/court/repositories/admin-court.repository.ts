@@ -7,6 +7,7 @@ import {
   type InsertPlaceAmenity,
   type InsertPlaceContactDetail,
   type InsertPlacePhoto,
+  organization,
   type PlaceAmenityRecord,
   type PlaceContactDetailRecord,
   type PlacePhotoRecord,
@@ -26,10 +27,12 @@ import type { AdminCourtFiltersDTO } from "../dtos";
  */
 export interface AdminPlaceListItem {
   place: PlaceRecord;
+  organizationName: string | null;
 }
 
 export interface AdminPlaceDetails {
   place: PlaceRecord;
+  organization: { id: string; name: string; slug: string } | null;
   contactDetail: PlaceContactDetailRecord | null;
   photos: PlacePhotoRecord[];
   amenities: PlaceAmenityRecord[];
@@ -102,6 +105,10 @@ export interface IAdminCourtRepository {
     ctx?: RequestContext,
   ): Promise<PaginatedAdminPlaces>;
   findById(id: string, ctx?: RequestContext): Promise<PlaceRecord | null>;
+  findByIdForUpdate(
+    id: string,
+    ctx: RequestContext,
+  ): Promise<PlaceRecord | null>;
   findByNameCity(
     name: string,
     city: string,
@@ -272,6 +279,7 @@ export class AdminCourtRepository implements IAdminCourtRepository {
           facebookUrl: data.facebookUrl ?? null,
           instagramUrl: data.instagramUrl ?? null,
           websiteUrl: data.websiteUrl ?? null,
+          phoneNumber: data.phoneNumber ?? null,
           viberInfo: data.viberInfo ?? null,
           otherContactInfo: data.otherContactInfo ?? null,
           updatedAt: new Date(),
@@ -346,16 +354,22 @@ export class AdminCourtRepository implements IAdminCourtRepository {
       .from(place)
       .where(whereClause);
 
-    // Get places
-    const places = await client
-      .select()
+    const rows = await client
+      .select({
+        place,
+        organizationName: organization.name,
+      })
       .from(place)
+      .leftJoin(organization, eq(place.organizationId, organization.id))
       .where(whereClause)
       .limit(filters.limit)
       .offset(filters.offset);
 
     return {
-      items: places.map((row) => ({ place: row })),
+      items: rows.map((row) => ({
+        place: row.place,
+        organizationName: row.organizationName ?? null,
+      })),
       total: countResult[0]?.count ?? 0,
     };
   }
@@ -387,6 +401,21 @@ export class AdminCourtRepository implements IAdminCourtRepository {
     return result[0] ?? null;
   }
 
+  async findByIdForUpdate(
+    id: string,
+    ctx: RequestContext,
+  ): Promise<PlaceRecord | null> {
+    const client = this.getClient(ctx) as DrizzleTransaction;
+    const result = await client
+      .select()
+      .from(place)
+      .where(eq(place.id, id))
+      .for("update")
+      .limit(1);
+
+    return result[0] ?? null;
+  }
+
   async findDetailsById(
     id: string,
     ctx?: RequestContext,
@@ -399,6 +428,19 @@ export class AdminCourtRepository implements IAdminCourtRepository {
       .limit(1);
     const placeRecord = placeResult[0];
     if (!placeRecord) return null;
+
+    const orgResult = placeRecord.organizationId
+      ? await client
+          .select({
+            id: organization.id,
+            name: organization.name,
+            slug: organization.slug,
+          })
+          .from(organization)
+          .where(eq(organization.id, placeRecord.organizationId))
+          .limit(1)
+      : [];
+    const org = orgResult[0] ?? null;
 
     const contactResult = await client
       .select()
@@ -433,6 +475,7 @@ export class AdminCourtRepository implements IAdminCourtRepository {
 
     return {
       place: placeRecord,
+      organization: org,
       contactDetail,
       photos,
       amenities,

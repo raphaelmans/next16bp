@@ -588,12 +588,10 @@ export class ReservationRepository implements IReservationRepository {
         slotEndTime: sql<Date>`max(${timeSlot.endTime})`,
         amountCents: sql<number>`sum(coalesce(${timeSlot.priceCents}, 0))`,
         currency: sql<string>`max(${timeSlot.currency})`,
-        paymentProof: {
-          referenceNumber: paymentProof.referenceNumber,
-          notes: paymentProof.notes,
-          fileUrl: paymentProof.fileUrl,
-          createdAt: paymentProof.createdAt,
-        },
+        paymentProofReferenceNumber: paymentProof.referenceNumber,
+        paymentProofNotes: paymentProof.notes,
+        paymentProofFileUrl: paymentProof.fileUrl,
+        paymentProofCreatedAt: paymentProof.createdAt,
       })
       .from(reservation)
       .leftJoin(
@@ -632,12 +630,17 @@ export class ReservationRepository implements IReservationRepository {
     const results = await query;
 
     return results.map((r) => {
-      const proof = r.paymentProof;
+      const proof = {
+        referenceNumber: r.paymentProofReferenceNumber ?? null,
+        notes: r.paymentProofNotes ?? null,
+        fileUrl: r.paymentProofFileUrl ?? null,
+        createdAt: r.paymentProofCreatedAt ?? null,
+      };
       const hasProof =
-        proof?.referenceNumber ||
-        proof?.notes ||
-        proof?.fileUrl ||
-        proof?.createdAt;
+        proof.referenceNumber ||
+        proof.notes ||
+        proof.fileUrl ||
+        proof.createdAt;
 
       return {
         ...r,
@@ -647,10 +650,10 @@ export class ReservationRepository implements IReservationRepository {
         expiresAt: toIsoString(r.expiresAt),
         paymentProof: hasProof
           ? {
-              referenceNumber: proof?.referenceNumber ?? null,
-              notes: proof?.notes ?? null,
-              fileUrl: proof?.fileUrl ?? null,
-              createdAt: toIsoString(proof?.createdAt) ?? "",
+              referenceNumber: proof.referenceNumber,
+              notes: proof.notes,
+              fileUrl: proof.fileUrl,
+              createdAt: toIsoString(proof.createdAt) ?? "",
             }
           : null,
       };

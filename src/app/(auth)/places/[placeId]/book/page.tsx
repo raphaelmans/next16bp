@@ -29,10 +29,11 @@ import {
 import { useProfile } from "@/features/reservation/hooks/use-profile";
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { normalizeDurationMinutes } from "@/shared/lib/duration";
 import { formatCurrency, formatDuration } from "@/shared/lib/format";
 import { getZonedDate } from "@/shared/lib/time-zone";
 
-const DURATIONS = [60, 120, 180];
+const DEFAULT_DURATION_MINUTES = 60;
 const selectionModeSchema = ["any", "court"] as const;
 
 export default function PlaceBookingPage() {
@@ -52,15 +53,15 @@ export default function PlaceBookingPage() {
 
   const startTime = bookingParams.startTime ?? undefined;
   const durationParam = bookingParams.duration ?? undefined;
-  const durationValue = durationParam ?? 60;
   const sportId = bookingParams.sportId ?? undefined;
   const modeParam = bookingParams.mode ?? undefined;
   const mode = modeParam ?? "any";
   const courtId = bookingParams.courtId ?? undefined;
 
-  const durationMinutes = DURATIONS.includes(durationValue)
-    ? durationValue
-    : DURATIONS[0];
+  const durationMinutes = normalizeDurationMinutes(
+    durationParam ?? DEFAULT_DURATION_MINUTES,
+    DEFAULT_DURATION_MINUTES,
+  );
 
   const { data: place, isLoading } = usePlaceDetail({ placeId });
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";

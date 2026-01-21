@@ -5,11 +5,17 @@ import {
   AlertCircle,
   Calendar,
   Clock,
+  Copy,
   ExternalLink,
   Loader2,
   MapPin,
+  Minus,
+  Phone,
+  Plus,
+  ShieldCheck,
   XCircle,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import * as React from "react";
@@ -34,6 +40,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  InputGroup,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -53,16 +65,23 @@ import {
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { trackEvent } from "@/shared/lib/clients/telemetry-client";
+import { copyToClipboard } from "@/shared/lib/clipboard";
 import {
   formatCurrency,
   formatDuration,
   formatInTimeZone,
 } from "@/shared/lib/format";
+import { buildViberDeepLink, toDialablePhone } from "@/shared/lib/phone";
 import { getZonedDayKey } from "@/shared/lib/time-zone";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
-const DURATIONS = [60, 120, 180];
+const MIN_DURATION_HOURS = 1;
+const MAX_DURATION_HOURS = 24;
+const DEFAULT_DURATION_MINUTES = 60;
+
+const clampDurationHours = (value: number) =>
+  Math.min(Math.max(Math.round(value), MIN_DURATION_HOURS), MAX_DURATION_HOURS);
 
 const claimFormSchema = z.object({
   organizationId: z.string().uuid("Organization is required"),
@@ -130,7 +149,12 @@ export default function PlaceDetailPage() {
   const [isRemovalOpen, setIsRemovalOpen] = React.useState(false);
 
   const [selectedDate, setSelectedDate] = React.useState<Date>();
-  const [durationMinutes, setDurationMinutes] = React.useState(60);
+  const [durationMinutes, setDurationMinutes] = React.useState(
+    DEFAULT_DURATION_MINUTES,
+  );
+  const [durationHoursDraft, setDurationHoursDraft] = React.useState(
+    String(DEFAULT_DURATION_MINUTES / 60),
+  );
   const [selectedSportId, setSelectedSportId] = React.useState<string>();
   const [selectionMode, setSelectionMode] = React.useState<"any" | "court">(
     "any",
@@ -148,6 +172,25 @@ export default function PlaceDetailPage() {
     setSelectedSlotId(undefined);
   }, []);
 
+  const durationHours = durationMinutes / 60;
+
+  const commitDurationHours = React.useCallback(
+    (hours: number) => {
+      const clampedHours = clampDurationHours(hours);
+      const nextMinutes = clampedHours * 60;
+      setDurationMinutes(nextMinutes);
+      setDurationHoursDraft(String(clampedHours));
+      if (nextMinutes !== durationMinutes) {
+        resetSelection();
+      }
+    },
+    [durationMinutes, resetSelection],
+  );
+
+  React.useEffect(() => {
+    setDurationHoursDraft(String(durationMinutes / 60));
+  }, [durationMinutes]);
+
   const scrollToSection = React.useCallback(
     (ref: React.RefObject<HTMLElement | null>) => {
       const element = ref.current;
@@ -163,6 +206,49 @@ export default function PlaceDetailPage() {
     [],
   );
 
+  const handleDurationDraftChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+      setDurationHoursDraft(value);
+      if (!value) return;
+      const parsed = Number(value);
+      if (!Number.isFinite(parsed) || !Number.isInteger(parsed)) return;
+      if (parsed < MIN_DURATION_HOURS || parsed > MAX_DURATION_HOURS) return;
+      commitDurationHours(parsed);
+    },
+    [commitDurationHours],
+  );
+
+  const handleDurationBlur = React.useCallback(() => {
+    if (!durationHoursDraft.trim()) {
+      commitDurationHours(MIN_DURATION_HOURS);
+      return;
+    }
+    const parsed = Number(durationHoursDraft);
+    if (!Number.isFinite(parsed)) {
+      commitDurationHours(MIN_DURATION_HOURS);
+      return;
+    }
+    commitDurationHours(parsed);
+  }, [commitDurationHours, durationHoursDraft]);
+
+  const handleDurationStep = React.useCallback(
+    (direction: "increase" | "decrease") => {
+      const draftValue = durationHoursDraft.trim();
+      const parsed = Number(draftValue);
+      const baseHours =
+        draftValue !== "" &&
+        Number.isFinite(parsed) &&
+        Number.isInteger(parsed)
+          ? parsed
+          : durationHours;
+      const nextHours =
+        direction === "increase" ? baseHours + 1 : baseHours - 1;
+      commitDurationHours(nextHours);
+    },
+    [commitDurationHours, durationHours, durationHoursDraft],
+  );
+
   const { data: place, isLoading } = usePlaceDetail({ placeId });
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";
   const isBookable = place?.placeType === "RESERVABLE";
@@ -170,6 +256,7 @@ export default function PlaceDetailPage() {
   const verificationStatus = place?.verification?.status ?? "UNVERIFIED";
   const reservationsEnabled = place?.verification?.reservationsEnabled ?? false;
   const isVerified = verificationStatus === "VERIFIED";
+  const isVerifiedReservable = isBookable && isVerified;
   const showBooking = isBookable && isVerified && reservationsEnabled;
   const showBookingVerificationUi = !showBooking && !isCurated;
   const canSubmitClaim = Boolean(
@@ -505,8 +592,13 @@ export default function PlaceDetailPage() {
     typeof place.longitude === "number" &&
     Number.isFinite(place.longitude);
   const contactDetail = place.contactDetail;
+  const phoneNumber = contactDetail?.phoneNumber?.trim();
+  const viberNumber = contactDetail?.viberInfo?.trim();
+  const dialablePhone = phoneNumber ? toDialablePhone(phoneNumber) : "";
+  const viberLink = viberNumber ? buildViberDeepLink(viberNumber) : "";
   const hasContactDetail = Boolean(
-    contactDetail?.websiteUrl ||
+    contactDetail?.phoneNumber ||
+      contactDetail?.websiteUrl ||
       contactDetail?.facebookUrl ||
       contactDetail?.instagramUrl ||
       contactDetail?.viberInfo ||
@@ -536,6 +628,14 @@ export default function PlaceDetailPage() {
   const openInMapsUrl = hasCoordinates
     ? `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`
     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+  const logoUrl = place.logoUrl?.trim();
+  const logoFallback = place.name
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <Container className="py-6">
@@ -544,6 +644,47 @@ export default function PlaceDetailPage() {
           <PhotoGallery
             photos={place.photos}
             courtName={place.name}
+            topOverlay={
+              <div className="inline-flex max-w-full flex-wrap items-center gap-3 rounded-2xl border border-border/60 bg-background/85 p-3 shadow-md backdrop-blur">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full border border-border/60 bg-background/80 p-1 shadow-sm">
+                  {logoUrl ? (
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={logoUrl}
+                        alt={`${place.name} logo`}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                  ) : (
+                    <span className="font-heading text-xs font-semibold text-foreground">
+                      {logoFallback}
+                    </span>
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="font-heading text-lg font-semibold text-foreground leading-tight">
+                    {place.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{place.city}</p>
+                </div>
+                {(isVerifiedReservable || isCurated) && (
+                  <div className="flex flex-wrap items-center gap-2 text-xs sm:ml-auto">
+                    {isVerifiedReservable && (
+                      <Badge variant="success" className="gap-1 text-[10px]">
+                        <ShieldCheck className="h-3 w-3" />
+                        Verified
+                      </Badge>
+                    )}
+                    {isCurated && (
+                      <Badge variant="secondary" className="text-[10px]">
+                        Curated
+                      </Badge>
+                    )}
+                  </div>
+                )}
+              </div>
+            }
             mainOverlay={
               showBooking ? (
                 <Button
@@ -556,9 +697,6 @@ export default function PlaceDetailPage() {
                     <Calendar className="h-4 w-4 text-accent" />
                     Check availability
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Pick a date and start time below.
-                  </p>
                   <span className="text-xs font-medium text-accent">
                     Jump to times
                   </span>
@@ -580,6 +718,30 @@ export default function PlaceDetailPage() {
                 <p className="text-muted-foreground">
                   Contact details are not available yet.
                 </p>
+              )}
+              {phoneNumber && (
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <span className="text-muted-foreground">Phone</span>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" asChild>
+                      <a href={`tel:${dialablePhone || phoneNumber}`}>
+                        <Phone className="h-4 w-4" />
+                        {phoneNumber}
+                      </a>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      aria-label="Copy phone number"
+                      onClick={() =>
+                        copyToClipboard(phoneNumber, "Phone number")
+                      }
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
               )}
               {contactDetail?.websiteUrl && (
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -623,10 +785,30 @@ export default function PlaceDetailPage() {
                   </a>
                 </div>
               )}
-              {contactDetail?.viberInfo && (
+              {viberNumber && (
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <span className="text-muted-foreground">Viber</span>
-                  <span className="font-medium">{contactDetail.viberInfo}</span>
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm" asChild>
+                      <a
+                        href={viberLink || `viber://chat?number=${viberNumber}`}
+                      >
+                        <Phone className="h-4 w-4" />
+                        {viberNumber}
+                      </a>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      aria-label="Copy Viber number"
+                      onClick={() =>
+                        copyToClipboard(viberNumber, "Viber number")
+                      }
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               )}
               {contactDetail?.otherContactInfo && (
@@ -755,22 +937,46 @@ export default function PlaceDetailPage() {
                   <CardHeader>
                     <CardTitle>Duration</CardTitle>
                   </CardHeader>
-                  <CardContent className="flex flex-wrap gap-3">
-                    {DURATIONS.map((duration) => (
-                      <Button
-                        key={duration}
+                  <CardContent className="space-y-2">
+                    <InputGroup className="max-w-[240px]">
+                      <InputGroupButton
                         type="button"
-                        variant={
-                          durationMinutes === duration ? "default" : "outline"
-                        }
-                        onClick={() => {
-                          setDurationMinutes(duration);
-                          resetSelection();
-                        }}
+                        size="icon-sm"
+                        aria-label="Decrease duration"
+                        onClick={() => handleDurationStep("decrease")}
+                        disabled={durationHours <= MIN_DURATION_HOURS}
                       >
-                        {formatDuration(duration)}
-                      </Button>
-                    ))}
+                        <Minus className="h-4 w-4" />
+                      </InputGroupButton>
+                      <InputGroupInput
+                        type="number"
+                        inputMode="numeric"
+                        min={MIN_DURATION_HOURS}
+                        max={MAX_DURATION_HOURS}
+                        step={1}
+                        value={durationHoursDraft}
+                        onChange={handleDurationDraftChange}
+                        onBlur={handleDurationBlur}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter") {
+                            event.currentTarget.blur();
+                          }
+                        }}
+                        className="text-center"
+                        aria-label="Duration in hours"
+                      />
+                      <InputGroupText className="px-2">hours</InputGroupText>
+                      <InputGroupButton
+                        type="button"
+                        size="icon-sm"
+                        aria-label="Increase duration"
+                        onClick={() => handleDurationStep("increase")}
+                        disabled={durationHours >= MAX_DURATION_HOURS}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </InputGroupButton>
+                    </InputGroup>
+                    <p className="text-xs text-muted-foreground">1-24 hours</p>
                   </CardContent>
                 </Card>
               </div>

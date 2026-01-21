@@ -65,6 +65,7 @@ export class PlaceDiscoveryService implements IPlaceDiscoveryService {
       city: filters.city,
       sportId: filters.sportId,
       amenities: filters.amenities,
+      verificationTier: filters.verificationTier,
       limit: filters.limit,
       offset: filters.offset,
     });

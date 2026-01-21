@@ -16,6 +16,7 @@ interface Photo {
 interface PhotoGalleryProps {
   photos: Photo[];
   courtName: string;
+  topOverlay?: React.ReactNode;
   mainOverlay?: React.ReactNode;
   className?: string;
 }
@@ -23,6 +24,7 @@ interface PhotoGalleryProps {
 export function PhotoGallery({
   photos,
   courtName,
+  topOverlay,
   mainOverlay,
   className,
 }: PhotoGalleryProps) {
@@ -45,11 +47,16 @@ export function PhotoGallery({
     return (
       <div
         className={cn(
-          "aspect-[4/3] md:aspect-[16/9] rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5",
+          "relative aspect-[4/3] md:aspect-[16/9] rounded-xl overflow-hidden bg-gradient-to-br from-primary/20 to-primary/5",
           "flex items-center justify-center",
           className,
         )}
       >
+        {topOverlay && (
+          <div className="absolute top-3 left-3 right-3 pointer-events-none">
+            {topOverlay}
+          </div>
+        )}
         <div className="text-center">
           <div className="text-primary/40 font-heading text-6xl mb-2">KC</div>
           <p className="text-muted-foreground text-sm">{courtName}</p>
@@ -77,6 +84,11 @@ export function PhotoGallery({
             className="object-cover transition-transform hover:scale-105"
             priority
           />
+          {topOverlay && (
+            <div className="absolute top-3 left-3 right-3 pointer-events-none">
+              {topOverlay}
+            </div>
+          )}
           {mainOverlay && (
             <div className="absolute inset-x-3 bottom-3">
               <div className="pointer-events-auto">{mainOverlay}</div>

@@ -28,6 +28,7 @@ export interface AdminCourt {
 }
 
 export interface AdminCourtDetail {
+  organization: { id: string; name: string; slug: string } | null;
   place: {
     id: string;
     name: string;
@@ -49,6 +50,7 @@ export interface AdminCourtDetail {
   contactDetail: {
     facebookUrl: string | null;
     instagramUrl: string | null;
+    phoneNumber: string | null;
     viberInfo: string | null;
     websiteUrl: string | null;
     otherContactInfo: string | null;
@@ -100,18 +102,25 @@ const toClaimStatusFilter = (value: string | null | undefined) => {
 const toIsoString = (value: string | Date) =>
   value instanceof Date ? value.toISOString() : value;
 
-const toAdminCourt = (place: {
-  id: string;
-  name: string;
-  address: string;
-  city: string;
-  placeType: "CURATED" | "RESERVABLE";
-  claimStatus: "UNCLAIMED" | "CLAIM_PENDING" | "CLAIMED" | "REMOVAL_REQUESTED";
-  isActive: boolean;
-  organizationId: string | null;
-  createdAt: string | Date;
-  updatedAt: string | Date;
-}): AdminCourt => ({
+const toAdminCourt = (
+  place: {
+    id: string;
+    name: string;
+    address: string;
+    city: string;
+    placeType: "CURATED" | "RESERVABLE";
+    claimStatus:
+      | "UNCLAIMED"
+      | "CLAIM_PENDING"
+      | "CLAIMED"
+      | "REMOVAL_REQUESTED";
+    isActive: boolean;
+    organizationId: string | null;
+    createdAt: string | Date;
+    updatedAt: string | Date;
+  },
+  organizationName?: string | null,
+): AdminCourt => ({
   id: place.id,
   name: place.name,
   address: place.address,
@@ -119,13 +128,17 @@ const toAdminCourt = (place: {
   type: place.placeType === "CURATED" ? "curated" : "reservable",
   status: place.isActive ? "active" : "inactive",
   organizationId: place.organizationId ?? undefined,
+  organizationName: organizationName ?? undefined,
   claimStatus: toClaimStatusFilter(place.claimStatus),
   createdAt: toIsoString(place.createdAt),
   updatedAt: toIsoString(place.updatedAt),
 });
 
 type AdminCourtPlace = Parameters<typeof toAdminCourt>[0];
-type AdminCourtListItem = { place: AdminCourtPlace };
+type AdminCourtListItem = {
+  place: AdminCourtPlace;
+  organizationName: string | null;
+};
 
 export function useAdminCourts(options: UseAdminCourtsOptions = {}) {
   const {
@@ -165,7 +178,7 @@ export function useAdminCourts(options: UseAdminCourtsOptions = {}) {
   const total = query.data?.total ?? 0;
   const courts =
     query.data?.items.map((item: AdminCourtListItem) =>
-      toAdminCourt(item.place),
+      toAdminCourt(item.place, item.organizationName),
     ) ?? [];
 
   return {
@@ -191,6 +204,19 @@ export function useAdminCourt(courtId: string) {
     ...query,
     data: query.data as AdminCourtDetail | undefined,
   };
+}
+
+export function useTransferPlaceToOrganization() {
+  const utils = trpc.useUtils();
+
+  return trpc.admin.court.transfer.useMutation({
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        utils.admin.court.list.invalidate(),
+        utils.admin.court.getById.invalidate({ placeId: variables.placeId }),
+      ]);
+    },
+  });
 }
 
 export function useToggleCourtStatus() {
@@ -263,6 +289,7 @@ export interface CuratedCourtData {
   timeZone?: string;
   facebookUrl?: string;
   instagramUrl?: string;
+  phoneNumber?: string;
   viberInfo?: string;
   websiteUrl?: string;
   otherContactInfo?: string;

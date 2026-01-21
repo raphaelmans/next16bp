@@ -20,9 +20,9 @@ export const court = pgTable(
   "court",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    placeId: uuid("place_id")
-      .notNull()
-      .references(() => place.id, { onDelete: "cascade" }),
+    placeId: uuid("place_id").references(() => place.id, {
+      onDelete: "set null",
+    }),
     sportId: uuid("sport_id")
       .notNull()
       .references(() => sport.id, { onDelete: "restrict" }),

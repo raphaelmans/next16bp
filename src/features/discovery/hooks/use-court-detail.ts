@@ -17,7 +17,7 @@ export interface CourtDetail {
   };
   tierLabel?: string;
   isActive: boolean;
-  placeId: string;
+  placeId: string | null;
 }
 
 interface UseCourtDetailOptions {
@@ -36,7 +36,7 @@ export function useCourtDetail({ courtId }: UseCourtDetailOptions) {
         label: query.data.court.label,
         tierLabel: query.data.court.tierLabel ?? undefined,
         isActive: query.data.court.isActive,
-        placeId: query.data.court.placeId,
+        placeId: query.data.court.placeId ?? null,
         sport: {
           id: query.data.sport.id,
           name: query.data.sport.name,

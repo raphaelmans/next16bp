@@ -38,6 +38,7 @@ export const CreatePlaceSchema = z.object({
   websiteUrl: z.string().url().optional(),
   facebookUrl: z.string().url().optional(),
   instagramUrl: z.string().url().optional(),
+  phoneNumber: z.string().max(20).optional(),
   viberInfo: z.string().max(100).optional(),
   otherContactInfo: z.string().max(500).optional(),
 });
@@ -61,9 +62,14 @@ export const UpdatePlaceSchema = z.object({
   websiteUrl: z.string().url().optional(),
   facebookUrl: z.string().url().optional(),
   instagramUrl: z.string().url().optional(),
+  phoneNumber: z.string().max(20).optional(),
   viberInfo: z.string().max(100).optional(),
   otherContactInfo: z.string().max(500).optional(),
   isActive: z.boolean().optional(),
+});
+
+export const DeletePlaceSchema = z.object({
+  placeId: z.string().uuid(),
 });
 
 export const ListMyPlacesSchema = z.object({
@@ -74,4 +80,5 @@ export type ListPlacesDTO = z.infer<typeof ListPlacesSchema>;
 export type GetPlaceByIdDTO = z.infer<typeof GetPlaceByIdSchema>;
 export type CreatePlaceDTO = z.infer<typeof CreatePlaceSchema>;
 export type UpdatePlaceDTO = z.infer<typeof UpdatePlaceSchema>;
+export type DeletePlaceDTO = z.infer<typeof DeletePlaceSchema>;
 export type ListMyPlacesDTO = z.infer<typeof ListMyPlacesSchema>;

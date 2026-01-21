@@ -85,6 +85,7 @@ pnpm db:seed:buckets # seed storage buckets
 - Prefer StandardForm components in `src/components/form` (StandardFormProvider, StandardFormInput/Select/Checkbox/Field).
 - Destructure `formState` values and helpers like `setValue`/`reset` from the form; avoid `form.formState.*` in inline expressions and `form.setValue(...)`.
 - Form submissions: use `mutateAsync`, show server errors via toast only, reset on success.
+- Async form defaults (especially selects with async options): initialize with empty `defaultValues`, `reset` once both record data + options are ready, and render a loading state/skeleton until the reset is applied to avoid first-render placeholders.
 - Prefer shared formatting helpers in `src/shared/lib/format.ts`.
 - Query params: use `nuqs` (`useQueryState` / `useQueryStates`) and avoid manual `router.replace` or `useSearchParams` reconciliation.
 - Cache invalidation: use `trpc.useUtils()` for tRPC data; for non-tRPC caches, use Query Key Factory (`@lukemorales/query-key-factory`) keys + `useQueryClient()`.

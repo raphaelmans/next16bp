@@ -8,7 +8,7 @@
 
 ## Story
 
-As an **authenticated user**, I want to **suggest a curated court listing** so that **the platform can expand its discovery catalog beyond admin-only submissions**.
+As an **authenticated user**, I want to **suggest a curated court listing (a venue I already play at)** so that **the platform can expand its discovery catalog beyond admin-only submissions**.
 
 ---
 
@@ -29,6 +29,13 @@ As an **authenticated user**, I want to **suggest a curated court listing** so t
 - Then the platform creates a new curated place in a pending approval state
 - And I see an inline success state on `/courts/suggest`
 - And I can click “Back to courts” to return to `/courts`
+
+### Funnel Use Case (Missing Venue)
+
+- Given I am browsing `/courts`
+- And I cannot find a venue that I play at
+- When I submit a suggestion
+- Then the venue can be reviewed and added to the platform
 
 ### Sports Selection
 
@@ -78,3 +85,5 @@ As an **authenticated user**, I want to **suggest a curated court listing** so t
 ## References
 
 - PRD: discovery supply growth (curated places)
+
+Out of scope (handled in a later session): notifying the submitter when their suggestion is approved/rejected.

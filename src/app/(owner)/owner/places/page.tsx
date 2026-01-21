@@ -3,22 +3,38 @@
 import {
   CheckCircle2,
   Clock,
+  Image as ImageIcon,
+  Loader2,
   Plus,
   Settings2,
   ShieldCheck,
   XCircle,
 } from "lucide-react";
 import Link from "next/link";
+import { type ChangeEvent, useRef } from "react";
+import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import { ReservationAlertsPanel } from "@/features/owner/components";
-import { useOwnerOrganization, useOwnerPlaces } from "@/features/owner/hooks";
+import {
+  useOwnerOrganization,
+  useOwnerPlaces,
+  useUploadOrganizationLogo,
+} from "@/features/owner/hooks";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { trpc } from "@/trpc/client";
 
 export default function OwnerPlacesPage() {
   const { data: user } = useSession();
@@ -28,9 +44,15 @@ export default function OwnerPlacesPage() {
     organizations,
     isLoading: orgLoading,
   } = useOwnerOrganization();
+  const organizationDetailsQuery = trpc.organization.get.useQuery(
+    { id: organization?.id ?? "" },
+    { enabled: !!organization?.id },
+  );
+  const uploadLogo = useUploadOrganizationLogo(organization?.id ?? "");
   const { data: places = [], isLoading: placesLoading } = useOwnerPlaces(
     organization?.id ?? null,
   );
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -86,6 +108,54 @@ export default function OwnerPlacesPage() {
     },
   );
 
+  const logoUrl = organizationDetailsQuery.data?.profile?.logoUrl ?? undefined;
+  const organizationName = organization?.name ?? "";
+  const logoFallback = organizationName
+    .split(" ")
+    .filter(Boolean)
+    .map((word) => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+  const isUploadingLogo = uploadLogo.isPending;
+
+  const handleLogoUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    if (!organization?.id) return;
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const acceptedTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/webp",
+      "image/jpg",
+    ];
+
+    if (!acceptedTypes.includes(file.type)) {
+      toast.error("Please upload a PNG, JPG, or WebP file");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Logo must be smaller than 5MB");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("organizationId", organization.id);
+    formData.append("image", file, file.name);
+
+    try {
+      await uploadLogo.mutateAsync(formData);
+    } catch {
+      // errors handled in hook
+    }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   return (
     <AppShell
       sidebar={
@@ -131,6 +201,57 @@ export default function OwnerPlacesPage() {
             </Link>
           </Button>
         </div>
+
+        <Card>
+          <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1">
+              <CardTitle>Organization Logo</CardTitle>
+              <CardDescription>
+                Shown on all your places and public pages.
+              </CardDescription>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploadingLogo}
+            >
+              {isUploadingLogo ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <ImageIcon className="mr-2 h-4 w-4" />
+              )}
+              {logoUrl ? "Change logo" : "Upload logo"}
+            </Button>
+          </CardHeader>
+          <CardContent className="flex flex-wrap items-center gap-4">
+            <Avatar className="h-16 w-16">
+              {logoUrl ? (
+                <AvatarImage src={logoUrl} alt={organizationName} />
+              ) : null}
+              <AvatarFallback className="text-base font-semibold">
+                {logoFallback || "KC"}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 space-y-1">
+              <p className="text-sm font-medium text-foreground">
+                {organizationName || "Your organization"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                PNG, JPG, or WebP. Max 5MB.
+              </p>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={handleLogoUpload}
+              className="hidden"
+              disabled={isUploadingLogo}
+            />
+          </CardContent>
+        </Card>
 
         <Card className="border-dashed">
           <CardContent className="p-4 sm:p-5">

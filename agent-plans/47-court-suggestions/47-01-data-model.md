@@ -12,6 +12,8 @@ Add a lightweight approval workflow for user-submitted curated places.
 
 Implementation is based on fields on `place` so that unapproved submissions can exist as real records but be fully hidden from public discovery.
 
+Out of scope (handled in a later session): notifying the submitter when their suggestion is approved/rejected.
+
 ---
 
 ## Schema Changes

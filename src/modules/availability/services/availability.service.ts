@@ -52,6 +52,10 @@ export class AvailabilityService implements IAvailabilityService {
       throw new CourtNotFoundError(data.courtId);
     }
 
+    if (!court.placeId) {
+      throw new PlaceNotFoundError();
+    }
+
     const place = await this.placeRepository.findById(court.placeId);
     if (!place) {
       throw new PlaceNotFoundError(court.placeId);

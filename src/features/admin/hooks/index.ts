@@ -12,6 +12,7 @@ export {
   useCreateCuratedCourt,
   useCreateCuratedCourtsBatch,
   useToggleCourtStatus,
+  useTransferPlaceToOrganization,
   useUpdateCuratedCourt,
   useUploadAdminCourtPhoto,
 } from "./use-admin-courts";

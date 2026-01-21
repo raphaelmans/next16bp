@@ -12,6 +12,8 @@
 2. Add admin review endpoints (approve/reject) and admin list filtering.
 3. Ensure unapproved places are fully hidden from public list and detail (server-enforced).
 
+Out of scope (handled in a later session): notifying the submitter when their suggestion is approved/rejected.
+
 ---
 
 ## tRPC Endpoints

@@ -318,7 +318,10 @@ export function ReservationsTable({
                   {/* Expanded row */}
                   {isExpanded && (
                     <TableRow>
-                      <TableCell colSpan={7} className="bg-muted/30 p-6">
+                      <TableCell
+                        colSpan={7}
+                        className="bg-muted/30 p-6 whitespace-normal"
+                      >
                         <div className="grid md:grid-cols-3 gap-6">
                           {/* Player Details */}
                           <div className="space-y-2">

@@ -38,6 +38,7 @@ interface PlaceListItem {
     placeType?: "CURATED" | "RESERVABLE";
   };
   coverImageUrl?: string | null;
+  organizationLogoUrl?: string | null;
   sports: { id: string; name: string; slug: string }[];
   courtCount?: number;
   lowestPriceCents?: number;
@@ -69,6 +70,7 @@ const mapPlaceSummary = (item: PlaceListItem): PlaceSummary => {
     address: item.place.address,
     city: item.place.city,
     coverImageUrl: item.coverImageUrl ?? undefined,
+    logoUrl: item.organizationLogoUrl ?? undefined,
     sports: item.sports.map((sport) => ({
       id: sport.id,
       name: sport.name,

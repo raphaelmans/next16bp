@@ -70,6 +70,7 @@ const buildFormDefaults = (
   websiteUrl: values?.websiteUrl ?? "",
   facebookUrl: values?.facebookUrl ?? "",
   instagramUrl: values?.instagramUrl ?? "",
+  phoneNumber: values?.phoneNumber ?? "",
   viberInfo: values?.viberInfo ?? "",
   otherContactInfo: values?.otherContactInfo ?? "",
 });
@@ -96,6 +97,9 @@ const normalizeFormValues = (values: PlaceFormValues): PlaceFormData => ({
     : undefined,
   instagramUrl: values.instagramUrl?.trim()
     ? values.instagramUrl.trim()
+    : undefined,
+  phoneNumber: values.phoneNumber?.trim()
+    ? values.phoneNumber.trim()
     : undefined,
   viberInfo: values.viberInfo?.trim() ? values.viberInfo.trim() : undefined,
   otherContactInfo: values.otherContactInfo?.trim()
@@ -397,9 +401,18 @@ export function PlaceForm({
               placeholder="https://instagram.com/..."
             />
             <StandardFormInput<PlaceFormValues>
-              name="viberInfo"
-              label="Viber Info"
+              name="phoneNumber"
+              label="Phone Number"
               placeholder="0917 123 4567"
+              type="tel"
+              autoComplete="tel"
+            />
+            <StandardFormInput<PlaceFormValues>
+              name="viberInfo"
+              label="Viber Number"
+              placeholder="0917 123 4567"
+              type="tel"
+              autoComplete="tel"
             />
           </div>
 

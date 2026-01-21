@@ -41,6 +41,16 @@ export interface Reservation {
   createdAt: string;
 }
 
+type PaymentProofLike = {
+  referenceNumber?: string | null;
+  reference_number?: string | null;
+  notes?: string | null;
+  fileUrl?: string | null;
+  file_url?: string | null;
+  createdAt?: string | null;
+  created_at?: string | null;
+} | null;
+
 interface UseOwnerReservationsOptions {
   reservationId?: string;
   placeId?: string;
@@ -119,6 +129,30 @@ function formatDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+function normalizePaymentProof(
+  proof: PaymentProofLike | undefined,
+  fallbackCreatedAt?: string | null,
+): Reservation["paymentProof"] | null {
+  if (!proof) return null;
+
+  const referenceNumber =
+    proof.referenceNumber ?? proof.reference_number ?? null;
+  const notes = proof.notes ?? null;
+  const fileUrl = proof.fileUrl ?? proof.file_url ?? null;
+  const createdAt =
+    proof.createdAt ?? proof.created_at ?? fallbackCreatedAt ?? null;
+  const hasContent = referenceNumber || notes || fileUrl;
+
+  if (!hasContent) return null;
+
+  return {
+    referenceNumber,
+    notes,
+    fileUrl,
+    createdAt: createdAt ?? "",
+  };
+}
+
 /**
  * Fetch reservations for an organization
  * Uses reservationOwner.getForOrganization endpoint
@@ -178,7 +212,7 @@ export function useOwnerReservations(
           status: mapStatusFromBackend(r.status),
           reservationStatus: r.status,
           expiresAt: r.expiresAt ?? null,
-          paymentProof: r.paymentProof ?? null,
+          paymentProof: normalizePaymentProof(r.paymentProof, r.createdAt),
           notes: r.cancellationReason ?? undefined,
           createdAt: r.createdAt ?? "",
         }));

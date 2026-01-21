@@ -2,9 +2,10 @@
 
 A staged supply pipeline (reduces platform risk)
 
-- Curated places: discoverable, read-only, contact info visible, not bookable.
+- Curated places: discoverable, read-only, contact info visible, not bookable (immediate opt-out removal on request).
 - Claiming: owners can claim curated places through an admin-reviewed workflow.
-- Verification: owner-created places can require admin verification (documents) before bookings are enabled.
+- Ownership verification: we validate phone + social links (and docs when needed) to prevent fake owners.
+- Booking gate: bookings are enabled only after verification + owner enablement.
 
 Privacy and enforcement
 
