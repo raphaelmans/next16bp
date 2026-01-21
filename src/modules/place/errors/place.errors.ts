@@ -1,4 +1,9 @@
-import { AuthorizationError, NotFoundError } from "@/shared/kernel/errors";
+import {
+  AuthorizationError,
+  ConflictError,
+  NotFoundError,
+  ValidationError,
+} from "@/shared/kernel/errors";
 
 export * from "./place-photo.errors";
 
@@ -15,5 +20,21 @@ export class NotPlaceOwnerError extends AuthorizationError {
 
   constructor() {
     super("You are not the owner of this venue");
+  }
+}
+
+export class PlaceSlugInvalidError extends ValidationError {
+  readonly code = "PLACE_SLUG_INVALID";
+
+  constructor(slug?: string) {
+    super("Venue slug is invalid", slug ? { slug } : undefined);
+  }
+}
+
+export class PlaceSlugTakenError extends ConflictError {
+  readonly code = "PLACE_SLUG_TAKEN";
+
+  constructor(slug: string) {
+    super("Venue slug is already in use", { slug });
   }
 }

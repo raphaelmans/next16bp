@@ -14,6 +14,7 @@ export type ClaimStatusFilter =
 
 export interface AdminCourt {
   id: string;
+  slug?: string | null;
   name: string;
   address: string;
   city: string;
@@ -23,6 +24,7 @@ export interface AdminCourt {
   organizationId?: string;
   organizationName?: string;
   claimStatus?: ClaimStatusFilter;
+  featuredRank?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -31,6 +33,7 @@ export interface AdminCourtDetail {
   organization: { id: string; name: string; slug: string } | null;
   place: {
     id: string;
+    slug?: string | null;
     name: string;
     address: string;
     city: string;
@@ -46,6 +49,7 @@ export interface AdminCourtDetail {
       | "CLAIMED"
       | "REMOVAL_REQUESTED";
     isActive: boolean;
+    featuredRank: number;
   };
   contactDetail: {
     facebookUrl: string | null;
@@ -105,6 +109,7 @@ const toIsoString = (value: string | Date) =>
 const toAdminCourt = (
   place: {
     id: string;
+    slug?: string | null;
     name: string;
     address: string;
     city: string;
@@ -115,6 +120,7 @@ const toAdminCourt = (
       | "CLAIMED"
       | "REMOVAL_REQUESTED";
     isActive: boolean;
+    featuredRank: number;
     organizationId: string | null;
     createdAt: string | Date;
     updatedAt: string | Date;
@@ -122,6 +128,7 @@ const toAdminCourt = (
   organizationName?: string | null,
 ): AdminCourt => ({
   id: place.id,
+  slug: place.slug ?? null,
   name: place.name,
   address: place.address,
   city: place.city,
@@ -130,6 +137,7 @@ const toAdminCourt = (
   organizationId: place.organizationId ?? undefined,
   organizationName: organizationName ?? undefined,
   claimStatus: toClaimStatusFilter(place.claimStatus),
+  featuredRank: place.featuredRank ?? 0,
   createdAt: toIsoString(place.createdAt),
   updatedAt: toIsoString(place.updatedAt),
 });

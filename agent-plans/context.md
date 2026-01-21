@@ -8,6 +8,8 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-21 | Added 59-public-courts-lazy-card-details plan (summary list + batched card details for faster discovery load) |
+| 2026-01-21 | Added 58-contact-us plan (public contact page, email integration, message storage) |
 | 2026-01-21 | Added 57-public-courts-pagination plan (replace "Load more" with shadcn pagination on /courts) |
 | 2026-01-21 | Added US-00-10 + 56-auth-redirect-continuity plan (standardized auth redirect + list-your-venue metadata) |
 | 2026-01-21 | Added US-00-09 + 55-owner-partner-landing plan (public /list-your-venue + onboarding continuation) |
@@ -90,6 +92,7 @@ References and context for planning artifacts.
 | 16-reservation-list-enrichment | `agent-plans/user-stories/16-reservation-list-enrichment/` | Player reservation lists with real court + slot data |
 | 17-place-claiming | `agent-plans/user-stories/17-place-claiming/` | Claim curated places and transfer courts to organizations |
 | 19-place-verification | `agent-plans/user-stories/19-place-verification/` | Per-place owner verification before enabling reservations |
+| 58-contact-us | `agent-plans/user-stories/58-contact-us/` | Public contact page submissions + email delivery |
 
 ---
 
@@ -120,6 +123,7 @@ References and context for planning artifacts.
 | 52-owner-place-deletion | `agent-plans/52-owner-place-deletion/` | Draft |
 | 55-owner-partner-landing | `agent-plans/55-owner-partner-landing/` | Draft |
 | 56-auth-redirect-continuity | `agent-plans/56-auth-redirect-continuity/` | Draft |
+| 58-contact-us | `agent-plans/58-contact-us/` | Draft |
 
 ---
 

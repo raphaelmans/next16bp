@@ -7,6 +7,7 @@ import {
   PlacePhotoNotFoundError,
   PlacePhotoOrderInvalidError,
 } from "@/modules/place/errors/place.errors";
+import { resolvePlaceSlug } from "@/modules/place/helpers";
 import type { IPlaceVerificationRepository } from "@/modules/place-verification/repositories/place-verification.repository";
 import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
 import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
@@ -29,6 +30,7 @@ import type {
   IAdminCourtRepository,
   PaginatedAdminPlaces,
 } from "../repositories/admin-court.repository";
+import { PlaceFeaturedRankTakenError } from "../errors/court.errors";
 
 export type CuratedBatchResultStatus =
   | "created"
@@ -117,11 +119,20 @@ export class AdminCourtService implements IAdminCourtService {
     return this.transactionManager.run(async (tx) => {
       const ctx = { tx };
 
+      const slug = await resolvePlaceSlug({
+        fallbackName: data.name,
+        findBySlug: this.adminCourtRepository.findBySlug.bind(
+          this.adminCourtRepository,
+        ),
+        ctx,
+      });
+
       // 1. Create place (no organization - admin-created)
       const placeRecord = await this.adminCourtRepository.create(
         {
           organizationId: null,
           name: data.name,
+          slug,
           address: data.address,
           city: data.city,
           province: data.province,
@@ -452,6 +463,22 @@ export class AdminCourtService implements IAdminCourtService {
       if (data.latitude !== undefined) updateData.latitude = data.latitude;
       if (data.longitude !== undefined) updateData.longitude = data.longitude;
       if (data.timeZone !== undefined) updateData.timeZone = data.timeZone;
+      if (data.featuredRank !== undefined) {
+        if (data.featuredRank > 0) {
+          const existingFeatured =
+            await this.adminCourtRepository.findByFeaturedRank(
+              data.featuredRank,
+              ctx,
+            );
+          if (existingFeatured && existingFeatured.id !== data.placeId) {
+            throw new PlaceFeaturedRankTakenError(
+              data.featuredRank,
+              existingFeatured.id,
+            );
+          }
+        }
+        updateData.featuredRank = data.featuredRank;
+      }
 
       const updated = await this.adminCourtRepository.update(
         data.placeId,

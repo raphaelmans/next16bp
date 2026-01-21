@@ -148,8 +148,8 @@ function buildSchedulePath({
 
   const query = params.toString();
   return query
-    ? `${appRoutes.courts.schedule(placeId)}?${query}`
-    : appRoutes.courts.schedule(placeId);
+    ? `${appRoutes.places.schedule(placeId)}?${query}`
+    : appRoutes.places.schedule(placeId);
 }
 
 function buildAvailabilityId(
@@ -163,7 +163,7 @@ function buildAvailabilityId(
 export default function CourtSchedulePage() {
   const params = useParams();
   const router = useRouter();
-  const placeId = (params.placeId ?? params.id ?? params.courtId) as string;
+  const placeIdOrSlug = (params.placeId ?? params.id ?? params.courtId) as string;
 
   const { data: session } = useSession();
   const isAuthenticated = !!session;
@@ -271,7 +271,10 @@ export default function CourtSchedulePage() {
     [commitDurationHours, durationHours, durationHoursDraft],
   );
 
-  const placeQuery = usePlaceDetail({ placeId });
+  const placeQuery = usePlaceDetail({ placeIdOrSlug });
+  const placeSlugOrId =
+    placeQuery.data?.slug ?? placeQuery.data?.id ?? placeIdOrSlug;
+  const analyticsPlaceId = placeQuery.data?.id ?? placeIdOrSlug;
   const place = placeQuery.data;
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";
   const verificationStatus = place?.verification?.status ?? "UNVERIFIED";
@@ -280,6 +283,35 @@ export default function CourtSchedulePage() {
   const showBooking =
     place?.placeType === "RESERVABLE" && isVerified && reservationsEnabled;
   const isMonthView = viewParam === "month";
+
+  React.useEffect(() => {
+    if (!place?.slug) return;
+    if (placeIdOrSlug === place.slug) return;
+    const nextPath = buildSchedulePath({
+      placeId: place.slug,
+      dayKey: dayKeyParam ?? undefined,
+      duration: durationMinutes,
+      sportId: sportIdParam ?? undefined,
+      mode: modeParam ?? undefined,
+      view: viewParam,
+      month: isValidMonthKey(monthParam) ? monthParam : undefined,
+      selectedCourtId: selectedCourtIdParam ?? undefined,
+      startTime: startTimeParam ?? undefined,
+    });
+    router.replace(nextPath);
+  }, [
+    dayKeyParam,
+    durationMinutes,
+    modeParam,
+    monthParam,
+    place?.slug,
+    placeIdOrSlug,
+    router,
+    selectedCourtIdParam,
+    sportIdParam,
+    startTimeParam,
+    viewParam,
+  ]);
 
   const today = React.useMemo(
     () => getZonedToday(placeTimeZone),
@@ -684,14 +716,14 @@ export default function CourtSchedulePage() {
     trackEvent({
       event: "funnel.schedule_slot_selected",
       properties: {
-        placeId,
+        placeId: analyticsPlaceId,
         mode: modeParam,
         durationMinutes,
         startTime: selectedOption.startTime,
         courtId: selectedOption.courtId,
       },
     });
-  }, [durationMinutes, modeParam, placeId, selectedOption]);
+  }, [analyticsPlaceId, durationMinutes, modeParam, selectedOption]);
 
   const handleReserve = () => {
     if (!selectedOption || !sportIdParam) return;
@@ -699,7 +731,7 @@ export default function CourtSchedulePage() {
     trackEvent({
       event: "funnel.reserve_clicked",
       properties: {
-        placeId,
+        placeId: analyticsPlaceId,
         mode: modeParam,
         durationMinutes,
         startTime: selectedOption.startTime,
@@ -718,7 +750,7 @@ export default function CourtSchedulePage() {
       bookingParams.set("courtId", selectedOption.courtId);
     }
 
-    const destination = `${appRoutes.places.book(placeId)}?${bookingParams.toString()}`;
+    const destination = `${appRoutes.places.book(placeSlugOrId)}?${bookingParams.toString()}`;
 
     if (isAuthenticated) {
       router.push(destination);
@@ -726,7 +758,7 @@ export default function CourtSchedulePage() {
     }
 
     const returnTo = buildSchedulePath({
-      placeId,
+      placeId: placeSlugOrId,
       dayKey: dayKeyParam ?? undefined,
       duration: durationMinutes,
       sportId: sportIdParam,
@@ -741,7 +773,7 @@ export default function CourtSchedulePage() {
     trackEvent({
       event: "funnel.login_started",
       properties: {
-        placeId,
+        placeId: analyticsPlaceId,
         redirect: returnTo,
       },
     });
@@ -771,7 +803,7 @@ export default function CourtSchedulePage() {
             removed.
           </p>
           <Link
-            href={appRoutes.courts.base}
+            href={appRoutes.places.base}
             className="text-primary hover:underline mt-4 inline-block"
           >
             Browse all courts
@@ -797,7 +829,9 @@ export default function CourtSchedulePage() {
           <h1 className="text-2xl font-bold">{heading}</h1>
           <p className="text-muted-foreground">{description}</p>
           <Button asChild variant="outline" className="mx-auto">
-            <Link href={appRoutes.courts.detail(placeId)}>Back to details</Link>
+            <Link href={appRoutes.places.detail(placeSlugOrId)}>
+              Back to details
+            </Link>
           </Button>
         </div>
       </Container>
@@ -835,7 +869,7 @@ export default function CourtSchedulePage() {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
             <Button variant="ghost" size="sm" asChild className="-ml-2">
-              <Link href={appRoutes.courts.detail(placeId)}>
+              <Link href={appRoutes.places.detail(placeSlugOrId)}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to details
               </Link>
@@ -851,7 +885,7 @@ export default function CourtSchedulePage() {
           <div className="flex items-center gap-2">
             <Button asChild variant="outline" size="sm">
               <a
-                href={appRoutes.courts.detail(placeId)}
+                href={appRoutes.places.detail(placeSlugOrId)}
                 target="_blank"
                 rel="noopener noreferrer"
               >

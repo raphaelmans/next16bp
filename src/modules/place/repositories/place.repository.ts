@@ -58,12 +58,17 @@ export interface PaginatedPlaces {
 
 export interface IPlaceRepository {
   findById(id: string, ctx?: RequestContext): Promise<PlaceRecord | null>;
+  findBySlug(slug: string, ctx?: RequestContext): Promise<PlaceRecord | null>;
   findByIdForUpdate(
     id: string,
     ctx: RequestContext,
   ): Promise<PlaceRecord | null>;
   findWithDetails(
     id: string,
+    ctx?: RequestContext,
+  ): Promise<PlaceWithDetails | null>;
+  findWithDetailsBySlug(
+    slug: string,
     ctx?: RequestContext,
   ): Promise<PlaceWithDetails | null>;
   findByOrganizationId(
@@ -89,6 +94,7 @@ export interface IPlaceRepository {
         | "verified_reservable"
         | "curated"
         | "unverified_reservable";
+      featuredOnly?: boolean;
       limit: number;
       offset: number;
     },
@@ -124,6 +130,20 @@ export class PlaceRepository implements IPlaceRepository {
       .select()
       .from(place)
       .where(eq(place.id, id))
+      .limit(1);
+
+    return result[0] ?? null;
+  }
+
+  async findBySlug(
+    slug: string,
+    ctx?: RequestContext,
+  ): Promise<PlaceRecord | null> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select()
+      .from(place)
+      .where(eq(place.slug, slug))
       .limit(1);
 
     return result[0] ?? null;
@@ -223,6 +243,18 @@ export class PlaceRepository implements IPlaceRepository {
     };
   }
 
+  async findWithDetailsBySlug(
+    slug: string,
+    ctx?: RequestContext,
+  ): Promise<PlaceWithDetails | null> {
+    const placeRecord = await this.findBySlug(slug, ctx);
+    if (!placeRecord) {
+      return null;
+    }
+
+    return this.findWithDetails(placeRecord.id, ctx);
+  }
+
   async findByOrganizationId(
     organizationId: string,
     ctx?: RequestContext,
@@ -269,6 +301,7 @@ export class PlaceRepository implements IPlaceRepository {
         | "verified_reservable"
         | "curated"
         | "unverified_reservable";
+      featuredOnly?: boolean;
       limit: number;
       offset: number;
     },
@@ -295,6 +328,17 @@ export class PlaceRepository implements IPlaceRepository {
       when ${place.placeType} = 'CURATED' then 1
       else 2
     end`;
+    const featuredBucket = sql<number>`case
+      when ${place.featuredRank} = 0 then 1
+      else 0
+    end`;
+    const featuredOrder = [
+      featuredBucket,
+      asc(place.featuredRank),
+      verificationRank,
+      asc(place.name),
+      asc(place.id),
+    ] as const;
 
     if (filters.province) {
       conditions.push(ilike(place.province, filters.province));
@@ -337,6 +381,10 @@ export class PlaceRepository implements IPlaceRepository {
       }
     }
 
+    if (filters.featuredOnly) {
+      conditions.push(sql`${place.featuredRank} > 0`);
+    }
+
     const baseCondition = and(...conditions);
 
     if (filters.sportId) {
@@ -375,7 +423,7 @@ export class PlaceRepository implements IPlaceRepository {
           )
           .groupBy(place.id)
           .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
-          .orderBy(verificationRank, asc(place.name), asc(place.id))
+          .orderBy(...featuredOrder)
           .limit(filters.limit)
           .offset(filters.offset);
 
@@ -455,7 +503,7 @@ export class PlaceRepository implements IPlaceRepository {
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .innerJoin(court, eq(court.placeId, place.id))
         .where(and(baseCondition, eq(court.sportId, filters.sportId)))
-        .orderBy(verificationRank, asc(place.name), asc(place.id))
+        .orderBy(...featuredOrder)
         .limit(filters.limit)
         .offset(filters.offset);
 
@@ -540,7 +588,7 @@ export class PlaceRepository implements IPlaceRepository {
         .where(and(baseCondition, inArray(placeAmenity.name, amenitiesFilter)))
         .groupBy(place.id)
         .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
-        .orderBy(verificationRank, asc(place.name), asc(place.id))
+        .orderBy(...featuredOrder)
         .limit(filters.limit)
         .offset(filters.offset);
 
@@ -567,7 +615,7 @@ export class PlaceRepository implements IPlaceRepository {
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .where(baseCondition)
-        .orderBy(verificationRank, asc(place.name), asc(place.id))
+        .orderBy(...featuredOrder)
         .limit(filters.limit)
         .offset(filters.offset);
 

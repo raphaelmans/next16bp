@@ -20,6 +20,9 @@ export const env = createEnv({
     DATABASE_URL: z.string(),
     SUPABASE_URL: z.string().url(),
     SUPABASE_SECRET_KEY: z.string(),
+    RESEND_API_KEY: z.string().min(1),
+    CONTACT_US_FROM_EMAIL: z.string().min(1),
+    CONTACT_US_TO_EMAIL: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),

@@ -349,6 +349,7 @@ export default function AdminCourtsPage() {
                     <TableHead>Type</TableHead>
                     <TableHead>Owner</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead>Featured</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -406,6 +407,15 @@ export default function AdminCourtsPage() {
                           </span>
                         </div>
                       </TableCell>
+                      <TableCell>
+                        {court.featuredRank && court.featuredRank > 0 ? (
+                          <Badge variant="paid" className="text-[10px]">
+                            #{court.featuredRank}
+                          </Badge>
+                        ) : (
+                          <span className="text-muted-foreground">-</span>
+                        )}
+                      </TableCell>
                       <TableCell
                         className="text-right"
                         onClick={(e) => e.stopPropagation()}
@@ -419,7 +429,9 @@ export default function AdminCourtsPage() {
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem asChild>
                               <Link
-                                href={appRoutes.courts.detail(court.id)}
+                                href={appRoutes.places.detail(
+                                  court.slug ?? court.id,
+                                )}
                                 target="_blank"
                               >
                                 <ExternalLink className="h-4 w-4 mr-2" />

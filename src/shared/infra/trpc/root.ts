@@ -3,6 +3,7 @@ import { authRouter } from "@/modules/auth/auth.router";
 import { availabilityRouter } from "@/modules/availability/availability.router";
 import { claimAdminRouter } from "@/modules/claim-request/admin/claim-admin.router";
 import { claimRequestRouter } from "@/modules/claim-request/claim-request.router";
+import { contactRouter } from "@/modules/contact/contact.router";
 import { adminCourtRouter } from "@/modules/court/admin/admin-court.router";
 import { courtRouter } from "@/modules/court/court.router";
 import { courtManagementRouter } from "@/modules/court/court-management.router";
@@ -43,6 +44,7 @@ export const appRouter = router({
   organizationPayment: organizationPaymentRouter,
   paymentProof: paymentProofRouter,
   claimRequest: claimRequestRouter,
+  contact: contactRouter,
   audit: auditRouter,
   availability: availabilityRouter,
   timeSlot: timeSlotRouter,

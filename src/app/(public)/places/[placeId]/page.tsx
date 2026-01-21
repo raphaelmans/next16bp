@@ -105,7 +105,7 @@ type RemovalFormData = z.infer<typeof removalFormSchema>;
 export default function PlaceDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const placeId = (params.placeId ?? params.id) as string;
+  const placeIdOrSlug = (params.placeId ?? params.id) as string;
 
   const { data: session } = useSession();
   const isAuthenticated = !!session;
@@ -251,7 +251,12 @@ export default function PlaceDetailPage() {
     [commitDurationHours, durationHours, durationHoursDraft],
   );
 
-  const { data: place, isLoading } = usePlaceDetail({ placeId });
+  const { data: place, isLoading } = usePlaceDetail({
+    placeIdOrSlug,
+  });
+  const placeId = place?.id;
+  const placeSlugOrId = place?.slug ?? place?.id ?? placeIdOrSlug;
+  const analyticsPlaceId = place?.id ?? placeIdOrSlug;
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";
   const isBookable = place?.placeType === "RESERVABLE";
   const isCurated = place?.placeType === "CURATED";
@@ -273,6 +278,12 @@ export default function PlaceDetailPage() {
     value: organization.id,
   }));
   const defaultOrganizationId = organizations[0]?.id ?? "";
+
+  React.useEffect(() => {
+    if (!place?.slug) return;
+    if (placeIdOrSlug === place.slug) return;
+    router.replace(appRoutes.places.detail(place.slug));
+  }, [place?.slug, placeIdOrSlug, router]);
 
   const claimMutation = trpc.claimRequest.submitClaim.useMutation();
   const removalMutation = trpc.claimRequest.submitGuestRemoval.useMutation();
@@ -352,15 +363,15 @@ export default function PlaceDetailPage() {
 
     trackEvent({
       event: "funnel.schedule_slot_selected",
-      properties: {
-        placeId,
-        mode: selectionMode,
-        durationMinutes,
-        startTime: selectedSlot.startTime,
-        courtId: selectedCourtId,
-      },
-    });
-  }, [durationMinutes, placeId, selectedCourtId, selectedSlot, selectionMode]);
+        properties: {
+          placeId: analyticsPlaceId,
+          mode: selectionMode,
+          durationMinutes,
+          startTime: selectedSlot.startTime,
+          courtId: selectedCourtId,
+        },
+      });
+  }, [analyticsPlaceId, durationMinutes, selectedCourtId, selectedSlot, selectionMode]);
 
   const scheduleHref = React.useMemo(() => {
     if (!showBooking || !place) return undefined;
@@ -387,12 +398,12 @@ export default function PlaceDetailPage() {
 
     const query = params.toString();
     return query
-      ? `${appRoutes.places.schedule(placeId)}?${query}`
-      : appRoutes.places.schedule(placeId);
+      ? `${appRoutes.places.schedule(placeSlugOrId)}?${query}`
+      : appRoutes.places.schedule(placeSlugOrId);
   }, [
     durationMinutes,
     place,
-    placeId,
+    placeSlugOrId,
     placeTimeZone,
     selectedCourtId,
     selectedDate,
@@ -416,6 +427,7 @@ export default function PlaceDetailPage() {
       : "Choose a date";
 
   const handleClaimSubmit = async (data: ClaimFormData) => {
+    if (!placeId) return;
     try {
       await claimMutation.mutateAsync({
         placeId,
@@ -430,7 +442,7 @@ export default function PlaceDetailPage() {
         requestNotes: "",
       });
       setIsClaimOpen(false);
-      await utils.place.getById.invalidate({ placeId });
+      await utils.place.getByIdOrSlug.invalidate({ placeIdOrSlug });
     } catch (error) {
       toast.error("Unable to submit claim", {
         description: getClientErrorMessage(error, "Please try again"),
@@ -439,6 +451,7 @@ export default function PlaceDetailPage() {
   };
 
   const handleRemovalSubmit = async (data: RemovalFormData) => {
+    if (!placeId) return;
     try {
       await removalMutation.mutateAsync({
         placeId,
@@ -455,7 +468,7 @@ export default function PlaceDetailPage() {
         requestNotes: "",
       });
       setIsRemovalOpen(false);
-      await utils.place.getById.invalidate({ placeId });
+      await utils.place.getByIdOrSlug.invalidate({ placeIdOrSlug });
     } catch (error) {
       toast.error("Unable to submit removal request", {
         description: getClientErrorMessage(error, "Please try again"),
@@ -491,12 +504,12 @@ export default function PlaceDetailPage() {
       params.set("startTime", selectedSlot.startTime);
     }
 
-    const destination = `${appRoutes.places.book(placeId)}?${params.toString()}`;
+    const destination = `${appRoutes.places.book(placeSlugOrId)}?${params.toString()}`;
 
     trackEvent({
       event: "funnel.reserve_clicked",
       properties: {
-        placeId,
+        placeId: analyticsPlaceId,
         mode: selectionMode,
         durationMinutes,
         startTime: selectedSlot?.startTime,
@@ -507,11 +520,11 @@ export default function PlaceDetailPage() {
     if (isAuthenticated) {
       router.push(destination);
     } else {
-      const returnTo = scheduleHref ?? appRoutes.places.schedule(placeId);
+      const returnTo = scheduleHref ?? appRoutes.places.schedule(placeSlugOrId);
       trackEvent({
         event: "funnel.login_started",
         properties: {
-          placeId,
+          placeId: analyticsPlaceId,
           redirect: returnTo,
         },
       });
@@ -570,7 +583,7 @@ export default function PlaceDetailPage() {
             removed.
           </p>
           <Link
-            href={appRoutes.courts.base}
+            href={appRoutes.places.base}
             className="text-primary hover:underline mt-4 inline-block"
           >
             Browse all courts

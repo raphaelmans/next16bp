@@ -135,6 +135,8 @@ export default function AdminCourtEditPage() {
     OrganizationSearchItem | undefined
   >(undefined);
   const [autoVerifyAndEnable, setAutoVerifyAndEnable] = React.useState(true);
+  const [featuredRankInput, setFeaturedRankInput] = React.useState("0");
+  const [isSavingFeaturedRank, setIsSavingFeaturedRank] = React.useState(false);
 
   const { data: sports = [], isLoading: sportsLoading } =
     trpc.sport.list.useQuery({});
@@ -400,6 +402,11 @@ export default function AdminCourtEditPage() {
     }
   }, [courtData, courtLoading, router]);
 
+  React.useEffect(() => {
+    if (courtData?.place.featuredRank === undefined) return;
+    setFeaturedRankInput(courtData.place.featuredRank.toString());
+  }, [courtData?.place.featuredRank]);
+
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
@@ -483,6 +490,33 @@ export default function AdminCourtEditPage() {
     if (!googleUrl.trim()) return;
     previewMutation.reset();
     previewMutation.mutate({ url: googleUrl });
+  };
+
+  const handleSaveFeaturedRank = async () => {
+    const trimmed = featuredRankInput.trim();
+    const parsed = Number(trimmed);
+    if (!Number.isInteger(parsed) || parsed < 0) {
+      toast.error("Featured rank must be a whole number of 0 or more");
+      return;
+    }
+
+    try {
+      setIsSavingFeaturedRank(true);
+      await updateMutation.mutateAsync({
+        placeId: courtId,
+        latitude: undefined,
+        longitude: undefined,
+        featuredRank: parsed,
+      });
+      setFeaturedRankInput(parsed.toString());
+      toast.success("Featured rank updated");
+    } catch (error) {
+      toast.error("Failed to update featured rank", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    } finally {
+      setIsSavingFeaturedRank(false);
+    }
   };
 
   const sportOptions = sports.map((sport) => ({
@@ -746,6 +780,40 @@ export default function AdminCourtEditPage() {
               Transfers keep existing reservations and move all courts under
               this venue.
             </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Featured Placement</CardTitle>
+            <CardDescription>
+              Set the featured rank for landing page visibility.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="max-w-xs space-y-2">
+              <Label htmlFor="featured-rank">Featured rank</Label>
+              <Input
+                id="featured-rank"
+                value={featuredRankInput}
+                onChange={(event) => setFeaturedRankInput(event.target.value)}
+                inputMode="numeric"
+                placeholder="0"
+              />
+              <p className="text-xs text-muted-foreground">
+                Use 0 to remove featuring. Lower numbers are higher priority.
+              </p>
+            </div>
+            <Button
+              type="button"
+              onClick={handleSaveFeaturedRank}
+              disabled={isSavingFeaturedRank || updateMutation.isPending}
+            >
+              {isSavingFeaturedRank ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
+              Save featured rank
+            </Button>
           </CardContent>
         </Card>
 

@@ -19,6 +19,7 @@ export interface PlaceSport {
 
 export interface PlaceCardPlace {
   id: string;
+  slug?: string | null;
   name: string;
   address: string;
   city: string;
@@ -31,6 +32,7 @@ export interface PlaceCardPlace {
   placeType?: "CURATED" | "RESERVABLE";
   verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
   reservationsEnabled?: boolean;
+  featuredRank?: number;
 }
 
 export type PlaceCardLinkScope = "card" | "title" | "none";
@@ -69,7 +71,7 @@ export function PlaceCard({
   const aspectRatio = variant === "featured" ? "aspect-[4/3]" : "aspect-[16/9]";
   const visibleSports = place.sports.slice(0, MAX_BADGES);
   const hiddenCount = Math.max(0, place.sports.length - MAX_BADGES);
-  const placeHref = appRoutes.courts.detail(place.id);
+  const placeHref = appRoutes.places.detail(place.slug ?? place.id);
   const logoSize = variant === "compact" ? "h-7 w-7" : "h-10 w-10";
   const logoPadding = variant === "compact" ? "p-1" : "p-1.5";
   const logoText = variant === "compact" ? "text-[10px]" : "text-xs";
@@ -100,6 +102,7 @@ export function PlaceCard({
   const isVerifiedReservable =
     place.placeType === "RESERVABLE" && place.verificationStatus === "VERIFIED";
   const isCurated = place.placeType === "CURATED";
+  const isFeatured = (place.featuredRank ?? 0) > 0;
 
   const cardContent = (
     <Card
@@ -175,8 +178,14 @@ export function PlaceCard({
             >
               {title}
             </h3>
-            {(isVerifiedReservable || isCurated) && variant !== "compact" && (
+            {(isVerifiedReservable || isCurated || isFeatured) &&
+              variant !== "compact" && (
               <div className="flex flex-wrap items-center gap-2">
+                {isFeatured && (
+                  <Badge variant="paid" className="gap-1 text-[10px]">
+                    Featured #{place.featuredRank}
+                  </Badge>
+                )}
                 {isVerifiedReservable && (
                   <Badge variant="success" className="gap-1 text-[10px]">
                     <ShieldCheck className="h-3 w-3" />

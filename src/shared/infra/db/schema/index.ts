@@ -5,6 +5,8 @@
 
 // Claim request tables
 export * from "./claim-request";
+// Contact messages
+export * from "./contact-message";
 // Court-related tables
 export * from "./court";
 export * from "./court-hours-window";

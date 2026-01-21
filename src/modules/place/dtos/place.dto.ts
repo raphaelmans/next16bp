@@ -11,6 +11,7 @@ export const ListPlacesSchema = z.object({
   verificationTier: z
     .enum(["verified_reservable", "curated", "unverified_reservable"])
     .optional(),
+  featuredOnly: z.boolean().optional(),
   limit: z.number().int().min(1).max(100).default(20),
   offset: z.number().int().min(0).default(0),
 });
@@ -19,9 +20,14 @@ export const GetPlaceByIdSchema = z.object({
   placeId: z.string().uuid(),
 });
 
+export const GetPlaceByIdOrSlugSchema = z.object({
+  placeIdOrSlug: z.string().trim().min(1).max(200),
+});
+
 export const CreatePlaceSchema = z.object({
   organizationId: z.string().uuid(),
   name: z.string().min(1).max(200),
+  slug: z.string().trim().min(1).max(200).optional(),
   address: z.string().min(1),
   city: z.string().min(1).max(100),
   province: z.string().min(1).max(100),
@@ -46,6 +52,7 @@ export const CreatePlaceSchema = z.object({
 export const UpdatePlaceSchema = z.object({
   placeId: z.string().uuid(),
   name: z.string().min(1).max(200).optional(),
+  slug: z.string().trim().min(1).max(200).optional(),
   address: z.string().min(1).optional(),
   city: z.string().min(1).max(100).optional(),
   province: z.string().min(1).max(100).optional(),
@@ -78,6 +85,7 @@ export const ListMyPlacesSchema = z.object({
 
 export type ListPlacesDTO = z.infer<typeof ListPlacesSchema>;
 export type GetPlaceByIdDTO = z.infer<typeof GetPlaceByIdSchema>;
+export type GetPlaceByIdOrSlugDTO = z.infer<typeof GetPlaceByIdOrSlugSchema>;
 export type CreatePlaceDTO = z.infer<typeof CreatePlaceSchema>;
 export type UpdatePlaceDTO = z.infer<typeof UpdatePlaceSchema>;
 export type DeletePlaceDTO = z.infer<typeof DeletePlaceSchema>;

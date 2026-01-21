@@ -20,6 +20,7 @@ import type {
   ReorderPlacePhotosDTO,
   UpdatePlaceDTO,
 } from "../dtos";
+import { resolvePlaceSlug } from "../helpers";
 import {
   MaxPlacePhotosExceededError,
   NotPlaceOwnerError,
@@ -93,10 +94,18 @@ export class PlaceManagementService implements IPlaceManagementService {
         throw new NotOrganizationOwnerError();
       }
 
+      const slug = await resolvePlaceSlug({
+        rawSlug: data.slug,
+        fallbackName: data.name,
+        findBySlug: this.placeRepository.findBySlug.bind(this.placeRepository),
+        ctx,
+      });
+
       const created = await this.placeRepository.create(
         {
           organizationId: data.organizationId,
           name: data.name,
+          slug,
           address: data.address,
           city: data.city,
           province: data.province,
@@ -161,11 +170,27 @@ export class PlaceManagementService implements IPlaceManagementService {
         viberInfo,
         otherContactInfo,
         country: _country,
+        slug,
         ...updateData
       } = data;
-      const normalizedUpdateData = {
+
+      let resolvedSlug: string | undefined;
+      if (slug !== undefined || !place.slug) {
+        resolvedSlug = await resolvePlaceSlug({
+          rawSlug: slug,
+          fallbackName: data.name ?? place.name,
+          findBySlug: this.placeRepository.findBySlug.bind(this.placeRepository),
+          ctx,
+          excludePlaceId: place.id,
+        });
+      }
+
+      const normalizedUpdateData: Partial<UpdatePlaceDTO> & {
+        country: string;
+      } = {
         ...updateData,
         country: "PH",
+        ...(resolvedSlug !== undefined ? { slug: resolvedSlug } : {}),
       };
       const updated = await this.placeRepository.update(
         placeId,

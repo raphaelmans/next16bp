@@ -42,6 +42,7 @@ export interface PlaceContactDetail {
 
 export interface PlaceDetail {
   id: string;
+  slug?: string;
   name: string;
   address: string;
   city: string;
@@ -74,7 +75,7 @@ export interface AvailabilityOption {
 }
 
 interface UsePlaceDetailOptions {
-  placeId: string;
+  placeIdOrSlug: string;
 }
 
 const mapCourtsToSports = (courts: PlaceCourt[]) => {
@@ -85,11 +86,11 @@ const mapCourtsToSports = (courts: PlaceCourt[]) => {
   return Array.from(map.values());
 };
 
-export function usePlaceDetail({ placeId }: UsePlaceDetailOptions) {
-  return trpc.place.getById.useQuery(
-    { placeId },
+export function usePlaceDetail({ placeIdOrSlug }: UsePlaceDetailOptions) {
+  return trpc.place.getByIdOrSlug.useQuery(
+    { placeIdOrSlug },
     {
-      enabled: !!placeId,
+      enabled: !!placeIdOrSlug,
       select: (response) => {
         const courts: PlaceCourt[] = response.courts.map((court) => ({
           id: court.court.id,
@@ -131,6 +132,7 @@ export function usePlaceDetail({ placeId }: UsePlaceDetailOptions) {
 
         return {
           id: response.place.id,
+          slug: response.place.slug ?? undefined,
           name: response.place.name,
           address: response.place.address,
           city: response.place.city,

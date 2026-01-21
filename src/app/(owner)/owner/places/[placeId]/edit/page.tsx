@@ -140,6 +140,7 @@ export default function EditPlacePage() {
   const place = placeData.place;
   const defaultValues: Partial<PlaceFormData> = {
     name: place.name,
+    slug: place.slug ?? "",
     address: place.address,
     city: place.city,
     province: place.province ?? "",

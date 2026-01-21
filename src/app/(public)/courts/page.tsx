@@ -18,12 +18,59 @@ import {
   PlaceCardSkeleton,
 } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
 import {
   findCityBySlug,
   findCityBySlugAcrossProvinces,
   findProvinceBySlug,
 } from "@/shared/lib/ph-location-data";
+
+type PaginationItemModel =
+  | { type: "page"; page: number }
+  | { type: "ellipsis"; key: string };
+
+const buildPaginationItems = (
+  current: number,
+  totalPages: number,
+): PaginationItemModel[] => {
+  if (totalPages <= 1) return [];
+
+  const pages = new Set<number>([1, totalPages]);
+
+  for (let page = current - 1; page <= current + 1; page += 1) {
+    if (page >= 1 && page <= totalPages) {
+      pages.add(page);
+    }
+  }
+
+  const sortedPages = [...pages].sort((a, b) => a - b);
+  const items: PaginationItemModel[] = [];
+
+  sortedPages.forEach((page, index) => {
+    if (index > 0) {
+      const previous = sortedPages[index - 1];
+      if (page - previous > 1) {
+        items.push({
+          type: "ellipsis",
+          key: `ellipsis-${previous}-${page}`,
+        });
+      }
+    }
+
+    items.push({ type: "page", page });
+  });
+
+  return items;
+};
 
 export default function PlacesPage() {
   return (
@@ -35,6 +82,7 @@ export default function PlacesPage() {
 
 function PlacesPageContent() {
   const filters = useDiscoveryFilters();
+  const pageLimit = Math.min(filters.limit, 10);
   const { data, isLoading } = useDiscoveryPlaces({
     q: filters.q ?? undefined,
     province: filters.province ?? undefined,
@@ -43,11 +91,20 @@ function PlacesPageContent() {
     amenities: filters.amenities ?? undefined,
     verificationTier: filters.verification ?? undefined,
     page: filters.page,
-    limit: filters.limit,
+    limit: pageLimit,
   });
 
   const places = data?.places ?? [];
   const total = data?.total ?? 0;
+  const page = filters.page;
+  const limit = data?.limit ?? pageLimit;
+  const totalPages = limit > 0 ? Math.ceil(total / limit) : 1;
+  const paginationItems = useMemo(
+    () => buildPaginationItems(page, totalPages),
+    [page, totalPages],
+  );
+  const startIndex = total === 0 ? 0 : (page - 1) * limit + 1;
+  const endIndex = Math.min(page * limit, total);
   const { data: provincesCities } = usePHProvincesCitiesQuery();
 
   const locationLabel = useMemo(() => {
@@ -139,15 +196,54 @@ function PlacesPageContent() {
 
             <AdBanner placement="search-results" className="mt-8" />
 
-            {data?.hasMore && (
-              <div className="flex justify-center pt-8">
-                <button
-                  type="button"
-                  onClick={() => filters.setPage(filters.page + 1)}
-                  className="text-primary hover:underline"
-                >
-                  Load more
-                </button>
+            {totalPages > 1 && (
+              <div className="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-muted-foreground">
+                  Showing {startIndex}-{endIndex} of {total}
+                </p>
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() => filters.setPage(Math.max(1, page - 1))}
+                        className={
+                          page === 1
+                            ? "pointer-events-none opacity-50"
+                            : "cursor-pointer"
+                        }
+                      />
+                    </PaginationItem>
+                    {paginationItems.map((item) =>
+                      item.type === "page" ? (
+                        <PaginationItem key={`page-${item.page}`}>
+                          <PaginationLink
+                            onClick={() => filters.setPage(item.page)}
+                            isActive={page === item.page}
+                            className="cursor-pointer"
+                          >
+                            {item.page}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ) : (
+                        <PaginationItem key={item.key}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      ),
+                    )}
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() =>
+                          filters.setPage(Math.min(totalPages, page + 1))
+                        }
+                        className={
+                          page === totalPages
+                            ? "pointer-events-none opacity-50"
+                            : "cursor-pointer"
+                        }
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
               </div>
             )}
           </>

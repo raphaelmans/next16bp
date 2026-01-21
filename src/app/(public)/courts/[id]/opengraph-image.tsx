@@ -27,17 +27,21 @@ export default async function OpenGraphImage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const canonicalPath = appRoutes.courts.detail(id);
+  const fallbackPath = appRoutes.places.detail(id);
+  let canonicalPath = fallbackPath;
 
   let title = "Court details";
   let subtitle = "Discover. Reserve. Play.";
 
   try {
-    const caller = await createServerCaller(canonicalPath);
-    const placeDetails = await caller.place.getById({ placeId: id });
+    const caller = await createServerCaller(fallbackPath);
+    const placeDetails = await caller.place.getByIdOrSlug({
+      placeIdOrSlug: id,
+    });
     const place = placeDetails.place;
     title = place.name;
     subtitle = buildLocationLabel(place);
+    canonicalPath = appRoutes.places.detail(place.slug ?? place.id);
   } catch {}
 
   return new ImageResponse(

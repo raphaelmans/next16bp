@@ -3,9 +3,11 @@ import {
   boolean,
   decimal,
   index,
+  integer,
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -26,6 +28,7 @@ export const place = pgTable(
       onDelete: "set null",
     }),
     name: varchar("name", { length: 200 }).notNull(),
+    slug: varchar("slug", { length: 200 }),
     address: text("address").notNull(),
     city: varchar("city", { length: 100 }).notNull(),
     province: varchar("province", { length: 100 }).notNull(),
@@ -39,6 +42,7 @@ export const place = pgTable(
     claimStatus: placeClaimStatusEnum("claim_status")
       .notNull()
       .default("UNCLAIMED"),
+    featuredRank: integer("featured_rank").notNull().default(0),
     isActive: boolean("is_active").notNull().default(true),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
@@ -51,12 +55,18 @@ export const place = pgTable(
     index("idx_place_location").on(table.latitude, table.longitude),
     index("idx_place_city").on(table.city),
     index("idx_place_type").on(table.placeType),
+    uniqueIndex("uq_place_slug")
+      .on(table.slug)
+      .where(sql`${table.slug} IS NOT NULL`),
     index("idx_place_org")
       .on(table.organizationId)
       .where(sql`${table.organizationId} IS NOT NULL`),
     index("idx_place_active")
       .on(table.isActive)
       .where(sql`${table.isActive} = true`),
+    uniqueIndex("idx_place_featured_rank_unique")
+      .on(table.featuredRank)
+      .where(sql`${table.featuredRank} > 0`),
   ],
 );
 

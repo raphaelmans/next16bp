@@ -41,7 +41,7 @@ export default function PlaceBookingPage() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const placeId = (params.placeId ?? params.id) as string;
+  const placeIdOrSlug = (params.placeId ?? params.id) as string;
 
   const [bookingParams] = useQueryStates({
     startTime: parseAsString,
@@ -63,7 +63,12 @@ export default function PlaceBookingPage() {
     DEFAULT_DURATION_MINUTES,
   );
 
-  const { data: place, isLoading } = usePlaceDetail({ placeId });
+  const { data: place, isLoading } = usePlaceDetail({
+    placeIdOrSlug,
+  });
+  const placeId = place?.id ?? placeIdOrSlug;
+  const resolvedPlaceId = place?.id;
+  const placeSlugOrId = place?.slug ?? place?.id ?? placeIdOrSlug;
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";
   const verificationStatus = place?.verification?.status ?? "UNVERIFIED";
   const reservationsEnabled = place?.verification?.reservationsEnabled ?? false;
@@ -97,6 +102,43 @@ export default function PlaceBookingPage() {
     const query = params.toString();
     return query ? `${pathname}?${query}` : pathname;
   }, [courtId, durationParam, modeParam, pathname, sportId, startTime]);
+
+  React.useEffect(() => {
+    if (!place?.slug) return;
+    if (placeIdOrSlug === place.slug) return;
+    const params = new URLSearchParams();
+
+    if (startTime) {
+      params.set("startTime", startTime);
+    }
+    if (durationParam != null) {
+      params.set("duration", String(durationParam));
+    }
+    if (sportId) {
+      params.set("sportId", sportId);
+    }
+    if (modeParam) {
+      params.set("mode", modeParam);
+    }
+    if (courtId) {
+      params.set("courtId", courtId);
+    }
+
+    const query = params.toString();
+    const nextPath = query
+      ? `${appRoutes.places.book(place.slug)}?${query}`
+      : appRoutes.places.book(place.slug);
+    router.replace(nextPath);
+  }, [
+    courtId,
+    durationParam,
+    modeParam,
+    place?.slug,
+    placeIdOrSlug,
+    router,
+    sportId,
+    startTime,
+  ]);
   const { data: profile, isLoading: isLoadingProfile } = useProfile();
   const createForCourt = useCreateReservationForCourt();
   const createForAnyCourt = useCreateReservationForAnyCourt();
@@ -164,23 +206,33 @@ export default function PlaceBookingPage() {
       toast.error("Select a sport to continue.");
       return;
     }
+    if (mode === "any" && !resolvedPlaceId) {
+      toast.error("Venue details unavailable.");
+      return;
+    }
 
     try {
       const payload = {
         startTime: selectedSlot.startTime,
         durationMinutes,
       };
-      const result =
-        mode === "court" && courtId
-          ? await createForCourt.mutateAsync({
-              courtId,
-              ...payload,
-            })
-          : await createForAnyCourt.mutateAsync({
-              placeId,
-              sportId: sportId ?? "",
-              ...payload,
-            });
+      let result: { status: string; id: string };
+      if (mode === "court" && courtId) {
+        result = await createForCourt.mutateAsync({
+          courtId,
+          ...payload,
+        });
+      } else {
+        if (!resolvedPlaceId) {
+          toast.error("Venue details unavailable.");
+          return;
+        }
+        result = await createForAnyCourt.mutateAsync({
+          placeId: resolvedPlaceId,
+          sportId: sportId ?? "",
+          ...payload,
+        });
+      }
 
       const requiresPayment = result.status === "AWAITING_PAYMENT";
       router.push(
@@ -206,7 +258,7 @@ export default function PlaceBookingPage() {
             This venue is not accepting reservations yet.
           </p>
           <Link
-            href={appRoutes.places.detail(placeId)}
+            href={appRoutes.places.detail(placeSlugOrId)}
             className="text-primary hover:underline inline-block"
           >
             Back to venue
@@ -225,7 +277,7 @@ export default function PlaceBookingPage() {
             Please return to the venue page and select a valid time slot.
           </p>
           <Link
-            href={appRoutes.places.detail(placeId)}
+            href={appRoutes.places.detail(placeSlugOrId)}
             className="text-primary hover:underline mt-4 inline-block"
           >
             Back to venue

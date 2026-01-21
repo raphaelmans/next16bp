@@ -30,12 +30,14 @@ export interface PlaceSummary extends PlaceCardPlace {
 interface PlaceListItem {
   place: {
     id: string;
+    slug?: string | null;
     name: string;
     address: string;
     city: string;
     latitude: string | null;
     longitude: string | null;
     placeType?: "CURATED" | "RESERVABLE";
+    featuredRank?: number | null;
   };
   coverImageUrl?: string | null;
   organizationLogoUrl?: string | null;
@@ -66,6 +68,7 @@ const mapPlaceSummary = (item: PlaceListItem): PlaceSummary => {
 
   return {
     id: item.place.id,
+    slug: item.place.slug ?? undefined,
     name: item.place.name,
     address: item.place.address,
     city: item.place.city,
@@ -82,6 +85,7 @@ const mapPlaceSummary = (item: PlaceListItem): PlaceSummary => {
     placeType: item.place.placeType,
     verificationStatus: item.verificationStatus ?? undefined,
     reservationsEnabled: item.reservationsEnabled ?? undefined,
+    featuredRank: item.place.featuredRank ?? 0,
     latitude: Number.isFinite(latitude) ? latitude : undefined,
     longitude: Number.isFinite(longitude) ? longitude : undefined,
   };
@@ -148,12 +152,13 @@ export function useDiscoveryPlaces(options: UseDiscoveryOptions = {}) {
 
 export function useFeaturedPlaces(limit = 6) {
   const query = trpc.place.list.useQuery({
+    featuredOnly: true,
     limit,
     offset: 0,
   });
 
   const places: PlaceSummary[] = query.data
-    ? query.data.items.map(mapPlaceSummary).slice(0, limit)
+    ? query.data.items.map(mapPlaceSummary)
     : [];
 
   return {

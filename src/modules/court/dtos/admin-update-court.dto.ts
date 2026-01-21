@@ -62,6 +62,7 @@ export const AdminUpdateCourtSchema = z.object({
   latitude: coordinateSchema,
   longitude: coordinateSchema,
   timeZone: z.string().min(1).max(64).optional(),
+  featuredRank: z.number().int().min(0).optional(),
   // Contact details
   facebookUrl: optionalUrlSchema,
   instagramUrl: optionalUrlSchema,

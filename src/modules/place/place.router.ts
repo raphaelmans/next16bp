@@ -1,5 +1,9 @@
 import { publicProcedure, router } from "@/shared/infra/trpc/trpc";
-import { GetPlaceByIdSchema, ListPlacesSchema } from "./dtos";
+import {
+  GetPlaceByIdOrSlugSchema,
+  GetPlaceByIdSchema,
+  ListPlacesSchema,
+} from "./dtos";
 import { makePlaceDiscoveryService } from "./factories/place.factory";
 
 export const placeRouter = router({
@@ -12,5 +16,11 @@ export const placeRouter = router({
     .query(async ({ input }) => {
       const service = makePlaceDiscoveryService();
       return service.getPlaceById(input.placeId);
+    }),
+  getByIdOrSlug: publicProcedure
+    .input(GetPlaceByIdOrSlugSchema)
+    .query(async ({ input }) => {
+      const service = makePlaceDiscoveryService();
+      return service.getPlaceByIdOrSlug(input.placeIdOrSlug);
     }),
 });

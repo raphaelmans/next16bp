@@ -12,6 +12,7 @@ export interface OwnerPlaceSport {
 
 export interface OwnerPlace {
   id: string;
+  slug?: string | null;
   name: string;
   address: string;
   city: string;
@@ -26,7 +27,7 @@ export interface OwnerPlace {
 
 type OwnerPlaceRecord = Pick<
   PlaceRecord,
-  "id" | "name" | "address" | "city" | "timeZone" | "isActive"
+  "id" | "slug" | "name" | "address" | "city" | "timeZone" | "isActive"
 > & {
   verification?: {
     status: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED" | null;
@@ -67,6 +68,7 @@ const mapOwnerPlace = (
   } | null,
 ): OwnerPlace => ({
   id: place.id,
+  slug: place.slug,
   name: place.name,
   address: place.address,
   city: place.city,

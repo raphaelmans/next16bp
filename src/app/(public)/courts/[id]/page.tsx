@@ -42,14 +42,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
 
-  const canonicalPath = appRoutes.courts.detail(id);
+  const fallbackPath = appRoutes.places.detail(id);
+  let canonicalPath = fallbackPath;
 
   let title = "Court details";
   let description = "View court details on KudosCourts.";
 
   try {
-    const caller = await createServerCaller(canonicalPath);
-    const placeDetails = await caller.place.getById({ placeId: id });
+    const caller = await createServerCaller(fallbackPath);
+    const placeDetails = await caller.place.getByIdOrSlug({
+      placeIdOrSlug: id,
+    });
     const place = placeDetails.place;
     const sports = placeDetails.sports
       .map((sport) => sport.name)
@@ -57,6 +60,7 @@ export async function generateMetadata({
 
     title = place.name;
     description = buildDescription(place, placeDetails.courts.length, sports);
+    canonicalPath = appRoutes.places.detail(place.slug ?? place.id);
   } catch {}
 
   return {

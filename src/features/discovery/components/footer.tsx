@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { KudosLogo } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
@@ -19,7 +20,7 @@ const FOOTER_LINKS = {
   ],
   company: [
     { name: "About Us", href: "/about" },
-    { name: "Contact", href: "/contact" },
+    { name: "Contact", href: appRoutes.contactUs.base },
     { name: "Blog", href: "/blog" },
   ],
   legal: [
@@ -44,6 +45,9 @@ export function Footer() {
               <p className="mt-4 text-sm text-muted-foreground">
                 The unified platform for court discovery and venue booking.
               </p>
+              <Button asChild variant="outline" size="sm" className="mt-5">
+                <Link href={appRoutes.contactUs.base}>Contact us</Link>
+              </Button>
             </div>
 
             {/* Discover */}

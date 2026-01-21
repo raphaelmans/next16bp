@@ -266,7 +266,7 @@ function CourtActionsDropdown({
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <a
-            href={appRoutes.places.detail(court.placeId)}
+            href={appRoutes.places.detail(court.placeSlug ?? court.placeId)}
             target="_blank"
             rel="noopener noreferrer"
           >

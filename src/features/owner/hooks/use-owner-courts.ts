@@ -8,6 +8,7 @@ export interface OwnerCourt {
   id: string;
   label: string;
   placeId: string;
+  placeSlug?: string | null;
   placeName: string;
   city: string;
   sportId: string;
@@ -21,7 +22,7 @@ export interface OwnerCourt {
   isActive: boolean;
 }
 
-type OwnerPlace = Pick<PlaceRecord, "id" | "name" | "city">;
+type OwnerPlace = Pick<PlaceRecord, "id" | "slug" | "name" | "city">;
 
 type CourtWithSportPayload = {
   court: {
@@ -47,6 +48,7 @@ function mapOwnerCourt(
     id: court.court.id,
     label: court.court.label,
     placeId: place.id,
+    placeSlug: place.slug ?? null,
     placeName: place.name,
     city: place.city,
     sportId: court.sport.id,

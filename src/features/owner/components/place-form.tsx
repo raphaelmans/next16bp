@@ -25,6 +25,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { env } from "@/lib/env";
+import { normalizePlaceSlug } from "@/lib/slug";
+import { appRoutes } from "@/shared/lib/app-routes";
 import { useGoogleLocPreviewMutation } from "@/shared/lib/clients/google-loc-client";
 import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
 import {
@@ -59,6 +61,7 @@ const buildFormDefaults = (
   values?: Partial<PlaceFormValues>,
 ): PlaceFormValues => ({
   name: values?.name ?? "",
+  slug: values?.slug ?? "",
   address: values?.address ?? "",
   city: values?.city ?? "",
   province: values?.province ?? "",
@@ -78,6 +81,7 @@ const buildFormDefaults = (
 
 const normalizeFormValues = (values: PlaceFormValues): PlaceFormData => ({
   name: values.name.trim(),
+  slug: values.slug?.trim() ? values.slug.trim() : undefined,
   address: values.address.trim(),
   city: values.city.trim(),
   province: values.province.trim(),
@@ -153,7 +157,7 @@ export function PlaceForm({
     control,
     reset,
     setValue,
-    formState: { isDirty, isSubmitting: formSubmitting },
+    formState: { dirtyFields, isDirty, isSubmitting: formSubmitting },
   } = form;
 
   const shouldHydrateDefaults = Boolean(defaultValues);
@@ -163,6 +167,8 @@ export function PlaceForm({
   const provinceValue = useWatch({ control, name: "province" });
   const cityValue = useWatch({ control, name: "city" });
   const nameValue = useWatch({ control, name: "name" });
+  const slugValue = useWatch({ control, name: "slug" });
+  const isSlugDirty = Boolean(dirtyFields.slug);
 
   const previewMutation = useGoogleLocPreviewMutation({
     onSuccess: (data) => {
@@ -208,6 +214,19 @@ export function PlaceForm({
     reset(resolvedDefaults);
     setIsFormReady(true);
   }, [reset, resolvedDefaults, shouldHydrateDefaults]);
+
+  useEffect(() => {
+    if (isSlugDirty) return;
+    if (!nameValue.trim()) return;
+    if (slugValue?.trim()) return;
+    const suggestedSlug = normalizePlaceSlug(nameValue);
+    if (!suggestedSlug) return;
+    setValue("slug", suggestedSlug, {
+      shouldDirty: false,
+      shouldTouch: false,
+      shouldValidate: true,
+    });
+  }, [isSlugDirty, nameValue, setValue, slugValue]);
 
   useEffect(() => {
     if (countryValue !== DEFAULT_COUNTRY) {
@@ -331,6 +350,14 @@ export function PlaceForm({
 
   const submitting = Boolean(isSubmitting || formSubmitting);
   const isSubmitDisabled = submitting || !isDirty;
+  const slugPreview = slugValue?.trim()
+    ? slugValue.trim()
+    : nameValue
+      ? normalizePlaceSlug(nameValue)
+      : "";
+  const slugDescription = slugPreview
+    ? `Public URL: ${appRoutes.places.detail(slugPreview)}`
+    : "Public URL will be generated from the venue name.";
 
   if (shouldHydrateDefaults && !isFormReady) {
     return (
@@ -356,6 +383,13 @@ export function PlaceForm({
             label="Venue Name"
             placeholder="e.g., Kudos Sports Complex"
             required
+          />
+
+          <StandardFormInput<PlaceFormValues>
+            name="slug"
+            label="Public URL Slug"
+            placeholder="e.g., kudos-sports-complex"
+            description={slugDescription}
           />
 
           <StandardFormInput<PlaceFormValues>

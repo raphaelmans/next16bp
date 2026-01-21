@@ -160,7 +160,9 @@ export default function OwnerVerificationLandingPage() {
                       </Link>
                     </Button>
                     <Button variant="ghost" size="sm" asChild>
-                      <Link href={appRoutes.places.detail(place.id)}>
+                      <Link
+                        href={appRoutes.places.detail(place.slug ?? place.id)}
+                      >
                         View public page
                       </Link>
                     </Button>

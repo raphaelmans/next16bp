@@ -37,6 +37,17 @@ export class DuplicateCourtLabelError extends ConflictError {
   }
 }
 
+export class PlaceFeaturedRankTakenError extends ConflictError {
+  readonly code = "PLACE_FEATURED_RANK_TAKEN";
+
+  constructor(featuredRank: number, placeId?: string) {
+    super("Featured rank is already assigned to another venue", {
+      featuredRank,
+      placeId,
+    });
+  }
+}
+
 export class InvalidCourtTypeError extends ValidationError {
   readonly code = "INVALID_COURT_TYPE";
 

@@ -57,6 +57,7 @@ export default function ManageSlotsPage() {
     { placeId: placeId ?? "" },
     { enabled: !!placeId },
   );
+  const placeSlugOrId = placeData?.place.slug ?? placeId;
   const placeTimeZone = placeData?.place.timeZone;
   const [isDateInitialized, setIsDateInitialized] = React.useState(false);
 
@@ -244,8 +245,8 @@ export default function ManageSlotsPage() {
     ? { id: currentOrg.id, name: currentOrg.name }
     : undefined;
   const courtName = courtData?.court.label ?? "Loading...";
-  const publicPlaceHref = courtData?.court.placeId
-    ? appRoutes.places.detail(courtData.court.placeId)
+  const publicPlaceHref = placeSlugOrId
+    ? appRoutes.places.detail(placeSlugOrId)
     : appRoutes.places.base;
 
   // Show loading state while court is loading

@@ -63,6 +63,10 @@ export const appRoutes = {
     base: "/privacy",
     options: { type: "public" as const },
   },
+  contactUs: {
+    base: "/contact-us",
+    options: { type: "public" as const },
+  },
   dashboard: {
     base: "/dashboard",
     options: { type: "protected" as const },
@@ -176,6 +180,7 @@ const publicBases = [
   appRoutes.places.base,
   appRoutes.terms.base,
   appRoutes.privacy.base,
+  appRoutes.contactUs.base,
 ];
 
 export const routeGroups = {

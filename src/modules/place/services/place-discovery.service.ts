@@ -2,6 +2,7 @@ import type {
   CourtWithSport,
   ICourtRepository,
 } from "@/modules/court/repositories/court.repository";
+import { isUuid } from "@/lib/slug";
 import type { ListPlacesDTO } from "../dtos";
 import { PlaceNotFoundError } from "../errors/place.errors";
 import type {
@@ -17,6 +18,7 @@ export interface PlaceDetails extends PlaceWithDetails {
 
 export interface IPlaceDiscoveryService {
   getPlaceById(placeId: string): Promise<PlaceDetails>;
+  getPlaceByIdOrSlug(placeIdOrSlug: string): Promise<PlaceDetails>;
   listPlaces(filters: ListPlacesDTO): Promise<{
     items: PlaceListItem[];
     total: number;
@@ -36,6 +38,33 @@ export class PlaceDiscoveryService implements IPlaceDiscoveryService {
       throw new PlaceNotFoundError(placeId);
     }
 
+    return this.buildPlaceDetails(placeId, place);
+  }
+
+  async getPlaceByIdOrSlug(placeIdOrSlug: string): Promise<PlaceDetails> {
+    const value = placeIdOrSlug.trim();
+    if (!value) {
+      throw new PlaceNotFoundError(placeIdOrSlug);
+    }
+
+    let place: PlaceWithDetails | null = null;
+    if (isUuid(value)) {
+      place = await this.placeRepository.findWithDetails(value);
+    }
+    if (!place) {
+      place = await this.placeRepository.findWithDetailsBySlug(value);
+    }
+    if (!place) {
+      throw new PlaceNotFoundError(placeIdOrSlug);
+    }
+
+    return this.buildPlaceDetails(place.place.id, place);
+  }
+
+  private async buildPlaceDetails(
+    placeId: string,
+    place: PlaceWithDetails,
+  ): Promise<PlaceDetails> {
     const courts = await this.courtRepository.findByPlaceWithSport(placeId);
     const sportsMap = new Map(
       courts.map((courtWithSport) => [
@@ -66,6 +95,7 @@ export class PlaceDiscoveryService implements IPlaceDiscoveryService {
       sportId: filters.sportId,
       amenities: filters.amenities,
       verificationTier: filters.verificationTier,
+      featuredOnly: filters.featuredOnly,
       limit: filters.limit,
       offset: filters.offset,
     });
