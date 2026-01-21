@@ -200,10 +200,19 @@ async function resolveGoogleMapsUrl(inputUrl: URL): Promise<URL> {
 
 function buildEmbedSrc(args: {
   key: string;
+  placeId?: string;
   lat: number;
   lng: number;
   zoom: number;
 }): string {
+  if (args.placeId) {
+    const params = new URLSearchParams({
+      key: args.key,
+      q: `place_id:${args.placeId}`,
+    });
+    return `https://www.google.com/maps/embed/v1/place?${params.toString()}`;
+  }
+
   const params = new URLSearchParams({
     key: args.key,
     center: `${args.lat},${args.lng}`,
@@ -299,6 +308,7 @@ export async function POST(req: Request) {
       lat: parsed.lat,
       lng: parsed.lng,
       zoom: parsed.zoom,
+      placeId: response.placeId,
     });
 
     return NextResponse.json<ApiResponse<GoogleLocResponse>>(
