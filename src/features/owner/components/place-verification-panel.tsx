@@ -12,6 +12,7 @@ import {
   ToggleRight,
   XCircle,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -33,6 +34,8 @@ import {
   FILE_SIZE_LIMITS_READABLE,
   MAX_VERIFICATION_DOCUMENT_SIZE,
 } from "@/modules/storage/dtos";
+import { appRoutes } from "@/shared/lib/app-routes";
+import { trpc } from "@/trpc/client";
 
 const STATUS_CONFIG: Record<
   PlaceVerificationStatus,
@@ -101,6 +104,8 @@ export function PlaceVerificationPanel({
   placeName,
   reservationCapable,
 }: PlaceVerificationPanelProps) {
+  const router = useRouter();
+  const utils = trpc.useUtils();
   const { data, isLoading } = usePlaceVerification(placeId);
   const submitVerification = useSubmitPlaceVerification(placeId);
   const toggleReservations = useTogglePlaceReservations(placeId);
@@ -175,6 +180,14 @@ export function PlaceVerificationPanel({
     );
     setDocuments([]);
     reset({ requestNotes: "" });
+
+    const courts = await utils.courtManagement.listByPlace
+      .fetch({ placeId })
+      .catch(() => null);
+
+    if (courts && courts.length === 0) {
+      router.push(appRoutes.owner.places.courts.base(placeId));
+    }
   };
 
   const handleToggleReservations = async () => {
