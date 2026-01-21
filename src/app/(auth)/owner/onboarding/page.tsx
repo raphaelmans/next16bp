@@ -15,16 +15,17 @@ const checkOnboardingRedirect = async (nextHref: string) => {
   const pathname = headerStore.get("x-pathname") ?? appRoutes.owner.onboarding;
   const caller = await createServerCaller(pathname);
 
-  try {
-    const organizations = await caller.organization.my();
-    if (organizations.length > 0) {
-      redirect(nextHref);
-    }
-  } catch (error) {
+  const organizations = await caller.organization.my().catch((error) => {
     if (error instanceof TRPCError && error.code === "UNAUTHORIZED") {
       redirect(appRoutes.login.from(pathname));
     }
+
     console.error("[owner-onboarding] Redirect check failed", error);
+    return null;
+  });
+
+  if ((organizations?.length ?? 0) > 0) {
+    redirect(nextHref);
   }
 };
 
@@ -34,6 +35,10 @@ const getSafeNextHref = (nextHref: string | undefined) => {
   }
 
   if (!nextHref.startsWith("/") || nextHref.startsWith("//")) {
+    return appRoutes.owner.places.new;
+  }
+
+  if (nextHref === appRoutes.owner.onboarding) {
     return appRoutes.owner.places.new;
   }
 

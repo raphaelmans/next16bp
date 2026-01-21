@@ -1,25 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { useSetOwnerOnboardingIntent } from "@/shared/lib/owner-onboarding-intent";
 import { trpc } from "@/trpc/client";
 
-const withCacheBust = (href: string) => {
-  if (typeof window === "undefined") {
-    return href;
-  }
-
-  const url = new URL(href, window.location.origin);
-  url.searchParams.set("r", String(Date.now()));
-  return `${url.pathname}${url.search}`;
-};
-
 export function OrganizationFormClient({ nextHref }: { nextHref: string }) {
   const router = useRouter();
-  const setOwnerOnboardingIntent = useSetOwnerOnboardingIntent();
+  const didRedirectRef = useRef(false);
+  const { mutate: setOwnerOnboardingIntent } = useSetOwnerOnboardingIntent();
 
   const { data: organizations } = trpc.organization.my.useQuery(undefined, {
     staleTime: 0,
@@ -29,13 +20,27 @@ export function OrganizationFormClient({ nextHref }: { nextHref: string }) {
   const hasOrganization = (organizations?.length ?? 0) > 0;
 
   useEffect(() => {
-    if (!hasOrganization) {
+    if (!hasOrganization || didRedirectRef.current) {
       return;
     }
 
-    setOwnerOnboardingIntent.mutate(false);
-    router.replace(withCacheBust(nextHref));
+    didRedirectRef.current = true;
+    setOwnerOnboardingIntent(false);
+    router.replace(nextHref);
   }, [hasOrganization, nextHref, router, setOwnerOnboardingIntent]);
 
-  return <OrganizationForm onCancel={() => router.push(appRoutes.home.base)} />;
+  return (
+    <OrganizationForm
+      onCancel={() => router.push(appRoutes.home.base)}
+      onSuccess={() => {
+        if (didRedirectRef.current) {
+          return;
+        }
+
+        didRedirectRef.current = true;
+        setOwnerOnboardingIntent(false);
+        router.replace(nextHref);
+      }}
+    />
+  );
 }

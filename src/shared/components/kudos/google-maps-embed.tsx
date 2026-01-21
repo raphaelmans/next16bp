@@ -9,6 +9,7 @@ interface GoogleMapsEmbedProps {
   title: string;
   lat?: number | null;
   lng?: number | null;
+  placeId?: string | null;
   query?: string | null;
   zoom?: number;
   className?: string;
@@ -20,6 +21,7 @@ export function GoogleMapsEmbed({
   title,
   lat,
   lng,
+  placeId,
   query,
   zoom = DEFAULT_ZOOM,
   className,
@@ -33,12 +35,19 @@ export function GoogleMapsEmbed({
     Number.isFinite(lat) &&
     typeof lng === "number" &&
     Number.isFinite(lng);
+  const normalizedPlaceId = placeId?.trim() ?? "";
   const normalizedQuery = query?.trim() ?? "";
 
   let embedSrc: string | null = null;
 
   if (hasEmbedKey) {
-    if (hasCoordinates) {
+    if (normalizedPlaceId.length > 0) {
+      const params = new URLSearchParams({
+        key: embedKey ?? "",
+        q: `place_id:${normalizedPlaceId}`,
+      });
+      embedSrc = `https://www.google.com/maps/embed/v1/place?${params.toString()}`;
+    } else if (hasCoordinates) {
       const params = new URLSearchParams({
         key: embedKey ?? "",
         center: `${lat},${lng}`,

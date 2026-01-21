@@ -606,6 +606,7 @@ export default function PlaceDetailPage() {
     Number.isFinite(place.latitude) &&
     typeof place.longitude === "number" &&
     Number.isFinite(place.longitude);
+  const placeIdParam = place.extGPlaceId?.trim() ?? "";
   const contactDetail = place.contactDetail;
   const phoneNumber = contactDetail?.phoneNumber?.trim();
   const viberNumber = contactDetail?.viberInfo?.trim();
@@ -643,12 +644,20 @@ export default function PlaceDetailPage() {
       ? "A removal request is already pending review."
       : "Flag incorrect info or request removal.";
   const mapQuery = `${place.name} ${place.address} ${place.city}`;
-  const directionsUrl = hasCoordinates
-    ? `https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`
-    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
-  const openInMapsUrl = hasCoordinates
-    ? `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`
-    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+  const destinationParam = hasCoordinates
+    ? `&destination=${place.latitude},${place.longitude}`
+    : "";
+  const directionsUrl = placeIdParam
+    ? `https://www.google.com/maps/dir/?api=1${destinationParam}&destination_place_id=${encodeURIComponent(placeIdParam)}`
+    : hasCoordinates
+      ? `https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+  const openInMapsQuery = hasCoordinates
+    ? `${place.latitude},${place.longitude}`
+    : mapQuery;
+  const openInMapsUrl = placeIdParam
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(openInMapsQuery)}&query_place_id=${encodeURIComponent(placeIdParam)}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(openInMapsQuery)}`;
   const logoUrl = place.logoUrl?.trim();
   const logoFallback = place.name
     .split(" ")
@@ -1288,6 +1297,7 @@ export default function PlaceDetailPage() {
                     title={`${place.name} location`}
                     lat={place.latitude}
                     lng={place.longitude}
+                    placeId={place.extGPlaceId}
                     query={mapQuery}
                     className="aspect-[16/9] w-full"
                     allowInteraction={false}
@@ -1379,6 +1389,7 @@ export default function PlaceDetailPage() {
                     title={`${place.name} location`}
                     lat={place.latitude}
                     lng={place.longitude}
+                    placeId={place.extGPlaceId}
                     query={mapQuery}
                     className="aspect-[16/9] w-full"
                     allowInteraction={false}

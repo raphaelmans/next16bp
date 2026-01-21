@@ -48,6 +48,7 @@ export interface PlaceDetail {
   city: string;
   latitude?: number;
   longitude?: number;
+  extGPlaceId?: string;
   description?: string;
   timeZone: string;
   coverImageUrl?: string;
@@ -138,6 +139,7 @@ export function usePlaceDetail({ placeIdOrSlug }: UsePlaceDetailOptions) {
           city: response.place.city,
           latitude: Number.isFinite(latitude) ? latitude : undefined,
           longitude: Number.isFinite(longitude) ? longitude : undefined,
+          extGPlaceId: response.place.extGPlaceId ?? undefined,
           timeZone: response.place.timeZone,
           description: undefined,
           coverImageUrl: photos[0]?.url,
