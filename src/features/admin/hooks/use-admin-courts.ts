@@ -41,6 +41,7 @@ export interface AdminCourtDetail {
     country: string;
     latitude: string | null;
     longitude: string | null;
+    extGPlaceId: string | null;
     timeZone: string;
     placeType: "CURATED" | "RESERVABLE";
     claimStatus:
