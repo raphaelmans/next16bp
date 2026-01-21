@@ -49,6 +49,7 @@ export const curatedCourtBatchItemSchema = z.object({
   country: z.string().length(2),
   latitude: coordinateSchema,
   longitude: coordinateSchema,
+  extGPlaceId: z.string().max(128).optional().or(z.literal("")),
   facebookUrl: optionalUrlSchema,
   instagramUrl: optionalUrlSchema,
   phoneNumber: z

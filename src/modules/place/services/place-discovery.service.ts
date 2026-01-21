@@ -7,7 +7,10 @@ import type { ListPlacesDTO } from "../dtos";
 import { PlaceNotFoundError } from "../errors/place.errors";
 import type {
   IPlaceRepository,
+  PlaceCardMediaItem,
+  PlaceCardMetaItem,
   PlaceListItem,
+  PlaceSummaryItem,
   PlaceWithDetails,
 } from "../repositories/place.repository";
 
@@ -23,6 +26,15 @@ export interface IPlaceDiscoveryService {
     items: PlaceListItem[];
     total: number;
   }>;
+  listPlaceSummaries(filters: ListPlacesDTO): Promise<{
+    items: PlaceSummaryItem[];
+    total: number;
+  }>;
+  listPlaceCardMediaByIds(placeIds: string[]): Promise<PlaceCardMediaItem[]>;
+  listPlaceCardMetaByIds(
+    placeIds: string[],
+    sportId?: string,
+  ): Promise<PlaceCardMetaItem[]>;
   listAmenities(): Promise<string[]>;
 }
 
@@ -99,6 +111,36 @@ export class PlaceDiscoveryService implements IPlaceDiscoveryService {
       limit: filters.limit,
       offset: filters.offset,
     });
+  }
+
+  async listPlaceSummaries(filters: ListPlacesDTO): Promise<{
+    items: PlaceSummaryItem[];
+    total: number;
+  }> {
+    return this.placeRepository.listSummary({
+      q: filters.q,
+      province: filters.province,
+      city: filters.city,
+      sportId: filters.sportId,
+      amenities: filters.amenities,
+      verificationTier: filters.verificationTier,
+      featuredOnly: filters.featuredOnly,
+      limit: filters.limit,
+      offset: filters.offset,
+    });
+  }
+
+  async listPlaceCardMediaByIds(
+    placeIds: string[],
+  ): Promise<PlaceCardMediaItem[]> {
+    return this.placeRepository.listCardMediaByPlaceIds(placeIds);
+  }
+
+  async listPlaceCardMetaByIds(
+    placeIds: string[],
+    sportId?: string,
+  ): Promise<PlaceCardMetaItem[]> {
+    return this.placeRepository.listCardMetaByPlaceIds(placeIds, sportId);
   }
 
   async listAmenities(): Promise<string[]> {

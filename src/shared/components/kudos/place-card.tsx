@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { trackEvent } from "@/shared/lib/clients/telemetry-client";
@@ -44,6 +45,8 @@ interface PlaceCardProps {
   showCTA?: boolean;
   linkScope?: PlaceCardLinkScope;
   className?: string;
+  isMediaLoading?: boolean;
+  isMetaLoading?: boolean;
 }
 
 const MAX_BADGES = 3;
@@ -64,6 +67,8 @@ export function PlaceCard({
   showCTA = true,
   linkScope = "card",
   className,
+  isMediaLoading = false,
+  isMetaLoading = false,
 }: PlaceCardProps) {
   const imageUrl = place.coverImageUrl;
   const logoUrl = place.logoUrl?.trim();
@@ -103,6 +108,12 @@ export function PlaceCard({
     place.placeType === "RESERVABLE" && place.verificationStatus === "VERIFIED";
   const isCurated = place.placeType === "CURATED";
   const isFeatured = (place.featuredRank ?? 0) > 0;
+  const showStatusRow =
+    variant !== "compact" &&
+    (isVerifiedReservable || isCurated || isFeatured || isMetaLoading);
+  const showVerificationSkeleton =
+    isMetaLoading && place.placeType === "RESERVABLE" && !isVerifiedReservable;
+  const showSportsRow = isMetaLoading || place.sports.length > 0;
 
   const cardContent = (
     <Card
@@ -131,6 +142,9 @@ export function PlaceCard({
             <div className="text-primary/40 font-heading text-2xl">KC</div>
           </div>
         )}
+        {isMediaLoading && (
+          <Skeleton className="absolute inset-0 rounded-none" />
+        )}
         <div
           className={cn(
             "absolute flex items-center justify-center rounded-full border border-border/60 bg-background/85 shadow-md backdrop-blur",
@@ -139,7 +153,9 @@ export function PlaceCard({
             logoOffset,
           )}
         >
-          {logoUrl ? (
+          {isMediaLoading ? (
+            <Skeleton className="h-full w-full rounded-full" />
+          ) : logoUrl ? (
             <div className="relative h-full w-full">
               <Image
                 src={logoUrl}
@@ -178,8 +194,7 @@ export function PlaceCard({
             >
               {title}
             </h3>
-            {(isVerifiedReservable || isCurated || isFeatured) &&
-              variant !== "compact" && (
+            {showStatusRow && (
               <div className="flex flex-wrap items-center gap-2">
                 {isFeatured && (
                   <Badge variant="paid" className="gap-1 text-[10px]">
@@ -197,16 +212,20 @@ export function PlaceCard({
                     Curated
                   </Badge>
                 )}
+                {showVerificationSkeleton && (
+                  <Skeleton className="h-5 w-16 rounded-full" />
+                )}
               </div>
             )}
           </div>
           {variant !== "compact" &&
-            place.courtCount !== undefined &&
-            place.courtCount > 0 && (
+            (isMetaLoading ? (
+              <Skeleton className="h-5 w-16 rounded-full" />
+            ) : place.courtCount !== undefined && place.courtCount > 0 ? (
               <Badge variant="secondary" className="text-[10px]">
                 {place.courtCount} courts
               </Badge>
-            )}
+            ) : null)}
         </div>
 
         <div className="flex items-center gap-1 text-muted-foreground mt-1">
@@ -221,30 +240,43 @@ export function PlaceCard({
           </span>
         </div>
 
-        {place.sports.length > 0 && (
+        {showSportsRow && (
           <div className="mt-3 flex flex-wrap gap-2">
-            {visibleSports.map((sport) => (
-              <Badge key={sport.id} variant="outline" className="text-[10px]">
-                {sport.name}
-              </Badge>
-            ))}
-            {hiddenCount > 0 && (
-              <Badge variant="outline" className="text-[10px]">
-                +{hiddenCount}
-              </Badge>
+            {isMetaLoading ? (
+              <>
+                <Skeleton className="h-5 w-16 rounded-full" />
+                <Skeleton className="h-5 w-12 rounded-full" />
+                <Skeleton className="h-5 w-10 rounded-full" />
+              </>
+            ) : (
+              <>
+                {visibleSports.map((sport) => (
+                  <Badge key={sport.id} variant="outline" className="text-[10px]">
+                    {sport.name}
+                  </Badge>
+                ))}
+                {hiddenCount > 0 && (
+                  <Badge variant="outline" className="text-[10px]">
+                    +{hiddenCount}
+                  </Badge>
+                )}
+              </>
             )}
           </div>
         )}
 
         <div className="mt-auto space-y-4">
-          {showPrice && place.lowestPriceCents !== undefined && (
-            <div>
-              <span className="font-heading font-bold text-foreground">
-                From {formatCurrency(place.lowestPriceCents, place.currency)}
-              </span>
-              <span className="text-muted-foreground text-sm"> /hour</span>
-            </div>
-          )}
+          {showPrice &&
+            (isMetaLoading ? (
+              <Skeleton className="h-5 w-24" />
+            ) : place.lowestPriceCents !== undefined ? (
+              <div>
+                <span className="font-heading font-bold text-foreground">
+                  From {formatCurrency(place.lowestPriceCents, place.currency)}
+                </span>
+                <span className="text-muted-foreground text-sm"> /hour</span>
+              </div>
+            ) : null)}
 
           {showCTA && variant !== "compact" && (
             <Button size="sm" className="w-full">

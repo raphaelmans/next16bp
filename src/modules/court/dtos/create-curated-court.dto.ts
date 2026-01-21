@@ -49,6 +49,7 @@ export const CreateCuratedCourtSchema = z.object({
   country: z.string().length(2).optional(),
   latitude: CoordinateSchema,
   longitude: CoordinateSchema,
+  extGPlaceId: z.string().min(1).optional(),
   timeZone: z.string().min(1).max(64).optional(),
   // Curated detail fields
   facebookUrl: z.string().url().optional(),

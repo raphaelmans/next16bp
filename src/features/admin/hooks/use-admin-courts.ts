@@ -294,6 +294,7 @@ export interface CuratedCourtData {
   city: string;
   latitude?: string | number;
   longitude?: string | number;
+  extGPlaceId?: string;
   timeZone?: string;
   facebookUrl?: string;
   instagramUrl?: string;

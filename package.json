@@ -9,6 +9,8 @@
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
+    "db:list-place-locations": "dotenvx run --env-file=.env.local -- tsx scripts/list-place-locations.ts",
+    "db:backfill:ext-g-place-id": "dotenvx run --env-file=.env.local -- tsx scripts/list-place-locations.ts",
     "generate:ph-locations": "tsx scripts/generate-ph-location-slugs.ts",
     "db:pull": "dotenvx run --env-file=.env.local -- drizzle-kit pull",
     "db:generate": "dotenvx run --env-file=.env.local -- drizzle-kit generate",

@@ -16,6 +16,15 @@ export const ListPlacesSchema = z.object({
   offset: z.number().int().min(0).default(0),
 });
 
+export const ListPlaceCardMediaSchema = z.object({
+  placeIds: z.array(z.string().uuid()),
+});
+
+export const ListPlaceCardMetaSchema = z.object({
+  placeIds: z.array(z.string().uuid()),
+  sportId: z.string().uuid().optional(),
+});
+
 export const GetPlaceByIdSchema = z.object({
   placeId: z.string().uuid(),
 });
@@ -84,6 +93,8 @@ export const ListMyPlacesSchema = z.object({
 });
 
 export type ListPlacesDTO = z.infer<typeof ListPlacesSchema>;
+export type ListPlaceCardMediaDTO = z.infer<typeof ListPlaceCardMediaSchema>;
+export type ListPlaceCardMetaDTO = z.infer<typeof ListPlaceCardMetaSchema>;
 export type GetPlaceByIdDTO = z.infer<typeof GetPlaceByIdSchema>;
 export type GetPlaceByIdOrSlugDTO = z.infer<typeof GetPlaceByIdOrSlugSchema>;
 export type CreatePlaceDTO = z.infer<typeof CreatePlaceSchema>;

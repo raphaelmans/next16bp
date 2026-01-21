@@ -63,6 +63,7 @@ export const curatedCourtSchema = z.object({
   timeZone: z.string().min(1).max(64).optional(),
   lat: z.number().optional(),
   lng: z.number().optional(),
+  extGPlaceId: z.string().max(128).optional().or(z.literal("")),
   facebookUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
   instagramUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
   phoneNumber: z

@@ -24,13 +24,13 @@ import type {
   TransferPlaceDTO,
   UploadCourtPhotoInput,
 } from "../dtos";
+import { PlaceFeaturedRankTakenError } from "../errors/court.errors";
 import type {
   AdminPlaceDetails,
   CreatedCuratedPlace,
   IAdminCourtRepository,
   PaginatedAdminPlaces,
 } from "../repositories/admin-court.repository";
-import { PlaceFeaturedRankTakenError } from "../errors/court.errors";
 
 export type CuratedBatchResultStatus =
   | "created"
@@ -139,6 +139,7 @@ export class AdminCourtService implements IAdminCourtService {
           country: "PH",
           latitude: data.latitude ?? null,
           longitude: data.longitude ?? null,
+          extGPlaceId: data.extGPlaceId ?? null,
           timeZone: data.timeZone ?? "Asia/Manila",
           placeType: "CURATED",
           claimStatus: "UNCLAIMED",
@@ -462,6 +463,9 @@ export class AdminCourtService implements IAdminCourtService {
       if (data.country !== undefined) updateData.country = data.country;
       if (data.latitude !== undefined) updateData.latitude = data.latitude;
       if (data.longitude !== undefined) updateData.longitude = data.longitude;
+      if (data.extGPlaceId !== undefined) {
+        updateData.extGPlaceId = data.extGPlaceId;
+      }
       if (data.timeZone !== undefined) updateData.timeZone = data.timeZone;
       if (data.featuredRank !== undefined) {
         if (data.featuredRank > 0) {

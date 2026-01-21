@@ -51,6 +51,7 @@ export const adminCourtEditSchema = z.object({
   country: z.string().length(2),
   latitude: coordinateSchema,
   longitude: coordinateSchema,
+  extGPlaceId: optionalTextSchema(128),
   timeZone: z.string().min(1).max(64).optional(),
   facebookUrl: optionalUrlSchema,
   instagramUrl: optionalUrlSchema,

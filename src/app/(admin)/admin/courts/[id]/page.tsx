@@ -167,6 +167,7 @@ export default function AdminCourtEditPage() {
       country: DEFAULT_COUNTRY,
       latitude: "",
       longitude: "",
+      extGPlaceId: "",
       timeZone: "Asia/Manila",
       facebookUrl: "",
       instagramUrl: "",
@@ -207,6 +208,7 @@ export default function AdminCourtEditPage() {
       country: courtData.place.country ?? DEFAULT_COUNTRY,
       latitude: courtData.place.latitude ?? "",
       longitude: courtData.place.longitude ?? "",
+      extGPlaceId: courtData.place.extGPlaceId ?? "",
       timeZone: courtData.place.timeZone ?? "Asia/Manila",
       facebookUrl: courtData.contactDetail?.facebookUrl ?? "",
       instagramUrl: courtData.contactDetail?.instagramUrl ?? "",
@@ -256,6 +258,9 @@ export default function AdminCourtEditPage() {
   const provinceValue = watch("province");
   const cityValue = watch("city");
   const countryValue = watch("country");
+  const latitudeValue = watch("latitude");
+  const longitudeValue = watch("longitude");
+  const extGPlaceIdValue = watch("extGPlaceId");
 
   const previewMutation = useGoogleLocPreviewMutation({
     onSuccess: (data) => {
@@ -277,6 +282,14 @@ export default function AdminCourtEditPage() {
 
       if (data.lng !== undefined) {
         setValue("longitude", data.lng.toString(), {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }
+
+      if (data.placeId) {
+        setValue("extGPlaceId", data.placeId, {
           shouldDirty: true,
           shouldTouch: true,
           shouldValidate: true,
@@ -390,11 +403,19 @@ export default function AdminCourtEditPage() {
   }, [cityValue, provinceValue, provincesCities, setValue]);
 
   const coordinateLabel = React.useMemo(() => {
-    if (previewResult?.lat === undefined || previewResult?.lng === undefined) {
-      return "";
-    }
-    return `${previewResult.lat.toFixed(6)}, ${previewResult.lng.toFixed(6)}`;
-  }, [previewResult?.lat, previewResult?.lng]);
+    const lat =
+      previewResult?.lat ??
+      (latitudeValue ? Number.parseFloat(latitudeValue) : undefined);
+    const lng =
+      previewResult?.lng ??
+      (longitudeValue ? Number.parseFloat(longitudeValue) : undefined);
+
+    if (lat === undefined || lng === undefined) return "";
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return "";
+    return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  }, [latitudeValue, longitudeValue, previewResult?.lat, previewResult?.lng]);
+
+  const placeIdLabel = previewResult?.placeId ?? extGPlaceIdValue ?? "";
 
   React.useEffect(() => {
     if (!courtLoading && !courtData) {
@@ -461,6 +482,7 @@ export default function AdminCourtEditPage() {
         country: data.country,
         latitude: data.latitude?.trim() || undefined,
         longitude: data.longitude?.trim() || undefined,
+        extGPlaceId: data.extGPlaceId?.trim() || undefined,
         timeZone: data.timeZone || undefined,
         facebookUrl: data.facebookUrl || undefined,
         instagramUrl: data.instagramUrl || undefined,
@@ -983,18 +1005,9 @@ export default function AdminCourtEditPage() {
                 )}
               </Button>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <StandardFormInput<AdminCourtEditFormData>
-                  name="latitude"
-                  label="Latitude (optional)"
-                  placeholder="e.g., 14.5547"
-                />
-                <StandardFormInput<AdminCourtEditFormData>
-                  name="longitude"
-                  label="Longitude (optional)"
-                  placeholder="e.g., 121.0244"
-                />
-              </div>
+              <input type="hidden" {...register("latitude")} />
+              <input type="hidden" {...register("longitude")} />
+              <input type="hidden" {...register("extGPlaceId")} />
 
               {previewErrorMessage && (
                 <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
@@ -1050,6 +1063,14 @@ export default function AdminCourtEditPage() {
                               {` · ${previewResult.source}`}
                             </span>
                           )}
+                        </div>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <div className="text-xs text-muted-foreground">
+                          Place ID
+                        </div>
+                        <div className="break-all font-mono text-xs">
+                          {placeIdLabel || "(none)"}
                         </div>
                       </div>
                     </div>

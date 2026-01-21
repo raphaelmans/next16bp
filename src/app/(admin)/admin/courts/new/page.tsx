@@ -81,6 +81,9 @@ export default function NewCuratedCourtPage() {
       city: "",
       province: "",
       country: DEFAULT_COUNTRY,
+      lat: undefined,
+      lng: undefined,
+      extGPlaceId: "",
       facebookUrl: "",
       instagramUrl: "",
       phoneNumber: "",
@@ -105,6 +108,7 @@ export default function NewCuratedCourtPage() {
   const {
     setValue,
     watch,
+    register,
     formState: { isDirty, isValid, isSubmitting },
   } = form;
 
@@ -112,6 +116,9 @@ export default function NewCuratedCourtPage() {
   const provinceValue = watch("province");
   const cityValue = watch("city");
   const countryValue = watch("country");
+  const latValue = watch("lat");
+  const lngValue = watch("lng");
+  const extGPlaceIdValue = watch("extGPlaceId");
 
   const previewMutation = useGoogleLocPreviewMutation({
     onSuccess: (data) => {
@@ -133,6 +140,14 @@ export default function NewCuratedCourtPage() {
 
       if (data.lng !== undefined) {
         setValue("lng", data.lng, {
+          shouldDirty: true,
+          shouldTouch: true,
+          shouldValidate: true,
+        });
+      }
+
+      if (data.placeId) {
+        setValue("extGPlaceId", data.placeId, {
           shouldDirty: true,
           shouldTouch: true,
           shouldValidate: true,
@@ -242,11 +257,15 @@ export default function NewCuratedCourtPage() {
   }, [cityValue, provinceValue, provincesCities, selectedProvince, setValue]);
 
   const coordinateLabel = React.useMemo(() => {
-    if (previewResult?.lat === undefined || previewResult?.lng === undefined) {
-      return "";
-    }
-    return `${previewResult.lat.toFixed(6)}, ${previewResult.lng.toFixed(6)}`;
-  }, [previewResult?.lat, previewResult?.lng]);
+    const lat = previewResult?.lat ?? latValue;
+    const lng = previewResult?.lng ?? lngValue;
+
+    if (lat === undefined || lng === undefined) return "";
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return "";
+    return `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+  }, [latValue, lngValue, previewResult?.lat, previewResult?.lng]);
+
+  const placeIdLabel = previewResult?.placeId ?? extGPlaceIdValue ?? "";
 
   const canAddMorePhotos = pendingPhotos.length < MAX_PHOTOS;
 
@@ -288,6 +307,7 @@ export default function NewCuratedCourtPage() {
         country: data.country,
         latitude: data.lat,
         longitude: data.lng,
+        extGPlaceId: data.extGPlaceId || undefined,
         timeZone: data.timeZone || undefined,
         facebookUrl: data.facebookUrl || undefined,
         instagramUrl: data.instagramUrl || undefined,
@@ -491,57 +511,9 @@ export default function NewCuratedCourtPage() {
                 )}
               </Button>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <StandardFormField<CuratedCourtFormData>
-                  name="lat"
-                  label="Latitude (optional)"
-                >
-                  {({ field }) => (
-                    <Input
-                      type="number"
-                      step="any"
-                      value={typeof field.value === "number" ? field.value : ""}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        if (!value) {
-                          field.onChange(undefined);
-                          return;
-                        }
-                        const parsed = Number(value);
-                        field.onChange(
-                          Number.isNaN(parsed) ? undefined : parsed,
-                        );
-                      }}
-                      placeholder="e.g., 14.5547"
-                    />
-                  )}
-                </StandardFormField>
-
-                <StandardFormField<CuratedCourtFormData>
-                  name="lng"
-                  label="Longitude (optional)"
-                >
-                  {({ field }) => (
-                    <Input
-                      type="number"
-                      step="any"
-                      value={typeof field.value === "number" ? field.value : ""}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        if (!value) {
-                          field.onChange(undefined);
-                          return;
-                        }
-                        const parsed = Number(value);
-                        field.onChange(
-                          Number.isNaN(parsed) ? undefined : parsed,
-                        );
-                      }}
-                      placeholder="e.g., 121.0244"
-                    />
-                  )}
-                </StandardFormField>
-              </div>
+              <input type="hidden" {...register("lat")} />
+              <input type="hidden" {...register("lng")} />
+              <input type="hidden" {...register("extGPlaceId")} />
 
               {previewErrorMessage && (
                 <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
@@ -597,6 +569,14 @@ export default function NewCuratedCourtPage() {
                               {` · ${previewResult.source}`}
                             </span>
                           )}
+                        </div>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <div className="text-xs text-muted-foreground">
+                          Place ID
+                        </div>
+                        <div className="break-all font-mono text-xs">
+                          {placeIdLabel || "(none)"}
                         </div>
                       </div>
                     </div>

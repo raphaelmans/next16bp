@@ -78,6 +78,7 @@ const DEFAULT_COURT = {
   country: DEFAULT_COUNTRY,
   latitude: "",
   longitude: "",
+  extGPlaceId: "",
   facebookUrl: "",
   instagramUrl: "",
   phoneNumber: "",
@@ -230,6 +231,7 @@ export default function AdminCourtsBatchPage() {
     reset,
     setValue,
     watch,
+    register,
     formState: { isDirty, isValid, isSubmitting },
   } = form;
 
@@ -397,6 +399,14 @@ export default function AdminCourtsBatchPage() {
               shouldValidate: true,
             });
           }
+
+          if (data.placeId) {
+            setValue(`courts.${index}.extGPlaceId`, data.placeId, {
+              shouldDirty: true,
+              shouldTouch: true,
+              shouldValidate: true,
+            });
+          }
         },
         onError: (error) => {
           setPreviewErrors((prev) => ({
@@ -483,6 +493,7 @@ export default function AdminCourtsBatchPage() {
           country: court.country,
           latitude: court.latitude || undefined,
           longitude: court.longitude || undefined,
+          extGPlaceId: court.extGPlaceId || undefined,
           facebookUrl: court.facebookUrl || undefined,
           instagramUrl: court.instagramUrl || undefined,
           phoneNumber: court.phoneNumber || undefined,
@@ -629,6 +640,8 @@ export default function AdminCourtsBatchPage() {
                 previewResult?.lng !== undefined
                   ? `${previewResult.lat.toFixed(6)}, ${previewResult.lng.toFixed(6)}`
                   : "";
+              const placeIdLabel =
+                previewResult?.placeId ?? courts?.[index]?.extGPlaceId ?? "";
 
               return (
                 <AccordionItem
@@ -752,6 +765,19 @@ export default function AdminCourtsBatchPage() {
                               </Button>
                             </div>
 
+                            <input
+                              type="hidden"
+                              {...register(`courts.${index}.latitude`)}
+                            />
+                            <input
+                              type="hidden"
+                              {...register(`courts.${index}.longitude`)}
+                            />
+                            <input
+                              type="hidden"
+                              {...register(`courts.${index}.extGPlaceId`)}
+                            />
+
                             {previewErrorMessage && (
                               <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
                                 {previewErrorMessage}
@@ -791,6 +817,12 @@ export default function AdminCourtsBatchPage() {
                                       {` · ${previewResult.source}`}
                                     </span>
                                   )}
+                                </div>
+                                <div className="mt-2 text-xs text-muted-foreground">
+                                  Place ID
+                                </div>
+                                <div className="break-all font-mono text-xs">
+                                  {placeIdLabel || "(none)"}
                                 </div>
                               </div>
 

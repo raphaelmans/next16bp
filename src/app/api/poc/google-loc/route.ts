@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { handleError } from "@/shared/infra/http/error-handler";
 import { ValidationError } from "@/shared/kernel/errors";
 import type { ApiErrorResponse, ApiResponse } from "@/shared/kernel/response";
+import { resolveGooglePlaceId } from "@/shared/lib/google-maps/resolve-google-place-id";
 import { wrapResponse } from "@/shared/utils/response";
 
 export const runtime = "nodejs";
@@ -20,6 +21,7 @@ export interface GoogleLocResponse {
   inputUrl: string;
   resolvedUrl?: string;
   suggestedName?: string;
+  placeId?: string;
   lat?: number;
   lng?: number;
   zoom?: number;
@@ -49,6 +51,47 @@ function parseSuggestedNameFromPathname(pathname: string): string | undefined {
   } catch {
     return firstSegment.replaceAll("+", " ");
   }
+}
+
+function parsePlaceIdFromUrl(url: URL): string | undefined {
+  const directParams = [
+    "query_place_id",
+    "destination_place_id",
+    "origin_place_id",
+    "place_id",
+  ];
+
+  for (const key of directParams) {
+    const value = url.searchParams.get(key);
+    if (value && value.trim().length > 0) return value.trim();
+  }
+
+  const q = url.searchParams.get("q");
+  if (q?.includes("place_id:")) {
+    const maybe = q.split("place_id:")[1]?.trim();
+    if (maybe) return maybe;
+  }
+
+  const href = url.toString();
+  const match = href.match(/place_id:([^&]+)/);
+  if (match?.[1]) {
+    try {
+      return decodeURIComponent(match[1]);
+    } catch {
+      return match[1];
+    }
+  }
+
+  const dataMatch = href.match(/!1s([^!]+)/);
+  if (dataMatch?.[1]?.startsWith("ChI")) {
+    try {
+      return decodeURIComponent(dataMatch[1]);
+    } catch {
+      return dataMatch[1];
+    }
+  }
+
+  return undefined;
 }
 
 function isValidLatLng(lat: number, lng: number): boolean {
@@ -209,6 +252,8 @@ export async function POST(req: Request) {
     response.resolvedUrl = resolved.toString();
     response.suggestedName = parseSuggestedNameFromPathname(resolved.pathname);
 
+    response.placeId = parsePlaceIdFromUrl(resolved);
+
     const parsed = parseLatLngZoom(resolved.toString());
     if (!parsed) {
       response.warnings.push("Could not parse coordinates from resolved URL");
@@ -221,6 +266,25 @@ export async function POST(req: Request) {
     response.lng = parsed.lng;
     response.zoom = parsed.zoom;
     response.source = parsed.source;
+
+    if (!response.placeId) {
+      const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+      if (!apiKey) {
+        response.warnings.push("Missing GOOGLE_MAPS_API_KEY");
+      } else if (response.suggestedName) {
+        const resolved = await resolveGooglePlaceId({
+          apiKey,
+          name: response.suggestedName,
+          lat: parsed.lat,
+          lng: parsed.lng,
+        });
+        if (resolved.placeId) {
+          response.placeId = resolved.placeId;
+        } else {
+          response.warnings.push("Could not resolve placeId from name");
+        }
+      }
+    }
 
     const embedKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY;
     if (!embedKey) {

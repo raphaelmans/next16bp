@@ -51,6 +51,35 @@ export interface PlaceListItem {
   reservationsEnabled?: boolean | null;
 }
 
+export interface PlaceSummaryItem {
+  place: {
+    id: string;
+    name: string;
+    address: string;
+    city: string;
+    latitude: string | null;
+    longitude: string | null;
+    placeType?: "CURATED" | "RESERVABLE";
+    featuredRank?: number | null;
+  };
+}
+
+export interface PlaceCardMediaItem {
+  placeId: string;
+  coverImageUrl: string | null;
+  organizationLogoUrl: string | null;
+}
+
+export interface PlaceCardMetaItem {
+  placeId: string;
+  sports: { id: string; slug: string; name: string }[];
+  courtCount: number;
+  lowestPriceCents: number | null;
+  currency: string | null;
+  verificationStatus?: typeof placeVerification.$inferSelect.status | null;
+  reservationsEnabled?: boolean | null;
+}
+
 export interface PaginatedPlaces {
   items: PlaceListItem[];
   total: number;
@@ -100,6 +129,32 @@ export interface IPlaceRepository {
     },
     ctx?: RequestContext,
   ): Promise<PaginatedPlaces>;
+  listSummary(
+    filters: {
+      q?: string;
+      province?: string;
+      city?: string;
+      sportId?: string;
+      amenities?: string[];
+      verificationTier?:
+        | "verified_reservable"
+        | "curated"
+        | "unverified_reservable";
+      featuredOnly?: boolean;
+      limit: number;
+      offset: number;
+    },
+    ctx?: RequestContext,
+  ): Promise<{ items: PlaceSummaryItem[]; total: number }>;
+  listCardMediaByPlaceIds(
+    placeIds: string[],
+    ctx?: RequestContext,
+  ): Promise<PlaceCardMediaItem[]>;
+  listCardMetaByPlaceIds(
+    placeIds: string[],
+    sportId?: string,
+    ctx?: RequestContext,
+  ): Promise<PlaceCardMetaItem[]>;
   listAmenities(ctx?: RequestContext): Promise<string[]>;
   create(data: InsertPlace, ctx?: RequestContext): Promise<PlaceRecord>;
   update(
@@ -673,6 +728,343 @@ export class PlaceRepository implements IPlaceRepository {
       }),
       total,
     };
+  }
+
+  async listSummary(
+    filters: {
+      q?: string;
+      province?: string;
+      city?: string;
+      sportId?: string;
+      amenities?: string[];
+      verificationTier?:
+        | "verified_reservable"
+        | "curated"
+        | "unverified_reservable";
+      featuredOnly?: boolean;
+      limit: number;
+      offset: number;
+    },
+    ctx?: RequestContext,
+  ): Promise<{ items: PlaceSummaryItem[]; total: number }> {
+    const client = this.getClient(ctx);
+    const { placeRecords, total } = await this.listBaseRecords(filters, client);
+
+    return {
+      items: placeRecords.map((placeRecord) => ({
+        place: {
+          id: placeRecord.id,
+          name: placeRecord.name,
+          address: placeRecord.address,
+          city: placeRecord.city,
+          latitude: placeRecord.latitude ?? null,
+          longitude: placeRecord.longitude ?? null,
+          placeType: placeRecord.placeType,
+          featuredRank: placeRecord.featuredRank ?? null,
+        },
+      })),
+      total,
+    };
+  }
+
+  async listCardMediaByPlaceIds(
+    placeIds: string[],
+    ctx?: RequestContext,
+  ): Promise<PlaceCardMediaItem[]> {
+    if (placeIds.length === 0) return [];
+    const client = this.getClient(ctx);
+    const [coverImageUrls, organizationLogos] = await Promise.all([
+      this.getCoverImageByPlaceIds(placeIds, client),
+      this.getOrganizationLogoByOrganizationIds(placeIds, client),
+    ]);
+
+    return placeIds.map((placeId) => ({
+      placeId,
+      coverImageUrl: coverImageUrls.get(placeId) ?? null,
+      organizationLogoUrl: organizationLogos.get(placeId) ?? null,
+    }));
+  }
+
+  async listCardMetaByPlaceIds(
+    placeIds: string[],
+    sportId?: string,
+    ctx?: RequestContext,
+  ): Promise<PlaceCardMetaItem[]> {
+    if (placeIds.length === 0) return [];
+    const client = this.getClient(ctx);
+    const [sportsByPlace, courtCounts, lowestPrices, verificationRows] =
+      await Promise.all([
+        this.getSportsByPlaceIds(placeIds, client),
+        this.getCourtCountsByPlaceIds(placeIds, sportId, client),
+        this.getLowestPriceByPlaceIds(placeIds, sportId, client),
+        client
+          .select({
+            placeId: placeVerification.placeId,
+            status: placeVerification.status,
+            reservationsEnabled: placeVerification.reservationsEnabled,
+          })
+          .from(placeVerification)
+          .where(inArray(placeVerification.placeId, placeIds)),
+      ]);
+
+    const verificationByPlaceId = new Map(
+      verificationRows.map((row) => [row.placeId, row]),
+    );
+
+    return placeIds.map((placeId) => {
+      const lowestPrice = lowestPrices.get(placeId);
+      const verification = verificationByPlaceId.get(placeId);
+      return {
+        placeId,
+        sports: sportsByPlace.get(placeId) ?? [],
+        courtCount: courtCounts.get(placeId) ?? 0,
+        lowestPriceCents: lowestPrice?.priceCents ?? null,
+        currency: lowestPrice?.currency ?? null,
+        verificationStatus: verification?.status ?? null,
+        reservationsEnabled: verification?.reservationsEnabled ?? null,
+      };
+    });
+  }
+
+  private async listBaseRecords(
+    filters: {
+      q?: string;
+      province?: string;
+      city?: string;
+      sportId?: string;
+      amenities?: string[];
+      verificationTier?:
+        | "verified_reservable"
+        | "curated"
+        | "unverified_reservable";
+      featuredOnly?: boolean;
+      limit: number;
+      offset: number;
+    },
+    client: DbClient | DrizzleTransaction,
+  ): Promise<{ placeRecords: PlaceRecord[]; total: number }> {
+    const conditions = [eq(place.isActive, true)];
+
+    const searchValue = filters.q?.trim();
+    const searchPattern = searchValue ? `%${searchValue}%` : undefined;
+    const amenitiesFilter = Array.from(
+      new Set(
+        (filters.amenities ?? [])
+          .map((amenity) => amenity.trim())
+          .filter((amenity) => amenity.length > 0),
+      ),
+    );
+    const verificationTier = filters.verificationTier;
+    const verificationJoin = placeVerification;
+    const verificationRank = sql<number>`case
+      when ${place.placeType} = 'RESERVABLE'
+        and ${verificationJoin.status} = 'VERIFIED'
+        then 0
+      when ${place.placeType} = 'CURATED' then 1
+      else 2
+    end`;
+    const featuredBucket = sql<number>`case
+      when ${place.featuredRank} = 0 then 1
+      else 0
+    end`;
+    const featuredOrder = [
+      featuredBucket,
+      asc(place.featuredRank),
+      verificationRank,
+      asc(place.name),
+      asc(place.id),
+    ] as const;
+
+    if (filters.province) {
+      conditions.push(ilike(place.province, filters.province));
+    }
+
+    if (filters.city) {
+      conditions.push(ilike(place.city, filters.city));
+    }
+
+    if (searchPattern) {
+      const searchCondition = or(
+        ilike(place.name, searchPattern),
+        ilike(place.address, searchPattern),
+        ilike(place.city, searchPattern),
+        ilike(place.province, searchPattern),
+      );
+
+      if (searchCondition) {
+        conditions.push(searchCondition);
+      }
+    }
+
+    if (verificationTier === "verified_reservable") {
+      conditions.push(eq(place.placeType, "RESERVABLE"));
+      conditions.push(eq(verificationJoin.status, "VERIFIED"));
+    }
+
+    if (verificationTier === "curated") {
+      conditions.push(eq(place.placeType, "CURATED"));
+    }
+
+    if (verificationTier === "unverified_reservable") {
+      conditions.push(eq(place.placeType, "RESERVABLE"));
+      const unverifiedCondition = or(
+        isNull(verificationJoin.status),
+        ne(verificationJoin.status, "VERIFIED"),
+      );
+      if (unverifiedCondition) {
+        conditions.push(unverifiedCondition);
+      }
+    }
+
+    if (filters.featuredOnly) {
+      conditions.push(sql`${place.featuredRank} > 0`);
+    }
+
+    const baseCondition = and(...conditions);
+
+    if (filters.sportId) {
+      if (amenitiesFilter.length > 0) {
+        const amenitiesCount = amenitiesFilter.length;
+        const countResult = await client
+          .select({ placeId: place.id })
+          .from(place)
+          .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+          .innerJoin(court, eq(court.placeId, place.id))
+          .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
+          .where(
+            and(
+              baseCondition,
+              eq(court.sportId, filters.sportId),
+              inArray(placeAmenity.name, amenitiesFilter),
+            ),
+          )
+          .groupBy(place.id)
+          .having(
+            sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`,
+          );
+
+        const pageRows = await client
+          .select({ placeId: place.id })
+          .from(place)
+          .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+          .innerJoin(court, eq(court.placeId, place.id))
+          .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
+          .where(
+            and(
+              baseCondition,
+              eq(court.sportId, filters.sportId),
+              inArray(placeAmenity.name, amenitiesFilter),
+            ),
+          )
+          .groupBy(place.id)
+          .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
+          .orderBy(...featuredOrder)
+          .limit(filters.limit)
+          .offset(filters.offset);
+
+        const placeIds = pageRows.map((row) => row.placeId);
+        const placeRecords = placeIds.length
+          ? await client.select().from(place).where(inArray(place.id, placeIds))
+          : [];
+        const placeById = new Map(
+          placeRecords.map((record) => [record.id, record]),
+        );
+        const orderedPlaces = placeIds
+          .map((placeId) => placeById.get(placeId))
+          .filter((record): record is PlaceRecord => Boolean(record));
+
+        return {
+          placeRecords: orderedPlaces,
+          total: countResult.length,
+        };
+      }
+
+      const countResult = await client
+        .select({ count: count() })
+        .from(place)
+        .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .innerJoin(court, eq(court.placeId, place.id))
+        .where(and(baseCondition, eq(court.sportId, filters.sportId)));
+
+      const placeRows = await client
+        .select({ place })
+        .from(place)
+        .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .innerJoin(court, eq(court.placeId, place.id))
+        .where(and(baseCondition, eq(court.sportId, filters.sportId)))
+        .orderBy(...featuredOrder)
+        .limit(filters.limit)
+        .offset(filters.offset);
+
+      const uniquePlaces = Array.from(
+        new Map(placeRows.map((row) => [row.place.id, row.place])).values(),
+      );
+
+      return {
+        placeRecords: uniquePlaces,
+        total: countResult[0]?.count ?? 0,
+      };
+    }
+
+    let placeRecords: PlaceRecord[] = [];
+    let total = 0;
+
+    if (amenitiesFilter.length > 0) {
+      const amenitiesCount = amenitiesFilter.length;
+      const countResult = await client
+        .select({ placeId: place.id })
+        .from(place)
+        .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
+        .where(and(baseCondition, inArray(placeAmenity.name, amenitiesFilter)))
+        .groupBy(place.id)
+        .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`);
+
+      const pageRows = await client
+        .select({ placeId: place.id })
+        .from(place)
+        .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
+        .where(and(baseCondition, inArray(placeAmenity.name, amenitiesFilter)))
+        .groupBy(place.id)
+        .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
+        .orderBy(...featuredOrder)
+        .limit(filters.limit)
+        .offset(filters.offset);
+
+      const placeIds = pageRows.map((row) => row.placeId);
+      placeRecords = placeIds.length
+        ? await client.select().from(place).where(inArray(place.id, placeIds))
+        : [];
+      const placeById = new Map(
+        placeRecords.map((record) => [record.id, record]),
+      );
+      placeRecords = placeIds
+        .map((placeId) => placeById.get(placeId))
+        .filter((record): record is PlaceRecord => Boolean(record));
+      total = countResult.length;
+    } else {
+      const countResult = await client
+        .select({ count: count() })
+        .from(place)
+        .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .where(baseCondition);
+
+      const placeRows = await client
+        .select({ place })
+        .from(place)
+        .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .where(baseCondition)
+        .orderBy(...featuredOrder)
+        .limit(filters.limit)
+        .offset(filters.offset);
+
+      placeRecords = placeRows.map((row) => row.place);
+
+      total = countResult[0]?.count ?? 0;
+    }
+
+    return { placeRecords, total };
   }
 
   async listAmenities(ctx?: RequestContext): Promise<string[]> {

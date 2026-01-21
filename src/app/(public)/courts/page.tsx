@@ -9,8 +9,10 @@ import {
   ViewToggle,
 } from "@/features/discovery/components";
 import {
+  buildDiscoveryPlaceCard,
   useDiscoveryFilters,
-  useDiscoveryPlaces,
+  useDiscoveryPlaceCardDetails,
+  useDiscoveryPlaceSummaries,
 } from "@/features/discovery/hooks";
 import {
   AdBanner,
@@ -82,8 +84,7 @@ export default function PlacesPage() {
 
 function PlacesPageContent() {
   const filters = useDiscoveryFilters();
-  const pageLimit = Math.min(filters.limit, 10);
-  const { data, isLoading } = useDiscoveryPlaces({
+  const { data, isLoading } = useDiscoveryPlaceSummaries({
     q: filters.q ?? undefined,
     province: filters.province ?? undefined,
     city: filters.city ?? undefined,
@@ -91,13 +92,43 @@ function PlacesPageContent() {
     amenities: filters.amenities ?? undefined,
     verificationTier: filters.verification ?? undefined,
     page: filters.page,
-    limit: pageLimit,
+    limit: filters.limit,
   });
 
-  const places = data?.places ?? [];
+  const placeSummaries = data?.places ?? [];
+  const placeIds = useMemo(
+    () => placeSummaries.map((place) => place.id),
+    [placeSummaries],
+  );
+  const { mediaById, metaById, isMediaLoading, isMetaLoading } =
+    useDiscoveryPlaceCardDetails(placeIds, filters.sportId ?? undefined);
+  const places = useMemo(
+    () =>
+      placeSummaries.map((summary) =>
+        buildDiscoveryPlaceCard(
+          summary,
+          mediaById[summary.id],
+          metaById[summary.id],
+        ),
+      ),
+    [placeSummaries, mediaById, metaById],
+  );
+  const mapPlaces = useMemo(
+    () =>
+      placeSummaries.map((summary) => ({
+        ...buildDiscoveryPlaceCard(
+          summary,
+          mediaById[summary.id],
+          metaById[summary.id],
+        ),
+        lat: summary.latitude,
+        lng: summary.longitude,
+      })),
+    [placeSummaries, mediaById, metaById],
+  );
   const total = data?.total ?? 0;
   const page = filters.page;
-  const limit = data?.limit ?? pageLimit;
+  const limit = data?.limit ?? filters.limit;
   const totalPages = limit > 0 ? Math.ceil(total / limit) : 1;
   const paginationItems = useMemo(
     () => buildPaginationItems(page, totalPages),
@@ -171,13 +202,7 @@ function PlacesPageContent() {
         />
 
         {filters.view === "map" ? (
-          <PlaceMap
-            places={places.map((place) => ({
-              ...place,
-              lat: place.latitude,
-              lng: place.longitude,
-            }))}
-          />
+          <PlaceMap places={mapPlaces} />
         ) : isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {["sk1", "sk2", "sk3", "sk4", "sk5", "sk6", "sk7", "sk8"].map(
@@ -190,7 +215,12 @@ function PlacesPageContent() {
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {places.map((place) => (
-                <PlaceCard key={place.id} place={place} />
+                <PlaceCard
+                  key={place.id}
+                  place={place}
+                  isMediaLoading={isMediaLoading}
+                  isMetaLoading={isMetaLoading}
+                />
               ))}
             </div>
 

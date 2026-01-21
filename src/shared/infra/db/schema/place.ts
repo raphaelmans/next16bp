@@ -35,6 +35,7 @@ export const place = pgTable(
     country: varchar("country", { length: 2 }).notNull().default("PH"),
     latitude: decimal("latitude", { precision: 10, scale: 8 }),
     longitude: decimal("longitude", { precision: 11, scale: 8 }),
+    extGPlaceId: varchar("ext_g_place_id", { length: 128 }),
     timeZone: varchar("time_zone", { length: 64 })
       .notNull()
       .default("Asia/Manila"),
@@ -53,6 +54,7 @@ export const place = pgTable(
   },
   (table) => [
     index("idx_place_location").on(table.latitude, table.longitude),
+    index("idx_place_ext_g_place_id").on(table.extGPlaceId),
     index("idx_place_city").on(table.city),
     index("idx_place_type").on(table.placeType),
     uniqueIndex("uq_place_slug")
