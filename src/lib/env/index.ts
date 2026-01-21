@@ -26,6 +26,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string(),
     NEXT_PUBLIC_APP_URL: z.string().url().optional(),
     NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY: z.string().min(1).optional(),
+    NEXT_PUBLIC_MIXPANEL_TOKEN: z.string().min(1).optional(),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -34,5 +35,6 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: runtimeAppUrl,
     NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY:
       process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY,
+    NEXT_PUBLIC_MIXPANEL_TOKEN: process.env.NEXT_PUBLIC_MIXPANEL_TOKEN,
   },
 });
