@@ -7,5 +7,6 @@ export { Footer } from "./footer";
 export { HeroSection } from "./hero-section";
 export { Navbar } from "./navbar";
 export { PhotoGallery } from "./photo-gallery";
+export { PlaceFiltersSheet } from "./place-filters-sheet";
 export { UserDropdown, type UserDropdownUser } from "./user-dropdown";
 export { ViewToggle } from "./view-toggle";

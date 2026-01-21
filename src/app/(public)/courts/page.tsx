@@ -4,6 +4,7 @@ import { Suspense, useMemo } from "react";
 import {
   EmptyResults,
   PlaceFilters,
+  PlaceFiltersSheet,
   PlaceMap,
   ViewToggle,
 } from "@/features/discovery/components";
@@ -80,11 +81,25 @@ function PlacesPageContent() {
           </div>
 
           <div className="flex items-center gap-3">
+            <PlaceFiltersSheet
+              amenities={filters.amenities ?? undefined}
+              province={filters.province ?? undefined}
+              city={filters.city ?? undefined}
+              sportId={filters.sportId ?? undefined}
+              verification={filters.verification ?? undefined}
+              onAmenitiesChange={filters.setAmenities}
+              onProvinceChange={filters.setProvince}
+              onCityChange={filters.setCity}
+              onSportChange={filters.setSportId}
+              onVerificationChange={filters.setVerification}
+              onClearAll={filters.clearAll}
+            />
             <ViewToggle value={filters.view} onChange={filters.setView} />
           </div>
         </div>
 
         <PlaceFilters
+          layout="desktop"
           amenities={filters.amenities ?? undefined}
           province={filters.province ?? undefined}
           city={filters.city ?? undefined}

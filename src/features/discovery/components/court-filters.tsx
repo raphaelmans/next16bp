@@ -42,6 +42,8 @@ interface PlaceFiltersProps {
   city?: string;
   sportId?: string;
   verification?: "verified_reservable" | "curated" | "unverified_reservable";
+  layout?: "desktop" | "sheet";
+  showClearButton?: boolean;
   onAmenitiesChange: (amenities: string[] | undefined) => void;
   onProvinceChange: (province: string | undefined) => void;
   onCityChange: (city: string | undefined) => void;
@@ -63,6 +65,8 @@ export function PlaceFilters({
   city,
   sportId,
   verification,
+  layout = "desktop",
+  showClearButton = true,
   onAmenitiesChange,
   onProvinceChange,
   onCityChange,
@@ -71,6 +75,7 @@ export function PlaceFilters({
   onClearAll,
   className,
 }: PlaceFiltersProps) {
+  const isSheet = layout === "sheet";
   const hasFilters =
     (amenities && amenities.length > 0) ||
     province ||
@@ -168,6 +173,36 @@ export function PlaceFilters({
   const [provinceOpen, setProvinceOpen] = useState(false);
   const [cityOpen, setCityOpen] = useState(false);
 
+  const amenitiesTriggerClassName = cn(
+    "justify-between",
+    isSheet ? "w-full" : "w-56",
+  );
+
+  const provinceTriggerClassName = cn(
+    "justify-between",
+    isSheet ? "w-full" : "w-48",
+  );
+
+  const cityTriggerClassName = cn(
+    "justify-between",
+    isSheet ? "w-full" : "w-48",
+  );
+
+  const amenitiesPopoverClassName = cn(
+    "p-0",
+    isSheet ? "w-[var(--radix-popover-trigger-width)] z-[60]" : "w-56",
+  );
+
+  const provincePopoverClassName = cn(
+    "p-0",
+    isSheet ? "w-[var(--radix-popover-trigger-width)] z-[60]" : "w-48",
+  );
+
+  const cityPopoverClassName = cn(
+    "p-0",
+    isSheet ? "w-[var(--radix-popover-trigger-width)] z-[60]" : "w-48",
+  );
+
   const handleAmenitiesChange = (amenity: string) => {
     const current = new Set(selectedAmenities);
     if (current.has(amenity)) {
@@ -233,7 +268,12 @@ export function PlaceFilters({
 
   return (
     <div
-      className={cn("hidden lg:flex flex-wrap items-center gap-3", className)}
+      className={cn(
+        isSheet
+          ? "flex w-full flex-col gap-3"
+          : "hidden lg:flex flex-wrap items-center gap-3",
+        className,
+      )}
     >
       <Popover open={amenitiesOpen} onOpenChange={setAmenitiesOpen}>
         <PopoverTrigger asChild>
@@ -242,13 +282,13 @@ export function PlaceFilters({
             role="combobox"
             aria-expanded={amenitiesOpen}
             disabled={isAmenitiesDisabled}
-            className="w-56 justify-between"
+            className={amenitiesTriggerClassName}
           >
             <span className="truncate">{amenitiesTriggerLabel}</span>
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-56 p-0" align="start">
+        <PopoverContent className={amenitiesPopoverClassName} align="start">
           <Command>
             <CommandInput placeholder="Search amenities..." />
             <CommandList>
@@ -286,13 +326,13 @@ export function PlaceFilters({
             role="combobox"
             aria-expanded={provinceOpen}
             disabled={isProvinceDisabled}
-            className="w-48 justify-between"
+            className={provinceTriggerClassName}
           >
             {provinceTriggerLabel ?? provincePlaceholder}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48 p-0" align="start">
+        <PopoverContent className={provincePopoverClassName} align="start">
           <Command>
             <CommandInput placeholder="Search provinces..." />
             <CommandList>
@@ -344,13 +384,13 @@ export function PlaceFilters({
             role="combobox"
             aria-expanded={cityOpen}
             disabled={isCityDisabled}
-            className="w-48 justify-between"
+            className={cityTriggerClassName}
           >
             {cityTriggerLabel ?? cityPlaceholder}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-48 p-0" align="start">
+        <PopoverContent className={cityPopoverClassName} align="start">
           <Command>
             <CommandInput
               placeholder={province ? "Search cities..." : "Select a province"}
@@ -399,14 +439,17 @@ export function PlaceFilters({
       </Popover>
 
       <Select
-        value={sportId}
-        onValueChange={(value) => onSportChange(value || undefined)}
+        value={sportId ?? "all"}
+        onValueChange={(value) =>
+          onSportChange(value === "all" ? undefined : value)
+        }
         disabled={sportsLoading}
       >
-        <SelectTrigger>
+        <SelectTrigger className={isSheet ? "w-full" : undefined}>
           <SelectValue placeholder="All sports" />
         </SelectTrigger>
         <SelectContent>
+          <SelectItem value="all">All sports</SelectItem>
           {sports.map((sport) => (
             <SelectItem key={sport.id} value={sport.id}>
               {sport.name}
@@ -430,15 +473,29 @@ export function PlaceFilters({
         }
         variant="outline"
         size="sm"
+        className={isSheet ? "grid w-full grid-cols-3" : undefined}
       >
-        <ToggleGroupItem value="verified_reservable">Verified</ToggleGroupItem>
-        <ToggleGroupItem value="curated">Curated</ToggleGroupItem>
-        <ToggleGroupItem value="unverified_reservable">
+        <ToggleGroupItem
+          value="verified_reservable"
+          className={isSheet ? "w-full justify-center text-xs" : undefined}
+        >
+          Verified
+        </ToggleGroupItem>
+        <ToggleGroupItem
+          value="curated"
+          className={isSheet ? "w-full justify-center text-xs" : undefined}
+        >
+          Curated
+        </ToggleGroupItem>
+        <ToggleGroupItem
+          value="unverified_reservable"
+          className={isSheet ? "w-full justify-center text-xs" : undefined}
+        >
           Unverified
         </ToggleGroupItem>
       </ToggleGroup>
 
-      {hasFilters && (
+      {showClearButton && hasFilters && (
         <Button variant="ghost" className="w-full" onClick={onClearAll}>
           <X className="h-4 w-4 mr-2" />
           Clear filters

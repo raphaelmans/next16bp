@@ -8,6 +8,7 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-21 | Added 57-public-courts-pagination plan (replace "Load more" with shadcn pagination on /courts) |
 | 2026-01-21 | Added US-00-10 + 56-auth-redirect-continuity plan (standardized auth redirect + list-your-venue metadata) |
 | 2026-01-21 | Added US-00-09 + 55-owner-partner-landing plan (public /list-your-venue + onboarding continuation) |
 | 2026-01-21 | Added 54-public-schedule-month-view plan (month schedule browsing) |
