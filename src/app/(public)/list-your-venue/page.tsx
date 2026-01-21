@@ -28,6 +28,7 @@ import {
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { trackEvent } from "@/shared/lib/clients/telemetry-client";
+import { useSetOwnerOnboardingIntent } from "@/shared/lib/owner-onboarding-intent";
 
 const buildOwnerOnboardingHref = () => {
   const params = new URLSearchParams({ next: appRoutes.owner.places.new });
@@ -98,10 +99,19 @@ const FAQS = [
 export default function ListYourVenuePage() {
   const onboardingHref = buildOwnerOnboardingHref();
   const signInHref = appRoutes.login.from(onboardingHref);
+  const setOwnerOnboardingIntent = useSetOwnerOnboardingIntent();
 
   useEffect(() => {
     trackEvent({ event: "funnel.owner_list_your_venue_viewed" });
   }, []);
+
+  const handleOnboardingStart = (source: string) => {
+    setOwnerOnboardingIntent.mutate(true);
+    trackEvent({
+      event: "funnel.owner_list_your_venue_cta_clicked",
+      properties: { source },
+    });
+  };
 
   return (
     <div className="relative">
@@ -137,10 +147,7 @@ export default function ListYourVenuePage() {
                   <Link
                     href={onboardingHref}
                     onClick={() =>
-                      trackEvent({
-                        event: "funnel.owner_list_your_venue_cta_clicked",
-                        properties: { source: "list-your-venue.hero" },
-                      })
+                      handleOnboardingStart("list-your-venue.hero")
                     }
                   >
                     Start onboarding
@@ -282,12 +289,7 @@ export default function ListYourVenuePage() {
             <Button asChild className="rounded-xl">
               <Link
                 href={onboardingHref}
-                onClick={() =>
-                  trackEvent({
-                    event: "funnel.owner_list_your_venue_cta_clicked",
-                    properties: { source: "list-your-venue.steps" },
-                  })
-                }
+                onClick={() => handleOnboardingStart("list-your-venue.steps")}
               >
                 Start onboarding
                 <ArrowRight className="h-4 w-4" />

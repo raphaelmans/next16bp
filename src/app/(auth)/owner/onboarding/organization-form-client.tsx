@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { useSetOwnerOnboardingIntent } from "@/shared/lib/owner-onboarding-intent";
 import { trpc } from "@/trpc/client";
 
 const withCacheBust = (href: string) => {
@@ -18,6 +19,7 @@ const withCacheBust = (href: string) => {
 
 export function OrganizationFormClient({ nextHref }: { nextHref: string }) {
   const router = useRouter();
+  const setOwnerOnboardingIntent = useSetOwnerOnboardingIntent();
 
   const { data: organizations } = trpc.organization.my.useQuery(undefined, {
     staleTime: 0,
@@ -31,8 +33,9 @@ export function OrganizationFormClient({ nextHref }: { nextHref: string }) {
       return;
     }
 
+    setOwnerOnboardingIntent.mutate(false);
     router.replace(withCacheBust(nextHref));
-  }, [hasOrganization, nextHref, router]);
+  }, [hasOrganization, nextHref, router, setOwnerOnboardingIntent]);
 
   return <OrganizationForm onCancel={() => router.push(appRoutes.home.base)} />;
 }

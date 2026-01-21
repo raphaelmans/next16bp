@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { OwnerOnboardingIntentClearer } from "@/features/owner/components/owner-onboarding-intent-clearer";
 import { makeOrganizationService } from "@/modules/organization/factories/organization.factory";
 import { requireSession } from "@/shared/infra/auth/server-session";
 import { appRoutes } from "@/shared/lib/app-routes";
@@ -27,5 +28,10 @@ export default async function OwnerLayout({
     redirect(appRoutes.owner.onboarding);
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <OwnerOnboardingIntentClearer />
+      {children}
+    </>
+  );
 }

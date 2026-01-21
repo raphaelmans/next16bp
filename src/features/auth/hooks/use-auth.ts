@@ -1,6 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { useSetOwnerOnboardingIntent } from "@/shared/lib/owner-onboarding-intent";
 import { trpc } from "@/trpc/client";
 
 /**
@@ -53,11 +54,13 @@ export function useLoginWithGoogle() {
  */
 export function useLogout() {
   const queryClient = useQueryClient();
+  const setOwnerOnboardingIntent = useSetOwnerOnboardingIntent();
 
   return trpc.auth.logout.useMutation({
     onSuccess: async () => {
       await queryClient.cancelQueries(undefined, { silent: true });
       queryClient.clear();
+      setOwnerOnboardingIntent.mutate(false);
     },
   });
 }

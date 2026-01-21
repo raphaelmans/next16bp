@@ -39,6 +39,7 @@ Standardize authentication return paths across password, Google OAuth, signup co
 |----|--------|----------|
 | 2A | Standardize `redirect` param across auth flows | `56-01-redirect-standardization.md` |
 | 2B | Update email + OAuth callbacks to respect `redirect` | `56-01-redirect-standardization.md` |
+| 2C | Owner onboarding intent fallback (localStorage) | `56-01-redirect-standardization.md` |
 
 ### Phase 3: QA
 

@@ -13,10 +13,16 @@ import {
 import type { Reservation } from "@/features/home/components/upcoming-reservations";
 import { useHomeData } from "@/features/home/hooks/use-home-data";
 import { appRoutes } from "@/shared/lib/app-routes";
+import {
+  useOwnerOnboardingIntent,
+  useSetOwnerOnboardingIntent,
+} from "@/shared/lib/owner-onboarding-intent";
 
 export default function HomePage() {
   const router = useRouter();
   const { data: sessionUser, isLoading: sessionLoading } = useSession();
+  const { data: ownerOnboardingIntent } = useOwnerOnboardingIntent();
+  const setOwnerOnboardingIntent = useSetOwnerOnboardingIntent();
   const {
     profile,
     reservations: rawReservations,
@@ -31,6 +37,32 @@ export default function HomePage() {
       router.push(appRoutes.login.from(appRoutes.home.base));
     }
   }, [sessionUser, sessionLoading, router]);
+
+  useEffect(() => {
+    if (sessionLoading || dataLoading || !sessionUser) {
+      return;
+    }
+
+    if (organization) {
+      if (ownerOnboardingIntent) {
+        setOwnerOnboardingIntent.mutate(false);
+      }
+      return;
+    }
+
+    if (ownerOnboardingIntent) {
+      const params = new URLSearchParams({ next: appRoutes.owner.places.new });
+      router.replace(`${appRoutes.owner.onboarding}?${params.toString()}`);
+    }
+  }, [
+    dataLoading,
+    organization,
+    ownerOnboardingIntent,
+    router,
+    sessionLoading,
+    sessionUser,
+    setOwnerOnboardingIntent,
+  ]);
 
   if (sessionLoading) {
     return null;

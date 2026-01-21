@@ -74,6 +74,26 @@ Add page-specific metadata for `/list-your-venue` and standardize auth redirect 
 
 ---
 
+### Module 2C: Owner Onboarding Intent Fallback
+
+**User Story:** `US-00-10`
+
+#### Files
+
+- `src/shared/lib/owner-onboarding-intent.ts`
+- `src/app/(public)/list-your-venue/page.tsx`
+- `src/app/(auth)/home/page.tsx`
+- `src/app/(auth)/owner/onboarding/organization-form-client.tsx`
+- `src/features/auth/hooks/use-auth.ts`
+
+#### Requirements
+
+- Store owner onboarding intent in localStorage when CTA is clicked.
+- Redirect `/home` to `/owner/onboarding` when intent is set and no org exists.
+- Clear intent on organization creation or logout.
+
+---
+
 ## Testing Checklist
 
 - [ ] `/list-your-venue` metadata appears in HTML head
