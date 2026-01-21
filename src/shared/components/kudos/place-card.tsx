@@ -228,16 +228,26 @@ export function PlaceCard({
             ) : null)}
         </div>
 
-        <div className="flex items-center gap-1 text-muted-foreground mt-1">
-          <MapPin className="h-3 w-3 text-accent shrink-0" />
-          <span
+        <div className="mt-1 space-y-1">
+          <div className="flex items-center gap-1">
+            <MapPin className="h-3 w-3 text-accent shrink-0" />
+            <span
+              className={cn(
+                "line-clamp-1 font-medium text-foreground",
+                variant === "compact" ? "text-xs" : "text-sm",
+              )}
+            >
+              {place.city}
+            </span>
+          </div>
+          <div
             className={cn(
-              "line-clamp-1",
-              variant === "compact" ? "text-xs" : "text-sm",
+              "pl-4 text-muted-foreground line-clamp-1",
+              variant === "compact" ? "text-[11px]" : "text-xs",
             )}
           >
-            {place.city}
-          </span>
+            {place.address}
+          </div>
         </div>
 
         {showSportsRow && (
@@ -338,6 +348,7 @@ export function PlaceCardSkeleton({
       >
         <div className="h-5 bg-muted rounded w-3/4" />
         <div className="h-4 bg-muted rounded w-1/2" />
+        <div className="h-3 bg-muted rounded w-2/3" />
         {variant !== "compact" && (
           <div className="h-8 bg-muted rounded w-full mt-3" />
         )}
