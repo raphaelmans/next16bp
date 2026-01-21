@@ -70,7 +70,7 @@ export default function EditCourtPage() {
   }
 
   const defaultValues: Partial<CourtFormData> = {
-    placeId: courtData.court.placeId,
+    placeId: courtData.court.placeId ?? undefined,
     sportId: courtData.sport.id,
     label: courtData.court.label,
     tierLabel: courtData.court.tierLabel,
