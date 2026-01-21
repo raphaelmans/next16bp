@@ -238,8 +238,8 @@ export default function PlaceDetailPage() {
       const parsed = Number(draftValue);
       const baseHours =
         draftValue !== "" &&
-        Number.isFinite(parsed) &&
-        Number.isInteger(parsed)
+          Number.isFinite(parsed) &&
+          Number.isInteger(parsed)
           ? parsed
           : durationHours;
       const nextHours =
@@ -261,10 +261,10 @@ export default function PlaceDetailPage() {
   const showBookingVerificationUi = !showBooking && !isCurated;
   const canSubmitClaim = Boolean(
     place &&
-      isCurated &&
-      place.claimStatus === "UNCLAIMED" &&
-      isAuthenticated &&
-      isOwner,
+    isCurated &&
+    place.claimStatus === "UNCLAIMED" &&
+    isAuthenticated &&
+    isOwner,
   );
   const organizationOptions = organizations.map((organization) => ({
     label: organization.name,
@@ -598,11 +598,11 @@ export default function PlaceDetailPage() {
   const viberLink = viberNumber ? buildViberDeepLink(viberNumber) : "";
   const hasContactDetail = Boolean(
     contactDetail?.phoneNumber ||
-      contactDetail?.websiteUrl ||
-      contactDetail?.facebookUrl ||
-      contactDetail?.instagramUrl ||
-      contactDetail?.viberInfo ||
-      contactDetail?.otherContactInfo,
+    contactDetail?.websiteUrl ||
+    contactDetail?.facebookUrl ||
+    contactDetail?.instagramUrl ||
+    contactDetail?.viberInfo ||
+    contactDetail?.otherContactInfo,
   );
   const claimStatusMessage =
     place.claimStatus === "CLAIM_PENDING"
@@ -697,9 +697,6 @@ export default function PlaceDetailPage() {
                     <Calendar className="h-4 w-4 text-accent" />
                     Check availability
                   </div>
-                  <span className="text-xs font-medium text-accent">
-                    Jump to times
-                  </span>
                 </Button>
               ) : showBookingVerificationUi ? (
                 <div className="rounded-xl border border-dashed bg-background/95 p-3 text-left text-xs text-muted-foreground shadow-md backdrop-blur">
@@ -1124,8 +1121,8 @@ export default function PlaceDetailPage() {
                       {selectionMode === "any"
                         ? "Any available court"
                         : (courtsForSport.find(
-                            (court) => court.id === selectedCourtId,
-                          )?.label ?? "Select a court")}
+                          (court) => court.id === selectedCourtId,
+                        )?.label ?? "Select a court")}
                     </p>
                   </div>
                   <div className="space-y-1">
@@ -1515,18 +1512,18 @@ export default function PlaceDetailPage() {
               <p className="text-sm font-medium">
                 {hasSelectedSlot && selectedSlot
                   ? formatInTimeZone(
-                      new Date(selectedSlot.startTime),
-                      placeTimeZone,
-                      "MMM d, h:mm a",
-                    )
+                    new Date(selectedSlot.startTime),
+                    placeTimeZone,
+                    "MMM d, h:mm a",
+                  )
                   : "Select a time"}
               </p>
               <p className="text-xs text-muted-foreground">
                 {hasSelectedSlot && selectedSlot
                   ? `${formatDuration(durationMinutes)} · ${formatCurrency(
-                      selectedSlot.totalPriceCents,
-                      selectedSlot.currency,
-                    )}`
+                    selectedSlot.totalPriceCents,
+                    selectedSlot.currency,
+                  )}`
                   : hasSelectedDate
                     ? "Continue to see available times"
                     : "Choose a date to continue"}
