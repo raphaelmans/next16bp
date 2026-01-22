@@ -20,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { type RegisterDTO, RegisterSchema } from "@/modules/auth/dtos";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { getSafeRedirectPath } from "@/shared/lib/redirects";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { useLoginWithGoogle, useRegister } from "../hooks/use-auth";
 
@@ -29,7 +30,11 @@ export function RegisterForm() {
   const registerMutation = useRegister();
   const googleLoginMutation = useLoginWithGoogle();
 
-  const redirectUrl = searchParams.get("redirect") || appRoutes.courts.base;
+  const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
+    fallback: appRoutes.courts.base,
+    origin: typeof window !== "undefined" ? window.location.origin : undefined,
+    disallowRoutes: ["guest"],
+  });
   const showBookingContext = redirectUrl.includes("/schedule");
 
   const form = useForm<RegisterDTO>({

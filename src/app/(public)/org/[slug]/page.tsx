@@ -7,12 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState, PlaceCard } from "@/shared/components/kudos";
-import {
-  BentoGrid,
-  BentoItem,
-  Container,
-  PublicShell,
-} from "@/shared/components/layout";
+import { BentoGrid, BentoItem } from "@/shared/components/layout/bento-grid";
+import { Container } from "@/shared/components/layout/container";
+import { PublicShell } from "@/shared/components/layout/public-shell";
 import { createServerCaller } from "@/shared/infra/trpc/server";
 import { appRoutes } from "@/shared/lib/app-routes";
 

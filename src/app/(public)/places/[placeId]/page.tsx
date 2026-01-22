@@ -273,10 +273,14 @@ export default function PlaceDetailPage() {
       isAuthenticated &&
       isOwner,
   );
-  const organizationOptions = organizations.map((organization) => ({
-    label: organization.name,
-    value: organization.id,
-  }));
+  const organizationOptions = React.useMemo(
+    () =>
+      organizations.map((organization) => ({
+        label: organization.name,
+        value: organization.id,
+      })),
+    [organizations],
+  );
   const defaultOrganizationId = organizations[0]?.id ?? "";
 
   React.useEffect(() => {
@@ -345,18 +349,25 @@ export default function PlaceDetailPage() {
   const availability = availabilityQuery.data ?? [];
   const isLoadingAvailability = availabilityQuery.isLoading;
 
-  const timeSlots: TimeSlot[] = availability.map((slot) => ({
-    id: slot.id,
-    startTime: slot.startTime,
-    endTime: slot.endTime,
-    priceCents: slot.totalPriceCents,
-    currency: slot.currency,
-    status: "available",
-  }));
+  const timeSlots: TimeSlot[] = React.useMemo(
+    () =>
+      availability.map((slot) => ({
+        id: slot.id,
+        startTime: slot.startTime,
+        endTime: slot.endTime,
+        priceCents: slot.totalPriceCents,
+        currency: slot.currency,
+        status: "available",
+      })),
+    [availability],
+  );
 
   const selectedSlot = availability.find((slot) => slot.id === selectedSlotId);
   const hasSelectedDate = !!selectedDate;
   const hasSelectedSlot = !!selectedSlot;
+  const handleSlotSelect = React.useCallback((slot: TimeSlot) => {
+    setSelectedSlotId(slot.id);
+  }, []);
 
   React.useEffect(() => {
     if (!selectedSlot) return;
@@ -1101,7 +1112,7 @@ export default function PlaceDetailPage() {
                           <TimeSlotPicker
                             slots={timeSlots}
                             selectedId={selectedSlotId}
-                            onSelect={(slot) => setSelectedSlotId(slot.id)}
+                            onSelect={handleSlotSelect}
                             showPrice
                             timeZone={placeTimeZone}
                           />

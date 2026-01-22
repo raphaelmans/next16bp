@@ -19,6 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { type LoginDTO, LoginSchema } from "@/modules/auth/dtos";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { getSafeRedirectPath } from "@/shared/lib/redirects";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { useLogin, useLoginWithGoogle } from "../hooks/use-auth";
 
@@ -28,7 +29,11 @@ export function LoginForm() {
   const loginMutation = useLogin();
   const googleLoginMutation = useLoginWithGoogle();
 
-  const redirectUrl = searchParams.get("redirect") || appRoutes.home.base;
+  const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
+    fallback: appRoutes.home.base,
+    origin: typeof window !== "undefined" ? window.location.origin : undefined,
+    disallowRoutes: ["guest"],
+  });
   const showBookingContext = redirectUrl.includes("/schedule");
 
   const form = useForm<LoginDTO>({

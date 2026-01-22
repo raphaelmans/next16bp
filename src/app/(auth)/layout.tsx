@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
-import { PlayerShell, PublicShell } from "@/shared/components/layout";
+import { PlayerShell } from "@/shared/components/layout/player-shell";
+import { PublicShell } from "@/shared/components/layout/public-shell";
 import {
   requireAdminSession,
   requireSession,

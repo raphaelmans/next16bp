@@ -1,4 +1,4 @@
-import { PublicShell } from "@/shared/components/layout";
+import { PublicShell } from "@/shared/components/layout/public-shell";
 
 export default function PublicLayout({
   children,

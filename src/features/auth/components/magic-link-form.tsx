@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/card";
 import { type MagicLinkDTO, MagicLinkSchema } from "@/modules/auth/dtos";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { getSafeRedirectPath } from "@/shared/lib/redirects";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { useMagicLink } from "../hooks/use-auth";
 
@@ -25,7 +26,11 @@ export function MagicLinkForm() {
   const searchParams = useSearchParams();
   const [success, setSuccess] = useState(false);
   const magicLinkMutation = useMagicLink();
-  const redirectUrl = searchParams.get("redirect") ?? appRoutes.home.base;
+  const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
+    fallback: appRoutes.home.base,
+    origin: typeof window !== "undefined" ? window.location.origin : undefined,
+    disallowRoutes: ["guest"],
+  });
   const loginHref = appRoutes.login.from(redirectUrl);
 
   const form = useForm<MagicLinkDTO>({

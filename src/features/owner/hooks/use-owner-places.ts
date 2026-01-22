@@ -116,14 +116,18 @@ export function useOwnerPlaces(organizationId?: string | null) {
   );
 
   const isCourtsLoading = courtQueries.some((query) => query.isLoading);
+  const courtData = useMemo(
+    () => courtQueries.map((query) => query.data ?? []),
+    [courtQueries],
+  );
 
   const data = useMemo(() => {
     if (!placesQuery.data) return [];
 
     return placesQuery.data.map((place, index) =>
-      mapOwnerPlace(place, courtQueries[index]?.data ?? [], place.verification),
+      mapOwnerPlace(place, courtData[index] ?? [], place.verification),
     );
-  }, [courtQueries, placesQuery.data]);
+  }, [courtData, placesQuery.data]);
 
   return {
     ...placesQuery,

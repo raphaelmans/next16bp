@@ -1,8 +1,43 @@
-import { appRoutes } from "@/shared/lib/app-routes";
+import {
+  appRoutes,
+  getRouteType,
+  type RouteType,
+} from "@/shared/lib/app-routes";
 
 type SafeRedirectOptions = {
   fallback?: string;
   origin?: string;
+  disallowRoutes?: RouteType[];
+  disallowPathname?: string;
+};
+
+const getRedirectPathname = (path: string) => {
+  try {
+    return new URL(path, "https://kudoscourts.local").pathname;
+  } catch {
+    return path.split("?")[0]?.split("#")[0] ?? path;
+  }
+};
+
+const applyRedirectPolicy = (
+  path: string,
+  options: SafeRedirectOptions,
+  fallback: string,
+) => {
+  const pathname = getRedirectPathname(path);
+
+  if (options.disallowPathname && pathname === options.disallowPathname) {
+    return fallback;
+  }
+
+  if (options.disallowRoutes?.length) {
+    const routeType = getRouteType(pathname);
+    if (options.disallowRoutes.includes(routeType)) {
+      return fallback;
+    }
+  }
+
+  return path;
 };
 
 const decodeRedirectValue = (value: string) => {
@@ -47,7 +82,11 @@ export const getSafeRedirectPath = (
       if (originUrl.origin !== targetUrl.origin) {
         return fallback;
       }
-      return `${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`;
+      return applyRedirectPolicy(
+        `${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`,
+        options,
+        fallback,
+      );
     } catch {
       return fallback;
     }
@@ -57,5 +96,5 @@ export const getSafeRedirectPath = (
     return fallback;
   }
 
-  return decoded;
+  return applyRedirectPolicy(decoded, options, fallback);
 };

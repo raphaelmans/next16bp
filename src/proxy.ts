@@ -113,6 +113,8 @@ export async function proxy(request: NextRequest) {
       {
         fallback: appRoutes.home.base,
         origin: request.nextUrl.origin,
+        disallowRoutes: ["guest"],
+        disallowPathname: path,
       },
     );
     return NextResponse.redirect(new URL(redirectTo, request.url));

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { KudosLogo } from "@/shared/components/kudos";
-import { Container } from "@/shared/components/layout";
+import { Container } from "@/shared/components/layout/container";
 import { appRoutes } from "@/shared/lib/app-routes";
 
 const FOOTER_LINKS = {

@@ -78,6 +78,7 @@ export class AuthService implements IAuthService {
     const safeRedirect = getSafeRedirectPath(redirect, {
       fallback: appRoutes.home.base,
       origin: baseUrl,
+      disallowRoutes: ["guest"],
     });
     const redirectTo = `${baseUrl}/auth/confirm?redirect=${encodeURIComponent(
       safeRedirect,
@@ -99,6 +100,7 @@ export class AuthService implements IAuthService {
     const safeRedirect = getSafeRedirectPath(redirect, {
       fallback: appRoutes.home.base,
       origin: baseUrl,
+      disallowRoutes: ["guest"],
     });
     const redirectTo = `${baseUrl}/auth/callback?redirect=${encodeURIComponent(
       safeRedirect,
@@ -119,6 +121,7 @@ export class AuthService implements IAuthService {
     const safeRedirect = getSafeRedirectPath(redirect, {
       fallback: appRoutes.home.base,
       origin: baseUrl,
+      disallowRoutes: ["guest"],
     });
     const redirectTo = `${baseUrl}/auth/confirm?redirect=${encodeURIComponent(
       safeRedirect,

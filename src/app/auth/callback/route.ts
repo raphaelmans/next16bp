@@ -17,6 +17,7 @@ export async function GET(request: Request) {
   const redirectPath = getSafeRedirectPath(searchParams.get("redirect"), {
     fallback: appRoutes.home.base,
     origin,
+    disallowRoutes: ["guest"],
   });
 
   if (code) {

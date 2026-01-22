@@ -1,4 +1,5 @@
-import { Footer, Navbar } from "@/features/discovery/components";
+import { Footer } from "@/features/discovery/components/footer";
+import { Navbar } from "@/features/discovery/components/navbar";
 import { cn } from "@/lib/utils";
 
 interface PublicShellProps {

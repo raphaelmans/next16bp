@@ -5,7 +5,7 @@ import {
   MessageSquareText,
 } from "lucide-react";
 import { ContactUsForm } from "@/features/contact";
-import { Container } from "@/shared/components/layout";
+import { Container } from "@/shared/components/layout/container";
 
 const HIGHLIGHTS = [
   {

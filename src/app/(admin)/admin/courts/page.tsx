@@ -167,14 +167,15 @@ export default function AdminCourtsPage() {
 
   // Reset page when filters change
   const filterKey = `${typeFilter}-${statusFilter}-${provinceFilter}-${cityFilter}-${claimStatusFilter}-${search}`;
-  const prevFilterKey = React.useRef(filterKey);
 
-  if (filterKey !== prevFilterKey.current) {
-    prevFilterKey.current = filterKey;
+  React.useEffect(() => {
+    if (!filterKey) {
+      return;
+    }
     if (page !== 1) {
       setPage(1);
     }
-  }
+  }, [filterKey, page]);
 
   return (
     <AppShell

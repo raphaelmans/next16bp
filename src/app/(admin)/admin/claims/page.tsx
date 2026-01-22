@@ -74,14 +74,15 @@ export default function AdminClaimsPage() {
 
   // Reset page when filters change
   const filterKey = `${activeTab}-${typeFilter}-${search}`;
-  const prevFilterKey = React.useRef(filterKey);
 
-  if (filterKey !== prevFilterKey.current) {
-    prevFilterKey.current = filterKey;
+  React.useEffect(() => {
+    if (!filterKey) {
+      return;
+    }
     if (page !== 1) {
       setPage(1);
     }
-  }
+  }, [filterKey, page]);
 
   return (
     <AppShell
