@@ -27,6 +27,7 @@ import path from "node:path";
 import { and, eq, ilike } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import { isUuid, normalizePlaceSlug } from "../src/lib/slug";
 import * as schema from "../src/shared/infra/db/schema";
 
 interface ImportOptions {
@@ -378,6 +379,27 @@ function parseRow(
   };
 }
 
+const resolveSlug = (
+  name: string,
+  existingSlugs: Set<string>,
+  rowNumber: number,
+) => {
+  let baseSlug = normalizePlaceSlug(name);
+  if (!baseSlug || isUuid(baseSlug)) {
+    baseSlug = `venue-${rowNumber}`;
+  }
+
+  let candidate = baseSlug;
+  let suffix = 2;
+  while (existingSlugs.has(candidate)) {
+    candidate = `${baseSlug}-${suffix}`;
+    suffix += 1;
+  }
+
+  existingSlugs.add(candidate);
+  return candidate;
+};
+
 async function importCuratedCourts() {
   const options = parseArgs();
   const resolvedPath = path.resolve(process.cwd(), options.filePath);
@@ -419,6 +441,16 @@ async function importCuratedCourts() {
     const sportIdsBySlug = new Map(
       sports.map((sport) => [sport.slug, sport.id]),
     );
+
+    const existingSlugs = new Set<string>();
+    const slugRows = await db
+      .select({ slug: schema.place.slug })
+      .from(schema.place);
+    for (const row of slugRows) {
+      if (row.slug) {
+        existingSlugs.add(row.slug);
+      }
+    }
 
     if (sportIdsBySlug.size === 0) {
       throw new Error("No sports found. Run db:seed:sports first.");
@@ -475,13 +507,16 @@ async function importCuratedCourts() {
           console.log(
             `  Validated: ${parsed.name} (${parsed.city}, ${parsed.province})`,
           );
+          resolveSlug(normalizedName, existingSlugs, rowNumber);
           validated += 1;
           continue;
         }
 
         await db.transaction(async (tx) => {
+          const slug = resolveSlug(normalizedName, existingSlugs, rowNumber);
           const placeValues: typeof schema.place.$inferInsert = {
             name: normalizedName,
+            slug,
             address: parsed.address.trim(),
             city: normalizedCity,
             province: normalizedProvince,
