@@ -12,6 +12,16 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return {
+      fallback: [
+        {
+          source: "/:orgSlug([a-z0-9-]{1,100})",
+          destination: "/org/:orgSlug",
+        },
+      ],
+    };
+  },
   images: {
     remotePatterns: [
       {

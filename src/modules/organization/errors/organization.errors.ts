@@ -2,6 +2,7 @@ import {
   AuthorizationError,
   ConflictError,
   NotFoundError,
+  ValidationError,
 } from "@/shared/kernel/errors";
 
 export class OrganizationNotFoundError extends NotFoundError {
@@ -13,6 +14,14 @@ export class OrganizationNotFoundError extends NotFoundError {
 export class SlugAlreadyExistsError extends ConflictError {
   constructor(slug: string) {
     super(`Slug already exists: ${slug}`);
+  }
+}
+
+export class OrganizationSlugReservedError extends ValidationError {
+  readonly code = "ORGANIZATION_SLUG_RESERVED";
+
+  constructor(slug: string) {
+    super("Slug is reserved", { slug });
   }
 }
 

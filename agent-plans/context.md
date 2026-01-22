@@ -8,6 +8,7 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-22 | Added 61-org-root-slug-routing plan (root org profile rewrite + reserved slug enforcement) |
 | 2026-01-21 | Added 59-public-courts-lazy-card-details plan (summary list + batched card details for faster discovery load) |
 | 2026-01-21 | Added 58-contact-us plan (public contact page, email integration, message storage) |
 | 2026-01-21 | Added 57-public-courts-pagination plan (replace "Load more" with shadcn pagination on /courts) |

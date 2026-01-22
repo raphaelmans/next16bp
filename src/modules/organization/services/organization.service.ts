@@ -7,6 +7,7 @@ import type {
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
+import { appRoutes } from "@/shared/lib/app-routes";
 import type {
   CreateOrganizationDTO,
   UpdateOrganizationDTO,
@@ -15,12 +16,60 @@ import type {
 import {
   NotOrganizationOwnerError,
   OrganizationNotFoundError,
+  OrganizationSlugReservedError,
   SlugAlreadyExistsError,
   UserAlreadyHasOrganizationError,
 } from "../errors/organization.errors";
 import type { IOrganizationRepository } from "../repositories/organization.repository";
 import type { IOrganizationProfileRepository } from "../repositories/organization-profile.repository";
 import { generateUniqueSlug } from "../utils/slug.utils";
+
+const extractTopLevelSegment = (path: string): string | null => {
+  const normalized = path.split("?")[0]?.split("#")[0] ?? path;
+  const segments = normalized.split("/").filter(Boolean);
+  return segments[0] ?? null;
+};
+
+const collectRouteBases = (
+  node: unknown,
+  bases: string[],
+  visited: Set<object>,
+) => {
+  if (!node || typeof node !== "object") return;
+  if (visited.has(node)) return;
+  visited.add(node);
+
+  const maybeBase = (node as { base?: unknown }).base;
+  if (typeof maybeBase === "string") {
+    bases.push(maybeBase);
+  }
+
+  for (const value of Object.values(node as Record<string, unknown>)) {
+    collectRouteBases(value, bases, visited);
+  }
+};
+
+const RESERVED_ORG_ROOT_SLUGS = (() => {
+  const bases: string[] = [];
+  collectRouteBases(appRoutes, bases, new Set());
+
+  const reserved = new Set<string>();
+  for (const base of bases) {
+    const segment = extractTopLevelSegment(base);
+    if (segment) {
+      reserved.add(segment);
+    }
+  }
+
+  reserved.add("api");
+  reserved.add("_next");
+  reserved.add("org");
+
+  return reserved;
+})();
+
+const isReservedOrgRootSlug = (slug: string) =>
+  RESERVED_ORG_ROOT_SLUGS.has(slug);
 
 export interface OrganizationWithProfile {
   organization: OrganizationRecord;
@@ -74,17 +123,27 @@ export class OrganizationService implements IOrganizationService {
       // Generate or validate slug
       let slug: string;
       if (data.slug) {
-        // User provided slug - check if it exists
-        const exists = await this.organizationRepository.slugExists(data.slug);
-        if (exists) {
-          throw new SlugAlreadyExistsError(data.slug);
+        const requestedSlug = data.slug.trim().toLowerCase();
+
+        if (isReservedOrgRootSlug(requestedSlug)) {
+          throw new OrganizationSlugReservedError(requestedSlug);
         }
-        slug = data.slug;
+
+        // User provided slug - check if it exists
+        const exists =
+          await this.organizationRepository.slugExists(requestedSlug);
+        if (exists) {
+          throw new SlugAlreadyExistsError(requestedSlug);
+        }
+        slug = requestedSlug;
       } else {
         // Auto-generate unique slug from name
-        slug = await generateUniqueSlug(data.name, (s) =>
-          this.organizationRepository.slugExists(s),
-        );
+        slug = await generateUniqueSlug(data.name, async (candidate) => {
+          if (isReservedOrgRootSlug(candidate)) {
+            return true;
+          }
+          return await this.organizationRepository.slugExists(candidate);
+        });
       }
 
       // Create organization
@@ -166,17 +225,26 @@ export class OrganizationService implements IOrganizationService {
 
       // If updating slug, check uniqueness
       if (data.slug && data.slug !== org.slug) {
+        const requestedSlug = data.slug.trim().toLowerCase();
+        if (isReservedOrgRootSlug(requestedSlug)) {
+          throw new OrganizationSlugReservedError(requestedSlug);
+        }
+
         const slugExists = await this.organizationRepository.slugExists(
-          data.slug,
+          requestedSlug,
           org.id,
         );
         if (slugExists) {
-          throw new SlugAlreadyExistsError(data.slug);
+          throw new SlugAlreadyExistsError(requestedSlug);
         }
       }
 
       // Update organization
-      const { id: _id, ...updateData } = data;
+      const { id: _id, slug: rawSlug, ...rest } = data;
+      const updateData = {
+        ...rest,
+        ...(rawSlug ? { slug: rawSlug.trim().toLowerCase() } : {}),
+      };
       const updated = await this.organizationRepository.update(
         org.id,
         updateData,
