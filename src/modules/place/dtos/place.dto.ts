@@ -36,7 +36,6 @@ export const GetPlaceByIdOrSlugSchema = z.object({
 export const CreatePlaceSchema = z.object({
   organizationId: z.string().uuid(),
   name: z.string().min(1).max(200),
-  slug: z.string().trim().min(1).max(200).optional(),
   address: z.string().min(1),
   city: z.string().min(1).max(100),
   province: z.string().min(1).max(100),
@@ -61,7 +60,6 @@ export const CreatePlaceSchema = z.object({
 export const UpdatePlaceSchema = z.object({
   placeId: z.string().uuid(),
   name: z.string().min(1).max(200).optional(),
-  slug: z.string().trim().min(1).max(200).optional(),
   address: z.string().min(1).optional(),
   city: z.string().min(1).max(100).optional(),
   province: z.string().min(1).max(100).optional(),

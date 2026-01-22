@@ -163,7 +163,9 @@ function buildAvailabilityId(
 export default function CourtSchedulePage() {
   const params = useParams();
   const router = useRouter();
-  const placeIdOrSlug = (params.placeId ?? params.id ?? params.courtId) as string;
+  const placeIdOrSlug = (params.placeId ??
+    params.id ??
+    params.courtId) as string;
 
   const { data: session } = useSession();
   const isAuthenticated = !!session;

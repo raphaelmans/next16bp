@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 import {
   type ContactMessageRecord,
-  type InsertContactMessage,
   contactMessage,
+  type InsertContactMessage,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
 import type { RequestContext } from "@/shared/kernel/context";

@@ -1,8 +1,8 @@
+import { isUuid } from "@/lib/slug";
 import type {
   CourtWithSport,
   ICourtRepository,
 } from "@/modules/court/repositories/court.repository";
-import { isUuid } from "@/lib/slug";
 import type { ListPlacesDTO } from "../dtos";
 import { PlaceNotFoundError } from "../errors/place.errors";
 import type {

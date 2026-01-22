@@ -12,7 +12,12 @@ import {
 } from "@/components/form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import {
   type SubmitContactMessageDTO,
@@ -72,7 +77,9 @@ export function ContactUsForm() {
     <Card className="border-border/60 bg-background/90 shadow-sm backdrop-blur">
       <CardHeader className="space-y-2">
         <div>
-          <h2 className="font-heading text-2xl font-semibold">Send a message</h2>
+          <h2 className="font-heading text-2xl font-semibold">
+            Send a message
+          </h2>
           <p className="mt-2 text-sm text-muted-foreground">
             Share your question, partnership request, or venue inquiry.
           </p>

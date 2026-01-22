@@ -261,7 +261,11 @@ export function PlaceCard({
             ) : (
               <>
                 {visibleSports.map((sport) => (
-                  <Badge key={sport.id} variant="outline" className="text-[10px]">
+                  <Badge
+                    key={sport.id}
+                    variant="outline"
+                    className="text-[10px]"
+                  >
                     {sport.name}
                   </Badge>
                 ))}

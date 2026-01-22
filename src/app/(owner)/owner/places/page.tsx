@@ -390,7 +390,9 @@ export default function OwnerPlacesPage() {
                     </Button>
 
                     <Button variant="ghost" size="sm" asChild>
-                      <Link href={appRoutes.places.detail(place.slug ?? place.id)}>
+                      <Link
+                        href={appRoutes.places.detail(place.slug ?? place.id)}
+                      >
                         View Public Page
                       </Link>
                     </Button>

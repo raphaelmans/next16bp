@@ -37,7 +37,9 @@ const main = async () => {
   const db = drizzle(client, { schema });
 
   const existingSlugs = new Set<string>();
-  const slugRows = await db.select({ slug: schema.place.slug }).from(schema.place);
+  const slugRows = await db
+    .select({ slug: schema.place.slug })
+    .from(schema.place);
   for (const row of slugRows) {
     if (row.slug) {
       existingSlugs.add(row.slug);

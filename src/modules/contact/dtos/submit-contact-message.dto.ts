@@ -7,4 +7,6 @@ export const SubmitContactMessageSchema = z.object({
   message: z.string().min(10).max(2000),
 });
 
-export type SubmitContactMessageDTO = z.infer<typeof SubmitContactMessageSchema>;
+export type SubmitContactMessageDTO = z.infer<
+  typeof SubmitContactMessageSchema
+>;

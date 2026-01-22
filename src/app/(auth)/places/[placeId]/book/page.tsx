@@ -66,7 +66,6 @@ export default function PlaceBookingPage() {
   const { data: place, isLoading } = usePlaceDetail({
     placeIdOrSlug,
   });
-  const placeId = place?.id ?? placeIdOrSlug;
   const resolvedPlaceId = place?.id;
   const placeSlugOrId = place?.slug ?? place?.id ?? placeIdOrSlug;
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";

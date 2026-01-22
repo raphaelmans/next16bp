@@ -1,7 +1,10 @@
 import { isUuid, normalizePlaceSlug } from "@/lib/slug";
 import type { PlaceRecord } from "@/shared/infra/db/schema";
 import type { RequestContext } from "@/shared/kernel/context";
-import { PlaceSlugInvalidError, PlaceSlugTakenError } from "./errors/place.errors";
+import {
+  PlaceSlugInvalidError,
+  PlaceSlugTakenError,
+} from "./errors/place.errors";
 
 type FindPlaceBySlug = (
   slug: string,
@@ -30,7 +33,8 @@ export async function resolvePlaceSlug({
   }
 
   for (let attempt = 0; attempt < 1000; attempt += 1) {
-    const candidate = attempt === 0 ? normalized : `${normalized}-${attempt + 1}`;
+    const candidate =
+      attempt === 0 ? normalized : `${normalized}-${attempt + 1}`;
     const existing = await findBySlug(candidate, ctx);
     if (!existing || existing.id === excludePlaceId) {
       return candidate;

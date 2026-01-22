@@ -28,7 +28,7 @@ export const place = pgTable(
       onDelete: "set null",
     }),
     name: varchar("name", { length: 200 }).notNull(),
-    slug: varchar("slug", { length: 200 }),
+    slug: varchar("slug", { length: 200 }).notNull(),
     address: text("address").notNull(),
     city: varchar("city", { length: 100 }).notNull(),
     province: varchar("province", { length: 100 }).notNull(),
@@ -57,9 +57,7 @@ export const place = pgTable(
     index("idx_place_ext_g_place_id").on(table.extGPlaceId),
     index("idx_place_city").on(table.city),
     index("idx_place_type").on(table.placeType),
-    uniqueIndex("uq_place_slug")
-      .on(table.slug)
-      .where(sql`${table.slug} IS NOT NULL`),
+    uniqueIndex("uq_place_slug").on(table.slug),
     index("idx_place_org")
       .on(table.organizationId)
       .where(sql`${table.organizationId} IS NOT NULL`),

@@ -54,7 +54,6 @@ export function usePlaceForm({
       await updateMutation.mutateAsync({
         placeId,
         name: data.name,
-        slug: data.slug?.trim() || undefined,
         address: data.address,
         city: data.city,
         province: data.province,
@@ -83,7 +82,6 @@ export function usePlaceForm({
     await createMutation.mutateAsync({
       organizationId,
       name: data.name,
-      slug: data.slug?.trim() || undefined,
       address: data.address,
       city: data.city,
       province: data.province,

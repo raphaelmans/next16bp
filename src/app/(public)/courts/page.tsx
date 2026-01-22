@@ -2,6 +2,15 @@
 
 import { Suspense, useMemo } from "react";
 import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
   EmptyResults,
   PlaceFilters,
   PlaceFiltersSheet,
@@ -20,15 +29,6 @@ import {
   PlaceCardSkeleton,
 } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
 import {
   findCityBySlug,

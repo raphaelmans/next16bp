@@ -48,11 +48,7 @@ export interface PlaceCardMeta {
   courtCount?: number;
   lowestPriceCents?: number;
   currency?: string;
-  verificationStatus?:
-    | "UNVERIFIED"
-    | "PENDING"
-    | "VERIFIED"
-    | "REJECTED";
+  verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
   reservationsEnabled?: boolean;
 }
 
@@ -302,10 +298,7 @@ export function useDiscoveryPlaceCardDetails(
   sportId?: string,
 ) {
   const queries = trpc.useQueries((t) => [
-    t.place.cardMediaByIds(
-      { placeIds },
-      { enabled: placeIds.length > 0 },
-    ),
+    t.place.cardMediaByIds({ placeIds }, { enabled: placeIds.length > 0 }),
     t.place.cardMetaByIds(
       { placeIds, sportId },
       { enabled: placeIds.length > 0 },

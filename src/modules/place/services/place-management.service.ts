@@ -7,6 +7,7 @@ import type { IOrganizationRepository } from "@/modules/organization/repositorie
 import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
 import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
 import type {
+  InsertPlace,
   PlacePhotoRecord,
   PlaceRecord,
   PlaceVerificationRecord,
@@ -20,7 +21,6 @@ import type {
   ReorderPlacePhotosDTO,
   UpdatePlaceDTO,
 } from "../dtos";
-import { resolvePlaceSlug } from "../helpers";
 import {
   MaxPlacePhotosExceededError,
   NotPlaceOwnerError,
@@ -28,6 +28,7 @@ import {
   PlacePhotoNotFoundError,
   PlacePhotoOrderInvalidError,
 } from "../errors/place.errors";
+import { resolvePlaceSlug } from "../helpers";
 import type {
   IPlaceRepository,
   PlaceWithDetails,
@@ -95,7 +96,6 @@ export class PlaceManagementService implements IPlaceManagementService {
       }
 
       const slug = await resolvePlaceSlug({
-        rawSlug: data.slug,
         fallbackName: data.name,
         findBySlug: this.placeRepository.findBySlug.bind(this.placeRepository),
         ctx,
@@ -170,22 +170,22 @@ export class PlaceManagementService implements IPlaceManagementService {
         viberInfo,
         otherContactInfo,
         country: _country,
-        slug,
         ...updateData
       } = data;
 
       let resolvedSlug: string | undefined;
-      if (slug !== undefined || !place.slug) {
+      if (data.name || !place.slug) {
         resolvedSlug = await resolvePlaceSlug({
-          rawSlug: slug,
           fallbackName: data.name ?? place.name,
-          findBySlug: this.placeRepository.findBySlug.bind(this.placeRepository),
+          findBySlug: this.placeRepository.findBySlug.bind(
+            this.placeRepository,
+          ),
           ctx,
           excludePlaceId: place.id,
         });
       }
 
-      const normalizedUpdateData: Partial<UpdatePlaceDTO> & {
+      const normalizedUpdateData: Partial<InsertPlace> & {
         country: string;
       } = {
         ...updateData,

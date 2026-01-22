@@ -363,15 +363,21 @@ export default function PlaceDetailPage() {
 
     trackEvent({
       event: "funnel.schedule_slot_selected",
-        properties: {
-          placeId: analyticsPlaceId,
-          mode: selectionMode,
-          durationMinutes,
-          startTime: selectedSlot.startTime,
-          courtId: selectedCourtId,
-        },
-      });
-  }, [analyticsPlaceId, durationMinutes, selectedCourtId, selectedSlot, selectionMode]);
+      properties: {
+        placeId: analyticsPlaceId,
+        mode: selectionMode,
+        durationMinutes,
+        startTime: selectedSlot.startTime,
+        courtId: selectedCourtId,
+      },
+    });
+  }, [
+    analyticsPlaceId,
+    durationMinutes,
+    selectedCourtId,
+    selectedSlot,
+    selectionMode,
+  ]);
 
   const scheduleHref = React.useMemo(() => {
     if (!showBooking || !place) return undefined;

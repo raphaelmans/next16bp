@@ -1,5 +1,5 @@
-import { makeEmailService } from "@/shared/infra/email/email.factory";
 import { getContainer } from "@/shared/infra/container";
+import { makeEmailService } from "@/shared/infra/email/email.factory";
 import { ContactMessageRepository } from "../repositories/contact-message.repository";
 import { ContactService } from "../services/contact.service";
 

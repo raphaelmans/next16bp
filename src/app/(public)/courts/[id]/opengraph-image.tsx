@@ -28,7 +28,6 @@ export default async function OpenGraphImage({
 }) {
   const { id } = await params;
   const fallbackPath = appRoutes.places.detail(id);
-  let canonicalPath = fallbackPath;
 
   let title = "Court details";
   let subtitle = "Discover. Reserve. Play.";
@@ -41,7 +40,6 @@ export default async function OpenGraphImage({
     const place = placeDetails.place;
     title = place.name;
     subtitle = buildLocationLabel(place);
-    canonicalPath = appRoutes.places.detail(place.slug ?? place.id);
   } catch {}
 
   return new ImageResponse(
