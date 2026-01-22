@@ -1,3 +1,4 @@
+import { PlaceRepository } from "@/modules/place/repositories/place.repository";
 import { makeObjectStorageService } from "@/modules/storage/factories/storage.factory";
 import { getContainer } from "@/shared/infra/container";
 import { OrganizationAdminRepository } from "../admin/repositories/organization-admin.repository";
@@ -8,6 +9,7 @@ import { OrganizationService } from "../services/organization.service";
 
 let organizationRepository: OrganizationRepository | null = null;
 let organizationProfileRepository: OrganizationProfileRepository | null = null;
+let placeRepository: PlaceRepository | null = null;
 let organizationService: OrganizationService | null = null;
 let organizationAdminRepository: OrganizationAdminRepository | null = null;
 let organizationAdminService: OrganizationAdminService | null = null;
@@ -28,11 +30,19 @@ export function makeOrganizationProfileRepository(): OrganizationProfileReposito
   return organizationProfileRepository;
 }
 
+function makePlaceRepository(): PlaceRepository {
+  if (!placeRepository) {
+    placeRepository = new PlaceRepository(getContainer().db);
+  }
+  return placeRepository;
+}
+
 export function makeOrganizationService(): OrganizationService {
   if (!organizationService) {
     organizationService = new OrganizationService(
       makeOrganizationRepository(),
       makeOrganizationProfileRepository(),
+      makePlaceRepository(),
       getContainer().transactionManager,
       makeObjectStorageService(),
     );

@@ -1,3 +1,4 @@
+import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
 import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
 import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
 import type {
@@ -76,6 +77,58 @@ export interface OrganizationWithProfile {
   profile: OrganizationProfileRecord | null;
 }
 
+export interface OrganizationLandingProfile {
+  description?: string;
+  logoUrl?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  address?: string;
+}
+
+export interface OrganizationLandingPlace {
+  id: string;
+  slug: string;
+  name: string;
+  address: string;
+  city: string;
+  coverImageUrl?: string;
+  logoUrl?: string;
+  sports: { id: string; slug: string; name: string }[];
+  courtCount: number;
+  lowestPriceCents?: number;
+  currency?: string;
+  placeType: "CURATED" | "RESERVABLE";
+  verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
+  reservationsEnabled?: boolean;
+  featuredRank?: number;
+}
+
+export interface OrganizationLandingSport {
+  id: string;
+  slug: string;
+  name: string;
+  count: number;
+}
+
+export interface OrganizationLandingStats {
+  venueCount: number;
+  totalCourts: number;
+  cityCount: number;
+  verifiedVenueCount: number;
+  topSports: OrganizationLandingSport[];
+}
+
+export interface OrganizationLanding {
+  organization: {
+    id: string;
+    name: string;
+    slug: string;
+  };
+  profile: OrganizationLandingProfile | null;
+  places: OrganizationLandingPlace[];
+  stats: OrganizationLandingStats;
+}
+
 export interface IOrganizationService {
   createOrganization(
     ownerId: string,
@@ -83,6 +136,7 @@ export interface IOrganizationService {
   ): Promise<OrganizationWithProfile>;
   getOrganization(id: string): Promise<OrganizationWithProfile>;
   getOrganizationBySlug(slug: string): Promise<OrganizationWithProfile>;
+  getLandingBySlug(slug: string): Promise<OrganizationLanding>;
   getMyOrganizations(userId: string): Promise<OrganizationRecord[]>;
   updateOrganization(
     userId: string,
@@ -103,6 +157,7 @@ export class OrganizationService implements IOrganizationService {
   constructor(
     private organizationRepository: IOrganizationRepository,
     private organizationProfileRepository: IOrganizationProfileRepository,
+    private placeRepository: IPlaceRepository,
     private transactionManager: TransactionManager,
     private storageService: IObjectStorageService,
   ) {}
@@ -200,6 +255,115 @@ export class OrganizationService implements IOrganizationService {
       await this.organizationProfileRepository.findByOrganizationId(org.id);
 
     return { organization: org, profile };
+  }
+
+  async getLandingBySlug(slug: string): Promise<OrganizationLanding> {
+    const org = await this.organizationRepository.findBySlug(slug);
+    if (!org || !org.isActive) {
+      throw new OrganizationNotFoundError(slug);
+    }
+
+    const profileRecord =
+      await this.organizationProfileRepository.findByOrganizationId(org.id);
+
+    const placeRecords = await this.placeRepository.findActiveByOrganizationId(
+      org.id,
+    );
+    const placeIds = placeRecords.map((place) => place.id);
+
+    const [media, meta] =
+      placeIds.length > 0
+        ? await Promise.all([
+            this.placeRepository.listCardMediaByPlaceIds(placeIds),
+            this.placeRepository.listCardMetaByPlaceIds(placeIds),
+          ])
+        : [[], []];
+
+    const mediaByPlaceId = new Map(media.map((item) => [item.placeId, item]));
+    const metaByPlaceId = new Map(meta.map((item) => [item.placeId, item]));
+
+    const places: OrganizationLandingPlace[] = placeRecords.map((place) => {
+      const placeMedia = mediaByPlaceId.get(place.id);
+      const placeMeta = metaByPlaceId.get(place.id);
+
+      return {
+        id: place.id,
+        slug: place.slug,
+        name: place.name,
+        address: place.address,
+        city: place.city,
+        coverImageUrl: placeMedia?.coverImageUrl ?? undefined,
+        logoUrl: placeMedia?.organizationLogoUrl ?? undefined,
+        sports: placeMeta?.sports ?? [],
+        courtCount: placeMeta?.courtCount ?? 0,
+        lowestPriceCents:
+          placeMeta?.lowestPriceCents === null ||
+          placeMeta?.lowestPriceCents === undefined
+            ? undefined
+            : placeMeta.lowestPriceCents,
+        currency: placeMeta?.currency ?? undefined,
+        placeType: place.placeType,
+        verificationStatus: placeMeta?.verificationStatus ?? undefined,
+        reservationsEnabled: placeMeta?.reservationsEnabled ?? undefined,
+        featuredRank: place.featuredRank,
+      };
+    });
+
+    const cities = new Set(places.map((place) => place.city));
+    const totalCourts = places.reduce(
+      (sum, place) => sum + (place.courtCount ?? 0),
+      0,
+    );
+    const verifiedVenueCount = places.filter(
+      (place) => place.verificationStatus === "VERIFIED",
+    ).length;
+
+    const sports = new Map<string, OrganizationLandingSport>();
+    for (const place of places) {
+      for (const sport of place.sports) {
+        const current = sports.get(sport.id);
+        if (current) {
+          current.count += 1;
+          continue;
+        }
+        sports.set(sport.id, { ...sport, count: 1 });
+      }
+    }
+
+    const topSports = Array.from(sports.values())
+      .sort(
+        (a, b) =>
+          b.count - a.count ||
+          a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
+      )
+      .slice(0, 6);
+
+    const profile: OrganizationLandingProfile | null = profileRecord
+      ? {
+          description: profileRecord.description ?? undefined,
+          logoUrl: profileRecord.logoUrl ?? undefined,
+          contactEmail: profileRecord.contactEmail ?? undefined,
+          contactPhone: profileRecord.contactPhone ?? undefined,
+          address: profileRecord.address ?? undefined,
+        }
+      : null;
+
+    return {
+      organization: {
+        id: org.id,
+        name: org.name,
+        slug: org.slug,
+      },
+      profile,
+      places,
+      stats: {
+        venueCount: places.length,
+        totalCourts,
+        cityCount: cities.size,
+        verifiedVenueCount,
+        topSports,
+      },
+    };
   }
 
   async getMyOrganizations(userId: string): Promise<OrganizationRecord[]> {

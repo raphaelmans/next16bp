@@ -1,15 +1,34 @@
-# Organization Root Slug Routing - Master Plan
+# Org Public Landing - Master Plan
 
 ## Overview
 
-Add `kudoscourts.com/<org_slug>` routing via Next.js rewrites to a server-rendered org profile page, and prevent org slug collisions with reserved top-level routes derived from `src/shared/lib/app-routes.ts`.
+Build a public, shareable organization landing page that highlights the organization, its venues (places), and the courts available across those venues.
+
+This plan focuses on `/org/[slug]` (current route). Root-level org slugs (`/{orgSlug}`) remain a follow-up (see Deferred).
+
+---
 
 ### Reference Documents
 
 | Document | Location |
 | --- | --- |
 | Context | `agent-plans/context.md` |
-| Next.js rewrites docs | Context7: `/vercel/next.js/v16.1.0` rewrites |
+| Design System | `business-contexts/kudoscourts-design-system.md` |
+| Org page route | `src/app/(public)/org/[slug]/page.tsx` |
+| Organization router | `src/modules/organization/organization.router.ts` |
+| Organization service | `src/modules/organization/services/organization.service.ts` |
+| Place repository | `src/modules/place/repositories/place.repository.ts` |
+| Place card UI | `src/shared/components/kudos/place-card.tsx` |
+
+---
+
+## Success Criteria
+
+- [ ] Public org landing page renders with: hero, stats, venues grid, contact, and CTA
+- [ ] Venues are linked using the venue slug when available
+- [ ] Backend returns landing-ready venue card data (sports, court count, pricing, media, verification)
+- [ ] No owner-identifying fields are exposed from `organization` in the landing response
+- [ ] `pnpm lint` and `TZ=UTC pnpm build` pass
 
 ---
 
@@ -17,7 +36,9 @@ Add `kudoscourts.com/<org_slug>` routing via Next.js rewrites to a server-render
 
 | Phase | Description | Modules | Parallelizable |
 | --- | --- | --- | --- |
-| 1 | Root rewrite + public org page + reserved slug enforcement | 1A, 1B | Yes |
+| 1 | Backend: org landing data endpoint | 1A | Yes |
+| 2 | Frontend: `/org/[slug]` landing page UI | 2A | Partial |
+| 3 | Deferred: root org slug routing (`/{slug}`) | 3A | No |
 
 ---
 
@@ -25,26 +46,29 @@ Add `kudoscourts.com/<org_slug>` routing via Next.js rewrites to a server-render
 
 ### Phase 1
 
-| ID | Module | Plan File |
-| --- | --- | --- |
-| 1A | Next.js rewrites + public org page | `61-01-root-slug-routing.md` |
-| 1B | Reserved slug enforcement in org service | `61-01-root-slug-routing.md` |
+| ID | Module | Agent | Plan File |
+| --- | --- | --- | --- |
+| 1A | `organization.getLandingBySlug` (public) | Agent | `61-01-org-landing.md` |
+
+### Phase 2
+
+| ID | Module | Agent | Plan File |
+| --- | --- | --- | --- |
+| 2A | `/org/[slug]` landing page layout | Agent | `61-01-org-landing.md` |
+
+### Phase 3 (Deferred)
+
+| ID | Module | Agent | Plan File |
+| --- | --- | --- | --- |
+| 3A | Root org slug routing + rewrite | Agent | `61-02-deferred.md` |
 
 ---
 
-## Key Decisions
+## Document Index
 
-| Decision | Choice | Rationale |
-| --- | --- | --- |
-| Rewrite strategy | `rewrites().fallback` | Avoids regex exclusions; only applies when no real route matches |
-| Destination route | `/org/:slug` | Internal stable destination for rewrite |
-| Collision prevention | Derive reserved top-level segments from `appRoutes` | Prevent unreachable org profiles like `/courts` |
-
----
-
-## Success Criteria
-
-- [ ] Visiting `/<org_slug>` renders org page (server-side) showing org name
-- [ ] Existing routes (e.g. `/courts`, `/venues`, `/owner`, `/admin`, `/api`) unaffected
-- [ ] Org slugs cannot equal reserved top-level routes
-- [ ] `pnpm lint` and `TZ=UTC pnpm build` pass
+| Document | Description |
+| --- | --- |
+| `61-00-overview.md` | This file |
+| `61-01-org-landing.md` | Backend + frontend implementation details |
+| `org-root-slug-routing-dev1-checklist.md` | Dev checklist |
+| `61-02-deferred.md` | Explicitly deferred work |

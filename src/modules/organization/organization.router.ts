@@ -9,6 +9,7 @@ import {
 import { AppError } from "@/shared/kernel/errors";
 import {
   CreateOrganizationSchema,
+  GetOrganizationLandingBySlugSchema,
   UpdateOrganizationProfileSchema,
   UpdateOrganizationSchema,
   UploadOrgLogoSchema,
@@ -105,6 +106,20 @@ export const organizationRouter = router({
       try {
         const organizationService = makeOrganizationService();
         return await organizationService.getOrganizationBySlug(input.slug);
+      } catch (error) {
+        handleOrganizationError(error);
+      }
+    }),
+
+  /**
+   * Get organization landing page data by slug (public)
+   */
+  getLandingBySlug: publicProcedure
+    .input(GetOrganizationLandingBySlugSchema)
+    .query(async ({ input }) => {
+      try {
+        const organizationService = makeOrganizationService();
+        return await organizationService.getLandingBySlug(input.slug);
       } catch (error) {
         handleOrganizationError(error);
       }

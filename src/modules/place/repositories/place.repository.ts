@@ -104,6 +104,10 @@ export interface IPlaceRepository {
     organizationId: string,
     ctx?: RequestContext,
   ): Promise<PlaceRecord[]>;
+  findActiveByOrganizationId(
+    organizationId: string,
+    ctx?: RequestContext,
+  ): Promise<PlaceRecord[]>;
   findByOrganizationIdWithVerification(
     organizationId: string,
     ctx?: RequestContext,
@@ -319,6 +323,30 @@ export class PlaceRepository implements IPlaceRepository {
       .select()
       .from(place)
       .where(eq(place.organizationId, organizationId));
+  }
+
+  async findActiveByOrganizationId(
+    organizationId: string,
+    ctx?: RequestContext,
+  ): Promise<PlaceRecord[]> {
+    const client = this.getClient(ctx);
+    const featuredBucket = sql<number>`case
+      when ${place.featuredRank} = 0 then 1
+      else 0
+    end`;
+
+    return client
+      .select()
+      .from(place)
+      .where(
+        and(eq(place.organizationId, organizationId), eq(place.isActive, true)),
+      )
+      .orderBy(
+        featuredBucket,
+        asc(place.featuredRank),
+        asc(place.name),
+        asc(place.id),
+      );
   }
 
   async findByOrganizationIdWithVerification(

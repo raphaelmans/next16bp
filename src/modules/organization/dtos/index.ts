@@ -3,6 +3,10 @@ export {
   CreateOrganizationSchema,
 } from "./create-organization.dto";
 export {
+  type GetOrganizationLandingBySlugDTO,
+  GetOrganizationLandingBySlugSchema,
+} from "./get-organization-landing.dto";
+export {
   type UpdateOrganizationDTO,
   UpdateOrganizationSchema,
 } from "./update-organization.dto";
