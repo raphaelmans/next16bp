@@ -30,12 +30,18 @@ export async function proxy(request: NextRequest) {
     return `${toBase}${suffix}`;
   };
 
-  // Canonical redirects: keep legacy URLs working but always send users
-  // to the new /venues paths.
+  // Canonical redirects: keep legacy URLs working but send list views to
+  // /courts and detail views to /venues.
   if (isExactOrChild(path, "/owner/places")) {
     const nextPath = swapBase(path, "/owner/places", "/owner/venues");
     const url = request.nextUrl.clone();
     url.pathname = nextPath;
+    return NextResponse.redirect(url, 308);
+  }
+
+  if (path === appRoutes.places.base) {
+    const url = request.nextUrl.clone();
+    url.pathname = appRoutes.courts.base;
     return NextResponse.redirect(url, 308);
   }
 

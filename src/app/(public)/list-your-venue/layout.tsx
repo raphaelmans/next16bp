@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { env } from "@/lib/env";
 import { appRoutes } from "@/shared/lib/app-routes";
 
-const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://www.kudoscourts.com";
+const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL(appRoutes.listYourVenue.base, appUrl);
 const title = "List your venue";
 const description =

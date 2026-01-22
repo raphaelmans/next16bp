@@ -3,9 +3,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { env } from "@/lib/env";
 import { EmptyState, PlaceCard } from "@/shared/components/kudos";
 import { BentoGrid, BentoItem } from "@/shared/components/layout/bento-grid";
 import { Container } from "@/shared/components/layout/container";
@@ -28,24 +30,51 @@ const getInitials = (name: string) =>
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  const canonical = `/org/${slug}`;
 
   try {
     const caller = await createServerCaller(`/org/${slug}`);
     const result = await caller.organization.getBySlug({ slug });
-    const description = result.profile?.description ?? undefined;
+    const description =
+      result.profile?.description ??
+      "Explore our venues, see what sports we host, and book your next game in minutes.";
 
     return {
       title: result.organization.name,
       description,
       alternates: {
-        canonical: `/org/${slug}`,
+        canonical,
+      },
+      openGraph: {
+        title: result.organization.name,
+        description,
+        url: canonical,
+        siteName: "KudosCourts",
+        type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: result.organization.name,
+        description,
       },
     };
   } catch {
     return {
       title: "Organization",
       alternates: {
-        canonical: `/org/${slug}`,
+        canonical,
+      },
+      openGraph: {
+        title: "Organization",
+        description: "Discover venues and courts on KudosCourts.",
+        url: canonical,
+        siteName: "KudosCourts",
+        type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: "Organization",
+        description: "Discover venues and courts on KudosCourts.",
       },
     };
   }
@@ -53,6 +82,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function OrgSlugPage({ params }: Props) {
   const { slug } = await params;
+  const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 
   try {
     const caller = await createServerCaller(`/org/${slug}`);
@@ -62,8 +92,37 @@ export default async function OrgSlugPage({ params }: Props) {
     const topSports = landing.stats.topSports;
     const hasVenues = landing.places.length > 0;
 
+    const orgUrl = `${appUrl}/org/${landing.organization.slug}`;
+    const orgStructuredData = {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: landing.organization.name,
+      url: orgUrl,
+      ...(landing.profile?.description
+        ? { description: landing.profile.description }
+        : {}),
+      ...(landing.profile?.logoUrl ? { logo: landing.profile.logoUrl } : {}),
+      ...(landing.profile?.contactEmail || landing.profile?.contactPhone
+        ? {
+            contactPoint: {
+              "@type": "ContactPoint",
+              contactType: "customer support",
+              ...(landing.profile?.contactEmail
+                ? { email: landing.profile.contactEmail }
+                : {}),
+              ...(landing.profile?.contactPhone
+                ? { telephone: landing.profile.contactPhone }
+                : {}),
+            },
+          }
+        : {}),
+    };
+
     return (
       <PublicShell>
+        <Script id="org-structured-data" type="application/ld+json">
+          {JSON.stringify(orgStructuredData)}
+        </Script>
         <section className="relative overflow-hidden py-10 sm:py-14">
           <div className="pointer-events-none absolute inset-0 -z-10">
             <div className="absolute -top-24 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />

@@ -4,8 +4,34 @@ import {
   MapPinned,
   MessageSquareText,
 } from "lucide-react";
+import type { Metadata } from "next";
 import { ContactUsForm } from "@/features/contact";
+import { env } from "@/lib/env";
 import { Container } from "@/shared/components/layout/container";
+import { appRoutes } from "@/shared/lib/app-routes";
+
+const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+const canonicalUrl = new URL(appRoutes.contactUs.base, appUrl);
+const title = "Contact KudosCourts";
+const description =
+  "Reach the KudosCourts team for venue partnerships, support, or booking questions.";
+
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: {
+    canonical: canonicalUrl,
+  },
+  openGraph: {
+    title,
+    description,
+    url: canonicalUrl,
+  },
+  twitter: {
+    title,
+    description,
+  },
+};
 
 const HIGHLIGHTS = [
   {

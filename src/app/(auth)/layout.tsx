@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { PlayerShell } from "@/shared/components/layout/player-shell";
 import { PublicShell } from "@/shared/components/layout/public-shell";
@@ -8,6 +9,13 @@ import {
 import { appRoutes, getRouteType } from "@/shared/lib/app-routes";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function AuthLayout({
   children,

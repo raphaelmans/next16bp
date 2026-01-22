@@ -19,14 +19,14 @@ const FOOTER_LINKS = {
     { name: "Pricing", href: appRoutes.owner.pricing },
   ],
   company: [
-    { name: "About Us", href: "/about" },
+    { name: "About Us", href: appRoutes.about.base },
     { name: "Contact", href: appRoutes.contactUs.base },
-    { name: "Blog", href: "/blog" },
+    { name: "Blog", href: appRoutes.blog.base },
   ],
   legal: [
     { name: "Terms of Service", href: appRoutes.terms.base },
     { name: "Privacy Policy", href: appRoutes.privacy.base },
-    { name: "Cookie Policy", href: "/cookies" },
+    { name: "Cookie Policy", href: appRoutes.cookies.base },
   ],
 };
 

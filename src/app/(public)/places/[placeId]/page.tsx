@@ -710,9 +710,9 @@ export default function PlaceDetailPage() {
                   )}
                 </div>
                 <div className="min-w-0">
-                  <p className="font-heading text-lg font-semibold text-foreground leading-tight">
+                  <h1 className="font-heading text-lg font-semibold text-foreground leading-tight">
                     {place.name}
-                  </p>
+                  </h1>
                   <p className="text-xs text-muted-foreground">{place.city}</p>
                 </div>
                 {(isVerifiedReservable || isCurated) && (

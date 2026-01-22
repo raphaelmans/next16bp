@@ -24,6 +24,41 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://kudoscourts.com";
+const isProduction =
+  process.env.VERCEL_ENV === "production" ||
+  process.env.NODE_ENV === "production";
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${appUrl}/#organization`,
+      name: "KudosCourts",
+      url: appUrl,
+      logo: `${appUrl}/apple-icon.png`,
+      sameAs: [
+        "https://facebook.com/kudoscourts",
+        "https://instagram.com/kudoscourts",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${appUrl}/#website`,
+      url: appUrl,
+      name: "KudosCourts",
+      publisher: {
+        "@id": `${appUrl}/#organization`,
+      },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${appUrl}/courts?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
+};
+
 export const metadata: Metadata = {
   title: {
     default: "KudosCourts - Discover. Reserve. Play.",
@@ -43,9 +78,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "KudosCourts" }],
   creator: "KudosCourts",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "https://kudoscourts.com",
-  ),
+  metadataBase: new URL(appUrl),
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -63,10 +96,15 @@ export const metadata: Metadata = {
     creator: "@kudoscourts",
     site: "@kudoscourts",
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: isProduction
+    ? {
+        index: true,
+        follow: true,
+      }
+    : {
+        index: false,
+        follow: false,
+      },
 };
 
 export default function RootLayout({
@@ -90,6 +128,13 @@ export default function RootLayout({
             strategy="lazyOnload"
           />
         )}
+        <Script
+          id="kudoscourts-structured-data"
+          type="application/ld+json"
+          strategy="beforeInteractive"
+        >
+          {JSON.stringify(structuredData)}
+        </Script>
       </head>
       <body
         className={`${outfit.variable} ${sourceSans.variable} ${ibmPlexMono.variable} antialiased`}
