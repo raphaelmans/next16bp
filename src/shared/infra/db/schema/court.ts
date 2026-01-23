@@ -40,6 +40,7 @@ export const court = pgTable(
     unique("court_place_id_label_unique").on(table.placeId, table.label),
     index("idx_court_place").on(table.placeId),
     index("idx_court_sport").on(table.sportId),
+    index("idx_court_place_sport").on(table.placeId, table.sportId),
     index("idx_court_active").on(table.isActive),
   ],
 );

@@ -1,18 +1,29 @@
 import { addMinutes } from "date-fns";
 import { CourtNotFoundError } from "@/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
+import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
+import type { IOrganizationProfileRepository } from "@/modules/organization/repositories/organization-profile.repository";
 import type { IOrganizationPaymentMethodRepository } from "@/modules/organization-payment/repositories/organization-payment-method.repository";
 import type { IOrganizationReservationPolicyRepository } from "@/modules/organization-payment/repositories/organization-reservation-policy.repository";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
+import type { IPlacePhotoRepository } from "@/modules/place/repositories/place-photo.repository";
 import { PlaceNotBookableError } from "@/modules/place-verification/errors/place-verification.errors";
 import type { IPlaceVerificationRepository } from "@/modules/place-verification/repositories/place-verification.repository";
 import type { IProfileRepository } from "@/modules/profile/repositories/profile.repository";
 import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
-import type { ITimeSlotRepository } from "@/modules/time-slot/repositories/time-slot.repository";
 import type {
+  ITimeSlotRepository,
+  TimeSlotWithDetails,
+} from "@/modules/time-slot/repositories/time-slot.repository";
+import type {
+  CourtRecord,
   OrganizationPaymentMethodRecord,
+  OrganizationProfileRecord,
+  OrganizationRecord,
   OrganizationReservationPolicyRecord,
+  PlacePhotoRecord,
+  PlaceRecord,
   ReservationEventRecord,
   ReservationRecord,
   TimeSlotRecord,
@@ -80,6 +91,18 @@ export interface ReservationPaymentInfo {
   defaultMethodId: string | null;
 }
 
+export interface ReservationDetail {
+  reservation: ReservationRecord;
+  events: ReservationEventRecord[];
+  timeSlot: TimeSlotWithDetails;
+  court: CourtRecord;
+  place: PlaceRecord;
+  placePhotos: PlacePhotoRecord[];
+  reservationPolicy: OrganizationReservationPolicyRecord | null;
+  organization: OrganizationRecord | null;
+  organizationProfile: OrganizationProfileRecord | null;
+}
+
 export interface IReservationService {
   createReservation(
     userId: string,
@@ -111,6 +134,7 @@ export interface IReservationService {
     profileId: string,
     reservationId: string,
   ): Promise<ReservationPaymentInfo>;
+  getReservationDetail(reservationId: string): Promise<ReservationDetail>;
   getReservationById(reservationId: string): Promise<{
     reservation: ReservationRecord;
     events: ReservationEventRecord[];
@@ -133,9 +157,12 @@ export class ReservationService implements IReservationService {
     _profileRepository: IProfileRepository,
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
+    private placePhotoRepository: IPlacePhotoRepository,
     private placeVerificationRepository: IPlaceVerificationRepository,
     private organizationReservationPolicyRepository: IOrganizationReservationPolicyRepository,
     private organizationPaymentMethodRepository: IOrganizationPaymentMethodRepository,
+    private organizationRepository: IOrganizationRepository,
+    private organizationProfileRepository: IOrganizationProfileRepository,
     private createFreeReservationUseCase: ICreateFreeReservationUseCase,
     private createPaidReservationUseCase: ICreatePaidReservationUseCase,
     private transactionManager: TransactionManager,
@@ -645,6 +672,66 @@ export class ReservationService implements IReservationService {
         isDefault: method.isDefault,
       })),
       defaultMethodId: defaultMethod?.id ?? null,
+    };
+  }
+
+  async getReservationDetail(
+    reservationId: string,
+  ): Promise<ReservationDetail> {
+    const reservation =
+      await this.reservationRepository.findById(reservationId);
+    if (!reservation) {
+      throw new ReservationNotFoundError(reservationId);
+    }
+
+    const [events, slot] = await Promise.all([
+      this.reservationEventRepository.findByReservationId(reservationId),
+      this.timeSlotRepository.findById(reservation.timeSlotId),
+    ]);
+
+    if (!slot) {
+      throw new SlotNotFoundError(reservation.timeSlotId);
+    }
+
+    const court = await this.courtRepository.findById(slot.courtId);
+    if (!court) {
+      throw new CourtNotFoundError(slot.courtId);
+    }
+
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    const place = await this.placeRepository.findById(placeId);
+    if (!place) {
+      throw new PlaceNotFoundError(placeId);
+    }
+
+    const [placePhotos, reservationPolicy, organization, organizationProfile] =
+      await Promise.all([
+        this.placePhotoRepository.findByPlaceId(placeId),
+        place.organizationId
+          ? this.organizationReservationPolicyRepository.findByOrganizationId(
+              place.organizationId,
+            )
+          : Promise.resolve(null),
+        place.organizationId
+          ? this.organizationRepository.findById(place.organizationId)
+          : Promise.resolve(null),
+        place.organizationId
+          ? this.organizationProfileRepository.findByOrganizationId(
+              place.organizationId,
+            )
+          : Promise.resolve(null),
+      ]);
+
+    return {
+      reservation,
+      events,
+      timeSlot: slot,
+      court,
+      place,
+      placePhotos,
+      reservationPolicy,
+      organization,
+      organizationProfile,
     };
   }
 

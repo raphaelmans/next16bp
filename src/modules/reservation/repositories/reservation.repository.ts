@@ -191,8 +191,7 @@ export class ReservationRepository implements IReservationRepository {
     if (options?.upcoming) {
       const conditions = [
         eq(reservation.playerId, playerId),
-        // Only future reservations
-        // We use a subquery approach since we need timeSlot.startTime
+        sql`${timeSlot.startTime} > now()`,
       ];
 
       if (options.status) {
@@ -223,11 +222,7 @@ export class ReservationRepository implements IReservationRepository {
         .limit(pagination.limit)
         .offset(pagination.offset);
 
-      // Filter for future reservations and return just the reservation records
-      const now = new Date();
-      return results
-        .filter((r) => new Date(r.startTime) > now)
-        .map((r) => r.reservation);
+      return results.map((r) => r.reservation);
     }
 
     // Standard query without upcoming filter

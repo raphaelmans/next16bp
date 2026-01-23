@@ -1,10 +1,16 @@
 import { makeCourtRepository } from "@/modules/court/factories/court.factory";
-import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
+import {
+  makeOrganizationProfileRepository,
+  makeOrganizationRepository,
+} from "@/modules/organization/factories/organization.factory";
 import {
   makeOrganizationPaymentMethodRepository,
   makeOrganizationReservationPolicyRepository,
 } from "@/modules/organization-payment/factories/organization-payment.factory";
-import { makePlaceRepository } from "@/modules/place/factories/place.factory";
+import {
+  makePlacePhotoRepository,
+  makePlaceRepository,
+} from "@/modules/place/factories/place.factory";
 import { makePlaceVerificationRepository } from "@/modules/place-verification/factories/place-verification.factory";
 import { makeProfileRepository } from "@/modules/profile/factories/profile.factory";
 import { makeTimeSlotRepository } from "@/modules/time-slot/factories/time-slot.factory";
@@ -74,9 +80,12 @@ export function makeReservationService(): ReservationService {
       makeProfileRepository(),
       makeCourtRepository(),
       makePlaceRepository(),
+      makePlacePhotoRepository(),
       makePlaceVerificationRepository(),
       makeOrganizationReservationPolicyRepository(),
       makeOrganizationPaymentMethodRepository(),
+      makeOrganizationRepository(),
+      makeOrganizationProfileRepository(),
       makeCreateFreeReservationUseCase(),
       makeCreatePaidReservationUseCase(),
       getContainer().transactionManager,

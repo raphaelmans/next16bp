@@ -79,6 +79,12 @@ export interface ITimeSlotRepository {
     endDate: Date,
     ctx?: RequestContext,
   ): Promise<TimeSlotRecord[]>;
+  findAvailableByCourtIds(
+    courtIds: string[],
+    startDate: Date,
+    endDate: Date,
+    ctx?: RequestContext,
+  ): Promise<TimeSlotRecord[]>;
   findOverlapping(
     courtId: string,
     startTime: Date,
@@ -256,6 +262,28 @@ export class TimeSlotRepository implements ITimeSlotRepository {
       "AVAILABLE",
       ctx,
     );
+  }
+
+  async findAvailableByCourtIds(
+    courtIds: string[],
+    startDate: Date,
+    endDate: Date,
+    ctx?: RequestContext,
+  ): Promise<TimeSlotRecord[]> {
+    if (courtIds.length === 0) return [];
+    const client = this.getClient(ctx);
+    return client
+      .select()
+      .from(timeSlot)
+      .where(
+        and(
+          inArray(timeSlot.courtId, courtIds),
+          gte(timeSlot.startTime, startDate),
+          lte(timeSlot.endTime, endDate),
+          eq(timeSlot.status, "AVAILABLE"),
+        ),
+      )
+      .orderBy(timeSlot.courtId, timeSlot.startTime);
   }
 
   async findOverlapping(

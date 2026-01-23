@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import {
   type InsertPlaceVerification,
   type InsertPlaceVerificationRequest,
@@ -22,6 +22,10 @@ export interface IPlaceVerificationRepository {
     placeId: string,
     ctx?: RequestContext,
   ): Promise<PlaceVerificationRecord | null>;
+  findByPlaceIds(
+    placeIds: string[],
+    ctx?: RequestContext,
+  ): Promise<PlaceVerificationRecord[]>;
   upsert(
     data: InsertPlaceVerification,
     ctx?: RequestContext,
@@ -114,6 +118,18 @@ export class PlaceVerificationRepository
       .limit(1);
 
     return result[0] ?? null;
+  }
+
+  async findByPlaceIds(
+    placeIds: string[],
+    ctx?: RequestContext,
+  ): Promise<PlaceVerificationRecord[]> {
+    if (placeIds.length === 0) return [];
+    const client = this.getClient(ctx);
+    return client
+      .select()
+      .from(placeVerification)
+      .where(inArray(placeVerification.placeId, placeIds));
   }
 
   async upsert(

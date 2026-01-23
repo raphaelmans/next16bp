@@ -5,6 +5,7 @@ import { publicProcedure, router } from "@/shared/infra/trpc/trpc";
 import {
   GetAvailabilityForCourtRangeSchema,
   GetAvailabilityForCourtSchema,
+  GetAvailabilityForCourtsSchema,
   GetAvailabilityForPlaceSportRangeSchema,
   GetAvailabilityForPlaceSportSchema,
 } from "./dtos";
@@ -32,6 +33,16 @@ export const availabilityRouter = router({
       try {
         const service = makeAvailabilityService();
         return await service.getForCourt(input);
+      } catch (error) {
+        handleAvailabilityError(error);
+      }
+    }),
+  getForCourts: publicProcedure
+    .input(GetAvailabilityForCourtsSchema)
+    .query(async ({ input }) => {
+      try {
+        const service = makeAvailabilityService();
+        return await service.getForCourts(input);
       } catch (error) {
         handleAvailabilityError(error);
       }

@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import {
   type CourtRecord,
   court,
@@ -16,6 +16,7 @@ export interface CourtWithSport {
 
 export interface ICourtRepository {
   findById(id: string, ctx?: RequestContext): Promise<CourtRecord | null>;
+  findByIds(ids: string[], ctx?: RequestContext): Promise<CourtRecord[]>;
   findByIdForUpdate(
     id: string,
     ctx: RequestContext,
@@ -61,6 +62,12 @@ export class CourtRepository implements ICourtRepository {
       .limit(1);
 
     return result[0] ?? null;
+  }
+
+  async findByIds(ids: string[], ctx?: RequestContext): Promise<CourtRecord[]> {
+    if (ids.length === 0) return [];
+    const client = this.getClient(ctx);
+    return client.select().from(court).where(inArray(court.id, ids));
   }
 
   async findByIdForUpdate(

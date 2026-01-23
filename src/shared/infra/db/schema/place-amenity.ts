@@ -1,4 +1,11 @@
-import { pgTable, timestamp, unique, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  index,
+  pgTable,
+  timestamp,
+  unique,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { place } from "./place";
@@ -21,6 +28,7 @@ export const placeAmenity = pgTable(
   },
   (table) => [
     unique("place_amenity_place_id_name_unique").on(table.placeId, table.name),
+    index("idx_place_amenity_name_place").on(table.name, table.placeId),
   ],
 );
 

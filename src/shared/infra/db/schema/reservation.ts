@@ -47,6 +47,12 @@ export const reservation = pgTable(
   (table) => [
     index("idx_reservation_player").on(table.playerId),
     index("idx_reservation_status").on(table.status),
+    index("idx_reservation_time_slot").on(table.timeSlotId),
+    index("idx_reservation_player_status_created").on(
+      table.playerId,
+      table.status,
+      table.createdAt,
+    ),
     index("idx_reservation_expires")
       .on(table.expiresAt)
       .where(

@@ -51,16 +51,11 @@ export default function PaymentPage() {
   } = form;
 
   // Fetch reservation details
-  const { data: reservationData, isLoading } =
-    trpc.reservation.getById.useQuery({ reservationId });
+  const { data: reservationDetail, isLoading } =
+    trpc.reservation.getDetail.useQuery({ reservationId });
 
-  const reservation = reservationData?.reservation;
-
-  // Fetch slot details for display
-  const { data: slot } = trpc.timeSlot.getById.useQuery(
-    { slotId: reservation?.timeSlotId || "" },
-    { enabled: !!reservation?.timeSlotId },
-  );
+  const reservation = reservationDetail?.reservation;
+  const slot = reservationDetail?.timeSlot;
 
   const { data: paymentInfo } = trpc.reservation.getPaymentInfo.useQuery(
     { reservationId },

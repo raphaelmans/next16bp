@@ -544,20 +544,20 @@ export default function CourtSchedulePage() {
 
   const cheapestAvailability = cheapestAvailabilityQuery.data ?? [];
 
-  const courtAvailabilityQueries = trpc.useQueries((t) => {
-    if (isMonthView) return [];
-    if (modeParam !== "court") return [];
-    if (!dayViewDateIso) return [];
-    if (!courtsForSport.length) return [];
-
-    return courtsForSport.map((court) =>
-      t.availability.getForCourt({
-        courtId: court.id,
-        date: dayViewDateIso,
-        durationMinutes,
-      }),
-    );
-  });
+  const courtAvailabilityQuery = trpc.availability.getForCourts.useQuery(
+    {
+      courtIds: courtsForSport.map((court) => court.id),
+      date: dayViewDateIso ?? "",
+      durationMinutes,
+    },
+    {
+      enabled:
+        !isMonthView &&
+        modeParam === "court" &&
+        !!dayViewDateIso &&
+        courtsForSport.length > 0,
+    },
+  );
 
   const monthAvailabilityQuery =
     trpc.availability.getForPlaceSportRange.useQuery(
@@ -618,9 +618,21 @@ export default function CourtSchedulePage() {
     monthAvailabilityQuery.data,
   ]);
 
-  const isLoadingCourtAvailability = courtAvailabilityQueries.some(
-    (query) => query.isLoading,
-  );
+  const isLoadingCourtAvailability = courtAvailabilityQuery.isLoading;
+
+  const courtAvailabilityById = React.useMemo(() => {
+    const grouped: Record<string, CourtAvailabilityOption[]> = {};
+    for (const option of courtAvailabilityQuery.data ?? []) {
+      if (!grouped[option.courtId]) {
+        grouped[option.courtId] = [];
+      }
+      grouped[option.courtId]?.push(option);
+    }
+    for (const options of Object.values(grouped)) {
+      options.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    }
+    return grouped;
+  }, [courtAvailabilityQuery.data]);
 
   const selectedOption: CourtAvailabilityOption | undefined =
     React.useMemo(() => {
@@ -640,21 +652,11 @@ export default function CourtSchedulePage() {
 
       if (!selectedCourtIdParam) return undefined;
 
-      const courtIndex = courtsForSport.findIndex(
-        (court) => court.id === selectedCourtIdParam,
-      );
-      if (courtIndex < 0) return undefined;
-
-      const options =
-        (courtAvailabilityQueries[courtIndex]?.data as
-          | CourtAvailabilityOption[]
-          | undefined) ?? [];
-
+      const options = courtAvailabilityById[selectedCourtIdParam] ?? [];
       return options.find((option) => option.startTime === startTimeParam);
     }, [
       cheapestAvailability,
-      courtAvailabilityQueries,
-      courtsForSport,
+      courtAvailabilityById,
       isMonthView,
       modeParam,
       monthAvailabilityOptions,
@@ -1197,11 +1199,8 @@ export default function CourtSchedulePage() {
               </p>
             ) : (
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {courtsForSport.map((court, index) => {
-                  const query = courtAvailabilityQueries[index];
-                  const options =
-                    (query?.data as CourtAvailabilityOption[] | undefined) ??
-                    [];
+                {courtsForSport.map((court) => {
+                  const options = courtAvailabilityById[court.id] ?? [];
 
                   const slots: TimeSlot[] = options.map((option) => ({
                     id: buildAvailabilityId(
@@ -1265,7 +1264,7 @@ export default function CourtSchedulePage() {
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-3">
-                        {query?.isLoading ? (
+                        {courtAvailabilityQuery.isLoading ? (
                           <TimeSlotPickerSkeleton count={8} />
                         ) : slots.length > 0 ? (
                           <TimeSlotPicker

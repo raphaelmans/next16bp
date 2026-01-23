@@ -21,6 +21,7 @@ import {
 import type {
   GetAvailabilityForCourtDTO,
   GetAvailabilityForCourtRangeDTO,
+  GetAvailabilityForCourtsDTO,
   GetAvailabilityForPlaceSportDTO,
   GetAvailabilityForPlaceSportRangeDTO,
 } from "../dtos";
@@ -36,6 +37,9 @@ export interface AvailabilityOption {
 
 export interface IAvailabilityService {
   getForCourt(data: GetAvailabilityForCourtDTO): Promise<AvailabilityOption[]>;
+  getForCourts(
+    data: GetAvailabilityForCourtsDTO,
+  ): Promise<AvailabilityOption[]>;
   getForPlaceSport(
     data: GetAvailabilityForPlaceSportDTO,
   ): Promise<AvailabilityOption[]>;
@@ -95,6 +99,93 @@ export class AvailabilityService implements IAvailabilityService {
     );
   }
 
+  async getForCourts(
+    data: GetAvailabilityForCourtsDTO,
+  ): Promise<AvailabilityOption[]> {
+    if (data.durationMinutes <= 0 || data.courtIds.length === 0) {
+      return [];
+    }
+
+    const courts = await this.courtRepository.findByIds(data.courtIds);
+    const eligibleCourts = courts.filter(
+      (court) => Boolean(court.placeId) && court.isActive,
+    );
+    if (eligibleCourts.length === 0) {
+      return [];
+    }
+
+    const placeIds = Array.from(
+      new Set(
+        eligibleCourts
+          .map((court) => court.placeId)
+          .filter((placeId): placeId is string => Boolean(placeId)),
+      ),
+    );
+
+    const [places, verifications] = await Promise.all([
+      this.placeRepository.findByIds(placeIds),
+      this.placeVerificationRepository.findByPlaceIds(placeIds),
+    ]);
+
+    const placeById = new Map(places.map((place) => [place.id, place]));
+    const verificationByPlaceId = new Map(
+      verifications.map((verification) => [verification.placeId, verification]),
+    );
+
+    const courtsByPlace = new Map<string, CourtRecord[]>();
+    for (const court of eligibleCourts) {
+      const placeId = court.placeId;
+      if (!placeId) continue;
+      const place = placeById.get(placeId);
+      if (!place || !place.isActive || place.placeType !== "RESERVABLE") {
+        continue;
+      }
+      const verification = verificationByPlaceId.get(placeId) ?? null;
+      if (!this.isPlaceBookable(verification)) {
+        continue;
+      }
+      const entry = courtsByPlace.get(placeId) ?? [];
+      entry.push(court);
+      courtsByPlace.set(placeId, entry);
+    }
+
+    if (courtsByPlace.size === 0) {
+      return [];
+    }
+
+    const slotGroups = await Promise.all(
+      Array.from(courtsByPlace.entries()).map(async ([placeId, courts]) => {
+        const place = placeById.get(placeId);
+        if (!place) {
+          return { courts, slots: [] as TimeSlotRecord[] };
+        }
+        const { start, end } = getZonedDayRangeForInstant(
+          data.date,
+          place.timeZone,
+        );
+        const slots = await this.timeSlotRepository.findAvailableByCourtIds(
+          courts.map((court) => court.id),
+          start,
+          end,
+        );
+        return { courts, slots };
+      }),
+    );
+
+    const options: AvailabilityOption[] = [];
+    for (const { courts, slots } of slotGroups) {
+      const slotsByCourtId = this.groupSlotsByCourtId(slots);
+      for (const court of courts) {
+        const courtSlots = slotsByCourtId.get(court.id) ?? [];
+        options.push(
+          ...this.buildOptionsForCourt(court, courtSlots, data.durationMinutes),
+        );
+      }
+    }
+
+    return options;
+  }
+
   async getForPlaceSport(
     data: GetAvailabilityForPlaceSportDTO,
   ): Promise<AvailabilityOption[]> {
@@ -120,14 +211,28 @@ export class AvailabilityService implements IAvailabilityService {
     );
 
     const activeCourts = courts.filter((court) => court.isActive);
+    if (activeCourts.length === 0) {
+      return [];
+    }
     const optionsByStart = new Map<number, AvailabilityOption>();
 
+    const { start, end } = getZonedDayRangeForInstant(
+      data.date,
+      place.timeZone,
+    );
+    const slots = await this.timeSlotRepository.findAvailableByCourtIds(
+      activeCourts.map((court) => court.id),
+      start,
+      end,
+    );
+    const slotsByCourtId = this.groupSlotsByCourtId(slots);
+
     for (const court of activeCourts) {
-      const availability = await this.getAvailabilityForCourt(
+      const courtSlots = slotsByCourtId.get(court.id) ?? [];
+      const availability = this.buildOptionsForCourt(
         court,
-        data.date,
+        courtSlots,
         data.durationMinutes,
-        place.timeZone,
       );
 
       for (const option of availability) {
@@ -214,15 +319,25 @@ export class AvailabilityService implements IAvailabilityService {
     );
 
     const activeCourts = courts.filter((court) => court.isActive);
+    if (activeCourts.length === 0) {
+      return [];
+    }
     const optionsByStart = new Map<number, AvailabilityOption>();
     const rangeStart = new Date(data.startDate);
     const rangeEnd = new Date(data.endDate);
 
+    const slots = await this.timeSlotRepository.findAvailableByCourtIds(
+      activeCourts.map((court) => court.id),
+      rangeStart,
+      rangeEnd,
+    );
+    const slotsByCourtId = this.groupSlotsByCourtId(slots);
+
     for (const court of activeCourts) {
-      const availability = await this.getAvailabilityRangeForCourt(
+      const courtSlots = slotsByCourtId.get(court.id) ?? [];
+      const availability = this.buildOptionsForCourtRange(
         court,
-        rangeStart,
-        rangeEnd,
+        courtSlots,
         data.durationMinutes,
         place.timeZone,
       );
@@ -292,30 +407,12 @@ export class AvailabilityService implements IAvailabilityService {
       new Date(endDate),
     );
 
-    if (slots.length === 0) {
-      return [];
-    }
-
-    const slotsByDay = new Map<string, TimeSlotRecord[]>();
-
-    for (const slot of slots) {
-      const dayKey = getZonedDayKey(slot.startTime, timeZone);
-      const existing = slotsByDay.get(dayKey);
-      if (existing) {
-        existing.push(slot);
-      } else {
-        slotsByDay.set(dayKey, [slot]);
-      }
-    }
-
-    const options: AvailabilityOption[] = [];
-    for (const daySlots of slotsByDay.values()) {
-      options.push(
-        ...this.buildOptionsForCourt(court, daySlots, durationMinutes),
-      );
-    }
-
-    return options.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    return this.buildOptionsForCourtRange(
+      court,
+      slots,
+      durationMinutes,
+      timeZone,
+    );
   }
 
   private buildOptionsForCourt(
@@ -356,6 +453,51 @@ export class AvailabilityService implements IAvailabilityService {
     }
 
     return options;
+  }
+
+  private buildOptionsForCourtRange(
+    court: CourtRecord,
+    slots: TimeSlotRecord[],
+    durationMinutes: number,
+    timeZone: string,
+  ): AvailabilityOption[] {
+    if (slots.length === 0) return [];
+
+    const slotsByDay = new Map<string, TimeSlotRecord[]>();
+
+    for (const slot of slots) {
+      const dayKey = getZonedDayKey(slot.startTime, timeZone);
+      const existing = slotsByDay.get(dayKey);
+      if (existing) {
+        existing.push(slot);
+      } else {
+        slotsByDay.set(dayKey, [slot]);
+      }
+    }
+
+    const options: AvailabilityOption[] = [];
+    for (const daySlots of slotsByDay.values()) {
+      options.push(
+        ...this.buildOptionsForCourt(court, daySlots, durationMinutes),
+      );
+    }
+
+    return options.sort((a, b) => a.startTime.localeCompare(b.startTime));
+  }
+
+  private groupSlotsByCourtId(
+    slots: TimeSlotRecord[],
+  ): Map<string, TimeSlotRecord[]> {
+    const grouped = new Map<string, TimeSlotRecord[]>();
+    for (const slot of slots) {
+      const existing = grouped.get(slot.courtId);
+      if (existing) {
+        existing.push(slot);
+      } else {
+        grouped.set(slot.courtId, [slot]);
+      }
+    }
+    return grouped;
   }
 
   private pickCheapestOption(

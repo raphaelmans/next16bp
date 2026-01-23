@@ -56,6 +56,16 @@ export const place = pgTable(
     index("idx_place_location").on(table.latitude, table.longitude),
     index("idx_place_ext_g_place_id").on(table.extGPlaceId),
     index("idx_place_city").on(table.city),
+    index("idx_place_name_trgm").using("gin", sql`${table.name} gin_trgm_ops`),
+    index("idx_place_address_trgm").using(
+      "gin",
+      sql`${table.address} gin_trgm_ops`,
+    ),
+    index("idx_place_city_trgm").using("gin", sql`${table.city} gin_trgm_ops`),
+    index("idx_place_province_trgm").using(
+      "gin",
+      sql`${table.province} gin_trgm_ops`,
+    ),
     index("idx_place_type").on(table.placeType),
     uniqueIndex("uq_place_slug").on(table.slug),
     index("idx_place_org")

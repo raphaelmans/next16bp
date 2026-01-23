@@ -202,6 +202,22 @@ export const reservationRouter = router({
     }),
 
   /**
+   * Get reservation details with related entities
+   */
+  getDetail: protectedProcedure
+    .input(z.object({ reservationId: z.string().uuid() }))
+    .query(async ({ input }) => {
+      try {
+        const reservationService = makeReservationService();
+        return await reservationService.getReservationDetail(
+          input.reservationId,
+        );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
+  /**
    * Get payment info for a reservation (player only)
    */
   getPaymentInfo: protectedProcedure

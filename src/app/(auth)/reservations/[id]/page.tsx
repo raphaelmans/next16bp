@@ -13,11 +13,6 @@ import { ReservationActionsCard } from "@/features/reservation/components/reserv
 import { ReservationExpired } from "@/features/reservation/components/reservation-expired";
 import { StatusBanner } from "@/features/reservation/components/status-banner";
 import { Container } from "@/shared/components/layout";
-import type {
-  OrganizationReservationPolicyRecord,
-  ReservationEventRecord,
-  ReservationRecord,
-} from "@/shared/infra/db/schema";
 import { appRoutes } from "@/shared/lib/app-routes";
 import {
   formatCurrency,
@@ -44,92 +39,32 @@ export default function ReservationDetailPage() {
   const utils = trpc.useUtils();
 
   const {
-    data: reservationData,
+    data: reservationDetail,
     isLoading: isLoadingReservation,
     isFetching: isFetchingReservation,
-  } = trpc.reservation.getById.useQuery({ reservationId: id });
+  } = trpc.reservation.getDetail.useQuery({ reservationId: id });
 
-  const parsedReservationData = reservationData as
-    | { reservation: ReservationRecord; events: ReservationEventRecord[] }
-    | ReservationRecord
-    | undefined;
-  const reservation = parsedReservationData
-    ? "reservation" in parsedReservationData
-      ? parsedReservationData.reservation
-      : parsedReservationData
-    : undefined;
-  const events: ReservationEvent[] =
-    parsedReservationData && "events" in parsedReservationData
-      ? parsedReservationData.events
-      : [];
-
-  const { data: timeSlot, isLoading: isLoadingSlot } =
-    trpc.timeSlot.getById.useQuery(
-      { slotId: reservation?.timeSlotId || "" },
-      { enabled: !!reservation?.timeSlotId },
-    );
-
-  const { data: courtData, isLoading: isLoadingCourt } =
-    trpc.court.getById.useQuery(
-      { courtId: timeSlot?.courtId || "" },
-      { enabled: !!timeSlot?.courtId },
-    );
-
-  const { data: placeData, isLoading: isLoadingPlace } =
-    trpc.place.getById.useQuery(
-      { placeId: courtData?.court.placeId || "" },
-      { enabled: !!courtData?.court.placeId },
-    );
-
-  const { data: organizationData, isLoading: isLoadingOrganization } =
-    trpc.organization.get.useQuery(
-      { id: placeData?.place.organizationId || "" },
-      { enabled: !!placeData?.place.organizationId },
-    );
+  const reservation = reservationDetail?.reservation;
+  const events: ReservationEvent[] = reservationDetail?.events ?? [];
+  const timeSlot = reservationDetail?.timeSlot;
+  const courtRecord = reservationDetail?.court;
+  const placeRecord = reservationDetail?.place;
+  const placePhotos = reservationDetail?.placePhotos ?? [];
+  const reservationPolicy = reservationDetail?.reservationPolicy ?? null;
+  const organizationRecord = reservationDetail?.organization ?? null;
+  const organizationProfile = reservationDetail?.organizationProfile ?? null;
 
   const handleRefresh = async () => {
     if (!id) return;
     setIsRefreshing(true);
     try {
-      const requests = [
-        utils.reservation.getById.invalidate({ reservationId: id }),
-      ];
-      if (reservation?.timeSlotId) {
-        requests.push(
-          utils.timeSlot.getById.invalidate({
-            slotId: reservation.timeSlotId,
-          }),
-        );
-      }
-      if (timeSlot?.courtId) {
-        requests.push(
-          utils.court.getById.invalidate({ courtId: timeSlot.courtId }),
-        );
-      }
-      if (courtData?.court.placeId) {
-        requests.push(
-          utils.place.getById.invalidate({ placeId: courtData.court.placeId }),
-        );
-      }
-      if (placeData?.place.organizationId) {
-        requests.push(
-          utils.organization.get.invalidate({
-            id: placeData.place.organizationId,
-          }),
-        );
-      }
-      await Promise.all(requests);
+      await utils.reservation.getDetail.invalidate({ reservationId: id });
     } finally {
       setIsRefreshing(false);
     }
   };
 
-  const isLoading =
-    isLoadingReservation ||
-    isLoadingSlot ||
-    isLoadingCourt ||
-    isLoadingPlace ||
-    isLoadingOrganization;
+  const isLoading = isLoadingReservation;
 
   if (isLoading) {
     return (
@@ -141,7 +76,7 @@ export default function ReservationDetailPage() {
     );
   }
 
-  if (!reservation || !timeSlot || !courtData || !placeData) {
+  if (!reservation || !timeSlot || !courtRecord || !placeRecord) {
     return (
       <Container className="py-6">
         <div className="text-center">
@@ -157,36 +92,34 @@ export default function ReservationDetailPage() {
     );
   }
 
-  const courtName = `${placeData.place.name} - ${courtData.court.label}`;
+  const courtName = `${placeRecord.name} - ${courtRecord.label}`;
   const court = {
-    id: courtData.court.id,
+    id: courtRecord.id,
     name: courtName,
-    address: placeData.place.address,
-    city: placeData.place.city,
-    coverImageUrl: placeData.photos[0]?.url,
-    latitude: placeData.place.latitude
-      ? Number.parseFloat(placeData.place.latitude)
+    address: placeRecord.address,
+    city: placeRecord.city,
+    coverImageUrl: placePhotos[0]?.url,
+    latitude: placeRecord.latitude
+      ? Number.parseFloat(placeRecord.latitude)
       : undefined,
-    longitude: placeData.place.longitude
-      ? Number.parseFloat(placeData.place.longitude)
+    longitude: placeRecord.longitude
+      ? Number.parseFloat(placeRecord.longitude)
       : undefined,
   };
 
-  const organizationForDisplay = organizationData
+  const organizationForDisplay = organizationRecord
     ? {
-        id: organizationData.organization.id,
-        name: organizationData.organization.name,
+        id: organizationRecord.id,
+        name: organizationRecord.name,
       }
     : undefined;
 
-  const reservationPolicy =
-    placeData.place.placeType === "RESERVABLE"
-      ? (placeData.reservationPolicy as OrganizationReservationPolicyRecord | null)
-      : null;
+  const effectiveReservationPolicy =
+    placeRecord.placeType === "RESERVABLE" ? reservationPolicy : null;
 
   const organization = {
-    contactEmail: organizationData?.profile?.contactEmail ?? undefined,
-    contactPhone: organizationData?.profile?.contactPhone ?? undefined,
+    contactEmail: organizationProfile?.contactEmail ?? undefined,
+    contactPhone: organizationProfile?.contactPhone ?? undefined,
   };
 
   const effectivePriceCents = timeSlot.priceCents ?? 0;
@@ -202,7 +135,7 @@ export default function ReservationDetailPage() {
   };
 
   const cancellationCutoffMinutes =
-    reservationPolicy?.cancellationCutoffMinutes ?? 0;
+    effectiveReservationPolicy?.cancellationCutoffMinutes ?? 0;
   const cancellationCutoffTime = new Date(transformedTimeSlot.startTime);
   cancellationCutoffTime.setMinutes(
     cancellationCutoffTime.getMinutes() - cancellationCutoffMinutes,

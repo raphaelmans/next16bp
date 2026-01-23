@@ -16,6 +16,15 @@ export const GetAvailabilityForCourtSchema = z.object({
   durationMinutes: DurationMinutesSchema,
 });
 
+export const GetAvailabilityForCourtsSchema = z.object({
+  courtIds: z
+    .array(z.string().uuid())
+    .min(1, "At least one court is required")
+    .max(50, "Too many courts requested"),
+  date: z.string().datetime(),
+  durationMinutes: DurationMinutesSchema,
+});
+
 export const GetAvailabilityForPlaceSportSchema = z.object({
   placeId: z.string().uuid(),
   sportId: z.string().uuid(),
@@ -61,6 +70,9 @@ export const GetAvailabilityForPlaceSportRangeSchema =
 
 export type GetAvailabilityForCourtDTO = z.infer<
   typeof GetAvailabilityForCourtSchema
+>;
+export type GetAvailabilityForCourtsDTO = z.infer<
+  typeof GetAvailabilityForCourtsSchema
 >;
 export type GetAvailabilityForPlaceSportDTO = z.infer<
   typeof GetAvailabilityForPlaceSportSchema
