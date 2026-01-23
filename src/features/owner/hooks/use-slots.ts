@@ -168,6 +168,9 @@ export interface BulkSlotResult {
   slotsCreated: number;
   totalGenerated: number;
   wasTrimmed: boolean;
+  attemptedCount: number;
+  skippedPricingCount: number;
+  skippedConflictCount: number;
 }
 
 /**
@@ -283,9 +286,12 @@ export function useCreateBulkSlots(courtId: string) {
         onSuccess: (result) => {
           options?.onSuccess?.({
             success: true,
-            slotsCreated: result.length,
+            slotsCreated: result.createdCount,
             totalGenerated,
             wasTrimmed,
+            attemptedCount: result.attemptedCount,
+            skippedPricingCount: result.skippedPricingCount,
+            skippedConflictCount: result.skippedConflictCount,
           });
         },
         onError: (error) => {
@@ -307,9 +313,12 @@ export function useCreateBulkSlots(courtId: string) {
 
     return {
       success: true,
-      slotsCreated: result.length,
+      slotsCreated: result.createdCount,
       totalGenerated,
       wasTrimmed,
+      attemptedCount: result.attemptedCount,
+      skippedPricingCount: result.skippedPricingCount,
+      skippedConflictCount: result.skippedConflictCount,
     } satisfies BulkSlotResult;
   };
 

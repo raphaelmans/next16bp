@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { after } from "next/server";
 import { z } from "zod";
 import {
   CourtNotFoundError,
@@ -143,7 +144,24 @@ export const timeSlotRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makeTimeSlotService();
-        return await service.createBulkSlots(ctx.userId, input);
+        const result = await service.createBulkSlots(ctx.userId, input);
+
+        after(() => {
+          ctx.log.info(
+            {
+              event: "time_slots.bulk_created_after",
+              courtId: input.courtId,
+              attemptedCount: result.attemptedCount,
+              createdCount: result.createdCount,
+              skippedPricingCount: result.skippedPricingCount,
+              skippedConflictCount: result.skippedConflictCount,
+              userId: ctx.userId,
+            },
+            "Bulk time slots created (after)",
+          );
+        });
+
+        return result;
       } catch (error) {
         handleTimeSlotError(error);
       }

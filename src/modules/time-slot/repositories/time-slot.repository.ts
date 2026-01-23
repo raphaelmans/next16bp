@@ -97,6 +97,10 @@ export interface ITimeSlotRepository {
     data: InsertTimeSlot[],
     ctx?: RequestContext,
   ): Promise<TimeSlotRecord[]>;
+  createManyBestEffort(
+    data: InsertTimeSlot[],
+    ctx?: RequestContext,
+  ): Promise<TimeSlotRecord[]>;
   update(
     id: string,
     data: Partial<InsertTimeSlot>,
@@ -327,6 +331,20 @@ export class TimeSlotRepository implements ITimeSlotRepository {
     const client = this.getClient(ctx);
     if (data.length === 0) return [];
     const result = await client.insert(timeSlot).values(data).returning();
+    return result;
+  }
+
+  async createManyBestEffort(
+    data: InsertTimeSlot[],
+    ctx?: RequestContext,
+  ): Promise<TimeSlotRecord[]> {
+    const client = this.getClient(ctx);
+    if (data.length === 0) return [];
+    const result = await client
+      .insert(timeSlot)
+      .values(data)
+      .onConflictDoNothing()
+      .returning();
     return result;
   }
 

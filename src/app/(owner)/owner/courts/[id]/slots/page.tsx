@@ -216,9 +216,39 @@ export default function ManageSlotsPage() {
   ) => {
     createBulkSlots.mutate(data, {
       onSuccess: (result) => {
-        const message = result.wasTrimmed
-          ? `Created ${result.slotsCreated} slots (trimmed from ${result.totalGenerated})`
-          : `Created ${result.slotsCreated} slots successfully`;
+        if (result.slotsCreated === 0) {
+          toast.error(
+            "No slots were created. Check pricing rules or existing conflicts.",
+          );
+          return;
+        }
+
+        const details: string[] = [];
+        if (result.wasTrimmed) {
+          details.push(`trimmed from ${result.totalGenerated}`);
+        }
+
+        const skippedTotal =
+          result.skippedPricingCount + result.skippedConflictCount;
+        if (skippedTotal > 0) {
+          const skippedParts: string[] = [];
+          if (result.skippedPricingCount > 0) {
+            skippedParts.push(`${result.skippedPricingCount} pricing`);
+          }
+          if (result.skippedConflictCount > 0) {
+            skippedParts.push(`${result.skippedConflictCount} conflicts`);
+          }
+          details.push(
+            `skipped ${skippedTotal}${
+              skippedParts.length > 0 ? ` (${skippedParts.join(", ")})` : ""
+            }`,
+          );
+        }
+
+        const message =
+          details.length > 0
+            ? `Created ${result.slotsCreated} slots; ${details.join("; ")}.`
+            : `Created ${result.slotsCreated} slots successfully.`;
         toast.success(message);
         setBulkModalOpen(false);
       },

@@ -7,7 +7,12 @@ import type { ICourtRepository } from "@/modules/court/repositories/court.reposi
 import type { ICourtRateRuleRepository } from "@/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
 import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
-import type { TimeSlotRecord } from "@/shared/infra/db/schema";
+import type {
+  CourtRateRuleRecord,
+  CourtRecord,
+  PlaceRecord,
+  TimeSlotRecord,
+} from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
@@ -46,7 +51,7 @@ export interface ITimeSlotService {
   createBulkSlots(
     userId: string,
     data: CreateBulkTimeSlotsDTO,
-  ): Promise<TimeSlotRecord[]>;
+  ): Promise<BulkSlotCreationResult>;
   blockSlot(userId: string, slotId: string): Promise<TimeSlotRecord>;
   unblockSlot(userId: string, slotId: string): Promise<TimeSlotRecord>;
   updateSlotPrice(
@@ -55,6 +60,13 @@ export interface ITimeSlotService {
   ): Promise<TimeSlotRecord>;
   deleteSlot(userId: string, slotId: string): Promise<void>;
 }
+
+export type BulkSlotCreationResult = {
+  createdCount: number;
+  attemptedCount: number;
+  skippedPricingCount: number;
+  skippedConflictCount: number;
+};
 
 export class TimeSlotService implements ITimeSlotService {
   constructor(
@@ -81,6 +93,14 @@ export class TimeSlotService implements ITimeSlotService {
     courtId: string,
     ctx?: RequestContext,
   ): Promise<void> {
+    await this.getOwnedCourtAndPlace(userId, courtId, ctx);
+  }
+
+  private async getOwnedCourtAndPlace(
+    userId: string,
+    courtId: string,
+    ctx?: RequestContext,
+  ): Promise<{ court: CourtRecord; place: PlaceRecord }> {
     const court = await this.courtRepository.findById(courtId, ctx);
     if (!court) {
       throw new CourtNotFoundError(courtId);
@@ -99,6 +119,8 @@ export class TimeSlotService implements ITimeSlotService {
     if (!org || org.ownerUserId !== userId) {
       throw new NotCourtOwnerError();
     }
+
+    return { court, place };
   }
 
   /**
@@ -155,6 +177,49 @@ export class TimeSlotService implements ITimeSlotService {
 
     if (!rule) {
       throw new SlotPricingUnavailableError(courtId, startTime, endTime);
+    }
+
+    const durationMinutes = differenceInMinutes(endTime, startTime);
+    const multiplier = durationMinutes / 60;
+
+    return {
+      priceCents: rule.hourlyRateCents * multiplier,
+      currency: rule.currency,
+    };
+  }
+
+  private resolveSlotPricingFromRules(options: {
+    startTime: Date;
+    endTime: Date;
+    priceCents?: number | null;
+    currency?: string | null;
+    rateRules: CourtRateRuleRecord[];
+    timeZone?: string | null;
+  }): { priceCents: number | null; currency: string | null } | null {
+    const { startTime, endTime, priceCents, currency, rateRules, timeZone } =
+      options;
+
+    if (priceCents === null && currency === null) {
+      return { priceCents: null, currency: null };
+    }
+
+    if (priceCents !== undefined || currency !== undefined) {
+      return { priceCents: priceCents ?? null, currency: currency ?? null };
+    }
+
+    const { dayOfWeek, minuteOfDay } = getZonedWeekdayMinuteOfDay(
+      startTime,
+      timeZone ?? undefined,
+    );
+    const rule = rateRules.find(
+      (candidate) =>
+        candidate.dayOfWeek === dayOfWeek &&
+        candidate.startMinute <= minuteOfDay &&
+        candidate.endMinute >= minuteOfDay + 1,
+    );
+
+    if (!rule) {
+      return null;
     }
 
     const durationMinutes = differenceInMinutes(endTime, startTime);
@@ -260,86 +325,84 @@ export class TimeSlotService implements ITimeSlotService {
   async createBulkSlots(
     userId: string,
     data: CreateBulkTimeSlotsDTO,
-  ): Promise<TimeSlotRecord[]> {
-    return this.transactionManager.run(async (tx) => {
-      const ctx: RequestContext = { tx };
+  ): Promise<BulkSlotCreationResult> {
+    const { court, place } = await this.getOwnedCourtAndPlace(
+      userId,
+      data.courtId,
+    );
 
-      await this.verifyCourtOwnership(userId, data.courtId, ctx);
+    const rateRules = await this.courtRateRuleRepository.findByCourtId(
+      data.courtId,
+    );
 
-      // Validate all slots and check for overlaps
-      const slotsToCreate = [];
-      for (const slotData of data.slots) {
-        const startTime = new Date(slotData.startTime);
-        const endTime = new Date(slotData.endTime);
+    const slotsToCreate: {
+      courtId: string;
+      startTime: Date;
+      endTime: Date;
+      priceCents: number | null;
+      currency: string | null;
+    }[] = [];
+    let skippedPricingCount = 0;
 
-        // Check for overlapping with existing slots
-        const overlapping = await this.timeSlotRepository.findOverlapping(
-          data.courtId,
-          startTime,
-          endTime,
-          undefined,
-          ctx,
-        );
+    for (const slotData of data.slots) {
+      const startTime = new Date(slotData.startTime);
+      const endTime = new Date(slotData.endTime);
 
-        if (overlapping.length > 0) {
-          throw new SlotOverlapError(data.courtId, startTime, endTime);
-        }
+      const pricing = this.resolveSlotPricingFromRules({
+        startTime,
+        endTime,
+        priceCents: slotData.priceCents,
+        currency: slotData.currency,
+        rateRules,
+        timeZone: place.timeZone,
+      });
 
-        const pricing = await this.resolveSlotPricing({
-          courtId: data.courtId,
-          startTime,
-          endTime,
-          priceCents: slotData.priceCents,
-          currency: slotData.currency,
-          ctx,
-        });
-
-        slotsToCreate.push({
-          courtId: data.courtId,
-          startTime,
-          endTime,
-          priceCents: pricing.priceCents,
-          currency: pricing.currency,
-        });
+      if (!pricing) {
+        skippedPricingCount += 1;
+        continue;
       }
 
-      // Also check for overlaps among the new slots themselves
-      for (let i = 0; i < slotsToCreate.length; i++) {
-        for (let j = i + 1; j < slotsToCreate.length; j++) {
-          const slotA = slotsToCreate[i];
-          const slotB = slotsToCreate[j];
+      slotsToCreate.push({
+        courtId: court.id,
+        startTime,
+        endTime,
+        priceCents: pricing.priceCents,
+        currency: pricing.currency,
+      });
+    }
 
-          // Check if A and B overlap
-          if (
-            slotA.startTime < slotB.endTime &&
-            slotA.endTime > slotB.startTime
-          ) {
-            throw new SlotOverlapError(
-              data.courtId,
-              slotA.startTime,
-              slotA.endTime,
-            );
-          }
-        }
-      }
+    const attemptedCount = slotsToCreate.length;
+    let createdCount = 0;
 
-      const slots = await this.timeSlotRepository.createMany(
-        slotsToCreate,
-        ctx,
-      );
+    if (attemptedCount > 0) {
+      const createdSlots = await this.transactionManager.run(async (tx) => {
+        const ctx: RequestContext = { tx };
+        return this.timeSlotRepository.createManyBestEffort(slotsToCreate, ctx);
+      });
+      createdCount = createdSlots.length;
+    }
 
-      logger.info(
-        {
-          event: "time_slots.bulk_created",
-          courtId: data.courtId,
-          count: slots.length,
-          userId,
-        },
-        "Bulk time slots created",
-      );
+    const skippedConflictCount = attemptedCount - createdCount;
 
-      return slots;
-    });
+    logger.info(
+      {
+        event: "time_slots.bulk_created",
+        courtId: court.id,
+        attemptedCount,
+        createdCount,
+        skippedPricingCount,
+        skippedConflictCount,
+        userId,
+      },
+      "Bulk time slots created",
+    );
+
+    return {
+      createdCount,
+      attemptedCount,
+      skippedPricingCount,
+      skippedConflictCount,
+    };
   }
 
   async blockSlot(userId: string, slotId: string): Promise<TimeSlotRecord> {
