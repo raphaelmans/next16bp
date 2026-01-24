@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gt, inArray, lt, sql } from "drizzle-orm";
 import {
   court,
   type InsertReservation,
@@ -7,8 +7,6 @@ import {
   placePhoto,
   type ReservationRecord,
   reservation,
-  reservationTimeSlot,
-  timeSlot,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
 import type { RequestContext } from "@/shared/kernel/context";
@@ -21,15 +19,6 @@ export interface IReservationRepository {
     id: string,
     ctx: RequestContext,
   ): Promise<ReservationRecord | null>;
-  findTimeSlotIdsByReservationId(
-    reservationId: string,
-    ctx?: RequestContext,
-  ): Promise<string[]>;
-  createTimeSlotLinks(
-    reservationId: string,
-    timeSlotIds: string[],
-    ctx?: RequestContext,
-  ): Promise<void>;
   findByPlayerId(
     playerId: string,
     pagination: { limit: number; offset: number },
@@ -49,14 +38,12 @@ export interface IReservationRepository {
     },
     ctx?: RequestContext,
   ): Promise<ReservationListItemRecord[]>;
-  findByTimeSlotId(
-    timeSlotId: string,
+  findOverlappingActiveByCourtIds(
+    courtIds: string[],
+    startTime: Date,
+    endTime: Date,
     ctx?: RequestContext,
   ): Promise<ReservationRecord[]>;
-  findActiveByTimeSlotId(
-    timeSlotId: string,
-    ctx?: RequestContext,
-  ): Promise<ReservationRecord | null>;
   findByCourtIdAndStatus(
     courtId: string,
     status:
@@ -146,36 +133,6 @@ export class ReservationRepository implements IReservationRepository {
     return result[0] ?? null;
   }
 
-  async findTimeSlotIdsByReservationId(
-    reservationId: string,
-    ctx?: RequestContext,
-  ): Promise<string[]> {
-    const client = this.getClient(ctx);
-    const result = await client
-      .select({ timeSlotId: reservationTimeSlot.timeSlotId })
-      .from(reservationTimeSlot)
-      .where(eq(reservationTimeSlot.reservationId, reservationId))
-      .orderBy(reservationTimeSlot.sequence);
-
-    return result.map((row) => row.timeSlotId);
-  }
-
-  async createTimeSlotLinks(
-    reservationId: string,
-    timeSlotIds: string[],
-    ctx?: RequestContext,
-  ): Promise<void> {
-    if (timeSlotIds.length === 0) return;
-    const client = this.getClient(ctx);
-    await client.insert(reservationTimeSlot).values(
-      timeSlotIds.map((timeSlotId, index) => ({
-        reservationId,
-        timeSlotId,
-        sequence: index,
-      })),
-    );
-  }
-
   async findByPlayerId(
     playerId: string,
     pagination: { limit: number; offset: number },
@@ -187,45 +144,6 @@ export class ReservationRepository implements IReservationRepository {
   ): Promise<ReservationRecord[]> {
     const client = this.getClient(ctx);
 
-    // If upcoming filter is requested, we need to join with timeSlot
-    if (options?.upcoming) {
-      const conditions = [
-        eq(reservation.playerId, playerId),
-        sql`${timeSlot.startTime} > now()`,
-      ];
-
-      if (options.status) {
-        conditions.push(
-          eq(
-            reservation.status,
-            options.status as
-              | "CREATED"
-              | "AWAITING_PAYMENT"
-              | "PAYMENT_MARKED_BY_USER"
-              | "CONFIRMED"
-              | "EXPIRED"
-              | "CANCELLED",
-          ),
-        );
-      }
-
-      // Join with timeSlot to filter by startTime
-      const results = await client
-        .select({
-          reservation: reservation,
-          startTime: timeSlot.startTime,
-        })
-        .from(reservation)
-        .innerJoin(timeSlot, eq(reservation.timeSlotId, timeSlot.id))
-        .where(and(...conditions))
-        .orderBy(timeSlot.startTime)
-        .limit(pagination.limit)
-        .offset(pagination.offset);
-
-      return results.map((r) => r.reservation);
-    }
-
-    // Standard query without upcoming filter
     const conditions = [eq(reservation.playerId, playerId)];
 
     if (options?.status) {
@@ -243,11 +161,19 @@ export class ReservationRepository implements IReservationRepository {
       );
     }
 
+    if (options?.upcoming) {
+      conditions.push(sql`${reservation.startTime} > now()`);
+    }
+
     return client
       .select()
       .from(reservation)
       .where(and(...conditions))
-      .orderBy(desc(reservation.createdAt))
+      .orderBy(
+        options?.upcoming
+          ? asc(reservation.startTime)
+          : desc(reservation.createdAt),
+      )
       .limit(pagination.limit)
       .offset(pagination.offset);
   }
@@ -280,7 +206,11 @@ export class ReservationRepository implements IReservationRepository {
       );
     }
 
-    let query = client
+    if (filters.upcoming) {
+      conditions.push(sql`${reservation.startTime} > now()`);
+    }
+
+    const query = client
       .select({
         id: reservation.id,
         status: reservation.status,
@@ -288,7 +218,6 @@ export class ReservationRepository implements IReservationRepository {
         playerPhoneSnapshot: reservation.playerPhoneSnapshot,
         createdAt: reservation.createdAt,
         expiresAt: reservation.expiresAt,
-        timeSlotId: reservation.timeSlotId,
         courtId: court.id,
         courtName: sql<string>`concat(${place.name}, ' - ', ${court.label})`,
         placeId: place.id,
@@ -298,21 +227,13 @@ export class ReservationRepository implements IReservationRepository {
         coverImageUrl: sql<
           string | null
         >`(array_agg(${placePhoto.url} order by ${placePhoto.displayOrder}))[1]`,
-        slotStartTime: sql<Date>`min(${timeSlot.startTime})`,
-        slotEndTime: sql<Date>`max(${timeSlot.endTime})`,
-        amountCents: sql<number>`sum(coalesce(${timeSlot.priceCents}, 0))`,
-        currency: sql<string>`max(${timeSlot.currency})`,
+        slotStartTime: reservation.startTime,
+        slotEndTime: reservation.endTime,
+        amountCents: reservation.totalPriceCents,
+        currency: reservation.currency,
       })
       .from(reservation)
-      .leftJoin(
-        reservationTimeSlot,
-        eq(reservationTimeSlot.reservationId, reservation.id),
-      )
-      .innerJoin(
-        timeSlot,
-        sql`${timeSlot.id} = coalesce(${reservationTimeSlot.timeSlotId}, ${reservation.timeSlotId})`,
-      )
-      .innerJoin(court, eq(timeSlot.courtId, court.id))
+      .innerJoin(court, eq(reservation.courtId, court.id))
       .innerJoin(place, eq(court.placeId, place.id))
       .leftJoin(placePhoto, eq(placePhoto.placeId, place.id))
       .where(and(...conditions))
@@ -323,7 +244,10 @@ export class ReservationRepository implements IReservationRepository {
         reservation.playerPhoneSnapshot,
         reservation.createdAt,
         reservation.expiresAt,
-        reservation.timeSlotId,
+        reservation.startTime,
+        reservation.endTime,
+        reservation.totalPriceCents,
+        reservation.currency,
         court.id,
         court.label,
         place.id,
@@ -331,16 +255,15 @@ export class ReservationRepository implements IReservationRepository {
         place.address,
         place.city,
       )
-      .$dynamic();
+      .orderBy(
+        filters.upcoming
+          ? asc(reservation.startTime)
+          : desc(reservation.createdAt),
+      )
+      .limit(filters.limit)
+      .offset(filters.offset);
 
-    if (filters.upcoming) {
-      query = query.having(sql`min(${timeSlot.startTime}) > now()`);
-      query = query.orderBy(asc(sql`min(${timeSlot.startTime})`));
-    } else {
-      query = query.orderBy(desc(reservation.createdAt));
-    }
-
-    const results = await query.limit(filters.limit).offset(filters.offset);
+    const results = await query;
 
     return results.map((row) => ({
       ...row,
@@ -352,74 +275,38 @@ export class ReservationRepository implements IReservationRepository {
     }));
   }
 
-  async findByTimeSlotId(
-    timeSlotId: string,
+  async findOverlappingActiveByCourtIds(
+    courtIds: string[],
+    startTime: Date,
+    endTime: Date,
     ctx?: RequestContext,
   ): Promise<ReservationRecord[]> {
     const client = this.getClient(ctx);
-    const results = await client
-      .select({ reservation })
-      .from(reservation)
-      .innerJoin(
-        reservationTimeSlot,
-        eq(reservationTimeSlot.reservationId, reservation.id),
-      )
-      .where(eq(reservationTimeSlot.timeSlotId, timeSlotId));
+    if (courtIds.length === 0) return [];
 
-    const linkedReservations = results.map((row) => row.reservation);
-    if (linkedReservations.length > 0) {
-      return linkedReservations;
-    }
-
-    return client
+    const candidates = await client
       .select()
       .from(reservation)
-      .where(eq(reservation.timeSlotId, timeSlotId));
-  }
+      .where(
+        and(
+          inArray(reservation.courtId, courtIds),
+          inArray(reservation.status, [
+            "CREATED",
+            "AWAITING_PAYMENT",
+            "PAYMENT_MARKED_BY_USER",
+            "CONFIRMED",
+          ]),
+          lt(reservation.startTime, endTime),
+          gt(reservation.endTime, startTime),
+        ),
+      );
 
-  async findActiveByTimeSlotId(
-    timeSlotId: string,
-    ctx?: RequestContext,
-  ): Promise<ReservationRecord | null> {
-    const client = this.getClient(ctx);
-    const results = await client
-      .select({ reservation })
-      .from(reservation)
-      .innerJoin(
-        reservationTimeSlot,
-        eq(reservationTimeSlot.reservationId, reservation.id),
-      )
-      .where(eq(reservationTimeSlot.timeSlotId, timeSlotId));
-
-    const linkedReservations = results.map((row) => row.reservation);
-    const active = linkedReservations.find(
-      (record) =>
-        record.status !== "CANCELLED" &&
-        record.status !== "EXPIRED" &&
-        (record.status === "CONFIRMED" ||
-          !record.expiresAt ||
-          new Date(record.expiresAt) > new Date()),
-    );
-
-    if (active || linkedReservations.length > 0) {
-      return active ?? null;
-    }
-
-    const fallback = await client
-      .select()
-      .from(reservation)
-      .where(eq(reservation.timeSlotId, timeSlotId));
-
-    const fallbackActive = fallback.find(
-      (record) =>
-        record.status !== "CANCELLED" &&
-        record.status !== "EXPIRED" &&
-        (record.status === "CONFIRMED" ||
-          !record.expiresAt ||
-          new Date(record.expiresAt) > new Date()),
-    );
-
-    return fallbackActive ?? null;
+    const now = new Date();
+    return candidates.filter((record) => {
+      if (record.status === "CONFIRMED") return true;
+      if (!record.expiresAt) return true;
+      return new Date(record.expiresAt) > now;
+    });
   }
 
   async findByCourtIdAndStatus(
@@ -434,58 +321,13 @@ export class ReservationRepository implements IReservationRepository {
     ctx?: RequestContext,
   ): Promise<ReservationRecord[]> {
     const client = this.getClient(ctx);
-    const results = await client
-      .select({ reservation })
+    return client
+      .select()
       .from(reservation)
-      .innerJoin(
-        reservationTimeSlot,
-        eq(reservationTimeSlot.reservationId, reservation.id),
+      .where(
+        and(eq(reservation.courtId, courtId), eq(reservation.status, status)),
       )
-      .innerJoin(timeSlot, eq(timeSlot.id, reservationTimeSlot.timeSlotId))
-      .where(
-        and(eq(timeSlot.courtId, courtId), eq(reservation.status, status)),
-      );
-
-    const unique = new Map(
-      results.map((row) => [row.reservation.id, row.reservation]),
-    );
-
-    if (unique.size > 0) {
-      return Array.from(unique.values());
-    }
-
-    const fallback = await client
-      .select({ reservation })
-      .from(reservation)
-      .innerJoin(timeSlot, eq(reservation.timeSlotId, timeSlot.id))
-      .where(
-        and(eq(timeSlot.courtId, courtId), eq(reservation.status, status)),
-      );
-
-    return fallback.map((row) => row.reservation);
-  }
-
-  async create(
-    data: InsertReservation,
-    ctx?: RequestContext,
-  ): Promise<ReservationRecord> {
-    const client = this.getClient(ctx);
-    const result = await client.insert(reservation).values(data).returning();
-    return result[0];
-  }
-
-  async update(
-    id: string,
-    data: Partial<InsertReservation>,
-    ctx?: RequestContext,
-  ): Promise<ReservationRecord> {
-    const client = this.getClient(ctx);
-    const result = await client
-      .update(reservation)
-      .set({ ...data, updatedAt: new Date() })
-      .where(eq(reservation.id, id))
-      .returning();
-    return result[0];
+      .orderBy(desc(reservation.createdAt));
   }
 
   async countByOrganizationAndStatuses(
@@ -502,12 +344,10 @@ export class ReservationRepository implements IReservationRepository {
   ): Promise<number> {
     const client = this.getClient(ctx);
 
-    // Join reservation -> timeSlot -> court to filter by organization
     const result = await client
       .select({ count: count() })
       .from(reservation)
-      .innerJoin(timeSlot, eq(reservation.timeSlotId, timeSlot.id))
-      .innerJoin(court, eq(timeSlot.courtId, court.id))
+      .innerJoin(court, eq(reservation.courtId, court.id))
       .innerJoin(place, eq(court.placeId, place.id))
       .where(
         and(
@@ -519,10 +359,6 @@ export class ReservationRepository implements IReservationRepository {
     return result[0]?.count ?? 0;
   }
 
-  /**
-   * Get reservations with slot and court details for an organization
-   * Uses JOINs to avoid N+1 queries
-   */
   async findWithDetailsByOrganization(
     organizationId: string,
     filters: {
@@ -537,7 +373,6 @@ export class ReservationRepository implements IReservationRepository {
   ): Promise<ReservationWithDetails[]> {
     const client = this.getClient(ctx);
 
-    // Build query with joins
     const conditions = [eq(place.organizationId, organizationId)];
 
     if (filters.placeId) {
@@ -567,7 +402,7 @@ export class ReservationRepository implements IReservationRepository {
       );
     }
 
-    const query = client
+    const results = await client
       .select({
         id: reservation.id,
         status: reservation.status,
@@ -579,50 +414,23 @@ export class ReservationRepository implements IReservationRepository {
         expiresAt: reservation.expiresAt,
         courtId: court.id,
         courtName: sql<string>`concat(${place.name}, ' - ', ${court.label})`,
-        slotStartTime: sql<Date>`min(${timeSlot.startTime})`,
-        slotEndTime: sql<Date>`max(${timeSlot.endTime})`,
-        amountCents: sql<number>`sum(coalesce(${timeSlot.priceCents}, 0))`,
-        currency: sql<string>`max(${timeSlot.currency})`,
+        slotStartTime: reservation.startTime,
+        slotEndTime: reservation.endTime,
+        amountCents: reservation.totalPriceCents,
+        currency: reservation.currency,
         paymentProofReferenceNumber: paymentProof.referenceNumber,
         paymentProofNotes: paymentProof.notes,
         paymentProofFileUrl: paymentProof.fileUrl,
         paymentProofCreatedAt: paymentProof.createdAt,
       })
       .from(reservation)
-      .leftJoin(
-        reservationTimeSlot,
-        eq(reservationTimeSlot.reservationId, reservation.id),
-      )
-      .innerJoin(
-        timeSlot,
-        sql`${timeSlot.id} = coalesce(${reservationTimeSlot.timeSlotId}, ${reservation.timeSlotId})`,
-      )
-      .innerJoin(court, eq(timeSlot.courtId, court.id))
+      .innerJoin(court, eq(reservation.courtId, court.id))
       .innerJoin(place, eq(court.placeId, place.id))
       .leftJoin(paymentProof, eq(paymentProof.reservationId, reservation.id))
       .where(and(...conditions))
-      .groupBy(
-        reservation.id,
-        reservation.status,
-        reservation.playerNameSnapshot,
-        reservation.playerEmailSnapshot,
-        reservation.playerPhoneSnapshot,
-        reservation.cancellationReason,
-        reservation.createdAt,
-        reservation.expiresAt,
-        court.id,
-        court.label,
-        place.name,
-        paymentProof.referenceNumber,
-        paymentProof.notes,
-        paymentProof.fileUrl,
-        paymentProof.createdAt,
-      )
       .orderBy(desc(reservation.createdAt))
       .limit(filters.limit)
       .offset(filters.offset);
-
-    const results = await query;
 
     return results.map((r) => {
       const proof = {
@@ -653,5 +461,28 @@ export class ReservationRepository implements IReservationRepository {
           : null,
       };
     });
+  }
+
+  async create(
+    data: InsertReservation,
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord> {
+    const client = this.getClient(ctx);
+    const result = await client.insert(reservation).values(data).returning();
+    return result[0];
+  }
+
+  async update(
+    id: string,
+    data: Partial<InsertReservation>,
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .update(reservation)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(reservation.id, id))
+      .returning();
+    return result[0];
   }
 }

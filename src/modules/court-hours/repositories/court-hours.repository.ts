@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import {
   type CourtHoursWindowRecord,
   courtHoursWindow,
@@ -10,6 +10,10 @@ import type { RequestContext } from "@/shared/kernel/context";
 export interface ICourtHoursRepository {
   findByCourtId(
     courtId: string,
+    ctx?: RequestContext,
+  ): Promise<CourtHoursWindowRecord[]>;
+  findByCourtIds(
+    courtIds: string[],
     ctx?: RequestContext,
   ): Promise<CourtHoursWindowRecord[]>;
   deleteByCourtId(courtId: string, ctx?: RequestContext): Promise<void>;
@@ -35,6 +39,18 @@ export class CourtHoursRepository implements ICourtHoursRepository {
       .select()
       .from(courtHoursWindow)
       .where(eq(courtHoursWindow.courtId, courtId));
+  }
+
+  async findByCourtIds(
+    courtIds: string[],
+    ctx?: RequestContext,
+  ): Promise<CourtHoursWindowRecord[]> {
+    const client = this.getClient(ctx);
+    if (courtIds.length === 0) return [];
+    return client
+      .select()
+      .from(courtHoursWindow)
+      .where(inArray(courtHoursWindow.courtId, courtIds));
   }
 
   async deleteByCourtId(courtId: string, ctx?: RequestContext): Promise<void> {

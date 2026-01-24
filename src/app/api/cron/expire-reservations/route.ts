@@ -1,12 +1,7 @@
 import { and, eq, inArray, lt } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 import { db } from "@/shared/infra/db/drizzle";
-import {
-  reservation,
-  reservationEvent,
-  reservationTimeSlot,
-  timeSlot,
-} from "@/shared/infra/db/schema";
+import { reservation, reservationEvent } from "@/shared/infra/db/schema";
 
 /**
  * Cron job to expire stale reservations.
@@ -15,8 +10,7 @@ import {
  * This job runs every minute to:
  * 1. Find reservations where expiresAt < NOW() and status is CREATED, AWAITING_PAYMENT or PAYMENT_MARKED_BY_USER
  * 2. Update reservation status to EXPIRED
- * 3. Release the associated time slot (status -> AVAILABLE)
- * 4. Create audit event with triggeredByRole: SYSTEM
+ * 3. Create audit event with triggeredByRole: SYSTEM
  *
  * Configure in vercel.json:
  * {
@@ -45,7 +39,6 @@ export async function GET(request: NextRequest) {
     const expiredReservations = await db
       .select({
         id: reservation.id,
-        timeSlotId: reservation.timeSlotId,
         status: reservation.status,
       })
       .from(reservation)
@@ -83,24 +76,7 @@ export async function GET(request: NextRequest) {
             })
             .where(eq(reservation.id, expiredRes.id));
 
-          const linkedSlots = await tx
-            .select({ timeSlotId: reservationTimeSlot.timeSlotId })
-            .from(reservationTimeSlot)
-            .where(eq(reservationTimeSlot.reservationId, expiredRes.id));
-
-          const slotIds = linkedSlots.map((slot) => slot.timeSlotId);
-          const targetSlotIds =
-            slotIds.length > 0 ? slotIds : [expiredRes.timeSlotId];
-
-          await tx
-            .update(timeSlot)
-            .set({
-              status: "AVAILABLE",
-              updatedAt: now,
-            })
-            .where(inArray(timeSlot.id, targetSlotIds));
-
-          // 3. Create audit event
+          // 2. Create audit event
           await tx.insert(reservationEvent).values({
             reservationId: expiredRes.id,
             fromStatus: expiredRes.status,

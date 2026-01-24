@@ -1,7 +1,11 @@
 import { makeCourtRepository } from "@/modules/court/factories/court.factory";
+import { makeCourtBlockRepository } from "@/modules/court-block/factories/court-block.factory";
+import { makeCourtHoursRepository } from "@/modules/court-hours/factories/court-hours.factory";
+import { makeCourtPriceOverrideRepository } from "@/modules/court-price-override/factories/court-price-override.factory";
+import { makeCourtRateRuleRepository } from "@/modules/court-rate-rule/factories/court-rate-rule.factory";
 import { makePlaceRepository } from "@/modules/place/factories/place.factory";
 import { makePlaceVerificationRepository } from "@/modules/place-verification/factories/place-verification.factory";
-import { makeTimeSlotRepository } from "@/modules/time-slot/factories/time-slot.factory";
+import { makeReservationRepository } from "@/modules/reservation/factories/reservation.factory";
 import { AvailabilityService } from "../services/availability.service";
 
 let availabilityService: AvailabilityService | null = null;
@@ -12,7 +16,11 @@ export function makeAvailabilityService(): AvailabilityService {
       makeCourtRepository(),
       makePlaceRepository(),
       makePlaceVerificationRepository(),
-      makeTimeSlotRepository(),
+      makeCourtHoursRepository(),
+      makeCourtRateRuleRepository(),
+      makeReservationRepository(),
+      makeCourtBlockRepository(),
+      makeCourtPriceOverrideRepository(),
     );
   }
 

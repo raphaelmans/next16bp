@@ -14,6 +14,7 @@ It models the current **mutual confirmation** flow with TTL expiration.
 Legend:
 - `expiresAt`: a timestamp used by the cron expirer
 - `TTL cron`: system job that transitions to `EXPIRED` when `expiresAt < now`
+- Availability is **computed** (no stored slot rows)
 
 ```text
                              +---------------------+
@@ -29,7 +30,7 @@ Legend:
 
           +-------------------+
           |     CREATED       |
-          | slot: AVAILABLE→HELD
+          | time range: reserved (excluded from availability)
           | expiresAt: now + 15m (owner accept window)
           +----+--------+---+
                |        |
@@ -51,17 +52,15 @@ Legend:
                |              v
                |         +----------+
                |         | CONFIRMED|
-               |         | slot: HELD→BOOKED
                |         +----------+
                |
                | owner accepts (free)
                v
           +----------+
           | CONFIRMED|
-          | slot: HELD→BOOKED
           +----------+
 
-Cancellations (release the hold):
+Cancellations (releases time range):
 
   CREATED ---------------> CANCELLED
   AWAITING_PAYMENT ------> CANCELLED
@@ -78,69 +77,78 @@ Final states:
 
   CONFIRMED, CANCELLED, EXPIRED
 
-Slot effect of terminal transitions:
-- CANCELLED → slot: HELD→AVAILABLE (or BOOKED→AVAILABLE for pre-cutoff cancels)
-- EXPIRED   → slot: HELD→AVAILABLE
+Availability effect of terminal transitions:
+- CANCELLED → time range available again (computed)
+- EXPIRED   → time range available again (computed)
 ```
 
 ---
 
-## 2) Time Slot Status State Machine (as used by reservations)
+## 2) Availability Computation (replaces time slot state machine)
+
+There is no `time_slot` table. Availability is computed on-the-fly:
 
 ```text
 +-----------------------------------------------------------------------------------+
-|                                   TIME SLOT                                       |
+|                            AVAILABILITY COMPUTATION                               |
 +-----------------------------------------------------------------------------------+
 
-                 owner blocks                      owner unblocks
-       +----------------------------------+    +-------------------+
-       |                                  v    v                   |
-   +----------+  createPaidReservation  +------+-----+  cancel/expire +----------+
-   | AVAILABLE| ----------------------> |   HELD    | -------------> | AVAILABLE|
-   +----------+                         +------+-----+               +----------+
-       |                                      |
-       | createFreeReservation                 | confirm paid OR accept free
-       v                                      v
-   +----------+  player/owner cancel      +----------+
-   |  BOOKED  | -----------------------> | AVAILABLE |
-   +----------+   (before cutoff)        +----------+
+  available_times(court, date) =
 
-Also:
-  AVAILABLE <-> BLOCKED (owner actions)
+      schedule_rules(court, date)          ← from court_hours_window + court_rate_rule
+    - active_reservations(court, date)     ← status NOT IN (CANCELLED, EXPIRED)
+    - court_blocks(court, date)            ← owner-defined blocked ranges
+
++-----------------------------------------------------------------------------------+
+|                              BLOCKING (EXCEPTIONS)                                |
++-----------------------------------------------------------------------------------+
+
+  Owner actions:
+    - Block time range   → INSERT court_block (courtId, startTime, endTime, reason)
+    - Unblock time range → DELETE court_block
+
+  Blocked ranges are excluded from availability computation.
+
++-----------------------------------------------------------------------------------+
+|                              PRICE OVERRIDES                                      |
++-----------------------------------------------------------------------------------+
+
+  Owner actions:
+    - Override price for a date → INSERT court_price_override (courtId, date, price)
+
+  Overrides take precedence over court_rate_rule for that date.
+```
 
 Notes:
-- Reservation creation is allowed only when the slot is `AVAILABLE`.
-- Reservation requests immediately hold the slot (`AVAILABLE → HELD`).
-```
+- Reservation creation checks availability at request time (computed).
+- No slot rows to lock or transition — reservations store the time range directly.
 
 ---
 
-## 3) Combined “Happy Path” Timelines
+## 3) Combined "Happy Path" Timelines
 
 ### A) Free booking
 
 ```text
-Player:   request booking
-Slot:     AVAILABLE -> HELD
+Player:   request booking (courtId + startTime + endTime)
 Resv:     CREATED (expiresAt = now + 15m)
+          → time range excluded from availability
 Owner:    accepts (free)
 Resv:     CONFIRMED
-Slot:     HELD -> BOOKED
 ```
 
 ### B) Paid booking (mutual confirmation)
 
 ```text
-Player:   request booking
-Slot:     AVAILABLE -> HELD
+Player:   request booking (courtId + startTime + endTime)
 Resv:     CREATED (expiresAt = now + 15m)
+          → time range excluded from availability
 Owner:    accepts (paid)
 Resv:     AWAITING_PAYMENT (expiresAt reset = now + 15m)
 Player:   marks payment (uploads proof / confirms paid)
 Resv:     PAYMENT_MARKED_BY_USER (can still expire)
 Owner:    confirms payment
 Resv:     CONFIRMED
-Slot:     HELD -> BOOKED
 ```
 
 ---
@@ -150,21 +158,21 @@ Slot:     HELD -> BOOKED
 ```text
 (1) Owner does nothing (TTL)
   Resv: CREATED -> EXPIRED
-  Slot: HELD -> AVAILABLE
+  → time range available again (computed)
 
 (2) Player does not pay in time (TTL)
   Resv: AWAITING_PAYMENT -> EXPIRED
-  Slot: HELD -> AVAILABLE
+  → time range available again (computed)
 
 (3) Player marks payment but owner never confirms (TTL)
   Resv: PAYMENT_MARKED_BY_USER -> EXPIRED
-  Slot: HELD -> AVAILABLE
+  → time range available again (computed)
 
 (4) Owner rejects / cancels
   Resv: {CREATED|AWAITING_PAYMENT|PAYMENT_MARKED_BY_USER} -> CANCELLED
-  Slot: HELD -> AVAILABLE
+  → time range available again (computed)
 
 (5) Player cancels (before cutoff)
   Resv: CONFIRMED -> CANCELLED
-  Slot: BOOKED -> AVAILABLE
+  → time range available again (computed)
 ```

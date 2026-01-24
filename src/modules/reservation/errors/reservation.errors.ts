@@ -90,3 +90,14 @@ export class TermsNotAcceptedError extends ValidationError {
     super("Terms must be accepted to complete the reservation");
   }
 }
+
+export class BookingWindowExceededError extends ValidationError {
+  readonly code = "BOOKING_WINDOW_EXCEEDED";
+
+  constructor(startTime: Date, maxStartTime: Date) {
+    super("Start time is beyond the maximum booking window", {
+      startTime: startTime.toISOString(),
+      maxStartTime: maxStartTime.toISOString(),
+    });
+  }
+}

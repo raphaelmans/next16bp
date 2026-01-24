@@ -1,5 +1,6 @@
 "use client";
 
+import { addDays } from "date-fns";
 import { LogIn } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,7 +14,9 @@ import {
   TimeSlotPicker,
   TimeSlotPickerSkeleton,
 } from "@/shared/components/kudos";
+import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
 import { formatCurrency } from "@/shared/lib/format";
+import { getZonedToday } from "@/shared/lib/time-zone";
 
 interface BookingCardProps {
   courtId: string;
@@ -49,6 +52,10 @@ export function BookingCard({
   const selectedSlotPrice = selectedSlot?.priceCents ?? pricePerHourCents;
   const hasSelectedPrice = selectedSlotPrice !== undefined;
   const isFreeCourt = isFree;
+  const maxDate = addDays(
+    timeZone ? getZonedToday(timeZone) : new Date(),
+    MAX_BOOKING_WINDOW_DAYS,
+  );
 
   const { data: sessionUser } = useSession();
   const isAuthenticated = !!sessionUser;
@@ -100,6 +107,7 @@ export function BookingCard({
             value={selectedDate}
             onChange={onDateChange}
             placeholder="Choose a date"
+            maxDate={maxDate}
             timeZone={timeZone}
           />
         </div>

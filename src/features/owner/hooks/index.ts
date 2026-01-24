@@ -73,15 +73,3 @@ export {
   useTogglePlaceReservations,
 } from "./use-place-verification";
 export { useReservationAlerts } from "./use-reservation-alerts";
-export {
-  type BulkSlotData,
-  type SlotStatus,
-  type TimeSlot,
-  useBlockSlot,
-  useConfirmBooking,
-  useCreateBulkSlots,
-  useDeleteSlot,
-  useRejectBooking,
-  useSlots,
-  useUnblockSlot,
-} from "./use-slots";

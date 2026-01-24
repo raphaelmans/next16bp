@@ -1,0 +1,1 @@
+export const MAX_BOOKING_WINDOW_DAYS = 60;

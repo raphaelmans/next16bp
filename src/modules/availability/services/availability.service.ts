@@ -1,22 +1,30 @@
 import { CourtNotFoundError } from "@/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
+import type { ICourtBlockRepository } from "@/modules/court-block/repositories/court-block.repository";
+import type { ICourtHoursRepository } from "@/modules/court-hours/repositories/court-hours.repository";
+import type { ICourtPriceOverrideRepository } from "@/modules/court-price-override/repositories/court-price-override.repository";
+import type { ICourtRateRuleRepository } from "@/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
 import type { IPlaceVerificationRepository } from "@/modules/place-verification/repositories/place-verification.repository";
-import type { ITimeSlotRepository } from "@/modules/time-slot/repositories/time-slot.repository";
+import type { IReservationRepository } from "@/modules/reservation/repositories/reservation.repository";
 import type {
+  CourtBlockRecord,
+  CourtHoursWindowRecord,
+  CourtPriceOverrideRecord,
+  CourtRateRuleRecord,
   CourtRecord,
   PlaceVerificationRecord,
-  TimeSlotRecord,
+  ReservationRecord,
 } from "@/shared/infra/db/schema";
 import {
-  buildSlotStartMap,
-  collectConsecutiveSlots,
-  summarizeSlotPricing,
-} from "@/shared/lib/time-slot-availability";
+  computeSchedulePrice,
+  rangesOverlap,
+} from "@/shared/lib/schedule-availability";
 import {
-  getZonedDayKey,
+  getZonedDate,
   getZonedDayRangeForInstant,
+  toUtcISOString,
 } from "@/shared/lib/time-zone";
 import type {
   GetAvailabilityForCourtDTO,
@@ -51,12 +59,18 @@ export interface IAvailabilityService {
   ): Promise<AvailabilityOption[]>;
 }
 
+const SLOT_STEP_MINUTES = 60;
+
 export class AvailabilityService implements IAvailabilityService {
   constructor(
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
     private placeVerificationRepository: IPlaceVerificationRepository,
-    private timeSlotRepository: ITimeSlotRepository,
+    private courtHoursRepository: ICourtHoursRepository,
+    private courtRateRuleRepository: ICourtRateRuleRepository,
+    private reservationRepository: IReservationRepository,
+    private courtBlockRepository: ICourtBlockRepository,
+    private courtPriceOverrideRepository: ICourtPriceOverrideRepository,
   ) {}
 
   async getForCourt(
@@ -91,12 +105,40 @@ export class AvailabilityService implements IAvailabilityService {
       return [];
     }
 
-    return this.getAvailabilityForCourt(
-      court,
+    const { start, end } = getZonedDayRangeForInstant(
       data.date,
-      data.durationMinutes,
       place.timeZone,
     );
+    const courtIds = [court.id];
+
+    const [hours, rules, reservations, blocks, overrides] = await Promise.all([
+      this.courtHoursRepository.findByCourtIds(courtIds),
+      this.courtRateRuleRepository.findByCourtIds(courtIds),
+      this.reservationRepository.findOverlappingActiveByCourtIds(
+        courtIds,
+        start,
+        end,
+      ),
+      this.courtBlockRepository.findOverlappingByCourtIds(courtIds, start, end),
+      this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+        courtIds,
+        start,
+        end,
+      ),
+    ]);
+
+    return this.buildAvailabilityForCourtRange({
+      court,
+      rangeStart: start,
+      rangeEnd: end,
+      durationMinutes: data.durationMinutes,
+      timeZone: place.timeZone,
+      hours,
+      rules,
+      reservations,
+      blocks,
+      overrides,
+    });
   }
 
   async getForCourts(
@@ -153,37 +195,60 @@ export class AvailabilityService implements IAvailabilityService {
       return [];
     }
 
-    const slotGroups = await Promise.all(
-      Array.from(courtsByPlace.entries()).map(async ([placeId, courts]) => {
-        const place = placeById.get(placeId);
-        if (!place) {
-          return { courts, slots: [] as TimeSlotRecord[] };
-        }
-        const { start, end } = getZonedDayRangeForInstant(
-          data.date,
-          place.timeZone,
-        );
-        const slots = await this.timeSlotRepository.findAvailableByCourtIds(
-          courts.map((court) => court.id),
-          start,
-          end,
-        );
-        return { courts, slots };
-      }),
-    );
+    const allCourtIds = eligibleCourts.map((court) => court.id);
+    const [hours, rules] = await Promise.all([
+      this.courtHoursRepository.findByCourtIds(allCourtIds),
+      this.courtRateRuleRepository.findByCourtIds(allCourtIds),
+    ]);
 
     const options: AvailabilityOption[] = [];
-    for (const { courts, slots } of slotGroups) {
-      const slotsByCourtId = this.groupSlotsByCourtId(slots);
-      for (const court of courts) {
-        const courtSlots = slotsByCourtId.get(court.id) ?? [];
+    for (const [placeId, placeCourts] of courtsByPlace.entries()) {
+      const place = placeById.get(placeId);
+      if (!place) continue;
+
+      const { start, end } = getZonedDayRangeForInstant(
+        data.date,
+        place.timeZone,
+      );
+      const placeCourtIds = placeCourts.map((court) => court.id);
+
+      const [reservations, blocks, overrides] = await Promise.all([
+        this.reservationRepository.findOverlappingActiveByCourtIds(
+          placeCourtIds,
+          start,
+          end,
+        ),
+        this.courtBlockRepository.findOverlappingByCourtIds(
+          placeCourtIds,
+          start,
+          end,
+        ),
+        this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+          placeCourtIds,
+          start,
+          end,
+        ),
+      ]);
+
+      for (const court of placeCourts) {
         options.push(
-          ...this.buildOptionsForCourt(court, courtSlots, data.durationMinutes),
+          ...this.buildAvailabilityForCourtRange({
+            court,
+            rangeStart: start,
+            rangeEnd: end,
+            durationMinutes: data.durationMinutes,
+            timeZone: place.timeZone,
+            hours,
+            rules,
+            reservations,
+            blocks,
+            overrides,
+          }),
         );
       }
     }
 
-    return options;
+    return options.sort((a, b) => a.startTime.localeCompare(b.startTime));
   }
 
   async getForPlaceSport(
@@ -214,26 +279,44 @@ export class AvailabilityService implements IAvailabilityService {
     if (activeCourts.length === 0) {
       return [];
     }
-    const optionsByStart = new Map<number, AvailabilityOption>();
 
     const { start, end } = getZonedDayRangeForInstant(
       data.date,
       place.timeZone,
     );
-    const slots = await this.timeSlotRepository.findAvailableByCourtIds(
-      activeCourts.map((court) => court.id),
-      start,
-      end,
-    );
-    const slotsByCourtId = this.groupSlotsByCourtId(slots);
+    const courtIds = activeCourts.map((court) => court.id);
+
+    const [hours, rules, reservations, blocks, overrides] = await Promise.all([
+      this.courtHoursRepository.findByCourtIds(courtIds),
+      this.courtRateRuleRepository.findByCourtIds(courtIds),
+      this.reservationRepository.findOverlappingActiveByCourtIds(
+        courtIds,
+        start,
+        end,
+      ),
+      this.courtBlockRepository.findOverlappingByCourtIds(courtIds, start, end),
+      this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+        courtIds,
+        start,
+        end,
+      ),
+    ]);
+
+    const optionsByStart = new Map<number, AvailabilityOption>();
 
     for (const court of activeCourts) {
-      const courtSlots = slotsByCourtId.get(court.id) ?? [];
-      const availability = this.buildOptionsForCourt(
+      const availability = this.buildAvailabilityForCourtRange({
         court,
-        courtSlots,
-        data.durationMinutes,
-      );
+        rangeStart: start,
+        rangeEnd: end,
+        durationMinutes: data.durationMinutes,
+        timeZone: place.timeZone,
+        hours,
+        rules,
+        reservations,
+        blocks,
+        overrides,
+      });
 
       for (const option of availability) {
         const startMs = new Date(option.startTime).getTime();
@@ -285,13 +368,42 @@ export class AvailabilityService implements IAvailabilityService {
       return [];
     }
 
-    return this.getAvailabilityRangeForCourt(
+    const rangeStart = new Date(data.startDate);
+    const rangeEnd = new Date(data.endDate);
+    const courtIds = [court.id];
+
+    const [hours, rules, reservations, blocks, overrides] = await Promise.all([
+      this.courtHoursRepository.findByCourtIds(courtIds),
+      this.courtRateRuleRepository.findByCourtIds(courtIds),
+      this.reservationRepository.findOverlappingActiveByCourtIds(
+        courtIds,
+        rangeStart,
+        rangeEnd,
+      ),
+      this.courtBlockRepository.findOverlappingByCourtIds(
+        courtIds,
+        rangeStart,
+        rangeEnd,
+      ),
+      this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+        courtIds,
+        rangeStart,
+        rangeEnd,
+      ),
+    ]);
+
+    return this.buildAvailabilityForCourtRange({
       court,
-      data.startDate,
-      data.endDate,
-      data.durationMinutes,
-      place.timeZone,
-    );
+      rangeStart,
+      rangeEnd,
+      durationMinutes: data.durationMinutes,
+      timeZone: place.timeZone,
+      hours,
+      rules,
+      reservations,
+      blocks,
+      overrides,
+    });
   }
 
   async getForPlaceSportRange(
@@ -322,25 +434,46 @@ export class AvailabilityService implements IAvailabilityService {
     if (activeCourts.length === 0) {
       return [];
     }
-    const optionsByStart = new Map<number, AvailabilityOption>();
+
     const rangeStart = new Date(data.startDate);
     const rangeEnd = new Date(data.endDate);
+    const courtIds = activeCourts.map((court) => court.id);
 
-    const slots = await this.timeSlotRepository.findAvailableByCourtIds(
-      activeCourts.map((court) => court.id),
-      rangeStart,
-      rangeEnd,
-    );
-    const slotsByCourtId = this.groupSlotsByCourtId(slots);
+    const [hours, rules, reservations, blocks, overrides] = await Promise.all([
+      this.courtHoursRepository.findByCourtIds(courtIds),
+      this.courtRateRuleRepository.findByCourtIds(courtIds),
+      this.reservationRepository.findOverlappingActiveByCourtIds(
+        courtIds,
+        rangeStart,
+        rangeEnd,
+      ),
+      this.courtBlockRepository.findOverlappingByCourtIds(
+        courtIds,
+        rangeStart,
+        rangeEnd,
+      ),
+      this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+        courtIds,
+        rangeStart,
+        rangeEnd,
+      ),
+    ]);
+
+    const optionsByStart = new Map<number, AvailabilityOption>();
 
     for (const court of activeCourts) {
-      const courtSlots = slotsByCourtId.get(court.id) ?? [];
-      const availability = this.buildOptionsForCourtRange(
+      const availability = this.buildAvailabilityForCourtRange({
         court,
-        courtSlots,
-        data.durationMinutes,
-        place.timeZone,
-      );
+        rangeStart,
+        rangeEnd,
+        durationMinutes: data.durationMinutes,
+        timeZone: place.timeZone,
+        hours,
+        rules,
+        reservations,
+        blocks,
+        overrides,
+      });
 
       for (const option of availability) {
         const startMs = new Date(option.startTime).getTime();
@@ -369,135 +502,156 @@ export class AvailabilityService implements IAvailabilityService {
     );
   }
 
-  private async getAvailabilityForCourt(
-    court: CourtRecord,
-    date: string,
-    durationMinutes: number,
-    timeZone: string,
-  ): Promise<AvailabilityOption[]> {
-    if (durationMinutes <= 0) {
-      return [];
+  private isReservationBlocking(reservation: ReservationRecord): boolean {
+    if (
+      reservation.status === "CANCELLED" ||
+      reservation.status === "EXPIRED"
+    ) {
+      return false;
     }
-
-    const { start, end } = getZonedDayRangeForInstant(date, timeZone);
-
-    const slots = await this.timeSlotRepository.findAvailable(
-      court.id,
-      start,
-      end,
-    );
-
-    return this.buildOptionsForCourt(court, slots, durationMinutes);
+    if (reservation.status === "CONFIRMED") {
+      return true;
+    }
+    if (!reservation.expiresAt) {
+      return true;
+    }
+    return new Date(reservation.expiresAt) > new Date();
   }
 
-  private async getAvailabilityRangeForCourt(
-    court: CourtRecord,
-    startDate: Date | string,
-    endDate: Date | string,
-    durationMinutes: number,
-    timeZone: string,
-  ): Promise<AvailabilityOption[]> {
-    if (durationMinutes <= 0) {
-      return [];
-    }
-
-    const slots = await this.timeSlotRepository.findAvailable(
-      court.id,
-      new Date(startDate),
-      new Date(endDate),
-    );
-
-    return this.buildOptionsForCourtRange(
+  private buildAvailabilityForCourtRange(options: {
+    court: CourtRecord;
+    rangeStart: Date;
+    rangeEnd: Date;
+    durationMinutes: number;
+    timeZone: string;
+    hours: CourtHoursWindowRecord[];
+    rules: CourtRateRuleRecord[];
+    reservations: ReservationRecord[];
+    blocks: CourtBlockRecord[];
+    overrides: CourtPriceOverrideRecord[];
+  }): AvailabilityOption[] {
+    const {
       court,
-      slots,
+      rangeStart,
+      rangeEnd,
       durationMinutes,
       timeZone,
+      hours,
+      rules,
+      reservations,
+      blocks,
+      overrides,
+    } = options;
+
+    if (durationMinutes <= 0) return [];
+
+    const hoursWindows = hours.filter((window) => window.courtId === court.id);
+    const rateRules = rules.filter((rule) => rule.courtId === court.id);
+    const priceOverrides = overrides.filter(
+      (override) => override.courtId === court.id,
     );
-  }
 
-  private buildOptionsForCourt(
-    court: CourtRecord,
-    slots: TimeSlotRecord[],
-    durationMinutes: number,
-  ): AvailabilityOption[] {
-    if (slots.length === 0) return [];
+    if (hoursWindows.length === 0 || rateRules.length === 0) {
+      return [];
+    }
 
-    const sortedSlots = [...slots].sort(
-      (a, b) => a.startTime.getTime() - b.startTime.getTime(),
-    );
-    const slotMap = buildSlotStartMap(sortedSlots);
-    const options: AvailabilityOption[] = [];
+    const courtReservations = reservations
+      .filter((reservation) => reservation.courtId === court.id)
+      .filter((reservation) => this.isReservationBlocking(reservation));
+    const courtBlocks = blocks.filter((block) => block.courtId === court.id);
 
-    for (const slot of sortedSlots) {
-      const consecutive = collectConsecutiveSlots({
-        slotMap,
-        startSlot: slot,
-        durationMinutes,
-      });
+    const rangeStartDay = getZonedDayRangeForInstant(
+      rangeStart,
+      timeZone,
+    ).start;
+    const rangeEndDay = getZonedDayRangeForInstant(rangeEnd, timeZone).start;
 
-      if (!consecutive) {
+    const results: AvailabilityOption[] = [];
+    const dayCursor = getZonedDate(rangeStartDay, timeZone);
+
+    while (dayCursor <= rangeEndDay) {
+      const dayStart = getZonedDayRangeForInstant(dayCursor, timeZone).start;
+      const dayOfWeek = dayStart.getDay();
+      const dayWindows = hoursWindows.filter(
+        (window) => window.dayOfWeek === dayOfWeek,
+      );
+      if (dayWindows.length === 0) {
+        dayCursor.setDate(dayCursor.getDate() + 1);
         continue;
       }
 
-      const pricing = summarizeSlotPricing(consecutive);
-      const lastSlot = consecutive[consecutive.length - 1];
-
-      options.push({
-        startTime: slot.startTime.toISOString(),
-        endTime: lastSlot.endTime.toISOString(),
-        totalPriceCents: pricing.totalPriceCents,
-        currency: pricing.currency,
-        courtId: court.id,
-        courtLabel: court.label,
-      });
-    }
-
-    return options;
-  }
-
-  private buildOptionsForCourtRange(
-    court: CourtRecord,
-    slots: TimeSlotRecord[],
-    durationMinutes: number,
-    timeZone: string,
-  ): AvailabilityOption[] {
-    if (slots.length === 0) return [];
-
-    const slotsByDay = new Map<string, TimeSlotRecord[]>();
-
-    for (const slot of slots) {
-      const dayKey = getZonedDayKey(slot.startTime, timeZone);
-      const existing = slotsByDay.get(dayKey);
-      if (existing) {
-        existing.push(slot);
-      } else {
-        slotsByDay.set(dayKey, [slot]);
+      const startMinutes = new Set<number>();
+      for (const window of dayWindows) {
+        for (
+          let minute = window.startMinute;
+          minute + SLOT_STEP_MINUTES <= window.endMinute;
+          minute += SLOT_STEP_MINUTES
+        ) {
+          startMinutes.add(minute);
+        }
       }
-    }
 
-    const options: AvailabilityOption[] = [];
-    for (const daySlots of slotsByDay.values()) {
-      options.push(
-        ...this.buildOptionsForCourt(court, daySlots, durationMinutes),
-      );
-    }
+      const sortedMinutes = Array.from(startMinutes).sort((a, b) => a - b);
 
-    return options.sort((a, b) => a.startTime.localeCompare(b.startTime));
-  }
+      for (const minute of sortedMinutes) {
+        const startTime = getZonedDate(dayStart, timeZone);
+        startTime.setHours(Math.floor(minute / 60), minute % 60, 0, 0);
 
-  private groupSlotsByCourtId(
-    slots: TimeSlotRecord[],
-  ): Map<string, TimeSlotRecord[]> {
-    const grouped = new Map<string, TimeSlotRecord[]>();
-    for (const slot of slots) {
-      const existing = grouped.get(slot.courtId);
-      if (existing) {
-        existing.push(slot);
-      } else {
-        grouped.set(slot.courtId, [slot]);
+        const pricing = computeSchedulePrice({
+          startTime,
+          durationMinutes,
+          timeZone,
+          hoursWindows,
+          rateRules,
+          priceOverrides,
+        });
+        if (!pricing) {
+          continue;
+        }
+
+        const endTime = pricing.endTime;
+        if (startTime < rangeStart || endTime > rangeEnd) {
+          continue;
+        }
+
+        const overlapsReservation = courtReservations.some((reservation) =>
+          rangesOverlap({
+            startA: startTime,
+            endA: endTime,
+            startB: new Date(reservation.startTime),
+            endB: new Date(reservation.endTime),
+          }),
+        );
+        if (overlapsReservation) {
+          continue;
+        }
+
+        const overlapsBlock = courtBlocks.some((block) =>
+          rangesOverlap({
+            startA: startTime,
+            endA: endTime,
+            startB: new Date(block.startTime),
+            endB: new Date(block.endTime),
+          }),
+        );
+        if (overlapsBlock) {
+          continue;
+        }
+
+        results.push({
+          startTime: toUtcISOString(startTime),
+          endTime: toUtcISOString(endTime),
+          totalPriceCents: pricing.totalPriceCents,
+          currency: pricing.currency,
+          courtId: court.id,
+          courtLabel: court.label,
+        });
       }
+
+      dayCursor.setDate(dayCursor.getDate() + 1);
     }
-    return grouped;
+
+    return results.sort((a, b) => a.startTime.localeCompare(b.startTime));
   }
 
   private pickCheapestOption(

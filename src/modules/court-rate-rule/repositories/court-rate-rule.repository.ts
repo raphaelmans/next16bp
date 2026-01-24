@@ -1,4 +1,4 @@
-import { and, eq, gte, lte } from "drizzle-orm";
+import { and, eq, gte, inArray, lte } from "drizzle-orm";
 import {
   type CourtRateRuleRecord,
   courtRateRule,
@@ -10,6 +10,10 @@ import type { RequestContext } from "@/shared/kernel/context";
 export interface ICourtRateRuleRepository {
   findByCourtId(
     courtId: string,
+    ctx?: RequestContext,
+  ): Promise<CourtRateRuleRecord[]>;
+  findByCourtIds(
+    courtIds: string[],
     ctx?: RequestContext,
   ): Promise<CourtRateRuleRecord[]>;
   findMatchingRule(
@@ -41,6 +45,18 @@ export class CourtRateRuleRepository implements ICourtRateRuleRepository {
       .select()
       .from(courtRateRule)
       .where(eq(courtRateRule.courtId, courtId));
+  }
+
+  async findByCourtIds(
+    courtIds: string[],
+    ctx?: RequestContext,
+  ): Promise<CourtRateRuleRecord[]> {
+    const client = this.getClient(ctx);
+    if (courtIds.length === 0) return [];
+    return client
+      .select()
+      .from(courtRateRule)
+      .where(inArray(courtRateRule.courtId, courtIds));
   }
 
   async findMatchingRule(

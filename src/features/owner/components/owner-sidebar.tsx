@@ -267,7 +267,7 @@ export function OwnerSidebar({
                                     isActive={isCourtActive(place.id, court.id)}
                                   >
                                     <Link
-                                      href={appRoutes.owner.places.courts.slots(
+                                      href={appRoutes.owner.places.courts.availability(
                                         place.id,
                                         court.id,
                                       )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { addDays } from "date-fns";
 import {
   AlertCircle,
   ArrowRight,
@@ -68,6 +69,7 @@ import {
 } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
 import { trackEvent } from "@/shared/lib/clients/telemetry-client";
 import { copyToClipboard } from "@/shared/lib/clipboard";
 import {
@@ -76,7 +78,7 @@ import {
   formatInTimeZone,
 } from "@/shared/lib/format";
 import { buildViberDeepLink, toDialablePhone } from "@/shared/lib/phone";
-import { getZonedDayKey } from "@/shared/lib/time-zone";
+import { getZonedDayKey, getZonedToday } from "@/shared/lib/time-zone";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
@@ -258,6 +260,10 @@ export default function PlaceDetailPage() {
   const placeSlugOrId = place?.slug ?? place?.id ?? placeIdOrSlug;
   const analyticsPlaceId = place?.id ?? placeIdOrSlug;
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";
+  const maxBookingDate = React.useMemo(
+    () => addDays(getZonedToday(placeTimeZone), MAX_BOOKING_WINDOW_DAYS),
+    [placeTimeZone],
+  );
   const isBookable = place?.placeType === "RESERVABLE";
   const isCurated = place?.placeType === "CURATED";
   const verificationStatus = place?.verification?.status ?? "UNVERIFIED";
@@ -1092,6 +1098,7 @@ export default function PlaceDetailPage() {
                           resetSelection();
                         }}
                         placeholder="Choose a date"
+                        maxDate={maxBookingDate}
                         timeZone={placeTimeZone}
                       />
                     </div>

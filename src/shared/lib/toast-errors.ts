@@ -36,6 +36,25 @@ const getFieldErrorMessage = (fieldErrors: unknown): string | null => {
   return null;
 };
 
+const FRIENDLY_ERROR_MESSAGES: Record<string, string> = {
+  BOOKING_WINDOW_EXCEEDED:
+    "This time is beyond the 60-day booking window. Choose an earlier date.",
+};
+
+const getCodeErrorMessage = (error: unknown): string | null => {
+  if (!isRecord(error)) return null;
+
+  const data = isRecord(error.data) ? error.data : null;
+  if (!data) return null;
+
+  const code = data.code;
+  if (typeof code === "string" && code in FRIENDLY_ERROR_MESSAGES) {
+    return FRIENDLY_ERROR_MESSAGES[code] ?? null;
+  }
+
+  return null;
+};
+
 const getValidationMessage = (error: unknown): string | null => {
   if (!isRecord(error)) return null;
 
@@ -57,6 +76,9 @@ export const getClientErrorMessage = (
   error: unknown,
   fallback = "Something went wrong",
 ): string => {
+  const codeMessage = getCodeErrorMessage(error);
+  if (codeMessage) return codeMessage;
+
   const validationMessage = getValidationMessage(error);
   if (validationMessage) return validationMessage;
 

@@ -2,10 +2,18 @@
 
 This level captures the state machine as a contract for engineering. It reflects the desired behavior for the mutual-confirmation flow.
 
+## Availability Model
+
+Availability is **computed on-the-fly**, not stored:
+- Schedule rules (`court_hours_window` + `court_rate_rule`) define when a court is bookable.
+- Existing reservations (non-terminal statuses) subtract from available time ranges.
+- `court_block` entries subtract from available time ranges (owner-defined exceptions).
+- Reservations store `courtId + startTime + endTime` directly (no slot FK).
+
 ## Reservation statuses
 - `CREATED`
   - Meaning: booking request created by player.
-  - Slot effect: slot is held immediately (`AVAILABLE` → `HELD`).
+  - Availability effect: time range excluded from availability (pending reservation).
   - TTL: `expiresAt` is set to `now + 15 minutes` (owner acceptance window).
 - `AWAITING_PAYMENT`
   - Meaning: owner accepted a paid request; waiting for player payment.
@@ -19,8 +27,10 @@ This level captures the state machine as a contract for engineering. It reflects
   - Paid: owner confirmation transitions to `CONFIRMED`.
 - `CANCELLED`
   - Meaning: request/reservation was cancelled by player or cancelled/rejected by owner.
+  - Availability effect: time range becomes available again (computed).
 - `EXPIRED`
-  - Meaning: TTL expired and system released the hold.
+  - Meaning: TTL expired and system released the reservation.
+  - Availability effect: time range becomes available again (computed).
 
 ## Key transitions
 - `CREATED` → `AWAITING_PAYMENT` (owner accepts a paid request).
@@ -59,19 +69,24 @@ stateDiagram-v2
   EXPIRED --> [*]
 ```
 
-## Time slot state diagram
-```mermaid
-stateDiagram-v2
-  [*] --> AVAILABLE
+## Availability computation (replaces time slot state machine)
 
-  AVAILABLE --> HELD: reservation request created (CREATED)
+There is no `time_slot` table. Availability is computed:
 
-  HELD --> BOOKED: owner accepts free OR owner confirms paid
-  HELD --> AVAILABLE: cancelled / rejected / expired
-
-  AVAILABLE --> BLOCKED: owner blocks
-  BLOCKED --> AVAILABLE: owner unblocks
 ```
+available_times = schedule_rules(court, date)
+                  - active_reservations(court, date)
+                  - court_blocks(court, date)
+```
+
+Where:
+- `schedule_rules`: generated from `court_hours_window` + `court_rate_rule`
+- `active_reservations`: reservations with status NOT IN (CANCELLED, EXPIRED)
+- `court_blocks`: explicit owner-defined blocked time ranges
+
+### Blocking behavior
+- Owners block time ranges via `court_block` table (not slot status).
+- Blocked ranges are excluded from availability computation.
 
 ## TTL rules
 - **Owner acceptance window**
@@ -96,3 +111,5 @@ stateDiagram-v2
 - `agent-contexts/00-13-owner-reservation-ops.md`
 - `src/shared/infra/db/schema/enums.ts`
 - `src/shared/infra/db/schema/reservation.ts`
+- `src/shared/infra/db/schema/court-block.ts`
+- `src/modules/availability/services/availability.service.ts`

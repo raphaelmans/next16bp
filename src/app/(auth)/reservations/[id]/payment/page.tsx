@@ -55,7 +55,6 @@ export default function PaymentPage() {
     trpc.reservation.getDetail.useQuery({ reservationId });
 
   const reservation = reservationDetail?.reservation;
-  const slot = reservationDetail?.timeSlot;
 
   const { data: paymentInfo } = trpc.reservation.getPaymentInfo.useQuery(
     { reservationId },
@@ -138,22 +137,18 @@ export default function PaymentPage() {
 
   const isPaymentExpired =
     reservation?.status === "EXPIRED" || (reservation ? isExpired : false);
-  const effectivePriceCents = slot?.priceCents ?? 0;
-  const priceCurrency = slot?.currency ?? "PHP";
-  const isFreeSlot =
-    slot?.isFree ||
-    effectivePriceCents === null ||
-    effectivePriceCents === undefined ||
-    effectivePriceCents === 0;
+  const effectivePriceCents = reservation?.totalPriceCents ?? 0;
+  const priceCurrency = reservation?.currency ?? "PHP";
+  const isFreeSlot = effectivePriceCents === 0;
   const price = isFreeSlot
     ? "Free"
     : formatCurrency(effectivePriceCents ?? 0, priceCurrency);
-  const slotDate = slot?.startTime
-    ? format(new Date(slot.startTime), "EEEE, MMMM d, yyyy")
+  const slotDate = reservation?.startTime
+    ? format(new Date(reservation.startTime), "EEEE, MMMM d, yyyy")
     : undefined;
-  const slotTime = slot?.startTime
-    ? `${format(new Date(slot.startTime), "h:mm a")} - ${format(
-        new Date(slot.endTime),
+  const slotTime = reservation?.startTime
+    ? `${format(new Date(reservation.startTime), "h:mm a")} - ${format(
+        new Date(reservation.endTime),
         "h:mm a",
       )}`
     : undefined;
@@ -177,7 +172,7 @@ export default function PaymentPage() {
     return (
       <Container className="py-6">
         <ReservationExpired
-          courtId={slot?.courtId ?? undefined}
+          courtId={reservation?.courtId ?? undefined}
           slotDate={slotDate}
           slotTime={slotTime}
           amount={price}
@@ -256,12 +251,18 @@ export default function PaymentPage() {
               </div>
               <div>
                 <div className="font-heading font-semibold">
-                  {slot && format(new Date(slot.startTime), "h:mm a")} -
-                  {slot && format(new Date(slot.endTime), "h:mm a")}
+                  {reservation &&
+                    format(new Date(reservation.startTime), "h:mm a")}{" "}
+                  -
+                  {reservation &&
+                    format(new Date(reservation.endTime), "h:mm a")}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  {slot &&
-                    format(new Date(slot.startTime), "EEEE, MMMM d, yyyy")}
+                  {reservation &&
+                    format(
+                      new Date(reservation.startTime),
+                      "EEEE, MMMM d, yyyy",
+                    )}
                 </div>
               </div>
             </div>

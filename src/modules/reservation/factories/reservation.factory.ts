@@ -1,4 +1,8 @@
 import { makeCourtRepository } from "@/modules/court/factories/court.factory";
+import { makeCourtBlockRepository } from "@/modules/court-block/factories/court-block.factory";
+import { makeCourtHoursRepository } from "@/modules/court-hours/factories/court-hours.factory";
+import { makeCourtPriceOverrideRepository } from "@/modules/court-price-override/factories/court-price-override.factory";
+import { makeCourtRateRuleRepository } from "@/modules/court-rate-rule/factories/court-rate-rule.factory";
 import {
   makeOrganizationProfileRepository,
   makeOrganizationRepository,
@@ -13,19 +17,14 @@ import {
 } from "@/modules/place/factories/place.factory";
 import { makePlaceVerificationRepository } from "@/modules/place-verification/factories/place-verification.factory";
 import { makeProfileRepository } from "@/modules/profile/factories/profile.factory";
-import { makeTimeSlotRepository } from "@/modules/time-slot/factories/time-slot.factory";
 import { getContainer } from "@/shared/infra/container";
 import { ReservationRepository } from "../repositories/reservation.repository";
 import { ReservationEventRepository } from "../repositories/reservation-event.repository";
 import { ReservationService } from "../services/reservation.service";
 import { ReservationOwnerService } from "../services/reservation-owner.service";
-import { CreateFreeReservationUseCase } from "../use-cases/create-free-reservation.use-case";
-import { CreatePaidReservationUseCase } from "../use-cases/create-paid-reservation.use-case";
 
 let reservationRepository: ReservationRepository | null = null;
 let reservationEventRepository: ReservationEventRepository | null = null;
-let createFreeReservationUseCase: CreateFreeReservationUseCase | null = null;
-let createPaidReservationUseCase: CreatePaidReservationUseCase | null = null;
 let reservationService: ReservationService | null = null;
 let reservationOwnerService: ReservationOwnerService | null = null;
 
@@ -45,38 +44,11 @@ export function makeReservationEventRepository(): ReservationEventRepository {
   return reservationEventRepository;
 }
 
-export function makeCreateFreeReservationUseCase(): CreateFreeReservationUseCase {
-  if (!createFreeReservationUseCase) {
-    createFreeReservationUseCase = new CreateFreeReservationUseCase(
-      makeReservationRepository(),
-      makeReservationEventRepository(),
-      makeTimeSlotRepository(),
-      makeProfileRepository(),
-      getContainer().transactionManager,
-    );
-  }
-  return createFreeReservationUseCase;
-}
-
-export function makeCreatePaidReservationUseCase(): CreatePaidReservationUseCase {
-  if (!createPaidReservationUseCase) {
-    createPaidReservationUseCase = new CreatePaidReservationUseCase(
-      makeReservationRepository(),
-      makeReservationEventRepository(),
-      makeTimeSlotRepository(),
-      makeProfileRepository(),
-      getContainer().transactionManager,
-    );
-  }
-  return createPaidReservationUseCase;
-}
-
 export function makeReservationService(): ReservationService {
   if (!reservationService) {
     reservationService = new ReservationService(
       makeReservationRepository(),
       makeReservationEventRepository(),
-      makeTimeSlotRepository(),
       makeProfileRepository(),
       makeCourtRepository(),
       makePlaceRepository(),
@@ -86,8 +58,10 @@ export function makeReservationService(): ReservationService {
       makeOrganizationPaymentMethodRepository(),
       makeOrganizationRepository(),
       makeOrganizationProfileRepository(),
-      makeCreateFreeReservationUseCase(),
-      makeCreatePaidReservationUseCase(),
+      makeCourtHoursRepository(),
+      makeCourtRateRuleRepository(),
+      makeCourtBlockRepository(),
+      makeCourtPriceOverrideRepository(),
       getContainer().transactionManager,
     );
   }
@@ -99,7 +73,6 @@ export function makeReservationOwnerService(): ReservationOwnerService {
     reservationOwnerService = new ReservationOwnerService(
       makeReservationRepository(),
       makeReservationEventRepository(),
-      makeTimeSlotRepository(),
       makeCourtRepository(),
       makePlaceRepository(),
       makeOrganizationReservationPolicyRepository(),

@@ -13,7 +13,12 @@ This documentation is split into multiple levels of detail so you can share the 
 - `docs/reservation-state-machine-changelog.md`
 
 ## Current contract (mutual confirmation)
-- Player creates a booking request (`CREATED`) and the slot is held immediately.
+- Player creates a booking request (`CREATED`) and the time range is reserved immediately.
 - Owner must accept within 15 minutes.
 - Paid bookings start a fresh 15-minute payment window on owner acceptance.
 - `PAYMENT_MARKED_BY_USER` can still expire if the TTL passes.
+
+## Availability model
+- Availability is **computed** from schedule rules, not stored as slot rows.
+- Reservations store `courtId + startTime + endTime` directly (range-based).
+- Blocking and price overrides use separate exception tables (`court_block`, `court_price_override`).

@@ -9,7 +9,9 @@ export * from "./claim-request";
 export * from "./contact-message";
 // Court-related tables
 export * from "./court";
+export * from "./court-block";
 export * from "./court-hours-window";
+export * from "./court-price-override";
 export * from "./court-rate-rule";
 // Enums (must be exported first as they are referenced by other schemas)
 export * from "./enums";
@@ -24,7 +26,5 @@ export * from "./place-verification";
 export * from "./profile";
 // Reservation-related tables
 export * from "./reservation";
-export * from "./reservation-time-slot";
 export * from "./sport";
-export * from "./time-slot";
 export * from "./user-roles";

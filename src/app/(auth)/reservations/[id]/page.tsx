@@ -46,7 +46,6 @@ export default function ReservationDetailPage() {
 
   const reservation = reservationDetail?.reservation;
   const events: ReservationEvent[] = reservationDetail?.events ?? [];
-  const timeSlot = reservationDetail?.timeSlot;
   const courtRecord = reservationDetail?.court;
   const placeRecord = reservationDetail?.place;
   const placePhotos = reservationDetail?.placePhotos ?? [];
@@ -76,7 +75,7 @@ export default function ReservationDetailPage() {
     );
   }
 
-  if (!reservation || !timeSlot || !courtRecord || !placeRecord) {
+  if (!reservation || !courtRecord || !placeRecord) {
     return (
       <Container className="py-6">
         <div className="text-center">
@@ -122,17 +121,15 @@ export default function ReservationDetailPage() {
     contactPhone: organizationProfile?.contactPhone ?? undefined,
   };
 
-  const effectivePriceCents = timeSlot.priceCents ?? 0;
-  const effectiveCurrency = timeSlot.currency ?? "PHP";
-  const isFreeSlot = timeSlot.isFree || effectivePriceCents === 0;
-
   const transformedTimeSlot = {
-    id: timeSlot.id,
-    startTime: timeSlot.startTime,
-    endTime: timeSlot.endTime,
-    priceCents: effectivePriceCents,
-    currency: effectiveCurrency,
+    id: reservation.id,
+    startTime: reservation.startTime,
+    endTime: reservation.endTime,
+    priceCents: reservation.totalPriceCents,
+    currency: reservation.currency,
   };
+
+  const isFreeSlot = transformedTimeSlot.priceCents === 0;
 
   const cancellationCutoffMinutes =
     effectiveReservationPolicy?.cancellationCutoffMinutes ?? 0;

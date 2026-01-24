@@ -1,6 +1,10 @@
-import { addMinutes } from "date-fns";
+import { addDays, addMinutes, endOfDay } from "date-fns";
 import { CourtNotFoundError } from "@/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
+import type { ICourtBlockRepository } from "@/modules/court-block/repositories/court-block.repository";
+import type { ICourtHoursRepository } from "@/modules/court-hours/repositories/court-hours.repository";
+import type { ICourtPriceOverrideRepository } from "@/modules/court-price-override/repositories/court-price-override.repository";
+import type { ICourtRateRuleRepository } from "@/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
 import type { IOrganizationProfileRepository } from "@/modules/organization/repositories/organization-profile.repository";
 import type { IOrganizationPaymentMethodRepository } from "@/modules/organization-payment/repositories/organization-payment-method.repository";
@@ -10,12 +14,11 @@ import type { IPlaceRepository } from "@/modules/place/repositories/place.reposi
 import type { IPlacePhotoRepository } from "@/modules/place/repositories/place-photo.repository";
 import { PlaceNotBookableError } from "@/modules/place-verification/errors/place-verification.errors";
 import type { IPlaceVerificationRepository } from "@/modules/place-verification/repositories/place-verification.repository";
+import {
+  IncompleteProfileError,
+  ProfileNotFoundError,
+} from "@/modules/profile/errors/profile.errors";
 import type { IProfileRepository } from "@/modules/profile/repositories/profile.repository";
-import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
-import type {
-  ITimeSlotRepository,
-  TimeSlotWithDetails,
-} from "@/modules/time-slot/repositories/time-slot.repository";
 import type {
   CourtRecord,
   OrganizationPaymentMethodRecord,
@@ -26,16 +29,12 @@ import type {
   PlaceRecord,
   ReservationEventRecord,
   ReservationRecord,
-  TimeSlotRecord,
 } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
-import {
-  findConsecutiveSlots,
-  summarizeSlotPricing,
-} from "@/shared/lib/time-slot-availability";
-import { getZonedDayRangeForInstant } from "@/shared/lib/time-zone";
+import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
+import { computeSchedulePrice } from "@/shared/lib/schedule-availability";
 import type {
   CancelReservationDTO,
   CreateReservationForAnyCourtDTO,
@@ -45,6 +44,7 @@ import type {
   ReservationListItemRecord,
 } from "../dtos";
 import {
+  BookingWindowExceededError,
   InvalidReservationStatusError,
   NoAvailabilityError,
   NotReservationOwnerError,
@@ -55,8 +55,6 @@ import {
 } from "../errors/reservation.errors";
 import type { IReservationRepository } from "../repositories/reservation.repository";
 import type { IReservationEventRepository } from "../repositories/reservation-event.repository";
-import type { ICreateFreeReservationUseCase } from "../use-cases/create-free-reservation.use-case";
-import type { ICreatePaidReservationUseCase } from "../use-cases/create-paid-reservation.use-case";
 
 const DEFAULT_OWNER_REVIEW_MINUTES = 15;
 const DEFAULT_CANCELLATION_CUTOFF_MINUTES = 0;
@@ -64,16 +62,17 @@ const DEFAULT_CANCELLATION_CUTOFF_MINUTES = 0;
 interface CourtAvailabilitySelection {
   courtId: string;
   courtLabel: string;
-  slotIds: string[];
+  startTime: Date;
+  endTime: Date;
   totalPriceCents: number;
-  currency: string | null;
+  currency: string;
 }
 
 export interface ReservationCreationResult extends ReservationRecord {
   courtId: string;
   courtLabel: string;
   totalPriceCents: number;
-  currency: string | null;
+  currency: string;
 }
 
 export interface ReservationPaymentMethod {
@@ -94,7 +93,6 @@ export interface ReservationPaymentInfo {
 export interface ReservationDetail {
   reservation: ReservationRecord;
   events: ReservationEventRecord[];
-  timeSlot: TimeSlotWithDetails;
   court: CourtRecord;
   place: PlaceRecord;
   placePhotos: PlacePhotoRecord[];
@@ -104,11 +102,6 @@ export interface ReservationDetail {
 }
 
 export interface IReservationService {
-  createReservation(
-    userId: string,
-    profileId: string,
-    timeSlotId: string,
-  ): Promise<ReservationRecord>;
   createReservationForCourt(
     userId: string,
     profileId: string,
@@ -153,8 +146,7 @@ export class ReservationService implements IReservationService {
   constructor(
     private reservationRepository: IReservationRepository,
     private reservationEventRepository: IReservationEventRepository,
-    private timeSlotRepository: ITimeSlotRepository,
-    _profileRepository: IProfileRepository,
+    private profileRepository: IProfileRepository,
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
     private placePhotoRepository: IPlacePhotoRepository,
@@ -163,10 +155,19 @@ export class ReservationService implements IReservationService {
     private organizationPaymentMethodRepository: IOrganizationPaymentMethodRepository,
     private organizationRepository: IOrganizationRepository,
     private organizationProfileRepository: IOrganizationProfileRepository,
-    private createFreeReservationUseCase: ICreateFreeReservationUseCase,
-    private createPaidReservationUseCase: ICreatePaidReservationUseCase,
+    private courtHoursRepository: ICourtHoursRepository,
+    private courtRateRuleRepository: ICourtRateRuleRepository,
+    private courtBlockRepository: ICourtBlockRepository,
+    private courtPriceOverrideRepository: ICourtPriceOverrideRepository,
     private transactionManager: TransactionManager,
   ) {}
+
+  private requireCourtPlaceId(placeId: string | null): string {
+    if (!placeId) {
+      throw new PlaceNotFoundError();
+    }
+    return placeId;
+  }
 
   private async getOrganizationPolicyForCourt(
     courtId: string,
@@ -201,6 +202,13 @@ export class ReservationService implements IReservationService {
     return addMinutes(new Date(), ownerReviewMinutes);
   }
 
+  private assertWithinBookingWindow(startTime: Date): void {
+    const maxStartTime = endOfDay(addDays(new Date(), MAX_BOOKING_WINDOW_DAYS));
+    if (startTime > maxStartTime) {
+      throw new BookingWindowExceededError(startTime, maxStartTime);
+    }
+  }
+
   private async assertPlaceBookable(
     placeId: string,
     ctx?: RequestContext,
@@ -220,51 +228,65 @@ export class ReservationService implements IReservationService {
     }
   }
 
-  private requireCourtPlaceId(placeId: string | null): string {
-    if (!placeId) {
-      throw new PlaceNotFoundError();
-    }
-    return placeId;
+  private async computeCourtPricing(options: {
+    courtId: string;
+    startTime: Date;
+    durationMinutes: number;
+    timeZone: string;
+    ctx?: RequestContext;
+  }): Promise<{
+    endTime: Date;
+    totalPriceCents: number;
+    currency: string;
+  } | null> {
+    const { courtId, startTime, durationMinutes, timeZone, ctx } = options;
+    const endTime = addMinutes(startTime, durationMinutes);
+
+    const [hoursWindows, rateRules, priceOverrides] = await Promise.all([
+      this.courtHoursRepository.findByCourtIds([courtId], ctx),
+      this.courtRateRuleRepository.findByCourtIds([courtId], ctx),
+      this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+        [courtId],
+        startTime,
+        endTime,
+        ctx,
+      ),
+    ]);
+
+    return computeSchedulePrice({
+      startTime,
+      durationMinutes,
+      timeZone,
+      hoursWindows,
+      rateRules,
+      priceOverrides,
+    });
   }
 
-  async createReservation(
-    userId: string,
-    profileId: string,
-    timeSlotId: string,
-  ): Promise<ReservationRecord> {
-    const slot = await this.timeSlotRepository.findById(timeSlotId);
-    if (!slot) {
-      throw new SlotNotFoundError(timeSlotId);
-    }
+  private async isCourtRangeAvailable(options: {
+    courtIds: string[];
+    startTime: Date;
+    endTime: Date;
+    ctx?: RequestContext;
+  }): Promise<boolean> {
+    const { courtIds, startTime, endTime, ctx } = options;
 
-    const court = await this.courtRepository.findById(slot.courtId);
-    if (!court) {
-      throw new CourtNotFoundError(slot.courtId);
-    }
+    const [reservations, blocks] = await Promise.all([
+      this.reservationRepository.findOverlappingActiveByCourtIds(
+        courtIds,
+        startTime,
+        endTime,
+        ctx,
+      ),
+      this.courtBlockRepository.findOverlappingByCourtIds(
+        courtIds,
+        startTime,
+        endTime,
+        ctx,
+      ),
+    ]);
 
-    const placeId = this.requireCourtPlaceId(court.placeId);
-    await this.assertPlaceBookable(placeId);
-
-    const policy = await this.getOrganizationPolicyForCourt(slot.courtId);
-    const expiresAt = this.getOwnerAcceptanceExpiresAt(policy);
-
-    const isFree = slot.priceCents === null;
-
-    if (isFree) {
-      return this.createFreeReservationUseCase.execute(
-        userId,
-        profileId,
-        [timeSlotId],
-        expiresAt,
-      );
-    }
-
-    return this.createPaidReservationUseCase.execute(
-      userId,
-      profileId,
-      [timeSlotId],
-      expiresAt,
-    );
+    return reservations.length === 0 && blocks.length === 0;
   }
 
   async createReservationForCourt(
@@ -278,16 +300,12 @@ export class ReservationService implements IReservationService {
     }
 
     const placeId = this.requireCourtPlaceId(court.placeId);
-    await this.assertPlaceBookable(placeId);
+    const place = await this.placeRepository.findById(placeId);
+    if (!place) {
+      throw new PlaceNotFoundError(placeId);
+    }
 
-    const startTime = new Date(data.startTime);
-    const consecutiveSlots = await this.findConsecutiveSlotsForCourt(
-      data.courtId,
-      startTime,
-      data.durationMinutes,
-    );
-
-    if (!consecutiveSlots) {
+    if (!place.isActive || place.placeType !== "RESERVABLE") {
       throw new NoAvailabilityError({
         courtId: data.courtId,
         startTime: data.startTime,
@@ -295,25 +313,116 @@ export class ReservationService implements IReservationService {
       });
     }
 
-    const pricing = summarizeSlotPricing(consecutiveSlots);
-    const slotIds = consecutiveSlots.map((slot) => slot.id);
-    const policy = await this.getOrganizationPolicyForCourt(data.courtId);
+    await this.assertPlaceBookable(placeId);
+
+    const startTime = new Date(data.startTime);
+    this.assertWithinBookingWindow(startTime);
+
+    const pricing = await this.computeCourtPricing({
+      courtId: court.id,
+      startTime,
+      durationMinutes: data.durationMinutes,
+      timeZone: place.timeZone,
+    });
+
+    if (!pricing) {
+      throw new NoAvailabilityError({
+        courtId: data.courtId,
+        startTime: data.startTime,
+        durationMinutes: data.durationMinutes,
+      });
+    }
+
+    const isAvailable = await this.isCourtRangeAvailable({
+      courtIds: [court.id],
+      startTime,
+      endTime: pricing.endTime,
+    });
+
+    if (!isAvailable) {
+      throw new NoAvailabilityError({
+        courtId: data.courtId,
+        startTime: data.startTime,
+        durationMinutes: data.durationMinutes,
+      });
+    }
+
+    const policy = await this.getOrganizationPolicyForCourt(court.id);
     const expiresAt = this.getOwnerAcceptanceExpiresAt(policy);
 
-    const reservation =
-      pricing.totalPriceCents > 0
-        ? await this.createPaidReservationUseCase.execute(
-            userId,
-            profileId,
-            slotIds,
-            expiresAt,
-          )
-        : await this.createFreeReservationUseCase.execute(
-            userId,
-            profileId,
-            slotIds,
-            expiresAt,
-          );
+    const reservation = await this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+
+      const profile = await this.profileRepository.findById(profileId, ctx);
+      if (!profile) {
+        throw new ProfileNotFoundError(profileId);
+      }
+
+      if (!profile.displayName || (!profile.email && !profile.phoneNumber)) {
+        throw new IncompleteProfileError();
+      }
+
+      const stillAvailable = await this.isCourtRangeAvailable({
+        courtIds: [court.id],
+        startTime,
+        endTime: pricing.endTime,
+        ctx,
+      });
+
+      if (!stillAvailable) {
+        throw new NoAvailabilityError({
+          courtId: data.courtId,
+          startTime: data.startTime,
+          durationMinutes: data.durationMinutes,
+        });
+      }
+
+      const created = await this.reservationRepository.create(
+        {
+          courtId: court.id,
+          startTime,
+          endTime: pricing.endTime,
+          totalPriceCents: pricing.totalPriceCents,
+          currency: pricing.currency,
+          playerId: profileId,
+          playerNameSnapshot: profile.displayName,
+          playerEmailSnapshot: profile.email,
+          playerPhoneSnapshot: profile.phoneNumber,
+          status: "CREATED",
+          expiresAt,
+        },
+        ctx,
+      );
+
+      await this.reservationEventRepository.create(
+        {
+          reservationId: created.id,
+          fromStatus: null,
+          toStatus: "CREATED",
+          triggeredByUserId: userId,
+          triggeredByRole: "PLAYER",
+          notes: "Reservation created - awaiting owner acceptance",
+        },
+        ctx,
+      );
+
+      logger.info(
+        {
+          event: "reservation.created",
+          reservationId: created.id,
+          courtId: court.id,
+          playerId: profileId,
+          status: "CREATED",
+          startTime: startTime.toISOString(),
+          endTime: pricing.endTime.toISOString(),
+          totalPriceCents: pricing.totalPriceCents,
+          currency: pricing.currency,
+        },
+        "Reservation created and awaiting owner acceptance",
+      );
+
+      return created;
+    });
 
     return {
       ...reservation,
@@ -349,28 +458,77 @@ export class ReservationService implements IReservationService {
       data.placeId,
       data.sportId,
     );
+    const activeCourts = courts.filter((court) => court.isActive);
+    if (activeCourts.length === 0) {
+      throw new NoAvailabilityError({
+        placeId: data.placeId,
+        sportId: data.sportId,
+        startTime: data.startTime,
+        durationMinutes: data.durationMinutes,
+      });
+    }
 
     const startTime = new Date(data.startTime);
+    this.assertWithinBookingWindow(startTime);
+    const endTime = addMinutes(startTime, data.durationMinutes);
+    const courtIds = activeCourts.map((court) => court.id);
+
+    const [hoursWindows, rateRules, overrides, reservations, blocks] =
+      await Promise.all([
+        this.courtHoursRepository.findByCourtIds(courtIds),
+        this.courtRateRuleRepository.findByCourtIds(courtIds),
+        this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+          courtIds,
+          startTime,
+          endTime,
+        ),
+        this.reservationRepository.findOverlappingActiveByCourtIds(
+          courtIds,
+          startTime,
+          endTime,
+        ),
+        this.courtBlockRepository.findOverlappingByCourtIds(
+          courtIds,
+          startTime,
+          endTime,
+        ),
+      ]);
+
+    const hasBlockingReservation = new Set(
+      reservations.map((reservation) => reservation.courtId),
+    );
+    const hasBlockingBlock = new Set(blocks.map((block) => block.courtId));
+
     let selected: CourtAvailabilitySelection | null = null;
 
-    for (const court of courts) {
-      if (!court.isActive) continue;
+    for (const court of activeCourts) {
+      if (hasBlockingReservation.has(court.id)) continue;
+      if (hasBlockingBlock.has(court.id)) continue;
 
-      const consecutiveSlots = await this.findConsecutiveSlotsForCourt(
-        court.id,
-        startTime,
-        data.durationMinutes,
+      const courtHours = hoursWindows.filter(
+        (window) => window.courtId === court.id,
+      );
+      const courtRules = rateRules.filter((rule) => rule.courtId === court.id);
+      const courtOverrides = overrides.filter(
+        (override) => override.courtId === court.id,
       );
 
-      if (!consecutiveSlots) {
-        continue;
-      }
+      const pricing = computeSchedulePrice({
+        startTime,
+        durationMinutes: data.durationMinutes,
+        timeZone: place.timeZone,
+        hoursWindows: courtHours,
+        rateRules: courtRules,
+        priceOverrides: courtOverrides,
+      });
 
-      const pricing = summarizeSlotPricing(consecutiveSlots);
+      if (!pricing) continue;
+
       const candidate: CourtAvailabilitySelection = {
         courtId: court.id,
         courtLabel: court.label,
-        slotIds: consecutiveSlots.map((slot) => slot.id),
+        startTime,
+        endTime: pricing.endTime,
         totalPriceCents: pricing.totalPriceCents,
         currency: pricing.currency,
       };
@@ -392,20 +550,80 @@ export class ReservationService implements IReservationService {
     const policy = await this.getOrganizationPolicyForCourt(selected.courtId);
     const expiresAt = this.getOwnerAcceptanceExpiresAt(policy);
 
-    const reservation =
-      selected.totalPriceCents > 0
-        ? await this.createPaidReservationUseCase.execute(
-            userId,
-            profileId,
-            selected.slotIds,
-            expiresAt,
-          )
-        : await this.createFreeReservationUseCase.execute(
-            userId,
-            profileId,
-            selected.slotIds,
-            expiresAt,
-          );
+    const reservation = await this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+
+      const profile = await this.profileRepository.findById(profileId, ctx);
+      if (!profile) {
+        throw new ProfileNotFoundError(profileId);
+      }
+
+      if (!profile.displayName || (!profile.email && !profile.phoneNumber)) {
+        throw new IncompleteProfileError();
+      }
+
+      const stillAvailable = await this.isCourtRangeAvailable({
+        courtIds: [selected.courtId],
+        startTime,
+        endTime: selected.endTime,
+        ctx,
+      });
+
+      if (!stillAvailable) {
+        throw new NoAvailabilityError({
+          placeId: data.placeId,
+          sportId: data.sportId,
+          startTime: data.startTime,
+          durationMinutes: data.durationMinutes,
+        });
+      }
+
+      const created = await this.reservationRepository.create(
+        {
+          courtId: selected.courtId,
+          startTime,
+          endTime: selected.endTime,
+          totalPriceCents: selected.totalPriceCents,
+          currency: selected.currency,
+          playerId: profileId,
+          playerNameSnapshot: profile.displayName,
+          playerEmailSnapshot: profile.email,
+          playerPhoneSnapshot: profile.phoneNumber,
+          status: "CREATED",
+          expiresAt,
+        },
+        ctx,
+      );
+
+      await this.reservationEventRepository.create(
+        {
+          reservationId: created.id,
+          fromStatus: null,
+          toStatus: "CREATED",
+          triggeredByUserId: userId,
+          triggeredByRole: "PLAYER",
+          notes: "Reservation created - awaiting owner acceptance",
+        },
+        ctx,
+      );
+
+      logger.info(
+        {
+          event: "reservation.created",
+          reservationId: created.id,
+          courtId: selected.courtId,
+          playerId: profileId,
+          status: "CREATED",
+          startTime: startTime.toISOString(),
+          endTime: selected.endTime.toISOString(),
+          totalPriceCents: selected.totalPriceCents,
+          currency: selected.currency,
+        },
+        "Reservation created and awaiting owner acceptance",
+      );
+
+      return created;
+    });
 
     return {
       ...reservation,
@@ -437,12 +655,10 @@ export class ReservationService implements IReservationService {
         throw new ReservationNotFoundError(data.reservationId);
       }
 
-      // Verify ownership
       if (reservation.playerId !== profileId) {
         throw new NotReservationOwnerError();
       }
 
-      // Verify status
       if (reservation.status !== "AWAITING_PAYMENT") {
         throw new InvalidReservationStatusError(
           data.reservationId,
@@ -451,7 +667,6 @@ export class ReservationService implements IReservationService {
         );
       }
 
-      // Check expiration
       if (
         reservation.expiresAt &&
         new Date(reservation.expiresAt) < new Date()
@@ -460,7 +675,6 @@ export class ReservationService implements IReservationService {
       }
 
       const now = new Date();
-
       const updated = await this.reservationRepository.update(
         data.reservationId,
         {
@@ -512,12 +726,10 @@ export class ReservationService implements IReservationService {
         throw new ReservationNotFoundError(data.reservationId);
       }
 
-      // Verify ownership
       if (reservation.playerId !== profileId) {
         throw new NotReservationOwnerError();
       }
 
-      // Block cancellation for terminal states
       if (
         reservation.status === "CANCELLED" ||
         reservation.status === "EXPIRED" ||
@@ -530,22 +742,14 @@ export class ReservationService implements IReservationService {
         );
       }
 
-      const slot = await this.timeSlotRepository.findById(
-        reservation.timeSlotId,
-        ctx,
-      );
-      if (!slot) {
-        throw new SlotNotFoundError(reservation.timeSlotId);
-      }
-
       const policy = await this.getOrganizationPolicyForCourt(
-        slot.courtId,
+        reservation.courtId,
         ctx,
       );
       const cancellationCutoffMinutes =
         policy?.cancellationCutoffMinutes ??
         DEFAULT_CANCELLATION_CUTOFF_MINUTES;
-      const cutoffTime = new Date(slot.startTime);
+      const cutoffTime = new Date(reservation.startTime);
       cutoffTime.setMinutes(
         cutoffTime.getMinutes() - cancellationCutoffMinutes,
       );
@@ -560,27 +764,17 @@ export class ReservationService implements IReservationService {
 
       const previousStatus = reservation.status;
 
-      // Update reservation status
       const updated = await this.reservationRepository.update(
         data.reservationId,
         {
           status: "CANCELLED",
           cancelledAt: new Date(),
           cancellationReason: data.reason,
+          expiresAt: null,
         },
         ctx,
       );
 
-      // Release the time slot back to AVAILABLE
-      const slotIds = await this.getReservationSlotIds(
-        reservation.id,
-        reservation.timeSlotId,
-        ctx,
-      );
-
-      await this.timeSlotRepository.updateManyStatus(slotIds, "AVAILABLE", ctx);
-
-      // Create audit event
       await this.reservationEventRepository.create(
         {
           reservationId: data.reservationId,
@@ -634,14 +828,9 @@ export class ReservationService implements IReservationService {
       );
     }
 
-    const slot = await this.timeSlotRepository.findById(reservation.timeSlotId);
-    if (!slot) {
-      throw new SlotNotFoundError(reservation.timeSlotId);
-    }
-
-    const court = await this.courtRepository.findById(slot.courtId);
+    const court = await this.courtRepository.findById(reservation.courtId);
     if (!court) {
-      throw new CourtNotFoundError(slot.courtId);
+      throw new CourtNotFoundError(reservation.courtId);
     }
 
     const placeId = this.requireCourtPlaceId(court.placeId);
@@ -684,18 +873,13 @@ export class ReservationService implements IReservationService {
       throw new ReservationNotFoundError(reservationId);
     }
 
-    const [events, slot] = await Promise.all([
+    const [events, court] = await Promise.all([
       this.reservationEventRepository.findByReservationId(reservationId),
-      this.timeSlotRepository.findById(reservation.timeSlotId),
+      this.courtRepository.findById(reservation.courtId),
     ]);
 
-    if (!slot) {
-      throw new SlotNotFoundError(reservation.timeSlotId);
-    }
-
-    const court = await this.courtRepository.findById(slot.courtId);
     if (!court) {
-      throw new CourtNotFoundError(slot.courtId);
+      throw new CourtNotFoundError(reservation.courtId);
     }
 
     const placeId = this.requireCourtPlaceId(court.placeId);
@@ -725,7 +909,6 @@ export class ReservationService implements IReservationService {
     return {
       reservation,
       events,
-      timeSlot: slot,
       court,
       place,
       placePhotos,
@@ -744,8 +927,10 @@ export class ReservationService implements IReservationService {
     if (!reservation) {
       throw new ReservationNotFoundError(reservationId);
     }
+
     const events =
       await this.reservationEventRepository.findByReservationId(reservationId);
+
     return { reservation, events };
   }
 
@@ -772,37 +957,6 @@ export class ReservationService implements IReservationService {
     });
   }
 
-  private async findConsecutiveSlotsForCourt(
-    courtId: string,
-    startTime: Date,
-    durationMinutes: number,
-  ): Promise<TimeSlotRecord[] | null> {
-    const court = await this.courtRepository.findById(courtId);
-    if (!court) {
-      throw new CourtNotFoundError(courtId);
-    }
-    const placeId = this.requireCourtPlaceId(court.placeId);
-    const place = await this.placeRepository.findById(placeId);
-    if (!place) {
-      throw new PlaceNotFoundError(placeId);
-    }
-    const { start, end } = getZonedDayRangeForInstant(
-      startTime,
-      place.timeZone,
-    );
-    const slots = await this.timeSlotRepository.findAvailable(
-      courtId,
-      start,
-      end,
-    );
-
-    return findConsecutiveSlots({
-      slots,
-      startTime,
-      durationMinutes,
-    });
-  }
-
   private pickCheapestCourtOption(
     current: CourtAvailabilitySelection,
     next: CourtAvailabilitySelection,
@@ -824,19 +978,5 @@ export class ReservationService implements IReservationService {
     }
 
     return next.courtId < current.courtId ? next : current;
-  }
-
-  private async getReservationSlotIds(
-    reservationId: string,
-    fallbackTimeSlotId: string,
-    ctx?: RequestContext,
-  ): Promise<string[]> {
-    const slotIds =
-      await this.reservationRepository.findTimeSlotIdsByReservationId(
-        reservationId,
-        ctx,
-      );
-
-    return slotIds.length > 0 ? slotIds : [fallbackTimeSlotId];
   }
 }

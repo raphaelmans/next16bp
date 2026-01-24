@@ -7,7 +7,6 @@ import {
   ProfileNotFoundError,
 } from "@/modules/profile/errors/profile.errors";
 import { makeProfileService } from "@/modules/profile/factories/profile.factory";
-import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
 import {
   protectedProcedure,
   protectedRateLimitedProcedure,
@@ -18,7 +17,6 @@ import {
   CancelReservationSchema,
   CreateReservationForAnyCourtSchema,
   CreateReservationForCourtSchema,
-  CreateReservationSchema,
   GetMyReservationsSchema,
   GetPaymentInfoSchema,
   MarkPaymentSchema,
@@ -41,7 +39,6 @@ import { makeReservationService } from "./factories/reservation.factory";
 function handleReservationError(error: unknown): never {
   if (
     error instanceof ReservationNotFoundError ||
-    error instanceof SlotNotFoundError ||
     error instanceof ProfileNotFoundError ||
     error instanceof CourtNotFoundError ||
     error instanceof PlaceNotFoundError
@@ -85,28 +82,6 @@ function handleReservationError(error: unknown): never {
 }
 
 export const reservationRouter = router({
-  /**
-   * Create a new reservation (sensitive - rate limited)
-   */
-  create: protectedRateLimitedProcedure("sensitive")
-    .input(CreateReservationSchema)
-    .mutation(async ({ input, ctx }) => {
-      try {
-        // Get or create profile for the user
-        const profileService = makeProfileService();
-        const profile = await profileService.getOrCreateProfile(ctx.userId);
-
-        const reservationService = makeReservationService();
-        return await reservationService.createReservation(
-          ctx.userId,
-          profile.id,
-          input.timeSlotId,
-        );
-      } catch (error) {
-        handleReservationError(error);
-      }
-    }),
-
   createForCourt: protectedRateLimitedProcedure("sensitive")
     .input(CreateReservationForCourtSchema)
     .mutation(async ({ input, ctx }) => {

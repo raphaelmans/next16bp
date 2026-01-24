@@ -1,5 +1,6 @@
 import { differenceInCalendarDays } from "date-fns";
 import { z } from "zod";
+import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
 
 const DurationMinutesSchema = z
   .number()
@@ -12,7 +13,17 @@ const DurationMinutesSchema = z
 
 export const GetAvailabilityForCourtSchema = z.object({
   courtId: z.string().uuid(),
-  date: z.string().datetime(),
+  date: z
+    .string()
+    .datetime()
+    .refine(
+      (date) =>
+        differenceInCalendarDays(new Date(date), new Date()) <=
+        MAX_BOOKING_WINDOW_DAYS,
+      {
+        message: `Date must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
+      },
+    ),
   durationMinutes: DurationMinutesSchema,
 });
 
@@ -21,23 +32,63 @@ export const GetAvailabilityForCourtsSchema = z.object({
     .array(z.string().uuid())
     .min(1, "At least one court is required")
     .max(50, "Too many courts requested"),
-  date: z.string().datetime(),
+  date: z
+    .string()
+    .datetime()
+    .refine(
+      (date) =>
+        differenceInCalendarDays(new Date(date), new Date()) <=
+        MAX_BOOKING_WINDOW_DAYS,
+      {
+        message: `Date must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
+      },
+    ),
   durationMinutes: DurationMinutesSchema,
 });
 
 export const GetAvailabilityForPlaceSportSchema = z.object({
   placeId: z.string().uuid(),
   sportId: z.string().uuid(),
-  date: z.string().datetime(),
+  date: z
+    .string()
+    .datetime()
+    .refine(
+      (date) =>
+        differenceInCalendarDays(new Date(date), new Date()) <=
+        MAX_BOOKING_WINDOW_DAYS,
+      {
+        message: `Date must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
+      },
+    ),
   durationMinutes: DurationMinutesSchema,
 });
 
-const MAX_AVAILABILITY_RANGE_DAYS = 45;
+const MAX_AVAILABILITY_RANGE_DAYS = MAX_BOOKING_WINDOW_DAYS;
 
 const AvailabilityRangeSchema = z
   .object({
-    startDate: z.string().datetime(),
-    endDate: z.string().datetime(),
+    startDate: z
+      .string()
+      .datetime()
+      .refine(
+        (date) =>
+          differenceInCalendarDays(new Date(date), new Date()) <=
+          MAX_BOOKING_WINDOW_DAYS,
+        {
+          message: `Date must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
+        },
+      ),
+    endDate: z
+      .string()
+      .datetime()
+      .refine(
+        (date) =>
+          differenceInCalendarDays(new Date(date), new Date()) <=
+          MAX_BOOKING_WINDOW_DAYS,
+        {
+          message: `Date must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
+        },
+      ),
   })
   .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
     message: "End date must be after start date",

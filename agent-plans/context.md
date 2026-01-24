@@ -8,6 +8,9 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-24 | Added 65-rules-exceptions-cutover plan (remove time_slot materialization + owner slots UI) |
+| 2026-01-24 | Added 64-booking-window-ux plan (schedule deep-link clamping + clearer window error messaging) |
+| 2026-01-24 | Added 63-booking-window-60-days plan (enforce 60-day availability + booking lead time caps) |
 | 2026-01-23 | Added 62-bulk-slot-best-effort plan (best-effort bulk slot creation + overlap constraint) |
 | 2026-01-22 | Added 61-org-root-slug-routing plan (root org profile rewrite + reserved slug enforcement) |
 | 2026-01-21 | Added 59-public-courts-lazy-card-details plan (summary list + batched card details for faster discovery load) |

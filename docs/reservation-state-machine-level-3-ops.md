@@ -13,8 +13,8 @@ This level describes the operational behavior expected from background jobs and 
   - `PAYMENT_MARKED_BY_USER`
 - Transaction updates:
   - Reservation → `EXPIRED`.
-  - Time slot → `AVAILABLE`.
   - Audit event → `SYSTEM` role with timeout note.
+- Availability effect: time range automatically becomes available (computed, no slot update needed).
 
 ## Owner monitoring (UI)
 - Owner “Active Reservations” queue should include:

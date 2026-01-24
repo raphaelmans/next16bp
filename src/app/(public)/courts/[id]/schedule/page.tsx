@@ -1,13 +1,15 @@
 "use client";
 
-import { endOfMonth, startOfMonth } from "date-fns";
+import { addDays, endOfMonth, startOfMonth } from "date-fns";
 import {
+  AlertTriangle,
   ArrowLeft,
   Calendar as CalendarIcon,
   Clock,
   ExternalLink,
   Minus,
   Plus,
+  RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -18,9 +20,9 @@ import {
   useQueryState,
 } from "nuqs";
 import * as React from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   InputGroup,
@@ -42,6 +44,7 @@ import {
   usePlaceDetail,
 } from "@/features/discovery/hooks";
 import {
+  AvailabilityMonthView,
   KudosDatePicker,
   type TimeSlot,
   TimeSlotPicker,
@@ -49,6 +52,7 @@ import {
 } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
 import { trackEvent } from "@/shared/lib/clients/telemetry-client";
 import { normalizeDurationMinutes } from "@/shared/lib/duration";
 import {
@@ -158,6 +162,41 @@ function buildAvailabilityId(
   duration: number,
 ) {
   return `${courtId}-${startTime}-${duration}`;
+}
+
+type AvailabilityErrorInfo = {
+  isBookingWindowError: boolean;
+  isError: boolean;
+  refetch: () => void;
+};
+
+function getAvailabilityErrorInfo(
+  error: unknown,
+  refetch: () => void,
+): AvailabilityErrorInfo {
+  if (!error) {
+    return { isBookingWindowError: false, isError: false, refetch };
+  }
+
+  const isRecord = (v: unknown): v is Record<string, unknown> =>
+    typeof v === "object" && v !== null;
+
+  if (isRecord(error)) {
+    const data = isRecord(error.data) ? error.data : null;
+    if (data?.code === "BOOKING_WINDOW_EXCEEDED") {
+      return { isBookingWindowError: true, isError: true, refetch };
+    }
+
+    const message = error.message;
+    if (
+      typeof message === "string" &&
+      message.includes("beyond the maximum booking window")
+    ) {
+      return { isBookingWindowError: true, isError: true, refetch };
+    }
+  }
+
+  return { isBookingWindowError: false, isError: true, refetch };
 }
 
 export default function CourtSchedulePage() {
@@ -319,6 +358,15 @@ export default function CourtSchedulePage() {
     () => getZonedToday(placeTimeZone),
     [placeTimeZone],
   );
+  const maxDate = React.useMemo(
+    () => addDays(today, MAX_BOOKING_WINDOW_DAYS),
+    [today],
+  );
+  const maxMonthStart = React.useMemo(() => startOfMonth(maxDate), [maxDate]);
+  const maxMonthKey = React.useMemo(
+    () => getMonthKeyFromDate(maxDate, placeTimeZone),
+    [maxDate, placeTimeZone],
+  );
   const todayDayKey = React.useMemo(
     () => getZonedDayKey(today, placeTimeZone),
     [placeTimeZone, today],
@@ -369,10 +417,14 @@ export default function CourtSchedulePage() {
     const monthStart = parseMonthKeyToDate(monthParam, placeTimeZone);
     if (monthStart < minMonthStart) {
       setMonthParam(currentMonthKey);
+    } else if (monthStart > maxMonthStart) {
+      setMonthParam(maxMonthKey);
     }
   }, [
     currentMonthKey,
     dayKeyParam,
+    maxMonthKey,
+    maxMonthStart,
     minMonthStart,
     monthParam,
     place,
@@ -430,10 +482,11 @@ export default function CourtSchedulePage() {
     ).start;
     return rangeStart < todayRange.start ? todayRange.start : rangeStart;
   }, [monthStart, placeTimeZone, todayRange.start]);
-  const monthRangeEnd = React.useMemo(
-    () => getZonedDayRangeForInstant(monthEnd, placeTimeZone).end,
-    [monthEnd, placeTimeZone],
-  );
+  const monthRangeEnd = React.useMemo(() => {
+    const rangeEnd = getZonedDayRangeForInstant(monthEnd, placeTimeZone).end;
+    const maxRangeEnd = getZonedDayRangeForInstant(maxDate, placeTimeZone).end;
+    return rangeEnd > maxRangeEnd ? maxRangeEnd : rangeEnd;
+  }, [maxDate, monthEnd, placeTimeZone]);
   const monthRangeStartIso = React.useMemo(
     () => toUtcISOString(monthRangeStart),
     [monthRangeStart],
@@ -619,6 +672,44 @@ export default function CourtSchedulePage() {
   ]);
 
   const isLoadingCourtAvailability = courtAvailabilityQuery.isLoading;
+
+  const activeAvailabilityError = React.useMemo<AvailabilityErrorInfo>(() => {
+    if (isMonthView) {
+      const query =
+        modeParam === "any"
+          ? monthAvailabilityQuery
+          : courtMonthAvailabilityQuery;
+      return getAvailabilityErrorInfo(query.error, query.refetch);
+    }
+
+    const query =
+      modeParam === "any" ? cheapestAvailabilityQuery : courtAvailabilityQuery;
+    return getAvailabilityErrorInfo(query.error, query.refetch);
+  }, [
+    cheapestAvailabilityQuery,
+    courtAvailabilityQuery,
+    courtMonthAvailabilityQuery,
+    isMonthView,
+    modeParam,
+    monthAvailabilityQuery,
+  ]);
+
+  const maxDayKey = React.useMemo(
+    () => getZonedDayKey(maxDate, placeTimeZone),
+    [maxDate, placeTimeZone],
+  );
+
+  const handleJumpToMaxDate = React.useCallback(() => {
+    setDayKeyParam(maxDayKey);
+    setMonthParam(maxMonthKey);
+    setStartTimeParam(null);
+  }, [
+    maxDayKey,
+    maxMonthKey,
+    setDayKeyParam,
+    setMonthParam,
+    setStartTimeParam,
+  ]);
 
   const courtAvailabilityById = React.useMemo(() => {
     const grouped: Record<string, CourtAvailabilityOption[]> = {};
@@ -1033,6 +1124,7 @@ export default function CourtSchedulePage() {
                     setStartTimeParam(null);
                   }}
                   placeholder="Choose a date"
+                  maxDate={maxDate}
                   timeZone={placeTimeZone}
                 />
               </div>
@@ -1063,6 +1155,53 @@ export default function CourtSchedulePage() {
           </CardHeader>
 
           <CardContent className="space-y-4">
+            {activeAvailabilityError.isError && (
+              <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>
+                  {activeAvailabilityError.isBookingWindowError
+                    ? "Date beyond booking window"
+                    : "Failed to load availability"}
+                </AlertTitle>
+                <AlertDescription>
+                  {activeAvailabilityError.isBookingWindowError ? (
+                    <div className="flex flex-col gap-2">
+                      <p>
+                        Bookings are available up to {MAX_BOOKING_WINDOW_DAYS}{" "}
+                        days in advance.
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="w-fit"
+                        onClick={handleJumpToMaxDate}
+                      >
+                        Jump to the latest available date
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      <p>
+                        Something went wrong while loading availability. Please
+                        try again.
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="w-fit"
+                        onClick={() => activeAvailabilityError.refetch()}
+                      >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Retry
+                      </Button>
+                    </div>
+                  )}
+                </AlertDescription>
+              </Alert>
+            )}
+
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/30 p-3">
               <div className="flex items-start gap-2">
                 <CalendarIcon className="h-4 w-4 text-accent mt-0.5" />
@@ -1101,78 +1240,37 @@ export default function CourtSchedulePage() {
             </div>
 
             {isMonthView ? (
-              <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium">Browse month</p>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={handleMonthToday}
-                    >
-                      Today
-                    </Button>
-                  </div>
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={handleMonthSelect}
-                    month={monthStart}
-                    onMonthChange={handleMonthChange}
-                    fromMonth={minMonthStart}
-                    disabled={(date) => date < todayRange.start}
-                    modifiers={{ available: availableMonthDates }}
-                    modifiersClassNames={{
-                      available: "ring-1 ring-primary/40",
-                    }}
-                    timeZone={placeTimeZone}
-                  />
-                </div>
-                <div className="space-y-4">
-                  {modeParam === "court" && courtsForSport.length === 0 ? (
+              <AvailabilityMonthView
+                selectedDate={selectedDate}
+                month={monthStart}
+                fromMonth={minMonthStart}
+                toMonth={maxMonthStart}
+                minDate={todayRange.start}
+                maxDate={maxDate}
+                availableDates={availableMonthDates}
+                days={monthAvailabilityByDay}
+                selectedSlotId={selectedOptionId}
+                isLoading={
+                  isLoadingTimes &&
+                  !(modeParam === "court" && courtsForSport.length === 0)
+                }
+                timeZone={placeTimeZone}
+                onSelectDate={handleMonthSelect}
+                onMonthChange={handleMonthChange}
+                onToday={handleMonthToday}
+                onSelectSlot={({ dayKey, slot }) => {
+                  setDayKeyParam(dayKey);
+                  setMonthParam(dayKey.slice(0, 7));
+                  setStartTimeParam(slot.startTime);
+                }}
+                emptyState={
+                  modeParam === "court" && courtsForSport.length === 0 ? (
                     <p className="text-sm text-muted-foreground py-6 text-center">
                       No active courts for this sport.
                     </p>
-                  ) : isLoadingTimes ? (
-                    <div className="space-y-3">
-                      <div className="h-4 w-32 rounded bg-muted animate-pulse" />
-                      <TimeSlotPickerSkeleton count={8} />
-                    </div>
-                  ) : monthAvailabilityByDay.length > 0 ? (
-                    monthAvailabilityByDay.map((day) => (
-                      <div
-                        key={day.dayKey}
-                        id={`day-${day.dayKey}`}
-                        className="space-y-2 scroll-mt-24"
-                      >
-                        <p className="text-sm font-medium">
-                          {formatInTimeZone(
-                            day.date,
-                            placeTimeZone,
-                            "EEE, MMM d",
-                          )}
-                        </p>
-                        <TimeSlotPicker
-                          slots={day.slots}
-                          selectedId={selectedOptionId}
-                          onSelect={(slot) => {
-                            setDayKeyParam(day.dayKey);
-                            setMonthParam(day.dayKey.slice(0, 7));
-                            setStartTimeParam(slot.startTime);
-                          }}
-                          showPrice
-                          timeZone={placeTimeZone}
-                        />
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-muted-foreground py-6 text-center">
-                      No available start times for this month.
-                    </p>
-                  )}
-                </div>
-              </div>
+                  ) : undefined
+                }
+              />
             ) : !selectedDate ? (
               <p className="text-sm text-muted-foreground py-6 text-center">
                 Select a date to see available start times.

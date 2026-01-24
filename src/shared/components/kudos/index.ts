@@ -1,6 +1,10 @@
 // Status & Timeline
 
 export { AdBanner } from "./ad-banner";
+export {
+  type AvailabilityMonthDay,
+  AvailabilityMonthView,
+} from "./availability-month-view";
 export { Countdown, CountdownBanner } from "./countdown";
 export {
   CourtCard,

@@ -109,7 +109,8 @@ export const appRoutes = {
       base: "/owner/courts",
       setupCreate: "/owner/courts/setup",
       edit: (courtId: string) => `/owner/courts/${courtId}/edit`,
-      slots: (courtId: string) => `/owner/courts/${courtId}/slots`,
+      availability: (courtId: string) =>
+        `/owner/courts/${courtId}/availability`,
     },
     places: {
       base: "/owner/venues",
@@ -135,8 +136,8 @@ export const appRoutes = {
           `/owner/venues/${placeId}/courts/${courtId}/hours`,
         pricing: (placeId: string, courtId: string) =>
           `/owner/venues/${placeId}/courts/${courtId}/pricing`,
-        slots: (placeId: string, courtId: string) =>
-          `/owner/venues/${placeId}/courts/${courtId}/slots`,
+        availability: (placeId: string, courtId: string) =>
+          `/owner/venues/${placeId}/courts/${courtId}/availability`,
       },
     },
     reservations: "/owner/reservations",

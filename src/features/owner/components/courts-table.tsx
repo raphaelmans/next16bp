@@ -250,10 +250,13 @@ function CourtActionsDropdown({
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link
-            href={appRoutes.owner.places.courts.slots(court.placeId, court.id)}
+            href={appRoutes.owner.places.courts.availability(
+              court.placeId,
+              court.id,
+            )}
           >
             <Clock className="mr-2 h-4 w-4" />
-            Manage Slots
+            Availability
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>

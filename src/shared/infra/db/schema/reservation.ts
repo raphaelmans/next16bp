@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   index,
+  integer,
   pgTable,
   text,
   timestamp,
@@ -10,21 +11,25 @@ import {
 import { authUsers } from "drizzle-orm/supabase";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { court } from "./court";
 import { reservationStatusEnum, triggeredByRoleEnum } from "./enums";
 import { profile } from "./profile";
-import { timeSlot } from "./time-slot";
 
 /**
  * Reservation table
- * Booking record linking a player to a time slot
+ * Booking record linking a player to a court time range
  */
 export const reservation = pgTable(
   "reservation",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    timeSlotId: uuid("time_slot_id")
+    courtId: uuid("court_id")
       .notNull()
-      .references(() => timeSlot.id, { onDelete: "cascade" }),
+      .references(() => court.id, { onDelete: "cascade" }),
+    startTime: timestamp("start_time", { withTimezone: true }).notNull(),
+    endTime: timestamp("end_time", { withTimezone: true }).notNull(),
+    totalPriceCents: integer("total_price_cents").notNull().default(0),
+    currency: varchar("currency", { length: 3 }).notNull().default("PHP"),
     playerId: uuid("player_id")
       .notNull()
       .references(() => profile.id, { onDelete: "cascade" }),
@@ -47,12 +52,13 @@ export const reservation = pgTable(
   (table) => [
     index("idx_reservation_player").on(table.playerId),
     index("idx_reservation_status").on(table.status),
-    index("idx_reservation_time_slot").on(table.timeSlotId),
+    index("idx_reservation_court_start").on(table.courtId, table.startTime),
     index("idx_reservation_player_status_created").on(
       table.playerId,
       table.status,
       table.createdAt,
     ),
+    index("idx_reservation_time_range").on(table.startTime, table.endTime),
     index("idx_reservation_expires")
       .on(table.expiresAt)
       .where(

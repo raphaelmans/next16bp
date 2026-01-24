@@ -1,10 +1,7 @@
 "use client";
 
-import type { TimeSlot, TimeSlotStatus } from "@/shared/components/kudos";
-import {
-  getZonedDayRangeForInstant,
-  toUtcISOString,
-} from "@/shared/lib/time-zone";
+import type { TimeSlot } from "@/shared/components/kudos";
+import { toUtcISOString } from "@/shared/lib/time-zone";
 import { trpc } from "@/trpc/client";
 
 export interface CourtDetail {
@@ -54,46 +51,29 @@ export function useCourtDetail({ courtId }: UseCourtDetailOptions) {
 interface UseAvailableSlotsOptions {
   courtId: string;
   date?: Date;
-  timeZone?: string;
 }
 
-function mapSlotStatus(backendStatus: string): TimeSlotStatus {
-  const statusMap: Record<string, TimeSlotStatus> = {
-    AVAILABLE: "available",
-    BOOKED: "booked",
-    HELD: "held",
-    BLOCKED: "booked",
-  };
-  return statusMap[backendStatus] ?? "booked";
-}
+const DEFAULT_DURATION_MINUTES = 60;
 
-export function useAvailableSlots({
-  courtId,
-  date,
-  timeZone,
-}: UseAvailableSlotsOptions) {
-  const dayRange = date
-    ? getZonedDayRangeForInstant(date, timeZone)
-    : undefined;
-  const startDate = dayRange ? toUtcISOString(dayRange.start) : undefined;
-  const endDate = dayRange ? toUtcISOString(dayRange.end) : undefined;
+export function useAvailableSlots({ courtId, date }: UseAvailableSlotsOptions) {
+  const dateIso = date ? toUtcISOString(date) : undefined;
 
-  const query = trpc.timeSlot.getAvailable.useQuery(
+  const query = trpc.availability.getForCourt.useQuery(
     {
       courtId,
-      startDate: startDate ?? "",
-      endDate: endDate ?? "",
+      date: dateIso ?? "",
+      durationMinutes: DEFAULT_DURATION_MINUTES,
     },
-    { enabled: !!courtId && !!date },
+    { enabled: !!courtId && !!dateIso },
   );
 
-  const transformedData: TimeSlot[] = (query.data ?? []).map((slot) => ({
-    id: slot.id,
-    startTime: slot.startTime,
-    endTime: slot.endTime,
-    status: mapSlotStatus(slot.status),
-    priceCents: slot.priceCents ?? undefined,
-    currency: slot.currency ?? "PHP",
+  const transformedData: TimeSlot[] = (query.data ?? []).map((option) => ({
+    id: `${option.courtId}-${option.startTime}-${option.endTime}`,
+    startTime: option.startTime,
+    endTime: option.endTime,
+    status: "available",
+    priceCents: option.totalPriceCents,
+    currency: option.currency ?? "PHP",
   }));
 
   return {

@@ -22,7 +22,6 @@ import { profileRouter } from "@/modules/profile/profile.router";
 import { reservationRouter } from "@/modules/reservation/reservation.router";
 import { reservationOwnerRouter } from "@/modules/reservation/reservation-owner.router";
 import { sportRouter } from "@/modules/sport/sport.router";
-import { timeSlotRouter } from "@/modules/time-slot/time-slot.router";
 import { router } from "./trpc";
 
 /**
@@ -47,7 +46,6 @@ export const appRouter = router({
   contact: contactRouter,
   audit: auditRouter,
   availability: availabilityRouter,
-  timeSlot: timeSlotRouter,
   reservation: reservationRouter,
   reservationOwner: reservationOwnerRouter,
   admin: router({

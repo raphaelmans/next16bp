@@ -12,7 +12,6 @@ import {
   profile,
   reservation,
   reservationEvent,
-  timeSlot,
   userRoles,
 } from "@/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/shared/infra/db/types";
@@ -86,35 +85,27 @@ export class AuditService implements IAuditService {
 
     // 2. Check if court owner
     let isOwner = false;
-    const slotResult = await client
+    const courtResult = await client
       .select()
-      .from(timeSlot)
-      .where(eq(timeSlot.id, res.timeSlotId))
+      .from(court)
+      .where(eq(court.id, res.courtId))
       .limit(1);
 
-    if (slotResult[0]) {
-      const courtResult = await client
+    if (courtResult[0]?.placeId) {
+      const placeResult = await client
         .select()
-        .from(court)
-        .where(eq(court.id, slotResult[0].courtId))
+        .from(place)
+        .where(eq(place.id, courtResult[0].placeId))
         .limit(1);
 
-      if (courtResult[0]?.placeId) {
-        const placeResult = await client
+      if (placeResult[0]?.organizationId) {
+        const orgResult = await client
           .select()
-          .from(place)
-          .where(eq(place.id, courtResult[0].placeId))
+          .from(organization)
+          .where(eq(organization.id, placeResult[0].organizationId))
           .limit(1);
 
-        if (placeResult[0]?.organizationId) {
-          const orgResult = await client
-            .select()
-            .from(organization)
-            .where(eq(organization.id, placeResult[0].organizationId))
-            .limit(1);
-
-          isOwner = orgResult[0]?.ownerUserId === userId;
-        }
+        isOwner = orgResult[0]?.ownerUserId === userId;
       }
     }
 

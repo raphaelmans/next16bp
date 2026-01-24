@@ -18,17 +18,6 @@ export const placeClaimStatusEnum = pgEnum("claim_status", [
 ]);
 
 /**
- * Time slot status enum
- * Tracks the availability state of a time slot
- */
-export const timeSlotStatusEnum = pgEnum("time_slot_status", [
-  "AVAILABLE",
-  "HELD",
-  "BOOKED",
-  "BLOCKED",
-]);
-
-/**
  * Reservation status enum
  * Tracks the lifecycle of a reservation
  */

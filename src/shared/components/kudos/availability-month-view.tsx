@@ -1,0 +1,129 @@
+"use client";
+
+import type * as React from "react";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { formatInTimeZone } from "@/shared/lib/format";
+import {
+  type TimeSlot,
+  TimeSlotPicker,
+  TimeSlotPickerSkeleton,
+} from "./time-slot-picker";
+
+export type AvailabilityMonthDay = {
+  dayKey: string;
+  date: Date;
+  slots: TimeSlot[];
+};
+
+export type AvailabilityMonthViewProps = {
+  selectedDate?: Date;
+  month: Date;
+  fromMonth: Date;
+  toMonth: Date;
+  minDate: Date;
+  maxDate: Date;
+  availableDates: Date[];
+  days: AvailabilityMonthDay[];
+  selectedSlotId?: string;
+  isLoading?: boolean;
+  timeZone?: string;
+  showPrice?: boolean;
+  onSelectDate: (date?: Date) => void;
+  onMonthChange: (date: Date) => void;
+  onToday?: () => void;
+  onSelectSlot?: (args: { dayKey: string; slot: TimeSlot }) => void;
+  emptyState?: React.ReactNode;
+};
+
+export function AvailabilityMonthView({
+  selectedDate,
+  month,
+  fromMonth,
+  toMonth,
+  minDate,
+  maxDate,
+  availableDates,
+  days,
+  selectedSlotId,
+  isLoading,
+  timeZone,
+  showPrice = true,
+  onSelectDate,
+  onMonthChange,
+  onToday,
+  onSelectSlot,
+  emptyState,
+}: AvailabilityMonthViewProps) {
+  const resolvedEmptyState = emptyState ?? (
+    <p className="text-sm text-muted-foreground py-6 text-center">
+      No available start times for this month.
+    </p>
+  );
+
+  return (
+    <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-medium">Browse month</p>
+          {onToday && (
+            <Button type="button" variant="outline" size="sm" onClick={onToday}>
+              Today
+            </Button>
+          )}
+        </div>
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          onSelect={onSelectDate}
+          month={month}
+          onMonthChange={onMonthChange}
+          fromMonth={fromMonth}
+          toMonth={toMonth}
+          disabled={(date) => date < minDate || date > maxDate}
+          modifiers={{ available: availableDates }}
+          modifiersClassNames={{
+            available: "ring-1 ring-primary/40",
+          }}
+          timeZone={timeZone}
+        />
+      </div>
+
+      <div className="space-y-4">
+        {isLoading ? (
+          <div className="space-y-3">
+            <div className="h-4 w-32 rounded bg-muted animate-pulse" />
+            <TimeSlotPickerSkeleton count={8} />
+          </div>
+        ) : days.length > 0 ? (
+          days.map((day) => (
+            <div
+              key={day.dayKey}
+              id={`day-${day.dayKey}`}
+              className="space-y-2 scroll-mt-24"
+            >
+              <p className="text-sm font-medium">
+                {formatInTimeZone(
+                  day.date,
+                  timeZone ?? "Asia/Manila",
+                  "EEE, MMM d",
+                )}
+              </p>
+              <TimeSlotPicker
+                slots={day.slots}
+                selectedId={selectedSlotId}
+                onSelect={(slot) =>
+                  onSelectSlot?.({ dayKey: day.dayKey, slot })
+                }
+                showPrice={showPrice}
+                timeZone={timeZone}
+              />
+            </div>
+          ))
+        ) : (
+          resolvedEmptyState
+        )}
+      </div>
+    </div>
+  );
+}

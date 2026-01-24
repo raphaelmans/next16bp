@@ -14,7 +14,6 @@ type ReservationStatus =
 type ReservationListItemData = {
   id: string;
   status: ReservationStatus;
-  timeSlotId: string;
   playerNameSnapshot: string | null;
   playerPhoneSnapshot: string | null;
   createdAt: string | null;
@@ -136,7 +135,6 @@ export function useMyReservations(options: UseMyReservationsOptions = {}) {
           return {
             id: item.id,
             status: item.status,
-            timeSlotId: item.timeSlotId,
             createdAt: item.createdAt ?? startTime,
             expiresAt: item.expiresAt ?? undefined,
             playerName: item.playerNameSnapshot,
@@ -148,7 +146,7 @@ export function useMyReservations(options: UseMyReservationsOptions = {}) {
               coverImageUrl: item.coverImageUrl ?? undefined,
             },
             timeSlot: {
-              id: item.timeSlotId,
+              id: item.id,
               startTime,
               endTime,
               priceCents,
@@ -232,7 +230,6 @@ export interface ReservationListItem {
     | "CONFIRMED"
     | "EXPIRED"
     | "CANCELLED";
-  timeSlotId: string;
   createdAt: string;
   expiresAt?: string;
   playerName?: string | null;

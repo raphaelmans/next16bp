@@ -4,7 +4,6 @@ import {
   NotCourtOwnerError,
 } from "@/modules/court/errors/court.errors";
 import { NotOrganizationOwnerError } from "@/modules/organization/errors/organization.errors";
-import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
 import { protectedProcedure, router } from "@/shared/infra/trpc/trpc";
 import { AppError } from "@/shared/kernel/errors";
 import {
@@ -28,7 +27,6 @@ import { makeReservationOwnerService } from "./factories/reservation.factory";
 function handleReservationOwnerError(error: unknown): never {
   if (
     error instanceof ReservationNotFoundError ||
-    error instanceof SlotNotFoundError ||
     error instanceof CourtNotFoundError
   ) {
     throw new TRPCError({

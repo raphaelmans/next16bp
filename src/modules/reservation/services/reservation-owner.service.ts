@@ -9,16 +9,10 @@ import type { IOrganizationRepository } from "@/modules/organization/repositorie
 import type { IOrganizationReservationPolicyRepository } from "@/modules/organization-payment/repositories/organization-reservation-policy.repository";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
-import { SlotNotFoundError } from "@/modules/time-slot/errors/time-slot.errors";
-import type { ITimeSlotRepository } from "@/modules/time-slot/repositories/time-slot.repository";
-import type {
-  ReservationRecord,
-  TimeSlotRecord,
-} from "@/shared/infra/db/schema";
+import type { ReservationRecord } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
-import { summarizeSlotPricing } from "@/shared/lib/time-slot-availability";
 import type {
   ConfirmPaymentDTO,
   GetOrgReservationsDTO,
@@ -63,7 +57,6 @@ export class ReservationOwnerService implements IReservationOwnerService {
   constructor(
     private reservationRepository: IReservationRepository,
     private reservationEventRepository: IReservationEventRepository,
-    private timeSlotRepository: ITimeSlotRepository,
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
     private organizationReservationPolicyRepository: IOrganizationReservationPolicyRepository,
@@ -79,22 +72,16 @@ export class ReservationOwnerService implements IReservationOwnerService {
   }
 
   /**
-   * Verify that the user owns the place for a court
-   * Returns the time slot for the reservation
+   * Verify that the user owns the place for a court.
    */
   private async verifyCourtOwnership(
     userId: string,
-    timeSlotId: string,
+    courtId: string,
     ctx?: RequestContext,
-  ): Promise<TimeSlotRecord> {
-    const slot = await this.timeSlotRepository.findById(timeSlotId, ctx);
-    if (!slot) {
-      throw new SlotNotFoundError(timeSlotId);
-    }
-
-    const court = await this.courtRepository.findById(slot.courtId, ctx);
+  ): Promise<void> {
+    const court = await this.courtRepository.findById(courtId, ctx);
     if (!court) {
-      throw new CourtNotFoundError(slot.courtId);
+      throw new CourtNotFoundError(courtId);
     }
 
     const placeId = this.requireCourtPlaceId(court.placeId);
@@ -114,8 +101,6 @@ export class ReservationOwnerService implements IReservationOwnerService {
     if (!org || org.ownerUserId !== userId) {
       throw new NotCourtOwnerError();
     }
-
-    return slot;
   }
 
   private async getPaymentHoldMinutes(
@@ -157,12 +142,11 @@ export class ReservationOwnerService implements IReservationOwnerService {
         reservationId,
         ctx,
       );
-
       if (!reservation) {
         throw new ReservationNotFoundError(reservationId);
       }
 
-      await this.verifyCourtOwnership(userId, reservation.timeSlotId, ctx);
+      await this.verifyCourtOwnership(userId, reservation.courtId, ctx);
 
       if (reservation.status !== "CREATED") {
         throw new InvalidReservationStatusError(
@@ -179,32 +163,11 @@ export class ReservationOwnerService implements IReservationOwnerService {
         throw new ReservationExpiredError(reservationId);
       }
 
-      const slotIds = await this.getReservationSlotIds(
-        reservation.id,
-        reservation.timeSlotId,
-        ctx,
-      );
-
-      const slots = await this.timeSlotRepository.findByIdsForUpdate(
-        slotIds,
-        ctx,
-      );
-      const slotMap = new Map(slots.map((slot) => [slot.id, slot]));
-      const orderedSlots = slotIds
-        .map((slotId) => slotMap.get(slotId))
-        .filter((slot): slot is TimeSlotRecord => !!slot);
-
-      if (orderedSlots.length !== slotIds.length) {
-        const missingId = slotIds.find((slotId) => !slotMap.has(slotId));
-        throw new SlotNotFoundError(missingId ?? "unknown");
-      }
-
-      const pricing = summarizeSlotPricing(orderedSlots);
       const now = new Date();
 
-      if (pricing.totalPriceCents > 0) {
+      if (reservation.totalPriceCents > 0) {
         const paymentHoldMinutes = await this.getPaymentHoldMinutes(
-          orderedSlots[0].courtId,
+          reservation.courtId,
           ctx,
         );
         const expiresAt = addMinutes(now, paymentHoldMinutes);
@@ -253,8 +216,6 @@ export class ReservationOwnerService implements IReservationOwnerService {
         ctx,
       );
 
-      await this.timeSlotRepository.updateManyStatus(slotIds, "BOOKED", ctx);
-
       await this.reservationEventRepository.create(
         {
           reservationId,
@@ -296,10 +257,8 @@ export class ReservationOwnerService implements IReservationOwnerService {
         throw new ReservationNotFoundError(data.reservationId);
       }
 
-      // Verify ownership
-      await this.verifyCourtOwnership(userId, reservation.timeSlotId, ctx);
+      await this.verifyCourtOwnership(userId, reservation.courtId, ctx);
 
-      // Verify status
       if (reservation.status !== "PAYMENT_MARKED_BY_USER") {
         throw new InvalidReservationStatusError(
           data.reservationId,
@@ -316,8 +275,6 @@ export class ReservationOwnerService implements IReservationOwnerService {
       }
 
       const now = new Date();
-
-      // Update reservation status to CONFIRMED
       const updated = await this.reservationRepository.update(
         data.reservationId,
         {
@@ -328,16 +285,6 @@ export class ReservationOwnerService implements IReservationOwnerService {
         ctx,
       );
 
-      // Update slot status to BOOKED
-      const slotIds = await this.getReservationSlotIds(
-        reservation.id,
-        reservation.timeSlotId,
-        ctx,
-      );
-
-      await this.timeSlotRepository.updateManyStatus(slotIds, "BOOKED", ctx);
-
-      // Create audit event
       await this.reservationEventRepository.create(
         {
           reservationId: data.reservationId,
@@ -374,13 +321,11 @@ export class ReservationOwnerService implements IReservationOwnerService {
         data.reservationId,
         ctx,
       );
-
       if (!reservation) {
         throw new ReservationNotFoundError(data.reservationId);
       }
 
-      // Verify ownership
-      await this.verifyCourtOwnership(userId, reservation.timeSlotId, ctx);
+      await this.verifyCourtOwnership(userId, reservation.courtId, ctx);
 
       if (
         reservation.status !== "CREATED" &&
@@ -396,27 +341,17 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       const previousStatus = reservation.status;
 
-      // Update reservation status to CANCELLED
       const updated = await this.reservationRepository.update(
         data.reservationId,
         {
           status: "CANCELLED",
           cancelledAt: new Date(),
           cancellationReason: data.reason,
+          expiresAt: null,
         },
         ctx,
       );
 
-      // Release slot back to AVAILABLE
-      const slotIds = await this.getReservationSlotIds(
-        reservation.id,
-        reservation.timeSlotId,
-        ctx,
-      );
-
-      await this.timeSlotRepository.updateManyStatus(slotIds, "AVAILABLE", ctx);
-
-      // Create audit event
       await this.reservationEventRepository.create(
         {
           reservationId: data.reservationId,
@@ -447,28 +382,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     userId: string,
     courtId: string,
   ): Promise<ReservationRecord[]> {
-    // Verify user owns this court
-    const court = await this.courtRepository.findById(courtId);
-    if (!court) {
-      throw new CourtNotFoundError(courtId);
-    }
-
-    const placeId = this.requireCourtPlaceId(court.placeId);
-    const place = await this.placeRepository.findById(placeId);
-    if (!place) {
-      throw new PlaceNotFoundError(placeId);
-    }
-
-    if (!place.organizationId) {
-      throw new NotCourtOwnerError();
-    }
-
-    const org = await this.organizationRepository.findById(
-      place.organizationId,
-    );
-    if (!org || org.ownerUserId !== userId) {
-      throw new NotCourtOwnerError();
-    }
+    await this.verifyCourtOwnership(userId, courtId);
 
     const created = await this.reservationRepository.findByCourtIdAndStatus(
       courtId,
@@ -494,7 +408,6 @@ export class ReservationOwnerService implements IReservationOwnerService {
     userId: string,
     filters: GetOrgReservationsDTO,
   ): Promise<ReservationWithDetails[]> {
-    // Verify user owns this organization
     const org = await this.organizationRepository.findById(
       filters.organizationId,
     );
@@ -502,7 +415,6 @@ export class ReservationOwnerService implements IReservationOwnerService {
       throw new NotOrganizationOwnerError();
     }
 
-    // Use new repository method with joins for efficient querying
     return this.reservationRepository.findWithDetailsByOrganization(
       filters.organizationId,
       {
@@ -516,37 +428,18 @@ export class ReservationOwnerService implements IReservationOwnerService {
     );
   }
 
-  /**
-   * Get count of pending reservations (PAYMENT_MARKED_BY_USER) for an organization
-   */
   async getPendingCount(
     userId: string,
     organizationId: string,
   ): Promise<number> {
-    // Verify user owns this organization
     const org = await this.organizationRepository.findById(organizationId);
     if (!org || org.ownerUserId !== userId) {
       throw new NotOrganizationOwnerError();
     }
 
-    // Use the efficient repository method
     return this.reservationRepository.countByOrganizationAndStatuses(
       organizationId,
       ["CREATED", "PAYMENT_MARKED_BY_USER"],
     );
-  }
-
-  private async getReservationSlotIds(
-    reservationId: string,
-    fallbackTimeSlotId: string,
-    ctx?: RequestContext,
-  ): Promise<string[]> {
-    const slotIds =
-      await this.reservationRepository.findTimeSlotIdsByReservationId(
-        reservationId,
-        ctx,
-      );
-
-    return slotIds.length > 0 ? slotIds : [fallbackTimeSlotId];
   }
 }

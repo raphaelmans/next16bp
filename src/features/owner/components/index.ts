@@ -1,5 +1,3 @@
-export { BulkSlotModal } from "./bulk-slot-modal";
-export { CalendarNavigation } from "./calendar-navigation";
 export { ComingSoonCard } from "./coming-soon-card";
 export { ConfirmDialog } from "./confirm-dialog";
 export { CourtForm } from "./court-form";
@@ -22,7 +20,5 @@ export { RejectModal } from "./reject-modal";
 export { RemovalRequestModal } from "./removal-request-modal";
 export { ReservationAlertsPanel } from "./reservation-alerts-panel";
 export { ReservationsTable } from "./reservations-table";
-export { SlotItem } from "./slot-item";
-export { SlotList } from "./slot-list";
 export { StatsCard } from "./stats-card";
 export { TodaysBookings } from "./todays-bookings";

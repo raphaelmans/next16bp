@@ -615,8 +615,8 @@ export default function CourtSetupWizardPage() {
                     className="w-full sm:w-auto"
                     disabled={isPrereqsLoading}
                   >
-                    <Link href={appRoutes.owner.courts.slots(courtId)}>
-                      Go to Manage Slots
+                    <Link href={appRoutes.owner.courts.availability(courtId)}>
+                      Go to Availability
                     </Link>
                   </Button>
                 </div>

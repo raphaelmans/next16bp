@@ -14,7 +14,6 @@ export const ReservationListItemSchema = z.object({
   playerPhoneSnapshot: z.string().nullable(),
   createdAt: z.string().nullable(),
   expiresAt: z.string().nullable(),
-  timeSlotId: z.string().uuid(),
   courtId: z.string().uuid(),
   courtName: z.string(),
   placeId: z.string().uuid(),

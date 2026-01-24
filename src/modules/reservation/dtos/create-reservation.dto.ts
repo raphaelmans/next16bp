@@ -1,4 +1,6 @@
+import { differenceInCalendarDays } from "date-fns";
 import { z } from "zod";
+import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
 
 const DurationMinutesSchema = z
   .number()
@@ -9,24 +11,39 @@ const DurationMinutesSchema = z
     message: "Duration must be a multiple of 60 minutes",
   });
 
-export const CreateReservationSchema = z.object({
-  timeSlotId: z.string().uuid(),
-});
-
 export const CreateReservationForCourtSchema = z.object({
   courtId: z.string().uuid(),
-  startTime: z.string().datetime(),
+  startTime: z
+    .string()
+    .datetime()
+    .refine(
+      (startTime) =>
+        differenceInCalendarDays(new Date(startTime), new Date()) <=
+        MAX_BOOKING_WINDOW_DAYS,
+      {
+        message: `Start time must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
+      },
+    ),
   durationMinutes: DurationMinutesSchema,
 });
 
 export const CreateReservationForAnyCourtSchema = z.object({
   placeId: z.string().uuid(),
   sportId: z.string().uuid(),
-  startTime: z.string().datetime(),
+  startTime: z
+    .string()
+    .datetime()
+    .refine(
+      (startTime) =>
+        differenceInCalendarDays(new Date(startTime), new Date()) <=
+        MAX_BOOKING_WINDOW_DAYS,
+      {
+        message: `Start time must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
+      },
+    ),
   durationMinutes: DurationMinutesSchema,
 });
 
-export type CreateReservationDTO = z.infer<typeof CreateReservationSchema>;
 export type CreateReservationForCourtDTO = z.infer<
   typeof CreateReservationForCourtSchema
 >;

@@ -35,13 +35,14 @@ This domain depends on the organization flow (01-organization) and feeds into th
 | US-02-07 | Admin Batch Curated Court Entry | Active | - |
 | US-02-08 | Owner Onboards Place With One-Time Court Creation | Active | - |
 | US-02-09 | Owner Deletes Place | Active | - |
+| US-02-10 | Organization Venue Limit (Max 3) | Active | - |
 
 ---
 
 ## Summary
 
-- Total: 9
-- Active: 9
+- Total: 10
+- Active: 10
 - Superseded: 0
 
 ---
