@@ -1,0 +1,208 @@
+import { env } from "@/lib/env";
+import { Container } from "@/shared/components/layout/container";
+import { appRoutes } from "@/shared/lib/app-routes";
+
+export const metadata = {
+  title: "Privacy Policy",
+  description: "Learn how KudosCourts collects, uses, and protects your information.",
+  alternates: {
+    canonical: new URL(
+      appRoutes.privacy.base,
+      env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com",
+    ),
+  },
+  openGraph: {
+    title: "Privacy Policy",
+    description:
+      "Learn how KudosCourts collects, uses, and protects your information.",
+    url: new URL(
+      appRoutes.privacy.base,
+      env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com",
+    ),
+  },
+  twitter: {
+    title: "Privacy Policy",
+    description:
+      "Learn how KudosCourts collects, uses, and protects your information.",
+  },
+};
+
+<Container className="py-12">
+  <div className="max-w-3xl space-y-8">
+    <div className="space-y-2">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+        Legal
+      </p>
+      <h1 className="font-heading text-3xl font-bold tracking-tight">
+        Privacy Policy
+      </h1>
+      <p className="text-muted-foreground">Effective date: January 24, 2026</p>
+      <p className="text-muted-foreground">Last updated: January 24, 2026</p>
+    </div>
+
+    <div className="space-y-6">
+
+This Privacy Policy explains how KudosCourts (**"we"**, **"us"**, **"our"**) collects, uses, shares, and protects information when you use the KudosCourts Platform.
+
+This Policy is intended to align with the **Philippine Data Privacy Act of 2012 (Republic Act No. 10173)** and its implementing rules and guidance.
+
+## 1) Scope
+
+This Privacy Policy applies to information processed through the Platform, including when you register, create listings, request Reservations, submit Payment Proof, or contact support.
+
+## 2) Information We Collect
+
+### A) Personal Information
+
+- Name
+- Email address
+- Phone number (if provided)
+- Account credentials (stored in hashed/secure form)
+
+### B) Reservation & Usage Information
+
+- Reservation history (requested time slots, status)
+- Payment status indicators (e.g., "payment marked")
+- Policy acknowledgements (e.g., cancellation/no-show policy acknowledgement)
+
+### C) Payment Proof (If You Provide It)
+
+- Reference number and notes you submit
+- Receipt or proof image/screenshot (if you upload one)
+
+### D) Technical & Security Information
+
+- IP address
+- Device/browser information
+- Log data, audit trails, timestamps, and security events
+- Approximate location inferred from IP (if enabled)
+
+### E) User-Generated Content (UGC)
+
+- Photos, organization logos, venue descriptions, metadata, and other content you upload.
+
+### F) Owner-Provided Payment Instructions
+
+We may store and display Owner-provided payment instructions (e.g., bank/e-wallet handles) to authorized Players to help complete off-Platform payments.
+
+## 3) How We Use Information (Purposes)
+
+We use information to:
+
+- Create and manage user accounts and authentication.
+- Enable court discovery, listings, and Reservations.
+- Share necessary details between Players and Owners to fulfill Reservations (including Payment Proof when submitted).
+- Enforce cancellation/expiration workflows and platform policies.
+- Provide customer support and respond to inquiries.
+- Maintain security, prevent fraud/abuse, and keep audit logs.
+- Improve the Platform (analytics, debugging, feature development).
+- Comply with legal obligations and lawful requests.
+
+## 4) Legal Bases for Processing (DPA)
+
+We process personal information based on one or more of the following (as applicable):
+
+- **Consent** (where required, e.g., optional fields/marketing).
+- **Contractual necessity** (to provide the Platform and fulfill Reservations).
+- **Legitimate interests** (platform security, fraud prevention, service improvement).
+- **Legal obligation** (compliance with laws and lawful orders).
+
+## 5) Sharing & Disclosure
+
+We may share information:
+
+### A) Between Users
+
+- Between Players and Owners as needed to fulfill Reservations (e.g., contact details, reservation details, policy confirmations, and Payment Proof when submitted).
+
+### B) Service Providers (Processors)
+
+We use third-party providers to operate the Platform. Depending on your usage and our configuration, these may include:
+
+- **Supabase** (authentication, database, storage)
+- **Vercel** (hosting and analytics)
+- **Resend** (transactional email)
+- **Upstash** (rate limiting / Redis)
+
+These providers process data under contractual obligations and appropriate safeguards.
+
+### C) Legal and Safety
+
+With regulators, law enforcement, courts, or other authorities when required by law or necessary to protect rights, safety, and security.
+
+We do not sell personal information.
+
+## 6) Data Retention
+
+We retain information for as long as necessary to:
+
+- Provide the Platform.
+- Maintain business and audit records.
+- Resolve disputes.
+- Enforce agreements.
+- Comply with legal obligations.
+
+Typical retention targets (to be refined with counsel):
+
+- Account data: for the life of the account plus **up to 3 years**
+- Reservation records and audit logs: **up to 5 years**
+- Support communications: **up to 2 years**
+
+We may anonymize or aggregate data for analytics and product improvement.
+
+## 7) Security Measures
+
+We implement reasonable organizational, physical, and technical measures to protect personal information, such as:
+
+- Access controls and least-privilege permissions
+- Encryption in transit (and at rest where appropriate)
+- Secure password hashing
+- Monitoring, logging, and audit trails
+- Incident response procedures
+
+No method of transmission or storage is 100% secure.
+
+## 8) Your Rights (Philippines DPA)
+
+Subject to DPA conditions and exceptions, you may have rights to:
+
+- Be informed
+- Access your personal information
+- Object to processing (where applicable)
+- Correct inaccurate/incomplete data
+- Erase or block (where applicable)
+- Data portability (where applicable)
+- File a complaint with the National Privacy Commission (NPC)
+
+To exercise rights, contact us using the details in Section 13.
+
+## 9) Cookies, Analytics, and Similar Technologies
+
+We may use cookies or similar technologies to:
+
+- Keep you logged in.
+- Remember preferences.
+- Maintain security.
+- Understand usage and improve features.
+
+You can control cookies through your browser/app settings. Some features may not function without cookies.
+
+## 10) International Data Transfers
+
+If we store or process information outside the Philippines (e.g., via cloud providers), we will implement appropriate safeguards consistent with the DPA and applicable guidance.
+
+## 11) Children's Privacy
+
+The Platform is intended for users who can enter into binding agreements under applicable law. We do not knowingly collect personal information from children without appropriate consent/authority. If you believe a child has provided personal information, contact us to request deletion.
+
+## 12) Changes to This Privacy Policy
+
+We may update this Policy from time to time by posting a revised version with a new effective date. Material changes may be notified through the Platform or by other reasonable means.
+
+## 13) Contact
+
+Questions about this Privacy Policy or your data? Contact us via `/contact-us`.
+
+    </div>
+  </div>
+</Container>

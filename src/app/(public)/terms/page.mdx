@@ -1,0 +1,223 @@
+import { env } from "@/lib/env";
+import { Container } from "@/shared/components/layout/container";
+import { appRoutes } from "@/shared/lib/app-routes";
+
+export const metadata = {
+  title: "Terms of Service",
+  description:
+    "Review the KudosCourts terms covering booking requests, payments, and platform guidelines.",
+  alternates: {
+    canonical: new URL(
+      appRoutes.terms.base,
+      env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com",
+    ),
+  },
+  openGraph: {
+    title: "Terms of Service",
+    description:
+      "Review the KudosCourts terms covering booking requests, payments, and platform guidelines.",
+    url: new URL(
+      appRoutes.terms.base,
+      env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com",
+    ),
+  },
+  twitter: {
+    title: "Terms of Service",
+    description:
+      "Review the KudosCourts terms covering booking requests, payments, and platform guidelines.",
+  },
+};
+
+<Container className="py-12">
+  <div className="max-w-3xl space-y-8">
+    <div className="space-y-2">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+        Legal
+      </p>
+      <h1 className="font-heading text-3xl font-bold tracking-tight">
+        Terms of Service
+      </h1>
+      <p className="text-muted-foreground">Effective date: January 24, 2026</p>
+      <p className="text-muted-foreground">Last updated: January 24, 2026</p>
+    </div>
+
+    <div className="space-y-6">
+
+By creating an account, accessing, or using the KudosCourts website, mobile applications, and related services (collectively, the **"Platform"**), you agree to these Terms of Service (**"Terms"**). If you do not agree, do not use the Platform.
+
+## 1) Definitions
+
+- **"Player" / "Customer"**: a user who searches for courts and requests reservations.
+- **"Owner" / "Venue Operator"**: a user who lists venues/courts and manages availability, reservation policies, and confirmations.
+- **"Reservation"**: a booking request made through the Platform for a time slot at a listed venue/court.
+- **"Organization"**: an Owner account and its associated venue(s)/court(s).
+- **"UGC"**: user-generated content including photos, logos, descriptions, and metadata.
+- **"Payment Proof"**: optional information a Player may provide (e.g., reference number, notes, receipt image/screenshot) to help an Owner verify an off-Platform payment.
+
+## 2) Platform Role: Facilitator Only (No Card Payments / No Escrow)
+
+KudosCourts provides discovery and reservation facilitation. Unless we explicitly state otherwise in writing:
+
+- We do **not** process card payments, hold funds, or provide escrow.
+- We are **not** a party to transactions between Players and Owners.
+- Payments (if any) occur **off-Platform** using payment instructions provided by Owners.
+- We do **not** guarantee reservations, venue availability, pricing, or service quality.
+
+## 3) Eligibility & Account Registration
+
+You must be able to enter into a binding agreement under applicable law (generally, **18 years old or older**).
+
+You agree to provide accurate, current information and keep it updated. You are responsible for:
+
+- Maintaining the confidentiality of your account credentials.
+- All activities under your account.
+- Not sharing your account or misrepresenting your identity.
+
+We may require additional verification for certain accounts or activities.
+
+## 4) User Roles & Responsibilities
+
+### Players / Customers
+
+Players may:
+
+- Discover courts/venues and request Reservations.
+- Mark payments as completed (as a status indicator).
+- Optionally submit Payment Proof.
+- Cancel Reservations within applicable policies.
+
+Players agree to:
+
+- Follow venue rules, safety requirements, and Owner policies.
+- Make any required payment directly to the Owner as instructed.
+- Provide truthful information regarding payment status and Payment Proof.
+
+### Owners / Venue Operators
+
+Owners may:
+
+- List and manage courts/venues and availability.
+- Set reservation and cancellation policies (including cutoffs and non-refundable terms).
+- Accept, confirm, reject, or cancel Reservations.
+- Provide payment instructions to Players.
+
+Owners are responsible for:
+
+- Accuracy of listings (pricing, availability, policies, location, amenities).
+- Compliance with applicable laws (permits, tax, consumer rules, safety).
+- Resolving disputes regarding payments, refunds, and service delivery.
+
+## 5) Reservation Lifecycle; Not Binding Until Confirmed
+
+Reservation states may include:
+
+- **Created / Requested**
+- **Awaiting payment (time-limited)**
+- **Payment marked by Player**
+- **Confirmed**
+- **Cancelled**
+- **Expired (automatic)**
+
+Key rules:
+
+- A Reservation is **not binding** until it is **confirmed by the Owner**.
+- Reservations may **expire automatically** if time limits lapse (including payment time limits).
+- Cancelled or expired Reservations release the time slot for others.
+
+## 6) Payments; "Payment Marked" and Payment Proof
+
+- Owners provide payment methods and instructions (e.g., bank transfer, e-wallet).
+- The Platform does not store card details and does not process payments.
+- **"Payment marked"** reflects what a Player indicates in the Platform. We do not confirm, validate, or guarantee payment.
+- The Platform may allow Players to submit **Payment Proof** (e.g., reference number, notes, receipt image) to help Owners verify an off-Platform payment. Owners decide whether to accept/confirm a Reservation.
+
+## 7) Cancellations, No-Shows, and Refunds
+
+- Cancellation rules are configurable per Organization and may include cutoff times and non-refundable bookings.
+- Refunds (if any) are handled **directly** between Player and Owner **off-Platform**.
+- KudosCourts does not mediate, guarantee, or enforce refunds, compensation, or credits.
+
+Owners and Players are responsible for resolving disputes related to cancellations, no-shows, and refunds.
+
+## 8) User Content (UGC) & License
+
+You may upload UGC such as court/venue photos, organization logos, descriptions, and Payment Proof.
+
+You represent that you own or have the rights to upload UGC and that it does not infringe third-party rights.
+
+By uploading UGC, you grant KudosCourts a worldwide, non-exclusive, royalty-free, sublicensable license to host, store, reproduce, modify (for formatting), display, distribute, and use such content:
+
+- to operate and improve the Platform,
+- to display listings and Reservation details to authorized users,
+- and for Platform marketing and promotion (e.g., featuring venues), unless prohibited by law.
+
+## 9) Prohibited Conduct
+
+You agree not to:
+
+- Provide false information (including false payment status or Payment Proof).
+- Engage in fraud, harassment, abuse, or discriminatory conduct.
+- Post illegal, obscene, or infringing content.
+- Interfere with Platform security or attempt unauthorized access.
+- Scrape, reverse engineer, or misuse the Platform.
+
+## 10) Moderation, Enforcement, Suspension, and Termination
+
+We may, in our discretion and without liability:
+
+- Remove or restrict UGC or listings.
+- Suspend or terminate accounts for fraud, repeated no-shows, abuse, policy violations, or legal risk.
+- Cancel Reservations or delist venues to protect users or the Platform.
+
+Where feasible, we may provide notice, but we are not obligated to do so in urgent cases (e.g., safety, fraud, legal compliance).
+
+## 11) Third-Party Services and Links
+
+The Platform may contain links to third-party sites or services (including payment services used off-Platform). We are not responsible for third-party content, policies, or services.
+
+## 12) Disclaimers
+
+To the maximum extent permitted by law:
+
+- The Platform is provided on an **"as is"** and **"as available"** basis.
+- We disclaim warranties of merchantability, fitness for a particular purpose, and non-infringement.
+- We do not warrant that listings are accurate, that venues are safe, or that Reservations will be accepted, confirmed, or honored.
+
+## 13) Limitation of Liability
+
+To the maximum extent permitted by Philippine law, KudosCourts will not be liable for:
+
+- Venue quality, safety, or suitability.
+- Owner cancellations, rejections, or changes.
+- Payment disputes, refunds, chargebacks, or non-payment.
+- Lost profits, lost revenue, missed Reservations, or consequential damages.
+- Incorrect information provided by users.
+
+Our total liability for any claim arising out of or relating to the Platform will not exceed **the amounts paid to us (if any) in the past 3 months**, unless prohibited by law.
+
+## 14) Indemnity
+
+You agree to indemnify and hold harmless KudosCourts and its officers, employees, and agents from claims arising out of:
+
+- your use of the Platform,
+- your UGC,
+- your violation of these Terms,
+- your dealings with other users (including payment and refund disputes).
+
+## 15) Changes to the Platform and Terms
+
+Features, flows, and policies may evolve. We may update these Terms by posting a revised version with a new effective date. Continued use after changes means you accept the updated Terms.
+
+## 16) Governing Law; Venue
+
+These Terms are governed by the laws of the **Republic of the Philippines**, without regard to conflict-of-law principles.
+
+Any dispute shall be filed in the courts of **[City/Municipality], Philippines**, unless a mandatory consumer protection rule requires otherwise.
+
+## 17) Contact
+
+Questions about these Terms? Contact us via `/contact-us`.
+
+    </div>
+  </div>
+</Container>
