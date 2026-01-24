@@ -7,101 +7,21 @@ export const size = {
 };
 export const contentType = "image/png";
 
-// Apple icon generation - KudosCourts court with orange pin
+// Apple icon generation - KudosCourts logo
 export default function AppleIcon() {
   return new ImageResponse(
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "linear-gradient(135deg, #0F766E 0%, #0D9488 100%)",
-        borderRadius: "36px",
-      }}
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 375 375"
+      xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Court representation */}
-      <div
-        style={{
-          width: "140px",
-          height: "140px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
-          border: "8px solid rgba(255,255,255,0.9)",
-          borderRadius: "16px",
-          background: "rgba(255,255,255,0.1)",
-        }}
-      >
-        {/* Top kitchen line */}
-        <div
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "4px",
-            background: "rgba(255,255,255,0.85)",
-            top: "30%",
-          }}
-        />
-        {/* Center line (horizontal - net) */}
-        <div
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "6px",
-            background: "white",
-            top: "50%",
-            transform: "translateY(-50%)",
-          }}
-        />
-        {/* Bottom kitchen line */}
-        <div
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "4px",
-            background: "rgba(255,255,255,0.85)",
-            bottom: "30%",
-          }}
-        />
-        {/* Vertical center line */}
-        <div
-          style={{
-            position: "absolute",
-            width: "3px",
-            height: "100%",
-            background: "rgba(255,255,255,0.5)",
-            left: "50%",
-            transform: "translateX(-50%)",
-          }}
-        />
-        {/* Orange pin in center */}
-        <div
-          style={{
-            width: "40px",
-            height: "40px",
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #FB923C 0%, #F97316 100%)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 10,
-            boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-          }}
-        >
-          <div
-            style={{
-              width: "18px",
-              height: "18px",
-              borderRadius: "50%",
-              background: "white",
-            }}
-          />
-        </div>
-      </div>
-    </div>,
+      <title>KudosCourts</title>
+      <rect width="375" height="375" fill="#0d9488" />
+      <g fill="#fafaf9" transform="translate(99.06738 280.162856)">
+        <path d="M 124.1875 0 L 52.4375 -92.328125 L 121.921875 -177.125 L 170.59375 -177.125 L 92.328125 -85.046875 L 92.328125 -101.109375 L 173.109375 0 Z M 17.0625 0 L 17.0625 -177.125 L 56.453125 -177.125 L 56.453125 0 Z M 17.0625 0 " />
+      </g>
+    </svg>,
     {
       ...size,
     },

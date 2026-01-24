@@ -36,7 +36,7 @@ const structuredData = {
       "@id": `${appUrl}/#organization`,
       name: "KudosCourts",
       url: appUrl,
-      logo: `${appUrl}/apple-icon.png`,
+      logo: `${appUrl}/logo.png`,
       sameAs: [
         "https://facebook.com/kudoscourts",
         "https://instagram.com/kudoscourts",
