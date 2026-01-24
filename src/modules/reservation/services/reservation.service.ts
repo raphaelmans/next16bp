@@ -282,6 +282,7 @@ export class ReservationService implements IReservationService {
         courtIds,
         startTime,
         endTime,
+        undefined,
         ctx,
       ),
     ]);

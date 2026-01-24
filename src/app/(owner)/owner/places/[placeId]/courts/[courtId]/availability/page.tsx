@@ -1,13 +1,38 @@
 "use client";
 
-import { addDays, endOfMonth, startOfMonth } from "date-fns";
+import { TZDate } from "@date-fns/tz";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  addDays,
+  addMinutes,
+  endOfMonth,
+  format,
+  startOfMonth,
+} from "date-fns";
 import { Loader2, Minus, Plus, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import * as React from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import {
+  StandardFormInput,
+  StandardFormProvider,
+  StandardFormTextarea,
+} from "@/components/form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   InputGroup,
   InputGroupButton,
@@ -26,13 +51,16 @@ import {
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
+import { formatCurrency, formatTimeRangeInTimeZone } from "@/shared/lib/format";
 import {
+  getZonedDate,
   getZonedDayKey,
   getZonedDayRangeForInstant,
   getZonedDayRangeFromDayKey,
   getZonedToday,
   toUtcISOString,
 } from "@/shared/lib/time-zone";
+import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 const MIN_DURATION_HOURS = 1;
@@ -59,6 +87,34 @@ function buildAvailabilityId(
 ) {
   return `${courtId}-${startTime}-${duration}`;
 }
+
+const blockFormSchema = z.object({
+  startTime: z.string().min(1, "Start time is required"),
+  endTime: z.string().min(1, "End time is required"),
+  reason: z.string().optional(),
+});
+
+type BlockFormValues = z.infer<typeof blockFormSchema>;
+
+const formatDateTimeInput = (date: Date, timeZone: string) =>
+  format(getZonedDate(date, timeZone), "yyyy-MM-dd'T'HH:mm");
+
+const parseDateTimeInput = (value: string, timeZone: string) => {
+  const [datePart, timePart] = value.split("T");
+  if (!datePart || !timePart) return null;
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hour, minute] = timePart.split(":").map(Number);
+  if (
+    !Number.isFinite(year) ||
+    !Number.isFinite(month) ||
+    !Number.isFinite(day) ||
+    !Number.isFinite(hour) ||
+    !Number.isFinite(minute)
+  ) {
+    return null;
+  }
+  return new TZDate(year, month - 1, day, hour, minute, timeZone);
+};
 
 export default function OwnerCourtAvailabilityPage() {
   const params = useParams();
@@ -149,6 +205,18 @@ export default function OwnerCourtAvailabilityPage() {
     String(durationHours),
   );
   const [selectedSlotId, setSelectedSlotId] = React.useState<string>();
+  const [maintenanceOpen, setMaintenanceOpen] = React.useState(false);
+  const [walkInOpen, setWalkInOpen] = React.useState(false);
+  const [walkInPreset, setWalkInPreset] = React.useState<TimeSlot | null>(null);
+
+  const maintenanceForm = useForm<BlockFormValues>({
+    resolver: zodResolver(blockFormSchema),
+    defaultValues: { startTime: "", endTime: "", reason: "" },
+  });
+  const walkInForm = useForm<BlockFormValues>({
+    resolver: zodResolver(blockFormSchema),
+    defaultValues: { startTime: "", endTime: "", reason: "" },
+  });
 
   const commitDurationHours = React.useCallback(
     (hours: number) => {
@@ -208,6 +276,30 @@ export default function OwnerCourtAvailabilityPage() {
     [commitDurationHours, durationHours, durationHoursDraft],
   );
 
+  const utils = trpc.useUtils();
+
+  const defaultRange = React.useMemo(() => {
+    const start = getZonedDate(selectedDate, placeTimeZone);
+    start.setHours(9, 0, 0, 0);
+    const end = addMinutes(new Date(start), durationMinutes);
+    return { start, end };
+  }, [durationMinutes, placeTimeZone, selectedDate]);
+
+  const selectedDayKey = React.useMemo(
+    () => getZonedDayKey(selectedDate, placeTimeZone),
+    [placeTimeZone, selectedDate],
+  );
+  const selectedDayLabel = React.useMemo(
+    () =>
+      format(getZonedDate(selectedDate, placeTimeZone), "EEEE, MMMM d, yyyy"),
+    [placeTimeZone, selectedDate],
+  );
+
+  const openWalkInDialog = React.useCallback((preset?: TimeSlot | null) => {
+    setWalkInPreset(preset ?? null);
+    setWalkInOpen(true);
+  }, []);
+
   const availabilityQuery = trpc.availability.getForCourtRange.useQuery(
     {
       courtId,
@@ -218,6 +310,15 @@ export default function OwnerCourtAvailabilityPage() {
     {
       enabled: Boolean(courtId) && durationMinutes > 0,
     },
+  );
+
+  const blocksQuery = trpc.courtBlock.listForCourtRange.useQuery(
+    {
+      courtId,
+      startTime: monthRangeStartIso,
+      endTime: monthRangeEndIso,
+    },
+    { enabled: Boolean(courtId) },
   );
 
   const monthAvailabilityByDay = React.useMemo<MonthDayAvailability[]>(() => {
@@ -256,6 +357,145 @@ export default function OwnerCourtAvailabilityPage() {
       .sort((a, b) => a.dayKey.localeCompare(b.dayKey));
   }, [availabilityQuery.data, durationMinutes, placeTimeZone]);
 
+  const selectedSlot = React.useMemo(() => {
+    if (!selectedSlotId) return null;
+    for (const day of monthAvailabilityByDay) {
+      const match = day.slots.find((slot) => slot.id === selectedSlotId);
+      if (match) return match;
+    }
+    return null;
+  }, [monthAvailabilityByDay, selectedSlotId]);
+
+  type CourtBlockItem = NonNullable<typeof blocksQuery.data>[number];
+
+  const blocksByDay = React.useMemo(() => {
+    const grouped = new Map<string, CourtBlockItem[]>();
+    for (const block of blocksQuery.data ?? []) {
+      if (!block.isActive) continue;
+      const dayKey = getZonedDayKey(block.startTime, placeTimeZone);
+      const existing = grouped.get(dayKey);
+      if (existing) {
+        existing.push(block);
+      } else {
+        grouped.set(dayKey, [block]);
+      }
+    }
+    return grouped;
+  }, [blocksQuery.data, placeTimeZone]);
+
+  const selectedDayBlocks = React.useMemo(() => {
+    const blocks = blocksByDay.get(selectedDayKey) ?? [];
+    return [...blocks].sort((a, b) => a.startTime.localeCompare(b.startTime));
+  }, [blocksByDay, selectedDayKey]);
+
+  const createMaintenance = trpc.courtBlock.createMaintenance.useMutation();
+  const createWalkIn = trpc.courtBlock.createWalkIn.useMutation();
+  const cancelBlock = trpc.courtBlock.cancel.useMutation();
+
+  const invalidateAvailability = React.useCallback(() => {
+    void utils.availability.getForCourtRange.invalidate();
+    void utils.courtBlock.listForCourtRange.invalidate();
+  }, [utils]);
+
+  const buildBlockPayload = React.useCallback(
+    (values: BlockFormValues) => {
+      const start = parseDateTimeInput(values.startTime, placeTimeZone);
+      const end = parseDateTimeInput(values.endTime, placeTimeZone);
+      if (!start || !end) {
+        toast.error("Invalid date or time", {
+          description: "Please enter a valid start and end time.",
+        });
+        return null;
+      }
+
+      const reason = values.reason?.trim();
+      return {
+        startTime: toUtcISOString(start),
+        endTime: toUtcISOString(end),
+        reason: reason && reason.length > 0 ? reason : undefined,
+      };
+    },
+    [placeTimeZone],
+  );
+
+  const handleMaintenanceSubmit = React.useCallback(
+    async (values: BlockFormValues) => {
+      const payload = buildBlockPayload(values);
+      if (!payload) return;
+      try {
+        await createMaintenance.mutateAsync({ courtId, ...payload });
+        toast.success("Maintenance block added");
+        setMaintenanceOpen(false);
+        invalidateAvailability();
+      } catch (error) {
+        toast.error("Unable to add block", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+      }
+    },
+    [buildBlockPayload, courtId, createMaintenance, invalidateAvailability],
+  );
+
+  const handleWalkInSubmit = React.useCallback(
+    async (values: BlockFormValues) => {
+      const payload = buildBlockPayload(values);
+      if (!payload) return;
+      try {
+        await createWalkIn.mutateAsync({ courtId, ...payload });
+        toast.success("Walk-in booking added");
+        setWalkInOpen(false);
+        setWalkInPreset(null);
+        invalidateAvailability();
+      } catch (error) {
+        toast.error("Unable to add walk-in booking", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+      }
+    },
+    [buildBlockPayload, courtId, createWalkIn, invalidateAvailability],
+  );
+
+  const handleCancelBlock = React.useCallback(
+    async (blockId: string) => {
+      const confirmed = window.confirm("Remove this block?");
+      if (!confirmed) return;
+      try {
+        await cancelBlock.mutateAsync({ blockId });
+        toast.success("Block removed");
+        invalidateAvailability();
+      } catch (error) {
+        toast.error("Unable to remove block", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+      }
+    },
+    [cancelBlock, invalidateAvailability],
+  );
+
+  React.useEffect(() => {
+    if (!maintenanceOpen) return;
+    maintenanceForm.reset({
+      startTime: formatDateTimeInput(defaultRange.start, placeTimeZone),
+      endTime: formatDateTimeInput(defaultRange.end, placeTimeZone),
+      reason: "",
+    });
+  }, [defaultRange, maintenanceForm, maintenanceOpen, placeTimeZone]);
+
+  React.useEffect(() => {
+    if (!walkInOpen) return;
+    const range = walkInPreset
+      ? {
+          start: new Date(walkInPreset.startTime),
+          end: new Date(walkInPreset.endTime),
+        }
+      : defaultRange;
+    walkInForm.reset({
+      startTime: formatDateTimeInput(range.start, placeTimeZone),
+      endTime: formatDateTimeInput(range.end, placeTimeZone),
+      reason: "",
+    });
+  }, [defaultRange, placeTimeZone, walkInForm, walkInOpen, walkInPreset]);
+
   const availableMonthDates = React.useMemo(
     () => monthAvailabilityByDay.map((day) => day.date),
     [monthAvailabilityByDay],
@@ -278,6 +518,7 @@ export default function OwnerCourtAvailabilityPage() {
     (date?: Date) => {
       if (!date) return;
       setSelectedDate(date);
+      setSelectedSlotId(undefined);
       scrollToDayKey(getZonedDayKey(date, placeTimeZone));
     },
     [placeTimeZone, scrollToDayKey],
@@ -285,11 +526,13 @@ export default function OwnerCourtAvailabilityPage() {
 
   const handleMonthChange = React.useCallback((date: Date) => {
     setMonthStart(startOfMonth(date));
+    setSelectedSlotId(undefined);
   }, []);
 
   const handleMonthToday = React.useCallback(() => {
     setMonthStart(startOfMonth(today));
     setSelectedDate(today);
+    setSelectedSlotId(undefined);
     scrollToDayKey(getZonedDayKey(today, placeTimeZone));
   }, [placeTimeZone, scrollToDayKey, today]);
 
@@ -476,6 +719,255 @@ export default function OwnerCourtAvailabilityPage() {
             />
           </CardContent>
         </Card>
+
+        <Card>
+          <CardContent className="space-y-4 p-6">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="space-y-1">
+                <h3 className="text-lg font-heading font-semibold">
+                  Blocks · {selectedDayLabel}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Maintenance and walk-in bookings remove availability.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setMaintenanceOpen(true)}
+                  disabled={createMaintenance.isPending}
+                >
+                  Add maintenance block
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => openWalkInDialog()}
+                  disabled={createWalkIn.isPending}
+                >
+                  Add walk-in booking
+                </Button>
+              </div>
+            </div>
+
+            {selectedSlot ? (
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/40 p-3">
+                <div>
+                  <p className="text-sm font-medium">Selected time</p>
+                  <p className="text-sm text-muted-foreground">
+                    {formatTimeRangeInTimeZone(
+                      selectedSlot.startTime,
+                      selectedSlot.endTime,
+                      placeTimeZone,
+                    )}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => openWalkInDialog(selectedSlot)}
+                  disabled={createWalkIn.isPending}
+                >
+                  Mark as booked (walk-in)
+                </Button>
+              </div>
+            ) : (
+              <div className="rounded-lg border border-dashed p-3 text-sm text-muted-foreground">
+                Select an available time to quickly mark a walk-in booking.
+              </div>
+            )}
+
+            {blocksQuery.error && (
+              <Alert variant="destructive">
+                <AlertTitle>Failed to load blocks</AlertTitle>
+                <AlertDescription>
+                  <div className="flex flex-col gap-2">
+                    <p>Please try again.</p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="w-fit"
+                      onClick={() => blocksQuery.refetch()}
+                    >
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Retry
+                    </Button>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            )}
+
+            <div className="space-y-3">
+              {blocksQuery.isLoading ? (
+                <p className="text-sm text-muted-foreground">
+                  Loading blocks...
+                </p>
+              ) : selectedDayBlocks.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  No blocks for this day yet.
+                </p>
+              ) : (
+                selectedDayBlocks.map((block) => (
+                  <div
+                    key={block.id}
+                    className="flex flex-wrap items-start justify-between gap-4 rounded-lg border p-3"
+                  >
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge
+                          variant={
+                            block.type === "WALK_IN" ? "paid" : "warning"
+                          }
+                        >
+                          {block.type === "WALK_IN" ? "Walk-in" : "Maintenance"}
+                        </Badge>
+                        <span className="text-sm font-medium">
+                          {formatTimeRangeInTimeZone(
+                            block.startTime,
+                            block.endTime,
+                            placeTimeZone,
+                          )}
+                        </span>
+                      </div>
+                      {block.reason && (
+                        <p className="text-sm text-muted-foreground">
+                          {block.reason}
+                        </p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {block.type === "WALK_IN" && (
+                        <span className="text-sm font-semibold">
+                          {formatCurrency(
+                            block.totalPriceCents,
+                            block.currency,
+                          )}
+                        </span>
+                      )}
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleCancelBlock(block.id)}
+                        disabled={cancelBlock.isPending}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Dialog open={maintenanceOpen} onOpenChange={setMaintenanceOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add maintenance block</DialogTitle>
+              <DialogDescription>
+                Block a time range for maintenance or private events. Times are
+                shown in {placeTimeZone}.
+              </DialogDescription>
+            </DialogHeader>
+            <StandardFormProvider
+              form={maintenanceForm}
+              onSubmit={handleMaintenanceSubmit}
+            >
+              <div className="space-y-4">
+                <StandardFormInput<BlockFormValues>
+                  name="startTime"
+                  label="Start time"
+                  type="datetime-local"
+                  required
+                />
+                <StandardFormInput<BlockFormValues>
+                  name="endTime"
+                  label="End time"
+                  type="datetime-local"
+                  required
+                />
+                <StandardFormTextarea<BlockFormValues>
+                  name="reason"
+                  label="Reason (optional)"
+                  placeholder="Net replacement"
+                />
+              </div>
+              <DialogFooter className="pt-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setMaintenanceOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={createMaintenance.isPending}>
+                  Save block
+                </Button>
+              </DialogFooter>
+            </StandardFormProvider>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog
+          open={walkInOpen}
+          onOpenChange={(open) => {
+            setWalkInOpen(open);
+            if (!open) {
+              setWalkInPreset(null);
+            }
+          }}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add walk-in booking</DialogTitle>
+              <DialogDescription>
+                Reserve a time range for a walk-in customer. Pricing is computed
+                from your schedule in {placeTimeZone}.
+              </DialogDescription>
+            </DialogHeader>
+            <StandardFormProvider
+              form={walkInForm}
+              onSubmit={handleWalkInSubmit}
+            >
+              <div className="space-y-4">
+                <StandardFormInput<BlockFormValues>
+                  name="startTime"
+                  label="Start time"
+                  type="datetime-local"
+                  required
+                />
+                <StandardFormInput<BlockFormValues>
+                  name="endTime"
+                  label="End time"
+                  type="datetime-local"
+                  required
+                />
+                <StandardFormTextarea<BlockFormValues>
+                  name="reason"
+                  label="Note (optional)"
+                  placeholder="Walk-in: Name, phone"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Walk-in bookings must be in 60-minute increments.
+                </p>
+              </div>
+              <DialogFooter className="pt-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setWalkInOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={createWalkIn.isPending}>
+                  Save walk-in
+                </Button>
+              </DialogFooter>
+            </StandardFormProvider>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppShell>
   );

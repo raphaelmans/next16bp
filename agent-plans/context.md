@@ -8,6 +8,7 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-25 | Added 67-owner-court-blocks plan (maintenance + walk-in blocks, computed price snapshots for revenue) |
 | 2026-01-24 | Added 65-rules-exceptions-cutover plan (remove time_slot materialization + owner slots UI) |
 | 2026-01-24 | Added 64-booking-window-ux plan (schedule deep-link clamping + clearer window error messaging) |
 | 2026-01-24 | Added 63-booking-window-60-days plan (enforce 60-day availability + booking lead time caps) |

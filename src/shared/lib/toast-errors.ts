@@ -39,6 +39,14 @@ const getFieldErrorMessage = (fieldErrors: unknown): string | null => {
 const FRIENDLY_ERROR_MESSAGES: Record<string, string> = {
   BOOKING_WINDOW_EXCEEDED:
     "This time is beyond the 60-day booking window. Choose an earlier date.",
+  COURT_BLOCK_OVERLAP:
+    "That time range overlaps another block. Choose a different time.",
+  COURT_BLOCK_OVERLAPS_RESERVATION:
+    "That time range overlaps an existing reservation.",
+  COURT_BLOCK_PRICING_UNAVAILABLE:
+    "Schedule pricing does not cover that time range. Update the schedule and try again.",
+  COURT_BLOCK_DURATION_INVALID: "Duration must be in 60-minute increments.",
+  COURT_BLOCK_TIME_RANGE_INVALID: "End time must be after start time.",
 };
 
 const getCodeErrorMessage = (error: unknown): string | null => {

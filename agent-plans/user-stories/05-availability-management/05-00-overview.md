@@ -2,17 +2,15 @@
 
 ## Overview
 
-The Availability Management domain enables organization owners to create and manage time slots for their courts. This is a prerequisite for the reservation flow - courts cannot accept bookings without available time slots.
+The Availability Management domain enables organization owners to control court availability through schedule rules and one-off blocks.
 
-Owners access slot management through the `/owner/courts/[id]/slots` page, where they can:
-- Create single or bulk time slots
-- Set per-slot pricing (free or paid)
-- View all slots across all statuses
-- Block/unblock slots for maintenance or private use
-- Delete available slots
-- See player information on booked slots
+Owners manage:
+- Weekly open hours + pricing rules (schedule editor)
+- Schedule-derived availability (availability month view)
+- One-off maintenance blocks (disable a time range)
+- Walk-in booking blocks (reserve a time range without the player reservation flow)
 
-This domain implements PRD Section 9 (Time Slot Management) and Journey 5 (Owner Manages Availability).
+Note: The original slot-based approach (explicit `time_slot` rows) has been superseded by computed availability + range-based reservations.
 
 ---
 
@@ -20,9 +18,10 @@ This domain implements PRD Section 9 (Time Slot Management) and Journey 5 (Owner
 
 | Document | Location |
 |----------|----------|
-| PRD | `business-contexts/kudoscourts-prd-v1.1.md` Section 9, Journey 5 |
+| PRD | `business-contexts/kudoscourts-prd-v1.2.md` Section 9 (concepts: blocking + pricing rules) |
 | Design System | `business-contexts/kudoscourts-design-system.md` |
 | Server Context | `agent-contexts/00-01-kudoscourts-server.md` |
+| Cutover Context | `agent-contexts/01-05-rules-exceptions-cutover.md` |
 
 ---
 
@@ -30,8 +29,10 @@ This domain implements PRD Section 9 (Time Slot Management) and Journey 5 (Owner
 
 | ID | Story | Status | Description |
 |----|-------|--------|-------------|
-| US-05-01 | Owner Creates Time Slots | Active | Single + bulk slot creation with pricing |
-| US-05-02 | Owner Views and Manages Slots | Active | View all slots, block/unblock, delete, player info |
+| US-05-01 | Owner Creates Time Slots | Superseded | Legacy slot publishing (pre-cutover) |
+| US-05-02 | Owner Views and Manages Slots | Superseded | Legacy slot management (pre-cutover) |
+| US-05-03 | Owner Blocks Court Time Range (Maintenance) | Active | One-off block to disable a time range (no overlaps) |
+| US-05-04 | Owner Creates Walk-In Booking Block | Active | Reserve a time range without reservation flow (computed price only, no overlaps) |
 
 ---
 
@@ -119,6 +120,6 @@ Per PRD Section 9.3:
 
 ## Summary
 
-- **Total Stories:** 2
+- **Total Stories:** 4
 - **Active:** 2
-- **Key Deliverable:** Wire frontend hooks to real backend, add `getForCourt` endpoint
+- **Superseded:** 2

@@ -558,7 +558,9 @@ export class AvailabilityService implements IAvailabilityService {
     const courtReservations = reservations
       .filter((reservation) => reservation.courtId === court.id)
       .filter((reservation) => this.isReservationBlocking(reservation));
-    const courtBlocks = blocks.filter((block) => block.courtId === court.id);
+    const courtBlocks = blocks.filter(
+      (block) => block.courtId === court.id && block.isActive,
+    );
 
     const rangeStartDay = getZonedDayRangeForInstant(
       rangeStart,

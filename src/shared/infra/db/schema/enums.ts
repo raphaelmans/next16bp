@@ -31,6 +31,15 @@ export const reservationStatusEnum = pgEnum("reservation_status", [
 ]);
 
 /**
+ * Court block type enum
+ * Distinguishes maintenance vs walk-in blocks
+ */
+export const courtBlockTypeEnum = pgEnum("court_block_type", [
+  "MAINTENANCE",
+  "WALK_IN",
+]);
+
+/**
  * Triggered by role enum
  * Identifies who triggered a status transition in audit logs
  */

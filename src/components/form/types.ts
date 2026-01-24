@@ -27,7 +27,14 @@ export interface StandardInputProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends StandardFieldProps<TFieldValues, TName> {
-  type?: "text" | "email" | "password" | "number" | "tel" | "url";
+  type?:
+    | "text"
+    | "email"
+    | "password"
+    | "number"
+    | "tel"
+    | "url"
+    | "datetime-local";
   autoComplete?: string;
   size?: FieldSize;
   variant?: FieldVariant;
