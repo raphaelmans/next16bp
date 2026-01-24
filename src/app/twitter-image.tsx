@@ -97,85 +97,30 @@ export default function TwitterImage() {
           marginLeft: "40px",
         }}
       >
-        {/* Court icon - larger version */}
         <div
           style={{
             width: "280px",
             height: "280px",
+            borderRadius: "64px",
+            overflow: "hidden",
+            boxShadow: "0 18px 50px rgba(0,0,0,0.25)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            position: "relative",
-            border: "12px solid rgba(255,255,255,0.9)",
-            borderRadius: "32px",
-            background: "rgba(255,255,255,0.12)",
           }}
         >
-          {/* Top kitchen line */}
-          <div
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "8px",
-              background: "rgba(255,255,255,0.7)",
-              top: "28%",
-            }}
-          />
-          {/* Net line */}
-          <div
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "10px",
-              background: "white",
-              top: "50%",
-              transform: "translateY(-50%)",
-            }}
-          />
-          {/* Bottom kitchen line */}
-          <div
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "8px",
-              background: "rgba(255,255,255,0.7)",
-              bottom: "28%",
-            }}
-          />
-          {/* Vertical center line */}
-          <div
-            style={{
-              position: "absolute",
-              width: "6px",
-              height: "100%",
-              background: "rgba(255,255,255,0.4)",
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-          />
-          {/* Orange pin */}
-          <div
-            style={{
-              width: "80px",
-              height: "80px",
-              borderRadius: "50%",
-              background: "linear-gradient(135deg, #FB923C 0%, #F97316 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 10,
-              boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
-            }}
+          <svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 375 375"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <div
-              style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "50%",
-                background: "white",
-              }}
-            />
-          </div>
+            <title>KudosCourts</title>
+            <rect width="375" height="375" fill="#0d9488" />
+            <g fill="#fafaf9" transform="translate(99.06738 280.162856)">
+              <path d="M 124.1875 0 L 52.4375 -92.328125 L 121.921875 -177.125 L 170.59375 -177.125 L 92.328125 -85.046875 L 92.328125 -101.109375 L 173.109375 0 Z M 17.0625 0 L 17.0625 -177.125 L 56.453125 -177.125 L 56.453125 0 Z M 17.0625 0 " />
+            </g>
+          </svg>
         </div>
       </div>
 
