@@ -38,6 +38,7 @@ export const mapPlaceSummary = (item: PlaceListItem): PlaceSummary => {
 
   return {
     id: item.place.id,
+    slug: item.place.slug ?? undefined,
     name: item.place.name,
     address: item.place.address,
     city: item.place.city,

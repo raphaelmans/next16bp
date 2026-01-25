@@ -54,6 +54,7 @@ export interface PlaceListItem {
 export interface PlaceSummaryItem {
   place: {
     id: string;
+    slug?: string | null;
     name: string;
     address: string;
     city: string;
@@ -792,6 +793,7 @@ export class PlaceRepository implements IPlaceRepository {
       items: placeRecords.map((placeRecord) => ({
         place: {
           id: placeRecord.id,
+          slug: placeRecord.slug,
           name: placeRecord.name,
           address: placeRecord.address,
           city: placeRecord.city,

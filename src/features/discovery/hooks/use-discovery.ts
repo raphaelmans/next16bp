@@ -28,6 +28,7 @@ interface UseDiscoveryOptions {
 
 export interface DiscoveryPlaceSummary {
   id: string;
+  slug?: string | null;
   name: string;
   address: string;
   city: string;
@@ -54,6 +55,7 @@ export interface PlaceCardMeta {
 interface PlaceSummaryListItem {
   place: {
     id: string;
+    slug?: string | null;
     name: string;
     address: string;
     city: string;
@@ -90,6 +92,7 @@ const mapPlaceSummaryItem = (
 
   return {
     id: item.place.id,
+    slug: item.place.slug ?? undefined,
     name: item.place.name,
     address: item.place.address,
     city: item.place.city,
@@ -106,6 +109,7 @@ export const buildDiscoveryPlaceCard = (
   meta?: PlaceCardMeta,
 ): PlaceCardPlace => ({
   id: summary.id,
+  slug: summary.slug ?? undefined,
   name: summary.name,
   address: summary.address,
   city: summary.city,

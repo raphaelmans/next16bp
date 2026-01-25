@@ -8,7 +8,9 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-25 | Added 69-bookings-import-normalization-poc plan (CLI PoC: external exports -> AI mapping spec -> reservation blocks JSON) |
 | 2026-01-25 | Added 67-owner-court-blocks plan (maintenance + walk-in blocks, computed price snapshots for revenue) |
+| 2026-01-25 | Added 68-venue-slug-canonical-navigation plan (stop UUID->slug flicker via slug propagation + server redirect) |
 | 2026-01-24 | Added 65-rules-exceptions-cutover plan (remove time_slot materialization + owner slots UI) |
 | 2026-01-24 | Added 64-booking-window-ux plan (schedule deep-link clamping + clearer window error messaging) |
 | 2026-01-24 | Added 63-booking-window-60-days plan (enforce 60-day availability + booking lead time caps) |
@@ -98,6 +100,7 @@ References and context for planning artifacts.
 | 16-reservation-list-enrichment | `agent-plans/user-stories/16-reservation-list-enrichment/` | Player reservation lists with real court + slot data |
 | 17-place-claiming | `agent-plans/user-stories/17-place-claiming/` | Claim curated places and transfer courts to organizations |
 | 19-place-verification | `agent-plans/user-stories/19-place-verification/` | Per-place owner verification before enabling reservations |
+| 66-bookings-import | `agent-plans/user-stories/66-bookings-import/` | Import existing bookings (calendar/spreadsheet) into reservation blocks |
 | 58-contact-us | `agent-plans/user-stories/58-contact-us/` | Public contact page submissions + email delivery |
 
 ---
@@ -130,6 +133,7 @@ References and context for planning artifacts.
 | 55-owner-partner-landing | `agent-plans/55-owner-partner-landing/` | Draft |
 | 56-auth-redirect-continuity | `agent-plans/56-auth-redirect-continuity/` | Draft |
 | 58-contact-us | `agent-plans/58-contact-us/` | Draft |
+| 68-venue-slug-canonical-navigation | `agent-plans/68-venue-slug-canonical-navigation/` | Draft |
 
 ---
 
