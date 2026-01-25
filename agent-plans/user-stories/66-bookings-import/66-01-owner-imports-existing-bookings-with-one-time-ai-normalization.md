@@ -52,6 +52,7 @@ As an **organization owner**, I want to **upload an export of my already-booked 
 | File contains no bookings | Show an empty state and guidance on supported formats |
 | Bookings cannot be mapped to a specific court | Row is flagged as an error until the owner selects a court |
 | Invalid time ranges (end <= start) | Row is flagged as an error until corrected |
+| Booking is not hour-aligned (minute != 0) or not a multiple of 60 minutes | Row is flagged as an error until corrected |
 | AI output is incomplete or inconsistent | Rows are flagged for owner correction; the draft remains editable |
 
 ---

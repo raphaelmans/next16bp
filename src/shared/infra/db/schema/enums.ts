@@ -106,3 +106,38 @@ export const placeVerificationStatusEnum = pgEnum("place_verification_status", [
   "VERIFIED",
   "REJECTED",
 ]);
+
+/**
+ * Bookings import job status enum
+ * Tracks the lifecycle of an import job
+ */
+export const bookingsImportJobStatusEnum = pgEnum(
+  "bookings_import_job_status",
+  [
+    "DRAFT",
+    "NORMALIZING",
+    "NORMALIZED",
+    "COMMITTING",
+    "COMMITTED",
+    "FAILED",
+    "DISCARDED",
+  ],
+);
+
+/**
+ * Bookings import source type enum
+ * The file format/source of the import
+ */
+export const bookingsImportSourceTypeEnum = pgEnum(
+  "bookings_import_source_type",
+  ["ics", "csv", "xlsx", "image"],
+);
+
+/**
+ * Bookings import row status enum
+ * Tracks the validation/commit state of individual rows
+ */
+export const bookingsImportRowStatusEnum = pgEnum(
+  "bookings_import_row_status",
+  ["PENDING", "VALID", "ERROR", "WARNING", "COMMITTED", "SKIPPED"],
+);

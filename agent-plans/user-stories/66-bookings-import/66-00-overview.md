@@ -26,12 +26,12 @@ This domain focuses on **importing booked time ranges** and presenting them in a
 | US-66-02 | Owner Reviews and Commits Imported Bookings | Active | - |
 | US-66-03 | Owner Understands One-Time AI Import Limits | Active | - |
 | US-66-04 | Developer Normalizes External Bookings to Reservation Blocks (POC Script) | Active | - |
+| US-66-05 | Owner Uploads Bookings via Venue Import Landing Page | Active | - |
 
 ---
 
 ## Summary
 
-- Total: 3
-- Total: 4
-- Active: 4
+- Total: 5
+- Active: 5
 - Superseded: 0

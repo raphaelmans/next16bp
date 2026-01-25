@@ -1,0 +1,12 @@
+{
+  "format": "ics",
+  "version": 1,
+  "resource": { "kind": "location" },
+  "reason": { "kind": "summary" },
+  "sport": { "kind": "infer" },
+  "parsing": {
+    "timeZoneFallback": "Asia/Manila",
+    "ignoreCancelled": true,
+    "ignoreAllDay": true
+  }
+}

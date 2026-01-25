@@ -16,12 +16,30 @@ export const MAX_PAYMENT_PROOF_SIZE = 10 * 1024 * 1024;
 export const MAX_VERIFICATION_DOCUMENT_SIZE = 10 * 1024 * 1024;
 
 /**
+ * Maximum file size for import files (20MB)
+ */
+export const MAX_IMPORT_FILE_SIZE = 20 * 1024 * 1024;
+
+/**
  * Allowed image MIME types
  */
 export const ALLOWED_IMAGE_TYPES = [
   "image/jpeg",
   "image/png",
   "image/webp",
+] as const;
+
+/**
+ * Allowed file types for bookings imports
+ */
+export const ALLOWED_IMPORT_FILE_TYPES = [
+  "text/calendar",
+  "text/csv",
+  "application/csv",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "image/jpeg",
+  "image/png",
 ] as const;
 
 /**
@@ -43,6 +61,7 @@ export const FILE_SIZE_LIMITS_READABLE = {
   ORG_LOGO: "5MB",
   PAYMENT_PROOF: "10MB",
   VERIFICATION_DOCUMENT: "10MB",
+  IMPORT_FILE: "20MB",
 } as const;
 
 /**
@@ -116,6 +135,24 @@ export const verificationDocumentFileSchema = zfd
   );
 
 /**
+ * Import file validation schema (CSV/XLSX/ICS/images, 20MB).
+ */
+export const importFileSchema = zfd
+  .file()
+  .refine((file) => file.size <= MAX_IMPORT_FILE_SIZE, {
+    message: `File must be less than ${FILE_SIZE_LIMITS_READABLE.IMPORT_FILE}`,
+  })
+  .refine(
+    (file) =>
+      ALLOWED_IMPORT_FILE_TYPES.includes(
+        file.type as (typeof ALLOWED_IMPORT_FILE_TYPES)[number],
+      ),
+    {
+      message: "File must be ICS, CSV, XLSX, or PNG/JPG",
+    },
+  );
+
+/**
  * Upload result returned by storage service
  */
 export interface UploadResult {
@@ -132,4 +169,6 @@ export interface UploadOptions {
   file: File;
   contentType?: string;
   upsert?: boolean;
+  allowedTypes?: readonly string[];
+  maxSize?: number;
 }

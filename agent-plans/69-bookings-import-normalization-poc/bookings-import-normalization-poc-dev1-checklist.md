@@ -23,6 +23,7 @@
 - [ ] Implement `--mapping-file` and `--no-ai`
 - [ ] Normalize to blocks with `resourceId` mapping
 - [ ] Detect multi-court and produce `resources[]`
+- [ ] Enforce hour alignment (minute 0; duration multiple of 60) and emit errors for invalid entries
 - [ ] Best-effort sport detection
 
 ## Phase 4: Polish + QA

@@ -3,6 +3,9 @@
  * Import individual table schemas here as they are created.
  */
 
+// Bookings import tables
+export * from "./bookings-import-job";
+export * from "./bookings-import-row";
 // Claim request tables
 export * from "./claim-request";
 // Contact messages

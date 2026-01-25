@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   MapPin,
   Settings,
+  UploadCloud,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -68,6 +69,11 @@ const navItems = [
     title: "Venues",
     href: appRoutes.owner.places.base,
     icon: MapPin,
+  },
+  {
+    title: "Imports",
+    href: appRoutes.owner.imports.bookings,
+    icon: UploadCloud,
   },
   {
     title: "Reservations",

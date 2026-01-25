@@ -34,7 +34,7 @@ pnpm script:normalize-data -- --path="/abs/path/to/file.ics"
 | Flag | Description | Default |
 |------|-------------|---------|
 | `--path` | File path to normalize | required |
-| `--format` | `ics` / `csv` / `xlsx` | inferred from extension |
+| `--format` | `ics` / `csv` / `xlsx` | required |
 | `--time-zone` | Time zone fallback for local-looking times | `Asia/Manila` |
 | `--range-start` | Start for RRULE expansion | `now()` |
 | `--range-end` | End for RRULE expansion | `now()+60d` |
@@ -62,6 +62,8 @@ Represents detected courts/resources in the input.
 ### `blocks[]`
 
 Normalized reservation blocks that reference a resource.
+
+Current constraint: blocks must be hour-aligned (minute 0) and have a duration multiple of 60 minutes.
 
 ```ts
 {
@@ -191,6 +193,8 @@ Allowed sports (current seed list):
 - Ensure `resourceId` exists
 - Ensure ISO datetimes parse
 - Ensure `endTime > startTime`
+- Ensure duration is a multiple of 60 minutes
+- Ensure start/end are aligned to the hour grid in `timeZoneFallback` (minute 0)
 - Collect invalid entries into `errors[]` and continue
 
 ---
@@ -230,6 +234,7 @@ Allowed sports (current seed list):
 - XLSX: first sheet detection + header detection
 - ICS: RRULE expansion within range
 - Multi-court: resources list stable and blocks reference correct resourceId
+- Hour alignment: reject minute != 0 or duration not multiple of 60
 - Sport: explicit column + inference fallback
 - Deterministic rerun: `--mapping-file` produces identical blocks
 

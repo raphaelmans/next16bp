@@ -12,6 +12,7 @@ import {
   InvalidFileTypeError,
   SignedUrlError,
   StorageDeleteError,
+  StorageDownloadError,
   StorageUploadError,
 } from "../errors/storage.errors";
 
@@ -23,6 +24,11 @@ export interface IObjectStorageService {
    * Upload a file to storage.
    */
   upload(options: UploadOptions): Promise<UploadResult>;
+
+  /**
+   * Download a file from storage.
+   */
+  download(bucket: StorageBucket, path: string): Promise<Buffer>;
 
   /**
    * Delete a file from storage.
@@ -61,15 +67,17 @@ export class ObjectStorageService implements IObjectStorageService {
   async upload(options: UploadOptions): Promise<UploadResult> {
     const { bucket, path, file, contentType, upsert = false } = options;
 
+    const maxSize = options.maxSize ?? MAX_FILE_SIZE;
+    const allowedTypes = options.allowedTypes ?? ALLOWED_IMAGE_TYPES;
+
     // Validate file size
-    if (file.size > MAX_FILE_SIZE) {
-      throw new FileTooLargeError(file.size, MAX_FILE_SIZE);
+    if (file.size > maxSize) {
+      throw new FileTooLargeError(file.size, maxSize);
     }
 
-    // Validate file type (for images)
-    const fileType = file.type as (typeof ALLOWED_IMAGE_TYPES)[number];
-    if (!ALLOWED_IMAGE_TYPES.includes(fileType)) {
-      throw new InvalidFileTypeError(file.type, [...ALLOWED_IMAGE_TYPES]);
+    // Validate file type
+    if (!allowedTypes.includes(file.type)) {
+      throw new InvalidFileTypeError(file.type, [...allowedTypes]);
     }
 
     // Convert File to ArrayBuffer for server-side upload
@@ -90,6 +98,23 @@ export class ObjectStorageService implements IObjectStorageService {
     const url = this.getPublicUrl(bucket, data.path);
 
     return { url, path: data.path };
+  }
+
+  async download(bucket: StorageBucket, path: string): Promise<Buffer> {
+    const { data, error } = await this.client.storage
+      .from(bucket)
+      .download(path);
+
+    if (error) {
+      throw new StorageDownloadError(path, error.message);
+    }
+
+    if (!data) {
+      throw new StorageDownloadError(path, "No data returned");
+    }
+
+    const arrayBuffer = await data.arrayBuffer();
+    return Buffer.from(arrayBuffer);
   }
 
   async delete(bucket: StorageBucket, path: string): Promise<void> {

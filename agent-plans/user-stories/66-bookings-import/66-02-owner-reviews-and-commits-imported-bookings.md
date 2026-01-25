@@ -28,6 +28,13 @@ As an **organization owner**, I want to **review, edit, and commit imported book
 - Then the platform prevents commit
 - And I see which rows must be fixed
 
+### Imported Bookings Must Be Hour-Aligned (Current Constraint)
+
+- Given I am reviewing imported bookings
+- When a booking start/end time is not aligned to the hour grid (minute 0) or the duration is not a multiple of 60 minutes
+- Then the row is flagged as an error
+- And I must correct the time range before commit
+
 ### Committing Prevents Double-Booking
 
 - Given I commit a valid imported bookings draft
@@ -43,6 +50,7 @@ As an **organization owner**, I want to **review, edit, and commit imported book
 | Draft contains duplicate bookings | Duplicates are flagged or skipped with a clear summary |
 | Draft booking overlaps an existing booking/block | Owner is warned and the platform prevents double-booking |
 | Commit partially succeeds | Owner sees a clear results summary (created vs skipped vs invalid) |
+| Imported booking is not hour-aligned | Booking cannot be committed until corrected |
 
 ---
 

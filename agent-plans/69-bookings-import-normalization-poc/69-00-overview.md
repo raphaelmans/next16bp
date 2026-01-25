@@ -80,6 +80,7 @@ Phase 1 ───────► Phase 2 ───────► Phase 3 ──
 | Output target | Reservation blocks only | Matches cutover model (rules + exceptions) and the immediate goal (prevent double-booking) |
 | Court identity (PoC) | `resourceId` + `resources[]` | Avoids DB coupling and allows multi-court exports without having court IDs |
 | AI usage | Mapping spec only (single call) | Minimizes token usage and enables deterministic processing + repeatability |
+| Time granularity (PoC) | Hour-aligned blocks only | Matches the 60-minute availability step and current block constraints; avoids ambiguous partial-hour blocking |
 | Re-runs without AI cost | `--mapping-file` / `--no-ai` | Lets dev iterate on parsing and normalization without paying again |
 | Error handling | Best-effort: blocks + errors | Optimizes iteration; mirrors eventual UI review flow |
 
@@ -101,6 +102,7 @@ Phase 1 ───────► Phase 2 ───────► Phase 3 ──
 - [ ] `pnpm script:normalize-data -- --path <file>` prints a single JSON payload to stdout
 - [ ] Output validates against a Zod schema (blocks + resources + errors)
 - [ ] Multi-court inputs produce `resources[]` with stable `resourceId`s
+- [ ] All emitted blocks are hour-aligned (minute 0; duration multiple of 60)
 - [ ] Sports are detected best-effort (explicit column or keyword inference)
 - [ ] `--mapping-file` allows reruns with zero AI calls
 - [ ] `pnpm lint` passes

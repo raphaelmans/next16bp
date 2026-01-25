@@ -140,6 +140,11 @@ export const appRoutes = {
           `/owner/venues/${placeId}/courts/${courtId}/availability`,
       },
     },
+    imports: {
+      base: "/owner/import",
+      bookings: "/owner/import/bookings",
+      bookingsReview: (jobId: string) => `/owner/import/bookings/${jobId}`,
+    },
     reservations: "/owner/reservations",
     reservationsActive: "/owner/reservations/active",
     reservationDetail: (reservationId: string) =>

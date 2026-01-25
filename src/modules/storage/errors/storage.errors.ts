@@ -59,3 +59,14 @@ export class SignedUrlError extends InternalError {
     super("Failed to generate signed URL", { path });
   }
 }
+
+/**
+ * Error thrown when file download fails.
+ */
+export class StorageDownloadError extends InternalError {
+  readonly code = "STORAGE_DOWNLOAD_FAILED";
+
+  constructor(path: string, reason?: string) {
+    super(`Failed to download file: ${reason ?? "unknown error"}`, { path });
+  }
+}

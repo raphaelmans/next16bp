@@ -1,6 +1,7 @@
 import { auditRouter } from "@/modules/audit/audit.router";
 import { authRouter } from "@/modules/auth/auth.router";
 import { availabilityRouter } from "@/modules/availability/availability.router";
+import { bookingsImportRouter } from "@/modules/bookings-import/bookings-import.router";
 import { claimAdminRouter } from "@/modules/claim-request/admin/claim-admin.router";
 import { claimRequestRouter } from "@/modules/claim-request/claim-request.router";
 import { contactRouter } from "@/modules/contact/contact.router";
@@ -48,6 +49,7 @@ export const appRouter = router({
   contact: contactRouter,
   audit: auditRouter,
   availability: availabilityRouter,
+  bookingsImport: bookingsImportRouter,
   reservation: reservationRouter,
   reservationOwner: reservationOwnerRouter,
   admin: router({

@@ -32,9 +32,16 @@ As a **KudosCourts developer**, I want to **run a local CLI script that converts
 - Given the script parses the file
 - When the script prints the normalized output
 - Then the output includes a `blocks` array
+- And the output includes a `resources` array describing detected courts/resources
+- And each block references a `resourceId` that exists in `resources`
 - And each block includes `startTime` and `endTime` as ISO datetimes
-- And each block includes enough court identity to be mapped to a platform court (e.g., `courtId` when provided, otherwise `courtLabel`)
 - And each block includes an optional `reason`
+
+### Blocks Are Hour-Aligned (Current Constraint)
+
+- Given the script outputs a normalized block
+- Then the block duration is a multiple of 60 minutes
+- And the start and end times are aligned to the hour grid in the configured time zone (minute 0)
 
 ### Validation And Error Reporting
 
@@ -65,6 +72,8 @@ As a **KudosCourts developer**, I want to **run a local CLI script that converts
 | Court cannot be resolved from input data | Entry is flagged as an error until a court mapping is provided |
 | ICS recurrence rules | Recurrences are expanded within a bounded date range |
 | Input uses a different timezone | Script applies a configured timezone fallback and outputs UTC ISO strings |
+| Entry is not hour-aligned (minute != 0) or not a multiple of 60 minutes | Entry is flagged as an error |
+| File contains bookings for multiple courts | Script outputs blocks for all detected courts/resources |
 
 ---
 
@@ -73,12 +82,14 @@ As a **KudosCourts developer**, I want to **run a local CLI script that converts
 | Flag | Type | Required |
 |------|------|----------|
 | --path | string | Yes |
-| --format | enum (ics/csv/xlsx) | No |
+| --format | enum (ics/csv/xlsx) | Yes |
 | --time-zone | string | No |
 | --range-start | datetime | No |
 | --range-end | datetime | No |
-| --court-id | uuid | No |
-| --court-label | string | No |
+| --model | string | No |
+| --mapping-file | path | No |
+| --save-mapping-file | path | No |
+| --no-ai | boolean | No |
 
 ---
 

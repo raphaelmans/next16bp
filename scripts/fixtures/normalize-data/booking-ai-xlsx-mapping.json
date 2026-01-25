@@ -1,0 +1,45 @@
+{
+  "format": "xlsx",
+  "version": 1,
+  "dateTimeMode": "date_start_end_time",
+  "resource": {
+    "kind": "column",
+    "column": {
+      "header": "Court Name"
+    }
+  },
+  "sport": {
+    "kind": "column",
+    "column": {
+      "header": "Sport"
+    }
+  },
+  "reason": {
+    "kind": "column",
+    "column": {
+      "header": "Notes"
+    }
+  },
+  "start": {
+    "date": {
+      "header": "Booking Date"
+    },
+    "time": {
+      "header": "Start Time"
+    }
+  },
+  "end": {
+    "date": {
+      "header": "Booking Date"
+    },
+    "time": {
+      "header": "End Time"
+    }
+  },
+  "parsing": {
+    "timeZoneFallback": "Asia/Manila",
+    "dateOrder": "ymd",
+    "timeFormat": "24h",
+    "assumeTimeZoneWhenMissingOffset": true
+  }
+}
