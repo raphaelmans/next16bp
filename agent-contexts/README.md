@@ -4,7 +4,7 @@ This directory contains chronological implementation history for the KudosCourts
 
 ## Quick Navigation
 
-Latest: [01-08](./01-08-owner-court-blocks.md)
+Latest: [01-09](./01-09-best-price-court-breakdown.md)
 
 ### By Implementation Phase
 
@@ -416,5 +416,5 @@ Latest: [01-08](./01-08-owner-court-blocks.md)
 ---
 
 **Last Updated:** 2026-01-25  
-**Total Documents:** 116  
+**Total Documents:** 117  
 **Implementation Phase:** Active (incremental)

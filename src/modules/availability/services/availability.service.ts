@@ -41,6 +41,18 @@ export interface AvailabilityOption {
   currency: string | null;
   courtId: string;
   courtLabel: string;
+  status: "AVAILABLE" | "BOOKED";
+  unavailableReason?: "RESERVATION" | "MAINTENANCE" | "WALK_IN" | null;
+  courtOptions?: AvailabilityCourtOption[];
+}
+
+export interface AvailabilityCourtOption {
+  courtId: string;
+  courtLabel: string;
+  status: "AVAILABLE" | "BOOKED";
+  totalPriceCents: number;
+  currency: string | null;
+  unavailableReason?: "RESERVATION" | "MAINTENANCE" | "WALK_IN" | null;
 }
 
 export interface IAvailabilityService {
@@ -138,6 +150,7 @@ export class AvailabilityService implements IAvailabilityService {
       reservations,
       blocks,
       overrides,
+      includeUnavailable: data.includeUnavailable ?? false,
     });
   }
 
@@ -243,6 +256,7 @@ export class AvailabilityService implements IAvailabilityService {
             reservations,
             blocks,
             overrides,
+            includeUnavailable: data.includeUnavailable ?? false,
           }),
         );
       }
@@ -303,6 +317,9 @@ export class AvailabilityService implements IAvailabilityService {
     ]);
 
     const optionsByStart = new Map<number, AvailabilityOption>();
+    const courtOptionsByStart = new Map<number, AvailabilityCourtOption[]>();
+    const includeUnavailable = data.includeUnavailable ?? false;
+    const includeCourtOptions = data.includeCourtOptions ?? false;
 
     for (const court of activeCourts) {
       const availability = this.buildAvailabilityForCourtRange({
@@ -316,10 +333,23 @@ export class AvailabilityService implements IAvailabilityService {
         reservations,
         blocks,
         overrides,
+        includeUnavailable,
       });
 
       for (const option of availability) {
         const startMs = new Date(option.startTime).getTime();
+        if (includeCourtOptions) {
+          const entry = courtOptionsByStart.get(startMs) ?? [];
+          entry.push({
+            courtId: option.courtId,
+            courtLabel: option.courtLabel,
+            status: option.status,
+            totalPriceCents: option.totalPriceCents,
+            currency: option.currency,
+            unavailableReason: option.unavailableReason ?? null,
+          });
+          courtOptionsByStart.set(startMs, entry);
+        }
         const existing = optionsByStart.get(startMs);
         if (!existing) {
           optionsByStart.set(startMs, option);
@@ -331,9 +361,14 @@ export class AvailabilityService implements IAvailabilityService {
       }
     }
 
-    return Array.from(optionsByStart.values()).sort((a, b) =>
-      a.startTime.localeCompare(b.startTime),
-    );
+    return Array.from(optionsByStart.entries())
+      .map(([startMs, option]) => ({
+        ...option,
+        courtOptions: includeCourtOptions
+          ? this.sortCourtOptions(courtOptionsByStart.get(startMs) ?? [])
+          : undefined,
+      }))
+      .sort((a, b) => a.startTime.localeCompare(b.startTime));
   }
 
   async getForCourtRange(
@@ -403,6 +438,7 @@ export class AvailabilityService implements IAvailabilityService {
       reservations,
       blocks,
       overrides,
+      includeUnavailable: data.includeUnavailable ?? false,
     });
   }
 
@@ -460,6 +496,9 @@ export class AvailabilityService implements IAvailabilityService {
     ]);
 
     const optionsByStart = new Map<number, AvailabilityOption>();
+    const courtOptionsByStart = new Map<number, AvailabilityCourtOption[]>();
+    const includeUnavailable = data.includeUnavailable ?? false;
+    const includeCourtOptions = data.includeCourtOptions ?? false;
 
     for (const court of activeCourts) {
       const availability = this.buildAvailabilityForCourtRange({
@@ -473,10 +512,23 @@ export class AvailabilityService implements IAvailabilityService {
         reservations,
         blocks,
         overrides,
+        includeUnavailable,
       });
 
       for (const option of availability) {
         const startMs = new Date(option.startTime).getTime();
+        if (includeCourtOptions) {
+          const entry = courtOptionsByStart.get(startMs) ?? [];
+          entry.push({
+            courtId: option.courtId,
+            courtLabel: option.courtLabel,
+            status: option.status,
+            totalPriceCents: option.totalPriceCents,
+            currency: option.currency,
+            unavailableReason: option.unavailableReason ?? null,
+          });
+          courtOptionsByStart.set(startMs, entry);
+        }
         const existing = optionsByStart.get(startMs);
         if (!existing) {
           optionsByStart.set(startMs, option);
@@ -488,9 +540,14 @@ export class AvailabilityService implements IAvailabilityService {
       }
     }
 
-    return Array.from(optionsByStart.values()).sort((a, b) =>
-      a.startTime.localeCompare(b.startTime),
-    );
+    return Array.from(optionsByStart.entries())
+      .map(([startMs, option]) => ({
+        ...option,
+        courtOptions: includeCourtOptions
+          ? this.sortCourtOptions(courtOptionsByStart.get(startMs) ?? [])
+          : undefined,
+      }))
+      .sort((a, b) => a.startTime.localeCompare(b.startTime));
   }
 
   private isPlaceBookable(
@@ -529,6 +586,7 @@ export class AvailabilityService implements IAvailabilityService {
     reservations: ReservationRecord[];
     blocks: CourtBlockRecord[];
     overrides: CourtPriceOverrideRecord[];
+    includeUnavailable?: boolean;
   }): AvailabilityOption[] {
     const {
       court,
@@ -541,7 +599,10 @@ export class AvailabilityService implements IAvailabilityService {
       reservations,
       blocks,
       overrides,
+      includeUnavailable,
     } = options;
+
+    const allowUnavailable = includeUnavailable ?? false;
 
     if (durationMinutes <= 0) return [];
 
@@ -616,7 +677,7 @@ export class AvailabilityService implements IAvailabilityService {
           continue;
         }
 
-        const overlapsReservation = courtReservations.some((reservation) =>
+        const reservationOverlap = courtReservations.find((reservation) =>
           rangesOverlap({
             startA: startTime,
             endA: endTime,
@@ -624,11 +685,8 @@ export class AvailabilityService implements IAvailabilityService {
             endB: new Date(reservation.endTime),
           }),
         );
-        if (overlapsReservation) {
-          continue;
-        }
 
-        const overlapsBlock = courtBlocks.some((block) =>
+        const blockOverlap = courtBlocks.find((block) =>
           rangesOverlap({
             startA: startTime,
             endA: endTime,
@@ -636,7 +694,9 @@ export class AvailabilityService implements IAvailabilityService {
             endB: new Date(block.endTime),
           }),
         );
-        if (overlapsBlock) {
+
+        const isUnavailable = Boolean(reservationOverlap || blockOverlap);
+        if (isUnavailable && !allowUnavailable) {
           continue;
         }
 
@@ -647,6 +707,14 @@ export class AvailabilityService implements IAvailabilityService {
           currency: pricing.currency,
           courtId: court.id,
           courtLabel: court.label,
+          status: isUnavailable ? "BOOKED" : "AVAILABLE",
+          unavailableReason: reservationOverlap
+            ? "RESERVATION"
+            : blockOverlap?.type === "WALK_IN"
+              ? "WALK_IN"
+              : blockOverlap
+                ? "MAINTENANCE"
+                : null,
         });
       }
 
@@ -660,6 +728,10 @@ export class AvailabilityService implements IAvailabilityService {
     current: AvailabilityOption,
     next: AvailabilityOption,
   ): AvailabilityOption {
+    if (current.status !== next.status) {
+      return current.status === "AVAILABLE" ? current : next;
+    }
+
     if (next.totalPriceCents < current.totalPriceCents) {
       return next;
     }
@@ -677,5 +749,16 @@ export class AvailabilityService implements IAvailabilityService {
     }
 
     return next.courtId < current.courtId ? next : current;
+  }
+
+  private sortCourtOptions(
+    options: AvailabilityCourtOption[],
+  ): AvailabilityCourtOption[] {
+    return [...options].sort((a, b) => {
+      if (a.status !== b.status) {
+        return a.status === "AVAILABLE" ? -1 : 1;
+      }
+      return a.courtLabel.localeCompare(b.courtLabel);
+    });
   }
 }

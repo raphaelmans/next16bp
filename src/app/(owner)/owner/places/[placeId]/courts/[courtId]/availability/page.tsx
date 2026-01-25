@@ -34,6 +34,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   InputGroup,
   InputGroupButton,
   InputGroupInput,
@@ -44,6 +50,7 @@ import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import { ReservationAlertsPanel } from "@/features/owner/components";
 import { useOwnerOrganization } from "@/features/owner/hooks";
+import { cn } from "@/lib/utils";
 import {
   AvailabilityMonthView,
   type TimeSlot,
@@ -208,6 +215,8 @@ export default function OwnerCourtAvailabilityPage() {
   const [maintenanceOpen, setMaintenanceOpen] = React.useState(false);
   const [walkInOpen, setWalkInOpen] = React.useState(false);
   const [walkInPreset, setWalkInPreset] = React.useState<TimeSlot | null>(null);
+  const [maintenancePreset, setMaintenancePreset] =
+    React.useState<TimeSlot | null>(null);
 
   const maintenanceForm = useForm<BlockFormValues>({
     resolver: zodResolver(blockFormSchema),
@@ -300,12 +309,21 @@ export default function OwnerCourtAvailabilityPage() {
     setWalkInOpen(true);
   }, []);
 
+  const openMaintenanceDialog = React.useCallback(
+    (preset?: TimeSlot | null) => {
+      setMaintenancePreset(preset ?? null);
+      setMaintenanceOpen(true);
+    },
+    [],
+  );
+
   const availabilityQuery = trpc.availability.getForCourtRange.useQuery(
     {
       courtId,
       startDate: monthRangeStartIso,
       endDate: monthRangeEndIso,
       durationMinutes,
+      includeUnavailable: true,
     },
     {
       enabled: Boolean(courtId) && durationMinutes > 0,
@@ -335,7 +353,8 @@ export default function OwnerCourtAvailabilityPage() {
         endTime: option.endTime,
         priceCents: option.totalPriceCents,
         currency: option.currency ?? "PHP",
-        status: "available",
+        status: option.status === "BOOKED" ? "booked" : "available",
+        unavailableReason: option.unavailableReason ?? undefined,
       };
 
       const existing = slotsByDay.get(dayKey);
@@ -472,14 +491,74 @@ export default function OwnerCourtAvailabilityPage() {
     [cancelBlock, invalidateAvailability],
   );
 
+  const renderSlotAction = React.useCallback(
+    ({
+      slot,
+      isSelected,
+      isDisabled,
+      date,
+    }: {
+      slot: TimeSlot;
+      isSelected: boolean;
+      isDisabled: boolean;
+      date: Date;
+    }) => {
+      if (isDisabled) return null;
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className={cn(
+                "h-7 px-2 text-[11px] uppercase tracking-wide transition-colors",
+                isSelected
+                  ? "border-primary/40 text-primary bg-primary/5"
+                  : "border-transparent bg-muted/70 text-muted-foreground hover:border-border/70 hover:text-foreground",
+              )}
+              onClick={() => {
+                setSelectedDate(date);
+                setSelectedSlotId(slot.id);
+              }}
+            >
+              Manage
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-44">
+            <DropdownMenuItem onSelect={() => openWalkInDialog(slot)}>
+              Walk-in booking
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => openMaintenanceDialog(slot)}>
+              Maintenance block
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+    [openMaintenanceDialog, openWalkInDialog],
+  );
+
   React.useEffect(() => {
     if (!maintenanceOpen) return;
+    const range = maintenancePreset
+      ? {
+          start: new Date(maintenancePreset.startTime),
+          end: new Date(maintenancePreset.endTime),
+        }
+      : defaultRange;
     maintenanceForm.reset({
-      startTime: formatDateTimeInput(defaultRange.start, placeTimeZone),
-      endTime: formatDateTimeInput(defaultRange.end, placeTimeZone),
+      startTime: formatDateTimeInput(range.start, placeTimeZone),
+      endTime: formatDateTimeInput(range.end, placeTimeZone),
       reason: "",
     });
-  }, [defaultRange, maintenanceForm, maintenanceOpen, placeTimeZone]);
+  }, [
+    defaultRange,
+    maintenanceForm,
+    maintenanceOpen,
+    maintenancePreset,
+    placeTimeZone,
+  ]);
 
   React.useEffect(() => {
     if (!walkInOpen) return;
@@ -497,7 +576,10 @@ export default function OwnerCourtAvailabilityPage() {
   }, [defaultRange, placeTimeZone, walkInForm, walkInOpen, walkInPreset]);
 
   const availableMonthDates = React.useMemo(
-    () => monthAvailabilityByDay.map((day) => day.date),
+    () =>
+      monthAvailabilityByDay
+        .filter((day) => day.slots.some((slot) => slot.status === "available"))
+        .map((day) => day.date),
     [monthAvailabilityByDay],
   );
 
@@ -708,6 +790,7 @@ export default function OwnerCourtAvailabilityPage() {
               selectedSlotId={selectedSlotId}
               isLoading={availabilityQuery.isLoading}
               timeZone={placeTimeZone}
+              renderSlotAction={renderSlotAction}
               onSelectDate={handleMonthSelect}
               onMonthChange={handleMonthChange}
               onToday={handleMonthToday}
@@ -862,7 +945,15 @@ export default function OwnerCourtAvailabilityPage() {
           </CardContent>
         </Card>
 
-        <Dialog open={maintenanceOpen} onOpenChange={setMaintenanceOpen}>
+        <Dialog
+          open={maintenanceOpen}
+          onOpenChange={(open) => {
+            setMaintenanceOpen(open);
+            if (!open) {
+              setMaintenancePreset(null);
+            }
+          }}
+        >
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Add maintenance block</DialogTitle>
@@ -898,7 +989,10 @@ export default function OwnerCourtAvailabilityPage() {
                 <Button
                   type="button"
                   variant="ghost"
-                  onClick={() => setMaintenanceOpen(false)}
+                  onClick={() => {
+                    setMaintenanceOpen(false);
+                    setMaintenancePreset(null);
+                  }}
                 >
                   Cancel
                 </Button>

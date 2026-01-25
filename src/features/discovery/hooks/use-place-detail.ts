@@ -173,6 +173,8 @@ interface UsePlaceAvailabilityOptions {
   date?: Date;
   durationMinutes: number;
   mode: "any" | "court";
+  includeUnavailable?: boolean;
+  includeCourtOptions?: boolean;
 }
 
 const getDateIso = (date?: Date, timeZone?: string) => {
@@ -187,6 +189,8 @@ export function usePlaceAvailability({
   date,
   durationMinutes,
   mode,
+  includeUnavailable,
+  includeCourtOptions,
 }: UsePlaceAvailabilityOptions) {
   const dateIso = getDateIso(date, place?.timeZone);
   const safeDuration = Number.isFinite(durationMinutes) ? durationMinutes : 0;
@@ -196,6 +200,7 @@ export function usePlaceAvailability({
       courtId: courtId ?? "",
       date: dateIso,
       durationMinutes: safeDuration,
+      includeUnavailable,
     },
     {
       enabled:
@@ -213,6 +218,8 @@ export function usePlaceAvailability({
       sportId: sportId ?? "",
       date: dateIso,
       durationMinutes: safeDuration,
+      includeUnavailable,
+      includeCourtOptions,
     },
     {
       enabled:
@@ -233,6 +240,9 @@ export function usePlaceAvailability({
     currency: option.currency ?? "PHP",
     courtId: option.courtId,
     courtLabel: option.courtLabel,
+    status: option.status,
+    unavailableReason: option.unavailableReason ?? undefined,
+    courtOptions: option.courtOptions ?? undefined,
   }));
 
   return {

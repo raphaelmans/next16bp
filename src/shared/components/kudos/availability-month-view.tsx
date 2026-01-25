@@ -29,6 +29,13 @@ export type AvailabilityMonthViewProps = {
   isLoading?: boolean;
   timeZone?: string;
   showPrice?: boolean;
+  renderSlotAction?: (args: {
+    dayKey: string;
+    date: Date;
+    slot: TimeSlot;
+    isSelected: boolean;
+    isDisabled: boolean;
+  }) => React.ReactNode;
   onSelectDate: (date?: Date) => void;
   onMonthChange: (date: Date) => void;
   onToday?: () => void;
@@ -49,6 +56,7 @@ export function AvailabilityMonthView({
   isLoading,
   timeZone,
   showPrice = true,
+  renderSlotAction,
   onSelectDate,
   onMonthChange,
   onToday,
@@ -117,6 +125,18 @@ export function AvailabilityMonthView({
                 }
                 showPrice={showPrice}
                 timeZone={timeZone}
+                renderSlotAction={
+                  renderSlotAction
+                    ? ({ slot, isSelected, isDisabled }) =>
+                        renderSlotAction({
+                          dayKey: day.dayKey,
+                          date: day.date,
+                          slot,
+                          isSelected,
+                          isDisabled,
+                        })
+                    : undefined
+                }
               />
             </div>
           ))

@@ -71,9 +71,10 @@ export function useAvailableSlots({ courtId, date }: UseAvailableSlotsOptions) {
     id: `${option.courtId}-${option.startTime}-${option.endTime}`,
     startTime: option.startTime,
     endTime: option.endTime,
-    status: "available",
+    status: option.status === "BOOKED" ? "booked" : "available",
     priceCents: option.totalPriceCents,
     currency: option.currency ?? "PHP",
+    unavailableReason: option.unavailableReason ?? undefined,
   }));
 
   return {

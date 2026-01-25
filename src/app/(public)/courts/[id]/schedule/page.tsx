@@ -43,6 +43,7 @@ import {
   usePlaceAvailability,
   usePlaceDetail,
 } from "@/features/discovery/hooks";
+import { cn } from "@/lib/utils";
 import {
   AvailabilityMonthView,
   KudosDatePicker,
@@ -89,6 +90,18 @@ type CourtAvailabilityOption = {
   currency: string | null;
   courtId: string;
   courtLabel: string;
+  status?: "AVAILABLE" | "BOOKED";
+  unavailableReason?: "RESERVATION" | "MAINTENANCE" | "WALK_IN" | null;
+  courtOptions?: CourtOption[];
+};
+
+type CourtOption = {
+  courtId: string;
+  courtLabel: string;
+  status: "AVAILABLE" | "BOOKED";
+  totalPriceCents: number;
+  currency: string | null;
+  unavailableReason?: "RESERVATION" | "MAINTENANCE" | "WALK_IN" | null;
 };
 
 type MonthDayAvailability = {
@@ -593,6 +606,8 @@ export default function CourtSchedulePage() {
     date: dayViewDate,
     durationMinutes,
     mode: "any",
+    includeUnavailable: true,
+    includeCourtOptions: true,
   });
 
   const cheapestAvailability = cheapestAvailabilityQuery.data ?? [];
@@ -602,6 +617,7 @@ export default function CourtSchedulePage() {
       courtIds: courtsForSport.map((court) => court.id),
       date: dayViewDateIso ?? "",
       durationMinutes,
+      includeUnavailable: true,
     },
     {
       enabled:
@@ -620,6 +636,8 @@ export default function CourtSchedulePage() {
         startDate: monthRangeStartIso,
         endDate: monthRangeEndIso,
         durationMinutes,
+        includeUnavailable: true,
+        includeCourtOptions: true,
       },
       {
         enabled:
@@ -638,6 +656,7 @@ export default function CourtSchedulePage() {
         startDate: monthRangeStartIso,
         endDate: monthRangeEndIso,
         durationMinutes,
+        includeUnavailable: true,
       },
       {
         enabled:
@@ -779,7 +798,8 @@ export default function CourtSchedulePage() {
         endTime: option.endTime,
         priceCents: option.totalPriceCents,
         currency: option.currency ?? "PHP",
-        status: "available",
+        status: option.status === "BOOKED" ? "booked" : "available",
+        unavailableReason: option.unavailableReason ?? undefined,
       };
       const existing = slotsByDay.get(dayKey);
       if (existing) {
@@ -801,8 +821,81 @@ export default function CourtSchedulePage() {
   }, [durationMinutes, isMonthView, monthAvailabilityOptions, placeTimeZone]);
 
   const availableMonthDates = React.useMemo(
-    () => monthAvailabilityByDay.map((day) => day.date),
+    () =>
+      monthAvailabilityByDay
+        .filter((day) => day.slots.some((slot) => slot.status === "available"))
+        .map((day) => day.date),
     [monthAvailabilityByDay],
+  );
+
+  const courtOptionsByStartTime = React.useMemo(() => {
+    if (modeParam !== "any") return new Map<string, CourtOption[]>();
+    const source = isMonthView
+      ? monthAvailabilityOptions
+      : cheapestAvailability;
+    const map = new Map<string, CourtOption[]>();
+    for (const option of source) {
+      if (!option.courtOptions || option.courtOptions.length === 0) continue;
+      map.set(option.startTime, option.courtOptions);
+    }
+    return map;
+  }, [cheapestAvailability, isMonthView, modeParam, monthAvailabilityOptions]);
+
+  const renderCourtOptions = React.useCallback(
+    (slot: TimeSlot) => {
+      if (modeParam !== "any") return null;
+      const options = courtOptionsByStartTime.get(slot.startTime);
+      if (!options || options.length === 0) return null;
+      return (
+        <div className="w-full rounded-md border border-dashed bg-muted/40 px-2 py-1 text-[11px]">
+          <div className="space-y-1">
+            {options.map((option) => {
+              const statusLabel =
+                option.status === "AVAILABLE"
+                  ? "Available"
+                  : option.unavailableReason === "MAINTENANCE"
+                    ? "Maintenance"
+                    : "Booked";
+              return (
+                <div
+                  key={option.courtId}
+                  className="flex items-center justify-between gap-2"
+                >
+                  <span
+                    className={cn(
+                      "truncate",
+                      option.status === "AVAILABLE"
+                        ? "text-foreground"
+                        : "text-muted-foreground",
+                    )}
+                  >
+                    {option.courtLabel}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-[10px] uppercase tracking-wide",
+                      option.status === "AVAILABLE"
+                        ? "text-success"
+                        : option.unavailableReason === "MAINTENANCE"
+                          ? "text-warning"
+                          : "text-muted-foreground",
+                    )}
+                  >
+                    {statusLabel}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    },
+    [courtOptionsByStartTime, modeParam],
+  );
+
+  const renderMonthSlotAction = React.useCallback(
+    ({ slot }: { slot: TimeSlot }) => renderCourtOptions(slot),
+    [renderCourtOptions],
   );
 
   React.useEffect(() => {
@@ -955,7 +1048,8 @@ export default function CourtSchedulePage() {
     endTime: slot.endTime,
     priceCents: slot.totalPriceCents,
     currency: slot.currency,
-    status: "available",
+    status: slot.status === "BOOKED" ? "booked" : "available",
+    unavailableReason: slot.unavailableReason ?? undefined,
   }));
 
   return (
@@ -1211,13 +1305,24 @@ export default function CourtSchedulePage() {
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {modeParam === "any"
-                      ? "We show the lowest price option per start time."
+                      ? "Best price aggregates all courts. Switch to By court to see blocked times."
                       : "Pick a start time under any court."}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
+                {modeParam === "any" && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="h-7 px-2 text-xs"
+                    onClick={() => setModeParam("court")}
+                  >
+                    View by court
+                  </Button>
+                )}
                 <Button
                   type="button"
                   size="sm"
@@ -1255,6 +1360,9 @@ export default function CourtSchedulePage() {
                   !(modeParam === "court" && courtsForSport.length === 0)
                 }
                 timeZone={placeTimeZone}
+                renderSlotAction={
+                  modeParam === "any" ? renderMonthSlotAction : undefined
+                }
                 onSelectDate={handleMonthSelect}
                 onMonthChange={handleMonthChange}
                 onToday={handleMonthToday}
@@ -1285,6 +1393,7 @@ export default function CourtSchedulePage() {
                   onSelect={(slot) => setStartTimeParam(slot.startTime)}
                   showPrice
                   timeZone={placeTimeZone}
+                  renderSlotAction={({ slot }) => renderCourtOptions(slot)}
                 />
               ) : (
                 <p className="text-sm text-muted-foreground py-6 text-center">
@@ -1310,7 +1419,8 @@ export default function CourtSchedulePage() {
                     endTime: option.endTime,
                     priceCents: option.totalPriceCents,
                     currency: option.currency ?? "PHP",
-                    status: "available",
+                    status: option.status === "BOOKED" ? "booked" : "available",
+                    unavailableReason: option.unavailableReason ?? undefined,
                   }));
 
                   const selectedId =
