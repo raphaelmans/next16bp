@@ -4,7 +4,7 @@ This directory contains chronological implementation history for the KudosCourts
 
 ## Quick Navigation
 
-Latest: [01-07](./01-07-drizzle-date-bind-fix.md)
+Latest: [01-08](./01-08-owner-court-blocks.md)
 
 ### By Implementation Phase
 
@@ -416,5 +416,5 @@ Latest: [01-07](./01-07-drizzle-date-bind-fix.md)
 ---
 
 **Last Updated:** 2026-01-25  
-**Total Documents:** 115  
+**Total Documents:** 116  
 **Implementation Phase:** Active (incremental)
