@@ -141,3 +141,14 @@ export type GetAvailabilityForCourtRangeDTO = z.infer<
 export type GetAvailabilityForPlaceSportRangeDTO = z.infer<
   typeof GetAvailabilityForPlaceSportRangeSchema
 >;
+
+export const AvailabilityDiagnosticsSchema = z.object({
+  hasHoursWindows: z.boolean(),
+  hasRateRules: z.boolean(),
+  dayHasHours: z.boolean(),
+  allSlotsBooked: z.boolean(),
+});
+
+export type AvailabilityDiagnosticsDTO = z.infer<
+  typeof AvailabilityDiagnosticsSchema
+>;

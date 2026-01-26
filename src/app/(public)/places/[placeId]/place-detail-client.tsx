@@ -27,6 +27,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { AvailabilityEmptyState } from "@/components/availability-empty-state";
 import {
   StandardFormInput,
   StandardFormProvider,
@@ -56,6 +57,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSession } from "@/features/auth";
 import { PhotoGallery } from "@/features/discovery/components";
+import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
 import {
   usePlaceAvailability,
   usePlaceDetail,
@@ -264,14 +266,19 @@ export default function PlaceDetailPage() {
     () => addDays(getZonedToday(placeTimeZone), MAX_BOOKING_WINDOW_DAYS),
     [placeTimeZone],
   );
-  const isBookable = place?.placeType === "RESERVABLE";
-  const isCurated = place?.placeType === "CURATED";
+  const {
+    isBookable,
+    isCurated,
+    showBooking,
+    showVerificationBadge,
+    showBookingVerificationUi,
+    verificationMessage,
+  } = getPlaceVerificationDisplay({
+    placeType: place?.placeType,
+    verificationStatus: place?.verification?.status,
+    reservationsEnabled: place?.verification?.reservationsEnabled,
+  });
   const verificationStatus = place?.verification?.status ?? "UNVERIFIED";
-  const reservationsEnabled = place?.verification?.reservationsEnabled ?? false;
-  const isVerified = verificationStatus === "VERIFIED";
-  const isVerifiedReservable = isBookable && isVerified;
-  const showBooking = isBookable && isVerified && reservationsEnabled;
-  const showBookingVerificationUi = !showBooking && !isCurated;
   const canSubmitClaim = Boolean(
     place &&
       isCurated &&
@@ -347,6 +354,7 @@ export default function PlaceDetailPage() {
   });
 
   const availability = availabilityQuery.data ?? [];
+  const availabilityDiagnostics = availabilityQuery.diagnostics;
   const isLoadingAvailability = availabilityQuery.isLoading;
 
   const timeSlots: TimeSlot[] = React.useMemo(
@@ -610,14 +618,6 @@ export default function PlaceDetailPage() {
     );
   }
 
-  const verificationMessage = showBooking
-    ? "Verified for reservations"
-    : verificationStatus === "PENDING"
-      ? "Verification pending"
-      : verificationStatus === "REJECTED"
-        ? "Verification needs updates"
-        : "Verification required to book";
-
   const hasCoordinates =
     typeof place.latitude === "number" &&
     Number.isFinite(place.latitude) &&
@@ -715,9 +715,9 @@ export default function PlaceDetailPage() {
                   </h1>
                   <p className="text-xs text-muted-foreground">{place.city}</p>
                 </div>
-                {(isVerifiedReservable || isCurated) && (
+                {(showVerificationBadge || isCurated) && (
                   <div className="flex flex-wrap items-center gap-2 text-xs sm:ml-auto">
-                    {isVerifiedReservable && (
+                    {showVerificationBadge && (
                       <Badge variant="success" className="gap-1 text-[10px]">
                         <ShieldCheck className="h-3 w-3" />
                         Verified
@@ -1118,9 +1118,11 @@ export default function PlaceDetailPage() {
                             timeZone={placeTimeZone}
                           />
                         ) : (
-                          <p className="text-sm text-muted-foreground py-4 text-center">
-                            No available start times for this date.
-                          </p>
+                          <AvailabilityEmptyState
+                            diagnostics={availabilityDiagnostics}
+                            variant="public"
+                            contact={contactDetail}
+                          />
                         )}
                       </div>
                     )}

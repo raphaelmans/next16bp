@@ -32,6 +32,63 @@ interface PlaceListItem {
   reservationsEnabled?: boolean | null;
 }
 
+export type PlaceVerificationStatus =
+  | "UNVERIFIED"
+  | "PENDING"
+  | "VERIFIED"
+  | "REJECTED";
+
+export type PlaceType = "CURATED" | "RESERVABLE";
+
+export interface PlaceVerificationDisplayInput {
+  placeType?: PlaceType | null;
+  verificationStatus?: PlaceVerificationStatus | null;
+  reservationsEnabled?: boolean | null;
+}
+
+export interface PlaceVerificationDisplay {
+  isBookable: boolean;
+  isCurated: boolean;
+  isVerified: boolean;
+  showBooking: boolean;
+  showVerificationBadge: boolean;
+  showBookingVerificationUi: boolean;
+  verificationMessage: string;
+}
+
+export function getPlaceVerificationDisplay(
+  input: PlaceVerificationDisplayInput,
+): PlaceVerificationDisplay {
+  const placeType = input.placeType ?? null;
+  const verificationStatus = input.verificationStatus ?? "UNVERIFIED";
+  const reservationsEnabled = input.reservationsEnabled ?? false;
+
+  const isBookable = placeType === "RESERVABLE";
+  const isCurated = placeType === "CURATED";
+  const isVerified = verificationStatus === "VERIFIED";
+  const showBooking = isBookable && isVerified && reservationsEnabled;
+  const showVerificationBadge = showBooking;
+  const showBookingVerificationUi = !showBooking && !isCurated;
+
+  const verificationMessage = showBooking
+    ? "Verified for reservations"
+    : verificationStatus === "PENDING"
+      ? "Verification pending"
+      : verificationStatus === "REJECTED"
+        ? "Verification needs updates"
+        : "Verification required to book";
+
+  return {
+    isBookable,
+    isCurated,
+    isVerified,
+    showBooking,
+    showVerificationBadge,
+    showBookingVerificationUi,
+    verificationMessage,
+  };
+}
+
 export const mapPlaceSummary = (item: PlaceListItem): PlaceSummary => {
   const latitude = Number.parseFloat(item.place.latitude ?? "");
   const longitude = Number.parseFloat(item.place.longitude ?? "");

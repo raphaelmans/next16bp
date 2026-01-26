@@ -55,20 +55,30 @@ export interface AvailabilityCourtOption {
   unavailableReason?: "RESERVATION" | "MAINTENANCE" | "WALK_IN" | null;
 }
 
+export interface AvailabilityDiagnostics {
+  hasHoursWindows: boolean;
+  hasRateRules: boolean;
+  dayHasHours: boolean;
+  allSlotsBooked: boolean;
+}
+
+export interface AvailabilityResult {
+  options: AvailabilityOption[];
+  diagnostics: AvailabilityDiagnostics;
+}
+
 export interface IAvailabilityService {
-  getForCourt(data: GetAvailabilityForCourtDTO): Promise<AvailabilityOption[]>;
-  getForCourts(
-    data: GetAvailabilityForCourtsDTO,
-  ): Promise<AvailabilityOption[]>;
+  getForCourt(data: GetAvailabilityForCourtDTO): Promise<AvailabilityResult>;
+  getForCourts(data: GetAvailabilityForCourtsDTO): Promise<AvailabilityResult>;
   getForPlaceSport(
     data: GetAvailabilityForPlaceSportDTO,
-  ): Promise<AvailabilityOption[]>;
+  ): Promise<AvailabilityResult>;
   getForCourtRange(
     data: GetAvailabilityForCourtRangeDTO,
-  ): Promise<AvailabilityOption[]>;
+  ): Promise<AvailabilityResult>;
   getForPlaceSportRange(
     data: GetAvailabilityForPlaceSportRangeDTO,
-  ): Promise<AvailabilityOption[]>;
+  ): Promise<AvailabilityResult>;
 }
 
 const SLOT_STEP_MINUTES = 60;
@@ -87,7 +97,14 @@ export class AvailabilityService implements IAvailabilityService {
 
   async getForCourt(
     data: GetAvailabilityForCourtDTO,
-  ): Promise<AvailabilityOption[]> {
+  ): Promise<AvailabilityResult> {
+    const emptyDiagnostics: AvailabilityDiagnostics = {
+      hasHoursWindows: false,
+      hasRateRules: false,
+      dayHasHours: false,
+      allSlotsBooked: false,
+    };
+
     const court = await this.courtRepository.findById(data.courtId);
     if (!court) {
       throw new CourtNotFoundError(data.courtId);
@@ -107,14 +124,14 @@ export class AvailabilityService implements IAvailabilityService {
       place.placeType !== "RESERVABLE" ||
       !court.isActive
     ) {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const verification = await this.placeVerificationRepository.findByPlaceId(
       place.id,
     );
     if (!this.isPlaceBookable(verification)) {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const { start, end } = getZonedDayRangeForInstant(
@@ -156,9 +173,16 @@ export class AvailabilityService implements IAvailabilityService {
 
   async getForCourts(
     data: GetAvailabilityForCourtsDTO,
-  ): Promise<AvailabilityOption[]> {
+  ): Promise<AvailabilityResult> {
+    const emptyDiagnostics: AvailabilityDiagnostics = {
+      hasHoursWindows: false,
+      hasRateRules: false,
+      dayHasHours: false,
+      allSlotsBooked: false,
+    };
+
     if (data.durationMinutes <= 0 || data.courtIds.length === 0) {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const courts = await this.courtRepository.findByIds(data.courtIds);
@@ -166,7 +190,7 @@ export class AvailabilityService implements IAvailabilityService {
       (court) => Boolean(court.placeId) && court.isActive,
     );
     if (eligibleCourts.length === 0) {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const placeIds = Array.from(
@@ -205,7 +229,7 @@ export class AvailabilityService implements IAvailabilityService {
     }
 
     if (courtsByPlace.size === 0) {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const allCourtIds = eligibleCourts.map((court) => court.id);
@@ -215,6 +239,14 @@ export class AvailabilityService implements IAvailabilityService {
     ]);
 
     const options: AvailabilityOption[] = [];
+    const aggregatedDiagnostics: AvailabilityDiagnostics = {
+      hasHoursWindows: false,
+      hasRateRules: false,
+      dayHasHours: false,
+      allSlotsBooked: true,
+    };
+    let hasAnySlots = false;
+
     for (const [placeId, placeCourts] of courtsByPlace.entries()) {
       const place = placeById.get(placeId);
       if (!place) continue;
@@ -244,44 +276,67 @@ export class AvailabilityService implements IAvailabilityService {
       ]);
 
       for (const court of placeCourts) {
-        options.push(
-          ...this.buildAvailabilityForCourtRange({
-            court,
-            rangeStart: start,
-            rangeEnd: end,
-            durationMinutes: data.durationMinutes,
-            timeZone: place.timeZone,
-            hours,
-            rules,
-            reservations,
-            blocks,
-            overrides,
-            includeUnavailable: data.includeUnavailable ?? false,
-          }),
-        );
+        const result = this.buildAvailabilityForCourtRange({
+          court,
+          rangeStart: start,
+          rangeEnd: end,
+          durationMinutes: data.durationMinutes,
+          timeZone: place.timeZone,
+          hours,
+          rules,
+          reservations,
+          blocks,
+          overrides,
+          includeUnavailable: data.includeUnavailable ?? false,
+        });
+        options.push(...result.options);
+
+        aggregatedDiagnostics.hasHoursWindows ||=
+          result.diagnostics.hasHoursWindows;
+        aggregatedDiagnostics.hasRateRules ||= result.diagnostics.hasRateRules;
+        aggregatedDiagnostics.dayHasHours ||= result.diagnostics.dayHasHours;
+        if (result.options.length > 0) {
+          hasAnySlots = true;
+          aggregatedDiagnostics.allSlotsBooked &&=
+            result.diagnostics.allSlotsBooked;
+        }
       }
     }
 
-    return options.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    if (!hasAnySlots) {
+      aggregatedDiagnostics.allSlotsBooked = false;
+    }
+
+    return {
+      options: options.sort((a, b) => a.startTime.localeCompare(b.startTime)),
+      diagnostics: aggregatedDiagnostics,
+    };
   }
 
   async getForPlaceSport(
     data: GetAvailabilityForPlaceSportDTO,
-  ): Promise<AvailabilityOption[]> {
+  ): Promise<AvailabilityResult> {
+    const emptyDiagnostics: AvailabilityDiagnostics = {
+      hasHoursWindows: false,
+      hasRateRules: false,
+      dayHasHours: false,
+      allSlotsBooked: false,
+    };
+
     const place = await this.placeRepository.findById(data.placeId);
     if (!place) {
       throw new PlaceNotFoundError(data.placeId);
     }
 
     if (!place.isActive || place.placeType !== "RESERVABLE") {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const verification = await this.placeVerificationRepository.findByPlaceId(
       place.id,
     );
     if (!this.isPlaceBookable(verification)) {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const courts = await this.courtRepository.findByPlaceAndSport(
@@ -291,7 +346,7 @@ export class AvailabilityService implements IAvailabilityService {
 
     const activeCourts = courts.filter((court) => court.isActive);
     if (activeCourts.length === 0) {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const { start, end } = getZonedDayRangeForInstant(
@@ -321,8 +376,16 @@ export class AvailabilityService implements IAvailabilityService {
     const includeUnavailable = data.includeUnavailable ?? false;
     const includeCourtOptions = data.includeCourtOptions ?? false;
 
+    const aggregatedDiagnostics: AvailabilityDiagnostics = {
+      hasHoursWindows: false,
+      hasRateRules: false,
+      dayHasHours: false,
+      allSlotsBooked: true,
+    };
+    let hasAnySlots = false;
+
     for (const court of activeCourts) {
-      const availability = this.buildAvailabilityForCourtRange({
+      const result = this.buildAvailabilityForCourtRange({
         court,
         rangeStart: start,
         rangeEnd: end,
@@ -336,7 +399,17 @@ export class AvailabilityService implements IAvailabilityService {
         includeUnavailable,
       });
 
-      for (const option of availability) {
+      aggregatedDiagnostics.hasHoursWindows ||=
+        result.diagnostics.hasHoursWindows;
+      aggregatedDiagnostics.hasRateRules ||= result.diagnostics.hasRateRules;
+      aggregatedDiagnostics.dayHasHours ||= result.diagnostics.dayHasHours;
+      if (result.options.length > 0) {
+        hasAnySlots = true;
+        aggregatedDiagnostics.allSlotsBooked &&=
+          result.diagnostics.allSlotsBooked;
+      }
+
+      for (const option of result.options) {
         const startMs = new Date(option.startTime).getTime();
         if (includeCourtOptions) {
           const entry = courtOptionsByStart.get(startMs) ?? [];
@@ -361,7 +434,11 @@ export class AvailabilityService implements IAvailabilityService {
       }
     }
 
-    return Array.from(optionsByStart.entries())
+    if (!hasAnySlots) {
+      aggregatedDiagnostics.allSlotsBooked = false;
+    }
+
+    const sortedOptions = Array.from(optionsByStart.entries())
       .map(([startMs, option]) => ({
         ...option,
         courtOptions: includeCourtOptions
@@ -369,11 +446,20 @@ export class AvailabilityService implements IAvailabilityService {
           : undefined,
       }))
       .sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+    return { options: sortedOptions, diagnostics: aggregatedDiagnostics };
   }
 
   async getForCourtRange(
     data: GetAvailabilityForCourtRangeDTO,
-  ): Promise<AvailabilityOption[]> {
+  ): Promise<AvailabilityResult> {
+    const emptyDiagnostics: AvailabilityDiagnostics = {
+      hasHoursWindows: false,
+      hasRateRules: false,
+      dayHasHours: false,
+      allSlotsBooked: false,
+    };
+
     const court = await this.courtRepository.findById(data.courtId);
     if (!court) {
       throw new CourtNotFoundError(data.courtId);
@@ -393,14 +479,14 @@ export class AvailabilityService implements IAvailabilityService {
       place.placeType !== "RESERVABLE" ||
       !court.isActive
     ) {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const verification = await this.placeVerificationRepository.findByPlaceId(
       place.id,
     );
     if (!this.isPlaceBookable(verification)) {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const rangeStart = new Date(data.startDate);
@@ -444,21 +530,28 @@ export class AvailabilityService implements IAvailabilityService {
 
   async getForPlaceSportRange(
     data: GetAvailabilityForPlaceSportRangeDTO,
-  ): Promise<AvailabilityOption[]> {
+  ): Promise<AvailabilityResult> {
+    const emptyDiagnostics: AvailabilityDiagnostics = {
+      hasHoursWindows: false,
+      hasRateRules: false,
+      dayHasHours: false,
+      allSlotsBooked: false,
+    };
+
     const place = await this.placeRepository.findById(data.placeId);
     if (!place) {
       throw new PlaceNotFoundError(data.placeId);
     }
 
     if (!place.isActive || place.placeType !== "RESERVABLE") {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const verification = await this.placeVerificationRepository.findByPlaceId(
       place.id,
     );
     if (!this.isPlaceBookable(verification)) {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const courts = await this.courtRepository.findByPlaceAndSport(
@@ -468,7 +561,7 @@ export class AvailabilityService implements IAvailabilityService {
 
     const activeCourts = courts.filter((court) => court.isActive);
     if (activeCourts.length === 0) {
-      return [];
+      return { options: [], diagnostics: emptyDiagnostics };
     }
 
     const rangeStart = new Date(data.startDate);
@@ -500,8 +593,16 @@ export class AvailabilityService implements IAvailabilityService {
     const includeUnavailable = data.includeUnavailable ?? false;
     const includeCourtOptions = data.includeCourtOptions ?? false;
 
+    const aggregatedDiagnostics: AvailabilityDiagnostics = {
+      hasHoursWindows: false,
+      hasRateRules: false,
+      dayHasHours: false,
+      allSlotsBooked: true,
+    };
+    let hasAnySlots = false;
+
     for (const court of activeCourts) {
-      const availability = this.buildAvailabilityForCourtRange({
+      const result = this.buildAvailabilityForCourtRange({
         court,
         rangeStart,
         rangeEnd,
@@ -515,7 +616,17 @@ export class AvailabilityService implements IAvailabilityService {
         includeUnavailable,
       });
 
-      for (const option of availability) {
+      aggregatedDiagnostics.hasHoursWindows ||=
+        result.diagnostics.hasHoursWindows;
+      aggregatedDiagnostics.hasRateRules ||= result.diagnostics.hasRateRules;
+      aggregatedDiagnostics.dayHasHours ||= result.diagnostics.dayHasHours;
+      if (result.options.length > 0) {
+        hasAnySlots = true;
+        aggregatedDiagnostics.allSlotsBooked &&=
+          result.diagnostics.allSlotsBooked;
+      }
+
+      for (const option of result.options) {
         const startMs = new Date(option.startTime).getTime();
         if (includeCourtOptions) {
           const entry = courtOptionsByStart.get(startMs) ?? [];
@@ -540,7 +651,11 @@ export class AvailabilityService implements IAvailabilityService {
       }
     }
 
-    return Array.from(optionsByStart.entries())
+    if (!hasAnySlots) {
+      aggregatedDiagnostics.allSlotsBooked = false;
+    }
+
+    const sortedOptions = Array.from(optionsByStart.entries())
       .map(([startMs, option]) => ({
         ...option,
         courtOptions: includeCourtOptions
@@ -548,6 +663,8 @@ export class AvailabilityService implements IAvailabilityService {
           : undefined,
       }))
       .sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+    return { options: sortedOptions, diagnostics: aggregatedDiagnostics };
   }
 
   private isPlaceBookable(
@@ -587,7 +704,7 @@ export class AvailabilityService implements IAvailabilityService {
     blocks: CourtBlockRecord[];
     overrides: CourtPriceOverrideRecord[];
     includeUnavailable?: boolean;
-  }): AvailabilityOption[] {
+  }): { options: AvailabilityOption[]; diagnostics: AvailabilityDiagnostics } {
     const {
       court,
       rangeStart,
@@ -604,16 +721,25 @@ export class AvailabilityService implements IAvailabilityService {
 
     const allowUnavailable = includeUnavailable ?? false;
 
-    if (durationMinutes <= 0) return [];
-
     const hoursWindows = hours.filter((window) => window.courtId === court.id);
     const rateRules = rules.filter((rule) => rule.courtId === court.id);
     const priceOverrides = overrides.filter(
       (override) => override.courtId === court.id,
     );
 
+    const baseDiagnostics: AvailabilityDiagnostics = {
+      hasHoursWindows: hoursWindows.length > 0,
+      hasRateRules: rateRules.length > 0,
+      dayHasHours: false,
+      allSlotsBooked: false,
+    };
+
+    if (durationMinutes <= 0) {
+      return { options: [], diagnostics: baseDiagnostics };
+    }
+
     if (hoursWindows.length === 0 || rateRules.length === 0) {
-      return [];
+      return { options: [], diagnostics: baseDiagnostics };
     }
 
     const courtReservations = reservations
@@ -631,6 +757,9 @@ export class AvailabilityService implements IAvailabilityService {
 
     const results: AvailabilityOption[] = [];
     const dayCursor = getZonedDate(rangeStartDay, timeZone);
+    let anyDayHasHours = false;
+    let totalSlotsGenerated = 0;
+    let bookedSlotsCount = 0;
 
     while (dayCursor <= rangeEndDay) {
       const dayStart = getZonedDayRangeForInstant(dayCursor, timeZone).start;
@@ -642,6 +771,7 @@ export class AvailabilityService implements IAvailabilityService {
         dayCursor.setDate(dayCursor.getDate() + 1);
         continue;
       }
+      anyDayHasHours = true;
 
       const startMinutes = new Set<number>();
       for (const window of dayWindows) {
@@ -696,6 +826,11 @@ export class AvailabilityService implements IAvailabilityService {
         );
 
         const isUnavailable = Boolean(reservationOverlap || blockOverlap);
+        totalSlotsGenerated++;
+        if (isUnavailable) {
+          bookedSlotsCount++;
+        }
+
         if (isUnavailable && !allowUnavailable) {
           continue;
         }
@@ -721,7 +856,19 @@ export class AvailabilityService implements IAvailabilityService {
       dayCursor.setDate(dayCursor.getDate() + 1);
     }
 
-    return results.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    const sortedOptions = results.sort((a, b) =>
+      a.startTime.localeCompare(b.startTime),
+    );
+
+    const diagnostics: AvailabilityDiagnostics = {
+      hasHoursWindows: hoursWindows.length > 0,
+      hasRateRules: rateRules.length > 0,
+      dayHasHours: anyDayHasHours,
+      allSlotsBooked:
+        totalSlotsGenerated > 0 && bookedSlotsCount === totalSlotsGenerated,
+    };
+
+    return { options: sortedOptions, diagnostics };
   }
 
   private pickCheapestOption(

@@ -20,6 +20,7 @@ import {
   useQueryState,
 } from "nuqs";
 import * as React from "react";
+import { AvailabilityEmptyState } from "@/components/availability-empty-state";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -611,6 +612,7 @@ export default function CourtSchedulePage() {
   });
 
   const cheapestAvailability = cheapestAvailabilityQuery.data ?? [];
+  const availabilityDiagnostics = cheapestAvailabilityQuery.diagnostics;
 
   const courtAvailabilityQuery = trpc.availability.getForCourts.useQuery(
     {
@@ -669,12 +671,12 @@ export default function CourtSchedulePage() {
 
   const monthAvailabilityOptions = React.useMemo(() => {
     if (!isMonthView) return [];
-    const data =
+    const responseData =
       modeParam === "any"
         ? monthAvailabilityQuery.data
         : courtMonthAvailabilityQuery.data;
-    if (!data) return [];
-    return data.map((option) => ({
+    const options = responseData?.options ?? [];
+    return options.map((option) => ({
       ...option,
       id: buildAvailabilityId(
         option.courtId,
@@ -685,6 +687,20 @@ export default function CourtSchedulePage() {
   }, [
     courtMonthAvailabilityQuery.data,
     durationMinutes,
+    isMonthView,
+    modeParam,
+    monthAvailabilityQuery.data,
+  ]);
+
+  const monthAvailabilityDiagnostics = React.useMemo(() => {
+    if (!isMonthView) return null;
+    const responseData =
+      modeParam === "any"
+        ? monthAvailabilityQuery.data
+        : courtMonthAvailabilityQuery.data;
+    return responseData?.diagnostics ?? null;
+  }, [
+    courtMonthAvailabilityQuery.data,
     isMonthView,
     modeParam,
     monthAvailabilityQuery.data,
@@ -732,14 +748,15 @@ export default function CourtSchedulePage() {
 
   const courtAvailabilityById = React.useMemo(() => {
     const grouped: Record<string, CourtAvailabilityOption[]> = {};
-    for (const option of courtAvailabilityQuery.data ?? []) {
+    const options = courtAvailabilityQuery.data?.options ?? [];
+    for (const option of options) {
       if (!grouped[option.courtId]) {
         grouped[option.courtId] = [];
       }
       grouped[option.courtId]?.push(option);
     }
-    for (const options of Object.values(grouped)) {
-      options.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    for (const opts of Object.values(grouped)) {
+      opts.sort((a, b) => a.startTime.localeCompare(b.startTime));
     }
     return grouped;
   }, [courtAvailabilityQuery.data]);
@@ -1376,7 +1393,13 @@ export default function CourtSchedulePage() {
                     <p className="text-sm text-muted-foreground py-6 text-center">
                       No active courts for this sport.
                     </p>
-                  ) : undefined
+                  ) : (
+                    <AvailabilityEmptyState
+                      diagnostics={monthAvailabilityDiagnostics}
+                      variant="public"
+                      contact={place?.contactDetail}
+                    />
+                  )
                 }
               />
             ) : !selectedDate ? (
@@ -1396,9 +1419,11 @@ export default function CourtSchedulePage() {
                   renderSlotAction={({ slot }) => renderCourtOptions(slot)}
                 />
               ) : (
-                <p className="text-sm text-muted-foreground py-6 text-center">
-                  No available start times for this date.
-                </p>
+                <AvailabilityEmptyState
+                  diagnostics={availabilityDiagnostics}
+                  variant="public"
+                  contact={place?.contactDetail}
+                />
               )
             ) : courtsForSport.length === 0 ? (
               <p className="text-sm text-muted-foreground py-6 text-center">

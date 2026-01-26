@@ -16,6 +16,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { AvailabilityEmptyState } from "@/components/availability-empty-state";
 import {
   StandardFormInput,
   StandardFormProvider,
@@ -339,9 +340,12 @@ export default function OwnerCourtAvailabilityPage() {
     { enabled: Boolean(courtId) },
   );
 
+  const availabilityOptions = availabilityQuery.data?.options ?? [];
+  const availabilityDiagnostics = availabilityQuery.data?.diagnostics;
+
   const monthAvailabilityByDay = React.useMemo<MonthDayAvailability[]>(() => {
     const slotsByDay = new Map<string, TimeSlot[]>();
-    for (const option of availabilityQuery.data ?? []) {
+    for (const option of availabilityOptions) {
       const dayKey = getZonedDayKey(option.startTime, placeTimeZone);
       const slot: TimeSlot = {
         id: buildAvailabilityId(
@@ -374,7 +378,7 @@ export default function OwnerCourtAvailabilityPage() {
         ),
       }))
       .sort((a, b) => a.dayKey.localeCompare(b.dayKey));
-  }, [availabilityQuery.data, durationMinutes, placeTimeZone]);
+  }, [availabilityOptions, durationMinutes, placeTimeZone]);
 
   const selectedSlot = React.useMemo(() => {
     if (!selectedSlotId) return null;
@@ -635,14 +639,11 @@ export default function OwnerCourtAvailabilityPage() {
   const reservationsHref = `${appRoutes.owner.reservations}?placeId=${placeId}&courtId=${courtId}`;
 
   const emptyState = (
-    <div className="flex flex-col items-center gap-3 py-6 text-center">
-      <p className="text-sm text-muted-foreground">
-        No available start times for this month.
-      </p>
-      <Button asChild variant="outline" size="sm">
-        <Link href={scheduleHref}>Edit schedule & pricing</Link>
-      </Button>
-    </div>
+    <AvailabilityEmptyState
+      diagnostics={availabilityDiagnostics}
+      variant="owner"
+      scheduleHref={scheduleHref}
+    />
   );
 
   return (

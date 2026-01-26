@@ -75,6 +75,13 @@ export interface AvailabilityOption {
   courtLabel: string;
 }
 
+export interface AvailabilityDiagnostics {
+  hasHoursWindows: boolean;
+  hasRateRules: boolean;
+  dayHasHours: boolean;
+  allSlotsBooked: boolean;
+}
+
 interface UsePlaceDetailOptions {
   placeIdOrSlug: string;
 }
@@ -182,6 +189,13 @@ const getDateIso = (date?: Date, timeZone?: string) => {
   return getZonedStartOfDayIso(date, timeZone);
 };
 
+const emptyDiagnostics: AvailabilityDiagnostics = {
+  hasHoursWindows: false,
+  hasRateRules: false,
+  dayHasHours: false,
+  allSlotsBooked: false,
+};
+
 export function usePlaceAvailability({
   place,
   sportId,
@@ -232,7 +246,11 @@ export function usePlaceAvailability({
   );
 
   const activeQuery = mode === "court" ? courtQuery : placeQuery;
-  const data = (activeQuery.data ?? []).map((option) => ({
+  const responseData = activeQuery.data;
+  const options = responseData?.options ?? [];
+  const diagnostics = responseData?.diagnostics ?? emptyDiagnostics;
+
+  const data = options.map((option) => ({
     id: `${option.courtId}-${option.startTime}-${safeDuration}`,
     startTime: option.startTime,
     endTime: option.endTime,
@@ -248,5 +266,6 @@ export function usePlaceAvailability({
   return {
     ...activeQuery,
     data,
+    diagnostics,
   };
 }

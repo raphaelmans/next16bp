@@ -67,7 +67,8 @@ export function useAvailableSlots({ courtId, date }: UseAvailableSlotsOptions) {
     { enabled: !!courtId && !!dateIso },
   );
 
-  const transformedData: TimeSlot[] = (query.data ?? []).map((option) => ({
+  const options = query.data?.options ?? [];
+  const transformedData: TimeSlot[] = options.map((option) => ({
     id: `${option.courtId}-${option.startTime}-${option.endTime}`,
     startTime: option.startTime,
     endTime: option.endTime,
@@ -80,5 +81,6 @@ export function useAvailableSlots({ courtId, date }: UseAvailableSlotsOptions) {
   return {
     ...query,
     data: transformedData,
+    diagnostics: query.data?.diagnostics,
   };
 }

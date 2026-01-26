@@ -32,7 +32,8 @@ export const availabilityRouter = router({
     .query(async ({ input }) => {
       try {
         const service = makeAvailabilityService();
-        return await service.getForCourt(input);
+        const result = await service.getForCourt(input);
+        return { options: result.options, diagnostics: result.diagnostics };
       } catch (error) {
         handleAvailabilityError(error);
       }
@@ -42,7 +43,8 @@ export const availabilityRouter = router({
     .query(async ({ input }) => {
       try {
         const service = makeAvailabilityService();
-        return await service.getForCourts(input);
+        const result = await service.getForCourts(input);
+        return { options: result.options, diagnostics: result.diagnostics };
       } catch (error) {
         handleAvailabilityError(error);
       }
@@ -52,7 +54,8 @@ export const availabilityRouter = router({
     .query(async ({ input }) => {
       try {
         const service = makeAvailabilityService();
-        return await service.getForPlaceSport(input);
+        const result = await service.getForPlaceSport(input);
+        return { options: result.options, diagnostics: result.diagnostics };
       } catch (error) {
         handleAvailabilityError(error);
       }
@@ -62,7 +65,8 @@ export const availabilityRouter = router({
     .query(async ({ input }) => {
       try {
         const service = makeAvailabilityService();
-        return await service.getForCourtRange(input);
+        const result = await service.getForCourtRange(input);
+        return { options: result.options, diagnostics: result.diagnostics };
       } catch (error) {
         handleAvailabilityError(error);
       }
@@ -72,7 +76,8 @@ export const availabilityRouter = router({
     .query(async ({ input }) => {
       try {
         const service = makeAvailabilityService();
-        return await service.getForPlaceSportRange(input);
+        const result = await service.getForPlaceSportRange(input);
+        return { options: result.options, diagnostics: result.diagnostics };
       } catch (error) {
         handleAvailabilityError(error);
       }
