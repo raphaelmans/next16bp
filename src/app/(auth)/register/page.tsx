@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { RegisterForm } from "@/features/auth";
+import { RegisterWithRoleChooser } from "@/features/auth";
 
 export const metadata = {
   title: "Create Account",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function RegisterPage() {
   return (
     <Suspense fallback={<RegisterFormSkeleton />}>
-      <RegisterForm />
+      <RegisterWithRoleChooser />
     </Suspense>
   );
 }

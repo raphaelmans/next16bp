@@ -30,7 +30,7 @@ export function LoginForm() {
   const googleLoginMutation = useLoginWithGoogle();
 
   const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
-    fallback: appRoutes.home.base,
+    fallback: appRoutes.postLogin.base,
     origin: typeof window !== "undefined" ? window.location.origin : undefined,
     disallowRoutes: ["guest"],
   });

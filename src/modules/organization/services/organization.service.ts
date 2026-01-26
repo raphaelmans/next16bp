@@ -1,6 +1,7 @@
 import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
 import { STORAGE_BUCKETS } from "@/modules/storage/dtos";
 import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
+import type { IUserPreferenceService } from "@/modules/user-preference/services/user-preference.service";
 import type {
   OrganizationProfileRecord,
   OrganizationRecord,
@@ -160,6 +161,7 @@ export class OrganizationService implements IOrganizationService {
     private placeRepository: IPlaceRepository,
     private transactionManager: TransactionManager,
     private storageService: IObjectStorageService,
+    private userPreferenceService: IUserPreferenceService,
   ) {}
 
   async createOrganization(
@@ -218,6 +220,8 @@ export class OrganizationService implements IOrganizationService {
         },
         ctx,
       );
+
+      await this.userPreferenceService.setDefaultPortal(ownerId, "owner", ctx);
 
       logger.info(
         {

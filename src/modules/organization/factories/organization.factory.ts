@@ -1,5 +1,6 @@
 import { PlaceRepository } from "@/modules/place/repositories/place.repository";
 import { makeObjectStorageService } from "@/modules/storage/factories/storage.factory";
+import { makeUserPreferenceService } from "@/modules/user-preference/factories/user-preference.factory";
 import { getContainer } from "@/shared/infra/container";
 import { OrganizationAdminRepository } from "../admin/repositories/organization-admin.repository";
 import { OrganizationAdminService } from "../admin/services/organization-admin.service";
@@ -45,6 +46,7 @@ export function makeOrganizationService(): OrganizationService {
       makePlaceRepository(),
       getContainer().transactionManager,
       makeObjectStorageService(),
+      makeUserPreferenceService(),
     );
   }
   return organizationService;

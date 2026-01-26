@@ -9,6 +9,7 @@ References and context for planning artifacts.
 | Date | Change |
 |------|--------|
 | 2026-01-26 | Added 71-bookings-import-review-commit plan (draft persistence, review/edit grid, commit to blocks, AI usage enforcement) |
+| 2026-01-26 | Added 72-owner-onboarding-revamp plan (canonical /owners/get-started, /register/owner, /owner/get-started hub, default portal routing) |
 | 2026-01-25 | Added 70-bookings-import-owner-ui plan (owner landing page: venue + source selection + drag-and-drop upload) |
 | 2026-01-25 | Added 69-bookings-import-normalization-poc plan (CLI PoC: external exports -> AI mapping spec -> reservation blocks JSON) |
 | 2026-01-25 | Added 67-owner-court-blocks plan (maintenance + walk-in blocks, computed price snapshots for revenue) |

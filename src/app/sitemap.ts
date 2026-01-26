@@ -57,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: buildUrl(appRoutes.listYourVenue.base),
+      url: buildUrl(appRoutes.ownersGetStarted.base),
       changeFrequency: "weekly" as const,
       priority: 0.7,
     },

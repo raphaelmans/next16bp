@@ -27,7 +27,7 @@ export function MagicLinkForm() {
   const [success, setSuccess] = useState(false);
   const magicLinkMutation = useMagicLink();
   const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
-    fallback: appRoutes.home.base,
+    fallback: appRoutes.postLogin.base,
     origin: typeof window !== "undefined" ? window.location.origin : undefined,
     disallowRoutes: ["guest"],
   });

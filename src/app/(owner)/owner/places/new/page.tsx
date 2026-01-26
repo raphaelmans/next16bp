@@ -2,7 +2,7 @@
 
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,6 +25,8 @@ import { SETTINGS_SECTION_HASHES } from "@/shared/lib/section-hashes";
 
 export default function NewPlacePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const fromSetup = searchParams.get("from") === "setup";
   const { data: user } = useSession();
   const logoutMutation = useLogout();
   const {
@@ -37,7 +39,11 @@ export default function NewPlacePage() {
     organizationId: organization?.id,
     onSuccess: (result) => {
       toast.success("Venue created successfully!");
-      router.push(appRoutes.owner.places.courts.new(result.placeId));
+      if (fromSetup) {
+        router.push(appRoutes.owner.verification.place(result.placeId));
+      } else {
+        router.push(appRoutes.owner.places.courts.new(result.placeId));
+      }
     },
   });
 

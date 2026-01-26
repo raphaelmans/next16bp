@@ -24,14 +24,24 @@ import { getSafeRedirectPath } from "@/shared/lib/redirects";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { useLoginWithGoogle, useRegister } from "../hooks/use-auth";
 
-export function RegisterForm() {
+export interface RegisterFormProps {
+  title?: string;
+  description?: string;
+  defaultRedirect?: string;
+}
+
+export function RegisterForm({
+  title = "Create Account",
+  description = "Enter your details to create an account",
+  defaultRedirect = appRoutes.postLogin.base,
+}: RegisterFormProps = {}) {
   const searchParams = useSearchParams();
   const [success, setSuccess] = useState(false);
   const registerMutation = useRegister();
   const googleLoginMutation = useLoginWithGoogle();
 
   const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
-    fallback: appRoutes.courts.base,
+    fallback: defaultRedirect,
     origin: typeof window !== "undefined" ? window.location.origin : undefined,
     disallowRoutes: ["guest"],
   });
@@ -113,10 +123,8 @@ export function RegisterForm() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Create Account</CardTitle>
-        <CardDescription>
-          Enter your details to create an account
-        </CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
         {showBookingContext && (
           <p className="text-sm text-muted-foreground">
             You&apos;ll return to your reservation after signing in.

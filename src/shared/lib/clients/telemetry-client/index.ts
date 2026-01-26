@@ -16,7 +16,15 @@ export type TelemetryEventName =
   | "funnel.owner_list_your_venue_viewed"
   | "funnel.owner_list_your_venue_cta_clicked"
   | "funnel.owner_list_your_venue_signin_clicked"
-  | "funnel.owner_list_your_venue_nav_clicked";
+  | "funnel.owner_list_your_venue_nav_clicked"
+  | "funnel.owner_get_started_viewed"
+  | "funnel.owner_get_started_cta_clicked"
+  | "funnel.owner_get_started_signin_clicked"
+  | "funnel.owner_setup_hub_viewed"
+  | "funnel.owner_org_created"
+  | "funnel.owner_add_venue_clicked"
+  | "funnel.owner_claim_submitted"
+  | "funnel.owner_import_started";
 
 export type TelemetryPayload = {
   event: TelemetryEventName;

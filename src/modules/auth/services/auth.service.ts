@@ -76,7 +76,7 @@ export class AuthService implements IAuthService {
     redirect?: string,
   ): Promise<{ user: User | null; session: Session | null }> {
     const safeRedirect = getSafeRedirectPath(redirect, {
-      fallback: appRoutes.home.base,
+      fallback: appRoutes.postLogin.base,
       origin: baseUrl,
       disallowRoutes: ["guest"],
     });
@@ -98,7 +98,7 @@ export class AuthService implements IAuthService {
     redirect?: string,
   ): Promise<{ url: string }> {
     const safeRedirect = getSafeRedirectPath(redirect, {
-      fallback: appRoutes.home.base,
+      fallback: appRoutes.postLogin.base,
       origin: baseUrl,
       disallowRoutes: ["guest"],
     });
@@ -119,7 +119,7 @@ export class AuthService implements IAuthService {
     redirect?: string,
   ): Promise<{ user: User | null; session: Session | null }> {
     const safeRedirect = getSafeRedirectPath(redirect, {
-      fallback: appRoutes.home.base,
+      fallback: appRoutes.postLogin.base,
       origin: baseUrl,
       disallowRoutes: ["guest"],
     });

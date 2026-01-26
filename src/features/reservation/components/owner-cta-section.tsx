@@ -68,7 +68,7 @@ export function OwnerCtaSection() {
       </CardHeader>
       <CardContent>
         <Button className="w-full" asChild>
-          <Link href={appRoutes.listYourVenue.base}>
+          <Link href={appRoutes.ownersGetStarted.base}>
             <Plus className="mr-2 h-4 w-4" />
             Become a Partner
           </Link>

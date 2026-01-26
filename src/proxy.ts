@@ -117,7 +117,7 @@ export async function proxy(request: NextRequest) {
     const redirectTo = getSafeRedirectPath(
       request.nextUrl.searchParams.get("redirect"),
       {
-        fallback: appRoutes.home.base,
+        fallback: appRoutes.postLogin.base,
         origin: request.nextUrl.origin,
         disallowRoutes: ["guest"],
         disallowPathname: path,

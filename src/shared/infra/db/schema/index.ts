@@ -30,4 +30,5 @@ export * from "./profile";
 // Reservation-related tables
 export * from "./reservation";
 export * from "./sport";
+export * from "./user-preferences";
 export * from "./user-roles";

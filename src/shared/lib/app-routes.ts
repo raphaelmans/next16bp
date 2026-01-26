@@ -23,6 +23,10 @@ export const appRoutes = {
     base: "/list-your-venue",
     options: { type: "public" as const },
   },
+  ownersGetStarted: {
+    base: "/owners/get-started",
+    options: { type: "public" as const },
+  },
   courts: {
     base: "/courts",
     options: { type: "public" as const },
@@ -46,6 +50,7 @@ export const appRoutes = {
   register: {
     base: "/register",
     options: { type: "guest" as const },
+    owner: "/register/owner",
   },
   magicLink: {
     base: "/magic-link",
@@ -53,6 +58,10 @@ export const appRoutes = {
   },
   home: {
     base: "/home",
+    options: { type: "protected" as const },
+  },
+  postLogin: {
+    base: "/post-login",
     options: { type: "protected" as const },
   },
   terms: {
@@ -98,6 +107,7 @@ export const appRoutes = {
   owner: {
     base: "/owner",
     options: { type: "owner" as const },
+    getStarted: "/owner/get-started",
     onboarding: "/owner/onboarding",
     pricing: "/owner/pricing",
     verify: "/owner/verify",
@@ -179,10 +189,12 @@ const exactOrChild = (path: string, base: string) =>
 
 const protectedBases = [
   appRoutes.home.base,
+  appRoutes.postLogin.base,
   appRoutes.dashboard.base,
   appRoutes.reservations.base,
   appRoutes.account.base,
   appRoutes.owner.onboarding,
+  appRoutes.owner.getStarted,
 ];
 
 const guestBases = [
@@ -194,6 +206,7 @@ const guestBases = [
 const publicBases = [
   appRoutes.index.base,
   appRoutes.listYourVenue.base,
+  appRoutes.ownersGetStarted.base,
   appRoutes.courts.base,
   appRoutes.places.base,
   appRoutes.terms.base,

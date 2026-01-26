@@ -94,7 +94,7 @@ export function Navbar({ className }: NavbarProps) {
     });
 
     if (!isAuthenticated) {
-      router.push(appRoutes.listYourVenue.base);
+      router.push(appRoutes.ownersGetStarted.base);
       return;
     }
 

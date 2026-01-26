@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   const type = searchParams.get("type") as EmailOtpType | null;
 
   const redirectPath = getSafeRedirectPath(searchParams.get("redirect"), {
-    fallback: appRoutes.home.base,
+    fallback: appRoutes.postLogin.base,
     origin: request.nextUrl.origin,
     disallowRoutes: ["guest"],
   });

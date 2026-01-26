@@ -14,7 +14,7 @@ const FOOTER_LINKS = {
     },
   ],
   owners: [
-    { name: "List Your Venue", href: appRoutes.listYourVenue.base },
+    { name: "List Your Venue", href: appRoutes.ownersGetStarted.base },
     { name: "Owner Dashboard", href: appRoutes.owner.base },
     { name: "Pricing", href: appRoutes.owner.pricing },
   ],

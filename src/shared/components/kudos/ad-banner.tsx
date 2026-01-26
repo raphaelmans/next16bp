@@ -21,7 +21,7 @@ const AD_CONTENT: Record<
     description:
       "Reach thousands of players (pickleball and more). Start accepting bookings today.",
     cta: "Get Started",
-    href: appRoutes.listYourVenue.base,
+    href: appRoutes.ownersGetStarted.base,
   },
   "court-detail": {
     title: "Premium Pickleball + Court Gear",
@@ -34,7 +34,7 @@ const AD_CONTENT: Record<
     description:
       "Get a verified badge and priority placement in search results.",
     cta: "Learn More",
-    href: `${appRoutes.listYourVenue.base}#verification`,
+    href: `${appRoutes.ownersGetStarted.base}#verification`,
   },
 };
 
