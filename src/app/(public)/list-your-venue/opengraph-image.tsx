@@ -26,29 +26,6 @@ export default function OpenGraphImage() {
     >
       <div
         style={{
-          position: "absolute",
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          opacity: 0.1,
-        }}
-      >
-        <div
-          style={{
-            width: "520px",
-            height: "520px",
-            border: "16px solid white",
-            borderRadius: "28px",
-            position: "relative",
-            display: "flex",
-          }}
-        />
-      </div>
-
-      <div
-        style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",

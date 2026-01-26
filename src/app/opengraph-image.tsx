@@ -23,30 +23,6 @@ export default function OpenGraphImage() {
         fontFamily: "system-ui, sans-serif",
       }}
     >
-      {/* Background pattern - subtle court lines */}
-      <div
-        style={{
-          position: "absolute",
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          opacity: 0.1,
-        }}
-      >
-        <div
-          style={{
-            width: "500px",
-            height: "500px",
-            border: "16px solid white",
-            borderRadius: "24px",
-            position: "relative",
-            display: "flex",
-          }}
-        />
-      </div>
-
       {/* Logo */}
       <div
         style={{
