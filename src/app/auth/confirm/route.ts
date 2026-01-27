@@ -16,10 +16,13 @@ export async function GET(request: NextRequest) {
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
 
-  const redirectPath = getSafeRedirectPath(searchParams.get("redirect"), {
+  const redirectParam =
+    searchParams.get("redirect") ?? searchParams.get("next");
+  const redirectPath = getSafeRedirectPath(redirectParam, {
     fallback: appRoutes.postLogin.base,
     origin: request.nextUrl.origin,
     disallowRoutes: ["guest"],
+    disallowPathname: request.nextUrl.pathname,
   });
   const redirectUrl = new URL(redirectPath, request.url);
   const fallbackUrl = new URL(appRoutes.index.base, request.url);
@@ -127,6 +130,90 @@ export async function GET(request: NextRequest) {
             error: error instanceof Error ? error.message : "Unknown error",
           },
           "Password recovery verification failed",
+        );
+      }
+      break;
+
+    case "invite":
+      try {
+        const { data, error } = await supabase.auth.verifyOtp({
+          token_hash,
+          type: "invite",
+        });
+
+        if (error) throw error;
+
+        if (data.user) {
+          logger.info(
+            { event: "user.invite_verified", userId: data.user.id },
+            "Invite verified",
+          );
+        }
+
+        return NextResponse.redirect(redirectUrl);
+      } catch (error) {
+        logger.error(
+          {
+            scope: "auth:invite_verification",
+            error: error instanceof Error ? error.message : "Unknown error",
+          },
+          "Invite verification failed",
+        );
+      }
+      break;
+
+    case "email_change":
+      try {
+        const { data, error } = await supabase.auth.verifyOtp({
+          token_hash,
+          type: "email_change",
+        });
+
+        if (error) throw error;
+
+        if (data.user) {
+          logger.info(
+            { event: "user.email_change_verified", userId: data.user.id },
+            "Email change verified",
+          );
+        }
+
+        return NextResponse.redirect(redirectUrl);
+      } catch (error) {
+        logger.error(
+          {
+            scope: "auth:email_change_verification",
+            error: error instanceof Error ? error.message : "Unknown error",
+          },
+          "Email change verification failed",
+        );
+      }
+      break;
+
+    case "email":
+      try {
+        const { data, error } = await supabase.auth.verifyOtp({
+          token_hash,
+          type: "email",
+        });
+
+        if (error) throw error;
+
+        if (data.user) {
+          logger.info(
+            { event: "user.email_otp_verified", userId: data.user.id },
+            "Email OTP verified",
+          );
+        }
+
+        return NextResponse.redirect(redirectUrl);
+      } catch (error) {
+        logger.error(
+          {
+            scope: "auth:email_verification",
+            error: error instanceof Error ? error.message : "Unknown error",
+          },
+          "Email verification failed",
         );
       }
       break;

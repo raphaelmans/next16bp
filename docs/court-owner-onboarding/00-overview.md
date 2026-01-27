@@ -52,6 +52,7 @@ Terminology used in code:
 Important gating behavior:
 - Owner routes (`src/app/(owner)/*`) require a session and at least 1 organization; otherwise redirect to `/owner/onboarding`.
 - Availability results are empty unless the venue is `VERIFIED` and `reservationsEnabled=true`.
+- Magic link + signup confirmation preserve intended destination via `redirect` on `/auth/confirm` (templates in `supabase/templates/*` append `token_hash` + `type` to `{{ .RedirectTo }}`).
 
 ## Module Docs
 

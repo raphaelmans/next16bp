@@ -71,15 +71,15 @@ This implementation uses **PKCE (Proof Key for Code Exchange)** flow, which is t
 │     └─► POST /api/trpc/auth.loginWithMagicLink                        │
 │                                                                        │
 │  2. Service calls Supabase signInWithOtp                               │
-│     └─► emailRedirectTo: https://app.com/auth/confirm                 │
+│     └─► emailRedirectTo: https://app.com/auth/confirm?redirect=%2F...  │
 │                                                                        │
 │  3. Supabase sends email with link:                                    │
-│     └─► https://app.com/auth/confirm?token_hash=xxx&type=magiclink    │
+│     └─► {{ .RedirectTo }}&token_hash=xxx&type=magiclink                │
 │                                                                        │
 │  4. User clicks link → Route handler verifies                          │
 │     └─► supabase.auth.verifyOtp({ token_hash, type: 'magiclink' })    │
 │                                                                        │
-│  5. Session cookies set → Redirect to /dashboard                       │
+│  5. Session cookies set → Redirect to `redirect` param                 │
 │                                                                        │
 └──────────────────────────────────────────────────────────────────────┘
 ```
@@ -96,33 +96,41 @@ Navigate to **Supabase Dashboard → Authentication → URL Configuration**:
 
 | Setting | Value | Notes |
 |---------|-------|-------|
-| **Site URL** | `https://yourdomain.com` | Used in `{{ .SiteURL }}` email template variable |
-| **Redirect URLs** | `https://yourdomain.com/auth/confirm` | Whitelist for PKCE |
-| | `https://yourdomain.com/auth/callback` | Whitelist for OAuth |
-| | `http://localhost:3000/auth/confirm` | For local development |
-| | `http://localhost:3000/auth/callback` | For local development |
+| **Site URL** | `https://kudoscourts.com` | Used as the default allow-listed base URL |
+| **Redirect URLs** | `https://kudoscourts.com` | Allow root redirects |
+| | `http://localhost:3000` | Allow local root redirects |
+| | `https://kudoscourts.com/auth/confirm**` | PKCE email links (`/auth/confirm?...`) |
+| | `https://kudoscourts.com/auth/callback**` | OAuth callback (`/auth/callback?...`) |
+| | `http://localhost:3000/auth/confirm**` | Local development |
+| | `http://localhost:3000/auth/callback**` | Local development |
 
 ### Email Templates
 
-Navigate to **Supabase Dashboard → Authentication → Email Templates**:
+Templates are version-controlled under `supabase/templates/*` and pushed to Supabase via CLI.
+
+**How it works:** this repo passes `emailRedirectTo` as a fully-qualified `/auth/confirm?redirect=...` URL. In the template, use `{{ .RedirectTo }}` as the base and append `token_hash` + `type`.
+
+**Push templates + auth config:**
+```bash
+supabase link --project-ref <project-ref>
+supabase config push --project-ref <project-ref>
+```
+
+If you prefer manual changes, you can still paste the HTML into **Supabase Dashboard → Authentication → Email Templates**.
 
 **Magic Link Template:**
 ```html
-<h2>Magic Link</h2>
-<p>Follow this link to login:</p>
-<p><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=magiclink">Log In</a></p>
+<a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=magiclink">Sign in</a>
 ```
 
 **Signup Confirmation Template:**
 ```html
-<h2>Confirm your signup</h2>
-<p><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup">Confirm your email</a></p>
+<a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=signup">Confirm email</a>
 ```
 
 **Password Recovery Template:**
 ```html
-<h2>Reset your password</h2>
-<p><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery">Reset Password</a></p>
+<a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=recovery">Reset password</a>
 ```
 
 ---
@@ -1440,11 +1448,13 @@ src/
 - [ ] Get publishable and secret keys
 - [ ] **Set Site URL** to production domain (e.g., `https://yourdomain.com`)
 - [ ] **Add Redirect URLs:**
-  - `https://yourdomain.com/auth/confirm` (PKCE)
-  - `https://yourdomain.com/auth/callback` (OAuth)
-  - `http://localhost:3000/auth/confirm` (dev)
-  - `http://localhost:3000/auth/callback` (dev)
-- [ ] **Configure email templates** with `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=...`
+  - `https://kudoscourts.com` (root)
+  - `http://localhost:3000` (dev root)
+  - `https://kudoscourts.com/auth/confirm**` (PKCE)
+  - `https://kudoscourts.com/auth/callback**` (OAuth)
+  - `http://localhost:3000/auth/confirm**` (dev PKCE)
+  - `http://localhost:3000/auth/callback**` (dev OAuth)
+- [ ] **Configure email templates** to use `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=...` (or push via `supabase config push`)
 
 ### Environment Variables
 - [ ] `NEXT_PUBLIC_APP_URL` set to production URL
