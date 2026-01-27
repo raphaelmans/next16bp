@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const RegisterSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8).max(100),
-  redirect: z.string().optional(),
+  email: S.auth.email,
+  password: S.auth.password,
+  redirect: S.common.optionalText,
 });
 
 export type RegisterDTO = z.infer<typeof RegisterSchema>;

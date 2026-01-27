@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const CreateCourtBlockSchema = z.object({
-  courtId: z.string().uuid(),
-  startTime: z.string().datetime(),
-  endTime: z.string().datetime(),
-  reason: z.string().trim().max(255).optional(),
+  courtId: S.ids.courtId,
+  startTime: S.common.isoDateTime,
+  endTime: S.common.isoDateTime,
+  reason: S.courtBlock.reason,
 });
 
 export type CreateCourtBlockDTO = z.infer<typeof CreateCourtBlockSchema>;

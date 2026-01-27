@@ -4,6 +4,8 @@
 
 There are two primary entry points.
 
+Note: the owner setup hub (`/owner/get-started`) is adding a dedicated “Configure venue courts” step that should route into the venue-scoped setup wizard (`/owner/venues/:placeId/courts/setup`).
+
 ### A) Venue-first (recommended in current owner UI)
 
 ```text

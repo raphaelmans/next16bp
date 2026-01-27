@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 /**
  * Schema for adding payment proof to a reservation.
@@ -6,13 +7,13 @@ import { z } from "zod";
  */
 export const AddPaymentProofSchema = z
   .object({
-    reservationId: z.string().uuid(),
-    fileUrl: z.string().url().optional(),
-    referenceNumber: z.string().max(100).optional(),
-    notes: z.string().max(500).optional(),
+    reservationId: S.ids.reservationId,
+    fileUrl: S.common.url().optional(),
+    referenceNumber: S.paymentProof.referenceNumber,
+    notes: S.paymentProof.notes,
   })
   .refine((data) => data.fileUrl || data.referenceNumber, {
-    message: "Either fileUrl or referenceNumber is required",
+    error: "Either fileUrl or referenceNumber is required",
     path: ["fileUrl"],
   });
 

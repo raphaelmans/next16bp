@@ -98,6 +98,7 @@ export default function CourtSetupWizardPage() {
     "courtId",
     parseAsString.withOptions({ history: "push" }),
   );
+  const [fromParam] = useQueryState("from", parseAsString);
   const [step, setStep] = useQueryState(
     "step",
     parseAsStringLiteral(stepKeys)
@@ -111,6 +112,7 @@ export default function CourtSetupWizardPage() {
     steps.findIndex((current) => current.key === currentStep),
     0,
   );
+  const isFromSetup = fromParam === "setup";
 
   const { data: user } = useSession();
   const logoutMutation = useLogout();
@@ -212,6 +214,7 @@ export default function CourtSetupWizardPage() {
   const isPrereqsLoading = hoursLoading || pricingLoading;
   const hasHours = !hoursLoading && hours.length > 0;
   const hasPricingRules = !pricingLoading && pricingRules.length > 0;
+  const canLeaveSetup = isFromSetup || (hasHours && hasPricingRules);
 
   const missingScheduleItems = [
     !hasHours ? "hours" : null,
@@ -611,13 +614,24 @@ export default function CourtSetupWizardPage() {
                     Back to Schedule
                   </Button>
                   <Button
-                    asChild={hasHours && hasPricingRules}
+                    asChild={canLeaveSetup}
                     className="w-full sm:w-auto"
-                    disabled={isPrereqsLoading || !hasHours || !hasPricingRules}
+                    disabled={
+                      isPrereqsLoading ||
+                      (!isFromSetup && (!hasHours || !hasPricingRules))
+                    }
                   >
-                    {hasHours && hasPricingRules ? (
-                      <Link href={appRoutes.owner.courts.availability(courtId)}>
-                        Go to Availability
+                    {canLeaveSetup ? (
+                      <Link
+                        href={
+                          isFromSetup
+                            ? appRoutes.owner.getStarted
+                            : appRoutes.owner.courts.availability(courtId)
+                        }
+                      >
+                        {isFromSetup
+                          ? "Back to setup hub"
+                          : "Go to Availability"}
                       </Link>
                     ) : (
                       "Go to Availability"

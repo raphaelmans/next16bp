@@ -7,6 +7,7 @@ import {
   router,
 } from "@/shared/infra/trpc/trpc";
 import { AppError } from "@/shared/kernel/errors";
+import { S } from "@/shared/kernel/schemas";
 import {
   CreateOrganizationSchema,
   GetOrganizationLandingBySlugSchema,
@@ -87,7 +88,7 @@ export const organizationRouter = router({
    * Get organization by ID (public)
    */
   get: publicProcedure
-    .input(z.object({ id: z.string().uuid() }))
+    .input(z.object({ id: S.ids.organizationId }))
     .query(async ({ input }) => {
       try {
         const organizationService = makeOrganizationService();
@@ -101,7 +102,7 @@ export const organizationRouter = router({
    * Get organization by slug (public)
    */
   getBySlug: publicProcedure
-    .input(z.object({ slug: z.string().min(1).max(100) }))
+    .input(z.object({ slug: S.organization.slug }))
     .query(async ({ input }) => {
       try {
         const organizationService = makeOrganizationService();

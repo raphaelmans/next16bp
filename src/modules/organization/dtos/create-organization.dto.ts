@@ -1,13 +1,9 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const CreateOrganizationSchema = z.object({
-  name: z.string().min(1).max(150),
-  slug: z
-    .string()
-    .min(1)
-    .max(100)
-    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens")
-    .optional(),
+  name: S.organization.name,
+  slug: S.organization.slug.optional(),
 });
 
 export type CreateOrganizationDTO = z.infer<typeof CreateOrganizationSchema>;

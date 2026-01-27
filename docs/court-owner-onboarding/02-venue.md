@@ -3,16 +3,32 @@
 ## What the owner experiences
 
 ```text
-/owner/venues
-   |
-   | “Add New Venue”
-   v
-/owner/venues/new
-   |
-   | fill venue form (name, address, city, timezone, contacts)
-   | submit
-   v
-/owner/venues/:placeId/courts/new   (prompt to add first court)
+A) Owner dashboard flow
+
+  /owner/venues
+     |
+     | “Add New Venue”
+     v
+  /owner/venues/new
+     |
+     | fill venue form (name, address, city, timezone, contacts)
+     | submit
+     v
+  /owner/venues/:placeId/courts/new   (legacy: prompt to add first court)
+
+B) Setup hub flow
+
+  /owner/get-started
+     |
+     | “Add venue”
+     v
+  /owner/venues/new?from=setup
+     |
+     | submit
+     v
+  /owner/verify/:placeId             (current behavior)
+
+  Planned change (pending): from=setup should redirect back to /owner/get-started
 ```
 
 ## Routes (UI)
@@ -20,6 +36,7 @@
 - Venues list: `src/app/(owner)/owner/places/page.tsx` (re-exported by `src/app/(owner)/owner/venues/page.tsx`)
 - Venue create: `src/app/(owner)/owner/places/new/page.tsx` (re-exported by `src/app/(owner)/owner/venues/new/page.tsx`)
 - Venue edit: `src/app/(owner)/owner/places/[placeId]/edit/page.tsx` (also has a `/owner/venues/...` re-export)
+ - Setup hub entry point: `src/app/(auth)/owner/get-started/page.tsx` (routes to venue create with `?from=setup`)
 
 Notes:
 - Canonical route prefix is `/owner/venues/*` (see `src/shared/lib/app-routes.ts`).

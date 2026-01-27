@@ -1,12 +1,13 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const ReorderPlacePhotosSchema = z.object({
-  placeId: z.string().uuid(),
+  placeId: S.ids.placeId,
   orderedIds: z
-    .array(z.string().uuid())
-    .min(1)
+    .array(S.ids.photoId)
+    .min(S.place.photos.min.value, { error: S.place.photos.min.message })
     .refine((value) => new Set(value).size === value.length, {
-      message: "Photo order must be unique",
+      error: "Photo order must be unique",
     }),
 });
 

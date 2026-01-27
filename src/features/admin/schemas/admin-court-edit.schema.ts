@@ -1,66 +1,42 @@
 import { z } from "zod";
+import { allowEmptyString, S, V } from "@/shared/kernel/schemas";
 
-const optionalUrlSchema = z
-  .string()
-  .url("Invalid URL")
-  .optional()
-  .or(z.literal(""));
+const optionalUrlSchema = allowEmptyString(S.common.url().optional());
 
-const optionalTextSchema = (maxLength: number) =>
-  z.string().max(maxLength).optional().or(z.literal(""));
-
-const coordinateSchema = z
-  .string()
-  .optional()
-  .or(z.literal(""))
-  .refine(
-    (value) =>
-      value === undefined ||
-      value === "" ||
-      !Number.isNaN(Number.parseFloat(value)),
-    {
-      message: "Coordinate must be a valid decimal number",
-    },
+const optionalTextSchema = (max: { value: number; message: string }) =>
+  allowEmptyString(
+    z.string().trim().max(max.value, { error: max.message }).optional(),
   );
 
+const coordinateSchema = S.common.coordinateString;
+
 const courtSchema = z.object({
-  id: z.string().uuid().optional(),
-  label: z
-    .string()
-    .min(1, "Court label is required")
-    .max(100, "Court label must be less than 100 characters"),
-  sportId: z.string().uuid("Sport is required"),
-  tierLabel: z
-    .string()
-    .max(20, "Tier label must be less than 20 characters")
-    .optional()
-    .nullable(),
+  id: S.ids.courtId.optional(),
+  label: S.court.label,
+  sportId: S.ids.sportId,
+  tierLabel: S.court.tierLabel.nullable(),
 });
 
 export const adminCourtEditSchema = z.object({
-  name: z
-    .string()
-    .min(3, "Court name must be at least 3 characters")
-    .max(100, "Court name must be less than 100 characters"),
-  address: z
-    .string()
-    .min(10, "Address must be at least 10 characters")
-    .max(200, "Address must be less than 200 characters"),
-  province: z.string().min(1, "Province is required").max(100),
-  city: z.string().min(1, "City is required"),
-  country: z.string().length(2),
-  latitude: coordinateSchema,
-  longitude: coordinateSchema,
-  extGPlaceId: optionalTextSchema(128),
-  timeZone: z.string().min(1).max(64).optional(),
+  name: S.place.name,
+  address: S.place.address,
+  province: S.place.province,
+  city: S.place.city,
+  country: S.common.country,
+  latitude: coordinateSchema.latitude,
+  longitude: coordinateSchema.longitude,
+  extGPlaceId: optionalTextSchema(V.place.googlePlaceId.max),
+  timeZone: S.place.timeZone.optional(),
   facebookUrl: optionalUrlSchema,
   instagramUrl: optionalUrlSchema,
-  phoneNumber: optionalTextSchema(20),
-  viberInfo: optionalTextSchema(100),
+  phoneNumber: optionalTextSchema(V.place.phoneNumber.max),
+  viberInfo: optionalTextSchema(V.place.viberInfo.max),
   websiteUrl: optionalUrlSchema,
-  otherContactInfo: optionalTextSchema(500),
-  amenities: z.array(z.string()),
-  courts: z.array(courtSchema).min(1, "Add at least one court"),
+  otherContactInfo: optionalTextSchema(V.place.otherContactInfo.max),
+  amenities: z.array(S.place.amenity),
+  courts: z
+    .array(courtSchema)
+    .min(S.court.listMin.value, { error: S.court.listMin.message }),
 });
 
 export type AdminCourtEditFormData = z.infer<typeof adminCourtEditSchema>;

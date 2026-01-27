@@ -1,49 +1,32 @@
 import { z } from "zod";
+import { allowEmptyString, S, V } from "@/shared/kernel/schemas";
 
-const optionalUrlSchema = z
-  .string()
-  .url("Invalid URL")
-  .optional()
-  .or(z.literal(""));
+const optionalUrlSchema = allowEmptyString(S.common.url().optional());
 
-const optionalTextSchema = (maxLength: number) =>
-  z.string().max(maxLength).optional().or(z.literal(""));
+const optionalTextSchema = (maxLength: { value: number; message: string }) =>
+  allowEmptyString(
+    z.string().max(maxLength.value, { error: maxLength.message }).optional(),
+  );
 
-const coordinateSchema = z.preprocess(
-  (value) => {
-    if (value === "" || value === null || value === undefined) {
-      return undefined;
-    }
-    if (typeof value === "number") {
-      return value.toString();
-    }
-    return value;
-  },
-  z
-    .string()
-    .refine((val) => !Number.isNaN(Number.parseFloat(val)), {
-      message: "Coordinate must be a valid decimal number",
-    })
-    .optional(),
-);
+const coordinateSchema = S.common.coordinateInput;
 
 const optionalPhotoInputSchema = z.object({
-  url: z.string().url("Invalid URL").optional().or(z.literal("")),
-  displayOrder: z.number().int().min(0).optional(),
+  url: optionalUrlSchema,
+  displayOrder: S.common.displayOrder.optional(),
 });
 
 const courtInputSchema = z.object({
-  id: z.string().uuid().optional(),
-  label: z.string().min(1).max(100),
-  sportId: z.string().uuid(),
-  tierLabel: z.string().max(20).optional().nullable(),
+  id: S.ids.courtId.optional(),
+  label: S.court.label,
+  sportId: S.ids.sportId,
+  tierLabel: S.court.tierLabel.nullish(),
 });
 
 /**
  * Schema for admin fetching a place
  */
 export const AdminCourtDetailSchema = z.object({
-  placeId: z.string().uuid(),
+  placeId: S.ids.placeId,
 });
 
 export type AdminCourtDetailDTO = z.infer<typeof AdminCourtDetailSchema>;
@@ -52,29 +35,32 @@ export type AdminCourtDetailDTO = z.infer<typeof AdminCourtDetailSchema>;
  * Schema for admin updating any place
  */
 export const AdminUpdateCourtSchema = z.object({
-  placeId: z.string().uuid(),
+  placeId: S.ids.placeId,
   // Place fields
-  name: z.string().min(1).max(200).optional(),
-  address: z.string().min(1).optional(),
-  city: z.string().min(1).max(100).optional(),
-  province: z.string().min(1).max(100).optional(),
-  country: z.string().length(2).optional(),
-  latitude: coordinateSchema,
-  longitude: coordinateSchema,
-  extGPlaceId: z.string().min(1).optional(),
-  timeZone: z.string().min(1).max(64).optional(),
-  featuredRank: z.number().int().min(0).optional(),
+  name: S.place.name.optional(),
+  address: S.place.address.optional(),
+  city: S.place.city.optional(),
+  province: S.place.province.optional(),
+  country: S.common.country.optional(),
+  latitude: coordinateSchema.latitude,
+  longitude: coordinateSchema.longitude,
+  extGPlaceId: S.place.googlePlaceId,
+  timeZone: S.place.timeZone.optional(),
+  featuredRank: S.common.displayOrder.optional(),
   // Contact details
   facebookUrl: optionalUrlSchema,
   instagramUrl: optionalUrlSchema,
-  phoneNumber: optionalTextSchema(20),
-  viberInfo: optionalTextSchema(100),
+  phoneNumber: optionalTextSchema(V.place.phoneNumber.max),
+  viberInfo: optionalTextSchema(V.place.viberInfo.max),
   websiteUrl: optionalUrlSchema,
-  otherContactInfo: optionalTextSchema(500),
+  otherContactInfo: optionalTextSchema(V.place.otherContactInfo.max),
   // Related data
   photos: z.array(optionalPhotoInputSchema).optional(),
-  amenities: z.array(z.string().min(1).max(100)).optional(),
-  courts: z.array(courtInputSchema).min(1).optional(),
+  amenities: z.array(S.place.amenity).optional(),
+  courts: z
+    .array(courtInputSchema)
+    .min(S.court.listMin.value, { error: S.court.listMin.message })
+    .optional(),
 });
 
 export type AdminUpdateCourtDTO = z.infer<typeof AdminUpdateCourtSchema>;
@@ -83,8 +69,8 @@ export type AdminUpdateCourtDTO = z.infer<typeof AdminUpdateCourtSchema>;
  * Schema for deactivating a place
  */
 export const DeactivateCourtSchema = z.object({
-  placeId: z.string().uuid(),
-  reason: z.string().min(1).max(500),
+  placeId: S.ids.placeId,
+  reason: S.claimRequest.reason,
 });
 
 export type DeactivateCourtDTO = z.infer<typeof DeactivateCourtSchema>;
@@ -93,7 +79,7 @@ export type DeactivateCourtDTO = z.infer<typeof DeactivateCourtSchema>;
  * Schema for activating a place
  */
 export const ActivateCourtSchema = z.object({
-  placeId: z.string().uuid(),
+  placeId: S.ids.placeId,
 });
 
 export type ActivateCourtDTO = z.infer<typeof ActivateCourtSchema>;
@@ -101,17 +87,17 @@ export type ActivateCourtDTO = z.infer<typeof ActivateCourtSchema>;
 /**
  * Place type filter enum values
  */
-const PlaceTypeFilterEnum = z.enum(["CURATED", "RESERVABLE"]);
+const PlaceTypeFilterEnum = z.enum(["CURATED", "RESERVABLE"], {
+  error: V.admin.placeType.invalid.message,
+});
 
 /**
  * Claim status filter enum values
  */
-const ClaimStatusFilterEnum = z.enum([
-  "UNCLAIMED",
-  "CLAIM_PENDING",
-  "CLAIMED",
-  "REMOVAL_REQUESTED",
-]);
+const ClaimStatusFilterEnum = z.enum(
+  ["UNCLAIMED", "CLAIM_PENDING", "CLAIMED", "REMOVAL_REQUESTED"],
+  { error: V.admin.claimStatus.invalid.message },
+);
 
 /**
  * Schema for admin place list filters
@@ -120,11 +106,11 @@ export const AdminCourtFiltersSchema = z.object({
   isActive: z.boolean().optional(),
   placeType: PlaceTypeFilterEnum.optional(),
   claimStatus: ClaimStatusFilterEnum.optional(),
-  province: z.string().optional(),
-  city: z.string().optional(),
-  search: z.string().optional(),
-  limit: z.number().int().min(1).max(100).default(20),
-  offset: z.number().int().min(0).default(0),
+  province: S.place.province.optional(),
+  city: S.place.city.optional(),
+  search: S.place.searchQuery.optional(),
+  limit: S.pagination.limit.default(20),
+  offset: S.pagination.offset.default(0),
 });
 
 export type AdminCourtFiltersDTO = z.infer<typeof AdminCourtFiltersSchema>;

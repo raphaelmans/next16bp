@@ -25,27 +25,31 @@ Card 1: Create organization (required)
 Card 2A: Add new venue (optional)
 - CTA: "Add venue"
 - Completion: place created
-- Post-create behavior (locked): redirect to `/owner/verify/:placeId`
+- Post-create behavior (updated): redirect back to `/owner/get-started` (verification becomes an explicit next step)
 
 Card 2B: Claim existing listing (optional)
 - CTA: "Claim listing"
 - Completion: claim request submitted
 - State: pending admin review
 
-Card 3: Import existing bookings (optional)
+Card 3: Get your venue verified
+- Prerequisite: venue exists
+- CTA: "Submit verification"
+- Completion: verification request submitted (PENDING) or status is VERIFIED
+
+Card 4: Go live
+
+Card 4A: Configure venue courts
+- Prerequisite: venue exists
+- CTA: "Set up courts"
+- Completion: at least one active court exists (schedule/pricing can be configured in the setup wizard)
+
+Card 4B: Import existing bookings (optional)
 - Prerequisite: venue exists
 - CTA: "Upload bookings file"
 - Current state: upload redirects to a review page where owners can normalize, review/edit rows, then commit blocks.
 - Remaining limitation: screenshot/image imports currently do not extract rows (0 rows) until AI extraction is implemented.
 - Deferred: list/resume jobs per venue on the upload page.
-
-Card 4: Go-live checklist
-- Shows what makes a venue "bookable":
-  - verified status
-  - reservations enabled
-  - at least one active court
-  - schedule + pricing configured
-  - no blocking conflicts (imports/blocks)
 
 ## Before vs After
 
@@ -66,7 +70,8 @@ AFTER
 /owner/get-started
   -> Org (required)
   -> Venue: Add OR Claim (optional)
-  -> Import (optional)
   -> Verify (if venue exists)
-  -> Next actions checklist
+  -> Go Live:
+       - Configure courts
+       - Import bookings (optional)
 ```

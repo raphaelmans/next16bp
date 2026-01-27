@@ -1,16 +1,16 @@
-import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { paymentProofFileSchema } from "@/modules/storage/dtos";
+import { S } from "@/shared/kernel/schemas";
 
 /**
  * Schema for payment proof upload FormData.
  * Accepts larger files (10MB) than regular images.
  */
 export const UploadPaymentProofSchema = zfd.formData({
-  reservationId: zfd.text(z.string().uuid()),
+  reservationId: zfd.text(S.ids.reservationId),
   image: paymentProofFileSchema,
-  referenceNumber: zfd.text(z.string().optional()),
-  notes: zfd.text(z.string().optional()),
+  referenceNumber: zfd.text(S.paymentProof.referenceNumber),
+  notes: zfd.text(S.paymentProof.notes),
 });
 
 export type UploadPaymentProofInput = {

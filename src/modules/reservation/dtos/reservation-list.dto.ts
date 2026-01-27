@@ -1,22 +1,28 @@
 import { z } from "zod";
+import { S, V } from "@/shared/kernel/schemas";
 
-export const ReservationListItemSchema = z.object({
-  id: z.string().uuid(),
-  status: z.enum([
+const ReservationStatusSchema = z.enum(
+  [
     "CREATED",
     "AWAITING_PAYMENT",
     "PAYMENT_MARKED_BY_USER",
     "CONFIRMED",
     "EXPIRED",
     "CANCELLED",
-  ]),
+  ],
+  { error: V.reservation.status.invalid.message },
+);
+
+export const ReservationListItemSchema = z.object({
+  id: S.ids.reservationId,
+  status: ReservationStatusSchema,
   playerNameSnapshot: z.string().nullable(),
   playerPhoneSnapshot: z.string().nullable(),
   createdAt: z.string().nullable(),
   expiresAt: z.string().nullable(),
-  courtId: z.string().uuid(),
+  courtId: S.ids.courtId,
   courtName: z.string(),
-  placeId: z.string().uuid(),
+  placeId: S.ids.placeId,
   placeName: z.string(),
   placeAddress: z.string(),
   placeCity: z.string(),

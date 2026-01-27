@@ -1,4 +1,4 @@
-# Court Owner Onboarding (Current State)
+# Court Owner Onboarding (As-Built + Planned Updates)
 
 Goal of this doc set: capture the current (as-built) owner-facing onboarding + setup flow so we can safely redesign UX without guessing.
 
@@ -10,27 +10,20 @@ Terminology used in code:
 ## Current End-to-End Flow
 
 ```text
-[Public] /list-your-venue
+[Public] /owners/get-started
    |
-   | sets localStorage: kudos.owner_onboarding=true
+   | CTA -> /register/owner?redirect=/owner/get-started
    v
-[Auth] /login  ->  /home
+[Protected] /owner/get-started  (setup hub)
    |
-   | if onboarding intent && user has no org => redirect
+   | Create organization (trpc.organization.create)
+   | Add venue OR claim listing
    v
-[Protected] /owner/onboarding
+[Owner] /owner/venues/new?from=setup
    |
-   | trpc.organization.create
+   | trpc.placeManagement.create (placeType=RESERVABLE, claimStatus=CLAIMED)
    v
-[Owner] /owner/venues/new
-   |
-   | trpc.placeManagement.create   (placeType=RESERVABLE, claimStatus=CLAIMED)
-   v
-[Owner] /owner/venues/:placeId/courts/new
-   |
-   | trpc.courtManagement.create
-   v
-[Owner] /owner/verify/:placeId
+[Owner] /owner/verify/:placeId  (current behavior when from=setup)
    |
    | trpc.placeVerification.submit
    | (admin review happens off-platform)
@@ -42,12 +35,17 @@ Terminology used in code:
    v
 [Owner] Court ops (per court)
    |
-   | schedule/pricing: /owner/venues/:placeId/courts/:courtId/schedule
-   | availability:     /owner/venues/:placeId/courts/:courtId/availability
-   | imports:          /owner/import/bookings
+   | courts setup:      /owner/venues/:placeId/courts/setup
+   | schedule/pricing:  /owner/venues/:placeId/courts/:courtId/schedule
+   | availability:      /owner/venues/:placeId/courts/:courtId/availability
+   | imports:           /owner/import/bookings
    v
 (Ongoing operations)
 ```
+
+Legacy / compatibility notes:
+- `/list-your-venue` is now a permanent redirect to `/owners/get-started`.
+- `/owner/onboarding` still exists as an org-gated fallback when a user hits owner routes without an organization.
 
 Important gating behavior:
 - Owner routes (`src/app/(owner)/*`) require a session and at least 1 organization; otherwise redirect to `/owner/onboarding`.
@@ -67,9 +65,32 @@ Each module doc includes a small ASCII diagram + the concrete routes, tRPC proce
 
 ## Key UX Notes (Current)
 
-- The marketing/onboarding path is “4 steps” (org, venue, first court, verification). Schedule/pricing is explicitly positioned as “later” on `/list-your-venue`.
+- The marketing page (`/owners/get-started`) frames onboarding as 3 steps (account, venue, verification). The setup hub (`/owner/get-started`) uses a 4-step checklist (org, venue, verify, go live).
 - The legacy “publish slots / manage slots” concept is being replaced by schedule-derived availability (see `agent-plans/65-rules-exceptions-cutover/65-00-overview.md`). Several `/slots` routes now redirect to availability.
 - Bookings import now supports an end-to-end flow (upload -> normalize -> review/edit -> commit) under `/owner/import/bookings` and `/owner/import/bookings/[jobId]`. Screenshot/image extraction is still not implemented (currently yields 0 rows).
+
+## Planned Update: Hub-Centric Stepper (Pending Implementation)
+
+Change request summary:
+
+```text
+Goal: every setup step returns to /owner/get-started
+
+Cards / steps on /owner/get-started:
+  1) Create organization
+  2) Venue added OR claim existing listing
+     2a) Add new venue
+     2b) Claim existing listing
+  3) Get your venue verified
+  4) Go live
+     4a) Configure venue courts
+     4b) Import bookings
+
+Key redirect change:
+  /owner/venues/new?from=setup
+    - today: redirects to /owner/verify/:placeId
+    - desired: redirects back to /owner/get-started (unlocking step 3 as an explicit card)
+```
 
 Recent related work:
 - Bookings import MVP is complete (upload -> review -> normalize -> edit -> commit -> discard). See `agent-contexts/01-12-bookings-import-mvp-complete.md` and `agent-plans/71-bookings-import-review-commit/71-00-overview.md`.

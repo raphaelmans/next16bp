@@ -72,6 +72,12 @@ To avoid the owner layout org gate, place the page under the `(auth)` group:
 
 ### Card details
 
+Update (2026-01-27): this plan reflects the first hub iteration. The next iteration (Stepper v2) changes the hub card order and makes verification explicit on the hub (venue creation from the hub returns to `/owner/get-started`).
+
+See:
+- `docs/owner-onboarding-revamp/92-stepper-v2-change-2026-01-27.md`
+- `agent-plans/73-owner-setup-hub-stepper-v2/73-00-overview.md`
+
 Card 1: Create organization (required)
 - Uses `trpc.organization.create`.
 - On success:

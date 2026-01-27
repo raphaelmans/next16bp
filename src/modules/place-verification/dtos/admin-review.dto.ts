@@ -1,8 +1,9 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const ReviewPlaceVerificationSchema = z.object({
-  requestId: z.string().uuid(),
-  reviewNotes: z.string().min(1).max(1000),
+  requestId: S.ids.requestId,
+  reviewNotes: S.claimRequest.reviewNotes,
 });
 
 export type ReviewPlaceVerificationDTO = z.infer<
@@ -10,8 +11,8 @@ export type ReviewPlaceVerificationDTO = z.infer<
 >;
 
 export const ApprovePlaceVerificationSchema = z.object({
-  requestId: z.string().uuid(),
-  reviewNotes: z.string().max(1000).optional(),
+  requestId: S.ids.requestId,
+  reviewNotes: S.claimRequest.reviewNotesOptional,
 });
 
 export type ApprovePlaceVerificationDTO = z.infer<

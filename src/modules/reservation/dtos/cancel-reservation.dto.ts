@@ -1,27 +1,31 @@
 import { z } from "zod";
+import { S, V } from "@/shared/kernel/schemas";
+
+const ReservationStatusSchema = z.enum(
+  [
+    "CREATED",
+    "AWAITING_PAYMENT",
+    "PAYMENT_MARKED_BY_USER",
+    "CONFIRMED",
+    "EXPIRED",
+    "CANCELLED",
+  ],
+  { error: V.reservation.status.invalid.message },
+);
 
 export const CancelReservationSchema = z.object({
-  reservationId: z.string().uuid(),
-  reason: z.string().max(500).optional(),
+  reservationId: S.ids.reservationId,
+  reason: S.reservation.cancelReason,
 });
 
 export type CancelReservationDTO = z.infer<typeof CancelReservationSchema>;
 
 export const GetMyReservationsSchema = z.object({
-  status: z
-    .enum([
-      "CREATED",
-      "AWAITING_PAYMENT",
-      "PAYMENT_MARKED_BY_USER",
-      "CONFIRMED",
-      "EXPIRED",
-      "CANCELLED",
-    ])
-    .optional(),
+  status: ReservationStatusSchema.optional(),
   /** Filter for future reservations only (startTime > now) */
   upcoming: z.boolean().optional(),
-  limit: z.number().int().min(1).max(100).default(20),
-  offset: z.number().int().min(0).default(0),
+  limit: S.pagination.limit.default(20),
+  offset: S.pagination.offset.default(0),
 });
 
 export type GetMyReservationsDTO = z.infer<typeof GetMyReservationsSchema>;

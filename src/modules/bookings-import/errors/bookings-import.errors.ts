@@ -63,6 +63,26 @@ export class BookingsImportInvalidStatusError extends ValidationError {
   }
 }
 
+export class BookingsImportAiRequiredError extends ValidationError {
+  readonly code = "BOOKINGS_IMPORT_AI_REQUIRED";
+
+  constructor(sourceType: string) {
+    super("AI normalization is required for this import source", {
+      sourceType,
+    });
+  }
+}
+
+export class BookingsImportAiNotConfiguredError extends ValidationError {
+  readonly code = "BOOKINGS_IMPORT_AI_NOT_CONFIGURED";
+
+  constructor() {
+    super("AI normalization is not configured", {
+      missing: "OPENAI_API_KEY",
+    });
+  }
+}
+
 export class BookingsImportAiAlreadyUsedError extends ValidationError {
   readonly code = "BOOKINGS_IMPORT_AI_ALREADY_USED";
 

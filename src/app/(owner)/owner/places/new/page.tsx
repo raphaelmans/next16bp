@@ -40,7 +40,7 @@ export default function NewPlacePage() {
     onSuccess: (result) => {
       toast.success("Venue created successfully!");
       if (fromSetup) {
-        router.push(appRoutes.owner.verification.place(result.placeId));
+        router.push(appRoutes.owner.getStarted);
       } else {
         router.push(appRoutes.owner.places.courts.new(result.placeId));
       }

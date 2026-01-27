@@ -10,6 +10,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { parseAsString, useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -94,6 +95,8 @@ export default function OwnerBookingsImportReviewPage() {
   const params = useParams<{ jobId: string }>();
   const router = useRouter();
   const jobId = params.jobId;
+  const [fromParam] = useQueryState("from", parseAsString);
+  const isFromSetup = fromParam === "setup";
 
   const { data: user } = useSession();
   const logoutMutation = useLogout();
@@ -182,7 +185,11 @@ export default function OwnerBookingsImportReviewPage() {
   const discardMutation = trpc.bookingsImport.discardJob.useMutation({
     onSuccess: () => {
       toast.success("Import discarded");
-      router.push(appRoutes.owner.imports.bookings);
+      router.push(
+        isFromSetup
+          ? appRoutes.owner.getStarted
+          : appRoutes.owner.imports.bookings,
+      );
     },
     onError: (error) => {
       toast.error(error.message || "Failed to discard import");
@@ -201,6 +208,10 @@ export default function OwnerBookingsImportReviewPage() {
         );
       } else {
         toast.success(`Successfully committed ${result.committedRows} rows`);
+      }
+
+      if (isFromSetup) {
+        router.push(appRoutes.owner.getStarted);
       }
     },
     onError: (error) => {
@@ -302,6 +313,7 @@ export default function OwnerBookingsImportReviewPage() {
   const aiUsed = Boolean(aiUsageQuery.data?.usedAt);
   const isDraft = job?.status === "DRAFT";
   const isNormalizing = job?.status === "NORMALIZING";
+  const isImageSource = job?.sourceType === "image";
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -525,17 +537,19 @@ export default function OwnerBookingsImportReviewPage() {
                             bookings for review.
                           </p>
                           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+                            {!isImageSource && (
+                              <Button
+                                onClick={() => handleNormalize("deterministic")}
+                                disabled={normalizeMutation.isPending}
+                              >
+                                {normalizeMutation.isPending && (
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                )}
+                                Parse File
+                              </Button>
+                            )}
                             <Button
-                              onClick={() => handleNormalize("deterministic")}
-                              disabled={normalizeMutation.isPending}
-                            >
-                              {normalizeMutation.isPending && (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              )}
-                              Parse File
-                            </Button>
-                            <Button
-                              variant="outline"
+                              variant={isImageSource ? "default" : "outline"}
                               onClick={() => handleNormalize("ai")}
                               disabled={
                                 normalizeMutation.isPending ||
@@ -549,6 +563,11 @@ export default function OwnerBookingsImportReviewPage() {
                               Use AI (one-time)
                             </Button>
                           </div>
+                          {isImageSource && (
+                            <p className="mt-2 text-xs text-muted-foreground">
+                              Screenshots require AI normalization.
+                            </p>
+                          )}
                           {aiUsed && (
                             <p className="mt-2 text-xs text-muted-foreground">
                               AI normalization was already used for this venue.
@@ -771,7 +790,11 @@ export default function OwnerBookingsImportReviewPage() {
                     variant="outline"
                     className="w-full"
                     onClick={() =>
-                      router.push(appRoutes.owner.imports.bookings)
+                      router.push(
+                        isFromSetup
+                          ? appRoutes.owner.getStarted
+                          : appRoutes.owner.imports.bookings,
+                      )
                     }
                   >
                     <ChevronLeft className="mr-2 h-4 w-4" />

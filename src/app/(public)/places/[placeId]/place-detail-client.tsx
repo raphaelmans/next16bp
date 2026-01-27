@@ -27,6 +27,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 import { AvailabilityEmptyState } from "@/components/availability-empty-state";
 import {
   StandardFormInput,
@@ -92,14 +93,14 @@ const clampDurationHours = (value: number) =>
   Math.min(Math.max(Math.round(value), MIN_DURATION_HOURS), MAX_DURATION_HOURS);
 
 const claimFormSchema = z.object({
-  organizationId: z.string().uuid("Organization is required"),
-  requestNotes: z.string().max(1000).optional(),
+  organizationId: S.ids.organizationId,
+  requestNotes: S.claimRequest.requestNotesOptional,
 });
 
 const removalFormSchema = z.object({
-  guestName: z.string().min(2, "Name is required").max(150),
-  guestEmail: z.string().email("Enter a valid email").max(255),
-  requestNotes: z.string().min(10, "Please share more details").max(1000),
+  guestName: S.claimRequest.guestName,
+  guestEmail: S.claimRequest.guestEmail,
+  requestNotes: S.claimRequest.requestNotes,
 });
 
 type ClaimFormData = z.infer<typeof claimFormSchema>;

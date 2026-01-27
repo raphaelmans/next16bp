@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { parseAsString, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 import { type Accept, type FileRejection, useDropzone } from "react-dropzone";
 import { toast } from "sonner";
@@ -123,6 +124,8 @@ export default function OwnerBookingsImportPage() {
     organizations,
     isLoading: orgLoading,
   } = useOwnerOrganization();
+  const [fromParam] = useQueryState("from", parseAsString);
+  const isFromSetup = fromParam === "setup";
   const { data: places = [], isLoading: placesLoading } = useOwnerPlaces(
     organization?.id ?? null,
   );
@@ -207,7 +210,10 @@ export default function OwnerBookingsImportPage() {
       toast.success("Import draft uploaded", {
         description: "Redirecting to review page...",
       });
-      router.push(appRoutes.owner.imports.bookingsReview(job.id));
+      const reviewHref = isFromSetup
+        ? `${appRoutes.owner.imports.bookingsReview(job.id)}?from=setup`
+        : appRoutes.owner.imports.bookingsReview(job.id);
+      router.push(reviewHref);
     } catch (_error) {
       toast.error("Failed to upload import file");
     }

@@ -13,6 +13,7 @@ import {
   router,
 } from "@/shared/infra/trpc/trpc";
 import { AppError } from "@/shared/kernel/errors";
+import { S } from "@/shared/kernel/schemas";
 import {
   CancelReservationSchema,
   CreateReservationForAnyCourtSchema,
@@ -166,7 +167,7 @@ export const reservationRouter = router({
    * Get a reservation by ID
    */
   getById: protectedProcedure
-    .input(z.object({ reservationId: z.string().uuid() }))
+    .input(z.object({ reservationId: S.ids.reservationId }))
     .query(async ({ input }) => {
       try {
         const reservationService = makeReservationService();
@@ -180,7 +181,7 @@ export const reservationRouter = router({
    * Get reservation details with related entities
    */
   getDetail: protectedProcedure
-    .input(z.object({ reservationId: z.string().uuid() }))
+    .input(z.object({ reservationId: S.ids.reservationId }))
     .query(async ({ input }) => {
       try {
         const reservationService = makeReservationService();

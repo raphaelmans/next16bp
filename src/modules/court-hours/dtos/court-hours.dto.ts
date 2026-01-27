@@ -1,28 +1,31 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 const CourtHoursWindowSchema = z
   .object({
-    dayOfWeek: z.number().int().min(0).max(6),
-    startMinute: z.number().int().min(0).max(1439),
-    endMinute: z.number().int().min(1).max(1440),
+    dayOfWeek: S.courtRateRule.dayOfWeek,
+    startMinute: S.courtRateRule.startMinute,
+    endMinute: S.courtRateRule.endMinute,
   })
   .refine((window) => window.startMinute < window.endMinute, {
-    message: "Start minute must be before end minute",
+    error: S.courtRateRule.startBeforeEnd,
     path: ["startMinute"],
   });
 
 export const SetCourtHoursSchema = z.object({
-  courtId: z.string().uuid(),
-  windows: z.array(CourtHoursWindowSchema).max(50),
+  courtId: S.ids.courtId,
+  windows: z.array(CourtHoursWindowSchema).max(S.courtHours.windowsMax.value, {
+    error: S.courtHours.windowsMax.message,
+  }),
 });
 
 export const GetCourtHoursSchema = z.object({
-  courtId: z.string().uuid(),
+  courtId: S.ids.courtId,
 });
 
 export const CopyCourtHoursSchema = z.object({
-  sourceCourtId: z.string().uuid(),
-  targetCourtId: z.string().uuid(),
+  sourceCourtId: S.ids.courtId,
+  targetCourtId: S.ids.courtId,
 });
 
 export type SetCourtHoursDTO = z.infer<typeof SetCourtHoursSchema>;

@@ -1,101 +1,56 @@
 import { differenceInCalendarDays } from "date-fns";
 import { z } from "zod";
-import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
+import { S, V } from "@/shared/kernel/schemas";
 
-const DurationMinutesSchema = z
-  .number()
-  .int()
-  .min(60)
-  .max(1440)
-  .refine((value) => value % 60 === 0, {
-    message: "Duration must be a multiple of 60 minutes",
-  });
+const BOOKING_WINDOW_DAYS = V.availability.dateWithinWindow.value;
+
+const BookingWindowDateSchema = S.common.isoDateTime.refine(
+  (date) =>
+    differenceInCalendarDays(new Date(date), new Date()) <= BOOKING_WINDOW_DAYS,
+  {
+    error: V.availability.dateWithinWindow.message,
+  },
+);
 
 export const GetAvailabilityForCourtSchema = z.object({
-  courtId: z.string().uuid(),
-  date: z
-    .string()
-    .datetime()
-    .refine(
-      (date) =>
-        differenceInCalendarDays(new Date(date), new Date()) <=
-        MAX_BOOKING_WINDOW_DAYS,
-      {
-        message: `Date must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
-      },
-    ),
-  durationMinutes: DurationMinutesSchema,
+  courtId: S.ids.courtId,
+  date: BookingWindowDateSchema,
+  durationMinutes: S.availability.durationMinutes,
   includeUnavailable: z.boolean().optional(),
 });
 
 export const GetAvailabilityForCourtsSchema = z.object({
   courtIds: z
-    .array(z.string().uuid())
-    .min(1, "At least one court is required")
-    .max(50, "Too many courts requested"),
-  date: z
-    .string()
-    .datetime()
-    .refine(
-      (date) =>
-        differenceInCalendarDays(new Date(date), new Date()) <=
-        MAX_BOOKING_WINDOW_DAYS,
-      {
-        message: `Date must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
-      },
-    ),
-  durationMinutes: DurationMinutesSchema,
+    .array(S.ids.courtId)
+    .min(V.availability.courtIds.min.value, {
+      error: V.availability.courtIds.min.message,
+    })
+    .max(V.availability.courtIds.max.value, {
+      error: V.availability.courtIds.max.message,
+    }),
+  date: BookingWindowDateSchema,
+  durationMinutes: S.availability.durationMinutes,
   includeUnavailable: z.boolean().optional(),
 });
 
 export const GetAvailabilityForPlaceSportSchema = z.object({
-  placeId: z.string().uuid(),
-  sportId: z.string().uuid(),
-  date: z
-    .string()
-    .datetime()
-    .refine(
-      (date) =>
-        differenceInCalendarDays(new Date(date), new Date()) <=
-        MAX_BOOKING_WINDOW_DAYS,
-      {
-        message: `Date must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
-      },
-    ),
-  durationMinutes: DurationMinutesSchema,
+  placeId: S.ids.placeId,
+  sportId: S.ids.sportId,
+  date: BookingWindowDateSchema,
+  durationMinutes: S.availability.durationMinutes,
   includeUnavailable: z.boolean().optional(),
   includeCourtOptions: z.boolean().optional(),
 });
 
-const MAX_AVAILABILITY_RANGE_DAYS = MAX_BOOKING_WINDOW_DAYS;
+const MAX_AVAILABILITY_RANGE_DAYS = V.availability.rangeWithinWindow.value;
 
 const AvailabilityRangeSchema = z
   .object({
-    startDate: z
-      .string()
-      .datetime()
-      .refine(
-        (date) =>
-          differenceInCalendarDays(new Date(date), new Date()) <=
-          MAX_BOOKING_WINDOW_DAYS,
-        {
-          message: `Date must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
-        },
-      ),
-    endDate: z
-      .string()
-      .datetime()
-      .refine(
-        (date) =>
-          differenceInCalendarDays(new Date(date), new Date()) <=
-          MAX_BOOKING_WINDOW_DAYS,
-        {
-          message: `Date must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
-        },
-      ),
+    startDate: BookingWindowDateSchema,
+    endDate: BookingWindowDateSchema,
   })
   .refine((data) => new Date(data.endDate) >= new Date(data.startDate), {
-    message: "End date must be after start date",
+    error: V.availability.rangeEndAfterStart.message,
     path: ["endDate"],
   })
   .refine(
@@ -105,23 +60,23 @@ const AvailabilityRangeSchema = z
         new Date(data.startDate),
       ) <= MAX_AVAILABILITY_RANGE_DAYS,
     {
-      message: `Date range must be within ${MAX_AVAILABILITY_RANGE_DAYS} days`,
+      error: V.availability.rangeWithinWindow.message,
       path: ["endDate"],
     },
   );
 
 export const GetAvailabilityForCourtRangeSchema =
   AvailabilityRangeSchema.extend({
-    courtId: z.string().uuid(),
-    durationMinutes: DurationMinutesSchema,
+    courtId: S.ids.courtId,
+    durationMinutes: S.availability.durationMinutes,
     includeUnavailable: z.boolean().optional(),
   });
 
 export const GetAvailabilityForPlaceSportRangeSchema =
   AvailabilityRangeSchema.extend({
-    placeId: z.string().uuid(),
-    sportId: z.string().uuid(),
-    durationMinutes: DurationMinutesSchema,
+    placeId: S.ids.placeId,
+    sportId: S.ids.sportId,
+    durationMinutes: S.availability.durationMinutes,
     includeUnavailable: z.boolean().optional(),
     includeCourtOptions: z.boolean().optional(),
   });

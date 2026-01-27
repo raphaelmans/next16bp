@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const GetPlaceVerificationByIdSchema = z.object({
-  id: z.string().uuid(),
+  id: S.ids.requestId,
 });
 
 export type GetPlaceVerificationByIdDTO = z.infer<
@@ -9,7 +10,7 @@ export type GetPlaceVerificationByIdDTO = z.infer<
 >;
 
 export const GetPlaceVerificationByPlaceSchema = z.object({
-  placeId: z.string().uuid(),
+  placeId: S.ids.placeId,
 });
 
 export type GetPlaceVerificationByPlaceDTO = z.infer<

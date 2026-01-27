@@ -5,12 +5,13 @@ export * from "./submit-guest-removal-request.dto";
 export * from "./submit-removal-request.dto";
 
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 /**
  * Schema for getting a claim request by ID
  */
 export const GetClaimRequestByIdSchema = z.object({
-  id: z.string().uuid(),
+  id: S.ids.requestId,
 });
 
 export type GetClaimRequestByIdDTO = z.infer<typeof GetClaimRequestByIdSchema>;
@@ -19,7 +20,7 @@ export type GetClaimRequestByIdDTO = z.infer<typeof GetClaimRequestByIdSchema>;
  * Schema for cancelling a claim request
  */
 export const CancelClaimRequestSchema = z.object({
-  requestId: z.string().uuid(),
+  requestId: S.ids.requestId,
 });
 
 export type CancelClaimRequestDTO = z.infer<typeof CancelClaimRequestSchema>;
@@ -28,8 +29,8 @@ export type CancelClaimRequestDTO = z.infer<typeof CancelClaimRequestSchema>;
  * Schema for listing pending claims (admin)
  */
 export const ListPendingClaimsSchema = z.object({
-  limit: z.number().int().min(1).max(100).default(20),
-  offset: z.number().int().min(0).default(0),
+  limit: S.pagination.limit.default(20),
+  offset: S.pagination.offset.default(0),
 });
 
 export type ListPendingClaimsDTO = z.infer<typeof ListPendingClaimsSchema>;

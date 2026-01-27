@@ -1,12 +1,15 @@
 import { z } from "zod";
+import { S, V } from "@/shared/kernel/schemas";
 
-export const NormalizeModeSchema = z.enum(["ai", "deterministic"]);
+export const NormalizeModeSchema = z.enum(["ai", "deterministic"], {
+  error: V.bookingsImport.normalizeMode.invalid.message,
+});
 
 export type NormalizeMode = z.infer<typeof NormalizeModeSchema>;
 
 export const NormalizeJobSchema = z
   .object({
-    jobId: z.string().uuid(),
+    jobId: S.ids.jobId,
     mode: NormalizeModeSchema,
     confirmAiOnce: z.boolean().optional(),
   })
@@ -15,8 +18,7 @@ export const NormalizeJobSchema = z
     if (data.mode === "ai" && data.confirmAiOnce !== true) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message:
-          "confirmAiOnce must be true when using AI mode (one-time per venue)",
+        message: V.bookingsImport.confirmAiOnce.message,
         path: ["confirmAiOnce"],
       });
     }
@@ -25,7 +27,7 @@ export const NormalizeJobSchema = z
 export type NormalizeJobDTO = z.infer<typeof NormalizeJobSchema>;
 
 export const NormalizeResultSchema = z.object({
-  jobId: z.string().uuid(),
+  jobId: S.ids.jobId,
   status: z.string(),
   rowCount: z.number().int(),
   validRowCount: z.number().int(),

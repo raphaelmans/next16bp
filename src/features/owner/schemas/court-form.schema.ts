@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const courtFormSchema = z.object({
-  placeId: z.string().uuid("Venue is required"),
-  sportId: z.string().uuid("Sport is required"),
-  label: z.string().trim().min(1, "Court label is required").max(100),
-  tierLabel: z.string().trim().max(20).optional().nullable(),
+  placeId: S.ids.placeId,
+  sportId: S.ids.sportId,
+  label: S.court.label,
+  tierLabel: S.court.tierLabel.nullable(),
   isActive: z.boolean().default(true),
 });
 

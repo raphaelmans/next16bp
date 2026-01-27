@@ -1,33 +1,28 @@
 import { z } from "zod";
+import { allowEmptyString, S, V } from "@/shared/kernel/schemas";
+
+const optionalUrl = allowEmptyString(S.common.url().optional());
+const optionalText = (max: { value: number; message: string }) =>
+  allowEmptyString(
+    z.string().trim().max(max.value, { error: max.message }).optional(),
+  );
 
 export const placeFormSchema = z.object({
-  name: z.string().min(1, "Venue name is required").max(200),
-  address: z.string().min(1, "Address is required"),
-  city: z.string().min(1, "City is required").max(100),
-  province: z.string().min(1, "Province is required").max(100),
-  country: z.string().length(2).default("PH"),
+  name: S.place.name,
+  address: S.place.address,
+  city: S.place.city,
+  province: S.place.province,
+  country: S.common.country.default("PH"),
   latitude: z.number().min(-90).max(90).optional(),
   longitude: z.number().min(-180).max(180).optional(),
-  timeZone: z.string().min(1).default("Asia/Manila"),
+  timeZone: S.place.timeZone.default("Asia/Manila"),
   isActive: z.boolean().default(true),
-  websiteUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
-  facebookUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
-  instagramUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
-  phoneNumber: z
-    .string()
-    .max(20, "Phone number must be less than 20 characters")
-    .optional()
-    .or(z.literal("")),
-  viberInfo: z
-    .string()
-    .max(100, "Viber info must be less than 100 characters")
-    .optional()
-    .or(z.literal("")),
-  otherContactInfo: z
-    .string()
-    .max(500, "Contact info must be less than 500 characters")
-    .optional()
-    .or(z.literal("")),
+  websiteUrl: optionalUrl,
+  facebookUrl: optionalUrl,
+  instagramUrl: optionalUrl,
+  phoneNumber: optionalText(V.place.phoneNumber.max),
+  viberInfo: optionalText(V.place.viberInfo.max),
+  otherContactInfo: optionalText(V.place.otherContactInfo.max),
 });
 
 export type PlaceFormData = z.infer<typeof placeFormSchema>;

@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const AdminSearchOrganizationsSchema = z.object({
-  query: z.string().trim().max(150).optional(),
+  query: S.admin.searchQuery,
   includeInactive: z.boolean().optional(),
-  limit: z.number().int().min(1).max(50).default(20),
-  offset: z.number().int().min(0).default(0),
+  limit: S.organization.search.limit.default(20),
+  offset: S.organization.search.offset.default(0),
 });
 
 export type AdminSearchOrganizationsDTO = z.infer<

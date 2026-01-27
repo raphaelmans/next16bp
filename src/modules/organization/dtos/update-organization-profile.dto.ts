@@ -1,12 +1,13 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const UpdateOrganizationProfileSchema = z.object({
-  organizationId: z.string().uuid(),
-  description: z.string().optional(),
-  logoUrl: z.string().url().optional().nullable(),
-  contactEmail: z.string().email().optional().nullable(),
-  contactPhone: z.string().max(20).optional().nullable(),
-  address: z.string().optional().nullable(),
+  organizationId: S.ids.organizationId,
+  description: S.organization.description.optional(),
+  logoUrl: S.common.url().optional().nullable(),
+  contactEmail: S.organization.contactEmail.optional().nullable(),
+  contactPhone: S.organization.contactPhone.nullish(),
+  address: S.organization.address.nullish(),
 });
 
 export type UpdateOrganizationProfileDTO = z.infer<

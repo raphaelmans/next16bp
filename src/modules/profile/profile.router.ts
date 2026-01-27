@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "@/shared/infra/trpc/trpc";
+import { S } from "@/shared/kernel/schemas";
 import { UpdateProfileSchema, UploadAvatarSchema } from "./dtos";
 import { ProfileNotFoundError } from "./errors/profile.errors";
 import { makeProfileService } from "./factories/profile.factory";
@@ -42,7 +43,7 @@ export const profileRouter = router({
    * Get profile by ID (for viewing other players)
    */
   getById: protectedProcedure
-    .input(z.object({ id: z.string().uuid() }))
+    .input(z.object({ id: S.ids.generic }))
     .query(async ({ input }) => {
       const profileService = makeProfileService();
       try {

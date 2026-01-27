@@ -1,6 +1,8 @@
 import path from "node:path";
+import { TZDate } from "@date-fns/tz";
 import { addDays } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
+import { env } from "@/lib/env";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
 import type { ICourtBlockRepository } from "@/modules/court-block/repositories/court-block.repository";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
@@ -26,6 +28,8 @@ import type {
 } from "../dtos";
 import {
   BookingsImportAiAlreadyUsedError,
+  BookingsImportAiNotConfiguredError,
+  BookingsImportAiRequiredError,
   BookingsImportHasBlockingErrorsError,
   BookingsImportInvalidFileTypeError,
   BookingsImportInvalidSourceError,
@@ -38,8 +42,11 @@ import {
 import {
   buildTabularDataset,
   detectDuplicates,
+  extractScreenshotBookings,
   parseCsv,
   parseIcs,
+  parseImageTime,
+  SCREENSHOT_MODEL_DEFAULT,
   validateRow,
 } from "../lib";
 import { parseXlsx } from "../lib/xlsx-parser";
@@ -56,6 +63,14 @@ type SourceConfig = {
   mimeTypes: string[];
   extensions: string[];
   contentTypeFallback: string;
+};
+
+type ParsedImportRow = {
+  courtLabel: string | null;
+  startTime: Date | null;
+  endTime: Date | null;
+  reason: string | null;
+  sourceData: Record<string, unknown>;
 };
 
 const SOURCE_CONFIG: Record<ImportSource, SourceConfig> = {
@@ -599,6 +614,11 @@ export class BookingsImportService implements IBookingsImportService {
       throw new BookingsImportInvalidStatusError(job.status, ["DRAFT"]);
     }
 
+    const isImageSource = job.sourceType === "image";
+    if (isImageSource && mode !== "ai") {
+      throw new BookingsImportAiRequiredError(job.sourceType);
+    }
+
     // AI mode guard
     if (mode === "ai") {
       if (!confirmAiOnce) {
@@ -616,6 +636,10 @@ export class BookingsImportService implements IBookingsImportService {
           existingAiUsage.toISOString(),
         );
       }
+    }
+
+    if (isImageSource && mode === "ai" && !env.OPENAI_API_KEY) {
+      throw new BookingsImportAiNotConfiguredError();
     }
 
     // Update job status to NORMALIZING
@@ -643,11 +667,38 @@ export class BookingsImportService implements IBookingsImportService {
       );
 
       // Parse based on source type
-      const parsedRows = await this.parseFile(
-        fileBuffer,
-        job.sourceType as ImportSource,
-        timeZone,
-      );
+      if (isImageSource) {
+        logger.info(
+          {
+            event: "bookings_import.image_extract_started",
+            jobId,
+            placeId: job.placeId,
+            model: SCREENSHOT_MODEL_DEFAULT,
+          },
+          "Bookings import image extraction started",
+        );
+      }
+
+      const { rows: parsedRows, metadata: parseMetadata } =
+        await this.parseFile({
+          buffer: fileBuffer,
+          sourceType: job.sourceType as ImportSource,
+          timeZone,
+          model: SCREENSHOT_MODEL_DEFAULT,
+        });
+
+      if (isImageSource) {
+        logger.info(
+          {
+            event: "bookings_import.image_extract_completed",
+            jobId,
+            placeId: job.placeId,
+            eventCount:
+              parseMetadata?.screenshotEventCount ?? parsedRows.length,
+          },
+          "Bookings import image extraction completed",
+        );
+      }
 
       // Delete existing rows for this job (in case of re-normalization)
       await this.rowRepository.deleteByJobId(jobId, ctx);
@@ -727,6 +778,13 @@ export class BookingsImportService implements IBookingsImportService {
           normalizedAt: new Date(),
         };
 
+      if (parseMetadata) {
+        updateData.metadata = {
+          ...(job.metadata ?? {}),
+          ...parseMetadata,
+        };
+      }
+
       if (mode === "ai") {
         updateData.aiUsedAt = new Date();
       }
@@ -754,6 +812,17 @@ export class BookingsImportService implements IBookingsImportService {
         errorRowCount: errorCount,
       };
     } catch (error) {
+      if (isImageSource) {
+        logger.warn(
+          {
+            event: "bookings_import.image_extract_failed",
+            jobId,
+            placeId: job.placeId,
+            error: error instanceof Error ? error.message : "Unknown error",
+          },
+          "Bookings import image extraction failed",
+        );
+      }
       // Mark job as failed
       await this.jobRepository.update(
         jobId,
@@ -1010,19 +1079,14 @@ export class BookingsImportService implements IBookingsImportService {
     }
   }
 
-  private async parseFile(
-    buffer: Buffer,
-    sourceType: ImportSource,
-    _timeZone: string,
-  ): Promise<
-    Array<{
-      courtLabel: string | null;
-      startTime: Date | null;
-      endTime: Date | null;
-      reason: string | null;
-      sourceData: Record<string, unknown>;
-    }>
-  > {
+  private async parseFile(params: {
+    buffer: Buffer;
+    sourceType: ImportSource;
+    timeZone: string;
+    model?: string;
+  }): Promise<{ rows: ParsedImportRow[]; metadata?: Record<string, unknown> }> {
+    const { buffer, sourceType, timeZone, model } = params;
+
     switch (sourceType) {
       case "ics": {
         const content = buffer.toString("utf-8");
@@ -1030,18 +1094,20 @@ export class BookingsImportService implements IBookingsImportService {
         const rangeEnd = addDays(now, 365);
         const occurrences = parseIcs(content, now, rangeEnd);
 
-        return occurrences.map((occ) => ({
+        const rows = occurrences.map((occ) => ({
           courtLabel: occ.location ?? occ.summary ?? null,
           startTime: occ.start,
           endTime: occ.end,
           reason: occ.summary ?? null,
           sourceData: {
-            summary: occ.summary,
-            location: occ.location,
-            description: occ.description,
-            uid: occ.uid,
+            summary: occ.summary ?? null,
+            location: occ.location ?? null,
+            description: occ.description ?? null,
+            uid: occ.uid ?? null,
           },
         }));
+
+        return { rows };
       }
 
       case "csv": {
@@ -1068,7 +1134,7 @@ export class BookingsImportService implements IBookingsImportService {
             h.includes("reason") || h.includes("note") || h.includes("title"),
         );
 
-        return dataset.rows.map((row) => {
+        const rows = dataset.rows.map((row) => {
           const courtLabel = courtCol
             ? (row.data[dataset.headers[headers.indexOf(courtCol)]] ?? null)
             : null;
@@ -1090,6 +1156,8 @@ export class BookingsImportService implements IBookingsImportService {
             sourceData: row.data,
           };
         });
+
+        return { rows };
       }
 
       case "xlsx": {
@@ -1115,7 +1183,7 @@ export class BookingsImportService implements IBookingsImportService {
             h.includes("reason") || h.includes("note") || h.includes("title"),
         );
 
-        return dataset.rows.map((row) => {
+        const rows = dataset.rows.map((row) => {
           const courtLabel = courtCol
             ? (row.data[dataset.headers[headers.indexOf(courtCol)]] ?? null)
             : null;
@@ -1137,15 +1205,64 @@ export class BookingsImportService implements IBookingsImportService {
             sourceData: row.data,
           };
         });
+
+        return { rows };
       }
 
-      case "image":
-        // Image parsing requires AI - for now return empty
-        // This would be handled via a separate AI extraction call
-        return [];
+      case "image": {
+        const extraction = await extractScreenshotBookings({
+          imageBuffer: buffer,
+          model,
+        });
+
+        const rows = extraction.events.map((event) => {
+          const time = parseImageTime(event.startTime);
+          const startTime = time
+            ? new TZDate(
+                extraction.year,
+                extraction.month - 1,
+                event.day,
+                time.hour,
+                time.minute,
+                timeZone,
+              )
+            : null;
+          const endTime = startTime
+            ? new Date(startTime.getTime() + 60 * 60 * 1000)
+            : null;
+
+          return {
+            courtLabel: event.resourceLabel?.trim() || null,
+            startTime,
+            endTime,
+            reason: event.title?.trim() || null,
+            sourceData: {
+              day: event.day,
+              startTime: event.startTime,
+              title: event.title ?? null,
+              resourceLabel: event.resourceLabel ?? null,
+              month: extraction.month,
+              year: extraction.year,
+              calendarTitle: extraction.calendarTitle ?? null,
+              timeZone: extraction.timeZone ?? null,
+            },
+          };
+        });
+
+        const metadata: Record<string, unknown> = {
+          screenshotEventCount: extraction.events.length,
+          screenshotMonth: extraction.month,
+          screenshotYear: extraction.year,
+          screenshotTitle: extraction.calendarTitle ?? null,
+          screenshotTimeZone: extraction.timeZone ?? null,
+          screenshotModel: model ?? SCREENSHOT_MODEL_DEFAULT,
+        };
+
+        return { rows, metadata };
+      }
 
       default:
-        return [];
+        return { rows: [] };
     }
   }
 }

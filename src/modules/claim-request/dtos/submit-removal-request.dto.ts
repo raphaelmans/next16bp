@@ -1,12 +1,13 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 /**
  * Schema for submitting a removal request for a claimed place
  */
 export const SubmitRemovalRequestSchema = z.object({
-  placeId: z.string().uuid(),
-  organizationId: z.string().uuid(),
-  requestNotes: z.string().min(10).max(1000), // Required for removal requests
+  placeId: S.ids.placeId,
+  organizationId: S.ids.organizationId,
+  requestNotes: S.claimRequest.requestNotes,
 });
 
 export type SubmitRemovalRequestDTO = z.infer<

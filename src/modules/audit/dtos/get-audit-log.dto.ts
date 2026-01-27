@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 /**
  * Schema for getting reservation history
  */
 export const GetReservationHistorySchema = z.object({
-  reservationId: z.string().uuid(),
+  reservationId: S.ids.reservationId,
 });
 
 export type GetReservationHistoryDTO = z.infer<
@@ -15,7 +16,7 @@ export type GetReservationHistoryDTO = z.infer<
  * Schema for getting claim request history (admin only)
  */
 export const GetClaimHistorySchema = z.object({
-  claimRequestId: z.string().uuid(),
+  claimRequestId: S.ids.requestId,
 });
 
 export type GetClaimHistoryDTO = z.infer<typeof GetClaimHistorySchema>;

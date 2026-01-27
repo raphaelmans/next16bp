@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const SubmitContactMessageSchema = z.object({
-  name: z.string().min(2).max(150),
-  email: z.string().email().max(255),
-  subject: z.string().min(2).max(200),
-  message: z.string().min(10).max(2000),
+  name: S.contact.name,
+  email: S.contact.email,
+  subject: S.contact.subject,
+  message: S.contact.message,
 });
 
 export type SubmitContactMessageDTO = z.infer<

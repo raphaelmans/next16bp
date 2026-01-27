@@ -6,15 +6,17 @@ import {
   Building2,
   Check,
   CheckCircle,
+  ClipboardList,
   FileSpreadsheet,
   HelpCircle,
   Loader2,
   MapPin,
   Search,
+  ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -56,10 +58,33 @@ export default function OwnerGetStartedPage() {
     organizationId ? { organizationId } : skipToken,
   );
 
+  const primaryPlace = useMemo(() => {
+    if (!myPlaces || myPlaces.length === 0) return null;
+    return [...myPlaces].sort((a, b) => {
+      const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return bTime - aTime;
+    })[0];
+  }, [myPlaces]);
+
+  const primaryPlaceId = primaryPlace?.id;
+  const primaryPlaceName = primaryPlace?.name ?? "your venue";
+  const verificationStatus = primaryPlace?.verification?.status ?? null;
+  const isVerificationPending = verificationStatus === "PENDING";
+  const isVerificationVerified = verificationStatus === "VERIFIED";
+  const isVerificationRejected = verificationStatus === "REJECTED";
+  const hasVerification = isVerificationPending || isVerificationVerified;
+
+  const { data: placeCourts } = trpc.courtManagement.listByPlace.useQuery(
+    primaryPlaceId ? { placeId: primaryPlaceId } : skipToken,
+  );
+
   const hasOrganization = (organizations?.length ?? 0) > 0;
   const hasPendingClaim =
     myClaims?.some((c) => c.status === "PENDING") ?? false;
   const hasVenue = (myPlaces?.length ?? 0) > 0;
+  const hasActiveCourt =
+    placeCourts?.some((court) => court.court.isActive) ?? false;
 
   useEffect(() => {
     trackEvent({ event: "funnel.owner_setup_hub_viewed" });
@@ -75,9 +100,23 @@ export default function OwnerGetStartedPage() {
     router.push(`${appRoutes.owner.places.new}?from=setup`);
   };
 
+  const handleVerifyVenue = () => {
+    if (!primaryPlaceId) return;
+    router.push(
+      `${appRoutes.owner.verification.place(primaryPlaceId)}?from=setup`,
+    );
+  };
+
+  const handleConfigureCourts = () => {
+    if (!primaryPlaceId) return;
+    router.push(
+      `${appRoutes.owner.places.courts.setupCreate(primaryPlaceId)}?from=setup`,
+    );
+  };
+
   const handleStartImport = () => {
     trackEvent({ event: "funnel.owner_import_started" });
-    router.push(appRoutes.owner.imports.bookings);
+    router.push(`${appRoutes.owner.imports.bookings}?from=setup`);
   };
 
   return (
@@ -112,12 +151,20 @@ export default function OwnerGetStartedPage() {
               )}
               Venue
             </Badge>
-            <Badge variant="secondary">
-              <span className="mr-1">3.</span>
+            <Badge variant={hasVerification ? "default" : "secondary"}>
+              {hasVerification ? (
+                <Check className="mr-1 h-3 w-3" />
+              ) : (
+                <span className="mr-1">3.</span>
+              )}
               Verify
             </Badge>
-            <Badge variant="secondary">
-              <span className="mr-1">4.</span>
+            <Badge variant={hasActiveCourt ? "default" : "secondary"}>
+              {hasActiveCourt ? (
+                <Check className="mr-1 h-3 w-3" />
+              ) : (
+                <span className="mr-1">4.</span>
+              )}
               Go Live
             </Badge>
           </div>
@@ -143,8 +190,22 @@ export default function OwnerGetStartedPage() {
                 onSearchClick={() => setShowClaimSearch(true)}
               />
 
+              <VerifyVenueCard
+                hasVenue={hasVenue}
+                placeName={primaryPlaceName}
+                verificationStatus={verificationStatus}
+                onVerifyClick={handleVerifyVenue}
+              />
+
+              <ConfigureVenueCourtsCard
+                hasVenue={hasVenue}
+                hasActiveCourt={hasActiveCourt}
+                placeId={primaryPlaceId}
+                onConfigureClick={handleConfigureCourts}
+              />
+
               <ImportBookingsCard
-                hasOrganization={hasOrganization}
+                hasVenue={hasVenue}
                 onImportClick={handleStartImport}
               />
             </div>
@@ -325,7 +386,8 @@ function AddVenueCard({
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                You can add more venues from your dashboard.
+                Next, submit verification to unlock bookings. You can add more
+                venues from your dashboard.
               </p>
             </div>
             <Button variant="outline" asChild>
@@ -439,15 +501,223 @@ function ClaimListingCard({
   );
 }
 
+function VerifyVenueCard({
+  hasVenue,
+  placeName,
+  verificationStatus,
+  onVerifyClick,
+}: {
+  hasVenue: boolean;
+  placeName: string;
+  verificationStatus?: string | null;
+  onVerifyClick: () => void;
+}) {
+  const isPending = verificationStatus === "PENDING";
+  const isVerified = verificationStatus === "VERIFIED";
+  const isRejected = verificationStatus === "REJECTED";
+
+  if (isVerified) {
+    return (
+      <Card className="border-primary/20 bg-primary/5">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <CheckCircle className="h-6 w-6" />
+            </div>
+            <div className="flex-1 space-y-1">
+              <div className="flex items-center gap-2">
+                <p className="font-heading font-semibold">Venue verified</p>
+                <Badge variant="outline" className="text-xs">
+                  Complete
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {placeName} is verified and ready for reservations.
+              </p>
+            </div>
+            <Button variant="outline" onClick={onVerifyClick}>
+              View verification
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (isPending) {
+    return (
+      <Card className="border-yellow-500/20 bg-yellow-50/50 dark:bg-yellow-950/20">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-yellow-500/10 text-yellow-600">
+              <ShieldCheck className="h-6 w-6" />
+            </div>
+            <div className="flex-1 space-y-1">
+              <div className="flex items-center gap-2">
+                <p className="font-heading font-semibold">
+                  Verification pending
+                </p>
+                <Badge variant="outline" className="text-xs text-yellow-600">
+                  Under review
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                We are reviewing your documents for {placeName}.
+              </p>
+            </div>
+            <Button variant="outline" onClick={onVerifyClick}>
+              View submission
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (isRejected) {
+    return (
+      <Card className="border-destructive/20 bg-destructive/5">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
+              <ShieldCheck className="h-6 w-6" />
+            </div>
+            <div className="flex-1 space-y-1">
+              <div className="flex items-center gap-2">
+                <p className="font-heading font-semibold">
+                  Verification needs updates
+                </p>
+                <Badge variant="outline" className="text-xs text-destructive">
+                  Action needed
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Update your documents to verify {placeName}.
+              </p>
+            </div>
+            <Button onClick={onVerifyClick}>Resubmit docs</Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className={!hasVenue ? "opacity-60" : ""}>
+      <CardContent className="p-6">
+        <div className="flex items-start gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground">
+            <ShieldCheck className="h-6 w-6" />
+          </div>
+          <div className="flex-1 space-y-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <p className="font-heading font-semibold">
+                  Get your venue verified
+                </p>
+                <Badge>Required</Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Upload proof of ownership to unlock online reservations.
+              </p>
+            </div>
+            <Button onClick={onVerifyClick} disabled={!hasVenue}>
+              Submit verification
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function ConfigureVenueCourtsCard({
+  hasVenue,
+  hasActiveCourt,
+  placeId,
+  onConfigureClick,
+}: {
+  hasVenue: boolean;
+  hasActiveCourt: boolean;
+  placeId?: string;
+  onConfigureClick: () => void;
+}) {
+  if (hasActiveCourt) {
+    return (
+      <Card className="border-primary/20 bg-primary/5">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <CheckCircle className="h-6 w-6" />
+            </div>
+            <div className="flex-1 space-y-1">
+              <div className="flex items-center gap-2">
+                <p className="font-heading font-semibold">Courts configured</p>
+                <Badge variant="outline" className="text-xs">
+                  Complete
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Your venue is ready for schedules and pricing updates.
+              </p>
+            </div>
+            {placeId ? (
+              <Button variant="outline" asChild>
+                <Link href={appRoutes.owner.places.courts.base(placeId)}>
+                  Manage courts
+                </Link>
+              </Button>
+            ) : (
+              <Button variant="outline" disabled>
+                Manage courts
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className={!hasVenue ? "opacity-60" : ""}>
+      <CardContent className="p-6">
+        <div className="flex items-start gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground">
+            <ClipboardList className="h-6 w-6" />
+          </div>
+          <div className="flex-1 space-y-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <p className="font-heading font-semibold">
+                  Configure venue courts
+                </p>
+                <Badge>Required</Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Add courts and set up schedules so players can book.
+              </p>
+            </div>
+            <Button onClick={onConfigureClick} disabled={!hasVenue}>
+              Set up courts
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 function ImportBookingsCard({
-  hasOrganization,
+  hasVenue,
   onImportClick,
 }: {
-  hasOrganization: boolean;
+  hasVenue: boolean;
   onImportClick: () => void;
 }) {
   return (
-    <Card className={!hasOrganization ? "opacity-60" : ""}>
+    <Card className={!hasVenue ? "opacity-60" : ""}>
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground">
@@ -466,7 +736,7 @@ function ImportBookingsCard({
             </div>
             <Button
               onClick={onImportClick}
-              disabled={!hasOrganization}
+              disabled={!hasVenue}
               variant="outline"
             >
               Start import

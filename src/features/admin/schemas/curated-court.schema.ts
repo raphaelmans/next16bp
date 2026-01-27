@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { allowEmptyString, S, V } from "@/shared/kernel/schemas";
 
 export const CITIES = [
   "Makati",
@@ -31,59 +32,43 @@ export const AMENITIES = [
   "Pet Friendly",
 ];
 
+const optionalUrl = allowEmptyString(S.common.url().optional());
+const optionalText = (max: { value: number; message: string }) =>
+  allowEmptyString(
+    z.string().trim().max(max.value, { error: max.message }).optional(),
+  );
+
 const courtSchema = z.object({
-  label: z
-    .string()
-    .min(1, "Court label is required")
-    .max(100, "Court label must be less than 100 characters"),
-  sportId: z.string().uuid("Sport is required"),
-  tierLabel: z
-    .string()
-    .max(20, "Tier label must be less than 20 characters")
-    .optional()
-    .nullable(),
+  label: S.court.label,
+  sportId: S.ids.sportId,
+  tierLabel: S.court.tierLabel.nullable(),
 });
 
 const photoSchema = z.object({
-  url: z.string().url("Invalid URL").optional().or(z.literal("")),
+  url: allowEmptyString(S.common.url().optional()),
 });
 
 export const curatedCourtSchema = z.object({
-  name: z
-    .string()
-    .min(3, "Court name must be at least 3 characters")
-    .max(100, "Court name must be less than 100 characters"),
-  address: z
-    .string()
-    .min(10, "Address must be at least 10 characters")
-    .max(200, "Address must be less than 200 characters"),
-  city: z.string().min(1, "City is required"),
-  province: z.string().min(1, "Province is required").max(100),
-  country: z.string().length(2),
-  timeZone: z.string().min(1).max(64).optional(),
+  name: S.place.name,
+  address: S.place.address,
+  city: S.place.city,
+  province: S.place.province,
+  country: S.common.country,
+  timeZone: S.place.timeZone.optional(),
   lat: z.number().optional(),
   lng: z.number().optional(),
-  extGPlaceId: z.string().max(128).optional().or(z.literal("")),
-  facebookUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
-  instagramUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
-  phoneNumber: z
-    .string()
-    .max(20, "Phone number must be less than 20 characters")
-    .optional()
-    .or(z.literal("")),
-  viberContact: z
-    .string()
-    .max(50, "Viber contact must be less than 50 characters")
-    .optional()
-    .or(z.literal("")),
-  websiteUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
-  otherContactInfo: z
-    .string()
-    .max(500, "Contact info must be less than 500 characters")
-    .optional(),
-  amenities: z.array(z.string()),
+  extGPlaceId: optionalText(V.place.googlePlaceId.max),
+  facebookUrl: optionalUrl,
+  instagramUrl: optionalUrl,
+  phoneNumber: optionalText(V.place.phoneNumber.max),
+  viberContact: optionalText(V.place.viberInfo.max),
+  websiteUrl: optionalUrl,
+  otherContactInfo: optionalText(V.place.otherContactInfo.max),
+  amenities: z.array(S.place.amenity),
   photos: z.array(photoSchema).optional(),
-  courts: z.array(courtSchema).min(1, "Add at least one court for this venue"),
+  courts: z
+    .array(courtSchema)
+    .min(S.court.listMin.value, { error: S.court.listMin.message }),
 });
 
 export type CuratedCourtFormData = z.infer<typeof curatedCourtSchema>;

@@ -89,6 +89,7 @@ interface PlaceVerificationPanelProps {
   placeId: string;
   placeName: string;
   reservationCapable: boolean;
+  returnTo?: string;
 }
 
 interface DocumentPreview {
@@ -103,6 +104,7 @@ export function PlaceVerificationPanel({
   placeId,
   placeName,
   reservationCapable,
+  returnTo,
 }: PlaceVerificationPanelProps) {
   const router = useRouter();
   const utils = trpc.useUtils();
@@ -180,6 +182,11 @@ export function PlaceVerificationPanel({
     );
     setDocuments([]);
     reset({ requestNotes: "" });
+
+    if (returnTo) {
+      router.push(returnTo);
+      return;
+    }
 
     const courts = await utils.courtManagement.listByPlace
       .fetch({ placeId })

@@ -1,13 +1,14 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 /**
  * Schema for submitting a guest removal request for a curated place
  */
 export const SubmitGuestRemovalRequestSchema = z.object({
-  placeId: z.string().uuid(),
-  guestName: z.string().min(2).max(150),
-  guestEmail: z.string().email().max(255),
-  requestNotes: z.string().min(10).max(1000),
+  placeId: S.ids.placeId,
+  guestName: S.claimRequest.guestName,
+  guestEmail: S.claimRequest.guestEmail,
+  requestNotes: S.claimRequest.requestNotes,
 });
 
 export type SubmitGuestRemovalRequestDTO = z.infer<

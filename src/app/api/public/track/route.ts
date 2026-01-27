@@ -4,6 +4,7 @@ import { handleError } from "@/shared/infra/http/error-handler";
 import { logger } from "@/shared/infra/logger";
 import { ValidationError } from "@/shared/kernel/errors";
 import type { ApiErrorResponse, ApiResponse } from "@/shared/kernel/response";
+import { V } from "@/shared/kernel/schemas";
 import { wrapResponse } from "@/shared/utils/response";
 
 export const runtime = "nodejs";
@@ -13,11 +14,16 @@ const forbiddenKeys = new Set(["email", "phone", "phonenumber", "fullname"]);
 
 const trackEventSchema = z.object({
   event: z
-    .string()
-    .min(1)
-    .max(120)
-    .regex(/^funnel\.[a-z0-9_.-]+$/),
-  properties: z.record(z.string(), z.unknown()).optional(),
+    .string({ error: V.common.string.type.message })
+    .trim()
+    .min(V.tracking.event.min.value, { error: V.tracking.event.min.message })
+    .max(V.tracking.event.max.value, { error: V.tracking.event.max.message })
+    .regex(V.tracking.event.pattern.value, {
+      error: V.tracking.event.pattern.message,
+    }),
+  properties: z
+    .record(z.string({ error: V.common.string.type.message }), z.unknown())
+    .optional(),
 });
 
 type TrackEventInput = z.infer<typeof trackEventSchema>;

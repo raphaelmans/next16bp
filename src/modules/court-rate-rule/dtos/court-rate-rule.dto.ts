@@ -1,30 +1,35 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 const CourtRateRuleWindowSchema = z
   .object({
-    dayOfWeek: z.number().int().min(0).max(6),
-    startMinute: z.number().int().min(0).max(1439),
-    endMinute: z.number().int().min(1).max(1440),
-    currency: z.string().length(3),
-    hourlyRateCents: z.number().int().min(0),
+    dayOfWeek: S.courtRateRule.dayOfWeek,
+    startMinute: S.courtRateRule.startMinute,
+    endMinute: S.courtRateRule.endMinute,
+    currency: S.common.currency,
+    hourlyRateCents: S.courtRateRule.hourlyRateCents,
   })
   .refine((window) => window.startMinute < window.endMinute, {
-    message: "Start minute must be before end minute",
+    error: S.courtRateRule.startBeforeEnd,
     path: ["startMinute"],
   });
 
 export const SetCourtRateRulesSchema = z.object({
-  courtId: z.string().uuid(),
-  rules: z.array(CourtRateRuleWindowSchema).max(100),
+  courtId: S.ids.courtId,
+  rules: z
+    .array(CourtRateRuleWindowSchema)
+    .max(S.courtRateRule.rulesMax.value, {
+      error: S.courtRateRule.rulesMax.message,
+    }),
 });
 
 export const GetCourtRateRulesSchema = z.object({
-  courtId: z.string().uuid(),
+  courtId: S.ids.courtId,
 });
 
 export const CopyCourtRateRulesSchema = z.object({
-  sourceCourtId: z.string().uuid(),
-  targetCourtId: z.string().uuid(),
+  sourceCourtId: S.ids.courtId,
+  targetCourtId: S.ids.courtId,
 });
 
 export type SetCourtRateRulesDTO = z.infer<typeof SetCourtRateRulesSchema>;

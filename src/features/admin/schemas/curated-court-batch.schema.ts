@@ -1,79 +1,47 @@
 import { z } from "zod";
+import { allowEmptyString, S, V } from "@/shared/kernel/schemas";
 
 export { AMENITIES, CITIES } from "./curated-court.schema";
 
-const optionalUrlSchema = z
-  .string()
-  .url("Invalid URL")
-  .optional()
-  .or(z.literal(""));
-
-const courtSchema = z.object({
-  label: z
-    .string()
-    .min(1, "Court label is required")
-    .max(100, "Court label must be less than 100 characters"),
-  sportId: z.string().uuid("Sport is required"),
-  tierLabel: z
-    .string()
-    .max(20, "Tier label must be less than 20 characters")
-    .optional()
-    .nullable(),
-});
-
-const coordinateSchema = z
-  .string()
-  .optional()
-  .or(z.literal(""))
-  .refine(
-    (value) =>
-      value === undefined ||
-      value === "" ||
-      !Number.isNaN(Number.parseFloat(value)),
-    {
-      message: "Coordinate must be a valid decimal number",
-    },
+const optionalUrlSchema = allowEmptyString(S.common.url().optional());
+const optionalText = (max: { value: number; message: string }) =>
+  allowEmptyString(
+    z.string().trim().max(max.value, { error: max.message }).optional(),
   );
 
+const courtSchema = z.object({
+  label: S.court.label,
+  sportId: S.ids.sportId,
+  tierLabel: S.court.tierLabel.nullable(),
+});
+
+const coordinateSchema = S.common.coordinateString;
+
 export const curatedCourtBatchItemSchema = z.object({
-  name: z
-    .string()
-    .min(3, "Court name must be at least 3 characters")
-    .max(100, "Court name must be less than 100 characters"),
-  address: z
-    .string()
-    .min(10, "Address must be at least 10 characters")
-    .max(200, "Address must be less than 200 characters"),
-  city: z.string().min(1, "City is required"),
-  province: z.string().min(1, "Province is required").max(100),
-  country: z.string().length(2),
-  latitude: coordinateSchema,
-  longitude: coordinateSchema,
-  extGPlaceId: z.string().max(128).optional().or(z.literal("")),
+  name: S.place.name,
+  address: S.place.address,
+  city: S.place.city,
+  province: S.place.province,
+  country: S.common.country,
+  latitude: coordinateSchema.latitude,
+  longitude: coordinateSchema.longitude,
+  extGPlaceId: optionalText(V.place.googlePlaceId.max),
   facebookUrl: optionalUrlSchema,
   instagramUrl: optionalUrlSchema,
-  phoneNumber: z
-    .string()
-    .max(20, "Phone number must be less than 20 characters")
-    .optional()
-    .or(z.literal("")),
-  viberContact: z
-    .string()
-    .max(50, "Viber contact must be less than 50 characters")
-    .optional()
-    .or(z.literal("")),
+  phoneNumber: optionalText(V.place.phoneNumber.max),
+  viberContact: optionalText(V.place.viberInfo.max),
   websiteUrl: optionalUrlSchema,
-  otherContactInfo: z
-    .string()
-    .max(500, "Contact info must be less than 500 characters")
-    .optional()
-    .or(z.literal("")),
-  amenities: z.array(z.string()),
-  courts: z.array(courtSchema).min(1, "Add at least one court for this venue"),
+  otherContactInfo: optionalText(V.place.otherContactInfo.max),
+  amenities: z.array(S.place.amenity),
+  courts: z
+    .array(courtSchema)
+    .min(S.court.listMin.value, { error: S.court.listMin.message }),
 });
 
 export const curatedCourtBatchSchema = z.object({
-  courts: z.array(curatedCourtBatchItemSchema).min(1),
+  courts: z
+    .array(curatedCourtBatchItemSchema)
+    .min(S.common.itemsMin.value, { error: S.common.itemsMin.message }),
 });
 
 export type CuratedCourtBatchFormData = z.infer<typeof curatedCourtBatchSchema>;

@@ -1,14 +1,14 @@
-import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { verificationDocumentFileSchema } from "@/modules/storage/dtos";
+import { S } from "@/shared/kernel/schemas";
 
 export const SubmitPlaceVerificationSchema = zfd.formData({
-  placeId: zfd.text(z.string().uuid()),
-  requestNotes: zfd.text(z.string().max(1000).optional()),
+  placeId: zfd.text(S.ids.placeId),
+  requestNotes: zfd.text(S.claimRequest.requestNotesOptional),
   documents: zfd
     .repeatableOfType(verificationDocumentFileSchema)
     .refine((files) => files.length > 0, {
-      message: "Please attach at least one document",
+      error: S.placeVerification.documentsMin.message,
     }),
 });
 

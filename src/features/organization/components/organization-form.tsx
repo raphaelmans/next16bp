@@ -15,18 +15,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { allowEmptyString, S } from "@/shared/kernel/schemas";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 const organizationFormSchema = z.object({
-  name: z.string().min(1, "Name is required").max(150),
-  slug: z
-    .string()
-    .min(1)
-    .max(100)
-    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens")
-    .optional()
-    .or(z.literal("")),
+  name: S.organization.name,
+  slug: allowEmptyString(S.organization.slug.optional()),
 });
 
 type OrganizationFormValues = z.infer<typeof organizationFormSchema>;

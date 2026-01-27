@@ -1,14 +1,15 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 /**
  * Schema for updating payment proof.
  * All fields are optional for partial updates.
  */
 export const UpdatePaymentProofSchema = z.object({
-  reservationId: z.string().uuid(),
-  fileUrl: z.string().url().nullish(),
-  referenceNumber: z.string().max(100).nullish(),
-  notes: z.string().max(500).nullish(),
+  reservationId: S.ids.reservationId,
+  fileUrl: S.common.url().nullish(),
+  referenceNumber: S.paymentProof.referenceNumber.nullish(),
+  notes: S.paymentProof.notes.nullish(),
 });
 
 export type UpdatePaymentProofDTO = z.infer<typeof UpdatePaymentProofSchema>;

@@ -3,32 +3,36 @@
 ## What the owner experiences
 
 ```text
-/list-your-venue
+/owners/get-started
    |
-   | CTA: “Start onboarding”
-   | sets localStorage: kudos.owner_onboarding=true
+   | CTA -> /register/owner?redirect=/owner/get-started
    v
-/login  ->  /home
+/owner/get-started (setup hub)
    |
-   | if user has no org && onboarding intent => /owner/onboarding
+   | “Create organization” (modal)
+   | trpc.organization.create
    v
-/owner/onboarding
-   |
-   | owner submits organization form
-   v
-/owner/venues/new  (default next)
+(Hub refreshes and unlocks next steps)
+
+Fallback org creation path (still used as a gate):
+  /owner/* (owner portal)
+    -> if no org => /owner/onboarding
+       -> creates org
+       -> redirects to next (defaults to /owner/venues/new)
 ```
 
 ## Routes (UI)
 
-- Public entry point: `src/app/(public)/list-your-venue/page.tsx`
-- Home redirect logic: `src/app/(auth)/home/page.tsx`
+- Public entry point (canonical): `src/app/(public)/owners/get-started/page.tsx`
+- Legacy redirect: `src/app/(public)/list-your-venue/page.tsx` (permanent -> `/owners/get-started`)
+- Post-auth routing: `src/app/(auth)/post-login/page.tsx`
+- Setup hub (recommended): `src/app/(auth)/owner/get-started/page.tsx`
 - Onboarding page: `src/app/(auth)/owner/onboarding/page.tsx`
 - Client form wrapper: `src/app/(auth)/owner/onboarding/organization-form-client.tsx`
 
 ## State / persistence
 
-- Local onboarding intent flag (client-only):
+- Local onboarding intent flag (client-only, still present):
   - `src/shared/lib/owner-onboarding-intent.ts` (localStorage key: `kudos.owner_onboarding`)
   - Cleared when entering owner route group via `src/features/owner/components/owner-onboarding-intent-clearer.tsx`.
 

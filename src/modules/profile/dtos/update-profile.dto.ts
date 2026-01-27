@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const UpdateProfileSchema = z.object({
-  displayName: z.string().min(1).max(100).optional(),
-  email: z.string().email().optional(),
-  phoneNumber: z.string().max(20).optional(),
-  avatarUrl: z.string().url().optional(),
+  displayName: S.profile.displayName.optional(),
+  email: S.common.email.optional(),
+  phoneNumber: S.profile.phoneNumber,
+  avatarUrl: S.profile.avatarUrl.optional(),
 });
 
 export type UpdateProfileDTO = z.infer<typeof UpdateProfileSchema>;

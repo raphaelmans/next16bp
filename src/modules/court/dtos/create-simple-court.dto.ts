@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 /**
  * Schema for creating a court with simplified fields (UI onboarding flow)
@@ -6,13 +7,13 @@ import { z } from "zod";
  * Coordinates default to 0,0 and can be updated later.
  */
 export const CreateSimpleCourtSchema = z.object({
-  organizationId: z.string().uuid(),
-  name: z.string().min(1).max(150),
-  address: z.string().min(1).max(200),
-  city: z.string().min(1).max(100),
-  description: z.string().max(1000).optional(),
-  defaultPriceCents: z.number().int().min(0).optional().nullable(),
-  currency: z.string().length(3).default("PHP"),
+  organizationId: S.ids.organizationId,
+  name: S.court.simpleName,
+  address: S.place.address,
+  city: S.place.city,
+  description: S.court.description,
+  defaultPriceCents: S.pricing.priceCents.nullish(),
+  currency: S.common.currency.default("PHP"),
 });
 
 export type CreateSimpleCourtDTO = z.infer<typeof CreateSimpleCourtSchema>;

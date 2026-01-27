@@ -1,13 +1,14 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const CommitJobSchema = z.object({
-  jobId: z.string().uuid(),
+  jobId: S.ids.jobId,
 });
 
 export type CommitJobDTO = z.infer<typeof CommitJobSchema>;
 
 export const CommitResultSchema = z.object({
-  jobId: z.string().uuid(),
+  jobId: S.ids.jobId,
   status: z.string(),
   totalRows: z.number().int(),
   committedRows: z.number().int(),
@@ -15,7 +16,7 @@ export const CommitResultSchema = z.object({
   failedRows: z.number().int(),
   failures: z.array(
     z.object({
-      rowId: z.string().uuid(),
+      rowId: S.ids.rowId,
       lineNumber: z.number().int(),
       error: z.string(),
     }),

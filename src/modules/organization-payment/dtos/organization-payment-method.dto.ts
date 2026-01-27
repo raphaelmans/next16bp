@@ -1,46 +1,51 @@
 import { z } from "zod";
+import { S, V } from "@/shared/kernel/schemas";
 import {
   PAYMENT_METHOD_PROVIDERS,
   PAYMENT_METHOD_TYPES,
 } from "@/shared/lib/payment-methods";
 
-export const PaymentMethodTypeSchema = z.enum(PAYMENT_METHOD_TYPES);
-export const PaymentMethodProviderSchema = z.enum(PAYMENT_METHOD_PROVIDERS);
+export const PaymentMethodTypeSchema = z.enum(PAYMENT_METHOD_TYPES, {
+  error: V.paymentMethod.type.invalid.message,
+});
+export const PaymentMethodProviderSchema = z.enum(PAYMENT_METHOD_PROVIDERS, {
+  error: V.paymentMethod.provider.invalid.message,
+});
 
 export const ListOrganizationPaymentMethodsSchema = z.object({
-  organizationId: z.string().uuid(),
+  organizationId: S.ids.organizationId,
 });
 
 export const CreateOrganizationPaymentMethodSchema = z.object({
-  organizationId: z.string().uuid(),
+  organizationId: S.ids.organizationId,
   type: PaymentMethodTypeSchema,
   provider: PaymentMethodProviderSchema,
-  accountName: z.string().min(1).max(150),
-  accountNumber: z.string().min(1).max(50),
-  instructions: z.string().max(500).optional(),
+  accountName: S.paymentMethod.accountName,
+  accountNumber: S.paymentMethod.accountNumber,
+  instructions: S.paymentMethod.instructions,
   isActive: z.boolean().optional(),
   isDefault: z.boolean().optional(),
-  displayOrder: z.number().int().min(0).optional(),
+  displayOrder: S.paymentMethod.displayOrder.optional(),
 });
 
 export const UpdateOrganizationPaymentMethodSchema = z.object({
-  paymentMethodId: z.string().uuid(),
+  paymentMethodId: S.ids.paymentMethodId,
   type: PaymentMethodTypeSchema.optional(),
   provider: PaymentMethodProviderSchema.optional(),
-  accountName: z.string().min(1).max(150).optional(),
-  accountNumber: z.string().min(1).max(50).optional(),
-  instructions: z.string().max(500).nullable().optional(),
+  accountName: S.paymentMethod.accountName.optional(),
+  accountNumber: S.paymentMethod.accountNumber.optional(),
+  instructions: S.paymentMethod.instructions.nullish(),
   isActive: z.boolean().optional(),
   isDefault: z.boolean().optional(),
-  displayOrder: z.number().int().min(0).optional(),
+  displayOrder: S.paymentMethod.displayOrder.optional(),
 });
 
 export const DeleteOrganizationPaymentMethodSchema = z.object({
-  paymentMethodId: z.string().uuid(),
+  paymentMethodId: S.ids.paymentMethodId,
 });
 
 export const SetDefaultOrganizationPaymentMethodSchema = z.object({
-  paymentMethodId: z.string().uuid(),
+  paymentMethodId: S.ids.paymentMethodId,
 });
 
 export type ListOrganizationPaymentMethodsDTO = z.infer<

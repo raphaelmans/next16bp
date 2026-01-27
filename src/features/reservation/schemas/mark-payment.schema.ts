@@ -1,15 +1,16 @@
 import { z } from "zod";
+import { allowEmptyString, S, V } from "@/shared/kernel/schemas";
 
 export const markPaymentSchema = z.object({
-  reservationId: z.string().min(1, "Reservation ID is required"),
-  referenceNumber: z.string().min(1, "Reference number is required"),
-  receiptUrl: z.string().url().optional(),
-  notes: z.string().max(500, "Notes must be 500 characters or less").optional(),
+  reservationId: S.ids.reservationId,
+  referenceNumber: allowEmptyString(S.reservation.referenceNumber.optional()),
+  receiptUrl: S.common.url().optional(),
+  notes: S.reservation.notes,
   disclaimerAcknowledged: z.boolean().refine((val) => val === true, {
-    message: "You must acknowledge the payment disclaimer",
+    error: V.reservation.disclaimerAcknowledged.message,
   }),
-  termsAccepted: z.boolean().refine((val) => val === true, {
-    message: "You must accept the terms and conditions",
+  termsAccepted: z.literal(true, {
+    error: V.reservation.termsAccepted.message,
   }),
 });
 

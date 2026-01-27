@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { S, V } from "@/shared/kernel/schemas";
 
 export const MarkPaymentSchema = z.object({
-  reservationId: z.string().uuid(),
+  reservationId: S.ids.reservationId,
   termsAccepted: z.literal(true, {
-    message: "Terms must be accepted",
+    error: V.reservation.termsAccepted.message,
   }),
 });
 

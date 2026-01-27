@@ -2,12 +2,12 @@
 
 This folder captures the agreed UX direction for a revamped court-owner onboarding flow.
 
-Do not implement yet. This is documentation only.
+This folder is documentation (spec + change requests). Some parts may already be implemented in the codebase.
 
 ## Goals
 
 - Owners land in the Owner Portal by default (without breaking player-first booking flows).
-- Owners can complete the minimum setup in one coherent flow: organization + (optional) venue + (optional) import + verify.
+- Owners can complete the minimum setup in one coherent flow: organization + venue (add/claim) + verify + go live (courts + optional import).
 - Marketing has a single canonical link to drive conversions.
 - The system makes "why am I not bookable?" explicit.
 
@@ -55,9 +55,11 @@ AFTER
   -> CTA: /register/owner?redirect=/owner/get-started
   -> /owner/get-started (protected hub)
        - Create organization (required)
-       - Add new venue (optional) OR Claim existing listing (optional)
-       - Import bookings (optional; requires venue)
-       - Continue to verification if venue created
+       - Venue: add new venue OR claim existing listing (optional)
+       - Verify venue (requires venue)
+       - Go live:
+            - Configure venue courts
+            - Import bookings (optional)
 
 /list-your-venue
   -> permanent redirect to /owners/get-started
@@ -81,4 +83,6 @@ Deferred import items (do not depend on these for onboarding UX):
 - Transfer/claim path: `docs/owner-onboarding-revamp/05-transfer-claim-path.md`
 - Import path: `docs/owner-onboarding-revamp/06-import-bookings-path.md`
 - SEO + copy guardrails: `docs/owner-onboarding-revamp/07-seo-and-copy.md`
+- Stepper v2 change request: `docs/owner-onboarding-revamp/92-stepper-v2-change-2026-01-27.md`
+- Stepper v2 smoke checklist: `docs/owner-onboarding-revamp/92-smoke-checklist-2026-01-27.md`
 - Open questions: `docs/owner-onboarding-revamp/99-open-questions.md`

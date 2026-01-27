@@ -2,6 +2,21 @@
 
 Status: implemented
 
+Update (2026-01-27): this redirect is now considered legacy.
+
+New desired behavior is hub-centric onboarding:
+
+```text
+/owner/venues/new?from=setup
+  success -> /owner/get-started
+```
+
+Verification becomes an explicit step/card on the hub.
+
+References:
+- Change request: `docs/owner-onboarding-revamp/92-stepper-v2-change-2026-01-27.md`
+- New plan: `agent-plans/73-owner-setup-hub-stepper-v2/73-00-overview.md`
+
 ## Problem
 
 Before this fix, from the owner setup hub (`/owner/get-started`), clicking "Add venue" routed into the existing venue create page, which on success redirected to first-court creation.

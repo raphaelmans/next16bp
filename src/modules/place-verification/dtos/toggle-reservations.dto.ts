@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const TogglePlaceReservationsSchema = z.object({
-  placeId: z.string().uuid(),
+  placeId: S.ids.placeId,
   enabled: z.boolean(),
 });
 

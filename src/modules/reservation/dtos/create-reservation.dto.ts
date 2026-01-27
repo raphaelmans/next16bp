@@ -1,47 +1,29 @@
 import { differenceInCalendarDays } from "date-fns";
 import { z } from "zod";
-import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
+import { S, V } from "@/shared/kernel/schemas";
 
-const DurationMinutesSchema = z
-  .number()
-  .int()
-  .min(60)
-  .max(1440)
-  .refine((value) => value % 60 === 0, {
-    message: "Duration must be a multiple of 60 minutes",
-  });
+const BOOKING_WINDOW_DAYS = V.reservation.startTimeWithinWindow.value;
+
+const BookingWindowStartTimeSchema = S.common.isoDateTime.refine(
+  (startTime) =>
+    differenceInCalendarDays(new Date(startTime), new Date()) <=
+    BOOKING_WINDOW_DAYS,
+  {
+    error: V.reservation.startTimeWithinWindow.message,
+  },
+);
 
 export const CreateReservationForCourtSchema = z.object({
-  courtId: z.string().uuid(),
-  startTime: z
-    .string()
-    .datetime()
-    .refine(
-      (startTime) =>
-        differenceInCalendarDays(new Date(startTime), new Date()) <=
-        MAX_BOOKING_WINDOW_DAYS,
-      {
-        message: `Start time must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
-      },
-    ),
-  durationMinutes: DurationMinutesSchema,
+  courtId: S.ids.courtId,
+  startTime: BookingWindowStartTimeSchema,
+  durationMinutes: S.availability.durationMinutes,
 });
 
 export const CreateReservationForAnyCourtSchema = z.object({
-  placeId: z.string().uuid(),
-  sportId: z.string().uuid(),
-  startTime: z
-    .string()
-    .datetime()
-    .refine(
-      (startTime) =>
-        differenceInCalendarDays(new Date(startTime), new Date()) <=
-        MAX_BOOKING_WINDOW_DAYS,
-      {
-        message: `Start time must be within ${MAX_BOOKING_WINDOW_DAYS} days`,
-      },
-    ),
-  durationMinutes: DurationMinutesSchema,
+  placeId: S.ids.placeId,
+  sportId: S.ids.sportId,
+  startTime: BookingWindowStartTimeSchema,
+  durationMinutes: S.availability.durationMinutes,
 });
 
 export type CreateReservationForCourtDTO = z.infer<

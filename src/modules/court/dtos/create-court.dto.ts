@@ -1,22 +1,28 @@
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 /**
  * Schema for creating a reservable court (by organization owner)
  */
 export const CreateReservableCourtSchema = z.object({
-  organizationId: z.string().uuid(),
-  name: z.string().min(1).max(200),
-  address: z.string().min(1),
-  city: z.string().min(1).max(100),
-  latitude: z.string().regex(/^-?\d+\.\d+$/, "Invalid latitude format"),
-  longitude: z.string().regex(/^-?\d+\.\d+$/, "Invalid longitude format"),
+  organizationId: S.ids.organizationId,
+  name: S.place.name,
+  address: S.place.address,
+  city: S.place.city,
+  latitude: S.common.coordinateRequired.latitude,
+  longitude: S.common.coordinateRequired.longitude,
   // Reservable court details
   isFree: z.boolean().default(false),
-  defaultPriceCents: z.number().int().min(0).nullable().optional(),
-  defaultCurrency: z.string().length(3).default("PHP"),
+  defaultPriceCents: S.pricing.priceCents.nullish(),
+  defaultCurrency: S.common.currency.default("PHP"),
   // Optional initial photos and amenities
-  photos: z.array(z.string().url()).max(10).optional(),
-  amenities: z.array(z.string().min(1).max(100)).optional(),
+  photos: z
+    .array(S.common.url())
+    .max(S.place.photos.max.value, {
+      error: S.place.photos.max.message,
+    })
+    .optional(),
+  amenities: z.array(S.place.amenity).optional(),
 });
 
 export type CreateReservableCourtDTO = z.infer<
