@@ -8,6 +8,7 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-27 | Planned Web UI screenshot (image) normalization for bookings import (AI vision extraction + row persistence). See `agent-plans/71-bookings-import-review-commit/71-06-screenshot-normalization.md`. |
 | 2026-01-26 | Added 71-bookings-import-review-commit plan (draft persistence, review/edit grid, commit to blocks, AI usage enforcement) |
 | 2026-01-26 | Added 72-owner-onboarding-revamp plan (canonical /owners/get-started, /register/owner, /owner/get-started hub, default portal routing) |
 | 2026-01-25 | Added 70-bookings-import-owner-ui plan (owner landing page: venue + source selection + drag-and-drop upload) |
@@ -191,6 +192,13 @@ src/modules/
 - Standardize client-side tRPC usage to `trpc.*.useQuery` / `trpc.*.useMutation` across the repo.
 - Replace mixed patterns (`useTRPC()+queryOptions`, `useTRPCClient()+manual queryKey/queryFn`) with a single hook-based API.
 - Migrate tRPC cache invalidation to `trpc.useUtils()` helpers wherever the data is tRPC-backed.
+
+### Bookings Import Screenshot Normalization (New)
+
+- Support `sourceType=image` normalization in the Web UI import pipeline.
+- AI is required for screenshots (vision extraction); deterministic parsing should be disabled/blocked for images.
+- Persist extracted events as import rows so owners can review/edit/commit like other sources.
+- Keep the existing one-time AI per venue constraint; do not consume AI usage on failures.
 
 ### Organization Payment Methods (New)
 

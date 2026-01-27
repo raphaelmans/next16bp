@@ -760,7 +760,6 @@ export default function OwnerSettingsPage() {
 
         {/* Danger Zone */}
         <Card
-         
           id={SETTINGS_SECTION_IDS.dangerZone}
           className="border-destructive"
         >

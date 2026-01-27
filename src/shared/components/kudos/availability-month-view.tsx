@@ -4,6 +4,7 @@ import type * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { formatInTimeZone } from "@/shared/lib/format";
+import { getZonedDayKey } from "@/shared/lib/time-zone";
 import {
   type TimeSlot,
   TimeSlotPicker,
@@ -69,6 +70,13 @@ export function AvailabilityMonthView({
     </p>
   );
 
+  const selectedDayKey = selectedDate
+    ? getZonedDayKey(selectedDate, timeZone)
+    : null;
+  const filteredDays = selectedDayKey
+    ? days.filter((day) => day.dayKey === selectedDayKey)
+    : days;
+
   return (
     <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
       <div className="space-y-3">
@@ -98,25 +106,27 @@ export function AvailabilityMonthView({
       </div>
 
       <div className="space-y-4">
+        {selectedDate && (
+          <p className="text-sm font-medium text-muted-foreground">
+            {formatInTimeZone(
+              selectedDate,
+              timeZone ?? "Asia/Manila",
+              "EEEE, MMMM d, yyyy",
+            )}
+          </p>
+        )}
         {isLoading ? (
           <div className="space-y-3">
             <div className="h-4 w-32 rounded bg-muted animate-pulse" />
             <TimeSlotPickerSkeleton count={8} />
           </div>
-        ) : days.length > 0 ? (
-          days.map((day) => (
+        ) : filteredDays.length > 0 ? (
+          filteredDays.map((day) => (
             <div
               key={day.dayKey}
               id={`day-${day.dayKey}`}
               className="space-y-2 scroll-mt-24"
             >
-              <p className="text-sm font-medium">
-                {formatInTimeZone(
-                  day.date,
-                  timeZone ?? "Asia/Manila",
-                  "EEE, MMM d",
-                )}
-              </p>
               <TimeSlotPicker
                 slots={day.slots}
                 selectedId={selectedSlotId}
@@ -140,6 +150,10 @@ export function AvailabilityMonthView({
               />
             </div>
           ))
+        ) : days.length > 0 ? (
+          <p className="text-sm text-muted-foreground py-6 text-center">
+            No available times for this day. Select another date.
+          </p>
         ) : (
           resolvedEmptyState
         )}

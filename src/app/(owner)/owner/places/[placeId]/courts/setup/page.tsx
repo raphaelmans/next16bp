@@ -611,13 +611,17 @@ export default function CourtSetupWizardPage() {
                     Back to Schedule
                   </Button>
                   <Button
-                    asChild
+                    asChild={hasHours && hasPricingRules}
                     className="w-full sm:w-auto"
-                    disabled={isPrereqsLoading}
+                    disabled={isPrereqsLoading || !hasHours || !hasPricingRules}
                   >
-                    <Link href={appRoutes.owner.courts.availability(courtId)}>
-                      Go to Availability
-                    </Link>
+                    {hasHours && hasPricingRules ? (
+                      <Link href={appRoutes.owner.courts.availability(courtId)}>
+                        Go to Availability
+                      </Link>
+                    ) : (
+                      "Go to Availability"
+                    )}
                   </Button>
                 </div>
               </div>

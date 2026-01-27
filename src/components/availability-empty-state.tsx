@@ -10,6 +10,7 @@ export interface AvailabilityDiagnostics {
   hasRateRules: boolean;
   dayHasHours: boolean;
   allSlotsBooked: boolean;
+  reservationsDisabled?: boolean;
 }
 
 export interface ContactInfo {
@@ -41,6 +42,7 @@ type EmptyStateReason =
   | "no_pricing"
   | "closed"
   | "fully_booked"
+  | "reservations_disabled"
   | "unknown";
 
 function determineReason(
@@ -48,6 +50,7 @@ function determineReason(
 ): EmptyStateReason {
   if (!diagnostics) return "unknown";
 
+  if (diagnostics.reservationsDisabled) return "reservations_disabled";
   if (!diagnostics.hasHoursWindows) return "no_schedule";
   if (!diagnostics.hasRateRules) return "no_pricing";
   if (!diagnostics.dayHasHours) return "closed";
@@ -60,6 +63,10 @@ const publicMessages: Record<
   EmptyStateReason,
   { title: string; body: string }
 > = {
+  reservations_disabled: {
+    title: "No available times for this date",
+    body: "This venue isn't accepting online bookings at the moment. Contact the venue directly to inquire about availability.",
+  },
   no_schedule: {
     title: "No available times for this date",
     body: "This venue isn't accepting online bookings for this day. Contact the venue directly to inquire about availability.",
@@ -84,6 +91,10 @@ const publicMessages: Record<
 
 const ownerMessages: Record<EmptyStateReason, { title: string; body: string }> =
   {
+    reservations_disabled: {
+      title: "Reservations are disabled",
+      body: "Your venue is verified but reservations are currently turned off. Enable reservations in the venue verification panel to start accepting bookings.",
+    },
     no_schedule: {
       title: "No schedule hours configured",
       body: "You haven't set up operating hours for this court yet. Add schedule hours to enable availability.",
@@ -178,7 +189,9 @@ export function AvailabilityEmptyState({
 
   const showWarningIcon =
     variant === "owner" &&
-    (reason === "no_schedule" || reason === "no_pricing");
+    (reason === "no_schedule" ||
+      reason === "no_pricing" ||
+      reason === "reservations_disabled");
   const showContactInfo =
     variant === "public" &&
     (reason === "no_schedule" ||

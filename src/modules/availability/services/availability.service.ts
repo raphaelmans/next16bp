@@ -60,6 +60,7 @@ export interface AvailabilityDiagnostics {
   hasRateRules: boolean;
   dayHasHours: boolean;
   allSlotsBooked: boolean;
+  reservationsDisabled: boolean;
 }
 
 export interface AvailabilityResult {
@@ -103,6 +104,7 @@ export class AvailabilityService implements IAvailabilityService {
       hasRateRules: false,
       dayHasHours: false,
       allSlotsBooked: false,
+      reservationsDisabled: false,
     };
 
     const court = await this.courtRepository.findById(data.courtId);
@@ -131,7 +133,10 @@ export class AvailabilityService implements IAvailabilityService {
       place.id,
     );
     if (!this.isPlaceBookable(verification)) {
-      return { options: [], diagnostics: emptyDiagnostics };
+      return {
+        options: [],
+        diagnostics: { ...emptyDiagnostics, reservationsDisabled: true },
+      };
     }
 
     const { start, end } = getZonedDayRangeForInstant(
@@ -179,6 +184,7 @@ export class AvailabilityService implements IAvailabilityService {
       hasRateRules: false,
       dayHasHours: false,
       allSlotsBooked: false,
+      reservationsDisabled: false,
     };
 
     if (data.durationMinutes <= 0 || data.courtIds.length === 0) {
@@ -244,6 +250,7 @@ export class AvailabilityService implements IAvailabilityService {
       hasRateRules: false,
       dayHasHours: false,
       allSlotsBooked: true,
+      reservationsDisabled: false,
     };
     let hasAnySlots = false;
 
@@ -321,6 +328,7 @@ export class AvailabilityService implements IAvailabilityService {
       hasRateRules: false,
       dayHasHours: false,
       allSlotsBooked: false,
+      reservationsDisabled: false,
     };
 
     const place = await this.placeRepository.findById(data.placeId);
@@ -336,7 +344,10 @@ export class AvailabilityService implements IAvailabilityService {
       place.id,
     );
     if (!this.isPlaceBookable(verification)) {
-      return { options: [], diagnostics: emptyDiagnostics };
+      return {
+        options: [],
+        diagnostics: { ...emptyDiagnostics, reservationsDisabled: true },
+      };
     }
 
     const courts = await this.courtRepository.findByPlaceAndSport(
@@ -381,6 +392,7 @@ export class AvailabilityService implements IAvailabilityService {
       hasRateRules: false,
       dayHasHours: false,
       allSlotsBooked: true,
+      reservationsDisabled: false,
     };
     let hasAnySlots = false;
 
@@ -458,6 +470,7 @@ export class AvailabilityService implements IAvailabilityService {
       hasRateRules: false,
       dayHasHours: false,
       allSlotsBooked: false,
+      reservationsDisabled: false,
     };
 
     const court = await this.courtRepository.findById(data.courtId);
@@ -486,7 +499,10 @@ export class AvailabilityService implements IAvailabilityService {
       place.id,
     );
     if (!this.isPlaceBookable(verification)) {
-      return { options: [], diagnostics: emptyDiagnostics };
+      return {
+        options: [],
+        diagnostics: { ...emptyDiagnostics, reservationsDisabled: true },
+      };
     }
 
     const rangeStart = new Date(data.startDate);
@@ -536,6 +552,7 @@ export class AvailabilityService implements IAvailabilityService {
       hasRateRules: false,
       dayHasHours: false,
       allSlotsBooked: false,
+      reservationsDisabled: false,
     };
 
     const place = await this.placeRepository.findById(data.placeId);
@@ -551,7 +568,10 @@ export class AvailabilityService implements IAvailabilityService {
       place.id,
     );
     if (!this.isPlaceBookable(verification)) {
-      return { options: [], diagnostics: emptyDiagnostics };
+      return {
+        options: [],
+        diagnostics: { ...emptyDiagnostics, reservationsDisabled: true },
+      };
     }
 
     const courts = await this.courtRepository.findByPlaceAndSport(
@@ -598,6 +618,7 @@ export class AvailabilityService implements IAvailabilityService {
       hasRateRules: false,
       dayHasHours: false,
       allSlotsBooked: true,
+      reservationsDisabled: false,
     };
     let hasAnySlots = false;
 
@@ -732,6 +753,7 @@ export class AvailabilityService implements IAvailabilityService {
       hasRateRules: rateRules.length > 0,
       dayHasHours: false,
       allSlotsBooked: false,
+      reservationsDisabled: false,
     };
 
     if (durationMinutes <= 0) {
@@ -866,6 +888,7 @@ export class AvailabilityService implements IAvailabilityService {
       dayHasHours: anyDayHasHours,
       allSlotsBooked:
         totalSlotsGenerated > 0 && bookedSlotsCount === totalSlotsGenerated,
+      reservationsDisabled: false,
     };
 
     return { options: sortedOptions, diagnostics };

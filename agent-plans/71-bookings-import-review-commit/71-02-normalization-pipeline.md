@@ -14,9 +14,9 @@ Turn an uploaded import job into draft rows that match the platform structure:
 - Optionally run AI mapping (one-time per venue)
 - Persist normalized rows + per-row errors for review
 
-Known limitation (MVP):
+Screenshot support:
 
-- `sourceType=image` extraction is deferred; image imports currently yield 0 rows until an OCR/vision pipeline is implemented.
+- `sourceType=image` normalization requires AI vision extraction. See `71-06-screenshot-normalization.md`.
 
 ---
 

@@ -20,7 +20,11 @@ This plan covers US-66-01, US-66-02, and US-66-03.
 
 Known limitation:
 
-- Screenshot (`image`) normalization is deferred; deterministic parsing covers ICS/CSV/XLSX
+- Screenshot (`image`) normalization is deferred in the shipped MVP; deterministic parsing covers ICS/CSV/XLSX
+
+Update (2026-01-27):
+
+- Add end-to-end screenshot normalization plan: `71-06-screenshot-normalization.md`
 
 ### Reference Documents
 
@@ -40,7 +44,7 @@ Known limitation:
 | Phase | Description | Modules | Parallelizable |
 |-------|-------------|---------|----------------|
 | 1 | Draft persistence + resume APIs | 1A, 1B | Yes |
-| 2 | Normalization pipeline (server) | 2A | Partial |
+| 2 | Normalization pipeline (server) | 2A, 2B | Partial |
 | 3 | Review/edit UI | 3A | Partial |
 | 4 | Commit to court blocks + results | 4A | No |
 | 5 | QA + polish | 5A | No |
@@ -61,6 +65,7 @@ Known limitation:
 | ID | Module | Plan File |
 |----|--------|----------|
 | 2A | Normalize draft (AI once/venue) + store rows/errors | `71-02-normalization-pipeline.md` |
+| 2B | Screenshot (`image`) normalization via AI vision extraction | `71-06-screenshot-normalization.md` |
 
 ### Phase 3
 

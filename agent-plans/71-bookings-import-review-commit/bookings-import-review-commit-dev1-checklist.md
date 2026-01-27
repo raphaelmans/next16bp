@@ -20,6 +20,7 @@
 - [x] Persist normalized rows and validation errors
 - [x] Implement hour-alignment validation (start/end minute=0; duration divisible by 60)
 - [x] Implement duplicate detection within job (flag duplicates and surface in row errors)
+- [ ] Add screenshot (`image`) normalization via AI vision extraction (plan: `71-06-screenshot-normalization.md`)
 
 ## Phase 3: Review/Edit UI
 
@@ -44,3 +45,10 @@
 - [x] `pnpm lint`
 - [x] `pnpm build`
 - [x] `TZ=UTC pnpm build`
+
+## Phase 6: Screenshot Normalization (Add-on)
+
+- [ ] Server: implement `sourceType=image` extraction + row persistence
+- [ ] Server: require AI mode for images; do not consume `ai_used_at` on failures
+- [ ] Client: disable/hide deterministic normalize action for images
+- [ ] QA: upload a screenshot and confirm non-zero rows + logs
