@@ -20,6 +20,8 @@ export type { ListJobsDTO } from "./list-jobs.dto";
 export { ListJobsSchema } from "./list-jobs.dto";
 export type { ListRowsDTO } from "./list-rows.dto";
 export { ListRowsSchema } from "./list-rows.dto";
+export type { ListSourcesDTO } from "./list-sources.dto";
+export { ListSourcesSchema } from "./list-sources.dto";
 export type {
   NormalizeJobDTO,
   NormalizeMode,

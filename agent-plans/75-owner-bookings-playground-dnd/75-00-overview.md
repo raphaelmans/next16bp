@@ -1,4 +1,4 @@
-# Owner Bookings Playground (DnD Blocks + Import Overlay)
+# Owner Availability Studio (DnD Blocks + Import Overlay)
 
 Status: draft
 
@@ -13,7 +13,7 @@ This makes “day ops” (quickly placing and correcting blocks) slow, and makes
 
 ## Goals
 
-- Add an owner-facing “Bookings Playground” surface optimized for big screens:
+- Add an owner-facing “Availability Studio” surface optimized for big screens:
   - Select venue -> select court -> manage a day via a timeline editor.
 - Add a drag-and-drop palette (widgets) to place blocks:
   - Drag preset widgets (e.g., 1h maintenance, 2h maintenance, 1h walk-in) onto a day timeline.
@@ -22,7 +22,7 @@ This makes “day ops” (quickly placing and correcting blocks) slow, and makes
 - Reuse existing backend primitives where possible (court blocks + bookings import draft rows).
 - Keep place time zone canonical for all date/time input and rendering.
 - Provide an “import overlay mode” that makes import correction calendar-first:
-  - Deep-link from import review to playground.
+  - Deep-link from import review to the studio.
   - Show draft rows as draggable “ghost blocks” until committed.
 
 ## Non-goals
@@ -51,17 +51,17 @@ This makes “day ops” (quickly placing and correcting blocks) slow, and makes
 
 ## Phases
 
-1. **Playground route + layout shell**: new owner route with venue/court selectors and calendar-first bento layout.
+1. **Studio route + layout shell**: new owner route with venue/court selectors and calendar-first bento layout.
 2. **DnD palette -> create blocks**: drag preset widgets onto a day timeline; auto-create + Undo.
 3. **Drag to move/resize blocks** (optional, gated): requires new backend update endpoint.
-4. **Import overlay mode**: drag draft rows onto timeline to fix times (and later court); commit from playground.
+4. **Import overlay mode**: drag draft rows onto timeline to fix times (and later court); commit from the studio.
 5. **QA + polish**: accessibility, reduced motion, error handling, performance.
 
 ## Workstreams
 
 ### Shared / Contract
 
-- [ ] Define URL contract for playground state:
+- [ ] Define URL contract for studio state:
   - `placeId`, `courtId`, `dayKey`, `view`, optional `jobId`.
 - [ ] Define drag payload shapes (type-safe) for dnd-kit:
   - preset widgets (maintenance/walk-in) and import draft rows.
@@ -78,7 +78,7 @@ This makes “day ops” (quickly placing and correcting blocks) slow, and makes
 
 ### Client / Frontend
 
-- [ ] Add `owner/bookings` playground route (venue/court selectors, day timeline, inspector).
+- [ ] Add `owner/bookings` studio route (venue/court selectors, day timeline, inspector).
 - [ ] Build Day Timeline editor component (hour grid, block rendering, time zone display).
 - [ ] Add dnd-kit integration:
   - drag preset -> drop to create -> toast with Undo.
@@ -90,4 +90,4 @@ This makes “day ops” (quickly placing and correcting blocks) slow, and makes
 - Owner can drag a 1h/2h maintenance widget onto a day and it creates a maintenance block.
 - Owner can drag a walk-in widget onto a day and it creates a walk-in block.
 - After drop-create, Undo reliably cancels the created block.
-- Import review can deep-link into playground with job overlay and owners can correct draft rows in calendar context.
+- Import review can deep-link into the studio with job overlay and owners can correct draft rows in calendar context.

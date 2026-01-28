@@ -9,6 +9,7 @@ import {
   CancelCourtBlockSchema,
   CreateCourtBlockSchema,
   ListCourtBlocksSchema,
+  UpdateCourtBlockRangeSchema,
 } from "./dtos";
 import {
   CourtBlockDurationInvalidError,
@@ -104,6 +105,16 @@ export const courtBlockRouter = router({
       try {
         const service = makeCourtBlockService();
         return await service.cancelBlock(ctx.userId, input);
+      } catch (error) {
+        handleCourtBlockError(error);
+      }
+    }),
+  updateRange: protectedProcedure
+    .input(UpdateCourtBlockRangeSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeCourtBlockService();
+        return await service.updateRange(ctx.userId, input);
       } catch (error) {
         handleCourtBlockError(error);
       }

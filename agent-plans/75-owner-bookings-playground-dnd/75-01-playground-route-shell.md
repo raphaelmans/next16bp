@@ -1,4 +1,4 @@
-# Phase 1: Playground Route + Layout Shell
+# Phase 1: Studio Route + Layout Shell
 
 **Dependencies:** existing owner auth + court blocks UI is live (`agent-plans/67-owner-court-blocks/`)  
 **Parallelizable:** Yes (frontend layout can start before drag/drop)  
@@ -8,7 +8,7 @@
 
 ## Objective
 
-Create an owner “Bookings Playground” route that centralizes:
+Create an owner “Availability Studio” route that centralizes:
 
 - Venue selection
 - Court selection

@@ -13,7 +13,9 @@ import type { IObjectStorageService } from "@/modules/storage/services/object-st
 import type {
   BookingsImportJobRecord,
   BookingsImportRowRecord,
+  BookingsImportSourceRecord,
   InsertBookingsImportRow,
+  InsertBookingsImportSource,
 } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
@@ -33,7 +35,6 @@ import {
   BookingsImportHasBlockingErrorsError,
   BookingsImportInvalidCourtError,
   BookingsImportInvalidFileTypeError,
-  BookingsImportInvalidSourceError,
   BookingsImportInvalidStatusError,
   BookingsImportJobNotFoundError,
   BookingsImportNotOwnerError,
@@ -41,9 +42,13 @@ import {
   BookingsImportRowNotFoundError,
 } from "../errors/bookings-import.errors";
 import {
+  buildIcsRowsFromSpec,
   buildTabularDataset,
+  buildTabularRowsFromSpec,
   detectDuplicates,
   extractScreenshotBookings,
+  generateIcsMappingSpec,
+  generateTabularMappingSpec,
   parseCsv,
   parseIcs,
   parseImageTime,
@@ -59,12 +64,7 @@ import type {
   BookingsImportRowStatus,
   IBookingsImportRowRepository,
 } from "../repositories/bookings-import-row.repository";
-
-type SourceConfig = {
-  mimeTypes: string[];
-  extensions: string[];
-  contentTypeFallback: string;
-};
+import type { IBookingsImportSourceRepository } from "../repositories/bookings-import-source.repository";
 
 type ParsedImportRow = {
   courtLabel: string | null;
@@ -72,6 +72,13 @@ type ParsedImportRow = {
   endTime: Date | null;
   reason: string | null;
   sourceData: Record<string, unknown>;
+  sourceLineNumber: number | null;
+};
+
+type SourceConfig = {
+  mimeTypes: string[];
+  extensions: string[];
+  contentTypeFallback: string;
 };
 
 const SOURCE_CONFIG: Record<ImportSource, SourceConfig> = {
@@ -133,6 +140,11 @@ export interface IBookingsImportService {
     jobId: string,
     ctx?: RequestContext,
   ): Promise<BookingsImportRowRecord[]>;
+  listSources(
+    userId: string,
+    jobId: string,
+    ctx?: RequestContext,
+  ): Promise<BookingsImportSourceRecord[]>;
   updateRow(
     userId: string,
     rowId: string,
@@ -171,10 +183,11 @@ export class BookingsImportService implements IBookingsImportService {
     private storageService: IObjectStorageService,
     private jobRepository: IBookingsImportJobRepository,
     private rowRepository: IBookingsImportRowRepository,
+    private sourceRepository: IBookingsImportSourceRepository,
     private courtRepository: ICourtRepository,
     private courtBlockRepository: ICourtBlockRepository,
     private reservationRepository: IReservationRepository,
-    _transactionManager: TransactionManager,
+    private transactionManager: TransactionManager,
   ) {}
 
   private async verifyOwnership(
@@ -242,11 +255,6 @@ export class BookingsImportService implements IBookingsImportService {
     data: CreateBookingsImportDTO,
     ctx?: RequestContext,
   ): Promise<BookingsImportJobRecord> {
-    const config = SOURCE_CONFIG[data.sourceType];
-    if (!config) {
-      throw new BookingsImportInvalidSourceError(data.sourceType);
-    }
-
     const { organizationId } = await this.verifyOwnership(
       userId,
       data.placeId,
@@ -269,71 +277,78 @@ export class BookingsImportService implements IBookingsImportService {
       }
     }
 
-    const fileName = data.file.name || "import";
-    const extension = path.extname(fileName).toLowerCase();
-    const hasExtension = extension.length > 0;
-
-    const hasAllowedMime =
-      data.file.type && config.mimeTypes.includes(data.file.type);
-    const hasAllowedExtension = hasExtension
-      ? config.extensions.includes(extension)
-      : false;
-
-    if (!hasAllowedMime && !hasAllowedExtension) {
-      throw new BookingsImportInvalidFileTypeError(
-        data.file.type,
-        config.mimeTypes,
-      );
-    }
-
     const jobId = uuidv4();
-    const resolvedExtension = hasExtension ? extension : config.extensions[0];
-    const pathName = `imports/${data.placeId}/${jobId}${resolvedExtension}`;
-    const contentType = data.file.type || config.contentTypeFallback;
-    const allowedTypes = data.file.type
-      ? config.mimeTypes
-      : [...config.mimeTypes, ""];
+    const uploadedPaths: string[] = [];
+    const sources: InsertBookingsImportSource[] = [];
 
-    const result = await this.storageService.upload({
-      bucket: STORAGE_BUCKETS.ORGANIZATION_ASSETS,
-      path: pathName,
-      file: data.file,
-      contentType,
-      upsert: false,
-      allowedTypes,
-      maxSize: MAX_IMPORT_FILE_SIZE,
-    });
+    try {
+      for (const [index, file] of data.files.entries()) {
+        const fileName = file.name || `import-${index + 1}`;
+        const { sourceType, resolvedExtension, allowedTypes, contentType } =
+          this.resolveSourceType(file, fileName);
+        const pathName = `imports/${data.placeId}/${jobId}/${index + 1}${resolvedExtension}`;
 
-    // Persist the job to the database
-    const job = await this.jobRepository.create(
-      {
-        id: jobId,
-        placeId: data.placeId,
-        organizationId,
-        userId,
-        sourceType: data.sourceType,
-        status: "DRAFT",
-        fileName: data.file.name,
-        fileSize: data.file.size,
-        filePath: result.path,
-        metadata: selectedCourtId ? { selectedCourtId } : undefined,
-      },
-      ctx,
-    );
+        const result = await this.storageService.upload({
+          bucket: STORAGE_BUCKETS.ORGANIZATION_ASSETS,
+          path: pathName,
+          file,
+          contentType,
+          upsert: false,
+          allowedTypes,
+          maxSize: MAX_IMPORT_FILE_SIZE,
+        });
 
-    logger.info(
-      {
-        event: "bookings_import.draft_created",
-        placeId: data.placeId,
-        organizationId,
-        jobId: job.id,
-        sourceType: data.sourceType,
-        userId,
-      },
-      "Bookings import draft created",
-    );
+        uploadedPaths.push(result.path);
+        sources.push({
+          jobId,
+          sourceType,
+          fileName,
+          fileSize: file.size,
+          filePath: result.path,
+          sortOrder: index + 1,
+        });
+      }
 
-    return job;
+      const primary = sources[0];
+      const job = await this.transactionManager.run(async (tx) => {
+        const txCtx = ctx ? { ...ctx, tx } : { tx };
+        const createdJob = await this.jobRepository.create(
+          {
+            id: jobId,
+            placeId: data.placeId,
+            organizationId,
+            userId,
+            sourceType: primary.sourceType,
+            status: "DRAFT",
+            fileName: primary.fileName,
+            fileSize: primary.fileSize,
+            filePath: primary.filePath,
+            metadata: selectedCourtId ? { selectedCourtId } : undefined,
+          },
+          txCtx,
+        );
+
+        await this.sourceRepository.createMany(sources, txCtx);
+        return createdJob;
+      });
+
+      logger.info(
+        {
+          event: "bookings_import.draft_created",
+          placeId: data.placeId,
+          organizationId,
+          jobId: job.id,
+          sourceTypes: sources.map((source) => source.sourceType),
+          userId,
+        },
+        "Bookings import draft created",
+      );
+
+      return job;
+    } catch (error) {
+      await this.cleanupUploads(uploadedPaths);
+      throw error;
+    }
   }
 
   async getJob(
@@ -360,6 +375,15 @@ export class BookingsImportService implements IBookingsImportService {
   ): Promise<BookingsImportRowRecord[]> {
     await this.verifyJobOwnership(userId, jobId, ctx);
     return this.rowRepository.findByJobId(jobId, ctx);
+  }
+
+  async listSources(
+    userId: string,
+    jobId: string,
+    ctx?: RequestContext,
+  ): Promise<BookingsImportSourceRecord[]> {
+    await this.verifyJobOwnership(userId, jobId, ctx);
+    return this.sourceRepository.findByJobId(jobId, ctx);
   }
 
   async updateRow(
@@ -571,23 +595,29 @@ export class BookingsImportService implements IBookingsImportService {
       );
     }
 
-    // Delete the uploaded file from storage
-    try {
-      await this.storageService.delete(
-        STORAGE_BUCKETS.ORGANIZATION_ASSETS,
-        job.filePath,
-      );
-    } catch (error) {
-      // Log but don't fail if file deletion fails
-      logger.warn(
-        {
-          event: "bookings_import.file_delete_failed",
-          jobId,
-          filePath: job.filePath,
-          error: error instanceof Error ? error.message : "Unknown error",
-        },
-        "Failed to delete import file on discard",
-      );
+    const sources = await this.sourceRepository.findByJobId(jobId, ctx);
+    const filePaths =
+      sources.length > 0
+        ? sources.map((source) => source.filePath)
+        : [job.filePath];
+
+    for (const filePath of filePaths) {
+      try {
+        await this.storageService.delete(
+          STORAGE_BUCKETS.ORGANIZATION_ASSETS,
+          filePath,
+        );
+      } catch (error) {
+        logger.warn(
+          {
+            event: "bookings_import.file_delete_failed",
+            jobId,
+            filePath,
+            error: error instanceof Error ? error.message : "Unknown error",
+          },
+          "Failed to delete import file on discard",
+        );
+      }
     }
 
     await this.jobRepository.updateStatus(jobId, "DISCARDED", ctx);
@@ -635,17 +665,34 @@ export class BookingsImportService implements IBookingsImportService {
         ? ((job.metadata as Record<string, unknown>).selectedCourtId as string)
         : null;
 
-    // Only allow normalization from DRAFT status
     if (job.status !== "DRAFT") {
       throw new BookingsImportInvalidStatusError(job.status, ["DRAFT"]);
     }
 
-    const isImageSource = job.sourceType === "image";
-    if (isImageSource && mode !== "ai") {
-      throw new BookingsImportAiRequiredError(job.sourceType);
+    let sources = await this.sourceRepository.findByJobId(jobId, ctx);
+    if (sources.length === 0) {
+      sources = await this.sourceRepository.createMany(
+        [
+          {
+            jobId,
+            sourceType: job.sourceType as ImportSource,
+            fileName: job.fileName,
+            fileSize: job.fileSize,
+            filePath: job.filePath,
+            sortOrder: 1,
+          },
+        ],
+        ctx,
+      );
     }
 
-    // AI mode guard
+    const hasImageSource = sources.some(
+      (source) => source.sourceType === "image",
+    );
+    if (hasImageSource && mode !== "ai") {
+      throw new BookingsImportAiRequiredError("image");
+    }
+
     if (mode === "ai") {
       if (!confirmAiOnce) {
         throw new BookingsImportInvalidStatusError(
@@ -664,22 +711,19 @@ export class BookingsImportService implements IBookingsImportService {
       }
     }
 
-    if (isImageSource && mode === "ai" && !env.OPENAI_API_KEY) {
+    if (mode === "ai" && !env.OPENAI_API_KEY) {
       throw new BookingsImportAiNotConfiguredError();
     }
 
-    // Update job status to NORMALIZING
     await this.jobRepository.updateStatus(jobId, "NORMALIZING", ctx);
 
     try {
-      // Get place info for timezone
       const place = await this.placeRepository.findById(job.placeId, ctx);
       if (!place) {
         throw new BookingsImportPlaceNotFoundError(job.placeId);
       }
       const timeZone = place.timeZone;
 
-      // Get courts for this place (for label matching)
       const courts = await this.courtRepository.findByPlaceId(job.placeId, ctx);
 
       if (
@@ -694,60 +738,66 @@ export class BookingsImportService implements IBookingsImportService {
         courtLabelMap.set(court.label.toLowerCase().trim(), court.id);
       }
 
-      // Download and parse the file
-      const fileBuffer = await this.storageService.download(
-        STORAGE_BUCKETS.ORGANIZATION_ASSETS,
-        job.filePath,
-      );
+      await this.rowRepository.deleteByJobId(jobId, ctx);
 
-      // Parse based on source type
-      if (isImageSource) {
-        logger.info(
-          {
-            event: "bookings_import.image_extract_started",
-            jobId,
-            placeId: job.placeId,
-            model: SCREENSHOT_MODEL_DEFAULT,
-          },
-          "Bookings import image extraction started",
+      const rowRecords: InsertBookingsImportRow[] = [];
+      let lineNumber = 1;
+
+      for (const source of sources) {
+        const fileBuffer = await this.storageService.download(
+          STORAGE_BUCKETS.ORGANIZATION_ASSETS,
+          source.filePath,
         );
-      }
 
-      const { rows: parsedRows, metadata: parseMetadata } =
-        await this.parseFile({
+        if (source.sourceType === "image" && mode === "ai") {
+          logger.info(
+            {
+              event: "bookings_import.image_extract_started",
+              jobId,
+              placeId: job.placeId,
+              sourceId: source.id,
+              model: SCREENSHOT_MODEL_DEFAULT,
+            },
+            "Bookings import image extraction started",
+          );
+        }
+
+        const { rows: parsedRows, metadata } = await this.parseFile({
           buffer: fileBuffer,
-          sourceType: job.sourceType as ImportSource,
+          sourceType: source.sourceType as ImportSource,
           timeZone,
+          mode,
           model: SCREENSHOT_MODEL_DEFAULT,
         });
 
-      if (isImageSource) {
-        logger.info(
-          {
-            event: "bookings_import.image_extract_completed",
-            jobId,
-            placeId: job.placeId,
-            eventCount:
-              parseMetadata?.screenshotEventCount ?? parsedRows.length,
-          },
-          "Bookings import image extraction completed",
-        );
-      }
+        if (source.sourceType === "image" && mode === "ai") {
+          logger.info(
+            {
+              event: "bookings_import.image_extract_completed",
+              jobId,
+              placeId: job.placeId,
+              sourceId: source.id,
+              eventCount: metadata?.screenshotEventCount ?? parsedRows.length,
+            },
+            "Bookings import image extraction completed",
+          );
+        }
 
-      // Delete existing rows for this job (in case of re-normalization)
-      await this.rowRepository.deleteByJobId(jobId, ctx);
+        if (metadata) {
+          await this.sourceRepository.update(
+            source.id,
+            { metadata: { ...(source.metadata ?? {}), ...metadata } },
+            ctx,
+          );
+        }
 
-      // Build row records with validation
-      const rowRecords: InsertBookingsImportRow[] = parsedRows.map(
-        (row, index) => {
-          // Try to match court by label
+        parsedRows.forEach((row, rowIndex) => {
           let courtId: string | null = selectedCourtId;
           if (!courtId && row.courtLabel) {
             courtId =
               courtLabelMap.get(row.courtLabel.toLowerCase().trim()) ?? null;
           }
 
-          // Validate the row
           const validation = validateRow({
             courtId,
             courtLabel: row.courtLabel,
@@ -759,11 +809,17 @@ export class BookingsImportService implements IBookingsImportService {
           const status: BookingsImportRowStatus =
             validation.errors.length > 0 ? "ERROR" : "VALID";
 
-          return {
+          rowRecords.push({
             jobId,
-            lineNumber: index + 1,
+            sourceId: source.id,
+            sourceLineNumber: row.sourceLineNumber ?? rowIndex + 1,
+            lineNumber,
             status,
-            sourceData: row.sourceData,
+            sourceData: {
+              ...row.sourceData,
+              sourceFileName: source.fileName,
+              sourceType: source.sourceType,
+            },
             courtId,
             courtLabel: row.courtLabel,
             startTime: row.startTime,
@@ -772,37 +828,39 @@ export class BookingsImportService implements IBookingsImportService {
             errors: validation.errors.length > 0 ? validation.errors : null,
             warnings:
               validation.warnings.length > 0 ? validation.warnings : null,
-          };
-        },
-      );
+          });
 
-      // Detect duplicates within the job
+          lineNumber += 1;
+        });
+      }
+
       const duplicateMap = detectDuplicates(
-        rowRecords.map((r) => ({
-          courtId: r.courtId ?? null,
-          startTime: r.startTime ?? null,
-          endTime: r.endTime ?? null,
+        rowRecords.map((row) => ({
+          courtId: row.courtId ?? null,
+          courtLabel: row.courtLabel ?? null,
+          startTime: row.startTime ?? null,
+          endTime: row.endTime ?? null,
         })),
       );
 
-      // Add duplicate errors
-      for (const [index, _duplicateIndices] of duplicateMap) {
+      for (const [index] of duplicateMap) {
         const row = rowRecords[index];
         const existingErrors = (row.errors as string[] | null) ?? [];
         row.errors = [...existingErrors, "Duplicate booking in this import"];
         row.status = "ERROR";
       }
 
-      // Insert rows in batches
       if (rowRecords.length > 0) {
         await this.rowRepository.createMany(rowRecords, ctx);
       }
 
-      // Count results
-      const validCount = rowRecords.filter((r) => r.status === "VALID").length;
-      const errorCount = rowRecords.filter((r) => r.status === "ERROR").length;
+      const validCount = rowRecords.filter(
+        (row) => row.status === "VALID",
+      ).length;
+      const errorCount = rowRecords.filter(
+        (row) => row.status === "ERROR",
+      ).length;
 
-      // Update job with counts and status
       const updateData: Parameters<IBookingsImportJobRepository["update"]>[1] =
         {
           status: "NORMALIZED",
@@ -811,13 +869,6 @@ export class BookingsImportService implements IBookingsImportService {
           errorRowCount: errorCount,
           normalizedAt: new Date(),
         };
-
-      if (parseMetadata) {
-        updateData.metadata = {
-          ...(job.metadata ?? {}),
-          ...parseMetadata,
-        };
-      }
 
       if (mode === "ai") {
         updateData.aiUsedAt = new Date();
@@ -846,7 +897,7 @@ export class BookingsImportService implements IBookingsImportService {
         errorRowCount: errorCount,
       };
     } catch (error) {
-      if (isImageSource) {
+      if (hasImageSource) {
         logger.warn(
           {
             event: "bookings_import.image_extract_failed",
@@ -857,7 +908,6 @@ export class BookingsImportService implements IBookingsImportService {
           "Bookings import image extraction failed",
         );
       }
-      // Mark job as failed
       await this.jobRepository.update(
         jobId,
         {
@@ -1129,13 +1179,79 @@ export class BookingsImportService implements IBookingsImportService {
     }
   }
 
+  private resolveSourceType(
+    file: File,
+    fileName: string,
+  ): {
+    sourceType: ImportSource;
+    resolvedExtension: string;
+    allowedTypes: string[];
+    contentType: string;
+  } {
+    const extension = path.extname(fileName).toLowerCase();
+    const hasExtension = extension.length > 0;
+    const entries = Object.entries(SOURCE_CONFIG) as Array<
+      [ImportSource, SourceConfig]
+    >;
+
+    const byExtension = hasExtension
+      ? entries.find(([, config]) => config.extensions.includes(extension))
+      : undefined;
+    const byMime = file.type
+      ? entries.find(([, config]) => config.mimeTypes.includes(file.type))
+      : undefined;
+
+    const matched = byExtension ?? byMime;
+    if (!matched) {
+      const allowedTypes = entries.flatMap(([, config]) => config.mimeTypes);
+      throw new BookingsImportInvalidFileTypeError(
+        file.type || extension || "unknown",
+        allowedTypes,
+      );
+    }
+
+    const [sourceType, config] = matched;
+    const resolvedExtension = hasExtension ? extension : config.extensions[0];
+    const allowedTypes = file.type
+      ? config.mimeTypes
+      : [...config.mimeTypes, ""];
+    const contentType = file.type || config.contentTypeFallback;
+
+    return { sourceType, resolvedExtension, allowedTypes, contentType };
+  }
+
+  private async cleanupUploads(paths: string[]): Promise<void> {
+    if (paths.length === 0) return;
+
+    await Promise.all(
+      paths.map(async (pathName) => {
+        try {
+          await this.storageService.delete(
+            STORAGE_BUCKETS.ORGANIZATION_ASSETS,
+            pathName,
+          );
+        } catch (error) {
+          logger.warn(
+            {
+              event: "bookings_import.cleanup_failed",
+              filePath: pathName,
+              error: error instanceof Error ? error.message : "Unknown error",
+            },
+            "Failed to cleanup uploaded import file",
+          );
+        }
+      }),
+    );
+  }
+
   private async parseFile(params: {
     buffer: Buffer;
     sourceType: ImportSource;
     timeZone: string;
+    mode: NormalizeMode;
     model?: string;
   }): Promise<{ rows: ParsedImportRow[]; metadata?: Record<string, unknown> }> {
-    const { buffer, sourceType, timeZone, model } = params;
+    const { buffer, sourceType, timeZone, mode, model } = params;
 
     switch (sourceType) {
       case "ics": {
@@ -1144,7 +1260,44 @@ export class BookingsImportService implements IBookingsImportService {
         const rangeEnd = addDays(now, 365);
         const occurrences = parseIcs(content, now, rangeEnd);
 
-        const rows = occurrences.map((occ) => ({
+        if (mode === "ai") {
+          const sampleEvents = occurrences.slice(0, 20).map((event) => ({
+            summary: event.summary ?? null,
+            location: event.location ?? null,
+            description: event.description ?? null,
+            start: event.start.toISOString(),
+            end: event.end.toISOString(),
+            status: event.status ?? null,
+          }));
+
+          const mappingSpec = await generateIcsMappingSpec({
+            sampleEvents,
+            model,
+          });
+
+          const mappedRows = buildIcsRowsFromSpec({
+            occurrences,
+            spec: mappingSpec,
+          });
+
+          const rows = mappedRows.map((row) => ({
+            courtLabel: row.courtLabel,
+            startTime: row.startTime,
+            endTime: row.endTime,
+            reason: row.reason,
+            sourceData: row.sourceData,
+            sourceLineNumber: row.rowNumber,
+          }));
+
+          return {
+            rows,
+            metadata: {
+              icsMappingSpec: mappingSpec,
+            },
+          };
+        }
+
+        const rows = occurrences.map((occ, index) => ({
           courtLabel: occ.location ?? occ.summary ?? null,
           startTime: occ.start,
           endTime: occ.end,
@@ -1155,6 +1308,7 @@ export class BookingsImportService implements IBookingsImportService {
             description: occ.description ?? null,
             uid: occ.uid ?? null,
           },
+          sourceLineNumber: index + 1,
         }));
 
         return { rows };
@@ -1163,6 +1317,36 @@ export class BookingsImportService implements IBookingsImportService {
       case "csv": {
         const content = buffer.toString("utf-8");
         const dataset = buildTabularDataset(parseCsv(content));
+
+        if (mode === "ai") {
+          const mappingSpec = await generateTabularMappingSpec({
+            dataset,
+            timeZone,
+            format: "csv",
+            model,
+          });
+          const mappedRows = buildTabularRowsFromSpec({
+            dataset,
+            spec: mappingSpec,
+            timeZone,
+            format: "csv",
+          });
+
+          return {
+            rows: mappedRows.map((row) => ({
+              courtLabel: row.courtLabel,
+              startTime: row.startTime,
+              endTime: row.endTime,
+              reason: row.reason,
+              sourceData: row.sourceData,
+              sourceLineNumber: row.rowNumber,
+            })),
+            metadata: {
+              tabularMappingSpec: mappingSpec,
+              tabularFormat: "csv",
+            },
+          };
+        }
 
         // Basic heuristic: look for common column names
         const headers = dataset.headers.map((h) => h.toLowerCase());
@@ -1204,6 +1388,7 @@ export class BookingsImportService implements IBookingsImportService {
             endTime: endStr ? new Date(endStr) : null,
             reason,
             sourceData: row.data,
+            sourceLineNumber: row.rowNumber,
           };
         });
 
@@ -1212,6 +1397,36 @@ export class BookingsImportService implements IBookingsImportService {
 
       case "xlsx": {
         const dataset = parseXlsx(buffer);
+
+        if (mode === "ai") {
+          const mappingSpec = await generateTabularMappingSpec({
+            dataset,
+            timeZone,
+            format: "xlsx",
+            model,
+          });
+          const mappedRows = buildTabularRowsFromSpec({
+            dataset,
+            spec: mappingSpec,
+            timeZone,
+            format: "xlsx",
+          });
+
+          return {
+            rows: mappedRows.map((row) => ({
+              courtLabel: row.courtLabel,
+              startTime: row.startTime,
+              endTime: row.endTime,
+              reason: row.reason,
+              sourceData: row.sourceData,
+              sourceLineNumber: row.rowNumber,
+            })),
+            metadata: {
+              tabularMappingSpec: mappingSpec,
+              tabularFormat: "xlsx",
+            },
+          };
+        }
 
         // Same heuristic as CSV
         const headers = dataset.headers.map((h) => h.toLowerCase());
@@ -1253,6 +1468,7 @@ export class BookingsImportService implements IBookingsImportService {
             endTime: endStr ? new Date(endStr) : null,
             reason,
             sourceData: row.data,
+            sourceLineNumber: row.rowNumber,
           };
         });
 
@@ -1265,7 +1481,7 @@ export class BookingsImportService implements IBookingsImportService {
           model,
         });
 
-        const rows = extraction.events.map((event) => {
+        const rows = extraction.events.map((event, index) => {
           const time = parseImageTime(event.startTime);
           const startTime = time
             ? new TZDate(
@@ -1296,6 +1512,7 @@ export class BookingsImportService implements IBookingsImportService {
               calendarTitle: extraction.calendarTitle ?? null,
               timeZone: extraction.timeZone ?? null,
             },
+            sourceLineNumber: index + 1,
           };
         });
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { TZDate } from "@date-fns/tz";
 import {
   closestCenter,
   DndContext,
@@ -15,16 +16,34 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { addMinutes } from "date-fns";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { addMinutes, differenceInMinutes, format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import Link from "next/link";
 import { parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+import {
+  StandardFormInput,
+  StandardFormProvider,
+  StandardFormSelect,
+  StandardFormTextarea,
+} from "@/components/form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -85,10 +104,60 @@ type DragPreset = {
   preset: BlockPreset;
 };
 
+type DragBlock = {
+  kind: "block";
+  blockId: string;
+};
+
+type DragResizeHandle = {
+  kind: "resize";
+  blockId: string;
+  edge: "start" | "end";
+};
+
+type DragDraftRow = {
+  kind: "draft-row";
+  rowId: string;
+};
+
+type DragItem = DragPreset | DragBlock | DragResizeHandle | DragDraftRow;
+
 type TimelineCellData = {
   kind: "timeline-cell";
   dayKey: string;
   startMinute: number;
+};
+
+type DraftRowStatus =
+  | "VALID"
+  | "ERROR"
+  | "WARNING"
+  | "PENDING"
+  | "COMMITTED"
+  | "SKIPPED";
+
+type CourtBlockItem = {
+  id: string;
+  type: "MAINTENANCE" | "WALK_IN";
+  startTime: Date | string;
+  endTime: Date | string;
+  reason: string | null;
+  totalPriceCents: number;
+  currency: string;
+  isActive: boolean;
+};
+
+type DraftRowItem = {
+  id: string;
+  lineNumber: number;
+  status: DraftRowStatus;
+  courtId: string | null;
+  courtLabel: string | null;
+  startTime: Date | string | null;
+  endTime: Date | string | null;
+  reason: string | null;
+  errors: string[] | null;
+  warnings: string[] | null;
 };
 
 const BLOCK_PRESETS: BlockPreset[] = [
@@ -117,6 +186,27 @@ const BLOCK_PRESETS: BlockPreset[] = [
     description: "Reserve for walk-in customers.",
   },
 ];
+
+const DRAFT_STATUS_PRIORITY: Record<DraftRowStatus, number> = {
+  ERROR: 0,
+  WARNING: 1,
+  VALID: 2,
+  PENDING: 3,
+  COMMITTED: 4,
+  SKIPPED: 5,
+};
+
+const DRAFT_STATUS_BADGE: Record<
+  DraftRowStatus,
+  "destructive" | "warning" | "success" | "secondary"
+> = {
+  ERROR: "destructive",
+  WARNING: "warning",
+  VALID: "success",
+  PENDING: "secondary",
+  COMMITTED: "secondary",
+  SKIPPED: "secondary",
+};
 
 const parseTimelineRange = (
   windows: { dayOfWeek: number; startMinute: number; endMinute: number }[],
@@ -155,7 +245,41 @@ const buildDateFromDayKey = (
   return addMinutes(dayStart, startMinute);
 };
 
-export default function OwnerBookingsPlaygroundPage() {
+const formatDateTimeInput = (date: Date, timeZone: string) =>
+  format(getZonedDate(date, timeZone), "yyyy-MM-dd'T'HH:mm");
+
+const parseDateTimeInput = (value: string, timeZone: string) => {
+  const [datePart, timePart] = value.split("T");
+  if (!datePart || !timePart) return null;
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hour, minute] = timePart.split(":").map(Number);
+  if (
+    !Number.isFinite(year) ||
+    !Number.isFinite(month) ||
+    !Number.isFinite(day) ||
+    !Number.isFinite(hour) ||
+    !Number.isFinite(minute)
+  ) {
+    return null;
+  }
+  return new TZDate(year, month - 1, day, hour, minute, timeZone);
+};
+
+const blockTypeOptions = [
+  { value: "MAINTENANCE", label: "Maintenance" },
+  { value: "WALK_IN", label: "Walk-in" },
+] as const;
+
+const customBlockSchema = z.object({
+  blockType: z.enum(["MAINTENANCE", "WALK_IN"]),
+  startTime: z.string().min(1, "Start time is required"),
+  endTime: z.string().min(1, "End time is required"),
+  reason: z.string().trim().optional(),
+});
+
+type CustomBlockFormValues = z.infer<typeof customBlockSchema>;
+
+export default function OwnerAvailabilityStudioPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
   const {
@@ -165,10 +289,10 @@ export default function OwnerBookingsPlaygroundPage() {
   } = useOwnerOrganization();
 
   const { placeId, setPlaceId } = useOwnerPlaceFilter({
-    storageKey: "owner.bookingsPlayground.placeId",
+    storageKey: "owner.availabilityStudio.placeId",
   });
   const { courtId, setCourtId } = useOwnerCourtFilter({
-    storageKey: "owner.bookingsPlayground.courtId",
+    storageKey: "owner.availabilityStudio.courtId",
   });
 
   const { data: places = [], isLoading: placesLoading } = useOwnerPlaces(
@@ -182,11 +306,20 @@ export default function OwnerBookingsPlaygroundPage() {
     [placeId, places],
   );
   const placeTimeZone = selectedPlace?.timeZone ?? "Asia/Manila";
+  const selectedCourt = React.useMemo(
+    () => courts.find((court) => court.id === courtId),
+    [courtId, courts],
+  );
 
   const [dayKeyParam, setDayKeyParam] = useQueryState(
     "dayKey",
     parseAsString.withOptions({ history: "replace" }),
   );
+  const [jobIdParam, setJobIdParam] = useQueryState(
+    "jobId",
+    parseAsString.withOptions({ history: "replace" }),
+  );
+  const jobId = jobIdParam ?? "";
 
   const fallbackDayKey = React.useMemo(
     () => getZonedDayKey(getZonedToday(placeTimeZone), placeTimeZone),
@@ -199,6 +332,22 @@ export default function OwnerBookingsPlaygroundPage() {
       setDayKeyParam(fallbackDayKey);
     }
   }, [dayKeyParam, fallbackDayKey, setDayKeyParam]);
+
+  const jobQuery = trpc.bookingsImport.getJob.useQuery(
+    { jobId },
+    { enabled: Boolean(jobId) },
+  );
+  const rowsQuery = trpc.bookingsImport.listRows.useQuery(
+    { jobId },
+    { enabled: Boolean(jobId) },
+  );
+
+  React.useEffect(() => {
+    if (!jobQuery.data?.placeId) return;
+    if (jobQuery.data.placeId !== placeId) {
+      setPlaceId(jobQuery.data.placeId);
+    }
+  }, [jobQuery.data?.placeId, placeId, setPlaceId]);
 
   React.useEffect(() => {
     if (placesLoading || places.length === 0) return;
@@ -219,23 +368,62 @@ export default function OwnerBookingsPlaygroundPage() {
     }
   }, [courtId, courts, courtsLoading, placeId, setCourtId]);
 
+  React.useEffect(() => {
+    const metadata = jobQuery.data?.metadata as Record<string, unknown> | null;
+    const selectedCourtId =
+      metadata && typeof metadata.selectedCourtId === "string"
+        ? metadata.selectedCourtId
+        : null;
+    if (!selectedCourtId) return;
+    if (courts.some((court) => court.id === selectedCourtId)) {
+      setCourtId(selectedCourtId);
+    }
+  }, [courts, jobQuery.data?.metadata, setCourtId]);
+
+  const isImportOverlay = Boolean(jobId);
+  const job = jobQuery.data;
+  const isImportEditable = job?.status === "NORMALIZED";
+  const draftRows = (rowsQuery.data ?? []) as DraftRowItem[];
+  const draftRowsById = React.useMemo(
+    () => new Map(draftRows.map((row) => [row.id, row])),
+    [draftRows],
+  );
+  const draftRowsSorted = React.useMemo(() => {
+    return [...draftRows].sort((a, b) => {
+      const statusA = (a.status ?? "PENDING") as DraftRowStatus;
+      const statusB = (b.status ?? "PENDING") as DraftRowStatus;
+      const priorityA = DRAFT_STATUS_PRIORITY[statusA] ?? 99;
+      const priorityB = DRAFT_STATUS_PRIORITY[statusB] ?? 99;
+      if (priorityA !== priorityB) return priorityA - priorityB;
+      return a.lineNumber - b.lineNumber;
+    });
+  }, [draftRows]);
+  const canCommitImport = Boolean(
+    job && isImportEditable && (job.errorRowCount ?? 0) === 0,
+  );
+
   const selectedDayRange = React.useMemo(
     () => getZonedDayRangeFromDayKey(dayKey, placeTimeZone),
     [dayKey, placeTimeZone],
   );
-  const selectedDate = selectedDayRange.start;
+  const selectedDayStart = selectedDayRange.start;
+  const selectedDate = React.useMemo(
+    () => new Date(selectedDayStart.getTime()),
+    [selectedDayStart],
+  );
   const selectedDayLabel = React.useMemo(
-    () => formatInTimeZone(selectedDate, placeTimeZone, "EEEE, MMMM d, yyyy"),
-    [placeTimeZone, selectedDate],
+    () =>
+      formatInTimeZone(selectedDayStart, placeTimeZone, "EEEE, MMMM d, yyyy"),
+    [placeTimeZone, selectedDayStart],
   );
 
-  const [calendarMonth, setCalendarMonth] = React.useState(selectedDate);
+  const [calendarMonth, setCalendarMonth] = React.useState<Date>(selectedDate);
   React.useEffect(() => {
     setCalendarMonth(selectedDate);
   }, [selectedDate]);
 
   const courtHoursQuery = useCourtHours(courtId);
-  const dayOfWeek = selectedDate.getDay();
+  const dayOfWeek = getZonedDate(selectedDayStart, placeTimeZone).getDay();
   const { startHour, endHour } = React.useMemo(
     () => parseTimelineRange(courtHoursQuery.data ?? [], dayOfWeek),
     [courtHoursQuery.data, dayOfWeek],
@@ -254,8 +442,8 @@ export default function OwnerBookingsPlaygroundPage() {
   const timelineEndMinute = endHour * 60;
 
   const dayStartIso = React.useMemo(
-    () => toUtcISOString(selectedDayRange.start),
-    [selectedDayRange.start],
+    () => toUtcISOString(selectedDayStart),
+    [selectedDayStart],
   );
   const dayEndIso = React.useMemo(
     () => toUtcISOString(selectedDayRange.end),
@@ -268,13 +456,19 @@ export default function OwnerBookingsPlaygroundPage() {
   );
 
   const activeBlocks = React.useMemo(
-    () => (blocksQuery.data ?? []).filter((block) => block.isActive),
+    () =>
+      ((blocksQuery.data ?? []) as CourtBlockItem[]).filter(
+        (block) => block.isActive,
+      ),
     [blocksQuery.data],
   );
 
   const dayBlocks = React.useMemo(
     () =>
-      [...activeBlocks].sort((a, b) => a.startTime.localeCompare(b.startTime)),
+      [...activeBlocks].sort(
+        (a, b) =>
+          new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
+      ),
     [activeBlocks],
   );
 
@@ -306,14 +500,71 @@ export default function OwnerBookingsPlaygroundPage() {
       .filter((item): item is NonNullable<typeof item> => Boolean(item));
   }, [activeBlocks, placeTimeZone, timelineEndMinute, timelineStartMinute]);
 
+  const draftTimelineBlocks = React.useMemo(() => {
+    if (!isImportOverlay)
+      return [] as Array<{
+        row: (typeof draftRows)[number];
+        topOffset: number;
+        height: number;
+      }>;
+
+    return draftRows
+      .filter((row) => row.status !== "COMMITTED" && row.status !== "SKIPPED")
+      .filter((row) => row.startTime && row.endTime)
+      .filter((row) => (courtId ? row.courtId === courtId : true))
+      .map((row) => {
+        const startTime = row.startTime as Date | string;
+        const endTime = row.endTime as Date | string;
+        const startMinute = getMinuteOfDay(startTime, placeTimeZone);
+        const endMinute = getMinuteOfDay(endTime, placeTimeZone);
+        if (
+          endMinute <= timelineStartMinute ||
+          startMinute >= timelineEndMinute
+        ) {
+          return null;
+        }
+
+        const clampedStart = Math.max(startMinute, timelineStartMinute);
+        const clampedEnd = Math.min(endMinute, timelineEndMinute);
+        const topOffset =
+          ((clampedStart - timelineStartMinute) / 60) * TIMELINE_ROW_HEIGHT;
+        const height = ((clampedEnd - clampedStart) / 60) * TIMELINE_ROW_HEIGHT;
+
+        return {
+          row,
+          topOffset,
+          height,
+        };
+      })
+      .filter((item): item is NonNullable<typeof item> => Boolean(item));
+  }, [
+    courtId,
+    draftRows,
+    isImportOverlay,
+    placeTimeZone,
+    timelineEndMinute,
+    timelineStartMinute,
+  ]);
+
   const utils = trpc.useUtils();
   const createMaintenance = trpc.courtBlock.createMaintenance.useMutation();
   const createWalkIn = trpc.courtBlock.createWalkIn.useMutation();
   const cancelBlock = trpc.courtBlock.cancel.useMutation();
+  const updateRange = trpc.courtBlock.updateRange.useMutation();
+
+  const updateDraftRow = trpc.bookingsImport.updateRow.useMutation();
+  const commitImport = trpc.bookingsImport.commit.useMutation();
+  const discardImport = trpc.bookingsImport.discardJob.useMutation();
 
   const invalidateBlocks = React.useCallback(() => {
     void utils.courtBlock.listForCourtRange.invalidate();
   }, [utils]);
+
+  const invalidateDraftRows = React.useCallback(() => {
+    if (!jobId) return;
+    void utils.bookingsImport.listRows.invalidate({ jobId });
+    void utils.bookingsImport.getJob.invalidate({ jobId });
+  }, [jobId, utils]);
 
   const handleCancelBlock = React.useCallback(
     async (
@@ -390,6 +641,115 @@ export default function OwnerBookingsPlaygroundPage() {
     ],
   );
 
+  const handleUpdateBlockRange = React.useCallback(
+    async (blockId: string, startTime: Date, endTime: Date) => {
+      if (endTime <= startTime) {
+        toast.error("End time must be after start time");
+        return;
+      }
+
+      try {
+        await updateRange.mutateAsync({
+          blockId,
+          startTime: toUtcISOString(startTime),
+          endTime: toUtcISOString(endTime),
+        });
+        invalidateBlocks();
+      } catch (error) {
+        toast.error("Unable to update block", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+      }
+    },
+    [invalidateBlocks, updateRange],
+  );
+
+  const handleDraftRowDrop = React.useCallback(
+    async (rowId: string, startMinute: number) => {
+      if (!jobId || !isImportEditable) {
+        toast.error("Import rows are not editable yet");
+        return;
+      }
+
+      const row = draftRowsById.get(rowId);
+      if (!row) return;
+
+      const durationMinutes =
+        row.startTime && row.endTime
+          ? Math.max(
+              differenceInMinutes(
+                new Date(row.endTime),
+                new Date(row.startTime),
+              ),
+              60,
+            )
+          : 60;
+      const start = buildDateFromDayKey(dayKey, startMinute, placeTimeZone);
+      const end = addMinutes(start, durationMinutes);
+
+      try {
+        await updateDraftRow.mutateAsync({
+          rowId,
+          startTime: start,
+          endTime: end,
+          courtId: selectedCourt?.id ?? undefined,
+          courtLabel: selectedCourt?.label ?? undefined,
+        });
+        invalidateDraftRows();
+        toast.success("Draft row updated");
+      } catch (error) {
+        toast.error("Unable to update draft row", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+      }
+    },
+    [
+      dayKey,
+      draftRowsById,
+      invalidateDraftRows,
+      isImportEditable,
+      jobId,
+      placeTimeZone,
+      selectedCourt?.id,
+      selectedCourt?.label,
+      updateDraftRow,
+    ],
+  );
+
+  const handleCommitImport = React.useCallback(async () => {
+    if (!jobId) return;
+    try {
+      const result = await commitImport.mutateAsync({ jobId });
+      invalidateDraftRows();
+      if (result.failedRows > 0) {
+        toast.warning(
+          `Committed ${result.committedRows} rows. ${result.failedRows} failed.`,
+        );
+      } else {
+        toast.success(`Committed ${result.committedRows} rows.`);
+      }
+    } catch (error) {
+      toast.error("Unable to commit import", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  }, [commitImport, invalidateDraftRows, jobId]);
+
+  const handleDiscardImport = React.useCallback(async () => {
+    if (!jobId) return;
+    const confirmed = window.confirm("Discard this import?");
+    if (!confirmed) return;
+    try {
+      await discardImport.mutateAsync({ jobId });
+      toast.success("Import discarded");
+      setJobIdParam(null);
+    } catch (error) {
+      toast.error("Unable to discard import", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  }, [discardImport, jobId, setJobIdParam]);
+
   const [activeDragItem, setActiveDragItem] = React.useState<DragPreset | null>(
     null,
   );
@@ -415,25 +775,159 @@ export default function OwnerBookingsPlaygroundPage() {
 
       if (!over) return;
 
-      const activeData = active.data.current as DragPreset | undefined;
+      const activeData = active.data.current as DragItem | undefined;
       const overData = over.data.current as TimelineCellData | undefined;
 
-      if (!activeData || activeData.kind !== "preset") return;
-      if (!overData || overData.kind !== "timeline-cell") return;
+      if (!activeData || !overData || overData.kind !== "timeline-cell") {
+        return;
+      }
 
-      const start = buildDateFromDayKey(
-        overData.dayKey,
-        overData.startMinute,
-        placeTimeZone,
-      );
-      const end = addMinutes(start, activeData.preset.durationMinutes);
-      await createBlock(activeData.preset, start, end);
+      if (activeData.kind === "preset") {
+        const start = buildDateFromDayKey(
+          overData.dayKey,
+          overData.startMinute,
+          placeTimeZone,
+        );
+        const end = addMinutes(start, activeData.preset.durationMinutes);
+        await createBlock(activeData.preset, start, end);
+        return;
+      }
+
+      if (activeData.kind === "block") {
+        const block = activeBlocks.find(
+          (item) => item.id === activeData.blockId,
+        );
+        if (!block) return;
+        const durationMinutes = Math.max(
+          differenceInMinutes(
+            new Date(block.endTime),
+            new Date(block.startTime),
+          ),
+          60,
+        );
+        const start = buildDateFromDayKey(
+          overData.dayKey,
+          overData.startMinute,
+          placeTimeZone,
+        );
+        const end = addMinutes(start, durationMinutes);
+        await handleUpdateBlockRange(block.id, start, end);
+        return;
+      }
+
+      if (activeData.kind === "resize") {
+        const block = activeBlocks.find(
+          (item) => item.id === activeData.blockId,
+        );
+        if (!block) return;
+        const startTime = new Date(block.startTime);
+        const endTime = new Date(block.endTime);
+        const nextTime = buildDateFromDayKey(
+          overData.dayKey,
+          overData.startMinute,
+          placeTimeZone,
+        );
+        if (activeData.edge === "start") {
+          await handleUpdateBlockRange(block.id, nextTime, endTime);
+        } else {
+          const adjustedEnd = addMinutes(nextTime, 60);
+          await handleUpdateBlockRange(block.id, startTime, adjustedEnd);
+        }
+        return;
+      }
+
+      if (activeData.kind === "draft-row") {
+        const row = draftRowsById.get(activeData.rowId);
+        if (!row) return;
+        await handleDraftRowDrop(row.id, overData.startMinute);
+      }
     },
-    [createBlock, placeTimeZone],
+    [
+      activeBlocks,
+      createBlock,
+      draftRowsById,
+      handleDraftRowDrop,
+      handleUpdateBlockRange,
+      placeTimeZone,
+    ],
   );
 
-  const isDragDisabled =
-    !courtId || createMaintenance.isPending || createWalkIn.isPending;
+  const isCreatingBlock = createMaintenance.isPending || createWalkIn.isPending;
+  const isDragDisabled = !courtId || isCreatingBlock || updateRange.isPending;
+  const isDraftDragDisabled =
+    !isImportEditable || !courtId || updateDraftRow.isPending;
+
+  const [customDialogOpen, setCustomDialogOpen] = React.useState(false);
+  const customForm = useForm<CustomBlockFormValues>({
+    resolver: zodResolver(customBlockSchema),
+    defaultValues: {
+      blockType: "MAINTENANCE",
+      startTime: "",
+      endTime: "",
+      reason: "",
+    },
+  });
+
+  const openCustomDialog = React.useCallback(() => {
+    const start = buildDateFromDayKey(
+      dayKey,
+      timelineStartMinute,
+      placeTimeZone,
+    );
+    const end = addMinutes(start, 60);
+    customForm.reset({
+      blockType: "MAINTENANCE",
+      startTime: formatDateTimeInput(start, placeTimeZone),
+      endTime: formatDateTimeInput(end, placeTimeZone),
+      reason: "",
+    });
+    setCustomDialogOpen(true);
+  }, [customForm, dayKey, placeTimeZone, timelineStartMinute]);
+
+  const handleCustomSubmit = React.useCallback(
+    async (values: CustomBlockFormValues) => {
+      if (!courtId) {
+        toast.error("Select a court first");
+        return;
+      }
+      const start = parseDateTimeInput(values.startTime, placeTimeZone);
+      const end = parseDateTimeInput(values.endTime, placeTimeZone);
+      if (!start || !end) {
+        toast.error("Invalid date or time", {
+          description: "Please enter valid start and end times.",
+        });
+        return;
+      }
+      if (end <= start) {
+        toast.error("End time must be after start time");
+        return;
+      }
+
+      try {
+        const payload = {
+          courtId,
+          startTime: toUtcISOString(start),
+          endTime: toUtcISOString(end),
+          reason: values.reason?.trim() || undefined,
+        };
+
+        if (values.blockType === "MAINTENANCE") {
+          await createMaintenance.mutateAsync(payload);
+        } else {
+          await createWalkIn.mutateAsync(payload);
+        }
+
+        invalidateBlocks();
+        toast.success("Block created");
+        setCustomDialogOpen(false);
+      } catch (error) {
+        toast.error("Unable to create block", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+      }
+    },
+    [courtId, createMaintenance, createWalkIn, invalidateBlocks, placeTimeZone],
+  );
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -508,12 +1002,107 @@ export default function OwnerBookingsPlaygroundPage() {
       <div className="space-y-6">
         <div className="space-y-2">
           <h1 className="text-2xl font-heading font-semibold">
-            Bookings Playground
+            Availability Studio
           </h1>
           <p className="text-sm text-muted-foreground">
             Drag block presets onto the timeline to manage daily availability.
           </p>
         </div>
+
+        {isImportOverlay && (
+          <Card className="border-primary/20 bg-primary/5">
+            <CardContent className="space-y-4 p-6">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="text-sm font-heading font-semibold">
+                    Import overlay active
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Review and fix imported rows in context.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Button asChild variant="outline" size="sm">
+                    <Link href={appRoutes.owner.imports.bookingsReview(jobId)}>
+                      Back to review
+                    </Link>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setJobIdParam(null)}
+                  >
+                    Exit overlay
+                  </Button>
+                </div>
+              </div>
+
+              {jobQuery.isLoading ? (
+                <div className="grid gap-2 sm:grid-cols-3">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+              ) : job ? (
+                <div className="flex flex-wrap gap-4 text-sm">
+                  <div>
+                    <span className="text-muted-foreground">Total:</span>{" "}
+                    <span className="font-medium">{job.rowCount ?? 0}</span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Valid:</span>{" "}
+                    <span className="font-medium text-green-600">
+                      {job.validRowCount ?? 0}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Errors:</span>{" "}
+                    <span className="font-medium text-destructive">
+                      {job.errorRowCount ?? 0}
+                    </span>
+                  </div>
+                  {(job.committedRowCount ?? 0) > 0 && (
+                    <div>
+                      <span className="text-muted-foreground">Committed:</span>{" "}
+                      <span className="font-medium">
+                        {job.committedRowCount}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Import job not found.
+                </p>
+              )}
+
+              <div className="flex flex-wrap items-center gap-3">
+                <Button
+                  type="button"
+                  disabled={!job || !canCommitImport || commitImport.isPending}
+                  onClick={handleCommitImport}
+                >
+                  {commitImport.isPending ? "Committing..." : "Commit"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  disabled={!job || discardImport.isPending}
+                  onClick={handleDiscardImport}
+                >
+                  Discard import
+                </Button>
+                {!isImportEditable && job && (
+                  <Badge variant="secondary">Status: {job.status}</Badge>
+                )}
+                {isImportEditable && job?.errorRowCount ? (
+                  <Badge variant="warning">Fix errors to commit</Badge>
+                ) : null}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <Card>
           <CardContent className="flex flex-wrap items-end gap-4 p-6">
@@ -576,6 +1165,7 @@ export default function OwnerBookingsPlaygroundPage() {
           collisionDetection={closestCenter}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragCancel={() => setActiveDragItem(null)}
           autoScroll
         >
           <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)_320px]">
@@ -621,11 +1211,61 @@ export default function OwnerBookingsPlaygroundPage() {
                         disabled={isDragDisabled}
                       />
                     ))}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={openCustomDialog}
+                      disabled={!courtId}
+                      className="w-full justify-start"
+                    >
+                      Custom block...
+                    </Button>
                   </div>
                   {isDragDisabled && (
                     <p className="text-xs text-muted-foreground">
                       Select a court to enable drag-and-drop.
                     </p>
+                  )}
+                  {isImportOverlay && (
+                    <div className="space-y-3 pt-2">
+                      <Separator />
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-heading font-semibold">
+                          Imported Drafts
+                        </h4>
+                        <p className="text-xs text-muted-foreground">
+                          Drag draft rows onto the timeline to fix times.
+                        </p>
+                      </div>
+                      {rowsQuery.isLoading ? (
+                        <div className="space-y-2">
+                          <Skeleton className="h-12 w-full" />
+                          <Skeleton className="h-12 w-full" />
+                        </div>
+                      ) : draftRowsSorted.length === 0 ? (
+                        <p className="text-xs text-muted-foreground">
+                          No draft rows yet.
+                        </p>
+                      ) : (
+                        <div className="space-y-2">
+                          {draftRowsSorted.slice(0, 8).map((row) => (
+                            <DraftRowCard
+                              key={row.id}
+                              row={row}
+                              timeZone={placeTimeZone}
+                              disabled={isDraftDragDisabled}
+                              selectedCourt={selectedCourt?.label ?? null}
+                            />
+                          ))}
+                          {draftRowsSorted.length > 8 && (
+                            <p className="text-xs text-muted-foreground">
+                              Showing first 8 rows. Open the import review for
+                              full list.
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </CardContent>
               </Card>
@@ -700,51 +1340,27 @@ export default function OwnerBookingsPlaygroundPage() {
                         </div>
                         <div className="pointer-events-none absolute inset-0">
                           {timelineBlocks.map(
-                            ({ block, topOffset, height }) => {
-                              const isWalkIn = block.type === "WALK_IN";
-                              return (
-                                <div
-                                  key={block.id}
-                                  className={cn(
-                                    "absolute left-1 right-1 rounded-lg border px-3 py-2 shadow-sm",
-                                    isWalkIn
-                                      ? "border-primary/30 bg-primary/10 text-primary"
-                                      : "border-amber-500/30 bg-amber-500/10 text-amber-700",
-                                  )}
-                                  style={{ top: topOffset, height }}
-                                >
-                                  <div className="flex items-center justify-between text-xs font-semibold uppercase">
-                                    <span>
-                                      {isWalkIn ? "Walk-in" : "Maintenance"}
-                                    </span>
-                                    <span>
-                                      {formatDuration(
-                                        getMinuteOfDay(
-                                          block.endTime,
-                                          placeTimeZone,
-                                        ) -
-                                          getMinuteOfDay(
-                                            block.startTime,
-                                            placeTimeZone,
-                                          ) || 0,
-                                      )}
-                                    </span>
-                                  </div>
-                                  <div className="text-xs">
-                                    {formatTimeRangeInTimeZone(
-                                      block.startTime,
-                                      block.endTime,
-                                      placeTimeZone,
-                                    )}
-                                  </div>
-                                  {block.reason && (
-                                    <div className="text-[11px] opacity-70 truncate">
-                                      {block.reason}
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            },
+                            ({ block, topOffset, height }) => (
+                              <TimelineBlockItem
+                                key={block.id}
+                                block={block}
+                                topOffset={topOffset}
+                                height={height}
+                                timeZone={placeTimeZone}
+                                disabled={isDragDisabled}
+                              />
+                            ),
+                          )}
+                          {draftTimelineBlocks.map(
+                            ({ row, topOffset, height }) => (
+                              <DraftTimelineBlock
+                                key={`draft-${row.id}`}
+                                row={row}
+                                topOffset={topOffset}
+                                height={height}
+                                timeZone={placeTimeZone}
+                              />
+                            ),
                           )}
                         </div>
                       </div>
@@ -837,14 +1453,65 @@ export default function OwnerBookingsPlaygroundPage() {
 
           <DragOverlay>
             {activeDragItem?.kind === "preset" ? (
-              <BlockPresetCard
-                preset={activeDragItem.preset}
-                disabled
-                isOverlay
-              />
+              <BlockPresetPreview preset={activeDragItem.preset} />
             ) : null}
           </DragOverlay>
         </DndContext>
+
+        <Dialog open={customDialogOpen} onOpenChange={setCustomDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create custom block</DialogTitle>
+              <DialogDescription>
+                Times are shown in {placeTimeZone}. Blocks must align to full
+                hours.
+              </DialogDescription>
+            </DialogHeader>
+            <StandardFormProvider
+              form={customForm}
+              onSubmit={handleCustomSubmit}
+            >
+              <StandardFormSelect<CustomBlockFormValues>
+                name="blockType"
+                label="Block type"
+                options={blockTypeOptions.map((option) => ({
+                  value: option.value,
+                  label: option.label,
+                }))}
+                required
+              />
+              <StandardFormInput<CustomBlockFormValues>
+                name="startTime"
+                label="Start time"
+                type="datetime-local"
+                required
+              />
+              <StandardFormInput<CustomBlockFormValues>
+                name="endTime"
+                label="End time"
+                type="datetime-local"
+                required
+              />
+              <StandardFormTextarea<CustomBlockFormValues>
+                name="reason"
+                label="Reason (optional)"
+                placeholder="Net replacement"
+              />
+              <DialogFooter className="pt-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setCustomDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isCreatingBlock}>
+                  {isCreatingBlock ? "Creating..." : "Create block"}
+                </Button>
+              </DialogFooter>
+            </StandardFormProvider>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppShell>
   );
@@ -853,11 +1520,9 @@ export default function OwnerBookingsPlaygroundPage() {
 function BlockPresetCard({
   preset,
   disabled,
-  isOverlay,
 }: {
   preset: BlockPreset;
   disabled?: boolean;
-  isOverlay?: boolean;
 }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
@@ -881,21 +1546,34 @@ function BlockPresetCard({
         "w-full rounded-lg border bg-card p-3 text-left transition-shadow",
         "hover:shadow-md",
         disabled ? "cursor-not-allowed opacity-50" : "cursor-grab",
-        isDragging && !isOverlay ? "opacity-40" : "opacity-100",
-        isOverlay ? "shadow-lg" : "shadow-sm",
+        isDragging ? "opacity-40" : "opacity-100",
       )}
       aria-disabled={disabled}
     >
-      <div className="flex items-center justify-between gap-2">
-        <div>
-          <p className="text-sm font-heading font-semibold">{preset.label}</p>
-          <p className="text-xs text-muted-foreground">{preset.description}</p>
-        </div>
-        <Badge variant={preset.badgeVariant}>
-          {formatDuration(preset.durationMinutes)}
-        </Badge>
-      </div>
+      <BlockPresetContent preset={preset} />
     </button>
+  );
+}
+
+function BlockPresetPreview({ preset }: { preset: BlockPreset }) {
+  return (
+    <div className="w-64 rounded-lg border bg-card p-3 text-left shadow-lg">
+      <BlockPresetContent preset={preset} />
+    </div>
+  );
+}
+
+function BlockPresetContent({ preset }: { preset: BlockPreset }) {
+  return (
+    <div className="flex items-center justify-between gap-2">
+      <div>
+        <p className="text-sm font-heading font-semibold">{preset.label}</p>
+        <p className="text-xs text-muted-foreground">{preset.description}</p>
+      </div>
+      <Badge variant={preset.badgeVariant}>
+        {formatDuration(preset.durationMinutes)}
+      </Badge>
+    </div>
   );
 }
 
@@ -927,5 +1605,213 @@ function TimelineDropRow({
         isOver && !disabled ? "bg-primary/10 border-primary/40" : "",
       )}
     />
+  );
+}
+
+function TimelineBlockItem({
+  block,
+  topOffset,
+  height,
+  timeZone,
+  disabled,
+}: {
+  block: CourtBlockItem;
+  topOffset: number;
+  height: number;
+  timeZone: string;
+  disabled: boolean;
+}) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: `block-${block.id}`,
+      data: { kind: "block", blockId: block.id } satisfies DragBlock,
+      disabled,
+    });
+
+  const style = transform
+    ? { transform: CSS.Translate.toString(transform) }
+    : undefined;
+
+  const isWalkIn = block.type === "WALK_IN";
+  const durationMinutes = Math.max(
+    getMinuteOfDay(block.endTime, timeZone) -
+      getMinuteOfDay(block.startTime, timeZone),
+    0,
+  );
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{ top: topOffset, height, ...style }}
+      {...attributes}
+      className={cn(
+        "pointer-events-auto absolute left-1 right-1 rounded-lg border px-3 py-2 shadow-sm",
+        isWalkIn
+          ? "border-primary/30 bg-primary/10 text-primary"
+          : "border-amber-500/30 bg-amber-500/10 text-amber-700",
+        disabled ? "cursor-not-allowed" : "cursor-grab",
+        isDragging ? "opacity-50" : "opacity-100",
+      )}
+    >
+      <div
+        className="flex items-center justify-between text-xs font-semibold uppercase"
+        {...listeners}
+      >
+        <span>{isWalkIn ? "Walk-in" : "Maintenance"}</span>
+        <span>{formatDuration(durationMinutes)}</span>
+      </div>
+      <div className="text-xs">
+        {formatTimeRangeInTimeZone(block.startTime, block.endTime, timeZone)}
+      </div>
+      {block.reason && (
+        <div className="text-[11px] opacity-70 truncate">{block.reason}</div>
+      )}
+      <ResizeHandle blockId={block.id} edge="start" disabled={disabled} />
+      <ResizeHandle blockId={block.id} edge="end" disabled={disabled} />
+    </div>
+  );
+}
+
+function ResizeHandle({
+  blockId,
+  edge,
+  disabled,
+}: {
+  blockId: string;
+  edge: "start" | "end";
+  disabled: boolean;
+}) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: `resize-${edge}-${blockId}`,
+    data: { kind: "resize", blockId, edge } satisfies DragResizeHandle,
+    disabled,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      className={cn(
+        "absolute left-2 right-2 h-2 rounded-full bg-foreground/30",
+        edge === "start" ? "top-1" : "bottom-1",
+        disabled ? "cursor-not-allowed" : "cursor-ns-resize",
+        isDragging ? "opacity-60" : "opacity-100",
+      )}
+      aria-hidden
+    />
+  );
+}
+
+function DraftTimelineBlock({
+  row,
+  topOffset,
+  height,
+  timeZone,
+}: {
+  row: DraftRowItem;
+  topOffset: number;
+  height: number;
+  timeZone: string;
+}) {
+  const status = (row.status ?? "PENDING") as DraftRowStatus;
+  const statusBadge = DRAFT_STATUS_BADGE[status] ?? "secondary";
+  const startTime = row.startTime as Date | string | null;
+  const endTime = row.endTime as Date | string | null;
+
+  return (
+    <div
+      className={cn(
+        "pointer-events-none absolute left-2 right-2 rounded-lg border border-dashed px-3 py-2",
+        status === "ERROR"
+          ? "border-destructive/40 bg-destructive/10 text-destructive"
+          : status === "WARNING"
+            ? "border-amber-400/40 bg-amber-100/60 text-amber-700"
+            : "border-primary/30 bg-primary/5 text-primary",
+      )}
+      style={{ top: topOffset, height }}
+    >
+      <div className="flex items-center justify-between text-[11px] font-semibold uppercase">
+        <span>Draft · Row {row.lineNumber}</span>
+        <Badge variant={statusBadge}>{status.toLowerCase()}</Badge>
+      </div>
+      {startTime && endTime && (
+        <div className="text-xs">
+          {formatTimeRangeInTimeZone(startTime, endTime, timeZone)}
+        </div>
+      )}
+      {row.courtLabel && (
+        <div className="text-[11px] opacity-70 truncate">
+          Court: {row.courtLabel}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DraftRowCard({
+  row,
+  timeZone,
+  disabled,
+  selectedCourt,
+}: {
+  row: DraftRowItem;
+  timeZone: string;
+  disabled: boolean;
+  selectedCourt: string | null;
+}) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: `draft-row-${row.id}`,
+      data: { kind: "draft-row", rowId: row.id } satisfies DragDraftRow,
+      disabled,
+    });
+
+  const style = transform
+    ? { transform: CSS.Translate.toString(transform) }
+    : undefined;
+  const status = (row.status ?? "PENDING") as DraftRowStatus;
+  const statusBadge = DRAFT_STATUS_BADGE[status] ?? "secondary";
+
+  const startTime = row.startTime as Date | string | null;
+  const endTime = row.endTime as Date | string | null;
+  const timeLabel =
+    startTime && endTime
+      ? formatTimeRangeInTimeZone(startTime, endTime, timeZone)
+      : "No time set";
+
+  const errorHint = row.errors?.[0];
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className={cn(
+        "rounded-lg border bg-card p-3 text-left text-xs transition-shadow",
+        disabled ? "cursor-not-allowed opacity-50" : "cursor-grab",
+        isDragging ? "opacity-40" : "opacity-100",
+      )}
+    >
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-heading font-semibold">Row {row.lineNumber}</span>
+        <Badge variant={statusBadge}>{status.toLowerCase()}</Badge>
+      </div>
+      <p className="mt-1 text-muted-foreground">{timeLabel}</p>
+      {row.courtLabel && (
+        <p className="mt-1 text-[11px] text-muted-foreground">
+          Court: {row.courtLabel}
+        </p>
+      )}
+      {!row.courtLabel && selectedCourt && (
+        <p className="mt-1 text-[11px] text-muted-foreground">
+          Drop to assign {selectedCourt}
+        </p>
+      )}
+      {errorHint && (
+        <p className="mt-1 text-[11px] text-destructive">{errorHint}</p>
+      )}
+    </div>
   );
 }

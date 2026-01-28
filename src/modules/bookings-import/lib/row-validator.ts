@@ -73,6 +73,7 @@ export function validateRow(input: RowValidationInput): ValidationResult {
 export function detectDuplicates(
   rows: Array<{
     courtId: string | null;
+    courtLabel?: string | null;
     startTime: Date | null;
     endTime: Date | null;
   }>,
@@ -81,9 +82,13 @@ export function detectDuplicates(
   const seen = new Map<string, number[]>();
 
   rows.forEach((row, index) => {
-    if (!row.courtId || !row.startTime || !row.endTime) return;
+    if (!row.startTime || !row.endTime) return;
 
-    const key = `${row.courtId}|${row.startTime.getTime()}|${row.endTime.getTime()}`;
+    const fallbackLabel = row.courtLabel?.trim().toLowerCase() ?? null;
+    const courtKey = row.courtId ?? fallbackLabel;
+    if (!courtKey) return;
+
+    const key = `${courtKey}|${row.startTime.getTime()}|${row.endTime.getTime()}`;
     const existing = seen.get(key);
 
     if (existing) {

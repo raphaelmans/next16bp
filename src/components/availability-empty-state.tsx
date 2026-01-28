@@ -24,6 +24,7 @@ export interface AvailabilityEmptyStateProps {
   diagnostics?: AvailabilityDiagnostics | null;
   variant: "public" | "owner";
   scheduleHref?: string;
+  verificationHref?: string;
   contact?: ContactInfo | null;
   className?: string;
 }
@@ -180,6 +181,7 @@ export function AvailabilityEmptyState({
   diagnostics,
   variant,
   scheduleHref,
+  verificationHref,
   contact,
   className,
 }: AvailabilityEmptyStateProps) {
@@ -200,7 +202,6 @@ export function AvailabilityEmptyState({
 
   return (
     <div
-      role="status"
       className={cn(
         "flex flex-col items-center gap-2 py-6 text-center",
         className,
@@ -212,11 +213,21 @@ export function AvailabilityEmptyState({
       <p className="text-sm font-medium">{title}</p>
       <p className="text-sm text-muted-foreground max-w-md">{body}</p>
 
-      {variant === "owner" && scheduleHref && (
-        <Button asChild variant="outline" size="sm" className="mt-2">
-          <Link href={scheduleHref}>Edit schedule & pricing</Link>
-        </Button>
-      )}
+      {variant === "owner" &&
+        reason === "reservations_disabled" &&
+        verificationHref && (
+          <Button asChild size="sm" className="mt-2">
+            <Link href={verificationHref}>Enable reservations</Link>
+          </Button>
+        )}
+
+      {variant === "owner" &&
+        reason !== "reservations_disabled" &&
+        scheduleHref && (
+          <Button asChild variant="outline" size="sm" className="mt-2">
+            <Link href={scheduleHref}>Edit schedule & pricing</Link>
+          </Button>
+        )}
 
       {showContactInfo && <ContactActions contact={contact} />}
     </div>

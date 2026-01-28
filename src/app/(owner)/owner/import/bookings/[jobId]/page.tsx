@@ -9,6 +9,7 @@ import {
   Trash2,
   XCircle,
 } from "lucide-react";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { parseAsString, useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
@@ -81,6 +82,8 @@ type RowStatus =
 type RowRecord = {
   id: string;
   lineNumber: number;
+  sourceId: string | null;
+  sourceLineNumber: number | null;
   status: string;
   courtId: string | null;
   courtLabel: string | null;
@@ -89,6 +92,15 @@ type RowRecord = {
   reason: string | null;
   errors: string[] | null;
   warnings: string[] | null;
+};
+
+const formatBytes = (bytes?: number | null) => {
+  if (!bytes || bytes < 0) return "-";
+  if (bytes < 1024) return `${bytes} B`;
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${kb.toFixed(1)} KB`;
+  const mb = kb / 1024;
+  return `${mb.toFixed(1)} MB`;
 };
 
 export default function OwnerBookingsImportReviewPage() {
@@ -130,6 +142,29 @@ export default function OwnerBookingsImportReviewPage() {
     { jobId },
     { enabled: Boolean(jobId) },
   );
+
+  const sourcesQuery = trpc.bookingsImport.listSources.useQuery(
+    { jobId },
+    { enabled: Boolean(jobId) },
+  );
+
+  const studioHref = useMemo(() => {
+    const job = jobQuery.data;
+    if (!job) return null;
+    const metadata = job.metadata as Record<string, unknown> | null;
+    const selectedCourtId =
+      metadata && typeof metadata.selectedCourtId === "string"
+        ? metadata.selectedCourtId
+        : null;
+    const params = new URLSearchParams({
+      jobId,
+      placeId: job.placeId,
+    });
+    if (selectedCourtId) {
+      params.set("courtId", selectedCourtId);
+    }
+    return `${appRoutes.owner.bookings}?${params.toString()}`;
+  }, [jobId, jobQuery.data]);
 
   const placeQuery = trpc.place.getById.useQuery(
     { placeId: jobQuery.data?.placeId ?? "" },
@@ -221,6 +256,20 @@ export default function OwnerBookingsImportReviewPage() {
 
   const job = jobQuery.data;
   const rows = rowsQuery.data ?? [];
+  const sources = sourcesQuery.data ?? [];
+  const sourceItems =
+    sources.length > 0 && job
+      ? sources
+      : job
+        ? [
+            {
+              id: job.id,
+              fileName: job.fileName,
+              fileSize: job.fileSize,
+              sourceType: job.sourceType,
+            },
+          ]
+        : [];
   const placeData = placeQuery.data;
   const courts = placeData?.courts ?? [];
   const place = placeData?.place;
@@ -237,6 +286,29 @@ export default function OwnerBookingsImportReviewPage() {
       courts.find((c) => c.court.id === selectedCourtId)?.court.label ?? null
     );
   }, [courts, selectedCourtId]);
+
+  const sourceById = useMemo(() => {
+    return new Map(sources.map((source) => [source.id, source]));
+  }, [sources]);
+
+  const hasImageSource =
+    sources.some((source) => source.sourceType === "image") ||
+    job?.sourceType === "image";
+
+  const sourceCount = sourceItems.length;
+  const sourceTypeLabel =
+    sources.length > 1
+      ? "MIXED"
+      : job?.sourceType
+        ? job.sourceType.toUpperCase()
+        : "-";
+
+  const getRowSourceLabel = (row: RowRecord) => {
+    const source = row.sourceId ? sourceById.get(row.sourceId) : null;
+    const fileName = source?.fileName ?? job?.fileName ?? "File";
+    const lineNumber = row.sourceLineNumber ?? row.lineNumber;
+    return `${fileName} #${lineNumber}`;
+  };
 
   const filteredRows = useMemo(() => {
     if (statusFilter === "ALL") return rows;
@@ -331,7 +403,6 @@ export default function OwnerBookingsImportReviewPage() {
   const aiUsed = Boolean(aiUsageQuery.data?.usedAt);
   const isDraft = job?.status === "DRAFT";
   const isNormalizing = job?.status === "NORMALIZING";
-  const isImageSource = job?.sourceType === "image";
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -480,12 +551,19 @@ export default function OwnerBookingsImportReviewPage() {
       <div className="space-y-6">
         <PageHeader
           title="Review Import"
-          description={`${place?.name ?? "Loading..."} - ${job.sourceType.toUpperCase()} import`}
+          description={`${place?.name ?? "Loading..."} - ${sourceCount} file${sourceCount === 1 ? "" : "s"} import`}
           breadcrumbs={[
             { label: "Owner", href: appRoutes.owner.base },
             { label: "Imports", href: appRoutes.owner.imports.bookings },
             { label: "Review" },
           ]}
+          actions={
+            studioHref ? (
+              <Button asChild variant="outline">
+                <Link href={studioHref}>Fix in studio</Link>
+              </Button>
+            ) : null
+          }
         />
 
         <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
@@ -551,11 +629,11 @@ export default function OwnerBookingsImportReviewPage() {
                             Normalize Import Data
                           </h3>
                           <p className="mt-1 text-sm text-muted-foreground">
-                            Parse and validate the uploaded file to prepare
+                            Parse and validate the uploaded files to prepare
                             bookings for review.
                           </p>
                           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-                            {!isImageSource && (
+                            {!hasImageSource && (
                               <Button
                                 onClick={() => handleNormalize("deterministic")}
                                 disabled={normalizeMutation.isPending}
@@ -563,11 +641,11 @@ export default function OwnerBookingsImportReviewPage() {
                                 {normalizeMutation.isPending && (
                                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 )}
-                                Parse File
+                                Parse files
                               </Button>
                             )}
                             <Button
-                              variant={isImageSource ? "default" : "outline"}
+                              variant={hasImageSource ? "default" : "outline"}
                               onClick={() => handleNormalize("ai")}
                               disabled={
                                 normalizeMutation.isPending ||
@@ -581,9 +659,9 @@ export default function OwnerBookingsImportReviewPage() {
                               Use AI (one-time)
                             </Button>
                           </div>
-                          {isImageSource && (
+                          {hasImageSource && (
                             <p className="mt-2 text-xs text-muted-foreground">
-                              Screenshots require AI normalization.
+                              Screenshot imports require AI normalization.
                             </p>
                           )}
                           {aiUsed && (
@@ -596,7 +674,7 @@ export default function OwnerBookingsImportReviewPage() {
                           <p className="font-medium">What happens next:</p>
                           <ul className="mt-2 list-disc space-y-1 pl-4">
                             <li>
-                              Your file will be parsed and converted to booking
+                              Your files will be parsed and converted to booking
                               rows
                             </li>
                             <li>
@@ -658,6 +736,7 @@ export default function OwnerBookingsImportReviewPage() {
                           <TableHeader>
                             <TableRow>
                               <TableHead className="w-16">#</TableHead>
+                              <TableHead>Source</TableHead>
                               <TableHead>Court</TableHead>
                               <TableHead>Start</TableHead>
                               <TableHead>End</TableHead>
@@ -676,6 +755,9 @@ export default function OwnerBookingsImportReviewPage() {
                               >
                                 <TableCell className="font-mono text-xs text-muted-foreground">
                                   {row.lineNumber}
+                                </TableCell>
+                                <TableCell className="max-w-[180px] truncate text-xs text-muted-foreground">
+                                  {getRowSourceLabel(row as RowRecord)}
                                 </TableCell>
                                 <TableCell>
                                   {courts.find(
@@ -838,6 +920,35 @@ export default function OwnerBookingsImportReviewPage() {
 
             <Card>
               <CardHeader>
+                <CardTitle>Attached files</CardTitle>
+                <CardDescription>
+                  {sourceCount} file{sourceCount === 1 ? "" : "s"} uploaded
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm">
+                {sourcesQuery.isLoading ? (
+                  <Skeleton className="h-4 w-full" />
+                ) : sourceItems.length === 0 ? (
+                  <p className="text-muted-foreground">No files found.</p>
+                ) : (
+                  sourceItems.map((source) => (
+                    <div
+                      key={source.id}
+                      className="flex items-center justify-between gap-3"
+                    >
+                      <span className="truncate">{source.fileName}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {source.sourceType.toUpperCase()} ·{" "}
+                        {formatBytes(source.fileSize)}
+                      </span>
+                    </div>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
                 <CardTitle>Import details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
@@ -847,7 +958,7 @@ export default function OwnerBookingsImportReviewPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Source</span>
-                  <span>{job.sourceType.toUpperCase()}</span>
+                  <span>{sourceTypeLabel}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Court scope</span>
@@ -858,8 +969,8 @@ export default function OwnerBookingsImportReviewPage() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">File</span>
-                  <span className="truncate max-w-[150px]">{job.fileName}</span>
+                  <span className="text-muted-foreground">Files</span>
+                  <span>{sourceCount}</span>
                 </div>
               </CardContent>
             </Card>

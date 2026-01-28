@@ -1,4 +1,4 @@
-# Dev1 Checklist: Owner Bookings Playground (DnD)
+# Dev1 Checklist: Owner Availability Studio (DnD)
 
 ## Shared / Contract
 

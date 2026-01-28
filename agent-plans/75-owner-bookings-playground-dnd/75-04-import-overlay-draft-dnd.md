@@ -10,10 +10,10 @@
 
 Make import correction calendar-first:
 
-- From an import job, owner opens the playground with `jobId`.
+- From an import job, owner opens the studio with `jobId`.
 - Draft rows render as draggable “ghost blocks”.
 - Owner can drop a draft row onto a timeline cell to set/fix its time.
-- Commit from playground uses the existing import commit endpoint.
+- Commit from the studio uses the existing import commit endpoint.
 
 ---
 
@@ -29,7 +29,7 @@ When `jobId` is present:
 
 Deep links:
 
-- Import review page adds a CTA: “Fix in playground”.
+- Import review page adds a CTA: “Fix in studio”.
 
 ---
 

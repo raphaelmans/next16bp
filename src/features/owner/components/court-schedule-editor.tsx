@@ -458,7 +458,7 @@ export function CourtScheduleEditor({
     );
   };
 
-  const handleApplyRateToAll = (sourceDay: number, sourceRowId: string) => {
+  const handleApplyToAll = (sourceDay: number, sourceRowId: string) => {
     setRowsByDay((prev) => {
       const sourceRow = (prev[sourceDay] ?? []).find(
         (row) => row.id === sourceRowId,
@@ -481,6 +481,8 @@ export function CourtScheduleEditor({
           if (!row.isOpen) return row;
           return {
             ...row,
+            startTime: sourceRow.startTime,
+            endTime: sourceRow.endTime,
             hourlyRate: sourceRow.hourlyRate,
             currency: sourceRow.currency,
             allowPricing: true,
@@ -491,7 +493,7 @@ export function CourtScheduleEditor({
       return next;
     });
 
-    toast.success("Rate applied to all open blocks");
+    toast.success("Applied to all open blocks");
   };
 
   const handleCopySchedule = async (sourceCourtId: string) => {
@@ -843,10 +845,7 @@ export function CourtScheduleEditor({
                                           className="shrink-0 text-xs"
                                           disabled={row.hourlyRate === ""}
                                           onClick={() =>
-                                            handleApplyRateToAll(
-                                              day.value,
-                                              row.id,
-                                            )
+                                            handleApplyToAll(day.value, row.id)
                                           }
                                         >
                                           Apply to all

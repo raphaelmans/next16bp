@@ -1,3 +1,5 @@
+export * from "./ai-ics-mapping";
+export * from "./ai-tabular-mapping";
 export * from "./csv-parser";
 export * from "./datetime-parser";
 export * from "./ics-parser";

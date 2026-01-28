@@ -9,9 +9,15 @@ export const ImportSourceSchema = z.enum(["ics", "csv", "xlsx", "image"], {
 
 export const CreateBookingsImportSchema = zfd.formData({
   placeId: zfd.text(S.ids.placeId),
-  sourceType: zfd.text(ImportSourceSchema),
   selectedCourtId: zfd.text(S.ids.courtId).optional(),
-  file: importFileSchema,
+  files: zfd
+    .repeatableOfType(importFileSchema)
+    .refine((files) => files.length >= 1, {
+      error: S.common.itemsMin.message,
+    })
+    .refine((files) => files.length <= 3, {
+      error: "Upload up to 3 files",
+    }),
 });
 
 export type ImportSource = z.infer<typeof ImportSourceSchema>;

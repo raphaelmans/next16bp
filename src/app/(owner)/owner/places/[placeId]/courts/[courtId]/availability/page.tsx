@@ -638,11 +638,14 @@ export default function OwnerCourtAvailabilityPage() {
   const scheduleHref = appRoutes.owner.places.courts.schedule(placeId, courtId);
   const reservationsHref = `${appRoutes.owner.reservations}?placeId=${placeId}&courtId=${courtId}`;
 
+  const verificationHref = appRoutes.owner.verification.place(placeId);
+
   const emptyState = (
     <AvailabilityEmptyState
       diagnostics={availabilityDiagnostics}
       variant="owner"
       scheduleHref={scheduleHref}
+      verificationHref={verificationHref}
     />
   );
 

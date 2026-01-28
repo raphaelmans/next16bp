@@ -7,10 +7,13 @@ import { makeObjectStorageService } from "@/modules/storage/factories/storage.fa
 import { getContainer } from "@/shared/infra/container";
 import { BookingsImportJobRepository } from "../repositories/bookings-import-job.repository";
 import { BookingsImportRowRepository } from "../repositories/bookings-import-row.repository";
+import { BookingsImportSourceRepository } from "../repositories/bookings-import-source.repository";
 import { BookingsImportService } from "../services/bookings-import.service";
 
 let bookingsImportJobRepository: BookingsImportJobRepository | null = null;
 let bookingsImportRowRepository: BookingsImportRowRepository | null = null;
+let bookingsImportSourceRepository: BookingsImportSourceRepository | null =
+  null;
 let bookingsImportService: BookingsImportService | null = null;
 
 export function makeBookingsImportJobRepository(): BookingsImportJobRepository {
@@ -31,6 +34,15 @@ export function makeBookingsImportRowRepository(): BookingsImportRowRepository {
   return bookingsImportRowRepository;
 }
 
+export function makeBookingsImportSourceRepository(): BookingsImportSourceRepository {
+  if (!bookingsImportSourceRepository) {
+    bookingsImportSourceRepository = new BookingsImportSourceRepository(
+      getContainer().db,
+    );
+  }
+  return bookingsImportSourceRepository;
+}
+
 export function makeBookingsImportService(): BookingsImportService {
   if (!bookingsImportService) {
     bookingsImportService = new BookingsImportService(
@@ -39,6 +51,7 @@ export function makeBookingsImportService(): BookingsImportService {
       makeObjectStorageService(),
       makeBookingsImportJobRepository(),
       makeBookingsImportRowRepository(),
+      makeBookingsImportSourceRepository(),
       makeCourtRepository(),
       makeCourtBlockRepository(),
       makeReservationRepository(),

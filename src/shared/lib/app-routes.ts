@@ -107,6 +107,7 @@ export const appRoutes = {
   owner: {
     base: "/owner",
     options: { type: "owner" as const },
+    bookings: "/owner/bookings",
     getStarted: "/owner/get-started",
     onboarding: "/owner/onboarding",
     pricing: "/owner/pricing",

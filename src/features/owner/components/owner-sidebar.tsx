@@ -3,6 +3,7 @@
 import {
   Building2,
   CalendarDays,
+  CalendarRange,
   ChevronDown,
   ChevronRight,
   LayoutDashboard,
@@ -65,6 +66,11 @@ const navItems = [
     title: "Imports",
     href: appRoutes.owner.imports.bookings,
     icon: UploadCloud,
+  },
+  {
+    title: "Availability Studio",
+    href: appRoutes.owner.bookings,
+    icon: CalendarRange,
   },
   {
     title: "Reservations",
@@ -207,13 +213,12 @@ export function OwnerSidebar({
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     asChild
-                    isActive={pathname.startsWith(
-                      appRoutes.owner.places.base,
-                    )}
-                    className={`font-heading ${pathname.startsWith(appRoutes.owner.places.base)
+                    isActive={pathname.startsWith(appRoutes.owner.places.base)}
+                    className={`font-heading ${
+                      pathname.startsWith(appRoutes.owner.places.base)
                         ? "bg-primary text-primary-foreground"
                         : ""
-                      }`}
+                    }`}
                   >
                     <Link href={appRoutes.owner.places.base}>
                       <MapPin className="h-4 w-4" />
@@ -230,65 +235,65 @@ export function OwnerSidebar({
                       {/* Venue > Courts hierarchy */}
                       {showVenuesLoading
                         ? venuesSkeletonKeys.map((key) => (
-                          <SidebarMenuSubItem key={key}>
-                            <SidebarMenuSkeleton />
-                          </SidebarMenuSubItem>
-                        ))
+                            <SidebarMenuSubItem key={key}>
+                              <SidebarMenuSkeleton />
+                            </SidebarMenuSubItem>
+                          ))
                         : quickLinks.map((place) => {
-                          const isPlaceActive = place.courts.some((court) =>
-                            isCourtActive(place.id, court.id),
-                          );
+                            const isPlaceActive = place.courts.some((court) =>
+                              isCourtActive(place.id, court.id),
+                            );
 
-                          return (
-                            <Collapsible
-                              key={place.id}
-                              defaultOpen={isPlaceActive}
-                              className="group/place"
-                            >
-                              <SidebarMenuSubItem>
-                                <CollapsibleTrigger asChild>
-                                  <SidebarMenuSubButton
-                                    isActive={isPlaceActive}
-                                    className="font-heading"
-                                  >
-                                    <span>{place.name}</span>
-                                    {place.courts.length > 0 && (
-                                      <span className="ml-auto text-sidebar-foreground">
-                                        <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]/place:rotate-180" />
-                                      </span>
-                                    )}
-                                  </SidebarMenuSubButton>
-                                </CollapsibleTrigger>
-                                {place.courts.length > 0 && (
-                                  <CollapsibleContent>
-                                    <SidebarMenuSub>
-                                      {place.courts.map((court) => (
-                                        <SidebarMenuSubItem key={court.id}>
-                                          <SidebarMenuSubButton
-                                            asChild
-                                            isActive={isCourtActive(
-                                              place.id,
-                                              court.id,
-                                            )}
-                                          >
-                                            <Link
-                                              href={appRoutes.owner.places.courts.availability(
+                            return (
+                              <Collapsible
+                                key={place.id}
+                                defaultOpen={isPlaceActive}
+                                className="group/place"
+                              >
+                                <SidebarMenuSubItem>
+                                  <CollapsibleTrigger asChild>
+                                    <SidebarMenuSubButton
+                                      isActive={isPlaceActive}
+                                      className="font-heading"
+                                    >
+                                      <span>{place.name}</span>
+                                      {place.courts.length > 0 && (
+                                        <span className="ml-auto text-sidebar-foreground">
+                                          <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]/place:rotate-180" />
+                                        </span>
+                                      )}
+                                    </SidebarMenuSubButton>
+                                  </CollapsibleTrigger>
+                                  {place.courts.length > 0 && (
+                                    <CollapsibleContent>
+                                      <SidebarMenuSub>
+                                        {place.courts.map((court) => (
+                                          <SidebarMenuSubItem key={court.id}>
+                                            <SidebarMenuSubButton
+                                              asChild
+                                              isActive={isCourtActive(
                                                 place.id,
                                                 court.id,
                                               )}
                                             >
-                                              <span>{court.label}</span>
-                                            </Link>
-                                          </SidebarMenuSubButton>
-                                        </SidebarMenuSubItem>
-                                      ))}
-                                    </SidebarMenuSub>
-                                  </CollapsibleContent>
-                                )}
-                              </SidebarMenuSubItem>
-                            </Collapsible>
-                          );
-                        })}
+                                              <Link
+                                                href={appRoutes.owner.places.courts.availability(
+                                                  place.id,
+                                                  court.id,
+                                                )}
+                                              >
+                                                <span>{court.label}</span>
+                                              </Link>
+                                            </SidebarMenuSubButton>
+                                          </SidebarMenuSubItem>
+                                        ))}
+                                      </SidebarMenuSub>
+                                    </CollapsibleContent>
+                                  )}
+                                </SidebarMenuSubItem>
+                              </Collapsible>
+                            );
+                          })}
                     </SidebarMenuSub>
                   </CollapsibleContent>
                 </SidebarMenuItem>

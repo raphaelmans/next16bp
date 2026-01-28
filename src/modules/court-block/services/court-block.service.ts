@@ -14,6 +14,7 @@ import type { IReservationRepository } from "@/modules/reservation/repositories/
 import type {
   CourtBlockRecord,
   CourtRecord,
+  InsertCourtBlock,
   PlaceRecord,
 } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
@@ -24,6 +25,7 @@ import type {
   CancelCourtBlockDTO,
   CreateCourtBlockDTO,
   ListCourtBlocksDTO,
+  UpdateCourtBlockRangeDTO,
 } from "../dtos";
 import {
   CourtBlockDurationInvalidError,
@@ -47,6 +49,10 @@ export interface ICourtBlockService {
   createWalkIn(
     userId: string,
     data: CreateCourtBlockDTO,
+  ): Promise<CourtBlockRecord>;
+  updateRange(
+    userId: string,
+    data: UpdateCourtBlockRangeDTO,
   ): Promise<CourtBlockRecord>;
   cancelBlock(
     userId: string,
@@ -190,6 +196,71 @@ export class CourtBlockService implements ICourtBlockService {
     });
   }
 
+  async updateRange(
+    userId: string,
+    data: UpdateCourtBlockRangeDTO,
+  ): Promise<CourtBlockRecord> {
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+      const block = await this.courtBlockRepository.findById(data.blockId, ctx);
+      if (!block || !block.isActive) {
+        throw new CourtBlockNotFoundError(data.blockId);
+      }
+
+      const { startTime, endTime, durationMinutes } = this.parseRange(
+        data.startTime,
+        data.endTime,
+      );
+
+      const { court, place } = await this.verifyCourtOwnership(
+        userId,
+        block.courtId,
+        ctx,
+      );
+
+      await this.assertNoOverlaps(court.id, startTime, endTime, ctx, {
+        excludeBlockId: block.id,
+      });
+
+      const updatePayload: Partial<InsertCourtBlock> = {
+        startTime,
+        endTime,
+      };
+
+      if (block.type === "WALK_IN") {
+        const pricing = await this.computeWalkInPricing(
+          court.id,
+          startTime,
+          durationMinutes,
+          place.timeZone,
+          ctx,
+        );
+        updatePayload.totalPriceCents = pricing.totalPriceCents;
+        updatePayload.currency = pricing.currency;
+      }
+
+      const updated = await this.courtBlockRepository.update(
+        block.id,
+        updatePayload,
+        ctx,
+      );
+
+      logger.info(
+        {
+          event: "court_block.rescheduled",
+          courtId: court.id,
+          blockId: updated.id,
+          type: updated.type,
+          startTime: updated.startTime.toISOString(),
+          endTime: updated.endTime.toISOString(),
+        },
+        "Court block rescheduled",
+      );
+
+      return updated;
+    });
+  }
+
   async cancelBlock(
     userId: string,
     data: CancelCourtBlockDTO,
@@ -304,6 +375,7 @@ export class CourtBlockService implements ICourtBlockService {
     startTime: Date,
     endTime: Date,
     ctx?: RequestContext,
+    options?: { excludeBlockId?: string },
   ): Promise<void> {
     const [blocks, reservations] = await Promise.all([
       this.courtBlockRepository.findOverlappingByCourtIds(
@@ -321,15 +393,19 @@ export class CourtBlockService implements ICourtBlockService {
       ),
     ]);
 
+    const filteredBlocks = options?.excludeBlockId
+      ? blocks.filter((block) => block.id !== options.excludeBlockId)
+      : blocks;
+
     if (reservations.length > 0) {
       throw new CourtBlockOverlapsReservationError({
         reservationIds: reservations.map((reservation) => reservation.id),
       });
     }
 
-    if (blocks.length > 0) {
+    if (filteredBlocks.length > 0) {
       throw new CourtBlockOverlapError({
-        blockIds: blocks.map((block) => block.id),
+        blockIds: filteredBlocks.map((block) => block.id),
       });
     }
   }

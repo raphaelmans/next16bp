@@ -14,6 +14,7 @@ import {
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { bookingsImportJob } from "./bookings-import-job";
+import { bookingsImportSource } from "./bookings-import-source";
 import { court } from "./court";
 import { courtBlock } from "./court-block";
 import { bookingsImportRowStatusEnum } from "./enums";
@@ -29,7 +30,11 @@ export const bookingsImportRow = pgTable(
     jobId: uuid("job_id")
       .notNull()
       .references(() => bookingsImportJob.id, { onDelete: "cascade" }),
+    sourceId: uuid("source_id")
+      .notNull()
+      .references(() => bookingsImportSource.id, { onDelete: "cascade" }),
     lineNumber: integer("line_number").notNull(),
+    sourceLineNumber: integer("source_line_number").notNull(),
     status: bookingsImportRowStatusEnum("status").notNull().default("PENDING"),
     // Source data from the file (raw)
     sourceData: jsonb("source_data").$type<Record<string, unknown>>(),
@@ -59,6 +64,7 @@ export const bookingsImportRow = pgTable(
   },
   (table) => [
     index("idx_bookings_import_row_job").on(table.jobId),
+    index("idx_bookings_import_row_source").on(table.sourceId),
     index("idx_bookings_import_row_job_status").on(table.jobId, table.status),
     index("idx_bookings_import_row_job_line").on(table.jobId, table.lineNumber),
     unique("uq_bookings_import_row_job_line").on(table.jobId, table.lineNumber),

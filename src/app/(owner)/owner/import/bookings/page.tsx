@@ -49,19 +49,12 @@ import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { trpc } from "@/trpc/client";
 
-type SourceType = "ics" | "csv" | "xlsx" | "image";
-
 type CourtScope = "multi" | "single";
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
+const MAX_FILES = 3;
 
-const SOURCE_OPTIONS: Array<{
-  value: SourceType;
-  label: string;
-  description: string;
-  extensions: string;
-  icon: typeof FileText;
-}> = [
+const SUPPORTED_SOURCES = [
   {
     value: "ics",
     label: "ICS (Calendar export)",
@@ -90,25 +83,18 @@ const SOURCE_OPTIONS: Array<{
     extensions: ".png, .jpg",
     icon: ImageIcon,
   },
-];
+] as const;
 
-const ACCEPT_BY_SOURCE: Record<SourceType, Accept> = {
-  ics: {
-    "text/calendar": [".ics"],
-  },
-  csv: {
-    "text/csv": [".csv"],
-    "application/csv": [".csv"],
-  },
-  xlsx: {
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
-      ".xlsx",
-    ],
-  },
-  image: {
-    "image/jpeg": [".jpg", ".jpeg"],
-    "image/png": [".png"],
-  },
+const ACCEPT_ALL: Accept = {
+  "text/calendar": [".ics"],
+  "text/csv": [".csv"],
+  "application/csv": [".csv"],
+  "application/vnd.ms-excel": [".csv"],
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
+    ".xlsx",
+  ],
+  "image/jpeg": [".jpg", ".jpeg"],
+  "image/png": [".png"],
 };
 
 const formatBytes = (bytes: number) => {
@@ -121,6 +107,32 @@ const formatBytes = (bytes: number) => {
 
 const getAcceptedExtensions = (accept: Accept) =>
   Object.values(accept).flat().join(", ");
+
+const getFileIcon = (file: File) => {
+  const name = file.name.toLowerCase();
+  if (name.endsWith(".ics")) return CalendarDays;
+  if (name.endsWith(".xlsx")) return FileSpreadsheet;
+  if (name.endsWith(".csv")) return FileText;
+  if (
+    name.endsWith(".png") ||
+    name.endsWith(".jpg") ||
+    name.endsWith(".jpeg") ||
+    file.type.startsWith("image/")
+  ) {
+    return ImageIcon;
+  }
+  return FileText;
+};
+
+const isImageFile = (file: File) => {
+  const name = file.name.toLowerCase();
+  return (
+    file.type.startsWith("image/") ||
+    name.endsWith(".png") ||
+    name.endsWith(".jpg") ||
+    name.endsWith(".jpeg")
+  );
+};
 
 export default function OwnerBookingsImportPage() {
   const router = useRouter();
@@ -138,11 +150,10 @@ export default function OwnerBookingsImportPage() {
   );
 
   const [selectedPlaceId, setSelectedPlaceId] = useState("");
-  const [selectedSource, setSelectedSource] = useState<SourceType | null>(null);
   const [courtScope, setCourtScope] = useState<CourtScope>("multi");
   const [selectedCourtId, setSelectedCourtId] = useState("");
   const [courtScopeTouched, setCourtScopeTouched] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [fileRejections, setFileRejections] = useState<FileRejection[]>([]);
   const [inputKey, setInputKey] = useState(0);
 
@@ -156,31 +167,29 @@ export default function OwnerBookingsImportPage() {
   const placeCourts = courtsQuery.data ?? [];
 
   const isUploading = createDraftMutation.isPending;
-  const acceptedExtensions = selectedSource
-    ? getAcceptedExtensions(ACCEPT_BY_SOURCE[selectedSource])
-    : "";
+  const acceptedExtensions = getAcceptedExtensions(ACCEPT_ALL);
+  const hasImageFiles = selectedFiles.some((file) => isImageFile(file));
 
-  const isDropzoneDisabled = !selectedPlaceId || !selectedSource || isUploading;
+  const isDropzoneDisabled = !selectedPlaceId || isUploading;
   const canContinue = Boolean(
     selectedPlaceId &&
-      selectedSource &&
-      selectedFile &&
+      selectedFiles.length > 0 &&
       fileRejections.length === 0 &&
       (courtScope !== "single" || Boolean(selectedCourtId)) &&
       !isUploading,
   );
 
   useEffect(() => {
-    if (!selectedPlaceId || !selectedSource) {
-      setSelectedFile(null);
+    if (!selectedPlaceId) {
+      setSelectedFiles([]);
       setFileRejections([]);
       setInputKey((prev) => prev + 1);
       return;
     }
-    setSelectedFile(null);
+    setSelectedFiles([]);
     setFileRejections([]);
     setInputKey((prev) => prev + 1);
-  }, [selectedPlaceId, selectedSource]);
+  }, [selectedPlaceId]);
 
   const handlePlaceChange = (placeId: string) => {
     setSelectedPlaceId(placeId);
@@ -206,19 +215,19 @@ export default function OwnerBookingsImportPage() {
     isDragAccept,
     isDragReject,
   } = useDropzone({
-    accept: selectedSource ? ACCEPT_BY_SOURCE[selectedSource] : undefined,
-    maxFiles: 1,
-    multiple: false,
+    accept: ACCEPT_ALL,
+    maxFiles: MAX_FILES,
+    multiple: true,
     maxSize: MAX_FILE_SIZE,
     disabled: isDropzoneDisabled,
     onDrop: (acceptedFiles, rejections) => {
-      setSelectedFile(acceptedFiles[0] ?? null);
+      setSelectedFiles(acceptedFiles);
       setFileRejections(rejections);
     },
   });
 
-  const handleRemoveFile = () => {
-    setSelectedFile(null);
+  const handleRemoveFile = (index: number) => {
+    setSelectedFiles((files) => files.filter((_, idx) => idx !== index));
     setFileRejections([]);
     setInputKey((prev) => prev + 1);
   };
@@ -229,15 +238,16 @@ export default function OwnerBookingsImportPage() {
   };
 
   const handleContinue = async () => {
-    if (!canContinue || !selectedSource || !selectedFile) return;
+    if (!canContinue) return;
 
     const formData = new FormData();
     formData.append("placeId", selectedPlaceId);
-    formData.append("sourceType", selectedSource);
     if (courtScope === "single" && selectedCourtId) {
       formData.append("selectedCourtId", selectedCourtId);
     }
-    formData.append("file", selectedFile, selectedFile.name);
+    selectedFiles.forEach((file) => {
+      formData.append("files", file, file.name);
+    });
 
     try {
       const job = await createDraftMutation.mutateAsync(formData);
@@ -329,15 +339,15 @@ export default function OwnerBookingsImportPage() {
                   Step 1 of 4
                 </Badge>
                 <div className="text-sm text-muted-foreground">
-                  Upload source file
+                  Upload source files
                 </div>
               </div>
               <Progress value={25} />
               <div>
-                <CardTitle>Choose venue and source</CardTitle>
+                <CardTitle>Choose venue and upload</CardTitle>
                 <CardDescription>
-                  Select a venue, then choose the file type to route the import
-                  correctly.
+                  Upload up to three files in any combination of calendar, CSV,
+                  XLSX, or screenshots.
                 </CardDescription>
               </div>
             </CardHeader>
@@ -485,7 +495,7 @@ export default function OwnerBookingsImportPage() {
                           ))}
                         </SelectContent>
                       </Select>
-                      {selectedSource === "image" ? (
+                      {hasImageFiles ? (
                         <div className="text-xs text-muted-foreground">
                           Tip: screenshots often don't include court names.
                           Selecting a court avoids mapping errors.
@@ -497,55 +507,7 @@ export default function OwnerBookingsImportPage() {
               </div>
 
               <div className="space-y-3">
-                <Label className="font-heading">Source type (required)</Label>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {SOURCE_OPTIONS.map((option) => {
-                    const isSelected = selectedSource === option.value;
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() =>
-                          !isUploading && setSelectedSource(option.value)
-                        }
-                        className={cn(
-                          "flex items-start gap-3 rounded-lg border px-4 py-3 text-left transition-colors",
-                          isSelected
-                            ? "border-primary bg-primary/5"
-                            : "hover:border-primary/40",
-                          isUploading && "cursor-not-allowed opacity-70",
-                        )}
-                        disabled={isUploading}
-                      >
-                        <div
-                          className={cn(
-                            "mt-1 flex h-9 w-9 items-center justify-center rounded-md",
-                            isSelected
-                              ? "bg-primary/10 text-primary"
-                              : "bg-muted text-muted-foreground",
-                          )}
-                        >
-                          <option.icon className="h-4 w-4" />
-                        </div>
-                        <div className="space-y-1">
-                          <div className="font-heading text-sm font-semibold">
-                            {option.label}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {option.description}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {option.extensions}
-                          </div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <Label className="font-heading">Upload file</Label>
+                <Label className="font-heading">Upload files (up to 3)</Label>
                 <div
                   {...getRootProps({
                     className: cn(
@@ -566,13 +528,11 @@ export default function OwnerBookingsImportPage() {
                   <div className="space-y-1">
                     <p className="text-sm font-medium">
                       {isDropzoneDisabled
-                        ? "Select a venue and source type first"
-                        : "Drag & drop your file, or click to browse"}
+                        ? "Select a venue first"
+                        : "Drag & drop files, or click to browse"}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {selectedSource
-                        ? `Accepted: ${acceptedExtensions}`
-                        : "Select a source type to see accepted formats"}
+                      Accepted: {acceptedExtensions}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       Max size: {formatBytes(MAX_FILE_SIZE)}
@@ -580,30 +540,40 @@ export default function OwnerBookingsImportPage() {
                   </div>
                 </div>
 
-                {selectedFile && (
-                  <div className="flex items-center justify-between rounded-lg border px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-primary">
-                        <FileText className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <div className="text-sm font-medium">
-                          {selectedFile.name}
+                {selectedFiles.length > 0 && (
+                  <div className="space-y-2">
+                    {selectedFiles.map((file, index) => {
+                      const Icon = getFileIcon(file);
+                      return (
+                        <div
+                          key={`${file.name}-${index}`}
+                          className="flex items-center justify-between rounded-lg border px-4 py-3"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-primary">
+                              <Icon className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <div className="text-sm font-medium">
+                                {file.name}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                {formatBytes(file.size)}
+                              </div>
+                            </div>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleRemoveFile(index)}
+                            aria-label="Remove file"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
                         </div>
-                        <div className="text-xs text-muted-foreground">
-                          {formatBytes(selectedFile.size)}
-                        </div>
-                      </div>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleRemoveFile}
-                      aria-label="Remove file"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
+                      );
+                    })}
                   </div>
                 )}
 
@@ -630,7 +600,7 @@ export default function OwnerBookingsImportPage() {
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="text-xs text-muted-foreground">
-                  We recommend starting with a single export per venue.
+                  Upload up to 3 files (for example, three months of bookings).
                 </div>
                 <Button onClick={handleContinue} disabled={!canContinue}>
                   {isUploading ? (
@@ -654,11 +624,11 @@ export default function OwnerBookingsImportPage() {
                 <ol className="space-y-3 text-sm text-muted-foreground">
                   <li className="flex gap-2">
                     <span className="font-heading text-foreground">1.</span>
-                    Choose venue + source, then upload the file.
+                    Choose a venue, then upload up to three files.
                   </li>
                   <li className="flex gap-2">
                     <span className="font-heading text-foreground">2.</span>
-                    AI normalizes your data (one-time per venue).
+                    Normalize with AI or parsing (AI is one-time per venue).
                   </li>
                   <li className="flex gap-2">
                     <span className="font-heading text-foreground">3.</span>
@@ -695,6 +665,7 @@ export default function OwnerBookingsImportPage() {
               <AlertTitle>Import constraints</AlertTitle>
               <AlertDescription>
                 <ul className="list-disc space-y-1 pl-4">
+                  <li>Up to 3 files per import.</li>
                   <li>Blocks must be hour-aligned (minute 0 only).</li>
                   <li>Screenshot imports assume 1-hour duration.</li>
                   <li>AI normalization can run once per venue.</li>
@@ -706,17 +677,12 @@ export default function OwnerBookingsImportPage() {
               <CardHeader>
                 <CardTitle>Supported formats</CardTitle>
                 <CardDescription>
-                  Select the source first to see accepted types.
+                  Upload any combination of these file types.
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex flex-wrap gap-2">
-                {SOURCE_OPTIONS.map((option) => (
-                  <Badge
-                    key={option.value}
-                    variant={
-                      selectedSource === option.value ? "default" : "outline"
-                    }
-                  >
+                {SUPPORTED_SOURCES.map((option) => (
+                  <Badge key={option.value} variant="outline">
                     {option.extensions}
                   </Badge>
                 ))}

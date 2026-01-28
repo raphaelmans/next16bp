@@ -14,6 +14,7 @@ import {
   GetJobSchema,
   ListJobsSchema,
   ListRowsSchema,
+  ListSourcesSchema,
   NormalizeJobSchema,
   UpdateRowSchema,
 } from "./dtos";
@@ -136,6 +137,17 @@ export const bookingsImportRouter = router({
       try {
         const service = makeBookingsImportService();
         return await service.listRows(ctx.userId, input.jobId);
+      } catch (error) {
+        handleBookingsImportError(error);
+      }
+    }),
+
+  listSources: protectedProcedure
+    .input(ListSourcesSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        const service = makeBookingsImportService();
+        return await service.listSources(ctx.userId, input.jobId);
       } catch (error) {
         handleBookingsImportError(error);
       }

@@ -27,7 +27,6 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { S } from "@/shared/kernel/schemas";
 import { AvailabilityEmptyState } from "@/components/availability-empty-state";
 import {
   StandardFormInput,
@@ -71,6 +70,7 @@ import {
   TimeSlotPickerSkeleton,
 } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
+import { S } from "@/shared/kernel/schemas";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
 import { trackEvent } from "@/shared/lib/clients/telemetry-client";

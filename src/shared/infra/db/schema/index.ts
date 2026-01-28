@@ -6,6 +6,7 @@
 // Bookings import tables
 export * from "./bookings-import-job";
 export * from "./bookings-import-row";
+export * from "./bookings-import-source";
 // Claim request tables
 export * from "./claim-request";
 // Contact messages
