@@ -502,7 +502,9 @@ export default function OwnerAvailabilityStudioPage() {
     return [dayKey];
   }, [dayKey, isWeekView, weekDayKeys]);
 
-  const [calendarMonth, setCalendarMonth] = React.useState<Date>(selectedDate);
+  const [calendarMonth, setCalendarMonth] = React.useState<Date>(
+    () => selectedDate,
+  );
   React.useEffect(() => {
     setCalendarMonth(selectedDate);
   }, [selectedDate]);
@@ -869,7 +871,7 @@ export default function OwnerAvailabilityStudioPage() {
 
   const utils = trpc.useUtils();
   const [pendingBlockIds, setPendingBlockIds] = React.useState<Set<string>>(
-    new Set(),
+    () => new Set(),
   );
   const pendingBlockIdCounts = React.useRef<Map<string, number>>(new Map());
   const updatePendingBlockId = React.useCallback(
@@ -2586,7 +2588,7 @@ export default function OwnerAvailabilityStudioPage() {
   );
 }
 
-function BlockPresetCard({
+const BlockPresetCard = React.memo(function BlockPresetCard({
   preset,
   disabled,
 }: {
@@ -2622,17 +2624,25 @@ function BlockPresetCard({
       <BlockPresetContent preset={preset} />
     </button>
   );
-}
+});
 
-function BlockPresetPreview({ preset }: { preset: BlockPreset }) {
+const BlockPresetPreview = React.memo(function BlockPresetPreview({
+  preset,
+}: {
+  preset: BlockPreset;
+}) {
   return (
     <div className="w-64 rounded-lg border bg-card p-3 text-left shadow-lg">
       <BlockPresetContent preset={preset} />
     </div>
   );
-}
+});
 
-function BlockPresetContent({ preset }: { preset: BlockPreset }) {
+const BlockPresetContent = React.memo(function BlockPresetContent({
+  preset,
+}: {
+  preset: BlockPreset;
+}) {
   return (
     <div className="flex items-center justify-between gap-2">
       <div>
@@ -2644,9 +2654,9 @@ function BlockPresetContent({ preset }: { preset: BlockPreset }) {
       </Badge>
     </div>
   );
-}
+});
 
-function TimelineDropRow({
+const TimelineDropRow = React.memo(function TimelineDropRow({
   dayKey,
   startMinute,
   disabled,
@@ -2675,9 +2685,9 @@ function TimelineDropRow({
       )}
     />
   );
-}
+});
 
-function TimelineBlockItem({
+const TimelineBlockItem = React.memo(function TimelineBlockItem({
   block,
   topOffset,
   height,
@@ -2813,9 +2823,9 @@ function TimelineBlockItem({
       />
     </div>
   );
-}
+});
 
-function ResizeHandle({
+const ResizeHandle = React.memo(function ResizeHandle({
   blockId,
   edge,
   disabled,
@@ -2847,9 +2857,9 @@ function ResizeHandle({
       aria-hidden
     />
   );
-}
+});
 
-function DraftTimelineBlock({
+const DraftTimelineBlock = React.memo(function DraftTimelineBlock({
   row,
   topOffset,
   height,
@@ -2893,9 +2903,9 @@ function DraftTimelineBlock({
       )}
     </div>
   );
-}
+});
 
-function DraftRowCard({
+const DraftRowCard = React.memo(function DraftRowCard({
   row,
   timeZone,
   disabled,
@@ -2960,9 +2970,9 @@ function DraftRowCard({
       )}
     </div>
   );
-}
+});
 
-function WeekDayColumn({
+const WeekDayColumn = React.memo(function WeekDayColumn({
   dayKey,
   hours,
   blocks,
@@ -3033,4 +3043,4 @@ function WeekDayColumn({
       </div>
     </div>
   );
-}
+});
