@@ -17,10 +17,12 @@ import {
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addMinutes, differenceInMinutes, format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { addDays, addMinutes, differenceInMinutes, format } from "date-fns";
+import debounce from "debounce";
+import { CalendarIcon, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { parseAsString, useQueryState } from "nuqs";
+import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -32,8 +34,18 @@ import {
   StandardFormTextarea,
 } from "@/components/form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -53,6 +65,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useLogout, useSession } from "@/features/auth";
 import {
   OwnerNavbar,
@@ -89,6 +102,15 @@ import { trpc } from "@/trpc/client";
 const DEFAULT_START_HOUR = 6;
 const DEFAULT_END_HOUR = 22;
 const TIMELINE_ROW_HEIGHT = 56;
+
+const generateOptimisticId = () =>
+  `optimistic:${Date.now()}:${Math.random().toString(36).slice(2, 9)}`;
+
+const isOptimisticBlockId = (blockId: string) =>
+  blockId.startsWith("optimistic:");
+
+const studioViewSchema = ["day", "week"] as const;
+type StudioView = (typeof studioViewSchema)[number];
 
 type BlockPreset = {
   id: string;
@@ -138,13 +160,17 @@ type DraftRowStatus =
 
 type CourtBlockItem = {
   id: string;
+  courtId: string;
   type: "MAINTENANCE" | "WALK_IN";
-  startTime: Date | string;
-  endTime: Date | string;
+  startTime: string;
+  endTime: string;
   reason: string | null;
   totalPriceCents: number;
   currency: string;
   isActive: boolean;
+  cancelledAt: string | null;
+  createdAt: string;
+  updatedAt: string;
 };
 
 type DraftRowItem = {
@@ -162,28 +188,20 @@ type DraftRowItem = {
 
 const BLOCK_PRESETS: BlockPreset[] = [
   {
-    id: "preset-maintenance-60",
-    label: "1h Maintenance",
-    blockType: "MAINTENANCE",
-    durationMinutes: 60,
-    badgeVariant: "warning",
-    description: "Block for repairs or private events.",
-  },
-  {
-    id: "preset-maintenance-120",
-    label: "2h Maintenance",
-    blockType: "MAINTENANCE",
-    durationMinutes: 120,
-    badgeVariant: "warning",
-    description: "Extended maintenance window.",
-  },
-  {
     id: "preset-walkin-60",
     label: "1h Walk-in",
     blockType: "WALK_IN",
     durationMinutes: 60,
     badgeVariant: "paid",
     description: "Reserve for walk-in customers.",
+  },
+  {
+    id: "preset-maintenance-60",
+    label: "1h Maintenance",
+    blockType: "MAINTENANCE",
+    durationMinutes: 60,
+    badgeVariant: "warning",
+    description: "Block for repairs or private events.",
   },
 ];
 
@@ -234,6 +252,21 @@ const parseTimelineRange = (
 const getMinuteOfDay = (instant: Date | string, timeZone: string) => {
   const zoned = getZonedDate(instant, timeZone);
   return zoned.getHours() * 60 + zoned.getMinutes();
+};
+
+const getEndMinuteForDayKey = (
+  dayKey: string,
+  instant: Date | string,
+  timeZone: string,
+) => {
+  const endMinute = getMinuteOfDay(instant, timeZone);
+  const endDayKey = getZonedDayKey(instant, timeZone);
+
+  if (endDayKey !== dayKey && endMinute === 0) {
+    return 24 * 60;
+  }
+
+  return endMinute;
 };
 
 const buildDateFromDayKey = (
@@ -315,11 +348,18 @@ export default function OwnerAvailabilityStudioPage() {
     "dayKey",
     parseAsString.withOptions({ history: "replace" }),
   );
+  const [viewParam, setViewParam] = useQueryState(
+    "view",
+    parseAsStringLiteral(studioViewSchema).withOptions({ history: "replace" }),
+  );
   const [jobIdParam, setJobIdParam] = useQueryState(
     "jobId",
     parseAsString.withOptions({ history: "replace" }),
   );
   const jobId = jobIdParam ?? "";
+
+  const view = viewParam ?? "week";
+  const isWeekView = view === "week";
 
   const fallbackDayKey = React.useMemo(
     () => getZonedDayKey(getZonedToday(placeTimeZone), placeTimeZone),
@@ -417,6 +457,51 @@ export default function OwnerAvailabilityStudioPage() {
     [placeTimeZone, selectedDayStart],
   );
 
+  const weekStartsOn = 0;
+  const weekStartDayKey = React.useMemo(() => {
+    const dayStart = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
+    const dayOfWeek = dayStart.getDay();
+    const delta = (dayOfWeek - weekStartsOn + 7) % 7;
+    const weekStart = addDays(dayStart, -delta);
+    return getZonedDayKey(weekStart, placeTimeZone);
+  }, [dayKey, placeTimeZone]);
+
+  const weekDayKeys = React.useMemo(() => {
+    const start = getZonedDayRangeFromDayKey(
+      weekStartDayKey,
+      placeTimeZone,
+    ).start;
+    return Array.from({ length: 7 }, (_, index) =>
+      getZonedDayKey(addDays(start, index), placeTimeZone),
+    );
+  }, [placeTimeZone, weekStartDayKey]);
+
+  const weekLabel = React.useMemo(() => {
+    const weekStart = getZonedDayRangeFromDayKey(
+      weekDayKeys[0] ?? weekStartDayKey,
+      placeTimeZone,
+    ).start;
+    const weekEnd = getZonedDayRangeFromDayKey(
+      weekDayKeys[6] ?? weekStartDayKey,
+      placeTimeZone,
+    ).start;
+    return `${formatInTimeZone(weekStart, placeTimeZone, "MMM d")} - ${formatInTimeZone(
+      weekEnd,
+      placeTimeZone,
+      "MMM d, yyyy",
+    )}`;
+  }, [placeTimeZone, weekDayKeys, weekStartDayKey]);
+
+  const todayDayKey = React.useMemo(
+    () => getZonedDayKey(getZonedToday(placeTimeZone), placeTimeZone),
+    [placeTimeZone],
+  );
+
+  const visibleDayKeys = React.useMemo(() => {
+    if (isWeekView) return weekDayKeys;
+    return [dayKey];
+  }, [dayKey, isWeekView, weekDayKeys]);
+
   const [calendarMonth, setCalendarMonth] = React.useState<Date>(selectedDate);
   React.useEffect(() => {
     setCalendarMonth(selectedDate);
@@ -424,10 +509,35 @@ export default function OwnerAvailabilityStudioPage() {
 
   const courtHoursQuery = useCourtHours(courtId);
   const dayOfWeek = getZonedDate(selectedDayStart, placeTimeZone).getDay();
-  const { startHour, endHour } = React.useMemo(
+  const selectedTimelineRange = React.useMemo(
     () => parseTimelineRange(courtHoursQuery.data ?? [], dayOfWeek),
     [courtHoursQuery.data, dayOfWeek],
   );
+  const timelineRange = React.useMemo(() => {
+    if (!isWeekView) return selectedTimelineRange;
+
+    const windows = courtHoursQuery.data ?? [];
+    if (weekDayKeys.length === 0) return selectedTimelineRange;
+
+    const ranges = weekDayKeys.map((dayKey) => {
+      const dayStart = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
+      const dayOfWeek = getZonedDate(dayStart, placeTimeZone).getDay();
+      return parseTimelineRange(windows, dayOfWeek);
+    });
+
+    return {
+      startHour: Math.min(...ranges.map((range) => range.startHour)),
+      endHour: Math.max(...ranges.map((range) => range.endHour)),
+    };
+  }, [
+    courtHoursQuery.data,
+    isWeekView,
+    placeTimeZone,
+    selectedTimelineRange,
+    weekDayKeys,
+  ]);
+
+  const { startHour, endHour } = timelineRange;
 
   const hours = React.useMemo(
     () =>
@@ -441,17 +551,34 @@ export default function OwnerAvailabilityStudioPage() {
   const timelineStartMinute = startHour * 60;
   const timelineEndMinute = endHour * 60;
 
-  const dayStartIso = React.useMemo(
-    () => toUtcISOString(selectedDayStart),
-    [selectedDayStart],
+  const blocksRange = React.useMemo(() => {
+    const startDayKey = visibleDayKeys[0] ?? dayKey;
+    const endDayKey = visibleDayKeys[visibleDayKeys.length - 1] ?? dayKey;
+    return {
+      start: getZonedDayRangeFromDayKey(startDayKey, placeTimeZone).start,
+      end: getZonedDayRangeFromDayKey(endDayKey, placeTimeZone).end,
+    };
+  }, [dayKey, placeTimeZone, visibleDayKeys]);
+  const blocksRangeStartIso = React.useMemo(
+    () => toUtcISOString(blocksRange.start),
+    [blocksRange.start],
   );
-  const dayEndIso = React.useMemo(
-    () => toUtcISOString(selectedDayRange.end),
-    [selectedDayRange.end],
+  const blocksRangeEndIso = React.useMemo(
+    () => toUtcISOString(blocksRange.end),
+    [blocksRange.end],
+  );
+
+  const blocksQueryInput = React.useMemo(
+    () => ({
+      courtId,
+      startTime: blocksRangeStartIso,
+      endTime: blocksRangeEndIso,
+    }),
+    [courtId, blocksRangeStartIso, blocksRangeEndIso],
   );
 
   const blocksQuery = trpc.courtBlock.listForCourtRange.useQuery(
-    { courtId, startTime: dayStartIso, endTime: dayEndIso },
+    blocksQueryInput,
     { enabled: Boolean(courtId) },
   );
 
@@ -463,20 +590,52 @@ export default function OwnerAvailabilityStudioPage() {
     [blocksQuery.data],
   );
 
+  const selectedDayEndExclusive = React.useMemo(
+    () => addDays(selectedDayStart, 1),
+    [selectedDayStart],
+  );
+
+  const activeBlocksForSelectedDay = React.useMemo(() => {
+    return activeBlocks.filter((block) => {
+      const startTime = new Date(block.startTime);
+      const endTime = new Date(block.endTime);
+      return startTime < selectedDayEndExclusive && endTime > selectedDayStart;
+    });
+  }, [activeBlocks, selectedDayEndExclusive, selectedDayStart]);
+
   const dayBlocks = React.useMemo(
     () =>
-      [...activeBlocks].sort(
+      [...activeBlocksForSelectedDay].sort(
         (a, b) =>
           new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
       ),
-    [activeBlocks],
+    [activeBlocksForSelectedDay],
   );
 
   const timelineBlocks = React.useMemo(() => {
-    return activeBlocks
+    return activeBlocksForSelectedDay
       .map((block) => {
-        const startMinute = getMinuteOfDay(block.startTime, placeTimeZone);
-        const endMinute = getMinuteOfDay(block.endTime, placeTimeZone);
+        const startTime = new Date(block.startTime);
+        const endTime = new Date(block.endTime);
+
+        if (
+          startTime >= selectedDayEndExclusive ||
+          endTime <= selectedDayStart
+        ) {
+          return null;
+        }
+
+        const segmentStart =
+          startTime > selectedDayStart ? startTime : selectedDayStart;
+        const segmentEnd =
+          endTime < selectedDayEndExclusive ? endTime : selectedDayEndExclusive;
+
+        const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
+        const endMinute = getEndMinuteForDayKey(
+          dayKey,
+          segmentEnd,
+          placeTimeZone,
+        );
 
         if (
           endMinute <= timelineStartMinute ||
@@ -498,7 +657,81 @@ export default function OwnerAvailabilityStudioPage() {
         };
       })
       .filter((item): item is NonNullable<typeof item> => Boolean(item));
-  }, [activeBlocks, placeTimeZone, timelineEndMinute, timelineStartMinute]);
+  }, [
+    activeBlocksForSelectedDay,
+    dayKey,
+    placeTimeZone,
+    selectedDayEndExclusive,
+    selectedDayStart,
+    timelineEndMinute,
+    timelineStartMinute,
+  ]);
+
+  const weekTimelineBlocksByDayKey = React.useMemo(() => {
+    if (!isWeekView) {
+      return new Map<
+        string,
+        Array<{ block: CourtBlockItem; topOffset: number; height: number }>
+      >();
+    }
+
+    const byDayKey = new Map<
+      string,
+      Array<{ block: CourtBlockItem; topOffset: number; height: number }>
+    >();
+
+    for (const dayKey of weekDayKeys) {
+      const dayStart = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
+      const dayEndExclusive = addDays(dayStart, 1);
+
+      const items = activeBlocks
+        .map((block) => {
+          const startTime = new Date(block.startTime);
+          const endTime = new Date(block.endTime);
+          if (startTime >= dayEndExclusive || endTime <= dayStart) return null;
+
+          const segmentStart = startTime > dayStart ? startTime : dayStart;
+          const segmentEnd =
+            endTime < dayEndExclusive ? endTime : dayEndExclusive;
+          const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
+          const endMinute = getEndMinuteForDayKey(
+            dayKey,
+            segmentEnd,
+            placeTimeZone,
+          );
+
+          if (
+            endMinute <= timelineStartMinute ||
+            startMinute >= timelineEndMinute
+          ) {
+            return null;
+          }
+
+          const clampedStart = Math.max(startMinute, timelineStartMinute);
+          const clampedEnd = Math.min(endMinute, timelineEndMinute);
+          const topOffset =
+            ((clampedStart - timelineStartMinute) / 60) * TIMELINE_ROW_HEIGHT;
+          const height =
+            ((clampedEnd - clampedStart) / 60) * TIMELINE_ROW_HEIGHT;
+
+          if (height <= 0) return null;
+
+          return { block, topOffset, height };
+        })
+        .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+      byDayKey.set(dayKey, items);
+    }
+
+    return byDayKey;
+  }, [
+    activeBlocks,
+    isWeekView,
+    placeTimeZone,
+    timelineEndMinute,
+    timelineStartMinute,
+    weekDayKeys,
+  ]);
 
   const draftTimelineBlocks = React.useMemo(() => {
     if (!isImportOverlay)
@@ -513,10 +746,25 @@ export default function OwnerAvailabilityStudioPage() {
       .filter((row) => row.startTime && row.endTime)
       .filter((row) => (courtId ? row.courtId === courtId : true))
       .map((row) => {
-        const startTime = row.startTime as Date | string;
-        const endTime = row.endTime as Date | string;
-        const startMinute = getMinuteOfDay(startTime, placeTimeZone);
-        const endMinute = getMinuteOfDay(endTime, placeTimeZone);
+        const startTime = new Date(row.startTime as Date | string);
+        const endTime = new Date(row.endTime as Date | string);
+        if (
+          startTime >= selectedDayEndExclusive ||
+          endTime <= selectedDayStart
+        ) {
+          return null;
+        }
+
+        const segmentStart =
+          startTime > selectedDayStart ? startTime : selectedDayStart;
+        const segmentEnd =
+          endTime < selectedDayEndExclusive ? endTime : selectedDayEndExclusive;
+        const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
+        const endMinute = getEndMinuteForDayKey(
+          dayKey,
+          segmentEnd,
+          placeTimeZone,
+        );
         if (
           endMinute <= timelineStartMinute ||
           startMinute >= timelineEndMinute
@@ -539,26 +787,464 @@ export default function OwnerAvailabilityStudioPage() {
       .filter((item): item is NonNullable<typeof item> => Boolean(item));
   }, [
     courtId,
+    dayKey,
     draftRows,
     isImportOverlay,
     placeTimeZone,
+    selectedDayEndExclusive,
+    selectedDayStart,
     timelineEndMinute,
     timelineStartMinute,
   ]);
 
+  const draftWeekTimelineBlocksByDayKey = React.useMemo(() => {
+    if (!isImportOverlay || !isWeekView) {
+      return new Map<
+        string,
+        Array<{ row: DraftRowItem; topOffset: number; height: number }>
+      >();
+    }
+
+    const byDayKey = new Map<
+      string,
+      Array<{ row: DraftRowItem; topOffset: number; height: number }>
+    >();
+
+    for (const dayKey of weekDayKeys) {
+      const dayStart = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
+      const dayEndExclusive = addDays(dayStart, 1);
+
+      const items = draftRows
+        .filter((row) => row.status !== "COMMITTED" && row.status !== "SKIPPED")
+        .filter((row) => row.startTime && row.endTime)
+        .filter((row) => (courtId ? row.courtId === courtId : true))
+        .map((row) => {
+          const startTime = new Date(row.startTime as Date | string);
+          const endTime = new Date(row.endTime as Date | string);
+          if (startTime >= dayEndExclusive || endTime <= dayStart) return null;
+
+          const segmentStart = startTime > dayStart ? startTime : dayStart;
+          const segmentEnd =
+            endTime < dayEndExclusive ? endTime : dayEndExclusive;
+          const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
+          const endMinute = getEndMinuteForDayKey(
+            dayKey,
+            segmentEnd,
+            placeTimeZone,
+          );
+          if (
+            endMinute <= timelineStartMinute ||
+            startMinute >= timelineEndMinute
+          ) {
+            return null;
+          }
+
+          const clampedStart = Math.max(startMinute, timelineStartMinute);
+          const clampedEnd = Math.min(endMinute, timelineEndMinute);
+          const topOffset =
+            ((clampedStart - timelineStartMinute) / 60) * TIMELINE_ROW_HEIGHT;
+          const height =
+            ((clampedEnd - clampedStart) / 60) * TIMELINE_ROW_HEIGHT;
+
+          if (height <= 0) return null;
+
+          return { row, topOffset, height };
+        })
+        .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+      byDayKey.set(dayKey, items);
+    }
+
+    return byDayKey;
+  }, [
+    courtId,
+    draftRows,
+    isImportOverlay,
+    isWeekView,
+    placeTimeZone,
+    timelineEndMinute,
+    timelineStartMinute,
+    weekDayKeys,
+  ]);
+
   const utils = trpc.useUtils();
-  const createMaintenance = trpc.courtBlock.createMaintenance.useMutation();
-  const createWalkIn = trpc.courtBlock.createWalkIn.useMutation();
-  const cancelBlock = trpc.courtBlock.cancel.useMutation();
+  const [pendingBlockIds, setPendingBlockIds] = React.useState<Set<string>>(
+    new Set(),
+  );
+  const pendingBlockIdCounts = React.useRef<Map<string, number>>(new Map());
+  const updatePendingBlockId = React.useCallback(
+    (blockId: string, delta: 1 | -1) => {
+      const nextCounts = new Map(pendingBlockIdCounts.current);
+      const nextCount = (nextCounts.get(blockId) ?? 0) + delta;
+      if (nextCount <= 0) {
+        nextCounts.delete(blockId);
+      } else {
+        nextCounts.set(blockId, nextCount);
+      }
+      pendingBlockIdCounts.current = nextCounts;
+      setPendingBlockIds(new Set(nextCounts.keys()));
+    },
+    [],
+  );
+
+  const scheduleRangeFlushRef = React.useRef<(blockId: string) => void>(
+    () => {},
+  );
+
+  const applyPendingRangeUpdate = (
+    serverBlock: CourtBlockItem,
+    optimisticId?: string,
+  ) => {
+    if (!optimisticId) return serverBlock;
+    const pending = pendingRangeUpdates.current.get(optimisticId);
+    if (!pending) return serverBlock;
+
+    pendingRangeUpdates.current.delete(optimisticId);
+    rangeUpdateVersions.current.delete(optimisticId);
+
+    rangeUpdateVersions.current.set(serverBlock.id, pending.version);
+    pendingRangeUpdates.current.set(serverBlock.id, {
+      ...pending,
+      version: pending.version,
+    });
+    scheduleRangeFlushRef.current(serverBlock.id);
+
+    return {
+      ...serverBlock,
+      startTime: pending.startTime,
+      endTime: pending.endTime,
+    };
+  };
+
+  const createMaintenance = trpc.courtBlock.createMaintenance.useMutation({
+    async onMutate(variables) {
+      const optimisticId = generateOptimisticId();
+      const nowIso = new Date().toISOString();
+      await utils.courtBlock.listForCourtRange.cancel(blocksQueryInput);
+      const previousBlocks =
+        utils.courtBlock.listForCourtRange.getData(blocksQueryInput);
+
+      const optimisticBlock: CourtBlockItem = {
+        id: optimisticId,
+        courtId: variables.courtId,
+        type: "MAINTENANCE",
+        startTime: variables.startTime,
+        endTime: variables.endTime,
+        reason: variables.reason ?? null,
+        totalPriceCents: 0,
+        currency: "PHP",
+        isActive: true,
+        cancelledAt: null,
+        createdAt: nowIso,
+        updatedAt: nowIso,
+      };
+
+      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
+        old ? [...old, optimisticBlock] : [optimisticBlock],
+      );
+      updatePendingBlockId(optimisticId, 1);
+
+      return { previousBlocks, optimisticId };
+    },
+    onError(_error, _variables, context) {
+      if (context?.previousBlocks !== undefined) {
+        utils.courtBlock.listForCourtRange.setData(
+          blocksQueryInput,
+          context.previousBlocks,
+        );
+      }
+      if (context?.optimisticId) {
+        updatePendingBlockId(context.optimisticId, -1);
+        pendingRangeUpdates.current.delete(context.optimisticId);
+        rangeUpdateVersions.current.delete(context.optimisticId);
+        const debounced = debouncedFlushByBlock.current.get(
+          context.optimisticId,
+        );
+        if (debounced) {
+          debounced.clear();
+          debouncedFlushByBlock.current.delete(context.optimisticId);
+        }
+      }
+    },
+    onSuccess(serverBlock, _variables, context) {
+      const nextBlock = applyPendingRangeUpdate(
+        serverBlock,
+        context?.optimisticId,
+      );
+      utils.courtBlock.listForCourtRange.setData(
+        blocksQueryInput,
+        (old) =>
+          old?.map((block) =>
+            block.id === context?.optimisticId ? nextBlock : block,
+          ) ?? [nextBlock],
+      );
+      if (context?.optimisticId) {
+        updatePendingBlockId(context.optimisticId, -1);
+      }
+    },
+    onSettled() {
+      void utils.courtBlock.listForCourtRange.invalidate(blocksQueryInput);
+    },
+  });
+
+  const createWalkIn = trpc.courtBlock.createWalkIn.useMutation({
+    async onMutate(variables) {
+      const optimisticId = generateOptimisticId();
+      const nowIso = new Date().toISOString();
+      await utils.courtBlock.listForCourtRange.cancel(blocksQueryInput);
+      const previousBlocks =
+        utils.courtBlock.listForCourtRange.getData(blocksQueryInput);
+
+      const optimisticBlock: CourtBlockItem = {
+        id: optimisticId,
+        courtId: variables.courtId,
+        type: "WALK_IN",
+        startTime: variables.startTime,
+        endTime: variables.endTime,
+        reason: variables.reason ?? null,
+        totalPriceCents: 0,
+        currency: "PHP",
+        isActive: true,
+        cancelledAt: null,
+        createdAt: nowIso,
+        updatedAt: nowIso,
+      };
+
+      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
+        old ? [...old, optimisticBlock] : [optimisticBlock],
+      );
+      updatePendingBlockId(optimisticId, 1);
+
+      return { previousBlocks, optimisticId };
+    },
+    onError(_error, _variables, context) {
+      if (context?.previousBlocks !== undefined) {
+        utils.courtBlock.listForCourtRange.setData(
+          blocksQueryInput,
+          context.previousBlocks,
+        );
+      }
+      if (context?.optimisticId) {
+        updatePendingBlockId(context.optimisticId, -1);
+        pendingRangeUpdates.current.delete(context.optimisticId);
+        rangeUpdateVersions.current.delete(context.optimisticId);
+        const debounced = debouncedFlushByBlock.current.get(
+          context.optimisticId,
+        );
+        if (debounced) {
+          debounced.clear();
+          debouncedFlushByBlock.current.delete(context.optimisticId);
+        }
+      }
+    },
+    onSuccess(serverBlock, _variables, context) {
+      const nextBlock = applyPendingRangeUpdate(
+        serverBlock,
+        context?.optimisticId,
+      );
+      utils.courtBlock.listForCourtRange.setData(
+        blocksQueryInput,
+        (old) =>
+          old?.map((block) =>
+            block.id === context?.optimisticId ? nextBlock : block,
+          ) ?? [nextBlock],
+      );
+      if (context?.optimisticId) {
+        updatePendingBlockId(context.optimisticId, -1);
+      }
+    },
+    onSettled() {
+      void utils.courtBlock.listForCourtRange.invalidate(blocksQueryInput);
+    },
+  });
+
+  const cancelBlock = trpc.courtBlock.cancel.useMutation({
+    async onMutate(variables) {
+      await utils.courtBlock.listForCourtRange.cancel(blocksQueryInput);
+      const previousBlocks =
+        utils.courtBlock.listForCourtRange.getData(blocksQueryInput);
+
+      utils.courtBlock.listForCourtRange.setData(
+        blocksQueryInput,
+        (old) => old?.filter((block) => block.id !== variables.blockId) ?? [],
+      );
+      updatePendingBlockId(variables.blockId, 1);
+
+      return { previousBlocks, blockId: variables.blockId };
+    },
+    onError(_error, _variables, context) {
+      if (context?.previousBlocks !== undefined) {
+        utils.courtBlock.listForCourtRange.setData(
+          blocksQueryInput,
+          context.previousBlocks,
+        );
+      }
+      if (context?.blockId) {
+        updatePendingBlockId(context.blockId, -1);
+      }
+    },
+    onSuccess(_data, _variables, context) {
+      if (context?.blockId) {
+        updatePendingBlockId(context.blockId, -1);
+      }
+    },
+    onSettled() {
+      void utils.courtBlock.listForCourtRange.invalidate(blocksQueryInput);
+    },
+  });
+
   const updateRange = trpc.courtBlock.updateRange.useMutation();
 
-  const updateDraftRow = trpc.bookingsImport.updateRow.useMutation();
+  const pendingRangeUpdates = React.useRef<
+    Map<string, { startTime: string; endTime: string; version: number }>
+  >(new Map());
+  const rangeUpdateVersions = React.useRef<Map<string, number>>(new Map());
+  const debouncedFlushByBlock = React.useRef<
+    Map<string, ReturnType<typeof debounce>>
+  >(new Map());
+
+  const flushBlockRangeUpdate = React.useCallback(
+    async (blockId: string) => {
+      const pending = pendingRangeUpdates.current.get(blockId);
+      if (!pending) return;
+      pendingRangeUpdates.current.delete(blockId);
+
+      updatePendingBlockId(blockId, 1);
+
+      try {
+        const serverBlock = await updateRange.mutateAsync({
+          blockId,
+          startTime: pending.startTime,
+          endTime: pending.endTime,
+        });
+        const latestVersion = rangeUpdateVersions.current.get(blockId);
+        if (latestVersion !== pending.version) return;
+
+        const rangeStart = new Date(blocksRangeStartIso);
+        const rangeEnd = new Date(blocksRangeEndIso);
+        const blockStart = new Date(serverBlock.startTime);
+        const blockEnd = new Date(serverBlock.endTime);
+        const isInRange = blockStart < rangeEnd && blockEnd > rangeStart;
+
+        utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) => {
+          const existing = old ?? [];
+          const filtered = existing.filter((block) => block.id !== blockId);
+          if (!isInRange) return filtered;
+          return [...filtered, serverBlock];
+        });
+        toast.success("Block updated");
+      } catch (error) {
+        const latestVersion = rangeUpdateVersions.current.get(blockId);
+        if (latestVersion === pending.version) {
+          void utils.courtBlock.listForCourtRange.invalidate(blocksQueryInput);
+          toast.error("Unable to update block", {
+            description: getClientErrorMessage(error, "Please try again"),
+          });
+        }
+      } finally {
+        updatePendingBlockId(blockId, -1);
+      }
+    },
+    [
+      blocksQueryInput,
+      blocksRangeEndIso,
+      blocksRangeStartIso,
+      updatePendingBlockId,
+      updateRange,
+      utils,
+    ],
+  );
+
+  const scheduleRangeFlush = React.useCallback(
+    (blockId: string) => {
+      let debounced = debouncedFlushByBlock.current.get(blockId);
+      if (!debounced) {
+        debounced = debounce(
+          (id: string) => void flushBlockRangeUpdate(id),
+          2000,
+        );
+        debouncedFlushByBlock.current.set(blockId, debounced);
+      }
+      debounced(blockId);
+    },
+    [flushBlockRangeUpdate],
+  );
+
+  scheduleRangeFlushRef.current = scheduleRangeFlush;
+
+  React.useEffect(
+    () => () => {
+      for (const debounced of debouncedFlushByBlock.current.values()) {
+        debounced.clear();
+      }
+    },
+    [],
+  );
+
+  const draftRowsQueryInput = React.useMemo(() => ({ jobId }), [jobId]);
+
+  const updateDraftRow = trpc.bookingsImport.updateRow.useMutation({
+    async onMutate(variables) {
+      if (!jobId) return { previousRows: undefined };
+      await utils.bookingsImport.listRows.cancel(draftRowsQueryInput);
+      const previousRows =
+        utils.bookingsImport.listRows.getData(draftRowsQueryInput);
+
+      utils.bookingsImport.listRows.setData(draftRowsQueryInput, (old) =>
+        old?.map((row) => {
+          if (row.id !== variables.rowId) return row;
+
+          const startTime: string | null =
+            variables.startTime === undefined
+              ? row.startTime
+              : variables.startTime instanceof Date
+                ? toUtcISOString(variables.startTime)
+                : null;
+          const endTime: string | null =
+            variables.endTime === undefined
+              ? row.endTime
+              : variables.endTime instanceof Date
+                ? toUtcISOString(variables.endTime)
+                : null;
+          const courtId: string | null =
+            variables.courtId === undefined
+              ? row.courtId
+              : (variables.courtId as string | null);
+          const courtLabel: string | null =
+            variables.courtLabel === undefined
+              ? row.courtLabel
+              : (variables.courtLabel as string | null);
+
+          return {
+            ...row,
+            startTime,
+            endTime,
+            courtId,
+            courtLabel,
+          };
+        }),
+      );
+
+      return { previousRows };
+    },
+    onError(_error, _variables, context) {
+      if (context?.previousRows !== undefined && jobId) {
+        utils.bookingsImport.listRows.setData(
+          draftRowsQueryInput,
+          context.previousRows,
+        );
+      }
+    },
+    onSettled() {
+      if (jobId) {
+        void utils.bookingsImport.listRows.invalidate(draftRowsQueryInput);
+        void utils.bookingsImport.getJob.invalidate({ jobId });
+      }
+    },
+  });
+
   const commitImport = trpc.bookingsImport.commit.useMutation();
   const discardImport = trpc.bookingsImport.discardJob.useMutation();
-
-  const invalidateBlocks = React.useCallback(() => {
-    void utils.courtBlock.listForCourtRange.invalidate();
-  }, [utils]);
 
   const invalidateDraftRows = React.useCallback(() => {
     if (!jobId) return;
@@ -566,30 +1252,46 @@ export default function OwnerAvailabilityStudioPage() {
     void utils.bookingsImport.getJob.invalidate({ jobId });
   }, [jobId, utils]);
 
+  const [pendingRemoveBlockId, setPendingRemoveBlockId] = React.useState<
+    string | null
+  >(null);
+
   const handleCancelBlock = React.useCallback(
-    async (
+    (
       blockId: string,
       options?: { skipConfirm?: boolean; silent?: boolean },
     ) => {
-      if (!options?.skipConfirm) {
-        const confirmed = window.confirm("Remove this block?");
-        if (!confirmed) return;
+      if (options?.skipConfirm) {
+        cancelBlock
+          .mutateAsync({ blockId })
+          .then(() => {
+            if (!options?.silent) toast.success("Block removed");
+          })
+          .catch((error: unknown) => {
+            toast.error("Unable to remove block", {
+              description: getClientErrorMessage(error, "Please try again"),
+            });
+          });
+        return;
       }
-
-      try {
-        await cancelBlock.mutateAsync({ blockId });
-        invalidateBlocks();
-        if (!options?.silent) {
-          toast.success("Block removed");
-        }
-      } catch (error) {
-        toast.error("Unable to remove block", {
-          description: getClientErrorMessage(error, "Please try again"),
-        });
-      }
+      setPendingRemoveBlockId(blockId);
     },
-    [cancelBlock, invalidateBlocks],
+    [cancelBlock],
   );
+
+  const confirmRemoveBlock = React.useCallback(async () => {
+    if (!pendingRemoveBlockId) return;
+    const blockId = pendingRemoveBlockId;
+    setPendingRemoveBlockId(null);
+    try {
+      await cancelBlock.mutateAsync({ blockId });
+      toast.success("Block removed");
+    } catch (error) {
+      toast.error("Unable to remove block", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  }, [cancelBlock, pendingRemoveBlockId]);
 
   const createBlock = React.useCallback(
     async (preset: BlockPreset, startTime: Date, endTime: Date) => {
@@ -609,7 +1311,6 @@ export default function OwnerAvailabilityStudioPage() {
             ? await createMaintenance.mutateAsync(payload)
             : await createWalkIn.mutateAsync(payload);
 
-        invalidateBlocks();
         toast.success("Block created", {
           description: `${preset.label} at ${formatInTimeZone(
             startTime,
@@ -636,36 +1337,50 @@ export default function OwnerAvailabilityStudioPage() {
       createMaintenance,
       createWalkIn,
       handleCancelBlock,
-      invalidateBlocks,
       placeTimeZone,
     ],
   );
 
   const handleUpdateBlockRange = React.useCallback(
-    async (blockId: string, startTime: Date, endTime: Date) => {
+    (blockId: string, startTime: Date, endTime: Date) => {
       if (endTime <= startTime) {
         toast.error("End time must be after start time");
         return;
       }
 
-      try {
-        await updateRange.mutateAsync({
-          blockId,
-          startTime: toUtcISOString(startTime),
-          endTime: toUtcISOString(endTime),
-        });
-        invalidateBlocks();
-      } catch (error) {
-        toast.error("Unable to update block", {
-          description: getClientErrorMessage(error, "Please try again"),
-        });
+      const startIso = toUtcISOString(startTime);
+      const endIso = toUtcISOString(endTime);
+
+      // Immediate optimistic cache update
+      utils.courtBlock.listForCourtRange.setData(
+        blocksQueryInput,
+        (old) =>
+          old?.map((block) =>
+            block.id === blockId
+              ? { ...block, startTime: startIso, endTime: endIso }
+              : block,
+          ) ?? [],
+      );
+
+      // Track latest values with versioning
+      const nextVersion = (rangeUpdateVersions.current.get(blockId) ?? 0) + 1;
+      rangeUpdateVersions.current.set(blockId, nextVersion);
+      pendingRangeUpdates.current.set(blockId, {
+        startTime: startIso,
+        endTime: endIso,
+        version: nextVersion,
+      });
+
+      // Debounced save (per block)
+      if (!isOptimisticBlockId(blockId)) {
+        scheduleRangeFlush(blockId);
       }
     },
-    [invalidateBlocks, updateRange],
+    [blocksQueryInput, scheduleRangeFlush, utils],
   );
 
   const handleDraftRowDrop = React.useCallback(
-    async (rowId: string, startMinute: number) => {
+    async (rowId: string, dropDayKey: string, startMinute: number) => {
       if (!jobId || !isImportEditable) {
         toast.error("Import rows are not editable yet");
         return;
@@ -684,7 +1399,7 @@ export default function OwnerAvailabilityStudioPage() {
               60,
             )
           : 60;
-      const start = buildDateFromDayKey(dayKey, startMinute, placeTimeZone);
+      const start = buildDateFromDayKey(dropDayKey, startMinute, placeTimeZone);
       const end = addMinutes(start, durationMinutes);
 
       try {
@@ -695,7 +1410,6 @@ export default function OwnerAvailabilityStudioPage() {
           courtId: selectedCourt?.id ?? undefined,
           courtLabel: selectedCourt?.label ?? undefined,
         });
-        invalidateDraftRows();
         toast.success("Draft row updated");
       } catch (error) {
         toast.error("Unable to update draft row", {
@@ -704,9 +1418,7 @@ export default function OwnerAvailabilityStudioPage() {
       }
     },
     [
-      dayKey,
       draftRowsById,
-      invalidateDraftRows,
       isImportEditable,
       jobId,
       placeTimeZone,
@@ -750,6 +1462,22 @@ export default function OwnerAvailabilityStudioPage() {
     }
   }, [discardImport, jobId, setJobIdParam]);
 
+  // Navigation handlers for week and month views
+  const navigateWeek = React.useCallback(
+    (direction: 1 | -1) => {
+      const weekStart = getZonedDayRangeFromDayKey(
+        weekDayKeys[0] ?? dayKey,
+        placeTimeZone,
+      ).start;
+      const newDayKey = getZonedDayKey(
+        addDays(weekStart, direction * 7),
+        placeTimeZone,
+      );
+      setDayKeyParam(newDayKey);
+    },
+    [dayKey, placeTimeZone, setDayKeyParam, weekDayKeys],
+  );
+
   const [activeDragItem, setActiveDragItem] = React.useState<DragPreset | null>(
     null,
   );
@@ -760,6 +1488,12 @@ export default function OwnerAvailabilityStudioPage() {
     }),
     useSensor(KeyboardSensor),
   );
+
+  // Motion: reduced motion support
+  const shouldReduceMotion = useReducedMotion();
+  const viewTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : { duration: 0.25, ease: "easeOut" as const };
 
   const handleDragStart = React.useCallback((event: DragStartEvent) => {
     const data = event.active.data.current as DragPreset | undefined;
@@ -839,7 +1573,7 @@ export default function OwnerAvailabilityStudioPage() {
       if (activeData.kind === "draft-row") {
         const row = draftRowsById.get(activeData.rowId);
         if (!row) return;
-        await handleDraftRowDrop(row.id, overData.startMinute);
+        await handleDraftRowDrop(row.id, overData.dayKey, overData.startMinute);
       }
     },
     [
@@ -853,9 +1587,8 @@ export default function OwnerAvailabilityStudioPage() {
   );
 
   const isCreatingBlock = createMaintenance.isPending || createWalkIn.isPending;
-  const isDragDisabled = !courtId || isCreatingBlock || updateRange.isPending;
-  const isDraftDragDisabled =
-    !isImportEditable || !courtId || updateDraftRow.isPending;
+  const isDragDisabled = !courtId;
+  const isDraftDragDisabled = !isImportEditable || !courtId;
 
   const [customDialogOpen, setCustomDialogOpen] = React.useState(false);
   const customForm = useForm<CustomBlockFormValues>({
@@ -917,7 +1650,6 @@ export default function OwnerAvailabilityStudioPage() {
           await createWalkIn.mutateAsync(payload);
         }
 
-        invalidateBlocks();
         toast.success("Block created");
         setCustomDialogOpen(false);
       } catch (error) {
@@ -926,7 +1658,7 @@ export default function OwnerAvailabilityStudioPage() {
         });
       }
     },
-    [courtId, createMaintenance, createWalkIn, invalidateBlocks, placeTimeZone],
+    [courtId, createMaintenance, createWalkIn, placeTimeZone],
   );
 
   const handleLogout = async () => {
@@ -1156,6 +1888,20 @@ export default function OwnerAvailabilityStudioPage() {
               >
                 Today
               </Button>
+              <ToggleGroup
+                type="single"
+                value={view}
+                onValueChange={(value) => {
+                  if (value) setViewParam(value as StudioView);
+                }}
+              >
+                <ToggleGroupItem value="day" aria-label="Day view">
+                  Day
+                </ToggleGroupItem>
+                <ToggleGroupItem value="week" aria-label="Week view">
+                  Week
+                </ToggleGroupItem>
+              </ToggleGroup>
             </div>
           </CardContent>
         </Card>
@@ -1168,288 +1914,586 @@ export default function OwnerAvailabilityStudioPage() {
           onDragCancel={() => setActiveDragItem(null)}
           autoScroll
         >
-          <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)_320px]">
-            <div className="space-y-6">
-              <Card>
-                <CardContent className="space-y-3 p-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-sm font-heading font-semibold">
-                      Day Selector
-                    </h2>
-                    <Badge variant="secondary">{selectedDayLabel}</Badge>
-                  </div>
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={(date) => {
-                      if (date) {
-                        setDayKeyParam(getZonedDayKey(date, placeTimeZone));
-                      }
-                    }}
-                    month={calendarMonth}
-                    onMonthChange={setCalendarMonth}
-                    timeZone={placeTimeZone}
-                  />
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="space-y-4 p-6">
-                  <div className="space-y-1">
-                    <h3 className="text-sm font-heading font-semibold">
-                      Block Palette
-                    </h3>
-                    <p className="text-xs text-muted-foreground">
-                      Drag a preset onto the timeline to create a block.
-                    </p>
-                  </div>
-                  <div className="space-y-3">
-                    {BLOCK_PRESETS.map((preset) => (
-                      <BlockPresetCard
-                        key={preset.id}
-                        preset={preset}
-                        disabled={isDragDisabled}
-                      />
-                    ))}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={openCustomDialog}
-                      disabled={!courtId}
-                      className="w-full justify-start"
-                    >
-                      Custom block...
-                    </Button>
-                  </div>
-                  {isDragDisabled && (
-                    <p className="text-xs text-muted-foreground">
-                      Select a court to enable drag-and-drop.
-                    </p>
-                  )}
-                  {isImportOverlay && (
-                    <div className="space-y-3 pt-2">
-                      <Separator />
-                      <div className="space-y-1">
-                        <h4 className="text-sm font-heading font-semibold">
-                          Imported Drafts
-                        </h4>
-                        <p className="text-xs text-muted-foreground">
-                          Drag draft rows onto the timeline to fix times.
-                        </p>
-                      </div>
-                      {rowsQuery.isLoading ? (
-                        <div className="space-y-2">
-                          <Skeleton className="h-12 w-full" />
-                          <Skeleton className="h-12 w-full" />
+          <AnimatePresence mode="wait" initial={false}>
+            {isWeekView ? (
+              <motion.div
+                key="week"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.02 }}
+                transition={viewTransition}
+              >
+                <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+                  <div className="space-y-6">
+                    <Card>
+                      <CardContent className="space-y-3 p-6">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-medium">Browse month</p>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setDayKeyParam(fallbackDayKey)}
+                          >
+                            Today
+                          </Button>
                         </div>
-                      ) : draftRowsSorted.length === 0 ? (
-                        <p className="text-xs text-muted-foreground">
-                          No draft rows yet.
-                        </p>
-                      ) : (
-                        <div className="space-y-2">
-                          {draftRowsSorted.slice(0, 8).map((row) => (
-                            <DraftRowCard
-                              key={row.id}
-                              row={row}
-                              timeZone={placeTimeZone}
-                              disabled={isDraftDragDisabled}
-                              selectedCourt={selectedCourt?.label ?? null}
-                            />
-                          ))}
-                          {draftRowsSorted.length > 8 && (
-                            <p className="text-xs text-muted-foreground">
-                              Showing first 8 rows. Open the import review for
-                              full list.
-                            </p>
-                          )}
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={(date) => {
+                            if (date) {
+                              setDayKeyParam(
+                                getZonedDayKey(date, placeTimeZone),
+                              );
+                            }
+                          }}
+                          month={calendarMonth}
+                          onMonthChange={setCalendarMonth}
+                          timeZone={placeTimeZone}
+                        />
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="space-y-4 p-6">
+                        <div className="space-y-1">
+                          <h3 className="text-sm font-heading font-semibold">
+                            Block Palette
+                          </h3>
+                          <p className="text-xs text-muted-foreground">
+                            Drag a preset onto the week grid to create a block.
+                          </p>
                         </div>
-                      )}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            <Card>
-              <CardContent className="space-y-4 p-6">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <h2 className="text-lg font-heading font-semibold">
-                      Day Timeline
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      {selectedDayLabel}
-                    </p>
-                  </div>
-                  <Badge variant="outline">Snap: 60m</Badge>
-                </div>
-
-                {!placeId || !courtId ? (
-                  <Alert>
-                    <AlertTitle>Select a venue and court</AlertTitle>
-                    <AlertDescription>
-                      Choose a venue and court to load the timeline.
-                    </AlertDescription>
-                  </Alert>
-                ) : blocksQuery.error ? (
-                  <Alert variant="destructive">
-                    <AlertTitle>Failed to load blocks</AlertTitle>
-                    <AlertDescription>
-                      {getClientErrorMessage(
-                        blocksQuery.error,
-                        "Please try again.",
-                      )}
-                    </AlertDescription>
-                  </Alert>
-                ) : (
-                  <div className="relative">
-                    <div className="grid grid-cols-[72px_minmax(0,1fr)] gap-x-3">
-                      <div className="space-y-0">
-                        {hours.map((hour) => {
-                          const hourLabel = formatInTimeZone(
-                            buildDateFromDayKey(
-                              dayKey,
-                              hour * 60,
-                              placeTimeZone,
-                            ),
-                            placeTimeZone,
-                            "h a",
-                          );
-                          return (
-                            <div
-                              key={`label-${hour}`}
-                              className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
-                            >
-                              {hourLabel}
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      <div className="relative">
-                        <div className="space-y-0">
-                          {hours.map((hour) => (
-                            <TimelineDropRow
-                              key={`row-${hour}`}
-                              dayKey={dayKey}
-                              startMinute={hour * 60}
+                        <div className="space-y-3">
+                          {BLOCK_PRESETS.map((preset) => (
+                            <BlockPresetCard
+                              key={preset.id}
+                              preset={preset}
                               disabled={isDragDisabled}
                             />
                           ))}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={openCustomDialog}
+                            disabled={!courtId}
+                            className="w-full justify-start"
+                          >
+                            Custom block...
+                          </Button>
                         </div>
-                        <div className="pointer-events-none absolute inset-0">
-                          {timelineBlocks.map(
-                            ({ block, topOffset, height }) => (
-                              <TimelineBlockItem
-                                key={block.id}
-                                block={block}
-                                topOffset={topOffset}
-                                height={height}
+                        {isDragDisabled && (
+                          <p className="text-xs text-muted-foreground">
+                            Select a court to enable drag-and-drop.
+                          </p>
+                        )}
+                        {isImportOverlay && (
+                          <div className="space-y-3 pt-2">
+                            <Separator />
+                            <div className="space-y-1">
+                              <h4 className="text-sm font-heading font-semibold">
+                                Imported Drafts
+                              </h4>
+                              <p className="text-xs text-muted-foreground">
+                                Drag draft rows onto the grid to fix times.
+                              </p>
+                            </div>
+                            {rowsQuery.isLoading ? (
+                              <div className="space-y-2">
+                                <Skeleton className="h-12 w-full" />
+                                <Skeleton className="h-12 w-full" />
+                              </div>
+                            ) : draftRowsSorted.length === 0 ? (
+                              <p className="text-xs text-muted-foreground">
+                                No draft rows yet.
+                              </p>
+                            ) : (
+                              <div className="space-y-2">
+                                {draftRowsSorted.slice(0, 8).map((row) => (
+                                  <DraftRowCard
+                                    key={row.id}
+                                    row={row}
+                                    timeZone={placeTimeZone}
+                                    disabled={isDraftDragDisabled}
+                                    selectedCourt={selectedCourt?.label ?? null}
+                                  />
+                                ))}
+                                {draftRowsSorted.length > 8 && (
+                                  <p className="text-xs text-muted-foreground">
+                                    Showing first 8 rows.
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <Card>
+                    <CardContent className="space-y-4 p-6">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => navigateWeek(-1)}
+                          >
+                            <ChevronLeft className="h-4 w-4" />
+                          </Button>
+                          <h2 className="text-lg font-heading font-semibold">
+                            {weekLabel}
+                          </h2>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => navigateWeek(1)}
+                          >
+                            <ChevronRight className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <Badge variant="outline">Snap: 60m</Badge>
+                      </div>
+
+                      {!placeId || !courtId ? (
+                        <Alert>
+                          <AlertTitle>Select a venue and court</AlertTitle>
+                          <AlertDescription>
+                            Choose a venue and court to load the week grid.
+                          </AlertDescription>
+                        </Alert>
+                      ) : blocksQuery.error ? (
+                        <Alert variant="destructive">
+                          <AlertTitle>Failed to load blocks</AlertTitle>
+                          <AlertDescription>
+                            {getClientErrorMessage(
+                              blocksQuery.error,
+                              "Please try again.",
+                            )}
+                          </AlertDescription>
+                        </Alert>
+                      ) : (
+                        <div className="relative overflow-x-auto">
+                          {/* Day headers */}
+                          <div
+                            className="grid gap-x-0"
+                            style={{
+                              gridTemplateColumns:
+                                "72px repeat(7, minmax(100px, 1fr))",
+                            }}
+                          >
+                            <div />
+                            {weekDayKeys.map((wdk) => {
+                              const wdStart = getZonedDayRangeFromDayKey(
+                                wdk,
+                                placeTimeZone,
+                              ).start;
+                              const isToday = wdk === todayDayKey;
+                              const isPastDay = wdk < todayDayKey;
+                              const isSelectedDay = wdk === dayKey;
+                              return (
+                                <button
+                                  key={`header-${wdk}`}
+                                  type="button"
+                                  className={cn(
+                                    "border-b px-1 py-2 text-center text-xs font-semibold transition-colors",
+                                    isToday && "text-primary",
+                                    isSelectedDay && "bg-primary/5",
+                                    isPastDay && "text-muted-foreground/60",
+                                  )}
+                                  onClick={() => {
+                                    setDayKeyParam(wdk);
+                                    setViewParam("day");
+                                  }}
+                                >
+                                  <div>
+                                    {formatInTimeZone(
+                                      wdStart,
+                                      placeTimeZone,
+                                      "EEE",
+                                    )}
+                                  </div>
+                                  <div
+                                    className={cn(
+                                      "mt-0.5 text-lg",
+                                      isToday &&
+                                        "inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground",
+                                    )}
+                                  >
+                                    {formatInTimeZone(
+                                      wdStart,
+                                      placeTimeZone,
+                                      "d",
+                                    )}
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          {/* Week columns: time labels + 7 day columns with interactive blocks */}
+                          <div
+                            className="grid gap-x-0"
+                            style={{
+                              gridTemplateColumns:
+                                "72px repeat(7, minmax(100px, 1fr))",
+                            }}
+                          >
+                            {/* Time labels column */}
+                            <div>
+                              {hours.map((hour) => (
+                                <div
+                                  key={`week-label-${hour}`}
+                                  className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
+                                >
+                                  {formatInTimeZone(
+                                    buildDateFromDayKey(
+                                      dayKey,
+                                      hour * 60,
+                                      placeTimeZone,
+                                    ),
+                                    placeTimeZone,
+                                    "h a",
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+
+                            {/* 7 day columns */}
+                            {weekDayKeys.map((wdk) => (
+                              <WeekDayColumn
+                                key={`week-col-${wdk}`}
+                                dayKey={wdk}
+                                hours={hours}
+                                blocks={
+                                  weekTimelineBlocksByDayKey.get(wdk) ?? []
+                                }
+                                draftBlocks={
+                                  draftWeekTimelineBlocksByDayKey.get(wdk) ?? []
+                                }
                                 timeZone={placeTimeZone}
                                 disabled={isDragDisabled}
+                                isPastDay={wdk < todayDayKey}
+                                pendingBlockIds={pendingBlockIds}
+                                onRemoveBlock={handleCancelBlock}
                               />
-                            ),
-                          )}
-                          {draftTimelineBlocks.map(
-                            ({ row, topOffset, height }) => (
-                              <DraftTimelineBlock
-                                key={`draft-${row.id}`}
-                                row={row}
-                                topOffset={topOffset}
-                                height={height}
-                                timeZone={placeTimeZone}
-                              />
-                            ),
+                            ))}
+                          </div>
+                          {blocksQuery.isLoading && (
+                            <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
                           )}
                         </div>
-                      </div>
-                    </div>
-                    {blocksQuery.isLoading && (
-                      <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
-                    )}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="space-y-4 p-6">
-                <div className="space-y-1">
-                  <h3 className="text-lg font-heading font-semibold">
-                    Blocks · {selectedDayLabel}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Review and remove blocks for this day.
-                  </p>
+                      )}
+                    </CardContent>
+                  </Card>
                 </div>
-
-                <Separator />
-
-                {blocksQuery.isLoading ? (
-                  <div className="space-y-3">
-                    <Skeleton className="h-16 w-full" />
-                    <Skeleton className="h-16 w-full" />
-                  </div>
-                ) : dayBlocks.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">
-                    No blocks on this day yet.
-                  </p>
-                ) : (
-                  <div className="space-y-3">
-                    {dayBlocks.map((block) => (
-                      <div key={block.id} className="rounded-lg border p-3">
-                        <div className="flex items-start justify-between gap-3">
-                          <div className="space-y-1">
-                            <Badge
-                              variant={
-                                block.type === "WALK_IN" ? "paid" : "warning"
-                              }
-                            >
-                              {block.type === "WALK_IN"
-                                ? "Walk-in"
-                                : "Maintenance"}
-                            </Badge>
-                            <p className="text-sm font-medium">
-                              {formatTimeRangeInTimeZone(
-                                block.startTime,
-                                block.endTime,
-                                placeTimeZone,
-                              )}
-                            </p>
-                            {block.reason && (
-                              <p className="text-xs text-muted-foreground">
-                                {block.reason}
-                              </p>
-                            )}
-                          </div>
-                          <div className="flex flex-col items-end gap-2">
-                            {block.type === "WALK_IN" && (
-                              <span className="text-sm font-semibold">
-                                {formatCurrency(
-                                  block.totalPriceCents,
-                                  block.currency,
-                                )}
-                              </span>
-                            )}
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleCancelBlock(block.id)}
-                              disabled={cancelBlock.isPending}
-                            >
-                              Remove
-                            </Button>
-                          </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="day"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.02 }}
+                transition={viewTransition}
+              >
+                <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)_320px]">
+                  <div className="space-y-6">
+                    <Card>
+                      <CardContent className="space-y-3 p-6">
+                        <div className="flex items-center justify-between">
+                          <h2 className="text-sm font-heading font-semibold">
+                            Day Selector
+                          </h2>
+                          <Badge variant="secondary">{selectedDayLabel}</Badge>
                         </div>
-                      </div>
-                    ))}
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={(date) => {
+                            if (date) {
+                              setDayKeyParam(
+                                getZonedDayKey(date, placeTimeZone),
+                              );
+                            }
+                          }}
+                          month={calendarMonth}
+                          onMonthChange={setCalendarMonth}
+                          timeZone={placeTimeZone}
+                        />
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardContent className="space-y-4 p-6">
+                        <div className="space-y-1">
+                          <h3 className="text-sm font-heading font-semibold">
+                            Block Palette
+                          </h3>
+                          <p className="text-xs text-muted-foreground">
+                            Drag a preset onto the timeline to create a block.
+                          </p>
+                        </div>
+                        <div className="space-y-3">
+                          {BLOCK_PRESETS.map((preset) => (
+                            <BlockPresetCard
+                              key={preset.id}
+                              preset={preset}
+                              disabled={isDragDisabled}
+                            />
+                          ))}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={openCustomDialog}
+                            disabled={!courtId}
+                            className="w-full justify-start"
+                          >
+                            Custom block...
+                          </Button>
+                        </div>
+                        {isDragDisabled && (
+                          <p className="text-xs text-muted-foreground">
+                            Select a court to enable drag-and-drop.
+                          </p>
+                        )}
+                        {isImportOverlay && (
+                          <div className="space-y-3 pt-2">
+                            <Separator />
+                            <div className="space-y-1">
+                              <h4 className="text-sm font-heading font-semibold">
+                                Imported Drafts
+                              </h4>
+                              <p className="text-xs text-muted-foreground">
+                                Drag draft rows onto the timeline to fix times.
+                              </p>
+                            </div>
+                            {rowsQuery.isLoading ? (
+                              <div className="space-y-2">
+                                <Skeleton className="h-12 w-full" />
+                                <Skeleton className="h-12 w-full" />
+                              </div>
+                            ) : draftRowsSorted.length === 0 ? (
+                              <p className="text-xs text-muted-foreground">
+                                No draft rows yet.
+                              </p>
+                            ) : (
+                              <div className="space-y-2">
+                                {draftRowsSorted.slice(0, 8).map((row) => (
+                                  <DraftRowCard
+                                    key={row.id}
+                                    row={row}
+                                    timeZone={placeTimeZone}
+                                    disabled={isDraftDragDisabled}
+                                    selectedCourt={selectedCourt?.label ?? null}
+                                  />
+                                ))}
+                                {draftRowsSorted.length > 8 && (
+                                  <p className="text-xs text-muted-foreground">
+                                    Showing first 8 rows. Open the import review
+                                    for full list.
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+
+                  <Card>
+                    <CardContent className="space-y-4 p-6">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <h2 className="text-lg font-heading font-semibold">
+                            Day Timeline
+                          </h2>
+                          <p className="text-sm text-muted-foreground">
+                            {selectedDayLabel}
+                          </p>
+                        </div>
+                        <Badge variant="outline">Snap: 60m</Badge>
+                      </div>
+
+                      {!placeId || !courtId ? (
+                        <Alert>
+                          <AlertTitle>Select a venue and court</AlertTitle>
+                          <AlertDescription>
+                            Choose a venue and court to load the timeline.
+                          </AlertDescription>
+                        </Alert>
+                      ) : blocksQuery.error ? (
+                        <Alert variant="destructive">
+                          <AlertTitle>Failed to load blocks</AlertTitle>
+                          <AlertDescription>
+                            {getClientErrorMessage(
+                              blocksQuery.error,
+                              "Please try again.",
+                            )}
+                          </AlertDescription>
+                        </Alert>
+                      ) : (
+                        <div className="relative">
+                          <div className="grid grid-cols-[72px_minmax(0,1fr)] gap-x-3">
+                            <div className="space-y-0">
+                              {hours.map((hour) => {
+                                const hourLabel = formatInTimeZone(
+                                  buildDateFromDayKey(
+                                    dayKey,
+                                    hour * 60,
+                                    placeTimeZone,
+                                  ),
+                                  placeTimeZone,
+                                  "h a",
+                                );
+                                return (
+                                  <div
+                                    key={`label-${hour}`}
+                                    className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
+                                  >
+                                    {hourLabel}
+                                  </div>
+                                );
+                              })}
+                            </div>
+
+                            <div className="relative">
+                              <div className="space-y-0">
+                                {hours.map((hour) => (
+                                  <TimelineDropRow
+                                    key={`row-${hour}`}
+                                    dayKey={dayKey}
+                                    startMinute={hour * 60}
+                                    disabled={isDragDisabled}
+                                  />
+                                ))}
+                              </div>
+                              <div className="pointer-events-none absolute inset-0">
+                                {timelineBlocks.map(
+                                  ({ block, topOffset, height }) => (
+                                    <TimelineBlockItem
+                                      key={block.id}
+                                      block={block}
+                                      topOffset={topOffset}
+                                      height={height}
+                                      timeZone={placeTimeZone}
+                                      disabled={isDragDisabled}
+                                      isPending={pendingBlockIds.has(block.id)}
+                                      onRemove={handleCancelBlock}
+                                    />
+                                  ),
+                                )}
+                                {draftTimelineBlocks.map(
+                                  ({ row, topOffset, height }) => (
+                                    <DraftTimelineBlock
+                                      key={`draft-${row.id}`}
+                                      row={row}
+                                      topOffset={topOffset}
+                                      height={height}
+                                      timeZone={placeTimeZone}
+                                    />
+                                  ),
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          {blocksQuery.isLoading && (
+                            <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
+                          )}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardContent className="space-y-4 p-6">
+                      <div className="space-y-1">
+                        <h3 className="text-lg font-heading font-semibold">
+                          Blocks · {selectedDayLabel}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          Review and remove blocks for this day.
+                        </p>
+                      </div>
+
+                      <Separator />
+
+                      {blocksQuery.isLoading ? (
+                        <div className="space-y-3">
+                          <Skeleton className="h-16 w-full" />
+                          <Skeleton className="h-16 w-full" />
+                        </div>
+                      ) : dayBlocks.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">
+                          No blocks on this day yet.
+                        </p>
+                      ) : (
+                        <div className="space-y-3">
+                          {dayBlocks.map((block) => (
+                            <div
+                              key={block.id}
+                              className="rounded-lg border p-3"
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="space-y-1">
+                                  <Badge
+                                    variant={
+                                      block.type === "WALK_IN"
+                                        ? "paid"
+                                        : "warning"
+                                    }
+                                  >
+                                    {block.type === "WALK_IN"
+                                      ? "Walk-in"
+                                      : "Maintenance"}
+                                  </Badge>
+                                  <p className="text-sm font-medium">
+                                    {formatTimeRangeInTimeZone(
+                                      block.startTime,
+                                      block.endTime,
+                                      placeTimeZone,
+                                    )}
+                                  </p>
+                                  {block.reason && (
+                                    <p className="text-xs text-muted-foreground">
+                                      {block.reason}
+                                    </p>
+                                  )}
+                                </div>
+                                <div className="flex flex-col items-end gap-2">
+                                  {block.type === "WALK_IN" && (
+                                    <span className="text-sm font-semibold">
+                                      {formatCurrency(
+                                        block.totalPriceCents,
+                                        block.currency,
+                                      )}
+                                    </span>
+                                  )}
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={() => handleCancelBlock(block.id)}
+                                    disabled={cancelBlock.isPending}
+                                  >
+                                    Remove
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <DragOverlay>
             {activeDragItem?.kind === "preset" ? (
@@ -1457,6 +2501,31 @@ export default function OwnerAvailabilityStudioPage() {
             ) : null}
           </DragOverlay>
         </DndContext>
+
+        <AlertDialog
+          open={pendingRemoveBlockId !== null}
+          onOpenChange={(open) => {
+            if (!open) setPendingRemoveBlockId(null);
+          }}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Remove block</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently remove the block from the schedule.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={confirmRemoveBlock}
+                className={buttonVariants({ variant: "destructive" })}
+              >
+                Remove
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <Dialog open={customDialogOpen} onOpenChange={setCustomDialogOpen}>
           <DialogContent>
@@ -1602,7 +2671,7 @@ function TimelineDropRow({
       className={cn(
         "h-[56px] rounded-md border-t border-border/70 transition-colors",
         "bg-card",
-        isOver && !disabled ? "bg-primary/10 border-primary/40" : "",
+        isOver && !disabled && "ring-2 ring-primary/30 ring-inset bg-primary/5",
       )}
     />
   );
@@ -1614,18 +2683,27 @@ function TimelineBlockItem({
   height,
   timeZone,
   disabled,
+  isPending,
+  isPastDay,
+  compact,
+  onRemove,
 }: {
   block: CourtBlockItem;
   topOffset: number;
   height: number;
   timeZone: string;
   disabled: boolean;
+  isPending?: boolean;
+  isPastDay?: boolean;
+  compact?: boolean;
+  onRemove?: (blockId: string) => void;
 }) {
+  const effectiveDisabled = disabled;
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: `block-${block.id}`,
       data: { kind: "block", blockId: block.id } satisfies DragBlock,
-      disabled,
+      disabled: effectiveDisabled,
     });
 
   const style = transform
@@ -1645,29 +2723,94 @@ function TimelineBlockItem({
       style={{ top: topOffset, height, ...style }}
       {...attributes}
       className={cn(
-        "pointer-events-auto absolute left-1 right-1 rounded-lg border px-3 py-2 shadow-sm",
-        isWalkIn
-          ? "border-primary/30 bg-primary/10 text-primary"
-          : "border-amber-500/30 bg-amber-500/10 text-amber-700",
-        disabled ? "cursor-not-allowed" : "cursor-grab",
-        isDragging ? "opacity-50" : "opacity-100",
+        "pointer-events-auto absolute rounded-lg border bg-card text-card-foreground shadow-sm",
+        compact
+          ? "left-0.5 right-0.5 border-l-2 px-1 py-0.5"
+          : "left-1 right-1 border-l-4 px-3 py-2",
+        isWalkIn ? "border-l-primary" : "border-l-amber-500",
+        "group",
+        effectiveDisabled ? "cursor-not-allowed" : "cursor-grab",
+        isDragging && "opacity-50",
+        isPending && "opacity-80",
+        isPastDay && "opacity-50 saturate-50",
       )}
     >
       <div
-        className="flex items-center justify-between text-xs font-semibold uppercase"
+        className={cn(
+          "flex items-center justify-between gap-1",
+          compact ? "gap-0.5" : "gap-2",
+        )}
         {...listeners}
       >
-        <span>{isWalkIn ? "Walk-in" : "Maintenance"}</span>
-        <span>{formatDuration(durationMinutes)}</span>
+        {compact ? (
+          <span
+            className={cn(
+              "text-[10px] font-semibold truncate",
+              isWalkIn ? "text-primary" : "text-amber-600",
+            )}
+          >
+            {isWalkIn ? "W" : "M"}
+          </span>
+        ) : (
+          <Badge
+            variant={isWalkIn ? "paid" : "warning"}
+            className="text-[10px] px-1.5 py-0"
+          >
+            {isWalkIn ? "Walk-in" : "Maintenance"}
+          </Badge>
+        )}
+        {!compact && (
+          <span className="text-xs text-muted-foreground">
+            {formatDuration(durationMinutes)}
+          </span>
+        )}
       </div>
-      <div className="text-xs">
-        {formatTimeRangeInTimeZone(block.startTime, block.endTime, timeZone)}
-      </div>
-      {block.reason && (
-        <div className="text-[11px] opacity-70 truncate">{block.reason}</div>
+      {!compact && (
+        <div className="mt-1 text-xs font-medium">
+          {formatTimeRangeInTimeZone(block.startTime, block.endTime, timeZone)}
+        </div>
       )}
-      <ResizeHandle blockId={block.id} edge="start" disabled={disabled} />
-      <ResizeHandle blockId={block.id} edge="end" disabled={disabled} />
+      {compact && (
+        <div className="text-[9px] text-muted-foreground truncate">
+          {formatTimeRangeInTimeZone(block.startTime, block.endTime, timeZone)}
+        </div>
+      )}
+      {!compact && block.reason && (
+        <div className="text-[11px] text-muted-foreground truncate">
+          {block.reason}
+        </div>
+      )}
+      {onRemove && (
+        <button
+          type="button"
+          aria-label="Remove block"
+          className={cn(
+            "pointer-events-auto absolute z-10 flex items-center justify-center rounded-full",
+            "bg-destructive/90 text-destructive-foreground shadow-sm",
+            "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 touch:opacity-100",
+            "transition-opacity duration-150",
+            "hover:bg-destructive",
+            compact ? "-right-1.5 -top-1.5 h-4 w-4" : "-right-2 -top-2 h-5 w-5",
+          )}
+          onPointerDownCapture={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove(block.id);
+          }}
+        >
+          <X className={compact ? "h-2.5 w-2.5" : "h-3 w-3"} />
+        </button>
+      )}
+      <ResizeHandle
+        blockId={block.id}
+        edge="start"
+        disabled={effectiveDisabled}
+      />
+      <ResizeHandle
+        blockId={block.id}
+        edge="end"
+        disabled={effectiveDisabled}
+      />
     </div>
   );
 }
@@ -1693,10 +2836,13 @@ function ResizeHandle({
       {...attributes}
       {...listeners}
       className={cn(
-        "absolute left-2 right-2 h-2 rounded-full bg-foreground/30",
+        "absolute left-2 right-2 h-2 rounded-full transition-opacity",
+        // Hidden by default, visible on hover/focus
+        "opacity-0 group-hover:opacity-100 focus-visible:opacity-100",
+        "bg-foreground/20 hover:bg-foreground/40",
         edge === "start" ? "top-1" : "bottom-1",
         disabled ? "cursor-not-allowed" : "cursor-ns-resize",
-        isDragging ? "opacity-60" : "opacity-100",
+        isDragging && "opacity-60",
       )}
       aria-hidden
     />
@@ -1722,12 +2868,12 @@ function DraftTimelineBlock({
   return (
     <div
       className={cn(
-        "pointer-events-none absolute left-2 right-2 rounded-lg border border-dashed px-3 py-2",
+        "pointer-events-none absolute left-2 right-2 rounded-lg border border-dashed bg-muted/30 px-3 py-2 text-foreground",
         status === "ERROR"
-          ? "border-destructive/40 bg-destructive/10 text-destructive"
+          ? "border-destructive/30"
           : status === "WARNING"
-            ? "border-amber-400/40 bg-amber-100/60 text-amber-700"
-            : "border-primary/30 bg-primary/5 text-primary",
+            ? "border-amber-400/30"
+            : "border-primary/30",
       )}
       style={{ top: topOffset, height }}
     >
@@ -1812,6 +2958,79 @@ function DraftRowCard({
       {errorHint && (
         <p className="mt-1 text-[11px] text-destructive">{errorHint}</p>
       )}
+    </div>
+  );
+}
+
+function WeekDayColumn({
+  dayKey,
+  hours,
+  blocks,
+  draftBlocks,
+  timeZone,
+  disabled,
+  isPastDay,
+  pendingBlockIds,
+  onRemoveBlock,
+}: {
+  dayKey: string;
+  hours: number[];
+  blocks: Array<{ block: CourtBlockItem; topOffset: number; height: number }>;
+  draftBlocks: Array<{
+    row: DraftRowItem;
+    topOffset: number;
+    height: number;
+  }>;
+  timeZone: string;
+  disabled: boolean;
+  isPastDay?: boolean;
+  pendingBlockIds: Set<string>;
+  onRemoveBlock?: (blockId: string) => void;
+}) {
+  return (
+    <div
+      className={cn(
+        "relative border-l border-border/70",
+        isPastDay && "bg-muted/40",
+      )}
+    >
+      {/* Droppable hour rows */}
+      <div className="space-y-0">
+        {hours.map((hour) => (
+          <TimelineDropRow
+            key={`week-drop-${dayKey}-${hour}`}
+            dayKey={dayKey}
+            startMinute={hour * 60}
+            disabled={disabled}
+          />
+        ))}
+      </div>
+      {/* Interactive block overlays */}
+      <div className="pointer-events-none absolute inset-0">
+        {blocks.map(({ block, topOffset, height }) => (
+          <TimelineBlockItem
+            key={block.id}
+            block={block}
+            topOffset={topOffset}
+            height={height}
+            timeZone={timeZone}
+            disabled={disabled}
+            isPending={pendingBlockIds.has(block.id)}
+            isPastDay={isPastDay}
+            compact
+            onRemove={onRemoveBlock}
+          />
+        ))}
+        {draftBlocks.map(({ row, topOffset, height }) => (
+          <DraftTimelineBlock
+            key={`draft-${row.id}`}
+            row={row}
+            topOffset={topOffset}
+            height={height}
+            timeZone={timeZone}
+          />
+        ))}
+      </div>
     </div>
   );
 }

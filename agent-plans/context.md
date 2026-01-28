@@ -8,6 +8,8 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-29 | Added 78-public-range-selection plan (player drag-to-select adjacent slot range, maps to existing startTime+duration booking). |
+| 2026-01-29 | Added 77-public-venue-court-page plan (public `/venues/[slug]/courts/[courtId]` detail + court-scoped month/day availability + Motion transitions). |
 | 2026-01-28 | Added 76-bookings-import-multi-file plan (up to 3 mixed files per import job + AI mapping for CSV/XLSX/ICS + screenshot support). |
 | 2026-01-28 | Added 75-owner-availability-studio-dnd plan (DnD block palette + day timeline editor + import overlay corrections). |
 | 2026-01-28 | Added 74-owner-setup-status plan (centralized setup status API + dashboard CTA). |

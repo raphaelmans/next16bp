@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { formatInTimeZone } from "@/shared/lib/format";
 import { getZonedDayKey } from "@/shared/lib/time-zone";
+import { TimeRangePicker, TimeRangePickerSkeleton } from "./time-range-picker";
 import {
   type TimeSlot,
   TimeSlotPicker,
@@ -15,6 +16,11 @@ export type AvailabilityMonthDay = {
   dayKey: string;
   date: Date;
   slots: TimeSlot[];
+};
+
+export type SelectedRange = {
+  startTime: string;
+  durationMinutes: number;
 };
 
 export type AvailabilityMonthViewProps = {
@@ -41,6 +47,11 @@ export type AvailabilityMonthViewProps = {
   onMonthChange: (date: Date) => void;
   onToday?: () => void;
   onSelectSlot?: (args: { dayKey: string; slot: TimeSlot }) => void;
+  /** When provided, renders a TimeRangePicker instead of TimeSlotPicker for the selected day. */
+  onSelectRange?: (args: { dayKey: string; range: SelectedRange }) => void;
+  /** The currently committed range selection (startTime + durationMinutes). */
+  selectedRange?: SelectedRange;
+  onClearRange?: () => void;
   emptyState?: React.ReactNode;
 };
 
@@ -62,6 +73,9 @@ export function AvailabilityMonthView({
   onMonthChange,
   onToday,
   onSelectSlot,
+  onSelectRange,
+  selectedRange,
+  onClearRange,
   emptyState,
 }: AvailabilityMonthViewProps) {
   const resolvedEmptyState = emptyState ?? (
@@ -69,6 +83,8 @@ export function AvailabilityMonthView({
       No available start times for this month.
     </p>
   );
+
+  const useRangePicker = !!onSelectRange;
 
   const selectedDayKey = selectedDate
     ? getZonedDayKey(selectedDate, timeZone)
@@ -118,7 +134,11 @@ export function AvailabilityMonthView({
         {isLoading ? (
           <div className="space-y-3">
             <div className="h-4 w-32 rounded bg-muted animate-pulse" />
-            <TimeSlotPickerSkeleton count={8} />
+            {useRangePicker ? (
+              <TimeRangePickerSkeleton count={8} />
+            ) : (
+              <TimeSlotPickerSkeleton count={8} />
+            )}
           </div>
         ) : filteredDays.length > 0 ? (
           filteredDays.map((day) => (
@@ -127,27 +147,41 @@ export function AvailabilityMonthView({
               id={`day-${day.dayKey}`}
               className="space-y-2 scroll-mt-24"
             >
-              <TimeSlotPicker
-                slots={day.slots}
-                selectedId={selectedSlotId}
-                onSelect={(slot) =>
-                  onSelectSlot?.({ dayKey: day.dayKey, slot })
-                }
-                showPrice={showPrice}
-                timeZone={timeZone}
-                renderSlotAction={
-                  renderSlotAction
-                    ? ({ slot, isSelected, isDisabled }) =>
-                        renderSlotAction({
-                          dayKey: day.dayKey,
-                          date: day.date,
-                          slot,
-                          isSelected,
-                          isDisabled,
-                        })
-                    : undefined
-                }
-              />
+              {useRangePicker ? (
+                <TimeRangePicker
+                  slots={day.slots}
+                  timeZone={timeZone ?? "Asia/Manila"}
+                  selectedStartTime={selectedRange?.startTime}
+                  selectedDurationMinutes={selectedRange?.durationMinutes}
+                  showPrice={showPrice}
+                  onChange={(range) =>
+                    onSelectRange({ dayKey: day.dayKey, range })
+                  }
+                  onClear={onClearRange}
+                />
+              ) : (
+                <TimeSlotPicker
+                  slots={day.slots}
+                  selectedId={selectedSlotId}
+                  onSelect={(slot) =>
+                    onSelectSlot?.({ dayKey: day.dayKey, slot })
+                  }
+                  showPrice={showPrice}
+                  timeZone={timeZone}
+                  renderSlotAction={
+                    renderSlotAction
+                      ? ({ slot, isSelected, isDisabled }) =>
+                          renderSlotAction({
+                            dayKey: day.dayKey,
+                            date: day.date,
+                            slot,
+                            isSelected,
+                            isDisabled,
+                          })
+                      : undefined
+                  }
+                />
+              )}
             </div>
           ))
         ) : days.length > 0 ? (

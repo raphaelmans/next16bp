@@ -25,6 +25,11 @@ This makes “day ops” (quickly placing and correcting blocks) slow, and makes
   - Deep-link from import review to the studio.
   - Show draft rows as draggable “ghost blocks” until committed.
 
+- Extend beyond a single day:
+  - `view=week`: week time grid for faster navigation
+  - `view=month`: month picker that zooms into week
+  - Use Motion for React (`motion`) for view transitions (with reduced motion support)
+
 ## Non-goals
 
 - Multi-court grid (drag across courts) in v1.
@@ -56,6 +61,9 @@ This makes “day ops” (quickly placing and correcting blocks) slow, and makes
 3. **Drag to move/resize blocks** (optional, gated): requires new backend update endpoint.
 4. **Import overlay mode**: drag draft rows onto timeline to fix times (and later court); commit from the studio.
 5. **QA + polish**: accessibility, reduced motion, error handling, performance.
+6. **Optimistic UX + visual refinement**: optimistic updates for drag actions + subtler block styling.
+7. **Week + Month views (motion)**: week grid + month grid picker + animated transitions.
+8. **Week interactivity parity**: ensure Week supports move + resize + remove (no indicator-only blocks).
 
 ## Workstreams
 

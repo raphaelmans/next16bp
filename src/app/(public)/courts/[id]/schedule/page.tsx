@@ -1261,6 +1261,17 @@ export default function CourtSchedulePage() {
                     ))}
                   </SelectContent>
                 </Select>
+                {selectedCourtIdParam && (
+                  <Link
+                    href={appRoutes.places.courts.detail(
+                      placeSlugOrId,
+                      selectedCourtIdParam,
+                    )}
+                    className="text-xs text-muted-foreground hover:text-primary underline"
+                  >
+                    Open court page (debug)
+                  </Link>
+                )}
               </div>
             ) : null}
           </CardHeader>

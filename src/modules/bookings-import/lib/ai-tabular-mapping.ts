@@ -252,7 +252,6 @@ export function buildTabularRowsFromSpec(params: {
   dataset: TabularDataset;
   spec: TabularMappingSpec;
   timeZone: string;
-  format: TabularFormat;
 }): TabularParsedRow[] {
   const { dataset, spec, timeZone } = params;
   validateTabularMapping(spec, dataset.headers);

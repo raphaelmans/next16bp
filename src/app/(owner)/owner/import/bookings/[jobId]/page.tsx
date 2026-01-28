@@ -857,7 +857,7 @@ export default function OwnerBookingsImportReviewPage() {
                 <CardTitle>Actions</CardTitle>
                 <CardDescription>
                   {isDraft
-                    ? "Process your import file"
+                    ? "Process your import files"
                     : "Fix errors or commit valid rows"}
                 </CardDescription>
               </CardHeader>
@@ -1097,7 +1097,7 @@ export default function OwnerBookingsImportReviewPage() {
             <AlertDialogTitle>Discard import?</AlertDialogTitle>
             <AlertDialogDescription>
               This will permanently delete the import job and all its rows. The
-              uploaded file will also be removed. This action cannot be undone.
+              uploaded files will also be removed. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

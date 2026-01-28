@@ -1329,7 +1329,6 @@ export class BookingsImportService implements IBookingsImportService {
             dataset,
             spec: mappingSpec,
             timeZone,
-            format: "csv",
           });
 
           return {
@@ -1409,7 +1408,6 @@ export class BookingsImportService implements IBookingsImportService {
             dataset,
             spec: mappingSpec,
             timeZone,
-            format: "xlsx",
           });
 
           return {

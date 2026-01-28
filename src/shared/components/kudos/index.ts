@@ -4,6 +4,7 @@ export { AdBanner } from "./ad-banner";
 export {
   type AvailabilityMonthDay,
   AvailabilityMonthView,
+  type SelectedRange,
 } from "./availability-month-view";
 export { Countdown, CountdownBanner } from "./countdown";
 export {
@@ -31,6 +32,11 @@ export {
   type KudosStatusBadgeProps,
   type ReservationStatus,
 } from "./status-badge";
+export {
+  TimeRangePicker,
+  type TimeRangePickerProps,
+  TimeRangePickerSkeleton,
+} from "./time-range-picker";
 export {
   type TimeSlot,
   TimeSlotPicker,

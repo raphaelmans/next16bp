@@ -19,6 +19,7 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant touch (@media (hover: none));
 
 :root {
   /* ─────────────────────────────────────────────────────────────────────────────
@@ -106,8 +107,11 @@
      ───────────────────────────────────────────────────────────────────────────── */
   --success: oklch(0.6 0.15 160);
   --success-foreground: oklch(0.99 0 0);
+  --success-light: oklch(0.95 0.04 160);
   --warning: oklch(0.65 0.15 70);
   --warning-foreground: oklch(0.2 0.01 70);
+  --warning-light: oklch(0.96 0.04 70);
+  --destructive-light: oklch(0.92 0.06 27);
 }
 
 /* =============================================================================
@@ -161,8 +165,11 @@
   /* Extended brand tokens (non-shadcn) */
   --success: oklch(0.65 0.14 160);
   --success-foreground: oklch(0.15 0.01 160);
+  --success-light: oklch(0.25 0.06 160);
   --warning: oklch(0.7 0.14 70);
   --warning-foreground: oklch(0.15 0.01 70);
+  --warning-light: oklch(0.3 0.06 70);
+  --destructive-light: oklch(0.25 0.08 27);
 }
 
 /* =============================================================================
@@ -207,8 +214,11 @@
   /* Extended brand color tokens */
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
+  --color-success-light: var(--success-light);
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
+  --color-warning-light: var(--warning-light);
+  --color-destructive-light: var(--destructive-light);
 
   /* Radius - shadcn standard calculations */
   --radius-sm: calc(var(--radius) - 4px);
