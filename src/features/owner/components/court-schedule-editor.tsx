@@ -451,14 +451,19 @@ export function CourtScheduleEditor({
     const parsed = rawValue === "" ? "" : Number(rawValue);
     const hourlyRate = parsed === "" || Number.isNaN(parsed) ? "" : parsed;
 
+    setDayRows(day, (rows) =>
+      rows.map((row) =>
+        row.id === rowId ? { ...row, hourlyRate, allowPricing: true } : row,
+      ),
+    );
+  };
+
+  const handleApplyRateToAll = (sourceDay: number, sourceRowId: string) => {
     setRowsByDay((prev) => {
-      const hadAnyPriceBefore = Object.values(prev).some((rows) =>
-        rows.some((row) => row.hourlyRate !== ""),
+      const sourceRow = (prev[sourceDay] ?? []).find(
+        (row) => row.id === sourceRowId,
       );
-      const sourceRow = (prev[day] ?? []).find((row) => row.id === rowId);
-      const sourceCurrency = sourceRow?.currency ?? DEFAULT_CURRENCY;
-      const shouldBulkFill =
-        !hadAnyPriceBefore && hourlyRate !== "" && Boolean(sourceRow?.isOpen);
+      if (!sourceRow || sourceRow.hourlyRate === "") return prev;
 
       const next: Record<number, BlockRow[]> = {
         0: [],
@@ -472,29 +477,21 @@ export function CourtScheduleEditor({
 
       DAY_KEYS.forEach((currentDay) => {
         next[currentDay] = (prev[currentDay] ?? []).map((row) => {
-          if (currentDay === day && row.id === rowId) {
-            return {
-              ...row,
-              hourlyRate,
-              allowPricing: true,
-            };
-          }
-
-          if (shouldBulkFill && row.isOpen && row.hourlyRate === "") {
-            return {
-              ...row,
-              hourlyRate,
-              currency: sourceCurrency,
-              allowPricing: true,
-            };
-          }
-
-          return row;
+          if (row.id === sourceRowId) return row;
+          if (!row.isOpen) return row;
+          return {
+            ...row,
+            hourlyRate: sourceRow.hourlyRate,
+            currency: sourceRow.currency,
+            allowPricing: true,
+          };
         });
       });
 
       return next;
     });
+
+    toast.success("Rate applied to all open blocks");
   };
 
   const handleCopySchedule = async (sourceCourtId: string) => {
@@ -822,22 +819,39 @@ export function CourtScheduleEditor({
                                   </TableCell>
                                   <TableCell>
                                     {row.allowPricing ? (
-                                      <Input
-                                        type="number"
-                                        min={0}
-                                        value={row.hourlyRate}
-                                        onChange={(event) =>
-                                          handleHourlyRateInput(
-                                            day.value,
-                                            row.id,
-                                            event.target.value,
-                                          )
-                                        }
-                                        className={cn(
-                                          hasError &&
-                                            "border-destructive focus-visible:ring-destructive/40",
-                                        )}
-                                      />
+                                      <div className="flex items-center gap-1.5">
+                                        <Input
+                                          type="number"
+                                          min={0}
+                                          value={row.hourlyRate}
+                                          onChange={(event) =>
+                                            handleHourlyRateInput(
+                                              day.value,
+                                              row.id,
+                                              event.target.value,
+                                            )
+                                          }
+                                          className={cn(
+                                            hasError &&
+                                              "border-destructive focus-visible:ring-destructive/40",
+                                          )}
+                                        />
+                                        <Button
+                                          type="button"
+                                          variant="outline"
+                                          size="sm"
+                                          className="shrink-0 text-xs"
+                                          disabled={row.hourlyRate === ""}
+                                          onClick={() =>
+                                            handleApplyRateToAll(
+                                              day.value,
+                                              row.id,
+                                            )
+                                          }
+                                        >
+                                          Apply to all
+                                        </Button>
+                                      </div>
                                     ) : (
                                       <Button
                                         type="button"

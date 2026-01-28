@@ -113,11 +113,11 @@ export default function CreateCourtSetupPage() {
               </p>
               <Button asChild>
                 <Link
-                  href={`${appRoutes.owner.onboarding}?next=${encodeURIComponent(
+                  href={`${appRoutes.owner.getStarted}?next=${encodeURIComponent(
                     appRoutes.owner.courts.setupCreate,
                   )}`}
                 >
-                  Go to onboarding
+                  Get started
                 </Link>
               </Button>
             </CardContent>

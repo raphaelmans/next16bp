@@ -1,6 +1,9 @@
 "use client";
 
-import { CalendarDays, MapPin } from "lucide-react";
+import { ArrowRight, CalendarDays, MapPin } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLogout, useSession } from "@/features/auth";
 import {
@@ -11,9 +14,22 @@ import {
   ReservationAlertsPanel,
   StatsCard,
 } from "@/features/owner";
-import { useOwnerOrganization, useOwnerStats } from "@/features/owner/hooks";
+import {
+  useOwnerOrganization,
+  useOwnerSetupStatus,
+  useOwnerStats,
+} from "@/features/owner/hooks";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+
+const OWNER_SETUP_NEXT_STEP_LABELS = {
+  create_organization: "Create your organization",
+  add_or_claim_venue: "Add or claim a venue",
+  claim_pending: "Claim pending review",
+  verify_venue: "Submit verification",
+  configure_courts: "Set up courts",
+  complete: "Setup complete",
+} as const;
 
 export default function OwnerDashboardPage() {
   const { data: user } = useSession();
@@ -25,7 +41,14 @@ export default function OwnerDashboardPage() {
   const { data: stats, isLoading: statsLoading } = useOwnerStats(
     organization?.id ?? null,
   );
+  const { data: setupStatus, isLoading: setupLoading } = useOwnerSetupStatus();
   const logoutMutation = useLogout();
+
+  const showSetupCta =
+    !setupLoading && setupStatus ? !setupStatus.isSetupComplete : false;
+  const nextStepLabel = setupStatus
+    ? OWNER_SETUP_NEXT_STEP_LABELS[setupStatus.nextStep]
+    : null;
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -110,6 +133,28 @@ export default function OwnerDashboardPage() {
             Here&apos;s what&apos;s happening with your courts today.
           </p>
         </div>
+
+        {showSetupCta && (
+          <Card className="border-primary/20 bg-primary/5">
+            <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1">
+                <p className="font-heading font-semibold">
+                  Finish your owner setup
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Complete the remaining steps to start accepting bookings.
+                  {nextStepLabel ? ` Next up: ${nextStepLabel}.` : ""}
+                </p>
+              </div>
+              <Button asChild>
+                <Link href={appRoutes.owner.getStarted}>
+                  Get started
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Pending actions alert */}
         <PendingActions pendingCount={stats?.pendingReservations ?? 0} />

@@ -31,6 +31,7 @@ import {
   BookingsImportAiNotConfiguredError,
   BookingsImportAiRequiredError,
   BookingsImportHasBlockingErrorsError,
+  BookingsImportInvalidCourtError,
   BookingsImportInvalidFileTypeError,
   BookingsImportInvalidSourceError,
   BookingsImportInvalidStatusError,
@@ -252,6 +253,22 @@ export class BookingsImportService implements IBookingsImportService {
       ctx,
     );
 
+    const selectedCourtId =
+      typeof data.selectedCourtId === "string" &&
+      data.selectedCourtId.length > 0
+        ? data.selectedCourtId
+        : null;
+
+    if (selectedCourtId) {
+      const court = await this.courtRepository.findById(selectedCourtId, ctx);
+      if (!court || court.placeId !== data.placeId) {
+        throw new BookingsImportInvalidCourtError(
+          selectedCourtId,
+          data.placeId,
+        );
+      }
+    }
+
     const fileName = data.file.name || "import";
     const extension = path.extname(fileName).toLowerCase();
     const hasExtension = extension.length > 0;
@@ -299,6 +316,7 @@ export class BookingsImportService implements IBookingsImportService {
         fileName: data.file.name,
         fileSize: data.file.size,
         filePath: result.path,
+        metadata: selectedCourtId ? { selectedCourtId } : undefined,
       },
       ctx,
     );
@@ -609,6 +627,14 @@ export class BookingsImportService implements IBookingsImportService {
   ): Promise<NormalizeResult> {
     const job = await this.verifyJobOwnership(userId, jobId, ctx);
 
+    const selectedCourtId =
+      job.metadata &&
+      typeof job.metadata === "object" &&
+      typeof (job.metadata as Record<string, unknown>).selectedCourtId ===
+        "string"
+        ? ((job.metadata as Record<string, unknown>).selectedCourtId as string)
+        : null;
+
     // Only allow normalization from DRAFT status
     if (job.status !== "DRAFT") {
       throw new BookingsImportInvalidStatusError(job.status, ["DRAFT"]);
@@ -655,6 +681,14 @@ export class BookingsImportService implements IBookingsImportService {
 
       // Get courts for this place (for label matching)
       const courts = await this.courtRepository.findByPlaceId(job.placeId, ctx);
+
+      if (
+        selectedCourtId &&
+        !courts.some((court) => court.id === selectedCourtId)
+      ) {
+        throw new BookingsImportInvalidCourtError(selectedCourtId, job.placeId);
+      }
+
       const courtLabelMap = new Map<string, string>();
       for (const court of courts) {
         courtLabelMap.set(court.label.toLowerCase().trim(), court.id);
@@ -707,8 +741,8 @@ export class BookingsImportService implements IBookingsImportService {
       const rowRecords: InsertBookingsImportRow[] = parsedRows.map(
         (row, index) => {
           // Try to match court by label
-          let courtId: string | null = null;
-          if (row.courtLabel) {
+          let courtId: string | null = selectedCourtId;
+          if (!courtId && row.courtLabel) {
             courtId =
               courtLabelMap.get(row.courtLabel.toLowerCase().trim()) ?? null;
           }
@@ -844,6 +878,14 @@ export class BookingsImportService implements IBookingsImportService {
   ): Promise<CommitResult> {
     const job = await this.verifyJobOwnership(userId, jobId, ctx);
 
+    const selectedCourtId =
+      job.metadata &&
+      typeof job.metadata === "object" &&
+      typeof (job.metadata as Record<string, unknown>).selectedCourtId ===
+        "string"
+        ? ((job.metadata as Record<string, unknown>).selectedCourtId as string)
+        : null;
+
     // Allow NORMALIZED or COMMITTING (for retry) or COMMITTED (for idempotent re-run)
     if (
       job.status !== "NORMALIZED" &&
@@ -873,6 +915,14 @@ export class BookingsImportService implements IBookingsImportService {
 
     // Get courts for this place to map court labels
     const courts = await this.courtRepository.findByPlaceId(job.placeId, ctx);
+
+    if (
+      selectedCourtId &&
+      !courts.some((court) => court.id === selectedCourtId)
+    ) {
+      throw new BookingsImportInvalidCourtError(selectedCourtId, job.placeId);
+    }
+
     const courtMap = new Map(courts.map((c) => [c.label.toLowerCase(), c.id]));
 
     const failures: Array<{
@@ -907,7 +957,7 @@ export class BookingsImportService implements IBookingsImportService {
           }
 
           // Try to match court
-          let courtId = row.courtId;
+          let courtId = selectedCourtId ?? row.courtId;
           if (!courtId && row.courtLabel) {
             courtId = courtMap.get(row.courtLabel.toLowerCase()) ?? null;
           }

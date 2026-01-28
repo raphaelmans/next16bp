@@ -96,11 +96,11 @@ Navigate to **Supabase Dashboard → Authentication → URL Configuration**:
 
 | Setting | Value | Notes |
 |---------|-------|-------|
-| **Site URL** | `https://kudoscourts.com` | Used as the default allow-listed base URL |
-| **Redirect URLs** | `https://kudoscourts.com` | Allow root redirects |
+| **Site URL** | `https://yourdomain.com` | Default allow-listed base URL |
+| **Redirect URLs** | `https://yourdomain.com` | Allow root redirects |
 | | `http://localhost:3000` | Allow local root redirects |
-| | `https://kudoscourts.com/auth/confirm**` | PKCE email links (`/auth/confirm?...`) |
-| | `https://kudoscourts.com/auth/callback**` | OAuth callback (`/auth/callback?...`) |
+| | `https://yourdomain.com/auth/confirm**` | PKCE email links (`/auth/confirm?...`) |
+| | `https://yourdomain.com/auth/callback**` | OAuth callback (`/auth/callback?...`) |
 | | `http://localhost:3000/auth/confirm**` | Local development |
 | | `http://localhost:3000/auth/callback**` | Local development |
 
@@ -108,7 +108,7 @@ Navigate to **Supabase Dashboard → Authentication → URL Configuration**:
 
 Templates are version-controlled under `supabase/templates/*` and pushed to Supabase via CLI.
 
-**How it works:** this repo passes `emailRedirectTo` as a fully-qualified `/auth/confirm?redirect=...` URL. In the template, use `{{ .RedirectTo }}` as the base and append `token_hash` + `type`.
+**How it works:** your backend passes `emailRedirectTo` as a fully-qualified `/auth/confirm?redirect=...` URL. In the template, use `{{ .RedirectTo }}` as the base and append `token_hash` + `type`.
 
 **Push templates + auth config:**
 ```bash
@@ -120,17 +120,21 @@ If you prefer manual changes, you can still paste the HTML into **Supabase Dashb
 
 **Magic Link Template:**
 ```html
-<a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=magiclink">Sign in</a>
+<h2>Magic Link</h2>
+<p>Follow this link to login:</p>
+<p><a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=magiclink">Log In</a></p>
 ```
 
 **Signup Confirmation Template:**
 ```html
-<a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=signup">Confirm email</a>
+<h2>Confirm your signup</h2>
+<p><a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=signup">Confirm your email</a></p>
 ```
 
 **Password Recovery Template:**
 ```html
-<a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=recovery">Reset password</a>
+<h2>Reset your password</h2>
+<p><a href="{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=recovery">Reset Password</a></p>
 ```
 
 ---
@@ -348,16 +352,18 @@ export class SessionExpiredError extends AuthenticationError {
 // modules/auth/dtos/login.dto.ts
 
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const LoginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
+  email: S.auth.email,
+  password: S.auth.loginPassword,
 });
 
 export type LoginDTO = z.infer<typeof LoginSchema>;
 
 export const MagicLinkSchema = z.object({
-  email: z.string().email(),
+  email: S.auth.email,
+  redirect: S.common.optionalText,
 });
 
 export type MagicLinkDTO = z.infer<typeof MagicLinkSchema>;
@@ -367,9 +373,10 @@ export type MagicLinkDTO = z.infer<typeof MagicLinkSchema>;
 // modules/auth/dtos/verify.dto.ts
 
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const VerifyTokenHashSchema = z.object({
-  token_hash: z.string(),
+  token_hash: S.common.requiredText,
 });
 
 export type VerifyTokenHashDTO = z.infer<typeof VerifyTokenHashSchema>;
@@ -395,12 +402,13 @@ Service layer with redirect URL construction and **business event logging**:
 import type { IAuthRepository } from "../repositories/auth.repository";
 import type { User, Session } from "@supabase/supabase-js";
 import { logger } from "@/shared/infra/logger";
+import { getSafeRedirectPath } from "@/shared/lib/redirects";
 
 export interface IAuthService {
   getCurrentUser(): Promise<User | null>;
   signIn(email: string, password: string): Promise<{ user: User; session: Session }>;
-  signInWithMagicLink(email: string, baseUrl: string): Promise<{ user: User | null; session: Session | null }>;
-  signUp(email: string, password: string, baseUrl: string): Promise<{ user: User | null; session: Session | null }>;
+  signInWithMagicLink(email: string, baseUrl: string, redirect?: string): Promise<{ user: User | null; session: Session | null }>;
+  signUp(email: string, password: string, baseUrl: string, redirect?: string): Promise<{ user: User | null; session: Session | null }>;
   signOut(): Promise<void>;
   exchangeCodeForSession(code: string): Promise<{ user: User; session: Session }>;
   // PKCE flow methods
@@ -427,9 +435,10 @@ export class AuthService implements IAuthService {
     return result;
   }
 
-  async signInWithMagicLink(email: string, baseUrl: string): Promise<{ user: User | null; session: Session | null }> {
-    // PKCE flow: redirect to /auth/confirm
-    const redirectTo = `${baseUrl}/auth/confirm`;
+  async signInWithMagicLink(email: string, baseUrl: string, redirect?: string): Promise<{ user: User | null; session: Session | null }> {
+    // PKCE flow: redirect to /auth/confirm with an explicit, safe in-app redirect
+    const safeRedirect = getSafeRedirectPath(redirect, { fallback: "/" });
+    const redirectTo = `${baseUrl}/auth/confirm?redirect=${encodeURIComponent(safeRedirect)}`;
     const result = await this.authRepository.signInWithOtp(email, redirectTo);
 
     logger.info(
@@ -440,9 +449,10 @@ export class AuthService implements IAuthService {
     return result;
   }
 
-  async signUp(email: string, password: string, baseUrl: string): Promise<{ user: User | null; session: Session | null }> {
-    // PKCE flow: redirect to /auth/confirm
-    const redirectTo = `${baseUrl}/auth/confirm`;
+  async signUp(email: string, password: string, baseUrl: string, redirect?: string): Promise<{ user: User | null; session: Session | null }> {
+    // PKCE flow: redirect to /auth/confirm with an explicit, safe in-app redirect
+    const safeRedirect = getSafeRedirectPath(redirect, { fallback: "/" });
+    const redirectTo = `${baseUrl}/auth/confirm?redirect=${encodeURIComponent(safeRedirect)}`;
     const result = await this.authRepository.signUp(email, password, redirectTo);
 
     if (result.user) {
@@ -1448,10 +1458,10 @@ src/
 - [ ] Get publishable and secret keys
 - [ ] **Set Site URL** to production domain (e.g., `https://yourdomain.com`)
 - [ ] **Add Redirect URLs:**
-  - `https://kudoscourts.com` (root)
+  - `https://yourdomain.com` (root)
   - `http://localhost:3000` (dev root)
-  - `https://kudoscourts.com/auth/confirm**` (PKCE)
-  - `https://kudoscourts.com/auth/callback**` (OAuth)
+  - `https://yourdomain.com/auth/confirm**` (PKCE)
+  - `https://yourdomain.com/auth/callback**` (OAuth)
   - `http://localhost:3000/auth/confirm**` (dev PKCE)
   - `http://localhost:3000/auth/callback**` (dev OAuth)
 - [ ] **Configure email templates** to use `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=...` (or push via `supabase config push`)
@@ -1470,7 +1480,7 @@ src/
 
 ### Auth Module
 - [ ] `AuthRepository` with PKCE methods (`verifyMagicLink`, `verifySignUp`, `verifyRecovery`)
-- [ ] `AuthService` with redirect URL construction to `/auth/confirm`
+- [ ] `AuthService` with redirect URL construction to `/auth/confirm?redirect=...`
 - [ ] Domain errors (`InvalidCredentialsError`, etc.)
 - [ ] DTOs with Zod schemas (including `VerifyTokenHashSchema`)
 - [ ] Request-scoped factories

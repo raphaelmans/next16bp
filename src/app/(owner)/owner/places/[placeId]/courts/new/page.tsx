@@ -98,11 +98,11 @@ export default function NewPlaceCourtPage() {
               </p>
               <Button asChild>
                 <Link
-                  href={`${appRoutes.owner.onboarding}?next=${encodeURIComponent(
+                  href={`${appRoutes.owner.getStarted}?next=${encodeURIComponent(
                     appRoutes.owner.places.courts.new(placeId),
                   )}`}
                 >
-                  Go to onboarding
+                  Get started
                 </Link>
               </Button>
             </CardContent>

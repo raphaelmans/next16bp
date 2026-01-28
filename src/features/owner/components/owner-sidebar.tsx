@@ -4,6 +4,7 @@ import {
   Building2,
   CalendarDays,
   ChevronDown,
+  ChevronRight,
   LayoutDashboard,
   MapPin,
   Settings,
@@ -29,9 +30,9 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSkeleton,
@@ -61,16 +62,6 @@ interface OwnerSidebarProps {
 
 const navItems = [
   {
-    title: "Dashboard",
-    href: appRoutes.owner.base,
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Venues",
-    href: appRoutes.owner.places.base,
-    icon: MapPin,
-  },
-  {
     title: "Imports",
     href: appRoutes.owner.imports.bookings,
     icon: UploadCloud,
@@ -87,11 +78,7 @@ const navItems = [
   },
 ];
 
-const quickLinksSkeletonKeys = [
-  "quick-links-1",
-  "quick-links-2",
-  "quick-links-3",
-];
+const venuesSkeletonKeys = ["venue-skeleton-1", "venue-skeleton-2"];
 
 export function OwnerSidebar({
   organizations = [],
@@ -102,7 +89,7 @@ export function OwnerSidebar({
   const { data: quickLinks = [], isLoading: quickLinksLoading } =
     useOwnerSidebarQuickLinks(currentOrganization?.id);
   const hasOrganization = Boolean(currentOrganization?.id);
-  const showQuickLinksLoading = quickLinksLoading || !hasOrganization;
+  const showVenuesLoading = quickLinksLoading || !hasOrganization;
 
   const isActive = (href: string) => {
     if (href === appRoutes.owner.base) {
@@ -187,6 +174,127 @@ export function OwnerSidebar({
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
+              {/* Dashboard */}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={isActive(appRoutes.owner.base)}
+                  className={
+                    isActive(appRoutes.owner.base)
+                      ? "bg-primary text-primary-foreground"
+                      : ""
+                  }
+                >
+                  <Link href={appRoutes.owner.base} className="font-heading">
+                    <LayoutDashboard className="h-4 w-4" />
+                    <span>Dashboard</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              {/* Venues - collapsible with nested venues > courts */}
+              <Collapsible
+                defaultOpen={
+                  pathname.startsWith(appRoutes.owner.places.base) ||
+                  quickLinks.some((place) =>
+                    place.courts.some((court) =>
+                      isCourtActive(place.id, court.id),
+                    ),
+                  )
+                }
+                className="group/venues"
+              >
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname.startsWith(
+                      appRoutes.owner.places.base,
+                    )}
+                    className={`font-heading ${pathname.startsWith(appRoutes.owner.places.base)
+                        ? "bg-primary text-primary-foreground"
+                        : ""
+                      }`}
+                  >
+                    <Link href={appRoutes.owner.places.base}>
+                      <MapPin className="h-4 w-4" />
+                      <span>Venues</span>
+                    </Link>
+                  </SidebarMenuButton>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuAction className="data-[state=open]:rotate-90">
+                      <ChevronRight className="h-4 w-4" />
+                    </SidebarMenuAction>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {/* Venue > Courts hierarchy */}
+                      {showVenuesLoading
+                        ? venuesSkeletonKeys.map((key) => (
+                          <SidebarMenuSubItem key={key}>
+                            <SidebarMenuSkeleton />
+                          </SidebarMenuSubItem>
+                        ))
+                        : quickLinks.map((place) => {
+                          const isPlaceActive = place.courts.some((court) =>
+                            isCourtActive(place.id, court.id),
+                          );
+
+                          return (
+                            <Collapsible
+                              key={place.id}
+                              defaultOpen={isPlaceActive}
+                              className="group/place"
+                            >
+                              <SidebarMenuSubItem>
+                                <CollapsibleTrigger asChild>
+                                  <SidebarMenuSubButton
+                                    isActive={isPlaceActive}
+                                    className="font-heading"
+                                  >
+                                    <span>{place.name}</span>
+                                    {place.courts.length > 0 && (
+                                      <span className="ml-auto text-sidebar-foreground">
+                                        <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]/place:rotate-180" />
+                                      </span>
+                                    )}
+                                  </SidebarMenuSubButton>
+                                </CollapsibleTrigger>
+                                {place.courts.length > 0 && (
+                                  <CollapsibleContent>
+                                    <SidebarMenuSub>
+                                      {place.courts.map((court) => (
+                                        <SidebarMenuSubItem key={court.id}>
+                                          <SidebarMenuSubButton
+                                            asChild
+                                            isActive={isCourtActive(
+                                              place.id,
+                                              court.id,
+                                            )}
+                                          >
+                                            <Link
+                                              href={appRoutes.owner.places.courts.availability(
+                                                place.id,
+                                                court.id,
+                                              )}
+                                            >
+                                              <span>{court.label}</span>
+                                            </Link>
+                                          </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                      ))}
+                                    </SidebarMenuSub>
+                                  </CollapsibleContent>
+                                )}
+                              </SidebarMenuSubItem>
+                            </Collapsible>
+                          );
+                        })}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
+
+              {/* Remaining nav items */}
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
@@ -194,7 +302,7 @@ export function OwnerSidebar({
                     isActive={isActive(item.href)}
                     className={
                       isActive(item.href)
-                        ? "bg-primary/10 text-primary border-l-2 border-primary"
+                        ? "bg-primary text-primary-foreground"
                         : ""
                     }
                   >
@@ -205,92 +313,6 @@ export function OwnerSidebar({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel className="font-heading">
-            Quick Links
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {showQuickLinksLoading ? (
-                quickLinksSkeletonKeys.map((key) => (
-                  <SidebarMenuItem key={key}>
-                    <SidebarMenuSkeleton showIcon />
-                  </SidebarMenuItem>
-                ))
-              ) : quickLinks.length === 0 ? (
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    aria-disabled
-                    className="cursor-default text-muted-foreground"
-                  >
-                    <span>No venues yet</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ) : (
-                quickLinks.map((place) => {
-                  const isPlaceActive = place.courts.some((court) =>
-                    isCourtActive(place.id, court.id),
-                  );
-
-                  return (
-                    <Collapsible
-                      key={place.id}
-                      defaultOpen={isPlaceActive}
-                      className="group/collapsible"
-                    >
-                      <SidebarMenuItem>
-                        <CollapsibleTrigger asChild>
-                          <SidebarMenuButton
-                            isActive={isPlaceActive}
-                            className="font-heading"
-                          >
-                            <MapPin className="h-4 w-4" />
-                            <span>{place.name}</span>
-                            <ChevronDown className="ml-auto h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                          </SidebarMenuButton>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent>
-                          <SidebarMenuSub>
-                            {place.courts.length === 0 ? (
-                              <SidebarMenuSubItem>
-                                <SidebarMenuSubButton
-                                  asChild
-                                  aria-disabled
-                                  className="cursor-default text-muted-foreground"
-                                >
-                                  <span>No active courts</span>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
-                            ) : (
-                              place.courts.map((court) => (
-                                <SidebarMenuSubItem key={court.id}>
-                                  <SidebarMenuSubButton
-                                    asChild
-                                    isActive={isCourtActive(place.id, court.id)}
-                                  >
-                                    <Link
-                                      href={appRoutes.owner.places.courts.availability(
-                                        place.id,
-                                        court.id,
-                                      )}
-                                    >
-                                      <span>{court.label}</span>
-                                    </Link>
-                                  </SidebarMenuSubButton>
-                                </SidebarMenuSubItem>
-                              ))
-                            )}
-                          </SidebarMenuSub>
-                        </CollapsibleContent>
-                      </SidebarMenuItem>
-                    </Collapsible>
-                  );
-                })
-              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

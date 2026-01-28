@@ -2,8 +2,22 @@ import type { MetadataRoute } from "next";
 import { env } from "@/lib/env";
 
 const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+const isProduction =
+  process.env.VERCEL_ENV === "production" ||
+  process.env.NODE_ENV === "production";
 
 export default function robots(): MetadataRoute.Robots {
+  if (!isProduction) {
+    return {
+      rules: [
+        {
+          userAgent: "*",
+          disallow: "/",
+        },
+      ],
+    };
+  }
+
   return {
     rules: [
       {
@@ -21,8 +35,12 @@ export default function robots(): MetadataRoute.Robots {
           "/auth",
           "/courts/*/schedule",
           "/venues/*/schedule",
+          "/places/*/schedule",
           "/courts/*/book",
           "/venues/*/book",
+          "/places/*/book",
+          "/poc",
+          "/poc/*",
         ],
       },
     ],

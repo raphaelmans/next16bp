@@ -60,6 +60,7 @@ export {
   useRejectReservation,
   useReservationCounts,
 } from "./use-owner-reservations";
+export { useOwnerSetupStatus } from "./use-owner-setup-status";
 export { useOwnerSidebarQuickLinks } from "./use-owner-sidebar-quick-links";
 export { usePlaceForm } from "./use-place-form";
 export {

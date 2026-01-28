@@ -8,6 +8,7 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-01-28 | Added 74-owner-setup-status plan (centralized setup status API + dashboard CTA). |
 | 2026-01-27 | Added 73-owner-setup-hub-stepper-v2 plan (explicit verify + go-live steps; return-to-hub onboarding). |
 | 2026-01-27 | Planned Web UI screenshot (image) normalization for bookings import (AI vision extraction + row persistence). See `agent-plans/71-bookings-import-review-commit/71-06-screenshot-normalization.md`. |
 | 2026-01-26 | Added 71-bookings-import-review-commit plan (draft persistence, review/edit grid, commit to blocks, AI usage enforcement) |

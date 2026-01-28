@@ -104,7 +104,7 @@ export function Navbar({ className }: NavbarProps) {
     }
 
     const params = new URLSearchParams({ next: appRoutes.owner.places.new });
-    router.push(`${appRoutes.owner.onboarding}?${params.toString()}`);
+    router.push(`${appRoutes.owner.getStarted}?${params.toString()}`);
   };
 
   return (

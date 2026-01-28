@@ -10,6 +10,7 @@ export const ImportSourceSchema = z.enum(["ics", "csv", "xlsx", "image"], {
 export const CreateBookingsImportSchema = zfd.formData({
   placeId: zfd.text(S.ids.placeId),
   sourceType: zfd.text(ImportSourceSchema),
+  selectedCourtId: zfd.text(S.ids.courtId).optional(),
   file: importFileSchema,
 });
 

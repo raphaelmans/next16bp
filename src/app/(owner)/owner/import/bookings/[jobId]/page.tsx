@@ -225,6 +225,19 @@ export default function OwnerBookingsImportReviewPage() {
   const courts = placeData?.courts ?? [];
   const place = placeData?.place;
 
+  const selectedCourtId = useMemo(() => {
+    if (!job?.metadata || typeof job.metadata !== "object") return null;
+    const value = (job.metadata as Record<string, unknown>).selectedCourtId;
+    return typeof value === "string" && value.length > 0 ? value : null;
+  }, [job?.metadata]);
+
+  const selectedCourtLabel = useMemo(() => {
+    if (!selectedCourtId) return null;
+    return (
+      courts.find((c) => c.court.id === selectedCourtId)?.court.label ?? null
+    );
+  }, [courts, selectedCourtId]);
+
   const filteredRows = useMemo(() => {
     if (statusFilter === "ALL") return rows;
     return rows.filter((row) => row.status === statusFilter);
@@ -259,7 +272,7 @@ export default function OwnerBookingsImportReviewPage() {
 
   const handleEditRow = (row: RowRecord) => {
     setEditingRow(row);
-    setEditCourtId(row.courtId ?? "");
+    setEditCourtId(selectedCourtId ?? row.courtId ?? "");
     setEditStartTime(
       row.startTime ? new Date(row.startTime).toISOString().slice(0, 16) : "",
     );
@@ -272,13 +285,18 @@ export default function OwnerBookingsImportReviewPage() {
   const handleSaveEdit = () => {
     if (!editingRow) return;
 
-    updateRowMutation.mutate({
+    const payload: Parameters<typeof updateRowMutation.mutate>[0] = {
       rowId: editingRow.id,
-      courtId: editCourtId || null,
       startTime: editStartTime ? new Date(editStartTime).toISOString() : null,
       endTime: editEndTime ? new Date(editEndTime).toISOString() : null,
       reason: editReason || null,
-    });
+    };
+
+    if (!selectedCourtId) {
+      payload.courtId = editCourtId || null;
+    }
+
+    updateRowMutation.mutate(payload);
   };
 
   const handleDeleteRow = () => {
@@ -660,10 +678,10 @@ export default function OwnerBookingsImportReviewPage() {
                                   {row.lineNumber}
                                 </TableCell>
                                 <TableCell>
-                                  {row.courtLabel ??
-                                    courts.find(
-                                      (c) => c.court.id === row.courtId,
-                                    )?.court.label ?? (
+                                  {courts.find(
+                                    (c) => c.court.id === row.courtId,
+                                  )?.court.label ??
+                                    row.courtLabel ?? (
                                       <span className="text-muted-foreground">
                                         Unmapped
                                       </span>
@@ -832,6 +850,14 @@ export default function OwnerBookingsImportReviewPage() {
                   <span>{job.sourceType.toUpperCase()}</span>
                 </div>
                 <div className="flex justify-between">
+                  <span className="text-muted-foreground">Court scope</span>
+                  <span>
+                    {selectedCourtId
+                      ? `${selectedCourtLabel ?? "Single court"}`
+                      : "Multiple courts"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
                   <span className="text-muted-foreground">File</span>
                   <span className="truncate max-w-[150px]">{job.fileName}</span>
                 </div>
@@ -855,19 +881,30 @@ export default function OwnerBookingsImportReviewPage() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-court">Court</Label>
-              <Select value={editCourtId} onValueChange={setEditCourtId}>
-                <SelectTrigger id="edit-court">
-                  <SelectValue placeholder="Select a court" />
-                </SelectTrigger>
-                <SelectContent>
-                  {courts.map((c) => (
-                    <SelectItem key={c.court.id} value={c.court.id}>
-                      {c.court.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {selectedCourtId ? (
+                <>
+                  <Label className="text-sm">Court</Label>
+                  <div className="rounded-md border bg-muted/30 px-3 py-2 text-sm">
+                    {selectedCourtLabel ?? "Selected court"}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Label htmlFor="edit-court">Court</Label>
+                  <Select value={editCourtId} onValueChange={setEditCourtId}>
+                    <SelectTrigger id="edit-court">
+                      <SelectValue placeholder="Select a court" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {courts.map((c) => (
+                        <SelectItem key={c.court.id} value={c.court.id}>
+                          {c.court.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-start">Start time</Label>

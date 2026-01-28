@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,9 @@ interface HomeSearchFormProps {
 export function HomeSearchForm({ popularLocations }: HomeSearchFormProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+
+  const buildLocationHref = (provinceSlug: string, citySlug: string) =>
+    `/courts/locations/${provinceSlug}/${citySlug}`;
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,13 +48,6 @@ export function HomeSearchForm({ popularLocations }: HomeSearchFormProps) {
         city: citySlug,
       },
     });
-    const search = new URLQueryBuilder()
-      .addParams({
-        province: provinceSlug,
-        city: citySlug,
-      })
-      .build();
-    router.push(`${appRoutes.courts.base}?${search}`);
   };
 
   return (
@@ -74,11 +71,19 @@ export function HomeSearchForm({ popularLocations }: HomeSearchFormProps) {
               variant="outline"
               size="sm"
               className="h-12"
-              onClick={() =>
-                handleLocationClick(location.provinceSlug, location.citySlug)
-              }
+              asChild
             >
-              {location.label}
+              <Link
+                href={buildLocationHref(
+                  location.provinceSlug,
+                  location.citySlug,
+                )}
+                onClick={() =>
+                  handleLocationClick(location.provinceSlug, location.citySlug)
+                }
+              >
+                {location.label}
+              </Link>
             </Button>
           ))}
         </div>

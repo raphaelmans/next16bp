@@ -15,6 +15,7 @@ import { healthRouter } from "@/modules/health/health.router";
 import { organizationAdminRouter } from "@/modules/organization/admin/organization-admin.router";
 import { organizationRouter } from "@/modules/organization/organization.router";
 import { organizationPaymentRouter } from "@/modules/organization-payment/organization-payment.router";
+import { ownerSetupRouter } from "@/modules/owner-setup/owner-setup.router";
 import { paymentProofRouter } from "@/modules/payment-proof/payment-proof.router";
 import { placeRouter } from "@/modules/place/place.router";
 import { placeManagementRouter } from "@/modules/place/place-management.router";
@@ -44,6 +45,7 @@ export const appRouter = router({
   profile: profileRouter,
   organization: organizationRouter,
   organizationPayment: organizationPaymentRouter,
+  ownerSetup: ownerSetupRouter,
   paymentProof: paymentProofRouter,
   claimRequest: claimRequestRouter,
   contact: contactRouter,

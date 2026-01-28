@@ -28,6 +28,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/ui/page-header";
 import { Progress } from "@/components/ui/progress";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -38,13 +39,19 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
-import { useOwnerOrganization, useOwnerPlaces } from "@/features/owner/hooks";
+import {
+  useOwnerCourtsByPlace,
+  useOwnerOrganization,
+  useOwnerPlaces,
+} from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { trpc } from "@/trpc/client";
 
 type SourceType = "ics" | "csv" | "xlsx" | "image";
+
+type CourtScope = "multi" | "single";
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 
@@ -132,6 +139,9 @@ export default function OwnerBookingsImportPage() {
 
   const [selectedPlaceId, setSelectedPlaceId] = useState("");
   const [selectedSource, setSelectedSource] = useState<SourceType | null>(null);
+  const [courtScope, setCourtScope] = useState<CourtScope>("multi");
+  const [selectedCourtId, setSelectedCourtId] = useState("");
+  const [courtScopeTouched, setCourtScopeTouched] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileRejections, setFileRejections] = useState<FileRejection[]>([]);
   const [inputKey, setInputKey] = useState(0);
@@ -141,6 +151,9 @@ export default function OwnerBookingsImportPage() {
     { placeId: selectedPlaceId },
     { enabled: Boolean(selectedPlaceId) },
   );
+
+  const courtsQuery = useOwnerCourtsByPlace(selectedPlaceId);
+  const placeCourts = courtsQuery.data ?? [];
 
   const isUploading = createDraftMutation.isPending;
   const acceptedExtensions = selectedSource
@@ -153,6 +166,7 @@ export default function OwnerBookingsImportPage() {
       selectedSource &&
       selectedFile &&
       fileRejections.length === 0 &&
+      (courtScope !== "single" || Boolean(selectedCourtId)) &&
       !isUploading,
   );
 
@@ -167,6 +181,23 @@ export default function OwnerBookingsImportPage() {
     setFileRejections([]);
     setInputKey((prev) => prev + 1);
   }, [selectedPlaceId, selectedSource]);
+
+  const handlePlaceChange = (placeId: string) => {
+    setSelectedPlaceId(placeId);
+    setCourtScope("multi");
+    setSelectedCourtId("");
+    setCourtScopeTouched(false);
+  };
+
+  useEffect(() => {
+    if (!selectedPlaceId) return;
+    if (courtsQuery.isLoading) return;
+    if (courtScopeTouched) return;
+    if (placeCourts.length === 1) {
+      setCourtScope("single");
+      setSelectedCourtId(placeCourts[0]?.id ?? "");
+    }
+  }, [courtScopeTouched, courtsQuery.isLoading, placeCourts, selectedPlaceId]);
 
   const {
     getRootProps,
@@ -203,6 +234,9 @@ export default function OwnerBookingsImportPage() {
     const formData = new FormData();
     formData.append("placeId", selectedPlaceId);
     formData.append("sourceType", selectedSource);
+    if (courtScope === "single" && selectedCourtId) {
+      formData.append("selectedCourtId", selectedCourtId);
+    }
     formData.append("file", selectedFile, selectedFile.name);
 
     try {
@@ -317,7 +351,7 @@ export default function OwnerBookingsImportPage() {
                 ) : (
                   <Select
                     value={selectedPlaceId}
-                    onValueChange={setSelectedPlaceId}
+                    onValueChange={handlePlaceChange}
                   >
                     <SelectTrigger id="venue-select" className="w-full">
                       <SelectValue placeholder="Select a venue" />
@@ -337,6 +371,129 @@ export default function OwnerBookingsImportPage() {
                     </SelectContent>
                   </Select>
                 )}
+              </div>
+
+              <div className="space-y-3">
+                <Label className="font-heading">Court scope (optional)</Label>
+                <div className="text-xs text-muted-foreground">
+                  Choose whether this import applies to a single court or uses
+                  court names from the file.
+                </div>
+
+                <RadioGroup
+                  value={courtScope}
+                  onValueChange={(value) => {
+                    const next = value as CourtScope;
+                    setCourtScopeTouched(true);
+                    setCourtScope(next);
+                    if (next !== "single") {
+                      setSelectedCourtId("");
+                    }
+                  }}
+                  className="grid gap-3 sm:grid-cols-2"
+                >
+                  <label
+                    htmlFor="court-scope-multi"
+                    className={cn(
+                      "flex cursor-pointer gap-3 rounded-lg border p-4 transition-colors",
+                      courtScope === "multi"
+                        ? "border-primary bg-primary/5"
+                        : "hover:border-primary/40",
+                    )}
+                  >
+                    <RadioGroupItem
+                      id="court-scope-multi"
+                      value="multi"
+                      className="mt-1"
+                    />
+                    <div className="space-y-1">
+                      <div className="font-heading text-sm font-semibold">
+                        Multiple courts
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Use court names in the file (you can remap rows during
+                        review).
+                      </div>
+                    </div>
+                  </label>
+
+                  <label
+                    htmlFor="court-scope-single"
+                    className={cn(
+                      "flex gap-3 rounded-lg border p-4 transition-colors",
+                      selectedPlaceId &&
+                        !courtsQuery.isLoading &&
+                        placeCourts.length > 0
+                        ? "cursor-pointer"
+                        : "cursor-not-allowed opacity-60",
+                      courtScope === "single"
+                        ? "border-primary bg-primary/5"
+                        : "hover:border-primary/40",
+                    )}
+                  >
+                    <RadioGroupItem
+                      id="court-scope-single"
+                      value="single"
+                      className="mt-1"
+                      disabled={
+                        !selectedPlaceId ||
+                        courtsQuery.isLoading ||
+                        placeCourts.length === 0
+                      }
+                    />
+                    <div className="space-y-1">
+                      <div className="font-heading text-sm font-semibold">
+                        Single court
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Assign every imported booking to one court (locked
+                        during review).
+                      </div>
+                    </div>
+                  </label>
+                </RadioGroup>
+
+                {selectedPlaceId && courtScope === "single" ? (
+                  courtsQuery.isLoading ? (
+                    <Skeleton className="h-10 w-full" />
+                  ) : placeCourts.length === 0 ? (
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>No courts found</AlertTitle>
+                      <AlertDescription>
+                        Configure at least one court for this venue to use
+                        single-court imports.
+                      </AlertDescription>
+                    </Alert>
+                  ) : (
+                    <div className="space-y-2">
+                      <Label htmlFor="court-select" className="text-sm">
+                        Court
+                      </Label>
+                      <Select
+                        value={selectedCourtId}
+                        onValueChange={setSelectedCourtId}
+                      >
+                        <SelectTrigger id="court-select" className="w-full">
+                          <SelectValue placeholder="Select a court" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {placeCourts.map((court) => (
+                            <SelectItem key={court.id} value={court.id}>
+                              {court.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {selectedSource === "image" ? (
+                        <div className="text-xs text-muted-foreground">
+                          Tip: screenshots often don't include court names.
+                          Selecting a court avoids mapping errors.
+                        </div>
+                      ) : null}
+                    </div>
+                  )
+                ) : null}
               </div>
 
               <div className="space-y-3">

@@ -52,7 +52,7 @@ export default function HomePage() {
 
     if (ownerOnboardingIntent) {
       const params = new URLSearchParams({ next: appRoutes.owner.places.new });
-      router.replace(`${appRoutes.owner.onboarding}?${params.toString()}`);
+      router.replace(`${appRoutes.owner.getStarted}?${params.toString()}`);
     }
   }, [
     dataLoading,

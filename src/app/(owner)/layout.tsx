@@ -33,7 +33,7 @@ export default async function OwnerLayout({
   );
 
   if (organizations.length === 0) {
-    redirect(appRoutes.owner.onboarding);
+    redirect(appRoutes.owner.getStarted);
   }
 
   return (

@@ -64,6 +64,8 @@ export function useSubmitPlaceVerification(placeId: string) {
     onSuccess: async () => {
       toast.success("Verification request submitted");
       await utils.placeVerification.getByPlace.invalidate({ placeId });
+      await utils.placeManagement.getById.invalidate({ placeId });
+      await utils.placeManagement.invalidate();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to submit verification request");
@@ -92,6 +94,7 @@ export function useTogglePlaceReservations(placeId: string) {
     onSuccess: async () => {
       await utils.placeVerification.getByPlace.invalidate({ placeId });
       await utils.placeManagement.getById.invalidate({ placeId });
+      await utils.placeManagement.invalidate();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to update reservation status");

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { env } from "@/lib/env";
 import { createServerCaller } from "@/shared/infra/trpc/server";
 import { appRoutes } from "@/shared/lib/app-routes";
 
@@ -35,6 +36,13 @@ const buildDescription = (
     .join(" | ");
 };
 
+const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+
+const toAbsoluteUrl = (value?: string | null) => {
+  if (!value) return undefined;
+  return value.startsWith("http") ? value : new URL(value, appUrl).toString();
+};
+
 export async function generateMetadata({
   params,
 }: {
@@ -47,6 +55,7 @@ export async function generateMetadata({
 
   let title = "Court details";
   let description = "View court details on KudosCourts.";
+  let imageUrl: string | undefined;
 
   try {
     const caller = await createServerCaller(fallbackPath);
@@ -61,7 +70,15 @@ export async function generateMetadata({
     title = place.name;
     description = buildDescription(place, placeDetails.courts.length, sports);
     canonicalPath = appRoutes.places.detail(place.slug ?? place.id);
+    imageUrl = toAbsoluteUrl(
+      placeDetails.photos?.[0]?.url ?? placeDetails.organizationLogoUrl,
+    );
   } catch {}
+
+  const openGraphImages = imageUrl
+    ? [{ url: imageUrl, alt: `${title} photo` }]
+    : undefined;
+  const twitterImages = imageUrl ? [imageUrl] : undefined;
 
   return {
     title,
@@ -75,11 +92,13 @@ export async function generateMetadata({
       url: canonicalPath,
       siteName: "KudosCourts",
       type: "website",
+      images: openGraphImages,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: twitterImages,
     },
   };
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { skipToken } from "@tanstack/react-query";
 import {
   ArrowRight,
   Building2,
@@ -16,7 +15,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { parseAsString, useQueryState } from "nuqs";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -31,68 +31,77 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
+import { useOwnerSetupStatus } from "@/features/owner/hooks";
 import { Container } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import { trackEvent } from "@/shared/lib/clients/telemetry-client";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
+const getSafeNextHref = (nextHref: string | null): string | null => {
+  if (!nextHref) {
+    return null;
+  }
+
+  if (!nextHref.startsWith("/") || nextHref.startsWith("//")) {
+    return null;
+  }
+
+  if (
+    nextHref === appRoutes.owner.getStarted ||
+    nextHref === appRoutes.owner.onboarding
+  ) {
+    return null;
+  }
+
+  const ownerBase = appRoutes.owner.base;
+  const isOwnerPath =
+    nextHref === ownerBase || nextHref.startsWith(`${ownerBase}/`);
+  if (!isOwnerPath) {
+    return null;
+  }
+
+  return nextHref;
+};
+
 export default function OwnerGetStartedPage() {
   const router = useRouter();
   const [showOrgForm, setShowOrgForm] = useState(false);
   const [showClaimSearch, setShowClaimSearch] = useState(false);
   const [claimSearchQuery, setClaimSearchQuery] = useState("");
+  const [nextParam] = useQueryState("next", parseAsString);
 
-  const { data: organizations, isLoading: orgsLoading } =
-    trpc.organization.my.useQuery(undefined, {
-      staleTime: 0,
-      refetchOnMount: "always",
-    });
+  const utils = trpc.useUtils();
+  const { data: setupStatus, isLoading: setupLoading } = useOwnerSetupStatus();
 
-  const { data: myClaims } = trpc.claimRequest.getMy.useQuery(undefined, {
-    enabled: (organizations?.length ?? 0) > 0,
-  });
-
-  const organizationId = organizations?.[0]?.id;
-  const { data: myPlaces } = trpc.placeManagement.list.useQuery(
-    organizationId ? { organizationId } : skipToken,
-  );
-
-  const primaryPlace = useMemo(() => {
-    if (!myPlaces || myPlaces.length === 0) return null;
-    return [...myPlaces].sort((a, b) => {
-      const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-      const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-      return bTime - aTime;
-    })[0];
-  }, [myPlaces]);
-
-  const primaryPlaceId = primaryPlace?.id;
-  const primaryPlaceName = primaryPlace?.name ?? "your venue";
-  const verificationStatus = primaryPlace?.verification?.status ?? null;
-  const isVerificationPending = verificationStatus === "PENDING";
-  const isVerificationVerified = verificationStatus === "VERIFIED";
-  const isVerificationRejected = verificationStatus === "REJECTED";
-  const hasVerification = isVerificationPending || isVerificationVerified;
-
-  const { data: placeCourts } = trpc.courtManagement.listByPlace.useQuery(
-    primaryPlaceId ? { placeId: primaryPlaceId } : skipToken,
-  );
-
-  const hasOrganization = (organizations?.length ?? 0) > 0;
-  const hasPendingClaim =
-    myClaims?.some((c) => c.status === "PENDING") ?? false;
-  const hasVenue = (myPlaces?.length ?? 0) > 0;
-  const hasActiveCourt =
-    placeCourts?.some((court) => court.court.isActive) ?? false;
+  const organization = setupStatus?.organization ?? null;
+  const organizationId = organization?.id;
+  const primaryPlaceId = setupStatus?.primaryPlace?.id;
+  const primaryPlaceName = setupStatus?.primaryPlace?.name ?? "your venue";
+  const verificationStatus = setupStatus?.verificationStatus ?? null;
+  const hasOrganization = setupStatus?.hasOrganization ?? false;
+  const hasPendingClaim = setupStatus?.hasPendingClaim ?? false;
+  const hasVenue = setupStatus?.hasVenue ?? false;
+  const hasVerification = setupStatus?.hasVerification ?? false;
+  const hasActiveCourt = setupStatus?.hasActiveCourt ?? false;
 
   useEffect(() => {
     trackEvent({ event: "funnel.owner_setup_hub_viewed" });
   }, []);
 
+  const safeNextHref = getSafeNextHref(nextParam);
+  useEffect(() => {
+    if (!safeNextHref) return;
+    if (setupLoading) return;
+    if (!setupStatus?.hasOrganization) return;
+
+    router.replace(safeNextHref);
+  }, [router, safeNextHref, setupLoading, setupStatus?.hasOrganization]);
+
   const handleOrgCreated = () => {
     setShowOrgForm(false);
     trackEvent({ event: "funnel.owner_org_created" });
+    utils.ownerSetup.getStatus.invalidate();
   };
 
   const handleAddVenue = () => {
@@ -173,8 +182,8 @@ export default function OwnerGetStartedPage() {
             <div className="lg:col-span-2 space-y-4">
               <CreateOrgCard
                 hasOrganization={hasOrganization}
-                isLoading={orgsLoading}
-                organization={organizations?.[0]}
+                isLoading={setupLoading}
+                organization={organization ?? undefined}
                 onCreateClick={() => setShowOrgForm(true)}
               />
 
@@ -269,7 +278,7 @@ export default function OwnerGetStartedPage() {
       <ClaimSearchDialog
         open={showClaimSearch}
         onOpenChange={setShowClaimSearch}
-        organizationId={organizations?.[0]?.id}
+        organizationId={organizationId}
         searchQuery={claimSearchQuery}
         onSearchQueryChange={setClaimSearchQuery}
       />
@@ -782,6 +791,7 @@ function ClaimSearchDialog({
         description: "We will review your request and notify you.",
       });
       utils.claimRequest.getMy.invalidate();
+      utils.ownerSetup.getStatus.invalidate();
       onOpenChange(false);
       trackEvent({ event: "funnel.owner_claim_submitted" });
     },

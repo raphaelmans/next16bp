@@ -101,6 +101,30 @@ export const imageUploadSchema = z.object({
 export type ImageAsset = z.infer<typeof imageAssetSchema>;
 ```
 
+### Cleared Inputs ("" -> undefined)
+
+Controlled inputs often emit an empty string (`""`) when a user clears a field.
+If the backend treats the field as optional, normalize `""` to `undefined` at the schema boundary.
+
+**Convention:**
+
+- Use `emptyToUndefined(...)` for optional fields where `""` should mean “not provided”.
+- Use `allowEmptyString(...)` only when `""` is a valid *value* (rare).
+
+```typescript
+import { z } from "zod";
+import { emptyToUndefined, S } from "@/shared/kernel/schemas";
+
+export const profileFormSchema = z.object({
+  displayName: S.profile.displayName,
+
+  // Input might be "" while editing; submit should send undefined
+  phoneNumber: emptyToUndefined(S.common.phone.optional()),
+});
+
+export type ProfileFormValues = z.infer<typeof profileFormSchema>; // phoneNumber: string | undefined
+```
+
 ## StandardForm Components
 
 ### Component Hierarchy
@@ -294,6 +318,42 @@ export default function ProfileForm() {
     </StandardFormProvider>
   )
 }
+```
+
+### Async Options + Select Defaults
+
+If a select depends on async options (e.g. provinces/cities) and the record data
+is also async, React Hook Form will mount with empty defaults first. To avoid
+the select showing a placeholder on the first render, wait for both the record
+and the options to be ready, then `reset` and render the form after that reset.
+
+```typescript
+const emptyDefaults: FormValues = {
+  province: "",
+  city: "",
+  // ...other fields
+}
+
+const [isFormReady, setIsFormReady] = useState(false)
+
+const form = useForm<FormValues>({
+  resolver: zodResolver(schema),
+  defaultValues: emptyDefaults,
+})
+
+useEffect(() => {
+  if (!record || !options) return
+  reset(resolveDefaults(record, options))
+  setIsFormReady(true)
+}, [record, options, reset])
+
+if (!isFormReady) return <FormSkeleton />
+
+return (
+  <StandardFormProvider form={form} onSubmit={onSubmit}>
+    {/* ... */}
+  </StandardFormProvider>
+)
 ```
 
 ### Form with Mutation

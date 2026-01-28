@@ -36,6 +36,14 @@ export class BookingsImportInvalidFileTypeError extends ValidationError {
   }
 }
 
+export class BookingsImportInvalidCourtError extends ValidationError {
+  readonly code = "BOOKINGS_IMPORT_INVALID_COURT";
+
+  constructor(courtId: string, placeId: string) {
+    super("Selected court is not valid for this venue", { courtId, placeId });
+  }
+}
+
 export class BookingsImportJobNotFoundError extends NotFoundError {
   readonly code = "BOOKINGS_IMPORT_JOB_NOT_FOUND";
 
