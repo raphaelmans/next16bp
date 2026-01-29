@@ -23,9 +23,11 @@ interface PageHeaderProps {
   title: string;
   description?: string;
   breadcrumbs?: BreadcrumbItemType[];
+  breadcrumbClassName?: string;
   backHref?: string;
   backLabel?: string;
   actions?: React.ReactNode;
+  actionsClassName?: string;
   className?: string;
 }
 
@@ -33,16 +35,18 @@ export function PageHeader({
   title,
   description,
   breadcrumbs,
+  breadcrumbClassName,
   backHref,
   backLabel,
   actions,
+  actionsClassName,
   className,
 }: PageHeaderProps) {
   return (
     <div className={cn("flex flex-col gap-4 pb-6", className)}>
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <Breadcrumb>
+        <Breadcrumb className={breadcrumbClassName}>
           <BreadcrumbList>
             {breadcrumbs.map((item, index) => {
               const isLast = index === breadcrumbs.length - 1;
@@ -92,7 +96,11 @@ export function PageHeader({
             <p className="text-muted-foreground">{description}</p>
           )}
         </div>
-        {actions && <div className="flex items-center gap-2">{actions}</div>}
+        {actions && (
+          <div className={cn("flex items-center gap-2", actionsClassName)}>
+            {actions}
+          </div>
+        )}
       </div>
     </div>
   );

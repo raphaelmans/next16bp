@@ -1,10 +1,19 @@
 "use client";
 
+import { CalendarIcon } from "lucide-react";
 import type * as React from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { MobileDateStrip } from "@/features/discovery/components/mobile-date-strip";
 import { formatInTimeZone } from "@/shared/lib/format";
-import { getZonedDayKey } from "@/shared/lib/time-zone";
+import { getZonedDayKey, getZonedToday } from "@/shared/lib/time-zone";
 import { TimeRangePicker, TimeRangePickerSkeleton } from "./time-range-picker";
 import {
   type TimeSlot,
@@ -97,9 +106,17 @@ export function AvailabilityMonthView({
     ? days.filter((day) => day.dayKey === selectedDayKey)
     : days;
 
+  const [calendarDialogOpen, setCalendarDialogOpen] = useState(false);
+
+  const todayDate = useMemo(
+    () => getZonedToday(timeZone ?? "Asia/Manila"),
+    [timeZone],
+  );
+
   return (
     <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
-      <div className="space-y-3">
+      {/* Desktop: full calendar sidebar */}
+      <div className="hidden lg:block space-y-3">
         <div className="flex items-center justify-between">
           <p className="text-sm font-medium">Browse month</p>
           {onToday && (
@@ -123,6 +140,75 @@ export function AvailabilityMonthView({
           }}
           timeZone={timeZone}
         />
+      </div>
+
+      {/* Mobile: date strip + pick date button */}
+      <div className="lg:hidden space-y-3">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-medium">
+            {selectedDate
+              ? formatInTimeZone(
+                  selectedDate,
+                  timeZone ?? "Asia/Manila",
+                  "EEE, MMM d",
+                )
+              : "Select date"}
+          </p>
+          <div className="flex items-center gap-2">
+            {onToday && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onToday}
+              >
+                Today
+              </Button>
+            )}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setCalendarDialogOpen(true)}
+            >
+              <CalendarIcon className="h-4 w-4 mr-1.5" />
+              Pick date
+            </Button>
+          </div>
+        </div>
+        {selectedDate && (
+          <MobileDateStrip
+            selectedDate={selectedDate}
+            onDateSelect={(date) => onSelectDate(date)}
+            timeZone={timeZone ?? "Asia/Manila"}
+            todayDate={todayDate}
+          />
+        )}
+        <Dialog open={calendarDialogOpen} onOpenChange={setCalendarDialogOpen}>
+          <DialogContent className="sm:max-w-[350px]">
+            <DialogHeader>
+              <DialogTitle>Pick a date</DialogTitle>
+            </DialogHeader>
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={(date) => {
+                onSelectDate(date);
+                setCalendarDialogOpen(false);
+              }}
+              month={month}
+              onMonthChange={onMonthChange}
+              fromMonth={fromMonth}
+              toMonth={toMonth}
+              disabled={(date) => date < minDate || date > maxDate}
+              modifiers={{ available: availableDates }}
+              modifiersClassNames={{
+                available: "ring-1 ring-primary/40",
+              }}
+              timeZone={timeZone}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="space-y-4">

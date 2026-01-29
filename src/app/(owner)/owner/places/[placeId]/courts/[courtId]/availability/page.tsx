@@ -9,7 +9,7 @@ import {
   format,
   startOfMonth,
 } from "date-fns";
-import { Loader2, Minus, Plus, RefreshCw } from "lucide-react";
+import { ChevronDown, Loader2, Minus, Plus, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import * as React from "react";
@@ -815,8 +815,8 @@ export default function OwnerCourtAvailabilityPage() {
     >
       <div className="space-y-6">
         <PageHeader
-          title={`Availability · ${courtData.court.label}`}
-          description="Schedule-derived availability based on hours, pricing, blocks, and reservations."
+          title="Availability"
+          description={courtData.court.label}
           breadcrumbs={[
             { label: "My Venues", href: appRoutes.owner.places.base },
             {
@@ -825,17 +825,19 @@ export default function OwnerCourtAvailabilityPage() {
             },
             { label: "Availability" },
           ]}
+          breadcrumbClassName="hidden sm:block"
           backHref={appRoutes.owner.places.courts.base(placeId)}
           actions={
             <>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="w-full sm:w-auto">
                 <Link href={scheduleHref}>Edit schedule</Link>
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="w-full sm:w-auto">
                 <Link href={reservationsHref}>View bookings</Link>
               </Button>
             </>
           }
+          actionsClassName="flex-col sm:flex-row w-full sm:w-auto"
         />
 
         <Card>
@@ -868,7 +870,7 @@ export default function OwnerCourtAvailabilityPage() {
               <div className="space-y-2">
                 <p className="text-sm font-medium">Duration</p>
                 <div className="space-y-2">
-                  <InputGroup className="max-w-[240px]">
+                  <InputGroup className="w-full sm:max-w-[240px]">
                     <InputGroupButton
                       type="button"
                       size="icon-sm"
@@ -954,7 +956,8 @@ export default function OwnerCourtAvailabilityPage() {
                   Maintenance and walk-in bookings remove availability.
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2">
+              {/* Desktop: inline buttons */}
+              <div className="hidden lg:flex flex-wrap gap-2">
                 <Button
                   type="button"
                   variant="outline"
@@ -978,6 +981,37 @@ export default function OwnerCourtAvailabilityPage() {
                 >
                   Add guest booking
                 </Button>
+              </div>
+              {/* Mobile: dropdown */}
+              <div className="lg:hidden">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button type="button" variant="outline" className="w-full">
+                      Add action
+                      <ChevronDown className="ml-2 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem
+                      onSelect={() => openGuestBookingDialog()}
+                      disabled={createGuestBooking.isPending}
+                    >
+                      Guest booking
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={() => openWalkInDialog()}
+                      disabled={createWalkIn.isPending}
+                    >
+                      Walk-in booking
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={() => setMaintenanceOpen(true)}
+                      disabled={createMaintenance.isPending}
+                    >
+                      Maintenance block
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
 
