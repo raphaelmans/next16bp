@@ -27,6 +27,7 @@ export interface TimeRangePickerProps {
   onContinue?: () => void;
   continueLabel?: string;
   className?: string;
+  currentTimeISO?: string;
 }
 
 function isSlotAvailable(slot: TimeSlot): boolean {
@@ -211,6 +212,7 @@ interface TimeSlotRowProps {
   slot: TimeSlot;
   timeZone: string;
   showPrice: boolean;
+  isPast?: boolean;
 }
 
 const TimeSlotRow = React.memo(function TimeSlotRow({
@@ -218,6 +220,7 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
   slot,
   timeZone,
   showPrice,
+  isPast,
 }: TimeSlotRowProps) {
   const shouldReduceMotion = useReducedMotion();
   const motionTransition = shouldReduceMotion
@@ -235,7 +238,7 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
     })),
   );
 
-  const available = isSlotAvailable(slot);
+  const available = isSlotAvailable(slot) && !isPast;
   const isBooked = slot.status === "booked" || slot.status === "held";
   const isMaintenance = slot.unavailableReason === "MAINTENANCE";
   const isReserved = isBooked && !isMaintenance;
@@ -377,6 +380,7 @@ export function TimeRangePicker({
   onContinue,
   continueLabel = "Continue to review",
   className,
+  currentTimeISO,
 }: TimeRangePickerProps) {
   // Compute committed range from props
   const committedRange = React.useMemo(() => {
@@ -423,6 +427,7 @@ export function TimeRangePicker({
         onContinue={onContinue}
         continueLabel={continueLabel}
         className={className}
+        currentTimeISO={currentTimeISO}
       />
     </RangeSelectionProvider>
   );
@@ -437,6 +442,7 @@ function TimeRangePickerInner({
   onContinue,
   continueLabel,
   className,
+  currentTimeISO,
 }: {
   slots: TimeSlot[];
   timeZone: string;
@@ -445,6 +451,7 @@ function TimeRangePickerInner({
   onContinue?: () => void;
   continueLabel: string;
   className?: string;
+  currentTimeISO?: string;
 }) {
   const { pointerUp, setHoveredIdx } = useRangeSelection(
     useShallow((s) => ({
@@ -480,6 +487,7 @@ function TimeRangePickerInner({
             slot={slot}
             timeZone={timeZone}
             showPrice={showPrice}
+            isPast={currentTimeISO ? slot.startTime < currentTimeISO : false}
           />
         ))}
       </div>

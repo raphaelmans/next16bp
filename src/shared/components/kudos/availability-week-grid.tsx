@@ -59,6 +59,7 @@ export type AvailabilityWeekGridProps = {
   continueLabel?: string;
   todayDayKey: string;
   maxDayKey: string;
+  currentHour?: number;
 };
 
 // ---------------------------------------------------------------------------
@@ -397,6 +398,7 @@ export function AvailabilityWeekGrid({
   continueLabel = "Continue to review",
   todayDayKey,
   maxDayKey,
+  currentHour,
 }: AvailabilityWeekGridProps) {
   const allHours = React.useMemo(() => {
     let minHour = 23;
@@ -549,6 +551,7 @@ export function AvailabilityWeekGrid({
         todayDayKey={todayDayKey}
         maxDayKey={maxDayKey}
         toLinear={toLinear}
+        currentHour={currentHour}
       />
     </RangeSelectionProvider>
   );
@@ -571,6 +574,7 @@ interface WeekGridInnerProps {
   todayDayKey: string;
   maxDayKey: string;
   toLinear: (dayColIdx: number, hourIdx: number) => number;
+  currentHour?: number;
 }
 
 function WeekGridInner({
@@ -586,6 +590,7 @@ function WeekGridInner({
   todayDayKey,
   maxDayKey,
   toLinear,
+  currentHour,
 }: WeekGridInnerProps) {
   const { pointerUp, setHoveredIdx } = useRangeSelection(
     useShallow((s) => ({
@@ -692,7 +697,7 @@ function WeekGridInner({
             {dayKeys.map((dk, dayColIdx) => {
               const isPast = dk < todayDayKey;
               const isBeyondMax = dk > maxDayKey;
-              const isDisabled = isPast || isBeyondMax;
+              const isDayDisabled = isPast || isBeyondMax;
               const isToday = dk === todayDayKey;
               const hourMap = slotLookup.get(dk);
 
@@ -701,12 +706,16 @@ function WeekGridInner({
                   key={`col-${dk}`}
                   className={cn(
                     "relative border-l border-border/70",
-                    isDisabled && "opacity-40",
+                    isDayDisabled && "opacity-40",
                     isToday && "bg-primary/[0.02]",
                   )}
                 >
                   {allHours.map((hour, hourIdx) => {
                     const slot = hourMap?.get(hour);
+                    const isPastSlot =
+                      isToday &&
+                      currentHour !== undefined &&
+                      hour < currentHour;
                     return (
                       <WeekGridCell
                         key={`${dk}-${hour}`}
@@ -714,7 +723,7 @@ function WeekGridInner({
                         slot={slot}
                         dayKey={dk}
                         hourIdx={hourIdx}
-                        isDisabled={isDisabled}
+                        isDisabled={isDayDisabled || isPastSlot}
                         timeZone={timeZone}
                       />
                     );
