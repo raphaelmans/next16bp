@@ -21,16 +21,6 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
   disabled: boolean;
   cellIndex: number;
 }) {
-  const { setNodeRef, isOver } = useDroppable({
-    id: `timeline-cell-${dayKey}-${startMinute}`,
-    data: {
-      kind: "timeline-cell",
-      dayKey,
-      startMinute,
-    } satisfies TimelineCellData,
-    disabled,
-  });
-
   const cellState = useCellState(cellIndex);
   const pointerDown = useRangeSelection((s) => s.pointerDown);
   const pointerEnter = useRangeSelection((s) => s.pointerEnter);
@@ -38,22 +28,33 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
   const setHoveredIdx = useRangeSelection((s) => s.setHoveredIdx);
   const isCellAvailable = useRangeSelection((s) => s.config.isCellAvailable);
 
-  const isAvailable = !disabled && isCellAvailable(cellIndex);
+  const isCellOpen = isCellAvailable(cellIndex);
+  const isInteractive = !disabled && isCellOpen;
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: `timeline-cell-${dayKey}-${startMinute}`,
+    data: {
+      kind: "timeline-cell",
+      dayKey,
+      startMinute,
+    } satisfies TimelineCellData,
+    disabled: !isInteractive,
+  });
 
   const handlePointerDown = React.useCallback(
     (e: React.PointerEvent) => {
-      if (!isAvailable) return;
+      if (!isInteractive) return;
       e.preventDefault();
       pointerDown(cellIndex);
     },
-    [cellIndex, isAvailable, pointerDown],
+    [cellIndex, isInteractive, pointerDown],
   );
 
   const handlePointerEnter = React.useCallback(() => {
-    if (!isAvailable) return;
+    if (!isInteractive) return;
     pointerEnter(cellIndex);
     setHoveredIdx(cellIndex);
-  }, [cellIndex, isAvailable, pointerEnter, setHoveredIdx]);
+  }, [cellIndex, isInteractive, pointerEnter, setHoveredIdx]);
 
   const handlePointerLeave = React.useCallback(() => {
     setHoveredIdx(null);
@@ -61,20 +62,20 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
 
   const handleClick = React.useCallback(
     (e: React.MouseEvent) => {
-      if (!isAvailable) return;
+      if (!isInteractive) return;
       click(cellIndex, e.shiftKey);
     },
-    [cellIndex, click, isAvailable],
+    [cellIndex, click, isInteractive],
   );
 
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        if (isAvailable) click(cellIndex, e.shiftKey);
+        if (isInteractive) click(cellIndex, e.shiftKey);
       }
     },
-    [cellIndex, click, isAvailable],
+    [cellIndex, click, isInteractive],
   );
 
   const timeLabel = React.useMemo(() => {
@@ -87,15 +88,18 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
     <button
       type="button"
       ref={setNodeRef}
-      tabIndex={isAvailable ? 0 : -1}
-      aria-disabled={!isAvailable}
+      tabIndex={isInteractive ? 0 : -1}
+      aria-disabled={!isInteractive}
       className={cn(
         "group/cell relative block w-full h-[56px] rounded-md border-t border-border/70 transition-colors",
         "touch-none appearance-none",
         "bg-card",
-        isAvailable &&
+        isInteractive &&
           "border-l-2 border-dashed border-l-primary/15 hover:bg-primary/10 hover:border-l-primary/30 cursor-pointer",
-        isOver && !disabled && "ring-2 ring-primary/30 ring-inset bg-primary/5",
+        !isInteractive && "bg-muted/30 cursor-not-allowed",
+        isOver &&
+          isInteractive &&
+          "ring-2 ring-primary/30 ring-inset bg-primary/5",
         cellState.inRange && "bg-primary/10",
         cellState.isStart && "rounded-t-lg ring-t-2 ring-primary/40",
         cellState.isEnd && "rounded-b-lg",
@@ -108,7 +112,7 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
       onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
-      {isAvailable && !cellState.inRange && !cellState.isPendingStart && (
+      {isInteractive && !cellState.inRange && !cellState.isPendingStart && (
         <span className="pointer-events-none absolute inset-0 flex items-center justify-center gap-1 opacity-0 group-hover/cell:opacity-100 transition-opacity">
           <Plus className="size-3 text-primary/40" />
           <span className="text-[10px] font-medium text-primary/40">

@@ -67,6 +67,11 @@ import {
   BookingStudioProvider,
   useBookingStudio,
 } from "@/features/owner/components/booking-studio/booking-studio-provider";
+import {
+  buildOpenCellIndexSet,
+  getTimelineRangeForWeek,
+  getWindowsForDayOfWeek,
+} from "@/features/owner/components/booking-studio/court-hours";
 import { CustomBlockDialog } from "@/features/owner/components/booking-studio/custom-block-dialog";
 import {
   DraftRowCard,
@@ -427,20 +432,11 @@ function OwnerAvailabilityStudioInner() {
   );
   const timelineRange = React.useMemo(() => {
     if (!isWeekView) return selectedTimelineRange;
-
-    const windows = courtHoursQuery.data ?? [];
-    if (weekDayKeys.length === 0) return selectedTimelineRange;
-
-    const ranges = weekDayKeys.map((dk) => {
-      const dayStart = getZonedDayRangeFromDayKey(dk, placeTimeZone).start;
-      const dow = getZonedDate(dayStart, placeTimeZone).getDay();
-      return parseTimelineRange(windows, dow);
-    });
-
-    return {
-      startHour: Math.min(...ranges.map((range) => range.startHour)),
-      endHour: Math.max(...ranges.map((range) => range.endHour)),
-    };
+    return getTimelineRangeForWeek(
+      courtHoursQuery.data ?? [],
+      weekDayKeys,
+      placeTimeZone,
+    );
   }, [
     courtHoursQuery.data,
     isWeekView,
@@ -1563,14 +1559,38 @@ function OwnerAvailabilityStudioInner() {
       }
     }
 
+    const closedHourIndices = new Set<number>();
+    const hasCourtHours = (courtHoursQuery.data ?? []).length > 0;
+    if (hasCourtHours) {
+      const dayWindows = getWindowsForDayOfWeek(
+        courtHoursQuery.data ?? [],
+        dayOfWeek,
+      );
+      const openCellIndices = buildOpenCellIndexSet({
+        windowsForDay: dayWindows,
+        axisStartHour: startHour,
+        cellCount: hours.length,
+        snapMinutes: 60,
+      });
+
+      for (let i = 0; i < hours.length; i += 1) {
+        if (!openCellIndices.has(i)) {
+          closedHourIndices.add(i);
+        }
+      }
+    }
+
+    const isUnavailable = (idx: number) =>
+      blockedHourIndices.has(idx) || closedHourIndices.has(idx);
+
     return {
       isCellAvailable: (idx: number) =>
-        idx >= 0 && idx < hours.length && !blockedHourIndices.has(idx),
+        idx >= 0 && idx < hours.length && !isUnavailable(idx),
       computeRange: (anchorIdx: number, targetIdx: number) => {
         const lo = Math.min(anchorIdx, targetIdx);
         const hi = Math.max(anchorIdx, targetIdx);
         for (let i = lo; i <= hi; i++) {
-          if (blockedHourIndices.has(i)) return null;
+          if (isUnavailable(i)) return null;
         }
         return { startIdx: lo, endIdx: hi };
       },
@@ -1579,7 +1599,7 @@ function OwnerAvailabilityStudioInner() {
         let current = anchorIdx;
         while (current !== targetIdx) {
           const next = current + dir;
-          if (blockedHourIndices.has(next)) break;
+          if (isUnavailable(next)) break;
           current = next;
         }
         return current;
@@ -1600,6 +1620,8 @@ function OwnerAvailabilityStudioInner() {
     startHour,
     timelineBlocks,
     timelineReservations,
+    courtHoursQuery.data,
+    dayOfWeek,
   ]);
 
   // Track which day column committed the range in week view
@@ -2489,6 +2511,7 @@ function OwnerAvailabilityStudioInner() {
                                 timeZone={placeTimeZone}
                                 disabled={isDragDisabled}
                                 isPastDay={wdk < todayDayKey}
+                                courtHoursWindows={courtHoursQuery.data ?? []}
                                 pendingBlockIds={pendingBlockIds}
                                 onRemoveBlock={handleCancelBlock}
                                 committedRange={

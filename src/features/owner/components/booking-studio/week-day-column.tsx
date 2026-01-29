@@ -6,6 +6,12 @@ import {
   type RangeSelectionConfig,
   RangeSelectionProvider,
 } from "@/shared/components/kudos/range-selection";
+import {
+  buildOpenCellIndexSet,
+  type CourtHoursWindow,
+  getDayOfWeekForDayKey,
+  getWindowsForDayOfWeek,
+} from "./court-hours";
 import { DraftTimelineBlock } from "./draft-row-card";
 import { SelectableTimelineRow } from "./selectable-timeline-row";
 import { TimelineBlockItem } from "./timeline-block-item";
@@ -22,6 +28,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   timeZone,
   disabled,
   isPastDay,
+  courtHoursWindows,
   pendingBlockIds,
   onRemoveBlock,
   committedRange,
@@ -43,6 +50,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   timeZone: string;
   disabled: boolean;
   isPastDay?: boolean;
+  courtHoursWindows?: CourtHoursWindow[];
   pendingBlockIds: Set<string>;
   onRemoveBlock?: (blockId: string) => void;
   committedRange: { startIdx: number; endIdx: number } | null;
@@ -73,14 +81,35 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
       }
     }
 
+    const closedHourIndices = new Set<number>();
+    if (courtHoursWindows && courtHoursWindows.length > 0) {
+      const dayOfWeek = getDayOfWeekForDayKey(dayKey, timeZone);
+      const dayWindows = getWindowsForDayOfWeek(courtHoursWindows, dayOfWeek);
+      const openCellIndices = buildOpenCellIndexSet({
+        windowsForDay: dayWindows,
+        axisStartHour: startHour,
+        cellCount: hours.length,
+        snapMinutes: 60,
+      });
+
+      for (let i = 0; i < hours.length; i += 1) {
+        if (!openCellIndices.has(i)) {
+          closedHourIndices.add(i);
+        }
+      }
+    }
+
+    const isUnavailable = (idx: number) =>
+      blockedHourIndices.has(idx) || closedHourIndices.has(idx);
+
     return {
       isCellAvailable: (idx: number) =>
-        idx >= 0 && idx < hours.length && !blockedHourIndices.has(idx),
+        idx >= 0 && idx < hours.length && !isUnavailable(idx),
       computeRange: (anchorIdx: number, targetIdx: number) => {
         const lo = Math.min(anchorIdx, targetIdx);
         const hi = Math.max(anchorIdx, targetIdx);
         for (let i = lo; i <= hi; i++) {
-          if (blockedHourIndices.has(i)) return null;
+          if (isUnavailable(i)) return null;
         }
         return { startIdx: lo, endIdx: hi };
       },
@@ -89,7 +118,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
         let current = anchorIdx;
         while (current !== targetIdx) {
           const next = current + dir;
-          if (blockedHourIndices.has(next)) break;
+          if (isUnavailable(next)) break;
           current = next;
         }
         return current;
@@ -98,7 +127,16 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
         onCommitRange(dayKey, s, e);
       },
     };
-  }, [blocks, dayKey, hours, onCommitRange, reservations, startHour, timeZone]);
+  }, [
+    blocks,
+    courtHoursWindows,
+    dayKey,
+    hours,
+    onCommitRange,
+    reservations,
+    startHour,
+    timeZone,
+  ]);
 
   return (
     <RangeSelectionProvider
