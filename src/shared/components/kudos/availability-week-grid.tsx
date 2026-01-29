@@ -201,6 +201,13 @@ export function AvailabilityWeekGrid({
       const slot = hourMap.get(allHours[startIdx]);
       if (!slot) return;
       const slotCount = endIdx - startIdx + 1;
+      console.log("[AWG commitRange]", {
+        dayKey,
+        startIdx,
+        endIdx,
+        startTime: slot.startTime,
+        durationMinutes: slotCount * TIMELINE_SLOT_DURATION,
+      });
       onRangeChange({
         startTime: slot.startTime,
         durationMinutes: slotCount * TIMELINE_SLOT_DURATION,
@@ -213,6 +220,11 @@ export function AvailabilityWeekGrid({
     (dayKey: string, hourIdx: number) => {
       const hourMap = slotLookup.get(dayKey);
       const slot = hourMap?.get(allHours[hourIdx]);
+      console.log("[AWG pointerDown]", {
+        dayKey,
+        hourIdx,
+        available: slot ? isSlotAvailable(slot) : false,
+      });
       if (!slot || !isSlotAvailable(slot)) return;
       didDragRef.current = false;
       setAnchorCoord({ dayKey, hourIdx });
@@ -239,13 +251,21 @@ export function AvailabilityWeekGrid({
   );
 
   const handlePointerUp = React.useCallback(() => {
+    console.log("[AWG pointerUp]", {
+      anchorCoord,
+      hoverCoord,
+      didDrag: didDragRef.current,
+      committedCells,
+      isAwaitingEndClick,
+    });
     if (!anchorCoord || !hoverCoord) {
       setAnchorCoord(null);
       setHoverCoord(null);
       return;
     }
-    // Only commit a drag range if the pointer actually moved to a different cell
+
     if (didDragRef.current && anchorCoord.dayKey === hoverCoord.dayKey) {
+      // Drag: commit the dragged range
       const clamped = clampToContiguous(
         anchorCoord.dayKey,
         anchorCoord.hourIdx,
@@ -256,20 +276,61 @@ export function AvailabilityWeekGrid({
         anchorCoord.hourIdx,
         clamped,
       );
+      console.log("[AWG pointerUp drag commit]", { range });
       if (range) {
         commitRange(anchorCoord.dayKey, range.startIdx, range.endIdx);
         suppressClickRef.current = true;
       }
+    } else {
+      // Single tap — handle like click (preventDefault on pointerdown
+      // can suppress click events in some browsers)
+      const { dayKey, hourIdx } = anchorCoord;
+      console.log("[AWG pointerUp single tap]", { dayKey, hourIdx });
+      suppressClickRef.current = true;
+
+      // Two-click flow: second tap extends from committed start
+      if (
+        isAwaitingEndClick &&
+        committedCells.dayKey === dayKey &&
+        hourIdx !== committedCells.startIdx
+      ) {
+        const range = computeRange(dayKey, committedCells.startIdx, hourIdx);
+        if (range) {
+          commitRange(dayKey, range.startIdx, range.endIdx);
+        } else {
+          commitRange(dayKey, hourIdx, hourIdx);
+        }
+      } else {
+        // New start
+        commitRange(dayKey, hourIdx, hourIdx);
+      }
     }
+
     didDragRef.current = false;
     setAnchorCoord(null);
     setHoverCoord(null);
-  }, [anchorCoord, hoverCoord, clampToContiguous, commitRange, computeRange]);
+  }, [
+    anchorCoord,
+    hoverCoord,
+    clampToContiguous,
+    commitRange,
+    computeRange,
+    committedCells,
+    isAwaitingEndClick,
+  ]);
 
   const handleClick = React.useCallback(
     (dayKey: string, hourIdx: number, shiftKey: boolean) => {
       const hourMap = slotLookup.get(dayKey);
       const slot = hourMap?.get(allHours[hourIdx]);
+      console.log("[AWG click]", {
+        dayKey,
+        hourIdx,
+        shiftKey,
+        available: slot ? isSlotAvailable(slot) : false,
+        committedCells,
+        isAwaitingEndClick,
+      });
       if (!slot || !isSlotAvailable(slot)) return;
 
       // Shift+click to extend
@@ -311,10 +372,22 @@ export function AvailabilityWeekGrid({
 
   // Global pointer up
   React.useEffect(() => {
-    if (!isDragging) return;
-    const onUp = () => handlePointerUp();
+    if (!isDragging) {
+      console.log("[AWG effect] isDragging=false, no global listener");
+      return;
+    }
+    console.log(
+      "[AWG effect] isDragging=true, adding global pointerup listener",
+    );
+    const onUp = () => {
+      console.log("[AWG global pointerup fired]");
+      handlePointerUp();
+    };
     window.addEventListener("pointerup", onUp);
-    return () => window.removeEventListener("pointerup", onUp);
+    return () => {
+      console.log("[AWG effect cleanup] removing global pointerup listener");
+      window.removeEventListener("pointerup", onUp);
+    };
   }, [isDragging, handlePointerUp]);
 
   // Determine active range for rendering
@@ -618,6 +691,11 @@ export function AvailabilityWeekGrid({
                         }}
                         onPointerLeave={() => setHoveredCoord(null)}
                         onClick={(e) => {
+                          console.log("[AWG onClick]", {
+                            dk,
+                            hourIdx,
+                            suppressed: suppressClickRef.current,
+                          });
                           if (suppressClickRef.current) {
                             suppressClickRef.current = false;
                             return;

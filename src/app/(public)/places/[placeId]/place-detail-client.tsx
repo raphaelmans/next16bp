@@ -246,6 +246,7 @@ export default function PlaceDetailPage() {
   const availabilitySectionRef = React.useRef<HTMLDivElement | null>(null);
 
   const clearSelection = React.useCallback((resetDuration = false) => {
+    console.log("[PDC clearSelection]", { resetDuration });
     setSelectedStartTime(undefined);
     setSelectedSlotId(undefined);
     if (resetDuration) {
@@ -845,6 +846,7 @@ export default function PlaceDetailPage() {
 
   const handleCourtRangeChange = React.useCallback(
     (range: { startTime: string; durationMinutes: number }) => {
+      console.log("[PDC handleCourtRangeChange]", range);
       setSelectedStartTime(range.startTime);
       setSelectedSlotId(undefined);
       setDurationMinutes(range.durationMinutes);
@@ -854,6 +856,7 @@ export default function PlaceDetailPage() {
 
   const handleAnyRangeChange = React.useCallback(
     (range: { startTime: string; durationMinutes: number }) => {
+      console.log("[PDC handleAnyRangeChange]", range);
       if (!range.startTime) {
         setSelectedStartTime(undefined);
         setSelectedSlotId(undefined);

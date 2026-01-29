@@ -93,7 +93,18 @@ export function TimeRangePicker({
   const [anchorIdx, setAnchorIdx] = React.useState<number | null>(null);
   const [hoverIdx, setHoverIdx] = React.useState<number | null>(null);
   const [hoveredIdx, setHoveredIdx] = React.useState<number | null>(null);
+  const suppressClickRef = React.useRef(false);
   const isDragging = anchorIdx !== null;
+
+  // DEBUG — temporary logging
+  console.log("[TRP render]", {
+    anchorIdx,
+    hoverIdx,
+    isDragging,
+    selectedStartTime,
+    selectedDurationMinutes,
+    slotsLen: slots.length,
+  });
 
   // Compute committed selection from props
   const committedRange = React.useMemo(() => {
@@ -103,6 +114,7 @@ export function TimeRangePicker({
     const slotCount = selectedDurationMinutes / SLOT_STEP_MINUTES;
     const endIdx = startIdx + slotCount - 1;
     if (endIdx >= slots.length) return null;
+    console.log("[TRP committedRange]", { startIdx, endIdx });
     return { startIdx, endIdx };
   }, [selectedStartTime, selectedDurationMinutes, slots]);
 
@@ -135,6 +147,12 @@ export function TimeRangePicker({
       const startSlot = slots[startIdx];
       const slotCount = endIdx - startIdx + 1;
       const durationMinutes = slotCount * SLOT_STEP_MINUTES;
+      console.log("[TRP commitRange]", {
+        startIdx,
+        endIdx,
+        startTime: startSlot.startTime,
+        durationMinutes,
+      });
       onChange?.({ startTime: startSlot.startTime, durationMinutes });
     },
     [onChange, slots],
@@ -142,6 +160,10 @@ export function TimeRangePicker({
 
   const handlePointerDown = React.useCallback(
     (idx: number) => {
+      console.log("[TRP pointerDown]", {
+        idx,
+        available: isSlotAvailable(slots[idx]),
+      });
       if (!isSlotAvailable(slots[idx])) return;
       setAnchorIdx(idx);
       setHoverIdx(idx);
@@ -158,29 +180,88 @@ export function TimeRangePicker({
   );
 
   const handlePointerUp = React.useCallback(() => {
+    console.log("[TRP pointerUp]", { anchorIdx, hoverIdx, committedRange });
     if (anchorIdx === null || hoverIdx === null) {
       setAnchorIdx(null);
       setHoverIdx(null);
       return;
     }
 
-    // Only commit on actual drag (different slots); single clicks are handled by handleClick
     if (anchorIdx !== hoverIdx) {
+      // Drag: commit the dragged range
       const clampedTarget = clampToContiguous(slots, anchorIdx, hoverIdx);
       const range = computeContiguousRange(slots, anchorIdx, clampedTarget);
+      console.log("[TRP pointerUp drag commit]", {
+        anchorIdx,
+        hoverIdx,
+        clampedTarget,
+        range,
+      });
       if (range) {
         commitRange(range.startIdx, range.endIdx);
+        suppressClickRef.current = true;
+      }
+    } else {
+      // Single tap — handle like click (preventDefault on pointerdown
+      // can suppress click events in some browsers)
+      const idx = anchorIdx;
+      console.log("[TRP pointerUp single tap]", { idx, committedRange });
+      suppressClickRef.current = true;
+
+      // Two-click flow: second tap extends from committed start
+      if (
+        committedRange &&
+        committedRange.startIdx === committedRange.endIdx &&
+        idx !== committedRange.startIdx
+      ) {
+        const range = computeContiguousRange(
+          slots,
+          committedRange.startIdx,
+          idx,
+        );
+        if (range) {
+          commitRange(range.startIdx, range.endIdx);
+        } else {
+          commitRange(idx, idx);
+        }
+      } else {
+        // New start
+        commitRange(idx, idx);
       }
     }
 
     setAnchorIdx(null);
     setHoverIdx(null);
-  }, [anchorIdx, commitRange, hoverIdx, slots]);
+  }, [anchorIdx, commitRange, committedRange, hoverIdx, slots]);
+
+  // Reset drag state when the slot list changes (e.g. day switch)
+  const slotsRef = React.useRef(slots);
+  React.useEffect(() => {
+    if (slotsRef.current !== slots) {
+      slotsRef.current = slots;
+      setAnchorIdx(null);
+      setHoverIdx(null);
+      setHoveredIdx(null);
+    }
+  }, [slots]);
 
   // Click: two-click flow (tap start, tap end) + shift-click to extend
   const handleClick = React.useCallback(
     (idx: number, shiftKey: boolean) => {
+      console.log("[TRP click]", {
+        idx,
+        shiftKey,
+        committedRange,
+        available: isSlotAvailable(slots[idx]),
+      });
       if (!isSlotAvailable(slots[idx])) return;
+
+      // Clear stale drag state from pointerdown (the global pointerup
+      // listener is registered via useEffect which runs AFTER render, so
+      // on a quick tap the pointerup event fires before the listener
+      // exists, leaving anchorIdx stuck).
+      setAnchorIdx(null);
+      setHoverIdx(null);
 
       if (shiftKey && committedRange) {
         // Shift+click: extend from committed start
@@ -234,10 +315,22 @@ export function TimeRangePicker({
 
   // Global pointer up listener
   React.useEffect(() => {
-    if (!isDragging) return;
-    const onUp = () => handlePointerUp();
+    if (!isDragging) {
+      console.log("[TRP effect] isDragging=false, no global listener");
+      return;
+    }
+    console.log(
+      "[TRP effect] isDragging=true, adding global pointerup listener",
+    );
+    const onUp = () => {
+      console.log("[TRP global pointerup fired]");
+      handlePointerUp();
+    };
     window.addEventListener("pointerup", onUp);
-    return () => window.removeEventListener("pointerup", onUp);
+    return () => {
+      console.log("[TRP effect cleanup] removing global pointerup listener");
+      window.removeEventListener("pointerup", onUp);
+    };
   }, [isDragging, handlePointerUp]);
 
   // Compute total price for range
@@ -402,7 +495,15 @@ export function TimeRangePicker({
               }}
               onPointerLeave={() => setHoveredIdx(null)}
               onClick={(e) => {
-                if (!isDragging) handleClick(idx, e.shiftKey);
+                console.log("[TRP onClick guard]", {
+                  idx,
+                  suppressed: suppressClickRef.current,
+                });
+                if (suppressClickRef.current) {
+                  suppressClickRef.current = false;
+                  return;
+                }
+                handleClick(idx, e.shiftKey);
               }}
               onKeyDown={(e) => handleKeyDown(e, idx)}
             >
