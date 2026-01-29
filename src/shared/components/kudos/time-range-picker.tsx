@@ -17,6 +17,8 @@ export interface TimeRangePickerProps {
   showPrice?: boolean;
   onChange?: (range: { startTime: string; durationMinutes: number }) => void;
   onClear?: () => void;
+  onContinue?: () => void;
+  continueLabel?: string;
   className?: string;
 }
 
@@ -83,6 +85,8 @@ export function TimeRangePicker({
   showPrice = true,
   onChange,
   onClear,
+  onContinue,
+  continueLabel = "Continue to review",
   className,
 }: TimeRangePickerProps) {
   const shouldReduceMotion = useReducedMotion();
@@ -309,15 +313,29 @@ export function TimeRangePicker({
                   </p>
                 </div>
               </div>
-              {onClear && (
-                <button
-                  type="button"
-                  onClick={onClear}
-                  className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  Clear
-                </button>
-              )}
+              <div className="flex items-center gap-2">
+                {onClear && (
+                  <button
+                    type="button"
+                    onClick={onClear}
+                    className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  >
+                    Clear
+                  </button>
+                )}
+                {onContinue &&
+                  !isAwaitingEndClick &&
+                  activeRange &&
+                  activeRange.startIdx !== activeRange.endIdx && (
+                    <button
+                      type="button"
+                      onClick={onContinue}
+                      className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                    >
+                      {continueLabel}
+                    </button>
+                  )}
+              </div>
             </div>
           </motion.div>
         )}

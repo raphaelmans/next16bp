@@ -4,9 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays } from "date-fns";
 import {
   AlertCircle,
+  AlertTriangle,
   ArrowRight,
   BadgeCheck,
   Calendar,
+  ChevronDown,
   CircleHelp,
   Clock,
   Copy,
@@ -14,9 +16,8 @@ import {
   Flag,
   Loader2,
   MapPin,
-  Minus,
   Phone,
-  Plus,
+  RefreshCw,
   ShieldCheck,
   XCircle,
 } from "lucide-react";
@@ -34,8 +35,10 @@ import {
   StandardFormSelect,
   StandardFormTextarea,
 } from "@/components/form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Calendar as CalendarWidget } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -47,27 +50,25 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  InputGroup,
-  InputGroupButton,
-  InputGroupInput,
-  InputGroupText,
-} from "@/components/ui/input-group";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useSession } from "@/features/auth";
 import { PhotoGallery } from "@/features/discovery/components";
 import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
+import { usePlaceDetail } from "@/features/discovery/hooks";
+import { cn } from "@/lib/utils";
 import {
-  usePlaceAvailability,
-  usePlaceDetail,
-} from "@/features/discovery/hooks";
-import {
+  AvailabilityWeekGrid,
+  AvailabilityWeekGridSkeleton,
   GoogleMapsEmbed,
   KudosDatePicker,
+  TimeRangePicker,
+  TimeRangePickerSkeleton,
   type TimeSlot,
-  TimeSlotPicker,
-  TimeSlotPickerSkeleton,
 } from "@/shared/components/kudos";
 import { Container } from "@/shared/components/layout";
 import { S } from "@/shared/kernel/schemas";
@@ -81,16 +82,81 @@ import {
   formatInTimeZone,
 } from "@/shared/lib/format";
 import { buildViberDeepLink, toDialablePhone } from "@/shared/lib/phone";
-import { getZonedDayKey, getZonedToday } from "@/shared/lib/time-zone";
+import {
+  getZonedDayKey,
+  getZonedDayRangeForInstant,
+  getZonedDayRangeFromDayKey,
+  getZonedStartOfDayIso,
+  getZonedToday,
+  toUtcISOString,
+} from "@/shared/lib/time-zone";
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
-const MIN_DURATION_HOURS = 1;
-const MAX_DURATION_HOURS = 24;
 const DEFAULT_DURATION_MINUTES = 60;
+const TIMELINE_SLOT_DURATION = 60;
 
-const clampDurationHours = (value: number) =>
-  Math.min(Math.max(Math.round(value), MIN_DURATION_HOURS), MAX_DURATION_HOURS);
+const parseDayKeyToDate = (dayKey: string, timeZone?: string) =>
+  getZonedDayRangeFromDayKey(dayKey, timeZone).start;
+
+const buildAvailabilityId = (
+  courtId: string,
+  startTime: string,
+  duration: number,
+) => `${courtId}-${startTime}-${duration}`;
+
+const getWeekStartDayKey = (dayKey: string, timeZone: string): string => {
+  const dayStart = getZonedDayRangeFromDayKey(dayKey, timeZone).start;
+  const dayOfWeek = dayStart.getDay();
+  const delta = (dayOfWeek - 0 + 7) % 7;
+  const weekStart = addDays(dayStart, -delta);
+  return getZonedDayKey(weekStart, timeZone);
+};
+
+const getWeekDayKeys = (
+  weekStartDayKey: string,
+  timeZone: string,
+): string[] => {
+  const start = parseDayKeyToDate(weekStartDayKey, timeZone);
+  return Array.from({ length: 7 }, (_, i) =>
+    getZonedDayKey(addDays(start, i), timeZone),
+  );
+};
+
+type AvailabilityErrorInfo = {
+  isBookingWindowError: boolean;
+  isError: boolean;
+  refetch: () => void;
+};
+
+const getAvailabilityErrorInfo = (
+  error: unknown,
+  refetch: () => void,
+): AvailabilityErrorInfo => {
+  if (!error) {
+    return { isBookingWindowError: false, isError: false, refetch };
+  }
+
+  const isRecord = (v: unknown): v is Record<string, unknown> =>
+    typeof v === "object" && v !== null;
+
+  if (isRecord(error)) {
+    const data = isRecord(error.data) ? error.data : null;
+    if (data?.code === "BOOKING_WINDOW_EXCEEDED") {
+      return { isBookingWindowError: true, isError: true, refetch };
+    }
+
+    const message = error.message;
+    if (
+      typeof message === "string" &&
+      message.includes("beyond the maximum booking window")
+    ) {
+      return { isBookingWindowError: true, isError: true, refetch };
+    }
+  }
+
+  return { isBookingWindowError: false, isError: true, refetch };
+};
 
 const claimFormSchema = z.object({
   organizationId: S.ids.organizationId,
@@ -161,44 +227,27 @@ export default function PlaceDetailPage() {
   const [durationMinutes, setDurationMinutes] = React.useState(
     DEFAULT_DURATION_MINUTES,
   );
-  const [durationHoursDraft, setDurationHoursDraft] = React.useState(
-    String(DEFAULT_DURATION_MINUTES / 60),
-  );
   const [selectedSportId, setSelectedSportId] = React.useState<string>();
   const [selectionMode, setSelectionMode] = React.useState<"any" | "court">(
-    "any",
+    "court",
   );
   const [selectedCourtId, setSelectedCourtId] = React.useState<string>();
-  const [selectedSlotId, setSelectedSlotId] = React.useState<string>();
-
-  const sportSectionRef = React.useRef<HTMLDivElement | null>(null);
-  const courtSectionRef = React.useRef<HTMLDivElement | null>(null);
-  const durationSectionRef = React.useRef<HTMLDivElement | null>(null);
-  const dateSectionRef = React.useRef<HTMLDivElement | null>(null);
-  const timesSectionRef = React.useRef<HTMLDivElement | null>(null);
-
-  const resetSelection = React.useCallback(() => {
-    setSelectedSlotId(undefined);
-  }, []);
-
-  const durationHours = durationMinutes / 60;
-
-  const commitDurationHours = React.useCallback(
-    (hours: number) => {
-      const clampedHours = clampDurationHours(hours);
-      const nextMinutes = clampedHours * 60;
-      setDurationMinutes(nextMinutes);
-      setDurationHoursDraft(String(clampedHours));
-      if (nextMinutes !== durationMinutes) {
-        resetSelection();
-      }
-    },
-    [durationMinutes, resetSelection],
+  const [selectedStartTime, setSelectedStartTime] = React.useState<string>();
+  const [_selectedSlotId, setSelectedSlotId] = React.useState<string>();
+  const [courtViewMode, setCourtViewMode] = React.useState<"week" | "day">(
+    "week",
   );
+  const [anyViewMode, setAnyViewMode] = React.useState<"week" | "day">("week");
 
-  React.useEffect(() => {
-    setDurationHoursDraft(String(durationMinutes / 60));
-  }, [durationMinutes]);
+  const availabilitySectionRef = React.useRef<HTMLDivElement | null>(null);
+
+  const clearSelection = React.useCallback((resetDuration = false) => {
+    setSelectedStartTime(undefined);
+    setSelectedSlotId(undefined);
+    if (resetDuration) {
+      setDurationMinutes(DEFAULT_DURATION_MINUTES);
+    }
+  }, []);
 
   const scrollToSection = React.useCallback(
     (ref: React.RefObject<HTMLElement | null>) => {
@@ -215,47 +264,6 @@ export default function PlaceDetailPage() {
     [],
   );
 
-  const handleDurationDraftChange = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      setDurationHoursDraft(value);
-      if (!value) return;
-      const parsed = Number(value);
-      if (!Number.isFinite(parsed) || !Number.isInteger(parsed)) return;
-      if (parsed < MIN_DURATION_HOURS || parsed > MAX_DURATION_HOURS) return;
-      commitDurationHours(parsed);
-    },
-    [commitDurationHours],
-  );
-
-  const handleDurationBlur = React.useCallback(() => {
-    if (!durationHoursDraft.trim()) {
-      commitDurationHours(MIN_DURATION_HOURS);
-      return;
-    }
-    const parsed = Number(durationHoursDraft);
-    if (!Number.isFinite(parsed)) {
-      commitDurationHours(MIN_DURATION_HOURS);
-      return;
-    }
-    commitDurationHours(parsed);
-  }, [commitDurationHours, durationHoursDraft]);
-
-  const handleDurationStep = React.useCallback(
-    (direction: "increase" | "decrease") => {
-      const draftValue = durationHoursDraft.trim();
-      const parsed = Number(draftValue);
-      const baseHours =
-        draftValue !== "" && Number.isFinite(parsed) && Number.isInteger(parsed)
-          ? parsed
-          : durationHours;
-      const nextHours =
-        direction === "increase" ? baseHours + 1 : baseHours - 1;
-      commitDurationHours(nextHours);
-    },
-    [commitDurationHours, durationHours, durationHoursDraft],
-  );
-
   const { data: place, isLoading } = usePlaceDetail({
     placeIdOrSlug,
   });
@@ -263,10 +271,6 @@ export default function PlaceDetailPage() {
   const placeSlugOrId = place?.slug ?? place?.id ?? placeIdOrSlug;
   const analyticsPlaceId = place?.id ?? placeIdOrSlug;
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";
-  const maxBookingDate = React.useMemo(
-    () => addDays(getZonedToday(placeTimeZone), MAX_BOOKING_WINDOW_DAYS),
-    [placeTimeZone],
-  );
   const {
     isBookable,
     isCurated,
@@ -325,7 +329,9 @@ export default function PlaceDetailPage() {
 
   const courtsForSport = React.useMemo(() => {
     if (!place || !selectedSportId) return [];
-    return place.courts.filter((court) => court.sportId === selectedSportId);
+    return place.courts
+      .filter((court) => court.sportId === selectedSportId)
+      .filter((court) => court.isActive);
   }, [place, selectedSportId]);
 
   React.useEffect(() => {
@@ -339,63 +345,421 @@ export default function PlaceDetailPage() {
     if (!isBookable) return;
     if (selectionMode !== "court") return;
     if (selectedCourtId) return;
-    const firstCourt = courtsForSport.find((court) => court.isActive);
-    if (firstCourt) {
-      setSelectedCourtId(firstCourt.id);
+    if (courtsForSport[0]?.id) {
+      setSelectedCourtId(courtsForSport[0].id);
     }
   }, [courtsForSport, selectedCourtId, selectionMode, isBookable]);
 
-  const availabilityQuery = usePlaceAvailability({
-    place: showBooking ? (place ?? undefined) : undefined,
-    sportId: selectedSportId,
-    courtId: selectionMode === "court" ? selectedCourtId : undefined,
-    date: selectedDate,
-    durationMinutes,
-    mode: selectionMode,
-  });
-
-  const availability = availabilityQuery.data ?? [];
-  const availabilityDiagnostics = availabilityQuery.diagnostics;
-  const isLoadingAvailability = availabilityQuery.isLoading;
-
-  const timeSlots: TimeSlot[] = React.useMemo(
-    () =>
-      availability.map((slot) => ({
-        id: slot.id,
-        startTime: slot.startTime,
-        endTime: slot.endTime,
-        priceCents: slot.totalPriceCents,
-        currency: slot.currency,
-        status: "available",
-      })),
-    [availability],
+  const today = React.useMemo(
+    () => getZonedToday(placeTimeZone),
+    [placeTimeZone],
+  );
+  const maxBookingDate = React.useMemo(
+    () => addDays(today, MAX_BOOKING_WINDOW_DAYS),
+    [today],
+  );
+  const todayDayKey = React.useMemo(
+    () => getZonedDayKey(today, placeTimeZone),
+    [placeTimeZone, today],
+  );
+  const maxDayKey = React.useMemo(
+    () => getZonedDayKey(maxBookingDate, placeTimeZone),
+    [maxBookingDate, placeTimeZone],
+  );
+  const todayRange = React.useMemo(
+    () => getZonedDayRangeForInstant(today, placeTimeZone),
+    [placeTimeZone, today],
   );
 
-  const selectedSlot = availability.find((slot) => slot.id === selectedSlotId);
-  const hasSelectedDate = !!selectedDate;
-  const hasSelectedSlot = !!selectedSlot;
-  const handleSlotSelect = React.useCallback((slot: TimeSlot) => {
-    setSelectedSlotId(slot.id);
-  }, []);
+  React.useEffect(() => {
+    if (!showBooking) return;
+    if (!selectedDate) {
+      setSelectedDate(today);
+      return;
+    }
+    const selectedRange = getZonedDayRangeForInstant(
+      selectedDate,
+      placeTimeZone,
+    );
+    if (selectedRange.start < todayRange.start) {
+      setSelectedDate(today);
+    }
+  }, [placeTimeZone, selectedDate, showBooking, today, todayRange.start]);
+
+  const selectedDayKey = React.useMemo(
+    () => getZonedDayKey(selectedDate ?? today, placeTimeZone),
+    [placeTimeZone, selectedDate, today],
+  );
+
+  const formattedDateLabel = React.useMemo(
+    () =>
+      selectedDate
+        ? formatInTimeZone(selectedDate, placeTimeZone, "MMM d, yyyy")
+        : "",
+    [placeTimeZone, selectedDate],
+  );
+
+  const isCourtMode = selectionMode === "court";
+  const isCourtWeekView = courtViewMode === "week";
+  const weekStartDayKey = React.useMemo(
+    () => getWeekStartDayKey(selectedDayKey, placeTimeZone),
+    [placeTimeZone, selectedDayKey],
+  );
+  const weekDayKeys = React.useMemo(
+    () => getWeekDayKeys(weekStartDayKey, placeTimeZone),
+    [placeTimeZone, weekStartDayKey],
+  );
+  const weekRangeStartIso = React.useMemo(() => {
+    const weekStart = parseDayKeyToDate(
+      weekDayKeys[0] ?? selectedDayKey,
+      placeTimeZone,
+    );
+    const clamped = weekStart < todayRange.start ? todayRange.start : weekStart;
+    return toUtcISOString(clamped);
+  }, [placeTimeZone, selectedDayKey, todayRange.start, weekDayKeys]);
+  const weekRangeEndIso = React.useMemo(() => {
+    const weekEnd = getZonedDayRangeForInstant(
+      parseDayKeyToDate(weekDayKeys[6] ?? selectedDayKey, placeTimeZone),
+      placeTimeZone,
+    ).end;
+    const maxEnd = getZonedDayRangeForInstant(
+      maxBookingDate,
+      placeTimeZone,
+    ).end;
+    return toUtcISOString(weekEnd > maxEnd ? maxEnd : weekEnd);
+  }, [maxBookingDate, placeTimeZone, selectedDayKey, weekDayKeys]);
+
+  const courtDayDateIso = React.useMemo(() => {
+    if (!isCourtMode || isCourtWeekView) return "";
+    return getZonedStartOfDayIso(selectedDate ?? today, placeTimeZone);
+  }, [isCourtMode, isCourtWeekView, placeTimeZone, selectedDate, today]);
+
+  const courtDayAvailabilityQuery = trpc.availability.getForCourt.useQuery(
+    {
+      courtId: selectedCourtId ?? "",
+      date: courtDayDateIso,
+      durationMinutes: TIMELINE_SLOT_DURATION,
+      includeUnavailable: true,
+    },
+    {
+      enabled:
+        showBooking &&
+        isCourtMode &&
+        !isCourtWeekView &&
+        !!selectedCourtId &&
+        !!courtDayDateIso,
+    },
+  );
+
+  const courtWeekAvailabilityQuery =
+    trpc.availability.getForCourtRange.useQuery(
+      {
+        courtId: selectedCourtId ?? "",
+        startDate: weekRangeStartIso,
+        endDate: weekRangeEndIso,
+        durationMinutes: TIMELINE_SLOT_DURATION,
+        includeUnavailable: true,
+      },
+      {
+        enabled:
+          showBooking && isCourtMode && isCourtWeekView && !!selectedCourtId,
+      },
+    );
+
+  // "Any court" week/day query — uses 60-min slots like court mode
+  const anyWeekDayDateIso = React.useMemo(() => {
+    if (selectionMode !== "any" || anyViewMode !== "day") return "";
+    return getZonedStartOfDayIso(selectedDate ?? today, placeTimeZone);
+  }, [anyViewMode, placeTimeZone, selectedDate, selectionMode, today]);
+
+  const anyWeekAvailabilityQuery =
+    trpc.availability.getForPlaceSportRange.useQuery(
+      {
+        placeId: place?.id ?? "",
+        sportId: selectedSportId ?? "",
+        startDate: weekRangeStartIso,
+        endDate: weekRangeEndIso,
+        durationMinutes: TIMELINE_SLOT_DURATION,
+        includeUnavailable: true,
+        includeCourtOptions: false,
+      },
+      {
+        enabled:
+          showBooking &&
+          selectionMode === "any" &&
+          anyViewMode === "week" &&
+          !!place?.id &&
+          !!selectedSportId,
+      },
+    );
+
+  const anyDayAvailabilityQuery =
+    trpc.availability.getForPlaceSportRange.useQuery(
+      {
+        placeId: place?.id ?? "",
+        sportId: selectedSportId ?? "",
+        startDate: anyWeekDayDateIso,
+        endDate: anyWeekDayDateIso
+          ? toUtcISOString(
+              getZonedDayRangeForInstant(
+                new Date(anyWeekDayDateIso),
+                placeTimeZone,
+              ).end,
+            )
+          : "",
+        durationMinutes: TIMELINE_SLOT_DURATION,
+        includeUnavailable: true,
+        includeCourtOptions: false,
+      },
+      {
+        enabled:
+          showBooking &&
+          selectionMode === "any" &&
+          anyViewMode === "day" &&
+          !!place?.id &&
+          !!selectedSportId &&
+          !!anyWeekDayDateIso,
+      },
+    );
+
+  const anyWeekSlotsByDay = React.useMemo(() => {
+    if (selectionMode !== "any" || anyViewMode !== "week")
+      return new Map<string, TimeSlot[]>();
+    const options = anyWeekAvailabilityQuery.data?.options ?? [];
+    const byDay = new Map<string, TimeSlot[]>();
+    for (const option of options) {
+      const dayKey = getZonedDayKey(option.startTime, placeTimeZone);
+      const slot: TimeSlot = {
+        id: buildAvailabilityId(
+          option.courtId,
+          option.startTime,
+          TIMELINE_SLOT_DURATION,
+        ),
+        startTime: option.startTime,
+        endTime: option.endTime,
+        priceCents: option.totalPriceCents,
+        currency: option.currency ?? "PHP",
+        status: option.status === "BOOKED" ? "booked" : "available",
+        unavailableReason:
+          (option.unavailableReason as TimeSlot["unavailableReason"]) ??
+          undefined,
+      };
+      const existing = byDay.get(dayKey);
+      if (existing) {
+        existing.push(slot);
+      } else {
+        byDay.set(dayKey, [slot]);
+      }
+    }
+    for (const [, slots] of byDay) {
+      slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    }
+    return byDay;
+  }, [
+    anyViewMode,
+    anyWeekAvailabilityQuery.data,
+    placeTimeZone,
+    selectionMode,
+  ]);
+
+  const anyDaySlots: TimeSlot[] = React.useMemo(() => {
+    if (selectionMode !== "any" || anyViewMode !== "day") return [];
+    const options = anyDayAvailabilityQuery.data?.options ?? [];
+    return options
+      .map((option) => ({
+        id: buildAvailabilityId(
+          option.courtId,
+          option.startTime,
+          TIMELINE_SLOT_DURATION,
+        ),
+        startTime: option.startTime,
+        endTime: option.endTime,
+        priceCents: option.totalPriceCents,
+        currency: option.currency ?? "PHP",
+        status:
+          option.status === "BOOKED"
+            ? ("booked" as const)
+            : ("available" as const),
+        unavailableReason:
+          (option.unavailableReason as TimeSlot["unavailableReason"]) ??
+          undefined,
+      }))
+      .sort((a, b) => a.startTime.localeCompare(b.startTime));
+  }, [anyDayAvailabilityQuery.data, anyViewMode, selectionMode]);
+
+  const mapCourtOptionsToSlots = React.useCallback(
+    (
+      options: {
+        courtId: string;
+        startTime: string;
+        endTime: string;
+        totalPriceCents: number;
+        currency: string | null;
+        status?: string;
+        unavailableReason?: string | null;
+      }[],
+    ): TimeSlot[] =>
+      options.map((option) => ({
+        id: buildAvailabilityId(
+          option.courtId,
+          option.startTime,
+          TIMELINE_SLOT_DURATION,
+        ),
+        startTime: option.startTime,
+        endTime: option.endTime,
+        priceCents: option.totalPriceCents,
+        currency: option.currency ?? "PHP",
+        status: option.status === "BOOKED" ? "booked" : "available",
+        unavailableReason:
+          (option.unavailableReason as TimeSlot["unavailableReason"]) ??
+          undefined,
+      })),
+    [],
+  );
+
+  const courtDaySlots: TimeSlot[] = React.useMemo(() => {
+    if (!isCourtMode || isCourtWeekView) return [];
+    return mapCourtOptionsToSlots(
+      courtDayAvailabilityQuery.data?.options ?? [],
+    );
+  }, [
+    courtDayAvailabilityQuery.data,
+    isCourtMode,
+    isCourtWeekView,
+    mapCourtOptionsToSlots,
+  ]);
+
+  const courtDayDiagnostics = React.useMemo(() => {
+    if (!isCourtMode || isCourtWeekView) return null;
+    return courtDayAvailabilityQuery.data?.diagnostics ?? null;
+  }, [courtDayAvailabilityQuery.data, isCourtMode, isCourtWeekView]);
+
+  const courtWeekSlotsByDay = React.useMemo(() => {
+    if (!isCourtMode || !isCourtWeekView) return new Map<string, TimeSlot[]>();
+    const allSlots = mapCourtOptionsToSlots(
+      courtWeekAvailabilityQuery.data?.options ?? [],
+    );
+    const byDay = new Map<string, TimeSlot[]>();
+    for (const slot of allSlots) {
+      const dayKey = getZonedDayKey(slot.startTime, placeTimeZone);
+      const existing = byDay.get(dayKey);
+      if (existing) {
+        existing.push(slot);
+      } else {
+        byDay.set(dayKey, [slot]);
+      }
+    }
+    for (const [, slots] of byDay) {
+      slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    }
+    return byDay;
+  }, [
+    isCourtMode,
+    isCourtWeekView,
+    mapCourtOptionsToSlots,
+    placeTimeZone,
+    courtWeekAvailabilityQuery.data,
+  ]);
+
+  const activeAvailabilityError = React.useMemo(() => {
+    if (selectionMode === "any") {
+      const query =
+        anyViewMode === "week"
+          ? anyWeekAvailabilityQuery
+          : anyDayAvailabilityQuery;
+      return getAvailabilityErrorInfo(query.error, query.refetch);
+    }
+    const query = isCourtWeekView
+      ? courtWeekAvailabilityQuery
+      : courtDayAvailabilityQuery;
+    return getAvailabilityErrorInfo(query.error, query.refetch);
+  }, [
+    anyDayAvailabilityQuery,
+    anyViewMode,
+    anyWeekAvailabilityQuery,
+    courtDayAvailabilityQuery,
+    courtWeekAvailabilityQuery,
+    isCourtWeekView,
+    selectionMode,
+  ]);
+
+  const hasSelection = !!selectedStartTime;
+
+  const selectedRange = React.useMemo(
+    () =>
+      selectedStartTime
+        ? { startTime: selectedStartTime, durationMinutes }
+        : undefined,
+    [durationMinutes, selectedStartTime],
+  );
+
+  const selectionSummary = React.useMemo(() => {
+    if (!selectedStartTime) return null;
+    const dayKey = getZonedDayKey(selectedStartTime, placeTimeZone);
+    const slotsForDay =
+      selectionMode === "any"
+        ? anyViewMode === "week"
+          ? (anyWeekSlotsByDay.get(dayKey) ?? [])
+          : anyDaySlots
+        : isCourtWeekView
+          ? (courtWeekSlotsByDay.get(dayKey) ?? [])
+          : courtDaySlots;
+    const startIdx = slotsForDay.findIndex(
+      (slot) => slot.startTime === selectedStartTime,
+    );
+    if (startIdx === -1) return null;
+    const slotCount = durationMinutes / TIMELINE_SLOT_DURATION;
+    let totalCents = 0;
+    let allHavePrice = true;
+    let endTime = slotsForDay[startIdx]?.endTime ?? "";
+    for (
+      let i = startIdx;
+      i < startIdx + slotCount && i < slotsForDay.length;
+      i++
+    ) {
+      if (slotsForDay[i].priceCents !== undefined) {
+        totalCents += slotsForDay[i].priceCents as number;
+      } else {
+        allHavePrice = false;
+      }
+      endTime = slotsForDay[i].endTime;
+    }
+    return {
+      startTime: selectedStartTime,
+      endTime,
+      totalCents: allHavePrice ? totalCents : undefined,
+      currency: slotsForDay[startIdx]?.currency ?? "PHP",
+    };
+  }, [
+    anyDaySlots,
+    anyViewMode,
+    anyWeekSlotsByDay,
+    courtDaySlots,
+    courtWeekSlotsByDay,
+    durationMinutes,
+    isCourtWeekView,
+    placeTimeZone,
+    selectedStartTime,
+    selectionMode,
+  ]);
 
   React.useEffect(() => {
-    if (!selectedSlot) return;
-
+    if (!selectedStartTime) return;
     trackEvent({
       event: "funnel.schedule_slot_selected",
       properties: {
         placeId: analyticsPlaceId,
         mode: selectionMode,
         durationMinutes,
-        startTime: selectedSlot.startTime,
-        courtId: selectedCourtId,
+        startTime: selectedStartTime,
+        courtId: selectionMode === "court" ? selectedCourtId : undefined,
       },
     });
   }, [
     analyticsPlaceId,
     durationMinutes,
     selectedCourtId,
-    selectedSlot,
+    selectedStartTime,
     selectionMode,
   ]);
 
@@ -418,8 +782,8 @@ export default function PlaceDetailPage() {
       params.set("courtId", selectedCourtId);
     }
 
-    if (selectedSlot) {
-      params.set("startTime", selectedSlot.startTime);
+    if (selectedStartTime) {
+      params.set("startTime", selectedStartTime);
     }
 
     const query = params.toString();
@@ -433,24 +797,137 @@ export default function PlaceDetailPage() {
     placeTimeZone,
     selectedCourtId,
     selectedDate,
-    selectedSlot,
     selectedSportId,
+    selectedStartTime,
     selectionMode,
     showBooking,
   ]);
 
-  const summaryCtaVariant = hasSelectedSlot ? "default" : "outline";
-  const summaryCtaLabel = hasSelectedSlot
-    ? "Reserve now"
-    : hasSelectedDate
-      ? "See available times"
-      : "Choose a date";
+  const summaryCtaVariant = hasSelection ? "default" : "outline";
+  const summaryCtaLabel = hasSelection ? "Continue to review" : "Select a time";
+  const stickyCtaLabel = summaryCtaLabel;
 
-  const stickyCtaLabel = hasSelectedSlot
-    ? "Reserve now"
-    : hasSelectedDate
-      ? "See available times"
-      : "Choose a date";
+  const selectionHint = "Select a range to continue.";
+  const selectionDateLabel =
+    hasSelection && selectedStartTime
+      ? `${formatInTimeZone(
+          new Date(selectedStartTime),
+          placeTimeZone,
+          "EEE, MMM d",
+        )}`
+      : formattedDateLabel || "Pick a date";
+  const selectionTimeLabel =
+    hasSelection && selectedStartTime
+      ? `${formatInTimeZone(
+          new Date(selectedStartTime),
+          placeTimeZone,
+          "h:mm a",
+        )}${
+          selectionSummary?.endTime
+            ? `-${formatInTimeZone(
+                new Date(selectionSummary.endTime),
+                placeTimeZone,
+                "h:mm a",
+              )}`
+            : ""
+        }`
+      : "";
+
+  const selectionMeta = hasSelection
+    ? `${formatDuration(durationMinutes)}${
+        selectionSummary?.totalCents !== undefined
+          ? ` · ${formatCurrency(
+              selectionSummary.totalCents,
+              selectionSummary.currency,
+            )}`
+          : ""
+      }`
+    : selectionHint;
+
+  const isLoadingAvailability =
+    selectionMode === "any"
+      ? anyViewMode === "week"
+        ? anyWeekAvailabilityQuery.isLoading
+        : anyDayAvailabilityQuery.isLoading
+      : isCourtWeekView
+        ? courtWeekAvailabilityQuery.isLoading
+        : courtDayAvailabilityQuery.isLoading;
+
+  const handleCourtRangeChange = React.useCallback(
+    (range: { startTime: string; durationMinutes: number }) => {
+      setSelectedStartTime(range.startTime);
+      setSelectedSlotId(undefined);
+      setDurationMinutes(range.durationMinutes);
+    },
+    [],
+  );
+
+  const handleAnyRangeChange = React.useCallback(
+    (range: { startTime: string; durationMinutes: number }) => {
+      if (!range.startTime) {
+        setSelectedStartTime(undefined);
+        setSelectedSlotId(undefined);
+        return;
+      }
+      setSelectedStartTime(range.startTime);
+      setSelectedSlotId(undefined);
+      setDurationMinutes(range.durationMinutes);
+    },
+    [],
+  );
+
+  const handleCourtViewChange = React.useCallback(
+    (value: string) => {
+      if (!value) return;
+      setCourtViewMode(value as "week" | "day");
+      clearSelection(true);
+    },
+    [clearSelection],
+  );
+
+  const handleGoToToday = React.useCallback(() => {
+    setSelectedDate(today);
+    clearSelection(true);
+  }, [clearSelection, today]);
+
+  const [calendarPopoverOpen, setCalendarPopoverOpen] = React.useState(false);
+  const handleCalendarJump = React.useCallback(
+    (date: Date | undefined) => {
+      if (!date) return;
+      const nextDayKey = getZonedDayKey(date, placeTimeZone);
+      setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
+      clearSelection(true);
+      setCalendarPopoverOpen(false);
+    },
+    [clearSelection, placeTimeZone],
+  );
+
+  const handleJumpToMaxDate = React.useCallback(() => {
+    setSelectedDate(maxBookingDate);
+    clearSelection(true);
+  }, [clearSelection, maxBookingDate]);
+
+  const isAnyWeekView = selectionMode === "any" && anyViewMode === "week";
+  const weekHeaderLabel = React.useMemo(() => {
+    if (!isCourtWeekView && !isAnyWeekView) return "";
+    const start = parseDayKeyToDate(
+      weekDayKeys[0] ?? selectedDayKey,
+      placeTimeZone,
+    );
+    const end = parseDayKeyToDate(
+      weekDayKeys[6] ?? selectedDayKey,
+      placeTimeZone,
+    );
+    const startLabel = formatInTimeZone(start, placeTimeZone, "MMM d");
+    const endLabel = formatInTimeZone(end, placeTimeZone, "MMM d, yyyy");
+    return `${startLabel} - ${endLabel}`;
+  }, [
+    isAnyWeekView,
+    isCourtWeekView,
+    placeTimeZone,
+    selectedDayKey,
+    weekDayKeys,
+  ]);
 
   const handleClaimSubmit = async (data: ClaimFormData) => {
     if (!placeId) return;
@@ -508,7 +985,7 @@ export default function PlaceDetailPage() {
   const removalDisabled = removalSubmitting || !isRemovalValid;
 
   const handleReserve = () => {
-    if (!place) return;
+    if (!place || !selectedStartTime) return;
     const params = new URLSearchParams();
 
     params.set("duration", String(durationMinutes));
@@ -526,9 +1003,7 @@ export default function PlaceDetailPage() {
       params.set("courtId", selectedCourtId);
     }
 
-    if (selectedSlot) {
-      params.set("startTime", selectedSlot.startTime);
-    }
+    params.set("startTime", selectedStartTime);
 
     const destination = `${appRoutes.places.book(placeSlugOrId)}?${params.toString()}`;
 
@@ -538,8 +1013,8 @@ export default function PlaceDetailPage() {
         placeId: analyticsPlaceId,
         mode: selectionMode,
         durationMinutes,
-        startTime: selectedSlot?.startTime,
-        courtId: selectedCourtId,
+        startTime: selectedStartTime,
+        courtId: selectionMode === "court" ? selectedCourtId : undefined,
       },
     });
 
@@ -559,31 +1034,21 @@ export default function PlaceDetailPage() {
   };
 
   const handleSummaryAction = () => {
-    if (hasSelectedSlot) {
+    if (hasSelection) {
       handleReserve();
       return;
     }
 
-    if (!hasSelectedDate) {
-      scrollToSection(dateSectionRef);
-      return;
-    }
-
-    scrollToSection(timesSectionRef);
+    scrollToSection(availabilitySectionRef);
   };
 
   const handleStickyCta = () => {
-    if (hasSelectedSlot) {
+    if (hasSelection) {
       handleReserve();
       return;
     }
 
-    if (!hasSelectedDate) {
-      scrollToSection(dateSectionRef);
-      return;
-    }
-
-    scrollToSection(timesSectionRef);
+    scrollToSection(availabilitySectionRef);
   };
 
   const handleScrollToAvailability = (event?: React.MouseEvent) => {
@@ -592,7 +1057,7 @@ export default function PlaceDetailPage() {
       event.preventDefault();
       event.stopPropagation();
     }
-    scrollToSection(dateSectionRef);
+    scrollToSection(availabilitySectionRef);
   };
 
   if (isLoading) {
@@ -792,6 +1257,468 @@ export default function PlaceDetailPage() {
             }
           />
 
+          {showBooking && (
+            <div ref={availabilitySectionRef} className="scroll-mt-24">
+              <Card>
+                <CardHeader className="space-y-4">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <CardTitle>Availability</CardTitle>
+                      <p className="text-sm text-muted-foreground">
+                        Browse times across courts, or pick a specific court to
+                        select a range.
+                      </p>
+                    </div>
+                    <Badge
+                      variant="secondary"
+                      className="bg-accent/10 text-accent"
+                    >
+                      Live availability
+                    </Badge>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">Sport</p>
+                    <Tabs
+                      value={selectedSportId}
+                      onValueChange={(value) => {
+                        setSelectedSportId(value);
+                        setSelectionMode("any");
+                        setSelectedCourtId(undefined);
+                        setCourtViewMode("week");
+                        clearSelection();
+                      }}
+                    >
+                      <TabsList>
+                        {place.sports.map((sport) => (
+                          <TabsTrigger key={sport.id} value={sport.id}>
+                            {sport.name}
+                          </TabsTrigger>
+                        ))}
+                      </TabsList>
+                    </Tabs>
+                  </div>
+
+                  <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+                    <div className="space-y-2">
+                      <p className="text-sm font-medium">View</p>
+                      <ToggleGroup
+                        type="single"
+                        value={selectionMode}
+                        onValueChange={(value) => {
+                          if (!value) return;
+                          setSelectionMode(value as "any" | "court");
+                          if (value === "court") {
+                            clearSelection(true);
+                            setCourtViewMode("week");
+                          } else {
+                            clearSelection();
+                          }
+                        }}
+                      >
+                        <ToggleGroupItem value="court" size="sm">
+                          Pick a court
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="any" size="sm">
+                          Any court
+                        </ToggleGroupItem>
+                      </ToggleGroup>
+                    </div>
+
+                    {selectionMode !== "court" ? null : (
+                      <div className="space-y-2">
+                        <p className="text-sm font-medium">Court</p>
+                        {courtsForSport.length > 0 ? (
+                          <div className="overflow-x-auto -mx-1 px-1 scrollbar-none">
+                            <div className="flex gap-1.5">
+                              {courtsForSport.map((court) => (
+                                <button
+                                  key={court.id}
+                                  type="button"
+                                  onClick={() => {
+                                    if (selectedCourtId !== court.id) {
+                                      setSelectedCourtId(court.id);
+                                      clearSelection(true);
+                                    }
+                                  }}
+                                  className={cn(
+                                    "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap",
+                                    selectedCourtId === court.id
+                                      ? "border-primary bg-primary/10 text-primary"
+                                      : "border-border bg-card text-foreground hover:bg-accent/10 hover:border-accent/30",
+                                  )}
+                                >
+                                  {court.label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-xs text-muted-foreground">
+                            No active courts for this sport.
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {selectionMode === "any" && (
+                    <div className="space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium">Schedule view</p>
+                          <p className="text-xs text-muted-foreground">
+                            Click a start time, then click an end time to select
+                            a range.
+                          </p>
+                        </div>
+                        <ToggleGroup
+                          type="single"
+                          value={anyViewMode}
+                          onValueChange={(value) => {
+                            if (!value) return;
+                            setAnyViewMode(value as "week" | "day");
+                            clearSelection(true);
+                          }}
+                        >
+                          <ToggleGroupItem value="week" size="sm">
+                            Week
+                          </ToggleGroupItem>
+                          <ToggleGroupItem value="day" size="sm">
+                            Day
+                          </ToggleGroupItem>
+                        </ToggleGroup>
+                      </div>
+
+                      {anyViewMode === "week" ? (
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Popover
+                            open={calendarPopoverOpen}
+                            onOpenChange={setCalendarPopoverOpen}
+                          >
+                            <PopoverTrigger asChild>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                aria-label="Open calendar to jump to a date"
+                              >
+                                <Calendar className="h-3.5 w-3.5" />
+                                {weekHeaderLabel}
+                                <ChevronDown
+                                  className={cn(
+                                    "h-3 w-3 opacity-50 transition-transform duration-200",
+                                    calendarPopoverOpen && "rotate-180",
+                                  )}
+                                />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
+                              <CalendarWidget
+                                mode="single"
+                                selected={selectedDate}
+                                onSelect={handleCalendarJump}
+                                disabled={(date) => {
+                                  if (date < todayRange.start) return true;
+                                  if (date > maxBookingDate) return true;
+                                  return false;
+                                }}
+                                timeZone={placeTimeZone}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleGoToToday}
+                          >
+                            Today
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-wrap items-center gap-2">
+                          <KudosDatePicker
+                            value={selectedDate}
+                            onChange={handleCalendarJump}
+                            placeholder="Choose a date"
+                            maxDate={maxBookingDate}
+                            timeZone={placeTimeZone}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleGoToToday}
+                          >
+                            Today
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {selectionMode === "court" && (
+                    <div className="space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium">Schedule view</p>
+                          <p className="text-xs text-muted-foreground">
+                            Click a start time, then click an end time to select
+                            a range.
+                          </p>
+                        </div>
+                        <ToggleGroup
+                          type="single"
+                          value={courtViewMode}
+                          onValueChange={handleCourtViewChange}
+                        >
+                          <ToggleGroupItem value="week" size="sm">
+                            Week
+                          </ToggleGroupItem>
+                          <ToggleGroupItem value="day" size="sm">
+                            Day
+                          </ToggleGroupItem>
+                        </ToggleGroup>
+                      </div>
+
+                      {isCourtWeekView ? (
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Popover
+                            open={calendarPopoverOpen}
+                            onOpenChange={setCalendarPopoverOpen}
+                          >
+                            <PopoverTrigger asChild>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                aria-label="Open calendar to jump to a date"
+                              >
+                                <Calendar className="h-3.5 w-3.5" />
+                                {weekHeaderLabel}
+                                <ChevronDown
+                                  className={cn(
+                                    "h-3 w-3 opacity-50 transition-transform duration-200",
+                                    calendarPopoverOpen && "rotate-180",
+                                  )}
+                                />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
+                              <CalendarWidget
+                                mode="single"
+                                selected={selectedDate}
+                                onSelect={handleCalendarJump}
+                                disabled={(date) => {
+                                  if (date < todayRange.start) return true;
+                                  if (date > maxBookingDate) return true;
+                                  return false;
+                                }}
+                                timeZone={placeTimeZone}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleGoToToday}
+                          >
+                            Today
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-wrap items-center gap-2">
+                          <KudosDatePicker
+                            value={selectedDate}
+                            onChange={handleCalendarJump}
+                            placeholder="Choose a date"
+                            maxDate={maxBookingDate}
+                            timeZone={placeTimeZone}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleGoToToday}
+                          >
+                            Today
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </CardHeader>
+
+                <CardContent className="space-y-4">
+                  {activeAvailabilityError.isError && (
+                    <Alert variant="destructive">
+                      <AlertTriangle className="h-4 w-4" />
+                      <AlertTitle>
+                        {activeAvailabilityError.isBookingWindowError
+                          ? "Date beyond booking window"
+                          : "Failed to load availability"}
+                      </AlertTitle>
+                      <AlertDescription>
+                        {activeAvailabilityError.isBookingWindowError ? (
+                          <div className="flex flex-col gap-2">
+                            <p>
+                              Bookings are available up to{" "}
+                              {MAX_BOOKING_WINDOW_DAYS} days in advance.
+                            </p>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="w-fit"
+                              onClick={handleJumpToMaxDate}
+                            >
+                              Jump to the latest available date
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-2">
+                            <p>
+                              Something went wrong while loading availability.
+                              Please try again.
+                            </p>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="w-fit"
+                              onClick={() => activeAvailabilityError.refetch()}
+                            >
+                              <RefreshCw className="h-4 w-4 mr-2" />
+                              Retry
+                            </Button>
+                          </div>
+                        )}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  {selectionMode === "any" ? (
+                    anyViewMode === "week" ? (
+                      isLoadingAvailability ? (
+                        <AvailabilityWeekGridSkeleton
+                          dayKeys={weekDayKeys}
+                          timeZone={placeTimeZone}
+                        />
+                      ) : (
+                        <AvailabilityWeekGrid
+                          dayKeys={weekDayKeys}
+                          slotsByDay={anyWeekSlotsByDay}
+                          timeZone={placeTimeZone}
+                          selectedRange={selectedRange}
+                          onRangeChange={handleAnyRangeChange}
+                          onDayClick={(dayKey) => {
+                            setSelectedDate(
+                              parseDayKeyToDate(dayKey, placeTimeZone),
+                            );
+                            setAnyViewMode("day");
+                            clearSelection(true);
+                          }}
+                          onContinue={handleReserve}
+                          todayDayKey={todayDayKey}
+                          maxDayKey={maxDayKey}
+                        />
+                      )
+                    ) : !selectedDate ? (
+                      <p className="text-sm text-muted-foreground py-6 text-center">
+                        Select a date to see available start times.
+                      </p>
+                    ) : isLoadingAvailability ? (
+                      <TimeRangePickerSkeleton count={8} />
+                    ) : anyDaySlots.length > 0 ? (
+                      <TimeRangePicker
+                        slots={anyDaySlots}
+                        timeZone={placeTimeZone}
+                        selectedStartTime={selectedRange?.startTime}
+                        selectedDurationMinutes={selectedRange?.durationMinutes}
+                        showPrice
+                        onChange={handleAnyRangeChange}
+                        onClear={() => clearSelection(true)}
+                        onContinue={handleReserve}
+                      />
+                    ) : (
+                      <AvailabilityEmptyState
+                        diagnostics={null}
+                        variant="public"
+                        contact={contactDetail}
+                      />
+                    )
+                  ) : !courtsForSport.length ? (
+                    <p className="text-sm text-muted-foreground py-6 text-center">
+                      No active courts for this sport.
+                    </p>
+                  ) : !selectedCourtId ? (
+                    <p className="text-sm text-muted-foreground py-6 text-center">
+                      Select a court to see available times.
+                    </p>
+                  ) : isCourtWeekView ? (
+                    isLoadingAvailability ? (
+                      <AvailabilityWeekGridSkeleton
+                        dayKeys={weekDayKeys}
+                        timeZone={placeTimeZone}
+                      />
+                    ) : (
+                      <AvailabilityWeekGrid
+                        dayKeys={weekDayKeys}
+                        slotsByDay={courtWeekSlotsByDay}
+                        timeZone={placeTimeZone}
+                        selectedRange={selectedRange}
+                        onRangeChange={handleCourtRangeChange}
+                        onDayClick={(dayKey) => {
+                          setSelectedDate(
+                            parseDayKeyToDate(dayKey, placeTimeZone),
+                          );
+                          setCourtViewMode("day");
+                          clearSelection(true);
+                        }}
+                        onContinue={handleReserve}
+                        todayDayKey={todayDayKey}
+                        maxDayKey={maxDayKey}
+                      />
+                    )
+                  ) : !selectedDate ? (
+                    <p className="text-sm text-muted-foreground py-6 text-center">
+                      Select a date to see available start times.
+                    </p>
+                  ) : isLoadingAvailability ? (
+                    <TimeRangePickerSkeleton count={8} />
+                  ) : courtDaySlots.length > 0 ? (
+                    <TimeRangePicker
+                      slots={courtDaySlots}
+                      timeZone={placeTimeZone}
+                      selectedStartTime={selectedRange?.startTime}
+                      selectedDurationMinutes={selectedRange?.durationMinutes}
+                      showPrice
+                      onChange={handleCourtRangeChange}
+                      onClear={() => clearSelection(true)}
+                      onContinue={handleReserve}
+                    />
+                  ) : (
+                    <AvailabilityEmptyState
+                      diagnostics={courtDayDiagnostics}
+                      variant="public"
+                      contact={contactDetail}
+                    />
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
           <Card>
             <CardHeader>
               <CardTitle>Contact</CardTitle>
@@ -903,235 +1830,7 @@ export default function PlaceDetailPage() {
             </CardContent>
           </Card>
 
-          {showBooking ? (
-            <>
-              <div ref={sportSectionRef} className="scroll-mt-24">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Choose a sport</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <Tabs
-                      value={selectedSportId}
-                      onValueChange={(value) => {
-                        setSelectedSportId(value);
-                        setSelectedCourtId(undefined);
-                        setSelectionMode("any");
-                        resetSelection();
-                      }}
-                    >
-                      <TabsList>
-                        {place.sports.map((sport) => (
-                          <TabsTrigger key={sport.id} value={sport.id}>
-                            {sport.name}
-                          </TabsTrigger>
-                        ))}
-                      </TabsList>
-                    </Tabs>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <div ref={courtSectionRef} className="scroll-mt-24">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Choose court</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <RadioGroup
-                      value={selectionMode === "any" ? "any" : selectedCourtId}
-                      onValueChange={(value) => {
-                        if (value === "any") {
-                          setSelectionMode("any");
-                          setSelectedCourtId(undefined);
-                          resetSelection();
-                          return;
-                        }
-                        setSelectionMode("court");
-                        setSelectedCourtId(value);
-                        resetSelection();
-                      }}
-                      className="space-y-3"
-                    >
-                      <div className="flex items-start gap-3 rounded-lg border px-4 py-3">
-                        <RadioGroupItem value="any" id="any" className="mt-1" />
-                        <Label
-                          htmlFor="any"
-                          className="space-y-1 cursor-pointer"
-                        >
-                          <div className="font-medium">Any available court</div>
-                          <div className="text-sm text-muted-foreground">
-                            Lowest total price across courts for the selected
-                            sport.
-                          </div>
-                        </Label>
-                      </div>
-
-                      {courtsForSport.map((court) => (
-                        <div
-                          key={court.id}
-                          className="flex items-start gap-3 rounded-lg border px-4 py-3"
-                        >
-                          <RadioGroupItem
-                            value={court.id}
-                            id={court.id}
-                            className="mt-1"
-                            disabled={!court.isActive}
-                          />
-                          <Label
-                            htmlFor={court.id}
-                            className="flex-1 cursor-pointer space-y-1"
-                          >
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className="font-medium">{court.label}</span>
-                              <Badge variant="outline" className="text-[10px]">
-                                {court.sportName}
-                              </Badge>
-                              {court.tierLabel && (
-                                <Badge
-                                  variant="secondary"
-                                  className="text-[10px]"
-                                >
-                                  {court.tierLabel}
-                                </Badge>
-                              )}
-                              {!court.isActive && (
-                                <Badge
-                                  variant="destructive"
-                                  className="text-[10px]"
-                                >
-                                  Inactive
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="text-sm text-muted-foreground">
-                              Pricing shown after selecting a time.
-                            </div>
-                          </Label>
-                        </div>
-                      ))}
-                    </RadioGroup>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <div ref={durationSectionRef} className="scroll-mt-24">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Duration</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <InputGroup className="max-w-[240px]">
-                      <InputGroupButton
-                        type="button"
-                        size="icon-sm"
-                        aria-label="Decrease duration"
-                        onClick={() => handleDurationStep("decrease")}
-                        disabled={durationHours <= MIN_DURATION_HOURS}
-                      >
-                        <Minus className="h-4 w-4" />
-                      </InputGroupButton>
-                      <InputGroupInput
-                        type="number"
-                        inputMode="numeric"
-                        min={MIN_DURATION_HOURS}
-                        max={MAX_DURATION_HOURS}
-                        step={1}
-                        value={durationHoursDraft}
-                        onChange={handleDurationDraftChange}
-                        onBlur={handleDurationBlur}
-                        onKeyDown={(event) => {
-                          if (event.key === "Enter") {
-                            event.currentTarget.blur();
-                          }
-                        }}
-                        className="text-center"
-                        aria-label="Duration in hours"
-                      />
-                      <InputGroupText className="px-2">hours</InputGroupText>
-                      <InputGroupButton
-                        type="button"
-                        size="icon-sm"
-                        aria-label="Increase duration"
-                        onClick={() => handleDurationStep("increase")}
-                        disabled={durationHours >= MAX_DURATION_HOURS}
-                      >
-                        <Plus className="h-4 w-4" />
-                      </InputGroupButton>
-                    </InputGroup>
-                    <p className="text-xs text-muted-foreground">1-24 hours</p>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <div ref={timesSectionRef} className="scroll-mt-24">
-                <Card>
-                  <CardHeader className="space-y-2">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <CardTitle>Available start times</CardTitle>
-                      <Badge
-                        className="bg-accent/10 text-accent"
-                        variant="secondary"
-                      >
-                        Next step
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Pick a date and start time to continue.
-                    </p>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div
-                      ref={dateSectionRef}
-                      className="space-y-2 scroll-mt-24"
-                    >
-                      <p className="text-sm font-medium">Select date</p>
-                      <KudosDatePicker
-                        value={selectedDate}
-                        onChange={(date) => {
-                          setSelectedDate(date);
-                          resetSelection();
-                        }}
-                        placeholder="Choose a date"
-                        maxDate={maxBookingDate}
-                        timeZone={placeTimeZone}
-                      />
-                    </div>
-
-                    {selectedDate && (
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium">
-                          Available times on{" "}
-                          {formatInTimeZone(
-                            selectedDate,
-                            placeTimeZone,
-                            "MMM d",
-                          )}
-                        </p>
-                        {isLoadingAvailability ? (
-                          <TimeSlotPickerSkeleton count={6} />
-                        ) : timeSlots.length > 0 ? (
-                          <TimeSlotPicker
-                            slots={timeSlots}
-                            selectedId={selectedSlotId}
-                            onSelect={handleSlotSelect}
-                            showPrice
-                            timeZone={placeTimeZone}
-                          />
-                        ) : (
-                          <AvailabilityEmptyState
-                            diagnostics={availabilityDiagnostics}
-                            variant="public"
-                            contact={contactDetail}
-                          />
-                        )}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            </>
-          ) : (
+          {!showBooking && (
             <Card>
               <CardHeader>
                 <CardTitle>Courts</CardTitle>
@@ -1203,9 +1902,7 @@ export default function PlaceDetailPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">
-                      Selected court
-                    </p>
+                    <p className="text-sm text-muted-foreground">Court</p>
                     <p className="font-medium">
                       {selectionMode === "any"
                         ? "Any available court"
@@ -1220,66 +1917,37 @@ export default function PlaceDetailPage() {
                       {formatDuration(durationMinutes)}
                     </p>
                   </div>
-                  {selectedSlot ? (
+                  {hasSelection && selectionSummary ? (
                     <div className="space-y-1">
                       <p className="text-sm text-muted-foreground">
-                        Start time
+                        Selected time
                       </p>
                       <p className="font-medium">
                         {formatInTimeZone(
-                          selectedSlot.startTime,
+                          new Date(selectionSummary.startTime),
                           placeTimeZone,
-                          "h:mm a",
+                          "MMM d, h:mm a",
                         )}{" "}
-                        ·{" "}
-                        {formatCurrency(
-                          selectedSlot.totalPriceCents,
-                          selectedSlot.currency,
-                        )}
+                        {selectionSummary.endTime
+                          ? `- ${formatInTimeZone(
+                              new Date(selectionSummary.endTime),
+                              placeTimeZone,
+                              "h:mm a",
+                            )}`
+                          : ""}
+                        {selectionSummary.totalCents !== undefined
+                          ? ` · ${formatCurrency(
+                              selectionSummary.totalCents,
+                              selectionSummary.currency,
+                            )}`
+                          : ""}
                       </p>
                     </div>
                   ) : (
                     <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-                      Select a start time to see pricing and continue.
+                      Select a time to see pricing and continue.
                     </div>
                   )}
-
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                    <span className="font-medium text-muted-foreground">
-                      Jump to:
-                    </span>
-                    <button
-                      type="button"
-                      className="text-accent hover:underline"
-                      onClick={() => scrollToSection(sportSectionRef)}
-                    >
-                      Sport
-                    </button>
-                    <span>·</span>
-                    <button
-                      type="button"
-                      className="text-accent hover:underline"
-                      onClick={() => scrollToSection(courtSectionRef)}
-                    >
-                      Court
-                    </button>
-                    <span>·</span>
-                    <button
-                      type="button"
-                      className="text-accent hover:underline"
-                      onClick={() => scrollToSection(durationSectionRef)}
-                    >
-                      Duration
-                    </button>
-                    <span>·</span>
-                    <button
-                      type="button"
-                      className="text-accent hover:underline"
-                      onClick={() => scrollToSection(timesSectionRef)}
-                    >
-                      Times
-                    </button>
-                  </div>
 
                   <Button
                     size="lg"
@@ -1290,18 +1958,7 @@ export default function PlaceDetailPage() {
                     {summaryCtaLabel}
                   </Button>
 
-                  {scheduleHref && (
-                    <Button
-                      asChild
-                      variant="link"
-                      size="sm"
-                      className="w-full justify-center"
-                    >
-                      <Link href={scheduleHref}>See full schedule</Link>
-                    </Button>
-                  )}
-
-                  {!isAuthenticated && selectedSlot && (
+                  {!isAuthenticated && hasSelection && (
                     <p className="text-xs text-muted-foreground text-center">
                       Sign in to complete your booking request.
                     </p>
@@ -1647,35 +2304,17 @@ export default function PlaceDetailPage() {
         </div>
       </div>
 
-      {(hasSelectedDate || hasSelectedSlot) && (
+      {hasSelection && selectedStartTime && (
         <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 p-4 shadow-lg backdrop-blur sm:hidden">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="text-sm font-medium">
-                {hasSelectedSlot && selectedSlot
-                  ? formatInTimeZone(
-                      new Date(selectedSlot.startTime),
-                      placeTimeZone,
-                      "MMM d, h:mm a",
-                    )
-                  : "Select a time"}
+                {selectionDateLabel}
+                {selectionTimeLabel ? ` · ${selectionTimeLabel}` : ""}
               </p>
-              <p className="text-xs text-muted-foreground">
-                {hasSelectedSlot && selectedSlot
-                  ? `${formatDuration(durationMinutes)} · ${formatCurrency(
-                      selectedSlot.totalPriceCents,
-                      selectedSlot.currency,
-                    )}`
-                  : hasSelectedDate
-                    ? "Continue to see available times"
-                    : "Choose a date to continue"}
-              </p>
+              <p className="text-xs text-muted-foreground">{selectionMeta}</p>
             </div>
-            <Button
-              size="sm"
-              variant={summaryCtaVariant}
-              onClick={handleStickyCta}
-            >
+            <Button size="sm" onClick={handleStickyCta}>
               {stickyCtaLabel}
             </Button>
           </div>

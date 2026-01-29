@@ -6,6 +6,12 @@ export {
   AvailabilityMonthView,
   type SelectedRange,
 } from "./availability-month-view";
+export {
+  AvailabilityWeekGrid,
+  type AvailabilityWeekGridProps,
+  type AvailabilityWeekGridRange,
+  AvailabilityWeekGridSkeleton,
+} from "./availability-week-grid";
 export { Countdown, CountdownBanner } from "./countdown";
 export {
   CourtCard,
