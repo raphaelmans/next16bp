@@ -3,12 +3,18 @@ import {
   CourtNotFoundError,
   NotCourtOwnerError,
 } from "@/modules/court/errors/court.errors";
+import { CourtBlockOverlapsReservationError } from "@/modules/court-block/errors/court-block.errors";
+import { GuestProfileNotFoundError } from "@/modules/guest-profile/errors/guest-profile.errors";
 import { NotOrganizationOwnerError } from "@/modules/organization/errors/organization.errors";
+import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
 import { protectedProcedure, router } from "@/shared/infra/trpc/trpc";
 import { AppError } from "@/shared/kernel/errors";
 import {
   AcceptReservationSchema,
+  ConfirmPaidOfflineSchema,
   ConfirmPaymentSchema,
+  CreateGuestBookingSchema,
+  GetActiveForCourtRangeSchema,
   GetOrgReservationsSchema,
   GetPendingCountSchema,
   GetPendingForCourtSchema,
@@ -16,8 +22,11 @@ import {
 } from "./dtos";
 import {
   InvalidReservationStatusError,
+  ReservationDurationInvalidError,
   ReservationExpiredError,
   ReservationNotFoundError,
+  ReservationPricingUnavailableError,
+  ReservationTimeRangeInvalidError,
 } from "./errors/reservation.errors";
 import { makeReservationOwnerService } from "./factories/reservation.factory";
 
@@ -27,7 +36,9 @@ import { makeReservationOwnerService } from "./factories/reservation.factory";
 function handleReservationOwnerError(error: unknown): never {
   if (
     error instanceof ReservationNotFoundError ||
-    error instanceof CourtNotFoundError
+    error instanceof CourtNotFoundError ||
+    error instanceof PlaceNotFoundError ||
+    error instanceof GuestProfileNotFoundError
   ) {
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -45,9 +56,19 @@ function handleReservationOwnerError(error: unknown): never {
       cause: error,
     });
   }
+  if (error instanceof CourtBlockOverlapsReservationError) {
+    throw new TRPCError({
+      code: "CONFLICT",
+      message: error.message,
+      cause: error,
+    });
+  }
   if (
     error instanceof InvalidReservationStatusError ||
-    error instanceof ReservationExpiredError
+    error instanceof ReservationExpiredError ||
+    error instanceof ReservationTimeRangeInvalidError ||
+    error instanceof ReservationDurationInvalidError ||
+    error instanceof ReservationPricingUnavailableError
   ) {
     throw new TRPCError({
       code: "BAD_REQUEST",
@@ -95,6 +116,20 @@ export const reservationOwnerRouter = router({
     }),
 
   /**
+   * Confirm a reservation as paid offline (CREATED -> CONFIRMED, owner only)
+   */
+  confirmPaidOffline: protectedProcedure
+    .input(ConfirmPaidOfflineSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationOwnerService();
+        return await service.confirmPaidOffline(ctx.userId, input);
+      } catch (error) {
+        handleReservationOwnerError(error);
+      }
+    }),
+
+  /**
    * Reject a reservation (owner only)
    */
   reject: protectedProcedure
@@ -103,6 +138,34 @@ export const reservationOwnerRouter = router({
       try {
         const service = makeReservationOwnerService();
         return await service.rejectReservation(ctx.userId, input);
+      } catch (error) {
+        handleReservationOwnerError(error);
+      }
+    }),
+
+  /**
+   * Create a guest booking directly as CONFIRMED (owner only)
+   */
+  createGuestBooking: protectedProcedure
+    .input(CreateGuestBookingSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationOwnerService();
+        return await service.createGuestBooking(ctx.userId, input);
+      } catch (error) {
+        handleReservationOwnerError(error);
+      }
+    }),
+
+  /**
+   * Get active reservations for a court in a date range (owner only)
+   */
+  getActiveForCourtRange: protectedProcedure
+    .input(GetActiveForCourtRangeSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationOwnerService();
+        return await service.getActiveForCourtRange(ctx.userId, input);
       } catch (error) {
         handleReservationOwnerError(error);
       }

@@ -11,6 +11,7 @@ import { courtManagementRouter } from "@/modules/court/court-management.router";
 import { courtBlockRouter } from "@/modules/court-block/court-block.router";
 import { courtHoursRouter } from "@/modules/court-hours/court-hours.router";
 import { courtRateRuleRouter } from "@/modules/court-rate-rule/court-rate-rule.router";
+import { guestProfileRouter } from "@/modules/guest-profile/guest-profile.router";
 import { healthRouter } from "@/modules/health/health.router";
 import { organizationAdminRouter } from "@/modules/organization/admin/organization-admin.router";
 import { organizationRouter } from "@/modules/organization/organization.router";
@@ -36,6 +37,7 @@ export const appRouter = router({
   court: courtRouter,
   courtManagement: courtManagementRouter,
   courtBlock: courtBlockRouter,
+  guestProfile: guestProfileRouter,
   courtHours: courtHoursRouter,
   courtRateRule: courtRateRuleRouter,
   place: placeRouter,

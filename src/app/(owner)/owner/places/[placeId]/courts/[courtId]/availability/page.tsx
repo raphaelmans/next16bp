@@ -20,6 +20,7 @@ import { AvailabilityEmptyState } from "@/components/availability-empty-state";
 import {
   StandardFormInput,
   StandardFormProvider,
+  StandardFormSelect,
   StandardFormTextarea,
 } from "@/components/form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -103,6 +104,19 @@ const blockFormSchema = z.object({
 });
 
 type BlockFormValues = z.infer<typeof blockFormSchema>;
+
+const guestBookingFormSchema = z.object({
+  startTime: z.string().min(1, "Start time is required"),
+  endTime: z.string().min(1, "End time is required"),
+  guestMode: z.enum(["existing", "new"]),
+  guestProfileId: z.string().optional(),
+  newGuestName: z.string().optional(),
+  newGuestPhone: z.string().optional(),
+  newGuestEmail: z.string().optional(),
+  notes: z.string().optional(),
+});
+
+type GuestBookingFormValues = z.infer<typeof guestBookingFormSchema>;
 
 const formatDateTimeInput = (date: Date, timeZone: string) =>
   format(getZonedDate(date, timeZone), "yyyy-MM-dd'T'HH:mm");
@@ -218,6 +232,9 @@ export default function OwnerCourtAvailabilityPage() {
   const [walkInPreset, setWalkInPreset] = React.useState<TimeSlot | null>(null);
   const [maintenancePreset, setMaintenancePreset] =
     React.useState<TimeSlot | null>(null);
+  const [guestBookingOpen, setGuestBookingOpen] = React.useState(false);
+  const [guestBookingPreset, setGuestBookingPreset] =
+    React.useState<TimeSlot | null>(null);
 
   const maintenanceForm = useForm<BlockFormValues>({
     resolver: zodResolver(blockFormSchema),
@@ -226,6 +243,19 @@ export default function OwnerCourtAvailabilityPage() {
   const walkInForm = useForm<BlockFormValues>({
     resolver: zodResolver(blockFormSchema),
     defaultValues: { startTime: "", endTime: "", reason: "" },
+  });
+  const guestBookingForm = useForm<GuestBookingFormValues>({
+    resolver: zodResolver(guestBookingFormSchema),
+    defaultValues: {
+      startTime: "",
+      endTime: "",
+      guestMode: "new",
+      guestProfileId: "",
+      newGuestName: "",
+      newGuestPhone: "",
+      newGuestEmail: "",
+      notes: "",
+    },
   });
 
   const commitDurationHours = React.useCallback(
@@ -314,6 +344,14 @@ export default function OwnerCourtAvailabilityPage() {
     (preset?: TimeSlot | null) => {
       setMaintenancePreset(preset ?? null);
       setMaintenanceOpen(true);
+    },
+    [],
+  );
+
+  const openGuestBookingDialog = React.useCallback(
+    (preset?: TimeSlot | null) => {
+      setGuestBookingPreset(preset ?? null);
+      setGuestBookingOpen(true);
     },
     [],
   );
@@ -415,6 +453,14 @@ export default function OwnerCourtAvailabilityPage() {
   const createWalkIn = trpc.courtBlock.createWalkIn.useMutation();
   const cancelBlock = trpc.courtBlock.cancel.useMutation();
 
+  const guestProfilesQuery = trpc.guestProfile.list.useQuery(
+    { organizationId: organization?.id ?? "", limit: 50 },
+    { enabled: guestBookingOpen && !!organization?.id },
+  );
+  const createGuestProfile = trpc.guestProfile.create.useMutation();
+  const createGuestBooking =
+    trpc.reservationOwner.createGuestBooking.useMutation();
+
   const invalidateAvailability = React.useCallback(() => {
     void utils.availability.getForCourtRange.invalidate();
     void utils.courtBlock.listForCourtRange.invalidate();
@@ -495,6 +541,67 @@ export default function OwnerCourtAvailabilityPage() {
     [cancelBlock, invalidateAvailability],
   );
 
+  const handleGuestBookingSubmit = React.useCallback(
+    async (values: GuestBookingFormValues) => {
+      const start = parseDateTimeInput(values.startTime, placeTimeZone);
+      const end = parseDateTimeInput(values.endTime, placeTimeZone);
+      if (!start || !end) {
+        toast.error("Invalid date or time", {
+          description: "Please enter a valid start and end time.",
+        });
+        return;
+      }
+
+      try {
+        let guestProfileId = values.guestProfileId;
+
+        if (values.guestMode === "new") {
+          if (!values.newGuestName?.trim()) {
+            toast.error("Guest name is required");
+            return;
+          }
+          const guest = await createGuestProfile.mutateAsync({
+            organizationId: organization?.id ?? "",
+            displayName: values.newGuestName.trim(),
+            phoneNumber: values.newGuestPhone?.trim() || undefined,
+            email: values.newGuestEmail?.trim() || undefined,
+          });
+          guestProfileId = guest.id;
+        }
+
+        if (!guestProfileId) {
+          toast.error("Please select or create a guest");
+          return;
+        }
+
+        await createGuestBooking.mutateAsync({
+          courtId,
+          startTime: toUtcISOString(start),
+          endTime: toUtcISOString(end),
+          guestProfileId,
+          notes: values.notes?.trim() || undefined,
+        });
+
+        toast.success("Guest booking added");
+        setGuestBookingOpen(false);
+        setGuestBookingPreset(null);
+        invalidateAvailability();
+      } catch (error) {
+        toast.error("Unable to add guest booking", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+      }
+    },
+    [
+      courtId,
+      createGuestBooking,
+      createGuestProfile,
+      invalidateAvailability,
+      organization?.id,
+      placeTimeZone,
+    ],
+  );
+
   const renderSlotAction = React.useCallback(
     ({
       slot,
@@ -530,6 +637,9 @@ export default function OwnerCourtAvailabilityPage() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-44">
+            <DropdownMenuItem onSelect={() => openGuestBookingDialog(slot)}>
+              Guest booking
+            </DropdownMenuItem>
             <DropdownMenuItem onSelect={() => openWalkInDialog(slot)}>
               Walk-in booking
             </DropdownMenuItem>
@@ -540,7 +650,7 @@ export default function OwnerCourtAvailabilityPage() {
         </DropdownMenu>
       );
     },
-    [openMaintenanceDialog, openWalkInDialog],
+    [openGuestBookingDialog, openMaintenanceDialog, openWalkInDialog],
   );
 
   React.useEffect(() => {
@@ -578,6 +688,32 @@ export default function OwnerCourtAvailabilityPage() {
       reason: "",
     });
   }, [defaultRange, placeTimeZone, walkInForm, walkInOpen, walkInPreset]);
+
+  React.useEffect(() => {
+    if (!guestBookingOpen) return;
+    const range = guestBookingPreset
+      ? {
+          start: new Date(guestBookingPreset.startTime),
+          end: new Date(guestBookingPreset.endTime),
+        }
+      : defaultRange;
+    guestBookingForm.reset({
+      startTime: formatDateTimeInput(range.start, placeTimeZone),
+      endTime: formatDateTimeInput(range.end, placeTimeZone),
+      guestMode: "new",
+      guestProfileId: "",
+      newGuestName: "",
+      newGuestPhone: "",
+      newGuestEmail: "",
+      notes: "",
+    });
+  }, [
+    defaultRange,
+    guestBookingForm,
+    guestBookingOpen,
+    guestBookingPreset,
+    placeTimeZone,
+  ]);
 
   const availableMonthDates = React.useMemo(
     () =>
@@ -829,10 +965,18 @@ export default function OwnerCourtAvailabilityPage() {
                 </Button>
                 <Button
                   type="button"
+                  variant="outline"
                   onClick={() => openWalkInDialog()}
                   disabled={createWalkIn.isPending}
                 >
                   Add walk-in booking
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => openGuestBookingDialog()}
+                  disabled={createGuestBooking.isPending}
+                >
+                  Add guest booking
                 </Button>
               </div>
             </div>
@@ -1061,6 +1205,142 @@ export default function OwnerCourtAvailabilityPage() {
                 </Button>
                 <Button type="submit" disabled={createWalkIn.isPending}>
                   Save walk-in
+                </Button>
+              </DialogFooter>
+            </StandardFormProvider>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog
+          open={guestBookingOpen}
+          onOpenChange={(open) => {
+            setGuestBookingOpen(open);
+            if (!open) {
+              setGuestBookingPreset(null);
+            }
+          }}
+        >
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Add guest booking</DialogTitle>
+              <DialogDescription>
+                Create a confirmed reservation for a guest. Pricing is computed
+                from your schedule in {placeTimeZone}.
+              </DialogDescription>
+            </DialogHeader>
+            <StandardFormProvider
+              form={guestBookingForm}
+              onSubmit={handleGuestBookingSubmit}
+            >
+              <div className="space-y-4">
+                <StandardFormInput<GuestBookingFormValues>
+                  name="startTime"
+                  label="Start time"
+                  type="datetime-local"
+                  required
+                />
+                <StandardFormInput<GuestBookingFormValues>
+                  name="endTime"
+                  label="End time"
+                  type="datetime-local"
+                  required
+                />
+
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Guest</p>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant={
+                        guestBookingForm.watch("guestMode") === "existing"
+                          ? "default"
+                          : "outline"
+                      }
+                      size="sm"
+                      onClick={() =>
+                        guestBookingForm.setValue("guestMode", "existing")
+                      }
+                    >
+                      Select existing
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={
+                        guestBookingForm.watch("guestMode") === "new"
+                          ? "default"
+                          : "outline"
+                      }
+                      size="sm"
+                      onClick={() =>
+                        guestBookingForm.setValue("guestMode", "new")
+                      }
+                    >
+                      Create new
+                    </Button>
+                  </div>
+                </div>
+
+                {guestBookingForm.watch("guestMode") === "existing" ? (
+                  <StandardFormSelect<GuestBookingFormValues>
+                    name="guestProfileId"
+                    label="Select guest"
+                    placeholder="Choose a guest..."
+                    emptyOptionLabel="Choose a guest..."
+                    options={(guestProfilesQuery.data ?? []).map((guest) => ({
+                      value: guest.id,
+                      label: `${guest.displayName}${guest.phoneNumber ? ` (${guest.phoneNumber})` : ""}`,
+                    }))}
+                    required
+                  />
+                ) : (
+                  <>
+                    <StandardFormInput<GuestBookingFormValues>
+                      name="newGuestName"
+                      label="Guest name"
+                      placeholder="Juan Dela Cruz"
+                      required
+                    />
+                    <StandardFormInput<GuestBookingFormValues>
+                      name="newGuestPhone"
+                      label="Phone (optional)"
+                      placeholder="09171234567"
+                    />
+                    <StandardFormInput<GuestBookingFormValues>
+                      name="newGuestEmail"
+                      label="Email (optional)"
+                      placeholder="guest@example.com"
+                    />
+                  </>
+                )}
+
+                <StandardFormTextarea<GuestBookingFormValues>
+                  name="notes"
+                  label="Notes (optional)"
+                  placeholder="Internal notes"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Guest bookings must be in 60-minute increments. The booking
+                  will be created as confirmed.
+                </p>
+              </div>
+              <DialogFooter className="pt-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => {
+                    setGuestBookingOpen(false);
+                    setGuestBookingPreset(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={
+                    createGuestBooking.isPending || createGuestProfile.isPending
+                  }
+                >
+                  Save guest booking
                 </Button>
               </DialogFooter>
             </StandardFormProvider>

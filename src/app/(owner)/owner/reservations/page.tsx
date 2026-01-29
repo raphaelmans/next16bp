@@ -1,5 +1,6 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import {
   Calendar as CalendarIcon,
@@ -10,10 +11,21 @@ import {
   XCircle,
 } from "lucide-react";
 import * as React from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   Popover,
@@ -151,6 +163,8 @@ export default function OwnerReservationsPage() {
   // Dialog state
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
   const [rejectModalOpen, setRejectModalOpen] = React.useState(false);
+  const [paidOfflineDialogOpen, setPaidOfflineDialogOpen] =
+    React.useState(false);
   const [selectedReservation, setSelectedReservation] =
     React.useState<Reservation | null>(null);
   const confirmTitle =
@@ -174,6 +188,22 @@ export default function OwnerReservationsPage() {
   const acceptMutation = useAcceptReservation();
   const confirmMutation = useConfirmReservation();
   const rejectMutation = useRejectReservation();
+  const confirmPaidOfflineMutation =
+    trpc.reservationOwner.confirmPaidOffline.useMutation({
+      onSuccess: () => {
+        void utils.reservationOwner.getForOrganization.invalidate();
+        void utils.reservationOwner.getPendingCount.invalidate();
+      },
+    });
+
+  const paidOfflineFormSchema = z.object({
+    paymentReference: z.string().min(1, "Reference is required").max(100),
+  });
+  type PaidOfflineFormValues = z.infer<typeof paidOfflineFormSchema>;
+  const paidOfflineForm = useForm<PaidOfflineFormValues>({
+    resolver: zodResolver(paidOfflineFormSchema),
+    defaultValues: { paymentReference: "" },
+  });
 
   const handleRefresh = async () => {
     if (!organization?.id) return;
@@ -344,6 +374,35 @@ export default function OwnerReservationsPage() {
       setSelectedReservation(reservation);
       setConfirmDialogOpen(true);
     }
+  };
+
+  const handlePaidOfflineClick = (reservationId: string) => {
+    const reservation = reservations.find((r) => r.id === reservationId);
+    if (reservation) {
+      setSelectedReservation(reservation);
+      paidOfflineForm.reset({ paymentReference: "" });
+      setPaidOfflineDialogOpen(true);
+    }
+  };
+
+  const handlePaidOfflineSubmit = (values: PaidOfflineFormValues) => {
+    if (!selectedReservation) return;
+    confirmPaidOfflineMutation.mutate(
+      {
+        reservationId: selectedReservation.id,
+        paymentReference: values.paymentReference,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Reservation confirmed as paid offline");
+          setPaidOfflineDialogOpen(false);
+          setSelectedReservation(null);
+        },
+        onError: () => {
+          toast.error("Failed to confirm offline payment");
+        },
+      },
+    );
   };
 
   const handleRejectClick = (reservationId: string) => {
@@ -649,11 +708,13 @@ export default function OwnerReservationsPage() {
                   <ReservationsTable
                     reservations={tabReservations}
                     onConfirm={handleConfirmClick}
+                    onConfirmPaidOffline={handlePaidOfflineClick}
                     onReject={handleRejectClick}
                     isLoading={
                       confirmMutation.isPending ||
                       acceptMutation.isPending ||
-                      rejectMutation.isPending
+                      rejectMutation.isPending ||
+                      confirmPaidOfflineMutation.isPending
                     }
                   />
                 )}
@@ -689,6 +750,51 @@ export default function OwnerReservationsPage() {
         playerName={selectedReservation?.playerName}
         courtName={selectedReservation?.courtName}
       />
+
+      {/* Paid Offline Dialog */}
+      <Dialog
+        open={paidOfflineDialogOpen}
+        onOpenChange={setPaidOfflineDialogOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm paid offline</DialogTitle>
+            <DialogDescription>
+              Confirm that {selectedReservation?.playerName} has paid offline
+              for {selectedReservation?.courtName}. This will skip the payment
+              flow and mark the reservation as confirmed.
+            </DialogDescription>
+          </DialogHeader>
+          <StandardFormProvider
+            form={paidOfflineForm}
+            onSubmit={handlePaidOfflineSubmit}
+          >
+            <div className="space-y-4">
+              <StandardFormInput<PaidOfflineFormValues>
+                name="paymentReference"
+                label="Payment reference"
+                placeholder="e.g. receipt number, GCash ref"
+                required
+              />
+            </div>
+            <DialogFooter className="pt-4">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setPaidOfflineDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={confirmPaidOfflineMutation.isPending}
+              >
+                Confirm payment
+              </Button>
+            </DialogFooter>
+          </StandardFormProvider>
+        </DialogContent>
+      </Dialog>
     </AppShell>
   );
 }

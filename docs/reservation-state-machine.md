@@ -14,8 +14,8 @@ This documentation is split into multiple levels of detail so you can share the 
 
 ## Current contract (mutual confirmation)
 - Player creates a booking request (`CREATED`) and the time range is reserved immediately.
-- Owner must accept within 15 minutes.
-- Paid bookings start a fresh 15-minute payment window on owner acceptance.
+- Owner must accept within 45 minutes.
+- Paid bookings start a fresh 45-minute payment window on owner acceptance.
 - `PAYMENT_MARKED_BY_USER` can still expire if the TTL passes.
 
 ## Availability model

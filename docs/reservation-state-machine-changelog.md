@@ -43,8 +43,8 @@ This changelog tracks product/engineering contract changes to the reservation st
 - Slot hold behavior:
   - Slot is held immediately when the player requests (`AVAILABLE` → `HELD`).
 - TTL behavior:
-  - `CREATED` has a 15-minute owner acceptance window.
-  - If owner accepts a paid request, `expiresAt` resets to a fresh 15-minute payment window.
+  - `CREATED` has a 45-minute owner acceptance window.
+  - If owner accepts a paid request, `expiresAt` resets to a fresh 45-minute payment window.
   - `PAYMENT_MARKED_BY_USER` still expires when the same `expiresAt` passes.
 - Owner ops behavior:
   - In `CREATED`: accept / cancel(reject) / view.

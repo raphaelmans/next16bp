@@ -1,33 +1,49 @@
-import { addMinutes } from "date-fns";
+import { addMinutes, differenceInMinutes } from "date-fns";
 import {
   CourtNotFoundError,
   NotCourtOwnerError,
 } from "@/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
+import { CourtBlockOverlapsReservationError } from "@/modules/court-block/errors/court-block.errors";
+import type { ICourtBlockRepository } from "@/modules/court-block/repositories/court-block.repository";
+import type { ICourtHoursRepository } from "@/modules/court-hours/repositories/court-hours.repository";
+import type { ICourtPriceOverrideRepository } from "@/modules/court-price-override/repositories/court-price-override.repository";
+import type { ICourtRateRuleRepository } from "@/modules/court-rate-rule/repositories/court-rate-rule.repository";
+import { GuestProfileNotFoundError } from "@/modules/guest-profile/errors/guest-profile.errors";
+import type { IGuestProfileRepository } from "@/modules/guest-profile/repositories/guest-profile.repository";
 import { NotOrganizationOwnerError } from "@/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
 import type { IOrganizationReservationPolicyRepository } from "@/modules/organization-payment/repositories/organization-reservation-policy.repository";
+import type { IPaymentProofRepository } from "@/modules/payment-proof/repositories/payment-proof.repository";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
 import type { ReservationRecord } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
+import { computeSchedulePrice } from "@/shared/lib/schedule-availability";
 import type {
+  ConfirmPaidOfflineDTO,
   ConfirmPaymentDTO,
+  CreateGuestBookingDTO,
+  GetActiveForCourtRangeDTO,
   GetOrgReservationsDTO,
   RejectReservationDTO,
   ReservationWithDetails,
 } from "../dtos";
 import {
   InvalidReservationStatusError,
+  ReservationDurationInvalidError,
   ReservationExpiredError,
   ReservationNotFoundError,
+  ReservationPaymentNotRequiredError,
+  ReservationPricingUnavailableError,
+  ReservationTimeRangeInvalidError,
 } from "../errors/reservation.errors";
 import type { IReservationRepository } from "../repositories/reservation.repository";
 import type { IReservationEventRepository } from "../repositories/reservation-event.repository";
 
-const DEFAULT_PAYMENT_HOLD_MINUTES = 15;
+const DEFAULT_PAYMENT_HOLD_MINUTES = 45;
 
 export interface IReservationOwnerService {
   acceptReservation(
@@ -38,10 +54,22 @@ export interface IReservationOwnerService {
     userId: string,
     data: ConfirmPaymentDTO,
   ): Promise<ReservationRecord>;
+  confirmPaidOffline(
+    userId: string,
+    data: ConfirmPaidOfflineDTO,
+  ): Promise<ReservationRecord>;
   rejectReservation(
     userId: string,
     data: RejectReservationDTO,
   ): Promise<ReservationRecord>;
+  createGuestBooking(
+    userId: string,
+    data: CreateGuestBookingDTO,
+  ): Promise<ReservationRecord>;
+  getActiveForCourtRange(
+    userId: string,
+    data: GetActiveForCourtRangeDTO,
+  ): Promise<ReservationRecord[]>;
   getPendingForCourt(
     userId: string,
     courtId: string,
@@ -62,6 +90,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
     private organizationReservationPolicyRepository: IOrganizationReservationPolicyRepository,
     private organizationRepository: IOrganizationRepository,
     private transactionManager: TransactionManager,
+    private paymentProofRepository?: IPaymentProofRepository,
+    private guestProfileRepository?: IGuestProfileRepository,
+    private courtHoursRepository?: ICourtHoursRepository,
+    private courtRateRuleRepository?: ICourtRateRuleRepository,
+    private courtPriceOverrideRepository?: ICourtPriceOverrideRepository,
+    private courtBlockRepository?: ICourtBlockRepository,
   ) {}
 
   private requireCourtPlaceId(placeId: string | null): string {
@@ -310,6 +344,96 @@ export class ReservationOwnerService implements IReservationOwnerService {
     });
   }
 
+  async confirmPaidOffline(
+    userId: string,
+    data: ConfirmPaidOfflineDTO,
+  ): Promise<ReservationRecord> {
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+
+      const reservation = await this.reservationRepository.findByIdForUpdate(
+        data.reservationId,
+        ctx,
+      );
+      if (!reservation) {
+        throw new ReservationNotFoundError(data.reservationId);
+      }
+
+      await this.verifyCourtOwnership(userId, reservation.courtId, ctx);
+
+      if (reservation.status !== "CREATED") {
+        throw new InvalidReservationStatusError(
+          data.reservationId,
+          reservation.status,
+          ["CREATED"],
+        );
+      }
+
+      if (reservation.totalPriceCents <= 0) {
+        throw new ReservationPaymentNotRequiredError({
+          reservationId: data.reservationId,
+          totalPriceCents: reservation.totalPriceCents,
+        });
+      }
+
+      if (
+        reservation.expiresAt &&
+        new Date(reservation.expiresAt) < new Date()
+      ) {
+        throw new ReservationExpiredError(data.reservationId);
+      }
+
+      const now = new Date();
+
+      const updated = await this.reservationRepository.update(
+        data.reservationId,
+        {
+          status: "CONFIRMED",
+          confirmedAt: now,
+          expiresAt: null,
+        },
+        ctx,
+      );
+
+      // Create payment proof record for audit trail
+      if (this.paymentProofRepository) {
+        await this.paymentProofRepository.create(
+          {
+            reservationId: data.reservationId,
+            referenceNumber: data.paymentReference,
+            notes: "Paid offline",
+            fileUrl: null,
+          },
+          ctx,
+        );
+      }
+
+      await this.reservationEventRepository.create(
+        {
+          reservationId: data.reservationId,
+          fromStatus: "CREATED",
+          toStatus: "CONFIRMED",
+          triggeredByUserId: userId,
+          triggeredByRole: "OWNER",
+          notes: `Owner confirmed - paid offline (ref: ${data.paymentReference})`,
+        },
+        ctx,
+      );
+
+      logger.info(
+        {
+          event: "reservation.confirmed_paid_offline",
+          reservationId: data.reservationId,
+          ownerId: userId,
+          paymentReference: data.paymentReference,
+        },
+        "Reservation confirmed as paid offline by owner",
+      );
+
+      return updated;
+    });
+  }
+
   async rejectReservation(
     userId: string,
     data: RejectReservationDTO,
@@ -376,6 +500,210 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       return updated;
     });
+  }
+
+  async createGuestBooking(
+    userId: string,
+    data: CreateGuestBookingDTO,
+  ): Promise<ReservationRecord> {
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+
+      const court = await this.courtRepository.findById(data.courtId, ctx);
+      if (!court) {
+        throw new CourtNotFoundError(data.courtId);
+      }
+
+      const placeId = this.requireCourtPlaceId(court.placeId);
+      const place = await this.placeRepository.findById(placeId, ctx);
+      if (!place) {
+        throw new PlaceNotFoundError(placeId);
+      }
+
+      if (!place.organizationId) {
+        throw new NotCourtOwnerError();
+      }
+
+      const org = await this.organizationRepository.findById(
+        place.organizationId,
+        ctx,
+      );
+      if (!org || org.ownerUserId !== userId) {
+        throw new NotCourtOwnerError();
+      }
+
+      // Verify guest profile exists and belongs to same org
+      if (!this.guestProfileRepository) {
+        throw new Error("GuestProfileRepository not configured");
+      }
+      const guest = await this.guestProfileRepository.findById(
+        data.guestProfileId,
+        ctx,
+      );
+      if (!guest || guest.organizationId !== place.organizationId) {
+        throw new GuestProfileNotFoundError(data.guestProfileId);
+      }
+
+      const startTime = new Date(data.startTime);
+      const endTime = new Date(data.endTime);
+
+      if (
+        Number.isNaN(startTime.getTime()) ||
+        Number.isNaN(endTime.getTime()) ||
+        endTime <= startTime
+      ) {
+        throw new ReservationTimeRangeInvalidError({
+          startTime: data.startTime,
+          endTime: data.endTime,
+        });
+      }
+
+      const durationMinutes = differenceInMinutes(endTime, startTime);
+
+      if (durationMinutes <= 0 || durationMinutes % 60 !== 0) {
+        throw new ReservationDurationInvalidError({
+          durationMinutes,
+        });
+      }
+
+      // Check overlaps with existing reservations
+      const overlappingReservations =
+        await this.reservationRepository.findOverlappingActiveByCourtIds(
+          [data.courtId],
+          startTime,
+          endTime,
+          ctx,
+        );
+      if (overlappingReservations.length > 0) {
+        throw new CourtBlockOverlapsReservationError({
+          courtId: data.courtId,
+          startTime: startTime.toISOString(),
+          endTime: endTime.toISOString(),
+        });
+      }
+
+      // Check overlaps with court blocks
+      if (this.courtBlockRepository) {
+        const overlappingBlocks =
+          await this.courtBlockRepository.findOverlappingByCourtIds(
+            [data.courtId],
+            startTime,
+            endTime,
+            {},
+            ctx,
+          );
+        if (overlappingBlocks.length > 0) {
+          throw new CourtBlockOverlapsReservationError({
+            courtId: data.courtId,
+            startTime: startTime.toISOString(),
+            endTime: endTime.toISOString(),
+          });
+        }
+      }
+
+      if (
+        !this.courtHoursRepository ||
+        !this.courtRateRuleRepository ||
+        !this.courtPriceOverrideRepository
+      ) {
+        throw new ReservationPricingUnavailableError({
+          courtId: data.courtId,
+          startTime: data.startTime,
+          durationMinutes,
+        });
+      }
+
+      const [hours, rules, overrides] = await Promise.all([
+        this.courtHoursRepository.findByCourtIds([data.courtId], ctx),
+        this.courtRateRuleRepository.findByCourtIds([data.courtId], ctx),
+        this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+          [data.courtId],
+          startTime,
+          endTime,
+          ctx,
+        ),
+      ]);
+
+      const pricing = computeSchedulePrice({
+        startTime,
+        durationMinutes,
+        timeZone: place.timeZone,
+        hoursWindows: hours,
+        rateRules: rules,
+        priceOverrides: overrides,
+      });
+
+      if (!pricing) {
+        throw new ReservationPricingUnavailableError({
+          courtId: data.courtId,
+          startTime: data.startTime,
+          durationMinutes,
+        });
+      }
+
+      const totalPriceCents = pricing.totalPriceCents;
+      const currency = pricing.currency;
+
+      const now = new Date();
+
+      const created = await this.reservationRepository.create(
+        {
+          courtId: data.courtId,
+          startTime,
+          endTime,
+          totalPriceCents,
+          currency,
+          playerId: null,
+          guestProfileId: data.guestProfileId,
+          playerNameSnapshot: guest.displayName,
+          playerEmailSnapshot: guest.email ?? null,
+          playerPhoneSnapshot: guest.phoneNumber ?? null,
+          status: "CONFIRMED",
+          confirmedAt: now,
+          expiresAt: null,
+        },
+        ctx,
+      );
+
+      await this.reservationEventRepository.create(
+        {
+          reservationId: created.id,
+          fromStatus: null,
+          toStatus: "CONFIRMED",
+          triggeredByUserId: userId,
+          triggeredByRole: "OWNER",
+          notes: data.notes ?? "Owner created guest booking",
+        },
+        ctx,
+      );
+
+      logger.info(
+        {
+          event: "reservation.guest_booking_created",
+          reservationId: created.id,
+          courtId: data.courtId,
+          guestProfileId: data.guestProfileId,
+          ownerId: userId,
+          totalPriceCents,
+        },
+        "Guest booking created by owner",
+      );
+
+      return created;
+    });
+  }
+
+  async getActiveForCourtRange(
+    userId: string,
+    data: GetActiveForCourtRangeDTO,
+  ): Promise<ReservationRecord[]> {
+    await this.verifyCourtOwnership(userId, data.courtId);
+
+    return this.reservationRepository.findOverlappingActiveByCourtIds(
+      [data.courtId],
+      new Date(data.startTime),
+      new Date(data.endTime),
+    );
   }
 
   async getPendingForCourt(

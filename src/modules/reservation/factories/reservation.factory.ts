@@ -3,6 +3,7 @@ import { makeCourtBlockRepository } from "@/modules/court-block/factories/court-
 import { makeCourtHoursRepository } from "@/modules/court-hours/factories/court-hours.factory";
 import { makeCourtPriceOverrideRepository } from "@/modules/court-price-override/factories/court-price-override.factory";
 import { makeCourtRateRuleRepository } from "@/modules/court-rate-rule/factories/court-rate-rule.factory";
+import { makeGuestProfileRepository } from "@/modules/guest-profile/factories/guest-profile.factory";
 import {
   makeOrganizationProfileRepository,
   makeOrganizationRepository,
@@ -11,6 +12,7 @@ import {
   makeOrganizationPaymentMethodRepository,
   makeOrganizationReservationPolicyRepository,
 } from "@/modules/organization-payment/factories/organization-payment.factory";
+import { makePaymentProofRepository } from "@/modules/payment-proof/factories/payment-proof.factory";
 import {
   makePlacePhotoRepository,
   makePlaceRepository,
@@ -78,6 +80,12 @@ export function makeReservationOwnerService(): ReservationOwnerService {
       makeOrganizationReservationPolicyRepository(),
       makeOrganizationRepository(),
       getContainer().transactionManager,
+      makePaymentProofRepository(),
+      makeGuestProfileRepository(),
+      makeCourtHoursRepository(),
+      makeCourtRateRuleRepository(),
+      makeCourtPriceOverrideRepository(),
+      makeCourtBlockRepository(),
     );
   }
   return reservationOwnerService;

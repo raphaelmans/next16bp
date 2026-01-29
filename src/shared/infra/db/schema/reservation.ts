@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  check,
   index,
   integer,
   pgTable,
@@ -13,6 +14,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
 import { court } from "./court";
 import { reservationStatusEnum, triggeredByRoleEnum } from "./enums";
+import { guestProfile } from "./guest-profile";
 import { profile } from "./profile";
 
 /**
@@ -30,9 +32,12 @@ export const reservation = pgTable(
     endTime: timestamp("end_time", { withTimezone: true }).notNull(),
     totalPriceCents: integer("total_price_cents").notNull().default(0),
     currency: varchar("currency", { length: 3 }).notNull().default("PHP"),
-    playerId: uuid("player_id")
-      .notNull()
-      .references(() => profile.id, { onDelete: "cascade" }),
+    playerId: uuid("player_id").references(() => profile.id, {
+      onDelete: "cascade",
+    }),
+    guestProfileId: uuid("guest_profile_id").references(() => guestProfile.id, {
+      onDelete: "restrict",
+    }),
     playerNameSnapshot: varchar("player_name_snapshot", { length: 100 }),
     playerEmailSnapshot: varchar("player_email_snapshot", { length: 255 }),
     playerPhoneSnapshot: varchar("player_phone_snapshot", { length: 20 }),
@@ -59,11 +64,16 @@ export const reservation = pgTable(
       table.createdAt,
     ),
     index("idx_reservation_time_range").on(table.startTime, table.endTime),
+    index("idx_reservation_guest_profile").on(table.guestProfileId),
     index("idx_reservation_expires")
       .on(table.expiresAt)
       .where(
         sql`${table.status} IN ('CREATED', 'AWAITING_PAYMENT', 'PAYMENT_MARKED_BY_USER')`,
       ),
+    check(
+      "chk_reservation_identity",
+      sql`((${table.playerId} IS NOT NULL)::int + (${table.guestProfileId} IS NOT NULL)::int) = 1`,
+    ),
   ],
 );
 

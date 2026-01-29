@@ -29,8 +29,8 @@ export const organizationReservationPolicy = pgTable(
     requiresOwnerConfirmation: boolean("requires_owner_confirmation")
       .notNull()
       .default(true),
-    paymentHoldMinutes: integer("payment_hold_minutes").notNull().default(15),
-    ownerReviewMinutes: integer("owner_review_minutes").notNull().default(15),
+    paymentHoldMinutes: integer("payment_hold_minutes").notNull().default(45),
+    ownerReviewMinutes: integer("owner_review_minutes").notNull().default(45),
     cancellationCutoffMinutes: integer("cancellation_cutoff_minutes")
       .notNull()
       .default(0),

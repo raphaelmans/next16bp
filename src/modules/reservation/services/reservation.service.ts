@@ -56,7 +56,7 @@ import {
 import type { IReservationRepository } from "../repositories/reservation.repository";
 import type { IReservationEventRepository } from "../repositories/reservation-event.repository";
 
-const DEFAULT_OWNER_REVIEW_MINUTES = 15;
+const DEFAULT_OWNER_REVIEW_MINUTES = 45;
 const DEFAULT_CANCELLATION_CUTOFF_MINUTES = 0;
 
 interface CourtAvailabilitySelection {

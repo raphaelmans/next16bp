@@ -19,6 +19,13 @@ export const AcceptReservationSchema = z.object({
 
 export type AcceptReservationDTO = z.infer<typeof AcceptReservationSchema>;
 
+export const ConfirmPaidOfflineSchema = z.object({
+  reservationId: S.ids.reservationId,
+  paymentReference: S.reservation.referenceNumber,
+});
+
+export type ConfirmPaidOfflineDTO = z.infer<typeof ConfirmPaidOfflineSchema>;
+
 export const ConfirmPaymentSchema = z.object({
   reservationId: S.ids.reservationId,
   notes: S.reservation.notes,
@@ -56,6 +63,26 @@ export const GetPendingCountSchema = z.object({
 });
 
 export type GetPendingCountDTO = z.infer<typeof GetPendingCountSchema>;
+
+export const GetActiveForCourtRangeSchema = z.object({
+  courtId: S.ids.courtId,
+  startTime: S.common.isoDateTime,
+  endTime: S.common.isoDateTime,
+});
+
+export type GetActiveForCourtRangeDTO = z.infer<
+  typeof GetActiveForCourtRangeSchema
+>;
+
+export const CreateGuestBookingSchema = z.object({
+  courtId: S.ids.courtId,
+  startTime: S.common.isoDateTime,
+  endTime: S.common.isoDateTime,
+  guestProfileId: S.ids.generic,
+  notes: S.reservation.notes,
+});
+
+export type CreateGuestBookingDTO = z.infer<typeof CreateGuestBookingSchema>;
 
 export const ReservationWithDetailsSchema = z.object({
   id: S.ids.reservationId,

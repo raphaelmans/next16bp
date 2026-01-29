@@ -29,6 +29,7 @@ import { PaymentProofCard } from "./payment-proof-card";
 interface ReservationsTableProps {
   reservations: Reservation[];
   onConfirm?: (reservationId: string) => void;
+  onConfirmPaidOffline?: (reservationId: string) => void;
   onReject?: (reservationId: string) => void;
   isLoading?: boolean;
 }
@@ -76,6 +77,7 @@ const stageConfig: Record<
 export function ReservationsTable({
   reservations,
   onConfirm,
+  onConfirmPaidOffline,
   onReject,
   isLoading,
 }: ReservationsTableProps) {
@@ -183,6 +185,17 @@ export function ReservationsTable({
                     <Check className="h-4 w-4 mr-1" />
                     {confirmLabel}
                   </Button>
+                  {canAccept && reservation.amountCents > 0 && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => onConfirmPaidOffline?.(reservation.id)}
+                      disabled={isLoading}
+                    >
+                      Paid offline
+                    </Button>
+                  )}
                   <Button
                     size="sm"
                     variant="destructive"
@@ -299,6 +312,19 @@ export function ReservationsTable({
                           >
                             <Check className="h-4 w-4" />
                           </Button>
+                          {canAccept && reservation.amountCents > 0 && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onConfirmPaidOffline?.(reservation.id);
+                              }}
+                              disabled={isLoading}
+                            >
+                              Paid offline
+                            </Button>
+                          )}
                           <Button
                             size="sm"
                             variant="destructive"

@@ -115,9 +115,9 @@ type StudioView = (typeof studioViewSchema)[number];
 type BlockPreset = {
   id: string;
   label: string;
-  blockType: "MAINTENANCE" | "WALK_IN";
+  blockType: "MAINTENANCE" | "WALK_IN" | "GUEST_BOOKING";
   durationMinutes: number;
-  badgeVariant: "warning" | "paid";
+  badgeVariant: "warning" | "paid" | "default";
   description: string;
 };
 
@@ -173,6 +173,19 @@ type CourtBlockItem = {
   updatedAt: string;
 };
 
+type ReservationItem = {
+  id: string;
+  courtId: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+  totalPriceCents: number;
+  currency: string;
+  playerNameSnapshot: string | null;
+  guestProfileId: string | null;
+  playerId: string | null;
+};
+
 type DraftRowItem = {
   id: string;
   lineNumber: number;
@@ -202,6 +215,14 @@ const BLOCK_PRESETS: BlockPreset[] = [
     durationMinutes: 60,
     badgeVariant: "warning",
     description: "Block for repairs or private events.",
+  },
+  {
+    id: "preset-guest-60",
+    label: "1h Guest booking",
+    blockType: "GUEST_BOOKING",
+    durationMinutes: 60,
+    badgeVariant: "default",
+    description: "Create a confirmed reservation for a guest.",
   },
 ];
 
@@ -584,6 +605,26 @@ export default function OwnerAvailabilityStudioPage() {
     { enabled: Boolean(courtId) },
   );
 
+  const reservationsQueryInput = React.useMemo(
+    () => ({
+      courtId,
+      startTime: blocksRangeStartIso,
+      endTime: blocksRangeEndIso,
+    }),
+    [courtId, blocksRangeStartIso, blocksRangeEndIso],
+  );
+
+  const reservationsQuery =
+    trpc.reservationOwner.getActiveForCourtRange.useQuery(
+      reservationsQueryInput,
+      { enabled: Boolean(courtId) },
+    );
+
+  const activeReservations = React.useMemo(
+    () => (reservationsQuery.data ?? []) as ReservationItem[],
+    [reservationsQuery.data],
+  );
+
   const activeBlocks = React.useMemo(
     () =>
       ((blocksQuery.data ?? []) as CourtBlockItem[]).filter(
@@ -728,6 +769,131 @@ export default function OwnerAvailabilityStudioPage() {
     return byDayKey;
   }, [
     activeBlocks,
+    isWeekView,
+    placeTimeZone,
+    timelineEndMinute,
+    timelineStartMinute,
+    weekDayKeys,
+  ]);
+
+  const timelineReservations = React.useMemo(() => {
+    return activeReservations
+      .map((res) => {
+        const startTime = new Date(res.startTime);
+        const endTime = new Date(res.endTime);
+
+        if (
+          startTime >= selectedDayEndExclusive ||
+          endTime <= selectedDayStart
+        ) {
+          return null;
+        }
+
+        const segmentStart =
+          startTime > selectedDayStart ? startTime : selectedDayStart;
+        const segmentEnd =
+          endTime < selectedDayEndExclusive ? endTime : selectedDayEndExclusive;
+
+        const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
+        const endMinute = getEndMinuteForDayKey(
+          dayKey,
+          segmentEnd,
+          placeTimeZone,
+        );
+
+        if (
+          endMinute <= timelineStartMinute ||
+          startMinute >= timelineEndMinute
+        ) {
+          return null;
+        }
+
+        const clampedStart = Math.max(startMinute, timelineStartMinute);
+        const clampedEnd = Math.min(endMinute, timelineEndMinute);
+        const topOffset =
+          ((clampedStart - timelineStartMinute) / 60) * TIMELINE_ROW_HEIGHT;
+        const height = ((clampedEnd - clampedStart) / 60) * TIMELINE_ROW_HEIGHT;
+
+        return { reservation: res, topOffset, height };
+      })
+      .filter((item): item is NonNullable<typeof item> => Boolean(item));
+  }, [
+    activeReservations,
+    dayKey,
+    placeTimeZone,
+    selectedDayEndExclusive,
+    selectedDayStart,
+    timelineEndMinute,
+    timelineStartMinute,
+  ]);
+
+  const weekTimelineReservationsByDayKey = React.useMemo(() => {
+    if (!isWeekView) {
+      return new Map<
+        string,
+        Array<{
+          reservation: ReservationItem;
+          topOffset: number;
+          height: number;
+        }>
+      >();
+    }
+
+    const byDayKey = new Map<
+      string,
+      Array<{
+        reservation: ReservationItem;
+        topOffset: number;
+        height: number;
+      }>
+    >();
+
+    for (const dayKey of weekDayKeys) {
+      const dayStart = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
+      const dayEndExclusive = addDays(dayStart, 1);
+
+      const items = activeReservations
+        .map((res) => {
+          const startTime = new Date(res.startTime);
+          const endTime = new Date(res.endTime);
+          if (startTime >= dayEndExclusive || endTime <= dayStart) return null;
+
+          const segmentStart = startTime > dayStart ? startTime : dayStart;
+          const segmentEnd =
+            endTime < dayEndExclusive ? endTime : dayEndExclusive;
+          const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
+          const endMinute = getEndMinuteForDayKey(
+            dayKey,
+            segmentEnd,
+            placeTimeZone,
+          );
+
+          if (
+            endMinute <= timelineStartMinute ||
+            startMinute >= timelineEndMinute
+          ) {
+            return null;
+          }
+
+          const clampedStart = Math.max(startMinute, timelineStartMinute);
+          const clampedEnd = Math.min(endMinute, timelineEndMinute);
+          const topOffset =
+            ((clampedStart - timelineStartMinute) / 60) * TIMELINE_ROW_HEIGHT;
+          const height =
+            ((clampedEnd - clampedStart) / 60) * TIMELINE_ROW_HEIGHT;
+
+          if (height <= 0) return null;
+
+          return { reservation: res, topOffset, height };
+        })
+        .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+      byDayKey.set(dayKey, items);
+    }
+
+    return byDayKey;
+  }, [
+    activeReservations,
     isWeekView,
     placeTimeZone,
     timelineEndMinute,
@@ -1295,10 +1461,143 @@ export default function OwnerAvailabilityStudioPage() {
     }
   }, [cancelBlock, pendingRemoveBlockId]);
 
+  // Guest booking state
+  const [guestBookingOpen, setGuestBookingOpen] = React.useState(false);
+  const [, setGuestBookingTimes] = React.useState<{
+    start: Date;
+    end: Date;
+  } | null>(null);
+
+  const guestBookingFormSchema = z.object({
+    startTime: z.string().min(1, "Start time is required"),
+    endTime: z.string().min(1, "End time is required"),
+    guestMode: z.enum(["existing", "new"]),
+    guestProfileId: z.string().optional(),
+    newGuestName: z.string().optional(),
+    newGuestPhone: z.string().optional(),
+    newGuestEmail: z.string().optional(),
+    notes: z.string().optional(),
+  });
+  type GuestBookingFormValues = z.infer<typeof guestBookingFormSchema>;
+
+  const guestBookingForm = useForm<GuestBookingFormValues>({
+    resolver: zodResolver(guestBookingFormSchema),
+    defaultValues: {
+      startTime: "",
+      endTime: "",
+      guestMode: "new",
+      guestProfileId: "",
+      newGuestName: "",
+      newGuestPhone: "",
+      newGuestEmail: "",
+      notes: "",
+    },
+  });
+
+  const guestProfilesQuery = trpc.guestProfile.list.useQuery(
+    { organizationId: organization?.id ?? "", limit: 50 },
+    { enabled: guestBookingOpen && !!organization?.id },
+  );
+  const createGuestProfile = trpc.guestProfile.create.useMutation();
+  const createGuestBooking =
+    trpc.reservationOwner.createGuestBooking.useMutation({
+      onSettled() {
+        void utils.courtBlock.listForCourtRange.invalidate(blocksQueryInput);
+        void utils.reservationOwner.getActiveForCourtRange.invalidate(
+          reservationsQueryInput,
+        );
+      },
+    });
+
+  const openGuestBookingDialog = React.useCallback(
+    (start: Date, end: Date) => {
+      setGuestBookingTimes({ start, end });
+      guestBookingForm.reset({
+        startTime: formatDateTimeInput(start, placeTimeZone),
+        endTime: formatDateTimeInput(end, placeTimeZone),
+        guestMode: "new",
+        guestProfileId: "",
+        newGuestName: "",
+        newGuestPhone: "",
+        newGuestEmail: "",
+        notes: "",
+      });
+      setGuestBookingOpen(true);
+    },
+    [guestBookingForm, placeTimeZone],
+  );
+
+  const handleGuestBookingSubmit = React.useCallback(
+    async (values: GuestBookingFormValues) => {
+      if (!courtId) {
+        toast.error("Select a court first");
+        return;
+      }
+      const start = parseDateTimeInput(values.startTime, placeTimeZone);
+      const end = parseDateTimeInput(values.endTime, placeTimeZone);
+      if (!start || !end) {
+        toast.error("Invalid date or time");
+        return;
+      }
+
+      try {
+        let guestProfileId = values.guestProfileId;
+
+        if (values.guestMode === "new") {
+          if (!values.newGuestName?.trim()) {
+            toast.error("Guest name is required");
+            return;
+          }
+          const guest = await createGuestProfile.mutateAsync({
+            organizationId: organization?.id ?? "",
+            displayName: values.newGuestName.trim(),
+            phoneNumber: values.newGuestPhone?.trim() || undefined,
+            email: values.newGuestEmail?.trim() || undefined,
+          });
+          guestProfileId = guest.id;
+        }
+
+        if (!guestProfileId) {
+          toast.error("Please select or create a guest");
+          return;
+        }
+
+        await createGuestBooking.mutateAsync({
+          courtId,
+          startTime: toUtcISOString(start),
+          endTime: toUtcISOString(end),
+          guestProfileId,
+          notes: values.notes?.trim() || undefined,
+        });
+
+        toast.success("Guest booking added");
+        setGuestBookingOpen(false);
+        setGuestBookingTimes(null);
+      } catch (error) {
+        toast.error("Unable to add guest booking", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+      }
+    },
+    [
+      courtId,
+      createGuestBooking,
+      createGuestProfile,
+      organization?.id,
+      placeTimeZone,
+    ],
+  );
+
   const createBlock = React.useCallback(
     async (preset: BlockPreset, startTime: Date, endTime: Date) => {
       if (!courtId) {
         toast.error("Select a court first");
+        return;
+      }
+
+      // Guest booking presets open a dialog instead of creating directly
+      if (preset.blockType === "GUEST_BOOKING") {
+        openGuestBookingDialog(startTime, endTime);
         return;
       }
 
@@ -1339,6 +1638,7 @@ export default function OwnerAvailabilityStudioPage() {
       createMaintenance,
       createWalkIn,
       handleCancelBlock,
+      openGuestBookingDialog,
       placeTimeZone,
     ],
   );
@@ -1588,7 +1888,10 @@ export default function OwnerAvailabilityStudioPage() {
     ],
   );
 
-  const isCreatingBlock = createMaintenance.isPending || createWalkIn.isPending;
+  const isCreatingBlock =
+    createMaintenance.isPending ||
+    createWalkIn.isPending ||
+    createGuestBooking.isPending;
   const isDragDisabled = !courtId;
   const isDraftDragDisabled = !isImportEditable || !courtId;
 
@@ -2177,6 +2480,10 @@ export default function OwnerAvailabilityStudioPage() {
                                 draftBlocks={
                                   draftWeekTimelineBlocksByDayKey.get(wdk) ?? []
                                 }
+                                reservations={
+                                  weekTimelineReservationsByDayKey.get(wdk) ??
+                                  []
+                                }
                                 timeZone={placeTimeZone}
                                 disabled={isDragDisabled}
                                 isPastDay={wdk < todayDayKey}
@@ -2400,6 +2707,17 @@ export default function OwnerAvailabilityStudioPage() {
                                     />
                                   ),
                                 )}
+                                {timelineReservations.map(
+                                  ({ reservation, topOffset, height }) => (
+                                    <TimelineReservationItem
+                                      key={`res-${reservation.id}`}
+                                      reservation={reservation}
+                                      topOffset={topOffset}
+                                      height={height}
+                                      timeZone={placeTimeZone}
+                                    />
+                                  ),
+                                )}
                               </div>
                             </div>
                           </div>
@@ -2578,6 +2896,136 @@ export default function OwnerAvailabilityStudioPage() {
                 </Button>
                 <Button type="submit" disabled={isCreatingBlock}>
                   {isCreatingBlock ? "Creating..." : "Create block"}
+                </Button>
+              </DialogFooter>
+            </StandardFormProvider>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog
+          open={guestBookingOpen}
+          onOpenChange={(open) => {
+            setGuestBookingOpen(open);
+            if (!open) setGuestBookingTimes(null);
+          }}
+        >
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Add guest booking</DialogTitle>
+              <DialogDescription>
+                Create a confirmed reservation for a guest. Pricing is computed
+                from your schedule in {placeTimeZone}.
+              </DialogDescription>
+            </DialogHeader>
+            <StandardFormProvider
+              form={guestBookingForm}
+              onSubmit={handleGuestBookingSubmit}
+            >
+              <div className="space-y-4">
+                <StandardFormInput<GuestBookingFormValues>
+                  name="startTime"
+                  label="Start time"
+                  type="datetime-local"
+                  required
+                />
+                <StandardFormInput<GuestBookingFormValues>
+                  name="endTime"
+                  label="End time"
+                  type="datetime-local"
+                  required
+                />
+
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Guest</p>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant={
+                        guestBookingForm.watch("guestMode") === "existing"
+                          ? "default"
+                          : "outline"
+                      }
+                      size="sm"
+                      onClick={() =>
+                        guestBookingForm.setValue("guestMode", "existing")
+                      }
+                    >
+                      Select existing
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={
+                        guestBookingForm.watch("guestMode") === "new"
+                          ? "default"
+                          : "outline"
+                      }
+                      size="sm"
+                      onClick={() =>
+                        guestBookingForm.setValue("guestMode", "new")
+                      }
+                    >
+                      Create new
+                    </Button>
+                  </div>
+                </div>
+
+                {guestBookingForm.watch("guestMode") === "existing" ? (
+                  <StandardFormSelect<GuestBookingFormValues>
+                    name="guestProfileId"
+                    label="Select guest"
+                    placeholder="Choose a guest..."
+                    emptyOptionLabel="Choose a guest..."
+                    options={(guestProfilesQuery.data ?? []).map((guest) => ({
+                      value: guest.id,
+                      label: `${guest.displayName}${guest.phoneNumber ? ` (${guest.phoneNumber})` : ""}`,
+                    }))}
+                    required
+                  />
+                ) : (
+                  <>
+                    <StandardFormInput<GuestBookingFormValues>
+                      name="newGuestName"
+                      label="Guest name"
+                      placeholder="Juan Dela Cruz"
+                      required
+                    />
+                    <StandardFormInput<GuestBookingFormValues>
+                      name="newGuestPhone"
+                      label="Phone (optional)"
+                      placeholder="09171234567"
+                    />
+                    <StandardFormInput<GuestBookingFormValues>
+                      name="newGuestEmail"
+                      label="Email (optional)"
+                      placeholder="guest@example.com"
+                    />
+                  </>
+                )}
+
+                <StandardFormTextarea<GuestBookingFormValues>
+                  name="notes"
+                  label="Notes (optional)"
+                  placeholder="Internal notes"
+                />
+              </div>
+              <DialogFooter className="pt-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => {
+                    setGuestBookingOpen(false);
+                    setGuestBookingTimes(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={
+                    createGuestBooking.isPending || createGuestProfile.isPending
+                  }
+                >
+                  Save guest booking
                 </Button>
               </DialogFooter>
             </StandardFormProvider>
@@ -2977,6 +3425,7 @@ const WeekDayColumn = React.memo(function WeekDayColumn({
   hours,
   blocks,
   draftBlocks,
+  reservations,
   timeZone,
   disabled,
   isPastDay,
@@ -2988,6 +3437,11 @@ const WeekDayColumn = React.memo(function WeekDayColumn({
   blocks: Array<{ block: CourtBlockItem; topOffset: number; height: number }>;
   draftBlocks: Array<{
     row: DraftRowItem;
+    topOffset: number;
+    height: number;
+  }>;
+  reservations: Array<{
+    reservation: ReservationItem;
     topOffset: number;
     height: number;
   }>;
@@ -3040,6 +3494,104 @@ const WeekDayColumn = React.memo(function WeekDayColumn({
             timeZone={timeZone}
           />
         ))}
+        {reservations.map(({ reservation, topOffset, height }) => (
+          <TimelineReservationItem
+            key={`res-${reservation.id}`}
+            reservation={reservation}
+            topOffset={topOffset}
+            height={height}
+            timeZone={timeZone}
+            compact
+          />
+        ))}
+      </div>
+    </div>
+  );
+});
+
+const TimelineReservationItem = React.memo(function TimelineReservationItem({
+  reservation,
+  topOffset,
+  height,
+  timeZone,
+  compact,
+}: {
+  reservation: ReservationItem;
+  topOffset: number;
+  height: number;
+  timeZone: string;
+  compact?: boolean;
+}) {
+  const isGuest = Boolean(reservation.guestProfileId);
+  const label =
+    reservation.playerNameSnapshot ?? (isGuest ? "Guest" : "Player");
+  const statusLabel =
+    reservation.status === "CONFIRMED"
+      ? "Confirmed"
+      : reservation.status === "CREATED"
+        ? "Pending"
+        : reservation.status;
+
+  return (
+    <div
+      style={{ top: topOffset, height }}
+      className={cn(
+        "pointer-events-auto absolute rounded-lg border bg-card/90 text-card-foreground shadow-sm",
+        compact
+          ? "left-0.5 right-0.5 border-l-2 px-1 py-0.5"
+          : "left-1 right-1 border-l-4 px-3 py-2",
+        "border-l-emerald-500",
+        "cursor-default",
+      )}
+    >
+      <div
+        className={cn(
+          "flex items-center justify-between",
+          compact ? "gap-0.5" : "gap-2",
+        )}
+      >
+        {compact ? (
+          <span className="text-[10px] font-semibold truncate text-emerald-600">
+            R
+          </span>
+        ) : (
+          <Badge variant="success" className="text-[10px] px-1.5 py-0">
+            {statusLabel}
+          </Badge>
+        )}
+        {!compact && reservation.totalPriceCents > 0 && (
+          <span className="text-xs text-muted-foreground">
+            {formatCurrency(reservation.totalPriceCents, reservation.currency)}
+          </span>
+        )}
+      </div>
+      {!compact && (
+        <div className="mt-1 text-xs font-medium">
+          {formatTimeRangeInTimeZone(
+            reservation.startTime,
+            reservation.endTime,
+            timeZone,
+          )}
+        </div>
+      )}
+      {compact && (
+        <div className="text-[9px] text-muted-foreground truncate">
+          {formatTimeRangeInTimeZone(
+            reservation.startTime,
+            reservation.endTime,
+            timeZone,
+          )}
+        </div>
+      )}
+      <div
+        className={cn(
+          "truncate",
+          compact
+            ? "text-[9px] text-muted-foreground"
+            : "text-[11px] text-muted-foreground",
+        )}
+      >
+        {label}
       </div>
     </div>
   );

@@ -19,6 +19,8 @@ export * from "./court-price-override";
 export * from "./court-rate-rule";
 // Enums (must be exported first as they are referenced by other schemas)
 export * from "./enums";
+// Guest profile
+export * from "./guest-profile";
 // Core tables
 export * from "./organization";
 export * from "./organization-payment";

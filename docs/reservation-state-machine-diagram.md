@@ -2,9 +2,10 @@
 stateDiagram-v2
   direction LR
   [*] --> CREATED: player requests booking
+  [*] --> CONFIRMED: owner creates guest booking (offline/handled payment)
 
-  CREATED --> CONFIRMED: owner accepts (free)
-  CREATED --> AWAITING_PAYMENT: owner accepts (paid)
+  CREATED --> CONFIRMED: owner accepts (free) OR owner confirms (paid offline)
+  CREATED --> AWAITING_PAYMENT: owner accepts (paid, online payment)
   CREATED --> CANCELLED: owner reject OR player cancel
   CREATED --> EXPIRED: cron expiresAt < now
 
@@ -34,6 +35,8 @@ stateDiagram-v2
   note right of CONFIRMED
     free bookings confirm after owner accept
     paid bookings confirm after owner payment confirm
+    paid bookings (offline) confirm directly from CREATED
+    guest bookings start here (owner-created)
     slot -> BOOKED
   end note
 

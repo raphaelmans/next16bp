@@ -5,7 +5,10 @@ This is an ASCII companion to the reservation contract described in:
 - `docs/reservation-state-machine-level-1-product.md`
 - `docs/reservation-state-machine-level-2-engineering.md`
 
-It models the current **mutual confirmation** flow with TTL expiration.
+It models the current **mutual confirmation** flow with TTL expiration, plus the **guest booking** and **offline payment** paths.
+
+### Identity invariant
+Every reservation has **exactly one** of `playerId` (player booking) or `guestProfileId` (guest booking). These are mutually exclusive.
 
 ---
 
@@ -24,6 +27,14 @@ Legend:
                              +----------+----------+
                                         |
                                         v
+
+  Guest booking (owner-created):
+    [*] ──────────────────────> CONFIRMED
+    (offline/handled payment, no timers, guestProfileId set)
+
+  Player booking (paid, offline payment):
+    CREATED ──────────────────> CONFIRMED
+    (owner confirms directly, bypasses payment flow)
 +-----------------------------------------------------------------------------------+
 |                                   RESERVATION                                     |
 +-----------------------------------------------------------------------------------+
@@ -31,14 +42,14 @@ Legend:
           +-------------------+
           |     CREATED       |
           | time range: reserved (excluded from availability)
-          | expiresAt: now + 15m (owner accept window)
+          | expiresAt: now + 45m (owner accept window)
           +----+--------+---+
                |        |
                |        | owner accepts (paid)
                |        v
                |   +-------------------+
                |   |  AWAITING_PAYMENT |
-               |   | expiresAt: now + 15m (payment window)
+               |   | expiresAt: now + 45m (payment window)
                |   +----+--------+---+
                |        |        |
                |        | player marks payment
@@ -131,20 +142,38 @@ Notes:
 
 ```text
 Player:   request booking (courtId + startTime + endTime)
-Resv:     CREATED (expiresAt = now + 15m)
+Resv:     CREATED (expiresAt = now + 45m)
           → time range excluded from availability
 Owner:    accepts (free)
 Resv:     CONFIRMED
 ```
 
-### B) Paid booking (mutual confirmation)
+### B) Paid booking (offline payment — owner confirms directly)
 
 ```text
 Player:   request booking (courtId + startTime + endTime)
-Resv:     CREATED (expiresAt = now + 15m)
+Resv:     CREATED (expiresAt = now + 45m)
+          → time range excluded from availability
+Owner:    accepts + confirms offline payment
+Resv:     CONFIRMED (bypasses AWAITING_PAYMENT)
+```
+
+### C) Guest booking (owner-created)
+
+```text
+Owner:    creates guest booking (courtId + startTime + endTime + guestProfileId)
+Resv:     CONFIRMED (immediately, no timers)
+          → time range excluded from availability
+```
+
+### D) Paid booking (mutual confirmation)
+
+```text
+Player:   request booking (courtId + startTime + endTime)
+Resv:     CREATED (expiresAt = now + 45m)
           → time range excluded from availability
 Owner:    accepts (paid)
-Resv:     AWAITING_PAYMENT (expiresAt reset = now + 15m)
+Resv:     AWAITING_PAYMENT (expiresAt reset = now + 45m)
 Player:   marks payment (uploads proof / confirms paid)
 Resv:     PAYMENT_MARKED_BY_USER (can still expire)
 Owner:    confirms payment

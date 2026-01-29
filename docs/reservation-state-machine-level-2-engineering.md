@@ -10,14 +10,22 @@ Availability is **computed on-the-fly**, not stored:
 - `court_block` entries subtract from available time ranges (owner-defined exceptions).
 - Reservations store `courtId + startTime + endTime` directly (no slot FK).
 
+## Identity invariant
+
+Every reservation has **exactly one** of:
+- `playerId` — registered player (player-created bookings).
+- `guestProfileId` — ad-hoc guest profile (owner-created guest bookings).
+
+These columns are mutually exclusive; a CHECK constraint enforces that exactly one is non-null.
+
 ## Reservation statuses
 - `CREATED`
-  - Meaning: booking request created by player.
+  - Meaning: booking request created by player (player bookings only; guest bookings skip this).
   - Availability effect: time range excluded from availability (pending reservation).
-  - TTL: `expiresAt` is set to `now + 15 minutes` (owner acceptance window).
+  - TTL: `expiresAt` is set to `now + 45 minutes` (owner acceptance window).
 - `AWAITING_PAYMENT`
   - Meaning: owner accepted a paid request; waiting for player payment.
-  - TTL: `expiresAt` is reset to `now + 15 minutes` (fresh payment window).
+  - TTL: `expiresAt` is reset to `now + 45 minutes` (fresh payment window).
 - `PAYMENT_MARKED_BY_USER`
   - Meaning: player marked payment complete; waiting for owner confirmation.
   - TTL: uses the same `expiresAt` window (does not extend).
@@ -25,6 +33,8 @@ Availability is **computed on-the-fly**, not stored:
   - Meaning: final state.
   - Free: owner acceptance transitions directly to `CONFIRMED`.
   - Paid: owner confirmation transitions to `CONFIRMED`.
+  - Paid (offline): owner confirms directly from `CREATED`, bypassing payment flow.
+  - Guest booking: created directly as `CONFIRMED` by owner (`[*] → CONFIRMED`).
 - `CANCELLED`
   - Meaning: request/reservation was cancelled by player or cancelled/rejected by owner.
   - Availability effect: time range becomes available again (computed).
@@ -33,8 +43,9 @@ Availability is **computed on-the-fly**, not stored:
   - Availability effect: time range becomes available again (computed).
 
 ## Key transitions
+- `[*]` → `CONFIRMED` (owner creates guest booking — offline/handled payment).
 - `CREATED` → `AWAITING_PAYMENT` (owner accepts a paid request).
-- `CREATED` → `CONFIRMED` (owner accepts a free request).
+- `CREATED` → `CONFIRMED` (owner accepts a free request, OR owner confirms paid request with offline payment).
 - `CREATED` → `CANCELLED` (player cancels or owner cancels/rejects).
 - `CREATED` → `EXPIRED` (TTL cron).
 
@@ -50,9 +61,10 @@ Availability is **computed on-the-fly**, not stored:
 ```mermaid
 stateDiagram-v2
   [*] --> CREATED: player requests booking
+  [*] --> CONFIRMED: owner creates guest booking (offline/handled payment)
 
-  CREATED --> CONFIRMED: owner accepts (free)
-  CREATED --> AWAITING_PAYMENT: owner accepts (paid)
+  CREATED --> CONFIRMED: owner accepts (free) OR owner confirms (paid offline)
+  CREATED --> AWAITING_PAYMENT: owner accepts (paid, online payment)
   CREATED --> CANCELLED: player cancels OR owner cancels/rejects
   CREATED --> EXPIRED: TTL cron (expiresAt < now)
 
@@ -90,10 +102,10 @@ Where:
 
 ## TTL rules
 - **Owner acceptance window**
-  - On `CREATED`, set `expiresAt = now + 15 minutes`.
+  - On `CREATED`, set `expiresAt = now + 45 minutes`.
   - If not accepted in time: expire and release.
 - **Payment window**
-  - When owner accepts a paid request: set `expiresAt = now + 15 minutes` (fresh).
+  - When owner accepts a paid request: set `expiresAt = now + 45 minutes` (fresh).
   - Marking payment does not extend the deadline.
 - **Expiration scope**
   - Cron expiration applies to `CREATED`, `AWAITING_PAYMENT`, and `PAYMENT_MARKED_BY_USER` when `expiresAt < now`.

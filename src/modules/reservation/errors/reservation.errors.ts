@@ -91,6 +91,38 @@ export class TermsNotAcceptedError extends ValidationError {
   }
 }
 
+export class ReservationTimeRangeInvalidError extends ValidationError {
+  readonly code = "RESERVATION_TIME_RANGE_INVALID";
+
+  constructor(details?: Record<string, unknown>) {
+    super("End time must be after start time.", details);
+  }
+}
+
+export class ReservationDurationInvalidError extends ValidationError {
+  readonly code = "RESERVATION_DURATION_INVALID";
+
+  constructor(details?: Record<string, unknown>) {
+    super("Duration must be in 60-minute increments.", details);
+  }
+}
+
+export class ReservationPricingUnavailableError extends ValidationError {
+  readonly code = "RESERVATION_PRICING_UNAVAILABLE";
+
+  constructor(details?: Record<string, unknown>) {
+    super("Schedule pricing does not cover this time range.", details);
+  }
+}
+
+export class ReservationPaymentNotRequiredError extends ValidationError {
+  readonly code = "RESERVATION_PAYMENT_NOT_REQUIRED";
+
+  constructor(details?: Record<string, unknown>) {
+    super("Reservation does not require payment.", details);
+  }
+}
+
 export class BookingWindowExceededError extends ValidationError {
   readonly code = "BOOKING_WINDOW_EXCEEDED";
 
