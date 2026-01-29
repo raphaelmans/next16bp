@@ -1,5 +1,4 @@
 import { createStore } from "zustand/vanilla";
-import type { DragPreset } from "../components/booking-studio/types";
 
 export interface BookingStudioState {
   // Dialog state
@@ -15,20 +14,19 @@ export interface BookingStudioState {
 
   // Mobile drawer
   mobileDrawerOpen: boolean;
-  mobileBlockType: "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING";
-  mobileCommittedRange: { startIdx: number; endIdx: number } | null;
-  mobileGuestModeState: "new" | "existing";
 
-  // Mobile refs (stored as plain values)
-  mobileGuestMode: "new" | "existing";
-  mobileGuestName: string;
-  mobileGuestPhone: string;
-  mobileGuestEmail: string;
-  mobileGuestProfileId: string;
-  mobileNotes: string;
+  // Selection panel (shared between mobile drawer & desktop sidebar)
+  selectionBlockType: "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING";
+  committedRange: { startIdx: number; endIdx: number } | null;
+  guestModeState: "new" | "existing";
 
-  // Drag
-  activeDragItem: DragPreset | null;
+  // Selection panel refs (stored as plain values)
+  guestMode: "new" | "existing";
+  guestName: string;
+  guestPhone: string;
+  guestEmail: string;
+  guestProfileId: string;
+  notes: string;
 
   // Calendar
   calendarMonth: Date;
@@ -43,27 +41,26 @@ export interface BookingStudioState {
   setDebouncedGuestSearch: (search: string) => void;
   setGuestComboboxOpen: (open: boolean) => void;
   setMobileDrawerOpen: (open: boolean) => void;
-  setMobileBlockType: (
+  setSelectionBlockType: (
     type: "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING",
   ) => void;
-  setMobileCommittedRange: (
+  setCommittedRange: (
     range: { startIdx: number; endIdx: number } | null,
   ) => void;
-  setMobileGuestModeState: (mode: "new" | "existing") => void;
-  setMobileGuestMode: (mode: "new" | "existing") => void;
-  setMobileGuestName: (name: string) => void;
-  setMobileGuestPhone: (phone: string) => void;
-  setMobileGuestEmail: (email: string) => void;
-  setMobileGuestProfileId: (id: string) => void;
-  setMobileNotes: (notes: string) => void;
-  setActiveDragItem: (item: DragPreset | null) => void;
+  setGuestModeState: (mode: "new" | "existing") => void;
+  setGuestMode: (mode: "new" | "existing") => void;
+  setGuestName: (name: string) => void;
+  setGuestPhone: (phone: string) => void;
+  setGuestEmail: (email: string) => void;
+  setGuestProfileId: (id: string) => void;
+  setNotes: (notes: string) => void;
   setCalendarMonth: (month: Date) => void;
   setMobileCalendarOpen: (open: boolean) => void;
 
   // Compound actions
   openGuestBookingDialog: (start: Date, end: Date) => void;
   closeGuestBookingDialog: () => void;
-  resetMobileDrawer: () => void;
+  resetSelectionPanel: () => void;
 }
 
 export type BookingStudioStoreApi = ReturnType<typeof createBookingStudioStore>;
@@ -83,20 +80,19 @@ export const createBookingStudioStore = (initialDate: Date) =>
 
     // Mobile drawer
     mobileDrawerOpen: false,
-    mobileBlockType: "GUEST_BOOKING",
-    mobileCommittedRange: null,
-    mobileGuestModeState: "existing",
 
-    // Mobile refs
-    mobileGuestMode: "existing",
-    mobileGuestName: "",
-    mobileGuestPhone: "",
-    mobileGuestEmail: "",
-    mobileGuestProfileId: "",
-    mobileNotes: "",
+    // Selection panel
+    selectionBlockType: "GUEST_BOOKING",
+    committedRange: null,
+    guestModeState: "existing",
 
-    // Drag
-    activeDragItem: null,
+    // Selection panel refs
+    guestMode: "existing",
+    guestName: "",
+    guestPhone: "",
+    guestEmail: "",
+    guestProfileId: "",
+    notes: "",
 
     // Calendar
     calendarMonth: initialDate,
@@ -111,16 +107,15 @@ export const createBookingStudioStore = (initialDate: Date) =>
     setDebouncedGuestSearch: (search) => set({ debouncedGuestSearch: search }),
     setGuestComboboxOpen: (open) => set({ guestComboboxOpen: open }),
     setMobileDrawerOpen: (open) => set({ mobileDrawerOpen: open }),
-    setMobileBlockType: (type) => set({ mobileBlockType: type }),
-    setMobileCommittedRange: (range) => set({ mobileCommittedRange: range }),
-    setMobileGuestModeState: (mode) => set({ mobileGuestModeState: mode }),
-    setMobileGuestMode: (mode) => set({ mobileGuestMode: mode }),
-    setMobileGuestName: (name) => set({ mobileGuestName: name }),
-    setMobileGuestPhone: (phone) => set({ mobileGuestPhone: phone }),
-    setMobileGuestEmail: (email) => set({ mobileGuestEmail: email }),
-    setMobileGuestProfileId: (id) => set({ mobileGuestProfileId: id }),
-    setMobileNotes: (notes) => set({ mobileNotes: notes }),
-    setActiveDragItem: (item) => set({ activeDragItem: item }),
+    setSelectionBlockType: (type) => set({ selectionBlockType: type }),
+    setCommittedRange: (range) => set({ committedRange: range }),
+    setGuestModeState: (mode) => set({ guestModeState: mode }),
+    setGuestMode: (mode) => set({ guestMode: mode }),
+    setGuestName: (name) => set({ guestName: name }),
+    setGuestPhone: (phone) => set({ guestPhone: phone }),
+    setGuestEmail: (email) => set({ guestEmail: email }),
+    setGuestProfileId: (id) => set({ guestProfileId: id }),
+    setNotes: (notes) => set({ notes: notes }),
     setCalendarMonth: (month) => set({ calendarMonth: month }),
     setMobileCalendarOpen: (open) => set({ mobileCalendarOpen: open }),
 
@@ -135,16 +130,16 @@ export const createBookingStudioStore = (initialDate: Date) =>
         guestBookingOpen: false,
         guestBookingTimes: null,
       }),
-    resetMobileDrawer: () =>
+    resetSelectionPanel: () =>
       set({
         mobileDrawerOpen: false,
-        mobileCommittedRange: null,
-        mobileNotes: "",
-        mobileGuestName: "",
-        mobileGuestPhone: "",
-        mobileGuestEmail: "",
-        mobileGuestProfileId: "",
-        mobileGuestMode: "existing",
-        mobileGuestModeState: "existing",
+        committedRange: null,
+        notes: "",
+        guestName: "",
+        guestPhone: "",
+        guestEmail: "",
+        guestProfileId: "",
+        guestMode: "existing",
+        guestModeState: "existing",
       }),
   }));

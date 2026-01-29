@@ -10,9 +10,8 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useBookingStudio } from "./booking-studio-provider";
-import { MobileGuestForm } from "./mobile-guest-form";
+import { SelectionPanelForm } from "./selection-panel-form";
 
 export const MobileCreateBlockDrawer = React.memo(
   function MobileCreateBlockDrawer({
@@ -31,22 +30,18 @@ export const MobileCreateBlockDrawer = React.memo(
     onDrawerClose: (open: boolean) => void;
   }) {
     const mobileDrawerOpen = useBookingStudio((s) => s.mobileDrawerOpen);
-    const mobileBlockType = useBookingStudio((s) => s.mobileBlockType);
-    const setMobileBlockType = useBookingStudio((s) => s.setMobileBlockType);
-    const mobileGuestModeState = useBookingStudio(
-      (s) => s.mobileGuestModeState,
+    const selectionBlockType = useBookingStudio((s) => s.selectionBlockType);
+    const setSelectionBlockType = useBookingStudio(
+      (s) => s.setSelectionBlockType,
     );
-    const setMobileGuestMode = useBookingStudio((s) => s.setMobileGuestMode);
-    const setMobileGuestModeState = useBookingStudio(
-      (s) => s.setMobileGuestModeState,
-    );
-    const setMobileGuestName = useBookingStudio((s) => s.setMobileGuestName);
-    const setMobileGuestPhone = useBookingStudio((s) => s.setMobileGuestPhone);
-    const setMobileGuestEmail = useBookingStudio((s) => s.setMobileGuestEmail);
-    const setMobileGuestProfileId = useBookingStudio(
-      (s) => s.setMobileGuestProfileId,
-    );
-    const setMobileNotes = useBookingStudio((s) => s.setMobileNotes);
+    const guestModeState = useBookingStudio((s) => s.guestModeState);
+    const setGuestMode = useBookingStudio((s) => s.setGuestMode);
+    const setGuestModeState = useBookingStudio((s) => s.setGuestModeState);
+    const setGuestName = useBookingStudio((s) => s.setGuestName);
+    const setGuestPhone = useBookingStudio((s) => s.setGuestPhone);
+    const setGuestEmail = useBookingStudio((s) => s.setGuestEmail);
+    const setGuestProfileId = useBookingStudio((s) => s.setGuestProfileId);
+    const setNotes = useBookingStudio((s) => s.setNotes);
 
     return (
       <Drawer open={mobileDrawerOpen} onOpenChange={onDrawerClose}>
@@ -58,62 +53,21 @@ export const MobileCreateBlockDrawer = React.memo(
             </DrawerDescription>
           </DrawerHeader>
           <div className="overflow-y-auto px-4 pb-4 space-y-4">
-            <ToggleGroup
-              type="single"
-              value={mobileBlockType}
-              onValueChange={(value) => {
-                if (value)
-                  setMobileBlockType(
-                    value as "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING",
-                  );
+            <SelectionPanelForm
+              blockType={selectionBlockType}
+              onBlockTypeChange={setSelectionBlockType}
+              guestModeState={guestModeState}
+              organizationId={organizationId}
+              onGuestModeChange={(mode) => {
+                setGuestMode(mode);
+                setGuestModeState(mode);
               }}
-              className="w-full"
-            >
-              <ToggleGroupItem value="GUEST_BOOKING" className="flex-1">
-                Guest
-              </ToggleGroupItem>
-              <ToggleGroupItem value="WALK_IN" className="flex-1">
-                Walk-in
-              </ToggleGroupItem>
-              <ToggleGroupItem value="MAINTENANCE" className="flex-1">
-                Maintenance
-              </ToggleGroupItem>
-            </ToggleGroup>
-
-            {mobileBlockType !== "GUEST_BOOKING" ? (
-              <label className="block space-y-2">
-                <span className="text-sm font-medium">Note (optional)</span>
-                <textarea
-                  className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
-                  placeholder={
-                    mobileBlockType === "MAINTENANCE"
-                      ? "e.g. Net replacement"
-                      : "e.g. Regular customer"
-                  }
-                  rows={2}
-                  defaultValue=""
-                  onChange={(e) => {
-                    setMobileNotes(e.target.value);
-                  }}
-                />
-              </label>
-            ) : null}
-
-            {mobileBlockType === "GUEST_BOOKING" ? (
-              <MobileGuestForm
-                guestMode={mobileGuestModeState}
-                onGuestModeChange={(mode) => {
-                  setMobileGuestMode(mode);
-                  setMobileGuestModeState(mode);
-                }}
-                organizationId={organizationId}
-                onGuestNameChange={setMobileGuestName}
-                onGuestPhoneChange={setMobileGuestPhone}
-                onGuestEmailChange={setMobileGuestEmail}
-                onGuestProfileIdChange={setMobileGuestProfileId}
-                onNotesChange={setMobileNotes}
-              />
-            ) : null}
+              onGuestNameChange={setGuestName}
+              onGuestPhoneChange={setGuestPhone}
+              onGuestEmailChange={setGuestEmail}
+              onGuestProfileIdChange={setGuestProfileId}
+              onNotesChange={setNotes}
+            />
           </div>
           <DrawerFooter className="pb-safe">
             <Button
@@ -123,9 +77,9 @@ export const MobileCreateBlockDrawer = React.memo(
             >
               {isCreatingBlock
                 ? "Saving..."
-                : mobileBlockType === "WALK_IN"
+                : selectionBlockType === "WALK_IN"
                   ? "Save walk-in booking"
-                  : mobileBlockType === "MAINTENANCE"
+                  : selectionBlockType === "MAINTENANCE"
                     ? "Save maintenance block"
                     : "Save guest booking"}
             </Button>

@@ -1,0 +1,89 @@
+"use client";
+
+import * as React from "react";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { MobileGuestForm } from "./mobile-guest-form";
+
+export const SelectionPanelForm = React.memo(function SelectionPanelForm({
+  blockType,
+  onBlockTypeChange,
+  guestModeState,
+  organizationId,
+  onGuestModeChange,
+  onGuestNameChange,
+  onGuestPhoneChange,
+  onGuestEmailChange,
+  onGuestProfileIdChange,
+  onNotesChange,
+}: {
+  blockType: "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING";
+  onBlockTypeChange: (
+    type: "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING",
+  ) => void;
+  guestModeState: "new" | "existing";
+  organizationId: string;
+  onGuestModeChange: (mode: "new" | "existing") => void;
+  onGuestNameChange: (v: string) => void;
+  onGuestPhoneChange: (v: string) => void;
+  onGuestEmailChange: (v: string) => void;
+  onGuestProfileIdChange: (v: string) => void;
+  onNotesChange: (v: string) => void;
+}) {
+  return (
+    <>
+      <ToggleGroup
+        type="single"
+        value={blockType}
+        onValueChange={(value) => {
+          if (value)
+            onBlockTypeChange(
+              value as "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING",
+            );
+        }}
+        className="w-full"
+      >
+        <ToggleGroupItem value="GUEST_BOOKING" className="flex-1">
+          Guest
+        </ToggleGroupItem>
+        <ToggleGroupItem value="WALK_IN" className="flex-1">
+          Walk-in
+        </ToggleGroupItem>
+        <ToggleGroupItem value="MAINTENANCE" className="flex-1">
+          Maintenance
+        </ToggleGroupItem>
+      </ToggleGroup>
+
+      {blockType !== "GUEST_BOOKING" ? (
+        <label className="block space-y-2">
+          <span className="text-sm font-medium">Note (optional)</span>
+          <textarea
+            className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+            placeholder={
+              blockType === "MAINTENANCE"
+                ? "e.g. Net replacement"
+                : "e.g. Regular customer"
+            }
+            rows={2}
+            defaultValue=""
+            onChange={(e) => {
+              onNotesChange(e.target.value);
+            }}
+          />
+        </label>
+      ) : null}
+
+      {blockType === "GUEST_BOOKING" ? (
+        <MobileGuestForm
+          guestMode={guestModeState}
+          onGuestModeChange={onGuestModeChange}
+          organizationId={organizationId}
+          onGuestNameChange={onGuestNameChange}
+          onGuestPhoneChange={onGuestPhoneChange}
+          onGuestEmailChange={onGuestEmailChange}
+          onGuestProfileIdChange={onGuestProfileIdChange}
+          onNotesChange={onNotesChange}
+        />
+      ) : null}
+    </>
+  );
+});

@@ -2,11 +2,16 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import {
+  type RangeSelectionConfig,
+  RangeSelectionProvider,
+} from "@/shared/components/kudos/range-selection";
 import { DraftTimelineBlock } from "./draft-row-card";
+import { SelectableTimelineRow } from "./selectable-timeline-row";
 import { TimelineBlockItem } from "./timeline-block-item";
-import { TimelineDropRow } from "./timeline-drop-row";
 import { TimelineReservationItem } from "./timeline-reservation-item";
 import type { CourtBlockItem, DraftRowItem, ReservationItem } from "./types";
+import { getMinuteOfDay } from "./types";
 
 export const WeekDayColumn = React.memo(function WeekDayColumn({
   dayKey,
@@ -19,6 +24,8 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   isPastDay,
   pendingBlockIds,
   onRemoveBlock,
+  committedRange,
+  onCommitRange,
 }: {
   dayKey: string;
   hours: number[];
@@ -38,59 +45,119 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   isPastDay?: boolean;
   pendingBlockIds: Set<string>;
   onRemoveBlock?: (blockId: string) => void;
+  committedRange: { startIdx: number; endIdx: number } | null;
+  onCommitRange: (dayKey: string, startIdx: number, endIdx: number) => void;
 }) {
+  const startHour = hours[0] ?? 0;
+
+  const selectionConfig = React.useMemo<RangeSelectionConfig>(() => {
+    const blockedHourIndices = new Set<number>();
+    for (const { block } of blocks) {
+      const blockStart = getMinuteOfDay(block.startTime, timeZone);
+      const blockEnd = getMinuteOfDay(block.endTime, timeZone);
+      for (let m = blockStart; m < blockEnd; m += 60) {
+        const idx = Math.floor(m / 60) - startHour;
+        if (idx >= 0 && idx < hours.length) {
+          blockedHourIndices.add(idx);
+        }
+      }
+    }
+    for (const { reservation } of reservations) {
+      const resStart = getMinuteOfDay(reservation.startTime, timeZone);
+      const resEnd = getMinuteOfDay(reservation.endTime, timeZone);
+      for (let m = resStart; m < resEnd; m += 60) {
+        const idx = Math.floor(m / 60) - startHour;
+        if (idx >= 0 && idx < hours.length) {
+          blockedHourIndices.add(idx);
+        }
+      }
+    }
+
+    return {
+      isCellAvailable: (idx: number) =>
+        idx >= 0 && idx < hours.length && !blockedHourIndices.has(idx),
+      computeRange: (anchorIdx: number, targetIdx: number) => {
+        const lo = Math.min(anchorIdx, targetIdx);
+        const hi = Math.max(anchorIdx, targetIdx);
+        for (let i = lo; i <= hi; i++) {
+          if (blockedHourIndices.has(i)) return null;
+        }
+        return { startIdx: lo, endIdx: hi };
+      },
+      clampToContiguous: (anchorIdx: number, targetIdx: number) => {
+        const dir = targetIdx >= anchorIdx ? 1 : -1;
+        let current = anchorIdx;
+        while (current !== targetIdx) {
+          const next = current + dir;
+          if (blockedHourIndices.has(next)) break;
+          current = next;
+        }
+        return current;
+      },
+      commitRange: (s: number, e: number) => {
+        onCommitRange(dayKey, s, e);
+      },
+    };
+  }, [blocks, dayKey, hours, onCommitRange, reservations, startHour, timeZone]);
+
   return (
-    <div
-      className={cn(
-        "relative border-l border-border/70",
-        isPastDay && "bg-muted/40",
-      )}
+    <RangeSelectionProvider
+      config={selectionConfig}
+      committedRange={committedRange}
     >
-      <div className="space-y-0">
-        {hours.map((hour) => (
-          <TimelineDropRow
-            key={`week-drop-${dayKey}-${hour}`}
-            dayKey={dayKey}
-            startMinute={hour * 60}
-            disabled={disabled}
-          />
-        ))}
+      <div
+        className={cn(
+          "relative border-l border-border/70",
+          isPastDay && "bg-muted/40",
+        )}
+      >
+        <div className="space-y-0">
+          {hours.map((hour, hourIndex) => (
+            <SelectableTimelineRow
+              key={`week-cell-${dayKey}-${hour}`}
+              dayKey={dayKey}
+              startMinute={hour * 60}
+              disabled={disabled}
+              cellIndex={hourIndex}
+            />
+          ))}
+        </div>
+        <div className="pointer-events-none absolute inset-0">
+          {blocks.map(({ block, topOffset, height }) => (
+            <TimelineBlockItem
+              key={block.id}
+              block={block}
+              topOffset={topOffset}
+              height={height}
+              timeZone={timeZone}
+              disabled={disabled}
+              isPending={pendingBlockIds.has(block.id)}
+              isPastDay={isPastDay}
+              compact
+              onRemove={onRemoveBlock}
+            />
+          ))}
+          {draftBlocks.map(({ row, topOffset, height }) => (
+            <DraftTimelineBlock
+              key={`draft-${row.id}`}
+              row={row}
+              topOffset={topOffset}
+              height={height}
+              timeZone={timeZone}
+            />
+          ))}
+          {reservations.map(({ reservation, topOffset, height }) => (
+            <TimelineReservationItem
+              key={`res-${reservation.id}`}
+              reservation={reservation}
+              topOffset={topOffset}
+              height={height}
+              timeZone={timeZone}
+              compact
+            />
+          ))}
+        </div>
       </div>
-      <div className="pointer-events-none absolute inset-0">
-        {blocks.map(({ block, topOffset, height }) => (
-          <TimelineBlockItem
-            key={block.id}
-            block={block}
-            topOffset={topOffset}
-            height={height}
-            timeZone={timeZone}
-            disabled={disabled}
-            isPending={pendingBlockIds.has(block.id)}
-            isPastDay={isPastDay}
-            compact
-            onRemove={onRemoveBlock}
-          />
-        ))}
-        {draftBlocks.map(({ row, topOffset, height }) => (
-          <DraftTimelineBlock
-            key={`draft-${row.id}`}
-            row={row}
-            topOffset={topOffset}
-            height={height}
-            timeZone={timeZone}
-          />
-        ))}
-        {reservations.map(({ reservation, topOffset, height }) => (
-          <TimelineReservationItem
-            key={`res-${reservation.id}`}
-            reservation={reservation}
-            topOffset={topOffset}
-            height={height}
-            timeZone={timeZone}
-            compact
-          />
-        ))}
-      </div>
-    </div>
+    </RangeSelectionProvider>
   );
 });

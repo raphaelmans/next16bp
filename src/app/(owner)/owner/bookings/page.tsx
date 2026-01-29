@@ -13,6 +13,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+// DnD kept only for draft-row import overlay
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   addDays,
@@ -27,6 +28,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  MousePointerClick,
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
@@ -62,10 +64,6 @@ import {
   ReservationAlertsPanel,
 } from "@/features/owner";
 import {
-  BlockPresetCard,
-  BlockPresetPreview,
-} from "@/features/owner/components/booking-studio/block-preset-card";
-import {
   BookingStudioProvider,
   useBookingStudio,
 } from "@/features/owner/components/booking-studio/booking-studio-provider";
@@ -75,15 +73,14 @@ import {
   DraftTimelineBlock,
 } from "@/features/owner/components/booking-studio/draft-row-card";
 import { GuestBookingDialog } from "@/features/owner/components/booking-studio/guest-booking-dialog";
-import { MobileAwareTimelineRow } from "@/features/owner/components/booking-studio/mobile-aware-timeline-row";
 import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-studio/mobile-create-block-drawer";
 import { MobileDayBlocksList } from "@/features/owner/components/booking-studio/mobile-day-blocks-list";
 import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
+import { SelectableTimelineRow } from "@/features/owner/components/booking-studio/selectable-timeline-row";
+import { SelectionPanelForm } from "@/features/owner/components/booking-studio/selection-panel-form";
 import { TimelineBlockItem } from "@/features/owner/components/booking-studio/timeline-block-item";
 import { TimelineReservationItem } from "@/features/owner/components/booking-studio/timeline-reservation-item";
 import {
-  BLOCK_PRESETS,
-  type BlockPreset,
   buildDateFromDayKey,
   type CourtBlockItem,
   type CustomBlockFormValues,
@@ -92,14 +89,12 @@ import {
   type DraftRowItem,
   type DraftRowStatus,
   type DragItem,
-  type DragPreset,
   formatDateTimeInput,
   type GuestBookingFormValues,
   generateOptimisticId,
   getEndMinuteForDayKey,
   getMinuteOfDay,
   guestBookingFormSchema,
-  isOptimisticBlockId,
   parseDateTimeInput,
   parseTimelineRange,
   type ReservationItem,
@@ -388,26 +383,31 @@ function OwnerAvailabilityStudioInner() {
     (s) => s.setPendingRemoveBlockId,
   );
   const guestBookingOpen = useBookingStudio((s) => s.guestBookingOpen);
-  const setGuestBookingOpen = useBookingStudio((s) => s.setGuestBookingOpen);
-  const setGuestBookingTimes = useBookingStudio((s) => s.setGuestBookingTimes);
   const closeGuestBookingDialog = useBookingStudio(
     (s) => s.closeGuestBookingDialog,
   );
   const setCustomDialogOpen = useBookingStudio((s) => s.setCustomDialogOpen);
   const setMobileDrawerOpen = useBookingStudio((s) => s.setMobileDrawerOpen);
-  const mobileBlockType = useBookingStudio((s) => s.mobileBlockType);
-  const mobileCommittedRange = useBookingStudio((s) => s.mobileCommittedRange);
-  const setMobileCommittedRange = useBookingStudio(
-    (s) => s.setMobileCommittedRange,
+  const selectionBlockType = useBookingStudio((s) => s.selectionBlockType);
+  const setSelectionBlockType = useBookingStudio(
+    (s) => s.setSelectionBlockType,
   );
-  const activeDragItem = useBookingStudio((s) => s.activeDragItem);
-  const setActiveDragItem = useBookingStudio((s) => s.setActiveDragItem);
+  const committedRange = useBookingStudio((s) => s.committedRange);
+  const setCommittedRange = useBookingStudio((s) => s.setCommittedRange);
+  const guestModeState = useBookingStudio((s) => s.guestModeState);
+  const setGuestMode = useBookingStudio((s) => s.setGuestMode);
+  const setGuestModeState = useBookingStudio((s) => s.setGuestModeState);
+  const setGuestName = useBookingStudio((s) => s.setGuestName);
+  const setGuestPhone = useBookingStudio((s) => s.setGuestPhone);
+  const setGuestEmail = useBookingStudio((s) => s.setGuestEmail);
+  const setGuestProfileId = useBookingStudio((s) => s.setGuestProfileId);
+  const setNotes = useBookingStudio((s) => s.setNotes);
   const debouncedGuestSearch = useBookingStudio((s) => s.debouncedGuestSearch);
   const setDebouncedGuestSearch = useBookingStudio(
     (s) => s.setDebouncedGuestSearch,
   );
   const guestSearch = useBookingStudio((s) => s.guestSearch);
-  const resetMobileDrawer = useBookingStudio((s) => s.resetMobileDrawer);
+  const resetSelectionPanel = useBookingStudio((s) => s.resetSelectionPanel);
 
   React.useEffect(() => {
     setCalendarMonth(selectedDate);
@@ -1380,29 +1380,6 @@ function OwnerAvailabilityStudioInner() {
       },
     });
 
-  const openGuestBookingDialog = React.useCallback(
-    (start: Date, end: Date) => {
-      setGuestBookingTimes({ start, end });
-      guestBookingForm.reset({
-        startTime: formatDateTimeInput(start, placeTimeZone),
-        endTime: formatDateTimeInput(end, placeTimeZone),
-        guestMode: "existing",
-        guestProfileId: "",
-        newGuestName: "",
-        newGuestPhone: "",
-        newGuestEmail: "",
-        notes: "",
-      });
-      setGuestBookingOpen(true);
-    },
-    [
-      guestBookingForm,
-      placeTimeZone,
-      setGuestBookingOpen,
-      setGuestBookingTimes,
-    ],
-  );
-
   const handleGuestBookingSubmit = React.useCallback(
     async (values: GuestBookingFormValues) => {
       if (!courtId) {
@@ -1462,95 +1439,6 @@ function OwnerAvailabilityStudioInner() {
       organization?.id,
       placeTimeZone,
     ],
-  );
-
-  const createBlock = React.useCallback(
-    async (preset: BlockPreset, startTime: Date, endTime: Date) => {
-      if (!courtId) {
-        toast.error("Select a court first");
-        return;
-      }
-
-      if (preset.blockType === "GUEST_BOOKING") {
-        openGuestBookingDialog(startTime, endTime);
-        return;
-      }
-
-      try {
-        const payload = {
-          courtId,
-          startTime: toUtcISOString(startTime),
-          endTime: toUtcISOString(endTime),
-        };
-        const created =
-          preset.blockType === "MAINTENANCE"
-            ? await createMaintenance.mutateAsync(payload)
-            : await createWalkIn.mutateAsync(payload);
-
-        toast.success("Block created", {
-          description: `${preset.label} at ${formatInTimeZone(
-            startTime,
-            placeTimeZone,
-            "h:mm a",
-          )}`,
-          action: {
-            label: "Undo",
-            onClick: () =>
-              void handleCancelBlock(created.id, {
-                skipConfirm: true,
-                silent: true,
-              }),
-          },
-        });
-      } catch (error) {
-        toast.error("Unable to create block", {
-          description: getClientErrorMessage(error, "Please try again"),
-        });
-      }
-    },
-    [
-      courtId,
-      createMaintenance,
-      createWalkIn,
-      handleCancelBlock,
-      openGuestBookingDialog,
-      placeTimeZone,
-    ],
-  );
-
-  const handleUpdateBlockRange = React.useCallback(
-    (blockId: string, startTime: Date, endTime: Date) => {
-      if (endTime <= startTime) {
-        toast.error("End time must be after start time");
-        return;
-      }
-
-      const startIso = toUtcISOString(startTime);
-      const endIso = toUtcISOString(endTime);
-
-      utils.courtBlock.listForCourtRange.setData(
-        blocksQueryInput,
-        (old) =>
-          old?.map((block) =>
-            block.id === blockId
-              ? { ...block, startTime: startIso, endTime: endIso }
-              : block,
-          ) ?? [],
-      );
-
-      const nextVersion = (rangeUpdateVersions.current.get(blockId) ?? 0) + 1;
-      rangeUpdateVersions.current.set(blockId, nextVersion);
-      pendingRangeUpdates.current.set(blockId, {
-        startTime: startIso,
-        endTime: endIso,
-        version: nextVersion,
-      });
-
-      if (!isOptimisticBlockId(blockId)) {
-        scheduleRangeFlush(blockId);
-      }
-    },
-    [blocksQueryInput, scheduleRangeFlush, utils],
   );
 
   const handleDraftRowDrop = React.useCallback(
@@ -1652,7 +1540,7 @@ function OwnerAvailabilityStudioInner() {
   );
 
   // Mobile selection config
-  const mobileSelectionConfig = React.useMemo<RangeSelectionConfig>(() => {
+  const daySelectionConfig = React.useMemo<RangeSelectionConfig>(() => {
     const blockedHourIndices = new Set<number>();
     for (const { block } of timelineBlocks) {
       const blockStart = getMinuteOfDay(block.startTime, placeTimeZone);
@@ -1697,46 +1585,63 @@ function OwnerAvailabilityStudioInner() {
         return current;
       },
       commitRange: (s: number, e: number) => {
-        setMobileCommittedRange({ startIdx: s, endIdx: e });
-        if (s !== e) {
+        setCommittedRange({ startIdx: s, endIdx: e });
+        if (isMobile && s !== e) {
           setMobileDrawerOpen(true);
         }
       },
     };
   }, [
     hours,
+    isMobile,
     placeTimeZone,
-    setMobileCommittedRange,
+    setCommittedRange,
     setMobileDrawerOpen,
     startHour,
     timelineBlocks,
     timelineReservations,
   ]);
 
+  // Track which day column committed the range in week view
+  const [weekCommittedDayKey, setWeekCommittedDayKey] = React.useState<
+    string | null
+  >(null);
+
+  const handleWeekCommitRange = React.useCallback(
+    (columnDayKey: string, s: number, e: number) => {
+      setCommittedRange({ startIdx: s, endIdx: e });
+      setWeekCommittedDayKey(columnDayKey);
+    },
+    [setCommittedRange],
+  );
+
   const handleMobileDrawerClose = React.useCallback(
     (open: boolean) => {
       setMobileDrawerOpen(open);
       if (!open) {
-        setMobileCommittedRange(null);
+        setCommittedRange(null);
       }
     },
-    [setMobileCommittedRange, setMobileDrawerOpen],
+    [setCommittedRange, setMobileDrawerOpen],
   );
 
-  const mobileSelectedTimeLabel = React.useMemo(() => {
-    if (!mobileCommittedRange) return "";
+  // The effective dayKey for committed range display
+  const committedDayKey = isWeekView ? (weekCommittedDayKey ?? dayKey) : dayKey;
+
+  const selectedTimeLabel = React.useMemo(() => {
+    if (!committedRange) return "";
     const s = buildDateFromDayKey(
-      dayKey,
-      (mobileCommittedRange.startIdx + startHour) * 60,
+      committedDayKey,
+      (committedRange.startIdx + startHour) * 60,
       placeTimeZone,
     );
     const e = buildDateFromDayKey(
-      dayKey,
-      (mobileCommittedRange.endIdx + startHour + 1) * 60,
+      committedDayKey,
+      (committedRange.endIdx + startHour + 1) * 60,
       placeTimeZone,
     );
     return formatTimeRangeInTimeZone(s, e, placeTimeZone);
-  }, [dayKey, mobileCommittedRange, placeTimeZone, startHour]);
+  }, [committedDayKey, committedRange, placeTimeZone, startHour]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -1751,20 +1656,13 @@ function OwnerAvailabilityStudioInner() {
     ? { duration: 0 }
     : { duration: 0.25, ease: "easeOut" as const };
 
-  const handleDragStart = React.useCallback(
-    (event: DragStartEvent) => {
-      const data = event.active.data.current as DragPreset | undefined;
-      if (data?.kind === "preset") {
-        setActiveDragItem(data);
-      }
-    },
-    [setActiveDragItem],
-  );
+  const handleDragStart = React.useCallback((_event: DragStartEvent) => {
+    // DnD only used for draft-row import overlay now
+  }, []);
 
   const handleDragEnd = React.useCallback(
     async (event: DragEndEvent) => {
       const { active, over } = event;
-      setActiveDragItem(null);
 
       if (!over) return;
 
@@ -1775,75 +1673,13 @@ function OwnerAvailabilityStudioInner() {
         return;
       }
 
-      if (activeData.kind === "preset") {
-        const start = buildDateFromDayKey(
-          overData.dayKey,
-          overData.startMinute,
-          placeTimeZone,
-        );
-        const end = addMinutes(start, activeData.preset.durationMinutes);
-        await createBlock(activeData.preset, start, end);
-        return;
-      }
-
-      if (activeData.kind === "block") {
-        const block = activeBlocks.find(
-          (item) => item.id === activeData.blockId,
-        );
-        if (!block) return;
-        const durationMinutes = Math.max(
-          differenceInMinutes(
-            new Date(block.endTime),
-            new Date(block.startTime),
-          ),
-          60,
-        );
-        const start = buildDateFromDayKey(
-          overData.dayKey,
-          overData.startMinute,
-          placeTimeZone,
-        );
-        const end = addMinutes(start, durationMinutes);
-        await handleUpdateBlockRange(block.id, start, end);
-        return;
-      }
-
-      if (activeData.kind === "resize") {
-        const block = activeBlocks.find(
-          (item) => item.id === activeData.blockId,
-        );
-        if (!block) return;
-        const startTime = new Date(block.startTime);
-        const endTime = new Date(block.endTime);
-        const nextTime = buildDateFromDayKey(
-          overData.dayKey,
-          overData.startMinute,
-          placeTimeZone,
-        );
-        if (activeData.edge === "start") {
-          await handleUpdateBlockRange(block.id, nextTime, endTime);
-        } else {
-          const adjustedEnd = addMinutes(nextTime, 60);
-          await handleUpdateBlockRange(block.id, startTime, adjustedEnd);
-        }
-        return;
-      }
-
       if (activeData.kind === "draft-row") {
         const row = draftRowsById.get(activeData.rowId);
         if (!row) return;
         await handleDraftRowDrop(row.id, overData.dayKey, overData.startMinute);
       }
     },
-    [
-      activeBlocks,
-      createBlock,
-      draftRowsById,
-      handleDraftRowDrop,
-      handleUpdateBlockRange,
-      placeTimeZone,
-      setActiveDragItem,
-    ],
+    [draftRowsById, handleDraftRowDrop],
   );
 
   const isCreatingBlock =
@@ -1940,52 +1776,55 @@ function OwnerAvailabilityStudioInner() {
     window.location.href = appRoutes.login.from(appRoutes.owner.bookings);
   };
 
-  // Mobile submit handler — needs to read store state at call time.
+  // Submit handler — needs to read store state at call time.
   // We use refs to bridge the gap between hook-based store reads and callback usage.
-  const mobileGuestModeRef = React.useRef<"new" | "existing">("existing");
-  const mobileGuestNameRef = React.useRef("");
-  const mobileGuestPhoneRef = React.useRef("");
-  const mobileGuestEmailRef = React.useRef("");
-  const mobileGuestProfileIdRef = React.useRef("");
-  const mobileNotesRef = React.useRef("");
+  const guestModeRef = React.useRef<"new" | "existing">("existing");
+  const guestNameRef = React.useRef("");
+  const guestPhoneRef = React.useRef("");
+  const guestEmailRef = React.useRef("");
+  const guestProfileIdRef = React.useRef("");
+  const notesRef = React.useRef("");
 
   // Keep refs in sync with store
-  const mobileGuestMode = useBookingStudio((s) => s.mobileGuestMode);
-  const mobileGuestName = useBookingStudio((s) => s.mobileGuestName);
-  const mobileGuestPhone = useBookingStudio((s) => s.mobileGuestPhone);
-  const mobileGuestEmail = useBookingStudio((s) => s.mobileGuestEmail);
-  const mobileGuestProfileId = useBookingStudio((s) => s.mobileGuestProfileId);
-  const mobileNotes = useBookingStudio((s) => s.mobileNotes);
+  const storeGuestMode = useBookingStudio((s) => s.guestMode);
+  const storeGuestName = useBookingStudio((s) => s.guestName);
+  const storeGuestPhone = useBookingStudio((s) => s.guestPhone);
+  const storeGuestEmail = useBookingStudio((s) => s.guestEmail);
+  const storeGuestProfileId = useBookingStudio((s) => s.guestProfileId);
+  const storeNotes = useBookingStudio((s) => s.notes);
 
-  mobileGuestModeRef.current = mobileGuestMode;
-  mobileGuestNameRef.current = mobileGuestName;
-  mobileGuestPhoneRef.current = mobileGuestPhone;
-  mobileGuestEmailRef.current = mobileGuestEmail;
-  mobileGuestProfileIdRef.current = mobileGuestProfileId;
-  mobileNotesRef.current = mobileNotes;
+  guestModeRef.current = storeGuestMode;
+  guestNameRef.current = storeGuestName;
+  guestPhoneRef.current = storeGuestPhone;
+  guestEmailRef.current = storeGuestEmail;
+  guestProfileIdRef.current = storeGuestProfileId;
+  notesRef.current = storeNotes;
 
-  const handleMobileSubmitFinal = React.useCallback(async () => {
-    if (!courtId || !mobileCommittedRange) {
+  const handleSelectionSubmit = React.useCallback(async () => {
+    if (!courtId || !committedRange) {
       toast.error("Select a court and time range first");
       return;
     }
+    const effectiveDayKey = isWeekView
+      ? (weekCommittedDayKey ?? dayKey)
+      : dayKey;
     const s = buildDateFromDayKey(
-      dayKey,
-      (mobileCommittedRange.startIdx + startHour) * 60,
+      effectiveDayKey,
+      (committedRange.startIdx + startHour) * 60,
       placeTimeZone,
     );
     const e = buildDateFromDayKey(
-      dayKey,
-      (mobileCommittedRange.endIdx + startHour + 1) * 60,
+      effectiveDayKey,
+      (committedRange.endIdx + startHour + 1) * 60,
       placeTimeZone,
     );
 
-    if (mobileBlockType === "GUEST_BOOKING") {
-      const guestMode = mobileGuestModeRef.current;
+    if (selectionBlockType === "GUEST_BOOKING") {
+      const currentGuestMode = guestModeRef.current;
       try {
-        let guestProfileId = mobileGuestProfileIdRef.current;
-        if (guestMode === "new") {
-          const name = mobileGuestNameRef.current.trim();
+        let gProfileId = guestProfileIdRef.current;
+        if (currentGuestMode === "new") {
+          const name = guestNameRef.current.trim();
           if (!name) {
             toast.error("Guest name is required");
             return;
@@ -1993,12 +1832,12 @@ function OwnerAvailabilityStudioInner() {
           const guest = await createGuestProfile.mutateAsync({
             organizationId: organization?.id ?? "",
             displayName: name,
-            phoneNumber: mobileGuestPhoneRef.current.trim() || undefined,
-            email: mobileGuestEmailRef.current.trim() || undefined,
+            phoneNumber: guestPhoneRef.current.trim() || undefined,
+            email: guestEmailRef.current.trim() || undefined,
           });
-          guestProfileId = guest.id;
+          gProfileId = guest.id;
         }
-        if (!guestProfileId) {
+        if (!gProfileId) {
           toast.error("Please select or create a guest");
           return;
         }
@@ -2006,8 +1845,8 @@ function OwnerAvailabilityStudioInner() {
           courtId,
           startTime: toUtcISOString(s),
           endTime: toUtcISOString(e),
-          guestProfileId,
-          notes: mobileNotesRef.current.trim() || undefined,
+          guestProfileId: gProfileId,
+          notes: notesRef.current.trim() || undefined,
         });
         toast.success("Guest booking added");
       } catch (error) {
@@ -2022,9 +1861,9 @@ function OwnerAvailabilityStudioInner() {
           courtId,
           startTime: toUtcISOString(s),
           endTime: toUtcISOString(e),
-          reason: mobileNotesRef.current.trim() || undefined,
+          reason: notesRef.current.trim() || undefined,
         };
-        if (mobileBlockType === "MAINTENANCE") {
+        if (selectionBlockType === "MAINTENANCE") {
           await createMaintenance.mutateAsync(payload);
         } else {
           await createWalkIn.mutateAsync(payload);
@@ -2038,7 +1877,7 @@ function OwnerAvailabilityStudioInner() {
       }
     }
 
-    resetMobileDrawer();
+    resetSelectionPanel();
   }, [
     courtId,
     createGuestBooking,
@@ -2046,12 +1885,14 @@ function OwnerAvailabilityStudioInner() {
     createMaintenance,
     createWalkIn,
     dayKey,
-    mobileBlockType,
-    mobileCommittedRange,
+    isWeekView,
+    selectionBlockType,
+    committedRange,
     organization?.id,
     placeTimeZone,
-    resetMobileDrawer,
+    resetSelectionPanel,
     startHour,
+    weekCommittedDayKey,
   ]);
 
   if (orgLoading) {
@@ -2301,7 +2142,7 @@ function OwnerAvailabilityStudioInner() {
           collisionDetection={closestCenter}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
-          onDragCancel={() => setActiveDragItem(null)}
+          onDragCancel={() => {}}
           autoScroll
         >
           <AnimatePresence mode="wait" initial={false}>
@@ -2347,37 +2188,79 @@ function OwnerAvailabilityStudioInner() {
 
                     <Card>
                       <CardContent className="space-y-4 p-6">
-                        <div className="space-y-1">
-                          <h3 className="text-sm font-heading font-semibold">
-                            Block Palette
-                          </h3>
-                          <p className="text-xs text-muted-foreground">
-                            Drag a preset onto the week grid to create a block.
-                          </p>
-                        </div>
-                        <div className="space-y-3">
-                          {BLOCK_PRESETS.map((preset) => (
-                            <BlockPresetCard
-                              key={preset.id}
-                              preset={preset}
-                              disabled={isDragDisabled}
+                        {committedRange ? (
+                          <>
+                            <div className="space-y-1">
+                              <h3 className="text-sm font-heading font-semibold">
+                                Create Block
+                              </h3>
+                              <p className="text-xs text-muted-foreground">
+                                {selectedTimeLabel} · {placeTimeZone}
+                              </p>
+                            </div>
+                            <SelectionPanelForm
+                              blockType={selectionBlockType}
+                              onBlockTypeChange={setSelectionBlockType}
+                              guestModeState={guestModeState}
+                              organizationId={organization?.id ?? ""}
+                              onGuestModeChange={(mode) => {
+                                setGuestMode(mode);
+                                setGuestModeState(mode);
+                              }}
+                              onGuestNameChange={setGuestName}
+                              onGuestPhoneChange={setGuestPhone}
+                              onGuestEmailChange={setGuestEmail}
+                              onGuestProfileIdChange={setGuestProfileId}
+                              onNotesChange={setNotes}
                             />
-                          ))}
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={openCustomDialog}
-                            disabled={!courtId}
-                            className="w-full justify-start"
-                          >
-                            Custom block...
-                          </Button>
-                        </div>
-                        {isDragDisabled ? (
-                          <p className="text-xs text-muted-foreground">
-                            Select a court to enable drag-and-drop.
-                          </p>
-                        ) : null}
+                            <div className="flex gap-2">
+                              <Button
+                                onClick={handleSelectionSubmit}
+                                className="flex-1"
+                                disabled={isCreatingBlock}
+                              >
+                                {isCreatingBlock
+                                  ? "Saving..."
+                                  : selectionBlockType === "WALK_IN"
+                                    ? "Save walk-in"
+                                    : selectionBlockType === "MAINTENANCE"
+                                      ? "Save maintenance"
+                                      : "Save guest booking"}
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => resetSelectionPanel()}
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
+                              <div className="flex items-center gap-2">
+                                <MousePointerClick className="size-4 text-primary/60" />
+                                <h3 className="text-sm font-heading font-semibold">
+                                  Create Block
+                                </h3>
+                              </div>
+                              <p className="text-xs text-muted-foreground">
+                                Click a start time, then an end time on the
+                                timeline to select a range.
+                              </p>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={openCustomDialog}
+                              disabled={!courtId}
+                              className="w-full justify-start"
+                            >
+                              Custom block...
+                            </Button>
+                          </>
+                        )}
                         {isImportOverlay ? (
                           <div className="space-y-3 pt-2">
                             <Separator />
@@ -2570,6 +2453,12 @@ function OwnerAvailabilityStudioInner() {
                                 isPastDay={wdk < todayDayKey}
                                 pendingBlockIds={pendingBlockIds}
                                 onRemoveBlock={handleCancelBlock}
+                                committedRange={
+                                  weekCommittedDayKey === wdk
+                                    ? committedRange
+                                    : null
+                                }
+                                onCommitRange={handleWeekCommitRange}
                               />
                             ))}
                           </div>
@@ -2619,37 +2508,79 @@ function OwnerAvailabilityStudioInner() {
 
                     <Card>
                       <CardContent className="space-y-4 p-6">
-                        <div className="space-y-1">
-                          <h3 className="text-sm font-heading font-semibold">
-                            Block Palette
-                          </h3>
-                          <p className="text-xs text-muted-foreground">
-                            Drag a preset onto the timeline to create a block.
-                          </p>
-                        </div>
-                        <div className="space-y-3">
-                          {BLOCK_PRESETS.map((preset) => (
-                            <BlockPresetCard
-                              key={preset.id}
-                              preset={preset}
-                              disabled={isDragDisabled}
+                        {committedRange ? (
+                          <>
+                            <div className="space-y-1">
+                              <h3 className="text-sm font-heading font-semibold">
+                                Create Block
+                              </h3>
+                              <p className="text-xs text-muted-foreground">
+                                {selectedTimeLabel} · {placeTimeZone}
+                              </p>
+                            </div>
+                            <SelectionPanelForm
+                              blockType={selectionBlockType}
+                              onBlockTypeChange={setSelectionBlockType}
+                              guestModeState={guestModeState}
+                              organizationId={organization?.id ?? ""}
+                              onGuestModeChange={(mode) => {
+                                setGuestMode(mode);
+                                setGuestModeState(mode);
+                              }}
+                              onGuestNameChange={setGuestName}
+                              onGuestPhoneChange={setGuestPhone}
+                              onGuestEmailChange={setGuestEmail}
+                              onGuestProfileIdChange={setGuestProfileId}
+                              onNotesChange={setNotes}
                             />
-                          ))}
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={openCustomDialog}
-                            disabled={!courtId}
-                            className="w-full justify-start"
-                          >
-                            Custom block...
-                          </Button>
-                        </div>
-                        {isDragDisabled ? (
-                          <p className="text-xs text-muted-foreground">
-                            Select a court to enable drag-and-drop.
-                          </p>
-                        ) : null}
+                            <div className="flex gap-2">
+                              <Button
+                                onClick={handleSelectionSubmit}
+                                className="flex-1"
+                                disabled={isCreatingBlock}
+                              >
+                                {isCreatingBlock
+                                  ? "Saving..."
+                                  : selectionBlockType === "WALK_IN"
+                                    ? "Save walk-in"
+                                    : selectionBlockType === "MAINTENANCE"
+                                      ? "Save maintenance"
+                                      : "Save guest booking"}
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => resetSelectionPanel()}
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
+                              <div className="flex items-center gap-2">
+                                <MousePointerClick className="size-4 text-primary/60" />
+                                <h3 className="text-sm font-heading font-semibold">
+                                  Create Block
+                                </h3>
+                              </div>
+                              <p className="text-xs text-muted-foreground">
+                                Click a start time, then an end time on the
+                                timeline to select a range.
+                              </p>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={openCustomDialog}
+                              disabled={!courtId}
+                              className="w-full justify-start"
+                            >
+                              Custom block...
+                            </Button>
+                          </>
+                        )}
                         {isImportOverlay ? (
                           <div className="space-y-3 pt-2">
                             <Separator />
@@ -2806,8 +2737,8 @@ function OwnerAvailabilityStudioInner() {
                         </Alert>
                       ) : (
                         <RangeSelectionProvider
-                          config={mobileSelectionConfig}
-                          committedRange={mobileCommittedRange}
+                          config={daySelectionConfig}
+                          committedRange={committedRange}
                         >
                           <div className="relative">
                             <div className="grid grid-cols-[72px_minmax(0,1fr)] gap-x-3">
@@ -2836,7 +2767,7 @@ function OwnerAvailabilityStudioInner() {
                               <div className="relative">
                                 <div className="space-y-0">
                                   {hours.map((hour, hourIndex) => (
-                                    <MobileAwareTimelineRow
+                                    <SelectableTimelineRow
                                       key={`row-${hour}`}
                                       dayKey={dayKey}
                                       startMinute={hour * 60}
@@ -2993,11 +2924,7 @@ function OwnerAvailabilityStudioInner() {
             )}
           </AnimatePresence>
 
-          <DragOverlay>
-            {activeDragItem?.kind === "preset" ? (
-              <BlockPresetPreview preset={activeDragItem.preset} />
-            ) : null}
-          </DragOverlay>
+          <DragOverlay />
         </DndContext>
 
         <RemoveBlockDialog confirmRemoveBlock={confirmRemoveBlock} />
@@ -3027,9 +2954,9 @@ function OwnerAvailabilityStudioInner() {
         />
 
         <MobileCreateBlockDrawer
-          handleMobileSubmit={handleMobileSubmitFinal}
+          handleMobileSubmit={handleSelectionSubmit}
           isCreatingBlock={isCreatingBlock}
-          mobileSelectedTimeLabel={mobileSelectedTimeLabel}
+          mobileSelectedTimeLabel={selectedTimeLabel}
           placeTimeZone={placeTimeZone}
           organizationId={organization?.id ?? ""}
           onDrawerClose={handleMobileDrawerClose}
