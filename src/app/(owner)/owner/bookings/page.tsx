@@ -10,12 +10,9 @@ import {
   KeyboardSensor,
   PointerSensor,
   TouchSensor,
-  useDraggable,
-  useDroppable,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   addDays,
@@ -23,7 +20,6 @@ import {
   addMonths,
   differenceInMinutes,
   endOfMonth,
-  format,
 } from "date-fns";
 import debounce from "debounce";
 import {
@@ -31,7 +27,6 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  X,
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
@@ -39,44 +34,11 @@ import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
-import {
-  StandardFormInput,
-  StandardFormProvider,
-  StandardFormSelect,
-  StandardFormTextarea,
-} from "@/components/form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
 import {
   Popover,
   PopoverContent,
@@ -100,6 +62,54 @@ import {
   ReservationAlertsPanel,
 } from "@/features/owner";
 import {
+  BlockPresetCard,
+  BlockPresetPreview,
+} from "@/features/owner/components/booking-studio/block-preset-card";
+import {
+  BookingStudioProvider,
+  useBookingStudio,
+} from "@/features/owner/components/booking-studio/booking-studio-provider";
+import { CustomBlockDialog } from "@/features/owner/components/booking-studio/custom-block-dialog";
+import {
+  DraftRowCard,
+  DraftTimelineBlock,
+} from "@/features/owner/components/booking-studio/draft-row-card";
+import { GuestBookingDialog } from "@/features/owner/components/booking-studio/guest-booking-dialog";
+import { MobileAwareTimelineRow } from "@/features/owner/components/booking-studio/mobile-aware-timeline-row";
+import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-studio/mobile-create-block-drawer";
+import { MobileDayBlocksList } from "@/features/owner/components/booking-studio/mobile-day-blocks-list";
+import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
+import { TimelineBlockItem } from "@/features/owner/components/booking-studio/timeline-block-item";
+import { TimelineReservationItem } from "@/features/owner/components/booking-studio/timeline-reservation-item";
+import {
+  BLOCK_PRESETS,
+  type BlockPreset,
+  buildDateFromDayKey,
+  type CourtBlockItem,
+  type CustomBlockFormValues,
+  customBlockSchema,
+  DRAFT_STATUS_PRIORITY,
+  type DraftRowItem,
+  type DraftRowStatus,
+  type DragItem,
+  type DragPreset,
+  formatDateTimeInput,
+  type GuestBookingFormValues,
+  generateOptimisticId,
+  getEndMinuteForDayKey,
+  getMinuteOfDay,
+  guestBookingFormSchema,
+  isOptimisticBlockId,
+  parseDateTimeInput,
+  parseTimelineRange,
+  type ReservationItem,
+  type StudioView,
+  studioViewSchema,
+  TIMELINE_ROW_HEIGHT,
+  type TimelineCellData,
+} from "@/features/owner/components/booking-studio/types";
+import { WeekDayColumn } from "@/features/owner/components/booking-studio/week-day-column";
+import {
   useCourtHours,
   useOwnerCourtFilter,
   useOwnerCourtsByPlace,
@@ -112,14 +122,11 @@ import { cn } from "@/lib/utils";
 import {
   type RangeSelectionConfig,
   RangeSelectionProvider,
-  useCellState,
-  useRangeSelection,
 } from "@/shared/components/kudos/range-selection";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import {
   formatCurrency,
-  formatDuration,
   formatInTimeZone,
   formatTimeRangeInTimeZone,
 } from "@/shared/lib/format";
@@ -133,241 +140,15 @@ import {
 import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
-const DEFAULT_START_HOUR = 6;
-const DEFAULT_END_HOUR = 22;
-const TIMELINE_ROW_HEIGHT = 56;
-
-const generateOptimisticId = () =>
-  `optimistic:${Date.now()}:${Math.random().toString(36).slice(2, 9)}`;
-
-const isOptimisticBlockId = (blockId: string) =>
-  blockId.startsWith("optimistic:");
-
-const studioViewSchema = ["day", "week"] as const;
-type StudioView = (typeof studioViewSchema)[number];
-
-type BlockPreset = {
-  id: string;
-  label: string;
-  blockType: "MAINTENANCE" | "WALK_IN" | "GUEST_BOOKING";
-  durationMinutes: number;
-  badgeVariant: "warning" | "paid" | "default";
-  description: string;
-};
-
-type DragPreset = {
-  kind: "preset";
-  preset: BlockPreset;
-};
-
-type DragBlock = {
-  kind: "block";
-  blockId: string;
-};
-
-type DragResizeHandle = {
-  kind: "resize";
-  blockId: string;
-  edge: "start" | "end";
-};
-
-type DragDraftRow = {
-  kind: "draft-row";
-  rowId: string;
-};
-
-type DragItem = DragPreset | DragBlock | DragResizeHandle | DragDraftRow;
-
-type TimelineCellData = {
-  kind: "timeline-cell";
-  dayKey: string;
-  startMinute: number;
-};
-
-type DraftRowStatus =
-  | "VALID"
-  | "ERROR"
-  | "WARNING"
-  | "PENDING"
-  | "COMMITTED"
-  | "SKIPPED";
-
-type CourtBlockItem = {
-  id: string;
-  courtId: string;
-  type: "MAINTENANCE" | "WALK_IN";
-  startTime: string;
-  endTime: string;
-  reason: string | null;
-  totalPriceCents: number;
-  currency: string;
-  isActive: boolean;
-  cancelledAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-};
-
-type ReservationItem = {
-  id: string;
-  courtId: string;
-  startTime: string;
-  endTime: string;
-  status: string;
-  totalPriceCents: number;
-  currency: string;
-  playerNameSnapshot: string | null;
-  guestProfileId: string | null;
-  playerId: string | null;
-};
-
-type DraftRowItem = {
-  id: string;
-  lineNumber: number;
-  status: DraftRowStatus;
-  courtId: string | null;
-  courtLabel: string | null;
-  startTime: Date | string | null;
-  endTime: Date | string | null;
-  reason: string | null;
-  errors: string[] | null;
-  warnings: string[] | null;
-};
-
-const BLOCK_PRESETS: BlockPreset[] = [
-  {
-    id: "preset-walkin-60",
-    label: "1h Walk-in",
-    blockType: "WALK_IN",
-    durationMinutes: 60,
-    badgeVariant: "paid",
-    description: "Reserve for walk-in customers.",
-  },
-  {
-    id: "preset-maintenance-60",
-    label: "1h Maintenance",
-    blockType: "MAINTENANCE",
-    durationMinutes: 60,
-    badgeVariant: "warning",
-    description: "Block for repairs or private events.",
-  },
-  {
-    id: "preset-guest-60",
-    label: "1h Guest booking",
-    blockType: "GUEST_BOOKING",
-    durationMinutes: 60,
-    badgeVariant: "default",
-    description: "Create a confirmed reservation for a guest.",
-  },
-];
-
-const DRAFT_STATUS_PRIORITY: Record<DraftRowStatus, number> = {
-  ERROR: 0,
-  WARNING: 1,
-  VALID: 2,
-  PENDING: 3,
-  COMMITTED: 4,
-  SKIPPED: 5,
-};
-
-const DRAFT_STATUS_BADGE: Record<
-  DraftRowStatus,
-  "destructive" | "warning" | "success" | "secondary"
-> = {
-  ERROR: "destructive",
-  WARNING: "warning",
-  VALID: "success",
-  PENDING: "secondary",
-  COMMITTED: "secondary",
-  SKIPPED: "secondary",
-};
-
-const parseTimelineRange = (
-  windows: { dayOfWeek: number; startMinute: number; endMinute: number }[],
-  dayOfWeek: number,
-) => {
-  const dayWindows = windows.filter((window) => window.dayOfWeek === dayOfWeek);
-  if (dayWindows.length === 0) {
-    return { startHour: DEFAULT_START_HOUR, endHour: DEFAULT_END_HOUR };
-  }
-
-  const startMinute = Math.min(
-    ...dayWindows.map((window) => window.startMinute),
-  );
-  const endMinute = Math.max(...dayWindows.map((window) => window.endMinute));
-  const startHour = Math.max(0, Math.floor(startMinute / 60));
-  const endHour = Math.min(24, Math.ceil(endMinute / 60));
-
-  if (endHour <= startHour) {
-    return { startHour: DEFAULT_START_HOUR, endHour: DEFAULT_END_HOUR };
-  }
-
-  return { startHour, endHour };
-};
-
-const getMinuteOfDay = (instant: Date | string, timeZone: string) => {
-  const zoned = getZonedDate(instant, timeZone);
-  return zoned.getHours() * 60 + zoned.getMinutes();
-};
-
-const getEndMinuteForDayKey = (
-  dayKey: string,
-  instant: Date | string,
-  timeZone: string,
-) => {
-  const endMinute = getMinuteOfDay(instant, timeZone);
-  const endDayKey = getZonedDayKey(instant, timeZone);
-
-  if (endDayKey !== dayKey && endMinute === 0) {
-    return 24 * 60;
-  }
-
-  return endMinute;
-};
-
-const buildDateFromDayKey = (
-  dayKey: string,
-  startMinute: number,
-  timeZone: string,
-) => {
-  const dayStart = getZonedDayRangeFromDayKey(dayKey, timeZone).start;
-  return addMinutes(dayStart, startMinute);
-};
-
-const formatDateTimeInput = (date: Date, timeZone: string) =>
-  format(getZonedDate(date, timeZone), "yyyy-MM-dd'T'HH:mm");
-
-const parseDateTimeInput = (value: string, timeZone: string) => {
-  const [datePart, timePart] = value.split("T");
-  if (!datePart || !timePart) return null;
-  const [year, month, day] = datePart.split("-").map(Number);
-  const [hour, minute] = timePart.split(":").map(Number);
-  if (
-    !Number.isFinite(year) ||
-    !Number.isFinite(month) ||
-    !Number.isFinite(day) ||
-    !Number.isFinite(hour) ||
-    !Number.isFinite(minute)
-  ) {
-    return null;
-  }
-  return new TZDate(year, month - 1, day, hour, minute, timeZone);
-};
-
-const blockTypeOptions = [
-  { value: "MAINTENANCE", label: "Maintenance" },
-  { value: "WALK_IN", label: "Walk-in" },
-] as const;
-
-const customBlockSchema = z.object({
-  blockType: z.enum(["MAINTENANCE", "WALK_IN"]),
-  startTime: z.string().min(1, "Start time is required"),
-  endTime: z.string().min(1, "End time is required"),
-  reason: z.string().trim().optional(),
-});
-
-type CustomBlockFormValues = z.infer<typeof customBlockSchema>;
-
 export default function OwnerAvailabilityStudioPage() {
+  return (
+    <BookingStudioProvider initialDate={new Date()}>
+      <OwnerAvailabilityStudioInner />
+    </BookingStudioProvider>
+  );
+}
+
+function OwnerAvailabilityStudioInner() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
   const {
@@ -595,13 +376,48 @@ export default function OwnerAvailabilityStudioPage() {
     return [dayKey];
   }, [dayKey, isWeekView, weekDayKeys]);
 
-  const [calendarMonth, setCalendarMonth] = React.useState<Date>(
-    () => selectedDate,
+  // Store reads
+  const calendarMonth = useBookingStudio((s) => s.calendarMonth);
+  const setCalendarMonth = useBookingStudio((s) => s.setCalendarMonth);
+  const mobileCalendarOpen = useBookingStudio((s) => s.mobileCalendarOpen);
+  const setMobileCalendarOpen = useBookingStudio(
+    (s) => s.setMobileCalendarOpen,
   );
-  const [mobileCalendarOpen, setMobileCalendarOpen] = React.useState(false);
+  const pendingRemoveBlockId = useBookingStudio((s) => s.pendingRemoveBlockId);
+  const setPendingRemoveBlockId = useBookingStudio(
+    (s) => s.setPendingRemoveBlockId,
+  );
+  const guestBookingOpen = useBookingStudio((s) => s.guestBookingOpen);
+  const setGuestBookingOpen = useBookingStudio((s) => s.setGuestBookingOpen);
+  const setGuestBookingTimes = useBookingStudio((s) => s.setGuestBookingTimes);
+  const closeGuestBookingDialog = useBookingStudio(
+    (s) => s.closeGuestBookingDialog,
+  );
+  const setCustomDialogOpen = useBookingStudio((s) => s.setCustomDialogOpen);
+  const setMobileDrawerOpen = useBookingStudio((s) => s.setMobileDrawerOpen);
+  const mobileBlockType = useBookingStudio((s) => s.mobileBlockType);
+  const mobileCommittedRange = useBookingStudio((s) => s.mobileCommittedRange);
+  const setMobileCommittedRange = useBookingStudio(
+    (s) => s.setMobileCommittedRange,
+  );
+  const activeDragItem = useBookingStudio((s) => s.activeDragItem);
+  const setActiveDragItem = useBookingStudio((s) => s.setActiveDragItem);
+  const debouncedGuestSearch = useBookingStudio((s) => s.debouncedGuestSearch);
+  const setDebouncedGuestSearch = useBookingStudio(
+    (s) => s.setDebouncedGuestSearch,
+  );
+  const guestSearch = useBookingStudio((s) => s.guestSearch);
+  const resetMobileDrawer = useBookingStudio((s) => s.resetMobileDrawer);
+
   React.useEffect(() => {
     setCalendarMonth(selectedDate);
-  }, [selectedDate]);
+  }, [selectedDate, setCalendarMonth]);
+
+  // Guest search debounce
+  React.useEffect(() => {
+    const timer = setTimeout(() => setDebouncedGuestSearch(guestSearch), 300);
+    return () => clearTimeout(timer);
+  }, [guestSearch, setDebouncedGuestSearch]);
 
   const courtHoursQuery = useCourtHours(courtId);
   const dayOfWeek = getZonedDate(selectedDayStart, placeTimeZone).getDay();
@@ -615,10 +431,10 @@ export default function OwnerAvailabilityStudioPage() {
     const windows = courtHoursQuery.data ?? [];
     if (weekDayKeys.length === 0) return selectedTimelineRange;
 
-    const ranges = weekDayKeys.map((dayKey) => {
-      const dayStart = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
-      const dayOfWeek = getZonedDate(dayStart, placeTimeZone).getDay();
-      return parseTimelineRange(windows, dayOfWeek);
+    const ranges = weekDayKeys.map((dk) => {
+      const dayStart = getZonedDayRangeFromDayKey(dk, placeTimeZone).start;
+      const dow = getZonedDate(dayStart, placeTimeZone).getDay();
+      return parseTimelineRange(windows, dow);
     });
 
     return {
@@ -796,8 +612,8 @@ export default function OwnerAvailabilityStudioPage() {
       Array<{ block: CourtBlockItem; topOffset: number; height: number }>
     >();
 
-    for (const dayKey of weekDayKeys) {
-      const dayStart = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
+    for (const dk of weekDayKeys) {
+      const dayStart = getZonedDayRangeFromDayKey(dk, placeTimeZone).start;
       const dayEndExclusive = addDays(dayStart, 1);
 
       const items = activeBlocks
@@ -811,7 +627,7 @@ export default function OwnerAvailabilityStudioPage() {
             endTime < dayEndExclusive ? endTime : dayEndExclusive;
           const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
           const endMinute = getEndMinuteForDayKey(
-            dayKey,
+            dk,
             segmentEnd,
             placeTimeZone,
           );
@@ -836,7 +652,7 @@ export default function OwnerAvailabilityStudioPage() {
         })
         .filter((item): item is NonNullable<typeof item> => Boolean(item));
 
-      byDayKey.set(dayKey, items);
+      byDayKey.set(dk, items);
     }
 
     return byDayKey;
@@ -921,8 +737,8 @@ export default function OwnerAvailabilityStudioPage() {
       }>
     >();
 
-    for (const dayKey of weekDayKeys) {
-      const dayStart = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
+    for (const dk of weekDayKeys) {
+      const dayStart = getZonedDayRangeFromDayKey(dk, placeTimeZone).start;
       const dayEndExclusive = addDays(dayStart, 1);
 
       const items = activeReservations
@@ -936,7 +752,7 @@ export default function OwnerAvailabilityStudioPage() {
             endTime < dayEndExclusive ? endTime : dayEndExclusive;
           const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
           const endMinute = getEndMinuteForDayKey(
-            dayKey,
+            dk,
             segmentEnd,
             placeTimeZone,
           );
@@ -961,7 +777,7 @@ export default function OwnerAvailabilityStudioPage() {
         })
         .filter((item): item is NonNullable<typeof item> => Boolean(item));
 
-      byDayKey.set(dayKey, items);
+      byDayKey.set(dk, items);
     }
 
     return byDayKey;
@@ -1051,8 +867,8 @@ export default function OwnerAvailabilityStudioPage() {
       Array<{ row: DraftRowItem; topOffset: number; height: number }>
     >();
 
-    for (const dayKey of weekDayKeys) {
-      const dayStart = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
+    for (const dk of weekDayKeys) {
+      const dayStart = getZonedDayRangeFromDayKey(dk, placeTimeZone).start;
       const dayEndExclusive = addDays(dayStart, 1);
 
       const items = draftRows
@@ -1069,7 +885,7 @@ export default function OwnerAvailabilityStudioPage() {
             endTime < dayEndExclusive ? endTime : dayEndExclusive;
           const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
           const endMinute = getEndMinuteForDayKey(
-            dayKey,
+            dk,
             segmentEnd,
             placeTimeZone,
           );
@@ -1093,7 +909,7 @@ export default function OwnerAvailabilityStudioPage() {
         })
         .filter((item): item is NonNullable<typeof item> => Boolean(item));
 
-      byDayKey.set(dayKey, items);
+      byDayKey.set(dk, items);
     }
 
     return byDayKey;
@@ -1131,6 +947,14 @@ export default function OwnerAvailabilityStudioPage() {
   const scheduleRangeFlushRef = React.useRef<(blockId: string) => void>(
     () => {},
   );
+
+  const pendingRangeUpdates = React.useRef<
+    Map<string, { startTime: string; endTime: string; version: number }>
+  >(new Map());
+  const rangeUpdateVersions = React.useRef<Map<string, number>>(new Map());
+  const debouncedFlushByBlock = React.useRef<
+    Map<string, ReturnType<typeof debounce>>
+  >(new Map());
 
   const applyPendingRangeUpdate = (
     serverBlock: CourtBlockItem,
@@ -1336,14 +1160,6 @@ export default function OwnerAvailabilityStudioPage() {
 
   const updateRange = trpc.courtBlock.updateRange.useMutation();
 
-  const pendingRangeUpdates = React.useRef<
-    Map<string, { startTime: string; endTime: string; version: number }>
-  >(new Map());
-  const rangeUpdateVersions = React.useRef<Map<string, number>>(new Map());
-  const debouncedFlushByBlock = React.useRef<
-    Map<string, ReturnType<typeof debounce>>
-  >(new Map());
-
   const flushBlockRangeUpdate = React.useCallback(
     async (blockId: string) => {
       const pending = pendingRangeUpdates.current.get(blockId);
@@ -1493,10 +1309,6 @@ export default function OwnerAvailabilityStudioPage() {
     void utils.bookingsImport.getJob.invalidate({ jobId });
   }, [jobId, utils]);
 
-  const [pendingRemoveBlockId, setPendingRemoveBlockId] = React.useState<
-    string | null
-  >(null);
-
   const handleCancelBlock = React.useCallback(
     (
       blockId: string,
@@ -1517,7 +1329,7 @@ export default function OwnerAvailabilityStudioPage() {
       }
       setPendingRemoveBlockId(blockId);
     },
-    [cancelBlock],
+    [cancelBlock, setPendingRemoveBlockId],
   );
 
   const confirmRemoveBlock = React.useCallback(async () => {
@@ -1532,33 +1344,15 @@ export default function OwnerAvailabilityStudioPage() {
         description: getClientErrorMessage(error, "Please try again"),
       });
     }
-  }, [cancelBlock, pendingRemoveBlockId]);
+  }, [cancelBlock, pendingRemoveBlockId, setPendingRemoveBlockId]);
 
-  // Guest booking state
-  const [guestBookingOpen, setGuestBookingOpen] = React.useState(false);
-  const [, setGuestBookingTimes] = React.useState<{
-    start: Date;
-    end: Date;
-  } | null>(null);
-
-  const guestBookingFormSchema = z.object({
-    startTime: z.string().min(1, "Start time is required"),
-    endTime: z.string().min(1, "End time is required"),
-    guestMode: z.enum(["existing", "new"]),
-    guestProfileId: z.string().optional(),
-    newGuestName: z.string().optional(),
-    newGuestPhone: z.string().optional(),
-    newGuestEmail: z.string().optional(),
-    notes: z.string().optional(),
-  });
-  type GuestBookingFormValues = z.infer<typeof guestBookingFormSchema>;
-
+  // Guest booking form
   const guestBookingForm = useForm<GuestBookingFormValues>({
     resolver: zodResolver(guestBookingFormSchema),
     defaultValues: {
       startTime: "",
       endTime: "",
-      guestMode: "new",
+      guestMode: "existing",
       guestProfileId: "",
       newGuestName: "",
       newGuestPhone: "",
@@ -1568,7 +1362,11 @@ export default function OwnerAvailabilityStudioPage() {
   });
 
   const guestProfilesQuery = trpc.guestProfile.list.useQuery(
-    { organizationId: organization?.id ?? "", limit: 50 },
+    {
+      organizationId: organization?.id ?? "",
+      query: debouncedGuestSearch || undefined,
+      limit: 50,
+    },
     { enabled: guestBookingOpen && !!organization?.id },
   );
   const createGuestProfile = trpc.guestProfile.create.useMutation();
@@ -1588,7 +1386,7 @@ export default function OwnerAvailabilityStudioPage() {
       guestBookingForm.reset({
         startTime: formatDateTimeInput(start, placeTimeZone),
         endTime: formatDateTimeInput(end, placeTimeZone),
-        guestMode: "new",
+        guestMode: "existing",
         guestProfileId: "",
         newGuestName: "",
         newGuestPhone: "",
@@ -1597,7 +1395,12 @@ export default function OwnerAvailabilityStudioPage() {
       });
       setGuestBookingOpen(true);
     },
-    [guestBookingForm, placeTimeZone],
+    [
+      guestBookingForm,
+      placeTimeZone,
+      setGuestBookingOpen,
+      setGuestBookingTimes,
+    ],
   );
 
   const handleGuestBookingSubmit = React.useCallback(
@@ -1644,8 +1447,7 @@ export default function OwnerAvailabilityStudioPage() {
         });
 
         toast.success("Guest booking added");
-        setGuestBookingOpen(false);
-        setGuestBookingTimes(null);
+        closeGuestBookingDialog();
       } catch (error) {
         toast.error("Unable to add guest booking", {
           description: getClientErrorMessage(error, "Please try again"),
@@ -1653,6 +1455,7 @@ export default function OwnerAvailabilityStudioPage() {
       }
     },
     [
+      closeGuestBookingDialog,
       courtId,
       createGuestBooking,
       createGuestProfile,
@@ -1668,7 +1471,6 @@ export default function OwnerAvailabilityStudioPage() {
         return;
       }
 
-      // Guest booking presets open a dialog instead of creating directly
       if (preset.blockType === "GUEST_BOOKING") {
         openGuestBookingDialog(startTime, endTime);
         return;
@@ -1726,7 +1528,6 @@ export default function OwnerAvailabilityStudioPage() {
       const startIso = toUtcISOString(startTime);
       const endIso = toUtcISOString(endTime);
 
-      // Immediate optimistic cache update
       utils.courtBlock.listForCourtRange.setData(
         blocksQueryInput,
         (old) =>
@@ -1737,7 +1538,6 @@ export default function OwnerAvailabilityStudioPage() {
           ) ?? [],
       );
 
-      // Track latest values with versioning
       const nextVersion = (rangeUpdateVersions.current.get(blockId) ?? 0) + 1;
       rangeUpdateVersions.current.set(blockId, nextVersion);
       pendingRangeUpdates.current.set(blockId, {
@@ -1746,7 +1546,6 @@ export default function OwnerAvailabilityStudioPage() {
         version: nextVersion,
       });
 
-      // Debounced save (per block)
       if (!isOptimisticBlockId(blockId)) {
         scheduleRangeFlush(blockId);
       }
@@ -1837,7 +1636,6 @@ export default function OwnerAvailabilityStudioPage() {
     }
   }, [discardImport, jobId, setJobIdParam]);
 
-  // Navigation handlers for week and month views
   const navigateWeek = React.useCallback(
     (direction: 1 | -1) => {
       const weekStart = getZonedDayRangeFromDayKey(
@@ -1853,26 +1651,7 @@ export default function OwnerAvailabilityStudioPage() {
     [dayKey, placeTimeZone, setDayKeyParam, weekDayKeys],
   );
 
-  // Mobile slot selection state
-  const [mobileCommittedRange, setMobileCommittedRange] = React.useState<{
-    startIdx: number;
-    endIdx: number;
-  } | null>(null);
-  const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false);
-  const [mobileBlockType, setMobileBlockType] = React.useState<
-    "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING"
-  >("WALK_IN");
-
-  const mobileGuestMode = React.useRef<"new" | "existing">("new");
-  const [mobileGuestModeState, setMobileGuestModeState] = React.useState<
-    "new" | "existing"
-  >("new");
-  const mobileGuestName = React.useRef("");
-  const mobileGuestPhone = React.useRef("");
-  const mobileGuestEmail = React.useRef("");
-  const mobileGuestProfileId = React.useRef("");
-  const mobileNotes = React.useRef("");
-
+  // Mobile selection config
   const mobileSelectionConfig = React.useMemo<RangeSelectionConfig>(() => {
     const blockedHourIndices = new Set<number>();
     for (const { block } of timelineBlocks) {
@@ -1924,14 +1703,25 @@ export default function OwnerAvailabilityStudioPage() {
         }
       },
     };
-  }, [hours, placeTimeZone, startHour, timelineBlocks, timelineReservations]);
+  }, [
+    hours,
+    placeTimeZone,
+    setMobileCommittedRange,
+    setMobileDrawerOpen,
+    startHour,
+    timelineBlocks,
+    timelineReservations,
+  ]);
 
-  const handleMobileDrawerClose = React.useCallback((open: boolean) => {
-    setMobileDrawerOpen(open);
-    if (!open) {
-      setMobileCommittedRange(null);
-    }
-  }, []);
+  const handleMobileDrawerClose = React.useCallback(
+    (open: boolean) => {
+      setMobileDrawerOpen(open);
+      if (!open) {
+        setMobileCommittedRange(null);
+      }
+    },
+    [setMobileCommittedRange, setMobileDrawerOpen],
+  );
 
   const mobileSelectedTimeLabel = React.useMemo(() => {
     if (!mobileCommittedRange) return "";
@@ -1948,115 +1738,6 @@ export default function OwnerAvailabilityStudioPage() {
     return formatTimeRangeInTimeZone(s, e, placeTimeZone);
   }, [dayKey, mobileCommittedRange, placeTimeZone, startHour]);
 
-  const handleMobileSubmit = React.useCallback(async () => {
-    if (!courtId || !mobileCommittedRange) {
-      toast.error("Select a court and time range first");
-      return;
-    }
-    const s = buildDateFromDayKey(
-      dayKey,
-      (mobileCommittedRange.startIdx + startHour) * 60,
-      placeTimeZone,
-    );
-    const e = buildDateFromDayKey(
-      dayKey,
-      (mobileCommittedRange.endIdx + startHour + 1) * 60,
-      placeTimeZone,
-    );
-
-    if (mobileBlockType === "GUEST_BOOKING") {
-      const guestMode = mobileGuestMode.current;
-      try {
-        let guestProfileId = mobileGuestProfileId.current;
-        if (guestMode === "new") {
-          const name = mobileGuestName.current.trim();
-          if (!name) {
-            toast.error("Guest name is required");
-            return;
-          }
-          const guest = await createGuestProfile.mutateAsync({
-            organizationId: organization?.id ?? "",
-            displayName: name,
-            phoneNumber: mobileGuestPhone.current.trim() || undefined,
-            email: mobileGuestEmail.current.trim() || undefined,
-          });
-          guestProfileId = guest.id;
-        }
-        if (!guestProfileId) {
-          toast.error("Please select or create a guest");
-          return;
-        }
-        await createGuestBooking.mutateAsync({
-          courtId,
-          startTime: toUtcISOString(s),
-          endTime: toUtcISOString(e),
-          guestProfileId,
-          notes: mobileNotes.current.trim() || undefined,
-        });
-        toast.success("Guest booking added");
-      } catch (error) {
-        toast.error("Unable to add guest booking", {
-          description: getClientErrorMessage(error, "Please try again"),
-        });
-        return;
-      }
-    } else {
-      try {
-        const payload = {
-          courtId,
-          startTime: toUtcISOString(s),
-          endTime: toUtcISOString(e),
-          reason: mobileNotes.current.trim() || undefined,
-        };
-        if (mobileBlockType === "MAINTENANCE") {
-          await createMaintenance.mutateAsync(payload);
-        } else {
-          await createWalkIn.mutateAsync(payload);
-        }
-        toast.success("Block created");
-      } catch (error) {
-        toast.error("Unable to create block", {
-          description: getClientErrorMessage(error, "Please try again"),
-        });
-        return;
-      }
-    }
-
-    setMobileDrawerOpen(false);
-    setMobileCommittedRange(null);
-    mobileNotes.current = "";
-    mobileGuestName.current = "";
-    mobileGuestPhone.current = "";
-    mobileGuestEmail.current = "";
-    mobileGuestProfileId.current = "";
-  }, [
-    courtId,
-    createGuestBooking,
-    createGuestProfile,
-    createMaintenance,
-    createWalkIn,
-    dayKey,
-    mobileBlockType,
-    mobileCommittedRange,
-    organization?.id,
-    placeTimeZone,
-    startHour,
-  ]);
-
-  // Open guest profiles query when drawer is open with guest type
-  const mobileGuestProfilesQuery = trpc.guestProfile.list.useQuery(
-    { organizationId: organization?.id ?? "", limit: 50 },
-    {
-      enabled:
-        mobileDrawerOpen &&
-        mobileBlockType === "GUEST_BOOKING" &&
-        !!organization?.id,
-    },
-  );
-
-  const [activeDragItem, setActiveDragItem] = React.useState<DragPreset | null>(
-    null,
-  );
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(TouchSensor, {
@@ -2065,18 +1746,20 @@ export default function OwnerAvailabilityStudioPage() {
     useSensor(KeyboardSensor),
   );
 
-  // Motion: reduced motion support
   const shouldReduceMotion = useReducedMotion();
   const viewTransition = shouldReduceMotion
     ? { duration: 0 }
     : { duration: 0.25, ease: "easeOut" as const };
 
-  const handleDragStart = React.useCallback((event: DragStartEvent) => {
-    const data = event.active.data.current as DragPreset | undefined;
-    if (data?.kind === "preset") {
-      setActiveDragItem(data);
-    }
-  }, []);
+  const handleDragStart = React.useCallback(
+    (event: DragStartEvent) => {
+      const data = event.active.data.current as DragPreset | undefined;
+      if (data?.kind === "preset") {
+        setActiveDragItem(data);
+      }
+    },
+    [setActiveDragItem],
+  );
 
   const handleDragEnd = React.useCallback(
     async (event: DragEndEvent) => {
@@ -2159,6 +1842,7 @@ export default function OwnerAvailabilityStudioPage() {
       handleDraftRowDrop,
       handleUpdateBlockRange,
       placeTimeZone,
+      setActiveDragItem,
     ],
   );
 
@@ -2169,7 +1853,6 @@ export default function OwnerAvailabilityStudioPage() {
   const isDragDisabled = !courtId;
   const isDraftDragDisabled = !isImportEditable || !courtId;
 
-  const [customDialogOpen, setCustomDialogOpen] = React.useState(false);
   const customForm = useForm<CustomBlockFormValues>({
     resolver: zodResolver(customBlockSchema),
     defaultValues: {
@@ -2194,7 +1877,13 @@ export default function OwnerAvailabilityStudioPage() {
       reason: "",
     });
     setCustomDialogOpen(true);
-  }, [customForm, dayKey, placeTimeZone, timelineStartMinute]);
+  }, [
+    customForm,
+    dayKey,
+    placeTimeZone,
+    setCustomDialogOpen,
+    timelineStartMinute,
+  ]);
 
   const handleCustomSubmit = React.useCallback(
     async (values: CustomBlockFormValues) => {
@@ -2237,13 +1926,133 @@ export default function OwnerAvailabilityStudioPage() {
         });
       }
     },
-    [courtId, createMaintenance, createWalkIn, placeTimeZone],
+    [
+      courtId,
+      createMaintenance,
+      createWalkIn,
+      placeTimeZone,
+      setCustomDialogOpen,
+    ],
   );
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(appRoutes.owner.bookings);
   };
+
+  // Mobile submit handler — needs to read store state at call time.
+  // We use refs to bridge the gap between hook-based store reads and callback usage.
+  const mobileGuestModeRef = React.useRef<"new" | "existing">("existing");
+  const mobileGuestNameRef = React.useRef("");
+  const mobileGuestPhoneRef = React.useRef("");
+  const mobileGuestEmailRef = React.useRef("");
+  const mobileGuestProfileIdRef = React.useRef("");
+  const mobileNotesRef = React.useRef("");
+
+  // Keep refs in sync with store
+  const mobileGuestMode = useBookingStudio((s) => s.mobileGuestMode);
+  const mobileGuestName = useBookingStudio((s) => s.mobileGuestName);
+  const mobileGuestPhone = useBookingStudio((s) => s.mobileGuestPhone);
+  const mobileGuestEmail = useBookingStudio((s) => s.mobileGuestEmail);
+  const mobileGuestProfileId = useBookingStudio((s) => s.mobileGuestProfileId);
+  const mobileNotes = useBookingStudio((s) => s.mobileNotes);
+
+  mobileGuestModeRef.current = mobileGuestMode;
+  mobileGuestNameRef.current = mobileGuestName;
+  mobileGuestPhoneRef.current = mobileGuestPhone;
+  mobileGuestEmailRef.current = mobileGuestEmail;
+  mobileGuestProfileIdRef.current = mobileGuestProfileId;
+  mobileNotesRef.current = mobileNotes;
+
+  const handleMobileSubmitFinal = React.useCallback(async () => {
+    if (!courtId || !mobileCommittedRange) {
+      toast.error("Select a court and time range first");
+      return;
+    }
+    const s = buildDateFromDayKey(
+      dayKey,
+      (mobileCommittedRange.startIdx + startHour) * 60,
+      placeTimeZone,
+    );
+    const e = buildDateFromDayKey(
+      dayKey,
+      (mobileCommittedRange.endIdx + startHour + 1) * 60,
+      placeTimeZone,
+    );
+
+    if (mobileBlockType === "GUEST_BOOKING") {
+      const guestMode = mobileGuestModeRef.current;
+      try {
+        let guestProfileId = mobileGuestProfileIdRef.current;
+        if (guestMode === "new") {
+          const name = mobileGuestNameRef.current.trim();
+          if (!name) {
+            toast.error("Guest name is required");
+            return;
+          }
+          const guest = await createGuestProfile.mutateAsync({
+            organizationId: organization?.id ?? "",
+            displayName: name,
+            phoneNumber: mobileGuestPhoneRef.current.trim() || undefined,
+            email: mobileGuestEmailRef.current.trim() || undefined,
+          });
+          guestProfileId = guest.id;
+        }
+        if (!guestProfileId) {
+          toast.error("Please select or create a guest");
+          return;
+        }
+        await createGuestBooking.mutateAsync({
+          courtId,
+          startTime: toUtcISOString(s),
+          endTime: toUtcISOString(e),
+          guestProfileId,
+          notes: mobileNotesRef.current.trim() || undefined,
+        });
+        toast.success("Guest booking added");
+      } catch (error) {
+        toast.error("Unable to add guest booking", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+        return;
+      }
+    } else {
+      try {
+        const payload = {
+          courtId,
+          startTime: toUtcISOString(s),
+          endTime: toUtcISOString(e),
+          reason: mobileNotesRef.current.trim() || undefined,
+        };
+        if (mobileBlockType === "MAINTENANCE") {
+          await createMaintenance.mutateAsync(payload);
+        } else {
+          await createWalkIn.mutateAsync(payload);
+        }
+        toast.success("Block created");
+      } catch (error) {
+        toast.error("Unable to create block", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+        return;
+      }
+    }
+
+    resetMobileDrawer();
+  }, [
+    courtId,
+    createGuestBooking,
+    createGuestProfile,
+    createMaintenance,
+    createWalkIn,
+    dayKey,
+    mobileBlockType,
+    mobileCommittedRange,
+    organization?.id,
+    placeTimeZone,
+    resetMobileDrawer,
+    startHour,
+  ]);
 
   if (orgLoading) {
     return (
@@ -2373,14 +2182,14 @@ export default function OwnerAvailabilityStudioPage() {
                       {job.errorRowCount ?? 0}
                     </span>
                   </div>
-                  {(job.committedRowCount ?? 0) > 0 && (
+                  {(job.committedRowCount ?? 0) > 0 ? (
                     <div>
                       <span className="text-muted-foreground">Committed:</span>{" "}
                       <span className="font-medium">
                         {job.committedRowCount}
                       </span>
                     </div>
-                  )}
+                  ) : null}
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">
@@ -2404,9 +2213,9 @@ export default function OwnerAvailabilityStudioPage() {
                 >
                   Discard import
                 </Button>
-                {!isImportEditable && job && (
+                {!isImportEditable && job ? (
                   <Badge variant="secondary">Status: {job.status}</Badge>
-                )}
+                ) : null}
                 {isImportEditable && job?.errorRowCount ? (
                   <Badge variant="warning">Fix errors to commit</Badge>
                 ) : null}
@@ -2564,12 +2373,12 @@ export default function OwnerAvailabilityStudioPage() {
                             Custom block...
                           </Button>
                         </div>
-                        {isDragDisabled && (
+                        {isDragDisabled ? (
                           <p className="text-xs text-muted-foreground">
                             Select a court to enable drag-and-drop.
                           </p>
-                        )}
-                        {isImportOverlay && (
+                        ) : null}
+                        {isImportOverlay ? (
                           <div className="space-y-3 pt-2">
                             <Separator />
                             <div className="space-y-1">
@@ -2600,15 +2409,15 @@ export default function OwnerAvailabilityStudioPage() {
                                     selectedCourt={selectedCourt?.label ?? null}
                                   />
                                 ))}
-                                {draftRowsSorted.length > 8 && (
+                                {draftRowsSorted.length > 8 ? (
                                   <p className="text-xs text-muted-foreground">
                                     Showing first 8 rows.
                                   </p>
-                                )}
+                                ) : null}
                               </div>
                             )}
                           </div>
-                        )}
+                        ) : null}
                       </CardContent>
                     </Card>
                   </div>
@@ -2659,7 +2468,6 @@ export default function OwnerAvailabilityStudioPage() {
                         </Alert>
                       ) : (
                         <div className="relative overflow-x-auto">
-                          {/* Day headers */}
                           <div
                             className="grid gap-x-0"
                             style={{
@@ -2716,7 +2524,6 @@ export default function OwnerAvailabilityStudioPage() {
                             })}
                           </div>
 
-                          {/* Week columns: time labels + 7 day columns with interactive blocks */}
                           <div
                             className="grid gap-x-0"
                             style={{
@@ -2724,7 +2531,6 @@ export default function OwnerAvailabilityStudioPage() {
                                 "72px repeat(7, minmax(100px, 1fr))",
                             }}
                           >
-                            {/* Time labels column */}
                             <div>
                               {hours.map((hour) => (
                                 <div
@@ -2744,7 +2550,6 @@ export default function OwnerAvailabilityStudioPage() {
                               ))}
                             </div>
 
-                            {/* 7 day columns */}
                             {weekDayKeys.map((wdk) => (
                               <WeekDayColumn
                                 key={`week-col-${wdk}`}
@@ -2768,9 +2573,9 @@ export default function OwnerAvailabilityStudioPage() {
                               />
                             ))}
                           </div>
-                          {blocksQuery.isLoading && (
+                          {blocksQuery.isLoading ? (
                             <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
-                          )}
+                          ) : null}
                         </div>
                       )}
                     </CardContent>
@@ -2840,12 +2645,12 @@ export default function OwnerAvailabilityStudioPage() {
                             Custom block...
                           </Button>
                         </div>
-                        {isDragDisabled && (
+                        {isDragDisabled ? (
                           <p className="text-xs text-muted-foreground">
                             Select a court to enable drag-and-drop.
                           </p>
-                        )}
-                        {isImportOverlay && (
+                        ) : null}
+                        {isImportOverlay ? (
                           <div className="space-y-3 pt-2">
                             <Separator />
                             <div className="space-y-1">
@@ -2876,23 +2681,22 @@ export default function OwnerAvailabilityStudioPage() {
                                     selectedCourt={selectedCourt?.label ?? null}
                                   />
                                 ))}
-                                {draftRowsSorted.length > 8 && (
+                                {draftRowsSorted.length > 8 ? (
                                   <p className="text-xs text-muted-foreground">
                                     Showing first 8 rows. Open the import review
                                     for full list.
                                   </p>
-                                )}
+                                ) : null}
                               </div>
                             )}
                           </div>
-                        )}
+                        ) : null}
                       </CardContent>
                     </Card>
                   </div>
 
                   <Card>
                     <CardContent className="space-y-4 p-6 pb-6 lg:pb-6">
-                      {/* Mobile date navigation */}
                       <div className="space-y-3 lg:hidden">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
@@ -3083,14 +2887,13 @@ export default function OwnerAvailabilityStudioPage() {
                                 </div>
                               </div>
                             </div>
-                            {blocksQuery.isLoading && (
+                            {blocksQuery.isLoading ? (
                               <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
-                            )}
+                            ) : null}
                           </div>
                         </RangeSelectionProvider>
                       )}
 
-                      {/* Mobile inline blocks list */}
                       <div className="lg:hidden">
                         <MobileDayBlocksList
                           blocks={dayBlocks}
@@ -3153,21 +2956,21 @@ export default function OwnerAvailabilityStudioPage() {
                                       placeTimeZone,
                                     )}
                                   </p>
-                                  {block.reason && (
+                                  {block.reason ? (
                                     <p className="text-xs text-muted-foreground">
                                       {block.reason}
                                     </p>
-                                  )}
+                                  ) : null}
                                 </div>
                                 <div className="flex flex-col items-end gap-2">
-                                  {block.type === "WALK_IN" && (
+                                  {block.type === "WALK_IN" ? (
                                     <span className="text-sm font-semibold">
                                       {formatCurrency(
                                         block.totalPriceCents,
                                         block.currency,
                                       )}
                                     </span>
-                                  )}
+                                  ) : null}
                                   <Button
                                     type="button"
                                     size="sm"
@@ -3197,1149 +3000,41 @@ export default function OwnerAvailabilityStudioPage() {
           </DragOverlay>
         </DndContext>
 
-        <AlertDialog
-          open={pendingRemoveBlockId !== null}
-          onOpenChange={(open) => {
-            if (!open) setPendingRemoveBlockId(null);
-          }}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Remove block</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will permanently remove the block from the schedule.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={confirmRemoveBlock}
-                className={buttonVariants({ variant: "destructive" })}
-              >
-                Remove
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <RemoveBlockDialog confirmRemoveBlock={confirmRemoveBlock} />
 
-        <Dialog open={customDialogOpen} onOpenChange={setCustomDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create custom block</DialogTitle>
-              <DialogDescription>
-                Times are shown in {placeTimeZone}. Blocks must align to full
-                hours.
-              </DialogDescription>
-            </DialogHeader>
-            <StandardFormProvider
-              form={customForm}
-              onSubmit={handleCustomSubmit}
-            >
-              <StandardFormSelect<CustomBlockFormValues>
-                name="blockType"
-                label="Block type"
-                options={blockTypeOptions.map((option) => ({
-                  value: option.value,
-                  label: option.label,
-                }))}
-                required
-              />
-              <StandardFormInput<CustomBlockFormValues>
-                name="startTime"
-                label="Start time"
-                type="datetime-local"
-                required
-              />
-              <StandardFormInput<CustomBlockFormValues>
-                name="endTime"
-                label="End time"
-                type="datetime-local"
-                required
-              />
-              <StandardFormTextarea<CustomBlockFormValues>
-                name="reason"
-                label="Reason (optional)"
-                placeholder="Net replacement"
-              />
-              <DialogFooter className="pt-2">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => setCustomDialogOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isCreatingBlock}>
-                  {isCreatingBlock ? "Creating..." : "Create block"}
-                </Button>
-              </DialogFooter>
-            </StandardFormProvider>
-          </DialogContent>
-        </Dialog>
+        <CustomBlockDialog
+          customForm={customForm}
+          handleCustomSubmit={handleCustomSubmit}
+          isCreatingBlock={isCreatingBlock}
+          placeTimeZone={placeTimeZone}
+        />
 
-        <Dialog
-          open={guestBookingOpen}
-          onOpenChange={(open) => {
-            setGuestBookingOpen(open);
-            if (!open) setGuestBookingTimes(null);
-          }}
-        >
-          <DialogContent className="sm:max-w-lg">
-            <DialogHeader>
-              <DialogTitle>Add guest booking</DialogTitle>
-              <DialogDescription>
-                Create a confirmed reservation for a guest. Pricing is computed
-                from your schedule in {placeTimeZone}.
-              </DialogDescription>
-            </DialogHeader>
-            <StandardFormProvider
-              form={guestBookingForm}
-              onSubmit={handleGuestBookingSubmit}
-            >
-              <div className="space-y-4">
-                <StandardFormInput<GuestBookingFormValues>
-                  name="startTime"
-                  label="Start time"
-                  type="datetime-local"
-                  required
-                />
-                <StandardFormInput<GuestBookingFormValues>
-                  name="endTime"
-                  label="End time"
-                  type="datetime-local"
-                  required
-                />
+        <GuestBookingDialog
+          guestBookingForm={guestBookingForm}
+          handleGuestBookingSubmit={handleGuestBookingSubmit}
+          isSubmitting={
+            createGuestBooking.isPending || createGuestProfile.isPending
+          }
+          guestProfilesData={
+            (guestProfilesQuery.data ?? []) as Array<{
+              id: string;
+              displayName: string;
+              phoneNumber: string | null;
+            }>
+          }
+          guestProfilesLoading={guestProfilesQuery.isLoading}
+          placeTimeZone={placeTimeZone}
+        />
 
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Guest</p>
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      variant={
-                        guestBookingForm.watch("guestMode") === "existing"
-                          ? "default"
-                          : "outline"
-                      }
-                      size="sm"
-                      onClick={() =>
-                        guestBookingForm.setValue("guestMode", "existing")
-                      }
-                    >
-                      Select existing
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={
-                        guestBookingForm.watch("guestMode") === "new"
-                          ? "default"
-                          : "outline"
-                      }
-                      size="sm"
-                      onClick={() =>
-                        guestBookingForm.setValue("guestMode", "new")
-                      }
-                    >
-                      Create new
-                    </Button>
-                  </div>
-                </div>
-
-                {guestBookingForm.watch("guestMode") === "existing" ? (
-                  <StandardFormSelect<GuestBookingFormValues>
-                    name="guestProfileId"
-                    label="Select guest"
-                    placeholder="Choose a guest..."
-                    emptyOptionLabel="Choose a guest..."
-                    options={(guestProfilesQuery.data ?? []).map((guest) => ({
-                      value: guest.id,
-                      label: `${guest.displayName}${guest.phoneNumber ? ` (${guest.phoneNumber})` : ""}`,
-                    }))}
-                    required
-                  />
-                ) : (
-                  <>
-                    <StandardFormInput<GuestBookingFormValues>
-                      name="newGuestName"
-                      label="Guest name"
-                      placeholder="Juan Dela Cruz"
-                      required
-                    />
-                    <StandardFormInput<GuestBookingFormValues>
-                      name="newGuestPhone"
-                      label="Phone (optional)"
-                      placeholder="09171234567"
-                    />
-                    <StandardFormInput<GuestBookingFormValues>
-                      name="newGuestEmail"
-                      label="Email (optional)"
-                      placeholder="guest@example.com"
-                    />
-                  </>
-                )}
-
-                <StandardFormTextarea<GuestBookingFormValues>
-                  name="notes"
-                  label="Notes (optional)"
-                  placeholder="Internal notes"
-                />
-              </div>
-              <DialogFooter className="pt-4">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => {
-                    setGuestBookingOpen(false);
-                    setGuestBookingTimes(null);
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={
-                    createGuestBooking.isPending || createGuestProfile.isPending
-                  }
-                >
-                  Save guest booking
-                </Button>
-              </DialogFooter>
-            </StandardFormProvider>
-          </DialogContent>
-        </Dialog>
-
-        {/* Mobile create block drawer */}
-        <Drawer open={mobileDrawerOpen} onOpenChange={handleMobileDrawerClose}>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>Create Block</DrawerTitle>
-              <DrawerDescription>
-                {mobileSelectedTimeLabel} · {placeTimeZone}
-              </DrawerDescription>
-            </DrawerHeader>
-            <div className="overflow-y-auto px-4 pb-4 space-y-4">
-              <ToggleGroup
-                type="single"
-                value={mobileBlockType}
-                onValueChange={(value) => {
-                  if (value)
-                    setMobileBlockType(
-                      value as "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING",
-                    );
-                }}
-                className="w-full"
-              >
-                <ToggleGroupItem value="WALK_IN" className="flex-1">
-                  Walk-in
-                </ToggleGroupItem>
-                <ToggleGroupItem value="MAINTENANCE" className="flex-1">
-                  Maintenance
-                </ToggleGroupItem>
-                <ToggleGroupItem value="GUEST_BOOKING" className="flex-1">
-                  Guest
-                </ToggleGroupItem>
-              </ToggleGroup>
-
-              {mobileBlockType !== "GUEST_BOOKING" && (
-                <label className="block space-y-2">
-                  <span className="text-sm font-medium">Note (optional)</span>
-                  <textarea
-                    className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
-                    placeholder={
-                      mobileBlockType === "MAINTENANCE"
-                        ? "e.g. Net replacement"
-                        : "e.g. Regular customer"
-                    }
-                    rows={2}
-                    defaultValue=""
-                    onChange={(e) => {
-                      mobileNotes.current = e.target.value;
-                    }}
-                  />
-                </label>
-              )}
-
-              {mobileBlockType === "GUEST_BOOKING" && (
-                <MobileGuestForm
-                  guestMode={mobileGuestModeState}
-                  onGuestModeChange={(mode) => {
-                    mobileGuestMode.current = mode;
-                    setMobileGuestModeState(mode);
-                  }}
-                  guestProfiles={mobileGuestProfilesQuery.data ?? []}
-                  onGuestNameChange={(v) => {
-                    mobileGuestName.current = v;
-                  }}
-                  onGuestPhoneChange={(v) => {
-                    mobileGuestPhone.current = v;
-                  }}
-                  onGuestEmailChange={(v) => {
-                    mobileGuestEmail.current = v;
-                  }}
-                  onGuestProfileIdChange={(v) => {
-                    mobileGuestProfileId.current = v;
-                  }}
-                  onNotesChange={(v) => {
-                    mobileNotes.current = v;
-                  }}
-                />
-              )}
-            </div>
-            <DrawerFooter className="pb-safe">
-              <Button
-                onClick={handleMobileSubmit}
-                className="w-full"
-                disabled={isCreatingBlock}
-              >
-                {isCreatingBlock
-                  ? "Saving..."
-                  : mobileBlockType === "WALK_IN"
-                    ? "Save walk-in booking"
-                    : mobileBlockType === "MAINTENANCE"
-                      ? "Save maintenance block"
-                      : "Save guest booking"}
-              </Button>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+        <MobileCreateBlockDrawer
+          handleMobileSubmit={handleMobileSubmitFinal}
+          isCreatingBlock={isCreatingBlock}
+          mobileSelectedTimeLabel={mobileSelectedTimeLabel}
+          placeTimeZone={placeTimeZone}
+          organizationId={organization?.id ?? ""}
+          onDrawerClose={handleMobileDrawerClose}
+        />
       </div>
     </AppShell>
   );
 }
-
-const MobileGuestForm = React.memo(function MobileGuestForm({
-  guestMode,
-  onGuestModeChange,
-  guestProfiles,
-  onGuestNameChange,
-  onGuestPhoneChange,
-  onGuestEmailChange,
-  onGuestProfileIdChange,
-  onNotesChange,
-}: {
-  guestMode: "new" | "existing";
-  onGuestModeChange: (mode: "new" | "existing") => void;
-  guestProfiles: Array<{
-    id: string;
-    displayName: string;
-    phoneNumber: string | null;
-  }>;
-  onGuestNameChange: (v: string) => void;
-  onGuestPhoneChange: (v: string) => void;
-  onGuestEmailChange: (v: string) => void;
-  onGuestProfileIdChange: (v: string) => void;
-  onNotesChange: (v: string) => void;
-}) {
-  return (
-    <div className="space-y-3">
-      <div className="space-y-2">
-        <p className="text-sm font-medium">Guest</p>
-        <div className="flex gap-2">
-          <Button
-            type="button"
-            variant={guestMode === "existing" ? "default" : "outline"}
-            size="sm"
-            onClick={() => onGuestModeChange("existing")}
-          >
-            Select existing
-          </Button>
-          <Button
-            type="button"
-            variant={guestMode === "new" ? "default" : "outline"}
-            size="sm"
-            onClick={() => onGuestModeChange("new")}
-          >
-            Create new
-          </Button>
-        </div>
-      </div>
-
-      {guestMode === "existing" ? (
-        <div className="space-y-2">
-          <p className="text-sm font-medium">Select guest</p>
-          <Select onValueChange={onGuestProfileIdChange}>
-            <SelectTrigger aria-label="Select guest">
-              <SelectValue placeholder="Choose a guest..." />
-            </SelectTrigger>
-            <SelectContent>
-              {guestProfiles.map((guest) => (
-                <SelectItem key={guest.id} value={guest.id}>
-                  {guest.displayName}
-                  {guest.phoneNumber ? ` (${guest.phoneNumber})` : ""}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      ) : (
-        <>
-          <label className="block space-y-2">
-            <span className="text-sm font-medium">Guest name</span>
-            <input
-              className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
-              placeholder="Juan Dela Cruz"
-              onChange={(e) => onGuestNameChange(e.target.value)}
-            />
-          </label>
-          <label className="block space-y-2">
-            <span className="text-sm font-medium">Phone (optional)</span>
-            <input
-              className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
-              placeholder="09171234567"
-              onChange={(e) => onGuestPhoneChange(e.target.value)}
-            />
-          </label>
-          <label className="block space-y-2">
-            <span className="text-sm font-medium">Email (optional)</span>
-            <input
-              className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
-              placeholder="guest@example.com"
-              onChange={(e) => onGuestEmailChange(e.target.value)}
-            />
-          </label>
-        </>
-      )}
-
-      <label className="block space-y-2">
-        <span className="text-sm font-medium">Notes (optional)</span>
-        <textarea
-          className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
-          placeholder="Internal notes"
-          rows={2}
-          onChange={(e) => onNotesChange(e.target.value)}
-        />
-      </label>
-    </div>
-  );
-});
-
-const MobileDayBlocksList = React.memo(function MobileDayBlocksList({
-  blocks,
-  isLoading,
-  timeZone,
-  selectedDayLabel,
-  onRemoveBlock,
-  isCancelPending,
-}: {
-  blocks: CourtBlockItem[];
-  isLoading: boolean;
-  timeZone: string;
-  selectedDayLabel: string;
-  onRemoveBlock: (blockId: string) => void;
-  isCancelPending: boolean;
-}) {
-  if (isLoading) {
-    return (
-      <div className="space-y-3 pt-4">
-        <Separator />
-        <Skeleton className="h-16 w-full" />
-        <Skeleton className="h-16 w-full" />
-      </div>
-    );
-  }
-
-  if (blocks.length === 0) return null;
-
-  return (
-    <div className="space-y-3 pt-4">
-      <Separator />
-      <h3 className="text-sm font-heading font-semibold">
-        Blocks · {selectedDayLabel}
-      </h3>
-      <div className="space-y-3 pb-20">
-        {blocks.map((block) => (
-          <div key={block.id} className="rounded-lg border p-3">
-            <div className="flex items-start justify-between gap-3">
-              <div className="space-y-1">
-                <Badge variant={block.type === "WALK_IN" ? "paid" : "warning"}>
-                  {block.type === "WALK_IN" ? "Walk-in" : "Maintenance"}
-                </Badge>
-                <p className="text-sm font-medium">
-                  {formatTimeRangeInTimeZone(
-                    block.startTime,
-                    block.endTime,
-                    timeZone,
-                  )}
-                </p>
-                {block.reason && (
-                  <p className="text-xs text-muted-foreground">
-                    {block.reason}
-                  </p>
-                )}
-              </div>
-              <div className="flex flex-col items-end gap-2">
-                {block.type === "WALK_IN" && (
-                  <span className="text-sm font-semibold">
-                    {formatCurrency(block.totalPriceCents, block.currency)}
-                  </span>
-                )}
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => onRemoveBlock(block.id)}
-                  disabled={isCancelPending}
-                >
-                  Remove
-                </Button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-});
-
-const MobileAwareTimelineRow = React.memo(function MobileAwareTimelineRow({
-  dayKey,
-  startMinute,
-  disabled,
-  cellIndex,
-}: {
-  dayKey: string;
-  startMinute: number;
-  disabled: boolean;
-  cellIndex: number;
-}) {
-  const { setNodeRef, isOver } = useDroppable({
-    id: `timeline-cell-${dayKey}-${startMinute}`,
-    data: {
-      kind: "timeline-cell",
-      dayKey,
-      startMinute,
-    } satisfies TimelineCellData,
-    disabled,
-  });
-
-  const cellState = useCellState(cellIndex);
-  const pointerDown = useRangeSelection((s) => s.pointerDown);
-  const pointerEnter = useRangeSelection((s) => s.pointerEnter);
-  const click = useRangeSelection((s) => s.click);
-  const setHoveredIdx = useRangeSelection((s) => s.setHoveredIdx);
-  const isCellAvailable = useRangeSelection((s) => s.config.isCellAvailable);
-
-  const isAvailable = !disabled && isCellAvailable(cellIndex);
-
-  const handlePointerDown = React.useCallback(
-    (e: React.PointerEvent) => {
-      if (!isAvailable) return;
-      e.preventDefault();
-      pointerDown(cellIndex);
-    },
-    [cellIndex, isAvailable, pointerDown],
-  );
-
-  const handlePointerEnter = React.useCallback(() => {
-    if (!isAvailable) return;
-    pointerEnter(cellIndex);
-    setHoveredIdx(cellIndex);
-  }, [cellIndex, isAvailable, pointerEnter, setHoveredIdx]);
-
-  const handlePointerLeave = React.useCallback(() => {
-    setHoveredIdx(null);
-  }, [setHoveredIdx]);
-
-  const handleClick = React.useCallback(
-    (e: React.MouseEvent) => {
-      if (!isAvailable) return;
-      click(cellIndex, e.shiftKey);
-    },
-    [cellIndex, click, isAvailable],
-  );
-
-  const handleKeyDown = React.useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        if (isAvailable) click(cellIndex, e.shiftKey);
-      }
-    },
-    [cellIndex, click, isAvailable],
-  );
-
-  return (
-    <button
-      type="button"
-      ref={setNodeRef}
-      tabIndex={isAvailable ? 0 : -1}
-      aria-disabled={!isAvailable}
-      className={cn(
-        "block w-full h-[56px] rounded-md border-t border-border/70 transition-colors",
-        "touch-none appearance-none",
-        "bg-card",
-        isOver && !disabled && "ring-2 ring-primary/30 ring-inset bg-primary/5",
-        cellState.inRange && "bg-primary/10",
-        cellState.isStart && "rounded-t-lg ring-t-2 ring-primary/40",
-        cellState.isEnd && "rounded-b-lg",
-        cellState.inHoverPreview && "bg-primary/5",
-        cellState.isPendingStart && "bg-primary/15 ring-2 ring-primary/30",
-      )}
-      onPointerDown={handlePointerDown}
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-    />
-  );
-});
-
-const BlockPresetCard = React.memo(function BlockPresetCard({
-  preset,
-  disabled,
-}: {
-  preset: BlockPreset;
-  disabled?: boolean;
-}) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: preset.id,
-      data: { kind: "preset", preset } satisfies DragPreset,
-      disabled,
-    });
-
-  const style = transform
-    ? { transform: CSS.Translate.toString(transform) }
-    : undefined;
-
-  return (
-    <button
-      ref={setNodeRef}
-      type="button"
-      style={style}
-      {...listeners}
-      {...attributes}
-      className={cn(
-        "w-full rounded-lg border bg-card p-3 text-left transition-shadow",
-        "hover:shadow-md",
-        disabled ? "cursor-not-allowed opacity-50" : "cursor-grab",
-        isDragging ? "opacity-40" : "opacity-100",
-      )}
-      aria-disabled={disabled}
-    >
-      <BlockPresetContent preset={preset} />
-    </button>
-  );
-});
-
-const BlockPresetPreview = React.memo(function BlockPresetPreview({
-  preset,
-}: {
-  preset: BlockPreset;
-}) {
-  return (
-    <div className="w-64 rounded-lg border bg-card p-3 text-left shadow-lg">
-      <BlockPresetContent preset={preset} />
-    </div>
-  );
-});
-
-const BlockPresetContent = React.memo(function BlockPresetContent({
-  preset,
-}: {
-  preset: BlockPreset;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-2">
-      <div>
-        <p className="text-sm font-heading font-semibold">{preset.label}</p>
-        <p className="text-xs text-muted-foreground">{preset.description}</p>
-      </div>
-      <Badge variant={preset.badgeVariant}>
-        {formatDuration(preset.durationMinutes)}
-      </Badge>
-    </div>
-  );
-});
-
-const TimelineDropRow = React.memo(function TimelineDropRow({
-  dayKey,
-  startMinute,
-  disabled,
-}: {
-  dayKey: string;
-  startMinute: number;
-  disabled: boolean;
-}) {
-  const { setNodeRef, isOver } = useDroppable({
-    id: `timeline-cell-${dayKey}-${startMinute}`,
-    data: {
-      kind: "timeline-cell",
-      dayKey,
-      startMinute,
-    } satisfies TimelineCellData,
-    disabled,
-  });
-
-  return (
-    <div
-      ref={setNodeRef}
-      className={cn(
-        "h-[56px] rounded-md border-t border-border/70 transition-colors",
-        "bg-card",
-        isOver && !disabled && "ring-2 ring-primary/30 ring-inset bg-primary/5",
-      )}
-    />
-  );
-});
-
-const TimelineBlockItem = React.memo(function TimelineBlockItem({
-  block,
-  topOffset,
-  height,
-  timeZone,
-  disabled,
-  isPending,
-  isPastDay,
-  compact,
-  onRemove,
-}: {
-  block: CourtBlockItem;
-  topOffset: number;
-  height: number;
-  timeZone: string;
-  disabled: boolean;
-  isPending?: boolean;
-  isPastDay?: boolean;
-  compact?: boolean;
-  onRemove?: (blockId: string) => void;
-}) {
-  const effectiveDisabled = disabled;
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: `block-${block.id}`,
-      data: { kind: "block", blockId: block.id } satisfies DragBlock,
-      disabled: effectiveDisabled,
-    });
-
-  const style = transform
-    ? { transform: CSS.Translate.toString(transform) }
-    : undefined;
-
-  const isWalkIn = block.type === "WALK_IN";
-  const durationMinutes = Math.max(
-    getMinuteOfDay(block.endTime, timeZone) -
-      getMinuteOfDay(block.startTime, timeZone),
-    0,
-  );
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={{ top: topOffset, height, ...style }}
-      {...attributes}
-      className={cn(
-        "pointer-events-auto absolute rounded-lg border bg-card text-card-foreground shadow-sm",
-        compact
-          ? "left-0.5 right-0.5 border-l-2 px-1 py-0.5"
-          : "left-1 right-1 border-l-4 px-3 py-2",
-        isWalkIn ? "border-l-primary" : "border-l-amber-500",
-        "group",
-        effectiveDisabled ? "cursor-not-allowed" : "cursor-grab",
-        isDragging && "opacity-50",
-        isPending && "opacity-80",
-        isPastDay && "opacity-50 saturate-50",
-      )}
-    >
-      <div
-        className={cn(
-          "flex items-center justify-between gap-1",
-          compact ? "gap-0.5" : "gap-2",
-        )}
-        {...listeners}
-      >
-        {compact ? (
-          <span
-            className={cn(
-              "text-[10px] font-semibold truncate",
-              isWalkIn ? "text-primary" : "text-amber-600",
-            )}
-          >
-            {isWalkIn ? "W" : "M"}
-          </span>
-        ) : (
-          <Badge
-            variant={isWalkIn ? "paid" : "warning"}
-            className="text-[10px] px-1.5 py-0"
-          >
-            {isWalkIn ? "Walk-in" : "Maintenance"}
-          </Badge>
-        )}
-        {!compact && (
-          <span className="text-xs text-muted-foreground">
-            {formatDuration(durationMinutes)}
-          </span>
-        )}
-      </div>
-      {!compact && (
-        <div className="mt-1 text-xs font-medium">
-          {formatTimeRangeInTimeZone(block.startTime, block.endTime, timeZone)}
-        </div>
-      )}
-      {compact && (
-        <div className="text-[9px] text-muted-foreground truncate">
-          {formatTimeRangeInTimeZone(block.startTime, block.endTime, timeZone)}
-        </div>
-      )}
-      {!compact && block.reason && (
-        <div className="text-[11px] text-muted-foreground truncate">
-          {block.reason}
-        </div>
-      )}
-      {onRemove && (
-        <button
-          type="button"
-          aria-label="Remove block"
-          className={cn(
-            "pointer-events-auto absolute z-10 flex items-center justify-center rounded-full",
-            "bg-destructive/90 text-destructive-foreground shadow-sm",
-            "lg:opacity-0 lg:group-hover:opacity-100 group-focus-within:opacity-100",
-            "transition-opacity duration-150",
-            "hover:bg-destructive",
-            compact ? "-right-1.5 -top-1.5 h-4 w-4" : "-right-2 -top-2 h-5 w-5",
-          )}
-          onPointerDownCapture={(e) => e.stopPropagation()}
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove(block.id);
-          }}
-        >
-          <X className={compact ? "h-2.5 w-2.5" : "h-3 w-3"} />
-        </button>
-      )}
-      <ResizeHandle
-        blockId={block.id}
-        edge="start"
-        disabled={effectiveDisabled}
-      />
-      <ResizeHandle
-        blockId={block.id}
-        edge="end"
-        disabled={effectiveDisabled}
-      />
-    </div>
-  );
-});
-
-const ResizeHandle = React.memo(function ResizeHandle({
-  blockId,
-  edge,
-  disabled,
-}: {
-  blockId: string;
-  edge: "start" | "end";
-  disabled: boolean;
-}) {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `resize-${edge}-${blockId}`,
-    data: { kind: "resize", blockId, edge } satisfies DragResizeHandle,
-    disabled,
-  });
-
-  return (
-    <div
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      className={cn(
-        "absolute left-2 right-2 h-3 rounded-full transition-opacity",
-        // Hidden by default, visible on hover/focus
-        "lg:opacity-0 lg:group-hover:opacity-100 focus-visible:opacity-100",
-        "bg-foreground/20 hover:bg-foreground/40",
-        edge === "start" ? "top-1" : "bottom-1",
-        disabled ? "cursor-not-allowed" : "cursor-ns-resize",
-        isDragging && "opacity-60",
-      )}
-      aria-hidden
-    />
-  );
-});
-
-const DraftTimelineBlock = React.memo(function DraftTimelineBlock({
-  row,
-  topOffset,
-  height,
-  timeZone,
-}: {
-  row: DraftRowItem;
-  topOffset: number;
-  height: number;
-  timeZone: string;
-}) {
-  const status = (row.status ?? "PENDING") as DraftRowStatus;
-  const statusBadge = DRAFT_STATUS_BADGE[status] ?? "secondary";
-  const startTime = row.startTime as Date | string | null;
-  const endTime = row.endTime as Date | string | null;
-
-  return (
-    <div
-      className={cn(
-        "pointer-events-none absolute left-2 right-2 rounded-lg border border-dashed bg-muted/30 px-3 py-2 text-foreground",
-        status === "ERROR"
-          ? "border-destructive/30"
-          : status === "WARNING"
-            ? "border-amber-400/30"
-            : "border-primary/30",
-      )}
-      style={{ top: topOffset, height }}
-    >
-      <div className="flex items-center justify-between text-[11px] font-semibold uppercase">
-        <span>Draft · Row {row.lineNumber}</span>
-        <Badge variant={statusBadge}>{status.toLowerCase()}</Badge>
-      </div>
-      {startTime && endTime && (
-        <div className="text-xs">
-          {formatTimeRangeInTimeZone(startTime, endTime, timeZone)}
-        </div>
-      )}
-      {row.courtLabel && (
-        <div className="text-[11px] opacity-70 truncate">
-          Court: {row.courtLabel}
-        </div>
-      )}
-    </div>
-  );
-});
-
-const DraftRowCard = React.memo(function DraftRowCard({
-  row,
-  timeZone,
-  disabled,
-  selectedCourt,
-}: {
-  row: DraftRowItem;
-  timeZone: string;
-  disabled: boolean;
-  selectedCourt: string | null;
-}) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: `draft-row-${row.id}`,
-      data: { kind: "draft-row", rowId: row.id } satisfies DragDraftRow,
-      disabled,
-    });
-
-  const style = transform
-    ? { transform: CSS.Translate.toString(transform) }
-    : undefined;
-  const status = (row.status ?? "PENDING") as DraftRowStatus;
-  const statusBadge = DRAFT_STATUS_BADGE[status] ?? "secondary";
-
-  const startTime = row.startTime as Date | string | null;
-  const endTime = row.endTime as Date | string | null;
-  const timeLabel =
-    startTime && endTime
-      ? formatTimeRangeInTimeZone(startTime, endTime, timeZone)
-      : "No time set";
-
-  const errorHint = row.errors?.[0];
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className={cn(
-        "rounded-lg border bg-card p-3 text-left text-xs transition-shadow",
-        disabled ? "cursor-not-allowed opacity-50" : "cursor-grab",
-        isDragging ? "opacity-40" : "opacity-100",
-      )}
-    >
-      <div className="flex items-center justify-between gap-2">
-        <span className="font-heading font-semibold">Row {row.lineNumber}</span>
-        <Badge variant={statusBadge}>{status.toLowerCase()}</Badge>
-      </div>
-      <p className="mt-1 text-muted-foreground">{timeLabel}</p>
-      {row.courtLabel && (
-        <p className="mt-1 text-[11px] text-muted-foreground">
-          Court: {row.courtLabel}
-        </p>
-      )}
-      {!row.courtLabel && selectedCourt && (
-        <p className="mt-1 text-[11px] text-muted-foreground">
-          Drop to assign {selectedCourt}
-        </p>
-      )}
-      {errorHint && (
-        <p className="mt-1 text-[11px] text-destructive">{errorHint}</p>
-      )}
-    </div>
-  );
-});
-
-const WeekDayColumn = React.memo(function WeekDayColumn({
-  dayKey,
-  hours,
-  blocks,
-  draftBlocks,
-  reservations,
-  timeZone,
-  disabled,
-  isPastDay,
-  pendingBlockIds,
-  onRemoveBlock,
-}: {
-  dayKey: string;
-  hours: number[];
-  blocks: Array<{ block: CourtBlockItem; topOffset: number; height: number }>;
-  draftBlocks: Array<{
-    row: DraftRowItem;
-    topOffset: number;
-    height: number;
-  }>;
-  reservations: Array<{
-    reservation: ReservationItem;
-    topOffset: number;
-    height: number;
-  }>;
-  timeZone: string;
-  disabled: boolean;
-  isPastDay?: boolean;
-  pendingBlockIds: Set<string>;
-  onRemoveBlock?: (blockId: string) => void;
-}) {
-  return (
-    <div
-      className={cn(
-        "relative border-l border-border/70",
-        isPastDay && "bg-muted/40",
-      )}
-    >
-      {/* Droppable hour rows */}
-      <div className="space-y-0">
-        {hours.map((hour) => (
-          <TimelineDropRow
-            key={`week-drop-${dayKey}-${hour}`}
-            dayKey={dayKey}
-            startMinute={hour * 60}
-            disabled={disabled}
-          />
-        ))}
-      </div>
-      {/* Interactive block overlays */}
-      <div className="pointer-events-none absolute inset-0">
-        {blocks.map(({ block, topOffset, height }) => (
-          <TimelineBlockItem
-            key={block.id}
-            block={block}
-            topOffset={topOffset}
-            height={height}
-            timeZone={timeZone}
-            disabled={disabled}
-            isPending={pendingBlockIds.has(block.id)}
-            isPastDay={isPastDay}
-            compact
-            onRemove={onRemoveBlock}
-          />
-        ))}
-        {draftBlocks.map(({ row, topOffset, height }) => (
-          <DraftTimelineBlock
-            key={`draft-${row.id}`}
-            row={row}
-            topOffset={topOffset}
-            height={height}
-            timeZone={timeZone}
-          />
-        ))}
-        {reservations.map(({ reservation, topOffset, height }) => (
-          <TimelineReservationItem
-            key={`res-${reservation.id}`}
-            reservation={reservation}
-            topOffset={topOffset}
-            height={height}
-            timeZone={timeZone}
-            compact
-          />
-        ))}
-      </div>
-    </div>
-  );
-});
-
-const TimelineReservationItem = React.memo(function TimelineReservationItem({
-  reservation,
-  topOffset,
-  height,
-  timeZone,
-  compact,
-}: {
-  reservation: ReservationItem;
-  topOffset: number;
-  height: number;
-  timeZone: string;
-  compact?: boolean;
-}) {
-  const isGuest = Boolean(reservation.guestProfileId);
-  const label =
-    reservation.playerNameSnapshot ?? (isGuest ? "Guest" : "Player");
-  const statusLabel =
-    reservation.status === "CONFIRMED"
-      ? "Confirmed"
-      : reservation.status === "CREATED"
-        ? "Pending"
-        : reservation.status;
-
-  return (
-    <div
-      style={{ top: topOffset, height }}
-      className={cn(
-        "pointer-events-auto absolute rounded-lg border bg-card/90 text-card-foreground shadow-sm",
-        compact
-          ? "left-0.5 right-0.5 border-l-2 px-1 py-0.5"
-          : "left-1 right-1 border-l-4 px-3 py-2",
-        "border-l-emerald-500",
-        "cursor-default",
-      )}
-    >
-      <div
-        className={cn(
-          "flex items-center justify-between",
-          compact ? "gap-0.5" : "gap-2",
-        )}
-      >
-        {compact ? (
-          <span className="text-[10px] font-semibold truncate text-emerald-600">
-            R
-          </span>
-        ) : (
-          <Badge variant="success" className="text-[10px] px-1.5 py-0">
-            {statusLabel}
-          </Badge>
-        )}
-        {!compact && reservation.totalPriceCents > 0 && (
-          <span className="text-xs text-muted-foreground">
-            {formatCurrency(reservation.totalPriceCents, reservation.currency)}
-          </span>
-        )}
-      </div>
-      {!compact && (
-        <div className="mt-1 text-xs font-medium">
-          {formatTimeRangeInTimeZone(
-            reservation.startTime,
-            reservation.endTime,
-            timeZone,
-          )}
-        </div>
-      )}
-      {compact && (
-        <div className="text-[9px] text-muted-foreground truncate">
-          {formatTimeRangeInTimeZone(
-            reservation.startTime,
-            reservation.endTime,
-            timeZone,
-          )}
-        </div>
-      )}
-      <div
-        className={cn(
-          "truncate",
-          compact
-            ? "text-[9px] text-muted-foreground"
-            : "text-[11px] text-muted-foreground",
-        )}
-      >
-        {label}
-      </div>
-    </div>
-  );
-});
