@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
+import { useShallow } from "zustand/shallow";
 import { cn } from "@/lib/utils";
 import {
   formatCurrency,
@@ -9,6 +10,12 @@ import {
   formatTimeInTimeZone,
 } from "@/shared/lib/format";
 import { getZonedDayRangeFromDayKey } from "@/shared/lib/time-zone";
+import {
+  type RangeSelectionConfig,
+  RangeSelectionProvider,
+  useCellState,
+  useRangeSelection,
+} from "./range-selection";
 import type { TimeSlot } from "./time-slot-picker";
 
 const TIMELINE_SLOT_DURATION = 60;
@@ -28,6 +35,14 @@ const getHourFromSlot = (slot: TimeSlot, timeZone: string): number => {
   return hourPart ? Number.parseInt(hourPart.value, 10) : 0;
 };
 
+function isSlotAvailable(slot: TimeSlot): boolean {
+  return slot.status === "available";
+}
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
 export type AvailabilityWeekGridRange = {
   startTime: string;
   durationMinutes: number;
@@ -46,11 +61,330 @@ export type AvailabilityWeekGridProps = {
   maxDayKey: string;
 };
 
-type CellCoord = { dayKey: string; hourIdx: number };
+// ---------------------------------------------------------------------------
+// Summary Bar (subscribes to store)
+// ---------------------------------------------------------------------------
 
-function isSlotAvailable(slot: TimeSlot): boolean {
-  return slot.status === "available";
+interface WeekGridSummaryBarProps {
+  allHours: number[];
+  slotLookup: Map<string, Map<number, TimeSlot>>;
+  dayKeys: string[];
+  hoursPerDay: number;
+  timeZone: string;
+  onRangeChange: (range: AvailabilityWeekGridRange) => void;
+  onContinue?: () => void;
+  continueLabel: string;
 }
+
+const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
+  allHours,
+  slotLookup,
+  dayKeys,
+  hoursPerDay,
+  timeZone,
+  onRangeChange,
+  onContinue,
+  continueLabel,
+}: WeekGridSummaryBarProps) {
+  const shouldReduceMotion = useReducedMotion();
+  const motionTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : { duration: 0.15, ease: "easeOut" as const };
+
+  const activeStartIdx = useRangeSelection((s) => {
+    const { anchorIdx, hoverIdx, committedRange, config } = s;
+    if (anchorIdx !== null && hoverIdx !== null) {
+      const clamped = config.clampToContiguous(anchorIdx, hoverIdx);
+      const r = config.computeRange(anchorIdx, clamped);
+      return r?.startIdx ?? committedRange?.startIdx ?? null;
+    }
+    return committedRange?.startIdx ?? null;
+  });
+  const activeEndIdx = useRangeSelection((s) => {
+    const { anchorIdx, hoverIdx, committedRange, config } = s;
+    if (anchorIdx !== null && hoverIdx !== null) {
+      const clamped = config.clampToContiguous(anchorIdx, hoverIdx);
+      const r = config.computeRange(anchorIdx, clamped);
+      return r?.endIdx ?? committedRange?.endIdx ?? null;
+    }
+    return committedRange?.endIdx ?? null;
+  });
+  const isAwaitingEndClick = useRangeSelection((s) => {
+    const { anchorIdx, committedRange } = s;
+    return (
+      committedRange !== null &&
+      committedRange.startIdx === committedRange.endIdx &&
+      anchorIdx === null
+    );
+  });
+
+  // Derive display data outside selector to avoid closing over props
+  const summaryData = React.useMemo(() => {
+    if (activeStartIdx === null || activeEndIdx === null) return null;
+    const startIdx = activeStartIdx;
+    const endIdx = activeEndIdx;
+
+    const startDayIdx = Math.floor(startIdx / hoursPerDay);
+    const startHourIdx = startIdx % hoursPerDay;
+    const endDayIdx = Math.floor(endIdx / hoursPerDay);
+    const endHourIdx = endIdx % hoursPerDay;
+
+    if (startDayIdx !== endDayIdx) return null;
+
+    const dk = dayKeys[startDayIdx];
+    const hourMap = slotLookup.get(dk);
+    if (!hourMap) return null;
+
+    const startSlot = hourMap.get(allHours[startHourIdx]);
+    const endSlot = hourMap.get(allHours[endHourIdx]);
+    if (!startSlot || !endSlot) return null;
+
+    let total = 0;
+    let allHavePrice = true;
+    for (let i = startHourIdx; i <= endHourIdx; i++) {
+      const slot = hourMap.get(allHours[i]);
+      if (slot?.priceCents !== undefined) {
+        total += slot.priceCents as number;
+      } else {
+        allHavePrice = false;
+      }
+    }
+
+    const slotCount = endIdx - startIdx + 1;
+
+    return {
+      startTime: startSlot.startTime,
+      endTime: endSlot.endTime,
+      isAwaitingEndClick,
+      priceCents: allHavePrice ? total : undefined,
+      currency: startSlot.currency ?? "PHP",
+      slotCount,
+      durationHours: slotCount * (TIMELINE_SLOT_DURATION / 60),
+    };
+  }, [
+    activeStartIdx,
+    activeEndIdx,
+    isAwaitingEndClick,
+    hoursPerDay,
+    dayKeys,
+    slotLookup,
+    allHours,
+  ]);
+
+  if (!summaryData) return null;
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="summary"
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: "auto" }}
+        exit={{ opacity: 0, height: 0 }}
+        transition={motionTransition}
+        className="overflow-hidden"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+              <div className="h-2.5 w-2.5 rounded-full bg-primary" />
+            </div>
+            <div>
+              <p className="font-heading text-sm font-semibold text-foreground">
+                {formatTimeInTimeZone(summaryData.startTime, timeZone)}
+                {" \u2013 "}
+                {formatTimeInTimeZone(summaryData.endTime, timeZone)}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {summaryData.durationHours}h
+                {summaryData.isAwaitingEndClick &&
+                  " \u00B7 Click another slot to extend"}
+                {summaryData.priceCents !== undefined &&
+                  ` \u00B7 ${formatCurrency(summaryData.priceCents, summaryData.currency)}`}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() =>
+                onRangeChange({ startTime: "", durationMinutes: 0 })
+              }
+              className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              Clear
+            </button>
+            {onContinue &&
+              !summaryData.isAwaitingEndClick &&
+              summaryData.slotCount > 1 && (
+                <button
+                  type="button"
+                  onClick={onContinue}
+                  className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  {continueLabel}
+                </button>
+              )}
+          </div>
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Grid Cell (memoized, subscribes to own visual state)
+// ---------------------------------------------------------------------------
+
+interface WeekGridCellProps {
+  linearIdx: number;
+  slot: TimeSlot | undefined;
+  dayKey: string;
+  hourIdx: number;
+  isDisabled: boolean;
+  timeZone: string;
+}
+
+const WeekGridCell = React.memo(function WeekGridCell({
+  linearIdx,
+  slot,
+  dayKey,
+  hourIdx,
+  isDisabled,
+  timeZone,
+}: WeekGridCellProps) {
+  const shouldReduceMotion = useReducedMotion();
+  const motionTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : { duration: 0.15, ease: "easeOut" as const };
+
+  const { inRange, isStart, isEnd, inHoverPreview, isPendingStart } =
+    useCellState(linearIdx);
+
+  const { pointerDown, pointerEnter, click, setHoveredIdx } = useRangeSelection(
+    useShallow((s) => ({
+      pointerDown: s.pointerDown,
+      pointerEnter: s.pointerEnter,
+      click: s.click,
+      setHoveredIdx: s.setHoveredIdx,
+    })),
+  );
+
+  const available = slot ? isSlotAvailable(slot) : false;
+  const isBooked = slot?.status === "booked" || slot?.status === "held";
+  const isMaintenance = slot?.unavailableReason === "MAINTENANCE";
+  const isReserved = isBooked && !isMaintenance;
+
+  return (
+    <button
+      key={`${dayKey}-${hourIdx}`}
+      type="button"
+      disabled={isDisabled || !available}
+      tabIndex={available && !isDisabled ? 0 : -1}
+      aria-pressed={inRange}
+      aria-label={
+        slot
+          ? `${formatInTimeZone(new Date(slot.startTime), timeZone, "h a")}${!available ? " (unavailable)" : ""}`
+          : undefined
+      }
+      onPointerDown={(e) => {
+        e.preventDefault();
+        if (slot && available && !isDisabled) pointerDown(linearIdx);
+      }}
+      onPointerEnter={() => {
+        if (!isDisabled) {
+          pointerEnter(linearIdx);
+          if (available) setHoveredIdx(linearIdx);
+        }
+      }}
+      onPointerLeave={() => setHoveredIdx(null)}
+      onClick={(e) => {
+        if (slot && available && !isDisabled) click(linearIdx, e.shiftKey);
+      }}
+      onKeyDown={(e) => {
+        if (
+          (e.key === "Enter" || e.key === " ") &&
+          slot &&
+          available &&
+          !isDisabled
+        ) {
+          e.preventDefault();
+          click(linearIdx, e.shiftKey);
+        }
+      }}
+      className={cn(
+        "group/cell relative flex w-full items-center justify-center border-t border-border/50 transition-all duration-150 touch-none",
+        available &&
+          !inRange &&
+          !inHoverPreview &&
+          "cursor-pointer bg-success-light/20 hover:bg-success-light/50",
+        inHoverPreview && "bg-primary/5 cursor-pointer",
+        inRange && !isPendingStart && "bg-primary/8",
+        isPendingStart && "bg-primary/15 ring-1 ring-inset ring-primary/25",
+        isReserved && "bg-destructive-light/40",
+        isMaintenance && "bg-warning-light/50",
+        !slot && "bg-transparent",
+      )}
+      style={{ height: WEEK_ROW_HEIGHT }}
+    >
+      {/* Left accent bar for selected range */}
+      {inRange && (
+        <motion.div
+          initial={shouldReduceMotion ? false : { scaleY: 0 }}
+          animate={{ scaleY: 1 }}
+          className={cn(
+            "absolute left-0 top-0 bottom-0 w-1 bg-primary origin-top",
+            isStart && "rounded-tl",
+            isEnd && "rounded-bl",
+          )}
+          transition={motionTransition}
+        />
+      )}
+
+      {isReserved && (
+        <span className="text-xs font-medium text-destructive/50">Booked</span>
+      )}
+      {isMaintenance && (
+        <span className="text-xs font-medium text-warning-foreground/60">
+          Maint.
+        </span>
+      )}
+      {inRange && (
+        <div className="flex flex-col items-center gap-0.5">
+          <motion.div
+            initial={shouldReduceMotion ? false : { scale: 0.5 }}
+            animate={{ scale: 1 }}
+            className={cn(
+              "h-2 w-2 rounded-full bg-primary shadow-sm shadow-primary/25",
+              isPendingStart &&
+                "h-2.5 w-2.5 ring-2 ring-primary/20 animate-pulse",
+            )}
+            transition={motionTransition}
+          />
+          {slot?.priceCents !== undefined && (
+            <span className="text-xs font-medium tabular-nums text-primary/70">
+              {formatCurrency(slot.priceCents, slot.currency ?? "PHP")}
+            </span>
+          )}
+        </div>
+      )}
+      {available && !inRange && slot && (
+        <div className="flex flex-col items-center gap-0.5">
+          {slot.priceCents !== undefined ? (
+            <span className="text-xs font-medium tabular-nums text-success/80 group-hover/cell:text-success">
+              {formatCurrency(slot.priceCents, slot.currency ?? "PHP")}
+            </span>
+          ) : (
+            <div className="h-1.5 w-1.5 rounded-full bg-success/50 transition-transform group-hover/cell:scale-150 group-hover/cell:bg-success" />
+          )}
+        </div>
+      )}
+    </button>
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Main Component
+// ---------------------------------------------------------------------------
 
 export function AvailabilityWeekGrid({
   dayKeys,
@@ -64,8 +398,6 @@ export function AvailabilityWeekGrid({
   todayDayKey,
   maxDayKey,
 }: AvailabilityWeekGridProps) {
-  const shouldReduceMotion = useReducedMotion();
-
   const allHours = React.useMemo(() => {
     let minHour = 23;
     let maxHour = 0;
@@ -92,341 +424,104 @@ export function AvailabilityWeekGrid({
     return map;
   }, [slotsByDay, timeZone]);
 
-  // --- Selection state ---
-  // Committed selection from props
-  const committedCells = React.useMemo(() => {
-    if (!selectedRange)
-      return { dayKey: null as string | null, startIdx: -1, endIdx: -1 };
-    for (const dk of dayKeys) {
+  const hoursPerDay = allHours.length;
+
+  // Linear index mapping: linearIdx = dayColIndex * hoursPerDay + hourIdx
+  const toLinear = React.useCallback(
+    (dayColIdx: number, hourIdx: number) => dayColIdx * hoursPerDay + hourIdx,
+    [hoursPerDay],
+  );
+
+  // Committed selection → linear indices
+  const committedRange = React.useMemo(() => {
+    if (!selectedRange) return null;
+    for (let di = 0; di < dayKeys.length; di++) {
+      const dk = dayKeys[di];
       const hourMap = slotLookup.get(dk);
       if (!hourMap) continue;
       for (let hi = 0; hi < allHours.length; hi++) {
         const slot = hourMap.get(allHours[hi]);
         if (slot && slot.startTime === selectedRange.startTime) {
           const count = selectedRange.durationMinutes / TIMELINE_SLOT_DURATION;
-          return { dayKey: dk, startIdx: hi, endIdx: hi + count - 1 };
+          return {
+            startIdx: toLinear(di, hi),
+            endIdx: toLinear(di, hi + count - 1),
+          };
         }
       }
-    }
-    return { dayKey: null, startIdx: -1, endIdx: -1 };
-  }, [selectedRange, dayKeys, slotLookup, allHours]);
-
-  // Drag state
-  const [anchorCoord, setAnchorCoord] = React.useState<CellCoord | null>(null);
-  const [hoverCoord, setHoverCoord] = React.useState<CellCoord | null>(null);
-  const didDragRef = React.useRef(false);
-  const suppressClickRef = React.useRef(false);
-  const isDragging = anchorCoord !== null;
-
-  // Hover for two-click preview
-  const [hoveredCoord, setHoveredCoord] = React.useState<CellCoord | null>(
-    null,
-  );
-
-  const isAwaitingEndClick =
-    committedCells.dayKey !== null &&
-    committedCells.startIdx === committedCells.endIdx &&
-    !isDragging;
-
-  // Compute contiguous range within a single day column
-  const computeRange = React.useCallback(
-    (
-      dayKey: string,
-      anchorIdx: number,
-      targetIdx: number,
-    ): { startIdx: number; endIdx: number } | null => {
-      const hourMap = slotLookup.get(dayKey);
-      if (!hourMap) return null;
-      const lo = Math.min(anchorIdx, targetIdx);
-      const hi = Math.max(anchorIdx, targetIdx);
-      for (let i = lo; i <= hi; i++) {
-        const slot = hourMap.get(allHours[i]);
-        if (!slot || !isSlotAvailable(slot)) return null;
-      }
-      return { startIdx: lo, endIdx: hi };
-    },
-    [allHours, slotLookup],
-  );
-
-  const clampToContiguous = React.useCallback(
-    (dayKey: string, anchorIdx: number, targetIdx: number): number => {
-      const hourMap = slotLookup.get(dayKey);
-      if (!hourMap) return anchorIdx;
-      const direction = targetIdx >= anchorIdx ? 1 : -1;
-      let lastValid = anchorIdx;
-      let i = anchorIdx + direction;
-      while (direction > 0 ? i <= targetIdx : i >= targetIdx) {
-        const slot = hourMap.get(allHours[i]);
-        if (!slot || !isSlotAvailable(slot)) break;
-        lastValid = i;
-        i += direction;
-      }
-      return lastValid;
-    },
-    [allHours, slotLookup],
-  );
-
-  // Preview range during drag
-  const dragPreview = React.useMemo(() => {
-    if (!anchorCoord || !hoverCoord) return null;
-    if (anchorCoord.dayKey !== hoverCoord.dayKey) return null;
-    const clamped = clampToContiguous(
-      anchorCoord.dayKey,
-      anchorCoord.hourIdx,
-      hoverCoord.hourIdx,
-    );
-    return {
-      dayKey: anchorCoord.dayKey,
-      ...computeRange(anchorCoord.dayKey, anchorCoord.hourIdx, clamped),
-    };
-  }, [anchorCoord, hoverCoord, clampToContiguous, computeRange]);
-
-  // Hover preview for two-click
-  const hoverPreview = React.useMemo(() => {
-    if (!isAwaitingEndClick || !hoveredCoord || !committedCells.dayKey)
-      return null;
-    if (hoveredCoord.dayKey !== committedCells.dayKey) return null;
-    if (hoveredCoord.hourIdx === committedCells.startIdx) return null;
-    return computeRange(
-      committedCells.dayKey,
-      committedCells.startIdx,
-      hoveredCoord.hourIdx,
-    );
-  }, [isAwaitingEndClick, hoveredCoord, committedCells, computeRange]);
-
-  const commitRange = React.useCallback(
-    (dayKey: string, startIdx: number, endIdx: number) => {
-      const hourMap = slotLookup.get(dayKey);
-      if (!hourMap) return;
-      const slot = hourMap.get(allHours[startIdx]);
-      if (!slot) return;
-      const slotCount = endIdx - startIdx + 1;
-      onRangeChange({
-        startTime: slot.startTime,
-        durationMinutes: slotCount * TIMELINE_SLOT_DURATION,
-      });
-    },
-    [allHours, onRangeChange, slotLookup],
-  );
-
-  const handlePointerDown = React.useCallback(
-    (dayKey: string, hourIdx: number) => {
-      const hourMap = slotLookup.get(dayKey);
-      const slot = hourMap?.get(allHours[hourIdx]);
-      if (!slot || !isSlotAvailable(slot)) return;
-      didDragRef.current = false;
-      setAnchorCoord({ dayKey, hourIdx });
-      setHoverCoord({ dayKey, hourIdx });
-    },
-    [allHours, slotLookup],
-  );
-
-  const handlePointerEnter = React.useCallback(
-    (dayKey: string, hourIdx: number) => {
-      if (anchorCoord && anchorCoord.dayKey === dayKey) {
-        if (hourIdx !== anchorCoord.hourIdx) {
-          didDragRef.current = true;
-        }
-        setHoverCoord({ dayKey, hourIdx });
-      }
-      const hourMap = slotLookup.get(dayKey);
-      const slot = hourMap?.get(allHours[hourIdx]);
-      if (slot && isSlotAvailable(slot)) {
-        setHoveredCoord({ dayKey, hourIdx });
-      }
-    },
-    [anchorCoord, allHours, slotLookup],
-  );
-
-  const handlePointerUp = React.useCallback(() => {
-    if (!anchorCoord || !hoverCoord) {
-      setAnchorCoord(null);
-      setHoverCoord(null);
-      return;
-    }
-
-    if (didDragRef.current && anchorCoord.dayKey === hoverCoord.dayKey) {
-      // Drag: commit the dragged range
-      const clamped = clampToContiguous(
-        anchorCoord.dayKey,
-        anchorCoord.hourIdx,
-        hoverCoord.hourIdx,
-      );
-      const range = computeRange(
-        anchorCoord.dayKey,
-        anchorCoord.hourIdx,
-        clamped,
-      );
-      if (range) {
-        commitRange(anchorCoord.dayKey, range.startIdx, range.endIdx);
-        suppressClickRef.current = true;
-      }
-    } else {
-      // Single tap — handle like click (preventDefault on pointerdown
-      // can suppress click events in some browsers)
-      const { dayKey, hourIdx } = anchorCoord;
-      suppressClickRef.current = true;
-
-      // Two-click flow: second tap extends from committed start
-      // Note: can't use isAwaitingEndClick here because pointerdown already
-      // set anchorCoord (isDragging=true), which makes isAwaitingEndClick false.
-      if (
-        committedCells.dayKey === dayKey &&
-        committedCells.startIdx === committedCells.endIdx &&
-        hourIdx !== committedCells.startIdx
-      ) {
-        const range = computeRange(dayKey, committedCells.startIdx, hourIdx);
-        if (range) {
-          commitRange(dayKey, range.startIdx, range.endIdx);
-        } else {
-          commitRange(dayKey, hourIdx, hourIdx);
-        }
-      } else {
-        // New start
-        commitRange(dayKey, hourIdx, hourIdx);
-      }
-    }
-
-    didDragRef.current = false;
-    setAnchorCoord(null);
-    setHoverCoord(null);
-  }, [
-    anchorCoord,
-    hoverCoord,
-    clampToContiguous,
-    commitRange,
-    computeRange,
-    committedCells,
-  ]);
-
-  const handleClick = React.useCallback(
-    (dayKey: string, hourIdx: number, shiftKey: boolean) => {
-      const hourMap = slotLookup.get(dayKey);
-      const slot = hourMap?.get(allHours[hourIdx]);
-      if (!slot || !isSlotAvailable(slot)) return;
-
-      // Shift+click to extend
-      if (shiftKey && committedCells.dayKey === dayKey) {
-        const range = computeRange(dayKey, committedCells.startIdx, hourIdx);
-        if (range) {
-          commitRange(dayKey, range.startIdx, range.endIdx);
-        }
-        return;
-      }
-
-      // Second click in two-click flow
-      if (
-        isAwaitingEndClick &&
-        committedCells.dayKey === dayKey &&
-        hourIdx !== committedCells.startIdx
-      ) {
-        const range = computeRange(dayKey, committedCells.startIdx, hourIdx);
-        if (range) {
-          commitRange(dayKey, range.startIdx, range.endIdx);
-        } else {
-          commitRange(dayKey, hourIdx, hourIdx);
-        }
-        return;
-      }
-
-      // New start
-      commitRange(dayKey, hourIdx, hourIdx);
-    },
-    [
-      allHours,
-      commitRange,
-      committedCells,
-      computeRange,
-      isAwaitingEndClick,
-      slotLookup,
-    ],
-  );
-
-  // Global pointer up
-  React.useEffect(() => {
-    if (!isDragging) {
-      return;
-    }
-    const onUp = () => {
-      handlePointerUp();
-    };
-    window.addEventListener("pointerup", onUp);
-    return () => {
-      window.removeEventListener("pointerup", onUp);
-    };
-  }, [isDragging, handlePointerUp]);
-
-  // Determine active range for rendering
-  const activeRange = React.useMemo(() => {
-    if (
-      dragPreview &&
-      dragPreview.startIdx !== undefined &&
-      dragPreview.endIdx !== undefined
-    ) {
-      return {
-        dayKey: dragPreview.dayKey,
-        startIdx: dragPreview.startIdx,
-        endIdx: dragPreview.endIdx,
-      };
-    }
-    if (committedCells.dayKey) {
-      return {
-        dayKey: committedCells.dayKey,
-        startIdx: committedCells.startIdx,
-        endIdx: committedCells.endIdx,
-      };
     }
     return null;
-  }, [dragPreview, committedCells]);
+  }, [selectedRange, dayKeys, slotLookup, allHours, toLinear]);
 
-  // Price calculation
-  const rangePriceCents = React.useMemo(() => {
-    if (!activeRange || !activeRange.dayKey) return undefined;
-    const hourMap = slotLookup.get(activeRange.dayKey);
-    if (!hourMap) return undefined;
-    let total = 0;
-    let allHavePrice = true;
-    for (let i = activeRange.startIdx; i <= activeRange.endIdx; i++) {
-      const slot = hourMap.get(allHours[i]);
-      if (slot?.priceCents !== undefined) {
-        total += slot.priceCents as number;
-      } else {
-        allHavePrice = false;
-      }
-    }
-    return allHavePrice ? total : undefined;
-  }, [activeRange, allHours, slotLookup]);
+  // Build config
+  const config = React.useMemo<RangeSelectionConfig>(() => {
+    const getDayHour = (idx: number) => ({
+      dayColIdx: Math.floor(idx / hoursPerDay),
+      hourIdx: idx % hoursPerDay,
+    });
 
-  const rangeCurrency = React.useMemo(() => {
-    if (!activeRange?.dayKey) return "PHP";
-    const hourMap = slotLookup.get(activeRange.dayKey);
-    const slot = hourMap?.get(allHours[activeRange.startIdx]);
-    return slot?.currency ?? "PHP";
-  }, [activeRange, allHours, slotLookup]);
+    return {
+      isCellAvailable: (idx) => {
+        const { dayColIdx, hourIdx } = getDayHour(idx);
+        const dk = dayKeys[dayColIdx];
+        if (!dk) return false;
+        const hourMap = slotLookup.get(dk);
+        const slot = hourMap?.get(allHours[hourIdx]);
+        return slot ? isSlotAvailable(slot) : false;
+      },
+      computeRange: (anchorIdx, targetIdx) => {
+        const a = getDayHour(anchorIdx);
+        const t = getDayHour(targetIdx);
+        // Must be same day
+        if (a.dayColIdx !== t.dayColIdx) return null;
+        const dk = dayKeys[a.dayColIdx];
+        const hourMap = slotLookup.get(dk);
+        if (!hourMap) return null;
+        const lo = Math.min(a.hourIdx, t.hourIdx);
+        const hi = Math.max(a.hourIdx, t.hourIdx);
+        for (let i = lo; i <= hi; i++) {
+          const slot = hourMap.get(allHours[i]);
+          if (!slot || !isSlotAvailable(slot)) return null;
+        }
+        return {
+          startIdx: toLinear(a.dayColIdx, lo),
+          endIdx: toLinear(a.dayColIdx, hi),
+        };
+      },
+      clampToContiguous: (anchorIdx, targetIdx) => {
+        const a = getDayHour(anchorIdx);
+        const t = getDayHour(targetIdx);
+        if (a.dayColIdx !== t.dayColIdx) return anchorIdx;
+        const dk = dayKeys[a.dayColIdx];
+        const hourMap = slotLookup.get(dk);
+        if (!hourMap) return anchorIdx;
+        const direction = t.hourIdx >= a.hourIdx ? 1 : -1;
+        let lastValid = a.hourIdx;
+        let i = a.hourIdx + direction;
+        while (direction > 0 ? i <= t.hourIdx : i >= t.hourIdx) {
+          const slot = hourMap.get(allHours[i]);
+          if (!slot || !isSlotAvailable(slot)) break;
+          lastValid = i;
+          i += direction;
+        }
+        return toLinear(a.dayColIdx, lastValid);
+      },
+      commitRange: (startIdx, endIdx) => {
+        const s = getDayHour(startIdx);
+        const dk = dayKeys[s.dayColIdx];
+        const hourMap = slotLookup.get(dk);
+        if (!hourMap) return;
+        const slot = hourMap.get(allHours[s.hourIdx]);
+        if (!slot) return;
+        const slotCount = endIdx - startIdx + 1;
+        onRangeChange({
+          startTime: slot.startTime,
+          durationMinutes: slotCount * TIMELINE_SLOT_DURATION,
+        });
+      },
+    };
+  }, [dayKeys, slotLookup, allHours, hoursPerDay, toLinear, onRangeChange]);
 
-  const rangeSlotCount = activeRange
-    ? activeRange.endIdx - activeRange.startIdx + 1
-    : 0;
-  const rangeDurationHours = rangeSlotCount * (TIMELINE_SLOT_DURATION / 60);
-
-  const motionTransition = shouldReduceMotion
-    ? { duration: 0 }
-    : { duration: 0.15, ease: "easeOut" as const };
-
-  // Summary bar data
-  const summaryStartSlot = React.useMemo(() => {
-    if (!activeRange?.dayKey) return null;
-    const hourMap = slotLookup.get(activeRange.dayKey);
-    return hourMap?.get(allHours[activeRange.startIdx]) ?? null;
-  }, [activeRange, allHours, slotLookup]);
-
-  const summaryEndSlot = React.useMemo(() => {
-    if (!activeRange?.dayKey) return null;
-    const hourMap = slotLookup.get(activeRange.dayKey);
-    return hourMap?.get(allHours[activeRange.endIdx]) ?? null;
-  }, [activeRange, allHours, slotLookup]);
-
-  const refDayKey = dayKeys[0];
   const hasAnySlots = dayKeys.some(
     (dk) => (slotsByDay.get(dk)?.length ?? 0) > 0,
   );
@@ -439,102 +534,91 @@ export function AvailabilityWeekGrid({
     );
   }
 
-  // Helper to check if cell is in active range
-  const isCellInRange = (dayKey: string, hourIdx: number) =>
-    activeRange !== null &&
-    dayKey === activeRange.dayKey &&
-    hourIdx >= activeRange.startIdx &&
-    hourIdx <= activeRange.endIdx;
+  return (
+    <RangeSelectionProvider config={config} committedRange={committedRange}>
+      <WeekGridInner
+        dayKeys={dayKeys}
+        allHours={allHours}
+        slotLookup={slotLookup}
+        hoursPerDay={hoursPerDay}
+        timeZone={timeZone}
+        onRangeChange={onRangeChange}
+        onDayClick={onDayClick}
+        onContinue={onContinue}
+        continueLabel={continueLabel}
+        todayDayKey={todayDayKey}
+        maxDayKey={maxDayKey}
+        toLinear={toLinear}
+      />
+    </RangeSelectionProvider>
+  );
+}
 
-  const isCellRangeStart = (dayKey: string, hourIdx: number) =>
-    activeRange !== null &&
-    dayKey === activeRange.dayKey &&
-    hourIdx === activeRange.startIdx;
+// ---------------------------------------------------------------------------
+// Inner Grid (inside provider)
+// ---------------------------------------------------------------------------
 
-  const isCellRangeEnd = (dayKey: string, hourIdx: number) =>
-    activeRange !== null &&
-    dayKey === activeRange.dayKey &&
-    hourIdx === activeRange.endIdx;
+interface WeekGridInnerProps {
+  dayKeys: string[];
+  allHours: number[];
+  slotLookup: Map<string, Map<number, TimeSlot>>;
+  hoursPerDay: number;
+  timeZone: string;
+  onRangeChange: (range: AvailabilityWeekGridRange) => void;
+  onDayClick: (dayKey: string) => void;
+  onContinue?: () => void;
+  continueLabel: string;
+  todayDayKey: string;
+  maxDayKey: string;
+  toLinear: (dayColIdx: number, hourIdx: number) => number;
+}
 
-  const isCellInHoverPreview = (dayKey: string, hourIdx: number) =>
-    hoverPreview !== null &&
-    dayKey === committedCells.dayKey &&
-    hourIdx >= hoverPreview.startIdx &&
-    hourIdx <= hoverPreview.endIdx &&
-    !isCellInRange(dayKey, hourIdx);
+function WeekGridInner({
+  dayKeys,
+  allHours,
+  slotLookup,
+  hoursPerDay,
+  timeZone,
+  onRangeChange,
+  onDayClick,
+  onContinue,
+  continueLabel,
+  todayDayKey,
+  maxDayKey,
+  toLinear,
+}: WeekGridInnerProps) {
+  const { pointerUp, setHoveredIdx } = useRangeSelection(
+    useShallow((s) => ({
+      pointerUp: s.pointerUp,
+      setHoveredIdx: s.setHoveredIdx,
+    })),
+  );
+  const isDragging = useRangeSelection((s) => s.anchorIdx !== null);
 
-  const isCellPendingStart = (dayKey: string, hourIdx: number) =>
-    isAwaitingEndClick &&
-    dayKey === committedCells.dayKey &&
-    hourIdx === committedCells.startIdx;
+  const refDayKey = dayKeys[0];
 
   return (
     <div
       className="space-y-3 select-none"
       onPointerLeave={() => {
-        if (isDragging) handlePointerUp();
-        setHoveredCoord(null);
+        if (isDragging) pointerUp();
+        setHoveredIdx(null);
       }}
     >
-      {/* Summary bar */}
-      <AnimatePresence mode="wait">
-        {activeRange && summaryStartSlot && summaryEndSlot && (
-          <motion.div
-            key="summary"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={motionTransition}
-            className="overflow-hidden"
-          >
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
-              <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                  <div className="h-2.5 w-2.5 rounded-full bg-primary" />
-                </div>
-                <div>
-                  <p className="font-heading text-sm font-semibold text-foreground">
-                    {formatTimeInTimeZone(summaryStartSlot.startTime, timeZone)}
-                    {" \u2013 "}
-                    {formatTimeInTimeZone(summaryEndSlot.endTime, timeZone)}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {rangeDurationHours}h
-                    {isAwaitingEndClick &&
-                      " \u00B7 Click another slot to extend"}
-                    {rangePriceCents !== undefined &&
-                      ` \u00B7 ${formatCurrency(rangePriceCents, rangeCurrency)}`}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() =>
-                    onRangeChange({ startTime: "", durationMinutes: 0 })
-                  }
-                  className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                >
-                  Clear
-                </button>
-                {onContinue && !isAwaitingEndClick && rangeSlotCount > 1 && (
-                  <button
-                    type="button"
-                    onClick={onContinue}
-                    className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                  >
-                    {continueLabel}
-                  </button>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <WeekGridSummaryBar
+        allHours={allHours}
+        slotLookup={slotLookup}
+        dayKeys={dayKeys}
+        hoursPerDay={hoursPerDay}
+        timeZone={timeZone}
+        onRangeChange={onRangeChange}
+        onContinue={onContinue}
+        continueLabel={continueLabel}
+      />
 
-      {/* Grid */}
       <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory">
         <div className="min-w-[700px]">
+          {/* Day headers */}
           <div
             className="grid gap-x-0"
             style={{
@@ -547,7 +631,6 @@ export function AvailabilityWeekGrid({
               const isToday = dk === todayDayKey;
               const isPast = dk < todayDayKey;
               const isBeyondMax = dk > maxDayKey;
-
               return (
                 <button
                   key={`hdr-${dk}`}
@@ -579,6 +662,7 @@ export function AvailabilityWeekGrid({
             })}
           </div>
 
+          {/* Hour rows */}
           <div
             className="grid gap-x-0"
             style={{
@@ -605,7 +689,7 @@ export function AvailabilityWeekGrid({
               })}
             </div>
 
-            {dayKeys.map((dk) => {
+            {dayKeys.map((dk, dayColIdx) => {
               const isPast = dk < todayDayKey;
               const isBeyondMax = dk > maxDayKey;
               const isDisabled = isPast || isBeyondMax;
@@ -623,137 +707,16 @@ export function AvailabilityWeekGrid({
                 >
                   {allHours.map((hour, hourIdx) => {
                     const slot = hourMap?.get(hour);
-                    const available = slot ? isSlotAvailable(slot) : false;
-                    const isBooked =
-                      slot?.status === "booked" || slot?.status === "held";
-                    const isMaintenance =
-                      slot?.unavailableReason === "MAINTENANCE";
-                    const isReserved = isBooked && !isMaintenance;
-                    const inRange = isCellInRange(dk, hourIdx);
-                    const isStart = isCellRangeStart(dk, hourIdx);
-                    const isEnd = isCellRangeEnd(dk, hourIdx);
-                    const inHover = isCellInHoverPreview(dk, hourIdx);
-                    const isPendingStart = isCellPendingStart(dk, hourIdx);
-
                     return (
-                      <button
+                      <WeekGridCell
                         key={`${dk}-${hour}`}
-                        type="button"
-                        disabled={isDisabled || !available}
-                        tabIndex={available && !isDisabled ? 0 : -1}
-                        aria-pressed={inRange}
-                        aria-label={
-                          slot
-                            ? `${formatInTimeZone(new Date(slot.startTime), timeZone, "h a")}${!available ? " (unavailable)" : ""}`
-                            : undefined
-                        }
-                        onPointerDown={(e) => {
-                          e.preventDefault();
-                          if (slot && available && !isDisabled)
-                            handlePointerDown(dk, hourIdx);
-                        }}
-                        onPointerEnter={() => {
-                          if (!isDisabled) handlePointerEnter(dk, hourIdx);
-                        }}
-                        onPointerLeave={() => setHoveredCoord(null)}
-                        onClick={(e) => {
-                          if (suppressClickRef.current) {
-                            suppressClickRef.current = false;
-                            return;
-                          }
-                          if (slot && available && !isDisabled)
-                            handleClick(dk, hourIdx, e.shiftKey);
-                        }}
-                        onKeyDown={(e) => {
-                          if (
-                            (e.key === "Enter" || e.key === " ") &&
-                            slot &&
-                            available &&
-                            !isDisabled
-                          ) {
-                            e.preventDefault();
-                            handleClick(dk, hourIdx, e.shiftKey);
-                          }
-                        }}
-                        className={cn(
-                          "group/cell relative flex w-full items-center justify-center border-t border-border/50 transition-all duration-150 touch-none",
-                          available &&
-                            !inRange &&
-                            !inHover &&
-                            "cursor-pointer bg-success-light/20 hover:bg-success-light/50",
-                          inHover && "bg-primary/5 cursor-pointer",
-                          inRange && !isPendingStart && "bg-primary/8",
-                          isPendingStart &&
-                            "bg-primary/15 ring-1 ring-inset ring-primary/25",
-                          isReserved && "bg-destructive-light/40",
-                          isMaintenance && "bg-warning-light/50",
-                          !slot && "bg-transparent",
-                        )}
-                        style={{ height: WEEK_ROW_HEIGHT }}
-                      >
-                        {/* Left accent bar for selected range */}
-                        {inRange && (
-                          <motion.div
-                            initial={shouldReduceMotion ? false : { scaleY: 0 }}
-                            animate={{ scaleY: 1 }}
-                            className={cn(
-                              "absolute left-0 top-0 bottom-0 w-1 bg-primary origin-top",
-                              isStart && "rounded-tl",
-                              isEnd && "rounded-bl",
-                            )}
-                            transition={motionTransition}
-                          />
-                        )}
-
-                        {isReserved && (
-                          <span className="text-xs font-medium text-destructive/50">
-                            Booked
-                          </span>
-                        )}
-                        {isMaintenance && (
-                          <span className="text-xs font-medium text-warning-foreground/60">
-                            Maint.
-                          </span>
-                        )}
-                        {inRange && (
-                          <div className="flex flex-col items-center gap-0.5">
-                            <motion.div
-                              initial={
-                                shouldReduceMotion ? false : { scale: 0.5 }
-                              }
-                              animate={{ scale: 1 }}
-                              className={cn(
-                                "h-2 w-2 rounded-full bg-primary shadow-sm shadow-primary/25",
-                                isPendingStart &&
-                                  "h-2.5 w-2.5 ring-2 ring-primary/20 animate-pulse",
-                              )}
-                              transition={motionTransition}
-                            />
-                            {slot?.priceCents !== undefined && (
-                              <span className="text-xs font-medium tabular-nums text-primary/70">
-                                {formatCurrency(
-                                  slot.priceCents,
-                                  slot.currency ?? "PHP",
-                                )}
-                              </span>
-                            )}
-                          </div>
-                        )}
-                        {available && !inRange && slot && (
-                          <div className="flex flex-col items-center gap-0.5">
-                            {slot.priceCents !== undefined ? (
-                              <span className="text-xs font-medium tabular-nums text-success/80 group-hover/cell:text-success">
-                                {formatCurrency(
-                                  slot.priceCents,
-                                  slot.currency ?? "PHP",
-                                )}
-                              </span>
-                            ) : (
-                              <div className="h-1.5 w-1.5 rounded-full bg-success/50 transition-transform group-hover/cell:scale-150 group-hover/cell:bg-success" />
-                            )}
-                          </div>
-                        )}
-                      </button>
+                        linearIdx={toLinear(dayColIdx, hourIdx)}
+                        slot={slot}
+                        dayKey={dk}
+                        hourIdx={hourIdx}
+                        isDisabled={isDisabled}
+                        timeZone={timeZone}
+                      />
                     );
                   })}
                 </div>
@@ -765,6 +728,10 @@ export function AvailabilityWeekGrid({
     </div>
   );
 }
+
+// ---------------------------------------------------------------------------
+// Skeleton
+// ---------------------------------------------------------------------------
 
 export type AvailabilityWeekGridSkeletonProps = {
   dayKeys: string[];

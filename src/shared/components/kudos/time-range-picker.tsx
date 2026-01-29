@@ -2,8 +2,15 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
+import { useShallow } from "zustand/shallow";
 import { cn } from "@/lib/utils";
 import { formatCurrency, formatTimeInTimeZone } from "@/shared/lib/format";
+import {
+  type RangeSelectionConfig,
+  RangeSelectionProvider,
+  useCellState,
+  useRangeSelection,
+} from "./range-selection";
 import type { TimeSlot } from "./time-slot-picker";
 
 const MAX_DURATION_MINUTES = 1440;
@@ -22,12 +29,6 @@ export interface TimeRangePickerProps {
   className?: string;
 }
 
-type SlotIndex = number;
-
-function getSlotIndex(slots: TimeSlot[], startTime: string): SlotIndex {
-  return slots.findIndex((s) => s.startTime === startTime);
-}
-
 function isSlotAvailable(slot: TimeSlot): boolean {
   return slot.status === "available";
 }
@@ -39,21 +40,11 @@ function computeContiguousRange(
 ): { startIdx: number; endIdx: number } | null {
   const startIdx = Math.min(anchorIdx, currentIdx);
   const endIdx = Math.max(anchorIdx, currentIdx);
-
-  // Check all slots in range are available
   for (let i = startIdx; i <= endIdx; i++) {
-    if (!isSlotAvailable(slots[i])) {
-      return null;
-    }
+    if (!isSlotAvailable(slots[i])) return null;
   }
-
-  // Check duration constraint
   const slotCount = endIdx - startIdx + 1;
-  const durationMinutes = slotCount * SLOT_STEP_MINUTES;
-  if (durationMinutes > MAX_DURATION_MINUTES) {
-    return null;
-  }
-
+  if (slotCount * SLOT_STEP_MINUTES > MAX_DURATION_MINUTES) return null;
   return { startIdx, endIdx };
 }
 
@@ -64,7 +55,6 @@ function clampToContiguous(
 ): number {
   const direction = targetIdx >= anchorIdx ? 1 : -1;
   let lastValid = anchorIdx;
-
   let i = anchorIdx + direction;
   while (direction > 0 ? i <= targetIdx : i >= targetIdx) {
     if (!isSlotAvailable(slots[i])) break;
@@ -73,9 +63,308 @@ function clampToContiguous(
     lastValid = i;
     i += direction;
   }
-
   return lastValid;
 }
+
+// ---------------------------------------------------------------------------
+// Summary Bar
+// ---------------------------------------------------------------------------
+
+interface SummaryBarProps {
+  slots: TimeSlot[];
+  timeZone: string;
+  showPrice: boolean;
+  onClear?: () => void;
+  onContinue?: () => void;
+  continueLabel: string;
+}
+
+const SummaryBar = React.memo(function SummaryBar({
+  slots,
+  timeZone,
+  showPrice,
+  onClear,
+  onContinue,
+  continueLabel,
+}: SummaryBarProps) {
+  const shouldReduceMotion = useReducedMotion();
+  const motionTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : { duration: 0.15, ease: "easeOut" as const };
+
+  const activeStartIdx = useRangeSelection((s) => {
+    const { anchorIdx, hoverIdx, committedRange, config } = s;
+    if (anchorIdx !== null && hoverIdx !== null) {
+      const clamped = config.clampToContiguous(anchorIdx, hoverIdx);
+      const r = config.computeRange(anchorIdx, clamped);
+      return r?.startIdx ?? committedRange?.startIdx ?? null;
+    }
+    return committedRange?.startIdx ?? null;
+  });
+  const activeEndIdx = useRangeSelection((s) => {
+    const { anchorIdx, hoverIdx, committedRange, config } = s;
+    if (anchorIdx !== null && hoverIdx !== null) {
+      const clamped = config.clampToContiguous(anchorIdx, hoverIdx);
+      const r = config.computeRange(anchorIdx, clamped);
+      return r?.endIdx ?? committedRange?.endIdx ?? null;
+    }
+    return committedRange?.endIdx ?? null;
+  });
+  const isAwaitingEndClick = useRangeSelection((s) => {
+    const { anchorIdx, committedRange } = s;
+    return (
+      committedRange !== null &&
+      committedRange.startIdx === committedRange.endIdx &&
+      anchorIdx === null
+    );
+  });
+
+  if (activeStartIdx === null || activeEndIdx === null) return null;
+
+  // Compute price outside the selector to avoid closing over `slots`
+  let rangePriceCents: number | undefined;
+  let rangeCurrency = "PHP";
+  {
+    let total = 0;
+    let allHavePrice = true;
+    for (let i = activeStartIdx; i <= activeEndIdx; i++) {
+      if (slots[i].priceCents !== undefined) {
+        total += slots[i].priceCents as number;
+      } else {
+        allHavePrice = false;
+      }
+    }
+    rangePriceCents = allHavePrice ? total : undefined;
+    rangeCurrency = slots[activeStartIdx].currency ?? "PHP";
+  }
+
+  const durationHours =
+    (activeEndIdx - activeStartIdx + 1) * (SLOT_STEP_MINUTES / 60);
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key="summary"
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: "auto" }}
+        exit={{ opacity: 0, height: 0 }}
+        transition={motionTransition}
+        className="overflow-hidden"
+      >
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+              <div className="h-2.5 w-2.5 rounded-full bg-primary" />
+            </div>
+            <div>
+              <p className="font-heading text-sm font-semibold text-foreground">
+                {formatTimeInTimeZone(
+                  slots[activeStartIdx].startTime,
+                  timeZone,
+                )}
+                {" \u2013 "}
+                {formatTimeInTimeZone(slots[activeEndIdx].endTime, timeZone)}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {durationHours}h
+                {isAwaitingEndClick && " \u00B7 Click another slot to extend"}
+                {showPrice &&
+                  rangePriceCents !== undefined &&
+                  ` \u00B7 ${formatCurrency(rangePriceCents, rangeCurrency)}`}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            {onClear && (
+              <button
+                type="button"
+                onClick={onClear}
+                className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                Clear
+              </button>
+            )}
+            {onContinue &&
+              !isAwaitingEndClick &&
+              activeStartIdx !== activeEndIdx && (
+                <button
+                  type="button"
+                  onClick={onContinue}
+                  className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  {continueLabel}
+                </button>
+              )}
+          </div>
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Slot Row
+// ---------------------------------------------------------------------------
+
+interface TimeSlotRowProps {
+  idx: number;
+  slot: TimeSlot;
+  timeZone: string;
+  showPrice: boolean;
+}
+
+const TimeSlotRow = React.memo(function TimeSlotRow({
+  idx,
+  slot,
+  timeZone,
+  showPrice,
+}: TimeSlotRowProps) {
+  const shouldReduceMotion = useReducedMotion();
+  const motionTransition = shouldReduceMotion
+    ? { duration: 0 }
+    : { duration: 0.15, ease: "easeOut" as const };
+
+  const { inRange, isStart, isEnd, inHoverPreview } = useCellState(idx);
+
+  const { pointerDown, pointerEnter, click, setHoveredIdx } = useRangeSelection(
+    useShallow((s) => ({
+      pointerDown: s.pointerDown,
+      pointerEnter: s.pointerEnter,
+      click: s.click,
+      setHoveredIdx: s.setHoveredIdx,
+    })),
+  );
+
+  const available = isSlotAvailable(slot);
+  const isBooked = slot.status === "booked" || slot.status === "held";
+  const isMaintenance = slot.unavailableReason === "MAINTENANCE";
+  const isReserved = isBooked && !isMaintenance;
+
+  const startLabel = formatTimeInTimeZone(slot.startTime, timeZone);
+  const endLabel = formatTimeInTimeZone(slot.endTime, timeZone);
+
+  return (
+    <button
+      type="button"
+      tabIndex={available ? 0 : -1}
+      disabled={!available}
+      aria-pressed={inRange}
+      aria-label={`${startLabel} to ${endLabel}${!available ? " (unavailable)" : ""}`}
+      className={cn(
+        "group flex w-full items-center gap-3 px-4 py-3 text-left transition-all duration-150",
+        "touch-none appearance-none",
+        "border-b border-border/50 last:border-b-0",
+        available &&
+          !inRange &&
+          !inHoverPreview &&
+          "bg-success-light/20 hover:bg-success-light/50 cursor-pointer",
+        inHoverPreview && "bg-primary/5 cursor-pointer",
+        inRange && "bg-primary/8 relative",
+        isReserved && "bg-destructive-light/40 cursor-not-allowed",
+        isMaintenance && "bg-warning-light/50 cursor-not-allowed",
+      )}
+      onPointerDown={(e) => {
+        e.preventDefault();
+        pointerDown(idx);
+      }}
+      onPointerEnter={() => {
+        pointerEnter(idx);
+        if (available) setHoveredIdx(idx);
+      }}
+      onPointerLeave={() => setHoveredIdx(null)}
+      onClick={(e) => click(idx, e.shiftKey)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          click(idx, e.shiftKey);
+        }
+      }}
+    >
+      {/* Left accent bar for selected range */}
+      {inRange && (
+        <motion.div
+          layoutId={shouldReduceMotion ? undefined : "range-bar"}
+          className={cn(
+            "absolute left-0 top-0 bottom-0 w-1 bg-primary",
+            isStart && "rounded-tl-xl",
+            isEnd && "rounded-bl-xl",
+          )}
+          transition={motionTransition}
+        />
+      )}
+
+      {/* Status dot */}
+      <div className="shrink-0">
+        {isMaintenance ? (
+          <div className="h-2 w-2 rounded-full bg-warning" />
+        ) : isReserved ? (
+          <div className="h-2 w-2 rounded-full bg-destructive/50" />
+        ) : inRange ? (
+          <motion.div
+            initial={{ scale: 0.5 }}
+            animate={{ scale: 1 }}
+            className="h-2.5 w-2.5 rounded-full bg-primary shadow-sm shadow-primary/25"
+            transition={motionTransition}
+          />
+        ) : (
+          <div
+            className={cn(
+              "h-2 w-2 rounded-full transition-colors duration-150",
+              "bg-success/60 group-hover:bg-success",
+            )}
+          />
+        )}
+      </div>
+
+      {/* Time label */}
+      <span
+        className={cn(
+          "w-[7.5rem] shrink-0 font-mono text-xs tabular-nums tracking-tight",
+          inRange ? "text-primary font-semibold" : "text-foreground/80",
+          isReserved && "text-destructive/50 line-through",
+          isMaintenance && "text-warning-foreground/60",
+        )}
+      >
+        {startLabel} &ndash; {endLabel}
+      </span>
+
+      {/* Status / price */}
+      <span className="flex flex-1 items-center gap-2">
+        {isMaintenance && (
+          <span className="inline-flex items-center rounded-md bg-warning-light px-2 py-0.5 text-[11px] font-medium text-warning-foreground">
+            Maintenance
+          </span>
+        )}
+        {isReserved && (
+          <span className="inline-flex items-center rounded-md bg-destructive-light px-2 py-0.5 text-[11px] font-medium text-destructive">
+            {slot.status === "held" ? "On hold" : "Reserved"}
+          </span>
+        )}
+        {available && showPrice && slot.priceCents !== undefined && (
+          <span
+            className={cn(
+              "text-xs font-medium tabular-nums",
+              inRange ? "text-primary/80" : "text-muted-foreground",
+            )}
+          >
+            {formatCurrency(slot.priceCents, slot.currency ?? "PHP")}
+          </span>
+        )}
+      </span>
+
+      {/* Range position indicator */}
+      {(isStart || isEnd) && (
+        <span className="shrink-0 text-[10px] font-heading font-semibold uppercase tracking-wider text-primary/60">
+          {isStart && isEnd ? "" : isStart ? "Start" : "End"}
+        </span>
+      )}
+    </button>
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Main Component
+// ---------------------------------------------------------------------------
 
 export function TimeRangePicker({
   slots,
@@ -89,17 +378,10 @@ export function TimeRangePicker({
   continueLabel = "Continue to review",
   className,
 }: TimeRangePickerProps) {
-  const shouldReduceMotion = useReducedMotion();
-  const [anchorIdx, setAnchorIdx] = React.useState<number | null>(null);
-  const [hoverIdx, setHoverIdx] = React.useState<number | null>(null);
-  const [hoveredIdx, setHoveredIdx] = React.useState<number | null>(null);
-  const suppressClickRef = React.useRef(false);
-  const isDragging = anchorIdx !== null;
-
-  // Compute committed selection from props
+  // Compute committed range from props
   const committedRange = React.useMemo(() => {
     if (!selectedStartTime || !selectedDurationMinutes) return null;
-    const startIdx = getSlotIndex(slots, selectedStartTime);
+    const startIdx = slots.findIndex((s) => s.startTime === selectedStartTime);
     if (startIdx === -1) return null;
     const slotCount = selectedDurationMinutes / SLOT_STEP_MINUTES;
     const endIdx = startIdx + slotCount - 1;
@@ -107,446 +389,99 @@ export function TimeRangePicker({
     return { startIdx, endIdx };
   }, [selectedStartTime, selectedDurationMinutes, slots]);
 
-  // Compute preview range during drag
-  const previewRange = React.useMemo(() => {
-    if (anchorIdx === null || hoverIdx === null) return null;
-    const clampedTarget = clampToContiguous(slots, anchorIdx, hoverIdx);
-    return computeContiguousRange(slots, anchorIdx, clampedTarget);
-  }, [anchorIdx, hoverIdx, slots]);
-
-  // Active range = preview during drag, committed otherwise
-  const activeRange = previewRange ?? committedRange;
-
-  // Is "waiting for second click" state?
-  const isAwaitingEndClick =
-    committedRange !== null &&
-    committedRange.startIdx === committedRange.endIdx &&
-    !isDragging;
-
-  // Preview range for hover in awaiting-end state
-  const hoverPreviewRange = React.useMemo(() => {
-    if (!isAwaitingEndClick || hoveredIdx === null || !committedRange)
-      return null;
-    if (hoveredIdx === committedRange.startIdx) return null;
-    return computeContiguousRange(slots, committedRange.startIdx, hoveredIdx);
-  }, [isAwaitingEndClick, hoveredIdx, committedRange, slots]);
-
-  const commitRange = React.useCallback(
-    (startIdx: number, endIdx: number) => {
-      const startSlot = slots[startIdx];
-      const slotCount = endIdx - startIdx + 1;
-      const durationMinutes = slotCount * SLOT_STEP_MINUTES;
-      onChange?.({ startTime: startSlot.startTime, durationMinutes });
-    },
-    [onChange, slots],
+  // Build config — stable reference via useMemo
+  const config = React.useMemo<RangeSelectionConfig>(
+    () => ({
+      isCellAvailable: (idx) => {
+        const slot = slots[idx];
+        return slot ? isSlotAvailable(slot) : false;
+      },
+      computeRange: (anchorIdx, targetIdx) =>
+        computeContiguousRange(slots, anchorIdx, targetIdx),
+      clampToContiguous: (anchorIdx, targetIdx) =>
+        clampToContiguous(slots, anchorIdx, targetIdx),
+      commitRange: (startIdx, endIdx) => {
+        const startSlot = slots[startIdx];
+        if (!startSlot) return;
+        const slotCount = endIdx - startIdx + 1;
+        onChange?.({
+          startTime: startSlot.startTime,
+          durationMinutes: slotCount * SLOT_STEP_MINUTES,
+        });
+      },
+    }),
+    [slots, onChange],
   );
 
-  const handlePointerDown = React.useCallback(
-    (idx: number) => {
-      if (!isSlotAvailable(slots[idx])) return;
-      setAnchorIdx(idx);
-      setHoverIdx(idx);
-    },
-    [slots],
+  return (
+    <RangeSelectionProvider config={config} committedRange={committedRange}>
+      <TimeRangePickerInner
+        slots={slots}
+        timeZone={timeZone}
+        showPrice={showPrice}
+        onClear={onClear}
+        onContinue={onContinue}
+        continueLabel={continueLabel}
+        className={className}
+      />
+    </RangeSelectionProvider>
+  );
+}
+
+// Inner component inside the provider
+function TimeRangePickerInner({
+  slots,
+  timeZone,
+  showPrice,
+  onClear,
+  onContinue,
+  continueLabel,
+  className,
+}: {
+  slots: TimeSlot[];
+  timeZone: string;
+  showPrice: boolean;
+  onClear?: () => void;
+  onContinue?: () => void;
+  continueLabel: string;
+  className?: string;
+}) {
+  const { pointerUp, setHoveredIdx } = useRangeSelection(
+    useShallow((s) => ({
+      pointerUp: s.pointerUp,
+      setHoveredIdx: s.setHoveredIdx,
+    })),
   );
 
-  const handlePointerEnter = React.useCallback(
-    (idx: number) => {
-      if (anchorIdx === null) return;
-      setHoverIdx(idx);
-    },
-    [anchorIdx],
-  );
-
-  const handlePointerUp = React.useCallback(() => {
-    if (anchorIdx === null || hoverIdx === null) {
-      setAnchorIdx(null);
-      setHoverIdx(null);
-      return;
-    }
-
-    if (anchorIdx !== hoverIdx) {
-      // Drag: commit the dragged range
-      const clampedTarget = clampToContiguous(slots, anchorIdx, hoverIdx);
-      const range = computeContiguousRange(slots, anchorIdx, clampedTarget);
-      if (range) {
-        commitRange(range.startIdx, range.endIdx);
-        suppressClickRef.current = true;
-      }
-    } else {
-      // Single tap — handle like click (preventDefault on pointerdown
-      // can suppress click events in some browsers)
-      const idx = anchorIdx;
-      suppressClickRef.current = true;
-
-      // Two-click flow: second tap extends from committed start
-      if (
-        committedRange &&
-        committedRange.startIdx === committedRange.endIdx &&
-        idx !== committedRange.startIdx
-      ) {
-        const range = computeContiguousRange(
-          slots,
-          committedRange.startIdx,
-          idx,
-        );
-        if (range) {
-          commitRange(range.startIdx, range.endIdx);
-        } else {
-          commitRange(idx, idx);
-        }
-      } else {
-        // New start
-        commitRange(idx, idx);
-      }
-    }
-
-    setAnchorIdx(null);
-    setHoverIdx(null);
-  }, [anchorIdx, commitRange, committedRange, hoverIdx, slots]);
-
-  // Reset drag state when the slot list changes (e.g. day switch)
-  const slotsRef = React.useRef(slots);
-  React.useEffect(() => {
-    if (slotsRef.current !== slots) {
-      slotsRef.current = slots;
-      setAnchorIdx(null);
-      setHoverIdx(null);
-      setHoveredIdx(null);
-    }
-  }, [slots]);
-
-  // Click: two-click flow (tap start, tap end) + shift-click to extend
-  const handleClick = React.useCallback(
-    (idx: number, shiftKey: boolean) => {
-      if (!isSlotAvailable(slots[idx])) return;
-
-      // Clear stale drag state from pointerdown (the global pointerup
-      // listener is registered via useEffect which runs AFTER render, so
-      // on a quick tap the pointerup event fires before the listener
-      // exists, leaving anchorIdx stuck).
-      setAnchorIdx(null);
-      setHoverIdx(null);
-
-      if (shiftKey && committedRange) {
-        // Shift+click: extend from committed start
-        const range = computeContiguousRange(
-          slots,
-          committedRange.startIdx,
-          idx,
-        );
-        if (range) {
-          commitRange(range.startIdx, range.endIdx);
-        }
-        return;
-      }
-
-      if (
-        committedRange &&
-        committedRange.startIdx === committedRange.endIdx &&
-        idx !== committedRange.startIdx
-      ) {
-        // Second click: extend from single-slot start to clicked slot
-        const range = computeContiguousRange(
-          slots,
-          committedRange.startIdx,
-          idx,
-        );
-        if (range) {
-          commitRange(range.startIdx, range.endIdx);
-        } else {
-          // Blocked slots in between — reset to new start
-          commitRange(idx, idx);
-        }
-        return;
-      }
-
-      // No range or already a multi-slot range — set new start
-      commitRange(idx, idx);
-    },
-    [commitRange, committedRange, slots],
-  );
-
-  // Keyboard support
-  const handleKeyDown = React.useCallback(
-    (event: React.KeyboardEvent, idx: number) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        handleClick(idx, event.shiftKey);
-      }
-    },
-    [handleClick],
-  );
-
-  // Global pointer up listener
-  React.useEffect(() => {
-    if (!isDragging) {
-      return;
-    }
-    const onUp = () => {
-      handlePointerUp();
-    };
-    window.addEventListener("pointerup", onUp);
-    return () => {
-      window.removeEventListener("pointerup", onUp);
-    };
-  }, [isDragging, handlePointerUp]);
-
-  // Compute total price for range
-  const rangePriceCents = React.useMemo(() => {
-    if (!activeRange) return undefined;
-    let total = 0;
-    let allHavePrice = true;
-    for (let i = activeRange.startIdx; i <= activeRange.endIdx; i++) {
-      if (slots[i].priceCents !== undefined) {
-        total += slots[i].priceCents as number;
-      } else {
-        allHavePrice = false;
-      }
-    }
-    return allHavePrice ? total : undefined;
-  }, [activeRange, slots]);
-
-  const rangeCurrency = activeRange
-    ? (slots[activeRange.startIdx].currency ?? "PHP")
-    : "PHP";
-
-  const motionTransition = shouldReduceMotion
-    ? { duration: 0 }
-    : { duration: 0.15, ease: "easeOut" as const };
-
-  const durationHours = activeRange
-    ? (activeRange.endIdx - activeRange.startIdx + 1) * (SLOT_STEP_MINUTES / 60)
-    : 0;
+  const isDragging = useRangeSelection((s) => s.anchorIdx !== null);
 
   return (
     <div
       className={cn("space-y-3 select-none", className)}
       onPointerLeave={() => {
-        if (isDragging) handlePointerUp();
+        if (isDragging) pointerUp();
         setHoveredIdx(null);
       }}
     >
-      {/* Summary bar */}
-      <AnimatePresence mode="wait">
-        {activeRange && (
-          <motion.div
-            key="summary"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={motionTransition}
-            className="overflow-hidden"
-          >
-            <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
-              <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                  <div className="h-2.5 w-2.5 rounded-full bg-primary" />
-                </div>
-                <div>
-                  <p className="font-heading text-sm font-semibold text-foreground">
-                    {formatTimeInTimeZone(
-                      slots[activeRange.startIdx].startTime,
-                      timeZone,
-                    )}
-                    {" \u2013 "}
-                    {formatTimeInTimeZone(
-                      slots[activeRange.endIdx].endTime,
-                      timeZone,
-                    )}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {durationHours}h
-                    {isAwaitingEndClick &&
-                      " \u00B7 Click another slot to extend"}
-                    {showPrice &&
-                      rangePriceCents !== undefined &&
-                      ` \u00B7 ${formatCurrency(rangePriceCents, rangeCurrency)}`}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                {onClear && (
-                  <button
-                    type="button"
-                    onClick={onClear}
-                    className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                  >
-                    Clear
-                  </button>
-                )}
-                {onContinue &&
-                  !isAwaitingEndClick &&
-                  activeRange &&
-                  activeRange.startIdx !== activeRange.endIdx && (
-                    <button
-                      type="button"
-                      onClick={onContinue}
-                      className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                    >
-                      {continueLabel}
-                    </button>
-                  )}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <SummaryBar
+        slots={slots}
+        timeZone={timeZone}
+        showPrice={showPrice}
+        onClear={onClear}
+        onContinue={onContinue}
+        continueLabel={continueLabel}
+      />
 
-      {/* Timeline grid */}
       <div className="relative overflow-hidden rounded-xl border border-border/80 bg-card shadow-sm">
-        {slots.map((slot, idx) => {
-          const available = isSlotAvailable(slot);
-          const isBooked = slot.status === "booked" || slot.status === "held";
-          const isMaintenance = slot.unavailableReason === "MAINTENANCE";
-          const isReserved = isBooked && !isMaintenance;
-          const inRange =
-            activeRange !== null &&
-            idx >= activeRange.startIdx &&
-            idx <= activeRange.endIdx;
-          const isRangeStart =
-            activeRange !== null && idx === activeRange.startIdx;
-          const isRangeEnd = activeRange !== null && idx === activeRange.endIdx;
-
-          // Hover preview highlighting
-          const inHoverPreview =
-            hoverPreviewRange !== null &&
-            idx >= hoverPreviewRange.startIdx &&
-            idx <= hoverPreviewRange.endIdx &&
-            !inRange;
-
-          const startLabel = formatTimeInTimeZone(slot.startTime, timeZone);
-          const endLabel = formatTimeInTimeZone(slot.endTime, timeZone);
-
-          return (
-            <button
-              type="button"
-              key={slot.id}
-              tabIndex={available ? 0 : -1}
-              disabled={!available}
-              aria-pressed={inRange}
-              aria-label={`${startLabel} to ${endLabel}${!available ? " (unavailable)" : ""}`}
-              className={cn(
-                "group flex w-full items-center gap-3 px-4 py-3 text-left transition-all duration-150",
-                "touch-none appearance-none",
-                "border-b border-border/50 last:border-b-0",
-                // Available idle — soft green tint signals reservable
-                available &&
-                  !inRange &&
-                  !inHoverPreview &&
-                  "bg-success-light/20 hover:bg-success-light/50 cursor-pointer",
-                // Hover preview (awaiting end click)
-                inHoverPreview && "bg-primary/5 cursor-pointer",
-                // In range — left accent strip via pseudo
-                inRange && "bg-primary/8 relative",
-                // Reserved by someone
-                isReserved && "bg-destructive-light/40 cursor-not-allowed",
-                // Maintenance
-                isMaintenance && "bg-warning-light/50 cursor-not-allowed",
-              )}
-              onPointerDown={(e) => {
-                e.preventDefault();
-                handlePointerDown(idx);
-              }}
-              onPointerEnter={() => {
-                handlePointerEnter(idx);
-                if (available) setHoveredIdx(idx);
-              }}
-              onPointerLeave={() => setHoveredIdx(null)}
-              onClick={(e) => {
-                if (suppressClickRef.current) {
-                  suppressClickRef.current = false;
-                  return;
-                }
-                handleClick(idx, e.shiftKey);
-              }}
-              onKeyDown={(e) => handleKeyDown(e, idx)}
-            >
-              {/* Left accent bar for selected range */}
-              {inRange && (
-                <motion.div
-                  layoutId={shouldReduceMotion ? undefined : "range-bar"}
-                  className={cn(
-                    "absolute left-0 top-0 bottom-0 w-1 bg-primary",
-                    isRangeStart && "rounded-tl-xl",
-                    isRangeEnd && "rounded-bl-xl",
-                  )}
-                  transition={motionTransition}
-                />
-              )}
-
-              {/* Status dot */}
-              <div className="shrink-0">
-                {isMaintenance ? (
-                  <div className="h-2 w-2 rounded-full bg-warning" />
-                ) : isReserved ? (
-                  <div className="h-2 w-2 rounded-full bg-destructive/50" />
-                ) : inRange ? (
-                  <motion.div
-                    initial={{ scale: 0.5 }}
-                    animate={{ scale: 1 }}
-                    className="h-2.5 w-2.5 rounded-full bg-primary shadow-sm shadow-primary/25"
-                    transition={motionTransition}
-                  />
-                ) : (
-                  <div
-                    className={cn(
-                      "h-2 w-2 rounded-full transition-colors duration-150",
-                      "bg-success/60 group-hover:bg-success",
-                    )}
-                  />
-                )}
-              </div>
-
-              {/* Time label */}
-              <span
-                className={cn(
-                  "w-[7.5rem] shrink-0 font-mono text-xs tabular-nums tracking-tight",
-                  inRange ? "text-primary font-semibold" : "text-foreground/80",
-                  isReserved && "text-destructive/50 line-through",
-                  isMaintenance && "text-warning-foreground/60",
-                )}
-              >
-                {startLabel} &ndash; {endLabel}
-              </span>
-
-              {/* Status / price */}
-              <span className="flex flex-1 items-center gap-2">
-                {isMaintenance && (
-                  <span className="inline-flex items-center rounded-md bg-warning-light px-2 py-0.5 text-[11px] font-medium text-warning-foreground">
-                    Maintenance
-                  </span>
-                )}
-                {isReserved && (
-                  <span className="inline-flex items-center rounded-md bg-destructive-light px-2 py-0.5 text-[11px] font-medium text-destructive">
-                    {slot.status === "held" ? "On hold" : "Reserved"}
-                  </span>
-                )}
-                {available && showPrice && slot.priceCents !== undefined && (
-                  <span
-                    className={cn(
-                      "text-xs font-medium tabular-nums",
-                      inRange ? "text-primary/80" : "text-muted-foreground",
-                    )}
-                  >
-                    {formatCurrency(slot.priceCents, slot.currency ?? "PHP")}
-                  </span>
-                )}
-              </span>
-
-              {/* Range position indicator */}
-              {(isRangeStart || isRangeEnd) && (
-                <span className="shrink-0 text-[10px] font-heading font-semibold uppercase tracking-wider text-primary/60">
-                  {isRangeStart && isRangeEnd
-                    ? ""
-                    : isRangeStart
-                      ? "Start"
-                      : "End"}
-                </span>
-              )}
-            </button>
-          );
-        })}
+        {slots.map((slot, idx) => (
+          <TimeSlotRow
+            key={slot.id}
+            idx={idx}
+            slot={slot}
+            timeZone={timeZone}
+            showPrice={showPrice}
+          />
+        ))}
       </div>
 
       {slots.length === 0 && (
