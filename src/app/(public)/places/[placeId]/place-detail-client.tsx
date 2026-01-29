@@ -9,6 +9,7 @@ import {
   BadgeCheck,
   Calendar,
   ChevronDown,
+  ChevronUp,
   CircleHelp,
   Clock,
   Copy,
@@ -57,7 +58,10 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useSession } from "@/features/auth";
-import { PhotoCarousel } from "@/features/discovery/components";
+import {
+  MobileDateStrip,
+  PhotoCarousel,
+} from "@/features/discovery/components";
 import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
 import { usePlaceDetail } from "@/features/discovery/hooks";
 import { cn } from "@/lib/utils";
@@ -805,9 +809,6 @@ export default function PlaceDetailPage() {
 
   const summaryCtaVariant = hasSelection ? "default" : "outline";
   const summaryCtaLabel = hasSelection ? "Continue to review" : "Select a time";
-  const stickyCtaLabel = summaryCtaLabel;
-
-  const selectionHint = "Select a range to continue.";
   const selectionDateLabel =
     hasSelection && selectedStartTime
       ? `${formatInTimeZone(
@@ -832,17 +833,6 @@ export default function PlaceDetailPage() {
             : ""
         }`
       : "";
-
-  const selectionMeta = hasSelection
-    ? `${formatDuration(durationMinutes)}${
-        selectionSummary?.totalCents !== undefined
-          ? ` · ${formatCurrency(
-              selectionSummary.totalCents,
-              selectionSummary.currency,
-            )}`
-          : ""
-      }`
-    : selectionHint;
 
   const isLoadingAvailability =
     selectionMode === "any"
@@ -891,6 +881,8 @@ export default function PlaceDetailPage() {
   }, [clearSelection, today]);
 
   const [calendarPopoverOpen, setCalendarPopoverOpen] = React.useState(false);
+  const [mobileCalendarOpen, setMobileCalendarOpen] = React.useState(false);
+  const [mobileSheetExpanded, setMobileSheetExpanded] = React.useState(false);
   const handleCalendarJump = React.useCallback(
     (date: Date | undefined) => {
       if (!date) return;
@@ -901,6 +893,137 @@ export default function PlaceDetailPage() {
     },
     [clearSelection, placeTimeZone],
   );
+
+  const handleMobileCalendarJump = React.useCallback(
+    (date: Date | undefined) => {
+      if (!date) return;
+      const nextDayKey = getZonedDayKey(date, placeTimeZone);
+      setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
+      clearSelection(true);
+      setMobileCalendarOpen(false);
+    },
+    [clearSelection, placeTimeZone],
+  );
+
+  const handleMobileDateSelect = React.useCallback(
+    (date: Date) => {
+      const nextDayKey = getZonedDayKey(date, placeTimeZone);
+      setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
+      clearSelection(true);
+    },
+    [clearSelection, placeTimeZone],
+  );
+
+  const handleMobileSportChange = React.useCallback(
+    (sportId: string) => {
+      setSelectedSportId(sportId);
+      setSelectionMode("any");
+      setSelectedCourtId(undefined);
+      clearSelection(true);
+    },
+    [clearSelection],
+  );
+
+  const handleMobileCourtChange = React.useCallback(
+    (courtId: string | undefined) => {
+      if (courtId) {
+        setSelectionMode("court");
+        setSelectedCourtId(courtId);
+      } else {
+        setSelectionMode("any");
+        setSelectedCourtId(undefined);
+      }
+      clearSelection(true);
+    },
+    [clearSelection],
+  );
+
+  // Mobile day slots — always uses day view for "any court" or specific court
+  const mobileDayDateIso = React.useMemo(() => {
+    return getZonedStartOfDayIso(selectedDate ?? today, placeTimeZone);
+  }, [placeTimeZone, selectedDate, today]);
+
+  const mobileAnyDayQuery = trpc.availability.getForPlaceSportRange.useQuery(
+    {
+      placeId: place?.id ?? "",
+      sportId: selectedSportId ?? "",
+      startDate: mobileDayDateIso,
+      endDate: mobileDayDateIso
+        ? toUtcISOString(
+            getZonedDayRangeForInstant(
+              new Date(mobileDayDateIso),
+              placeTimeZone,
+            ).end,
+          )
+        : "",
+      durationMinutes: TIMELINE_SLOT_DURATION,
+      includeUnavailable: true,
+      includeCourtOptions: false,
+    },
+    {
+      enabled:
+        showBooking &&
+        selectionMode === "any" &&
+        !!place?.id &&
+        !!selectedSportId &&
+        !!mobileDayDateIso,
+    },
+  );
+
+  const mobileCourtDayQuery = trpc.availability.getForCourt.useQuery(
+    {
+      courtId: selectedCourtId ?? "",
+      date: mobileDayDateIso,
+      durationMinutes: TIMELINE_SLOT_DURATION,
+      includeUnavailable: true,
+    },
+    {
+      enabled:
+        showBooking &&
+        selectionMode === "court" &&
+        !!selectedCourtId &&
+        !!mobileDayDateIso,
+    },
+  );
+
+  const mobileDaySlots: TimeSlot[] = React.useMemo(() => {
+    if (selectionMode === "any") {
+      const options = mobileAnyDayQuery.data?.options ?? [];
+      return options
+        .map((option) => ({
+          id: buildAvailabilityId(
+            option.courtId,
+            option.startTime,
+            TIMELINE_SLOT_DURATION,
+          ),
+          startTime: option.startTime,
+          endTime: option.endTime,
+          priceCents: option.totalPriceCents,
+          currency: option.currency ?? "PHP",
+          status:
+            option.status === "BOOKED"
+              ? ("booked" as const)
+              : ("available" as const),
+          unavailableReason:
+            (option.unavailableReason as TimeSlot["unavailableReason"]) ??
+            undefined,
+        }))
+        .sort((a, b) => a.startTime.localeCompare(b.startTime));
+    }
+    return mapCourtOptionsToSlots(mobileCourtDayQuery.data?.options ?? []).sort(
+      (a, b) => a.startTime.localeCompare(b.startTime),
+    );
+  }, [
+    selectionMode,
+    mobileAnyDayQuery.data,
+    mobileCourtDayQuery.data,
+    mapCourtOptionsToSlots,
+  ]);
+
+  const isMobileLoading =
+    selectionMode === "any"
+      ? mobileAnyDayQuery.isLoading
+      : mobileCourtDayQuery.isLoading;
 
   const handleJumpToMaxDate = React.useCallback(() => {
     setSelectedDate(maxBookingDate);
@@ -1034,15 +1157,6 @@ export default function PlaceDetailPage() {
   };
 
   const handleSummaryAction = () => {
-    if (hasSelection) {
-      handleReserve();
-      return;
-    }
-
-    scrollToSection(availabilitySectionRef);
-  };
-
-  const handleStickyCta = () => {
     if (hasSelection) {
       handleReserve();
       return;
@@ -1230,10 +1344,13 @@ export default function PlaceDetailPage() {
       </div>
 
       {/* Content grid */}
-      <div className="grid gap-6 lg:grid-cols-3 mt-4 lg:mt-6 pb-24">
+      <div className="grid gap-6 lg:grid-cols-3 mt-4 lg:mt-6 pb-[70vh] lg:pb-24">
         <div className="lg:col-span-2 space-y-6">
           {showBooking && (
-            <div ref={availabilitySectionRef} className="scroll-mt-24">
+            <div
+              ref={availabilitySectionRef}
+              className="scroll-mt-24 hidden lg:block"
+            >
               <Card>
                 <CardHeader className="space-y-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
@@ -2286,18 +2403,190 @@ export default function PlaceDetailPage() {
         </div>
       </div>
 
-      {hasSelection && selectedStartTime && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 p-4 shadow-lg backdrop-blur sm:hidden">
-          <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              <p className="text-sm font-medium">
-                {selectionDateLabel}
-                {selectionTimeLabel ? ` · ${selectionTimeLabel}` : ""}
-              </p>
-              <p className="text-xs text-muted-foreground">{selectionMeta}</p>
+      {/* Mobile bottom sheet */}
+      {showBooking && (
+        <div className="fixed inset-x-0 bottom-0 z-40 rounded-t-3xl bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.15)] lg:hidden flex flex-col max-h-[85vh]">
+          {/* Handle — tap to toggle */}
+          <button
+            type="button"
+            className="flex flex-col items-center pt-3 pb-2 w-full"
+            onClick={() => setMobileSheetExpanded((v) => !v)}
+          >
+            <div className="w-9 h-1 bg-muted-foreground/30 rounded-full" />
+            <div className="flex items-center gap-1.5 mt-1.5">
+              <p className="text-base font-semibold">Check Availability</p>
+              {mobileSheetExpanded ? (
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              ) : (
+                <ChevronUp className="h-4 w-4 text-muted-foreground" />
+              )}
             </div>
-            <Button size="sm" onClick={handleStickyCta}>
-              {stickyCtaLabel}
+          </button>
+
+          {mobileSheetExpanded && (
+            <>
+              {/* Sport pills */}
+              {place.sports.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto px-5 pb-3 scrollbar-none">
+                  {place.sports.map((sport) => (
+                    <button
+                      key={sport.id}
+                      type="button"
+                      onClick={() => handleMobileSportChange(sport.id)}
+                      className={cn(
+                        "shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+                        selectedSportId === sport.id
+                          ? "bg-foreground text-background border-foreground"
+                          : "border-border bg-background text-foreground hover:bg-muted/50",
+                      )}
+                    >
+                      {sport.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Court selector */}
+              <div className="px-5 pb-3">
+                <div className="flex gap-2 overflow-x-auto scrollbar-none">
+                  <button
+                    type="button"
+                    onClick={() => handleMobileCourtChange(undefined)}
+                    className={cn(
+                      "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap",
+                      selectionMode === "any"
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-card text-foreground hover:bg-accent/10 hover:border-accent/30",
+                    )}
+                  >
+                    Any court
+                  </button>
+                  {courtsForSport.map((court) => (
+                    <button
+                      key={court.id}
+                      type="button"
+                      onClick={() => handleMobileCourtChange(court.id)}
+                      className={cn(
+                        "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors whitespace-nowrap",
+                        selectionMode === "court" &&
+                          selectedCourtId === court.id
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border bg-card text-foreground hover:bg-accent/10 hover:border-accent/30",
+                      )}
+                    >
+                      {court.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Date selector */}
+              <div className="space-y-2 px-5 pb-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-full justify-start"
+                  onClick={() => setMobileCalendarOpen(true)}
+                >
+                  <Calendar className="h-3.5 w-3.5" />
+                  {selectedDate
+                    ? formatInTimeZone(
+                        selectedDate,
+                        placeTimeZone,
+                        "EEEE, MMM d",
+                      )
+                    : "Pick a date"}
+                </Button>
+                <MobileDateStrip
+                  selectedDate={selectedDate ?? today}
+                  onDateSelect={handleMobileDateSelect}
+                  timeZone={placeTimeZone}
+                  todayDate={today}
+                />
+              </div>
+
+              {/* Calendar dialog */}
+              <Dialog
+                open={mobileCalendarOpen}
+                onOpenChange={setMobileCalendarOpen}
+              >
+                <DialogContent className="sm:max-w-fit p-0">
+                  <DialogHeader className="sr-only">
+                    <DialogTitle>Select a date</DialogTitle>
+                    <DialogDescription>
+                      Choose a date to view availability
+                    </DialogDescription>
+                  </DialogHeader>
+                  <CalendarWidget
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={handleMobileCalendarJump}
+                    disabled={(date) => {
+                      if (date < todayRange.start) return true;
+                      if (date > maxBookingDate) return true;
+                      return false;
+                    }}
+                    timeZone={placeTimeZone}
+                    initialFocus
+                  />
+                </DialogContent>
+              </Dialog>
+
+              {/* Time slots */}
+              <div className="flex-1 overflow-y-auto px-5 pb-2 min-h-0">
+                {isMobileLoading ? (
+                  <TimeRangePickerSkeleton count={5} />
+                ) : mobileDaySlots.length > 0 ? (
+                  <TimeRangePicker
+                    slots={mobileDaySlots}
+                    timeZone={placeTimeZone}
+                    selectedStartTime={selectedRange?.startTime}
+                    selectedDurationMinutes={selectedRange?.durationMinutes}
+                    showPrice
+                    onChange={
+                      selectionMode === "any"
+                        ? handleAnyRangeChange
+                        : handleCourtRangeChange
+                    }
+                    onClear={() => clearSelection(true)}
+                    onContinue={handleReserve}
+                  />
+                ) : (
+                  <div className="py-6 text-center text-sm text-muted-foreground">
+                    No available slots for this date.
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
+          {/* Booking footer */}
+          <div className="flex items-center justify-between px-5 py-4 border-t border-border bg-background">
+            <div className="min-w-0">
+              {hasSelection && selectionSummary ? (
+                <>
+                  <p className="text-sm text-muted-foreground">
+                    {selectionDateLabel}
+                    {selectionTimeLabel ? ` · ${selectionTimeLabel}` : ""}
+                  </p>
+                  {selectionSummary.totalCents !== undefined && (
+                    <p className="text-lg font-semibold text-foreground">
+                      {formatCurrency(
+                        selectionSummary.totalCents,
+                        selectionSummary.currency,
+                      )}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Select a time slot
+                </p>
+              )}
+            </div>
+            <Button disabled={!hasSelection} onClick={handleReserve}>
+              Reserve
             </Button>
           </div>
         </div>
@@ -2327,11 +2616,35 @@ function PlaceDetailSkeleton() {
       </div>
       <div className="grid gap-6 lg:grid-cols-3 mt-4 lg:mt-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="h-48 bg-muted rounded-xl animate-pulse" />
+          <div className="h-48 bg-muted rounded-xl animate-pulse hidden lg:block" />
         </div>
         <div className="space-y-4">
           <div className="hidden lg:block aspect-[16/10] bg-muted rounded-xl animate-pulse" />
-          <div className="h-64 bg-muted rounded-xl animate-pulse" />
+          <div className="h-64 bg-muted rounded-xl animate-pulse hidden lg:block" />
+        </div>
+      </div>
+      {/* Mobile bottom sheet skeleton */}
+      <div className="fixed inset-x-0 bottom-0 z-40 rounded-t-3xl bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.15)] lg:hidden p-5 space-y-3">
+        <div className="flex justify-center pb-1">
+          <div className="w-9 h-1 bg-muted rounded-full" />
+        </div>
+        <div className="h-5 w-40 bg-muted rounded animate-pulse" />
+        <div className="flex gap-2">
+          <div className="h-9 w-24 bg-muted rounded-full animate-pulse" />
+          <div className="h-9 w-20 bg-muted rounded-full animate-pulse" />
+        </div>
+        <div className="flex gap-1.5">
+          {Array.from({ length: 7 }).map((_, i) => (
+            <div
+              key={`day-skel-${String(i)}`}
+              className="h-14 w-12 bg-muted rounded-xl animate-pulse"
+            />
+          ))}
+        </div>
+        <div className="space-y-2">
+          <div className="h-14 bg-muted/50 rounded-xl animate-pulse" />
+          <div className="h-14 bg-muted/50 rounded-xl animate-pulse" />
+          <div className="h-14 bg-muted/50 rounded-xl animate-pulse" />
         </div>
       </div>
     </Container>

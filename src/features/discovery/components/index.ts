@@ -5,6 +5,7 @@ export { PlaceMap } from "./court-map";
 export { EmptyResults } from "./empty-results";
 export { Footer } from "./footer";
 export { HeroSection } from "./hero-section";
+export { MobileDateStrip } from "./mobile-date-strip";
 export { Navbar } from "./navbar";
 export { PhotoCarousel } from "./photo-carousel";
 export { PlaceFiltersSheet } from "./place-filters-sheet";
