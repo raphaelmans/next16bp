@@ -123,6 +123,17 @@ export class ReservationPaymentNotRequiredError extends ValidationError {
   }
 }
 
+export class ReservationPaymentMethodInvalidError extends ValidationError {
+  readonly code = "RESERVATION_PAYMENT_METHOD_INVALID";
+
+  constructor(details?: Record<string, unknown>) {
+    super(
+      "Selected payment method is invalid or does not belong to this organization.",
+      details,
+    );
+  }
+}
+
 export class BookingWindowExceededError extends ValidationError {
   readonly code = "BOOKING_WINDOW_EXCEEDED";
 

@@ -14,7 +14,11 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { StandardFormInput, StandardFormProvider } from "@/components/form";
+import {
+  StandardFormInput,
+  StandardFormProvider,
+  StandardFormSelect,
+} from "@/components/form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -50,6 +54,7 @@ import {
   useOwnerPlaceFilter,
   useOwnerPlaces,
 } from "@/features/owner/hooks";
+import { useOrganizationPaymentMethods } from "@/features/owner/hooks/use-organization-payment-methods";
 import {
   type Reservation,
   useAcceptReservation,
@@ -60,6 +65,7 @@ import {
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
+import { SETTINGS_SECTION_HASHES } from "@/shared/lib/section-hashes";
 import { trpc } from "@/trpc/client";
 
 type TabValue = "pending" | "upcoming" | "past" | "cancelled";
@@ -196,13 +202,21 @@ export default function OwnerReservationsPage() {
       },
     });
 
+  const { data: paymentMethodsData } = useOrganizationPaymentMethods(
+    organization?.id,
+  );
+  const paymentMethods = paymentMethodsData?.methods ?? [];
+  const activePaymentMethods = paymentMethods.filter((m) => m.isActive);
+  const defaultPaymentMethod = activePaymentMethods.find((m) => m.isDefault);
+
   const paidOfflineFormSchema = z.object({
+    paymentMethodId: z.string().min(1, "Payment method is required"),
     paymentReference: z.string().min(1, "Reference is required").max(100),
   });
   type PaidOfflineFormValues = z.infer<typeof paidOfflineFormSchema>;
   const paidOfflineForm = useForm<PaidOfflineFormValues>({
     resolver: zodResolver(paidOfflineFormSchema),
-    defaultValues: { paymentReference: "" },
+    defaultValues: { paymentMethodId: "", paymentReference: "" },
   });
 
   const handleRefresh = async () => {
@@ -380,7 +394,10 @@ export default function OwnerReservationsPage() {
     const reservation = reservations.find((r) => r.id === reservationId);
     if (reservation) {
       setSelectedReservation(reservation);
-      paidOfflineForm.reset({ paymentReference: "" });
+      paidOfflineForm.reset({
+        paymentMethodId: defaultPaymentMethod?.id ?? "",
+        paymentReference: "",
+      });
       setPaidOfflineDialogOpen(true);
     }
   };
@@ -390,6 +407,7 @@ export default function OwnerReservationsPage() {
     confirmPaidOfflineMutation.mutate(
       {
         reservationId: selectedReservation.id,
+        paymentMethodId: values.paymentMethodId,
         paymentReference: values.paymentReference,
       },
       {
@@ -765,34 +783,71 @@ export default function OwnerReservationsPage() {
               flow and mark the reservation as confirmed.
             </DialogDescription>
           </DialogHeader>
-          <StandardFormProvider
-            form={paidOfflineForm}
-            onSubmit={handlePaidOfflineSubmit}
-          >
+          {activePaymentMethods.length === 0 ? (
             <div className="space-y-4">
-              <StandardFormInput<PaidOfflineFormValues>
-                name="paymentReference"
-                label="Payment reference"
-                placeholder="e.g. receipt number, GCash ref"
-                required
-              />
+              <div className="rounded-lg border border-dashed bg-muted/30 p-4 text-center">
+                <p className="text-sm text-muted-foreground mb-3">
+                  You need at least one active payment method to confirm offline
+                  payments.
+                </p>
+                <Button asChild>
+                  <a
+                    href={`${appRoutes.owner.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`}
+                  >
+                    Set up payment methods
+                  </a>
+                </Button>
+              </div>
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setPaidOfflineDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+              </DialogFooter>
             </div>
-            <DialogFooter className="pt-4">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => setPaidOfflineDialogOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={confirmPaidOfflineMutation.isPending}
-              >
-                Confirm payment
-              </Button>
-            </DialogFooter>
-          </StandardFormProvider>
+          ) : (
+            <StandardFormProvider
+              form={paidOfflineForm}
+              onSubmit={handlePaidOfflineSubmit}
+            >
+              <div className="space-y-4">
+                <StandardFormSelect<PaidOfflineFormValues>
+                  name="paymentMethodId"
+                  label="Payment method"
+                  placeholder="Select payment method"
+                  required
+                  options={activePaymentMethods.map((m) => ({
+                    value: m.id,
+                    label: `${m.provider} — ${m.accountName}${m.isDefault ? " (Default)" : ""}`,
+                  }))}
+                />
+                <StandardFormInput<PaidOfflineFormValues>
+                  name="paymentReference"
+                  label="Payment reference"
+                  placeholder="e.g. receipt number, GCash ref"
+                  required
+                />
+              </div>
+              <DialogFooter className="pt-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setPaidOfflineDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={confirmPaidOfflineMutation.isPending}
+                >
+                  Confirm payment
+                </Button>
+              </DialogFooter>
+            </StandardFormProvider>
+          )}
         </DialogContent>
       </Dialog>
     </AppShell>

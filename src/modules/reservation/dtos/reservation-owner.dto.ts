@@ -21,6 +21,7 @@ export type AcceptReservationDTO = z.infer<typeof AcceptReservationSchema>;
 
 export const ConfirmPaidOfflineSchema = z.object({
   reservationId: S.ids.reservationId,
+  paymentMethodId: S.ids.paymentMethodId,
   paymentReference: S.reservation.referenceNumber,
 });
 

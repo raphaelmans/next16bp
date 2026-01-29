@@ -86,6 +86,7 @@ export function makeReservationOwnerService(): ReservationOwnerService {
       makeCourtRateRuleRepository(),
       makeCourtPriceOverrideRepository(),
       makeCourtBlockRepository(),
+      makeOrganizationPaymentMethodRepository(),
     );
   }
   return reservationOwnerService;

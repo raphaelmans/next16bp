@@ -15,6 +15,7 @@ import type { z } from "zod";
 import { court } from "./court";
 import { reservationStatusEnum, triggeredByRoleEnum } from "./enums";
 import { guestProfile } from "./guest-profile";
+import { organizationPaymentMethod } from "./organization-payment";
 import { profile } from "./profile";
 
 /**
@@ -95,6 +96,10 @@ export const paymentProof = pgTable("payment_proof", {
     .references(() => reservation.id, { onDelete: "cascade" }),
   fileUrl: text("file_url"),
   referenceNumber: varchar("reference_number", { length: 100 }),
+  paymentMethodId: uuid("payment_method_id").references(
+    () => organizationPaymentMethod.id,
+    { onDelete: "set null" },
+  ),
   notes: text("notes"),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()

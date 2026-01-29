@@ -13,6 +13,7 @@ import { GuestProfileNotFoundError } from "@/modules/guest-profile/errors/guest-
 import type { IGuestProfileRepository } from "@/modules/guest-profile/repositories/guest-profile.repository";
 import { NotOrganizationOwnerError } from "@/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
+import type { IOrganizationPaymentMethodRepository } from "@/modules/organization-payment/repositories/organization-payment-method.repository";
 import type { IOrganizationReservationPolicyRepository } from "@/modules/organization-payment/repositories/organization-reservation-policy.repository";
 import type { IPaymentProofRepository } from "@/modules/payment-proof/repositories/payment-proof.repository";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
@@ -36,6 +37,7 @@ import {
   ReservationDurationInvalidError,
   ReservationExpiredError,
   ReservationNotFoundError,
+  ReservationPaymentMethodInvalidError,
   ReservationPaymentNotRequiredError,
   ReservationPricingUnavailableError,
   ReservationTimeRangeInvalidError,
@@ -96,6 +98,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     private courtRateRuleRepository?: ICourtRateRuleRepository,
     private courtPriceOverrideRepository?: ICourtPriceOverrideRepository,
     private courtBlockRepository?: ICourtBlockRepository,
+    private organizationPaymentMethodRepository?: IOrganizationPaymentMethodRepository,
   ) {}
 
   private requireCourtPlaceId(placeId: string | null): string {
@@ -107,12 +110,13 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
   /**
    * Verify that the user owns the place for a court.
+   * Returns the organization ID.
    */
   private async verifyCourtOwnership(
     userId: string,
     courtId: string,
     ctx?: RequestContext,
-  ): Promise<void> {
+  ): Promise<string> {
     const court = await this.courtRepository.findById(courtId, ctx);
     if (!court) {
       throw new CourtNotFoundError(courtId);
@@ -135,6 +139,8 @@ export class ReservationOwnerService implements IReservationOwnerService {
     if (!org || org.ownerUserId !== userId) {
       throw new NotCourtOwnerError();
     }
+
+    return place.organizationId;
   }
 
   private async getPaymentHoldMinutes(
@@ -359,7 +365,11 @@ export class ReservationOwnerService implements IReservationOwnerService {
         throw new ReservationNotFoundError(data.reservationId);
       }
 
-      await this.verifyCourtOwnership(userId, reservation.courtId, ctx);
+      const organizationId = await this.verifyCourtOwnership(
+        userId,
+        reservation.courtId,
+        ctx,
+      );
 
       if (reservation.status !== "CREATED") {
         throw new InvalidReservationStatusError(
@@ -383,6 +393,29 @@ export class ReservationOwnerService implements IReservationOwnerService {
         throw new ReservationExpiredError(data.reservationId);
       }
 
+      if (!this.organizationPaymentMethodRepository) {
+        throw new ReservationPaymentMethodInvalidError({
+          paymentMethodId: data.paymentMethodId,
+          organizationId,
+          reason: "repository_missing",
+        });
+      }
+
+      const method = await this.organizationPaymentMethodRepository.findById(
+        data.paymentMethodId,
+        ctx,
+      );
+      if (
+        !method ||
+        method.organizationId !== organizationId ||
+        !method.isActive
+      ) {
+        throw new ReservationPaymentMethodInvalidError({
+          paymentMethodId: data.paymentMethodId,
+          organizationId,
+        });
+      }
+
       const now = new Date();
 
       const updated = await this.reservationRepository.update(
@@ -401,6 +434,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
           {
             reservationId: data.reservationId,
             referenceNumber: data.paymentReference,
+            paymentMethodId: data.paymentMethodId,
             notes: "Paid offline",
             fileUrl: null,
           },
