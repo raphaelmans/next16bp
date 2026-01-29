@@ -96,16 +96,6 @@ export function TimeRangePicker({
   const suppressClickRef = React.useRef(false);
   const isDragging = anchorIdx !== null;
 
-  // DEBUG — temporary logging
-  console.log("[TRP render]", {
-    anchorIdx,
-    hoverIdx,
-    isDragging,
-    selectedStartTime,
-    selectedDurationMinutes,
-    slotsLen: slots.length,
-  });
-
   // Compute committed selection from props
   const committedRange = React.useMemo(() => {
     if (!selectedStartTime || !selectedDurationMinutes) return null;
@@ -114,7 +104,6 @@ export function TimeRangePicker({
     const slotCount = selectedDurationMinutes / SLOT_STEP_MINUTES;
     const endIdx = startIdx + slotCount - 1;
     if (endIdx >= slots.length) return null;
-    console.log("[TRP committedRange]", { startIdx, endIdx });
     return { startIdx, endIdx };
   }, [selectedStartTime, selectedDurationMinutes, slots]);
 
@@ -147,12 +136,6 @@ export function TimeRangePicker({
       const startSlot = slots[startIdx];
       const slotCount = endIdx - startIdx + 1;
       const durationMinutes = slotCount * SLOT_STEP_MINUTES;
-      console.log("[TRP commitRange]", {
-        startIdx,
-        endIdx,
-        startTime: startSlot.startTime,
-        durationMinutes,
-      });
       onChange?.({ startTime: startSlot.startTime, durationMinutes });
     },
     [onChange, slots],
@@ -160,10 +143,6 @@ export function TimeRangePicker({
 
   const handlePointerDown = React.useCallback(
     (idx: number) => {
-      console.log("[TRP pointerDown]", {
-        idx,
-        available: isSlotAvailable(slots[idx]),
-      });
       if (!isSlotAvailable(slots[idx])) return;
       setAnchorIdx(idx);
       setHoverIdx(idx);
@@ -180,7 +159,6 @@ export function TimeRangePicker({
   );
 
   const handlePointerUp = React.useCallback(() => {
-    console.log("[TRP pointerUp]", { anchorIdx, hoverIdx, committedRange });
     if (anchorIdx === null || hoverIdx === null) {
       setAnchorIdx(null);
       setHoverIdx(null);
@@ -191,12 +169,6 @@ export function TimeRangePicker({
       // Drag: commit the dragged range
       const clampedTarget = clampToContiguous(slots, anchorIdx, hoverIdx);
       const range = computeContiguousRange(slots, anchorIdx, clampedTarget);
-      console.log("[TRP pointerUp drag commit]", {
-        anchorIdx,
-        hoverIdx,
-        clampedTarget,
-        range,
-      });
       if (range) {
         commitRange(range.startIdx, range.endIdx);
         suppressClickRef.current = true;
@@ -205,7 +177,6 @@ export function TimeRangePicker({
       // Single tap — handle like click (preventDefault on pointerdown
       // can suppress click events in some browsers)
       const idx = anchorIdx;
-      console.log("[TRP pointerUp single tap]", { idx, committedRange });
       suppressClickRef.current = true;
 
       // Two-click flow: second tap extends from committed start
@@ -248,12 +219,6 @@ export function TimeRangePicker({
   // Click: two-click flow (tap start, tap end) + shift-click to extend
   const handleClick = React.useCallback(
     (idx: number, shiftKey: boolean) => {
-      console.log("[TRP click]", {
-        idx,
-        shiftKey,
-        committedRange,
-        available: isSlotAvailable(slots[idx]),
-      });
       if (!isSlotAvailable(slots[idx])) return;
 
       // Clear stale drag state from pointerdown (the global pointerup
@@ -316,19 +281,13 @@ export function TimeRangePicker({
   // Global pointer up listener
   React.useEffect(() => {
     if (!isDragging) {
-      console.log("[TRP effect] isDragging=false, no global listener");
       return;
     }
-    console.log(
-      "[TRP effect] isDragging=true, adding global pointerup listener",
-    );
     const onUp = () => {
-      console.log("[TRP global pointerup fired]");
       handlePointerUp();
     };
     window.addEventListener("pointerup", onUp);
     return () => {
-      console.log("[TRP effect cleanup] removing global pointerup listener");
       window.removeEventListener("pointerup", onUp);
     };
   }, [isDragging, handlePointerUp]);
@@ -495,10 +454,6 @@ export function TimeRangePicker({
               }}
               onPointerLeave={() => setHoveredIdx(null)}
               onClick={(e) => {
-                console.log("[TRP onClick guard]", {
-                  idx,
-                  suppressed: suppressClickRef.current,
-                });
                 if (suppressClickRef.current) {
                   suppressClickRef.current = false;
                   return;

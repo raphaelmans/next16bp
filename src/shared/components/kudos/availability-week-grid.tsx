@@ -201,13 +201,6 @@ export function AvailabilityWeekGrid({
       const slot = hourMap.get(allHours[startIdx]);
       if (!slot) return;
       const slotCount = endIdx - startIdx + 1;
-      console.log("[AWG commitRange]", {
-        dayKey,
-        startIdx,
-        endIdx,
-        startTime: slot.startTime,
-        durationMinutes: slotCount * TIMELINE_SLOT_DURATION,
-      });
       onRangeChange({
         startTime: slot.startTime,
         durationMinutes: slotCount * TIMELINE_SLOT_DURATION,
@@ -220,11 +213,6 @@ export function AvailabilityWeekGrid({
     (dayKey: string, hourIdx: number) => {
       const hourMap = slotLookup.get(dayKey);
       const slot = hourMap?.get(allHours[hourIdx]);
-      console.log("[AWG pointerDown]", {
-        dayKey,
-        hourIdx,
-        available: slot ? isSlotAvailable(slot) : false,
-      });
       if (!slot || !isSlotAvailable(slot)) return;
       didDragRef.current = false;
       setAnchorCoord({ dayKey, hourIdx });
@@ -251,13 +239,6 @@ export function AvailabilityWeekGrid({
   );
 
   const handlePointerUp = React.useCallback(() => {
-    console.log("[AWG pointerUp]", {
-      anchorCoord,
-      hoverCoord,
-      didDrag: didDragRef.current,
-      committedCells,
-      isAwaitingEndClick,
-    });
     if (!anchorCoord || !hoverCoord) {
       setAnchorCoord(null);
       setHoverCoord(null);
@@ -276,7 +257,6 @@ export function AvailabilityWeekGrid({
         anchorCoord.hourIdx,
         clamped,
       );
-      console.log("[AWG pointerUp drag commit]", { range });
       if (range) {
         commitRange(anchorCoord.dayKey, range.startIdx, range.endIdx);
         suppressClickRef.current = true;
@@ -285,13 +265,14 @@ export function AvailabilityWeekGrid({
       // Single tap — handle like click (preventDefault on pointerdown
       // can suppress click events in some browsers)
       const { dayKey, hourIdx } = anchorCoord;
-      console.log("[AWG pointerUp single tap]", { dayKey, hourIdx });
       suppressClickRef.current = true;
 
       // Two-click flow: second tap extends from committed start
+      // Note: can't use isAwaitingEndClick here because pointerdown already
+      // set anchorCoord (isDragging=true), which makes isAwaitingEndClick false.
       if (
-        isAwaitingEndClick &&
         committedCells.dayKey === dayKey &&
+        committedCells.startIdx === committedCells.endIdx &&
         hourIdx !== committedCells.startIdx
       ) {
         const range = computeRange(dayKey, committedCells.startIdx, hourIdx);
@@ -316,21 +297,12 @@ export function AvailabilityWeekGrid({
     commitRange,
     computeRange,
     committedCells,
-    isAwaitingEndClick,
   ]);
 
   const handleClick = React.useCallback(
     (dayKey: string, hourIdx: number, shiftKey: boolean) => {
       const hourMap = slotLookup.get(dayKey);
       const slot = hourMap?.get(allHours[hourIdx]);
-      console.log("[AWG click]", {
-        dayKey,
-        hourIdx,
-        shiftKey,
-        available: slot ? isSlotAvailable(slot) : false,
-        committedCells,
-        isAwaitingEndClick,
-      });
       if (!slot || !isSlotAvailable(slot)) return;
 
       // Shift+click to extend
@@ -373,19 +345,13 @@ export function AvailabilityWeekGrid({
   // Global pointer up
   React.useEffect(() => {
     if (!isDragging) {
-      console.log("[AWG effect] isDragging=false, no global listener");
       return;
     }
-    console.log(
-      "[AWG effect] isDragging=true, adding global pointerup listener",
-    );
     const onUp = () => {
-      console.log("[AWG global pointerup fired]");
       handlePointerUp();
     };
     window.addEventListener("pointerup", onUp);
     return () => {
-      console.log("[AWG effect cleanup] removing global pointerup listener");
       window.removeEventListener("pointerup", onUp);
     };
   }, [isDragging, handlePointerUp]);
@@ -691,11 +657,6 @@ export function AvailabilityWeekGrid({
                         }}
                         onPointerLeave={() => setHoveredCoord(null)}
                         onClick={(e) => {
-                          console.log("[AWG onClick]", {
-                            dk,
-                            hourIdx,
-                            suppressed: suppressClickRef.current,
-                          });
                           if (suppressClickRef.current) {
                             suppressClickRef.current = false;
                             return;
