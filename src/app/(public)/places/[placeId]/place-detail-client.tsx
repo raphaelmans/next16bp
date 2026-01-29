@@ -57,7 +57,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useSession } from "@/features/auth";
-import { PhotoGallery } from "@/features/discovery/components";
+import { PhotoCarousel } from "@/features/discovery/components";
 import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
 import { usePlaceDetail } from "@/features/discovery/hooks";
 import { cn } from "@/lib/utils";
@@ -1151,112 +1151,87 @@ export default function PlaceDetailPage() {
     .toUpperCase();
 
   return (
-    <Container className="py-6">
-      <div className="grid gap-8 lg:grid-cols-3 mt-8 pb-24">
-        <div className="lg:col-span-2 space-y-6">
-          <PhotoGallery
-            photos={place.photos}
-            courtName={place.name}
-            topOverlay={
-              <div className="inline-flex max-w-full flex-wrap items-center gap-3 rounded-2xl border border-border/60 bg-background/85 p-3 shadow-md backdrop-blur">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full border border-border/60 bg-background/80 p-1 shadow-sm">
-                  {logoUrl ? (
-                    <div className="relative h-full w-full">
-                      <Image
-                        src={logoUrl}
-                        alt={`${place.name} logo`}
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
-                  ) : (
-                    <span className="font-heading text-xs font-semibold text-foreground">
-                      {logoFallback}
-                    </span>
-                  )}
-                </div>
-                <div className="min-w-0">
-                  <h1 className="font-heading text-lg font-semibold text-foreground leading-tight">
-                    {place.name}
-                  </h1>
-                  <p className="text-xs text-muted-foreground">{place.city}</p>
-                </div>
-                {(showVerificationBadge || isCurated) && (
-                  <div className="flex flex-wrap items-center gap-2 text-xs sm:ml-auto">
-                    {showVerificationBadge && (
-                      <Badge variant="success" className="gap-1 text-[10px]">
-                        <ShieldCheck className="h-3 w-3" />
-                        Verified
-                      </Badge>
-                    )}
-                    {isCurated && (
-                      <Badge variant="secondary" className="text-[10px]">
-                        Curated
-                      </Badge>
-                    )}
-                  </div>
-                )}
+    <Container className="pt-4 sm:pt-6">
+      {/* Venue header */}
+      <div className="space-y-2 border-b border-border/60 pb-4">
+        <div className="flex items-start gap-3.5">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border/60 bg-muted/50 p-1">
+            {logoUrl ? (
+              <div className="relative h-full w-full">
+                <Image
+                  src={logoUrl}
+                  alt={`${place.name} logo`}
+                  fill
+                  className="object-contain"
+                />
               </div>
-            }
-            mainOverlay={
-              showBooking ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="h-auto w-full items-start gap-2 rounded-xl border-border/60 bg-background/95 p-3 text-left shadow-md backdrop-blur"
-                  onClick={handleScrollToAvailability}
-                >
-                  <div className="flex items-center gap-2 text-sm font-medium">
-                    <Calendar className="h-4 w-4 text-accent" />
-                    Check availability
-                  </div>
-                </Button>
-              ) : (
-                <div className="space-y-2">
-                  <div
-                    className={
-                      hasCallCta ? "grid gap-2 sm:grid-cols-2" : "grid gap-2"
-                    }
-                  >
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="w-full hover:translate-y-0"
-                    >
-                      <a
-                        href={directionsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <MapPin className="h-4 w-4" />
-                        Get directions
-                      </a>
-                    </Button>
-                    {hasCallCta && (
-                      <Button
-                        asChild
-                        variant="outline"
-                        size="sm"
-                        className="w-full hover:translate-y-0"
-                      >
-                        <a href={callHref}>
-                          <Phone className="h-4 w-4" />
-                          Call venue
-                        </a>
-                      </Button>
-                    )}
-                  </div>
-                  {showBookingVerificationUi && (
-                    <div className="rounded-lg border border-dashed bg-background/95 p-3 text-left text-xs text-muted-foreground shadow-sm backdrop-blur">
-                      {verificationMessage}
-                    </div>
-                  )}
-                </div>
-              )
-            }
-          />
+            ) : (
+              <span className="font-heading text-xs font-semibold text-foreground">
+                {logoFallback}
+              </span>
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+              <h1 className="font-heading text-xl font-semibold text-foreground leading-tight sm:text-2xl">
+                {place.name}
+              </h1>
+              {showVerificationBadge && (
+                <Badge variant="success" className="gap-1 text-[10px]">
+                  <ShieldCheck className="h-3 w-3" />
+                  Verified
+                </Badge>
+              )}
+              {isCurated && (
+                <Badge variant="secondary" className="text-[10px]">
+                  Curated
+                </Badge>
+              )}
+            </div>
+            <p className="mt-0.5 text-sm text-muted-foreground">
+              {place.city}
+              {place.address ? ` · ${place.address}` : ""}
+            </p>
+          </div>
+        </div>
 
+        {/* Quick actions row */}
+        <div className="flex flex-wrap items-center gap-2">
+          {showBooking && (
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleScrollToAvailability}
+            >
+              <Calendar className="h-4 w-4" />
+              Check availability
+            </Button>
+          )}
+          <Button asChild variant="outline" size="sm">
+            <a href={directionsUrl} target="_blank" rel="noopener noreferrer">
+              <MapPin className="h-4 w-4" />
+              Directions
+            </a>
+          </Button>
+          {hasCallCta && (
+            <Button asChild variant="outline" size="sm">
+              <a href={callHref}>
+                <Phone className="h-4 w-4" />
+                Call
+              </a>
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile-only carousel */}
+      <div className="mt-4 lg:hidden">
+        <PhotoCarousel photos={place.photos} courtName={place.name} />
+      </div>
+
+      {/* Content grid */}
+      <div className="grid gap-6 lg:grid-cols-3 mt-4 lg:mt-6 pb-24">
+        <div className="lg:col-span-2 space-y-6">
           {showBooking && (
             <div ref={availabilitySectionRef} className="scroll-mt-24">
               <Card>
@@ -1893,7 +1868,14 @@ export default function PlaceDetailPage() {
           )}
         </div>
 
-        <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+        <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+          {/* Desktop-only carousel */}
+          <div className="hidden lg:block">
+            <Card className="overflow-hidden p-0">
+              <PhotoCarousel photos={place.photos} courtName={place.name} />
+            </Card>
+          </div>
+
           {showBooking ? (
             <>
               <Card>
@@ -2326,18 +2308,30 @@ export default function PlaceDetailPage() {
 
 function PlaceDetailSkeleton() {
   return (
-    <Container className="py-6">
-      <div className="space-y-6">
-        <div className="h-6 w-48 bg-muted rounded animate-pulse" />
-        <div className="h-8 w-64 bg-muted rounded animate-pulse" />
+    <Container className="pt-4 sm:pt-6">
+      <div className="space-y-2 border-b border-border/60 pb-4">
+        <div className="flex items-start gap-3.5">
+          <div className="h-11 w-11 rounded-full bg-muted animate-pulse shrink-0" />
+          <div className="space-y-2 flex-1">
+            <div className="h-7 w-48 bg-muted rounded animate-pulse" />
+            <div className="h-4 w-32 bg-muted rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <div className="h-8 w-36 bg-muted rounded-md animate-pulse" />
+          <div className="h-8 w-24 bg-muted rounded-md animate-pulse" />
+        </div>
       </div>
-      <div className="grid gap-8 lg:grid-cols-3 mt-8">
+      <div className="mt-4 lg:hidden">
+        <div className="aspect-[16/10] bg-muted rounded-xl animate-pulse" />
+      </div>
+      <div className="grid gap-6 lg:grid-cols-3 mt-4 lg:mt-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="aspect-[4/3] sm:aspect-[16/10] md:aspect-[2/1] lg:aspect-[21/9] bg-muted rounded-xl animate-pulse" />
           <div className="h-48 bg-muted rounded-xl animate-pulse" />
         </div>
-        <div>
-          <div className="h-96 bg-muted rounded-xl animate-pulse" />
+        <div className="space-y-4">
+          <div className="hidden lg:block aspect-[16/10] bg-muted rounded-xl animate-pulse" />
+          <div className="h-64 bg-muted rounded-xl animate-pulse" />
         </div>
       </div>
     </Container>
