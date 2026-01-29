@@ -1,0 +1,10 @@
+{
+  "blocks": [
+    {
+      "resourceId": "r1",
+      "startTime": "2026-02-02T16:00:00.000Z",
+      "endTime": "2026-02-02T18:00:00.000Z",
+      "reason": "Midnight edge"
+    }
+  ]
+}

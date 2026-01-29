@@ -1,0 +1,8 @@
+{
+  "blocks": [],
+  "errors": [
+    {
+      "messageContains": "Resource/court value is missing"
+    }
+  ]
+}

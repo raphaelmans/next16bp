@@ -1,0 +1,16 @@
+{
+  "blocks": [
+    {
+      "resourceId": "r1",
+      "startTime": "2026-02-03T01:00:00.000Z",
+      "endTime": "2026-02-03T03:00:00.000Z",
+      "reason": "Active event"
+    },
+    {
+      "resourceId": "r1",
+      "startTime": "2026-02-04T01:00:00.000Z",
+      "endTime": "2026-02-04T03:00:00.000Z",
+      "reason": "Cancelled event"
+    }
+  ]
+}

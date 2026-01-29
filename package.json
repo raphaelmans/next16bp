@@ -23,7 +23,14 @@
     "db:export:curated-places": "dotenvx run --env-file=.env.local -- tsx scripts/export-curated-places.ts",
     "db:backfill:place-slugs": "dotenvx run --env-file=.env.local -- tsx scripts/backfill-place-slugs.ts",
     "script:normalize-data": "dotenvx run --env-file=.env.local -- tsx scripts/normalize-data.ts",
-    "script:contract-test-normalize-data": "tsx scripts/contract-test-normalize-data.ts"
+    "script:contract-test-normalize-data": "tsx scripts/contract-test-normalize-data.ts",
+    "script:gen-tier-fixtures": "tsx scripts/gen-tier-fixtures.ts",
+    "script:test-tier0": "dotenvx run --env-file=.env.local -- tsx scripts/test-tier0-normalize.ts",
+    "script:test-tier1": "dotenvx run --env-file=.env.local -- tsx scripts/test-tier1-normalize.ts",
+    "script:test-tier2": "dotenvx run --env-file=.env.local -- tsx scripts/test-tier2-normalize.ts",
+    "script:test-tier3": "dotenvx run --env-file=.env.local -- tsx scripts/test-tier3-normalize.ts",
+    "script:test-all-tiers": "pnpm script:test-tier0 && pnpm script:test-tier1 && pnpm script:test-tier2 && pnpm script:test-tier3",
+    "script:promote-tier3": "tsx scripts/promote-tier3.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.89",

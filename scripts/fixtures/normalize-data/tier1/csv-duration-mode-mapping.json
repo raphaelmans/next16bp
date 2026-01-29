@@ -1,0 +1,39 @@
+{
+  "format": "csv",
+  "version": 1,
+  "resource": {
+    "kind": "column",
+    "column": {
+      "header": "court"
+    }
+  },
+  "sport": {
+    "kind": "infer"
+  },
+  "reason": {
+    "kind": "column",
+    "column": {
+      "header": "reason"
+    }
+  },
+  "parsing": {
+    "timeZoneFallback": "Asia/Manila",
+    "dateOrder": "ymd",
+    "timeFormat": "24h",
+    "assumeTimeZoneWhenMissingOffset": true
+  },
+  "dateTimeMode": "date_start_time_duration_min",
+  "start": {
+    "date": {
+      "header": "date"
+    },
+    "time": {
+      "header": "start_time"
+    }
+  },
+  "end": {
+    "durationMinutes": {
+      "header": "duration_min"
+    }
+  }
+}

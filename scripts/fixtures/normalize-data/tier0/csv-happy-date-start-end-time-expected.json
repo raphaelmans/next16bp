@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "format": "csv",
+    "timeZoneFallback": "Asia/Manila",
+    "isMultiCourt": false
+  },
+  "blocks": [
+    {
+      "resourceId": "r1",
+      "startTime": "2026-02-01T01:00:00.000Z",
+      "endTime": "2026-02-01T03:00:00.000Z",
+      "reason": "Member booking"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "blocks": [
+    {
+      "resourceId": "r1",
+      "startTime": "2026-02-03T01:00:00.000Z",
+      "endTime": "2026-02-03T03:00:00.000Z",
+      "reason": "Mixed case headers"
+    }
+  ]
+}

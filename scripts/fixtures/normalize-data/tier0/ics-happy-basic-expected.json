@@ -1,0 +1,21 @@
+{
+  "meta": {
+    "format": "ics",
+    "timeZoneFallback": "Asia/Manila",
+    "isMultiCourt": true
+  },
+  "blocks": [
+    {
+      "resourceId": "r1",
+      "startTime": "2026-02-03T01:00:00.000Z",
+      "endTime": "2026-02-03T03:00:00.000Z",
+      "reason": "Open play"
+    },
+    {
+      "resourceId": "r2",
+      "startTime": "2026-02-04T05:00:00.000Z",
+      "endTime": "2026-02-04T07:00:00.000Z",
+      "reason": "Coaching"
+    }
+  ]
+}
