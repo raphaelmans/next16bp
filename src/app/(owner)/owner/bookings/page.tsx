@@ -17,9 +17,22 @@ import {
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addDays, addMinutes, differenceInMinutes, format } from "date-fns";
+import {
+  addDays,
+  addMinutes,
+  addMonths,
+  differenceInMinutes,
+  endOfMonth,
+  format,
+} from "date-fns";
 import debounce from "debounce";
-import { CalendarIcon, ChevronLeft, ChevronRight, X } from "lucide-react";
+import {
+  CalendarIcon,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  X,
+} from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
@@ -57,6 +70,19 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -67,6 +93,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useLogout, useSession } from "@/features/auth";
+import { MobileDateStrip } from "@/features/discovery/components/mobile-date-strip";
 import {
   OwnerNavbar,
   OwnerSidebar,
@@ -80,7 +107,14 @@ import {
   useOwnerPlaceFilter,
   useOwnerPlaces,
 } from "@/features/owner/hooks";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import {
+  type RangeSelectionConfig,
+  RangeSelectionProvider,
+  useCellState,
+  useRangeSelection,
+} from "@/shared/components/kudos/range-selection";
 import { AppShell } from "@/shared/components/layout";
 import { appRoutes } from "@/shared/lib/app-routes";
 import {
@@ -381,6 +415,7 @@ export default function OwnerAvailabilityStudioPage() {
 
   const view = viewParam ?? "week";
   const isWeekView = view === "week";
+  const isMobile = useIsMobile();
 
   const fallbackDayKey = React.useMemo(
     () => getZonedDayKey(getZonedToday(placeTimeZone), placeTimeZone),
@@ -393,6 +428,12 @@ export default function OwnerAvailabilityStudioPage() {
       setDayKeyParam(fallbackDayKey);
     }
   }, [dayKeyParam, fallbackDayKey, setDayKeyParam]);
+
+  React.useEffect(() => {
+    if (isMobile && view !== "day") {
+      setViewParam("day");
+    }
+  }, [isMobile, setViewParam, view]);
 
   const jobQuery = trpc.bookingsImport.getJob.useQuery(
     { jobId },
@@ -477,7 +518,6 @@ export default function OwnerAvailabilityStudioPage() {
       formatInTimeZone(selectedDayStart, placeTimeZone, "EEEE, MMMM d, yyyy"),
     [placeTimeZone, selectedDayStart],
   );
-
   const weekStartsOn = 0;
   const weekStartDayKey = React.useMemo(() => {
     const dayStart = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
@@ -513,9 +553,41 @@ export default function OwnerAvailabilityStudioPage() {
     )}`;
   }, [placeTimeZone, weekDayKeys, weekStartDayKey]);
 
-  const todayDayKey = React.useMemo(
-    () => getZonedDayKey(getZonedToday(placeTimeZone), placeTimeZone),
+  const todayDate = React.useMemo(
+    () => getZonedToday(placeTimeZone),
     [placeTimeZone],
+  );
+  const todayDayKey = React.useMemo(
+    () => getZonedDayKey(todayDate, placeTimeZone),
+    [placeTimeZone, todayDate],
+  );
+
+  const handleMobileDateSelect = React.useCallback(
+    (date: Date) => {
+      setDayKeyParam(getZonedDayKey(date, placeTimeZone));
+    },
+    [placeTimeZone, setDayKeyParam],
+  );
+
+  const handleMobileToday = React.useCallback(() => {
+    setDayKeyParam(getZonedDayKey(todayDate, placeTimeZone));
+  }, [placeTimeZone, setDayKeyParam, todayDate]);
+
+  const navigateMonth = React.useCallback(
+    (direction: 1 | -1) => {
+      const current = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
+      const targetMonth = addMonths(current, direction);
+      const lastDay = endOfMonth(targetMonth);
+      const targetDay = Math.min(current.getDate(), lastDay.getDate());
+      const targetDate = new TZDate(
+        targetMonth.getFullYear(),
+        targetMonth.getMonth(),
+        targetDay,
+        placeTimeZone,
+      );
+      setDayKeyParam(getZonedDayKey(targetDate, placeTimeZone));
+    },
+    [dayKey, placeTimeZone, setDayKeyParam],
   );
 
   const visibleDayKeys = React.useMemo(() => {
@@ -526,6 +598,7 @@ export default function OwnerAvailabilityStudioPage() {
   const [calendarMonth, setCalendarMonth] = React.useState<Date>(
     () => selectedDate,
   );
+  const [mobileCalendarOpen, setMobileCalendarOpen] = React.useState(false);
   React.useEffect(() => {
     setCalendarMonth(selectedDate);
   }, [selectedDate]);
@@ -1780,6 +1853,207 @@ export default function OwnerAvailabilityStudioPage() {
     [dayKey, placeTimeZone, setDayKeyParam, weekDayKeys],
   );
 
+  // Mobile slot selection state
+  const [mobileCommittedRange, setMobileCommittedRange] = React.useState<{
+    startIdx: number;
+    endIdx: number;
+  } | null>(null);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = React.useState(false);
+  const [mobileBlockType, setMobileBlockType] = React.useState<
+    "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING"
+  >("WALK_IN");
+
+  const mobileGuestMode = React.useRef<"new" | "existing">("new");
+  const [mobileGuestModeState, setMobileGuestModeState] = React.useState<
+    "new" | "existing"
+  >("new");
+  const mobileGuestName = React.useRef("");
+  const mobileGuestPhone = React.useRef("");
+  const mobileGuestEmail = React.useRef("");
+  const mobileGuestProfileId = React.useRef("");
+  const mobileNotes = React.useRef("");
+
+  const mobileSelectionConfig = React.useMemo<RangeSelectionConfig>(() => {
+    const blockedHourIndices = new Set<number>();
+    for (const { block } of timelineBlocks) {
+      const blockStart = getMinuteOfDay(block.startTime, placeTimeZone);
+      const blockEnd = getMinuteOfDay(block.endTime, placeTimeZone);
+      for (let m = blockStart; m < blockEnd; m += 60) {
+        const idx = Math.floor(m / 60) - startHour;
+        if (idx >= 0 && idx < hours.length) {
+          blockedHourIndices.add(idx);
+        }
+      }
+    }
+    for (const { reservation } of timelineReservations) {
+      const resStart = getMinuteOfDay(reservation.startTime, placeTimeZone);
+      const resEnd = getMinuteOfDay(reservation.endTime, placeTimeZone);
+      for (let m = resStart; m < resEnd; m += 60) {
+        const idx = Math.floor(m / 60) - startHour;
+        if (idx >= 0 && idx < hours.length) {
+          blockedHourIndices.add(idx);
+        }
+      }
+    }
+
+    return {
+      isCellAvailable: (idx: number) =>
+        idx >= 0 && idx < hours.length && !blockedHourIndices.has(idx),
+      computeRange: (anchorIdx: number, targetIdx: number) => {
+        const lo = Math.min(anchorIdx, targetIdx);
+        const hi = Math.max(anchorIdx, targetIdx);
+        for (let i = lo; i <= hi; i++) {
+          if (blockedHourIndices.has(i)) return null;
+        }
+        return { startIdx: lo, endIdx: hi };
+      },
+      clampToContiguous: (anchorIdx: number, targetIdx: number) => {
+        const dir = targetIdx >= anchorIdx ? 1 : -1;
+        let current = anchorIdx;
+        while (current !== targetIdx) {
+          const next = current + dir;
+          if (blockedHourIndices.has(next)) break;
+          current = next;
+        }
+        return current;
+      },
+      commitRange: (s: number, e: number) => {
+        setMobileCommittedRange({ startIdx: s, endIdx: e });
+        if (s !== e) {
+          setMobileDrawerOpen(true);
+        }
+      },
+    };
+  }, [hours, placeTimeZone, startHour, timelineBlocks, timelineReservations]);
+
+  const handleMobileDrawerClose = React.useCallback((open: boolean) => {
+    setMobileDrawerOpen(open);
+    if (!open) {
+      setMobileCommittedRange(null);
+    }
+  }, []);
+
+  const mobileSelectedTimeLabel = React.useMemo(() => {
+    if (!mobileCommittedRange) return "";
+    const s = buildDateFromDayKey(
+      dayKey,
+      (mobileCommittedRange.startIdx + startHour) * 60,
+      placeTimeZone,
+    );
+    const e = buildDateFromDayKey(
+      dayKey,
+      (mobileCommittedRange.endIdx + startHour + 1) * 60,
+      placeTimeZone,
+    );
+    return formatTimeRangeInTimeZone(s, e, placeTimeZone);
+  }, [dayKey, mobileCommittedRange, placeTimeZone, startHour]);
+
+  const handleMobileSubmit = React.useCallback(async () => {
+    if (!courtId || !mobileCommittedRange) {
+      toast.error("Select a court and time range first");
+      return;
+    }
+    const s = buildDateFromDayKey(
+      dayKey,
+      (mobileCommittedRange.startIdx + startHour) * 60,
+      placeTimeZone,
+    );
+    const e = buildDateFromDayKey(
+      dayKey,
+      (mobileCommittedRange.endIdx + startHour + 1) * 60,
+      placeTimeZone,
+    );
+
+    if (mobileBlockType === "GUEST_BOOKING") {
+      const guestMode = mobileGuestMode.current;
+      try {
+        let guestProfileId = mobileGuestProfileId.current;
+        if (guestMode === "new") {
+          const name = mobileGuestName.current.trim();
+          if (!name) {
+            toast.error("Guest name is required");
+            return;
+          }
+          const guest = await createGuestProfile.mutateAsync({
+            organizationId: organization?.id ?? "",
+            displayName: name,
+            phoneNumber: mobileGuestPhone.current.trim() || undefined,
+            email: mobileGuestEmail.current.trim() || undefined,
+          });
+          guestProfileId = guest.id;
+        }
+        if (!guestProfileId) {
+          toast.error("Please select or create a guest");
+          return;
+        }
+        await createGuestBooking.mutateAsync({
+          courtId,
+          startTime: toUtcISOString(s),
+          endTime: toUtcISOString(e),
+          guestProfileId,
+          notes: mobileNotes.current.trim() || undefined,
+        });
+        toast.success("Guest booking added");
+      } catch (error) {
+        toast.error("Unable to add guest booking", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+        return;
+      }
+    } else {
+      try {
+        const payload = {
+          courtId,
+          startTime: toUtcISOString(s),
+          endTime: toUtcISOString(e),
+          reason: mobileNotes.current.trim() || undefined,
+        };
+        if (mobileBlockType === "MAINTENANCE") {
+          await createMaintenance.mutateAsync(payload);
+        } else {
+          await createWalkIn.mutateAsync(payload);
+        }
+        toast.success("Block created");
+      } catch (error) {
+        toast.error("Unable to create block", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+        return;
+      }
+    }
+
+    setMobileDrawerOpen(false);
+    setMobileCommittedRange(null);
+    mobileNotes.current = "";
+    mobileGuestName.current = "";
+    mobileGuestPhone.current = "";
+    mobileGuestEmail.current = "";
+    mobileGuestProfileId.current = "";
+  }, [
+    courtId,
+    createGuestBooking,
+    createGuestProfile,
+    createMaintenance,
+    createWalkIn,
+    dayKey,
+    mobileBlockType,
+    mobileCommittedRange,
+    organization?.id,
+    placeTimeZone,
+    startHour,
+  ]);
+
+  // Open guest profiles query when drawer is open with guest type
+  const mobileGuestProfilesQuery = trpc.guestProfile.list.useQuery(
+    { organizationId: organization?.id ?? "", limit: 50 },
+    {
+      enabled:
+        mobileDrawerOpen &&
+        mobileBlockType === "GUEST_BOOKING" &&
+        !!organization?.id,
+    },
+  );
+
   const [activeDragItem, setActiveDragItem] = React.useState<DragPreset | null>(
     null,
   );
@@ -2036,7 +2310,7 @@ export default function OwnerAvailabilityStudioPage() {
         <ReservationAlertsPanel organizationId={organization?.id ?? null} />
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-6 pb-24 lg:pb-0">
         <div className="space-y-2">
           <h1 className="text-2xl font-heading font-semibold">
             Availability Studio
@@ -2143,7 +2417,7 @@ export default function OwnerAvailabilityStudioPage() {
 
         <Card>
           <CardContent className="flex flex-wrap items-end gap-4 p-6">
-            <div className="min-w-[220px] space-y-2">
+            <div className="w-full sm:w-auto sm:min-w-[220px] space-y-2">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Venue
               </p>
@@ -2160,7 +2434,7 @@ export default function OwnerAvailabilityStudioPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="min-w-[220px] space-y-2">
+            <div className="w-full sm:w-auto sm:min-w-[220px] space-y-2">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Court
               </p>
@@ -2189,6 +2463,7 @@ export default function OwnerAvailabilityStudioPage() {
               <Button
                 type="button"
                 variant="outline"
+                className="hidden lg:inline-flex"
                 onClick={() => setDayKeyParam(fallbackDayKey)}
               >
                 Today
@@ -2199,6 +2474,7 @@ export default function OwnerAvailabilityStudioPage() {
                 onValueChange={(value) => {
                   if (value) setViewParam(value as StudioView);
                 }}
+                className="hidden lg:flex"
               >
                 <ToggleGroupItem value="day" aria-label="Day view">
                   Day
@@ -2229,7 +2505,7 @@ export default function OwnerAvailabilityStudioPage() {
                 transition={viewTransition}
               >
                 <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
-                  <div className="space-y-6">
+                  <div className="hidden lg:block space-y-6">
                     <Card>
                       <CardContent className="space-y-3 p-6">
                         <div className="flex items-center justify-between">
@@ -2510,7 +2786,7 @@ export default function OwnerAvailabilityStudioPage() {
                 transition={viewTransition}
               >
                 <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)_320px]">
-                  <div className="space-y-6">
+                  <div className="hidden lg:block space-y-6">
                     <Card>
                       <CardContent className="space-y-3 p-6">
                         <div className="flex items-center justify-between">
@@ -2615,8 +2891,87 @@ export default function OwnerAvailabilityStudioPage() {
                   </div>
 
                   <Card>
-                    <CardContent className="space-y-4 p-6">
-                      <div className="flex flex-wrap items-center justify-between gap-3">
+                    <CardContent className="space-y-4 p-6 pb-6 lg:pb-6">
+                      {/* Mobile date navigation */}
+                      <div className="space-y-3 lg:hidden">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => navigateMonth(-1)}
+                            >
+                              <ChevronLeft className="h-4 w-4" />
+                            </Button>
+                            <Popover
+                              open={mobileCalendarOpen}
+                              onOpenChange={setMobileCalendarOpen}
+                            >
+                              <PopoverTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  className="gap-1.5 text-sm font-medium"
+                                >
+                                  <CalendarIcon className="h-3.5 w-3.5" />
+                                  {weekLabel}
+                                  <ChevronDown
+                                    className={cn(
+                                      "h-3.5 w-3.5 transition-transform",
+                                      mobileCalendarOpen && "rotate-180",
+                                    )}
+                                  />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent
+                                className="w-auto p-0"
+                                align="start"
+                              >
+                                <Calendar
+                                  mode="single"
+                                  selected={selectedDate}
+                                  onSelect={(date) => {
+                                    if (date) {
+                                      setDayKeyParam(
+                                        getZonedDayKey(date, placeTimeZone),
+                                      );
+                                      setMobileCalendarOpen(false);
+                                    }
+                                  }}
+                                  month={calendarMonth}
+                                  onMonthChange={setCalendarMonth}
+                                  timeZone={placeTimeZone}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => navigateMonth(1)}
+                            >
+                              <ChevronRight className="h-4 w-4" />
+                            </Button>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleMobileToday}
+                          >
+                            Today
+                          </Button>
+                        </div>
+                        <MobileDateStrip
+                          selectedDate={selectedDate}
+                          onDateSelect={handleMobileDateSelect}
+                          timeZone={placeTimeZone}
+                          todayDate={todayDate}
+                        />
+                      </div>
+
+                      <div className="hidden lg:flex flex-wrap items-center justify-between gap-3">
                         <div>
                           <h2 className="text-lg font-heading font-semibold">
                             Day Timeline
@@ -2646,90 +3001,110 @@ export default function OwnerAvailabilityStudioPage() {
                           </AlertDescription>
                         </Alert>
                       ) : (
-                        <div className="relative">
-                          <div className="grid grid-cols-[72px_minmax(0,1fr)] gap-x-3">
-                            <div className="space-y-0">
-                              {hours.map((hour) => {
-                                const hourLabel = formatInTimeZone(
-                                  buildDateFromDayKey(
-                                    dayKey,
-                                    hour * 60,
-                                    placeTimeZone,
-                                  ),
-                                  placeTimeZone,
-                                  "h a",
-                                );
-                                return (
-                                  <div
-                                    key={`label-${hour}`}
-                                    className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
-                                  >
-                                    {hourLabel}
-                                  </div>
-                                );
-                              })}
-                            </div>
-
-                            <div className="relative">
+                        <RangeSelectionProvider
+                          config={mobileSelectionConfig}
+                          committedRange={mobileCommittedRange}
+                        >
+                          <div className="relative">
+                            <div className="grid grid-cols-[72px_minmax(0,1fr)] gap-x-3">
                               <div className="space-y-0">
-                                {hours.map((hour) => (
-                                  <TimelineDropRow
-                                    key={`row-${hour}`}
-                                    dayKey={dayKey}
-                                    startMinute={hour * 60}
-                                    disabled={isDragDisabled}
-                                  />
-                                ))}
+                                {hours.map((hour) => {
+                                  const hourLabel = formatInTimeZone(
+                                    buildDateFromDayKey(
+                                      dayKey,
+                                      hour * 60,
+                                      placeTimeZone,
+                                    ),
+                                    placeTimeZone,
+                                    "h a",
+                                  );
+                                  return (
+                                    <div
+                                      key={`label-${hour}`}
+                                      className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
+                                    >
+                                      {hourLabel}
+                                    </div>
+                                  );
+                                })}
                               </div>
-                              <div className="pointer-events-none absolute inset-0">
-                                {timelineBlocks.map(
-                                  ({ block, topOffset, height }) => (
-                                    <TimelineBlockItem
-                                      key={block.id}
-                                      block={block}
-                                      topOffset={topOffset}
-                                      height={height}
-                                      timeZone={placeTimeZone}
+
+                              <div className="relative">
+                                <div className="space-y-0">
+                                  {hours.map((hour, hourIndex) => (
+                                    <MobileAwareTimelineRow
+                                      key={`row-${hour}`}
+                                      dayKey={dayKey}
+                                      startMinute={hour * 60}
                                       disabled={isDragDisabled}
-                                      isPending={pendingBlockIds.has(block.id)}
-                                      onRemove={handleCancelBlock}
+                                      cellIndex={hourIndex}
                                     />
-                                  ),
-                                )}
-                                {draftTimelineBlocks.map(
-                                  ({ row, topOffset, height }) => (
-                                    <DraftTimelineBlock
-                                      key={`draft-${row.id}`}
-                                      row={row}
-                                      topOffset={topOffset}
-                                      height={height}
-                                      timeZone={placeTimeZone}
-                                    />
-                                  ),
-                                )}
-                                {timelineReservations.map(
-                                  ({ reservation, topOffset, height }) => (
-                                    <TimelineReservationItem
-                                      key={`res-${reservation.id}`}
-                                      reservation={reservation}
-                                      topOffset={topOffset}
-                                      height={height}
-                                      timeZone={placeTimeZone}
-                                    />
-                                  ),
-                                )}
+                                  ))}
+                                </div>
+                                <div className="pointer-events-none absolute inset-0">
+                                  {timelineBlocks.map(
+                                    ({ block, topOffset, height }) => (
+                                      <TimelineBlockItem
+                                        key={block.id}
+                                        block={block}
+                                        topOffset={topOffset}
+                                        height={height}
+                                        timeZone={placeTimeZone}
+                                        disabled={isDragDisabled}
+                                        isPending={pendingBlockIds.has(
+                                          block.id,
+                                        )}
+                                        onRemove={handleCancelBlock}
+                                      />
+                                    ),
+                                  )}
+                                  {draftTimelineBlocks.map(
+                                    ({ row, topOffset, height }) => (
+                                      <DraftTimelineBlock
+                                        key={`draft-${row.id}`}
+                                        row={row}
+                                        topOffset={topOffset}
+                                        height={height}
+                                        timeZone={placeTimeZone}
+                                      />
+                                    ),
+                                  )}
+                                  {timelineReservations.map(
+                                    ({ reservation, topOffset, height }) => (
+                                      <TimelineReservationItem
+                                        key={`res-${reservation.id}`}
+                                        reservation={reservation}
+                                        topOffset={topOffset}
+                                        height={height}
+                                        timeZone={placeTimeZone}
+                                      />
+                                    ),
+                                  )}
+                                </div>
                               </div>
                             </div>
+                            {blocksQuery.isLoading && (
+                              <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
+                            )}
                           </div>
-                          {blocksQuery.isLoading && (
-                            <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
-                          )}
-                        </div>
+                        </RangeSelectionProvider>
                       )}
+
+                      {/* Mobile inline blocks list */}
+                      <div className="lg:hidden">
+                        <MobileDayBlocksList
+                          blocks={dayBlocks}
+                          isLoading={blocksQuery.isLoading}
+                          timeZone={placeTimeZone}
+                          selectedDayLabel={selectedDayLabel}
+                          onRemoveBlock={handleCancelBlock}
+                          isCancelPending={cancelBlock.isPending}
+                        />
+                      </div>
                     </CardContent>
                   </Card>
 
-                  <Card>
+                  <Card className="hidden lg:block">
                     <CardContent className="space-y-4 p-6">
                       <div className="space-y-1">
                         <h3 className="text-lg font-heading font-semibold">
@@ -3031,10 +3406,382 @@ export default function OwnerAvailabilityStudioPage() {
             </StandardFormProvider>
           </DialogContent>
         </Dialog>
+
+        {/* Mobile create block drawer */}
+        <Drawer open={mobileDrawerOpen} onOpenChange={handleMobileDrawerClose}>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Create Block</DrawerTitle>
+              <DrawerDescription>
+                {mobileSelectedTimeLabel} · {placeTimeZone}
+              </DrawerDescription>
+            </DrawerHeader>
+            <div className="overflow-y-auto px-4 pb-4 space-y-4">
+              <ToggleGroup
+                type="single"
+                value={mobileBlockType}
+                onValueChange={(value) => {
+                  if (value)
+                    setMobileBlockType(
+                      value as "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING",
+                    );
+                }}
+                className="w-full"
+              >
+                <ToggleGroupItem value="WALK_IN" className="flex-1">
+                  Walk-in
+                </ToggleGroupItem>
+                <ToggleGroupItem value="MAINTENANCE" className="flex-1">
+                  Maintenance
+                </ToggleGroupItem>
+                <ToggleGroupItem value="GUEST_BOOKING" className="flex-1">
+                  Guest
+                </ToggleGroupItem>
+              </ToggleGroup>
+
+              {mobileBlockType !== "GUEST_BOOKING" && (
+                <label className="block space-y-2">
+                  <span className="text-sm font-medium">Note (optional)</span>
+                  <textarea
+                    className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+                    placeholder={
+                      mobileBlockType === "MAINTENANCE"
+                        ? "e.g. Net replacement"
+                        : "e.g. Regular customer"
+                    }
+                    rows={2}
+                    defaultValue=""
+                    onChange={(e) => {
+                      mobileNotes.current = e.target.value;
+                    }}
+                  />
+                </label>
+              )}
+
+              {mobileBlockType === "GUEST_BOOKING" && (
+                <MobileGuestForm
+                  guestMode={mobileGuestModeState}
+                  onGuestModeChange={(mode) => {
+                    mobileGuestMode.current = mode;
+                    setMobileGuestModeState(mode);
+                  }}
+                  guestProfiles={mobileGuestProfilesQuery.data ?? []}
+                  onGuestNameChange={(v) => {
+                    mobileGuestName.current = v;
+                  }}
+                  onGuestPhoneChange={(v) => {
+                    mobileGuestPhone.current = v;
+                  }}
+                  onGuestEmailChange={(v) => {
+                    mobileGuestEmail.current = v;
+                  }}
+                  onGuestProfileIdChange={(v) => {
+                    mobileGuestProfileId.current = v;
+                  }}
+                  onNotesChange={(v) => {
+                    mobileNotes.current = v;
+                  }}
+                />
+              )}
+            </div>
+            <DrawerFooter className="pb-safe">
+              <Button
+                onClick={handleMobileSubmit}
+                className="w-full"
+                disabled={isCreatingBlock}
+              >
+                {isCreatingBlock
+                  ? "Saving..."
+                  : mobileBlockType === "WALK_IN"
+                    ? "Save walk-in booking"
+                    : mobileBlockType === "MAINTENANCE"
+                      ? "Save maintenance block"
+                      : "Save guest booking"}
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
       </div>
     </AppShell>
   );
 }
+
+const MobileGuestForm = React.memo(function MobileGuestForm({
+  guestMode,
+  onGuestModeChange,
+  guestProfiles,
+  onGuestNameChange,
+  onGuestPhoneChange,
+  onGuestEmailChange,
+  onGuestProfileIdChange,
+  onNotesChange,
+}: {
+  guestMode: "new" | "existing";
+  onGuestModeChange: (mode: "new" | "existing") => void;
+  guestProfiles: Array<{
+    id: string;
+    displayName: string;
+    phoneNumber: string | null;
+  }>;
+  onGuestNameChange: (v: string) => void;
+  onGuestPhoneChange: (v: string) => void;
+  onGuestEmailChange: (v: string) => void;
+  onGuestProfileIdChange: (v: string) => void;
+  onNotesChange: (v: string) => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="space-y-2">
+        <p className="text-sm font-medium">Guest</p>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant={guestMode === "existing" ? "default" : "outline"}
+            size="sm"
+            onClick={() => onGuestModeChange("existing")}
+          >
+            Select existing
+          </Button>
+          <Button
+            type="button"
+            variant={guestMode === "new" ? "default" : "outline"}
+            size="sm"
+            onClick={() => onGuestModeChange("new")}
+          >
+            Create new
+          </Button>
+        </div>
+      </div>
+
+      {guestMode === "existing" ? (
+        <div className="space-y-2">
+          <p className="text-sm font-medium">Select guest</p>
+          <Select onValueChange={onGuestProfileIdChange}>
+            <SelectTrigger aria-label="Select guest">
+              <SelectValue placeholder="Choose a guest..." />
+            </SelectTrigger>
+            <SelectContent>
+              {guestProfiles.map((guest) => (
+                <SelectItem key={guest.id} value={guest.id}>
+                  {guest.displayName}
+                  {guest.phoneNumber ? ` (${guest.phoneNumber})` : ""}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      ) : (
+        <>
+          <label className="block space-y-2">
+            <span className="text-sm font-medium">Guest name</span>
+            <input
+              className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+              placeholder="Juan Dela Cruz"
+              onChange={(e) => onGuestNameChange(e.target.value)}
+            />
+          </label>
+          <label className="block space-y-2">
+            <span className="text-sm font-medium">Phone (optional)</span>
+            <input
+              className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+              placeholder="09171234567"
+              onChange={(e) => onGuestPhoneChange(e.target.value)}
+            />
+          </label>
+          <label className="block space-y-2">
+            <span className="text-sm font-medium">Email (optional)</span>
+            <input
+              className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+              placeholder="guest@example.com"
+              onChange={(e) => onGuestEmailChange(e.target.value)}
+            />
+          </label>
+        </>
+      )}
+
+      <label className="block space-y-2">
+        <span className="text-sm font-medium">Notes (optional)</span>
+        <textarea
+          className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+          placeholder="Internal notes"
+          rows={2}
+          onChange={(e) => onNotesChange(e.target.value)}
+        />
+      </label>
+    </div>
+  );
+});
+
+const MobileDayBlocksList = React.memo(function MobileDayBlocksList({
+  blocks,
+  isLoading,
+  timeZone,
+  selectedDayLabel,
+  onRemoveBlock,
+  isCancelPending,
+}: {
+  blocks: CourtBlockItem[];
+  isLoading: boolean;
+  timeZone: string;
+  selectedDayLabel: string;
+  onRemoveBlock: (blockId: string) => void;
+  isCancelPending: boolean;
+}) {
+  if (isLoading) {
+    return (
+      <div className="space-y-3 pt-4">
+        <Separator />
+        <Skeleton className="h-16 w-full" />
+        <Skeleton className="h-16 w-full" />
+      </div>
+    );
+  }
+
+  if (blocks.length === 0) return null;
+
+  return (
+    <div className="space-y-3 pt-4">
+      <Separator />
+      <h3 className="text-sm font-heading font-semibold">
+        Blocks · {selectedDayLabel}
+      </h3>
+      <div className="space-y-3 pb-20">
+        {blocks.map((block) => (
+          <div key={block.id} className="rounded-lg border p-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-1">
+                <Badge variant={block.type === "WALK_IN" ? "paid" : "warning"}>
+                  {block.type === "WALK_IN" ? "Walk-in" : "Maintenance"}
+                </Badge>
+                <p className="text-sm font-medium">
+                  {formatTimeRangeInTimeZone(
+                    block.startTime,
+                    block.endTime,
+                    timeZone,
+                  )}
+                </p>
+                {block.reason && (
+                  <p className="text-xs text-muted-foreground">
+                    {block.reason}
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col items-end gap-2">
+                {block.type === "WALK_IN" && (
+                  <span className="text-sm font-semibold">
+                    {formatCurrency(block.totalPriceCents, block.currency)}
+                  </span>
+                )}
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => onRemoveBlock(block.id)}
+                  disabled={isCancelPending}
+                >
+                  Remove
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+});
+
+const MobileAwareTimelineRow = React.memo(function MobileAwareTimelineRow({
+  dayKey,
+  startMinute,
+  disabled,
+  cellIndex,
+}: {
+  dayKey: string;
+  startMinute: number;
+  disabled: boolean;
+  cellIndex: number;
+}) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: `timeline-cell-${dayKey}-${startMinute}`,
+    data: {
+      kind: "timeline-cell",
+      dayKey,
+      startMinute,
+    } satisfies TimelineCellData,
+    disabled,
+  });
+
+  const cellState = useCellState(cellIndex);
+  const pointerDown = useRangeSelection((s) => s.pointerDown);
+  const pointerEnter = useRangeSelection((s) => s.pointerEnter);
+  const click = useRangeSelection((s) => s.click);
+  const setHoveredIdx = useRangeSelection((s) => s.setHoveredIdx);
+  const isCellAvailable = useRangeSelection((s) => s.config.isCellAvailable);
+
+  const isAvailable = !disabled && isCellAvailable(cellIndex);
+
+  const handlePointerDown = React.useCallback(
+    (e: React.PointerEvent) => {
+      if (!isAvailable) return;
+      e.preventDefault();
+      pointerDown(cellIndex);
+    },
+    [cellIndex, isAvailable, pointerDown],
+  );
+
+  const handlePointerEnter = React.useCallback(() => {
+    if (!isAvailable) return;
+    pointerEnter(cellIndex);
+    setHoveredIdx(cellIndex);
+  }, [cellIndex, isAvailable, pointerEnter, setHoveredIdx]);
+
+  const handlePointerLeave = React.useCallback(() => {
+    setHoveredIdx(null);
+  }, [setHoveredIdx]);
+
+  const handleClick = React.useCallback(
+    (e: React.MouseEvent) => {
+      if (!isAvailable) return;
+      click(cellIndex, e.shiftKey);
+    },
+    [cellIndex, click, isAvailable],
+  );
+
+  const handleKeyDown = React.useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        if (isAvailable) click(cellIndex, e.shiftKey);
+      }
+    },
+    [cellIndex, click, isAvailable],
+  );
+
+  return (
+    <button
+      type="button"
+      ref={setNodeRef}
+      tabIndex={isAvailable ? 0 : -1}
+      aria-disabled={!isAvailable}
+      className={cn(
+        "block w-full h-[56px] rounded-md border-t border-border/70 transition-colors",
+        "touch-none appearance-none",
+        "bg-card",
+        isOver && !disabled && "ring-2 ring-primary/30 ring-inset bg-primary/5",
+        cellState.inRange && "bg-primary/10",
+        cellState.isStart && "rounded-t-lg ring-t-2 ring-primary/40",
+        cellState.isEnd && "rounded-b-lg",
+        cellState.inHoverPreview && "bg-primary/5",
+        cellState.isPendingStart && "bg-primary/15 ring-2 ring-primary/30",
+      )}
+      onPointerDown={handlePointerDown}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+    />
+  );
+});
 
 const BlockPresetCard = React.memo(function BlockPresetCard({
   preset,
@@ -3245,7 +3992,7 @@ const TimelineBlockItem = React.memo(function TimelineBlockItem({
           className={cn(
             "pointer-events-auto absolute z-10 flex items-center justify-center rounded-full",
             "bg-destructive/90 text-destructive-foreground shadow-sm",
-            "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 touch:opacity-100",
+            "lg:opacity-0 lg:group-hover:opacity-100 group-focus-within:opacity-100",
             "transition-opacity duration-150",
             "hover:bg-destructive",
             compact ? "-right-1.5 -top-1.5 h-4 w-4" : "-right-2 -top-2 h-5 w-5",
@@ -3294,9 +4041,9 @@ const ResizeHandle = React.memo(function ResizeHandle({
       {...attributes}
       {...listeners}
       className={cn(
-        "absolute left-2 right-2 h-2 rounded-full transition-opacity",
+        "absolute left-2 right-2 h-3 rounded-full transition-opacity",
         // Hidden by default, visible on hover/focus
-        "opacity-0 group-hover:opacity-100 focus-visible:opacity-100",
+        "lg:opacity-0 lg:group-hover:opacity-100 focus-visible:opacity-100",
         "bg-foreground/20 hover:bg-foreground/40",
         edge === "start" ? "top-1" : "bottom-1",
         disabled ? "cursor-not-allowed" : "cursor-ns-resize",

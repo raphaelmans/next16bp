@@ -9,7 +9,7 @@ import {
   format,
   startOfMonth,
 } from "date-fns";
-import { ChevronDown, Loader2, Minus, Plus, RefreshCw } from "lucide-react";
+import { ChevronDown, Loader2, Minus, Plus, RefreshCw, X } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import * as React from "react";
@@ -616,38 +616,40 @@ export default function OwnerCourtAvailabilityPage() {
     }) => {
       if (isDisabled) return null;
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className={cn(
-                "h-7 px-2 text-[11px] uppercase tracking-wide transition-colors",
-                isSelected
-                  ? "border-primary/40 text-primary bg-primary/5"
-                  : "border-transparent bg-muted/70 text-muted-foreground hover:border-border/70 hover:text-foreground",
-              )}
-              onClick={() => {
-                setSelectedDate(date);
-                setSelectedSlotId(slot.id);
-              }}
-            >
-              Manage
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-44">
-            <DropdownMenuItem onSelect={() => openGuestBookingDialog(slot)}>
-              Guest booking
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => openWalkInDialog(slot)}>
-              Walk-in booking
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => openMaintenanceDialog(slot)}>
-              Maintenance block
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="hidden lg:block">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className={cn(
+                  "h-7 px-2 text-[11px] uppercase tracking-wide transition-colors",
+                  isSelected
+                    ? "border-primary/40 text-primary bg-primary/5"
+                    : "border-transparent bg-muted/70 text-muted-foreground hover:border-border/70 hover:text-foreground",
+                )}
+                onClick={() => {
+                  setSelectedDate(date);
+                  setSelectedSlotId(slot.id);
+                }}
+              >
+                Manage
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuItem onSelect={() => openGuestBookingDialog(slot)}>
+                Guest booking
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => openWalkInDialog(slot)}>
+                Walk-in booking
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => openMaintenanceDialog(slot)}>
+                Maintenance block
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
     [openGuestBookingDialog, openMaintenanceDialog, openWalkInDialog],
@@ -813,7 +815,7 @@ export default function OwnerCourtAvailabilityPage() {
         <ReservationAlertsPanel organizationId={organization?.id ?? null} />
       }
     >
-      <div className="space-y-6">
+      <div className="space-y-6 pb-20 lg:pb-0">
         <PageHeader
           title="Availability"
           description={courtData.court.label}
@@ -866,7 +868,7 @@ export default function OwnerCourtAvailabilityPage() {
               </Alert>
             )}
 
-            <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_220px] sm:items-end">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div className="space-y-2">
                 <p className="text-sm font-medium">Duration</p>
                 <div className="space-y-2">
@@ -949,7 +951,7 @@ export default function OwnerCourtAvailabilityPage() {
           <CardContent className="space-y-4 p-6">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="space-y-1">
-                <h3 className="text-lg font-heading font-semibold">
+                <h3 className="text-base sm:text-lg font-heading font-semibold">
                   Blocks · {selectedDayLabel}
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -1016,7 +1018,7 @@ export default function OwnerCourtAvailabilityPage() {
             </div>
 
             {selectedSlot ? (
-              <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/40 p-3">
+              <div className="hidden lg:flex flex-wrap items-center justify-between gap-3 rounded-lg border bg-muted/40 p-3">
                 <div>
                   <p className="text-sm font-medium">Selected time</p>
                   <p className="text-sm text-muted-foreground">
@@ -1037,7 +1039,7 @@ export default function OwnerCourtAvailabilityPage() {
                 </Button>
               </div>
             ) : (
-              <div className="rounded-lg border border-dashed p-3 text-sm text-muted-foreground">
+              <div className="hidden lg:block rounded-lg border border-dashed p-3 text-sm text-muted-foreground">
                 Select an available time to quickly mark a walk-in booking.
               </div>
             )}
@@ -1380,6 +1382,51 @@ export default function OwnerCourtAvailabilityPage() {
             </StandardFormProvider>
           </DialogContent>
         </Dialog>
+
+        {selectedSlot && (
+          <div className="fixed bottom-0 inset-x-0 z-50 lg:hidden border-t bg-background/95 backdrop-blur-sm p-3 pb-[env(safe-area-inset-bottom,12px)] animate-in slide-in-from-bottom-4 duration-200">
+            <div className="flex items-center gap-2">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">
+                  {formatTimeRangeInTimeZone(
+                    selectedSlot.startTime,
+                    selectedSlot.endTime,
+                    placeTimeZone,
+                  )}
+                </p>
+                {selectedSlot.priceCents !== undefined && (
+                  <p className="text-xs text-muted-foreground">
+                    {formatCurrency(
+                      selectedSlot.priceCents,
+                      selectedSlot.currency ?? "PHP",
+                    )}
+                  </p>
+                )}
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => openGuestBookingDialog(selectedSlot)}
+              >
+                Guest
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => openWalkInDialog(selectedSlot)}
+              >
+                Walk-in
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setSelectedSlotId(undefined)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </AppShell>
   );
