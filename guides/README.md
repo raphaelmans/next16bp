@@ -22,6 +22,7 @@ This repository contains **architectural patterns and conventions** for building
 ```
 node-architecture/
 ├── README.md                    # This file - entry point
+├── context.md                   # AGENTS.md / CLAUDE.md guidance
 │
 ├── server/                      # Backend architecture
 │   ├── README.md                # Server overview + quick start

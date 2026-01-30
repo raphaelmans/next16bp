@@ -3,6 +3,7 @@
 > Feature-based architecture for React frontends with Next.js, tRPC, TanStack Query, and TypeScript.
 
 See [../README.md](../README.md) for the unified project folder structure and full documentation index.
+See [../context.md](../context.md) for AGENTS.md / CLAUDE.md guidance.
 
 ## Overview
 

@@ -3,6 +3,7 @@
 > Disciplined layered architecture for Node.js backends with Next.js, tRPC, Drizzle ORM, and PostgreSQL.
 
 See [../README.md](../README.md) for the unified project folder structure and full documentation index.
+See [../context.md](../context.md) for AGENTS.md / CLAUDE.md guidance.
 
 ## Overview
 
