@@ -40,13 +40,17 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
   onConvertWalkIn?: (blockId: string) => void;
   onResizePreview?: (args: {
     blockId: string;
-    startTime: string;
-    endTime: string;
+    edge: "start" | "end";
+    hoursDelta: number;
+    baseStart: Date;
+    baseEnd: Date;
   }) => void;
   onResizeCommit?: (args: {
     blockId: string;
-    startTime: string;
-    endTime: string;
+    edge: "start" | "end";
+    hoursDelta: number;
+    baseStart: Date;
+    baseEnd: Date;
   }) => void;
 }) {
   const effectiveDisabled = disabled;

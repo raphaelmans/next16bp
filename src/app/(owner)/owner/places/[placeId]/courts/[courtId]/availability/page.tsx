@@ -3,6 +3,7 @@
 import { TZDate } from "@date-fns/tz";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays, addMinutes, addMonths, endOfMonth } from "date-fns";
+import debounce from "debounce";
 import {
   CalendarIcon,
   ChevronDown,
@@ -50,6 +51,7 @@ import { GuestBookingDialog } from "@/features/owner/components/booking-studio/g
 import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-studio/mobile-create-block-drawer";
 import { MobileDayBlocksList } from "@/features/owner/components/booking-studio/mobile-day-blocks-list";
 import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
+import { computeClampedResizeRange } from "@/features/owner/components/booking-studio/resize-helpers";
 import { SelectableTimelineRow } from "@/features/owner/components/booking-studio/selectable-timeline-row";
 import { SelectionPanelForm } from "@/features/owner/components/booking-studio/selection-panel-form";
 import { TimelineBlockItem } from "@/features/owner/components/booking-studio/timeline-block-item";
@@ -65,6 +67,7 @@ import {
   getEndMinuteForDayKey,
   getMinuteOfDay,
   guestBookingFormSchema,
+  isOptimisticBlockId,
   parseDateTimeInput,
   parseTimelineRange,
   type ReservationItem,
@@ -673,6 +676,181 @@ function OwnerCourtAvailabilityInner() {
       setPendingBlockIds(new Set(nextCounts.keys()));
     },
     [],
+  );
+
+  // --- Block range resize (optimistic + debounced) ---
+  const pendingRangeUpdates = React.useRef<
+    Map<string, { startTime: string; endTime: string; version: number }>
+  >(new Map());
+  const rangeUpdateVersions = React.useRef<Map<string, number>>(new Map());
+  const debouncedFlushByBlock = React.useRef<
+    Map<string, ReturnType<typeof debounce>>
+  >(new Map());
+
+  const updateRange = trpc.courtBlock.updateRange.useMutation();
+
+  const flushBlockRangeUpdate = React.useCallback(
+    async (blockId: string) => {
+      const pending = pendingRangeUpdates.current.get(blockId);
+      if (!pending) return;
+      pendingRangeUpdates.current.delete(blockId);
+
+      updatePendingBlockId(blockId, 1);
+
+      try {
+        const serverBlock = await updateRange.mutateAsync({
+          blockId,
+          startTime: pending.startTime,
+          endTime: pending.endTime,
+        });
+        const latestVersion = rangeUpdateVersions.current.get(blockId);
+        if (latestVersion !== pending.version) return;
+
+        const rangeStart = new Date(blocksRangeStartIso);
+        const rangeEnd = new Date(blocksRangeEndIso);
+        const blockStart = new Date(serverBlock.startTime);
+        const blockEnd = new Date(serverBlock.endTime);
+        const isInRange = blockStart < rangeEnd && blockEnd > rangeStart;
+
+        utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) => {
+          const existing = old ?? [];
+          const filtered = existing.filter((b) => b.id !== blockId);
+          if (!isInRange) return filtered;
+          return [...filtered, serverBlock];
+        });
+        toast.success("Block updated");
+      } catch (error) {
+        const latestVersion = rangeUpdateVersions.current.get(blockId);
+        if (latestVersion === pending.version) {
+          void utils.courtBlock.listForCourtRange.invalidate(blocksQueryInput);
+          toast.error("Unable to update block", {
+            description: getClientErrorMessage(error, "Please try again"),
+          });
+        }
+      } finally {
+        updatePendingBlockId(blockId, -1);
+      }
+    },
+    [
+      blocksQueryInput,
+      blocksRangeEndIso,
+      blocksRangeStartIso,
+      updatePendingBlockId,
+      updateRange,
+      utils,
+    ],
+  );
+
+  const scheduleRangeFlush = React.useCallback(
+    (blockId: string) => {
+      let debounced = debouncedFlushByBlock.current.get(blockId);
+      if (!debounced) {
+        debounced = debounce(
+          (id: string) => void flushBlockRangeUpdate(id),
+          2000,
+        );
+        debouncedFlushByBlock.current.set(blockId, debounced);
+      }
+      debounced(blockId);
+    },
+    [flushBlockRangeUpdate],
+  );
+
+  React.useEffect(
+    () => () => {
+      for (const debounced of debouncedFlushByBlock.current.values()) {
+        debounced.clear();
+      }
+    },
+    [],
+  );
+
+  const computeNextResizeRange = React.useCallback(
+    (args: {
+      blockId: string;
+      edge: "start" | "end";
+      hoursDelta: number;
+      baseStart: Date;
+      baseEnd: Date;
+    }) => {
+      const block = activeBlocks.find((b) => b.id === args.blockId);
+      if (!block) return null;
+      if (block.type !== "WALK_IN" && block.type !== "MAINTENANCE") return null;
+
+      return computeClampedResizeRange({
+        block,
+        edge: args.edge,
+        hoursDelta: args.hoursDelta,
+        baseStart: args.baseStart,
+        baseEnd: args.baseEnd,
+        timeZone: placeTimeZone,
+        courtHoursWindows: courtHoursQuery.data ?? [],
+        blocks: activeBlocks,
+        reservations: activeReservations,
+      });
+    },
+    [activeBlocks, activeReservations, courtHoursQuery.data, placeTimeZone],
+  );
+
+  const handleResizePreview = React.useCallback(
+    (args: {
+      blockId: string;
+      edge: "start" | "end";
+      hoursDelta: number;
+      baseStart: Date;
+      baseEnd: Date;
+    }) => {
+      const next = computeNextResizeRange(args);
+      if (!next) return;
+
+      const nextStartIso = toUtcISOString(next.startTime);
+      const nextEndIso = toUtcISOString(next.endTime);
+
+      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
+        old?.map((b) =>
+          b.id === args.blockId
+            ? { ...b, startTime: nextStartIso, endTime: nextEndIso }
+            : b,
+        ),
+      );
+    },
+    [blocksQueryInput, computeNextResizeRange, utils],
+  );
+
+  const handleResizeCommit = React.useCallback(
+    (args: {
+      blockId: string;
+      edge: "start" | "end";
+      hoursDelta: number;
+      baseStart: Date;
+      baseEnd: Date;
+    }) => {
+      const next = computeNextResizeRange(args);
+      if (!next) return;
+
+      const nextStartIso = toUtcISOString(next.startTime);
+      const nextEndIso = toUtcISOString(next.endTime);
+
+      const nextVersion =
+        (rangeUpdateVersions.current.get(args.blockId) ?? 0) + 1;
+      rangeUpdateVersions.current.set(args.blockId, nextVersion);
+      pendingRangeUpdates.current.set(args.blockId, {
+        startTime: nextStartIso,
+        endTime: nextEndIso,
+        version: nextVersion,
+      });
+
+      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
+        old?.map((b) =>
+          b.id === args.blockId
+            ? { ...b, startTime: nextStartIso, endTime: nextEndIso }
+            : b,
+        ),
+      );
+
+      scheduleRangeFlush(args.blockId);
+    },
+    [blocksQueryInput, computeNextResizeRange, scheduleRangeFlush, utils],
   );
 
   const createMaintenance = trpc.courtBlock.createMaintenance.useMutation({
@@ -1677,6 +1855,16 @@ function OwnerCourtAvailabilityInner() {
                               courtHoursWindows={courtHoursQuery.data ?? []}
                               pendingBlockIds={pendingBlockIds}
                               onRemoveBlock={handleCancelBlock}
+                              onResizePreview={(args) => {
+                                if (pendingBlockIds.has(args.blockId)) return;
+                                if (isOptimisticBlockId(args.blockId)) return;
+                                handleResizePreview(args);
+                              }}
+                              onResizeCommit={(args) => {
+                                if (pendingBlockIds.has(args.blockId)) return;
+                                if (isOptimisticBlockId(args.blockId)) return;
+                                handleResizeCommit(args);
+                              }}
                               committedRange={
                                 weekCommittedDayKey === wdk
                                   ? committedRange
@@ -2010,6 +2198,22 @@ function OwnerCourtAvailabilityInner() {
                                       disabled={false}
                                       isPending={pendingBlockIds.has(block.id)}
                                       onRemove={handleCancelBlock}
+                                      onResizePreview={
+                                        (block.type === "WALK_IN" ||
+                                          block.type === "MAINTENANCE") &&
+                                        !pendingBlockIds.has(block.id) &&
+                                        !isOptimisticBlockId(block.id)
+                                          ? handleResizePreview
+                                          : undefined
+                                      }
+                                      onResizeCommit={
+                                        (block.type === "WALK_IN" ||
+                                          block.type === "MAINTENANCE") &&
+                                        !pendingBlockIds.has(block.id) &&
+                                        !isOptimisticBlockId(block.id)
+                                          ? handleResizeCommit
+                                          : undefined
+                                      }
                                     />
                                   ),
                                 )}

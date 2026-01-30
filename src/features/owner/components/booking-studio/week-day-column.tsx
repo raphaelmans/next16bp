@@ -63,13 +63,17 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   onPlace?: (dayKey: string, startMinute: number) => void;
   onResizePreview?: (args: {
     blockId: string;
-    startTime: string;
-    endTime: string;
+    edge: "start" | "end";
+    hoursDelta: number;
+    baseStart: Date;
+    baseEnd: Date;
   }) => void;
   onResizeCommit?: (args: {
     blockId: string;
-    startTime: string;
-    endTime: string;
+    edge: "start" | "end";
+    hoursDelta: number;
+    baseStart: Date;
+    baseEnd: Date;
   }) => void;
   committedRange: { startIdx: number; endIdx: number } | null;
   onCommitRange: (dayKey: string, startIdx: number, endIdx: number) => void;
@@ -198,8 +202,18 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
                   ? onConvertWalkIn
                   : undefined
               }
-              onResizePreview={onResizePreview}
-              onResizeCommit={onResizeCommit}
+              onResizePreview={
+                (block.type === "WALK_IN" || block.type === "MAINTENANCE") &&
+                onResizePreview
+                  ? onResizePreview
+                  : undefined
+              }
+              onResizeCommit={
+                (block.type === "WALK_IN" || block.type === "MAINTENANCE") &&
+                onResizeCommit
+                  ? onResizeCommit
+                  : undefined
+              }
             />
           ))}
           {draftBlocks.map(({ row, topOffset, height }) => (

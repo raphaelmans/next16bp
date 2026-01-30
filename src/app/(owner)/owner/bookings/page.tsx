@@ -69,6 +69,7 @@ import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-stu
 import { MobileDayBlocksList } from "@/features/owner/components/booking-studio/mobile-day-blocks-list";
 import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
 import { ReplaceWithGuestDialog } from "@/features/owner/components/booking-studio/replace-with-guest-dialog";
+import { computeClampedResizeRange } from "@/features/owner/components/booking-studio/resize-helpers";
 import { SelectableTimelineRow } from "@/features/owner/components/booking-studio/selectable-timeline-row";
 import { SelectionPanelForm } from "@/features/owner/components/booking-studio/selection-panel-form";
 import { TimelineBlockItem } from "@/features/owner/components/booking-studio/timeline-block-item";
@@ -87,6 +88,7 @@ import {
   getEndMinuteForDayKey,
   getMinuteOfDay,
   guestBookingFormSchema,
+  isOptimisticBlockId,
   parseDateTimeInput,
   parseTimelineRange,
   type ReservationItem,
@@ -1864,41 +1866,95 @@ function OwnerAvailabilityStudioInner() {
     [armedDraftRowId, draftRowsById, handleDraftRowDrop],
   );
 
+  const computeNextResizeRange = React.useCallback(
+    (args: {
+      blockId: string;
+      edge: "start" | "end";
+      hoursDelta: number;
+      baseStart: Date;
+      baseEnd: Date;
+    }) => {
+      const block = activeBlocks.find((b) => b.id === args.blockId);
+      if (!block) return null;
+      if (block.type !== "WALK_IN" && block.type !== "MAINTENANCE") return null;
+
+      const next = computeClampedResizeRange({
+        block,
+        edge: args.edge,
+        hoursDelta: args.hoursDelta,
+        baseStart: args.baseStart,
+        baseEnd: args.baseEnd,
+        timeZone: placeTimeZone,
+        courtHoursWindows: courtHoursQuery.data ?? [],
+        blocks: activeBlocks,
+        reservations: activeReservations,
+      });
+      return next;
+    },
+    [activeBlocks, activeReservations, courtHoursQuery.data, placeTimeZone],
+  );
+
   const handleResizePreview = React.useCallback(
-    (args: { blockId: string; startTime: string; endTime: string }) => {
+    (args: {
+      blockId: string;
+      edge: "start" | "end";
+      hoursDelta: number;
+      baseStart: Date;
+      baseEnd: Date;
+    }) => {
+      const next = computeNextResizeRange(args);
+      if (!next) return;
+
+      const nextStartIso = toUtcISOString(next.startTime);
+      const nextEndIso = toUtcISOString(next.endTime);
+
       utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
         old?.map((b) =>
           b.id === args.blockId
-            ? { ...b, startTime: args.startTime, endTime: args.endTime }
+            ? { ...b, startTime: nextStartIso, endTime: nextEndIso }
             : b,
         ),
       );
     },
-    [blocksQueryInput, utils],
+    [blocksQueryInput, computeNextResizeRange, utils],
   );
 
   const handleResizeCommit = React.useCallback(
-    (args: { blockId: string; startTime: string; endTime: string }) => {
+    (args: {
+      blockId: string;
+      edge: "start" | "end";
+      hoursDelta: number;
+      baseStart: Date;
+      baseEnd: Date;
+    }) => {
+      const next = computeNextResizeRange(args);
+      if (!next) return;
+
+      const nextStartIso = toUtcISOString(next.startTime);
+      const nextEndIso = toUtcISOString(next.endTime);
+
       const nextVersion =
         (rangeUpdateVersions.current.get(args.blockId) ?? 0) + 1;
       rangeUpdateVersions.current.set(args.blockId, nextVersion);
       pendingRangeUpdates.current.set(args.blockId, {
-        startTime: args.startTime,
-        endTime: args.endTime,
+        startTime: nextStartIso,
+        endTime: nextEndIso,
         version: nextVersion,
       });
 
       utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
         old?.map((b) =>
           b.id === args.blockId
-            ? { ...b, startTime: args.startTime, endTime: args.endTime }
+            ? { ...b, startTime: nextStartIso, endTime: nextEndIso }
             : b,
         ),
       );
 
-      scheduleRangeFlushRef.current(args.blockId);
+      if (!isOptimisticBlockId(args.blockId)) {
+        scheduleRangeFlushRef.current(args.blockId);
+      }
     },
-    [blocksQueryInput, utils],
+    [blocksQueryInput, computeNextResizeRange, utils],
   );
 
   const isCreatingBlock =
@@ -3098,11 +3154,15 @@ function OwnerAvailabilityStudioInner() {
                                           : undefined
                                       }
                                       onResizePreview={
+                                        (block.type === "WALK_IN" ||
+                                          block.type === "MAINTENANCE") &&
                                         !pendingBlockIds.has(block.id)
                                           ? handleResizePreview
                                           : undefined
                                       }
                                       onResizeCommit={
+                                        (block.type === "WALK_IN" ||
+                                          block.type === "MAINTENANCE") &&
                                         !pendingBlockIds.has(block.id)
                                           ? handleResizeCommit
                                           : undefined

@@ -1,9 +1,7 @@
 "use client";
 
-import { addMinutes, differenceInMinutes } from "date-fns";
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { toUtcISOString } from "@/shared/lib/time-zone";
 import { TIMELINE_ROW_HEIGHT } from "./types";
 
 export const ResizeHandle = React.memo(function ResizeHandle({
@@ -22,13 +20,17 @@ export const ResizeHandle = React.memo(function ResizeHandle({
   endTime: Date | string;
   onPreview?: (args: {
     blockId: string;
-    startTime: string;
-    endTime: string;
+    edge: "start" | "end";
+    hoursDelta: number;
+    baseStart: Date;
+    baseEnd: Date;
   }) => void;
   onCommit?: (args: {
     blockId: string;
-    startTime: string;
-    endTime: string;
+    edge: "start" | "end";
+    hoursDelta: number;
+    baseStart: Date;
+    baseEnd: Date;
   }) => void;
 }) {
   const dragRef = React.useRef<{
@@ -38,31 +40,6 @@ export const ResizeHandle = React.memo(function ResizeHandle({
     baseEnd: Date;
   } | null>(null);
   const lastHoursDeltaRef = React.useRef<number>(0);
-
-  const computeTimesForHoursDelta = React.useCallback(
-    (hoursDelta: number) => {
-      const state = dragRef.current;
-      if (!state) return null;
-
-      const deltaMinutes = hoursDelta * 60;
-      const nextStart =
-        edge === "start"
-          ? addMinutes(state.baseStart, deltaMinutes)
-          : state.baseStart;
-      const nextEnd =
-        edge === "end"
-          ? addMinutes(state.baseEnd, deltaMinutes)
-          : state.baseEnd;
-
-      if (differenceInMinutes(nextEnd, nextStart) < 60) return null;
-
-      return {
-        startTime: toUtcISOString(nextStart),
-        endTime: toUtcISOString(nextEnd),
-      };
-    },
-    [edge],
-  );
 
   const handlePointerDown = React.useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
@@ -94,11 +71,15 @@ export const ResizeHandle = React.memo(function ResizeHandle({
       if (hoursDelta === lastHoursDeltaRef.current) return;
       lastHoursDeltaRef.current = hoursDelta;
 
-      const next = computeTimesForHoursDelta(hoursDelta);
-      if (!next) return;
-      onPreview?.({ blockId, ...next });
+      onPreview?.({
+        blockId,
+        edge,
+        hoursDelta,
+        baseStart: state.baseStart,
+        baseEnd: state.baseEnd,
+      });
     },
-    [blockId, computeTimesForHoursDelta, onPreview],
+    [blockId, edge, onPreview],
   );
 
   const finishDrag = React.useCallback(
@@ -114,11 +95,15 @@ export const ResizeHandle = React.memo(function ResizeHandle({
 
       if (hoursDelta === 0) return;
 
-      const next = computeTimesForHoursDelta(hoursDelta);
-      if (!next) return;
-      onCommit?.({ blockId, ...next });
+      onCommit?.({
+        blockId,
+        edge,
+        hoursDelta,
+        baseStart: state.baseStart,
+        baseEnd: state.baseEnd,
+      });
     },
-    [blockId, computeTimesForHoursDelta, onCommit],
+    [blockId, edge, onCommit],
   );
 
   if (!onPreview && !onCommit) return null;
