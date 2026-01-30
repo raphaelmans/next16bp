@@ -1137,7 +1137,11 @@ export default function PlaceDetailPage() {
       return;
     }
 
-    scrollToSection(availabilitySectionRef);
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      setMobileSheetExpanded(true);
+    } else {
+      scrollToSection(availabilitySectionRef);
+    }
   };
 
   const handleScrollToAvailability = (event?: React.MouseEvent) => {
@@ -1146,7 +1150,11 @@ export default function PlaceDetailPage() {
       event.preventDefault();
       event.stopPropagation();
     }
-    scrollToSection(availabilitySectionRef);
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      setMobileSheetExpanded(true);
+    } else {
+      scrollToSection(availabilitySectionRef);
+    }
   };
 
   if (isLoading) {
