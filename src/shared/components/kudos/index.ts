@@ -27,6 +27,7 @@ export { GoogleMapsEmbed } from "./google-maps-embed";
 export { LocationPin, MapMarker } from "./location-pin";
 // Branding
 export { KudosLogo, KudosLogoIcon } from "./logo";
+export { MobileScrollThumb } from "./mobile-scroll-thumb";
 export {
   PlaceCard,
   type PlaceCardLinkScope,

@@ -70,6 +70,7 @@ import {
   AvailabilityWeekGridSkeleton,
   GoogleMapsEmbed,
   KudosDatePicker,
+  MobileScrollThumb,
   TimeRangePicker,
   TimeRangePickerSkeleton,
   type TimeSlot,
@@ -244,6 +245,7 @@ export default function PlaceDetailPage() {
   const [anyViewMode, setAnyViewMode] = React.useState<"week" | "day">("week");
 
   const availabilitySectionRef = React.useRef<HTMLDivElement | null>(null);
+  const mobileScrollRef = React.useRef<HTMLDivElement | null>(null);
 
   const clearSelection = React.useCallback((resetDuration = false) => {
     setSelectedStartTime(undefined);
@@ -2510,7 +2512,11 @@ export default function PlaceDetailPage() {
               </Dialog>
 
               {/* Time slots */}
-              <div className="flex-1 overflow-y-auto px-5 pb-2 min-h-0">
+              <MobileScrollThumb scrollRef={mobileScrollRef} />
+              <div
+                ref={mobileScrollRef}
+                className="flex-1 overflow-y-auto px-5 pb-2 min-h-0"
+              >
                 {isMobileLoading ? (
                   <TimeRangePickerSkeleton count={5} />
                 ) : mobileDaySlots.length > 0 ? (

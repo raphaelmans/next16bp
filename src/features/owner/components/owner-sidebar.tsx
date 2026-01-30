@@ -63,11 +63,6 @@ interface OwnerSidebarProps {
 
 const navItems = [
   {
-    title: "Imports",
-    href: appRoutes.owner.imports.bookings,
-    icon: UploadCloud,
-  },
-  {
     title: "Availability Studio",
     href: appRoutes.owner.bookings,
     icon: CalendarRange,
@@ -76,6 +71,11 @@ const navItems = [
     title: "Reservations",
     href: appRoutes.owner.reservations,
     icon: CalendarDays,
+  },
+  {
+    title: "Imports",
+    href: appRoutes.owner.imports.bookings,
+    icon: UploadCloud,
   },
   {
     title: "Settings",

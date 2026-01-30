@@ -39,7 +39,7 @@ export function DashboardLayout({
         {/* Main content */}
         <main
           className={cn(
-            "flex-1 w-full overflow-auto px-4 py-6 sm:px-6 lg:px-8",
+            "flex-1 w-full max-w-full overflow-x-hidden overflow-y-auto px-4 py-6 sm:px-6 lg:px-8",
             className,
           )}
         >

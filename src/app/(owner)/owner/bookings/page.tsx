@@ -12,7 +12,6 @@ import {
 import debounce from "debounce";
 import {
   CalendarIcon,
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
   MousePointerClick,
@@ -28,6 +27,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
@@ -66,6 +66,7 @@ import {
 } from "@/features/owner/components/booking-studio/draft-row-card";
 import { GuestBookingDialog } from "@/features/owner/components/booking-studio/guest-booking-dialog";
 import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-studio/mobile-create-block-drawer";
+import { MobileSelectionPeekBar } from "@/features/owner/components/booking-studio/mobile-selection-peek-bar";
 import { MobileDayBlocksList } from "@/features/owner/components/booking-studio/mobile-day-blocks-list";
 import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
 import { ReplaceWithGuestDialog } from "@/features/owner/components/booking-studio/replace-with-guest-dialog";
@@ -1785,9 +1786,6 @@ function OwnerAvailabilityStudioInner() {
       },
       commitRange: (s: number, e: number) => {
         setCommittedRange({ startIdx: s, endIdx: e });
-        if (isMobile && s !== e) {
-          setMobileDrawerOpen(true);
-        }
       },
     };
   }, [
@@ -2996,66 +2994,17 @@ function OwnerAvailabilityStudioInner() {
                 <Card>
                   <CardContent className="space-y-4 p-6 pb-6 lg:pb-6">
                     <div className="space-y-3 lg:hidden">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => navigateMonth(-1)}
-                          >
-                            <ChevronLeft className="h-4 w-4" />
-                          </Button>
-                          <Popover
-                            open={mobileCalendarOpen}
-                            onOpenChange={setMobileCalendarOpen}
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                className="gap-1.5 text-sm font-medium"
-                              >
-                                <CalendarIcon className="h-3.5 w-3.5" />
-                                {weekLabel}
-                                <ChevronDown
-                                  className={cn(
-                                    "h-3.5 w-3.5 transition-transform",
-                                    mobileCalendarOpen && "rotate-180",
-                                  )}
-                                />
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={selectedDate}
-                                onSelect={(date) => {
-                                  if (date) {
-                                    setDayKeyParam(
-                                      getZonedDayKey(date, placeTimeZone),
-                                    );
-                                    setMobileCalendarOpen(false);
-                                  }
-                                }}
-                                month={calendarMonth}
-                                onMonthChange={setCalendarMonth}
-                                timeZone={placeTimeZone}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => navigateMonth(1)}
-                          >
-                            <ChevronRight className="h-4 w-4" />
-                          </Button>
-                        </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="flex-1 justify-start"
+                          onClick={() => setMobileCalendarOpen(true)}
+                        >
+                          <CalendarIcon className="h-3.5 w-3.5" />
+                          {weekLabel}
+                        </Button>
                         <Button
                           type="button"
                           variant="outline"
@@ -3065,6 +3014,31 @@ function OwnerAvailabilityStudioInner() {
                           Today
                         </Button>
                       </div>
+                      <Dialog
+                        open={mobileCalendarOpen}
+                        onOpenChange={setMobileCalendarOpen}
+                      >
+                        <DialogContent className="w-auto p-0 sm:max-w-fit">
+                          <DialogTitle className="sr-only">
+                            Select date
+                          </DialogTitle>
+                          <Calendar
+                            mode="single"
+                            selected={selectedDate}
+                            onSelect={(date) => {
+                              if (date) {
+                                setDayKeyParam(
+                                  getZonedDayKey(date, placeTimeZone),
+                                );
+                                setMobileCalendarOpen(false);
+                              }
+                            }}
+                            month={calendarMonth}
+                            onMonthChange={setCalendarMonth}
+                            timeZone={placeTimeZone}
+                          />
+                        </DialogContent>
+                      </Dialog>
                       <MobileDateStrip
                         selectedDate={selectedDate}
                         onDateSelect={handleMobileDateSelect}
@@ -3365,6 +3339,13 @@ function OwnerAvailabilityStudioInner() {
           }
           submitLabel={isWalkInReplace ? "Convert to guest" : "Replace block"}
         />
+
+        {isMobile && (
+          <MobileSelectionPeekBar
+            selectedTimeLabel={selectedTimeLabel}
+            onOpen={() => setMobileDrawerOpen(true)}
+          />
+        )}
 
         <MobileCreateBlockDrawer
           handleMobileSubmit={handleSelectionSubmit}
