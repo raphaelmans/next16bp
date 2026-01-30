@@ -350,6 +350,17 @@ function OwnerCourtAvailabilityInner() {
       ),
     [endHour, startHour],
   );
+  const dayHourLabels = React.useMemo(
+    () =>
+      hours.map((hour) =>
+        formatInTimeZone(
+          buildDateFromDayKey(dayKey, hour * 60, placeTimeZone),
+          placeTimeZone,
+          "h a",
+        ),
+      ),
+    [dayKey, hours, placeTimeZone],
+  );
 
   const timelineStartMinute = startHour * 60;
   const timelineEndMinute = endHour * 60;
@@ -413,6 +424,10 @@ function OwnerCourtAvailabilityInner() {
         (block) => block.isActive,
       ),
     [blocksQuery.data],
+  );
+  const activeBlocksById = React.useMemo(
+    () => new Map(activeBlocks.map((block) => [block.id, block])),
+    [activeBlocks],
   );
 
   const selectedDayEndExclusive = React.useMemo(
@@ -773,7 +788,7 @@ function OwnerCourtAvailabilityInner() {
       baseStart: Date;
       baseEnd: Date;
     }) => {
-      const block = activeBlocks.find((b) => b.id === args.blockId);
+      const block = activeBlocksById.get(args.blockId);
       if (!block) return null;
       if (block.type !== "WALK_IN" && block.type !== "MAINTENANCE") return null;
 
@@ -789,7 +804,13 @@ function OwnerCourtAvailabilityInner() {
         reservations: activeReservations,
       });
     },
-    [activeBlocks, activeReservations, courtHoursQuery.data, placeTimeZone],
+    [
+      activeBlocks,
+      activeBlocksById,
+      activeReservations,
+      courtHoursQuery.data,
+      placeTimeZone,
+    ],
   );
 
   const handleResizePreview = React.useCallback(
@@ -2153,25 +2174,14 @@ function OwnerCourtAvailabilityInner() {
                         <div className="relative">
                           <div className="grid grid-cols-1 gap-x-3 md:grid-cols-[72px_minmax(0,1fr)]">
                             <div className="hidden space-y-0 md:block">
-                              {hours.map((hour) => {
-                                const hourLabel = formatInTimeZone(
-                                  buildDateFromDayKey(
-                                    dayKey,
-                                    hour * 60,
-                                    placeTimeZone,
-                                  ),
-                                  placeTimeZone,
-                                  "h a",
-                                );
-                                return (
-                                  <div
-                                    key={`label-${hour}`}
-                                    className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
-                                  >
-                                    {hourLabel}
-                                  </div>
-                                );
-                              })}
+                              {dayHourLabels.map((hourLabel, index) => (
+                                <div
+                                  key={`label-${hours[index] ?? index}`}
+                                  className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
+                                >
+                                  {hourLabel}
+                                </div>
+                              ))}
                             </div>
 
                             <div className="relative">
