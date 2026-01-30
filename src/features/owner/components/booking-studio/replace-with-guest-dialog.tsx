@@ -48,6 +48,9 @@ export const ReplaceWithGuestDialog = React.memo(
     blockStartTime,
     blockEndTime,
     suggestedName,
+    title,
+    description,
+    submitLabel,
   }: {
     form: UseFormReturn<GuestBookingFormValues>;
     onSubmit: (values: GuestBookingFormValues) => Promise<void>;
@@ -62,6 +65,9 @@ export const ReplaceWithGuestDialog = React.memo(
     blockStartTime: Date | string | null;
     blockEndTime: Date | string | null;
     suggestedName: string | null;
+    title?: string;
+    description?: string;
+    submitLabel?: string;
   }) {
     const replaceDialogOpen = useBookingStudio((s) => s.replaceDialogOpen);
     const closeReplaceDialog = useBookingStudio((s) => s.closeReplaceDialog);
@@ -86,9 +92,10 @@ export const ReplaceWithGuestDialog = React.memo(
       >
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Replace with guest booking</DialogTitle>
+            <DialogTitle>{title ?? "Replace with guest booking"}</DialogTitle>
             <DialogDescription>
-              Replace the imported block with a confirmed guest reservation.
+              {description ??
+                "Replace the imported block with a confirmed guest reservation."}
             </DialogDescription>
           </DialogHeader>
           <StandardFormProvider form={form} onSubmit={onSubmit}>
@@ -232,7 +239,7 @@ export const ReplaceWithGuestDialog = React.memo(
                 Cancel
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                Replace block
+                {submitLabel ?? "Replace block"}
               </Button>
             </DialogFooter>
           </StandardFormProvider>

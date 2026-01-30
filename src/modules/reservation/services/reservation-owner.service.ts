@@ -4,7 +4,13 @@ import {
   NotCourtOwnerError,
 } from "@/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
-import { CourtBlockOverlapsReservationError } from "@/modules/court-block/errors/court-block.errors";
+import {
+  CourtBlockNotActiveError,
+  CourtBlockNotFoundError,
+  CourtBlockNotWalkInError,
+  CourtBlockOverlapError,
+  CourtBlockOverlapsReservationError,
+} from "@/modules/court-block/errors/court-block.errors";
 import type { ICourtBlockRepository } from "@/modules/court-block/repositories/court-block.repository";
 import type { ICourtHoursRepository } from "@/modules/court-hours/repositories/court-hours.repository";
 import type { ICourtPriceOverrideRepository } from "@/modules/court-price-override/repositories/court-price-override.repository";
@@ -26,6 +32,7 @@ import { computeSchedulePrice } from "@/shared/lib/schedule-availability";
 import type {
   ConfirmPaidOfflineDTO,
   ConfirmPaymentDTO,
+  ConvertWalkInBlockDTO,
   CreateGuestBookingDTO,
   GetActiveForCourtRangeDTO,
   GetOrgReservationsDTO,
@@ -67,6 +74,10 @@ export interface IReservationOwnerService {
   createGuestBooking(
     userId: string,
     data: CreateGuestBookingDTO,
+  ): Promise<ReservationRecord>;
+  convertWalkInBlockToGuest(
+    userId: string,
+    data: ConvertWalkInBlockDTO,
   ): Promise<ReservationRecord>;
   getActiveForCourtRange(
     userId: string,
@@ -721,6 +732,166 @@ export class ReservationOwnerService implements IReservationOwnerService {
           totalPriceCents,
         },
         "Guest booking created by owner",
+      );
+
+      return created;
+    });
+  }
+
+  async convertWalkInBlockToGuest(
+    userId: string,
+    data: ConvertWalkInBlockDTO,
+  ): Promise<ReservationRecord> {
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+
+      if (!this.courtBlockRepository) {
+        throw new Error("CourtBlockRepository not configured");
+      }
+      if (!this.guestProfileRepository) {
+        throw new Error("GuestProfileRepository not configured");
+      }
+
+      const block = await this.courtBlockRepository.findById(data.blockId, ctx);
+      if (!block) {
+        throw new CourtBlockNotFoundError(data.blockId);
+      }
+      if (!block.isActive) {
+        throw new CourtBlockNotActiveError(data.blockId);
+      }
+      if (block.type !== "WALK_IN") {
+        throw new CourtBlockNotWalkInError(data.blockId);
+      }
+
+      const organizationId = await this.verifyCourtOwnership(
+        userId,
+        block.courtId,
+        ctx,
+      );
+
+      let guestProfileId: string;
+      if (data.guestMode === "existing") {
+        if (!data.guestProfileId) {
+          throw new GuestProfileNotFoundError("");
+        }
+        const existingGuest = await this.guestProfileRepository.findById(
+          data.guestProfileId,
+          ctx,
+        );
+        if (!existingGuest || existingGuest.organizationId !== organizationId) {
+          throw new GuestProfileNotFoundError(data.guestProfileId);
+        }
+        guestProfileId = data.guestProfileId;
+      } else {
+        if (!data.newGuestName) {
+          throw new GuestProfileNotFoundError("");
+        }
+        const newGuest = await this.guestProfileRepository.create(
+          {
+            organizationId,
+            displayName: data.newGuestName,
+            phoneNumber: data.newGuestPhone ?? null,
+            email: data.newGuestEmail ?? null,
+            notes: null,
+          },
+          ctx,
+        );
+        guestProfileId = newGuest.id;
+      }
+
+      const guest = await this.guestProfileRepository.findById(
+        guestProfileId,
+        ctx,
+      );
+      if (!guest) {
+        throw new GuestProfileNotFoundError(guestProfileId);
+      }
+
+      const startTime = new Date(block.startTime);
+      const endTime = new Date(block.endTime);
+
+      const overlappingReservations =
+        await this.reservationRepository.findOverlappingActiveByCourtIds(
+          [block.courtId],
+          startTime,
+          endTime,
+          ctx,
+        );
+      if (overlappingReservations.length > 0) {
+        throw new CourtBlockOverlapsReservationError({
+          courtId: block.courtId,
+          startTime: startTime.toISOString(),
+          endTime: endTime.toISOString(),
+        });
+      }
+
+      const overlappingBlocks =
+        await this.courtBlockRepository.findOverlappingByCourtIds(
+          [block.courtId],
+          startTime,
+          endTime,
+          {},
+          ctx,
+        );
+      const otherBlocks = overlappingBlocks.filter(
+        (item) => item.id !== block.id,
+      );
+      if (otherBlocks.length > 0) {
+        throw new CourtBlockOverlapError({
+          courtId: block.courtId,
+          startTime: startTime.toISOString(),
+          endTime: endTime.toISOString(),
+        });
+      }
+
+      const now = new Date();
+      const created = await this.reservationRepository.create(
+        {
+          courtId: block.courtId,
+          startTime,
+          endTime,
+          totalPriceCents: block.totalPriceCents,
+          currency: block.currency,
+          playerId: null,
+          guestProfileId,
+          playerNameSnapshot: guest.displayName,
+          playerEmailSnapshot: guest.email ?? null,
+          playerPhoneSnapshot: guest.phoneNumber ?? null,
+          status: "CONFIRMED",
+          confirmedAt: now,
+          expiresAt: null,
+        },
+        ctx,
+      );
+
+      await this.reservationEventRepository.create(
+        {
+          reservationId: created.id,
+          fromStatus: null,
+          toStatus: "CONFIRMED",
+          triggeredByUserId: userId,
+          triggeredByRole: "OWNER",
+          notes: data.notes ?? "Converted walk-in block to guest booking",
+        },
+        ctx,
+      );
+
+      await this.courtBlockRepository.update(
+        block.id,
+        { isActive: false, cancelledAt: now },
+        ctx,
+      );
+
+      logger.info(
+        {
+          event: "reservation.walk_in_converted",
+          reservationId: created.id,
+          blockId: block.id,
+          courtId: block.courtId,
+          guestProfileId,
+          ownerId: userId,
+        },
+        "Walk-in block converted to guest booking",
       );
 
       return created;

@@ -1,6 +1,5 @@
 "use client";
 
-import { useDroppable } from "@dnd-kit/core";
 import { Plus } from "lucide-react";
 import * as React from "react";
 import { cn } from "@/lib/utils";
@@ -8,18 +7,21 @@ import {
   useCellState,
   useRangeSelection,
 } from "@/shared/components/kudos/range-selection";
-import type { TimelineCellData } from "./types";
 
 export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
   dayKey,
   startMinute,
   disabled,
   cellIndex,
+  placing,
+  onPlace,
 }: {
   dayKey: string;
   startMinute: number;
   disabled: boolean;
   cellIndex: number;
+  placing?: boolean;
+  onPlace?: (dayKey: string, startMinute: number) => void;
 }) {
   const cellState = useCellState(cellIndex);
   const pointerDown = useRangeSelection((s) => s.pointerDown);
@@ -31,30 +33,27 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
   const isCellOpen = isCellAvailable(cellIndex);
   const isInteractive = !disabled && isCellOpen;
 
-  const { setNodeRef, isOver } = useDroppable({
-    id: `timeline-cell-${dayKey}-${startMinute}`,
-    data: {
-      kind: "timeline-cell",
-      dayKey,
-      startMinute,
-    } satisfies TimelineCellData,
-    disabled: !isInteractive,
-  });
+  const isPlacing = Boolean(placing && onPlace);
 
   const handlePointerDown = React.useCallback(
     (e: React.PointerEvent) => {
       if (!isInteractive) return;
+      if (isPlacing) {
+        e.preventDefault();
+        return;
+      }
       e.preventDefault();
       pointerDown(cellIndex);
     },
-    [cellIndex, isInteractive, pointerDown],
+    [cellIndex, isInteractive, isPlacing, pointerDown],
   );
 
   const handlePointerEnter = React.useCallback(() => {
     if (!isInteractive) return;
+    if (isPlacing) return;
     pointerEnter(cellIndex);
     setHoveredIdx(cellIndex);
-  }, [cellIndex, isInteractive, pointerEnter, setHoveredIdx]);
+  }, [cellIndex, isInteractive, isPlacing, pointerEnter, setHoveredIdx]);
 
   const handlePointerLeave = React.useCallback(() => {
     setHoveredIdx(null);
@@ -63,9 +62,15 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
   const handleClick = React.useCallback(
     (e: React.MouseEvent) => {
       if (!isInteractive) return;
+      if (isPlacing) {
+        e.preventDefault();
+        e.stopPropagation();
+        onPlace?.(dayKey, startMinute);
+        return;
+      }
       click(cellIndex, e.shiftKey);
     },
-    [cellIndex, click, isInteractive],
+    [cellIndex, click, dayKey, isInteractive, isPlacing, onPlace, startMinute],
   );
 
   const handleKeyDown = React.useCallback(
@@ -87,7 +92,6 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
   return (
     <button
       type="button"
-      ref={setNodeRef}
       tabIndex={isInteractive ? 0 : -1}
       aria-disabled={!isInteractive}
       className={cn(
@@ -97,9 +101,9 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
         isInteractive &&
           "border-l-2 border-dashed border-l-primary/15 hover:bg-primary/10 hover:border-l-primary/30 cursor-pointer",
         !isInteractive && "bg-muted/30 cursor-not-allowed",
-        isOver &&
+        isPlacing &&
           isInteractive &&
-          "ring-2 ring-primary/30 ring-inset bg-primary/5",
+          "cursor-crosshair hover:bg-primary/5 hover:border-l-primary/40",
         cellState.inRange && "bg-primary/10",
         cellState.isStart && "rounded-t-lg ring-t-2 ring-primary/40",
         cellState.isEnd && "rounded-b-lg",
@@ -112,10 +116,15 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
       onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
+      {isInteractive && (
+        <span className="pointer-events-none absolute left-2 top-2 text-[10px] font-medium tabular-nums text-muted-foreground/70 md:hidden">
+          {timeLabel}
+        </span>
+      )}
       {isInteractive && !cellState.inRange && !cellState.isPendingStart && (
-        <span className="pointer-events-none absolute inset-0 flex items-center justify-center gap-1 opacity-0 group-hover/cell:opacity-100 transition-opacity">
+        <span className="pointer-events-none absolute inset-0 flex items-center justify-center gap-1 opacity-0 transition-opacity md:group-hover/cell:opacity-100">
           <Plus className="size-3 text-primary/40" />
-          <span className="text-[10px] font-medium text-primary/40">
+          <span className="text-[10px] font-medium tabular-nums text-primary/40">
             {timeLabel}
           </span>
         </span>

@@ -1736,11 +1736,15 @@ export class BookingsImportService implements IBookingsImportService {
       );
 
       // 14. Update import row with replacement data
-      await this.rowRepository.update(data.rowId, {
-        replacedWithReservationId: reservation.id,
-        replacedWithGuestProfileId: guestProfileId,
-        replacedAt: now,
-      });
+      await this.rowRepository.update(
+        data.rowId,
+        {
+          replacedWithReservationId: reservation.id,
+          replacedWithGuestProfileId: guestProfileId,
+          replacedAt: now,
+        },
+        ctx,
+      );
 
       logger.info(
         {

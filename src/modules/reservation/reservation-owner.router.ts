@@ -3,7 +3,13 @@ import {
   CourtNotFoundError,
   NotCourtOwnerError,
 } from "@/modules/court/errors/court.errors";
-import { CourtBlockOverlapsReservationError } from "@/modules/court-block/errors/court-block.errors";
+import {
+  CourtBlockNotActiveError,
+  CourtBlockNotFoundError,
+  CourtBlockNotWalkInError,
+  CourtBlockOverlapError,
+  CourtBlockOverlapsReservationError,
+} from "@/modules/court-block/errors/court-block.errors";
 import { GuestProfileNotFoundError } from "@/modules/guest-profile/errors/guest-profile.errors";
 import { NotOrganizationOwnerError } from "@/modules/organization/errors/organization.errors";
 import { PlaceNotFoundError } from "@/modules/place/errors/place.errors";
@@ -13,6 +19,7 @@ import {
   AcceptReservationSchema,
   ConfirmPaidOfflineSchema,
   ConfirmPaymentSchema,
+  ConvertWalkInBlockSchema,
   CreateGuestBookingSchema,
   GetActiveForCourtRangeSchema,
   GetOrgReservationsSchema,
@@ -38,7 +45,8 @@ function handleReservationOwnerError(error: unknown): never {
     error instanceof ReservationNotFoundError ||
     error instanceof CourtNotFoundError ||
     error instanceof PlaceNotFoundError ||
-    error instanceof GuestProfileNotFoundError
+    error instanceof GuestProfileNotFoundError ||
+    error instanceof CourtBlockNotFoundError
   ) {
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -56,7 +64,10 @@ function handleReservationOwnerError(error: unknown): never {
       cause: error,
     });
   }
-  if (error instanceof CourtBlockOverlapsReservationError) {
+  if (
+    error instanceof CourtBlockOverlapsReservationError ||
+    error instanceof CourtBlockOverlapError
+  ) {
     throw new TRPCError({
       code: "CONFLICT",
       message: error.message,
@@ -68,7 +79,9 @@ function handleReservationOwnerError(error: unknown): never {
     error instanceof ReservationExpiredError ||
     error instanceof ReservationTimeRangeInvalidError ||
     error instanceof ReservationDurationInvalidError ||
-    error instanceof ReservationPricingUnavailableError
+    error instanceof ReservationPricingUnavailableError ||
+    error instanceof CourtBlockNotActiveError ||
+    error instanceof CourtBlockNotWalkInError
   ) {
     throw new TRPCError({
       code: "BAD_REQUEST",
@@ -152,6 +165,20 @@ export const reservationOwnerRouter = router({
       try {
         const service = makeReservationOwnerService();
         return await service.createGuestBooking(ctx.userId, input);
+      } catch (error) {
+        handleReservationOwnerError(error);
+      }
+    }),
+
+  /**
+   * Convert a walk-in block into a guest booking (owner only)
+   */
+  convertWalkInBlockToGuest: protectedProcedure
+    .input(ConvertWalkInBlockSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationOwnerService();
+        return await service.convertWalkInBlockToGuest(ctx.userId, input);
       } catch (error) {
         handleReservationOwnerError(error);
       }

@@ -1,7 +1,5 @@
 "use client";
 
-import { useDraggable } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
 import { X } from "lucide-react";
 import * as React from "react";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatDuration, formatTimeRangeInTimeZone } from "@/shared/lib/format";
 import { ResizeHandle } from "./resize-handle";
-import type { CourtBlockItem, DragBlock } from "./types";
+import type { CourtBlockItem } from "./types";
 import { getMinuteOfDay } from "./types";
 
 export const TimelineBlockItem = React.memo(function TimelineBlockItem({
@@ -24,6 +22,9 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
   onRemove,
   isImported,
   onReplaceWithGuest,
+  onConvertWalkIn,
+  onResizePreview,
+  onResizeCommit,
 }: {
   block: CourtBlockItem;
   topOffset: number;
@@ -36,18 +37,21 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
   onRemove?: (blockId: string) => void;
   isImported?: boolean;
   onReplaceWithGuest?: (blockId: string) => void;
+  onConvertWalkIn?: (blockId: string) => void;
+  onResizePreview?: (args: {
+    blockId: string;
+    startTime: string;
+    endTime: string;
+  }) => void;
+  onResizeCommit?: (args: {
+    blockId: string;
+    startTime: string;
+    endTime: string;
+  }) => void;
 }) {
   const effectiveDisabled = disabled;
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: `block-${block.id}`,
-      data: { kind: "block", blockId: block.id } satisfies DragBlock,
-      disabled: effectiveDisabled,
-    });
 
-  const style = transform
-    ? { transform: CSS.Translate.toString(transform) }
-    : undefined;
+  const canResize = Boolean(onResizePreview || onResizeCommit);
 
   const isWalkIn = block.type === "WALK_IN";
   const durationMinutes = Math.max(
@@ -58,9 +62,7 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
 
   return (
     <div
-      ref={setNodeRef}
-      style={{ top: topOffset, height, ...style }}
-      {...attributes}
+      style={{ top: topOffset, height }}
       className={cn(
         "pointer-events-auto absolute rounded-lg border bg-card text-card-foreground shadow-sm",
         compact
@@ -68,8 +70,7 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
           : "left-1 right-1 border-l-4 px-3 py-2",
         isWalkIn ? "border-l-primary" : "border-l-amber-500",
         "group",
-        effectiveDisabled ? "cursor-not-allowed" : "cursor-grab",
-        isDragging && "opacity-50",
+        effectiveDisabled ? "cursor-not-allowed" : "cursor-default",
         isPending && "opacity-80",
         isPastDay && "opacity-50 saturate-50",
       )}
@@ -79,7 +80,6 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
           "flex items-center justify-between gap-1",
           compact ? "gap-0.5" : "gap-2",
         )}
-        {...listeners}
       >
         {compact ? (
           <span
@@ -141,6 +141,39 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
           )}
         </div>
       )}
+      {isWalkIn && onConvertWalkIn && (
+        <div className="mt-1">
+          {compact ? (
+            <Button
+              type="button"
+              variant="outline"
+              className="h-4 rounded-full border-primary/30 bg-primary/5 px-2 text-[9px] font-semibold uppercase tracking-[0.08em] text-primary/70 hover:bg-primary/10 hover:text-primary"
+              onPointerDownCapture={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onConvertWalkIn(block.id);
+              }}
+              aria-label="Convert to guest"
+            >
+              Guest
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="h-5 text-[10px] px-1.5"
+              onPointerDownCapture={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onConvertWalkIn(block.id);
+              }}
+            >
+              Convert to guest
+            </Button>
+          )}
+        </div>
+      )}
       {onRemove && (
         <button
           type="button"
@@ -162,16 +195,28 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
           <X className={compact ? "h-2.5 w-2.5" : "h-3 w-3"} />
         </button>
       )}
-      <ResizeHandle
-        blockId={block.id}
-        edge="start"
-        disabled={effectiveDisabled}
-      />
-      <ResizeHandle
-        blockId={block.id}
-        edge="end"
-        disabled={effectiveDisabled}
-      />
+      {canResize ? (
+        <>
+          <ResizeHandle
+            blockId={block.id}
+            edge="start"
+            disabled={effectiveDisabled}
+            startTime={block.startTime}
+            endTime={block.endTime}
+            onPreview={onResizePreview}
+            onCommit={onResizeCommit}
+          />
+          <ResizeHandle
+            blockId={block.id}
+            edge="end"
+            disabled={effectiveDisabled}
+            startTime={block.startTime}
+            endTime={block.endTime}
+            onPreview={onResizePreview}
+            onCommit={onResizeCommit}
+          />
+        </>
+      ) : null}
     </div>
   );
 });

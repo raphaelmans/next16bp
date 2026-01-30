@@ -13,6 +13,22 @@ export class CourtBlockNotFoundError extends NotFoundError {
   }
 }
 
+export class CourtBlockNotActiveError extends ValidationError {
+  readonly code = "COURT_BLOCK_NOT_ACTIVE";
+
+  constructor(blockId: string) {
+    super("Court block is not active.", { blockId });
+  }
+}
+
+export class CourtBlockNotWalkInError extends ValidationError {
+  readonly code = "COURT_BLOCK_NOT_WALK_IN";
+
+  constructor(blockId: string) {
+    super("Court block must be a walk-in block.", { blockId });
+  }
+}
+
 export class CourtBlockOverlapError extends ConflictError {
   readonly code = "COURT_BLOCK_OVERLAP";
 

@@ -1,12 +1,10 @@
 "use client";
 
-import { useDraggable } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
 import * as React from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { formatTimeRangeInTimeZone } from "@/shared/lib/format";
-import type { DraftRowItem, DraftRowStatus, DragDraftRow } from "./types";
+import type { DraftRowItem, DraftRowStatus } from "./types";
 import { DRAFT_STATUS_BADGE } from "./types";
 
 export const DraftTimelineBlock = React.memo(function DraftTimelineBlock({
@@ -60,22 +58,16 @@ export const DraftRowCard = React.memo(function DraftRowCard({
   timeZone,
   disabled,
   selectedCourt,
+  isArmed,
+  onArm,
 }: {
   row: DraftRowItem;
   timeZone: string;
   disabled: boolean;
   selectedCourt: string | null;
+  isArmed?: boolean;
+  onArm?: (rowId: string) => void;
 }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id: `draft-row-${row.id}`,
-      data: { kind: "draft-row", rowId: row.id } satisfies DragDraftRow,
-      disabled,
-    });
-
-  const style = transform
-    ? { transform: CSS.Translate.toString(transform) }
-    : undefined;
   const status = (row.status ?? "PENDING") as DraftRowStatus;
   const statusBadge = DRAFT_STATUS_BADGE[status] ?? "secondary";
 
@@ -89,16 +81,21 @@ export const DraftRowCard = React.memo(function DraftRowCard({
   const errorHint = row.errors?.[0];
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
+    <button
+      type="button"
+      disabled={disabled}
       className={cn(
-        "rounded-lg border bg-card p-3 text-left text-xs transition-shadow",
-        disabled ? "cursor-not-allowed opacity-50" : "cursor-grab",
-        isDragging ? "opacity-40" : "opacity-100",
+        "w-full rounded-lg border bg-card p-3 text-left text-xs transition-shadow",
+        disabled
+          ? "cursor-not-allowed opacity-50"
+          : "cursor-pointer hover:shadow-sm",
+        isArmed &&
+          "border-primary/40 bg-primary/5 shadow-sm ring-1 ring-primary/20",
       )}
+      onClick={() => {
+        if (disabled) return;
+        onArm?.(row.id);
+      }}
     >
       <div className="flex items-center justify-between gap-2">
         <span className="font-heading font-semibold">Row {row.lineNumber}</span>
@@ -112,12 +109,12 @@ export const DraftRowCard = React.memo(function DraftRowCard({
       ) : null}
       {!row.courtLabel && selectedCourt ? (
         <p className="mt-1 text-[11px] text-muted-foreground">
-          Drop to assign {selectedCourt}
+          {isArmed ? "Tap a slot to place" : `Tap to place on ${selectedCourt}`}
         </p>
       ) : null}
       {errorHint ? (
         <p className="mt-1 text-[11px] text-destructive">{errorHint}</p>
       ) : null}
-    </div>
+    </button>
   );
 });

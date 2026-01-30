@@ -1963,8 +1963,8 @@ function OwnerCourtAvailabilityInner() {
                         committedRange={committedRange}
                       >
                         <div className="relative">
-                          <div className="grid grid-cols-[72px_minmax(0,1fr)] gap-x-3">
-                            <div className="space-y-0">
+                          <div className="grid grid-cols-1 gap-x-3 md:grid-cols-[72px_minmax(0,1fr)]">
+                            <div className="hidden space-y-0 md:block">
                               {hours.map((hour) => {
                                 const hourLabel = formatInTimeZone(
                                   buildDateFromDayKey(

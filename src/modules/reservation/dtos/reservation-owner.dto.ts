@@ -85,6 +85,29 @@ export const CreateGuestBookingSchema = z.object({
 
 export type CreateGuestBookingDTO = z.infer<typeof CreateGuestBookingSchema>;
 
+export const ConvertWalkInBlockSchema = z
+  .object({
+    blockId: S.ids.blockId,
+    guestMode: z.enum(["existing", "new"]),
+    guestProfileId: S.ids.generic.optional(),
+    newGuestName: z.string().min(1).max(100).optional(),
+    newGuestPhone: z.string().max(20).optional(),
+    newGuestEmail: z.string().email().optional(),
+    notes: S.reservation.notes,
+  })
+  .refine(
+    (data) => {
+      if (data.guestMode === "existing") return !!data.guestProfileId;
+      return !!data.newGuestName;
+    },
+    {
+      message:
+        "Guest profile ID is required for existing mode; name is required for new mode",
+    },
+  );
+
+export type ConvertWalkInBlockDTO = z.infer<typeof ConvertWalkInBlockSchema>;
+
 export const ReservationWithDetailsSchema = z.object({
   id: S.ids.reservationId,
   status: ReservationStatusSchema,

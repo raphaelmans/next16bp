@@ -31,6 +31,11 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   courtHoursWindows,
   pendingBlockIds,
   onRemoveBlock,
+  onConvertWalkIn,
+  placing,
+  onPlace,
+  onResizePreview,
+  onResizeCommit,
   committedRange,
   onCommitRange,
 }: {
@@ -53,6 +58,19 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   courtHoursWindows?: CourtHoursWindow[];
   pendingBlockIds: Set<string>;
   onRemoveBlock?: (blockId: string) => void;
+  onConvertWalkIn?: (blockId: string) => void;
+  placing?: boolean;
+  onPlace?: (dayKey: string, startMinute: number) => void;
+  onResizePreview?: (args: {
+    blockId: string;
+    startTime: string;
+    endTime: string;
+  }) => void;
+  onResizeCommit?: (args: {
+    blockId: string;
+    startTime: string;
+    endTime: string;
+  }) => void;
   committedRange: { startIdx: number; endIdx: number } | null;
   onCommitRange: (dayKey: string, startIdx: number, endIdx: number) => void;
 }) {
@@ -157,6 +175,8 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
               startMinute={hour * 60}
               disabled={disabled}
               cellIndex={hourIndex}
+              placing={placing}
+              onPlace={onPlace}
             />
           ))}
         </div>
@@ -173,6 +193,13 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
               isPastDay={isPastDay}
               compact
               onRemove={onRemoveBlock}
+              onConvertWalkIn={
+                block.type === "WALK_IN" && onConvertWalkIn
+                  ? onConvertWalkIn
+                  : undefined
+              }
+              onResizePreview={onResizePreview}
+              onResizeCommit={onResizeCommit}
             />
           ))}
           {draftBlocks.map(({ row, topOffset, height }) => (
