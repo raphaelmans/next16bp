@@ -12,6 +12,10 @@ export interface BookingStudioState {
   debouncedGuestSearch: string;
   guestComboboxOpen: boolean;
 
+  // Replace imported block dialog
+  replaceDialogOpen: boolean;
+  replaceBlockId: string | null;
+
   // Mobile drawer
   mobileDrawerOpen: boolean;
 
@@ -40,6 +44,8 @@ export interface BookingStudioState {
   setGuestSearch: (search: string) => void;
   setDebouncedGuestSearch: (search: string) => void;
   setGuestComboboxOpen: (open: boolean) => void;
+  openReplaceDialog: (blockId: string) => void;
+  closeReplaceDialog: () => void;
   setMobileDrawerOpen: (open: boolean) => void;
   setSelectionBlockType: (
     type: "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING",
@@ -78,6 +84,10 @@ export const createBookingStudioStore = (initialDate: Date) =>
     debouncedGuestSearch: "",
     guestComboboxOpen: false,
 
+    // Replace imported block dialog
+    replaceDialogOpen: false,
+    replaceBlockId: null,
+
     // Mobile drawer
     mobileDrawerOpen: false,
 
@@ -106,6 +116,10 @@ export const createBookingStudioStore = (initialDate: Date) =>
     setGuestSearch: (search) => set({ guestSearch: search }),
     setDebouncedGuestSearch: (search) => set({ debouncedGuestSearch: search }),
     setGuestComboboxOpen: (open) => set({ guestComboboxOpen: open }),
+    openReplaceDialog: (blockId) =>
+      set({ replaceDialogOpen: true, replaceBlockId: blockId }),
+    closeReplaceDialog: () =>
+      set({ replaceDialogOpen: false, replaceBlockId: null }),
     setMobileDrawerOpen: (open) => set({ mobileDrawerOpen: open }),
     setSelectionBlockType: (type) => set({ selectionBlockType: type }),
     setCommittedRange: (range) => set({ committedRange: range }),

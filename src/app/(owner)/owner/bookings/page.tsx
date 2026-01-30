@@ -81,6 +81,7 @@ import { GuestBookingDialog } from "@/features/owner/components/booking-studio/g
 import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-studio/mobile-create-block-drawer";
 import { MobileDayBlocksList } from "@/features/owner/components/booking-studio/mobile-day-blocks-list";
 import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
+import { ReplaceWithGuestDialog } from "@/features/owner/components/booking-studio/replace-with-guest-dialog";
 import { SelectableTimelineRow } from "@/features/owner/components/booking-studio/selectable-timeline-row";
 import { SelectionPanelForm } from "@/features/owner/components/booking-studio/selection-panel-form";
 import { TimelineBlockItem } from "@/features/owner/components/booking-studio/timeline-block-item";
@@ -284,6 +285,35 @@ function OwnerAvailabilityStudioInner() {
   const canCommitImport = Boolean(
     job && isImportEditable && (job.errorRowCount ?? 0) === 0,
   );
+  const isImportCommitted = job?.status === "COMMITTED";
+
+  const importedBlockIds = React.useMemo(() => {
+    if (!isImportOverlay) return new Set<string>();
+    return new Set(
+      draftRows
+        .filter((r) => r.courtBlockId && r.status === "COMMITTED")
+        .map((r) => r.courtBlockId as string),
+    );
+  }, [draftRows, isImportOverlay]);
+
+  const replacedBlockIds = React.useMemo(() => {
+    if (!isImportOverlay) return new Set<string>();
+    return new Set(
+      draftRows
+        .filter((r) => r.courtBlockId && r.replacedAt)
+        .map((r) => r.courtBlockId as string),
+    );
+  }, [draftRows, isImportOverlay]);
+
+  const draftRowsByBlockId = React.useMemo(() => {
+    const map = new Map<string, DraftRowItem>();
+    for (const row of draftRows) {
+      if (row.courtBlockId) {
+        map.set(row.courtBlockId, row);
+      }
+    }
+    return map;
+  }, [draftRows]);
 
   const selectedDayRange = React.useMemo(
     () => getZonedDayRangeFromDayKey(dayKey, placeTimeZone),
@@ -391,6 +421,10 @@ function OwnerAvailabilityStudioInner() {
   const closeGuestBookingDialog = useBookingStudio(
     (s) => s.closeGuestBookingDialog,
   );
+  const replaceDialogOpen = useBookingStudio((s) => s.replaceDialogOpen);
+  const replaceBlockId = useBookingStudio((s) => s.replaceBlockId);
+  const openReplaceDialog = useBookingStudio((s) => s.openReplaceDialog);
+  const closeReplaceDialog = useBookingStudio((s) => s.closeReplaceDialog);
   const setCustomDialogOpen = useBookingStudio((s) => s.setCustomDialogOpen);
   const setMobileDrawerOpen = useBookingStudio((s) => s.setMobileDrawerOpen);
   const selectionBlockType = useBookingStudio((s) => s.selectionBlockType);
@@ -1363,7 +1397,7 @@ function OwnerAvailabilityStudioInner() {
       query: debouncedGuestSearch || undefined,
       limit: 50,
     },
-    { enabled: guestBookingOpen && !!organization?.id },
+    { enabled: (guestBookingOpen || replaceDialogOpen) && !!organization?.id },
   );
   const createGuestProfile = trpc.guestProfile.create.useMutation();
   const createGuestBooking =
@@ -1435,6 +1469,97 @@ function OwnerAvailabilityStudioInner() {
       organization?.id,
       placeTimeZone,
     ],
+  );
+
+  // --- Replace imported block with guest booking ---
+  const replaceWithGuestForm = useForm<GuestBookingFormValues>({
+    resolver: zodResolver(guestBookingFormSchema),
+    defaultValues: {
+      startTime: "",
+      endTime: "",
+      guestMode: "existing",
+      guestProfileId: "",
+      newGuestName: "",
+      newGuestPhone: "",
+      newGuestEmail: "",
+      notes: "",
+    },
+  });
+
+  const replaceRow = replaceBlockId
+    ? draftRowsByBlockId.get(replaceBlockId)
+    : null;
+
+  React.useEffect(() => {
+    if (replaceDialogOpen && replaceRow) {
+      replaceWithGuestForm.reset({
+        startTime: "",
+        endTime: "",
+        guestMode: "existing",
+        guestProfileId: "",
+        newGuestName: replaceRow.reason ?? "",
+        newGuestPhone: "",
+        newGuestEmail: "",
+        notes: "",
+      });
+    }
+  }, [replaceDialogOpen, replaceRow, replaceWithGuestForm]);
+
+  const replaceWithGuestMutation =
+    trpc.bookingsImport.replaceWithGuest.useMutation({
+      onSuccess() {
+        toast.success("Block replaced with guest booking");
+        closeReplaceDialog();
+        void utils.courtBlock.listForCourtRange.invalidate(blocksQueryInput);
+        void utils.reservationOwner.getActiveForCourtRange.invalidate(
+          reservationsQueryInput,
+        );
+        void utils.bookingsImport.listRows.invalidate(draftRowsQueryInput);
+      },
+      onError(error) {
+        toast.error("Unable to replace block", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+      },
+    });
+
+  const handleReplaceWithGuestSubmit = React.useCallback(
+    async (values: GuestBookingFormValues) => {
+      if (!replaceRow) {
+        toast.error("No import row found for this block");
+        return;
+      }
+
+      await replaceWithGuestMutation.mutateAsync({
+        rowId: replaceRow.id,
+        guestMode: values.guestMode,
+        guestProfileId:
+          values.guestMode === "existing"
+            ? (values.guestProfileId ?? undefined)
+            : undefined,
+        newGuestName:
+          values.guestMode === "new"
+            ? (values.newGuestName ?? undefined)
+            : undefined,
+        newGuestPhone:
+          values.guestMode === "new"
+            ? (values.newGuestPhone ?? undefined)
+            : undefined,
+        newGuestEmail:
+          values.guestMode === "new"
+            ? (values.newGuestEmail ?? undefined)
+            : undefined,
+        notes: values.notes ?? undefined,
+      });
+    },
+    [replaceRow, replaceWithGuestMutation],
+  );
+
+  const handleOpenReplaceDialog = React.useCallback(
+    (blockId: string) => {
+      openReplaceDialog(blockId);
+    },
+    [openReplaceDialog],
   );
 
   const handleDraftRowDrop = React.useCallback(
@@ -2889,6 +3014,17 @@ function OwnerAvailabilityStudioInner() {
                                           block.id,
                                         )}
                                         onRemove={handleCancelBlock}
+                                        isImported={
+                                          isImportCommitted &&
+                                          importedBlockIds.has(block.id)
+                                        }
+                                        onReplaceWithGuest={
+                                          isImportCommitted &&
+                                          importedBlockIds.has(block.id) &&
+                                          !replacedBlockIds.has(block.id)
+                                            ? handleOpenReplaceDialog
+                                            : undefined
+                                        }
                                       />
                                     ),
                                   )}
@@ -3050,6 +3186,24 @@ function OwnerAvailabilityStudioInner() {
           }
           guestProfilesLoading={guestProfilesQuery.isLoading}
           placeTimeZone={placeTimeZone}
+        />
+
+        <ReplaceWithGuestDialog
+          form={replaceWithGuestForm}
+          onSubmit={handleReplaceWithGuestSubmit}
+          isSubmitting={replaceWithGuestMutation.isPending}
+          guestProfilesData={
+            (guestProfilesQuery.data ?? []) as Array<{
+              id: string;
+              displayName: string;
+              phoneNumber: string | null;
+            }>
+          }
+          guestProfilesLoading={guestProfilesQuery.isLoading}
+          placeTimeZone={placeTimeZone}
+          blockStartTime={replaceRow?.startTime ?? null}
+          blockEndTime={replaceRow?.endTime ?? null}
+          suggestedName={replaceRow?.reason ?? null}
         />
 
         <MobileCreateBlockDrawer

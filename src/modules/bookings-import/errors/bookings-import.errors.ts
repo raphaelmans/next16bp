@@ -1,5 +1,6 @@
 import {
   AuthorizationError,
+  ConflictError,
   NotFoundError,
   ValidationError,
 } from "@/shared/kernel/errors";
@@ -109,5 +110,32 @@ export class BookingsImportHasBlockingErrorsError extends ValidationError {
     super("Import has rows with blocking errors that must be fixed", {
       errorCount,
     });
+  }
+}
+
+export class BookingsImportRowAlreadyReplacedError extends ConflictError {
+  readonly code = "BOOKINGS_IMPORT_ROW_ALREADY_REPLACED";
+
+  constructor(rowId: string, reservationId: string) {
+    super("This import row has already been replaced with a guest booking", {
+      rowId,
+      reservationId,
+    });
+  }
+}
+
+export class BookingsImportRowNotCommittedError extends ValidationError {
+  readonly code = "BOOKINGS_IMPORT_ROW_NOT_COMMITTED";
+
+  constructor(rowId: string) {
+    super("Import row has not been committed yet", { rowId });
+  }
+}
+
+export class BookingsImportRowMissingBlockError extends ValidationError {
+  readonly code = "BOOKINGS_IMPORT_ROW_MISSING_BLOCK";
+
+  constructor(rowId: string) {
+    super("Import row has no associated active court block", { rowId });
   }
 }

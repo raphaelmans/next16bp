@@ -18,6 +18,8 @@ import { bookingsImportSource } from "./bookings-import-source";
 import { court } from "./court";
 import { courtBlock } from "./court-block";
 import { bookingsImportRowStatusEnum } from "./enums";
+import { guestProfile } from "./guest-profile";
+import { reservation } from "./reservation";
 
 /**
  * Bookings Import Row table
@@ -55,6 +57,15 @@ export const bookingsImportRow = pgTable(
     }),
     committedAt: timestamp("committed_at", { withTimezone: true }),
     skipReason: text("skip_reason"),
+    // Guest replacement tracking
+    replacedWithReservationId: uuid("replaced_with_reservation_id").references(
+      () => reservation.id,
+      { onDelete: "set null" },
+    ),
+    replacedWithGuestProfileId: uuid(
+      "replaced_with_guest_profile_id",
+    ).references(() => guestProfile.id, { onDelete: "set null" }),
+    replacedAt: timestamp("replaced_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),

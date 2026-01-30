@@ -105,6 +105,9 @@ export type DraftRowItem = {
   reason: string | null;
   errors: string[] | null;
   warnings: string[] | null;
+  courtBlockId: string | null;
+  replacedWithReservationId: string | null;
+  replacedAt: Date | string | null;
 };
 
 export const BLOCK_PRESETS: BlockPreset[] = [

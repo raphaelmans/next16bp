@@ -5,6 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { X } from "lucide-react";
 import * as React from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatDuration, formatTimeRangeInTimeZone } from "@/shared/lib/format";
 import { ResizeHandle } from "./resize-handle";
@@ -21,6 +22,8 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
   isPastDay,
   compact,
   onRemove,
+  isImported,
+  onReplaceWithGuest,
 }: {
   block: CourtBlockItem;
   topOffset: number;
@@ -31,6 +34,8 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
   isPastDay?: boolean;
   compact?: boolean;
   onRemove?: (blockId: string) => void;
+  isImported?: boolean;
+  onReplaceWithGuest?: (blockId: string) => void;
 }) {
   const effectiveDisabled = disabled;
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -112,6 +117,28 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
       {!compact && block.reason && (
         <div className="text-[11px] text-muted-foreground truncate">
           {block.reason}
+        </div>
+      )}
+      {isImported && !compact && (
+        <div className="mt-1 flex items-center gap-1.5">
+          <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+            Imported
+          </Badge>
+          {onReplaceWithGuest && (
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              className="h-5 text-[10px] px-1.5"
+              onPointerDownCapture={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onReplaceWithGuest(block.id);
+              }}
+            >
+              Replace with guest
+            </Button>
+          )}
         </div>
       )}
       {onRemove && (

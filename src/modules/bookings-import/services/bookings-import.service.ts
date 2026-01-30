@@ -1,13 +1,19 @@
 import path from "node:path";
 import { TZDate } from "@date-fns/tz";
-import { addDays } from "date-fns";
+import { addDays, differenceInMinutes } from "date-fns";
 import { v4 as uuidv4 } from "uuid";
 import { env } from "@/lib/env";
 import type { ICourtRepository } from "@/modules/court/repositories/court.repository";
 import type { ICourtBlockRepository } from "@/modules/court-block/repositories/court-block.repository";
+import type { ICourtHoursRepository } from "@/modules/court-hours/repositories/court-hours.repository";
+import type { ICourtPriceOverrideRepository } from "@/modules/court-price-override/repositories/court-price-override.repository";
+import type { ICourtRateRuleRepository } from "@/modules/court-rate-rule/repositories/court-rate-rule.repository";
+import { GuestProfileNotFoundError } from "@/modules/guest-profile/errors/guest-profile.errors";
+import type { IGuestProfileRepository } from "@/modules/guest-profile/repositories/guest-profile.repository";
 import type { IOrganizationRepository } from "@/modules/organization/repositories/organization.repository";
 import type { IPlaceRepository } from "@/modules/place/repositories/place.repository";
 import type { IReservationRepository } from "@/modules/reservation/repositories/reservation.repository";
+import type { IReservationEventRepository } from "@/modules/reservation/repositories/reservation-event.repository";
 import { MAX_IMPORT_FILE_SIZE, STORAGE_BUCKETS } from "@/modules/storage/dtos";
 import type { IObjectStorageService } from "@/modules/storage/services/object-storage.service";
 import type {
@@ -16,10 +22,12 @@ import type {
   BookingsImportSourceRecord,
   InsertBookingsImportRow,
   InsertBookingsImportSource,
+  ReservationRecord,
 } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
 import type { RequestContext } from "@/shared/kernel/context";
 import type { TransactionManager } from "@/shared/kernel/transaction";
+import { computeSchedulePrice } from "@/shared/lib/schedule-availability";
 import type {
   CommitResult,
   CreateBookingsImportDTO,
@@ -27,6 +35,7 @@ import type {
   ImportSource,
   NormalizeMode,
   NormalizeResult,
+  ReplaceWithGuestDTO,
 } from "../dtos";
 import {
   BookingsImportAiAlreadyUsedError,
@@ -39,6 +48,9 @@ import {
   BookingsImportJobNotFoundError,
   BookingsImportNotOwnerError,
   BookingsImportPlaceNotFoundError,
+  BookingsImportRowAlreadyReplacedError,
+  BookingsImportRowMissingBlockError,
+  BookingsImportRowNotCommittedError,
   BookingsImportRowNotFoundError,
 } from "../errors/bookings-import.errors";
 import {
@@ -174,6 +186,10 @@ export interface IBookingsImportService {
     jobId: string,
     ctx?: RequestContext,
   ): Promise<CommitResult>;
+  replaceWithGuest(
+    userId: string,
+    data: ReplaceWithGuestDTO,
+  ): Promise<ReservationRecord>;
 }
 
 export class BookingsImportService implements IBookingsImportService {
@@ -188,6 +204,11 @@ export class BookingsImportService implements IBookingsImportService {
     private courtBlockRepository: ICourtBlockRepository,
     private reservationRepository: IReservationRepository,
     private transactionManager: TransactionManager,
+    private guestProfileRepository: IGuestProfileRepository,
+    private reservationEventRepository: IReservationEventRepository,
+    private courtHoursRepository: ICourtHoursRepository,
+    private courtRateRuleRepository: ICourtRateRuleRepository,
+    private courtPriceOverrideRepository: ICourtPriceOverrideRepository,
   ) {}
 
   private async verifyOwnership(
@@ -1529,5 +1550,211 @@ export class BookingsImportService implements IBookingsImportService {
       default:
         return { rows: [] };
     }
+  }
+
+  async replaceWithGuest(
+    userId: string,
+    data: ReplaceWithGuestDTO,
+  ): Promise<ReservationRecord> {
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+
+      // 1. Fetch row and verify ownership
+      const { row, job } = await this.verifyRowOwnership(
+        userId,
+        data.rowId,
+        ctx,
+      );
+
+      // 2. Guard: row must be committed
+      if (row.status !== "COMMITTED") {
+        throw new BookingsImportRowNotCommittedError(data.rowId);
+      }
+
+      // 3. Guard: not already replaced
+      if (row.replacedWithReservationId) {
+        throw new BookingsImportRowAlreadyReplacedError(
+          data.rowId,
+          row.replacedWithReservationId,
+        );
+      }
+
+      // 4. Guard: must have active court block
+      const courtBlockId = row.courtBlockId;
+      if (!courtBlockId) {
+        throw new BookingsImportRowMissingBlockError(data.rowId);
+      }
+
+      // 5. Verify block is active
+      const block = await this.courtBlockRepository.findById(courtBlockId, ctx);
+      if (!block || !block.isActive) {
+        throw new BookingsImportRowMissingBlockError(data.rowId);
+      }
+
+      // 6. Validate time data
+      if (!row.courtId || !row.startTime || !row.endTime) {
+        throw new BookingsImportRowMissingBlockError(data.rowId);
+      }
+
+      const startTime = new Date(row.startTime);
+      const endTime = new Date(row.endTime);
+      const durationMinutes = differenceInMinutes(endTime, startTime);
+
+      // 7. Get place for pricing + timezone
+      const { place, organizationId } = await this.verifyOwnership(
+        userId,
+        job.placeId,
+        ctx,
+      );
+
+      // 8. Resolve guest profile
+      let guestProfileId: string;
+      if (data.guestMode === "existing") {
+        if (!data.guestProfileId) {
+          throw new GuestProfileNotFoundError("");
+        }
+        const existingGuest = await this.guestProfileRepository.findById(
+          data.guestProfileId,
+          ctx,
+        );
+        if (!existingGuest || existingGuest.organizationId !== organizationId) {
+          throw new GuestProfileNotFoundError(data.guestProfileId);
+        }
+        guestProfileId = data.guestProfileId;
+      } else {
+        if (!data.newGuestName) {
+          throw new BookingsImportRowMissingBlockError(data.rowId);
+        }
+        const newGuest = await this.guestProfileRepository.create(
+          {
+            organizationId,
+            displayName: data.newGuestName,
+            phoneNumber: data.newGuestPhone ?? null,
+            email: data.newGuestEmail ?? null,
+            notes: null,
+          },
+          ctx,
+        );
+        guestProfileId = newGuest.id;
+      }
+
+      const guest = await this.guestProfileRepository.findById(
+        guestProfileId,
+        ctx,
+      );
+      if (!guest) {
+        throw new GuestProfileNotFoundError(guestProfileId);
+      }
+
+      // 9. Compute pricing
+      const [hours, rules, overrides] = await Promise.all([
+        this.courtHoursRepository.findByCourtIds([row.courtId], ctx),
+        this.courtRateRuleRepository.findByCourtIds([row.courtId], ctx),
+        this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+          [row.courtId],
+          startTime,
+          endTime,
+          ctx,
+        ),
+      ]);
+
+      const pricing = computeSchedulePrice({
+        startTime,
+        durationMinutes,
+        timeZone: place.timeZone,
+        hoursWindows: hours,
+        rateRules: rules,
+        priceOverrides: overrides,
+      });
+
+      // 10. Check overlaps (excluding this block)
+      const overlappingReservations =
+        await this.reservationRepository.findOverlappingActiveByCourtIds(
+          [row.courtId],
+          startTime,
+          endTime,
+          ctx,
+        );
+      if (overlappingReservations.length > 0) {
+        throw new BookingsImportInvalidCourtError(row.courtId, job.placeId);
+      }
+
+      const overlappingBlocks =
+        await this.courtBlockRepository.findOverlappingByCourtIds(
+          [row.courtId],
+          startTime,
+          endTime,
+          {},
+          ctx,
+        );
+      const otherBlocks = overlappingBlocks.filter(
+        (b) => b.id !== courtBlockId,
+      );
+      if (otherBlocks.length > 0) {
+        throw new BookingsImportInvalidCourtError(row.courtId, job.placeId);
+      }
+
+      // 11. Create reservation
+      const now = new Date();
+      const reservation = await this.reservationRepository.create(
+        {
+          courtId: row.courtId,
+          startTime,
+          endTime,
+          totalPriceCents: pricing?.totalPriceCents ?? 0,
+          currency: pricing?.currency ?? "BRL",
+          playerId: null,
+          guestProfileId,
+          playerNameSnapshot: guest.displayName,
+          playerEmailSnapshot: guest.email ?? null,
+          playerPhoneSnapshot: guest.phoneNumber ?? null,
+          status: "CONFIRMED",
+          confirmedAt: now,
+          expiresAt: null,
+        },
+        ctx,
+      );
+
+      // 12. Create reservation event
+      await this.reservationEventRepository.create(
+        {
+          reservationId: reservation.id,
+          fromStatus: null,
+          toStatus: "CONFIRMED",
+          triggeredByUserId: userId,
+          triggeredByRole: "OWNER",
+          notes: data.notes ?? "Replaced imported block with guest booking",
+        },
+        ctx,
+      );
+
+      // 13. Cancel the court block
+      await this.courtBlockRepository.update(
+        courtBlockId,
+        { isActive: false, cancelledAt: now },
+        ctx,
+      );
+
+      // 14. Update import row with replacement data
+      await this.rowRepository.update(data.rowId, {
+        replacedWithReservationId: reservation.id,
+        replacedWithGuestProfileId: guestProfileId,
+        replacedAt: now,
+      });
+
+      logger.info(
+        {
+          event: "bookingsImport.row_replaced_with_guest",
+          rowId: data.rowId,
+          courtBlockId,
+          reservationId: reservation.id,
+          guestProfileId,
+          ownerId: userId,
+        },
+        "Import row replaced with guest booking",
+      );
+
+      return reservation;
+    });
   }
 }

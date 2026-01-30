@@ -1,8 +1,15 @@
 import { makeCourtRepository } from "@/modules/court/factories/court.factory";
 import { makeCourtBlockRepository } from "@/modules/court-block/factories/court-block.factory";
+import { makeCourtHoursRepository } from "@/modules/court-hours/factories/court-hours.factory";
+import { makeCourtPriceOverrideRepository } from "@/modules/court-price-override/factories/court-price-override.factory";
+import { makeCourtRateRuleRepository } from "@/modules/court-rate-rule/factories/court-rate-rule.factory";
+import { makeGuestProfileRepository } from "@/modules/guest-profile/factories/guest-profile.factory";
 import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
 import { makePlaceRepository } from "@/modules/place/factories/place.factory";
-import { makeReservationRepository } from "@/modules/reservation/factories/reservation.factory";
+import {
+  makeReservationEventRepository,
+  makeReservationRepository,
+} from "@/modules/reservation/factories/reservation.factory";
 import { makeObjectStorageService } from "@/modules/storage/factories/storage.factory";
 import { getContainer } from "@/shared/infra/container";
 import { BookingsImportJobRepository } from "../repositories/bookings-import-job.repository";
@@ -56,6 +63,11 @@ export function makeBookingsImportService(): BookingsImportService {
       makeCourtBlockRepository(),
       makeReservationRepository(),
       getContainer().transactionManager,
+      makeGuestProfileRepository(),
+      makeReservationEventRepository(),
+      makeCourtHoursRepository(),
+      makeCourtRateRuleRepository(),
+      makeCourtPriceOverrideRepository(),
     );
   }
   return bookingsImportService;

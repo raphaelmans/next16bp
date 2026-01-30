@@ -16,6 +16,7 @@ import {
   ListRowsSchema,
   ListSourcesSchema,
   NormalizeJobSchema,
+  ReplaceWithGuestSchema,
   UpdateRowSchema,
 } from "./dtos";
 import {
@@ -27,6 +28,7 @@ import {
   BookingsImportJobNotFoundError,
   BookingsImportNotOwnerError,
   BookingsImportPlaceNotFoundError,
+  BookingsImportRowAlreadyReplacedError,
   BookingsImportRowNotFoundError,
 } from "./errors/bookings-import.errors";
 import { makeBookingsImportService } from "./factories/bookings-import.factory";
@@ -61,7 +63,10 @@ function handleBookingsImportError(error: unknown): never {
       cause: error,
     });
   }
-  if (error instanceof BookingsImportAiAlreadyUsedError) {
+  if (
+    error instanceof BookingsImportAiAlreadyUsedError ||
+    error instanceof BookingsImportRowAlreadyReplacedError
+  ) {
     throw new TRPCError({
       code: "CONFLICT",
       message: error.message,
@@ -211,6 +216,17 @@ export const bookingsImportRouter = router({
       try {
         const service = makeBookingsImportService();
         return await service.commit(ctx.userId, input.jobId);
+      } catch (error) {
+        handleBookingsImportError(error);
+      }
+    }),
+
+  replaceWithGuest: protectedProcedure
+    .input(ReplaceWithGuestSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeBookingsImportService();
+        return await service.replaceWithGuest(ctx.userId, input);
       } catch (error) {
         handleBookingsImportError(error);
       }

@@ -28,5 +28,7 @@ export type {
   NormalizeResult,
 } from "./normalize-job.dto";
 export { NormalizeJobSchema, NormalizeModeSchema } from "./normalize-job.dto";
+export type { ReplaceWithGuestDTO } from "./replace-with-guest.dto";
+export { ReplaceWithGuestSchema } from "./replace-with-guest.dto";
 export type { UpdateRowDTO } from "./update-row.dto";
 export { UpdateRowSchema } from "./update-row.dto";
