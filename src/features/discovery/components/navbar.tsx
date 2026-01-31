@@ -183,8 +183,8 @@ export function Navbar({ className }: NavbarProps) {
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </SheetTrigger>
-        <SheetContent side="right" className="w-[320px] sm:w-[360px]">
-          <div className="flex flex-col gap-4 mt-8">
+        <SheetContent side="right" className="w-[320px] sm:w-[360px] overflow-y-auto">
+          <div className="flex flex-col gap-4 mt-8 pb-8">
             {/* Mobile Search */}
             <form
               action={appRoutes.courts.base}
