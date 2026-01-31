@@ -1,0 +1,48 @@
+import { eq } from "drizzle-orm";
+import {
+  type InsertUserRole,
+  type UserRoleRecord,
+  userRoles,
+} from "@/lib/shared/infra/db/schema";
+import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";
+import type { RequestContext } from "@/lib/shared/kernel/context";
+
+export interface IUserRoleRepository {
+  findByUserId(
+    userId: string,
+    ctx?: RequestContext,
+  ): Promise<UserRoleRecord | null>;
+  create(data: InsertUserRole, ctx?: RequestContext): Promise<UserRoleRecord>;
+}
+
+export class UserRoleRepository implements IUserRoleRepository {
+  constructor(private db: DbClient) {}
+
+  private getClient(ctx?: RequestContext): DbClient | DrizzleTransaction {
+    return (ctx?.tx as DrizzleTransaction) ?? this.db;
+  }
+
+  async findByUserId(
+    userId: string,
+    ctx?: RequestContext,
+  ): Promise<UserRoleRecord | null> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select()
+      .from(userRoles)
+      .where(eq(userRoles.userId, userId))
+      .limit(1);
+
+    return result[0] ?? null;
+  }
+
+  async create(
+    data: InsertUserRole,
+    ctx?: RequestContext,
+  ): Promise<UserRoleRecord> {
+    const client = this.getClient(ctx);
+    const result = await client.insert(userRoles).values(data).returning();
+
+    return result[0];
+  }
+}

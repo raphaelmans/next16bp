@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import { getSafeRedirectPath } from "@/common/redirects";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,11 +20,8 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
-import { type LoginDTO, LoginSchema } from "@/modules/auth/dtos";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { getSafeRedirectPath } from "@/shared/lib/redirects";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
-import { useLogin, useLoginWithGoogle } from "../hooks/use-auth";
+import { type LoginDTO, LoginSchema } from "@/lib/modules/auth/dtos";
+import { useLogin, useLoginWithGoogle } from "../hooks";
 
 export function LoginForm() {
   const router = useRouter();

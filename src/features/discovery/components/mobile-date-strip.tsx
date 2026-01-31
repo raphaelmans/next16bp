@@ -2,9 +2,9 @@
 
 import { addDays } from "date-fns";
 import * as React from "react";
+import { formatInTimeZone } from "@/common/format";
+import { getZonedDayKey } from "@/common/time-zone";
 import { cn } from "@/lib/utils";
-import { formatInTimeZone } from "@/shared/lib/format";
-import { getZonedDayKey } from "@/shared/lib/time-zone";
 
 interface MobileDateStripProps {
   selectedDate: Date;

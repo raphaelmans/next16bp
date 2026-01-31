@@ -4,6 +4,7 @@ import { Building2, User } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { appRoutes } from "@/common/app-routes";
 import {
   Card,
   CardContent,
@@ -11,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { appRoutes } from "@/shared/lib/app-routes";
 import { RegisterForm } from "./register-form";
 
 function hasOwnerIntent(redirectParam: string | null): boolean {

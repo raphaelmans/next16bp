@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import {
   type TelemetryEventName,
   trackEvent,
-} from "@/shared/lib/clients/telemetry-client";
+} from "@/common/clients/telemetry-client";
 
 interface HomeTrackedLinkProps {
   href: string;

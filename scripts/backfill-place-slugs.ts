@@ -1,8 +1,8 @@
 import { eq, isNull, or } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import * as schema from "../src/lib/shared/infra/db/schema";
 import { isUuid, normalizePlaceSlug } from "../src/lib/slug";
-import * as schema from "../src/shared/infra/db/schema";
 
 const FALLBACK_PREFIX = "venue";
 

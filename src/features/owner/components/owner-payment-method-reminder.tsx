@@ -1,11 +1,11 @@
 "use client";
 
+import { appRoutes } from "@/common/app-routes";
+import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
 import {
   useOrganizationPaymentMethods,
   useOwnerOrganization,
 } from "@/features/owner/hooks";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { SETTINGS_SECTION_HASHES } from "@/shared/lib/section-hashes";
 import { PaymentMethodReminderCard } from "./payment-method-reminder-card";
 
 export function OwnerPaymentMethodReminder() {

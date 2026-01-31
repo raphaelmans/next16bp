@@ -3,6 +3,7 @@
 import { Calendar, FileText, Receipt, ZoomIn } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { formatRelative } from "@/common/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -12,7 +13,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { formatRelative } from "@/shared/lib/format";
 
 interface PaymentProofDisplayProps {
   paymentProof: {

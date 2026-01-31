@@ -5,6 +5,8 @@ import { MapPin, Search, Tag, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,16 +36,14 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
-import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
 import {
   type ClaimStatus,
   type ClaimType,
+  useAdminStats,
   useClaimCounts,
   useClaims,
-} from "@/features/admin/hooks/use-claims";
+} from "@/features/admin/hooks";
 import { useLogout, useSession } from "@/features/auth";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function AdminClaimsPage() {
   const router = useRouter();

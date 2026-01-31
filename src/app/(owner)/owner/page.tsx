@@ -2,6 +2,8 @@
 
 import { ArrowRight, CalendarDays, MapPin } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,8 +21,6 @@ import {
   useOwnerSetupStatus,
   useOwnerStats,
 } from "@/features/owner/hooks";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 const OWNER_SETUP_NEXT_STEP_LABELS = {
   create_organization: "Create your organization",

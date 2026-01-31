@@ -7,12 +7,23 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
+import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import {
+  buildCityOptions,
+  buildProvinceOptions,
+  findCityByName,
+  findProvinceByName,
+} from "@/common/ph-location-data";
 import {
   StandardFormField,
   StandardFormInput,
   StandardFormProvider,
   StandardFormSelect,
 } from "@/components/form";
+import { AppShell } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -27,27 +38,15 @@ import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/ui/page-header";
 import { Textarea } from "@/components/ui/textarea";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
-import { useCreateCuratedCourt } from "@/features/admin/hooks/use-admin-courts";
-import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
+import { useAdminStats, useCreateCuratedCourt } from "@/features/admin/hooks";
 import {
   AMENITIES,
   type CuratedCourtFormData,
   curatedCourtSchema,
-} from "@/features/admin/schemas/curated-court.schema";
+} from "@/features/admin/schemas";
 import { useLogout, useSession } from "@/features/auth";
-import { PLACE_TIME_ZONES } from "@/features/owner/schemas/place-form.schema";
+import { PLACE_TIME_ZONES } from "@/features/owner/schemas";
 import { env } from "@/lib/env";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { useGoogleLocPreviewMutation } from "@/shared/lib/clients/google-loc-client";
-import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
-import {
-  buildCityOptions,
-  buildProvinceOptions,
-  findCityByName,
-  findProvinceByName,
-} from "@/shared/lib/ph-location-data";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 const DEFAULT_COUNTRY = "PH";

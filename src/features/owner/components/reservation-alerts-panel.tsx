@@ -5,30 +5,28 @@ import { Bell, Clock, ExternalLink, X } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
+import { DraggablePanel } from "@/components/ui/draggable-panel";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
 import { PlaceCourtFilter } from "@/features/owner/components/place-court-filter";
 import { RejectModal } from "@/features/owner/components/reject-modal";
 import {
+  useAcceptReservation,
+  useConfirmReservation,
   useOwnerCourtFilter,
   useOwnerCourts,
   useOwnerOrganization,
   useOwnerPlaceFilter,
   useOwnerPlaces,
-} from "@/features/owner/hooks";
-import {
-  useAcceptReservation,
-  useConfirmReservation,
   useRejectReservation,
-} from "@/features/owner/hooks/use-owner-reservations";
-import { useReservationAlerts } from "@/features/owner/hooks/use-reservation-alerts";
+  useReservationAlerts,
+} from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
-import { DraggablePanel } from "@/shared/components/ui/draggable-panel";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 export function ReservationAlertsPanel({
   organizationId,

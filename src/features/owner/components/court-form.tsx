@@ -5,6 +5,7 @@ import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import {
   StandardFormCheckbox,
   StandardFormInput,
@@ -13,12 +14,11 @@ import {
 } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import {
   type CourtFormData,
   courtFormSchema,
   defaultCourtFormValues,
-} from "../schemas/court-form.schema";
+} from "../schemas";
 
 type CourtFormValues = z.input<typeof courtFormSchema>;
 

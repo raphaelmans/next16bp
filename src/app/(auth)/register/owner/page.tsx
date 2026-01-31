@@ -1,6 +1,6 @@
 import { Suspense } from "react";
+import { appRoutes } from "@/common/app-routes";
 import { RegisterForm } from "@/features/auth";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 export const metadata = {
   title: "Create Owner Account",

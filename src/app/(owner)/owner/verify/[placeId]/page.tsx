@@ -4,6 +4,8 @@ import { Loader2, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { parseAsString, useQueryState } from "nuqs";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
@@ -14,8 +16,6 @@ import {
   ReservationAlertsPanel,
 } from "@/features/owner/components";
 import { useOwnerOrganization } from "@/features/owner/hooks";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
 import { trpc } from "@/trpc/client";
 
 export default function OwnerVerificationPlacePage() {

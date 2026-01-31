@@ -1,14 +1,11 @@
 "use client";
 
 import { Copy, Mail, MapPin, Phone, X } from "lucide-react";
+import { copyToClipboard } from "@/common/utils/clipboard";
+import { KudosStatusBadge, type ReservationStatus } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import {
-  KudosStatusBadge,
-  type ReservationStatus,
-} from "@/shared/components/kudos";
-import { copyToClipboard } from "@/shared/lib/clipboard";
 
 interface ReservationActionsCardProps {
   reservationId: string;

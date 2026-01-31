@@ -7,6 +7,7 @@ import { parseAsString, useQueryState } from "nuqs";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -17,16 +18,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
-import {
-  useProfile,
-  useUpdateProfile,
-  useUploadAvatar,
-} from "../hooks/use-profile";
-import {
-  type ProfileFormValues,
-  profileSchema,
-} from "../schemas/profile.schema";
+import { useProfile, useUpdateProfile, useUploadAvatar } from "../hooks";
+import { type ProfileFormValues, profileSchema } from "../schemas";
 import { AvatarUpload } from "./avatar-upload";
 import { ProfileFormSkeleton } from "./skeletons";
 

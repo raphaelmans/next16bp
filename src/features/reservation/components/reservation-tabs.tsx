@@ -3,12 +3,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { useReservationCounts } from "../hooks/use-my-reservations";
 import {
   type ReservationTab,
   reservationTabs,
+  useReservationCounts,
   useReservationsTabs,
-} from "../hooks/use-reservations-tabs";
+} from "../hooks";
 import { ReservationList } from "./reservation-list";
 
 const tabLabels: Record<ReservationTab, string> = {

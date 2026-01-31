@@ -2,6 +2,7 @@
 
 import { ArrowRight, Building2, Plus } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,7 +12,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { appRoutes } from "@/shared/lib/app-routes";
 import { trpc } from "@/trpc/client";
 
 export function OwnerCtaSection() {

@@ -29,6 +29,26 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { appRoutes } from "@/common/app-routes";
+import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
+import { trackEvent } from "@/common/clients/telemetry-client";
+import {
+  formatCurrency,
+  formatDuration,
+  formatInTimeZone,
+} from "@/common/format";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import { buildViberDeepLink, toDialablePhone } from "@/common/phone";
+import { S } from "@/common/schemas";
+import {
+  getZonedDayKey,
+  getZonedDayRangeForInstant,
+  getZonedDayRangeFromDayKey,
+  getZonedStartOfDayIso,
+  getZonedToday,
+  toUtcISOString,
+} from "@/common/time-zone";
+import { copyToClipboard } from "@/common/utils/clipboard";
 import { AvailabilityEmptyState } from "@/components/availability-empty-state";
 import {
   StandardFormInput,
@@ -36,6 +56,17 @@ import {
   StandardFormSelect,
   StandardFormTextarea,
 } from "@/components/form";
+import {
+  AvailabilityWeekGrid,
+  AvailabilityWeekGridSkeleton,
+  GoogleMapsEmbed,
+  KudosDatePicker,
+  MobileScrollThumb,
+  TimeRangePicker,
+  TimeRangePickerSkeleton,
+  type TimeSlot,
+} from "@/components/kudos";
+import { Container } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -65,37 +96,6 @@ import {
 import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
 import { usePlaceDetail } from "@/features/discovery/hooks";
 import { cn } from "@/lib/utils";
-import {
-  AvailabilityWeekGrid,
-  AvailabilityWeekGridSkeleton,
-  GoogleMapsEmbed,
-  KudosDatePicker,
-  MobileScrollThumb,
-  TimeRangePicker,
-  TimeRangePickerSkeleton,
-  type TimeSlot,
-} from "@/shared/components/kudos";
-import { Container } from "@/shared/components/layout";
-import { S } from "@/shared/kernel/schemas";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
-import { trackEvent } from "@/shared/lib/clients/telemetry-client";
-import { copyToClipboard } from "@/shared/lib/clipboard";
-import {
-  formatCurrency,
-  formatDuration,
-  formatInTimeZone,
-} from "@/shared/lib/format";
-import { buildViberDeepLink, toDialablePhone } from "@/shared/lib/phone";
-import {
-  getZonedDayKey,
-  getZonedDayRangeForInstant,
-  getZonedDayRangeFromDayKey,
-  getZonedStartOfDayIso,
-  getZonedToday,
-  toUtcISOString,
-} from "@/shared/lib/time-zone";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 const DEFAULT_DURATION_MINUTES = 60;

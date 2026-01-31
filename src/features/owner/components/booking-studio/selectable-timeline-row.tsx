@@ -2,11 +2,11 @@
 
 import { Plus } from "lucide-react";
 import * as React from "react";
-import { cn } from "@/lib/utils";
 import {
   useCellState,
   useRangeSelection,
-} from "@/shared/components/kudos/range-selection";
+} from "@/components/kudos/range-selection";
+import { cn } from "@/lib/utils";
 
 export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
   dayKey,

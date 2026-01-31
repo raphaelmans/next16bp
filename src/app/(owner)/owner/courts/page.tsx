@@ -4,6 +4,8 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLogout, useSession } from "@/features/auth";
@@ -15,17 +17,13 @@ import {
   ReservationAlertsPanel,
 } from "@/features/owner/components";
 import {
+  useDeactivateCourt,
   useOwnerCourtFilter,
+  useOwnerCourts,
   useOwnerOrganization,
   useOwnerPlaceFilter,
   useOwnerPlaces,
 } from "@/features/owner/hooks";
-import {
-  useDeactivateCourt,
-  useOwnerCourts,
-} from "@/features/owner/hooks/use-owner-courts";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function OwnerCourtsPage() {
   const { data: user } = useSession();

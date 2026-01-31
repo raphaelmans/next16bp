@@ -20,6 +20,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -43,17 +45,15 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import { ClaimReviewActions } from "@/features/admin/components/claim-review-actions";
-import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
 import {
+  useAdminStats,
   useApproveClaim,
   useClaim,
   useClaimEvents,
   useRejectClaim,
-} from "@/features/admin/hooks/use-claims";
+} from "@/features/admin/hooks";
 import { useLogout, useSession } from "@/features/auth";
 import { cn } from "@/lib/utils";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 const statusConfig = {
   pending: {

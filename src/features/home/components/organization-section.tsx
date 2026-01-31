@@ -2,6 +2,7 @@
 
 import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 interface OrganizationSectionProps {
   organization: {

@@ -5,6 +5,7 @@ import { MailCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import {
   StandardFormInput,
   StandardFormProvider,
@@ -22,8 +23,7 @@ import { Spinner } from "@/components/ui/spinner";
 import {
   type SubmitContactMessageDTO,
   SubmitContactMessageSchema,
-} from "@/modules/contact/dtos";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
+} from "@/lib/modules/contact/dtos";
 import { useSubmitContactMessage } from "../hooks";
 
 const defaultValues: SubmitContactMessageDTO = {

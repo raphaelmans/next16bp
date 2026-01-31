@@ -2,6 +2,7 @@
 
 import { FileQuestion } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -11,7 +12,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 interface ReservationNotFoundProps {
   reservationId?: string;

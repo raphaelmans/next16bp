@@ -2,11 +2,11 @@
 
 import { AlertTriangle, CheckCircle, Clock, Info, XCircle } from "lucide-react";
 import Link from "next/link";
+import { formatRelative } from "@/common/format";
+import type { ReservationStatus } from "@/components/kudos";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { ReservationStatus } from "@/shared/components/kudos";
-import { formatRelative } from "@/shared/lib/format";
 
 interface StatusBannerProps {
   status: ReservationStatus;

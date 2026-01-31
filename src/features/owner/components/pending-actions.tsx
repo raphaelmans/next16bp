@@ -2,9 +2,9 @@
 
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 interface PendingActionsProps {
   pendingCount: number;

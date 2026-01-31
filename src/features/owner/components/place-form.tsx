@@ -6,6 +6,16 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
+import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
+import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import {
+  buildCityOptions,
+  buildProvinceOptions,
+  findCityByName,
+  findProvinceByName,
+  resolveProvinceCityValues,
+} from "@/common/ph-location-data";
 import {
   StandardFormCheckbox,
   StandardFormField,
@@ -25,22 +35,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { env } from "@/lib/env";
-import { useGoogleLocPreviewMutation } from "@/shared/lib/clients/google-loc-client";
-import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
-import {
-  buildCityOptions,
-  buildProvinceOptions,
-  findCityByName,
-  findProvinceByName,
-  resolveProvinceCityValues,
-} from "@/shared/lib/ph-location-data";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import {
   defaultPlaceFormValues,
   PLACE_TIME_ZONES,
   type PlaceFormData,
   placeFormSchema,
-} from "../schemas/place-form.schema";
+} from "../schemas";
 
 type PlaceFormValues = z.input<typeof placeFormSchema>;
 

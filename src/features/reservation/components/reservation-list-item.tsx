@@ -3,6 +3,12 @@
 import { CreditCard, Eye, MoreHorizontal, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  formatCurrency,
+  formatDateShort,
+  formatTimeRange,
+} from "@/common/format";
+import { KudosStatusBadge, type ReservationStatus } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -12,16 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import {
-  KudosStatusBadge,
-  type ReservationStatus,
-} from "@/shared/components/kudos";
-import {
-  formatCurrency,
-  formatDateShort,
-  formatTimeRange,
-} from "@/shared/lib/format";
-import type { ReservationListItem as ReservationListItemType } from "../hooks/use-my-reservations";
+import type { ReservationListItem as ReservationListItemType } from "../hooks";
 
 interface ReservationListItemProps {
   reservation: ReservationListItemType;

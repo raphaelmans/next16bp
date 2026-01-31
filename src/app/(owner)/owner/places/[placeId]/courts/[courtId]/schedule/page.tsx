@@ -2,6 +2,8 @@
 
 import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { PageHeader } from "@/components/ui/page-header";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
@@ -10,8 +12,6 @@ import {
   ReservationAlertsPanel,
 } from "@/features/owner/components";
 import { useOwnerOrganization } from "@/features/owner/hooks";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
 import { trpc } from "@/trpc/client";
 
 export default function CourtSchedulePage() {

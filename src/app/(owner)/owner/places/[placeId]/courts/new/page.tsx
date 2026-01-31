@@ -4,6 +4,8 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
@@ -11,8 +13,6 @@ import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import { CourtForm, ReservationAlertsPanel } from "@/features/owner/components";
 import { useCourtForm, useOwnerOrganization } from "@/features/owner/hooks";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
 import { trpc } from "@/trpc/client";
 
 export default function NewPlaceCourtPage() {

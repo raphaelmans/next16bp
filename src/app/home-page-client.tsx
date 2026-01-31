@@ -2,12 +2,12 @@ import { ArrowRight, Calendar, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { HomeSearchForm } from "@/app/home-search-form";
 import { HomeTrackedLink } from "@/app/home-tracked-link";
+import { appRoutes } from "@/common/app-routes";
+import { PlaceCard } from "@/components/kudos";
+import { Container } from "@/components/layout/container";
+import { PublicShell } from "@/components/layout/public-shell";
 import { Button } from "@/components/ui/button";
 import type { PlaceSummary } from "@/features/discovery/helpers";
-import { PlaceCard } from "@/shared/components/kudos";
-import { Container } from "@/shared/components/layout/container";
-import { PublicShell } from "@/shared/components/layout/public-shell";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 // Popular locations for quick access
 const POPULAR_LOCATIONS = [

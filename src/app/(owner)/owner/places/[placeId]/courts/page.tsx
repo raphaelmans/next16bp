@@ -4,6 +4,8 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLogout, useSession } from "@/features/auth";
@@ -19,8 +21,6 @@ import {
   useOwnerOrganization,
   useOwnerPlace,
 } from "@/features/owner/hooks";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function OwnerPlaceCourtsPage() {
   const params = useParams();

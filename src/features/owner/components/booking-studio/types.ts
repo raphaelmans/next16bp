@@ -5,7 +5,7 @@ import {
   getZonedDate,
   getZonedDayKey,
   getZonedDayRangeFromDayKey,
-} from "@/shared/lib/time-zone";
+} from "@/common/time-zone";
 
 export const DEFAULT_START_HOUR = 6;
 export const DEFAULT_END_HOUR = 22;

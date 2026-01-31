@@ -2,8 +2,8 @@ import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
-import * as schema from "../src/shared/infra/db/schema";
-import { resolveGooglePlaceId } from "../src/shared/lib/google-maps/resolve-google-place-id";
+import * as schema from "../src/lib/shared/infra/db/schema";
+import { resolveGooglePlaceId } from "../src/lib/shared/lib/google-maps/resolve-google-place-id";
 
 type PlaceLocation = {
   id: string;

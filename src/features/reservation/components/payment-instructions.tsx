@@ -1,10 +1,10 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import type {
   PaymentMethodProvider,
   PaymentMethodType,
-} from "@/shared/lib/payment-methods";
+} from "@/common/payment-methods";
+import { Card, CardContent } from "@/components/ui/card";
 import { PaymentMethodCard } from "./payment-method-card";
 
 interface PaymentMethod {

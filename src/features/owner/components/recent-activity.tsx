@@ -7,8 +7,8 @@ import {
   CreditCard,
   type LucideIcon,
 } from "lucide-react";
+import { formatRelative } from "@/common/format";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatRelative } from "@/shared/lib/format";
 
 type ActivityType = "booking" | "payment" | "blocked" | "confirmed";
 

@@ -6,6 +6,8 @@ import { useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import { allowEmptyString, S } from "@/common/schemas";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,8 +17,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { allowEmptyString, S } from "@/shared/kernel/schemas";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 const organizationFormSchema = z.object({

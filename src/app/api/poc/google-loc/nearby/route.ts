@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 
-import { handleError } from "@/shared/infra/http/error-handler";
-import { BadGatewayError, ValidationError } from "@/shared/kernel/errors";
-import type { ApiErrorResponse, ApiResponse } from "@/shared/kernel/response";
-import { wrapResponse } from "@/shared/utils/response";
+import { handleError } from "@/lib/shared/infra/http/error-handler";
+import { BadGatewayError, ValidationError } from "@/lib/shared/kernel/errors";
+import type {
+  ApiErrorResponse,
+  ApiResponse,
+} from "@/lib/shared/kernel/response";
+import { wrapResponse } from "@/lib/shared/utils/response";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

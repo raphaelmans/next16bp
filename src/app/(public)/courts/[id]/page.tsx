@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
-import { createServerCaller } from "@/shared/infra/trpc/server";
-import { appRoutes } from "@/shared/lib/app-routes";
+import { createServerCaller } from "@/lib/shared/infra/trpc/server";
 
 export { default } from "../../places/[placeId]/page";
 

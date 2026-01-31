@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { formatTimeRangeInTimeZone } from "@/common/format";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { formatTimeRangeInTimeZone } from "@/shared/lib/format";
 import type { DraftRowItem, DraftRowStatus } from "./types";
 import { DRAFT_STATUS_BADGE } from "./types";
 

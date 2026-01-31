@@ -1,11 +1,11 @@
 import type { EmailOtpType } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
+import { appRoutes } from "@/common/app-routes";
+import { getSafeRedirectPath } from "@/common/redirects";
 import { env } from "@/lib/env";
-import { logger } from "@/shared/infra/logger";
-import { createClient } from "@/shared/infra/supabase/create-client";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { getSafeRedirectPath } from "@/shared/lib/redirects";
+import { logger } from "@/lib/shared/infra/logger";
+import { createClient } from "@/lib/shared/infra/supabase/create-client";
 
 /**
  * Auth confirm route handler for PKCE flow (magic link, signup, recovery).

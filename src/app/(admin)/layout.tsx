@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { requireAdminSession } from "@/shared/infra/auth/server-session";
-import { appRoutes } from "@/shared/lib/app-routes";
+import { appRoutes } from "@/common/app-routes";
+import { requireAdminSession } from "@/lib/shared/infra/auth/server-session";
 
 /**
  * Admin route group layout.

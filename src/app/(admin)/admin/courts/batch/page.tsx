@@ -6,6 +6,19 @@ import Link from "next/link";
 import * as React from "react";
 import { type Control, useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import {
+  type GoogleLocResult,
+  useGoogleLocPreviewMutation,
+} from "@/common/clients/google-loc-client";
+import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import {
+  buildCityOptions,
+  buildProvinceOptions,
+  findCityByName,
+  findProvinceByName,
+} from "@/common/ph-location-data";
 import {
   StandardFormField,
   StandardFormInput,
@@ -13,6 +26,7 @@ import {
   StandardFormSelect,
   StandardFormTextarea,
 } from "@/components/form";
+import { AppShell } from "@/components/layout";
 import {
   Accordion,
   AccordionContent,
@@ -34,30 +48,16 @@ import { PageHeader } from "@/components/ui/page-header";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
   type CuratedCourtBatchResult,
+  useAdminStats,
   useCreateCuratedCourtsBatch,
-} from "@/features/admin/hooks/use-admin-courts";
-import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
+} from "@/features/admin/hooks";
 import {
   AMENITIES,
   type CuratedCourtBatchFormData,
   curatedCourtBatchSchema,
-} from "@/features/admin/schemas/curated-court-batch.schema";
+} from "@/features/admin/schemas";
 import { useLogout, useSession } from "@/features/auth";
 import { env } from "@/lib/env";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import {
-  type GoogleLocResult,
-  useGoogleLocPreviewMutation,
-} from "@/shared/lib/clients/google-loc-client";
-import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
-import {
-  buildCityOptions,
-  buildProvinceOptions,
-  findCityByName,
-  findProvinceByName,
-} from "@/shared/lib/ph-location-data";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 const DEFAULT_COUNTRY = "PH";

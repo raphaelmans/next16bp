@@ -1,8 +1,8 @@
 import { Suspense } from "react";
+import { appRoutes } from "@/common/app-routes";
 import { PageHeader } from "@/components/ui/page-header";
 import { OwnerPaymentMethodReminder } from "@/features/owner/components";
 import { ReservationTabs } from "@/features/reservation/components/reservation-tabs";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 export const metadata = {
   title: "My Reservations",

@@ -14,11 +14,14 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { appRoutes } from "@/common/app-routes";
+import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
 import {
   StandardFormInput,
   StandardFormProvider,
   StandardFormSelect,
 } from "@/components/form";
+import { AppShell } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -48,24 +51,19 @@ import {
   ReservationsTable,
 } from "@/features/owner/components";
 import {
+  type Reservation,
+  useAcceptReservation,
+  useConfirmReservation,
+  useOrganizationPaymentMethods,
   useOwnerCourtFilter,
   useOwnerCourts,
   useOwnerOrganization,
   useOwnerPlaceFilter,
   useOwnerPlaces,
-} from "@/features/owner/hooks";
-import { useOrganizationPaymentMethods } from "@/features/owner/hooks/use-organization-payment-methods";
-import {
-  type Reservation,
-  useAcceptReservation,
-  useConfirmReservation,
   useOwnerReservations,
   useRejectReservation,
-} from "@/features/owner/hooks/use-owner-reservations";
+} from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { SETTINGS_SECTION_HASHES } from "@/shared/lib/section-hashes";
 import { trpc } from "@/trpc/client";
 
 type TabValue = "pending" | "upcoming" | "past" | "cancelled";

@@ -1,4 +1,4 @@
-import type { PlaceCardPlace } from "@/shared/components/kudos";
+import type { PlaceCardPlace } from "@/components/kudos";
 
 export interface PlaceSummary extends PlaceCardPlace {
   latitude?: number;

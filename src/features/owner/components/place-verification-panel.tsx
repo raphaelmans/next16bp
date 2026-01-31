@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
 import { StandardFormProvider, StandardFormTextarea } from "@/components/form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -28,13 +29,12 @@ import {
   usePlaceVerification,
   useSubmitPlaceVerification,
   useTogglePlaceReservations,
-} from "@/features/owner/hooks/use-place-verification";
-import { cn } from "@/lib/utils";
+} from "@/features/owner/hooks";
 import {
   FILE_SIZE_LIMITS_READABLE,
   MAX_VERIFICATION_DOCUMENT_SIZE,
-} from "@/modules/storage/dtos";
-import { appRoutes } from "@/shared/lib/app-routes";
+} from "@/lib/modules/storage/dtos";
+import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 
 const STATUS_CONFIG: Record<

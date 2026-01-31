@@ -2,6 +2,15 @@
 
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useAmenitiesQuery } from "@/common/clients/amenities-client";
+import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
+import {
+  buildCityOptions,
+  buildProvinceOptions,
+  findCityBySlug,
+  findCityBySlugAcrossProvinces,
+  findProvinceBySlug,
+} from "@/common/ph-location-data";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -25,15 +34,6 @@ import {
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
-import { useAmenitiesQuery } from "@/shared/lib/clients/amenities-client";
-import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
-import {
-  buildCityOptions,
-  buildProvinceOptions,
-  findCityBySlug,
-  findCityBySlugAcrossProvinces,
-  findProvinceBySlug,
-} from "@/shared/lib/ph-location-data";
 import { trpc } from "@/trpc/client";
 
 interface PlaceFiltersProps {

@@ -1,9 +1,9 @@
 import { notFound, redirect } from "next/navigation";
 import Script from "next/script";
+import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
+import { createServerCaller } from "@/lib/shared/infra/trpc/server";
 import { isUuid } from "@/lib/slug";
-import { createServerCaller } from "@/shared/infra/trpc/server";
-import { appRoutes } from "@/shared/lib/app-routes";
 import PlaceDetailClient from "./place-detail-client";
 
 export { generateMetadata } from "../../courts/[id]/page";

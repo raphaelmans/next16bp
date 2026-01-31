@@ -8,8 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { OwnerCourt } from "../hooks/use-owner-courts";
-import type { OwnerPlace } from "../hooks/use-owner-places";
+import type { OwnerCourt, OwnerPlace } from "../hooks";
 
 interface PlaceCourtFilterProps {
   places: OwnerPlace[];

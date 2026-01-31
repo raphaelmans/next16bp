@@ -13,6 +13,8 @@ import {
 import Link from "next/link";
 import { type ChangeEvent, useRef } from "react";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,8 +34,6 @@ import {
   useOwnerPlaces,
   useUploadOrganizationLogo,
 } from "@/features/owner/hooks";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
 import { trpc } from "@/trpc/client";
 
 export default function OwnerPlacesPage() {

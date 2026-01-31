@@ -3,13 +3,13 @@
 import { Building2, Check, Copy, Smartphone, Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import {
   PAYMENT_PROVIDER_LABELS,
   type PaymentMethodProvider,
   type PaymentMethodType,
-} from "@/shared/lib/payment-methods";
+} from "@/common/payment-methods";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface PaymentMethodCardProps {
   type: PaymentMethodType;

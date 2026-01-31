@@ -1,7 +1,7 @@
 import { and, eq, inArray, lt } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
-import { db } from "@/shared/infra/db/drizzle";
-import { reservation, reservationEvent } from "@/shared/infra/db/schema";
+import { db } from "@/lib/shared/infra/db/drizzle";
+import { reservation, reservationEvent } from "@/lib/shared/infra/db/schema";
 
 /**
  * Cron job to expire stale reservations.

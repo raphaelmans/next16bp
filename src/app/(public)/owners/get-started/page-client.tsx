@@ -11,6 +11,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
+import { appRoutes } from "@/common/app-routes";
+import { trackEvent } from "@/common/clients/telemetry-client";
+import { useSetOwnerOnboardingIntent } from "@/common/hooks/owner-onboarding-intent";
+import { Container } from "@/components/layout";
 import {
   Accordion,
   AccordionContent,
@@ -26,10 +30,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Container } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { trackEvent } from "@/shared/lib/clients/telemetry-client";
-import { useSetOwnerOnboardingIntent } from "@/shared/lib/owner-onboarding-intent";
 
 const buildOwnerRegisterHref = () => {
   const params = new URLSearchParams({ redirect: appRoutes.owner.getStarted });

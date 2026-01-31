@@ -1,10 +1,10 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { makeOrganizationRepository } from "@/modules/organization/factories/organization.factory";
-import { makeUserPreferenceService } from "@/modules/user-preference/factories/user-preference.factory";
-import { requireSession } from "@/shared/infra/auth/server-session";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { getSafeRedirectPath } from "@/shared/lib/redirects";
+import { appRoutes } from "@/common/app-routes";
+import { getSafeRedirectPath } from "@/common/redirects";
+import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
+import { makeUserPreferenceService } from "@/lib/modules/user-preference/factories/user-preference.factory";
+import { requireSession } from "@/lib/shared/infra/auth/server-session";
 
 export const dynamic = "force-dynamic";
 

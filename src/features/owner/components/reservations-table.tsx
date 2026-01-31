@@ -23,7 +23,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import type { Reservation } from "../hooks/use-owner-reservations";
+import type { Reservation } from "../hooks";
 import { PaymentProofCard } from "./payment-proof-card";
 
 interface ReservationsTableProps {

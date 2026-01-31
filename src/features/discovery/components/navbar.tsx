@@ -13,16 +13,16 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { appRoutes } from "@/common/app-routes";
+import { trackEvent } from "@/common/clients/telemetry-client";
+import { URLQueryBuilder } from "@/common/url-query-builder";
+import { KudosLogo } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useLogout, useSession } from "@/features/auth/hooks/use-auth";
+import { useLogout, useSession } from "@/features/auth/hooks";
 import { cn } from "@/lib/utils";
-import { KudosLogo } from "@/shared/components/kudos";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { trackEvent } from "@/shared/lib/clients/telemetry-client";
-import { URLQueryBuilder } from "@/shared/lib/url-query-builder";
 import { trpc } from "@/trpc/client";
 import { UserDropdown } from "./user-dropdown";
 

@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { OnboardingShell } from "@/shared/components/layout/onboarding-shell";
-import { PlayerShell } from "@/shared/components/layout/player-shell";
-import { PublicShell } from "@/shared/components/layout/public-shell";
+import { appRoutes, getRouteType } from "@/common/app-routes";
+import { OnboardingShell } from "@/components/layout/onboarding-shell";
+import { PlayerShell } from "@/components/layout/player-shell";
+import { PublicShell } from "@/components/layout/public-shell";
 import {
   requireAdminSession,
   requireSession,
-} from "@/shared/infra/auth/server-session";
-import { appRoutes, getRouteType } from "@/shared/lib/app-routes";
+} from "@/lib/shared/infra/auth/server-session";
 
 export const dynamic = "force-dynamic";
 

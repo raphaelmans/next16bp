@@ -8,7 +8,9 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { formatCurrency } from "@/common/format";
 import { StandardFormProvider } from "@/components/form";
+import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CountdownTimer } from "@/features/reservation/components/countdown-timer";
@@ -24,8 +26,6 @@ import {
   useMarkPayment,
   useUploadPaymentProof,
 } from "@/features/reservation/hooks";
-import { Container } from "@/shared/components/layout";
-import { formatCurrency } from "@/shared/lib/format";
 import { trpc } from "@/trpc/client";
 
 export default function PaymentPage() {

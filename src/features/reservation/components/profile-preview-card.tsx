@@ -2,11 +2,11 @@
 
 import { AlertTriangle, Edit, Mail, Phone, User } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 interface ProfilePreviewCardProps {
   profile: {

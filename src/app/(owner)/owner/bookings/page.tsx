@@ -1,14 +1,7 @@
 "use client";
 
-import { TZDate } from "@date-fns/tz";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  addDays,
-  addMinutes,
-  addMonths,
-  differenceInMinutes,
-  endOfMonth,
-} from "date-fns";
+import { addDays, addMinutes, differenceInMinutes } from "date-fns";
 import debounce from "debounce";
 import {
   CalendarIcon,
@@ -22,6 +15,25 @@ import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import {
+  formatCurrency,
+  formatInTimeZone,
+  formatTimeRangeInTimeZone,
+} from "@/common/format";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import {
+  getZonedDate,
+  getZonedDayKey,
+  getZonedDayRangeFromDayKey,
+  getZonedToday,
+  toUtcISOString,
+} from "@/common/time-zone";
+import {
+  type RangeSelectionConfig,
+  RangeSelectionProvider,
+} from "@/components/kudos/range-selection";
+import { AppShell } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -103,25 +115,6 @@ import {
 } from "@/features/owner/hooks";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import {
-  type RangeSelectionConfig,
-  RangeSelectionProvider,
-} from "@/shared/components/kudos/range-selection";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import {
-  formatCurrency,
-  formatInTimeZone,
-  formatTimeRangeInTimeZone,
-} from "@/shared/lib/format";
-import {
-  getZonedDate,
-  getZonedDayKey,
-  getZonedDayRangeFromDayKey,
-  getZonedToday,
-  toUtcISOString,
-} from "@/shared/lib/time-zone";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 export default function OwnerAvailabilityStudioPage() {
@@ -366,23 +359,6 @@ function OwnerAvailabilityStudioInner() {
   const handleMobileToday = React.useCallback(() => {
     setDayKeyParam(getZonedDayKey(todayDate, placeTimeZone));
   }, [placeTimeZone, setDayKeyParam, todayDate]);
-
-  const _navigateMonth = React.useCallback(
-    (direction: 1 | -1) => {
-      const current = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
-      const targetMonth = addMonths(current, direction);
-      const lastDay = endOfMonth(targetMonth);
-      const targetDay = Math.min(current.getDate(), lastDay.getDate());
-      const targetDate = new TZDate(
-        targetMonth.getFullYear(),
-        targetMonth.getMonth(),
-        targetDay,
-        placeTimeZone,
-      );
-      setDayKeyParam(getZonedDayKey(targetDate, placeTimeZone));
-    },
-    [dayKey, placeTimeZone, setDayKeyParam],
-  );
 
   const visibleDayKeys = React.useMemo(() => {
     if (isWeekView) return weekDayKeys;

@@ -3,8 +3,8 @@
 import { AlertCircle, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { appRoutes } from "@/common/app-routes";
 import { Button } from "@/components/ui/button";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 interface ProfileCompletionBannerProps {
   isProfileComplete: boolean;

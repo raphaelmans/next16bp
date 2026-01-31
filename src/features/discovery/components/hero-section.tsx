@@ -3,11 +3,11 @@
 import { MapPin, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { appRoutes } from "@/common/app-routes";
+import { URLQueryBuilder } from "@/common/url-query-builder";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { URLQueryBuilder } from "@/shared/lib/url-query-builder";
 
 const POPULAR_LOCATIONS = [
   { name: "Manila", slug: "manila" },

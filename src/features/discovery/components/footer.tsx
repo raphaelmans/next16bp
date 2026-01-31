@@ -1,8 +1,8 @@
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
+import { KudosLogo } from "@/components/kudos";
+import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
-import { KudosLogo } from "@/shared/components/kudos";
-import { Container } from "@/shared/components/layout/container";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 const FOOTER_LINKS = {
   discover: [

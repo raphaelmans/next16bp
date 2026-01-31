@@ -1,11 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
-import {
-  appRoutes,
-  isGuestRoute,
-  isProtectedRoute,
-} from "@/shared/lib/app-routes";
-import { getSafeRedirectPath } from "@/shared/lib/redirects";
+import { appRoutes, isGuestRoute, isProtectedRoute } from "@/common/app-routes";
+import { getSafeRedirectPath } from "@/common/redirects";
 
 /**
  * Next.js proxy for session refresh and route protection.

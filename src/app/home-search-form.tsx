@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { appRoutes } from "@/common/app-routes";
+import { trackEvent } from "@/common/clients/telemetry-client";
+import { URLQueryBuilder } from "@/common/url-query-builder";
 import { Button } from "@/components/ui/button";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { trackEvent } from "@/shared/lib/clients/telemetry-client";
-import { URLQueryBuilder } from "@/shared/lib/url-query-builder";
 
 interface PopularLocation {
   label: string;

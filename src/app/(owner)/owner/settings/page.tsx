@@ -12,6 +12,17 @@ import {
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import {
+  BANK_PROVIDERS,
+  MOBILE_WALLET_PROVIDERS,
+  PAYMENT_METHOD_TYPE_LABELS,
+  PAYMENT_PROVIDER_LABELS,
+  type PaymentMethodProvider,
+  type PaymentMethodType,
+} from "@/common/payment-methods";
+import { SETTINGS_SECTION_IDS } from "@/common/section-hashes";
 import {
   StandardFormField,
   StandardFormInput,
@@ -19,6 +30,7 @@ import {
   StandardFormSelect,
   StandardFormSwitch,
 } from "@/components/form";
+import { AppShell } from "@/components/layout";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -56,38 +68,22 @@ import {
 } from "@/features/owner/components";
 import {
   useCreateOrganizationPaymentMethod,
+  useCurrentOrganization,
   useDeleteOrganizationPaymentMethod,
   useOrganizationPaymentMethods,
   useOwnerOrganization,
+  useRequestRemoval,
   useSetDefaultOrganizationPaymentMethod,
+  useUpdateOrganization,
   useUpdateOrganizationPaymentMethod,
 } from "@/features/owner/hooks";
 import {
-  useCurrentOrganization,
-  useRequestRemoval,
-  useUpdateOrganization,
-} from "@/features/owner/hooks/use-organization";
-import {
   type OrganizationFormData,
-  organizationSchema,
-  type RemovalRequestFormData,
-} from "@/features/owner/schemas/organization.schema";
-import {
   type OrganizationPaymentMethodFormData,
   organizationPaymentMethodSchema,
-} from "@/features/owner/schemas/organization-payment-method.schema";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import {
-  BANK_PROVIDERS,
-  MOBILE_WALLET_PROVIDERS,
-  PAYMENT_METHOD_TYPE_LABELS,
-  PAYMENT_PROVIDER_LABELS,
-  type PaymentMethodProvider,
-  type PaymentMethodType,
-} from "@/shared/lib/payment-methods";
-import { SETTINGS_SECTION_IDS } from "@/shared/lib/section-hashes";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
+  organizationSchema,
+  type RemovalRequestFormData,
+} from "@/features/owner/schemas";
 
 interface OrganizationPaymentMethodItem {
   id: string;

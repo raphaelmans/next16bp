@@ -1,11 +1,11 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { appRoutes } from "@/common/app-routes";
+import { getSafeRedirectPath } from "@/common/redirects";
 import { env } from "@/lib/env";
-import { UserRoleAlreadyExistsError } from "@/modules/user-role/errors/user-role.errors";
-import { makeUserRoleService } from "@/modules/user-role/factories/user-role.factory";
-import { createClient } from "@/shared/infra/supabase/create-client";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { getSafeRedirectPath } from "@/shared/lib/redirects";
+import { UserRoleAlreadyExistsError } from "@/lib/modules/user-role/errors/user-role.errors";
+import { makeUserRoleService } from "@/lib/modules/user-role/factories/user-role.factory";
+import { createClient } from "@/lib/shared/infra/supabase/create-client";
 
 /**
  * Auth callback route handler for OAuth and magic link flows.

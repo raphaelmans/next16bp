@@ -20,7 +20,32 @@ import {
   useQueryState,
 } from "nuqs";
 import * as React from "react";
+import { appRoutes } from "@/common/app-routes";
+import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
+import { trackEvent } from "@/common/clients/telemetry-client";
+import {
+  formatCurrency,
+  formatDuration,
+  formatInTimeZone,
+} from "@/common/format";
+import {
+  getZonedDayKey,
+  getZonedDayRangeForInstant,
+  getZonedDayRangeFromDayKey,
+  getZonedStartOfDayIso,
+  getZonedToday,
+  toUtcISOString,
+} from "@/common/time-zone";
 import { AvailabilityEmptyState } from "@/components/availability-empty-state";
+import {
+  AvailabilityWeekGrid,
+  AvailabilityWeekGridSkeleton,
+  KudosDatePicker,
+  TimeRangePicker,
+  TimeRangePickerSkeleton,
+  type TimeSlot,
+} from "@/components/kudos";
+import { Container } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,31 +57,6 @@ import {
   type PlaceVerificationDisplayInput,
 } from "@/features/discovery/helpers";
 import { cn } from "@/lib/utils";
-import {
-  AvailabilityWeekGrid,
-  AvailabilityWeekGridSkeleton,
-  KudosDatePicker,
-  TimeRangePicker,
-  TimeRangePickerSkeleton,
-  type TimeSlot,
-} from "@/shared/components/kudos";
-import { Container } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
-import { trackEvent } from "@/shared/lib/clients/telemetry-client";
-import {
-  formatCurrency,
-  formatDuration,
-  formatInTimeZone,
-} from "@/shared/lib/format";
-import {
-  getZonedDayKey,
-  getZonedDayRangeForInstant,
-  getZonedDayRangeFromDayKey,
-  getZonedStartOfDayIso,
-  getZonedToday,
-  toUtcISOString,
-} from "@/shared/lib/time-zone";
 import { trpc } from "@/trpc/client";
 
 const TIMELINE_SLOT_DURATION = 60;

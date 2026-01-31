@@ -1,8 +1,8 @@
 import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { z } from "zod";
-import { CreateCourtBlockSchema } from "../src/modules/court-block/dtos/create-court-block.dto";
-import { getZonedDate } from "../src/shared/lib/time-zone";
+import { getZonedDate } from "../src/common/time-zone";
+import { CreateCourtBlockSchema } from "../src/lib/modules/court-block/dtos/create-court-block.dto";
 
 type FixtureCommand = {
   name: string;

@@ -2,11 +2,11 @@
 
 import { Clock, User } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
+import { formatTime } from "@/common/format";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { formatTime } from "@/shared/lib/format";
 
 type BookingStatus = "booked" | "pending" | "available" | "blocked";
 

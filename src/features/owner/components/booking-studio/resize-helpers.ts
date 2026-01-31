@@ -1,5 +1,5 @@
 import { addMinutes, differenceInMinutes } from "date-fns";
-import { getZonedDate } from "@/shared/lib/time-zone";
+import { getZonedDate } from "@/common/time-zone";
 import { type CourtHoursWindow, getWindowsForDayOfWeek } from "./court-hours";
 import {
   type CourtBlockItem,

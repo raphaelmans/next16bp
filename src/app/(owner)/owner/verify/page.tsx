@@ -2,6 +2,8 @@
 
 import { CheckCircle2, Clock, ShieldCheck, XCircle } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,8 +12,6 @@ import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import { ReservationAlertsPanel } from "@/features/owner/components";
 import { useOwnerOrganization, useOwnerPlaces } from "@/features/owner/hooks";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function OwnerVerificationLandingPage() {
   const { data: user } = useSession();

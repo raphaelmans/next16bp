@@ -1,13 +1,13 @@
 import { eq } from "drizzle-orm";
 import type { MetadataRoute } from "next";
+import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
-import { db } from "@/shared/infra/db/drizzle";
-import { organization, place } from "@/shared/infra/db/schema";
-import { appRoutes } from "@/shared/lib/app-routes";
+import { db } from "@/lib/shared/infra/db/drizzle";
+import { organization, place } from "@/lib/shared/infra/db/schema";
 import {
   getPHProvincesCities,
   resolveLocationSlugs,
-} from "@/shared/lib/ph-location-data.server";
+} from "@/lib/shared/lib/ph-location-data.server";
 
 export const revalidate = 3600;
 

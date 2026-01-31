@@ -12,6 +12,11 @@ import {
 } from "nuqs";
 import * as React from "react";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { normalizeDurationMinutes } from "@/common/duration";
+import { formatCurrency, formatDuration } from "@/common/format";
+import { getZonedDate } from "@/common/time-zone";
+import { Container } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -25,13 +30,8 @@ import { ProfilePreviewCard } from "@/features/reservation/components/profile-pr
 import {
   useCreateReservationForAnyCourt,
   useCreateReservationForCourt,
+  useProfile,
 } from "@/features/reservation/hooks";
-import { useProfile } from "@/features/reservation/hooks/use-profile";
-import { Container } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { normalizeDurationMinutes } from "@/shared/lib/duration";
-import { formatCurrency, formatDuration } from "@/shared/lib/format";
-import { getZonedDate } from "@/shared/lib/time-zone";
 
 const DEFAULT_DURATION_MINUTES = 60;
 const selectionModeSchema = ["any", "court"] as const;

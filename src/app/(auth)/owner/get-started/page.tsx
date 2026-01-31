@@ -18,6 +18,10 @@ import { useRouter } from "next/navigation";
 import { parseAsString, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { trackEvent } from "@/common/clients/telemetry-client";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import { Container } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,10 +36,6 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
 import { useOwnerSetupStatus } from "@/features/owner/hooks";
-import { Container } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { trackEvent } from "@/shared/lib/clients/telemetry-client";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 const getSafeNextHref = (nextHref: string | null): string | null => {

@@ -4,6 +4,14 @@ import { Loader2, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
+import { appRoutes } from "@/common/app-routes";
+import {
+  formatCurrency,
+  formatDateShort,
+  formatTime,
+  formatTimeRange,
+} from "@/common/format";
+import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
@@ -12,14 +20,6 @@ import { CancelDialog } from "@/features/reservation/components/cancel-dialog";
 import { ReservationActionsCard } from "@/features/reservation/components/reservation-actions-card";
 import { ReservationExpired } from "@/features/reservation/components/reservation-expired";
 import { StatusBanner } from "@/features/reservation/components/status-banner";
-import { Container } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import {
-  formatCurrency,
-  formatDateShort,
-  formatTime,
-  formatTimeRange,
-} from "@/shared/lib/format";
 import { trpc } from "@/trpc/client";
 
 interface ReservationEvent {

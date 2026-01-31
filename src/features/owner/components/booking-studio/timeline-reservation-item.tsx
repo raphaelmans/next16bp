@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
+import { formatCurrency, formatTimeRangeInTimeZone } from "@/common/format";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { formatCurrency, formatTimeRangeInTimeZone } from "@/shared/lib/format";
 import type { ReservationItem } from "./types";
 
 export const TimelineReservationItem = React.memo(

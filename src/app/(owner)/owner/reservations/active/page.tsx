@@ -5,6 +5,9 @@ import { Clock, ExternalLink, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { formatCurrency } from "@/common/format";
+import { AppShell } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,24 +29,18 @@ import {
   ReservationAlertsPanel,
 } from "@/features/owner/components";
 import {
+  type Reservation,
+  useAcceptReservation,
+  useConfirmReservation,
   useOwnerCourtFilter,
   useOwnerCourts,
   useOwnerOrganization,
   useOwnerPlaceFilter,
   useOwnerPlaces,
-} from "@/features/owner/hooks";
-
-import {
-  type Reservation,
-  useAcceptReservation,
-  useConfirmReservation,
   useOwnerReservations,
   useRejectReservation,
-} from "@/features/owner/hooks/use-owner-reservations";
+} from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { formatCurrency } from "@/shared/lib/format";
 import { trpc } from "@/trpc/client";
 
 type ActiveFilter = "all" | "awaiting" | "marked";

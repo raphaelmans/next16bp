@@ -3,15 +3,15 @@
 import { Building2, Check, Clock, Copy, Smartphone } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   PAYMENT_PROVIDER_LABELS,
   type PaymentMethodProvider,
   type PaymentMethodType,
-} from "@/shared/lib/payment-methods";
+} from "@/common/payment-methods";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface PaymentMethod {
   id: string;

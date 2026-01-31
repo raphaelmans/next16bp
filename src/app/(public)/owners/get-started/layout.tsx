@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL(appRoutes.ownersGetStarted.base, appUrl);

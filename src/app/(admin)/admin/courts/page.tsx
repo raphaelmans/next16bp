@@ -14,6 +14,14 @@ import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
+import {
+  buildCityOptions,
+  buildProvinceOptions,
+  findProvinceByName,
+} from "@/common/ph-location-data";
+import { AppShell } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -55,19 +63,11 @@ import {
   type CourtStatus,
   type CourtType,
   useAdminCourts,
+  useAdminStats,
   useToggleCourtStatus,
-} from "@/features/admin/hooks/use-admin-courts";
-import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
+} from "@/features/admin/hooks";
 import { useLogout, useSession } from "@/features/auth";
 import { cn } from "@/lib/utils";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
-import {
-  buildCityOptions,
-  buildProvinceOptions,
-  findProvinceByName,
-} from "@/shared/lib/ph-location-data";
 
 const _claimStatusLabels: Record<ClaimStatusFilter, string> = {
   unclaimed: "Unclaimed",

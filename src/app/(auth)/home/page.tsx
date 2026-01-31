@@ -2,7 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
-import { useSession } from "@/features/auth/hooks/use-auth";
+import { appRoutes } from "@/common/app-routes";
+import {
+  useOwnerOnboardingIntent,
+  useSetOwnerOnboardingIntent,
+} from "@/common/hooks/owner-onboarding-intent";
+import { useSession } from "@/features/auth/hooks";
 import {
   OrganizationSection,
   ProfileCompletionBanner,
@@ -11,12 +16,7 @@ import {
   WelcomeHeader,
 } from "@/features/home/components";
 import type { Reservation } from "@/features/home/components/upcoming-reservations";
-import { useHomeData } from "@/features/home/hooks/use-home-data";
-import { appRoutes } from "@/shared/lib/app-routes";
-import {
-  useOwnerOnboardingIntent,
-  useSetOwnerOnboardingIntent,
-} from "@/shared/lib/owner-onboarding-intent";
+import { useHomeData } from "@/features/home/hooks";
 
 export default function HomePage() {
   const router = useRouter();

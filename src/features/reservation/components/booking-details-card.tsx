@@ -2,14 +2,10 @@
 
 import { Calendar, Clock, ExternalLink, MapPin } from "lucide-react";
 import Image from "next/image";
+import { formatCurrency, formatDate, formatTimeRange } from "@/common/format";
+import { GoogleMapsEmbed } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GoogleMapsEmbed } from "@/shared/components/kudos";
-import {
-  formatCurrency,
-  formatDate,
-  formatTimeRange,
-} from "@/shared/lib/format";
 
 interface BookingDetailsCardProps {
   court: {

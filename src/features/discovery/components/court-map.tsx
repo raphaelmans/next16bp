@@ -2,16 +2,16 @@
 
 import { ExternalLink } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import {
   GoogleMapsEmbed,
   LocationPin,
   PlaceCard,
   type PlaceCardLinkScope,
   type PlaceCardPlace,
-} from "@/shared/components/kudos";
+} from "@/components/kudos";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface PlaceMapItem extends PlaceCardPlace {
   lat?: number | null;

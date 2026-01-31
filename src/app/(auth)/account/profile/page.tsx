@@ -1,11 +1,11 @@
 "use client";
 
 import { Suspense } from "react";
+import { appRoutes } from "@/common/app-routes";
 import { PageHeader } from "@/components/ui/page-header";
 import { OwnerCtaSection } from "@/features/reservation/components/owner-cta-section";
 import { ProfileForm } from "@/features/reservation/components/profile-form";
 import { ProfileFormSkeleton } from "@/features/reservation/components/skeletons";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 export default function ProfilePage() {
   return (

@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { findCityBySlug, findProvinceBySlug } from "@/common/ph-location-data";
 import { env } from "@/lib/env";
-import {
-  findCityBySlug,
-  findProvinceBySlug,
-} from "@/shared/lib/ph-location-data";
-import { getPHProvincesCities } from "@/shared/lib/ph-location-data.server";
+import { getPHProvincesCities } from "@/lib/shared/lib/ph-location-data.server";
 import CourtsPageClient from "../../../courts-page-client";
 
 type CourtsCityPageProps = {

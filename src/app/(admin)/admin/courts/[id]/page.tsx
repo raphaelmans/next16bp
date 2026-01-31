@@ -15,12 +15,24 @@ import { useParams, useRouter } from "next/navigation";
 import * as React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
+import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import {
+  buildCityOptions,
+  buildProvinceOptions,
+  findCityByName,
+  findProvinceByName,
+  resolveProvinceCityValues,
+} from "@/common/ph-location-data";
 import {
   StandardFormField,
   StandardFormInput,
   StandardFormProvider,
   StandardFormSelect,
 } from "@/components/form";
+import { AppShell } from "@/components/layout";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -70,33 +82,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
   useAdminCourt,
+  useAdminStats,
   useRemoveAdminCourtPhoto,
   useTransferPlaceToOrganization,
   useUpdateCuratedCourt,
   useUploadAdminCourtPhoto,
-} from "@/features/admin/hooks/use-admin-courts";
-import { useAdminStats } from "@/features/admin/hooks/use-admin-dashboard";
+} from "@/features/admin/hooks";
 import {
   type AdminCourtEditFormData,
+  AMENITIES,
   adminCourtEditSchema,
-} from "@/features/admin/schemas/admin-court-edit.schema";
-import { AMENITIES } from "@/features/admin/schemas/curated-court.schema";
+} from "@/features/admin/schemas";
 import { useLogout, useSession } from "@/features/auth";
-import { PLACE_TIME_ZONES } from "@/features/owner/schemas/place-form.schema";
+import { PLACE_TIME_ZONES } from "@/features/owner/schemas";
 import { env } from "@/lib/env";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { useGoogleLocPreviewMutation } from "@/shared/lib/clients/google-loc-client";
-import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
-import {
-  buildCityOptions,
-  buildProvinceOptions,
-  findCityByName,
-  findProvinceByName,
-  resolveProvinceCityValues,
-} from "@/shared/lib/ph-location-data";
-
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
 import { trpc } from "@/trpc/client";
 
 const DEFAULT_COUNTRY = "PH";

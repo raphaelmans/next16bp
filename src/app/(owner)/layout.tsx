@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { appRoutes } from "@/common/app-routes";
 import { OwnerOnboardingIntentClearer } from "@/features/owner/components/owner-onboarding-intent-clearer";
-import { makeOrganizationService } from "@/modules/organization/factories/organization.factory";
-import { requireSession } from "@/shared/infra/auth/server-session";
-import { appRoutes } from "@/shared/lib/app-routes";
+import { makeOrganizationService } from "@/lib/modules/organization/factories/organization.factory";
+import { requireSession } from "@/lib/shared/infra/auth/server-session";
 
 /**
  * Owner route group layout.

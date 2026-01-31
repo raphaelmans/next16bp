@@ -6,6 +6,9 @@ import { useParams, useRouter } from "next/navigation";
 import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
 import * as React from "react";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { formatCurrency } from "@/common/format";
+import { AppShell } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,10 +27,7 @@ import {
   useCourtRateRules,
   useOwnerOrganization,
 } from "@/features/owner/hooks";
-import type { CourtFormData } from "@/features/owner/schemas/court-form.schema";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { formatCurrency } from "@/shared/lib/format";
+import type { CourtFormData } from "@/features/owner/schemas";
 import { trpc } from "@/trpc/client";
 
 const stepKeys = [

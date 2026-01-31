@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import { Checkbox } from "@/components/ui/checkbox";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 interface TermsCheckboxProps {
   checked: boolean;

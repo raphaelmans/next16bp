@@ -16,6 +16,8 @@ import {
   XCircle,
 } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,12 +34,10 @@ import {
   useAdminRecentActivity,
   useAdminStats,
   usePendingClaims,
-} from "@/features/admin/hooks/use-admin-dashboard";
+} from "@/features/admin/hooks";
 import { useLogout, useSession } from "@/features/auth";
 import { StatsCard } from "@/features/owner/components/stats-card";
 import { cn } from "@/lib/utils";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 const activityIcons = {
   claim_approved: CheckCircle2,

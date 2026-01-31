@@ -1,6 +1,14 @@
 "use client";
 
 import { Suspense, useMemo } from "react";
+import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
+import {
+  findCityBySlug,
+  findCityBySlugAcrossProvinces,
+  findProvinceBySlug,
+} from "@/common/ph-location-data";
+import { AdBanner, PlaceCard, PlaceCardSkeleton } from "@/components/kudos";
+import { Container } from "@/components/layout";
 import {
   Pagination,
   PaginationContent,
@@ -23,18 +31,6 @@ import {
   useDiscoveryPlaceCardDetails,
   useDiscoveryPlaceSummaries,
 } from "@/features/discovery/hooks";
-import {
-  AdBanner,
-  PlaceCard,
-  PlaceCardSkeleton,
-} from "@/shared/components/kudos";
-import { Container } from "@/shared/components/layout";
-import { usePHProvincesCitiesQuery } from "@/shared/lib/clients/ph-provinces-cities-client";
-import {
-  findCityBySlug,
-  findCityBySlugAcrossProvinces,
-  findProvinceBySlug,
-} from "@/shared/lib/ph-location-data";
 
 type PaginationItemModel =
   | { type: "page"; page: number }

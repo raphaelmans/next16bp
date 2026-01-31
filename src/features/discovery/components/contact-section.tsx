@@ -1,11 +1,11 @@
 "use client";
 
 import { ExternalLink, Facebook, Globe, Instagram, Phone } from "lucide-react";
+import { buildViberDeepLink, toDialablePhone } from "@/common/phone";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { buildViberDeepLink, toDialablePhone } from "@/shared/lib/phone";
 
 interface SocialLinks {
   facebook?: string;

@@ -15,6 +15,8 @@ import { parseAsString, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 import { type Accept, type FileRejection, useDropzone } from "react-dropzone";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,8 +47,6 @@ import {
   useOwnerPlaces,
 } from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
 import { trpc } from "@/trpc/client";
 
 type CourtScope = "multi" | "single";

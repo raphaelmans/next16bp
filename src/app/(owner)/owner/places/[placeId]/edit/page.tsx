@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,9 +36,7 @@ import {
   ReservationAlertsPanel,
 } from "@/features/owner/components";
 import { useOwnerOrganization, usePlaceForm } from "@/features/owner/hooks";
-import type { PlaceFormData } from "@/features/owner/schemas/place-form.schema";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
+import type { PlaceFormData } from "@/features/owner/schemas";
 import { trpc } from "@/trpc/client";
 
 export default function EditPlacePage() {

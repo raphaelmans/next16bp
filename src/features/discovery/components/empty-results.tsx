@@ -1,8 +1,8 @@
 "use client";
 
 import { MapPin } from "lucide-react";
-import { EmptyState } from "@/shared/components/kudos";
-import { appRoutes } from "@/shared/lib/app-routes";
+import { appRoutes } from "@/common/app-routes";
+import { EmptyState } from "@/components/kudos";
 
 interface EmptyResultsProps {
   query?: string;

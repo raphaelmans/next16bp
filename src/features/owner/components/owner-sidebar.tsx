@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { appRoutes } from "@/common/app-routes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Collapsible,
@@ -43,7 +44,6 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { useOwnerSidebarQuickLinks } from "@/features/owner/hooks";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 interface Organization {
   id: string;

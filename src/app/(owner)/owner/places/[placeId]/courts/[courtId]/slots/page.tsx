@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { appRoutes } from "@/shared/lib/app-routes";
+import { appRoutes } from "@/common/app-routes";
 
 type CourtSlotsPageProps = {
   params: Promise<{ placeId: string; courtId: string }>;

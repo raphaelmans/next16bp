@@ -3,6 +3,7 @@
 import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 import type { UseFormReturn } from "react-hook-form";
+import { formatTimeRangeInTimeZone } from "@/common/format";
 import {
   StandardFormInput,
   StandardFormProvider,
@@ -33,7 +34,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { formatTimeRangeInTimeZone } from "@/shared/lib/format";
 import { useBookingStudio } from "./booking-studio-provider";
 import type { GuestBookingFormValues } from "./types";
 

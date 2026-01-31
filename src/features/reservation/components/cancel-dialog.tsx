@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useCancelReservation } from "../hooks/use-cancel-reservation";
+import { useCancelReservation } from "../hooks";
 
 interface CancelDialogProps {
   reservationId: string;

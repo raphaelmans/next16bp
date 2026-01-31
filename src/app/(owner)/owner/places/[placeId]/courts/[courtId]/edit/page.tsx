@@ -3,14 +3,14 @@
 import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { AppShell } from "@/components/layout";
 import { PageHeader } from "@/components/ui/page-header";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import { CourtForm, ReservationAlertsPanel } from "@/features/owner/components";
 import { useCourtForm, useOwnerOrganization } from "@/features/owner/hooks";
-import type { CourtFormData } from "@/features/owner/schemas/court-form.schema";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
+import type { CourtFormData } from "@/features/owner/schemas";
 import { trpc } from "@/trpc/client";
 
 export default function EditPlaceCourtPage() {

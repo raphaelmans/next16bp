@@ -1,11 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "@/lib/utils";
 import {
   type RangeSelectionConfig,
   RangeSelectionProvider,
-} from "@/shared/components/kudos/range-selection";
+} from "@/components/kudos/range-selection";
+import { cn } from "@/lib/utils";
 import {
   buildOpenCellIndexSet,
   type CourtHoursWindow,

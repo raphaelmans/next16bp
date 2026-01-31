@@ -3,6 +3,7 @@
 import { format } from "date-fns";
 import { CalendarDays, MapPin } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 export interface Reservation {
   id: string;

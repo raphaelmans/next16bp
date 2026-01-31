@@ -6,6 +6,9 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import { getSafeRedirectPath } from "@/common/redirects";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,11 +19,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { type MagicLinkDTO, MagicLinkSchema } from "@/modules/auth/dtos";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { getSafeRedirectPath } from "@/shared/lib/redirects";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
-import { useMagicLink } from "../hooks/use-auth";
+import { type MagicLinkDTO, MagicLinkSchema } from "@/lib/modules/auth/dtos";
+import { useMagicLink } from "../hooks";
 
 export function MagicLinkForm() {
   const searchParams = useSearchParams();

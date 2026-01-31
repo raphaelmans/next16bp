@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
-import { createServerCaller } from "@/shared/infra/trpc/server";
-import { appRoutes } from "@/shared/lib/app-routes";
+import { appRoutes } from "@/common/app-routes";
+import { createServerCaller } from "@/lib/shared/infra/trpc/server";
 
 export const alt = "KudosCourts court";
 export const size = {

@@ -6,6 +6,9 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import * as React from "react";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { formatCurrency } from "@/common/format";
+import { AppShell } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,17 +21,14 @@ import {
 } from "@/features/owner/components";
 import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
 import { RejectModal } from "@/features/owner/components/reject-modal";
-import { useOwnerOrganization } from "@/features/owner/hooks/use-owner-organization";
 import {
   useAcceptReservation,
   useConfirmReservation,
+  useOwnerOrganization,
   useOwnerReservations,
   useRejectReservation,
-} from "@/features/owner/hooks/use-owner-reservations";
+} from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { formatCurrency } from "@/shared/lib/format";
 import { trpc } from "@/trpc/client";
 
 const stageConfig = {

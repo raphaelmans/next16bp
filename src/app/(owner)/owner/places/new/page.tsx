@@ -4,6 +4,9 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { appRoutes } from "@/common/app-routes";
+import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
+import { AppShell } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
@@ -19,9 +22,6 @@ import {
   useOwnerOrganization,
   usePlaceForm,
 } from "@/features/owner/hooks";
-import { AppShell } from "@/shared/components/layout";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { SETTINGS_SECTION_HASHES } from "@/shared/lib/section-hashes";
 
 export default function NewPlacePage() {
   const router = useRouter();

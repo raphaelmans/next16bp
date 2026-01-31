@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { createServerCaller } from "@/shared/infra/trpc/server";
-import { appRoutes } from "@/shared/lib/app-routes";
+import { appRoutes } from "@/common/app-routes";
+import { createServerCaller } from "@/lib/shared/infra/trpc/server";
 
 export const dynamic = "force-dynamic";
 

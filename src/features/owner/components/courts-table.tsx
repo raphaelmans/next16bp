@@ -12,6 +12,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { appRoutes } from "@/common/app-routes";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,8 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { appRoutes } from "@/shared/lib/app-routes";
-import type { OwnerCourt } from "../hooks/use-owner-courts";
+import type { OwnerCourt } from "../hooks";
 
 interface CourtsTableProps {
   courts: OwnerCourt[];

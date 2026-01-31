@@ -14,7 +14,7 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import * as schema from "../src/shared/infra/db/schema";
+import * as schema from "../src/lib/shared/infra/db/schema";
 
 interface SportSeed {
   slug: string;

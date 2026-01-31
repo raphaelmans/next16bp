@@ -1,11 +1,11 @@
 "use client";
 
 import * as React from "react";
+import { formatCurrency, formatTimeRangeInTimeZone } from "@/common/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatCurrency, formatTimeRangeInTimeZone } from "@/shared/lib/format";
 import type { CourtBlockItem } from "./types";
 
 export const MobileDayBlocksList = React.memo(function MobileDayBlocksList({

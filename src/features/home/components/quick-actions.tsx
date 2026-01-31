@@ -9,9 +9,9 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 interface QuickActionCardProps {
   title: string;

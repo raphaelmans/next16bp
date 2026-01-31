@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { appRoutes } from "@/common/app-routes";
+import { Container } from "@/components/layout/container";
 import { env } from "@/lib/env";
-import { Container } from "@/shared/components/layout/container";
-import { appRoutes } from "@/shared/lib/app-routes";
 
 const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL(appRoutes.blog.base, appUrl);

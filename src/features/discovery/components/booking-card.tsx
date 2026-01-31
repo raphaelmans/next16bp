@@ -4,19 +4,19 @@ import { addDays } from "date-fns";
 import { LogIn } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSession } from "@/features/auth/hooks/use-auth";
-import { cn } from "@/lib/utils";
+import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
+import { formatCurrency } from "@/common/format";
+import { getZonedToday } from "@/common/time-zone";
 import {
   KudosDatePicker,
   type TimeSlot,
   TimeSlotPicker,
   TimeSlotPickerSkeleton,
-} from "@/shared/components/kudos";
-import { MAX_BOOKING_WINDOW_DAYS } from "@/shared/lib/booking-window";
-import { formatCurrency } from "@/shared/lib/format";
-import { getZonedToday } from "@/shared/lib/time-zone";
+} from "@/components/kudos";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useSession } from "@/features/auth/hooks";
+import { cn } from "@/lib/utils";
 
 interface BookingCardProps {
   courtId: string;

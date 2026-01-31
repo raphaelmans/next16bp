@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import {
   useOwnerOnboardingIntent,
   useSetOwnerOnboardingIntent,
-} from "@/shared/lib/owner-onboarding-intent";
+} from "@/common/hooks/owner-onboarding-intent";
 
 export function OwnerOnboardingIntentClearer() {
   const { data: ownerOnboardingIntent } = useOwnerOnboardingIntent();

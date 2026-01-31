@@ -4,16 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Script from "next/script";
+import { appRoutes } from "@/common/app-routes";
+import { EmptyState, PlaceCard } from "@/components/kudos";
+import { BentoGrid, BentoItem } from "@/components/layout/bento-grid";
+import { Container } from "@/components/layout/container";
+import { PublicShell } from "@/components/layout/public-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { env } from "@/lib/env";
-import { EmptyState, PlaceCard } from "@/shared/components/kudos";
-import { BentoGrid, BentoItem } from "@/shared/components/layout/bento-grid";
-import { Container } from "@/shared/components/layout/container";
-import { PublicShell } from "@/shared/components/layout/public-shell";
-import { createServerCaller } from "@/shared/infra/trpc/server";
-import { appRoutes } from "@/shared/lib/app-routes";
+import { createServerCaller } from "@/lib/shared/infra/trpc/server";
 
 type Props = {
   params: Promise<{ slug: string }>;

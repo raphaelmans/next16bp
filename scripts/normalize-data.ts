@@ -7,7 +7,7 @@ import { addDays } from "date-fns";
 import IcalExpander from "ical-expander";
 import xlsx from "xlsx";
 import { z } from "zod";
-import { getZonedDate, toUtcISOString } from "../src/shared/lib/time-zone";
+import { getZonedDate, toUtcISOString } from "../src/common/time-zone";
 
 type InputFormat = "csv" | "xlsx" | "ics" | "image";
 

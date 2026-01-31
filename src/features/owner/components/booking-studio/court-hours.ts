@@ -1,7 +1,4 @@
-import {
-  getZonedDate,
-  getZonedDayRangeFromDayKey,
-} from "@/shared/lib/time-zone";
+import { getZonedDate, getZonedDayRangeFromDayKey } from "@/common/time-zone";
 import { DEFAULT_END_HOUR, DEFAULT_START_HOUR } from "./types";
 
 export type CourtHoursWindow = {

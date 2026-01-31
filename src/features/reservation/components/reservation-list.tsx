@@ -2,6 +2,7 @@
 
 import { CalendarDays, Search } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -11,12 +12,11 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { appRoutes } from "@/shared/lib/app-routes";
-import { useMyReservations } from "../hooks/use-my-reservations";
 import {
   type ReservationTab,
+  useMyReservations,
   useReservationsTabs,
-} from "../hooks/use-reservations-tabs";
+} from "../hooks";
 import { ReservationListItem } from "./reservation-list-item";
 import { ReservationListSkeleton } from "./skeletons";
 

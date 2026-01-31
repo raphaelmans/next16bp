@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { handleError } from "@/shared/infra/http/error-handler";
-import { logger } from "@/shared/infra/logger";
-import { ValidationError } from "@/shared/kernel/errors";
-import type { ApiErrorResponse, ApiResponse } from "@/shared/kernel/response";
-import { V } from "@/shared/kernel/schemas";
-import { wrapResponse } from "@/shared/utils/response";
+import { V } from "@/common/schemas";
+import { handleError } from "@/lib/shared/infra/http/error-handler";
+import { logger } from "@/lib/shared/infra/logger";
+import { ValidationError } from "@/lib/shared/kernel/errors";
+import type {
+  ApiErrorResponse,
+  ApiResponse,
+} from "@/lib/shared/kernel/response";
+import { wrapResponse } from "@/lib/shared/utils/response";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

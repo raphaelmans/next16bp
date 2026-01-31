@@ -5,6 +5,7 @@ import { AlertTriangle, Loader2 } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import {
   StandardFormCheckbox,
   StandardFormField,
@@ -21,11 +22,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { getClientErrorMessage } from "@/shared/lib/toast-errors";
-import {
-  type RemovalRequestFormData,
-  removalRequestSchema,
-} from "../schemas/organization.schema";
+import { type RemovalRequestFormData, removalRequestSchema } from "../schemas";
 
 interface RemovalRequestModalProps {
   open: boolean;

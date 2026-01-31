@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import type { OwnerCourt } from "../hooks/use-owner-courts";
+import type { OwnerCourt } from "../hooks";
 
 interface CourtConfigCopyDialogProps {
   open: boolean;

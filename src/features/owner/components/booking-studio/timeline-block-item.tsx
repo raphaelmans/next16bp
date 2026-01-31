@@ -2,10 +2,10 @@
 
 import { X } from "lucide-react";
 import * as React from "react";
+import { formatDuration, formatTimeRangeInTimeZone } from "@/common/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { formatDuration, formatTimeRangeInTimeZone } from "@/shared/lib/format";
 import { ResizeHandle } from "./resize-handle";
 import type { CourtBlockItem } from "./types";
 import { getMinuteOfDay } from "./types";
