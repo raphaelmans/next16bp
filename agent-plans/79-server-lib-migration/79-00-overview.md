@@ -4,16 +4,20 @@
 Migrate server-only code into `src/lib` by moving `src/shared` and `src/modules` under `src/lib`, updating import paths, and ensuring no client/browser code remains in `src/lib`. This is an infra refactor that touches many files and must preserve runtime boundaries.
 
 ## Overview Requirements (fill before delegating)
-- [ ] `agent-plans/context.md` exists and is up to date (design system, ERD, refs)
-- [ ] User stories exist in `agent-plans/user-stories/` and are referenced below
-- [ ] Owners assigned for Server and Client workstreams
-- [ ] Contract drafted (procedures/endpoints + DTO shapes + error shapes + auth)
-- [ ] Primary UI surfaces listed (routes/pages/components) with acceptance notes
-- [ ] Dependencies + parallelization identified (what can run in parallel)
-- [ ] Success criteria + test expectations captured
+- [x] `agent-plans/context.md` exists and is up to date (design system, ERD, refs)
+- [x] User stories exist in `agent-plans/user-stories/` and are referenced below (N/A for infra refactor)
+- [x] Owners assigned for Server and Client workstreams (single contributor)
+- [x] Contract drafted (procedures/endpoints + DTO shapes + error shapes + auth) (N/A for refactor)
+- [x] Primary UI surfaces listed (routes/pages/components) with acceptance notes (N/A for infra refactor)
+- [x] Dependencies + parallelization identified (what can run in parallel)
+- [x] Success criteria + test expectations captured
 
 ### Completed Work (if any)
-- None
+- Moved `src/shared` and `src/modules` under `src/lib`.
+- Migrated client-safe utilities to `src/common` and removed `src/lib/shared/*` shims.
+- Updated imports across app, modules, and scripts to `@/common/*` or `@/lib/*`.
+- Audited server-only boundaries to keep browser code out of `src/lib`.
+- Verified with `pnpm lint` and `TZ=UTC pnpm build`.
 
 ### Reference Documents
 | Document | Location |
@@ -95,22 +99,22 @@ Migrate server-only code into `src/lib` by moving `src/shared` and `src/modules`
 ---
 
 ## Shared / Contract Checklist (overview-level)
-- [ ] Procedure/endpoints list and naming
-- [ ] DTO shapes (input/output) + error shapes
-- [ ] Auth rules captured (who can call what)
-- [ ] Example payloads documented for client integration
+- [x] Procedure/endpoints list and naming (N/A for infra refactor)
+- [x] DTO shapes (input/output) + error shapes (N/A for infra refactor)
+- [x] Auth rules captured (who can call what) (N/A for infra refactor)
+- [x] Example payloads documented for client integration (N/A for infra refactor)
 
 ## Server / Backend Checklist (overview-level)
-- [ ] Data model / migrations identified
-- [ ] Business logic + validations defined
-- [ ] Observability expectations noted (logging/metrics) (if any)
-- [ ] Server test strategy (unit/integration) captured
+- [x] Data model / migrations identified (N/A for infra refactor)
+- [x] Business logic + validations defined (N/A for infra refactor)
+- [x] Observability expectations noted (logging/metrics) (if any) (N/A for infra refactor)
+- [x] Server test strategy (unit/integration) captured (N/A for infra refactor)
 
 ## Client / Frontend Checklist (overview-level)
-- [ ] Routes/pages/components list
-- [ ] Forms + validation + error mapping
-- [ ] Loading/empty/error states defined
-- [ ] Client test strategy (unit/e2e) captured
+- [x] Routes/pages/components list (N/A for infra refactor)
+- [x] Forms + validation + error mapping (N/A for infra refactor)
+- [x] Loading/empty/error states defined (N/A for infra refactor)
+- [x] Client test strategy (unit/e2e) captured (N/A for infra refactor)
 
 ---
 
@@ -152,8 +156,8 @@ Phase 1 ─────┬───── Phase 2 ─────── Phase 3
 ---
 
 ## Success Criteria
-- [ ] `src/shared` and `src/modules` removed; contents now under `src/lib`
-- [ ] All imports updated to new `@/lib/...` paths
-- [ ] No `use client` or browser APIs in `src/lib`
-- [ ] `pnpm lint` passes
-- [ ] `TZ=UTC pnpm build` passes
+- [x] `src/shared` and `src/modules` removed; contents now under `src/lib`
+- [x] All imports updated to new `@/lib/...` paths
+- [x] No `use client` or browser APIs in `src/lib`
+- [x] `pnpm lint` passes
+- [x] `TZ=UTC pnpm build` passes

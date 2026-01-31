@@ -19,7 +19,7 @@ Refactor the largest client-side offenders into feature/presentation layers, mov
 **Plan File:** `80-03-targeted-refactors.md`
 
 #### Shared / Contract
-- [ ] Define shared booking-studio helpers/hooks module
+- [x] Define shared booking-studio helpers/hooks module
 
 ##### API Contract
 - N/A
@@ -33,10 +33,10 @@ Refactor the largest client-side offenders into feature/presentation layers, mov
 - [ ] N/A
 
 #### Client / Frontend
-- [ ] Split `src/app/(owner)/owner/bookings/page.tsx` into route shell + feature component
-- [ ] Extract timeline math, selection config, import overlay logic into `features/owner/booking-studio/helpers.ts`
-- [ ] Move URL state and derived view state into `features/owner/booking-studio/hooks.ts`
-- [ ] Apply the same helpers/hooks to `src/app/(owner)/owner/places/[placeId]/courts/[courtId]/availability/page.tsx`
+- [x] Split `src/app/(owner)/owner/bookings/page.tsx` into route shell + feature component
+- [x] Extract timeline math, selection config, import overlay logic into `features/owner/booking-studio/helpers.ts`
+- [x] Move URL state and derived view state into `features/owner/booking-studio/hooks.ts`
+- [x] Apply the same helpers/hooks to `src/app/(owner)/owner/places/[placeId]/courts/[courtId]/availability/page.tsx`
 
 ---
 
@@ -46,15 +46,15 @@ Refactor the largest client-side offenders into feature/presentation layers, mov
 **Plan File:** `80-03-targeted-refactors.md`
 
 #### Shared / Contract
-- [ ] Define discovery feature extraction targets
+- [x] Define discovery feature extraction targets
 
 #### Server / Backend
 - [ ] N/A
 
 #### Client / Frontend
-- [ ] Split `src/app/(public)/places/[placeId]/place-detail-client.tsx` into sections
-- [ ] Move availability computations into `features/discovery/helpers.ts`
-- [ ] Move selection/state into `features/discovery/hooks.ts`
+- [x] Split `src/app/(public)/places/[placeId]/place-detail-client.tsx` into sections
+- [x] Move availability computations into `features/discovery/helpers.ts`
+- [x] Move selection/state into `features/discovery/hooks.ts`
 
 ---
 
@@ -64,16 +64,16 @@ Refactor the largest client-side offenders into feature/presentation layers, mov
 **Plan File:** `80-03-targeted-refactors.md`
 
 #### Shared / Contract
-- [ ] Define admin feature extraction targets
+- [x] Define admin feature extraction targets
 
 #### Server / Backend
 - [ ] N/A
 
 #### Client / Frontend
-- [ ] Split `src/app/(admin)/admin/courts/[id]/page.tsx` into form + panels in `features/admin/components`
-- [ ] Split `src/app/(admin)/admin/courts/batch/page.tsx` into batch form sections
-- [ ] Split `src/app/(owner)/owner/import/bookings/[jobId]/page.tsx` into review table + action panels
-- [ ] Refactor `src/features/owner/components/court-schedule-editor.tsx` into helpers/hooks + subcomponents
+- [x] Split `src/app/(admin)/admin/courts/[id]/page.tsx` into form + panels in `features/admin/components`
+- [x] Split `src/app/(admin)/admin/courts/batch/page.tsx` into batch form sections
+- [x] Split `src/app/(owner)/owner/import/bookings/[jobId]/page.tsx` into review table + action panels
+- [x] Refactor `src/features/owner/components/court-schedule-editor.tsx` into helpers/hooks + subcomponents
 
 ---
 
@@ -101,6 +101,6 @@ Large page ──► Feature component ──► Presentation components
 ---
 
 ## Phase Completion Checklist
-- [ ] Largest pages split into feature/presentation components
-- [ ] Helpers + hooks extracted per feature
-- [ ] No TypeScript errors
+- [x] Largest pages split into feature/presentation components
+- [x] Helpers + hooks extracted per feature
+- [x] No TypeScript errors

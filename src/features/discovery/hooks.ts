@@ -1,7 +1,7 @@
 "use client";
 
 import { useQueryStates } from "nuqs";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
 import {
   findCityBySlug,
@@ -654,6 +654,87 @@ export function usePlaceDetail({ placeIdOrSlug }: UsePlaceDetailOptions) {
       },
     },
   );
+}
+
+type UsePlaceAvailabilitySelectionOptions = {
+  place?: PlaceDetail;
+  isBookable: boolean;
+  defaultDurationMinutes?: number;
+};
+
+export function usePlaceAvailabilitySelection({
+  place,
+  isBookable,
+  defaultDurationMinutes = 60,
+}: UsePlaceAvailabilitySelectionOptions) {
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [durationMinutes, setDurationMinutes] = useState(
+    defaultDurationMinutes,
+  );
+  const [selectedSportId, setSelectedSportId] = useState<string>();
+  const [selectionMode, setSelectionMode] = useState<"any" | "court">("court");
+  const [selectedCourtId, setSelectedCourtId] = useState<string>();
+  const [selectedStartTime, setSelectedStartTime] = useState<string>();
+  const [selectedSlotId, setSelectedSlotId] = useState<string>();
+  const [courtViewMode, setCourtViewMode] = useState<"week" | "day">("week");
+  const [anyViewMode, setAnyViewMode] = useState<"week" | "day">("week");
+
+  const clearSelection = useCallback(
+    (resetDuration = false) => {
+      setSelectedStartTime(undefined);
+      setSelectedSlotId(undefined);
+      if (resetDuration) {
+        setDurationMinutes(defaultDurationMinutes);
+      }
+    },
+    [defaultDurationMinutes],
+  );
+
+  const courtsForSport = useMemo(() => {
+    if (!place || !selectedSportId) return [];
+    return place.courts
+      .filter((court) => court.sportId === selectedSportId)
+      .filter((court) => court.isActive);
+  }, [place, selectedSportId]);
+
+  useEffect(() => {
+    if (!place || !isBookable) return;
+    if (!selectedSportId) {
+      setSelectedSportId(place.sports[0]?.id);
+    }
+  }, [isBookable, place, selectedSportId]);
+
+  useEffect(() => {
+    if (!isBookable) return;
+    if (selectionMode !== "court") return;
+    if (selectedCourtId) return;
+    if (courtsForSport[0]?.id) {
+      setSelectedCourtId(courtsForSport[0].id);
+    }
+  }, [courtsForSport, isBookable, selectedCourtId, selectionMode]);
+
+  return {
+    selectedDate,
+    setSelectedDate,
+    durationMinutes,
+    setDurationMinutes,
+    selectedSportId,
+    setSelectedSportId,
+    selectionMode,
+    setSelectionMode,
+    selectedCourtId,
+    setSelectedCourtId,
+    selectedStartTime,
+    setSelectedStartTime,
+    selectedSlotId,
+    setSelectedSlotId,
+    courtViewMode,
+    setCourtViewMode,
+    anyViewMode,
+    setAnyViewMode,
+    courtsForSport,
+    clearSelection,
+  };
 }
 
 interface UsePlaceAvailabilityOptions {

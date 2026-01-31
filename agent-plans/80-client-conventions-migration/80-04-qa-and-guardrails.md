@@ -19,7 +19,12 @@ Add verification steps and guardrails to ensure composability and folder convent
 **Plan File:** `80-04-qa-and-guardrails.md`
 
 #### Shared / Contract
-- [ ] Define composability checklist (page thinness, helpers/hooks extraction)
+- [x] Define composability checklist (page thinness, helpers/hooks extraction)
+
+Checklist
+- Pages should be thin shells that delegate to feature components.
+- Heavy logic lives in `helpers.ts` or `hooks.ts` within the feature.
+- Shared client utilities live in `src/common`.
 
 ##### API Contract
 - N/A
@@ -33,8 +38,8 @@ Add verification steps and guardrails to ensure composability and folder convent
 - [ ] N/A
 
 #### Client / Frontend
-- [ ] Run `pnpm lint`
-- [ ] Run `TZ=UTC pnpm build`
+- [x] Run `pnpm lint`
+- [x] Run `TZ=UTC pnpm build`
 - [ ] Spot-check top refactored pages for parity
 
 ---
@@ -58,7 +63,11 @@ Refactor complete ──► lint/build ──► spot-check UI flows
 - [ ] Manual verification of key flows
 
 #### Handoff Notes
-- [ ] Publish QA summary and any remaining issues
+- [x] Publish QA summary and any remaining issues
+
+QA Summary
+- `pnpm lint` passes.
+- `TZ=UTC pnpm build` passes.
 
 ---
 

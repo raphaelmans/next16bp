@@ -4,16 +4,19 @@
 Align the client codebase with `guides/client/*` conventions by migrating shared client utilities into `src/common`, consolidating feature `hooks.ts` and `schemas.ts`, and refactoring top composability offenders into feature/presentation layers. This plan pairs structural migration with targeted refactors on the largest pages/components.
 
 ## Overview Requirements (fill before delegating)
-- [ ] `agent-plans/context.md` exists and is up to date (design system, ERD, refs)
-- [ ] User stories exist in `agent-plans/user-stories/` and are referenced below
-- [ ] Owners assigned for Server and Client workstreams
-- [ ] Contract drafted (procedures/endpoints + DTO shapes + error shapes + auth)
-- [ ] Primary UI surfaces listed (routes/pages/components) with acceptance notes
-- [ ] Dependencies + parallelization identified (what can run in parallel)
-- [ ] Success criteria + test expectations captured
+- [x] `agent-plans/context.md` exists and is up to date (design system, ERD, refs)
+- [x] User stories exist in `agent-plans/user-stories/` and are referenced below (N/A for infra refactor)
+- [x] Owners assigned for Server and Client workstreams (single contributor)
+- [x] Contract drafted (procedures/endpoints + DTO shapes + error shapes + auth) (N/A for refactor)
+- [x] Primary UI surfaces listed (routes/pages/components) with acceptance notes
+- [x] Dependencies + parallelization identified (what can run in parallel)
+- [x] Success criteria + test expectations captured
 
 ### Completed Work (if any)
-- None
+- Phase 1: Shared utilities moved to `src/common` and providers aligned.
+- Phase 2: Feature hooks/schemas consolidated.
+- Phase 3: Targeted refactors complete for booking studio, place detail, admin courts, import review, schedule editor, and place form.
+- Phase 4: Guardrails documented and lint/build verified (manual UI spot-check pending).
 
 ### Reference Documents
 | Document | Location |
@@ -76,18 +79,18 @@ Align the client codebase with `guides/client/*` conventions by migrating shared
 ---
 
 ## Shared / Contract Checklist (overview-level)
-- [ ] File move map for `src/common`
-- [ ] Feature consolidation rules documented
-- [ ] Composability extraction criteria defined
+- [x] File move map for `src/common` (see `80-01-foundation-shared-moves.md`)
+- [x] Feature consolidation rules documented (see `80-02-feature-consolidation.md`)
+- [x] Composability extraction criteria defined (see `80-03-targeted-refactors.md` + `80-04-qa-and-guardrails.md`)
 
 ## Server / Backend Checklist (overview-level)
 - [ ] N/A (client-only refactor)
 
 ## Client / Frontend Checklist (overview-level)
-- [ ] Shared utilities moved to `src/common`
-- [ ] Feature hooks + schemas consolidated
-- [ ] Largest offenders refactored into feature/presentation layers
-- [ ] Loading/empty/error states preserved
+- [x] Shared utilities moved to `src/common`
+- [x] Feature hooks + schemas consolidated
+- [x] Largest offenders refactored into feature/presentation layers
+- [x] Loading/empty/error states preserved
 
 ---
 
@@ -130,8 +133,8 @@ Phase 1 ─────┬───── Phase 2 ─────── Phase 3 
 ---
 
 ## Success Criteria
-- [ ] `src/common` populated with shared client utilities
-- [ ] Feature hooks consolidated to `hooks.ts`
-- [ ] Feature schemas consolidated to `schemas.ts`
-- [ ] Large pages/components split into feature/presentation layers
-- [ ] `pnpm lint` and `TZ=UTC pnpm build` pass
+- [x] `src/common` populated with shared client utilities
+- [x] Feature hooks consolidated to `hooks.ts`
+- [x] Feature schemas consolidated to `schemas.ts`
+- [x] Large pages/components split into feature/presentation layers
+- [x] `pnpm lint` and `TZ=UTC pnpm build` pass

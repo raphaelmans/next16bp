@@ -43,7 +43,6 @@ import { S } from "@/common/schemas";
 import {
   getZonedDayKey,
   getZonedDayRangeForInstant,
-  getZonedDayRangeFromDayKey,
   getZonedStartOfDayIso,
   getZonedToday,
   toUtcISOString,
@@ -93,75 +92,24 @@ import {
   MobileDateStrip,
   PhotoCarousel,
 } from "@/features/discovery/components";
-import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
-import { usePlaceDetail } from "@/features/discovery/hooks";
+import {
+  buildSlotsByDayKey,
+  getAvailabilityErrorInfo,
+  getPlaceVerificationDisplay,
+  getWeekDayKeys,
+  getWeekStartDayKey,
+  mapAvailabilityOptionsToSlots,
+  parseDayKeyToDate,
+} from "@/features/discovery/helpers";
+import {
+  usePlaceAvailabilitySelection,
+  usePlaceDetail,
+} from "@/features/discovery/hooks";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 
 const DEFAULT_DURATION_MINUTES = 60;
 const TIMELINE_SLOT_DURATION = 60;
-
-const parseDayKeyToDate = (dayKey: string, timeZone?: string) =>
-  getZonedDayRangeFromDayKey(dayKey, timeZone).start;
-
-const buildAvailabilityId = (
-  courtId: string,
-  startTime: string,
-  duration: number,
-) => `${courtId}-${startTime}-${duration}`;
-
-const getWeekStartDayKey = (dayKey: string, timeZone: string): string => {
-  const dayStart = getZonedDayRangeFromDayKey(dayKey, timeZone).start;
-  const dayOfWeek = dayStart.getDay();
-  const delta = (dayOfWeek - 0 + 7) % 7;
-  const weekStart = addDays(dayStart, -delta);
-  return getZonedDayKey(weekStart, timeZone);
-};
-
-const getWeekDayKeys = (
-  weekStartDayKey: string,
-  timeZone: string,
-): string[] => {
-  const start = parseDayKeyToDate(weekStartDayKey, timeZone);
-  return Array.from({ length: 7 }, (_, i) =>
-    getZonedDayKey(addDays(start, i), timeZone),
-  );
-};
-
-type AvailabilityErrorInfo = {
-  isBookingWindowError: boolean;
-  isError: boolean;
-  refetch: () => void;
-};
-
-const getAvailabilityErrorInfo = (
-  error: unknown,
-  refetch: () => void,
-): AvailabilityErrorInfo => {
-  if (!error) {
-    return { isBookingWindowError: false, isError: false, refetch };
-  }
-
-  const isRecord = (v: unknown): v is Record<string, unknown> =>
-    typeof v === "object" && v !== null;
-
-  if (isRecord(error)) {
-    const data = isRecord(error.data) ? error.data : null;
-    if (data?.code === "BOOKING_WINDOW_EXCEEDED") {
-      return { isBookingWindowError: true, isError: true, refetch };
-    }
-
-    const message = error.message;
-    if (
-      typeof message === "string" &&
-      message.includes("beyond the maximum booking window")
-    ) {
-      return { isBookingWindowError: true, isError: true, refetch };
-    }
-  }
-
-  return { isBookingWindowError: false, isError: true, refetch };
-};
 
 const claimFormSchema = z.object({
   organizationId: S.ids.organizationId,
@@ -228,47 +176,8 @@ export default function PlaceDetailPage() {
   const [isClaimOpen, setIsClaimOpen] = React.useState(false);
   const [isRemovalOpen, setIsRemovalOpen] = React.useState(false);
 
-  const [selectedDate, setSelectedDate] = React.useState<Date>();
-  const [durationMinutes, setDurationMinutes] = React.useState(
-    DEFAULT_DURATION_MINUTES,
-  );
-  const [selectedSportId, setSelectedSportId] = React.useState<string>();
-  const [selectionMode, setSelectionMode] = React.useState<"any" | "court">(
-    "court",
-  );
-  const [selectedCourtId, setSelectedCourtId] = React.useState<string>();
-  const [selectedStartTime, setSelectedStartTime] = React.useState<string>();
-  const [_selectedSlotId, setSelectedSlotId] = React.useState<string>();
-  const [courtViewMode, setCourtViewMode] = React.useState<"week" | "day">(
-    "week",
-  );
-  const [anyViewMode, setAnyViewMode] = React.useState<"week" | "day">("week");
-
   const availabilitySectionRef = React.useRef<HTMLDivElement | null>(null);
   const mobileScrollRef = React.useRef<HTMLDivElement | null>(null);
-
-  const clearSelection = React.useCallback((resetDuration = false) => {
-    setSelectedStartTime(undefined);
-    setSelectedSlotId(undefined);
-    if (resetDuration) {
-      setDurationMinutes(DEFAULT_DURATION_MINUTES);
-    }
-  }, []);
-
-  const scrollToSection = React.useCallback(
-    (ref: React.RefObject<HTMLElement | null>) => {
-      const element = ref.current;
-      if (!element || typeof window === "undefined") return;
-      const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-      element.scrollIntoView({
-        behavior: prefersReducedMotion ? "auto" : "smooth",
-        block: "start",
-      });
-    },
-    [],
-  );
 
   const { data: place, isLoading } = usePlaceDetail({
     placeIdOrSlug,
@@ -296,6 +205,48 @@ export default function PlaceDetailPage() {
       place.claimStatus === "UNCLAIMED" &&
       isAuthenticated &&
       isOwner,
+  );
+
+  const {
+    selectedDate,
+    setSelectedDate,
+    durationMinutes,
+    setDurationMinutes,
+    selectedSportId,
+    setSelectedSportId,
+    selectionMode,
+    setSelectionMode,
+    selectedCourtId,
+    setSelectedCourtId,
+    selectedStartTime,
+    setSelectedStartTime,
+    selectedSlotId: _selectedSlotId,
+    setSelectedSlotId,
+    courtViewMode,
+    setCourtViewMode,
+    anyViewMode,
+    setAnyViewMode,
+    courtsForSport,
+    clearSelection,
+  } = usePlaceAvailabilitySelection({
+    place,
+    isBookable,
+    defaultDurationMinutes: DEFAULT_DURATION_MINUTES,
+  });
+
+  const scrollToSection = React.useCallback(
+    (ref: React.RefObject<HTMLElement | null>) => {
+      const element = ref.current;
+      if (!element || typeof window === "undefined") return;
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      element.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    },
+    [],
   );
   const organizationOptions = React.useMemo(
     () =>
@@ -332,29 +283,6 @@ export default function PlaceDetailPage() {
       requestNotes: "",
     });
   }, [defaultOrganizationId, getClaimValues, isClaimOpen, resetClaimForm]);
-
-  const courtsForSport = React.useMemo(() => {
-    if (!place || !selectedSportId) return [];
-    return place.courts
-      .filter((court) => court.sportId === selectedSportId)
-      .filter((court) => court.isActive);
-  }, [place, selectedSportId]);
-
-  React.useEffect(() => {
-    if (!place || !isBookable) return;
-    if (!selectedSportId) {
-      setSelectedSportId(place.sports[0]?.id);
-    }
-  }, [place, selectedSportId, isBookable]);
-
-  React.useEffect(() => {
-    if (!isBookable) return;
-    if (selectionMode !== "court") return;
-    if (selectedCourtId) return;
-    if (courtsForSport[0]?.id) {
-      setSelectedCourtId(courtsForSport[0].id);
-    }
-  }, [courtsForSport, selectedCourtId, selectionMode, isBookable]);
 
   const today = React.useMemo(
     () => getZonedToday(placeTimeZone),
@@ -403,7 +331,14 @@ export default function PlaceDetailPage() {
     if (selectedRange.start < todayRange.start) {
       setSelectedDate(today);
     }
-  }, [placeTimeZone, selectedDate, showBooking, today, todayRange.start]);
+  }, [
+    placeTimeZone,
+    selectedDate,
+    setSelectedDate,
+    showBooking,
+    today,
+    todayRange.start,
+  ]);
 
   const selectedDayKey = React.useMemo(
     () => getZonedDayKey(selectedDate ?? today, placeTimeZone),
@@ -544,36 +479,11 @@ export default function PlaceDetailPage() {
   const anyWeekSlotsByDay = React.useMemo(() => {
     if (selectionMode !== "any" || anyViewMode !== "week")
       return new Map<string, TimeSlot[]>();
-    const options = anyWeekAvailabilityQuery.data?.options ?? [];
-    const byDay = new Map<string, TimeSlot[]>();
-    for (const option of options) {
-      const dayKey = getZonedDayKey(option.startTime, placeTimeZone);
-      const slot: TimeSlot = {
-        id: buildAvailabilityId(
-          option.courtId,
-          option.startTime,
-          TIMELINE_SLOT_DURATION,
-        ),
-        startTime: option.startTime,
-        endTime: option.endTime,
-        priceCents: option.totalPriceCents,
-        currency: option.currency ?? "PHP",
-        status: option.status === "BOOKED" ? "booked" : "available",
-        unavailableReason:
-          (option.unavailableReason as TimeSlot["unavailableReason"]) ??
-          undefined,
-      };
-      const existing = byDay.get(dayKey);
-      if (existing) {
-        existing.push(slot);
-      } else {
-        byDay.set(dayKey, [slot]);
-      }
-    }
-    for (const [, slots] of byDay) {
-      slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
-    }
-    return byDay;
+    return buildSlotsByDayKey(
+      anyWeekAvailabilityQuery.data?.options ?? [],
+      placeTimeZone,
+      TIMELINE_SLOT_DURATION,
+    );
   }, [
     anyViewMode,
     anyWeekAvailabilityQuery.data,
@@ -583,70 +493,20 @@ export default function PlaceDetailPage() {
 
   const anyDaySlots: TimeSlot[] = React.useMemo(() => {
     if (selectionMode !== "any" || anyViewMode !== "day") return [];
-    const options = anyDayAvailabilityQuery.data?.options ?? [];
-    return options
-      .map((option) => ({
-        id: buildAvailabilityId(
-          option.courtId,
-          option.startTime,
-          TIMELINE_SLOT_DURATION,
-        ),
-        startTime: option.startTime,
-        endTime: option.endTime,
-        priceCents: option.totalPriceCents,
-        currency: option.currency ?? "PHP",
-        status:
-          option.status === "BOOKED"
-            ? ("booked" as const)
-            : ("available" as const),
-        unavailableReason:
-          (option.unavailableReason as TimeSlot["unavailableReason"]) ??
-          undefined,
-      }))
-      .sort((a, b) => a.startTime.localeCompare(b.startTime));
+    const slots = mapAvailabilityOptionsToSlots(
+      anyDayAvailabilityQuery.data?.options ?? [],
+      TIMELINE_SLOT_DURATION,
+    );
+    return slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
   }, [anyDayAvailabilityQuery.data, anyViewMode, selectionMode]);
-
-  const mapCourtOptionsToSlots = React.useCallback(
-    (
-      options: {
-        courtId: string;
-        startTime: string;
-        endTime: string;
-        totalPriceCents: number;
-        currency: string | null;
-        status?: string;
-        unavailableReason?: string | null;
-      }[],
-    ): TimeSlot[] =>
-      options.map((option) => ({
-        id: buildAvailabilityId(
-          option.courtId,
-          option.startTime,
-          TIMELINE_SLOT_DURATION,
-        ),
-        startTime: option.startTime,
-        endTime: option.endTime,
-        priceCents: option.totalPriceCents,
-        currency: option.currency ?? "PHP",
-        status: option.status === "BOOKED" ? "booked" : "available",
-        unavailableReason:
-          (option.unavailableReason as TimeSlot["unavailableReason"]) ??
-          undefined,
-      })),
-    [],
-  );
 
   const courtDaySlots: TimeSlot[] = React.useMemo(() => {
     if (!isCourtMode || isCourtWeekView) return [];
-    return mapCourtOptionsToSlots(
+    return mapAvailabilityOptionsToSlots(
       courtDayAvailabilityQuery.data?.options ?? [],
+      TIMELINE_SLOT_DURATION,
     );
-  }, [
-    courtDayAvailabilityQuery.data,
-    isCourtMode,
-    isCourtWeekView,
-    mapCourtOptionsToSlots,
-  ]);
+  }, [courtDayAvailabilityQuery.data, isCourtMode, isCourtWeekView]);
 
   const courtDayDiagnostics = React.useMemo(() => {
     if (!isCourtMode || isCourtWeekView) return null;
@@ -655,27 +515,14 @@ export default function PlaceDetailPage() {
 
   const courtWeekSlotsByDay = React.useMemo(() => {
     if (!isCourtMode || !isCourtWeekView) return new Map<string, TimeSlot[]>();
-    const allSlots = mapCourtOptionsToSlots(
+    return buildSlotsByDayKey(
       courtWeekAvailabilityQuery.data?.options ?? [],
+      placeTimeZone,
+      TIMELINE_SLOT_DURATION,
     );
-    const byDay = new Map<string, TimeSlot[]>();
-    for (const slot of allSlots) {
-      const dayKey = getZonedDayKey(slot.startTime, placeTimeZone);
-      const existing = byDay.get(dayKey);
-      if (existing) {
-        existing.push(slot);
-      } else {
-        byDay.set(dayKey, [slot]);
-      }
-    }
-    for (const [, slots] of byDay) {
-      slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
-    }
-    return byDay;
   }, [
     isCourtMode,
     isCourtWeekView,
-    mapCourtOptionsToSlots,
     placeTimeZone,
     courtWeekAvailabilityQuery.data,
   ]);
@@ -824,7 +671,7 @@ export default function PlaceDetailPage() {
       setSelectedSlotId(undefined);
       setDurationMinutes(range.durationMinutes);
     },
-    [],
+    [setDurationMinutes, setSelectedSlotId, setSelectedStartTime],
   );
 
   const handleAnyRangeChange = React.useCallback(
@@ -838,7 +685,7 @@ export default function PlaceDetailPage() {
       setSelectedSlotId(undefined);
       setDurationMinutes(range.durationMinutes);
     },
-    [],
+    [setDurationMinutes, setSelectedSlotId, setSelectedStartTime],
   );
 
   const handleCourtViewChange = React.useCallback(
@@ -847,13 +694,13 @@ export default function PlaceDetailPage() {
       setCourtViewMode(value as "week" | "day");
       clearSelection(true);
     },
-    [clearSelection],
+    [clearSelection, setCourtViewMode],
   );
 
   const handleGoToToday = React.useCallback(() => {
     setSelectedDate(today);
     clearSelection(true);
-  }, [clearSelection, today]);
+  }, [clearSelection, setSelectedDate, today]);
 
   const [calendarPopoverOpen, setCalendarPopoverOpen] = React.useState(false);
   const [mobileCalendarOpen, setMobileCalendarOpen] = React.useState(false);
@@ -866,7 +713,7 @@ export default function PlaceDetailPage() {
       clearSelection(true);
       setCalendarPopoverOpen(false);
     },
-    [clearSelection, placeTimeZone],
+    [clearSelection, placeTimeZone, setSelectedDate],
   );
 
   const handleMobileCalendarJump = React.useCallback(
@@ -877,7 +724,7 @@ export default function PlaceDetailPage() {
       clearSelection(true);
       setMobileCalendarOpen(false);
     },
-    [clearSelection, placeTimeZone],
+    [clearSelection, placeTimeZone, setSelectedDate],
   );
 
   const handleMobileDateSelect = React.useCallback(
@@ -886,7 +733,7 @@ export default function PlaceDetailPage() {
       setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
       clearSelection(true);
     },
-    [clearSelection, placeTimeZone],
+    [clearSelection, placeTimeZone, setSelectedDate],
   );
 
   const handleMobileSportChange = React.useCallback(
@@ -896,7 +743,7 @@ export default function PlaceDetailPage() {
       setSelectedCourtId(undefined);
       clearSelection(true);
     },
-    [clearSelection],
+    [clearSelection, setSelectedCourtId, setSelectedSportId, setSelectionMode],
   );
 
   const handleMobileCourtChange = React.useCallback(
@@ -910,7 +757,7 @@ export default function PlaceDetailPage() {
       }
       clearSelection(true);
     },
-    [clearSelection],
+    [clearSelection, setSelectedCourtId, setSelectionMode],
   );
 
   // Mobile day slots — always uses day view for "any court" or specific court
@@ -962,38 +809,16 @@ export default function PlaceDetailPage() {
   );
 
   const mobileDaySlots: TimeSlot[] = React.useMemo(() => {
-    if (selectionMode === "any") {
-      const options = mobileAnyDayQuery.data?.options ?? [];
-      return options
-        .map((option) => ({
-          id: buildAvailabilityId(
-            option.courtId,
-            option.startTime,
-            TIMELINE_SLOT_DURATION,
-          ),
-          startTime: option.startTime,
-          endTime: option.endTime,
-          priceCents: option.totalPriceCents,
-          currency: option.currency ?? "PHP",
-          status:
-            option.status === "BOOKED"
-              ? ("booked" as const)
-              : ("available" as const),
-          unavailableReason:
-            (option.unavailableReason as TimeSlot["unavailableReason"]) ??
-            undefined,
-        }))
-        .sort((a, b) => a.startTime.localeCompare(b.startTime));
-    }
-    return mapCourtOptionsToSlots(mobileCourtDayQuery.data?.options ?? []).sort(
-      (a, b) => a.startTime.localeCompare(b.startTime),
+    const options =
+      selectionMode === "any"
+        ? (mobileAnyDayQuery.data?.options ?? [])
+        : (mobileCourtDayQuery.data?.options ?? []);
+    const slots = mapAvailabilityOptionsToSlots(
+      options,
+      TIMELINE_SLOT_DURATION,
     );
-  }, [
-    selectionMode,
-    mobileAnyDayQuery.data,
-    mobileCourtDayQuery.data,
-    mapCourtOptionsToSlots,
-  ]);
+    return slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
+  }, [selectionMode, mobileAnyDayQuery.data, mobileCourtDayQuery.data]);
 
   const isMobileLoading =
     selectionMode === "any"
@@ -1003,7 +828,7 @@ export default function PlaceDetailPage() {
   const handleJumpToMaxDate = React.useCallback(() => {
     setSelectedDate(maxBookingDate);
     clearSelection(true);
-  }, [clearSelection, maxBookingDate]);
+  }, [clearSelection, maxBookingDate, setSelectedDate]);
 
   const isAnyWeekView = selectionMode === "any" && anyViewMode === "week";
   const weekHeaderLabel = React.useMemo(() => {

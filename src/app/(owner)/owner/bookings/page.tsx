@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
+import { parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -24,15 +24,10 @@ import {
 import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import {
   getZonedDate,
-  getZonedDayKey,
   getZonedDayRangeFromDayKey,
-  getZonedToday,
   toUtcISOString,
 } from "@/common/time-zone";
-import {
-  type RangeSelectionConfig,
-  RangeSelectionProvider,
-} from "@/components/kudos/range-selection";
+import { RangeSelectionProvider } from "@/components/kudos/range-selection";
 import { AppShell } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -58,14 +53,22 @@ import {
   ReservationAlertsPanel,
 } from "@/features/owner";
 import {
+  buildBlocksRange,
+  buildDaySelectionConfig,
+  buildDraftRowsState,
+  buildDraftTimelineBlocksForDay,
+  buildDraftWeekTimelineBlocksByDayKey,
+  buildTimelineBlocksForDay,
+  buildTimelineReservationsForDay,
+  buildWeekTimelineBlocksByDayKey,
+  buildWeekTimelineReservationsByDayKey,
+} from "@/features/owner/booking-studio/helpers";
+import { useBookingStudioViewState } from "@/features/owner/booking-studio/hooks";
+import {
   BookingStudioProvider,
   useBookingStudio,
 } from "@/features/owner/components/booking-studio/booking-studio-provider";
-import {
-  buildOpenCellIndexSet,
-  getTimelineRangeForWeek,
-  getWindowsForDayOfWeek,
-} from "@/features/owner/components/booking-studio/court-hours";
+import { getTimelineRangeForWeek } from "@/features/owner/components/booking-studio/court-hours";
 import { CustomBlockDialog } from "@/features/owner/components/booking-studio/custom-block-dialog";
 import {
   DraftRowCard,
@@ -87,22 +90,16 @@ import {
   type CourtBlockItem,
   type CustomBlockFormValues,
   customBlockSchema,
-  DRAFT_STATUS_PRIORITY,
   type DraftRowItem,
-  type DraftRowStatus,
   formatDateTimeInput,
   type GuestBookingFormValues,
   generateOptimisticId,
-  getEndMinuteForDayKey,
-  getMinuteOfDay,
   guestBookingFormSchema,
   isOptimisticBlockId,
   parseDateTimeInput,
   parseTimelineRange,
   type ReservationItem,
   type StudioView,
-  studioViewSchema,
-  TIMELINE_ROW_HEIGHT,
 } from "@/features/owner/components/booking-studio/types";
 import { WeekDayColumn } from "@/features/owner/components/booking-studio/week-day-column";
 import {
@@ -113,7 +110,6 @@ import {
   useOwnerPlaceFilter,
   useOwnerPlaces,
 } from "@/features/owner/hooks";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 
@@ -157,41 +153,30 @@ function OwnerAvailabilityStudioInner() {
     [courtId, courts],
   );
 
-  const [dayKeyParam, setDayKeyParam] = useQueryState(
-    "dayKey",
-    parseAsString.withOptions({ history: "replace" }),
-  );
-  const [viewParam, setViewParam] = useQueryState(
-    "view",
-    parseAsStringLiteral(studioViewSchema).withOptions({ history: "replace" }),
-  );
+  const {
+    dayKey,
+    setDayKeyParam,
+    view,
+    setViewParam,
+    isWeekView,
+    isMobile,
+    selectedDayStart,
+    selectedDate,
+    selectedDayLabel,
+    weekDayKeys,
+    weekLabel,
+    todayDate,
+    todayDayKey,
+    visibleDayKeys,
+    handleMobileDateSelect,
+    handleMobileToday,
+    navigateWeek,
+  } = useBookingStudioViewState({ timeZone: placeTimeZone });
   const [jobIdParam, setJobIdParam] = useQueryState(
     "jobId",
     parseAsString.withOptions({ history: "replace" }),
   );
   const jobId = jobIdParam ?? "";
-
-  const view = viewParam ?? "week";
-  const isWeekView = view === "week";
-  const isMobile = useIsMobile();
-
-  const fallbackDayKey = React.useMemo(
-    () => getZonedDayKey(getZonedToday(placeTimeZone), placeTimeZone),
-    [placeTimeZone],
-  );
-  const dayKey = dayKeyParam ?? fallbackDayKey;
-
-  React.useEffect(() => {
-    if (!dayKeyParam) {
-      setDayKeyParam(fallbackDayKey);
-    }
-  }, [dayKeyParam, fallbackDayKey, setDayKeyParam]);
-
-  React.useEffect(() => {
-    if (isMobile && view !== "day") {
-      setViewParam("day");
-    }
-  }, [isMobile, setViewParam, view]);
 
   const jobQuery = trpc.bookingsImport.getJob.useQuery(
     { jobId },
@@ -242,128 +227,20 @@ function OwnerAvailabilityStudioInner() {
 
   const isImportOverlay = Boolean(jobId);
   const job = jobQuery.data;
-  const isImportEditable = job?.status === "NORMALIZED";
   const draftRows = (rowsQuery.data ?? []) as DraftRowItem[];
-  const draftRowsById = React.useMemo(
-    () => new Map(draftRows.map((row) => [row.id, row])),
-    [draftRows],
+  const {
+    draftRowsById,
+    draftRowsByBlockId,
+    draftRowsSorted,
+    importedBlockIds,
+    replacedBlockIds,
+    isImportEditable,
+    canCommitImport,
+    isImportCommitted,
+  } = React.useMemo(
+    () => buildDraftRowsState({ draftRows, isImportOverlay, job }),
+    [draftRows, isImportOverlay, job],
   );
-  const draftRowsSorted = React.useMemo(() => {
-    return [...draftRows].sort((a, b) => {
-      const statusA = (a.status ?? "PENDING") as DraftRowStatus;
-      const statusB = (b.status ?? "PENDING") as DraftRowStatus;
-      const priorityA = DRAFT_STATUS_PRIORITY[statusA] ?? 99;
-      const priorityB = DRAFT_STATUS_PRIORITY[statusB] ?? 99;
-      if (priorityA !== priorityB) return priorityA - priorityB;
-      return a.lineNumber - b.lineNumber;
-    });
-  }, [draftRows]);
-  const canCommitImport = Boolean(
-    job && isImportEditable && (job.errorRowCount ?? 0) === 0,
-  );
-  const isImportCommitted = job?.status === "COMMITTED";
-
-  const importedBlockIds = React.useMemo(() => {
-    if (!isImportOverlay) return new Set<string>();
-    return new Set(
-      draftRows
-        .filter((r) => r.courtBlockId && r.status === "COMMITTED")
-        .map((r) => r.courtBlockId as string),
-    );
-  }, [draftRows, isImportOverlay]);
-
-  const replacedBlockIds = React.useMemo(() => {
-    if (!isImportOverlay) return new Set<string>();
-    return new Set(
-      draftRows
-        .filter((r) => r.courtBlockId && r.replacedAt)
-        .map((r) => r.courtBlockId as string),
-    );
-  }, [draftRows, isImportOverlay]);
-
-  const draftRowsByBlockId = React.useMemo(() => {
-    const map = new Map<string, DraftRowItem>();
-    for (const row of draftRows) {
-      if (row.courtBlockId) {
-        map.set(row.courtBlockId, row);
-      }
-    }
-    return map;
-  }, [draftRows]);
-
-  const selectedDayRange = React.useMemo(
-    () => getZonedDayRangeFromDayKey(dayKey, placeTimeZone),
-    [dayKey, placeTimeZone],
-  );
-  const selectedDayStart = selectedDayRange.start;
-  const selectedDate = React.useMemo(
-    () => new Date(selectedDayStart.getTime()),
-    [selectedDayStart],
-  );
-  const selectedDayLabel = React.useMemo(
-    () =>
-      formatInTimeZone(selectedDayStart, placeTimeZone, "EEEE, MMMM d, yyyy"),
-    [placeTimeZone, selectedDayStart],
-  );
-  const weekStartsOn = 0;
-  const weekStartDayKey = React.useMemo(() => {
-    const dayStart = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
-    const dayOfWeek = dayStart.getDay();
-    const delta = (dayOfWeek - weekStartsOn + 7) % 7;
-    const weekStart = addDays(dayStart, -delta);
-    return getZonedDayKey(weekStart, placeTimeZone);
-  }, [dayKey, placeTimeZone]);
-
-  const weekDayKeys = React.useMemo(() => {
-    const start = getZonedDayRangeFromDayKey(
-      weekStartDayKey,
-      placeTimeZone,
-    ).start;
-    return Array.from({ length: 7 }, (_, index) =>
-      getZonedDayKey(addDays(start, index), placeTimeZone),
-    );
-  }, [placeTimeZone, weekStartDayKey]);
-
-  const weekLabel = React.useMemo(() => {
-    const weekStart = getZonedDayRangeFromDayKey(
-      weekDayKeys[0] ?? weekStartDayKey,
-      placeTimeZone,
-    ).start;
-    const weekEnd = getZonedDayRangeFromDayKey(
-      weekDayKeys[6] ?? weekStartDayKey,
-      placeTimeZone,
-    ).start;
-    return `${formatInTimeZone(weekStart, placeTimeZone, "MMM d")} - ${formatInTimeZone(
-      weekEnd,
-      placeTimeZone,
-      "MMM d, yyyy",
-    )}`;
-  }, [placeTimeZone, weekDayKeys, weekStartDayKey]);
-
-  const todayDate = React.useMemo(
-    () => getZonedToday(placeTimeZone),
-    [placeTimeZone],
-  );
-  const todayDayKey = React.useMemo(
-    () => getZonedDayKey(todayDate, placeTimeZone),
-    [placeTimeZone, todayDate],
-  );
-
-  const handleMobileDateSelect = React.useCallback(
-    (date: Date) => {
-      setDayKeyParam(getZonedDayKey(date, placeTimeZone));
-    },
-    [placeTimeZone, setDayKeyParam],
-  );
-
-  const handleMobileToday = React.useCallback(() => {
-    setDayKeyParam(getZonedDayKey(todayDate, placeTimeZone));
-  }, [placeTimeZone, setDayKeyParam, todayDate]);
-
-  const visibleDayKeys = React.useMemo(() => {
-    if (isWeekView) return weekDayKeys;
-    return [dayKey];
-  }, [dayKey, isWeekView, weekDayKeys]);
 
   // Store reads
   const calendarMonth = useBookingStudio((s) => s.calendarMonth);
@@ -463,14 +340,15 @@ function OwnerAvailabilityStudioInner() {
   const timelineStartMinute = startHour * 60;
   const timelineEndMinute = endHour * 60;
 
-  const blocksRange = React.useMemo(() => {
-    const startDayKey = visibleDayKeys[0] ?? dayKey;
-    const endDayKey = visibleDayKeys[visibleDayKeys.length - 1] ?? dayKey;
-    return {
-      start: getZonedDayRangeFromDayKey(startDayKey, placeTimeZone).start,
-      end: getZonedDayRangeFromDayKey(endDayKey, placeTimeZone).end,
-    };
-  }, [dayKey, placeTimeZone, visibleDayKeys]);
+  const blocksRange = React.useMemo(
+    () =>
+      buildBlocksRange({
+        dayKey,
+        visibleDayKeys,
+        timeZone: placeTimeZone,
+      }),
+    [dayKey, placeTimeZone, visibleDayKeys],
+  );
   const blocksRangeStartIso = React.useMemo(
     () => toUtcISOString(blocksRange.start),
     [blocksRange.start],
@@ -548,118 +426,37 @@ function OwnerAvailabilityStudioInner() {
     [activeBlocksForSelectedDay],
   );
 
-  const timelineBlocks = React.useMemo(() => {
-    return activeBlocksForSelectedDay
-      .map((block) => {
-        const startTime = new Date(block.startTime);
-        const endTime = new Date(block.endTime);
-
-        if (
-          startTime >= selectedDayEndExclusive ||
-          endTime <= selectedDayStart
-        ) {
-          return null;
-        }
-
-        const segmentStart =
-          startTime > selectedDayStart ? startTime : selectedDayStart;
-        const segmentEnd =
-          endTime < selectedDayEndExclusive ? endTime : selectedDayEndExclusive;
-
-        const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
-        const endMinute = getEndMinuteForDayKey(
-          dayKey,
-          segmentEnd,
-          placeTimeZone,
-        );
-
-        if (
-          endMinute <= timelineStartMinute ||
-          startMinute >= timelineEndMinute
-        ) {
-          return null;
-        }
-
-        const clampedStart = Math.max(startMinute, timelineStartMinute);
-        const clampedEnd = Math.min(endMinute, timelineEndMinute);
-        const topOffset =
-          ((clampedStart - timelineStartMinute) / 60) * TIMELINE_ROW_HEIGHT;
-        const height = ((clampedEnd - clampedStart) / 60) * TIMELINE_ROW_HEIGHT;
-
-        return {
-          block,
-          topOffset,
-          height,
-        };
-      })
-      .filter((item): item is NonNullable<typeof item> => Boolean(item));
-  }, [
-    activeBlocksForSelectedDay,
-    dayKey,
-    placeTimeZone,
-    selectedDayEndExclusive,
-    selectedDayStart,
-    timelineEndMinute,
-    timelineStartMinute,
-  ]);
+  const timelineBlocks = React.useMemo(
+    () =>
+      buildTimelineBlocksForDay({
+        blocks: activeBlocksForSelectedDay,
+        dayKey,
+        dayStart: selectedDayStart,
+        timeZone: placeTimeZone,
+        timelineStartMinute,
+        timelineEndMinute,
+      }),
+    [
+      activeBlocksForSelectedDay,
+      dayKey,
+      placeTimeZone,
+      selectedDayStart,
+      timelineEndMinute,
+      timelineStartMinute,
+    ],
+  );
 
   const weekTimelineBlocksByDayKey = React.useMemo(() => {
     if (!isWeekView) {
-      return new Map<
-        string,
-        Array<{ block: CourtBlockItem; topOffset: number; height: number }>
-      >();
+      return new Map();
     }
-
-    const byDayKey = new Map<
-      string,
-      Array<{ block: CourtBlockItem; topOffset: number; height: number }>
-    >();
-
-    for (const dk of weekDayKeys) {
-      const dayStart = getZonedDayRangeFromDayKey(dk, placeTimeZone).start;
-      const dayEndExclusive = addDays(dayStart, 1);
-
-      const items = activeBlocks
-        .map((block) => {
-          const startTime = new Date(block.startTime);
-          const endTime = new Date(block.endTime);
-          if (startTime >= dayEndExclusive || endTime <= dayStart) return null;
-
-          const segmentStart = startTime > dayStart ? startTime : dayStart;
-          const segmentEnd =
-            endTime < dayEndExclusive ? endTime : dayEndExclusive;
-          const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
-          const endMinute = getEndMinuteForDayKey(
-            dk,
-            segmentEnd,
-            placeTimeZone,
-          );
-
-          if (
-            endMinute <= timelineStartMinute ||
-            startMinute >= timelineEndMinute
-          ) {
-            return null;
-          }
-
-          const clampedStart = Math.max(startMinute, timelineStartMinute);
-          const clampedEnd = Math.min(endMinute, timelineEndMinute);
-          const topOffset =
-            ((clampedStart - timelineStartMinute) / 60) * TIMELINE_ROW_HEIGHT;
-          const height =
-            ((clampedEnd - clampedStart) / 60) * TIMELINE_ROW_HEIGHT;
-
-          if (height <= 0) return null;
-
-          return { block, topOffset, height };
-        })
-        .filter((item): item is NonNullable<typeof item> => Boolean(item));
-
-      byDayKey.set(dk, items);
-    }
-
-    return byDayKey;
+    return buildWeekTimelineBlocksByDayKey({
+      blocks: activeBlocks,
+      weekDayKeys,
+      timeZone: placeTimeZone,
+      timelineStartMinute,
+      timelineEndMinute,
+    });
   }, [
     activeBlocks,
     isWeekView,
@@ -669,122 +466,37 @@ function OwnerAvailabilityStudioInner() {
     weekDayKeys,
   ]);
 
-  const timelineReservations = React.useMemo(() => {
-    return activeReservations
-      .map((res) => {
-        const startTime = new Date(res.startTime);
-        const endTime = new Date(res.endTime);
-
-        if (
-          startTime >= selectedDayEndExclusive ||
-          endTime <= selectedDayStart
-        ) {
-          return null;
-        }
-
-        const segmentStart =
-          startTime > selectedDayStart ? startTime : selectedDayStart;
-        const segmentEnd =
-          endTime < selectedDayEndExclusive ? endTime : selectedDayEndExclusive;
-
-        const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
-        const endMinute = getEndMinuteForDayKey(
-          dayKey,
-          segmentEnd,
-          placeTimeZone,
-        );
-
-        if (
-          endMinute <= timelineStartMinute ||
-          startMinute >= timelineEndMinute
-        ) {
-          return null;
-        }
-
-        const clampedStart = Math.max(startMinute, timelineStartMinute);
-        const clampedEnd = Math.min(endMinute, timelineEndMinute);
-        const topOffset =
-          ((clampedStart - timelineStartMinute) / 60) * TIMELINE_ROW_HEIGHT;
-        const height = ((clampedEnd - clampedStart) / 60) * TIMELINE_ROW_HEIGHT;
-
-        return { reservation: res, topOffset, height };
-      })
-      .filter((item): item is NonNullable<typeof item> => Boolean(item));
-  }, [
-    activeReservations,
-    dayKey,
-    placeTimeZone,
-    selectedDayEndExclusive,
-    selectedDayStart,
-    timelineEndMinute,
-    timelineStartMinute,
-  ]);
+  const timelineReservations = React.useMemo(
+    () =>
+      buildTimelineReservationsForDay({
+        reservations: activeReservations,
+        dayKey,
+        dayStart: selectedDayStart,
+        timeZone: placeTimeZone,
+        timelineStartMinute,
+        timelineEndMinute,
+      }),
+    [
+      activeReservations,
+      dayKey,
+      placeTimeZone,
+      selectedDayStart,
+      timelineEndMinute,
+      timelineStartMinute,
+    ],
+  );
 
   const weekTimelineReservationsByDayKey = React.useMemo(() => {
     if (!isWeekView) {
-      return new Map<
-        string,
-        Array<{
-          reservation: ReservationItem;
-          topOffset: number;
-          height: number;
-        }>
-      >();
+      return new Map();
     }
-
-    const byDayKey = new Map<
-      string,
-      Array<{
-        reservation: ReservationItem;
-        topOffset: number;
-        height: number;
-      }>
-    >();
-
-    for (const dk of weekDayKeys) {
-      const dayStart = getZonedDayRangeFromDayKey(dk, placeTimeZone).start;
-      const dayEndExclusive = addDays(dayStart, 1);
-
-      const items = activeReservations
-        .map((res) => {
-          const startTime = new Date(res.startTime);
-          const endTime = new Date(res.endTime);
-          if (startTime >= dayEndExclusive || endTime <= dayStart) return null;
-
-          const segmentStart = startTime > dayStart ? startTime : dayStart;
-          const segmentEnd =
-            endTime < dayEndExclusive ? endTime : dayEndExclusive;
-          const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
-          const endMinute = getEndMinuteForDayKey(
-            dk,
-            segmentEnd,
-            placeTimeZone,
-          );
-
-          if (
-            endMinute <= timelineStartMinute ||
-            startMinute >= timelineEndMinute
-          ) {
-            return null;
-          }
-
-          const clampedStart = Math.max(startMinute, timelineStartMinute);
-          const clampedEnd = Math.min(endMinute, timelineEndMinute);
-          const topOffset =
-            ((clampedStart - timelineStartMinute) / 60) * TIMELINE_ROW_HEIGHT;
-          const height =
-            ((clampedEnd - clampedStart) / 60) * TIMELINE_ROW_HEIGHT;
-
-          if (height <= 0) return null;
-
-          return { reservation: res, topOffset, height };
-        })
-        .filter((item): item is NonNullable<typeof item> => Boolean(item));
-
-      byDayKey.set(dk, items);
-    }
-
-    return byDayKey;
+    return buildWeekTimelineReservationsByDayKey({
+      reservations: activeReservations,
+      weekDayKeys,
+      timeZone: placeTimeZone,
+      timelineStartMinute,
+      timelineEndMinute,
+    });
   }, [
     activeReservations,
     isWeekView,
@@ -794,129 +506,43 @@ function OwnerAvailabilityStudioInner() {
     weekDayKeys,
   ]);
 
-  const draftTimelineBlocks = React.useMemo(() => {
-    if (!isImportOverlay)
-      return [] as Array<{
-        row: (typeof draftRows)[number];
-        topOffset: number;
-        height: number;
-      }>;
-
-    return draftRows
-      .filter((row) => row.status !== "COMMITTED" && row.status !== "SKIPPED")
-      .filter((row) => row.startTime && row.endTime)
-      .filter((row) => (courtId ? row.courtId === courtId : true))
-      .map((row) => {
-        const startTime = new Date(row.startTime as Date | string);
-        const endTime = new Date(row.endTime as Date | string);
-        if (
-          startTime >= selectedDayEndExclusive ||
-          endTime <= selectedDayStart
-        ) {
-          return null;
-        }
-
-        const segmentStart =
-          startTime > selectedDayStart ? startTime : selectedDayStart;
-        const segmentEnd =
-          endTime < selectedDayEndExclusive ? endTime : selectedDayEndExclusive;
-        const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
-        const endMinute = getEndMinuteForDayKey(
-          dayKey,
-          segmentEnd,
-          placeTimeZone,
-        );
-        if (
-          endMinute <= timelineStartMinute ||
-          startMinute >= timelineEndMinute
-        ) {
-          return null;
-        }
-
-        const clampedStart = Math.max(startMinute, timelineStartMinute);
-        const clampedEnd = Math.min(endMinute, timelineEndMinute);
-        const topOffset =
-          ((clampedStart - timelineStartMinute) / 60) * TIMELINE_ROW_HEIGHT;
-        const height = ((clampedEnd - clampedStart) / 60) * TIMELINE_ROW_HEIGHT;
-
-        return {
-          row,
-          topOffset,
-          height,
-        };
-      })
-      .filter((item): item is NonNullable<typeof item> => Boolean(item));
-  }, [
-    courtId,
-    dayKey,
-    draftRows,
-    isImportOverlay,
-    placeTimeZone,
-    selectedDayEndExclusive,
-    selectedDayStart,
-    timelineEndMinute,
-    timelineStartMinute,
-  ]);
+  const draftTimelineBlocks = React.useMemo(
+    () =>
+      isImportOverlay
+        ? buildDraftTimelineBlocksForDay({
+            draftRows,
+            dayKey,
+            dayStart: selectedDayStart,
+            timeZone: placeTimeZone,
+            timelineStartMinute,
+            timelineEndMinute,
+            courtId,
+          })
+        : [],
+    [
+      courtId,
+      dayKey,
+      draftRows,
+      isImportOverlay,
+      placeTimeZone,
+      selectedDayStart,
+      timelineEndMinute,
+      timelineStartMinute,
+    ],
+  );
 
   const draftWeekTimelineBlocksByDayKey = React.useMemo(() => {
     if (!isImportOverlay || !isWeekView) {
-      return new Map<
-        string,
-        Array<{ row: DraftRowItem; topOffset: number; height: number }>
-      >();
+      return new Map();
     }
-
-    const byDayKey = new Map<
-      string,
-      Array<{ row: DraftRowItem; topOffset: number; height: number }>
-    >();
-
-    for (const dk of weekDayKeys) {
-      const dayStart = getZonedDayRangeFromDayKey(dk, placeTimeZone).start;
-      const dayEndExclusive = addDays(dayStart, 1);
-
-      const items = draftRows
-        .filter((row) => row.status !== "COMMITTED" && row.status !== "SKIPPED")
-        .filter((row) => row.startTime && row.endTime)
-        .filter((row) => (courtId ? row.courtId === courtId : true))
-        .map((row) => {
-          const startTime = new Date(row.startTime as Date | string);
-          const endTime = new Date(row.endTime as Date | string);
-          if (startTime >= dayEndExclusive || endTime <= dayStart) return null;
-
-          const segmentStart = startTime > dayStart ? startTime : dayStart;
-          const segmentEnd =
-            endTime < dayEndExclusive ? endTime : dayEndExclusive;
-          const startMinute = getMinuteOfDay(segmentStart, placeTimeZone);
-          const endMinute = getEndMinuteForDayKey(
-            dk,
-            segmentEnd,
-            placeTimeZone,
-          );
-          if (
-            endMinute <= timelineStartMinute ||
-            startMinute >= timelineEndMinute
-          ) {
-            return null;
-          }
-
-          const clampedStart = Math.max(startMinute, timelineStartMinute);
-          const clampedEnd = Math.min(endMinute, timelineEndMinute);
-          const topOffset =
-            ((clampedStart - timelineStartMinute) / 60) * TIMELINE_ROW_HEIGHT;
-          const height =
-            ((clampedEnd - clampedStart) / 60) * TIMELINE_ROW_HEIGHT;
-
-          if (height <= 0) return null;
-
-          return { row, topOffset, height };
-        })
-        .filter((item): item is NonNullable<typeof item> => Boolean(item));
-
-      byDayKey.set(dk, items);
-    }
-
-    return byDayKey;
+    return buildDraftWeekTimelineBlocksByDayKey({
+      draftRows,
+      weekDayKeys,
+      timeZone: placeTimeZone,
+      timelineStartMinute,
+      timelineEndMinute,
+      courtId,
+    });
   }, [
     courtId,
     draftRows,
@@ -1671,104 +1297,32 @@ function OwnerAvailabilityStudioInner() {
     }
   }, [discardImport, jobId, setJobIdParam]);
 
-  const navigateWeek = React.useCallback(
-    (direction: 1 | -1) => {
-      const weekStart = getZonedDayRangeFromDayKey(
-        weekDayKeys[0] ?? dayKey,
-        placeTimeZone,
-      ).start;
-      const newDayKey = getZonedDayKey(
-        addDays(weekStart, direction * 7),
-        placeTimeZone,
-      );
-      setDayKeyParam(newDayKey);
-    },
-    [dayKey, placeTimeZone, setDayKeyParam, weekDayKeys],
-  );
-
   // Mobile selection config
-  const daySelectionConfig = React.useMemo<RangeSelectionConfig>(() => {
-    const blockedHourIndices = new Set<number>();
-    for (const { block } of timelineBlocks) {
-      const blockStart = getMinuteOfDay(block.startTime, placeTimeZone);
-      const blockEnd = getMinuteOfDay(block.endTime, placeTimeZone);
-      for (let m = blockStart; m < blockEnd; m += 60) {
-        const idx = Math.floor(m / 60) - startHour;
-        if (idx >= 0 && idx < hours.length) {
-          blockedHourIndices.add(idx);
-        }
-      }
-    }
-    for (const { reservation } of timelineReservations) {
-      const resStart = getMinuteOfDay(reservation.startTime, placeTimeZone);
-      const resEnd = getMinuteOfDay(reservation.endTime, placeTimeZone);
-      for (let m = resStart; m < resEnd; m += 60) {
-        const idx = Math.floor(m / 60) - startHour;
-        if (idx >= 0 && idx < hours.length) {
-          blockedHourIndices.add(idx);
-        }
-      }
-    }
-
-    const closedHourIndices = new Set<number>();
-    const hasCourtHours = (courtHoursQuery.data ?? []).length > 0;
-    if (hasCourtHours) {
-      const dayWindows = getWindowsForDayOfWeek(
-        courtHoursQuery.data ?? [],
+  const daySelectionConfig = React.useMemo(
+    () =>
+      buildDaySelectionConfig({
+        timelineBlocks,
+        timelineReservations,
+        placeTimeZone,
+        startHour,
+        hours,
         dayOfWeek,
-      );
-      const openCellIndices = buildOpenCellIndexSet({
-        windowsForDay: dayWindows,
-        axisStartHour: startHour,
-        cellCount: hours.length,
-        snapMinutes: 60,
-      });
-
-      for (let i = 0; i < hours.length; i += 1) {
-        if (!openCellIndices.has(i)) {
-          closedHourIndices.add(i);
-        }
-      }
-    }
-
-    const isUnavailable = (idx: number) =>
-      blockedHourIndices.has(idx) || closedHourIndices.has(idx);
-
-    return {
-      isCellAvailable: (idx: number) =>
-        idx >= 0 && idx < hours.length && !isUnavailable(idx),
-      computeRange: (anchorIdx: number, targetIdx: number) => {
-        const lo = Math.min(anchorIdx, targetIdx);
-        const hi = Math.max(anchorIdx, targetIdx);
-        for (let i = lo; i <= hi; i++) {
-          if (isUnavailable(i)) return null;
-        }
-        return { startIdx: lo, endIdx: hi };
-      },
-      clampToContiguous: (anchorIdx: number, targetIdx: number) => {
-        const dir = targetIdx >= anchorIdx ? 1 : -1;
-        let current = anchorIdx;
-        while (current !== targetIdx) {
-          const next = current + dir;
-          if (isUnavailable(next)) break;
-          current = next;
-        }
-        return current;
-      },
-      commitRange: (s: number, e: number) => {
-        setCommittedRange({ startIdx: s, endIdx: e });
-      },
-    };
-  }, [
-    hours,
-    placeTimeZone,
-    setCommittedRange,
-    startHour,
-    timelineBlocks,
-    timelineReservations,
-    courtHoursQuery.data,
-    dayOfWeek,
-  ]);
+        courtHours: courtHoursQuery.data ?? [],
+        onCommitRange: (startIdx, endIdx) => {
+          setCommittedRange({ startIdx, endIdx });
+        },
+      }),
+    [
+      hours,
+      placeTimeZone,
+      setCommittedRange,
+      startHour,
+      timelineBlocks,
+      timelineReservations,
+      courtHoursQuery.data,
+      dayOfWeek,
+    ],
+  );
 
   // Track which day column committed the range in week view
   const [weekCommittedDayKey, setWeekCommittedDayKey] = React.useState<
@@ -2377,7 +1931,7 @@ function OwnerAvailabilityStudioInner() {
                 type="button"
                 variant="outline"
                 className="hidden lg:inline-flex"
-                onClick={() => setDayKeyParam(fallbackDayKey)}
+                onClick={handleMobileToday}
               >
                 Today
               </Button>
@@ -2419,7 +1973,7 @@ function OwnerAvailabilityStudioInner() {
                           type="button"
                           variant="outline"
                           size="sm"
-                          onClick={() => setDayKeyParam(fallbackDayKey)}
+                          onClick={handleMobileToday}
                         >
                           Today
                         </Button>
@@ -2428,9 +1982,7 @@ function OwnerAvailabilityStudioInner() {
                         mode="single"
                         selected={selectedDate}
                         onSelect={(date) => {
-                          if (date) {
-                            setDayKeyParam(getZonedDayKey(date, placeTimeZone));
-                          }
+                          if (date) handleMobileDateSelect(date);
                         }}
                         month={calendarMonth}
                         onMonthChange={setCalendarMonth}
@@ -2790,7 +2342,7 @@ function OwnerAvailabilityStudioInner() {
                         selected={selectedDate}
                         onSelect={(date) => {
                           if (date) {
-                            setDayKeyParam(getZonedDayKey(date, placeTimeZone));
+                            handleMobileDateSelect(date);
                           }
                         }}
                         month={calendarMonth}
@@ -2996,9 +2548,7 @@ function OwnerAvailabilityStudioInner() {
                             selected={selectedDate}
                             onSelect={(date) => {
                               if (date) {
-                                setDayKeyParam(
-                                  getZonedDayKey(date, placeTimeZone),
-                                );
+                                handleMobileDateSelect(date);
                                 setMobileCalendarOpen(false);
                               }
                             }}
