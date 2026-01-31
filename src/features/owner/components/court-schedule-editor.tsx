@@ -699,7 +699,217 @@ export function CourtScheduleEditor({
                       </p>
                     ) : (
                       <div className="pt-3">
-                        <Table>
+                        {/* Mobile card layout */}
+                        <div className="md:hidden space-y-3">
+                          {dayRows.map((row) => {
+                            const hasInvalidTime =
+                              validation.invalidRows.has(row.id);
+                            const overlapsHours =
+                              validation.overlappingHours.has(row.id);
+                            const overlapsPricing =
+                              validation.overlappingPricing.has(row.id);
+                            const missingPrice =
+                              validation.openWithoutPrice.has(row.id);
+                            const closedWithPrice =
+                              validation.closedWithPrice.has(row.id);
+                            const isOvernight =
+                              validation.overnightRows.has(row.id);
+                            const hasError =
+                              hasInvalidTime ||
+                              overlapsHours ||
+                              overlapsPricing;
+
+                            const issueLabels = [
+                              hasInvalidTime ? "Invalid time" : null,
+                              overlapsHours ? "Hours overlap" : null,
+                              overlapsPricing ? "Pricing overlap" : null,
+                              missingPrice ? "Needs price" : null,
+                              closedWithPrice ? "Closed + priced" : null,
+                              isOvernight ? "Overnight" : null,
+                            ].filter(Boolean);
+
+                            return (
+                              <div
+                                key={row.id}
+                                className={cn(
+                                  "rounded-lg border p-3 space-y-3",
+                                  hasError && "border-destructive bg-destructive/5",
+                                )}
+                              >
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div>
+                                    <label className="text-xs text-muted-foreground mb-1 block">
+                                      Start
+                                    </label>
+                                    <Input
+                                      type="time"
+                                      value={row.startTime}
+                                      onChange={(event) =>
+                                        handleRowChange(day.value, row.id, {
+                                          startTime: event.target.value,
+                                        })
+                                      }
+                                      className={cn(
+                                        hasError &&
+                                          "border-destructive focus-visible:ring-destructive/40",
+                                      )}
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="text-xs text-muted-foreground mb-1 block">
+                                      End
+                                    </label>
+                                    <Input
+                                      type="time"
+                                      value={row.endTime}
+                                      onChange={(event) =>
+                                        handleRowChange(day.value, row.id, {
+                                          endTime: event.target.value,
+                                        })
+                                      }
+                                      className={cn(
+                                        hasError &&
+                                          "border-destructive focus-visible:ring-destructive/40",
+                                      )}
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-2 items-end">
+                                  <div>
+                                    <label className="text-xs text-muted-foreground mb-1 block">
+                                      Status
+                                    </label>
+                                    <div className="flex items-center gap-2">
+                                      <Switch
+                                        checked={row.isOpen}
+                                        onCheckedChange={(checked) =>
+                                          handleRowChange(day.value, row.id, {
+                                            isOpen: checked,
+                                          })
+                                        }
+                                        aria-label="Toggle open hours"
+                                      />
+                                      <span className="text-xs text-muted-foreground">
+                                        {row.isOpen ? "Open" : "Closed"}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <label className="text-xs text-muted-foreground mb-1 block">
+                                      Currency
+                                    </label>
+                                    <Select
+                                      value={row.currency}
+                                      onValueChange={(value) =>
+                                        handleRowChange(day.value, row.id, {
+                                          currency: value,
+                                        })
+                                      }
+                                      disabled={!row.allowPricing}
+                                    >
+                                      <SelectTrigger>
+                                        <SelectValue placeholder="Currency" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        {CURRENCY_OPTIONS.map((currency) => (
+                                          <SelectItem
+                                            key={currency}
+                                            value={currency}
+                                          >
+                                            {currency}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                </div>
+
+                                <div>
+                                  <label className="text-xs text-muted-foreground mb-1 block">
+                                    Hourly rate
+                                  </label>
+                                  {row.allowPricing ? (
+                                    <div className="flex items-center gap-1.5">
+                                      <Input
+                                        type="number"
+                                        min={0}
+                                        value={row.hourlyRate}
+                                        onChange={(event) =>
+                                          handleHourlyRateInput(
+                                            day.value,
+                                            row.id,
+                                            event.target.value,
+                                          )
+                                        }
+                                        className={cn(
+                                          hasError &&
+                                            "border-destructive focus-visible:ring-destructive/40",
+                                        )}
+                                      />
+                                      <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        className="shrink-0 text-xs"
+                                        disabled={row.hourlyRate === ""}
+                                        onClick={() =>
+                                          handleApplyToAll(day.value, row.id)
+                                        }
+                                      >
+                                        Apply to all
+                                      </Button>
+                                    </div>
+                                  ) : (
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() =>
+                                        handleRowChange(day.value, row.id, {
+                                          allowPricing: true,
+                                        })
+                                      }
+                                    >
+                                      Add pricing
+                                    </Button>
+                                  )}
+                                </div>
+
+                                <div className="flex items-center justify-between">
+                                  <div>
+                                    {issueLabels.length > 0 && (
+                                      <div
+                                        className={cn(
+                                          "text-xs",
+                                          hasError
+                                            ? "text-destructive"
+                                            : "text-muted-foreground",
+                                        )}
+                                      >
+                                        {issueLabels.join(" · ")}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() =>
+                                      handleRemoveRow(day.value, row.id)
+                                    }
+                                    aria-label="Remove block"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Desktop table layout */}
+                        <Table className="hidden md:table">
                           <TableHeader>
                             <TableRow>
                               <TableHead>Start</TableHead>
