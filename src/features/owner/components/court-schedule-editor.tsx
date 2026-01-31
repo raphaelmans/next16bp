@@ -741,10 +741,14 @@ export function CourtScheduleEditor({
                               >
                                 <div className="space-y-2">
                                   <div>
-                                    <label className="text-xs text-muted-foreground mb-1 block">
+                                    <label
+                                      htmlFor={`start-${day.value}-${row.id}`}
+                                      className="text-xs text-muted-foreground mb-1 block"
+                                    >
                                       Start
                                     </label>
                                     <Input
+                                      id={`start-${day.value}-${row.id}`}
                                       type="time"
                                       value={row.startTime}
                                       onChange={(event) =>
@@ -759,10 +763,14 @@ export function CourtScheduleEditor({
                                     />
                                   </div>
                                   <div>
-                                    <label className="text-xs text-muted-foreground mb-1 block">
+                                    <label
+                                      htmlFor={`end-${day.value}-${row.id}`}
+                                      className="text-xs text-muted-foreground mb-1 block"
+                                    >
                                       End
                                     </label>
                                     <Input
+                                      id={`end-${day.value}-${row.id}`}
                                       type="time"
                                       value={row.endTime}
                                       onChange={(event) =>
@@ -780,11 +788,15 @@ export function CourtScheduleEditor({
 
                                 <div className="grid grid-cols-2 gap-2 items-end">
                                   <div>
-                                    <label className="text-xs text-muted-foreground mb-1 block">
+                                    <label
+                                      htmlFor={`status-${day.value}-${row.id}`}
+                                      className="text-xs text-muted-foreground mb-1 block"
+                                    >
                                       Status
                                     </label>
                                     <div className="flex items-center gap-2">
                                       <Switch
+                                        id={`status-${day.value}-${row.id}`}
                                         checked={row.isOpen}
                                         onCheckedChange={(checked) =>
                                           handleRowChange(day.value, row.id, {
@@ -799,7 +811,10 @@ export function CourtScheduleEditor({
                                     </div>
                                   </div>
                                   <div>
-                                    <label className="text-xs text-muted-foreground mb-1 block">
+                                    <label
+                                      htmlFor={`currency-${day.value}-${row.id}`}
+                                      className="text-xs text-muted-foreground mb-1 block"
+                                    >
                                       Currency
                                     </label>
                                     <Select
@@ -829,12 +844,16 @@ export function CourtScheduleEditor({
                                 </div>
 
                                 <div>
-                                  <label className="text-xs text-muted-foreground mb-1 block">
+                                  <label
+                                    htmlFor={`rate-${day.value}-${row.id}`}
+                                    className="text-xs text-muted-foreground mb-1 block"
+                                  >
                                     Hourly rate
                                   </label>
                                   {row.allowPricing ? (
                                     <div className="flex items-center gap-1.5">
                                       <Input
+                                        id={`rate-${day.value}-${row.id}`}
                                         type="number"
                                         min={0}
                                         value={row.hourlyRate}

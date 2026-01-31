@@ -29,11 +29,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -66,8 +61,8 @@ import {
 } from "@/features/owner/components/booking-studio/draft-row-card";
 import { GuestBookingDialog } from "@/features/owner/components/booking-studio/guest-booking-dialog";
 import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-studio/mobile-create-block-drawer";
-import { MobileSelectionPeekBar } from "@/features/owner/components/booking-studio/mobile-selection-peek-bar";
 import { MobileDayBlocksList } from "@/features/owner/components/booking-studio/mobile-day-blocks-list";
+import { MobileSelectionPeekBar } from "@/features/owner/components/booking-studio/mobile-selection-peek-bar";
 import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
 import { ReplaceWithGuestDialog } from "@/features/owner/components/booking-studio/replace-with-guest-dialog";
 import { computeClampedResizeRange } from "@/features/owner/components/booking-studio/resize-helpers";
@@ -372,7 +367,7 @@ function OwnerAvailabilityStudioInner() {
     setDayKeyParam(getZonedDayKey(todayDate, placeTimeZone));
   }, [placeTimeZone, setDayKeyParam, todayDate]);
 
-  const navigateMonth = React.useCallback(
+  const _navigateMonth = React.useCallback(
     (direction: 1 | -1) => {
       const current = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
       const targetMonth = addMonths(current, direction);
@@ -1790,10 +1785,8 @@ function OwnerAvailabilityStudioInner() {
     };
   }, [
     hours,
-    isMobile,
     placeTimeZone,
     setCommittedRange,
-    setMobileDrawerOpen,
     startHour,
     timelineBlocks,
     timelineReservations,
