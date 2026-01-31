@@ -321,7 +321,7 @@ export function PlaceVerificationPanel({
                     Drag & drop files or click to browse
                   </span>
                   <span className="text-xs">
-                    Proof of ownership, permits, or government IDs.
+                    Photo with the court showing today's date, or other proof.
                   </span>
                 </label>
               </div>

@@ -15,9 +15,7 @@ export const MobileSelectionPeekBar = React.memo(
   }) {
     const committedRange = useBookingStudio((s) => s.committedRange);
     const mobileDrawerOpen = useBookingStudio((s) => s.mobileDrawerOpen);
-    const resetSelectionPanel = useBookingStudio(
-      (s) => s.resetSelectionPanel,
-    );
+    const resetSelectionPanel = useBookingStudio((s) => s.resetSelectionPanel);
 
     const visible = !!committedRange && !mobileDrawerOpen;
 
