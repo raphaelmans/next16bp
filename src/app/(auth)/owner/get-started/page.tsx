@@ -199,18 +199,18 @@ export default function OwnerGetStartedPage() {
                 onSearchClick={() => setShowClaimSearch(true)}
               />
 
-              <VerifyVenueCard
-                hasVenue={hasVenue}
-                placeName={primaryPlaceName}
-                verificationStatus={verificationStatus}
-                onVerifyClick={handleVerifyVenue}
-              />
-
               <ConfigureVenueCourtsCard
                 hasVenue={hasVenue}
                 hasActiveCourt={hasActiveCourt}
                 placeId={primaryPlaceId}
                 onConfigureClick={handleConfigureCourts}
+              />
+
+              <VerifyVenueCard
+                hasVenue={hasVenue}
+                placeName={primaryPlaceName}
+                verificationStatus={verificationStatus}
+                onVerifyClick={handleVerifyVenue}
               />
 
               <ImportBookingsCard
@@ -398,10 +398,12 @@ function AddVenueCard({
                 Next, submit verification to unlock bookings. You can add more
                 venues from your dashboard.
               </p>
+              <div className="pt-2">
+                <Button variant="outline" asChild>
+                  <Link href={appRoutes.owner.places.base}>View venues</Link>
+                </Button>
+              </div>
             </div>
-            <Button variant="outline" asChild>
-              <Link href={appRoutes.owner.places.base}>View venues</Link>
-            </Button>
           </div>
         </CardContent>
       </Card>
@@ -543,10 +545,12 @@ function VerifyVenueCard({
               <p className="text-sm text-muted-foreground">
                 {placeName} is verified and ready for reservations.
               </p>
+              <div className="pt-2">
+                <Button variant="outline" onClick={onVerifyClick}>
+                  View verification
+                </Button>
+              </div>
             </div>
-            <Button variant="outline" onClick={onVerifyClick}>
-              View verification
-            </Button>
           </div>
         </CardContent>
       </Card>
@@ -573,10 +577,12 @@ function VerifyVenueCard({
               <p className="text-sm text-muted-foreground">
                 We are reviewing your documents for {placeName}.
               </p>
+              <div className="pt-2">
+                <Button variant="outline" onClick={onVerifyClick}>
+                  View submission
+                </Button>
+              </div>
             </div>
-            <Button variant="outline" onClick={onVerifyClick}>
-              View submission
-            </Button>
           </div>
         </CardContent>
       </Card>
@@ -603,8 +609,10 @@ function VerifyVenueCard({
               <p className="text-sm text-muted-foreground">
                 Update your documents to verify {placeName}.
               </p>
+              <div className="pt-2">
+                <Button onClick={onVerifyClick}>Resubmit docs</Button>
+              </div>
             </div>
-            <Button onClick={onVerifyClick}>Resubmit docs</Button>
           </div>
         </CardContent>
       </Card>
@@ -670,18 +678,20 @@ function ConfigureVenueCourtsCard({
               <p className="text-sm text-muted-foreground">
                 Your venue is ready for schedules and pricing updates.
               </p>
+              <div className="pt-2">
+                {placeId ? (
+                  <Button variant="outline" asChild>
+                    <Link href={appRoutes.owner.places.courts.base(placeId)}>
+                      Manage courts
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button variant="outline" disabled>
+                    Manage courts
+                  </Button>
+                )}
+              </div>
             </div>
-            {placeId ? (
-              <Button variant="outline" asChild>
-                <Link href={appRoutes.owner.places.courts.base(placeId)}>
-                  Manage courts
-                </Link>
-              </Button>
-            ) : (
-              <Button variant="outline" disabled>
-                Manage courts
-              </Button>
-            )}
           </div>
         </CardContent>
       </Card>
