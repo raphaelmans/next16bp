@@ -702,8 +702,9 @@ export function CourtScheduleEditor({
                         {/* Mobile card layout */}
                         <div className="md:hidden space-y-3">
                           {dayRows.map((row) => {
-                            const hasInvalidTime =
-                              validation.invalidRows.has(row.id);
+                            const hasInvalidTime = validation.invalidRows.has(
+                              row.id,
+                            );
                             const overlapsHours =
                               validation.overlappingHours.has(row.id);
                             const overlapsPricing =
@@ -712,8 +713,9 @@ export function CourtScheduleEditor({
                               validation.openWithoutPrice.has(row.id);
                             const closedWithPrice =
                               validation.closedWithPrice.has(row.id);
-                            const isOvernight =
-                              validation.overnightRows.has(row.id);
+                            const isOvernight = validation.overnightRows.has(
+                              row.id,
+                            );
                             const hasError =
                               hasInvalidTime ||
                               overlapsHours ||
@@ -733,10 +735,11 @@ export function CourtScheduleEditor({
                                 key={row.id}
                                 className={cn(
                                   "rounded-lg border p-3 space-y-3",
-                                  hasError && "border-destructive bg-destructive/5",
+                                  hasError &&
+                                    "border-destructive bg-destructive/5",
                                 )}
                               >
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="space-y-2">
                                   <div>
                                     <label className="text-xs text-muted-foreground mb-1 block">
                                       Start
