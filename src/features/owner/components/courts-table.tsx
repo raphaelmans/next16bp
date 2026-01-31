@@ -163,11 +163,18 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                         {court.placeName} · {court.city}
                       </p>
                     </div>
-                    <CourtActionsDropdown
-                      court={court}
-                      onDeactivate={onDeactivate}
-                      onContainerClick={(e) => e.stopPropagation()}
-                    />
+                    {/* biome-ignore lint/a11y/useKeyWithClickEvents: wrapper only stops propagation */}
+                    {/* biome-ignore lint/a11y/noStaticElementInteractions: wrapper only stops propagation */}
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      onPointerDown={(e) => e.stopPropagation()}
+                    >
+                      <CourtActionsDropdown
+                        court={court}
+                        onDeactivate={onDeactivate}
+                        onContainerClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
                   </div>
                   <div className="mt-2 flex items-center gap-2">
                     <Badge
@@ -239,9 +246,10 @@ function CourtActionsDropdown({
 
         <DropdownMenuItem asChild>
           <Link
-            href={appRoutes.owner.places.courts.schedule(
+            href={appRoutes.owner.places.courts.setup(
               court.placeId,
               court.id,
+              "schedule",
             )}
           >
             <Clock className="mr-2 h-4 w-4" />
