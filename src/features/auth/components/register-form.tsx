@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,7 +22,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { type RegisterDTO, RegisterSchema } from "@/lib/modules/auth/dtos";
-import { useLoginWithGoogle, useRegister } from "../hooks";
+import { useLoginWithGoogle, useRegister, useVerifySignUpOtp } from "../hooks";
+import { EmailVerificationScreen } from "./email-verification-screen";
 
 export interface RegisterFormProps {
   title?: string;
@@ -35,10 +36,13 @@ export function RegisterForm({
   description = "Enter your details to create an account",
   defaultRedirect = appRoutes.postLogin.base,
 }: RegisterFormProps = {}) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [success, setSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
   const registerMutation = useRegister();
   const googleLoginMutation = useLoginWithGoogle();
+  const verifySignUpOtpMutation = useVerifySignUpOtp();
 
   const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
     fallback: defaultRedirect,
@@ -71,6 +75,7 @@ export function RegisterForm({
         ...data,
         redirect: redirectUrl,
       });
+      setRegisteredEmail(data.email);
       reset(data);
       setSuccess(true);
     } catch (error) {
@@ -100,23 +105,33 @@ export function RegisterForm({
 
   if (success) {
     return (
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Check your email</CardTitle>
-          <CardDescription>
-            We&apos;ve sent a confirmation link to your email address. Please
-            click the link to verify your account.
-          </CardDescription>
-        </CardHeader>
-        <CardFooter>
-          <Link
-            href={loginHref}
-            className="text-primary hover:underline text-sm"
-          >
-            Back to sign in
-          </Link>
-        </CardFooter>
-      </Card>
+      <EmailVerificationScreen
+        email={registeredEmail}
+        onVerifyOtp={async (token) => {
+          try {
+            await verifySignUpOtpMutation.mutateAsync({
+              email: registeredEmail,
+              token,
+            });
+            router.push(redirectUrl);
+            router.refresh();
+          } catch (error) {
+            toast.error("Unable to verify code", {
+              description: getClientErrorMessage(error, "Please try again"),
+            });
+          }
+        }}
+        onResendCode={async () => {
+          await registerMutation.mutateAsync({
+            email: registeredEmail,
+            password: form.getValues("password"),
+            redirect: redirectUrl,
+          });
+        }}
+        isVerifying={verifySignUpOtpMutation.isPending}
+        isResending={registerMutation.isPending}
+        loginHref={loginHref}
+      />
     );
   }
 

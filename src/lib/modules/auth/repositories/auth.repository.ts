@@ -45,6 +45,10 @@ export interface IAuthRepository {
   verifySignUp(
     tokenHash: string,
   ): Promise<{ user: User | null; session: Session | null }>;
+  verifySignUpOtp(
+    email: string,
+    token: string,
+  ): Promise<{ user: User | null; session: Session | null }>;
   verifyRecovery(tokenHash: string): Promise<void>;
 }
 
@@ -196,6 +200,20 @@ export class AuthRepository implements IAuthRepository {
       token_hash: tokenHash,
       type: "signup",
     });
+    if (error) throw error;
+    return data;
+  }
+
+  async verifySignUpOtp(
+    email: string,
+    token: string,
+  ): Promise<{ user: User | null; session: Session | null }> {
+    const { data, error } = await this.client.auth.verifyOtp({
+      email,
+      token,
+      type: "signup",
+    });
+
     if (error) throw error;
     return data;
   }

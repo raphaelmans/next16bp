@@ -60,10 +60,6 @@ export const appRoutes = {
     base: "/magic-link",
     options: { type: "guest" as const },
   },
-  otp: {
-    base: "/otp",
-    options: { type: "guest" as const },
-  },
   home: {
     base: "/home",
     options: { type: "protected" as const },
@@ -210,7 +206,6 @@ const guestBases = [
   appRoutes.login.base,
   appRoutes.register.base,
   appRoutes.magicLink.base,
-  appRoutes.otp.base,
 ];
 
 const publicBases = [

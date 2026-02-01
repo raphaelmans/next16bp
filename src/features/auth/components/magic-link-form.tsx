@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -20,12 +20,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { type MagicLinkDTO, MagicLinkSchema } from "@/lib/modules/auth/dtos";
-import { useMagicLink } from "../hooks";
+import { useMagicLink, useVerifyEmailOtp } from "../hooks";
+import { EmailVerificationScreen } from "./email-verification-screen";
 
 export function MagicLinkForm() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [success, setSuccess] = useState(false);
+  const [sentEmail, setSentEmail] = useState("");
   const magicLinkMutation = useMagicLink();
+  const verifyEmailOtpMutation = useVerifyEmailOtp();
   const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
     fallback: appRoutes.postLogin.base,
     origin: typeof window !== "undefined" ? window.location.origin : undefined,
@@ -55,6 +59,7 @@ export function MagicLinkForm() {
         ...data,
         redirect: redirectUrl,
       });
+      setSentEmail(data.email);
       reset(data);
       setSuccess(true);
     } catch (error) {
@@ -66,23 +71,32 @@ export function MagicLinkForm() {
 
   if (success) {
     return (
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Check your email</CardTitle>
-          <CardDescription>
-            We&apos;ve sent a magic link to your email address. Click the link
-            to sign in.
-          </CardDescription>
-        </CardHeader>
-        <CardFooter>
-          <Link
-            href={loginHref}
-            className="text-primary hover:underline text-sm"
-          >
-            Back to sign in
-          </Link>
-        </CardFooter>
-      </Card>
+      <EmailVerificationScreen
+        email={sentEmail}
+        onVerifyOtp={async (token) => {
+          try {
+            await verifyEmailOtpMutation.mutateAsync({
+              email: sentEmail,
+              token,
+            });
+            router.push(redirectUrl);
+            router.refresh();
+          } catch (error) {
+            toast.error("Unable to verify code", {
+              description: getClientErrorMessage(error, "Please try again"),
+            });
+          }
+        }}
+        onResendCode={async () => {
+          await magicLinkMutation.mutateAsync({
+            email: sentEmail,
+            redirect: redirectUrl,
+          });
+        }}
+        isVerifying={verifyEmailOtpMutation.isPending}
+        isResending={magicLinkMutation.isPending}
+        loginHref={loginHref}
+      />
     );
   }
 

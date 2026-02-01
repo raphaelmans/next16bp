@@ -67,6 +67,19 @@ export function useVerifyEmailOtp() {
 }
 
 /**
+ * Hook for signup OTP verify mutation.
+ */
+export function useVerifySignUpOtp() {
+  const utils = trpc.useUtils();
+
+  return trpc.auth.verifySignUpOtp.useMutation({
+    onSuccess: async () => {
+      await utils.auth.me.invalidate();
+    },
+  });
+}
+
+/**
  * Hook for Google OAuth login mutation.
  */
 export function useLoginWithGoogle() {

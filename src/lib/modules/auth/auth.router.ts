@@ -117,6 +117,21 @@ export const authRouter = router({
       };
     }),
 
+  verifySignUpOtp: publicProcedure
+    .input(VerifyEmailOtpSchema)
+    .mutation(async ({ input, ctx }) => {
+      const authService = makeAuthService(ctx.cookies);
+      const result = await authService.verifySignUpOtpCode(
+        input.email,
+        input.token,
+      );
+      return {
+        user: result.user
+          ? { id: result.user.id, email: result.user.email }
+          : null,
+      };
+    }),
+
   verifyRecovery: publicProcedure
     .input(VerifyTokenHashSchema)
     .mutation(async ({ input, ctx }) => {

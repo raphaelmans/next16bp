@@ -47,6 +47,10 @@ export interface IAuthService {
   verifySignUp(
     tokenHash: string,
   ): Promise<{ user: User | null; session: Session | null }>;
+  verifySignUpOtpCode(
+    email: string,
+    token: string,
+  ): Promise<{ user: User | null; session: Session | null }>;
   verifyRecovery(tokenHash: string): Promise<void>;
 }
 
@@ -228,6 +232,22 @@ export class AuthService implements IAuthService {
       logger.info(
         { event: "user.signup_verified", userId: result.user.id },
         "Signup verified",
+      );
+    }
+
+    return result;
+  }
+
+  async verifySignUpOtpCode(
+    email: string,
+    token: string,
+  ): Promise<{ user: User | null; session: Session | null }> {
+    const result = await this.authRepository.verifySignUpOtp(email, token);
+
+    if (result.user) {
+      logger.info(
+        { event: "user.signup_otp_verified", userId: result.user.id },
+        "Signup OTP verified",
       );
     }
 
