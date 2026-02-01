@@ -27,6 +27,10 @@ import {
 } from "@/common/format";
 import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import {
+  getReservationEnablement,
+  type ReservationEnablementIssueCode,
+} from "@/common/reservation-enablement";
+import {
   getZonedDate,
   getZonedDayKey,
   getZonedDayRangeFromDayKey,
@@ -94,7 +98,11 @@ import {
   TIMELINE_ROW_HEIGHT,
 } from "@/features/owner/components/booking-studio/types";
 import { WeekDayColumn } from "@/features/owner/components/booking-studio/week-day-column";
-import { useCourtHours, useOwnerOrganization } from "@/features/owner/hooks";
+import {
+  useCourtHours,
+  useCourtRateRules,
+  useOwnerOrganization,
+} from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 
@@ -213,6 +221,7 @@ function OwnerCourtAvailabilityInner() {
 
   // Timeline range from court hours
   const courtHoursQuery = useCourtHours(courtId);
+  const courtRateRulesQuery = useCourtRateRules(courtId);
   const dayOfWeek = getZonedDate(selectedDayStart, placeTimeZone).getDay();
   const selectedTimelineRange = React.useMemo(
     () => parseTimelineRange(courtHoursQuery.data ?? [], dayOfWeek),
@@ -1205,9 +1214,28 @@ function OwnerCourtAvailabilityInner() {
   const verificationStatus = placeData.verification?.status ?? "UNVERIFIED";
   const reservationsEnabled =
     placeData.verification?.reservationsEnabled ?? false;
-  const showVerificationBanner = verificationStatus !== "VERIFIED";
-  const showReservationsDisabledBanner =
-    verificationStatus === "VERIFIED" && !reservationsEnabled;
+  const hasHoursWindows = courtHoursQuery.data
+    ? courtHoursQuery.data.length > 0
+    : null;
+  const hasRateRules = courtRateRulesQuery.data
+    ? courtRateRulesQuery.data.length > 0
+    : null;
+  const enablement = getReservationEnablement({
+    placeType: placeData.place.placeType,
+    verificationStatus,
+    reservationsEnabled,
+    hasHoursWindows,
+    hasRateRules,
+  });
+  const hasIssue = (code: ReservationEnablementIssueCode) =>
+    enablement.issues.some((issue) => issue.code === code);
+  const showVerificationBanner =
+    hasIssue("VERIFICATION_REQUIRED") ||
+    hasIssue("VERIFICATION_PENDING") ||
+    hasIssue("VERIFICATION_REJECTED");
+  const showReservationsDisabledBanner = hasIssue("RESERVATIONS_DISABLED");
+  const showScheduleBanner = hasIssue("NO_SCHEDULE");
+  const showPricingBanner = hasIssue("NO_PRICING");
 
   return (
     <AppShell
@@ -1279,7 +1307,10 @@ function OwnerCourtAvailabilityInner() {
           actionsClassName="flex-col sm:flex-row w-full sm:w-auto"
         />
 
-        {(showVerificationBanner || showReservationsDisabledBanner) && (
+        {(showVerificationBanner ||
+          showReservationsDisabledBanner ||
+          showScheduleBanner ||
+          showPricingBanner) && (
           <div className="space-y-3">
             {showVerificationBanner && (
               <Alert className="border-warning/20 bg-warning/10">
@@ -1308,6 +1339,38 @@ function OwnerCourtAvailabilityInner() {
                   </p>
                   <Button asChild size="sm" className="mt-2">
                     <Link href={verificationHref}>Enable reservations</Link>
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {showScheduleBanner && (
+              <Alert className="border-warning/20 bg-warning/10">
+                <AlertCircle className="text-warning" />
+                <AlertTitle>No schedule hours configured</AlertTitle>
+                <AlertDescription>
+                  <p>
+                    You haven&apos;t set up operating hours for this court yet.
+                    Add schedule hours to enable availability.
+                  </p>
+                  <Button asChild size="sm" className="mt-2">
+                    <Link href={scheduleHref}>Edit schedule & pricing</Link>
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {showPricingBanner && (
+              <Alert className="border-warning/20 bg-warning/10">
+                <AlertCircle className="text-warning" />
+                <AlertTitle>No pricing rules configured</AlertTitle>
+                <AlertDescription>
+                  <p>
+                    You haven&apos;t set up pricing rules for this court yet.
+                    Add pricing to enable bookings.
+                  </p>
+                  <Button asChild size="sm" className="mt-2">
+                    <Link href={scheduleHref}>Edit schedule & pricing</Link>
                   </Button>
                 </AlertDescription>
               </Alert>

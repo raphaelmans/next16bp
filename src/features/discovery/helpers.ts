@@ -1,4 +1,5 @@
 import { addDays } from "date-fns";
+import { getReservationEnablement } from "@/common/reservation-enablement";
 import { getZonedDayKey, getZonedDayRangeFromDayKey } from "@/common/time-zone";
 import type { PlaceCardPlace, TimeSlot } from "@/components/kudos";
 
@@ -73,10 +74,16 @@ export function getPlaceVerificationDisplay(
   const verificationStatus = input.verificationStatus ?? "UNVERIFIED";
   const reservationsEnabled = input.reservationsEnabled ?? false;
 
+  const enablement = getReservationEnablement({
+    placeType,
+    verificationStatus,
+    reservationsEnabled,
+  });
+
   const isBookable = placeType === "RESERVABLE";
   const isCurated = placeType === "CURATED";
   const isVerified = verificationStatus === "VERIFIED";
-  const showBooking = isBookable && isVerified && reservationsEnabled;
+  const showBooking = enablement.canShowPublicBooking;
   const showVerificationBadge = showBooking;
   const showBookingVerificationUi = !showBooking && !isCurated;
 

@@ -102,6 +102,7 @@ export const AvailabilityDiagnosticsSchema = z.object({
   hasRateRules: z.boolean(),
   dayHasHours: z.boolean(),
   allSlotsBooked: z.boolean(),
+  reservationsDisabled: z.boolean().optional(),
 });
 
 export type AvailabilityDiagnosticsDTO = z.infer<

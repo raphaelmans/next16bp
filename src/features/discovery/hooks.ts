@@ -563,6 +563,7 @@ export interface AvailabilityDiagnostics {
   hasRateRules: boolean;
   dayHasHours: boolean;
   allSlotsBooked: boolean;
+  reservationsDisabled?: boolean;
 }
 
 interface UsePlaceDetailOptions {
@@ -758,6 +759,7 @@ const emptyDiagnostics: AvailabilityDiagnostics = {
   hasRateRules: false,
   dayHasHours: false,
   allSlotsBooked: false,
+  reservationsDisabled: false,
 };
 
 export function usePlaceAvailability({

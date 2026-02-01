@@ -1554,7 +1554,9 @@ export default function PlaceDetailPage() {
                       />
                     ) : (
                       <AvailabilityEmptyState
-                        diagnostics={null}
+                        diagnostics={
+                          anyDayAvailabilityQuery.data?.diagnostics ?? null
+                        }
                         variant="public"
                         contact={contactDetail}
                       />
