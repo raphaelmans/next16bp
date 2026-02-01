@@ -1,3 +1,4 @@
+import { makeNotificationDeliveryService } from "@/lib/modules/notification-delivery/factories/notification-delivery.factory";
 import { getContainer } from "@/lib/shared/infra/container";
 import {
   ClaimPlaceRepository,
@@ -67,6 +68,7 @@ export function makeApproveClaimRequestUseCase() {
       makeClaimPlaceRepository(),
       makeClaimRequestEventRepository(),
       getContainer().transactionManager,
+      makeNotificationDeliveryService(),
       getContainer().db,
     );
   }
@@ -82,6 +84,7 @@ export function makeClaimAdminService() {
       makeOrganizationRepository(),
       makeApproveClaimRequestUseCase(),
       getContainer().transactionManager,
+      makeNotificationDeliveryService(),
     );
   }
   return claimAdminService;

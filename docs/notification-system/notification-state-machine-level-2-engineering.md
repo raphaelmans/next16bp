@@ -28,21 +28,52 @@ stateDiagram-v2
   SENT --> [*]
 ```
 
-## Enqueue chokepoint (MVP)
+## Enqueue chokepoints (MVP)
 
-Event: `place_verification.requested`
+Events:
 
+1) `place_verification.requested` (notify admins)
 - File: `src/lib/modules/place-verification/services/place-verification.service.ts`
 - Enqueue inside the same transaction that creates:
   - `place_verification_request`
   - `place_verification_request_event`
   - `place_verification` upsert
 
+2) `reservation.created` (notify court owner)
+- Files:
+  - `src/lib/modules/reservation/services/reservation.service.ts`
+- Enqueue inside the same transaction that creates:
+  - `reservation`
+  - `reservation_event`
+
+3) `place_verification.approved|rejected` (notify court owner)
+- Files:
+  - `src/lib/modules/place-verification/services/place-verification-admin.service.ts`
+- Enqueue inside the same transaction that updates:
+  - `place_verification_request`
+  - `place_verification_request_event`
+  - `place_verification`
+  - `place`
+
+4) `claim_request.approved|rejected` (notify court owner)
+- Files:
+  - `src/lib/modules/claim-request/use-cases/approve-claim-request.use-case.ts`
+  - `src/lib/modules/claim-request/services/claim-admin.service.ts`
+- Enqueue inside the same transaction that updates:
+  - `claim_request`
+  - `claim_request_event`
+  - `place`
+
 ## Recipients (MVP)
 
-- Admins are resolved via `user_roles.role = "admin"` joined to `profile`.
+Admins:
+- Resolved via `user_roles.role = "admin"` joined to `profile`.
 - Email jobs are created when `profile.email` exists.
 - SMS jobs are created when `profile.phoneNumber` exists.
+
+Court owner:
+- Resolved via `organization_profile.contactEmail/contactPhone`.
+- Fallback to `profile.email/phoneNumber` for `organization.ownerUserId`.
 
 ## Idempotency
 
@@ -51,10 +82,20 @@ Each job has a unique `idempotencyKey` to prevent duplicates.
 Format (MVP):
 - `place_verification.requested:<requestId>:admin:<adminUserId>:email`
 - `place_verification.requested:<requestId>:admin:<adminUserId>:sms`
+- `reservation.created:<reservationId>:org:<organizationId>:email`
+- `reservation.created:<reservationId>:org:<organizationId>:sms`
+- `place_verification.approved:<requestId>:org:<organizationId>:email`
+- `place_verification.approved:<requestId>:org:<organizationId>:sms`
+- `place_verification.rejected:<requestId>:org:<organizationId>:email`
+- `place_verification.rejected:<requestId>:org:<organizationId>:sms`
+- `claim_request.approved:<requestId>:org:<organizationId>:email`
+- `claim_request.approved:<requestId>:org:<organizationId>:sms`
+- `claim_request.rejected:<requestId>:org:<organizationId>:email`
+- `claim_request.rejected:<requestId>:org:<organizationId>:sms`
 
 ## Payload contract
 
-`notification_delivery_job.payload` contains:
+`place_verification.requested` payload:
 - `requestId`
 - `placeId`
 - `placeName`
@@ -62,6 +103,38 @@ Format (MVP):
 - `organizationName`
 - `requestedByUserId`
 - `requestNotes` (nullable)
+
+`reservation.created` payload:
+- `reservationId`
+- `organizationId`
+- `placeId`
+- `placeName`
+- `courtId`
+- `courtLabel`
+- `startTimeIso`
+- `endTimeIso`
+- `totalPriceCents`
+- `currency`
+- `playerName`
+- `playerEmail` (nullable)
+- `playerPhone` (nullable)
+- `expiresAtIso` (nullable)
+
+`place_verification.approved|rejected` payload:
+- `requestId`
+- `organizationId`
+- `placeId`
+- `placeName`
+- `status` (`APPROVED` | `REJECTED`)
+- `reviewNotes` (nullable)
+
+`claim_request.approved|rejected` payload:
+- `requestId`
+- `organizationId`
+- `placeId`
+- `placeName`
+- `status` (`APPROVED` | `REJECTED`)
+- `reviewNotes` (nullable)
 
 ## Dispatcher contract
 

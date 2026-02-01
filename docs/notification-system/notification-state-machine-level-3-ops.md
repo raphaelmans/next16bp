@@ -31,3 +31,14 @@
 - `SEMAPHORE_BASE_URL` (optional)
 - `NEXT_PUBLIC_APP_URL` (optional; used for deep links)
 - `CRON_SECRET`
+
+## Channel toggles
+
+- `NOTIFICATION_EMAIL_ENABLED` (default: true)
+  - Set to `false` to permanently skip EMAIL jobs (marked `SKIPPED` with `DISABLED_CHANNEL:EMAIL`).
+- `NOTIFICATION_SMS_ENABLED` (default: true)
+  - Set to `false` to permanently skip SMS jobs (marked `SKIPPED` with `DISABLED_CHANNEL:SMS`).
+
+Notes:
+- When a channel is disabled, enqueue will stop creating jobs for that channel.
+- If jobs already exist in the outbox, the dispatcher will mark them `SKIPPED` when it encounters them.

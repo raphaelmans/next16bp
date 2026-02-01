@@ -14,7 +14,13 @@
 - SMS (Semaphore): `docs/notification-system/sms-integration.md`
 
 ## Current Contract (MVP)
-- Event: owner submits a venue verification request
-- Recipients: admins (`user_roles.role = "admin"`)
+- Events:
+  - `place_verification.requested` -> notify admins
+  - `reservation.created` -> notify court owner
+  - `place_verification.approved|rejected` -> notify court owner
+  - `claim_request.approved|rejected` -> notify court owner
+- Recipients:
+  - Admins (`user_roles.role = "admin"`)
+  - Court owner (org contact or owner profile)
 - Channels: email + SMS (when contact details exist)
 - Delivery: async outbox jobs dispatched by cron

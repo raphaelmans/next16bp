@@ -1,5 +1,7 @@
 import { addMinutes } from "date-fns";
 import { type NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
 import { NotificationDeliveryJobRepository } from "@/lib/modules/notification-delivery/repositories/notification-delivery-job.repository";
 import { getContainer } from "@/lib/shared/infra/container";
@@ -11,15 +13,50 @@ const MAX_ATTEMPTS = 5;
 const BACKOFF_MINUTES = [1, 5, 15, 60, 360];
 const BATCH_LIMIT = 25;
 
-type VerificationRequestedPayload = {
-  requestId: string;
-  placeId: string;
-  placeName: string;
-  organizationId: string;
-  organizationName?: string | null;
-  requestedByUserId: string;
-  requestNotes?: string | null;
-};
+const verificationRequestedSchema = z.object({
+  requestId: z.string(),
+  placeId: z.string(),
+  placeName: z.string(),
+  organizationId: z.string(),
+  organizationName: z.string().nullable().optional(),
+  requestedByUserId: z.string(),
+  requestNotes: z.string().nullable().optional(),
+});
+
+const reservationCreatedSchema = z.object({
+  reservationId: z.string(),
+  organizationId: z.string(),
+  placeId: z.string(),
+  placeName: z.string(),
+  courtId: z.string(),
+  courtLabel: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  totalPriceCents: z.number(),
+  currency: z.string(),
+  playerName: z.string(),
+  playerEmail: z.string().nullable().optional(),
+  playerPhone: z.string().nullable().optional(),
+  expiresAtIso: z.string().nullable().optional(),
+});
+
+const verificationReviewedSchema = z.object({
+  requestId: z.string(),
+  organizationId: z.string(),
+  placeId: z.string(),
+  placeName: z.string(),
+  status: z.enum(["APPROVED", "REJECTED"]),
+  reviewNotes: z.string().nullable().optional(),
+});
+
+const claimReviewedSchema = z.object({
+  requestId: z.string(),
+  organizationId: z.string(),
+  placeId: z.string(),
+  placeName: z.string(),
+  status: z.enum(["APPROVED", "REJECTED"]),
+  reviewNotes: z.string().nullable().optional(),
+});
 
 const getAppUrl = (): string => {
   const appUrl = env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
@@ -28,44 +65,32 @@ const getAppUrl = (): string => {
 
 const parseVerificationPayload = (
   payload: Record<string, unknown> | null | undefined,
-): VerificationRequestedPayload | null => {
-  if (!payload) return null;
-  const requestId = payload.requestId;
-  const placeId = payload.placeId;
-  const placeName = payload.placeName;
-  const organizationId = payload.organizationId;
-  const requestedByUserId = payload.requestedByUserId;
+) => verificationRequestedSchema.safeParse(payload ?? {});
 
-  if (
-    typeof requestId !== "string" ||
-    typeof placeId !== "string" ||
-    typeof placeName !== "string" ||
-    typeof organizationId !== "string" ||
-    typeof requestedByUserId !== "string"
-  ) {
-    return null;
-  }
+const parseReservationPayload = (
+  payload: Record<string, unknown> | null | undefined,
+) => reservationCreatedSchema.safeParse(payload ?? {});
 
-  return {
-    requestId,
-    placeId,
-    placeName,
-    organizationId,
-    organizationName:
-      typeof payload.organizationName === "string"
-        ? payload.organizationName
-        : null,
-    requestedByUserId,
-    requestNotes:
-      typeof payload.requestNotes === "string" ? payload.requestNotes : null,
-  };
+const parseVerificationReviewedPayload = (
+  payload: Record<string, unknown> | null | undefined,
+) => verificationReviewedSchema.safeParse(payload ?? {});
+
+const parseClaimReviewedPayload = (
+  payload: Record<string, unknown> | null | undefined,
+) => claimReviewedSchema.safeParse(payload ?? {});
+
+const toLocalCurrency = (totalPriceCents: number, currency: string) => {
+  const amount = (totalPriceCents / 100).toFixed(2);
+  return `${amount} ${currency}`;
 };
 
 const buildVerificationMessages = (
-  payload: VerificationRequestedPayload,
+  payload: z.infer<typeof verificationRequestedSchema>,
   appUrl: string,
 ) => {
-  const reviewPath = `/admin/verification/${payload.requestId}`;
+  const reviewPath = appRoutes.admin.placeVerification.detail(
+    payload.requestId,
+  );
   const reviewUrl = appUrl ? `${appUrl}${reviewPath}` : reviewPath;
 
   const subject = `New venue verification request: ${payload.placeName}`;
@@ -85,7 +110,102 @@ const buildVerificationMessages = (
   ];
 
   const emailText = lines.join("\n");
-  const smsText = `Verification request: ${payload.placeName}. Review: ${reviewUrl}`;
+  const smsText = `KudosCourts: New verification request for ${payload.placeName}. Request ID: ${payload.requestId}. Log in to review.`;
+
+  return { subject, emailText, smsText };
+};
+
+const buildReservationCreatedMessages = (
+  payload: z.infer<typeof reservationCreatedSchema>,
+  appUrl: string,
+) => {
+  const reservationPath = appRoutes.owner.reservationDetail(
+    payload.reservationId,
+  );
+  const reservationUrl = appUrl
+    ? `${appUrl}${reservationPath}`
+    : reservationPath;
+
+  const subject = `New reservation: ${payload.placeName} (${payload.courtLabel})`;
+
+  const lines = [
+    "New reservation created",
+    "",
+    `Place: ${payload.placeName}`,
+    `Court: ${payload.courtLabel}`,
+    `Start: ${payload.startTimeIso}`,
+    `End: ${payload.endTimeIso}`,
+    `Player: ${payload.playerName}`,
+    payload.playerEmail
+      ? `Player Email: ${payload.playerEmail}`
+      : "Player Email: (none)",
+    payload.playerPhone
+      ? `Player Phone: ${payload.playerPhone}`
+      : "Player Phone: (none)",
+    `Total: ${toLocalCurrency(payload.totalPriceCents, payload.currency)}`,
+    payload.expiresAtIso
+      ? `Owner response due: ${payload.expiresAtIso}`
+      : "Owner response due: (not set)",
+    "",
+    `Review: ${reservationUrl}`,
+  ];
+
+  const emailText = lines.join("\n");
+  const smsText = `KudosCourts: New reservation at ${payload.placeName} (${payload.courtLabel}) on ${payload.startTimeIso}. Reservation ID: ${payload.reservationId}. Log in to review.`;
+
+  return { subject, emailText, smsText };
+};
+
+const buildVerificationReviewedMessages = (
+  payload: z.infer<typeof verificationReviewedSchema>,
+  appUrl: string,
+) => {
+  const verifyPath = appRoutes.owner.verification.place(payload.placeId);
+  const verifyUrl = appUrl ? `${appUrl}${verifyPath}` : verifyPath;
+  const statusLabel = payload.status === "APPROVED" ? "approved" : "rejected";
+
+  const subject = `Venue verification ${statusLabel}: ${payload.placeName}`;
+
+  const lines = [
+    `Venue verification ${statusLabel}`,
+    "",
+    `Place: ${payload.placeName}`,
+    `Request ID: ${payload.requestId}`,
+    payload.reviewNotes ? `Notes: ${payload.reviewNotes}` : "Notes: (none)",
+    "",
+    `Details: ${verifyUrl}`,
+  ];
+
+  const emailText = lines.join("\n");
+  const smsText = `KudosCourts: Verification ${statusLabel} for ${payload.placeName}. Request ID: ${payload.requestId}. Log in for details.`;
+
+  return { subject, emailText, smsText };
+};
+
+const buildClaimReviewedMessages = (
+  payload: z.infer<typeof claimReviewedSchema>,
+  appUrl: string,
+) => {
+  const ownerPlacesPath = appRoutes.owner.places.base;
+  const ownerPlacesUrl = appUrl
+    ? `${appUrl}${ownerPlacesPath}`
+    : ownerPlacesPath;
+  const statusLabel = payload.status === "APPROVED" ? "approved" : "rejected";
+
+  const subject = `Ownership claim ${statusLabel}: ${payload.placeName}`;
+
+  const lines = [
+    `Ownership claim ${statusLabel}`,
+    "",
+    `Place: ${payload.placeName}`,
+    `Request ID: ${payload.requestId}`,
+    payload.reviewNotes ? `Notes: ${payload.reviewNotes}` : "Notes: (none)",
+    "",
+    `Manage your venues: ${ownerPlacesUrl}`,
+  ];
+
+  const emailText = lines.join("\n");
+  const smsText = `KudosCourts: Ownership claim ${statusLabel} for ${payload.placeName}. Request ID: ${payload.requestId}. Log in for details.`;
 
   return { subject, emailText, smsText };
 };
@@ -117,8 +237,11 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const emailService = makeEmailService();
-  const smsService = makeSmsService();
+  const emailEnabled = env.NOTIFICATION_EMAIL_ENABLED !== false;
+  const smsEnabled = env.NOTIFICATION_SMS_ENABLED !== false;
+
+  const emailService = emailEnabled ? makeEmailService() : null;
+  const smsService = smsEnabled ? makeSmsService() : null;
   const appUrl = getAppUrl();
 
   let sentCount = 0;
@@ -126,6 +249,26 @@ export async function GET(request: NextRequest) {
   let skippedCount = 0;
 
   for (const job of jobs) {
+    if (job.channel === "EMAIL" && !emailEnabled) {
+      skippedCount += 1;
+      await jobRepository.update(job.id, {
+        status: "SKIPPED",
+        lastError: "DISABLED_CHANNEL:EMAIL",
+        nextAttemptAt: null,
+      });
+      continue;
+    }
+
+    if (job.channel === "SMS" && !smsEnabled) {
+      skippedCount += 1;
+      await jobRepository.update(job.id, {
+        status: "SKIPPED",
+        lastError: "DISABLED_CHANNEL:SMS",
+        nextAttemptAt: null,
+      });
+      continue;
+    }
+
     if (!job.target) {
       skippedCount += 1;
       await jobRepository.update(job.id, {
@@ -136,7 +279,93 @@ export async function GET(request: NextRequest) {
       continue;
     }
 
-    if (job.eventType !== "place_verification.requested") {
+    let subject: string | null = null;
+    let emailText: string | null = null;
+    let smsText: string | null = null;
+
+    if (job.eventType === "place_verification.requested") {
+      const parsed = parseVerificationPayload(
+        job.payload as Record<string, unknown> | null,
+      );
+
+      if (!parsed.success) {
+        skippedCount += 1;
+        await jobRepository.update(job.id, {
+          status: "SKIPPED",
+          lastError: "INVALID_PAYLOAD",
+          nextAttemptAt: null,
+        });
+        continue;
+      }
+
+      const messages = buildVerificationMessages(parsed.data, appUrl);
+      subject = messages.subject;
+      emailText = messages.emailText;
+      smsText = messages.smsText;
+    } else if (job.eventType === "reservation.created") {
+      const parsed = parseReservationPayload(
+        job.payload as Record<string, unknown> | null,
+      );
+
+      if (!parsed.success) {
+        skippedCount += 1;
+        await jobRepository.update(job.id, {
+          status: "SKIPPED",
+          lastError: "INVALID_PAYLOAD",
+          nextAttemptAt: null,
+        });
+        continue;
+      }
+
+      const messages = buildReservationCreatedMessages(parsed.data, appUrl);
+      subject = messages.subject;
+      emailText = messages.emailText;
+      smsText = messages.smsText;
+    } else if (
+      job.eventType === "place_verification.approved" ||
+      job.eventType === "place_verification.rejected"
+    ) {
+      const parsed = parseVerificationReviewedPayload(
+        job.payload as Record<string, unknown> | null,
+      );
+
+      if (!parsed.success) {
+        skippedCount += 1;
+        await jobRepository.update(job.id, {
+          status: "SKIPPED",
+          lastError: "INVALID_PAYLOAD",
+          nextAttemptAt: null,
+        });
+        continue;
+      }
+
+      const messages = buildVerificationReviewedMessages(parsed.data, appUrl);
+      subject = messages.subject;
+      emailText = messages.emailText;
+      smsText = messages.smsText;
+    } else if (
+      job.eventType === "claim_request.approved" ||
+      job.eventType === "claim_request.rejected"
+    ) {
+      const parsed = parseClaimReviewedPayload(
+        job.payload as Record<string, unknown> | null,
+      );
+
+      if (!parsed.success) {
+        skippedCount += 1;
+        await jobRepository.update(job.id, {
+          status: "SKIPPED",
+          lastError: "INVALID_PAYLOAD",
+          nextAttemptAt: null,
+        });
+        continue;
+      }
+
+      const messages = buildClaimReviewedMessages(parsed.data, appUrl);
+      subject = messages.subject;
+      emailText = messages.emailText;
+      smsText = messages.smsText;
+    } else {
       skippedCount += 1;
       await jobRepository.update(job.id, {
         status: "SKIPPED",
@@ -146,44 +375,31 @@ export async function GET(request: NextRequest) {
       continue;
     }
 
-    const payload = parseVerificationPayload(
-      job.payload as Record<string, unknown> | null,
-    );
-
-    if (!payload) {
-      skippedCount += 1;
-      await jobRepository.update(job.id, {
-        status: "SKIPPED",
-        lastError: "INVALID_PAYLOAD",
-        nextAttemptAt: null,
-      });
-      continue;
-    }
-
-    const { subject, emailText, smsText } = buildVerificationMessages(
-      payload,
-      appUrl,
-    );
-
     try {
       const attemptCount = job.attemptCount + 1;
       let providerMessageId: string | undefined;
 
       if (job.channel === "EMAIL") {
+        if (!emailService) {
+          throw new Error("Email service is disabled");
+        }
         const result = await emailService.sendEmail({
           from: env.CONTACT_US_FROM_EMAIL,
           to: job.target,
-          subject,
-          text: emailText,
+          subject: subject ?? "",
+          text: emailText ?? "",
           headers: {
             "Idempotency-Key": job.idempotencyKey,
           },
         });
         providerMessageId = result.id;
       } else if (job.channel === "SMS") {
+        if (!smsService) {
+          throw new Error("SMS service is disabled");
+        }
         const result = await smsService.sendSms({
           to: job.target,
-          message: smsText,
+          message: smsText ?? "",
         });
         providerMessageId = result.id;
       } else {

@@ -1,3 +1,4 @@
+import type { NotificationDeliveryService } from "@/lib/modules/notification-delivery/services/notification-delivery.service";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
@@ -44,6 +45,7 @@ export class PlaceVerificationAdminService {
     private transactionManager: TransactionManager,
     private placeRepository: IPlaceRepository,
     private organizationRepository: IOrganizationRepository,
+    private notificationDeliveryService: NotificationDeliveryService,
   ) {}
 
   async getPendingRequests(
@@ -115,6 +117,14 @@ export class PlaceVerificationAdminService {
         throw new PlaceVerificationRequestNotFoundError(data.requestId);
       }
 
+      const place = await this.placeRepository.findByIdForUpdate(
+        request.placeId,
+        ctx,
+      );
+      if (!place) {
+        throw new PlaceNotFoundError(request.placeId);
+      }
+
       if (request.status !== "PENDING") {
         throw new PlaceVerificationAlreadyReviewedError(request.status);
       }
@@ -163,8 +173,20 @@ export class PlaceVerificationAdminService {
       );
 
       await this.placeRepository.update(
-        request.placeId,
+        place.id,
         { placeType: "RESERVABLE" },
+        ctx,
+      );
+
+      await this.notificationDeliveryService.enqueueOwnerPlaceVerificationReviewed(
+        {
+          requestId: request.id,
+          organizationId: request.organizationId,
+          placeId: place.id,
+          placeName: place.name,
+          status: "APPROVED",
+          reviewNotes: data.reviewNotes ?? null,
+        },
         ctx,
       );
 
@@ -172,7 +194,7 @@ export class PlaceVerificationAdminService {
         {
           event: "place_verification.approved",
           requestId: request.id,
-          placeId: request.placeId,
+          placeId: place.id,
           adminUserId,
         },
         "Venue verification approved",
@@ -193,6 +215,14 @@ export class PlaceVerificationAdminService {
         );
       if (!request) {
         throw new PlaceVerificationRequestNotFoundError(data.requestId);
+      }
+
+      const place = await this.placeRepository.findByIdForUpdate(
+        request.placeId,
+        ctx,
+      );
+      if (!place) {
+        throw new PlaceNotFoundError(request.placeId);
       }
 
       if (request.status !== "PENDING") {
@@ -233,11 +263,23 @@ export class PlaceVerificationAdminService {
         ctx,
       );
 
+      await this.notificationDeliveryService.enqueueOwnerPlaceVerificationReviewed(
+        {
+          requestId: request.id,
+          organizationId: request.organizationId,
+          placeId: place.id,
+          placeName: place.name,
+          status: "REJECTED",
+          reviewNotes: data.reviewNotes,
+        },
+        ctx,
+      );
+
       logger.info(
         {
           event: "place_verification.rejected",
           requestId: request.id,
-          placeId: request.placeId,
+          placeId: place.id,
           adminUserId,
         },
         "Venue verification rejected",

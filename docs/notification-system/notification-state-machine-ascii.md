@@ -5,6 +5,20 @@ This is an ASCII companion to:
 - `docs/notification-system/notification-state-machine-level-1-product.md`
 - `docs/notification-system/notification-state-machine-level-2-engineering.md`
 
+## 0) Current contract (MVP)
+
+This system currently supports:
+
+- Event types:
+  - `place_verification.requested` -> admins
+  - `reservation.created` -> court owner
+  - `place_verification.approved|rejected` -> court owner
+  - `claim_request.approved|rejected` -> court owner
+- Channels: EMAIL (Resend) + SMS (Semaphore) when contact details exist
+- Delivery: async outbox jobs (`notification_delivery_job`) dispatched by cron
+
+Not in scope yet (intentionally deferred): in-app inbox, push notifications, user notification preferences, multi-event templates.
+
 ## 1) Delivery pipeline (MVP)
 
 ```text

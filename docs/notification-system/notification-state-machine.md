@@ -13,6 +13,10 @@ This documentation is split into multiple levels of detail so you can share the 
 - `docs/notification-system/notification-state-machine-changelog.md`
 
 ## Current contract (MVP)
-- When an owner submits a place verification request, admins are notified.
+- Events:
+  - `place_verification.requested` -> notify admins
+  - `reservation.created` -> notify court owner
+  - `place_verification.approved|rejected` -> notify court owner
+  - `claim_request.approved|rejected` -> notify court owner
 - Delivery is asynchronous via outbox jobs and a cron dispatcher.
 - Channels: Email (Resend) and SMS (Semaphore) when contact details exist.

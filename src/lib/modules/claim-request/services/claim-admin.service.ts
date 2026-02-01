@@ -1,3 +1,4 @@
+import type { NotificationDeliveryService } from "@/lib/modules/notification-delivery/services/notification-delivery.service";
 import type {
   ClaimRequestEventRecord,
   ClaimRequestRecord,
@@ -10,6 +11,7 @@ import type { TransactionManager } from "@/lib/shared/kernel/transaction";
 import {
   ClaimRequestNotFoundError,
   InvalidClaimStatusError,
+  PlaceNotFoundError,
 } from "../errors/claim-request.errors";
 import type {
   IClaimPlaceRepository,
@@ -59,6 +61,7 @@ export class ClaimAdminService implements IClaimAdminService {
     private organizationRepository: IOrganizationRepository,
     private approveClaimRequestUseCase: IApproveClaimRequestUseCase,
     private transactionManager: TransactionManager,
+    private notificationDeliveryService: NotificationDeliveryService,
   ) {}
 
   async getPendingClaimRequests(
@@ -153,6 +156,14 @@ export class ClaimAdminService implements IClaimAdminService {
         );
       }
 
+      const place = await this.placeRepository.findByIdForUpdate(
+        claimRequest.placeId,
+        ctx,
+      );
+      if (!place) {
+        throw new PlaceNotFoundError(claimRequest.placeId);
+      }
+
       // Update claim request
       const updated = await this.claimRequestRepository.update(
         requestId,
@@ -195,6 +206,20 @@ export class ClaimAdminService implements IClaimAdminService {
         },
         "Claim request rejected",
       );
+
+      if (claimRequest.organizationId) {
+        await this.notificationDeliveryService.enqueueOwnerClaimReviewed(
+          {
+            requestId,
+            organizationId: claimRequest.organizationId,
+            placeId: place.id,
+            placeName: place.name,
+            status: "REJECTED",
+            reviewNotes: reason,
+          },
+          ctx,
+        );
+      }
 
       return updated;
     });

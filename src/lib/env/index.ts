@@ -23,11 +23,25 @@ export const env = createEnv({
     SUPABASE_URL: z.string().url(),
     SUPABASE_SECRET_KEY: z.string(),
     RESEND_API_KEY: z.string().min(1),
-    SEMAPHORE_API_KEY: z.string().min(1),
-    SEMAPHORE_SENDER_NAME: z.string().min(1).optional(),
-    SEMAPHORE_BASE_URL: z.string().url().optional(),
+    SEMAPHORE_API_KEY: z.string().min(1).optional(),
+    SEMAPHORE_SENDER_NAME: z.preprocess(
+      (v) => (v === "" ? undefined : v),
+      z.string().min(1).optional(),
+    ),
+    SEMAPHORE_BASE_URL: z.preprocess(
+      (v) => (v === "" ? undefined : v),
+      z.string().url().optional(),
+    ),
     CONTACT_US_FROM_EMAIL: z.string().min(1),
     CONTACT_US_TO_EMAIL: z.string().min(1),
+    NOTIFICATION_EMAIL_ENABLED: z
+      .string()
+      .transform((v) => v !== "false")
+      .optional(),
+    NOTIFICATION_SMS_ENABLED: z
+      .string()
+      .transform((v) => v !== "false")
+      .optional(),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),

@@ -6,6 +6,7 @@ import type { ICourtBlockRepository } from "@/lib/modules/court-block/repositori
 import type { ICourtHoursRepository } from "@/lib/modules/court-hours/repositories/court-hours.repository";
 import type { ICourtPriceOverrideRepository } from "@/lib/modules/court-price-override/repositories/court-price-override.repository";
 import type { ICourtRateRuleRepository } from "@/lib/modules/court-rate-rule/repositories/court-rate-rule.repository";
+import type { NotificationDeliveryService } from "@/lib/modules/notification-delivery/services/notification-delivery.service";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
 import type { IOrganizationProfileRepository } from "@/lib/modules/organization/repositories/organization-profile.repository";
 import type { IOrganizationPaymentMethodRepository } from "@/lib/modules/organization-payment/repositories/organization-payment-method.repository";
@@ -160,6 +161,7 @@ export class ReservationService implements IReservationService {
     private courtBlockRepository: ICourtBlockRepository,
     private courtPriceOverrideRepository: ICourtPriceOverrideRepository,
     private transactionManager: TransactionManager,
+    private notificationDeliveryService: NotificationDeliveryService,
   ) {}
 
   private requireCourtPlaceId(placeId: string | null): string {
@@ -407,6 +409,30 @@ export class ReservationService implements IReservationService {
         ctx,
       );
 
+      if (place.organizationId) {
+        await this.notificationDeliveryService.enqueueOwnerReservationCreated(
+          {
+            reservationId: created.id,
+            organizationId: place.organizationId,
+            placeId: place.id,
+            placeName: place.name,
+            courtId: court.id,
+            courtLabel: court.label,
+            startTimeIso: created.startTime.toISOString(),
+            endTimeIso: created.endTime.toISOString(),
+            totalPriceCents: created.totalPriceCents,
+            currency: created.currency,
+            playerName: profile.displayName,
+            playerEmail: profile.email ?? null,
+            playerPhone: profile.phoneNumber ?? null,
+            expiresAtIso: created.expiresAt
+              ? new Date(created.expiresAt).toISOString()
+              : null,
+          },
+          ctx,
+        );
+      }
+
       logger.info(
         {
           event: "reservation.created",
@@ -607,6 +633,30 @@ export class ReservationService implements IReservationService {
         },
         ctx,
       );
+
+      if (place.organizationId) {
+        await this.notificationDeliveryService.enqueueOwnerReservationCreated(
+          {
+            reservationId: created.id,
+            organizationId: place.organizationId,
+            placeId: place.id,
+            placeName: place.name,
+            courtId: selected.courtId,
+            courtLabel: selected.courtLabel,
+            startTimeIso: created.startTime.toISOString(),
+            endTimeIso: created.endTime.toISOString(),
+            totalPriceCents: created.totalPriceCents,
+            currency: created.currency,
+            playerName: profile.displayName,
+            playerEmail: profile.email ?? null,
+            playerPhone: profile.phoneNumber ?? null,
+            expiresAtIso: created.expiresAt
+              ? new Date(created.expiresAt).toISOString()
+              : null,
+          },
+          ctx,
+        );
+      }
 
       logger.info(
         {

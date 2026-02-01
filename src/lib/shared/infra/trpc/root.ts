@@ -13,6 +13,7 @@ import { courtHoursRouter } from "@/lib/modules/court-hours/court-hours.router";
 import { courtRateRuleRouter } from "@/lib/modules/court-rate-rule/court-rate-rule.router";
 import { guestProfileRouter } from "@/lib/modules/guest-profile/guest-profile.router";
 import { healthRouter } from "@/lib/modules/health/health.router";
+import { notificationDeliveryAdminRouter } from "@/lib/modules/notification-delivery/admin/notification-delivery-admin.router";
 import { organizationAdminRouter } from "@/lib/modules/organization/admin/organization-admin.router";
 import { organizationRouter } from "@/lib/modules/organization/organization.router";
 import { organizationPaymentRouter } from "@/lib/modules/organization-payment/organization-payment.router";
@@ -61,6 +62,7 @@ export const appRouter = router({
     court: adminCourtRouter,
     organization: organizationAdminRouter,
     placeVerification: placeVerificationAdminRouter,
+    notificationDelivery: notificationDeliveryAdminRouter,
   }),
 });
 

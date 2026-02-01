@@ -1,3 +1,4 @@
+import type { NotificationDeliveryService } from "@/lib/modules/notification-delivery/services/notification-delivery.service";
 import type { ClaimRequestRecord } from "@/lib/shared/infra/db/schema";
 import type { DbClient } from "@/lib/shared/infra/db/types";
 import { logger } from "@/lib/shared/infra/logger";
@@ -27,6 +28,7 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
     private placeRepository: IClaimPlaceRepository,
     private claimRequestEventRepository: IClaimRequestEventRepository,
     private transactionManager: TransactionManager,
+    private notificationDeliveryService: NotificationDeliveryService,
     _db: DbClient,
   ) {}
 
@@ -102,6 +104,20 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
         },
         "Claim request approved - place transformed to reservable",
       );
+
+      if (claimRequest.organizationId) {
+        await this.notificationDeliveryService.enqueueOwnerClaimReviewed(
+          {
+            requestId,
+            organizationId: claimRequest.organizationId,
+            placeId: place.id,
+            placeName: place.name,
+            status: "APPROVED",
+            reviewNotes: reviewNotes ?? null,
+          },
+          ctx,
+        );
+      }
 
       return updatedRequest;
     });

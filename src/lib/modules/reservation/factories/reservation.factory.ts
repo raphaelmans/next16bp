@@ -4,6 +4,7 @@ import { makeCourtHoursRepository } from "@/lib/modules/court-hours/factories/co
 import { makeCourtPriceOverrideRepository } from "@/lib/modules/court-price-override/factories/court-price-override.factory";
 import { makeCourtRateRuleRepository } from "@/lib/modules/court-rate-rule/factories/court-rate-rule.factory";
 import { makeGuestProfileRepository } from "@/lib/modules/guest-profile/factories/guest-profile.factory";
+import { makeNotificationDeliveryService } from "@/lib/modules/notification-delivery/factories/notification-delivery.factory";
 import {
   makeOrganizationProfileRepository,
   makeOrganizationRepository,
@@ -65,6 +66,7 @@ export function makeReservationService(): ReservationService {
       makeCourtBlockRepository(),
       makeCourtPriceOverrideRepository(),
       getContainer().transactionManager,
+      makeNotificationDeliveryService(),
     );
   }
   return reservationService;

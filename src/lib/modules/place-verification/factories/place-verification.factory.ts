@@ -83,6 +83,7 @@ export function makePlaceVerificationAdminService() {
       getContainer().transactionManager,
       makePlaceRepository(),
       makeOrganizationRepository(),
+      makeNotificationDeliveryService(),
     );
   }
   return placeVerificationAdminService;
