@@ -113,13 +113,13 @@ export const metadata: Metadata = {
   },
   robots: isProduction
     ? {
-      index: true,
-      follow: true,
-    }
+        index: true,
+        follow: true,
+      }
     : {
-      index: false,
-      follow: false,
-    },
+        index: false,
+        follow: false,
+      },
 };
 
 export default function RootLayout({

@@ -17,7 +17,7 @@ import { bookingsImportJob } from "./bookings-import-job";
 import { bookingsImportSource } from "./bookings-import-source";
 import { court } from "./court";
 import { courtBlock } from "./court-block";
-import { bookingsImportRowStatusEnum } from "./enums";
+import { bookingsImportRowStatusEnum, courtBlockTypeEnum } from "./enums";
 import { guestProfile } from "./guest-profile";
 import { reservation } from "./reservation";
 
@@ -48,6 +48,7 @@ export const bookingsImportRow = pgTable(
     startTime: timestamp("start_time", { withTimezone: true }),
     endTime: timestamp("end_time", { withTimezone: true }),
     reason: text("reason"),
+    blockType: courtBlockTypeEnum("block_type"),
     // Validation errors (array of error codes/messages)
     errors: jsonb("errors").$type<string[]>(),
     warnings: jsonb("warnings").$type<string[]>(),

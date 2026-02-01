@@ -50,8 +50,20 @@ export type IcsParsedRow = {
   startTime: Date;
   endTime: Date;
   reason: string | null;
+  blockType: "MAINTENANCE" | "WALK_IN" | null;
   sourceData: Record<string, unknown>;
 };
+
+const WALK_IN_PATTERN = /walk[- ]?in|open\s*play|drop[- ]?in/i;
+
+function inferBlockType(
+  ...texts: (string | null | undefined)[]
+): "MAINTENANCE" | "WALK_IN" | null {
+  for (const text of texts) {
+    if (text && WALK_IN_PATTERN.test(text)) return "WALK_IN";
+  }
+  return "MAINTENANCE";
+}
 
 const DEFAULT_ICS_MODEL = "gpt-5.2";
 
@@ -148,12 +160,20 @@ export function buildIcsRowsFromSpec(params: {
       reason = event.description ?? null;
     }
 
+    const reasonText = reason?.trim() || null;
+    const blockType = inferBlockType(
+      reasonText,
+      event.summary,
+      event.description,
+    );
+
     rows.push({
       rowNumber: index + 1,
       courtLabel: resourceLabel.trim() || null,
       startTime: event.start,
       endTime: event.end,
-      reason: reason?.trim() || null,
+      reason: reasonText,
+      blockType,
       sourceData: {
         summary: event.summary ?? null,
         location: event.location ?? null,

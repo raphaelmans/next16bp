@@ -561,13 +561,6 @@ export default function OwnerBookingsImportReviewView({
             { label: "Imports", href: appRoutes.owner.imports.bookings },
             { label: "Review" },
           ]}
-          actions={
-            studioHref ? (
-              <Button asChild variant="outline">
-                <Link href={studioHref}>Fix in studio</Link>
-              </Button>
-            ) : null
-          }
         />
 
         <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
@@ -866,6 +859,11 @@ export default function OwnerBookingsImportReviewView({
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
+                {studioHref && !isDraft && !isNormalizing && (
+                  <Button asChild variant="outline" className="w-full">
+                    <Link href={studioHref}>Fix in studio</Link>
+                  </Button>
+                )}
                 {!isDraft && !isNormalizing && (
                   <>
                     <Button

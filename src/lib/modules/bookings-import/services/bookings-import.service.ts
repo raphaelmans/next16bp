@@ -86,9 +86,21 @@ type ParsedImportRow = {
   startTime: Date | null;
   endTime: Date | null;
   reason: string | null;
+  blockType?: "MAINTENANCE" | "WALK_IN" | null;
   sourceData: Record<string, unknown>;
   sourceLineNumber: number | null;
 };
+
+const WALK_IN_PATTERN = /walk[- ]?in|open\s*play|drop[- ]?in/i;
+
+function inferBlockTypeFromTexts(
+  ...texts: (string | null | undefined)[]
+): "MAINTENANCE" | "WALK_IN" {
+  for (const text of texts) {
+    if (text && WALK_IN_PATTERN.test(text)) return "WALK_IN";
+  }
+  return "MAINTENANCE";
+}
 
 type SourceConfig = {
   mimeTypes: string[];
@@ -849,6 +861,7 @@ export class BookingsImportService implements IBookingsImportService {
             startTime: row.startTime,
             endTime: row.endTime,
             reason: row.reason,
+            blockType: row.blockType ?? null,
             errors: validation.errors.length > 0 ? validation.errors : null,
             warnings:
               validation.warnings.length > 0 ? validation.warnings : null,
@@ -1109,7 +1122,7 @@ export class BookingsImportService implements IBookingsImportService {
               courtId,
               startTime: row.startTime,
               endTime: row.endTime,
-              type: "MAINTENANCE",
+              type: row.blockType ?? "MAINTENANCE",
               reason: row.reason ?? "Imported booking",
               isActive: true,
             },
@@ -1309,6 +1322,7 @@ export class BookingsImportService implements IBookingsImportService {
             startTime: row.startTime,
             endTime: row.endTime,
             reason: row.reason,
+            blockType: row.blockType,
             sourceData: row.sourceData,
             sourceLineNumber: row.rowNumber,
           }));
@@ -1326,6 +1340,7 @@ export class BookingsImportService implements IBookingsImportService {
           startTime: occ.start,
           endTime: occ.end,
           reason: occ.summary ?? null,
+          blockType: inferBlockTypeFromTexts(occ.summary, occ.description),
           sourceData: {
             summary: occ.summary ?? null,
             location: occ.location ?? null,
@@ -1361,6 +1376,7 @@ export class BookingsImportService implements IBookingsImportService {
               startTime: row.startTime,
               endTime: row.endTime,
               reason: row.reason,
+              blockType: row.blockType,
               sourceData: row.sourceData,
               sourceLineNumber: row.rowNumber,
             })),
@@ -1410,6 +1426,10 @@ export class BookingsImportService implements IBookingsImportService {
             startTime: startStr ? new Date(startStr) : null,
             endTime: endStr ? new Date(endStr) : null,
             reason,
+            blockType: inferBlockTypeFromTexts(
+              reason,
+              ...Object.values(row.data),
+            ),
             sourceData: row.data,
             sourceLineNumber: row.rowNumber,
           };
@@ -1440,6 +1460,7 @@ export class BookingsImportService implements IBookingsImportService {
               startTime: row.startTime,
               endTime: row.endTime,
               reason: row.reason,
+              blockType: row.blockType,
               sourceData: row.sourceData,
               sourceLineNumber: row.rowNumber,
             })),
@@ -1489,6 +1510,10 @@ export class BookingsImportService implements IBookingsImportService {
             startTime: startStr ? new Date(startStr) : null,
             endTime: endStr ? new Date(endStr) : null,
             reason,
+            blockType: inferBlockTypeFromTexts(
+              reason,
+              ...Object.values(row.data),
+            ),
             sourceData: row.data,
             sourceLineNumber: row.rowNumber,
           };
@@ -1524,6 +1549,10 @@ export class BookingsImportService implements IBookingsImportService {
             startTime,
             endTime,
             reason: event.title?.trim() || null,
+            blockType: inferBlockTypeFromTexts(
+              event.title,
+              event.resourceLabel,
+            ),
             sourceData: {
               day: event.day,
               startTime: event.startTime,

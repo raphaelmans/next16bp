@@ -118,8 +118,20 @@ export type TabularParsedRow = {
   startTime: Date | null;
   endTime: Date | null;
   reason: string | null;
+  blockType: "MAINTENANCE" | "WALK_IN" | null;
   sourceData: Record<string, string>;
 };
+
+const WALK_IN_PATTERN = /walk[- ]?in|open\s*play|drop[- ]?in/i;
+
+function inferBlockType(
+  ...texts: (string | null | undefined)[]
+): "MAINTENANCE" | "WALK_IN" | null {
+  for (const text of texts) {
+    if (text && WALK_IN_PATTERN.test(text)) return "WALK_IN";
+  }
+  return "MAINTENANCE";
+}
 
 const DEFAULT_TABULAR_MODEL = "gpt-5.2";
 
@@ -353,12 +365,16 @@ export function buildTabularRowsFromSpec(params: {
       }
     }
 
+    const reasonText = reason?.trim() || null;
+    const blockType = inferBlockType(reasonText, ...Object.values(row.data));
+
     rows.push({
       rowNumber: row.rowNumber,
       courtLabel: resourceLabel.trim() || null,
       startTime: start,
       endTime: end,
-      reason: reason?.trim() || null,
+      reason: reasonText,
+      blockType,
       sourceData: row.data,
     });
   }

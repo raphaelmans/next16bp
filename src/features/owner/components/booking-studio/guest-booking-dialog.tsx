@@ -234,9 +234,7 @@ export const GuestBookingDialog = React.memo(function GuestBookingDialog({
             </Button>
             <Button
               type="submit"
-              disabled={
-                isSubmitting || guestBookingForm.formState.isSubmitting
-              }
+              disabled={isSubmitting || guestBookingForm.formState.isSubmitting}
             >
               {isSubmitting || guestBookingForm.formState.isSubmitting
                 ? "Saving…"
