@@ -113,13 +113,13 @@ export const metadata: Metadata = {
   },
   robots: isProduction
     ? {
-        index: true,
-        follow: true,
-      }
+      index: true,
+      follow: true,
+    }
     : {
-        index: false,
-        follow: false,
-      },
+      index: false,
+      follow: false,
+    },
 };
 
 export default function RootLayout({
@@ -131,11 +131,17 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {process.env.NODE_ENV === "development" && (
-          <Script
-            src="//unpkg.com/react-grab/dist/index.global.js"
-            crossOrigin="anonymous"
-            strategy="beforeInteractive"
-          />
+          <>
+            <Script
+              crossOrigin="anonymous"
+              src="//unpkg.com/react-scan/dist/auto.global.js"
+            />
+            <Script
+              src="//unpkg.com/react-grab/dist/index.global.js"
+              crossOrigin="anonymous"
+              strategy="beforeInteractive"
+            />
+          </>
         )}
         {process.env.NODE_ENV === "development" && (
           <Script
