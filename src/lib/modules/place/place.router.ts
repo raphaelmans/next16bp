@@ -43,4 +43,8 @@ export const placeRouter = router({
       const service = makePlaceDiscoveryService();
       return service.getPlaceByIdOrSlug(input.placeIdOrSlug);
     }),
+  stats: publicProcedure.query(async () => {
+    const service = makePlaceDiscoveryService();
+    return service.getPublicStats();
+  }),
 });

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import HomePageClient from "@/app/home-page-client";
 import { mapPlaceSummary } from "@/features/discovery/helpers";
 import { env } from "@/lib/env";
-import { publicCaller } from "@/trpc/server";
+import { HydrateClient, publicCaller, trpc } from "@/trpc/server";
 
 const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL("/", appUrl);
@@ -38,5 +38,11 @@ export default async function HomePage() {
   const featuredResponse = await publicCaller.place.list(featuredInput);
   const featuredPlaces = featuredResponse.items.map(mapPlaceSummary);
 
-  return <HomePageClient featuredPlaces={featuredPlaces} />;
+  await trpc.place.stats.prefetch();
+
+  return (
+    <HydrateClient>
+      <HomePageClient featuredPlaces={featuredPlaces} />
+    </HydrateClient>
+  );
 }

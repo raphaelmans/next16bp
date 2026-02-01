@@ -36,6 +36,11 @@ export interface IPlaceDiscoveryService {
     sportId?: string,
   ): Promise<PlaceCardMetaItem[]>;
   listAmenities(): Promise<string[]>;
+  getPublicStats(): Promise<{
+    totalPlaces: number;
+    totalCourts: number;
+    totalCities: number;
+  }>;
 }
 
 export class PlaceDiscoveryService implements IPlaceDiscoveryService {
@@ -145,5 +150,9 @@ export class PlaceDiscoveryService implements IPlaceDiscoveryService {
 
   async listAmenities(): Promise<string[]> {
     return this.placeRepository.listAmenities();
+  }
+
+  async getPublicStats() {
+    return this.placeRepository.getPublicStats();
   }
 }

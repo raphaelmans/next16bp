@@ -1,5 +1,6 @@
 "use client";
 
+import { MapPin, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,9 +17,13 @@ interface PopularLocation {
 
 interface HomeSearchFormProps {
   popularLocations: PopularLocation[];
+  variant?: "inline" | "hero";
 }
 
-export function HomeSearchForm({ popularLocations }: HomeSearchFormProps) {
+export function HomeSearchForm({
+  popularLocations,
+  variant = "inline",
+}: HomeSearchFormProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -49,6 +54,49 @@ export function HomeSearchForm({ popularLocations }: HomeSearchFormProps) {
       },
     });
   };
+
+  if (variant === "hero") {
+    return (
+      <div>
+        <form onSubmit={handleSearch}>
+          <div className="flex items-center rounded-2xl border-[1.5px] border-border bg-card p-1.5 pl-5 shadow-sm transition-all duration-300 focus-within:border-primary focus-within:shadow-[0_0_0_4px_rgba(13,148,136,0.07),0_8px_28px_rgba(13,148,136,0.09)] focus-within:-translate-y-0.5 max-w-[470px]">
+            <Search className="h-[18px] w-[18px] text-muted-foreground/60 mr-2.5 shrink-0" />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder='Try "Cebu City" or "badminton"...'
+              className="flex-1 border-none bg-transparent text-[15px] text-foreground outline-none placeholder:text-muted-foreground/50 min-w-0"
+            />
+            <Button
+              type="submit"
+              className="rounded-xl px-6 py-3 font-heading font-semibold text-sm"
+            >
+              Search Courts
+            </Button>
+          </div>
+        </form>
+        <div className="flex flex-wrap gap-[7px] mt-3.5 items-center">
+          <span className="text-xs text-muted-foreground/60 font-medium font-heading">
+            Popular:
+          </span>
+          {popularLocations.map((location) => (
+            <Link
+              key={location.label}
+              href={buildLocationHref(location.provinceSlug, location.citySlug)}
+              onClick={() =>
+                handleLocationClick(location.provinceSlug, location.citySlug)
+              }
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-border text-xs font-medium font-heading text-muted-foreground transition-all hover:border-accent hover:text-accent hover:bg-accent/5"
+            >
+              <MapPin className="h-[11px] w-[11px] text-accent" />
+              {location.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSearch} className="mb-6">

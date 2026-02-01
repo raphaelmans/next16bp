@@ -173,6 +173,12 @@ export interface IPlaceRepository {
     data: InsertPlaceContactDetail,
     ctx?: RequestContext,
   ): Promise<PlaceContactDetailRecord>;
+  getPublicStats(): Promise<{
+    totalPlaces: number;
+    totalCourts: number;
+    totalCities: number;
+    totalVerifiedVenues: number;
+  }>;
 }
 
 export class PlaceRepository implements IPlaceRepository {
@@ -1181,6 +1187,44 @@ export class PlaceRepository implements IPlaceRepository {
       .returning();
 
     return result[0];
+  }
+
+  async getPublicStats(): Promise<{
+    totalPlaces: number;
+    totalCourts: number;
+    totalCities: number;
+    totalVerifiedVenues: number;
+  }> {
+    const [places, courts, cities, verified] = await Promise.all([
+      this.db
+        .select({ count: count() })
+        .from(place)
+        .where(eq(place.isActive, true)),
+      this.db
+        .select({ count: count() })
+        .from(court)
+        .where(eq(court.isActive, true)),
+      this.db
+        .selectDistinct({ city: place.city })
+        .from(place)
+        .where(eq(place.isActive, true)),
+      this.db
+        .select({ count: count() })
+        .from(placeVerification)
+        .innerJoin(place, eq(placeVerification.placeId, place.id))
+        .where(
+          and(
+            eq(placeVerification.status, "VERIFIED"),
+            eq(place.isActive, true),
+          ),
+        ),
+    ]);
+    return {
+      totalPlaces: places[0]?.count ?? 0,
+      totalCourts: courts[0]?.count ?? 0,
+      totalCities: cities.length,
+      totalVerifiedVenues: verified[0]?.count ?? 0,
+    };
   }
 
   private async getSportsByPlaceIds(
