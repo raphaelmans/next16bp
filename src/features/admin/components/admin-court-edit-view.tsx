@@ -28,7 +28,7 @@ import {
 } from "@/features/admin/components/admin-court-ownership-transfer-card";
 import {
   useAdminCourt,
-  useAdminStats,
+  useAdminSidebarStats,
   useRemoveAdminCourtPhoto,
   useTransferPlaceToOrganization,
   useUpdateCuratedCourt,
@@ -57,7 +57,7 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
-  const { data: stats } = useAdminStats();
+  const { data: stats } = useAdminSidebarStats();
   const { data: courtData, isLoading: courtLoading } = useAdminCourt(courtId);
   const updateMutation = useUpdateCuratedCourt();
   const uploadPhotoMutation = useUploadAdminCourtPhoto(courtId);

@@ -19,7 +19,7 @@ import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/ui/page-header";
 import { Textarea } from "@/components/ui/textarea";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
-import { useAdminStats } from "@/features/admin/hooks";
+import { useAdminSidebarStats } from "@/features/admin/hooks";
 import { useLogout, useSession } from "@/features/auth";
 import { trpc } from "@/trpc/client";
 
@@ -29,7 +29,7 @@ type ReviewedStatus = "APPROVED" | "REJECTED";
 export default function AdminNotificationTestPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
-  const { data: stats } = useAdminStats();
+  const { data: stats } = useAdminSidebarStats();
 
   const dispatchMutation =
     trpc.admin.notificationDelivery.dispatchNow.useMutation();

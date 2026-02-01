@@ -126,4 +126,13 @@ export const adminCourtRouter = router({
       const service = makeAdminCourtService();
       return service.listAllPlaces(input);
     }),
+
+  /**
+   * Get court stats (total + reservable counts) in a single query
+   * Admin only
+   */
+  stats: adminProcedure.query(async () => {
+    const service = makeAdminCourtService();
+    return service.getStats();
+  }),
 });

@@ -179,16 +179,19 @@ export function useAdminCourts(options: UseAdminCourtsOptions = {}) {
       ? claimStatusMap[claimStatus]
       : undefined;
 
-  const query = trpc.admin.court.list.useQuery({
-    limit,
-    offset,
-    placeType: placeTypeInput,
-    isActive: status && status !== "all" ? status === "active" : undefined,
-    province: province && province !== "all" ? province : undefined,
-    city: city && city !== "all" ? city : undefined,
-    claimStatus: claimStatusInput,
-    search: search || undefined,
-  });
+  const query = trpc.admin.court.list.useQuery(
+    {
+      limit,
+      offset,
+      placeType: placeTypeInput,
+      isActive: status && status !== "all" ? status === "active" : undefined,
+      province: province && province !== "all" ? province : undefined,
+      city: city && city !== "all" ? city : undefined,
+      claimStatus: claimStatusInput,
+      search: search || undefined,
+    },
+    { staleTime: 5_000 },
+  );
 
   const total = query.data?.total ?? 0;
   const courts =
@@ -471,42 +474,58 @@ const mockRecentActivity: AdminActivity[] = [
 ];
 
 /**
- * Hook for admin dashboard stats
- * Aggregates data from multiple endpoints
+ * Hook for sidebar badge stats only (claims + verifications).
+ * Does NOT fetch court counts — use useAdminStats() for pages that display those.
+ */
+export function useAdminSidebarStats() {
+  const claimsQuery = trpc.admin.claim.getPending.useQuery(
+    { limit: 1, offset: 0 },
+    { staleTime: 30_000 },
+  );
+
+  const verificationsQuery = trpc.admin.placeVerification.getPending.useQuery(
+    { limit: 1, offset: 0 },
+    { staleTime: 30_000 },
+  );
+
+  return {
+    data: {
+      pendingClaims: claimsQuery.data?.total ?? 0,
+      pendingVerifications: verificationsQuery.data?.total ?? 0,
+      totalCourts: 0,
+      reservableCourts: 0,
+      activeOrganizations: 0,
+    } satisfies AdminStats,
+    isLoading: claimsQuery.isLoading || verificationsQuery.isLoading,
+    isError: claimsQuery.isError || verificationsQuery.isError,
+  };
+}
+
+/**
+ * Hook for admin dashboard stats — includes court counts via dedicated stats endpoint.
+ * Use only on pages that display totalCourts / reservableCourts (dashboard, courts list).
  */
 export function useAdminStats() {
-  // Fetch pending claims count
-  const claimsQuery = trpc.admin.claim.getPending.useQuery({
-    limit: 1,
-    offset: 0,
+  const claimsQuery = trpc.admin.claim.getPending.useQuery(
+    { limit: 1, offset: 0 },
+    { staleTime: 30_000 },
+  );
+
+  const verificationsQuery = trpc.admin.placeVerification.getPending.useQuery(
+    { limit: 1, offset: 0 },
+    { staleTime: 30_000 },
+  );
+
+  const courtStatsQuery = trpc.admin.court.stats.useQuery(undefined, {
+    staleTime: 30_000,
   });
 
-  // Fetch courts count
-  const courtsQuery = trpc.admin.court.list.useQuery({
-    limit: 1,
-    offset: 0,
-  });
-
-  // Fetch verification queue count
-  const verificationsQuery = trpc.admin.placeVerification.getPending.useQuery({
-    limit: 1,
-    offset: 0,
-  });
-
-  // Fetch reservable courts count
-  const reservableQuery = trpc.admin.court.list.useQuery({
-    placeType: "RESERVABLE",
-    limit: 1,
-    offset: 0,
-  });
-
-  // Calculate stats from responses
   const stats: AdminStats = {
     pendingClaims: claimsQuery.data?.total ?? 0,
     pendingVerifications: verificationsQuery.data?.total ?? 0,
-    totalCourts: courtsQuery.data?.total ?? 0,
-    reservableCourts: reservableQuery.data?.total ?? 0,
-    activeOrganizations: 0, // Would need a separate endpoint
+    totalCourts: courtStatsQuery.data?.total ?? 0,
+    reservableCourts: courtStatsQuery.data?.reservable ?? 0,
+    activeOrganizations: 0,
   };
 
   return {
@@ -514,13 +533,11 @@ export function useAdminStats() {
     isLoading:
       claimsQuery.isLoading ||
       verificationsQuery.isLoading ||
-      courtsQuery.isLoading ||
-      reservableQuery.isLoading,
+      courtStatsQuery.isLoading,
     isError:
       claimsQuery.isError ||
       verificationsQuery.isError ||
-      courtsQuery.isError ||
-      reservableQuery.isError,
+      courtStatsQuery.isError,
   };
 }
 

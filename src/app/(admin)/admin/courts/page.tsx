@@ -63,7 +63,7 @@ import {
   type CourtStatus,
   type CourtType,
   useAdminCourts,
-  useAdminStats,
+  useAdminSidebarStats,
   useToggleCourtStatus,
 } from "@/features/admin/hooks";
 import { useLogout, useSession } from "@/features/auth";
@@ -92,7 +92,7 @@ export default function AdminCourtsPage() {
   const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState(1);
 
-  const { data: stats } = useAdminStats();
+  const { data: stats } = useAdminSidebarStats();
   const provincesCitiesQuery = usePHProvincesCitiesQuery();
   const provincesCities = provincesCitiesQuery.data ?? null;
 

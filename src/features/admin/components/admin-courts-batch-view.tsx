@@ -48,7 +48,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
   type CuratedCourtBatchResult,
-  useAdminStats,
+  useAdminSidebarStats,
   useCreateCuratedCourtsBatch,
 } from "@/features/admin/hooks";
 import {
@@ -186,7 +186,7 @@ export default function AdminCourtsBatchView() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
-  const { data: stats } = useAdminStats();
+  const { data: stats } = useAdminSidebarStats();
   const createBatchMutation = useCreateCuratedCourtsBatch();
   const uploadPhotoMutation = trpc.admin.court.uploadPhoto.useMutation();
   const previewMutation = useGoogleLocPreviewMutation();

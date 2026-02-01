@@ -38,7 +38,10 @@ import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/ui/page-header";
 import { Textarea } from "@/components/ui/textarea";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
-import { useAdminStats, useCreateCuratedCourt } from "@/features/admin/hooks";
+import {
+  useAdminSidebarStats,
+  useCreateCuratedCourt,
+} from "@/features/admin/hooks";
 import {
   AMENITIES,
   type CuratedCourtFormData,
@@ -58,7 +61,7 @@ export default function NewCuratedCourtPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
-  const { data: stats } = useAdminStats();
+  const { data: stats } = useAdminSidebarStats();
   const createMutation = useCreateCuratedCourt();
   const uploadPhotoMutation = trpc.admin.court.uploadPhoto.useMutation();
   const { data: sports = [], isLoading: sportsLoading } =

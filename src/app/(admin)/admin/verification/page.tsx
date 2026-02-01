@@ -26,7 +26,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
-  useAdminStats,
+  useAdminSidebarStats,
   usePlaceVerificationQueue,
 } from "@/features/admin/hooks";
 import { useLogout, useSession } from "@/features/auth";
@@ -54,7 +54,7 @@ export default function AdminVerificationPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
-  const { data: stats } = useAdminStats();
+  const { data: stats } = useAdminSidebarStats();
   const {
     data: verificationQueue,
     isLoading,

@@ -1,4 +1,4 @@
-import { and, asc, count, eq, ilike, type SQL } from "drizzle-orm";
+import { and, asc, count, eq, ilike, type SQL, sql } from "drizzle-orm";
 import {
   type CourtRecord,
   court,
@@ -133,6 +133,9 @@ export interface IAdminCourtRepository {
     ctx?: RequestContext,
   ): Promise<void>;
   deleteCourtsByPlaceId(placeId: string, ctx?: RequestContext): Promise<void>;
+  getStats(
+    ctx?: RequestContext,
+  ): Promise<{ total: number; reservable: number }>;
 }
 
 export class AdminCourtRepository implements IAdminCourtRepository {
@@ -353,16 +356,11 @@ export class AdminCourtRepository implements IAdminCourtRepository {
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    // Count
-    const countResult = await client
-      .select({ count: count() })
-      .from(place)
-      .where(whereClause);
-
     const rows = await client
       .select({
         place,
         organizationName: organization.name,
+        total: sql<number>`count(*) over()`,
       })
       .from(place)
       .leftJoin(organization, eq(place.organizationId, organization.id))
@@ -375,7 +373,7 @@ export class AdminCourtRepository implements IAdminCourtRepository {
         place: row.place,
         organizationName: row.organizationName ?? null,
       })),
-      total: countResult[0]?.count ?? 0,
+      total: rows.length > 0 ? Number(rows[0].total) : 0,
     };
   }
 
@@ -445,6 +443,22 @@ export class AdminCourtRepository implements IAdminCourtRepository {
       .limit(1);
 
     return result[0] ?? null;
+  }
+
+  async getStats(
+    ctx?: RequestContext,
+  ): Promise<{ total: number; reservable: number }> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select({
+        total: count(),
+        reservable: sql<number>`count(*) filter (where ${place.placeType} = 'RESERVABLE')`,
+      })
+      .from(place);
+    return {
+      total: result[0]?.total ?? 0,
+      reservable: Number(result[0]?.reservable ?? 0),
+    };
   }
 
   async findDetailsById(

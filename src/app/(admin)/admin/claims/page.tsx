@@ -39,7 +39,7 @@ import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
   type ClaimStatus,
   type ClaimType,
-  useAdminStats,
+  useAdminSidebarStats,
   useClaimCounts,
   useClaims,
 } from "@/features/admin/hooks";
@@ -57,7 +57,7 @@ export default function AdminClaimsPage() {
   const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState(1);
 
-  const { data: stats } = useAdminStats();
+  const { data: stats } = useAdminSidebarStats();
   const { data: counts } = useClaimCounts();
   const { data: claimsData, isLoading } = useClaims({
     type: typeFilter,

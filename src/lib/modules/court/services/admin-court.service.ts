@@ -94,6 +94,7 @@ export interface IAdminCourtService {
     adminUserId: string,
     data: TransferPlaceDTO,
   ): Promise<PlaceRecord>;
+  getStats(): Promise<{ total: number; reservable: number }>;
 }
 
 export class AdminCourtService implements IAdminCourtService {
@@ -656,6 +657,10 @@ export class AdminCourtService implements IAdminCourtService {
     );
 
     return updated;
+  }
+
+  async getStats(): Promise<{ total: number; reservable: number }> {
+    return this.adminCourtRepository.getStats();
   }
 
   async listAllPlaces(

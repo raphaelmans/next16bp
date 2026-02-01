@@ -46,7 +46,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import { ClaimReviewActions } from "@/features/admin/components/claim-review-actions";
 import {
-  useAdminStats,
+  useAdminSidebarStats,
   useApproveClaim,
   useClaim,
   useClaimEvents,
@@ -87,7 +87,7 @@ export default function ClaimDetailPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
-  const { data: stats } = useAdminStats();
+  const { data: stats } = useAdminSidebarStats();
   const { data: claim, isLoading: claimLoading } = useClaim(claimId);
   const { data: events = [] } = useClaimEvents(claimId);
   const approveMutation = useApproveClaim();

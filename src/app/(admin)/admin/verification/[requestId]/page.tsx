@@ -32,7 +32,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import { PlaceVerificationReviewActions } from "@/features/admin/components/place-verification-review-actions";
 import {
-  useAdminStats,
+  useAdminSidebarStats,
   useApprovePlaceVerification,
   usePlaceVerificationRequest,
   useRejectPlaceVerification,
@@ -72,7 +72,7 @@ export default function AdminVerificationDetailPage() {
   const { data: user } = useSession();
   const logoutMutation = useLogout();
 
-  const { data: stats } = useAdminStats();
+  const { data: stats } = useAdminSidebarStats();
   const { data, isLoading } = usePlaceVerificationRequest(requestId);
   const approveMutation = useApprovePlaceVerification();
   const rejectMutation = useRejectPlaceVerification();
