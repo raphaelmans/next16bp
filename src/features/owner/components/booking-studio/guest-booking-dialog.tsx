@@ -232,8 +232,15 @@ export const GuestBookingDialog = React.memo(function GuestBookingDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              Save guest booking
+            <Button
+              type="submit"
+              disabled={
+                isSubmitting || guestBookingForm.formState.isSubmitting
+              }
+            >
+              {isSubmitting || guestBookingForm.formState.isSubmitting
+                ? "Saving…"
+                : "Save guest booking"}
             </Button>
           </DialogFooter>
         </StandardFormProvider>
