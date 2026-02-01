@@ -10,7 +10,7 @@ import {
   type PlaceCardPlace,
 } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 interface PlaceMapItem extends PlaceCardPlace {
@@ -121,44 +121,30 @@ export function PlaceMap({
         </div>
       )}
 
-      <div className="absolute top-4 left-4 bottom-4 w-80 overflow-auto space-y-3 z-10">
-        {places.map((place) => (
-          <button
-            type="button"
-            key={place.id}
-            className={cn(
-              "w-full text-left cursor-pointer transition-all bg-transparent border-none p-0",
-              place.id === selectedPlaceId && "ring-2 ring-primary rounded-xl",
-            )}
-            onClick={() => handleSelect(place)}
-          >
-            <PlaceCard
-              place={place}
-              variant="compact"
-              showCTA={false}
-              linkScope={cardLinkScope}
-            />
-          </button>
-        ))}
-      </div>
-
-      {selectedPlace && (
-        <Card className="absolute bottom-4 right-4 left-[352px] p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-heading font-semibold">
-                {selectedPlace.name}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {selectedPlace.address}
-              </p>
-            </div>
-            <span className="text-sm font-medium text-primary">
-              View Details
-            </span>
-          </div>
-        </Card>
-      )}
+      <ScrollArea className="absolute bottom-4 left-4 right-4 z-10">
+        <div className="flex gap-3">
+          {places.map((place) => (
+            <button
+              type="button"
+              key={place.id}
+              className={cn(
+                "w-72 shrink-0 text-left cursor-pointer transition-all bg-transparent border-none p-0",
+                place.id === selectedPlaceId &&
+                  "ring-2 ring-primary rounded-xl",
+              )}
+              onClick={() => handleSelect(place)}
+            >
+              <PlaceCard
+                place={place}
+                variant="compact"
+                showCTA={false}
+                linkScope={cardLinkScope}
+              />
+            </button>
+          ))}
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </div>
   );
 }
