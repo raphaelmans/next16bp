@@ -52,9 +52,9 @@ pnpm script:promote-tier3
 ## Architecture (current + target)
 - Routes: `src/app`
 - Frontend features: `src/features`
-- Shared UI: `src/components` and `src/shared/components`
-- Server (current): `src/shared` and `src/modules`
-- Shared helpers: `src/shared/lib`
+- Shared UI: `src/components`
+- Server (current): `src/lib/shared` and `src/lib/modules`
+- Shared helpers: `src/common`
 - Target: all server-only code under `src/lib` (no client/browser imports)
 - tRPC client: `src/trpc`
 
@@ -63,7 +63,7 @@ pnpm script:promote-tier3
 - Imports: use `@/` alias; group external → internal alias → relative.
 - Frontend: add "use client" to client components; StandardForm in `src/components/form`; URL state via `nuqs`; `trpc` from `@/trpc/client`; invalidate via `trpc.useUtils()`; helpers in `src/features/<feature>/helpers.ts`.
 - Backend: repository/service/use-case/router layering; repositories return `null`; services own transactions; routers validate input; log business events as `<entity>.<past_tense_action>`.
-- Time zones: treat `place.timeZone` as canonical; use `src/shared/lib/time-zone.ts` and `src/shared/lib/format.ts`.
+- Time zones: treat `place.timeZone` as canonical; use `src/common/time-zone.ts` and `src/common/format.ts`.
 
 ## Environment
 - Copy `.env.example` to `.env.local`; DB scripts expect `dotenvx`.
