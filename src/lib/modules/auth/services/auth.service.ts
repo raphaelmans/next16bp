@@ -14,6 +14,14 @@ export interface IAuthService {
     email: string,
     password: string,
   ): Promise<{ user: User; session: Session }>;
+  requestEmailOtpCode(
+    email: string,
+    shouldCreateUser: boolean,
+  ): Promise<{ user: User | null; session: Session | null }>;
+  verifyEmailOtpCode(
+    email: string,
+    token: string,
+  ): Promise<{ user: User | null; session: Session | null }>;
   signInWithMagicLink(
     email: string,
     baseUrl: string,
@@ -66,6 +74,39 @@ export class AuthService implements IAuthService {
       { event: "user.logged_in", userId: result.user.id, email },
       "User logged in",
     );
+
+    return result;
+  }
+
+  async requestEmailOtpCode(
+    email: string,
+    shouldCreateUser: boolean,
+  ): Promise<{ user: User | null; session: Session | null }> {
+    const result = await this.authRepository.requestEmailOtp(
+      email,
+      shouldCreateUser,
+    );
+
+    logger.info(
+      { event: "user.email_otp_requested", email },
+      "Email OTP requested",
+    );
+
+    return result;
+  }
+
+  async verifyEmailOtpCode(
+    email: string,
+    token: string,
+  ): Promise<{ user: User | null; session: Session | null }> {
+    const result = await this.authRepository.verifyEmailOtp(email, token);
+
+    if (result.user) {
+      logger.info(
+        { event: "user.email_otp_verified", userId: result.user.id },
+        "Email OTP verified",
+      );
+    }
 
     return result;
   }

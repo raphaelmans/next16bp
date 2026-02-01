@@ -47,6 +47,26 @@ export function useMagicLink() {
 }
 
 /**
+ * Hook for email OTP request mutation.
+ */
+export function useRequestEmailOtp() {
+  return trpc.auth.requestEmailOtp.useMutation();
+}
+
+/**
+ * Hook for email OTP verify mutation.
+ */
+export function useVerifyEmailOtp() {
+  const utils = trpc.useUtils();
+
+  return trpc.auth.verifyEmailOtp.useMutation({
+    onSuccess: async () => {
+      await utils.auth.me.invalidate();
+    },
+  });
+}
+
+/**
  * Hook for Google OAuth login mutation.
  */
 export function useLoginWithGoogle() {

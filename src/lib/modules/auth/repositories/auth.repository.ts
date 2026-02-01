@@ -17,6 +17,14 @@ export interface IAuthRepository {
     email: string,
     password: string,
   ): Promise<{ user: User; session: Session }>;
+  requestEmailOtp(
+    email: string,
+    shouldCreateUser: boolean,
+  ): Promise<{ user: User | null; session: Session | null }>;
+  verifyEmailOtp(
+    email: string,
+    token: string,
+  ): Promise<{ user: User | null; session: Session | null }>;
   signInWithOtp(
     email: string,
     redirectTo: string,
@@ -75,6 +83,35 @@ export class AuthRepository implements IAuthRepository {
       throw error;
     }
 
+    return data;
+  }
+
+  async requestEmailOtp(
+    email: string,
+    shouldCreateUser: boolean,
+  ): Promise<{ user: User | null; session: Session | null }> {
+    const { data, error } = await this.client.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser,
+      },
+    });
+
+    if (error) throw error;
+    return data;
+  }
+
+  async verifyEmailOtp(
+    email: string,
+    token: string,
+  ): Promise<{ user: User | null; session: Session | null }> {
+    const { data, error } = await this.client.auth.verifyOtp({
+      email,
+      token,
+      type: "email",
+    });
+
+    if (error) throw error;
     return data;
   }
 

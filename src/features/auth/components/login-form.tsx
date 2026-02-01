@@ -90,6 +90,11 @@ export function LoginForm() {
       ? `${appRoutes.magicLink.base}?redirect=${encodeURIComponent(redirectUrl)}`
       : appRoutes.magicLink.base;
 
+  const otpHref =
+    redirectUrl !== appRoutes.home.base
+      ? `${appRoutes.otp.base}?redirect=${encodeURIComponent(redirectUrl)}`
+      : appRoutes.otp.base;
+
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
@@ -158,8 +163,14 @@ export function LoginForm() {
           </div>
 
           <div className="text-muted-foreground text-sm">
+            <Link href={otpHref} className="text-primary hover:underline">
+              Sign in with email code
+            </Link>
+          </div>
+
+          <div className="text-muted-foreground text-sm">
             <Link href={magicLinkHref} className="text-primary hover:underline">
-              Sign in with magic link
+              Use magic link instead
             </Link>
           </div>
         </CardFooter>

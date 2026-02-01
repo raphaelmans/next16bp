@@ -1,13 +1,16 @@
 import {
   protectedProcedure,
   publicProcedure,
+  rateLimitedProcedure,
   router,
 } from "@/lib/shared/infra/trpc/trpc";
 import {
   LoginSchema,
   MagicLinkSchema,
   RegisterSchema,
+  RequestEmailOtpSchema,
   StartGoogleOAuthSchema,
+  VerifyEmailOtpSchema,
   VerifyTokenHashSchema,
 } from "./dtos";
 import {
@@ -21,6 +24,29 @@ export const authRouter = router({
     const result = await authService.signIn(input.email, input.password);
     return { user: { id: result.user.id, email: result.user.email } };
   }),
+
+  requestEmailOtp: rateLimitedProcedure("auth")
+    .input(RequestEmailOtpSchema)
+    .mutation(async ({ input, ctx }) => {
+      const authService = makeAuthService(ctx.cookies);
+      await authService.requestEmailOtpCode(input.email, true);
+      return { success: true };
+    }),
+
+  verifyEmailOtp: publicProcedure
+    .input(VerifyEmailOtpSchema)
+    .mutation(async ({ input, ctx }) => {
+      const authService = makeAuthService(ctx.cookies);
+      const result = await authService.verifyEmailOtpCode(
+        input.email,
+        input.token,
+      );
+      return {
+        user: result.user
+          ? { id: result.user.id, email: result.user.email }
+          : null,
+      };
+    }),
 
   loginWithMagicLink: publicProcedure
     .input(MagicLinkSchema)
