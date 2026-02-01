@@ -421,7 +421,7 @@ function AddVenueCard({
             <div>
               <div className="flex items-center gap-2">
                 <p className="font-heading font-semibold">Add new venue</p>
-                <Badge variant="secondary">Optional</Badge>
+                <Badge>Required</Badge>
               </div>
               <p className="text-sm text-muted-foreground">
                 Create a new venue listing with name, address, and contact info.

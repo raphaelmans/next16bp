@@ -49,6 +49,15 @@ export interface StandardSelectProps<
   size?: FieldSize;
 }
 
+export interface StandardComboboxProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> extends StandardFieldProps<TFieldValues, TName> {
+  options: Array<{ label: string; value: string }>;
+  searchPlaceholder?: string;
+  emptyMessage?: string;
+}
+
 export interface StandardFormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,

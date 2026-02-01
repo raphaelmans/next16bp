@@ -3,6 +3,7 @@
 import { Loader2 } from "lucide-react";
 import {
   StandardFormCheckbox,
+  StandardFormCombobox,
   StandardFormField,
   StandardFormInput,
   StandardFormProvider,
@@ -103,19 +104,21 @@ export function PlaceForm({
           />
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <StandardFormSelect<PlaceFormValues>
+            <StandardFormCombobox<PlaceFormValues>
               name="province"
               label="Province"
               options={provinceOptions}
               placeholder={provincePlaceholder}
+              searchPlaceholder="Search province..."
               required
               disabled={isProvinceDisabled}
             />
-            <StandardFormSelect<PlaceFormValues>
+            <StandardFormCombobox<PlaceFormValues>
               name="city"
               label="City"
               options={cityOptions}
               placeholder={cityPlaceholder}
+              searchPlaceholder="Search city..."
               required
               disabled={isCityDisabled}
             />
