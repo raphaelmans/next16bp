@@ -1583,9 +1583,11 @@ export function useSubmitPlaceVerification(placeId: string) {
   return trpc.placeVerification.submit.useMutation({
     onSuccess: async () => {
       toast.success("Verification request submitted");
-      await utils.placeVerification.getByPlace.invalidate({ placeId });
-      await utils.placeManagement.getById.invalidate({ placeId });
-      await utils.placeManagement.invalidate();
+      await Promise.allSettled([
+        utils.placeVerification.getByPlace.invalidate({ placeId }),
+        utils.placeManagement.getById.invalidate({ placeId }),
+        utils.placeManagement.invalidate(),
+      ]);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to submit verification request");
