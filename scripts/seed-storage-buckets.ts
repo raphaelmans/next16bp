@@ -16,6 +16,7 @@ const BUCKET_NAMES = {
   courtPhotos: "court-photos",
   placePhotos: "place-photos",
   organizationAssets: "organization-assets",
+  bookingsImports: "bookings-imports",
   placeVerificationDocs: "place-verification-docs",
 } as const;
 
@@ -30,7 +31,7 @@ const BUCKET_DEFINITIONS: BucketDefinition[] = [
   {
     id: BUCKET_NAMES.paymentProofs,
     name: BUCKET_NAMES.paymentProofs,
-    public: true,
+    public: false,
   },
   {
     id: BUCKET_NAMES.courtPhotos,
@@ -48,9 +49,14 @@ const BUCKET_DEFINITIONS: BucketDefinition[] = [
     public: true,
   },
   {
+    id: BUCKET_NAMES.bookingsImports,
+    name: BUCKET_NAMES.bookingsImports,
+    public: false,
+  },
+  {
     id: BUCKET_NAMES.placeVerificationDocs,
     name: BUCKET_NAMES.placeVerificationDocs,
-    public: true,
+    public: false,
   },
 ];
 

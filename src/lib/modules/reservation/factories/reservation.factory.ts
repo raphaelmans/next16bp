@@ -20,6 +20,7 @@ import {
 } from "@/lib/modules/place/factories/place.factory";
 import { makePlaceVerificationRepository } from "@/lib/modules/place-verification/factories/place-verification.factory";
 import { makeProfileRepository } from "@/lib/modules/profile/factories/profile.factory";
+import { makeObjectStorageService } from "@/lib/modules/storage/factories/storage.factory";
 import { getContainer } from "@/lib/shared/infra/container";
 import { ReservationRepository } from "../repositories/reservation.repository";
 import { ReservationEventRepository } from "../repositories/reservation-event.repository";
@@ -89,6 +90,7 @@ export function makeReservationOwnerService(): ReservationOwnerService {
       makeCourtPriceOverrideRepository(),
       makeCourtBlockRepository(),
       makeOrganizationPaymentMethodRepository(),
+      makeObjectStorageService(),
     );
   }
   return reservationOwnerService;

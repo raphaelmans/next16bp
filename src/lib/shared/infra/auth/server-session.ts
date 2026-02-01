@@ -29,8 +29,8 @@ const createCookieMethods = async (): Promise<CookieMethodsServer> => {
 export async function getServerSession(): Promise<Session | null> {
   const cookieMethods = await createCookieMethods();
   const supabase = createClient(
-    env.SUPABASE_URL,
-    env.SUPABASE_SECRET_KEY,
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     cookieMethods,
   );
 

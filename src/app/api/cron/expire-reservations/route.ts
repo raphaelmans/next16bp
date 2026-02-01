@@ -1,7 +1,9 @@
 import { and, eq, inArray, lt } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
+import { verifyCronAuth } from "@/lib/shared/infra/cron/cron-auth";
 import { db } from "@/lib/shared/infra/db/drizzle";
 import { reservation, reservationEvent } from "@/lib/shared/infra/db/schema";
+import { logger } from "@/lib/shared/infra/logger";
 
 /**
  * Cron job to expire stale reservations.
@@ -21,13 +23,9 @@ import { reservation, reservationEvent } from "@/lib/shared/infra/db/schema";
  * }
  */
 export async function GET(request: NextRequest) {
-  // Verify cron secret to prevent unauthorized access
-  const authHeader = request.headers.get("authorization");
-  const cronSecret = process.env.CRON_SECRET;
-
-  // In production, require CRON_SECRET for security
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const auth = verifyCronAuth(request);
+  if (!auth.ok) {
+    return auth.response;
   }
 
   const now = new Date();
@@ -93,9 +91,13 @@ export async function GET(request: NextRequest) {
         errors.push(
           `Failed to expire reservation ${expiredRes.id}: ${errorMsg}`,
         );
-        console.error(
-          `[CRON] Failed to expire reservation ${expiredRes.id}:`,
-          err,
+        logger.error(
+          {
+            event: "cron.expire_reservations.failed",
+            reservationId: expiredRes.id,
+            error: errorMsg,
+          },
+          "Failed to expire reservation",
         );
       }
     }
@@ -109,12 +111,24 @@ export async function GET(request: NextRequest) {
       ...(errors.length > 0 && { errors }),
     };
 
-    console.log("[CRON] expire-reservations completed:", response);
+    logger.info(
+      {
+        event: "cron.expire_reservations.completed",
+        ...response,
+      },
+      "expire-reservations completed",
+    );
 
     return NextResponse.json(response);
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : "Unknown error";
-    console.error("[CRON] expire-reservations failed:", err);
+    logger.error(
+      {
+        event: "cron.expire_reservations.failed",
+        error: errorMsg,
+      },
+      "expire-reservations failed",
+    );
 
     return NextResponse.json(
       {

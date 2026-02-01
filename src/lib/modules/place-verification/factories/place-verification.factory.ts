@@ -84,6 +84,7 @@ export function makePlaceVerificationAdminService() {
       makePlaceRepository(),
       makeOrganizationRepository(),
       makeNotificationDeliveryService(),
+      makeObjectStorageService(),
     );
   }
   return placeVerificationAdminService;

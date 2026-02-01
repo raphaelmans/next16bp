@@ -95,6 +95,7 @@ export const paymentProof = pgTable("payment_proof", {
     .unique()
     .references(() => reservation.id, { onDelete: "cascade" }),
   fileUrl: text("file_url"),
+  filePath: text("file_path"),
   referenceNumber: varchar("reference_number", { length: 100 }),
   paymentMethodId: uuid("payment_method_id").references(
     () => organizationPaymentMethod.id,

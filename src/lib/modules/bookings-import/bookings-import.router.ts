@@ -141,7 +141,7 @@ export const bookingsImportRouter = router({
     .query(async ({ input, ctx }) => {
       try {
         const service = makeBookingsImportService();
-        return await service.listRows(ctx.userId, input.jobId);
+        return await service.listRows(ctx.userId, input);
       } catch (error) {
         handleBookingsImportError(error);
       }

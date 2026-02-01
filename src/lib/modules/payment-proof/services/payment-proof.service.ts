@@ -97,7 +97,8 @@ export class PaymentProofService implements IPaymentProofService {
     const proof = await this.paymentProofRepository.create(
       {
         reservationId: data.reservationId,
-        fileUrl: data.fileUrl,
+        fileUrl: null,
+        filePath: null,
         referenceNumber: data.referenceNumber,
         notes: data.notes,
       },
@@ -169,7 +170,8 @@ export class PaymentProofService implements IPaymentProofService {
     // Create the proof record
     const proof = await this.paymentProofRepository.create({
       reservationId,
-      fileUrl: result.url,
+      fileUrl: null,
+      filePath: result.path,
       referenceNumber,
       notes,
     });
@@ -179,7 +181,6 @@ export class PaymentProofService implements IPaymentProofService {
         event: "payment_proof.uploaded",
         reservationId,
         proofId: proof.id,
-        url: result.url,
         userId,
       },
       "Payment proof uploaded",
@@ -219,7 +220,6 @@ export class PaymentProofService implements IPaymentProofService {
 
     // 4. Update
     const updateData: Record<string, unknown> = {};
-    if (data.fileUrl !== undefined) updateData.fileUrl = data.fileUrl;
     if (data.referenceNumber !== undefined)
       updateData.referenceNumber = data.referenceNumber;
     if (data.notes !== undefined) updateData.notes = data.notes;
@@ -276,6 +276,21 @@ export class PaymentProofService implements IPaymentProofService {
       throw new PaymentProofNotFoundError(reservationId);
     }
 
-    return proof;
+    const filePath = proof.filePath;
+    if (!filePath) {
+      return proof;
+    }
+
+    const signedUrl = await this.storageService.createSignedUrl(
+      STORAGE_BUCKETS.PAYMENT_PROOFS,
+      filePath,
+      60 * 5,
+    );
+
+    return {
+      ...proof,
+      fileUrl: signedUrl,
+      filePath: null,
+    };
   }
 }

@@ -524,6 +524,11 @@ export class OrganizationService implements IOrganizationService {
       upsert: true,
     });
 
+    const publicUrl = result.url;
+    if (!publicUrl) {
+      throw new Error("Expected public URL for organization asset upload");
+    }
+
     // Update or create profile with logo URL
     let profile =
       await this.organizationProfileRepository.findByOrganizationId(
@@ -533,11 +538,11 @@ export class OrganizationService implements IOrganizationService {
     if (!profile) {
       profile = await this.organizationProfileRepository.create({
         organizationId,
-        logoUrl: result.url,
+        logoUrl: publicUrl,
       });
     } else {
       await this.organizationProfileRepository.update(profile.id, {
-        logoUrl: result.url,
+        logoUrl: publicUrl,
       });
     }
 
@@ -545,12 +550,12 @@ export class OrganizationService implements IOrganizationService {
       {
         event: "organization.logo_uploaded",
         organizationId,
-        url: result.url,
+        url: publicUrl,
         userId,
       },
       "Organization logo uploaded",
     );
 
-    return result.url;
+    return publicUrl;
   }
 }

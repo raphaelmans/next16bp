@@ -5,6 +5,7 @@ import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
 import { NotificationDeliveryJobRepository } from "@/lib/modules/notification-delivery/repositories/notification-delivery-job.repository";
 import { getContainer } from "@/lib/shared/infra/container";
+import { verifyCronAuth } from "@/lib/shared/infra/cron/cron-auth";
 import { makeEmailService } from "@/lib/shared/infra/email/email.factory";
 import { logger } from "@/lib/shared/infra/logger";
 import { makeSmsService } from "@/lib/shared/infra/sms/sms.factory";
@@ -211,11 +212,9 @@ const buildClaimReviewedMessages = (
 };
 
 export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get("authorization");
-  const cronSecret = process.env.CRON_SECRET;
-
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const auth = verifyCronAuth(request);
+  if (!auth.ok) {
+    return auth.response;
   }
 
   const now = new Date();

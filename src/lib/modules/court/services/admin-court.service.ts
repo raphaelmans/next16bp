@@ -367,6 +367,11 @@ export class AdminCourtService implements IAdminCourtService {
       upsert: false,
     });
 
+    const publicUrl = result.url;
+    if (!publicUrl) {
+      throw new Error("Expected public URL for place photo upload");
+    }
+
     const created = await this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
       const photos = await this.adminCourtRepository.findPhotosByPlaceId(
@@ -380,7 +385,7 @@ export class AdminCourtService implements IAdminCourtService {
       return this.adminCourtRepository.createPhoto(
         {
           placeId: data.placeId,
-          url: result.url,
+          url: publicUrl,
           displayOrder: nextOrder,
         },
         ctx,
@@ -397,7 +402,7 @@ export class AdminCourtService implements IAdminCourtService {
       "Admin uploaded venue photo",
     );
 
-    return { url: result.url };
+    return { url: publicUrl };
   }
 
   async removePhoto(

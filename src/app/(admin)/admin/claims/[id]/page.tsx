@@ -317,7 +317,11 @@ export default function ClaimDetailPage() {
                 </div>
                 <Separator />
                 <Button variant="outline" size="sm" asChild>
-                  <Link href={`/courts/${claim.courtId}`} target="_blank">
+                  <Link
+                    href={`/courts/${claim.courtId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <ExternalLink className="h-4 w-4 mr-2" />
                     View Court Details
                   </Link>

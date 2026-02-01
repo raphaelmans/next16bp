@@ -181,14 +181,18 @@ function OwnerAvailabilityStudioInner() {
   );
   const jobId = jobIdParam ?? "";
 
+  const listRowsQueryInput = React.useMemo(
+    () => ({ jobId, limit: 200, offset: 0 }),
+    [jobId],
+  );
+
   const jobQuery = trpc.bookingsImport.getJob.useQuery(
     { jobId },
     { enabled: Boolean(jobId) },
   );
-  const rowsQuery = trpc.bookingsImport.listRows.useQuery(
-    { jobId },
-    { enabled: Boolean(jobId) },
-  );
+  const rowsQuery = trpc.bookingsImport.listRows.useQuery(listRowsQueryInput, {
+    enabled: Boolean(jobId),
+  });
 
   React.useEffect(() => {
     if (!jobQuery.data?.placeId) return;
@@ -871,7 +875,7 @@ function OwnerAvailabilityStudioInner() {
     [],
   );
 
-  const draftRowsQueryInput = React.useMemo(() => ({ jobId }), [jobId]);
+  const draftRowsQueryInput = listRowsQueryInput;
 
   const updateDraftRow = trpc.bookingsImport.updateRow.useMutation({
     async onMutate(variables) {
@@ -938,9 +942,9 @@ function OwnerAvailabilityStudioInner() {
 
   const invalidateDraftRows = React.useCallback(() => {
     if (!jobId) return;
-    void utils.bookingsImport.listRows.invalidate({ jobId });
+    void utils.bookingsImport.listRows.invalidate(draftRowsQueryInput);
     void utils.bookingsImport.getJob.invalidate({ jobId });
-  }, [jobId, utils]);
+  }, [draftRowsQueryInput, jobId, utils]);
 
   const handleCancelBlock = React.useCallback(
     (

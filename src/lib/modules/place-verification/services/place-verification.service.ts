@@ -162,7 +162,8 @@ export class PlaceVerificationService implements IPlaceVerificationService {
 
           return {
             placeVerificationRequestId: request.id,
-            fileUrl: result.url,
+            fileUrl: null,
+            filePath: result.path,
             mimeType: file.type,
             fileName: file.name,
             sizeBytes: file.size,

@@ -115,7 +115,7 @@ export default function GoogleLocPocPage() {
                     <a
                       href={result.resolvedUrl}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener noreferrer"
                       className="break-all text-accent hover:underline"
                     >
                       {result.resolvedUrl}

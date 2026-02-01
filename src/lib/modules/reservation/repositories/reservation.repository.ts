@@ -421,6 +421,7 @@ export class ReservationRepository implements IReservationRepository {
         paymentProofReferenceNumber: paymentProof.referenceNumber,
         paymentProofNotes: paymentProof.notes,
         paymentProofFileUrl: paymentProof.fileUrl,
+        paymentProofFilePath: paymentProof.filePath,
         paymentProofCreatedAt: paymentProof.createdAt,
       })
       .from(reservation)
@@ -437,12 +438,14 @@ export class ReservationRepository implements IReservationRepository {
         referenceNumber: r.paymentProofReferenceNumber ?? null,
         notes: r.paymentProofNotes ?? null,
         fileUrl: r.paymentProofFileUrl ?? null,
+        filePath: r.paymentProofFilePath ?? null,
         createdAt: r.paymentProofCreatedAt ?? null,
       };
       const hasProof =
         proof.referenceNumber ||
         proof.notes ||
         proof.fileUrl ||
+        proof.filePath ||
         proof.createdAt;
 
       return {
@@ -456,6 +459,7 @@ export class ReservationRepository implements IReservationRepository {
               referenceNumber: proof.referenceNumber,
               notes: proof.notes,
               fileUrl: proof.fileUrl,
+              filePath: proof.filePath,
               createdAt: toIsoString(proof.createdAt) ?? "",
             }
           : null,

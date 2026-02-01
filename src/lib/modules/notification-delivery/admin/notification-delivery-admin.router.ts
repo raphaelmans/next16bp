@@ -254,11 +254,19 @@ export const notificationDeliveryAdminRouter = router({
     .mutation(async ({ ctx }) => {
       const cronSecret = process.env.CRON_SECRET;
       const headers: Record<string, string> = {};
+      if (process.env.NODE_ENV === "production" && !cronSecret) {
+        return {
+          ok: false,
+          status: 500,
+          body: "CRON_SECRET is not configured",
+        };
+      }
       if (cronSecret) {
         headers.authorization = `Bearer ${cronSecret}`;
       }
 
-      const url = `${ctx.origin}/api/cron/dispatch-notification-delivery`;
+      const appUrl = ctx.origin;
+      const url = `${appUrl}/api/cron/dispatch-notification-delivery`;
       const res = await fetch(url, { method: "GET", headers });
       const text = await res.text();
 

@@ -36,6 +36,7 @@ import type {
   CreateBookingsImportDTO,
   GetAiUsageDTO,
   ImportSource,
+  ListRowsDTO,
   NormalizeMode,
   NormalizeResult,
   ReplaceWithGuestDTO,
@@ -164,7 +165,7 @@ export interface IBookingsImportService {
   ): Promise<BookingsImportJobRecord[]>;
   listRows(
     userId: string,
-    jobId: string,
+    data: ListRowsDTO,
     ctx?: RequestContext,
   ): Promise<BookingsImportRowRecord[]>;
   listSources(
@@ -325,7 +326,7 @@ export class BookingsImportService implements IBookingsImportService {
         const pathName = `imports/${data.placeId}/${jobId}/${index + 1}${resolvedExtension}`;
 
         const result = await this.storageService.upload({
-          bucket: STORAGE_BUCKETS.ORGANIZATION_ASSETS,
+          bucket: STORAGE_BUCKETS.BOOKINGS_IMPORTS,
           path: pathName,
           file,
           contentType,
@@ -406,11 +407,15 @@ export class BookingsImportService implements IBookingsImportService {
 
   async listRows(
     userId: string,
-    jobId: string,
+    data: ListRowsDTO,
     ctx?: RequestContext,
   ): Promise<BookingsImportRowRecord[]> {
-    await this.verifyJobOwnership(userId, jobId, ctx);
-    return this.rowRepository.findByJobId(jobId, ctx);
+    await this.verifyJobOwnership(userId, data.jobId, ctx);
+    return this.rowRepository.findByJobIdPaginated(
+      data.jobId,
+      { limit: data.limit, offset: data.offset },
+      ctx,
+    );
   }
 
   async listSources(
@@ -640,7 +645,7 @@ export class BookingsImportService implements IBookingsImportService {
     for (const filePath of filePaths) {
       try {
         await this.storageService.delete(
-          STORAGE_BUCKETS.ORGANIZATION_ASSETS,
+          STORAGE_BUCKETS.BOOKINGS_IMPORTS,
           filePath,
         );
       } catch (error) {
@@ -781,7 +786,7 @@ export class BookingsImportService implements IBookingsImportService {
 
       for (const source of sources) {
         const fileBuffer = await this.storageService.download(
-          STORAGE_BUCKETS.ORGANIZATION_ASSETS,
+          STORAGE_BUCKETS.BOOKINGS_IMPORTS,
           source.filePath,
         );
 
@@ -1264,7 +1269,7 @@ export class BookingsImportService implements IBookingsImportService {
       paths.map(async (pathName) => {
         try {
           await this.storageService.delete(
-            STORAGE_BUCKETS.ORGANIZATION_ASSETS,
+            STORAGE_BUCKETS.BOOKINGS_IMPORTS,
             pathName,
           );
         } catch (error) {

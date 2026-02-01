@@ -80,7 +80,7 @@ const components = {
       <a
         className={classes}
         href={resolvedHref}
-        rel="noreferrer"
+        rel="noopener noreferrer"
         target="_blank"
         {...props}
       />

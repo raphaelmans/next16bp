@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { handleError } from "@/lib/shared/infra/http/error-handler";
+import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { BadGatewayError, ValidationError } from "@/lib/shared/kernel/errors";
 import type {
   ApiErrorResponse,
@@ -51,6 +52,15 @@ export async function POST(req: Request) {
     req.headers.get("x-request-id") ?? globalThis.crypto.randomUUID();
 
   try {
+    if (process.env.NODE_ENV === "production") {
+      return NextResponse.json({ error: "Not Found" }, { status: 404 });
+    }
+
+    const rl = await enforceRateLimit({ req, tier: "sensitive", requestId });
+    if (!rl.ok) {
+      return rl.response;
+    }
+
     let body: unknown;
     try {
       body = await req.json();

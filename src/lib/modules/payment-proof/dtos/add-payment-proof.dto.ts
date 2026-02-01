@@ -8,13 +8,12 @@ import { S } from "@/common/schemas";
 export const AddPaymentProofSchema = z
   .object({
     reservationId: S.ids.reservationId,
-    fileUrl: S.common.url().optional(),
     referenceNumber: S.paymentProof.referenceNumber,
     notes: S.paymentProof.notes,
   })
-  .refine((data) => data.fileUrl || data.referenceNumber, {
-    error: "Either fileUrl or referenceNumber is required",
-    path: ["fileUrl"],
+  .refine((data) => Boolean(data.referenceNumber), {
+    error: "Reference number is required",
+    path: ["referenceNumber"],
   });
 
 export type AddPaymentProofDTO = z.infer<typeof AddPaymentProofSchema>;

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import GoogleLocPocPageClient from "./page-client";
 
 export const metadata: Metadata = {
@@ -12,5 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default function GoogleLocPocPage() {
+  if (process.env.NODE_ENV === "production") {
+    notFound();
+  }
   return <GoogleLocPocPageClient />;
 }

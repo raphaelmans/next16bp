@@ -9,19 +9,13 @@ const buildRequestUrl = (pathname: string, headerStore: Headers) => {
     return new URL(pathname, env.NEXT_PUBLIC_APP_URL).toString();
   }
 
-  const forwardedHost = headerStore.get("x-forwarded-host");
-  const forwardedProto = headerStore.get("x-forwarded-proto");
-  if (forwardedHost) {
-    return `${forwardedProto ?? "https"}://${forwardedHost}${pathname}`;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("NEXT_PUBLIC_APP_URL is required in production");
   }
 
   const host = headerStore.get("host");
-  if (host) {
-    const protocol = host.includes("localhost") ? "http" : "https";
-    return `${protocol}://${host}${pathname}`;
-  }
-
-  return `http://localhost:3000${pathname}`;
+  const protocol = host?.includes("localhost") ? "http" : "http";
+  return `${protocol}://${host ?? "localhost:3000"}${pathname}`;
 };
 
 const buildRequestInfo = (url: string) => ({

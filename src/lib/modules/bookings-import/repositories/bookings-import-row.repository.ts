@@ -24,6 +24,11 @@ export interface IBookingsImportRowRepository {
     jobId: string,
     ctx?: RequestContext,
   ): Promise<BookingsImportRowRecord[]>;
+  findByJobIdPaginated(
+    jobId: string,
+    pagination: { limit: number; offset: number },
+    ctx?: RequestContext,
+  ): Promise<BookingsImportRowRecord[]>;
   findByJobIdAndStatus(
     jobId: string,
     statuses: BookingsImportRowStatus[],
@@ -87,6 +92,21 @@ export class BookingsImportRowRepository
       .from(bookingsImportRow)
       .where(eq(bookingsImportRow.jobId, jobId))
       .orderBy(asc(bookingsImportRow.lineNumber));
+  }
+
+  async findByJobIdPaginated(
+    jobId: string,
+    pagination: { limit: number; offset: number },
+    ctx?: RequestContext,
+  ): Promise<BookingsImportRowRecord[]> {
+    const client = this.getClient(ctx);
+    return client
+      .select()
+      .from(bookingsImportRow)
+      .where(eq(bookingsImportRow.jobId, jobId))
+      .orderBy(asc(bookingsImportRow.lineNumber))
+      .limit(pagination.limit)
+      .offset(pagination.offset);
   }
 
   async findByJobIdAndStatus(

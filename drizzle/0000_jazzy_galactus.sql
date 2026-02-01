@@ -5,18 +5,8 @@ CREATE TYPE "public"."court_type" AS ENUM('CURATED', 'RESERVABLE');--> statement
 CREATE TYPE "public"."reservation_status" AS ENUM('CREATED', 'AWAITING_PAYMENT', 'PAYMENT_MARKED_BY_USER', 'CONFIRMED', 'EXPIRED', 'CANCELLED');--> statement-breakpoint
 CREATE TYPE "public"."time_slot_status" AS ENUM('AVAILABLE', 'HELD', 'BOOKED', 'BLOCKED');--> statement-breakpoint
 CREATE TYPE "public"."triggered_by_role" AS ENUM('PLAYER', 'OWNER', 'SYSTEM');--> statement-breakpoint
-CREATE TABLE "auth"."users" (
-	"id" uuid PRIMARY KEY NOT NULL,
-	"email" varchar(255),
-	"phone" text,
-	"email_confirmed_at" timestamp with time zone,
-	"phone_confirmed_at" timestamp with time zone,
-	"last_sign_in_at" timestamp with time zone,
-	"created_at" timestamp with time zone,
-	"updated_at" timestamp with time zone,
-	CONSTRAINT "users_phone_unique" UNIQUE("phone")
-);
---> statement-breakpoint
+-- NOTE: Supabase manages auth.users. Do not create it via app migrations.
+-- This app references auth.users via foreign keys only.
 CREATE TABLE "user_roles" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,

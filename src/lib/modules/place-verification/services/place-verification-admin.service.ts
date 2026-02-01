@@ -2,6 +2,8 @@ import type { NotificationDeliveryService } from "@/lib/modules/notification-del
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
+import { STORAGE_BUCKETS } from "@/lib/modules/storage/dtos";
+import type { IObjectStorageService } from "@/lib/modules/storage/services/object-storage.service";
 import type { PlaceVerificationRequestRecord } from "@/lib/shared/infra/db/schema";
 import { logger } from "@/lib/shared/infra/logger";
 import type { RequestContext } from "@/lib/shared/kernel/context";
@@ -46,6 +48,7 @@ export class PlaceVerificationAdminService {
     private placeRepository: IPlaceRepository,
     private organizationRepository: IOrganizationRepository,
     private notificationDeliveryService: NotificationDeliveryService,
+    private storageService: IObjectStorageService,
   ) {}
 
   async getPendingRequests(
@@ -87,6 +90,27 @@ export class PlaceVerificationAdminService {
         request.id,
         ctx,
       );
+
+    const signedDocuments = await Promise.all(
+      documents.map(async (doc) => {
+        const filePath = doc.filePath;
+        if (!filePath) {
+          return { ...doc, fileUrl: doc.fileUrl ?? null, filePath: null };
+        }
+
+        const signedUrl = await this.storageService.createSignedUrl(
+          STORAGE_BUCKETS.PLACE_VERIFICATION_DOCS,
+          filePath,
+          60 * 5,
+        );
+
+        return {
+          ...doc,
+          fileUrl: signedUrl,
+          filePath: null,
+        };
+      }),
+    );
     const events =
       await this.placeVerificationRequestEventRepository.findByRequestId(
         request.id,
@@ -97,7 +121,7 @@ export class PlaceVerificationAdminService {
       request,
       place,
       organization,
-      documents,
+      documents: signedDocuments,
       events,
     };
   }

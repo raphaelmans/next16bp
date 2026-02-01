@@ -2,6 +2,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
 import {
   ALLOWED_IMAGE_TYPES,
+  isPublicStorageBucket,
   MAX_FILE_SIZE,
   type StorageBucket,
   type UploadOptions,
@@ -95,7 +96,9 @@ export class ObjectStorageService implements IObjectStorageService {
       throw new StorageUploadError(error.message, { bucket, path });
     }
 
-    const url = this.getPublicUrl(bucket, data.path);
+    const url = isPublicStorageBucket(bucket)
+      ? this.getPublicUrl(bucket, data.path)
+      : null;
 
     return { url, path: data.path };
   }

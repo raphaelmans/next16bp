@@ -138,6 +138,10 @@ export class ProfileService implements IProfileService {
       upsert: true,
     });
 
+    if (!result.url) {
+      throw new Error("Expected public URL for avatar upload");
+    }
+
     // Update profile with new avatar URL
     await this.profileRepository.update(profile.id, {
       avatarUrl: result.url,

@@ -24,6 +24,8 @@ import type { IOrganizationReservationPolicyRepository } from "@/lib/modules/org
 import type { IPaymentProofRepository } from "@/lib/modules/payment-proof/repositories/payment-proof.repository";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
+import { STORAGE_BUCKETS } from "@/lib/modules/storage/dtos";
+import type { IObjectStorageService } from "@/lib/modules/storage/services/object-storage.service";
 import type { ReservationRecord } from "@/lib/shared/infra/db/schema";
 import { logger } from "@/lib/shared/infra/logger";
 import type { RequestContext } from "@/lib/shared/kernel/context";
@@ -110,7 +112,54 @@ export class ReservationOwnerService implements IReservationOwnerService {
     private courtPriceOverrideRepository?: ICourtPriceOverrideRepository,
     private courtBlockRepository?: ICourtBlockRepository,
     private organizationPaymentMethodRepository?: IOrganizationPaymentMethodRepository,
+    private storageService?: IObjectStorageService,
   ) {}
+
+  private async attachSignedPaymentProofUrl(
+    record: ReservationWithDetails,
+  ): Promise<ReservationWithDetails> {
+    if (!record.paymentProof) return record;
+    if (!this.storageService) {
+      return {
+        ...record,
+        paymentProof: {
+          ...record.paymentProof,
+          filePath: null,
+        },
+      };
+    }
+
+    const filePath =
+      typeof record.paymentProof.filePath === "string" &&
+      record.paymentProof.filePath.length > 0
+        ? record.paymentProof.filePath
+        : null;
+
+    if (!filePath) {
+      return {
+        ...record,
+        paymentProof: {
+          ...record.paymentProof,
+          filePath: null,
+        },
+      };
+    }
+
+    const signedUrl = await this.storageService.createSignedUrl(
+      STORAGE_BUCKETS.PAYMENT_PROOFS,
+      filePath,
+      60 * 5,
+    );
+
+    return {
+      ...record,
+      paymentProof: {
+        ...record.paymentProof,
+        fileUrl: signedUrl,
+        filePath: null,
+      },
+    };
+  }
 
   private requireCourtPlaceId(placeId: string | null): string {
     if (!placeId) {
@@ -948,16 +997,21 @@ export class ReservationOwnerService implements IReservationOwnerService {
       throw new NotOrganizationOwnerError();
     }
 
-    return this.reservationRepository.findWithDetailsByOrganization(
-      filters.organizationId,
-      {
-        reservationId: filters.reservationId,
-        placeId: filters.placeId,
-        courtId: filters.courtId,
-        status: filters.status,
-        limit: filters.limit,
-        offset: filters.offset,
-      },
+    const results =
+      await this.reservationRepository.findWithDetailsByOrganization(
+        filters.organizationId,
+        {
+          reservationId: filters.reservationId,
+          placeId: filters.placeId,
+          courtId: filters.courtId,
+          status: filters.status,
+          limit: filters.limit,
+          offset: filters.offset,
+        },
+      );
+
+    return Promise.all(
+      results.map((record) => this.attachSignedPaymentProofUrl(record)),
     );
   }
 

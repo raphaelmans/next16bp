@@ -534,7 +534,7 @@ export default function NewCuratedCourtPage() {
                         <a
                           href={previewResult.resolvedUrl}
                           target="_blank"
-                          rel="noreferrer"
+                          rel="noopener noreferrer"
                           className="break-all text-accent hover:underline"
                         >
                           {previewResult.resolvedUrl}

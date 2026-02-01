@@ -349,12 +349,22 @@ export default function AdminVerificationDetailPage() {
                           {((doc.sizeBytes ?? 0) / 1024 / 1024).toFixed(2)} MB
                         </p>
                       </div>
-                      <Button variant="outline" size="sm" asChild>
-                        <a href={doc.fileUrl} target="_blank" rel="noreferrer">
-                          View file
-                          <ExternalLink className="ml-2 h-3 w-3" />
-                        </a>
-                      </Button>
+                      {doc.fileUrl ? (
+                        <Button variant="outline" size="sm" asChild>
+                          <a
+                            href={doc.fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View file
+                            <ExternalLink className="ml-2 h-3 w-3" />
+                          </a>
+                        </Button>
+                      ) : (
+                        <Button variant="outline" size="sm" disabled>
+                          Unavailable
+                        </Button>
+                      )}
                     </div>
                   ))
                 )}

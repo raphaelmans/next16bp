@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { V } from "@/common/schemas";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
+import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { logger } from "@/lib/shared/infra/logger";
 import { ValidationError } from "@/lib/shared/kernel/errors";
 import type {
@@ -14,6 +15,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const forbiddenKeys = new Set(["email", "phone", "phonenumber", "fullname"]);
+
+const MAX_PROPERTY_KEYS = 25;
 
 const trackEventSchema = z.object({
   event: z
@@ -45,11 +48,24 @@ function ensureNoPii(properties?: Record<string, unknown>) {
   }
 }
 
+function getSafePropertyKeys(properties?: Record<string, unknown>) {
+  if (!properties) return [] as string[];
+  return Object.keys(properties)
+    .map((key) => key.trim())
+    .filter((key) => key.length > 0)
+    .slice(0, MAX_PROPERTY_KEYS);
+}
+
 export async function POST(req: Request) {
   const requestId =
     req.headers.get("x-request-id") ?? globalThis.crypto.randomUUID();
 
   try {
+    const rl = await enforceRateLimit({ req, tier: "default", requestId });
+    if (!rl.ok) {
+      return rl.response;
+    }
+
     let body: unknown;
     try {
       body = await req.json();
@@ -67,11 +83,16 @@ export async function POST(req: Request) {
     const payload: TrackEventInput = parsed.data;
     ensureNoPii(payload.properties);
 
+    const propertyKeys = getSafePropertyKeys(payload.properties);
+
     logger.info(
       {
         event: payload.event,
         requestId,
-        properties: payload.properties ?? {},
+        propertyKeys,
+        propertyCount: payload.properties
+          ? Object.keys(payload.properties).length
+          : 0,
       },
       "Funnel event logged",
     );

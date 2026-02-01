@@ -434,6 +434,7 @@ export default function AdminCourtsPage() {
                                   court.slug ?? court.id,
                                 )}
                                 target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 <ExternalLink className="h-4 w-4 mr-2" />
                                 View Details

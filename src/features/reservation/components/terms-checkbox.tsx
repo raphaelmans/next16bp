@@ -28,6 +28,7 @@ export function TermsCheckbox({
             <Link
               href={appRoutes.terms.base}
               target="_blank"
+              rel="noopener noreferrer"
               className="text-primary underline"
             >
               Terms & Conditions

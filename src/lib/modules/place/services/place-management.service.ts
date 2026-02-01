@@ -303,6 +303,11 @@ export class PlaceManagementService implements IPlaceManagementService {
       upsert: false,
     });
 
+    const publicUrl = result.url;
+    if (!publicUrl) {
+      throw new Error("Expected public URL for place photo upload");
+    }
+
     try {
       const created = await this.transactionManager.run(async (tx) => {
         const ctx: RequestContext = { tx };
@@ -318,7 +323,7 @@ export class PlaceManagementService implements IPlaceManagementService {
         return this.placePhotoRepository.create(
           {
             placeId,
-            url: result.url,
+            url: publicUrl,
             displayOrder: nextOrder,
           },
           ctx,

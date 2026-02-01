@@ -130,6 +130,7 @@ export const ReservationWithDetailsSchema = z.object({
       referenceNumber: z.string().nullable(),
       notes: z.string().nullable(),
       fileUrl: z.string().nullable(),
+      filePath: z.string().nullable().optional(),
       createdAt: z.string(),
     })
     .nullable(),

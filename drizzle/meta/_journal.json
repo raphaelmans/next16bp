@@ -29,6 +29,118 @@
       "when": 1768809600000,
       "tag": "0003_guest_removal_request",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1768809600001,
+      "tag": "0004_place_verification",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1768809600002,
+      "tag": "0005_detach_court_place",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1768809600003,
+      "tag": "0006_place_slug",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1768809600004,
+      "tag": "0007_place_ext_g_place_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1768809600005,
+      "tag": "0008_time_slot_no_overlap",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1768809600006,
+      "tag": "0009_court_block_fields",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1768809600007,
+      "tag": "0010_user_preferences_default_portal",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1768809600008,
+      "tag": "0011_bookings_import_sources",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1768809600009,
+      "tag": "0012_guest_profile_and_reservation_identity",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1768809600010,
+      "tag": "0013_update_default_ttls_to_45m",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1768809600011,
+      "tag": "0014_payment_proof_payment_method_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1768809600012,
+      "tag": "0015_place_featured_rank",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1768809600013,
+      "tag": "0016_storage_file_paths",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1768809600014,
+      "tag": "0017_enable_pg_trgm",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1768809600015,
+      "tag": "0018_reservation_no_overlap",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1768809600016,
+      "tag": "0019_place_trgm_indexes",
+      "breakpoints": true
     }
   ]
 }

@@ -73,11 +73,22 @@ export const STORAGE_BUCKETS = {
   COURT_PHOTOS: "court-photos",
   PLACE_PHOTOS: "place-photos",
   ORGANIZATION_ASSETS: "organization-assets",
+  BOOKINGS_IMPORTS: "bookings-imports",
   PLACE_VERIFICATION_DOCS: "place-verification-docs",
 } as const;
 
 export type StorageBucket =
   (typeof STORAGE_BUCKETS)[keyof typeof STORAGE_BUCKETS];
+
+export const PUBLIC_STORAGE_BUCKETS = new Set<StorageBucket>([
+  STORAGE_BUCKETS.AVATARS,
+  STORAGE_BUCKETS.COURT_PHOTOS,
+  STORAGE_BUCKETS.PLACE_PHOTOS,
+  STORAGE_BUCKETS.ORGANIZATION_ASSETS,
+]);
+
+export const isPublicStorageBucket = (bucket: StorageBucket) =>
+  PUBLIC_STORAGE_BUCKETS.has(bucket);
 
 /**
  * Reusable image file validation schema.
@@ -156,7 +167,7 @@ export const importFileSchema = zfd
  * Upload result returned by storage service
  */
 export interface UploadResult {
-  url: string;
+  url: string | null;
   path: string;
 }
 

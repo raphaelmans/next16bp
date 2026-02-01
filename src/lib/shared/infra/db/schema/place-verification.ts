@@ -184,7 +184,8 @@ export const placeVerificationRequestDocument = pgTable(
     placeVerificationRequestId: uuid("place_verification_request_id")
       .notNull()
       .references(() => placeVerificationRequest.id, { onDelete: "cascade" }),
-    fileUrl: text("file_url").notNull(),
+    fileUrl: text("file_url"),
+    filePath: text("file_path"),
     mimeType: varchar("mime_type", { length: 100 }).notNull(),
     fileName: varchar("file_name", { length: 255 }),
     sizeBytes: integer("size_bytes"),

@@ -137,15 +137,20 @@ export default function OwnerBookingsImportReviewView({
 
   const utils = trpc.useUtils();
 
+  const rowsQueryInput = {
+    jobId,
+    limit: 200,
+    offset: 0,
+  };
+
   const jobQuery = trpc.bookingsImport.getJob.useQuery(
     { jobId },
     { enabled: Boolean(jobId) },
   );
 
-  const rowsQuery = trpc.bookingsImport.listRows.useQuery(
-    { jobId },
-    { enabled: Boolean(jobId) },
-  );
+  const rowsQuery = trpc.bookingsImport.listRows.useQuery(rowsQueryInput, {
+    enabled: Boolean(jobId),
+  });
 
   const sourcesQuery = trpc.bookingsImport.listSources.useQuery(
     { jobId },
@@ -183,7 +188,7 @@ export default function OwnerBookingsImportReviewView({
   const normalizeMutation = trpc.bookingsImport.normalize.useMutation({
     onSuccess: (result) => {
       utils.bookingsImport.getJob.invalidate({ jobId });
-      utils.bookingsImport.listRows.invalidate({ jobId });
+      utils.bookingsImport.listRows.invalidate(rowsQueryInput);
       utils.bookingsImport.aiUsage.invalidate({
         placeId: jobQuery.data?.placeId ?? "",
       });
@@ -199,7 +204,7 @@ export default function OwnerBookingsImportReviewView({
 
   const updateRowMutation = trpc.bookingsImport.updateRow.useMutation({
     onSuccess: () => {
-      utils.bookingsImport.listRows.invalidate({ jobId });
+      utils.bookingsImport.listRows.invalidate(rowsQueryInput);
       utils.bookingsImport.getJob.invalidate({ jobId });
       setEditingRow(null);
       toast.success("Row updated");
@@ -211,7 +216,7 @@ export default function OwnerBookingsImportReviewView({
 
   const deleteRowMutation = trpc.bookingsImport.deleteRow.useMutation({
     onSuccess: () => {
-      utils.bookingsImport.listRows.invalidate({ jobId });
+      utils.bookingsImport.listRows.invalidate(rowsQueryInput);
       utils.bookingsImport.getJob.invalidate({ jobId });
       setDeletingRowId(null);
       toast.success("Row deleted");
@@ -237,7 +242,7 @@ export default function OwnerBookingsImportReviewView({
 
   const commitMutation = trpc.bookingsImport.commit.useMutation({
     onSuccess: (result) => {
-      utils.bookingsImport.listRows.invalidate({ jobId });
+      utils.bookingsImport.listRows.invalidate(rowsQueryInput);
       utils.bookingsImport.getJob.invalidate({ jobId });
       setShowCommitDialog(false);
 
