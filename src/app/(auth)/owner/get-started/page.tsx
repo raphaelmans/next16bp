@@ -3,6 +3,7 @@
 import {
   ArrowRight,
   Building2,
+  Calendar,
   Check,
   CheckCircle,
   ClipboardList,
@@ -10,6 +11,7 @@ import {
   HelpCircle,
   Loader2,
   MapPin,
+  PartyPopper,
   Search,
   ShieldCheck,
 } from "lucide-react";
@@ -84,6 +86,8 @@ export default function OwnerGetStartedPage() {
   const hasVenue = setupStatus?.hasVenue ?? false;
   const hasVerification = setupStatus?.hasVerification ?? false;
   const hasActiveCourt = setupStatus?.hasActiveCourt ?? false;
+  const primaryCourtId = setupStatus?.primaryCourtId ?? undefined;
+  const isSetupComplete = setupStatus?.isSetupComplete ?? false;
 
   useEffect(() => {
     trackEvent({ event: "funnel.owner_setup_hub_viewed" });
@@ -178,6 +182,32 @@ export default function OwnerGetStartedPage() {
             </Badge>
           </div>
 
+          {isSetupComplete && (
+            <Card className="border-primary/20 bg-primary/5">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <PartyPopper className="h-6 w-6" />
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <p className="font-heading font-semibold">
+                      You&apos;re all set!
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Your venue is ready to accept bookings on KudosCourts.
+                    </p>
+                  </div>
+                  <Button asChild>
+                    <Link href={appRoutes.owner.places.base}>
+                      Go to your venues
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           <div className="grid gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2 space-y-4">
               <CreateOrgCard
@@ -203,6 +233,7 @@ export default function OwnerGetStartedPage() {
                 hasVenue={hasVenue}
                 hasActiveCourt={hasActiveCourt}
                 placeId={primaryPlaceId}
+                courtId={primaryCourtId}
                 onConfigureClick={handleConfigureCourts}
               />
 
@@ -217,6 +248,17 @@ export default function OwnerGetStartedPage() {
                 hasVenue={hasVenue}
                 onImportClick={handleStartImport}
               />
+
+              {hasVenue && (
+                <div className="flex">
+                  <Button variant="outline" asChild>
+                    <Link href={appRoutes.owner.bookings}>
+                      <Calendar className="mr-2 h-4 w-4" />
+                      View bookings
+                    </Link>
+                  </Button>
+                </div>
+              )}
             </div>
 
             <div className="space-y-4">
@@ -653,11 +695,13 @@ function ConfigureVenueCourtsCard({
   hasVenue,
   hasActiveCourt,
   placeId,
+  courtId,
   onConfigureClick,
 }: {
   hasVenue: boolean;
   hasActiveCourt: boolean;
   placeId?: string;
+  courtId?: string;
   onConfigureClick: () => void;
 }) {
   if (hasActiveCourt) {
@@ -678,13 +722,27 @@ function ConfigureVenueCourtsCard({
               <p className="text-sm text-muted-foreground">
                 Your venue is ready for schedules and pricing updates.
               </p>
-              <div className="pt-2">
+              <div className="flex flex-wrap gap-2 pt-2">
                 {placeId ? (
-                  <Button variant="outline" asChild>
-                    <Link href={appRoutes.owner.places.courts.base(placeId)}>
-                      Manage courts
-                    </Link>
-                  </Button>
+                  <>
+                    <Button variant="outline" asChild>
+                      <Link href={appRoutes.owner.places.courts.base(placeId)}>
+                        Manage courts
+                      </Link>
+                    </Button>
+                    {courtId && (
+                      <Button variant="outline" asChild>
+                        <Link
+                          href={appRoutes.owner.places.courts.availability(
+                            placeId,
+                            courtId,
+                          )}
+                        >
+                          Manage availability
+                        </Link>
+                      </Button>
+                    )}
+                  </>
                 ) : (
                   <Button variant="outline" disabled>
                     Manage courts

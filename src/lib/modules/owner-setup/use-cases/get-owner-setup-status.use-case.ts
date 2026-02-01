@@ -56,6 +56,7 @@ export class GetOwnerSetupStatusUseCase {
         verificationStatus: null,
         hasVerification: false,
         hasActiveCourt: false,
+        primaryCourtId: null,
         isSetupComplete: false,
         nextStep: "create_organization",
       };
@@ -76,7 +77,8 @@ export class GetOwnerSetupStatusUseCase {
     const courts = primaryPlace
       ? await this.courtRepository.findByPlaceId(primaryPlace.id)
       : [];
-    const hasActiveCourt = courts.some((court) => court.isActive);
+    const activeCourt = courts.find((court) => court.isActive);
+    const hasActiveCourt = Boolean(activeCourt);
 
     const isSetupComplete =
       hasOrganization && hasVenue && hasVerification && hasActiveCourt;
@@ -104,6 +106,7 @@ export class GetOwnerSetupStatusUseCase {
       verificationStatus,
       hasVerification,
       hasActiveCourt,
+      primaryCourtId: activeCourt?.id ?? null,
       isSetupComplete,
       nextStep,
     };

@@ -21,6 +21,7 @@ export type OwnerSetupStatus = {
   verificationStatus: OwnerSetupVerificationStatus | null;
   hasVerification: boolean;
   hasActiveCourt: boolean;
+  primaryCourtId: string | null;
   isSetupComplete: boolean;
   nextStep: OwnerSetupNextStep;
 };
