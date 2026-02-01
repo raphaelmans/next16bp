@@ -21,6 +21,8 @@ export * from "./court-rate-rule";
 export * from "./enums";
 // Guest profile
 export * from "./guest-profile";
+// Notification delivery
+export * from "./notification-delivery-job";
 // Core tables
 export * from "./organization";
 export * from "./organization-payment";

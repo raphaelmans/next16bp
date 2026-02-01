@@ -1,3 +1,4 @@
+import { makeNotificationDeliveryService } from "@/lib/modules/notification-delivery/factories/notification-delivery.factory";
 import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
 import { makePlaceRepository } from "@/lib/modules/place/factories/place.factory";
 import {
@@ -66,6 +67,7 @@ export function makePlaceVerificationService() {
       getContainer().transactionManager,
       makePlaceRepository(),
       makeOrganizationRepository(),
+      makeNotificationDeliveryService(),
     );
   }
   return placeVerificationService;

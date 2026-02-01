@@ -4,6 +4,10 @@
     {
       "path": "/api/cron/expire-reservations",
       "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/cron/dispatch-notification-delivery",
+      "schedule": "* * * * *"
     }
   ]
 }

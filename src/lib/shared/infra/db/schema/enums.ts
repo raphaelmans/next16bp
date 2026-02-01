@@ -147,3 +147,21 @@ export const bookingsImportRowStatusEnum = pgEnum(
   "bookings_import_row_status",
   ["PENDING", "VALID", "ERROR", "WARNING", "COMMITTED", "SKIPPED"],
 );
+
+/**
+ * Notification delivery channel enum
+ * Defines how notifications are delivered (email or sms)
+ */
+export const notificationDeliveryChannelEnum = pgEnum(
+  "notification_delivery_channel",
+  ["EMAIL", "SMS"],
+);
+
+/**
+ * Notification delivery job status enum
+ * Tracks async delivery attempts for outbox jobs
+ */
+export const notificationDeliveryJobStatusEnum = pgEnum(
+  "notification_delivery_job_status",
+  ["PENDING", "SENDING", "SENT", "FAILED", "SKIPPED"],
+);

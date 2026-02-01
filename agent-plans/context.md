@@ -8,6 +8,7 @@ References and context for planning artifacts.
 
 | Date | Change |
 |------|--------|
+| 2026-02-01 | Added 81-notification-system plan (outbox delivery via Resend email + Semaphore SMS; admin notified on venue verification submit). |
 | 2026-01-29 | Added 78-public-range-selection plan (player drag-to-select adjacent slot range, maps to existing startTime+duration booking). |
 | 2026-01-29 | Added 77-public-venue-court-page plan (public `/venues/[slug]/courts/[courtId]` detail + court-scoped month/day availability + Motion transitions). |
 | 2026-01-28 | Added 76-bookings-import-multi-file plan (up to 3 mixed files per import job + AI mapping for CSV/XLSX/ICS + screenshot support). |

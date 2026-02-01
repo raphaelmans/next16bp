@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import type { NotificationDeliveryService } from "@/lib/modules/notification-delivery/services/notification-delivery.service";
 import { OrganizationNotFoundError } from "@/lib/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
@@ -70,6 +71,7 @@ export class PlaceVerificationService implements IPlaceVerificationService {
     private transactionManager: TransactionManager,
     private placeRepository: IPlaceRepository,
     private organizationRepository: IOrganizationRepository,
+    private notificationDeliveryService: NotificationDeliveryService,
   ) {}
 
   async submitRequest(
@@ -171,6 +173,19 @@ export class PlaceVerificationService implements IPlaceVerificationService {
 
       await this.placeVerificationRequestDocumentRepository.createMany(
         documents,
+        ctx,
+      );
+
+      await this.notificationDeliveryService.enqueueAdminVerificationRequested(
+        {
+          requestId: request.id,
+          placeId: place.id,
+          placeName: place.name,
+          organizationId: organization.id,
+          organizationName: organization.name,
+          requestedByUserId: userId,
+          requestNotes: data.requestNotes ?? null,
+        },
         ctx,
       );
 
