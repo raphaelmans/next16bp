@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const result = await caller.organization.getBySlug({ slug });
     const description =
       result.profile?.description ??
-      "Explore our venues, see what sports we host, and book your next game in minutes.";
+      "Explore our venues in the Philippines, see what sports we host, and book your next game in minutes.";
 
     return {
       title: result.organization.name,
@@ -66,7 +66,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       openGraph: {
         title: "Organization",
-        description: "Discover venues and courts on KudosCourts.",
+        description: "Discover venues and courts on KudosCourts — Philippines.",
         url: canonical,
         siteName: "KudosCourts",
         type: "website",
@@ -74,7 +74,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       twitter: {
         card: "summary_large_image",
         title: "Organization",
-        description: "Discover venues and courts on KudosCourts.",
+        description: "Discover venues and courts on KudosCourts — Philippines.",
       },
     };
   }

@@ -14,7 +14,7 @@ const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL(appRoutes.contactUs.base, appUrl);
 const title = "Contact KudosCourts";
 const description =
-  "Reach the KudosCourts team for venue partnerships, support, or booking questions.";
+  "Reach the KudosCourts team for venue partnerships, support, or booking questions in the Philippines.";
 
 export const metadata: Metadata = {
   title,

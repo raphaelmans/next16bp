@@ -28,8 +28,8 @@ export async function generateMetadata({
     };
   }
 
-  const title = `Courts in ${province.displayName}`;
-  const description = `Browse pickleball, tennis, and multi-sport courts in ${province.displayName}.`;
+  const title = `Sports Courts in ${province.displayName}, Philippines`;
+  const description = `Browse pickleball, basketball, and tennis courts in ${province.displayName}, Philippines. Book your next game on KudosCourts.`;
   const canonicalUrl = new URL(`/courts/locations/${province.slug}`, appUrl);
 
   return {

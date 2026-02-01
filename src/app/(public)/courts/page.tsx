@@ -5,9 +5,9 @@ import CourtsPageClient from "./courts-page-client";
 
 const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL(appRoutes.courts.base, appUrl);
-const title = "Browse courts near you";
+const title = "Browse Sports Courts in the Philippines";
 const description =
-  "Discover pickleball, tennis, basketball, and more courts near you. Filter by city, amenities, and availability on KudosCourts.";
+  "Find and book pickleball, basketball, tennis, and badminton courts across the Philippines. Filter by city, sport, and availability on KudosCourts.";
 
 export const metadata: Metadata = {
   title,

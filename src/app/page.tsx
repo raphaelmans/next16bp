@@ -6,9 +6,9 @@ import { publicCaller } from "@/trpc/server";
 
 const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL("/", appUrl);
-const title = "Find courts near you";
+const title = "Find Pickleball & Sports Courts in the Philippines";
 const description =
-  "Discover pickleball and multi-sport courts, check availability, and reserve time fast with KudosCourts.";
+  "Discover pickleball, basketball, badminton, and tennis courts across the Philippines. Check availability and book your next game on KudosCourts.";
 
 export const metadata: Metadata = {
   title,

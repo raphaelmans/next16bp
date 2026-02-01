@@ -29,8 +29,8 @@ export async function generateMetadata({
     };
   }
 
-  const title = `Courts in ${city.displayName}, ${province.displayName}`;
-  const description = `Discover courts in ${city.displayName}, ${province.displayName}, and book your next game fast.`;
+  const title = `Sports Courts in ${city.displayName}, ${province.displayName} — Philippines`;
+  const description = `Discover and book pickleball, basketball, and badminton courts in ${city.displayName}, Philippines.`;
   const canonicalUrl = new URL(
     `/courts/locations/${province.slug}/${city.slug}`,
     appUrl,

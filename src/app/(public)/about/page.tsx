@@ -7,7 +7,7 @@ const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL(appRoutes.about.base, appUrl);
 const title = "About KudosCourts";
 const description =
-  "KudosCourts is a player-first platform for discovering courts and reserving time with trusted venue owners.";
+  "KudosCourts is the Philippines' player-first platform for discovering sports courts and booking time with verified venue owners.";
 
 export const metadata: Metadata = {
   title,

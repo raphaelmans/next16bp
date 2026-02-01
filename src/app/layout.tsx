@@ -41,6 +41,10 @@ const structuredData = {
         "https://facebook.com/kudoscourts",
         "https://instagram.com/kudoscourts",
       ],
+      areaServed: {
+        "@type": "Country",
+        name: "Philippines",
+      },
     },
     {
       "@type": "WebSite",
@@ -65,17 +69,28 @@ export const metadata: Metadata = {
     template: "%s | KudosCourts",
   },
   description:
-    "Find pickleball and other sports courts near you and book your next game in seconds. The unified platform for players and court owners.",
+    "Find pickleball and other sports courts in the Philippines and book your next game in seconds. The unified platform for players and court owners.",
   keywords: [
     "pickleball",
+    "pickleball courts Philippines",
     "basketball courts",
+    "basketball court rental Philippines",
     "tennis courts",
     "badminton courts",
+    "badminton court booking Philippines",
     "court booking",
     "court reservation",
-    "sports booking",
+    "sports booking Philippines",
     "court discovery",
+    "sports court booking Philippines",
+    "Manila",
+    "Cebu",
+    "Davao",
   ],
+  other: {
+    "geo.region": "PH",
+    "geo.placename": "Philippines",
+  },
   authors: [{ name: "KudosCourts" }],
   creator: "KudosCourts",
   metadataBase: new URL(appUrl),
@@ -86,13 +101,13 @@ export const metadata: Metadata = {
     siteName: "KudosCourts",
     title: "KudosCourts - Discover. Reserve. Play.",
     description:
-      "Find pickleball and other sports courts near you and book your next game in seconds. The unified platform for players and court owners.",
+      "Find pickleball and other sports courts in the Philippines and book your next game in seconds. The unified platform for players and court owners.",
   },
   twitter: {
     card: "summary_large_image",
     title: "KudosCourts - Discover. Reserve. Play.",
     description:
-      "Find pickleball and other sports courts near you and book your next game in seconds.",
+      "Find pickleball and other sports courts in the Philippines and book your next game in seconds.",
     creator: "@kudoscourts",
     site: "@kudoscourts",
   },

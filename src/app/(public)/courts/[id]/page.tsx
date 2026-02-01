@@ -31,7 +31,13 @@ const buildDescription = (
 ) => {
   const locationLabel = buildLocationLabel(place);
   const sportLabel = sports.length > 0 ? `Sports: ${sports.join(", ")}` : "";
-  return [place.name, locationLabel, formatCourtCount(courtCount), sportLabel]
+  return [
+    place.name,
+    locationLabel,
+    "Philippines",
+    formatCourtCount(courtCount),
+    sportLabel,
+  ]
     .filter(Boolean)
     .join(" | ");
 };
@@ -54,7 +60,7 @@ export async function generateMetadata({
   let canonicalPath = fallbackPath;
 
   let title = "Court details";
-  let description = "View court details on KudosCourts.";
+  let description = "View court details on KudosCourts — Philippines.";
   let imageUrl: string | undefined;
 
   try {

@@ -7,7 +7,7 @@ const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL(appRoutes.blog.base, appUrl);
 const title = "KudosCourts Blog";
 const description =
-  "Product updates, play tips, and venue spotlights from the KudosCourts team.";
+  "Pickleball tips, court reviews, and venue spotlights from the Philippines' sports court platform.";
 
 export const metadata: Metadata = {
   title,
