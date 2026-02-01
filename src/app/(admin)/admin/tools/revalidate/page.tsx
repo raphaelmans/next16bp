@@ -48,7 +48,7 @@ export default function AdminRevalidatePage() {
           return;
         }
         toast.success("Revalidation triggered", {
-          description: `path: ${result.path}`,
+          description: `path: ${result.path} | tag: ${result.tag}`,
         });
       } catch (error) {
         toast.error("Revalidation failed", {
@@ -101,6 +101,9 @@ export default function AdminRevalidatePage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            <p className="text-xs text-muted-foreground">
+              Cache tag: <code>home:featured</code>
+            </p>
             <div className="flex items-center gap-3">
               <Checkbox
                 checked={confirmRevalidate}

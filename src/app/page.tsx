@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import HomePageClient from "@/app/home-page-client";
 import { mapPlaceSummary } from "@/features/discovery/helpers";
 import { env } from "@/lib/env";
@@ -29,14 +30,22 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
+const getFeaturedPlaces = unstable_cache(
+  async () => {
+    const featuredInput = {
+      featuredOnly: true,
+      limit: 3,
+      offset: 0,
+    };
+    const featuredResponse = await publicCaller.place.list(featuredInput);
+    return featuredResponse.items.map(mapPlaceSummary);
+  },
+  ["home-featured"],
+  { tags: ["home:featured"] },
+);
+
 export default async function HomePage() {
-  const featuredInput = {
-    featuredOnly: true,
-    limit: 3,
-    offset: 0,
-  };
-  const featuredResponse = await publicCaller.place.list(featuredInput);
-  const featuredPlaces = featuredResponse.items.map(mapPlaceSummary);
+  const featuredPlaces = await getFeaturedPlaces();
 
   await trpc.place.stats.prefetch();
 

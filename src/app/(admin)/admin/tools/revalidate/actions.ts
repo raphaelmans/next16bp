@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { appRoutes } from "@/common/app-routes";
 import { requireAdminSession } from "@/lib/shared/infra/auth/server-session";
@@ -21,10 +21,12 @@ export async function revalidateHomeAction(input: { confirm: true }) {
   }
 
   revalidatePath(appRoutes.index.base);
+  revalidateTag("home:featured", "max");
 
   return {
     ok: true as const,
     path: appRoutes.index.base,
+    tag: "home:featured",
     at: Date.now(),
   };
 }
