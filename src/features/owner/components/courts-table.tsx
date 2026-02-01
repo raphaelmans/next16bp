@@ -49,6 +49,11 @@ const statusBadgeVariant: Record<
 export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
   const router = useRouter();
 
+  const formatSlots = (court: OwnerCourt) => {
+    if (court.totalSlots <= 0) return "—";
+    return `${court.openSlots}/${court.totalSlots}`;
+  };
+
   const handleRowClick = (courtId: string, placeId: string) => {
     router.push(
       appRoutes.owner.places.courts.setup(placeId, courtId, "details"),
@@ -113,7 +118,7 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
-                  {court.openSlots}/{court.totalSlots}
+                  {formatSlots(court)}
                 </TableCell>
                 <TableCell
                   onClick={(event) => event.stopPropagation()}
@@ -184,7 +189,7 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                       {court.status}
                     </Badge>
                     <span className="text-sm text-muted-foreground">
-                      {court.openSlots}/{court.totalSlots} slots
+                      {formatSlots(court)} slots
                     </span>
                   </div>
                 </div>

@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+} from "react";
 import { useStore } from "zustand";
 import {
   createRangeSelectionStore,
@@ -36,7 +42,7 @@ export function RangeSelectionProvider({
     store.getState().setConfig(config);
   }, [store, config]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     store.getState().setCommittedRange(committedRange);
   }, [store, committedRange]);
 

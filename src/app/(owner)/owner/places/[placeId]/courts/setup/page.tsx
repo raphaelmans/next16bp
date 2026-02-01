@@ -321,8 +321,12 @@ export default function CourtSetupWizardPage() {
     ? `Court Setup · ${courtData?.court.label ?? "Court"}`
     : `Court Setup · ${placeData.place.name}`;
 
+  const shellClassName =
+    currentStep === "schedule" ? "overflow-x-visible" : undefined;
+
   return (
     <AppShell
+      className={shellClassName}
       sidebar={
         <OwnerSidebar
           currentOrganization={

@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays, addMinutes, addMonths, endOfMonth } from "date-fns";
 import debounce from "debounce";
 import {
+  AlertCircle,
   CalendarIcon,
   ChevronDown,
   ChevronLeft,
@@ -69,6 +70,7 @@ import { CustomBlockDialog } from "@/features/owner/components/booking-studio/cu
 import { GuestBookingDialog } from "@/features/owner/components/booking-studio/guest-booking-dialog";
 import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-studio/mobile-create-block-drawer";
 import { MobileDayBlocksList } from "@/features/owner/components/booking-studio/mobile-day-blocks-list";
+import { MobileSelectionPeekBar } from "@/features/owner/components/booking-studio/mobile-selection-peek-bar";
 import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
 import { computeClampedResizeRange } from "@/features/owner/components/booking-studio/resize-helpers";
 import { SelectableTimelineRow } from "@/features/owner/components/booking-studio/selectable-timeline-row";
@@ -89,6 +91,7 @@ import {
   parseTimelineRange,
   type ReservationItem,
   type StudioView,
+  TIMELINE_ROW_HEIGHT,
 } from "@/features/owner/components/booking-studio/types";
 import { WeekDayColumn } from "@/features/owner/components/booking-studio/week-day-column";
 import { useCourtHours, useOwnerOrganization } from "@/features/owner/hooks";
@@ -934,17 +937,12 @@ function OwnerCourtAvailabilityInner() {
         courtHours: courtHoursQuery.data ?? [],
         onCommitRange: (startIdx, endIdx) => {
           setCommittedRange({ startIdx, endIdx });
-          if (isMobile && startIdx !== endIdx) {
-            setMobileDrawerOpen(true);
-          }
         },
       }),
     [
       hours,
-      isMobile,
       placeTimeZone,
       setCommittedRange,
-      setMobileDrawerOpen,
       startHour,
       timelineBlocks,
       timelineReservations,
@@ -1203,6 +1201,14 @@ function OwnerCourtAvailabilityInner() {
     return null;
   }
 
+  const verificationHref = appRoutes.owner.verification.place(placeId);
+  const verificationStatus = placeData.verification?.status ?? "UNVERIFIED";
+  const reservationsEnabled =
+    placeData.verification?.reservationsEnabled ?? false;
+  const showVerificationBanner = verificationStatus !== "VERIFIED";
+  const showReservationsDisabledBanner =
+    verificationStatus === "VERIFIED" && !reservationsEnabled;
+
   return (
     <AppShell
       sidebar={
@@ -1272,6 +1278,42 @@ function OwnerCourtAvailabilityInner() {
           }
           actionsClassName="flex-col sm:flex-row w-full sm:w-auto"
         />
+
+        {(showVerificationBanner || showReservationsDisabledBanner) && (
+          <div className="space-y-3">
+            {showVerificationBanner && (
+              <Alert className="border-warning/20 bg-warning/10">
+                <AlertCircle className="text-warning" />
+                <AlertTitle>Venue not yet verified</AlertTitle>
+                <AlertDescription>
+                  <p>
+                    Verification status: {verificationStatus.toLowerCase()}.
+                    Public bookings won&apos;t be available until this venue is
+                    verified.
+                  </p>
+                  <Button asChild size="sm" className="mt-2">
+                    <Link href={verificationHref}>Go to verification</Link>
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {showReservationsDisabledBanner && (
+              <Alert className="border-warning/20 bg-warning/10">
+                <AlertCircle className="text-warning" />
+                <AlertTitle>Reservations are disabled</AlertTitle>
+                <AlertDescription>
+                  <p>
+                    Players cannot book online until reservations are enabled.
+                  </p>
+                  <Button asChild size="sm" className="mt-2">
+                    <Link href={verificationHref}>Enable reservations</Link>
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            )}
+          </div>
+        )}
 
         <AnimatePresence mode="wait" initial={false}>
           {isWeekView ? (
@@ -1762,8 +1804,8 @@ function OwnerCourtAvailabilityInner() {
                   <CardContent className="space-y-4 p-6 pb-6 lg:pb-6">
                     {/* Mobile header */}
                     <div className="space-y-3 lg:hidden">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex items-center gap-2 min-w-0">
                           <Button
                             type="button"
                             variant="ghost"
@@ -1780,10 +1822,10 @@ function OwnerCourtAvailabilityInner() {
                               <Button
                                 type="button"
                                 variant="ghost"
-                                className="gap-1.5 text-sm font-medium"
+                                className="gap-1.5 text-sm font-medium min-w-0"
                               >
                                 <CalendarIcon className="h-3.5 w-3.5" />
-                                {weekLabel}
+                                <span className="truncate">{weekLabel}</span>
                                 <ChevronDown
                                   className={cn(
                                     "h-3.5 w-3.5 transition-transform",
@@ -1827,6 +1869,7 @@ function OwnerCourtAvailabilityInner() {
                           variant="outline"
                           size="sm"
                           onClick={handleMobileToday}
+                          className="shrink-0"
                         >
                           Today
                         </Button>
@@ -1931,6 +1974,16 @@ function OwnerCourtAvailabilityInner() {
                                       topOffset={topOffset}
                                       height={height}
                                       timeZone={placeTimeZone}
+                                      compact={
+                                        height <= TIMELINE_ROW_HEIGHT + 8
+                                      }
+                                      onClick={() => {
+                                        router.push(
+                                          appRoutes.owner.reservationDetail(
+                                            reservation.id,
+                                          ),
+                                        );
+                                      }}
                                     />
                                   ),
                                 )}
@@ -2076,6 +2129,13 @@ function OwnerCourtAvailabilityInner() {
           organizationId={organization?.id ?? ""}
           onDrawerClose={handleMobileDrawerClose}
         />
+
+        {isMobile && (
+          <MobileSelectionPeekBar
+            selectedTimeLabel={selectedTimeLabel}
+            onOpen={() => setMobileDrawerOpen(true)}
+          />
+        )}
       </div>
     </AppShell>
   );

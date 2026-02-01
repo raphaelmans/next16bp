@@ -56,6 +56,7 @@ export default function CourtSchedulePage() {
 
   return (
     <AppShell
+      className="overflow-x-visible"
       sidebar={
         <OwnerSidebar
           currentOrganization={

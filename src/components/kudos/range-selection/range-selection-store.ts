@@ -26,6 +26,11 @@ export interface RangeSelectionState {
   click: (idx: number, shiftKey: boolean) => void;
   setHoveredIdx: (idx: number | null) => void;
   resetDrag: () => void;
+
+  commitRangeInternal: (
+    range: { startIdx: number; endIdx: number },
+    opts?: { suppressClick?: boolean; clearDrag?: boolean },
+  ) => void;
 }
 
 const NOOP_CONFIG: RangeSelectionConfig = {
@@ -65,6 +70,31 @@ export const createRangeSelectionStore = (
       setConfig: (config) => set({ config }),
       setCommittedRange: (range) => set({ committedRange: range }),
 
+      // Keep visual selection stable by updating committedRange immediately.
+      // Parent state is still notified via config.commitRange.
+      // (Without this, there can be a paint where activeRange becomes null.)
+      //
+      // NOTE: Suppressing click is only needed for pointerUp -> click ordering.
+      //       Regular click commits should not suppress subsequent clicks.
+      //
+      commitRangeInternal: (
+        range: { startIdx: number; endIdx: number },
+        opts?: {
+          suppressClick?: boolean;
+          clearDrag?: boolean;
+        },
+      ) => {
+        const { config } = get();
+        set({
+          committedRange: range,
+          ...(opts?.suppressClick ? { suppressClick: true } : {}),
+          ...(opts?.clearDrag
+            ? { anchorIdx: null, hoverIdx: null, didDrag: false }
+            : {}),
+        });
+        config.commitRange(range.startIdx, range.endIdx);
+      },
+
       pointerDown: (idx) => {
         const { config } = get();
         if (!config.isCellAvailable(idx)) return;
@@ -100,12 +130,9 @@ export const createRangeSelectionStore = (
           const clamped = config.clampToContiguous(anchorIdx, hoverIdx);
           const range = config.computeRange(anchorIdx, clamped);
           if (range) {
-            config.commitRange(range.startIdx, range.endIdx);
-            set({
+            get().commitRangeInternal(range, {
               suppressClick: true,
-              anchorIdx: null,
-              hoverIdx: null,
-              didDrag: false,
+              clearDrag: true,
             });
             return;
           }
@@ -126,15 +153,20 @@ export const createRangeSelectionStore = (
               anchorIdx,
             );
             if (range) {
-              config.commitRange(range.startIdx, range.endIdx);
+              get().commitRangeInternal(range, { suppressClick: true });
             } else {
-              config.commitRange(anchorIdx, anchorIdx);
+              get().commitRangeInternal(
+                { startIdx: anchorIdx, endIdx: anchorIdx },
+                { suppressClick: true },
+              );
             }
           } else {
             // New start
-            config.commitRange(anchorIdx, anchorIdx);
+            get().commitRangeInternal(
+              { startIdx: anchorIdx, endIdx: anchorIdx },
+              { suppressClick: true },
+            );
           }
-          set({ suppressClick: true });
         }
 
         set({ anchorIdx: null, hoverIdx: null, didDrag: false });
@@ -156,7 +188,7 @@ export const createRangeSelectionStore = (
         if (shiftKey && committedRange) {
           const range = config.computeRange(committedRange.startIdx, idx);
           if (range) {
-            config.commitRange(range.startIdx, range.endIdx);
+            get().commitRangeInternal(range);
             return;
           }
         }
@@ -168,15 +200,15 @@ export const createRangeSelectionStore = (
         if (isSingle && committedRange && idx !== committedRange.startIdx) {
           const range = config.computeRange(committedRange.startIdx, idx);
           if (range) {
-            config.commitRange(range.startIdx, range.endIdx);
+            get().commitRangeInternal(range);
           } else {
-            config.commitRange(idx, idx);
+            get().commitRangeInternal({ startIdx: idx, endIdx: idx });
           }
           return;
         }
 
         // New start
-        config.commitRange(idx, idx);
+        get().commitRangeInternal({ startIdx: idx, endIdx: idx });
       },
 
       setHoveredIdx: (idx) => set({ hoveredIdx: idx }),
