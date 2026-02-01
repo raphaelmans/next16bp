@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays } from "date-fns";
 import {
-  AlertCircle,
   AlertTriangle,
   ArrowRight,
   BadgeCheck,
@@ -20,7 +19,6 @@ import {
   Phone,
   RefreshCw,
   ShieldCheck,
-  XCircle,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -92,6 +90,7 @@ import {
   MobileDateStrip,
   PhotoCarousel,
 } from "@/features/discovery/components";
+import { VerificationStatusBanner } from "@/features/discovery/components/verification-status-banner";
 import {
   buildSlotsByDayKey,
   getAvailabilityErrorInfo,
@@ -193,12 +192,13 @@ export default function PlaceDetailPage() {
     showVerificationBadge,
     showBookingVerificationUi,
     verificationMessage,
+    verificationDescription,
+    verificationStatusVariant,
   } = getPlaceVerificationDisplay({
     placeType: place?.placeType,
     verificationStatus: place?.verification?.status,
     reservationsEnabled: place?.verification?.reservationsEnabled,
   });
-  const verificationStatus = place?.verification?.status ?? "UNVERIFIED";
   const canSubmitClaim = Boolean(
     place &&
       isCurated &&
@@ -1740,22 +1740,11 @@ export default function PlaceDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {showBookingVerificationUi && (
-                  <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2 font-medium text-foreground">
-                      {verificationStatus === "PENDING" ? (
-                        <Clock className="h-4 w-4 text-warning" />
-                      ) : verificationStatus === "REJECTED" ? (
-                        <XCircle className="h-4 w-4 text-destructive" />
-                      ) : (
-                        <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                      )}
-                      {verificationMessage}
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-2">
-                      This venue must be verified and enabled by the owner
-                      before online reservations become available.
-                    </p>
-                  </div>
+                  <VerificationStatusBanner
+                    message={verificationMessage}
+                    description={verificationDescription}
+                    variant={verificationStatusVariant}
+                  />
                 )}
                 {place.courts.length === 0 ? (
                   <p className="text-sm text-muted-foreground">
@@ -1950,21 +1939,12 @@ export default function PlaceDetailPage() {
                   <CardHeader>
                     <CardTitle>Booking status</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                      {verificationStatus === "PENDING" ? (
-                        <Clock className="h-4 w-4 text-warning" />
-                      ) : verificationStatus === "REJECTED" ? (
-                        <XCircle className="h-4 w-4 text-destructive" />
-                      ) : (
-                        <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                      )}
-                      <span>{verificationMessage}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Owners must complete verification and enable reservations
-                      before bookings are available.
-                    </p>
+                  <CardContent>
+                    <VerificationStatusBanner
+                      message={verificationMessage}
+                      description={verificationDescription}
+                      variant={verificationStatusVariant}
+                    />
                   </CardContent>
                 </Card>
               )}

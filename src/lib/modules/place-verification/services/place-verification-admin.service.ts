@@ -156,8 +156,8 @@ export class PlaceVerificationAdminService {
           status: "VERIFIED",
           verifiedAt: new Date(),
           verifiedByUserId: adminUserId,
-          reservationsEnabled: false,
-          reservationsEnabledAt: null,
+          reservationsEnabled: true,
+          reservationsEnabledAt: new Date(),
         },
         ctx,
       );

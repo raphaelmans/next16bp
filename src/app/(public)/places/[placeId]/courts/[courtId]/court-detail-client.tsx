@@ -144,7 +144,7 @@ export default function CourtDetailClient({
       verificationStatus as PlaceVerificationDisplayInput["verificationStatus"],
     reservationsEnabled,
   });
-  const showBooking = verificationDisplay.showBooking;
+  const { showBooking } = verificationDisplay;
 
   // URL state
   const [viewParam, setViewParam] = useQueryState(
@@ -586,7 +586,7 @@ export default function CourtDetailClient({
         : "Not bookable yet";
     const description =
       placeType === "RESERVABLE"
-        ? "This venue must be verified and enabled by the owner before bookings open."
+        ? verificationDisplay.verificationDescription
         : "This listing doesn't have a public booking schedule yet.";
 
     return (

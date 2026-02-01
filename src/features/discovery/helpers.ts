@@ -48,6 +48,12 @@ export interface PlaceVerificationDisplayInput {
   reservationsEnabled?: boolean | null;
 }
 
+export type PlaceVerificationStatusVariant =
+  | "success"
+  | "warning"
+  | "destructive"
+  | "muted";
+
 export interface PlaceVerificationDisplay {
   isBookable: boolean;
   isCurated: boolean;
@@ -56,6 +62,8 @@ export interface PlaceVerificationDisplay {
   showVerificationBadge: boolean;
   showBookingVerificationUi: boolean;
   verificationMessage: string;
+  verificationDescription: string;
+  verificationStatusVariant: PlaceVerificationStatusVariant;
 }
 
 export function getPlaceVerificationDisplay(
@@ -74,11 +82,27 @@ export function getPlaceVerificationDisplay(
 
   const verificationMessage = showBooking
     ? "Verified for reservations"
+    : isVerified && !reservationsEnabled
+      ? "Reservations not yet enabled"
+      : verificationStatus === "PENDING"
+        ? "Verification pending"
+        : verificationStatus === "REJECTED"
+          ? "Verification needs updates"
+          : "Verification required to book";
+
+  const verificationDescription = showBooking
+    ? ""
+    : isVerified && !reservationsEnabled
+      ? "The owner has not yet enabled online reservations for this venue."
+      : "This venue must be verified and reservations enabled by the owner before online bookings become available.";
+
+  const verificationStatusVariant: PlaceVerificationStatusVariant = showBooking
+    ? "success"
     : verificationStatus === "PENDING"
-      ? "Verification pending"
+      ? "warning"
       : verificationStatus === "REJECTED"
-        ? "Verification needs updates"
-        : "Verification required to book";
+        ? "destructive"
+        : "muted";
 
   return {
     isBookable,
@@ -88,6 +112,8 @@ export function getPlaceVerificationDisplay(
     showVerificationBadge,
     showBookingVerificationUi,
     verificationMessage,
+    verificationDescription,
+    verificationStatusVariant,
   };
 }
 
