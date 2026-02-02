@@ -3,11 +3,7 @@
 import { ChevronRight, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
-import {
-  formatCurrency,
-  formatDuration,
-  formatTimeRangeInTimeZone,
-} from "@/common/format";
+import { formatTimeRangeInTimeZone } from "@/common/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,8 +14,8 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { BlockInfoDisplay } from "./block-info-display";
 import type { CourtBlockItem } from "./types";
-import { getMinuteOfDay } from "./types";
 
 export const MobileManageBlockPeekBar = React.memo(
   function MobileManageBlockPeekBar({
@@ -49,14 +45,6 @@ export const MobileManageBlockPeekBar = React.memo(
     }, [block]);
 
     const isWalkIn = block?.type === "WALK_IN";
-
-    const durationMinutes = block
-      ? Math.max(
-          getMinuteOfDay(block.endTime, timeZone) -
-            getMinuteOfDay(block.startTime, timeZone),
-          0,
-        )
-      : 0;
 
     const timeLabel = block
       ? formatTimeRangeInTimeZone(block.startTime, block.endTime, timeZone)
@@ -120,28 +108,12 @@ export const MobileManageBlockPeekBar = React.memo(
               <DrawerDescription>{timeLabel}</DrawerDescription>
             </DrawerHeader>
             {block && (
-              <div className="px-4 pb-4 space-y-3">
-                <div className="flex items-center gap-2">
-                  <Badge
-                    variant={isWalkIn ? "paid" : "warning"}
-                    className="text-[10px] px-1.5 py-0"
-                  >
-                    {isWalkIn ? "Walk-in" : "Maintenance"}
-                  </Badge>
-                  <span className="text-sm text-muted-foreground">
-                    {formatDuration(durationMinutes)}
-                  </span>
-                </div>
-                {block.reason && (
-                  <p className="text-sm text-muted-foreground">
-                    {block.reason}
-                  </p>
-                )}
-                {isWalkIn && block.totalPriceCents > 0 && (
-                  <p className="text-sm font-medium">
-                    {formatCurrency(block.totalPriceCents, block.currency)}
-                  </p>
-                )}
+              <div className="px-4 pb-4">
+                <BlockInfoDisplay
+                  block={block}
+                  timeZone={timeZone}
+                  isImported={isImported}
+                />
               </div>
             )}
             <DrawerFooter className="pb-safe">

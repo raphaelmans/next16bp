@@ -99,6 +99,7 @@ import {
   type StudioView,
   TIMELINE_ROW_HEIGHT,
 } from "@/features/owner/components/booking-studio/types";
+import { useManageBlock } from "@/features/owner/components/booking-studio/use-manage-block";
 import { WeekDayColumn } from "@/features/owner/components/booking-studio/week-day-column";
 import {
   useCourtHours,
@@ -185,9 +186,6 @@ function OwnerCourtAvailabilityInner() {
   const setPendingRemoveBlockId = useBookingStudio(
     (s) => s.setPendingRemoveBlockId,
   );
-  const [selectedManageBlockId, setSelectedManageBlockId] = React.useState<
-    string | null
-  >(null);
   const guestBookingOpen = useBookingStudio((s) => s.guestBookingOpen);
   const closeGuestBookingDialog = useBookingStudio(
     (s) => s.closeGuestBookingDialog,
@@ -831,6 +829,11 @@ function OwnerCourtAvailabilityInner() {
       });
     }
   }, [cancelBlock, pendingRemoveBlockId, setPendingRemoveBlockId]);
+
+  const manageBlock = useManageBlock({
+    activeBlocksById,
+    onCancelBlock: handleCancelBlock,
+  });
 
   // Guest booking form
   const guestBookingForm = useForm<GuestBookingFormValues>({
@@ -1681,7 +1684,7 @@ function OwnerCourtAvailabilityInner() {
                               isPastDay={wdk < todayDayKey}
                               courtHoursWindows={courtHoursQuery.data ?? []}
                               pendingBlockIds={pendingBlockIds}
-                              onSelectBlock={setSelectedManageBlockId}
+                              onSelectBlock={manageBlock.select}
                               onResizePreview={(args) => {
                                 if (pendingBlockIds.has(args.blockId)) return;
                                 if (isOptimisticBlockId(args.blockId)) return;
@@ -2014,7 +2017,7 @@ function OwnerCourtAvailabilityInner() {
                                       timeZone={placeTimeZone}
                                       disabled={false}
                                       isPending={pendingBlockIds.has(block.id)}
-                                      onSelect={setSelectedManageBlockId}
+                                      onSelect={manageBlock.select}
                                       onResizePreview={
                                         (block.type === "WALK_IN" ||
                                           block.type === "MAINTENANCE") &&
@@ -2207,33 +2210,19 @@ function OwnerCourtAvailabilityInner() {
 
         {!isMobile && (
           <ManageBlockDialog
-            block={
-              selectedManageBlockId
-                ? (activeBlocksById.get(selectedManageBlockId) ?? null)
-                : null
-            }
+            block={manageBlock.selectedBlock}
             timeZone={placeTimeZone}
-            onClose={() => setSelectedManageBlockId(null)}
-            onRemove={(blockId) => {
-              handleCancelBlock(blockId);
-              setSelectedManageBlockId(null);
-            }}
+            onClose={manageBlock.close}
+            onRemove={manageBlock.remove}
           />
         )}
 
         {isMobile && (
           <MobileManageBlockPeekBar
-            block={
-              selectedManageBlockId
-                ? (activeBlocksById.get(selectedManageBlockId) ?? null)
-                : null
-            }
+            block={manageBlock.selectedBlock}
             timeZone={placeTimeZone}
-            onDismiss={() => setSelectedManageBlockId(null)}
-            onRemove={(blockId) => {
-              handleCancelBlock(blockId);
-              setSelectedManageBlockId(null);
-            }}
+            onDismiss={manageBlock.close}
+            onRemove={manageBlock.remove}
             isCancelPending={cancelBlock.isPending}
           />
         )}
