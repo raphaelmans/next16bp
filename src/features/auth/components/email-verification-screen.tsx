@@ -69,8 +69,7 @@ export function EmailVerificationScreen({
     return () => window.clearInterval(timer);
   }, [cooldown]);
 
-  const isSubmitDisabled =
-    isVerifying || !form.formState.isDirty || !form.formState.isValid;
+  const isSubmitDisabled = isVerifying || !form.formState.isValid;
   const canResend = cooldown === 0 && !isResending;
 
   const onSubmit = async (data: VerifyEmailOtpDTO) => {

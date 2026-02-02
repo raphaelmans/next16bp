@@ -145,10 +145,7 @@ export function EmailOtpForm() {
   };
 
   if (step === "verify") {
-    const isSubmitDisabled =
-      verifySubmitting ||
-      !verifyForm.formState.isDirty ||
-      !verifyForm.formState.isValid;
+    const isSubmitDisabled = verifySubmitting || !verifyForm.formState.isValid;
     const canResend = cooldown === 0 && !requestSubmitting;
 
     return (
