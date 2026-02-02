@@ -75,6 +75,7 @@ import {
   DraftTimelineBlock,
 } from "@/features/owner/components/booking-studio/draft-row-card";
 import { GuestBookingDialog } from "@/features/owner/components/booking-studio/guest-booking-dialog";
+import { ManageBlockDialog } from "@/features/owner/components/booking-studio/manage-block-dialog";
 import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-studio/mobile-create-block-drawer";
 import { MobileDayBlocksList } from "@/features/owner/components/booking-studio/mobile-day-blocks-list";
 import { MobileManageBlockPeekBar } from "@/features/owner/components/booking-studio/mobile-manage-block-peek-bar";
@@ -2299,8 +2300,7 @@ function OwnerAvailabilityStudioInner() {
                               isPastDay={wdk < todayDayKey}
                               courtHoursWindows={courtHoursQuery.data ?? []}
                               pendingBlockIds={pendingBlockIds}
-                              onRemoveBlock={handleCancelBlock}
-                              onConvertWalkIn={handleOpenReplaceDialog}
+                              onSelectBlock={setSelectedManageBlockId}
                               placing={isPlacingDraftRow}
                               onPlace={handlePlaceDraftRow}
                               onResizePreview={handleResizePreview}
@@ -2642,24 +2642,7 @@ function OwnerAvailabilityStudioInner() {
                                       timeZone={placeTimeZone}
                                       disabled={isDragDisabled}
                                       isPending={pendingBlockIds.has(block.id)}
-                                      onRemove={handleCancelBlock}
-                                      isImported={
-                                        isImportCommitted &&
-                                        importedBlockIds.has(block.id)
-                                      }
-                                      onReplaceWithGuest={
-                                        isImportCommitted &&
-                                        importedBlockIds.has(block.id) &&
-                                        !replacedBlockIds.has(block.id)
-                                          ? handleOpenReplaceDialog
-                                          : undefined
-                                      }
-                                      onConvertWalkIn={
-                                        block.type === "WALK_IN" &&
-                                        !pendingBlockIds.has(block.id)
-                                          ? handleOpenReplaceDialog
-                                          : undefined
-                                      }
+                                      onSelect={setSelectedManageBlockId}
                                       onResizePreview={
                                         (block.type === "WALK_IN" ||
                                           block.type === "MAINTENANCE") &&
@@ -2672,11 +2655,6 @@ function OwnerAvailabilityStudioInner() {
                                           block.type === "MAINTENANCE") &&
                                         !pendingBlockIds.has(block.id)
                                           ? handleResizeCommit
-                                          : undefined
-                                      }
-                                      onSelect={
-                                        isMobile
-                                          ? setSelectedManageBlockId
                                           : undefined
                                       }
                                     />
@@ -2721,6 +2699,7 @@ function OwnerAvailabilityStudioInner() {
                         timeZone={placeTimeZone}
                         selectedDayLabel={selectedDayLabel}
                         onRemoveBlock={handleCancelBlock}
+                        onConvertWalkIn={handleOpenReplaceDialog}
                         isCancelPending={cancelBlock.isPending}
                       />
                     </div>
@@ -2884,6 +2863,37 @@ function OwnerAvailabilityStudioInner() {
           onDrawerClose={handleMobileDrawerClose}
         />
 
+        {!isMobile && (
+          <ManageBlockDialog
+            block={
+              selectedManageBlockId
+                ? (activeBlocksById.get(selectedManageBlockId) ?? null)
+                : null
+            }
+            timeZone={placeTimeZone}
+            onClose={() => setSelectedManageBlockId(null)}
+            onRemove={(blockId) => {
+              handleCancelBlock(blockId);
+              setSelectedManageBlockId(null);
+            }}
+            onConvertWalkIn={(blockId) => {
+              handleOpenReplaceDialog(blockId);
+              setSelectedManageBlockId(null);
+            }}
+            onReplaceWithGuest={(blockId) => {
+              handleOpenReplaceDialog(blockId);
+              setSelectedManageBlockId(null);
+            }}
+            isImported={
+              selectedManageBlockId
+                ? isImportCommitted &&
+                  importedBlockIds.has(selectedManageBlockId) &&
+                  !replacedBlockIds.has(selectedManageBlockId)
+                : false
+            }
+          />
+        )}
+
         {isMobile && (
           <MobileManageBlockPeekBar
             block={
@@ -2901,6 +2911,17 @@ function OwnerAvailabilityStudioInner() {
               handleOpenReplaceDialog(blockId);
               setSelectedManageBlockId(null);
             }}
+            onReplaceWithGuest={(blockId) => {
+              handleOpenReplaceDialog(blockId);
+              setSelectedManageBlockId(null);
+            }}
+            isImported={
+              selectedManageBlockId
+                ? isImportCommitted &&
+                  importedBlockIds.has(selectedManageBlockId) &&
+                  !replacedBlockIds.has(selectedManageBlockId)
+                : false
+            }
             isCancelPending={cancelBlock.isPending}
           />
         )}

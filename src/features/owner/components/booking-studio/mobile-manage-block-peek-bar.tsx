@@ -28,6 +28,8 @@ export const MobileManageBlockPeekBar = React.memo(
     onDismiss,
     onRemove,
     onConvertWalkIn,
+    onReplaceWithGuest,
+    isImported,
     isCancelPending,
   }: {
     block: CourtBlockItem | null;
@@ -35,6 +37,8 @@ export const MobileManageBlockPeekBar = React.memo(
     onDismiss: () => void;
     onRemove: (blockId: string) => void;
     onConvertWalkIn?: (blockId: string) => void;
+    onReplaceWithGuest?: (blockId: string) => void;
+    isImported?: boolean;
     isCancelPending: boolean;
   }) {
     const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -169,6 +173,21 @@ export const MobileManageBlockPeekBar = React.memo(
                     }}
                   >
                     Convert to guest
+                  </Button>
+                )}
+                {isImported && onReplaceWithGuest && (
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => {
+                      if (block) {
+                        onReplaceWithGuest(block.id);
+                        setDrawerOpen(false);
+                        onDismiss();
+                      }
+                    }}
+                  >
+                    Replace with guest
                   </Button>
                 )}
               </div>

@@ -72,6 +72,7 @@ import {
 import { getTimelineRangeForWeek } from "@/features/owner/components/booking-studio/court-hours";
 import { CustomBlockDialog } from "@/features/owner/components/booking-studio/custom-block-dialog";
 import { GuestBookingDialog } from "@/features/owner/components/booking-studio/guest-booking-dialog";
+import { ManageBlockDialog } from "@/features/owner/components/booking-studio/manage-block-dialog";
 import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-studio/mobile-create-block-drawer";
 import { MobileDayBlocksList } from "@/features/owner/components/booking-studio/mobile-day-blocks-list";
 import { MobileManageBlockPeekBar } from "@/features/owner/components/booking-studio/mobile-manage-block-peek-bar";
@@ -1680,7 +1681,7 @@ function OwnerCourtAvailabilityInner() {
                               isPastDay={wdk < todayDayKey}
                               courtHoursWindows={courtHoursQuery.data ?? []}
                               pendingBlockIds={pendingBlockIds}
-                              onRemoveBlock={handleCancelBlock}
+                              onSelectBlock={setSelectedManageBlockId}
                               onResizePreview={(args) => {
                                 if (pendingBlockIds.has(args.blockId)) return;
                                 if (isOptimisticBlockId(args.blockId)) return;
@@ -2013,7 +2014,7 @@ function OwnerCourtAvailabilityInner() {
                                       timeZone={placeTimeZone}
                                       disabled={false}
                                       isPending={pendingBlockIds.has(block.id)}
-                                      onRemove={handleCancelBlock}
+                                      onSelect={setSelectedManageBlockId}
                                       onResizePreview={
                                         (block.type === "WALK_IN" ||
                                           block.type === "MAINTENANCE") &&
@@ -2028,11 +2029,6 @@ function OwnerCourtAvailabilityInner() {
                                         !pendingBlockIds.has(block.id) &&
                                         !isOptimisticBlockId(block.id)
                                           ? handleResizeCommit
-                                          : undefined
-                                      }
-                                      onSelect={
-                                        isMobile
-                                          ? setSelectedManageBlockId
                                           : undefined
                                       }
                                     />
@@ -2206,6 +2202,22 @@ function OwnerCourtAvailabilityInner() {
           <MobileSelectionPeekBar
             selectedTimeLabel={selectedTimeLabel}
             onOpen={() => setMobileDrawerOpen(true)}
+          />
+        )}
+
+        {!isMobile && (
+          <ManageBlockDialog
+            block={
+              selectedManageBlockId
+                ? (activeBlocksById.get(selectedManageBlockId) ?? null)
+                : null
+            }
+            timeZone={placeTimeZone}
+            onClose={() => setSelectedManageBlockId(null)}
+            onRemove={(blockId) => {
+              handleCancelBlock(blockId);
+              setSelectedManageBlockId(null);
+            }}
           />
         )}
 

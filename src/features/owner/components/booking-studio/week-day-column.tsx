@@ -30,8 +30,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   isPastDay,
   courtHoursWindows,
   pendingBlockIds,
-  onRemoveBlock,
-  onConvertWalkIn,
+  onSelectBlock,
   placing,
   onPlace,
   onResizePreview,
@@ -57,8 +56,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   isPastDay?: boolean;
   courtHoursWindows?: CourtHoursWindow[];
   pendingBlockIds: Set<string>;
-  onRemoveBlock?: (blockId: string) => void;
-  onConvertWalkIn?: (blockId: string) => void;
+  onSelectBlock?: (blockId: string) => void;
   placing?: boolean;
   onPlace?: (dayKey: string, startMinute: number) => void;
   onResizePreview?: (args: {
@@ -196,12 +194,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
               isPending={pendingBlockIds.has(block.id)}
               isPastDay={isPastDay}
               compact
-              onRemove={onRemoveBlock}
-              onConvertWalkIn={
-                block.type === "WALK_IN" && onConvertWalkIn
-                  ? onConvertWalkIn
-                  : undefined
-              }
+              onSelect={onSelectBlock}
               onResizePreview={
                 (block.type === "WALK_IN" || block.type === "MAINTENANCE") &&
                 onResizePreview

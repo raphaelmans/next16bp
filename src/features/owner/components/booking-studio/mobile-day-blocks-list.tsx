@@ -14,6 +14,7 @@ export const MobileDayBlocksList = React.memo(function MobileDayBlocksList({
   timeZone,
   selectedDayLabel,
   onRemoveBlock,
+  onConvertWalkIn,
   isCancelPending,
 }: {
   blocks: CourtBlockItem[];
@@ -21,6 +22,7 @@ export const MobileDayBlocksList = React.memo(function MobileDayBlocksList({
   timeZone: string;
   selectedDayLabel: string;
   onRemoveBlock: (blockId: string) => void;
+  onConvertWalkIn?: (blockId: string) => void;
   isCancelPending: boolean;
 }) {
   if (isLoading) {
@@ -68,6 +70,16 @@ export const MobileDayBlocksList = React.memo(function MobileDayBlocksList({
                     {formatCurrency(block.totalPriceCents, block.currency)}
                   </span>
                 ) : null}
+                {block.type === "WALK_IN" && onConvertWalkIn && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => onConvertWalkIn(block.id)}
+                  >
+                    Guest
+                  </Button>
+                )}
                 <Button
                   type="button"
                   size="sm"
