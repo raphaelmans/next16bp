@@ -82,8 +82,8 @@
 - [ ] N/A
 
 ### Client / Frontend
-- [ ] Split place detail into sections
-- [ ] Move availability logic into discovery helpers/hooks
+- [x] Split place detail into sections (route client file remains as orchestration layer)
+- [x] Move availability logic into discovery helpers/hooks (`src/features/discovery/*`)
 
 ### Handoffs
 - [ ] Publish refactor notes

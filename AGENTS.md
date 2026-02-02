@@ -62,6 +62,7 @@ pnpm script:promote-tier3
 - Formatting: Biome, 2-space indent, double quotes, semicolons; keep changes minimal.
 - Imports: use `@/` alias; group external → internal alias → relative.
 - Frontend: add "use client" to client components; StandardForm in `src/components/form`; URL state via `nuqs`; `trpc` from `@/trpc/client`; invalidate via `trpc.useUtils()`; helpers in `src/features/<feature>/helpers.ts`.
+- IMPORTANT: Component placement: `src/app/**` is routes only (e.g. `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`). Do not add new component modules under `src/app/**` (existing route-local components are legacy); put feature UI in `src/features/<feature>/components`, shared UI in `src/components`, shared helpers in `src/common` (see `@guides/client/core/folder-structure.md`).
 - Backend: repository/service/use-case/router layering; repositories return `null`; services own transactions; routers validate input; log business events as `<entity>.<past_tense_action>`.
 - Time zones: treat `place.timeZone` as canonical; use `src/common/time-zone.ts` and `src/common/format.ts`.
 

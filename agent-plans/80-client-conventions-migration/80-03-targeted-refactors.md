@@ -55,6 +55,7 @@ Refactor the largest client-side offenders into feature/presentation layers, mov
 - [x] Split `src/app/(public)/places/[placeId]/place-detail-client.tsx` into sections
 - [x] Move availability computations into `features/discovery/helpers.ts`
 - [x] Move selection/state into `features/discovery/hooks.ts`
+- Note: the route-level client file remains as an orchestration layer; the primary goal is to keep derived logic + state in `src/features/discovery/*`.
 
 ---
 
