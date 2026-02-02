@@ -833,6 +833,7 @@ function OwnerCourtAvailabilityInner() {
   const manageBlock = useManageBlock({
     activeBlocksById,
     onCancelBlock: handleCancelBlock,
+    onSelect: resetSelectionPanel,
   });
 
   // Guest booking form
@@ -935,8 +936,9 @@ function OwnerCourtAvailabilityInner() {
     (columnDayKey: string, s: number, e: number) => {
       setCommittedRange({ startIdx: s, endIdx: e });
       setWeekCommittedDayKey(columnDayKey);
+      manageBlock.close();
     },
-    [setCommittedRange],
+    [setCommittedRange, manageBlock.close],
   );
 
   const committedDayKey = isWeekView ? (weekCommittedDayKey ?? dayKey) : dayKey;
@@ -954,6 +956,7 @@ function OwnerCourtAvailabilityInner() {
         courtHours: courtHoursQuery.data ?? [],
         onCommitRange: (startIdx, endIdx) => {
           setCommittedRange({ startIdx, endIdx });
+          manageBlock.close();
         },
       }),
     [
@@ -965,6 +968,7 @@ function OwnerCourtAvailabilityInner() {
       timelineReservations,
       courtHoursQuery.data,
       dayOfWeek,
+      manageBlock.close,
     ],
   );
 

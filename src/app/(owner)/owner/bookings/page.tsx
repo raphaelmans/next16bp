@@ -1221,6 +1221,7 @@ function OwnerAvailabilityStudioInner() {
     activeBlocksById,
     onCancelBlock: handleCancelBlock,
     onOpenReplaceDialog: handleOpenReplaceDialog,
+    onSelect: resetSelectionPanel,
   });
 
   const handleDraftRowDrop = React.useCallback(
@@ -1319,6 +1320,7 @@ function OwnerAvailabilityStudioInner() {
         courtHours: courtHoursQuery.data ?? [],
         onCommitRange: (startIdx, endIdx) => {
           setCommittedRange({ startIdx, endIdx });
+          manageBlock.close();
         },
       }),
     [
@@ -1330,6 +1332,7 @@ function OwnerAvailabilityStudioInner() {
       timelineReservations,
       courtHoursQuery.data,
       dayOfWeek,
+      manageBlock.close,
     ],
   );
 
@@ -1342,8 +1345,9 @@ function OwnerAvailabilityStudioInner() {
     (columnDayKey: string, s: number, e: number) => {
       setCommittedRange({ startIdx: s, endIdx: e });
       setWeekCommittedDayKey(columnDayKey);
+      manageBlock.close();
     },
-    [setCommittedRange],
+    [setCommittedRange, manageBlock.close],
   );
 
   const handleMobileDrawerClose = React.useCallback(
