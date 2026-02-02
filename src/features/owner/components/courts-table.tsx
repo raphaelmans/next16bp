@@ -170,10 +170,7 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                     </div>
                     {/* biome-ignore lint/a11y/useKeyWithClickEvents: wrapper only stops propagation */}
                     {/* biome-ignore lint/a11y/noStaticElementInteractions: wrapper only stops propagation */}
-                    <div
-                      onClick={(e) => e.stopPropagation()}
-                      onPointerDown={(e) => e.stopPropagation()}
-                    >
+                    <div onClick={(e) => e.stopPropagation()}>
                       <CourtActionsDropdown
                         court={court}
                         onDeactivate={onDeactivate}

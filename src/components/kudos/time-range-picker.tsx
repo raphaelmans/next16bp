@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { useShallow } from "zustand/shallow";
 import { formatCurrency, formatTimeInTimeZone } from "@/common/format";
+import { useTouchIntent } from "@/common/use-touch-intent";
 import { cn } from "@/lib/utils";
 import {
   type RangeSelectionConfig,
@@ -238,6 +239,16 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
     })),
   );
 
+  const touchIntent = useTouchIntent({
+    onConfirm: React.useCallback(
+      (e: React.PointerEvent) => {
+        e.preventDefault();
+        pointerDown(idx);
+      },
+      [pointerDown, idx],
+    ),
+  });
+
   const available = isSlotAvailable(slot) && !isPast;
   const isBooked = slot.status === "booked" || slot.status === "held";
   const isMaintenance = slot.unavailableReason === "MAINTENANCE";
@@ -255,7 +266,7 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
       aria-label={`${startLabel} to ${endLabel}${!available ? " (unavailable)" : ""}`}
       className={cn(
         "group flex w-full items-center gap-3 px-4 py-3 text-left transition-all duration-150",
-        "touch-none appearance-none",
+        "appearance-none",
         "border-b border-border/50 last:border-b-0",
         available &&
           !inRange &&
@@ -266,15 +277,16 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
         isReserved && "bg-destructive-light/40 cursor-not-allowed",
         isMaintenance && "bg-warning-light/50 cursor-not-allowed",
       )}
-      onPointerDown={(e) => {
-        e.preventDefault();
-        pointerDown(idx);
-      }}
+      onPointerDown={touchIntent.onPointerDown}
+      onPointerMove={touchIntent.onPointerMove}
       onPointerEnter={() => {
         pointerEnter(idx);
         if (available) setHoveredIdx(idx);
       }}
-      onPointerLeave={() => setHoveredIdx(null)}
+      onPointerLeave={() => {
+        touchIntent.cancel();
+        setHoveredIdx(null);
+      }}
       onClick={(e) => click(idx, e.shiftKey)}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {

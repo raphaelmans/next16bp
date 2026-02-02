@@ -35,6 +35,21 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
 
   const isPlacing = Boolean(placing && onPlace);
 
+  const pendingRef = React.useRef<{
+    timer: ReturnType<typeof setTimeout>;
+    startX: number;
+    startY: number;
+  } | null>(null);
+
+  const cancelPending = React.useCallback(() => {
+    if (pendingRef.current) {
+      clearTimeout(pendingRef.current.timer);
+      pendingRef.current = null;
+    }
+  }, []);
+
+  React.useEffect(() => cancelPending, [cancelPending]);
+
   const handlePointerDown = React.useCallback(
     (e: React.PointerEvent) => {
       if (!isInteractive) return;
@@ -42,10 +57,42 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
         e.preventDefault();
         return;
       }
-      e.preventDefault();
-      pointerDown(cellIndex);
+
+      // Mouse/pen: immediate activation (preserves desktop behavior)
+      if (e.pointerType !== "touch") {
+        e.preventDefault();
+        pointerDown(cellIndex);
+        return;
+      }
+
+      // Touch: delay activation to disambiguate from scroll
+      cancelPending();
+      const timer = setTimeout(() => {
+        pendingRef.current = null;
+        pointerDown(cellIndex);
+      }, 150);
+      pendingRef.current = {
+        timer,
+        startX: e.clientX,
+        startY: e.clientY,
+      };
     },
-    [cellIndex, isInteractive, isPlacing, pointerDown],
+    [cellIndex, isInteractive, isPlacing, pointerDown, cancelPending],
+  );
+
+  const handlePointerMove = React.useCallback(
+    (e: React.PointerEvent) => {
+      if (pendingRef.current) {
+        const dx = e.clientX - pendingRef.current.startX;
+        const dy = e.clientY - pendingRef.current.startY;
+        if (dx * dx + dy * dy > 100) {
+          // 10px threshold
+          cancelPending();
+          return;
+        }
+      }
+    },
+    [cancelPending],
   );
 
   const handlePointerEnter = React.useCallback(() => {
@@ -56,8 +103,9 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
   }, [cellIndex, isInteractive, isPlacing, pointerEnter, setHoveredIdx]);
 
   const handlePointerLeave = React.useCallback(() => {
+    cancelPending();
     setHoveredIdx(null);
-  }, [setHoveredIdx]);
+  }, [cancelPending, setHoveredIdx]);
 
   const handleClick = React.useCallback(
     (e: React.MouseEvent) => {
@@ -96,7 +144,7 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
       aria-disabled={!isInteractive}
       className={cn(
         "group/cell relative block w-full h-[56px] rounded-md border-t border-border/70 transition-colors",
-        "touch-none appearance-none",
+        "appearance-none",
         "bg-card",
         isInteractive &&
           "border-l-2 border-dashed border-l-primary/15 hover:bg-primary/10 hover:border-l-primary/30 cursor-pointer",
@@ -111,6 +159,7 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
         cellState.isPendingStart && "bg-primary/15 ring-2 ring-primary/30",
       )}
       onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       onClick={handleClick}
