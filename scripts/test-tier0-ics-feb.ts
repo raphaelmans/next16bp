@@ -148,8 +148,14 @@ try {
   console.log(`Errors: ${parsed.errors?.length ?? 0}`);
   console.log("\n--- Output ---");
   console.log(JSON.stringify(parsed, null, 2));
-} catch (err: any) {
+} catch (err: unknown) {
   console.error("normalize-data.ts failed:");
-  console.error(err.stdout || err.message);
+  if (err && typeof err === "object" && "stdout" in err) {
+    console.error((err as { stdout?: unknown }).stdout);
+  } else if (err instanceof Error) {
+    console.error(err.message);
+  } else {
+    console.error(String(err));
+  }
   process.exit(1);
 }

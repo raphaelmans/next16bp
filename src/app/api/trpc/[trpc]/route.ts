@@ -36,6 +36,25 @@ export async function POST(req: Request) {
   });
 }
 
-export async function GET() {
-  return NextResponse.json({ error: "Method Not Allowed" }, { status: 405 });
+export async function GET(req: Request) {
+  const secFetchSite = req.headers.get("sec-fetch-site");
+  if (secFetchSite && secFetchSite.toLowerCase() === "cross-site") {
+    return NextResponse.json({ error: "CSRF blocked" }, { status: 403 });
+  }
+
+  const origin = req.headers.get("origin");
+  if (origin && !isAllowedOrigin(origin, req)) {
+    return NextResponse.json({ error: "CSRF blocked" }, { status: 403 });
+  }
+
+  return fetchRequestHandler({
+    endpoint: "/api/trpc",
+    req,
+    router: appRouter,
+    createContext,
+  });
+}
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204 });
 }
