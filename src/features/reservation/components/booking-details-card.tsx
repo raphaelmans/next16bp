@@ -65,7 +65,7 @@ export function BookingDetailsCard({
             )}
           </div>
           <div className="min-w-0 space-y-1">
-            <h3 className="font-semibold text-foreground">{court.name}</h3>
+            <h3 className="font-semibold text-foreground break-words">{court.name}</h3>
             <div className="flex items-start gap-1.5 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
               <span>
