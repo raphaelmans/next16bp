@@ -1,9 +1,11 @@
 "use client";
 
+import { Info } from "lucide-react";
 import * as React from "react";
 import {
   type RangeSelectionConfig,
   RangeSelectionProvider,
+  useRangeSelection,
 } from "@/components/kudos/range-selection";
 import { cn } from "@/lib/utils";
 import {
@@ -18,6 +20,19 @@ import { TimelineBlockItem } from "./timeline-block-item";
 import { TimelineReservationItem } from "./timeline-reservation-item";
 import type { CourtBlockItem, DraftRowItem, ReservationItem } from "./types";
 import { getMinuteOfDay } from "./types";
+
+function TapHoldHint() {
+  const hasSelection = useRangeSelection(
+    (s) => s.committedRange !== null || s.anchorIdx !== null,
+  );
+  if (hasSelection) return null;
+  return (
+    <p className="flex items-center gap-1.5 px-2 py-1 text-xs text-muted-foreground md:hidden">
+      <Info className="h-3.5 w-3.5 shrink-0" />
+      Tap and hold to select
+    </p>
+  );
+}
 
 export const WeekDayColumn = React.memo(function WeekDayColumn({
   dayKey,
@@ -169,6 +184,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
           isPastDay && "bg-muted/40",
         )}
       >
+        <TapHoldHint />
         <div className="space-y-0">
           {hours.map((hour, hourIndex) => (
             <SelectableTimelineRow

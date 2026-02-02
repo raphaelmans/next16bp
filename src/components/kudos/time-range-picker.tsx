@@ -1,5 +1,6 @@
 "use client";
 
+import { Info } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { useShallow } from "zustand/shallow";
@@ -473,6 +474,9 @@ function TimeRangePickerInner({
   );
 
   const isDragging = useRangeSelection((s) => s.anchorIdx !== null);
+  const hasSelection = useRangeSelection(
+    (s) => s.committedRange !== null || s.anchorIdx !== null,
+  );
 
   return (
     <div
@@ -490,6 +494,13 @@ function TimeRangePickerInner({
         onContinue={onContinue}
         continueLabel={continueLabel}
       />
+
+      {!hasSelection && (
+        <p className="flex items-center gap-1.5 px-4 py-1.5 text-xs text-muted-foreground md:hidden">
+          <Info className="h-3.5 w-3.5 shrink-0" />
+          Tap and hold to select
+        </p>
+      )}
 
       <div className="relative overflow-hidden rounded-xl border border-border/80 bg-card shadow-sm">
         {slots.map((slot, idx) => (
