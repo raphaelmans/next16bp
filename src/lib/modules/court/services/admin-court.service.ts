@@ -85,6 +85,7 @@ export interface IAdminCourtService {
     reason: string,
   ): Promise<PlaceRecord>;
   activatePlace(adminUserId: string, placeId: string): Promise<PlaceRecord>;
+  deletePlaceHard(adminUserId: string, placeId: string): Promise<void>;
   listAllPlaces(
     filters: AdminCourtFiltersDTO,
     ctx?: RequestContext,
@@ -662,6 +663,64 @@ export class AdminCourtService implements IAdminCourtService {
     );
 
     return updated;
+  }
+
+  async deletePlaceHard(adminUserId: string, placeId: string): Promise<void> {
+    await this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+      const place = await this.adminCourtRepository.findByIdForUpdate(
+        placeId,
+        ctx,
+      );
+      if (!place) {
+        throw new PlaceNotFoundError(placeId);
+      }
+
+      const photos = await this.adminCourtRepository.findPhotosByPlaceId(
+        placeId,
+        ctx,
+      );
+
+      await Promise.all(
+        photos.map(async (photo) => {
+          const path = this.extractPublicStoragePath(
+            photo.url,
+            STORAGE_BUCKETS.PLACE_PHOTOS,
+          );
+          if (!path) {
+            return;
+          }
+          try {
+            await this.storageService.delete(
+              STORAGE_BUCKETS.PLACE_PHOTOS,
+              path,
+            );
+          } catch (error) {
+            logger.warn(
+              {
+                event: "place.photo_delete_failed",
+                placeId,
+                photoId: photo.id,
+                adminUserId,
+                err: error,
+              },
+              "Failed to delete place photo from storage",
+            );
+          }
+        }),
+      );
+
+      await this.adminCourtRepository.deletePlaceById(placeId, ctx);
+
+      logger.info(
+        {
+          event: "place.deleted",
+          placeId,
+          adminUserId,
+        },
+        "Admin deleted venue",
+      );
+    });
   }
 
   async getStats(): Promise<{ total: number; reservable: number }> {

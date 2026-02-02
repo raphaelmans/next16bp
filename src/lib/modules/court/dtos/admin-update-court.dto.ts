@@ -106,6 +106,7 @@ export const AdminCourtFiltersSchema = z.object({
   isActive: z.boolean().optional(),
   placeType: PlaceTypeFilterEnum.optional(),
   claimStatus: ClaimStatusFilterEnum.optional(),
+  featured: z.boolean().optional(),
   province: S.place.province.optional(),
   city: S.place.city.optional(),
   search: S.place.searchQuery.optional(),

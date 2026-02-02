@@ -1,3 +1,4 @@
+export * from "./admin-delete-place.dto";
 export * from "./admin-update-court.dto";
 export * from "./court.dto";
 export * from "./create-curated-court.dto";

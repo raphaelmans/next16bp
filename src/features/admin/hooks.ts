@@ -17,6 +17,7 @@ export type ClaimStatusFilter =
   | "claim_pending"
   | "claimed"
   | "removal_requested";
+export type FeaturedFilter = "all" | "featured" | "not_featured";
 
 export interface AdminCourt {
   id: string;
@@ -85,6 +86,7 @@ interface UseAdminCourtsOptions {
   province?: string | "all";
   city?: string | "all";
   claimStatus?: ClaimStatusFilter | "all";
+  featured?: FeaturedFilter;
   search?: string;
   page?: number;
   limit?: number;
@@ -162,6 +164,7 @@ export function useAdminCourts(options: UseAdminCourtsOptions = {}) {
     province,
     city,
     claimStatus,
+    featured,
     search,
     page = 1,
     limit = 10,
@@ -178,6 +181,8 @@ export function useAdminCourts(options: UseAdminCourtsOptions = {}) {
     claimStatus && claimStatus !== "all"
       ? claimStatusMap[claimStatus]
       : undefined;
+  const featuredInput =
+    featured && featured !== "all" ? featured === "featured" : undefined;
 
   const query = trpc.admin.court.list.useQuery(
     {
@@ -188,6 +193,7 @@ export function useAdminCourts(options: UseAdminCourtsOptions = {}) {
       province: province && province !== "all" ? province : undefined,
       city: city && city !== "all" ? city : undefined,
       claimStatus: claimStatusInput,
+      featured: featuredInput,
       search: search || undefined,
     },
     { staleTime: 5_000 },
@@ -285,6 +291,19 @@ export function useToggleCourtStatus() {
     mutate,
     isPending: activateMutation.isPending || deactivateMutation.isPending,
   };
+}
+
+export function useDeleteAdminPlace() {
+  const utils = trpc.useUtils();
+
+  return trpc.admin.court.deletePlace.useMutation({
+    onSuccess: async () => {
+      await Promise.all([
+        utils.admin.court.list.invalidate(),
+        utils.admin.court.stats.invalidate(),
+      ]);
+    },
+  });
 }
 
 export interface CuratedCourtPhotoInput {

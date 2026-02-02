@@ -5,6 +5,8 @@ export { AdminCourtOwnershipTransferCard } from "./admin-court-ownership-transfe
 export { default as AdminCourtsBatchView } from "./admin-courts-batch-view";
 export { AdminNavbar } from "./admin-navbar";
 export { AdminOnly } from "./admin-only";
+export { AdminPageFrame } from "./admin-page-frame";
+export { AdminPlacesList } from "./admin-places-list";
 export { AdminSidebar } from "./admin-sidebar";
 export { ClaimReviewActions } from "./claim-review-actions";
 export { PlaceVerificationReviewActions } from "./place-verification-review-actions";

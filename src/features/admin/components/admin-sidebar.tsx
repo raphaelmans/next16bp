@@ -3,6 +3,7 @@
 import {
   Building2,
   LayoutDashboard,
+  MapPin,
   Shield,
   ShieldCheck,
   Tag,
@@ -61,6 +62,13 @@ const navItems = [
     title: "Courts",
     href: appRoutes.admin.courts.base,
     icon: Building2,
+    badge: false,
+    badgeKey: "none" as const,
+  },
+  {
+    title: "Venues",
+    href: appRoutes.admin.venues.base,
+    icon: MapPin,
     badge: false,
     badgeKey: "none" as const,
   },

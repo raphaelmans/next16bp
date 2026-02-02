@@ -7,6 +7,7 @@ import {
   ActivateCourtSchema,
   AdminCourtDetailSchema,
   AdminCourtFiltersSchema,
+  AdminDeletePlaceSchema,
   AdminUpdateCourtSchema,
   CreateCuratedCourtBatchSchema,
   CreateCuratedCourtSchema,
@@ -81,6 +82,18 @@ export const adminCourtRouter = router({
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
       return service.updatePlace(ctx.userId, input);
+    }),
+
+  /**
+   * Delete a place (hard delete)
+   * Admin only + rate limited
+   */
+  deletePlace: adminRateLimitedProcedure("mutation")
+    .input(AdminDeletePlaceSchema)
+    .mutation(async ({ input, ctx }) => {
+      const service = makeAdminCourtService();
+      await service.deletePlaceHard(ctx.userId, input.placeId);
+      return { success: true };
     }),
 
   /**

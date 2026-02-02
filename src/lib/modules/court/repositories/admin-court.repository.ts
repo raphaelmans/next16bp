@@ -1,4 +1,14 @@
-import { and, asc, count, eq, ilike, type SQL, sql } from "drizzle-orm";
+import {
+  and,
+  asc,
+  count,
+  eq,
+  gt,
+  ilike,
+  lte,
+  type SQL,
+  sql,
+} from "drizzle-orm";
 import {
   type CourtRecord,
   court,
@@ -133,6 +143,7 @@ export interface IAdminCourtRepository {
     ctx?: RequestContext,
   ): Promise<void>;
   deleteCourtsByPlaceId(placeId: string, ctx?: RequestContext): Promise<void>;
+  deletePlaceById(placeId: string, ctx?: RequestContext): Promise<void>;
   getStats(
     ctx?: RequestContext,
   ): Promise<{ total: number; reservable: number }>;
@@ -321,6 +332,11 @@ export class AdminCourtRepository implements IAdminCourtRepository {
     await client.delete(court).where(eq(court.placeId, placeId));
   }
 
+  async deletePlaceById(placeId: string, ctx?: RequestContext): Promise<void> {
+    const client = this.getClient(ctx);
+    await client.delete(place).where(eq(place.id, placeId));
+  }
+
   async findAll(
     filters: AdminCourtFiltersDTO,
     ctx?: RequestContext,
@@ -340,6 +356,14 @@ export class AdminCourtRepository implements IAdminCourtRepository {
 
     if (filters.claimStatus) {
       conditions.push(eq(place.claimStatus, filters.claimStatus));
+    }
+
+    if (filters.featured === true) {
+      conditions.push(gt(place.featuredRank, 0));
+    }
+
+    if (filters.featured === false) {
+      conditions.push(lte(place.featuredRank, 0));
     }
 
     if (filters.province) {
