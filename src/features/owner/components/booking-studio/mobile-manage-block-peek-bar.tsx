@@ -61,36 +61,35 @@ export const MobileManageBlockPeekBar = React.memo(
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background pb-[env(safe-area-inset-bottom)]"
             >
-              <button
-                type="button"
-                onClick={() => setDrawerOpen(true)}
-                className="flex w-full items-center gap-3 px-4 py-3 text-left"
-              >
-                <Badge
-                  variant={isWalkIn ? "paid" : "warning"}
-                  className="shrink-0 text-[10px] px-1.5 py-0"
-                >
-                  {isWalkIn ? "Walk-in" : "Maintenance"}
-                </Badge>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{timeLabel}</p>
-                </div>
-                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground">
-                  Manage
-                  <ChevronRight className="h-3.5 w-3.5" />
-                </span>
+              <div className="flex w-full items-center gap-3 px-4 py-3">
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDismiss();
-                  }}
+                  onClick={() => setDrawerOpen(true)}
+                  className="flex flex-1 items-center gap-3 text-left min-w-0"
+                >
+                  <Badge
+                    variant={isWalkIn ? "paid" : "warning"}
+                    className="shrink-0 text-[10px] px-1.5 py-0"
+                  >
+                    {isWalkIn ? "Walk-in" : "Maintenance"}
+                  </Badge>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{timeLabel}</p>
+                  </div>
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground">
+                    Manage
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={onDismiss}
                   className="shrink-0 rounded-full p-1.5 hover:bg-muted"
                   aria-label="Dismiss"
                 >
                   <X className="h-4 w-4" />
                 </button>
-              </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
