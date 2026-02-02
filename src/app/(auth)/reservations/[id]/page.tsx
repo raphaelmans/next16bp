@@ -226,7 +226,7 @@ export default function ReservationDetailPage() {
         cancellationReason={reservation.cancellationReason ?? undefined}
       />
 
-      <div className="grid gap-6 lg:grid-cols-3 mt-6">
+      <div className="grid gap-6 lg:grid-cols-3 mt-6 overflow-hidden">
         <div className="lg:col-span-2 space-y-6">
           <BookingDetailsCard court={court} timeSlot={transformedTimeSlot} />
 

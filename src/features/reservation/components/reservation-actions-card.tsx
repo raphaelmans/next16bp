@@ -45,7 +45,7 @@ export function ReservationActionsCard({
     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${court.name} ${court.address} ${court.city}`)}`;
 
   return (
-    <Card className="sticky top-4">
+    <Card className="sticky top-4 overflow-hidden">
       <CardContent className="p-4 space-y-4">
         {/* Status */}
         <div className="space-y-2">
