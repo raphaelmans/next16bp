@@ -692,7 +692,7 @@ export default function OwnerBookingsImportReviewView({
                       value={statusFilter}
                       onValueChange={(v) => setStatusFilter(v as RowStatus)}
                     >
-                      <TabsList className="mb-4">
+                      <TabsList className="mb-4 overflow-x-auto">
                         <TabsTrigger value="ALL">
                           All ({statusCounts.ALL})
                         </TabsTrigger>
@@ -728,119 +728,217 @@ export default function OwnerBookingsImportReviewView({
                         No rows match the current filter
                       </div>
                     ) : (
-                      <div className="overflow-x-auto">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead className="w-16">#</TableHead>
-                              <TableHead>Source</TableHead>
-                              <TableHead>Court</TableHead>
-                              <TableHead>Start</TableHead>
-                              <TableHead>End</TableHead>
-                              <TableHead>Reason</TableHead>
-                              <TableHead>Status</TableHead>
-                              <TableHead className="w-24">Actions</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {filteredRows.map((row) => (
-                              <TableRow
+                      <>
+                        {/* Mobile card layout */}
+                        <div className="space-y-2 md:hidden">
+                          {filteredRows.map((row) => {
+                            const typedRow = row as RowRecord;
+                            const courtLabel =
+                              courts.find((c) => c.court.id === row.courtId)
+                                ?.court.label ??
+                              row.courtLabel ??
+                              "Unmapped";
+                            return (
+                              <div
                                 key={row.id}
                                 className={cn(
+                                  "rounded-lg border p-3",
                                   row.status === "ERROR" && "bg-destructive/5",
                                 )}
                               >
-                                <TableCell className="font-mono text-xs text-muted-foreground">
-                                  {row.lineNumber}
-                                </TableCell>
-                                <TableCell className="max-w-[180px] truncate text-xs text-muted-foreground">
-                                  {getRowSourceLabel(row as RowRecord)}
-                                </TableCell>
-                                <TableCell>
-                                  {courts.find(
-                                    (c) => c.court.id === row.courtId,
-                                  )?.court.label ??
-                                    row.courtLabel ?? (
-                                      <span className="text-muted-foreground">
-                                        Unmapped
-                                      </span>
-                                    )}
-                                </TableCell>
-                                <TableCell>
+                                <div className="flex items-center justify-between gap-2">
+                                  <div className="flex items-center gap-2 text-xs text-muted-foreground min-w-0">
+                                    <span className="font-mono">
+                                      #{row.lineNumber}
+                                    </span>
+                                    <span className="truncate">
+                                      {getRowSourceLabel(typedRow)}
+                                    </span>
+                                  </div>
+                                  {getStatusBadge(row.status)}
+                                </div>
+                                <div className="mt-1.5 text-sm font-medium">
+                                  {courtLabel}
+                                </div>
+                                <div className="mt-1 text-sm text-muted-foreground">
                                   {row.startTime ? (
-                                    <span>
+                                    <>
                                       {formatDateShort(new Date(row.startTime))}{" "}
                                       {formatTime(new Date(row.startTime))}
-                                    </span>
+                                      {row.endTime && (
+                                        <>
+                                          {" → "}
+                                          {formatDateShort(
+                                            new Date(row.startTime),
+                                          ) ===
+                                          formatDateShort(new Date(row.endTime))
+                                            ? formatTime(new Date(row.endTime))
+                                            : `${formatDateShort(new Date(row.endTime))} ${formatTime(new Date(row.endTime))}`}
+                                        </>
+                                      )}
+                                    </>
                                   ) : (
-                                    <span className="text-muted-foreground">
-                                      -
-                                    </span>
+                                    "-"
                                   )}
-                                </TableCell>
-                                <TableCell>
-                                  {row.endTime ? (
-                                    <span>
-                                      {formatDateShort(new Date(row.endTime))}{" "}
-                                      {formatTime(new Date(row.endTime))}
-                                    </span>
-                                  ) : (
-                                    <span className="text-muted-foreground">
-                                      -
-                                    </span>
-                                  )}
-                                </TableCell>
-                                <TableCell className="max-w-[200px] truncate">
-                                  {row.reason ?? (
-                                    <span className="text-muted-foreground">
-                                      -
-                                    </span>
-                                  )}
-                                </TableCell>
-                                <TableCell>
-                                  <div className="space-y-1">
-                                    {getStatusBadge(row.status)}
-                                    {row.errors && row.errors.length > 0 && (
-                                      <div className="text-xs text-destructive">
-                                        {row.errors.map((err, i) => (
-                                          <div key={`${row.id}-err-${i}`}>
-                                            {err}
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
+                                </div>
+                                {row.reason && (
+                                  <div className="mt-1 text-xs truncate">
+                                    {row.reason}
                                   </div>
-                                </TableCell>
-                                <TableCell>
-                                  {row.status !== "COMMITTED" &&
-                                    row.status !== "SKIPPED" && (
-                                      <div className="flex gap-1">
-                                        <Button
-                                          variant="ghost"
-                                          size="icon"
-                                          onClick={() =>
-                                            handleEditRow(row as RowRecord)
-                                          }
-                                        >
-                                          <Edit className="h-4 w-4" />
-                                        </Button>
-                                        <Button
-                                          variant="ghost"
-                                          size="icon"
-                                          onClick={() =>
-                                            setDeletingRowId(row.id)
-                                          }
-                                        >
-                                          <Trash2 className="h-4 w-4" />
-                                        </Button>
+                                )}
+                                {row.errors && row.errors.length > 0 && (
+                                  <div className="mt-1 text-xs text-destructive">
+                                    {row.errors.map((err, i) => (
+                                      <div key={`${row.id}-err-${i}`}>
+                                        {err}
                                       </div>
-                                    )}
-                                </TableCell>
+                                    ))}
+                                  </div>
+                                )}
+                                {row.status !== "COMMITTED" &&
+                                  row.status !== "SKIPPED" && (
+                                    <div className="mt-2 flex gap-1">
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-7 w-7"
+                                        onClick={() => handleEditRow(typedRow)}
+                                      >
+                                        <Edit className="h-3.5 w-3.5" />
+                                      </Button>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-7 w-7"
+                                        onClick={() => setDeletingRowId(row.id)}
+                                      >
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                      </Button>
+                                    </div>
+                                  )}
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Desktop table layout */}
+                        <div className="hidden md:block overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead className="w-16">#</TableHead>
+                                <TableHead>Source</TableHead>
+                                <TableHead>Court</TableHead>
+                                <TableHead>Start</TableHead>
+                                <TableHead>End</TableHead>
+                                <TableHead>Reason</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead className="w-24">Actions</TableHead>
                               </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </div>
+                            </TableHeader>
+                            <TableBody>
+                              {filteredRows.map((row) => (
+                                <TableRow
+                                  key={row.id}
+                                  className={cn(
+                                    row.status === "ERROR" &&
+                                      "bg-destructive/5",
+                                  )}
+                                >
+                                  <TableCell className="font-mono text-xs text-muted-foreground">
+                                    {row.lineNumber}
+                                  </TableCell>
+                                  <TableCell className="max-w-[180px] truncate text-xs text-muted-foreground">
+                                    {getRowSourceLabel(row as RowRecord)}
+                                  </TableCell>
+                                  <TableCell>
+                                    {courts.find(
+                                      (c) => c.court.id === row.courtId,
+                                    )?.court.label ??
+                                      row.courtLabel ?? (
+                                        <span className="text-muted-foreground">
+                                          Unmapped
+                                        </span>
+                                      )}
+                                  </TableCell>
+                                  <TableCell>
+                                    {row.startTime ? (
+                                      <span>
+                                        {formatDateShort(
+                                          new Date(row.startTime),
+                                        )}{" "}
+                                        {formatTime(new Date(row.startTime))}
+                                      </span>
+                                    ) : (
+                                      <span className="text-muted-foreground">
+                                        -
+                                      </span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    {row.endTime ? (
+                                      <span>
+                                        {formatDateShort(new Date(row.endTime))}{" "}
+                                        {formatTime(new Date(row.endTime))}
+                                      </span>
+                                    ) : (
+                                      <span className="text-muted-foreground">
+                                        -
+                                      </span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="max-w-[200px] truncate">
+                                    {row.reason ?? (
+                                      <span className="text-muted-foreground">
+                                        -
+                                      </span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    <div className="space-y-1">
+                                      {getStatusBadge(row.status)}
+                                      {row.errors && row.errors.length > 0 && (
+                                        <div className="text-xs text-destructive">
+                                          {row.errors.map((err, i) => (
+                                            <div key={`${row.id}-err-${i}`}>
+                                              {err}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </TableCell>
+                                  <TableCell>
+                                    {row.status !== "COMMITTED" &&
+                                      row.status !== "SKIPPED" && (
+                                        <div className="flex gap-1">
+                                          <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() =>
+                                              handleEditRow(row as RowRecord)
+                                            }
+                                          >
+                                            <Edit className="h-4 w-4" />
+                                          </Button>
+                                          <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() =>
+                                              setDeletingRowId(row.id)
+                                            }
+                                          >
+                                            <Trash2 className="h-4 w-4" />
+                                          </Button>
+                                        </div>
+                                      )}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      </>
                     )}
                   </>
                 )}
