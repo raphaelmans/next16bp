@@ -25,6 +25,7 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
   onConvertWalkIn,
   onResizePreview,
   onResizeCommit,
+  onSelect,
 }: {
   block: CourtBlockItem;
   topOffset: number;
@@ -38,6 +39,7 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
   isImported?: boolean;
   onReplaceWithGuest?: (blockId: string) => void;
   onConvertWalkIn?: (blockId: string) => void;
+  onSelect?: (blockId: string) => void;
   onResizePreview?: (args: {
     blockId: string;
     edge: "start" | "end";
@@ -68,7 +70,7 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
     <div
       style={{ top: topOffset, height }}
       className={cn(
-        "pointer-events-auto absolute rounded-lg border bg-card text-card-foreground shadow-sm",
+        "pointer-events-auto absolute overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm",
         compact
           ? "left-0.5 right-0.5 border-l-2 px-1 py-0.5"
           : "left-1 right-1 border-l-4 px-3 py-2",
@@ -77,7 +79,21 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
         effectiveDisabled ? "cursor-not-allowed" : "cursor-default",
         isPending && "opacity-80",
         isPastDay && "opacity-50 saturate-50",
+        onSelect && "cursor-pointer",
       )}
+      role={onSelect ? "button" : undefined}
+      tabIndex={onSelect ? 0 : undefined}
+      onClick={onSelect ? () => onSelect(block.id) : undefined}
+      onKeyDown={
+        onSelect
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onSelect(block.id);
+              }
+            }
+          : undefined
+      }
     >
       <div
         className={cn(

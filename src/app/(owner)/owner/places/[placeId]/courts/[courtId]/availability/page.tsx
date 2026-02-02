@@ -74,6 +74,7 @@ import { CustomBlockDialog } from "@/features/owner/components/booking-studio/cu
 import { GuestBookingDialog } from "@/features/owner/components/booking-studio/guest-booking-dialog";
 import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-studio/mobile-create-block-drawer";
 import { MobileDayBlocksList } from "@/features/owner/components/booking-studio/mobile-day-blocks-list";
+import { MobileManageBlockPeekBar } from "@/features/owner/components/booking-studio/mobile-manage-block-peek-bar";
 import { MobileSelectionPeekBar } from "@/features/owner/components/booking-studio/mobile-selection-peek-bar";
 import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
 import { computeClampedResizeRange } from "@/features/owner/components/booking-studio/resize-helpers";
@@ -183,6 +184,9 @@ function OwnerCourtAvailabilityInner() {
   const setPendingRemoveBlockId = useBookingStudio(
     (s) => s.setPendingRemoveBlockId,
   );
+  const [selectedManageBlockId, setSelectedManageBlockId] = React.useState<
+    string | null
+  >(null);
   const guestBookingOpen = useBookingStudio((s) => s.guestBookingOpen);
   const closeGuestBookingDialog = useBookingStudio(
     (s) => s.closeGuestBookingDialog,
@@ -1864,7 +1868,7 @@ function OwnerCourtAvailabilityInner() {
 
                 {/* Center — timeline */}
                 <Card>
-                  <CardContent className="space-y-4 p-6 pb-6 lg:pb-6">
+                  <CardContent className="space-y-4 p-6 pr-8 pb-6 lg:pr-6 lg:pb-6">
                     {/* Mobile header */}
                     <div className="space-y-3 lg:hidden">
                       <div className="flex flex-wrap items-center gap-3">
@@ -2024,6 +2028,11 @@ function OwnerCourtAvailabilityInner() {
                                         !pendingBlockIds.has(block.id) &&
                                         !isOptimisticBlockId(block.id)
                                           ? handleResizeCommit
+                                          : undefined
+                                      }
+                                      onSelect={
+                                        isMobile
+                                          ? setSelectedManageBlockId
                                           : undefined
                                       }
                                     />
@@ -2197,6 +2206,23 @@ function OwnerCourtAvailabilityInner() {
           <MobileSelectionPeekBar
             selectedTimeLabel={selectedTimeLabel}
             onOpen={() => setMobileDrawerOpen(true)}
+          />
+        )}
+
+        {isMobile && (
+          <MobileManageBlockPeekBar
+            block={
+              selectedManageBlockId
+                ? (activeBlocksById.get(selectedManageBlockId) ?? null)
+                : null
+            }
+            timeZone={placeTimeZone}
+            onDismiss={() => setSelectedManageBlockId(null)}
+            onRemove={(blockId) => {
+              handleCancelBlock(blockId);
+              setSelectedManageBlockId(null);
+            }}
+            isCancelPending={cancelBlock.isPending}
           />
         )}
       </div>
