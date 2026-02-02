@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Ban,
-  CalendarDays,
-  Clipboard,
-  Clock,
-  ExternalLink,
-  MoreHorizontal,
-  Pencil,
-} from "lucide-react";
+import { Ban, CalendarDays, Clock, MoreHorizontal, Pencil } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -55,9 +47,7 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
   };
 
   const handleRowClick = (courtId: string, placeId: string) => {
-    router.push(
-      appRoutes.owner.places.courts.setup(placeId, courtId, "details"),
-    );
+    router.push(appRoutes.owner.places.courts.edit(placeId, courtId));
   };
 
   return (
@@ -227,18 +217,6 @@ function CourtActionsDropdown({
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
           <Link
-            href={appRoutes.owner.places.courts.setup(
-              court.placeId,
-              court.id,
-              "details",
-            )}
-          >
-            <Clipboard className="mr-2 h-4 w-4" />
-            Setup Wizard
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link
             href={appRoutes.owner.places.courts.edit(court.placeId, court.id)}
           >
             <Pencil className="mr-2 h-4 w-4" />
@@ -260,32 +238,11 @@ function CourtActionsDropdown({
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link
-            href={appRoutes.owner.places.courts.availability(
-              court.placeId,
-              court.id,
-            )}
-          >
-            <Clock className="mr-2 h-4 w-4" />
-            Availability
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link
             href={`${appRoutes.owner.reservations}?placeId=${court.placeId}&courtId=${court.id}`}
           >
             <CalendarDays className="mr-2 h-4 w-4" />
             View Bookings
           </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <a
-            href={appRoutes.places.detail(court.placeSlug ?? court.placeId)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <ExternalLink className="mr-2 h-4 w-4" />
-            View Public Page
-          </a>
         </DropdownMenuItem>
 
         {court.status === "active" && (
