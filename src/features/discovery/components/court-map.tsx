@@ -86,9 +86,12 @@ export function PlaceMap({
 
   return (
     <div
-      className={cn("relative h-[600px] rounded-xl overflow-hidden", className)}
+      className={cn(
+        "flex flex-col gap-4 md:relative md:h-[600px] md:rounded-xl md:overflow-hidden",
+        className,
+      )}
     >
-      <div className="absolute inset-0">
+      <div className="relative h-[320px] overflow-hidden rounded-xl border border-border/60 sm:h-[360px] md:absolute md:inset-0 md:h-auto md:rounded-none md:border-0">
         <GoogleMapsEmbed
           title={mapTitle}
           lat={selectedPlace?.lat}
@@ -103,32 +106,32 @@ export function PlaceMap({
             <LocationPin size={48} className="text-accent drop-shadow-lg" />
           </div>
         )}
+
+        {openInMapsUrl && (
+          <div className="absolute top-3 right-3 z-10 sm:top-4 sm:right-4">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="bg-background/90 backdrop-blur"
+            >
+              <a href={openInMapsUrl} target="_blank" rel="noopener noreferrer">
+                Open in Google Maps
+                <ExternalLink className="ml-2 h-3 w-3" />
+              </a>
+            </Button>
+          </div>
+        )}
       </div>
 
-      {openInMapsUrl && (
-        <div className="absolute top-4 right-4 z-10">
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className="bg-background/90 backdrop-blur"
-          >
-            <a href={openInMapsUrl} target="_blank" rel="noopener noreferrer">
-              Open in Google Maps
-              <ExternalLink className="ml-2 h-3 w-3" />
-            </a>
-          </Button>
-        </div>
-      )}
-
-      <ScrollArea className="absolute bottom-4 left-4 right-4 z-10">
-        <div className="flex gap-3">
+      <ScrollArea className="md:absolute md:bottom-4 md:left-4 md:right-4 md:z-10">
+        <div className="flex flex-col gap-3 md:flex-row">
           {places.map((place) => (
             <button
               type="button"
               key={place.id}
               className={cn(
-                "w-72 shrink-0 text-left cursor-pointer transition-all bg-transparent border-none p-0",
+                "w-full shrink-0 text-left cursor-pointer transition-all bg-transparent border-none p-0 md:w-72",
                 place.id === selectedPlaceId &&
                   "ring-2 ring-primary rounded-xl",
               )}
@@ -143,7 +146,7 @@ export function PlaceMap({
             </button>
           ))}
         </div>
-        <ScrollBar orientation="horizontal" />
+        <ScrollBar orientation="horizontal" className="hidden md:flex" />
       </ScrollArea>
     </div>
   );
