@@ -232,6 +232,20 @@
   --font-heading: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
 }
 
+@keyframes courtline-scan {
+  0% {
+    transform: translateX(-60%);
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(60%);
+    opacity: 0;
+  }
+}
+
 /* =============================================================================
    BASE STYLES
    ============================================================================= */

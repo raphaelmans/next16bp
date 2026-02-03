@@ -10,6 +10,7 @@ import {
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { NavigationProgress } from "@/components/navigation/navigation-progress";
 import { trpc } from "@/trpc/client";
 import { getQueryClient } from "@/trpc/query-client";
 
@@ -54,6 +55,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <NuqsAdapter>
+      <NavigationProgress />
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           {children}

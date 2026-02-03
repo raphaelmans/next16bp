@@ -56,36 +56,8 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
     0,
   );
 
-  return (
-    // biome-ignore lint/a11y/noStaticElementInteractions: this block is conditionally interactive (role/tabIndex/keyboard handlers set) when selectable.
-    <div
-      style={{ top: topOffset, height }}
-      className={cn(
-        "pointer-events-auto absolute overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm",
-        compact
-          ? "left-0.5 right-0.5 border-l-2 px-1 py-0.5"
-          : "left-1 right-1 border-l-4 px-3 py-2",
-        isWalkIn ? "border-l-primary" : "border-l-amber-500",
-        "group",
-        effectiveDisabled ? "cursor-not-allowed" : "cursor-default",
-        isPending && "opacity-80",
-        isPastDay && "opacity-50 saturate-50",
-        onSelect && "cursor-pointer",
-      )}
-      role={onSelect ? "button" : undefined}
-      tabIndex={onSelect ? 0 : undefined}
-      onClick={onSelect ? () => onSelect(block.id) : undefined}
-      onKeyDown={
-        onSelect
-          ? (e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onSelect(block.id);
-              }
-            }
-          : undefined
-      }
-    >
+  const content = (
+    <>
       <div
         className={cn(
           "flex items-center justify-between gap-1",
@@ -115,6 +87,7 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
           </span>
         )}
       </div>
+
       {!compact && (
         <div className="mt-1 text-xs font-medium">
           {formatTimeRangeInTimeZone(block.startTime, block.endTime, timeZone)}
@@ -152,6 +125,39 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
           />
         </>
       ) : null}
+    </>
+  );
+
+  const className = cn(
+    "pointer-events-auto absolute overflow-hidden rounded-lg border bg-card text-card-foreground shadow-sm",
+    compact
+      ? "left-0.5 right-0.5 border-l-2 px-1 py-0.5"
+      : "left-1 right-1 border-l-4 px-3 py-2",
+    isWalkIn ? "border-l-primary" : "border-l-amber-500",
+    "group",
+    effectiveDisabled ? "cursor-not-allowed" : "cursor-default",
+    isPending && "opacity-80",
+    isPastDay && "opacity-50 saturate-50",
+    onSelect && "cursor-pointer",
+  );
+
+  if (onSelect) {
+    return (
+      <button
+        type="button"
+        style={{ top: topOffset, height }}
+        className={cn(className, "text-left")}
+        onClick={() => onSelect(block.id)}
+        disabled={effectiveDisabled}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <div style={{ top: topOffset, height }} className={className}>
+      {content}
     </div>
   );
 });

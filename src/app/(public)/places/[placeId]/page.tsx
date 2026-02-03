@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import Script from "next/script";
 import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
-import { createServerCaller } from "@/lib/shared/infra/trpc/server";
+import { getPlaceDetailsByIdOrSlug } from "@/lib/shared/lib/place-details.server";
 import { isUuid } from "@/lib/slug";
 import PlaceDetailClient from "./place-detail-client";
 
@@ -26,10 +26,7 @@ export default async function PlaceDetailPage({
   const { placeId } = await params;
 
   try {
-    const caller = await createServerCaller(appRoutes.places.detail(placeId));
-    const placeDetails = await caller.place.getByIdOrSlug({
-      placeIdOrSlug: placeId,
-    });
+    const placeDetails = await getPlaceDetailsByIdOrSlug(placeId);
     const place = placeDetails.place;
     const slug = place.slug;
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
-import { createServerCaller } from "@/lib/shared/infra/trpc/server";
+import { getPlaceDetailsByIdOrSlug } from "@/lib/shared/lib/place-details.server";
 
 export { default } from "../../places/[placeId]/page";
 
@@ -64,10 +64,7 @@ export async function generateMetadata({
   let imageUrl: string | undefined;
 
   try {
-    const caller = await createServerCaller(fallbackPath);
-    const placeDetails = await caller.place.getByIdOrSlug({
-      placeIdOrSlug: id,
-    });
+    const placeDetails = await getPlaceDetailsByIdOrSlug(id);
     const place = placeDetails.place;
     const sports = placeDetails.sports
       .map((sport) => sport.name)
