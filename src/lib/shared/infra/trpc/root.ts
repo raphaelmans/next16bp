@@ -2,6 +2,7 @@ import { auditRouter } from "@/lib/modules/audit/audit.router";
 import { authRouter } from "@/lib/modules/auth/auth.router";
 import { availabilityRouter } from "@/lib/modules/availability/availability.router";
 import { bookingsImportRouter } from "@/lib/modules/bookings-import/bookings-import.router";
+import { chatPocRouter } from "@/lib/modules/chat/chat-poc.router";
 import { claimAdminRouter } from "@/lib/modules/claim-request/admin/claim-admin.router";
 import { claimRequestRouter } from "@/lib/modules/claim-request/claim-request.router";
 import { contactRouter } from "@/lib/modules/contact/contact.router";
@@ -51,6 +52,7 @@ export const appRouter = router({
   ownerSetup: ownerSetupRouter,
   paymentProof: paymentProofRouter,
   claimRequest: claimRequestRouter,
+  chatPoc: chatPocRouter,
   contact: contactRouter,
   audit: auditRouter,
   availability: availabilityRouter,

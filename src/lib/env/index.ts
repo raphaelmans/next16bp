@@ -18,6 +18,13 @@ const runtimeAppUrl =
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string(),
+    CHAT_PROVIDER: z.enum(["stream"]).optional(),
+    CHAT_POC_ENABLED: z
+      .string()
+      .transform((value) => value === "true")
+      .optional(),
+    STREAM_CHAT_API_KEY: z.string().min(1).optional(),
+    STREAM_CHAT_API_SECRET: z.string().min(1).optional(),
     GOOGLE_MAPS_API_KEY: z.string().min(1).optional(),
     OPENAI_API_KEY: z.string().min(1).optional(),
     SUPABASE_URL: z.string().url(),
