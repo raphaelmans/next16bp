@@ -162,6 +162,20 @@ export interface IPlaceRepository {
     ctx?: RequestContext,
   ): Promise<PlaceCardMetaItem[]>;
   listAmenities(ctx?: RequestContext): Promise<string[]>;
+  deleteAmenitiesByPlaceId(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<void>;
+  createAmenities(
+    placeId: string,
+    names: string[],
+    ctx?: RequestContext,
+  ): Promise<void>;
+  replaceAmenitiesByPlaceId(
+    placeId: string,
+    names: string[],
+    ctx?: RequestContext,
+  ): Promise<void>;
   create(data: InsertPlace, ctx?: RequestContext): Promise<PlaceRecord>;
   update(
     id: string,
@@ -1136,6 +1150,43 @@ export class PlaceRepository implements IPlaceRepository {
       .filter((name) => name.length > 0);
 
     return Array.from(new Set(normalized)).sort((a, b) => a.localeCompare(b));
+  }
+
+  async deleteAmenitiesByPlaceId(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<void> {
+    const client = this.getClient(ctx);
+    await client.delete(placeAmenity).where(eq(placeAmenity.placeId, placeId));
+  }
+
+  async createAmenities(
+    placeId: string,
+    names: string[],
+    ctx?: RequestContext,
+  ): Promise<void> {
+    const client = this.getClient(ctx);
+    const normalized = Array.from(
+      new Set(
+        names.map((name) => name.trim()).filter((name) => name.length > 0),
+      ),
+    );
+
+    if (normalized.length === 0) return;
+
+    await client
+      .insert(placeAmenity)
+      .values(normalized.map((name) => ({ placeId, name })))
+      .onConflictDoNothing();
+  }
+
+  async replaceAmenitiesByPlaceId(
+    placeId: string,
+    names: string[],
+    ctx?: RequestContext,
+  ): Promise<void> {
+    await this.deleteAmenitiesByPlaceId(placeId, ctx);
+    await this.createAmenities(placeId, names, ctx);
   }
 
   async create(data: InsertPlace, ctx?: RequestContext): Promise<PlaceRecord> {

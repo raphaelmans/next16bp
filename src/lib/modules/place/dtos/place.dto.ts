@@ -50,6 +50,7 @@ export const CreatePlaceSchema = z.object({
   phoneNumber: S.place.phoneNumber,
   viberInfo: S.place.viberInfo,
   otherContactInfo: S.place.otherContactInfo,
+  amenities: z.array(S.place.amenity).optional(),
 });
 
 export const UpdatePlaceSchema = z.object({
@@ -68,6 +69,7 @@ export const UpdatePlaceSchema = z.object({
   phoneNumber: S.place.phoneNumber,
   viberInfo: S.place.viberInfo,
   otherContactInfo: S.place.otherContactInfo,
+  amenities: z.array(S.place.amenity).optional(),
   isActive: z.boolean().optional(),
 });
 

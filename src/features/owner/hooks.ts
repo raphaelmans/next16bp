@@ -1422,6 +1422,7 @@ export function usePlaceForm({
         phoneNumber: data.phoneNumber || undefined,
         viberInfo: data.viberInfo || undefined,
         otherContactInfo: data.otherContactInfo || undefined,
+        amenities: data.amenities,
       });
       return;
     }
@@ -1449,6 +1450,7 @@ export function usePlaceForm({
       phoneNumber: data.phoneNumber || undefined,
       viberInfo: data.viberInfo || undefined,
       otherContactInfo: data.otherContactInfo || undefined,
+      amenities: data.amenities.length > 0 ? data.amenities : undefined,
     });
   };
 

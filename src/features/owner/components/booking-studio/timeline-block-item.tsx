@@ -57,6 +57,7 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
   );
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: this block is conditionally interactive (role/tabIndex/keyboard handlers set) when selectable.
     <div
       style={{ top: topOffset, height }}
       className={cn(

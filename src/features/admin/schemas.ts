@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PLACE_AMENITIES } from "@/common/amenities";
 import { allowEmptyString, S, V } from "@/common/schemas";
 
 // ============================================================================
@@ -108,21 +109,7 @@ export const CITIES = [
   "Alabang",
 ];
 
-export const AMENITIES = [
-  "Parking",
-  "Restrooms",
-  "Lights",
-  "Showers",
-  "Locker Rooms",
-  "Equipment Rental",
-  "Pro Shop",
-  "Seating Area",
-  "Food/Drinks",
-  "WiFi",
-  "Air Conditioning",
-  "Covered Courts",
-  "Pet Friendly",
-];
+export const AMENITIES = PLACE_AMENITIES;
 
 export const curatedCourtSchema = z.object({
   name: S.place.name,

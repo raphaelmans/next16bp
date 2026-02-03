@@ -1,0 +1,15 @@
+export const PLACE_AMENITIES = [
+  "Parking",
+  "Restrooms",
+  "Lights",
+  "Showers",
+  "Locker Rooms",
+  "Equipment Rental",
+  "Pro Shop",
+  "Seating Area",
+  "Food/Drinks",
+  "WiFi",
+  "Air Conditioning",
+  "Covered Courts",
+  "Pet Friendly",
+] as const;

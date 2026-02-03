@@ -29,6 +29,7 @@ export const buildFormDefaults = (
   phoneNumber: values?.phoneNumber ?? "",
   viberInfo: values?.viberInfo ?? "",
   otherContactInfo: values?.otherContactInfo ?? "",
+  amenities: values?.amenities ?? defaultPlaceFormValues.amenities ?? [],
 });
 
 export const normalizeFormValues = (
@@ -63,4 +64,7 @@ export const normalizeFormValues = (
   otherContactInfo: values.otherContactInfo?.trim()
     ? values.otherContactInfo.trim()
     : undefined,
+  amenities: Array.isArray(values.amenities)
+    ? values.amenities
+    : (defaultPlaceFormValues.amenities ?? []),
 });

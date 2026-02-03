@@ -154,6 +154,7 @@ export default function EditPlacePage() {
     phoneNumber: placeData.contactDetail?.phoneNumber ?? "",
     viberInfo: placeData.contactDetail?.viberInfo ?? "",
     otherContactInfo: placeData.contactDetail?.otherContactInfo ?? "",
+    amenities: (placeData.amenities ?? []).map((amenity) => amenity.name),
   };
   const deleteConfirmationMatches = deleteConfirmValue.trim() === place.name;
 

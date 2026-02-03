@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import { PLACE_AMENITIES } from "@/common/amenities";
 import {
   StandardFormCheckbox,
   StandardFormCombobox,
@@ -17,6 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -202,6 +204,49 @@ export function PlaceForm({
                 ref={field.ref}
               />
             )}
+          </StandardFormField>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Amenities</CardTitle>
+          <CardDescription>
+            Select the amenities available at this venue.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <StandardFormField<PlaceFormValues> name="amenities">
+            {({ field }) => {
+              const current = Array.isArray(field.value)
+                ? (field.value as string[])
+                : [];
+
+              return (
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                  {PLACE_AMENITIES.map((amenity) => (
+                    <div
+                      key={amenity}
+                      className="flex items-start gap-3 text-sm font-normal"
+                    >
+                      <Checkbox
+                        checked={current.includes(amenity)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            field.onChange([...current, amenity]);
+                          } else {
+                            field.onChange(
+                              current.filter((value) => value !== amenity),
+                            );
+                          }
+                        }}
+                      />
+                      <span>{amenity}</span>
+                    </div>
+                  ))}
+                </div>
+              );
+            }}
           </StandardFormField>
         </CardContent>
       </Card>

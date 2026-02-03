@@ -98,6 +98,7 @@ export const placeFormSchema = z.object({
   phoneNumber: optionalText(V.place.phoneNumber.max),
   viberInfo: optionalText(V.place.viberInfo.max),
   otherContactInfo: optionalText(V.place.otherContactInfo.max),
+  amenities: z.array(S.place.amenity).default([]),
 });
 
 export type PlaceFormData = z.infer<typeof placeFormSchema>;
@@ -106,6 +107,7 @@ export const defaultPlaceFormValues: Partial<PlaceFormData> = {
   timeZone: "Asia/Manila",
   country: "PH",
   isActive: true,
+  amenities: [],
 };
 
 export const PLACE_TIME_ZONES = [

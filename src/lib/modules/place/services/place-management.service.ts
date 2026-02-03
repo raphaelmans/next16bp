@@ -133,6 +133,22 @@ export class PlaceManagementService implements IPlaceManagementService {
         ctx,
       );
 
+      if (data.amenities && data.amenities.length > 0) {
+        const normalizedAmenities = Array.from(
+          new Set(
+            data.amenities
+              .map((amenity) => amenity.trim())
+              .filter((amenity) => amenity.length > 0),
+          ),
+        );
+
+        await this.placeRepository.createAmenities(
+          created.id,
+          normalizedAmenities,
+          ctx,
+        );
+      }
+
       logger.info(
         {
           event: "place.created",
@@ -163,6 +179,7 @@ export class PlaceManagementService implements IPlaceManagementService {
 
       const {
         placeId,
+        amenities,
         facebookUrl,
         instagramUrl,
         websiteUrl,
@@ -210,6 +227,22 @@ export class PlaceManagementService implements IPlaceManagementService {
         },
         ctx,
       );
+
+      if (amenities !== undefined) {
+        const normalizedAmenities = Array.from(
+          new Set(
+            amenities
+              .map((amenity) => amenity.trim())
+              .filter((amenity) => amenity.length > 0),
+          ),
+        );
+
+        await this.placeRepository.replaceAmenitiesByPlaceId(
+          placeId,
+          normalizedAmenities,
+          ctx,
+        );
+      }
 
       logger.info(
         {
