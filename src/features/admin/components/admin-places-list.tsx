@@ -1,12 +1,15 @@
 "use client";
 
 import {
+  ChevronDown,
+  Copy,
   Edit,
   ExternalLink,
   History,
   Loader2,
   MapPin,
   MoreHorizontal,
+  Phone,
   Power,
   Search,
   Trash2,
@@ -72,6 +75,7 @@ import {
   type CourtStatus,
   type CourtType,
   type FeaturedFilter,
+  useAdminCourt,
   useAdminCourts,
   useDeleteAdminPlace,
   useToggleCourtStatus,
@@ -110,6 +114,9 @@ export function AdminPlacesList({
     React.useState<FeaturedFilter>("all");
   const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState(1);
+  const [expandedPlaceId, setExpandedPlaceId] = React.useState<string | null>(
+    null,
+  );
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [deleteConfirmValue, setDeleteConfirmValue] = React.useState("");
   const [deleteTarget, setDeleteTarget] = React.useState<AdminCourt | null>(
@@ -175,6 +182,7 @@ export function AdminPlacesList({
 
   const toggleStatusMutation = useToggleCourtStatus();
   const deletePlaceMutation = useDeleteAdminPlace();
+  const expandedDetailsQuery = useAdminCourt(expandedPlaceId ?? "");
 
   const handleToggleStatus = (placeId: string, currentStatus: CourtStatus) => {
     const newStatus = currentStatus === "active" ? "inactive" : "active";
@@ -236,6 +244,30 @@ export function AdminPlacesList({
       setPage(1);
     }
   }, [filterKey, page]);
+
+  React.useEffect(() => {
+    if (!expandedPlaceId) {
+      return;
+    }
+    const stillOnPage =
+      courtsData?.courts.some((court) => court.id === expandedPlaceId) ?? false;
+    if (!stillOnPage) {
+      setExpandedPlaceId(null);
+    }
+  }, [courtsData?.courts, expandedPlaceId]);
+
+  const handleToggleExpanded = (placeId: string) => {
+    setExpandedPlaceId((current) => (current === placeId ? null : placeId));
+  };
+
+  const handleCopy = async (label: string, value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      toast.success(`${label} copied`);
+    } catch {
+      toast.error("Failed to copy");
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -386,6 +418,7 @@ export function AdminPlacesList({
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[44px]" />
                   <TableHead>{entityName}</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead>Owner</TableHead>
@@ -395,132 +428,572 @@ export function AdminPlacesList({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {courtsData.courts.map((place) => (
-                  <TableRow key={place.id} className="hover:bg-muted/50">
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        {place.imageUrl && (
-                          <Image
-                            src={place.imageUrl}
-                            alt={place.name}
-                            width={48}
-                            height={36}
-                            className="w-12 h-9 object-cover rounded"
-                          />
-                        )}
-                        <div>
-                          <p className="font-medium">{place.name}</p>
-                          <p className="text-sm text-muted-foreground flex items-center gap-1">
-                            <MapPin className="h-3 w-3" />
-                            {place.city}
-                          </p>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          place.type === "reservable" ? "default" : "secondary"
-                        }
-                      >
-                        {place.type.toUpperCase()}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {place.organizationName || (
-                        <span className="text-muted-foreground">-</span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={cn(
-                            "w-2 h-2 rounded-full",
-                            place.status === "active"
-                              ? "bg-success"
-                              : "bg-muted-foreground",
-                          )}
-                        />
-                        <span className="text-sm capitalize">
-                          {place.status}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {place.featuredRank && place.featuredRank > 0 ? (
-                        <Badge variant="paid" className="text-[10px]">
-                          #{place.featuredRank}
-                        </Badge>
-                      ) : (
-                        <span className="text-muted-foreground">-</span>
-                      )}
-                    </TableCell>
-                    <TableCell
-                      className="text-right"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link
-                              href={appRoutes.places.detail(
-                                place.slug ?? place.id,
-                              )}
-                              target="_blank"
-                            >
-                              <ExternalLink className="h-4 w-4 mr-2" />
-                              View Details
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link
-                              href={`${appRoutes.admin.courts.base}/${place.id}`}
-                            >
-                              <Edit className="h-4 w-4 mr-2" />
-                              Edit {entityName}
-                            </Link>
-                          </DropdownMenuItem>
+                {courtsData.courts.map((place) => {
+                  const isExpanded = expandedPlaceId === place.id;
+                  const details = isExpanded ? expandedDetailsQuery.data : null;
+                  const isDetailsLoading =
+                    isExpanded && expandedDetailsQuery.isLoading;
+                  const detailsError = isExpanded
+                    ? expandedDetailsQuery.error
+                    : null;
 
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() =>
-                              handleToggleStatus(place.id, place.status)
-                            }
-                            disabled={toggleStatusMutation.isPending}
-                          >
-                            <Power className="h-4 w-4 mr-2" />
-                            {place.status === "active"
-                              ? "Deactivate"
-                              : "Activate"}
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem>
-                            <History className="h-4 w-4 mr-2" />
-                            View History
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setDeleteTarget(place);
-                              setDeleteConfirmValue("");
-                              setDeleteDialogOpen(true);
+                  return (
+                    <React.Fragment key={place.id}>
+                      <TableRow
+                        className={cn(
+                          "hover:bg-muted/50",
+                          isExpanded && "bg-muted/30",
+                        )}
+                      >
+                        <TableCell className="p-2 align-top">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleToggleExpanded(place.id);
                             }}
-                            className="text-destructive focus:text-destructive"
-                            disabled={deletePlaceMutation.isPending}
+                            aria-label={
+                              isExpanded
+                                ? `Collapse ${place.name}`
+                                : `Expand ${place.name}`
+                            }
                           >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete {entityName}
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                            <ChevronDown
+                              className={cn(
+                                "h-4 w-4 transition-transform duration-200",
+                                isExpanded && "rotate-180",
+                              )}
+                            />
+                          </Button>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            {place.imageUrl && (
+                              <Image
+                                src={place.imageUrl}
+                                alt={place.name}
+                                width={48}
+                                height={36}
+                                className="w-12 h-9 object-cover rounded"
+                              />
+                            )}
+                            <div>
+                              <p className="font-medium">{place.name}</p>
+                              <p className="text-sm text-muted-foreground flex items-center gap-1">
+                                <MapPin className="h-3 w-3" />
+                                {place.city}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              place.type === "reservable"
+                                ? "default"
+                                : "secondary"
+                            }
+                          >
+                            {place.type.toUpperCase()}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {place.organizationName || (
+                            <span className="text-muted-foreground">-</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={cn(
+                                "w-2 h-2 rounded-full",
+                                place.status === "active"
+                                  ? "bg-success"
+                                  : "bg-muted-foreground",
+                              )}
+                            />
+                            <span className="text-sm capitalize">
+                              {place.status}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {place.featuredRank && place.featuredRank > 0 ? (
+                            <Badge variant="paid" className="text-[10px]">
+                              #{place.featuredRank}
+                            </Badge>
+                          ) : (
+                            <span className="text-muted-foreground">-</span>
+                          )}
+                        </TableCell>
+                        <TableCell
+                          className="text-right"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem asChild>
+                                <Link
+                                  href={appRoutes.places.detail(
+                                    place.slug ?? place.id,
+                                  )}
+                                  target="_blank"
+                                >
+                                  <ExternalLink className="h-4 w-4 mr-2" />
+                                  View Details
+                                </Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem asChild>
+                                <Link
+                                  href={`${appRoutes.admin.courts.base}/${place.id}`}
+                                >
+                                  <Edit className="h-4 w-4 mr-2" />
+                                  Edit {entityName}
+                                </Link>
+                              </DropdownMenuItem>
+
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleToggleStatus(place.id, place.status)
+                                }
+                                disabled={toggleStatusMutation.isPending}
+                              >
+                                <Power className="h-4 w-4 mr-2" />
+                                {place.status === "active"
+                                  ? "Deactivate"
+                                  : "Activate"}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem>
+                                <History className="h-4 w-4 mr-2" />
+                                View History
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setDeleteTarget(place);
+                                  setDeleteConfirmValue("");
+                                  setDeleteDialogOpen(true);
+                                }}
+                                className="text-destructive focus:text-destructive"
+                                disabled={deletePlaceMutation.isPending}
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete {entityName}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+
+                      {isExpanded && (
+                        <TableRow className="bg-muted/30">
+                          <TableCell colSpan={7} className="p-0">
+                            <div className="border-t">
+                              <div className="px-5 py-4">
+                                <div className="flex flex-wrap items-center justify-between gap-3">
+                                  <div className="flex items-center gap-2">
+                                    <Badge
+                                      variant="outline"
+                                      className="text-[11px]"
+                                    >
+                                      Inline details
+                                    </Badge>
+                                    <span className="text-sm text-muted-foreground">
+                                      {place.slug ? place.slug : place.id}
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() =>
+                                        void handleCopy("Place ID", place.id)
+                                      }
+                                    >
+                                      <Copy className="h-4 w-4 mr-2" />
+                                      Copy ID
+                                    </Button>
+                                    <Button variant="outline" size="sm" asChild>
+                                      <Link
+                                        href={appRoutes.places.detail(
+                                          place.slug ?? place.id,
+                                        )}
+                                        target="_blank"
+                                      >
+                                        <ExternalLink className="h-4 w-4 mr-2" />
+                                        Open public
+                                      </Link>
+                                    </Button>
+                                    <Button size="sm" asChild>
+                                      <Link
+                                        href={`${appRoutes.admin.courts.base}/${place.id}`}
+                                      >
+                                        <Edit className="h-4 w-4 mr-2" />
+                                        Edit
+                                      </Link>
+                                    </Button>
+                                  </div>
+                                </div>
+
+                                <div className="mt-4 grid gap-3 md:grid-cols-2">
+                                  <div className="rounded-lg border bg-background/60 p-4">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <h3 className="text-sm font-heading font-semibold">
+                                        Location
+                                      </h3>
+                                      <Badge
+                                        variant="secondary"
+                                        className="text-[11px]"
+                                      >
+                                        {place.type}
+                                      </Badge>
+                                    </div>
+                                    {isDetailsLoading ? (
+                                      <div className="mt-3 text-sm text-muted-foreground">
+                                        Loading details...
+                                      </div>
+                                    ) : details ? (
+                                      <div className="mt-3 space-y-2 text-sm">
+                                        <div>
+                                          <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                                            Address
+                                          </div>
+                                          <div className="font-medium">
+                                            {details.place.address}
+                                          </div>
+                                          <div className="text-muted-foreground">
+                                            {details.place.city},{" "}
+                                            {details.place.province},{" "}
+                                            {details.place.country}
+                                          </div>
+                                        </div>
+                                        <div className="grid gap-2 sm:grid-cols-2">
+                                          <div>
+                                            <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                                              Time zone
+                                            </div>
+                                            <div className="font-medium">
+                                              {details.place.timeZone}
+                                            </div>
+                                          </div>
+                                          <div>
+                                            <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                                              extGPlaceId
+                                            </div>
+                                            <div className="font-medium">
+                                              {details.place.extGPlaceId || "-"}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ) : detailsError ? (
+                                      <div className="mt-3 text-sm">
+                                        <p className="text-destructive">
+                                          Failed to load details.
+                                        </p>
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          className="mt-2"
+                                          onClick={() =>
+                                            expandedDetailsQuery.refetch()
+                                          }
+                                        >
+                                          Retry
+                                        </Button>
+                                      </div>
+                                    ) : null}
+                                  </div>
+
+                                  <div className="rounded-lg border bg-background/60 p-4">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <h3 className="text-sm font-heading font-semibold">
+                                        Ownership
+                                      </h3>
+                                      {details?.place.claimStatus && (
+                                        <Badge
+                                          variant="outline"
+                                          className="text-[11px]"
+                                        >
+                                          {details.place.claimStatus}
+                                        </Badge>
+                                      )}
+                                    </div>
+                                    {isDetailsLoading ? (
+                                      <div className="mt-3 text-sm text-muted-foreground">
+                                        Loading details...
+                                      </div>
+                                    ) : details ? (
+                                      <div className="mt-3 space-y-2 text-sm">
+                                        <div>
+                                          <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                                            Organization
+                                          </div>
+                                          <div className="font-medium">
+                                            {details.organization?.name ||
+                                              "Unowned"}
+                                          </div>
+                                          {details.organization?.slug && (
+                                            <div className="text-muted-foreground">
+                                              {details.organization.slug}
+                                            </div>
+                                          )}
+                                        </div>
+
+                                        <div className="grid gap-2 sm:grid-cols-2">
+                                          <div>
+                                            <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                                              Featured rank
+                                            </div>
+                                            <div className="font-medium">
+                                              {details.place.featuredRank > 0
+                                                ? `#${details.place.featuredRank}`
+                                                : "-"}
+                                            </div>
+                                          </div>
+                                          <div>
+                                            <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                                              Status
+                                            </div>
+                                            <div className="font-medium">
+                                              {details.place.isActive
+                                                ? "active"
+                                                : "inactive"}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ) : null}
+                                  </div>
+
+                                  <div className="rounded-lg border bg-background/60 p-4">
+                                    <h3 className="text-sm font-heading font-semibold">
+                                      Contact
+                                    </h3>
+                                    {isDetailsLoading ? (
+                                      <div className="mt-3 text-sm text-muted-foreground">
+                                        Loading details...
+                                      </div>
+                                    ) : details ? (
+                                      <div className="mt-3 flex flex-col gap-2 text-sm">
+                                        {details.contactDetail?.phoneNumber ? (
+                                          <a
+                                            href={`tel:${details.contactDetail.phoneNumber}`}
+                                            className="inline-flex items-center gap-2 text-foreground hover:underline"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                          >
+                                            <Phone className="h-4 w-4 text-muted-foreground" />
+                                            {details.contactDetail.phoneNumber}
+                                          </a>
+                                        ) : (
+                                          <span className="text-muted-foreground">
+                                            No contact details
+                                          </span>
+                                        )}
+
+                                        <div className="flex flex-wrap gap-2">
+                                          {details.contactDetail
+                                            ?.websiteUrl && (
+                                            <Button
+                                              variant="outline"
+                                              size="sm"
+                                              asChild
+                                            >
+                                              <a
+                                                href={
+                                                  details.contactDetail
+                                                    .websiteUrl
+                                                }
+                                                target="_blank"
+                                                rel="noreferrer"
+                                              >
+                                                <ExternalLink className="h-4 w-4 mr-2" />
+                                                Website
+                                              </a>
+                                            </Button>
+                                          )}
+                                          {details.contactDetail
+                                            ?.facebookUrl && (
+                                            <Button
+                                              variant="outline"
+                                              size="sm"
+                                              asChild
+                                            >
+                                              <a
+                                                href={
+                                                  details.contactDetail
+                                                    .facebookUrl
+                                                }
+                                                target="_blank"
+                                                rel="noreferrer"
+                                              >
+                                                <ExternalLink className="h-4 w-4 mr-2" />
+                                                Facebook
+                                              </a>
+                                            </Button>
+                                          )}
+                                          {details.contactDetail
+                                            ?.instagramUrl && (
+                                            <Button
+                                              variant="outline"
+                                              size="sm"
+                                              asChild
+                                            >
+                                              <a
+                                                href={
+                                                  details.contactDetail
+                                                    .instagramUrl
+                                                }
+                                                target="_blank"
+                                                rel="noreferrer"
+                                              >
+                                                <ExternalLink className="h-4 w-4 mr-2" />
+                                                Instagram
+                                              </a>
+                                            </Button>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ) : null}
+                                  </div>
+
+                                  <div className="rounded-lg border bg-background/60 p-4">
+                                    <h3 className="text-sm font-heading font-semibold">
+                                      Courts & amenities
+                                    </h3>
+                                    {isDetailsLoading ? (
+                                      <div className="mt-3 text-sm text-muted-foreground">
+                                        Loading details...
+                                      </div>
+                                    ) : details ? (
+                                      <div className="mt-3 space-y-3">
+                                        <div>
+                                          <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                                            Court units
+                                          </div>
+                                          {details.courts.length > 0 ? (
+                                            <div className="mt-2 flex flex-wrap gap-2">
+                                              {details.courts
+                                                .slice(0, 8)
+                                                .map((item) => (
+                                                  <Badge
+                                                    key={item.court.id}
+                                                    variant="secondary"
+                                                    className="px-2 py-1"
+                                                  >
+                                                    {item.sport.name}:{" "}
+                                                    {item.court.label}
+                                                    {item.court.tierLabel
+                                                      ? ` (${item.court.tierLabel})`
+                                                      : ""}
+                                                  </Badge>
+                                                ))}
+                                              {details.courts.length > 8 && (
+                                                <span className="text-sm text-muted-foreground">
+                                                  +{details.courts.length - 8}{" "}
+                                                  more
+                                                </span>
+                                              )}
+                                            </div>
+                                          ) : (
+                                            <div className="mt-2 text-sm text-muted-foreground">
+                                              No courts attached
+                                            </div>
+                                          )}
+                                        </div>
+
+                                        <div>
+                                          <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                                            Amenities
+                                          </div>
+                                          {details.amenities.length > 0 ? (
+                                            <div className="mt-2 flex flex-wrap gap-2">
+                                              {details.amenities
+                                                .slice(0, 10)
+                                                .map((a) => (
+                                                  <Badge
+                                                    key={a.id}
+                                                    variant="outline"
+                                                  >
+                                                    {a.name}
+                                                  </Badge>
+                                                ))}
+                                              {details.amenities.length >
+                                                10 && (
+                                                <span className="text-sm text-muted-foreground">
+                                                  +
+                                                  {details.amenities.length -
+                                                    10}{" "}
+                                                  more
+                                                </span>
+                                              )}
+                                            </div>
+                                          ) : (
+                                            <div className="mt-2 text-sm text-muted-foreground">
+                                              No amenities
+                                            </div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ) : null}
+                                  </div>
+                                </div>
+
+                                {!isDetailsLoading && details && (
+                                  <div className="mt-4 rounded-lg border bg-background/60 p-4">
+                                    <div className="flex flex-wrap items-center justify-between gap-2">
+                                      <h3 className="text-sm font-heading font-semibold">
+                                        Media
+                                      </h3>
+                                      <div className="text-sm text-muted-foreground">
+                                        {details.photos.length} photos •{" "}
+                                        {details.amenities.length} amenities
+                                      </div>
+                                    </div>
+
+                                    {details.photos.length > 0 ? (
+                                      <div className="mt-3 flex gap-2 overflow-x-auto">
+                                        {details.photos
+                                          .slice(0, 3)
+                                          .map((photo) => (
+                                            <div
+                                              key={photo.id}
+                                              className="relative h-20 w-28 shrink-0 overflow-hidden rounded-md border"
+                                            >
+                                              <Image
+                                                src={photo.url}
+                                                alt={`${place.name} photo`}
+                                                fill
+                                                sizes="112px"
+                                                className="object-cover"
+                                              />
+                                            </div>
+                                          ))}
+                                      </div>
+                                    ) : (
+                                      <div className="mt-3 text-sm text-muted-foreground">
+                                        No photos
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
