@@ -51,6 +51,11 @@ export interface IAuthService {
     email: string,
     token: string,
   ): Promise<{ user: User | null; session: Session | null }>;
+  resendSignUpOtpCode(
+    email: string,
+    baseUrl: string,
+    redirect?: string,
+  ): Promise<void>;
   verifyRecovery(tokenHash: string): Promise<void>;
 }
 
@@ -252,6 +257,28 @@ export class AuthService implements IAuthService {
     }
 
     return result;
+  }
+
+  async resendSignUpOtpCode(
+    email: string,
+    baseUrl: string,
+    redirect?: string,
+  ): Promise<void> {
+    const safeRedirect = getSafeRedirectPath(redirect, {
+      fallback: appRoutes.postLogin.base,
+      origin: baseUrl,
+      disallowRoutes: ["guest"],
+    });
+    const redirectTo = `${baseUrl}/auth/confirm?redirect=${encodeURIComponent(
+      safeRedirect,
+    )}`;
+
+    await this.authRepository.resendSignUpOtp(email, redirectTo);
+
+    logger.info(
+      { event: "user.signup_otp_resent", email: email.trim().toLowerCase() },
+      "Signup OTP resent",
+    );
   }
 
   async verifyRecovery(tokenHash: string): Promise<void> {

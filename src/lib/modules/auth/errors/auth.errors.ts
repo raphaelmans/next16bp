@@ -4,6 +4,8 @@ import {
   InternalError,
 } from "@/lib/shared/kernel/errors";
 
+export type AuthOtpType = "signup" | "email" | "magiclink" | "recovery";
+
 export class InvalidCredentialsError extends AuthenticationError {
   readonly code = "AUTH_INVALID_CREDENTIALS";
 
@@ -17,6 +19,14 @@ export class EmailNotVerifiedError extends AuthenticationError {
 
   constructor(email: string) {
     super("Email not verified", { email });
+  }
+}
+
+export class AuthOtpInvalidOrExpiredError extends AuthenticationError {
+  readonly code = "AUTH_OTP_INVALID_OR_EXPIRED";
+
+  constructor(type: AuthOtpType) {
+    super("Verification code expired or is invalid", { type });
   }
 }
 

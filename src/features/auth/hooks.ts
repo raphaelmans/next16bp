@@ -80,6 +80,13 @@ export function useVerifySignUpOtp() {
 }
 
 /**
+ * Hook for signup OTP resend mutation.
+ */
+export function useResendSignUpOtp() {
+  return trpc.auth.resendSignUpOtp.useMutation();
+}
+
+/**
  * Hook for Google OAuth login mutation.
  */
 export function useLoginWithGoogle() {

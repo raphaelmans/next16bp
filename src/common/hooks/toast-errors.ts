@@ -37,6 +37,8 @@ const getFieldErrorMessage = (fieldErrors: unknown): string | null => {
 };
 
 const FRIENDLY_ERROR_MESSAGES: Record<string, string> = {
+  AUTH_OTP_INVALID_OR_EXPIRED:
+    "That code is expired or invalid. Tap “Resend code” and use the latest email.",
   BOOKING_WINDOW_EXCEEDED:
     "This time is beyond the 60-day booking window. Choose an earlier date.",
   COURT_BLOCK_OVERLAP:

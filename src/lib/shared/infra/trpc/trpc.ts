@@ -86,7 +86,14 @@ const loggerMiddleware = t.middleware(async ({ ctx, next, type }) => {
     const result = await next({ ctx });
     const duration = Date.now() - start;
 
-    ctx.log.info({ duration, status: "success", type }, "Request completed");
+    if (result.ok) {
+      ctx.log.info({ duration, status: "success", type }, "Request completed");
+    } else {
+      ctx.log.info(
+        { duration, status: "error", type, errorCode: result.error.code },
+        "Request failed",
+      );
+    }
 
     return result;
   } catch (error) {

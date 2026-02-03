@@ -22,7 +22,12 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { type RegisterDTO, RegisterSchema } from "@/lib/modules/auth/dtos";
-import { useLoginWithGoogle, useRegister, useVerifySignUpOtp } from "../hooks";
+import {
+  useLoginWithGoogle,
+  useRegister,
+  useResendSignUpOtp,
+  useVerifySignUpOtp,
+} from "../hooks";
 import { EmailVerificationScreen } from "./email-verification-screen";
 
 export interface RegisterFormProps {
@@ -43,6 +48,7 @@ export function RegisterForm({
   const registerMutation = useRegister();
   const googleLoginMutation = useLoginWithGoogle();
   const verifySignUpOtpMutation = useVerifySignUpOtp();
+  const resendSignUpOtpMutation = useResendSignUpOtp();
 
   const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
     fallback: defaultRedirect,
@@ -71,11 +77,11 @@ export function RegisterForm({
 
   const onSubmit = async (data: RegisterDTO) => {
     try {
-      await registerMutation.mutateAsync({
+      const result = await registerMutation.mutateAsync({
         ...data,
         redirect: redirectUrl,
       });
-      setRegisteredEmail(data.email);
+      setRegisteredEmail(result.user?.email ?? data.email);
       reset(data);
       setSuccess(true);
     } catch (error) {
@@ -122,14 +128,13 @@ export function RegisterForm({
           }
         }}
         onResendCode={async () => {
-          await registerMutation.mutateAsync({
+          await resendSignUpOtpMutation.mutateAsync({
             email: registeredEmail,
-            password: form.getValues("password"),
             redirect: redirectUrl,
           });
         }}
         isVerifying={verifySignUpOtpMutation.isPending}
-        isResending={registerMutation.isPending}
+        isResending={resendSignUpOtpMutation.isPending}
         loginHref={loginHref}
       />
     );
