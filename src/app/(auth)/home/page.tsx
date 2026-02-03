@@ -142,8 +142,8 @@ export default function HomePage() {
         isOwner={!!organization}
       />
 
-      <div className="grid gap-8 md:grid-cols-3">
-        <div className="md:col-span-2">
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="lg:col-span-2">
           <UpcomingReservations
             reservations={reservations}
             isLoading={dataLoading}
