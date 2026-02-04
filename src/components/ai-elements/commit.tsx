@@ -182,15 +182,7 @@ export const CommitActions = ({
   children,
   ...props
 }: CommitActionsProps) => (
-  // biome-ignore lint/a11y/noNoninteractiveElementInteractions: stopPropagation required for nested interactions
-  // biome-ignore lint/a11y/useSemanticElements: fieldset doesn't fit this UI pattern
-  <div
-    className={cn("flex items-center gap-1", className)}
-    onClick={(e) => e.stopPropagation()}
-    onKeyDown={(e) => e.stopPropagation()}
-    role="group"
-    {...props}
-  >
+  <div className={cn("flex items-center gap-1", className)} {...props}>
     {children}
   </div>
 );

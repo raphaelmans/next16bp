@@ -1,0 +1,118 @@
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { S } from "@/common/schemas";
+import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
+import { NotOrganizationOwnerError } from "@/lib/modules/organization/errors/organization.errors";
+import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
+import { ProfileNotFoundError } from "@/lib/modules/profile/errors/profile.errors";
+import { ReservationNotFoundError } from "@/lib/modules/reservation/errors/reservation.errors";
+import {
+  adminProcedure,
+  protectedProcedure,
+  router,
+} from "@/lib/shared/infra/trpc/trpc";
+import { AppError } from "@/lib/shared/kernel/errors";
+import {
+  ReservationChatGuestReservationNotSupportedError,
+  ReservationChatNotAvailableError,
+  ReservationChatNotParticipantError,
+} from "./errors/reservation-chat.errors";
+import { makeReservationChatService } from "./factories/reservation-chat.factory";
+
+function handleReservationChatError(error: unknown): never {
+  if (
+    error instanceof ReservationNotFoundError ||
+    error instanceof ProfileNotFoundError ||
+    error instanceof CourtNotFoundError ||
+    error instanceof PlaceNotFoundError
+  ) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: error.message,
+      cause: error,
+    });
+  }
+
+  if (
+    error instanceof ReservationChatNotParticipantError ||
+    error instanceof ReservationChatNotAvailableError ||
+    error instanceof NotOrganizationOwnerError
+  ) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: error.message,
+      cause: error,
+    });
+  }
+
+  if (error instanceof ReservationChatGuestReservationNotSupportedError) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: error.message,
+      cause: error,
+    });
+  }
+
+  if (error instanceof AppError) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: error.message,
+      cause: error,
+    });
+  }
+
+  throw error;
+}
+
+export const reservationChatRouter = router({
+  getSession: protectedProcedure
+    .input(
+      z.object({
+        reservationId: S.ids.generic,
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationChatService();
+        return await service.getSession(ctx.userId, input.reservationId, {
+          id: ctx.userId,
+          name: ctx.session.email || ctx.userId,
+        });
+      } catch (error) {
+        handleReservationChatError(error);
+      }
+    }),
+
+  listTranscriptSnapshots: adminProcedure
+    .input(
+      z.object({
+        reservationId: S.ids.generic,
+      }),
+    )
+    .query(async ({ input }) => {
+      try {
+        const service = makeReservationChatService();
+        return await service.listTranscriptSnapshots(input.reservationId);
+      } catch (error) {
+        handleReservationChatError(error);
+      }
+    }),
+
+  captureTranscriptSnapshot: adminProcedure
+    .input(
+      z.object({
+        reservationId: S.ids.generic,
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationChatService();
+        return await service.captureTranscriptSnapshot(
+          ctx.userId,
+          input.reservationId,
+        );
+      } catch (error) {
+        handleReservationChatError(error);
+      }
+    }),
+});

@@ -34,6 +34,7 @@ export * from "./place-verification";
 export * from "./profile";
 // Reservation-related tables
 export * from "./reservation";
+export * from "./reservation-chat";
 export * from "./sport";
 export * from "./user-preferences";
 export * from "./user-roles";

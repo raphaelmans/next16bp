@@ -15,6 +15,7 @@ import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
+import { PlayerReservationChatWidget } from "@/features/chat/components/chat-widget/player-reservation-chat-widget";
 import { BookingDetailsCard } from "@/features/reservation/components/booking-details-card";
 import { CancelDialog } from "@/features/reservation/components/cancel-dialog";
 import { ReservationActionsCard } from "@/features/reservation/components/reservation-actions-card";
@@ -316,6 +317,11 @@ export default function ReservationDetailPage() {
         reservationId={reservation.id}
         open={showCancelDialog}
         onOpenChange={setShowCancelDialog}
+      />
+
+      <PlayerReservationChatWidget
+        reservationId={reservation.id}
+        reservationStatus={reservation.status}
       />
     </Container>
   );
