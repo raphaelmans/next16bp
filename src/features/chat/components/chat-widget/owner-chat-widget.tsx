@@ -3,6 +3,7 @@
 import { MessagesSquare, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Channel } from "stream-chat";
+import { formatInTimeZone, formatTimeRangeInTimeZone } from "@/common/format";
 import { useMediaQuery } from "@/common/hooks/use-media-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -151,6 +152,29 @@ export function OwnerChatWidget() {
     });
   }, [channels, query]);
 
+  const reservationIds = useMemo(() => {
+    const ids = channels
+      .map((c) => c.id)
+      .filter(
+        (id): id is string => typeof id === "string" && id.startsWith("res-"),
+      )
+      .map((id) => id.replace("res-", ""));
+    return Array.from(new Set(ids)).sort();
+  }, [channels]);
+
+  const metasQuery = trpc.reservationChat.getThreadMetas.useQuery(
+    { reservationIds },
+    { enabled: open && reservationIds.length > 0 },
+  );
+
+  const metasByReservationId = useMemo(() => {
+    const map = new Map<string, NonNullable<typeof metasQuery.data>[number]>();
+    for (const meta of metasQuery.data ?? []) {
+      map.set(meta.reservationId, meta);
+    }
+    return map;
+  }, [metasQuery.data]);
+
   const unreadCount = useMemo(() => {
     return channels.reduce((sum, c) => sum + (c.state.unreadCount ?? 0), 0);
   }, [channels]);
@@ -161,6 +185,21 @@ export function OwnerChatWidget() {
     }
     return channels.find((c) => c.cid === activeCid) ?? null;
   }, [activeCid, channels]);
+
+  const activeReservationId = useMemo(() => {
+    const id = activeChannel?.id;
+    if (!id || !id.startsWith("res-")) {
+      return null;
+    }
+    return id.replace("res-", "");
+  }, [activeChannel?.id]);
+
+  const activeMeta = useMemo(() => {
+    if (!activeReservationId) {
+      return null;
+    }
+    return metasByReservationId.get(activeReservationId) ?? null;
+  }, [activeReservationId, metasByReservationId]);
 
   const myUserId = auth?.user.id ?? null;
 
@@ -250,9 +289,26 @@ export function OwnerChatWidget() {
                     ) : (
                       filteredChannels.map((c) => {
                         const isActive = c.cid === activeCid;
-                        const label = c.id?.startsWith("res-")
-                          ? `Reservation ${c.id.replace("res-", "").slice(0, 8).toUpperCase()}`
-                          : (c.id ?? c.cid);
+                        const reservationId = c.id?.startsWith("res-")
+                          ? c.id.replace("res-", "")
+                          : null;
+                        const meta = reservationId
+                          ? (metasByReservationId.get(reservationId) ?? null)
+                          : null;
+
+                        const statusClassName =
+                          meta?.status === "CONFIRMED"
+                            ? "bg-success/10 text-success border-success/20"
+                            : meta?.status === "CANCELLED" ||
+                                meta?.status === "EXPIRED"
+                              ? "bg-destructive/10 text-destructive border-destructive/20"
+                              : "bg-warning/10 text-warning border-warning/20";
+
+                        const label = meta
+                          ? meta.playerDisplayName
+                          : c.id?.startsWith("res-")
+                            ? `Reservation ${c.id.replace("res-", "").slice(0, 8).toUpperCase()}`
+                            : (c.id ?? c.cid);
                         const lastMessage =
                           c.state.latestMessages?.[0]?.text ?? "";
                         const unread = c.state.unreadCount ?? 0;
@@ -269,11 +325,32 @@ export function OwnerChatWidget() {
                           >
                             <div className="flex items-start justify-between gap-3">
                               <div className="min-w-0">
-                                <div className="truncate text-sm font-medium">
-                                  {label}
+                                <div className="flex items-center gap-2">
+                                  {meta?.status ? (
+                                    <Badge
+                                      variant="outline"
+                                      className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium ${statusClassName}`}
+                                    >
+                                      {meta.status}
+                                    </Badge>
+                                  ) : null}
+                                  <div className="truncate text-sm font-medium">
+                                    {label}
+                                  </div>
                                 </div>
-                                <div className="truncate text-xs text-muted-foreground">
-                                  {lastMessage || "No messages yet"}
+
+                                <div className="truncate text-xs text-muted-foreground mt-0.5">
+                                  {meta
+                                    ? `${meta.placeName} • ${formatInTimeZone(
+                                        meta.startTimeIso,
+                                        meta.timeZone,
+                                        "EEE MMM d",
+                                      )} • ${formatTimeRangeInTimeZone(
+                                        meta.startTimeIso,
+                                        meta.endTimeIso,
+                                        meta.timeZone,
+                                      )}`
+                                    : lastMessage || "No messages yet"}
                                 </div>
                               </div>
                               {unread > 0 ? (
@@ -307,6 +384,21 @@ export function OwnerChatWidget() {
                   channelType={activeChannel?.type ?? "messaging"}
                   members={null}
                   myUserId={myUserId}
+                  headerStatus={activeMeta?.status}
+                  headerTitle={activeMeta?.playerDisplayName ?? "Messages"}
+                  headerSubtitle={
+                    activeMeta
+                      ? `RES-${activeMeta.reservationId.slice(0, 8).toUpperCase()} • ${formatInTimeZone(
+                          activeMeta.startTimeIso,
+                          activeMeta.timeZone,
+                          "EEE MMM d",
+                        )} • ${formatTimeRangeInTimeZone(
+                          activeMeta.startTimeIso,
+                          activeMeta.endTimeIso,
+                          activeMeta.timeZone,
+                        )}`
+                      : undefined
+                  }
                   minHeightClassName="min-h-0 flex-1"
                 />
               </div>

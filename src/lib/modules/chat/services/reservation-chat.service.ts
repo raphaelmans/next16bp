@@ -19,7 +19,11 @@ import { makeReservationChannelId } from "../helpers/reservation-channel-id";
 import type { IChatProvider } from "../providers/chat.provider";
 import type { IReservationChatThreadRepository } from "../repositories/reservation-chat-thread.repository";
 import type { IReservationChatTranscriptRepository } from "../repositories/reservation-chat-transcript.repository";
-import type { ChatAuthResult, ReservationChatChannelResult } from "../types";
+import type {
+  ChatAuthResult,
+  ReservationChatChannelResult,
+  ReservationChatMeta,
+} from "../types";
 
 const CHAT_ENABLED_STATUSES = [
   "CREATED",
@@ -68,10 +72,40 @@ export class ReservationChatService {
     private chatProvider: IChatProvider,
   ) {}
 
-  private async getReservationParticipants(
+  private async getReservationContext(
     reservationId: string,
     ctx?: RequestContext,
-  ): Promise<{ playerUserId: string; ownerUserId: string }> {
+  ): Promise<{
+    reservation: {
+      id: string;
+      status: string;
+      startTime: Date;
+      endTime: Date;
+      playerId: string;
+      courtId: string;
+    };
+    profile: {
+      id: string;
+      userId: string;
+      displayName: string | null;
+    };
+    court: {
+      id: string;
+      label: string;
+      placeId: string;
+    };
+    place: {
+      id: string;
+      name: string;
+      timeZone: string;
+      organizationId: string;
+    };
+    organization: {
+      id: string;
+      name: string;
+      ownerUserId: string;
+    };
+  }> {
     const reservation = await this.reservationRepository.findById(
       reservationId,
       ctx,
@@ -119,8 +153,35 @@ export class ReservationChatService {
     }
 
     return {
-      playerUserId: profile.userId,
-      ownerUserId: organization.ownerUserId,
+      reservation: {
+        id: reservation.id,
+        status: reservation.status,
+        startTime: reservation.startTime,
+        endTime: reservation.endTime,
+        playerId: reservation.playerId,
+        courtId: reservation.courtId,
+      },
+      profile: {
+        id: profile.id,
+        userId: profile.userId,
+        displayName: profile.displayName,
+      },
+      court: {
+        id: court.id,
+        label: court.label,
+        placeId: court.placeId,
+      },
+      place: {
+        id: place.id,
+        name: place.name,
+        timeZone: place.timeZone,
+        organizationId: place.organizationId,
+      },
+      organization: {
+        id: organization.id,
+        name: organization.name,
+        ownerUserId: organization.ownerUserId,
+      },
     };
   }
 
@@ -165,7 +226,11 @@ export class ReservationChatService {
     reservationId: string,
     user: { id: string; name?: string; image?: string },
     ctx?: RequestContext,
-  ): Promise<{ auth: ChatAuthResult; channel: ReservationChatChannelResult }> {
+  ): Promise<{
+    auth: ChatAuthResult;
+    channel: ReservationChatChannelResult;
+    meta: ReservationChatMeta;
+  }> {
     const reservation = await this.reservationRepository.findById(
       reservationId,
       ctx,
@@ -178,12 +243,11 @@ export class ReservationChatService {
       throw new ReservationChatNotAvailableError(reservation.status);
     }
 
-    const { playerUserId, ownerUserId } = await this.getReservationParticipants(
-      reservationId,
-      ctx,
-    );
-
-    const memberIds = [playerUserId, ownerUserId];
+    const context = await this.getReservationContext(reservationId, ctx);
+    const memberIds = [
+      context.profile.userId,
+      context.organization.ownerUserId,
+    ];
     if (!memberIds.includes(userId)) {
       throw new ReservationChatNotParticipantError(reservationId);
     }
@@ -204,6 +268,33 @@ export class ReservationChatService {
         token,
       },
       channel,
+      meta: {
+        reservation: {
+          id: context.reservation.id,
+          status: context.reservation.status,
+          startTimeIso: context.reservation.startTime.toISOString(),
+          endTimeIso: context.reservation.endTime.toISOString(),
+        },
+        place: {
+          id: context.place.id,
+          name: context.place.name,
+          timeZone: context.place.timeZone,
+        },
+        court: {
+          id: context.court.id,
+          label: context.court.label,
+        },
+        participants: {
+          player: {
+            userId: context.profile.userId,
+            displayName: context.profile.displayName ?? "Player",
+          },
+          owner: {
+            userId: context.organization.ownerUserId,
+            displayName: context.organization.name,
+          },
+        },
+      },
     };
   }
 
@@ -212,12 +303,11 @@ export class ReservationChatService {
     reservationId: string,
     ctx?: RequestContext,
   ) {
-    const { playerUserId, ownerUserId } = await this.getReservationParticipants(
-      reservationId,
-      ctx,
-    );
-
-    const memberIds = [playerUserId, ownerUserId];
+    const context = await this.getReservationContext(reservationId, ctx);
+    const memberIds = [
+      context.profile.userId,
+      context.organization.ownerUserId,
+    ];
 
     const channel = await this.ensureThread(
       reservationId,
@@ -268,5 +358,64 @@ export class ReservationChatService {
       reservationId,
       ctx,
     );
+  }
+
+  async getThreadMetas(
+    userId: string,
+    reservationIds: string[],
+    ctx?: RequestContext,
+  ): Promise<
+    Array<{
+      reservationId: string;
+      status: string;
+      placeName: string;
+      timeZone: string;
+      courtLabel: string;
+      playerDisplayName: string;
+      ownerDisplayName: string;
+      startTimeIso: string;
+      endTimeIso: string;
+    }>
+  > {
+    const results: Array<{
+      reservationId: string;
+      status: string;
+      placeName: string;
+      timeZone: string;
+      courtLabel: string;
+      playerDisplayName: string;
+      ownerDisplayName: string;
+      startTimeIso: string;
+      endTimeIso: string;
+    }> = [];
+
+    for (const reservationId of reservationIds) {
+      try {
+        const context = await this.getReservationContext(reservationId, ctx);
+        const memberIds = [
+          context.profile.userId,
+          context.organization.ownerUserId,
+        ];
+        if (!memberIds.includes(userId)) {
+          continue;
+        }
+
+        results.push({
+          reservationId: context.reservation.id,
+          status: context.reservation.status,
+          placeName: context.place.name,
+          timeZone: context.place.timeZone,
+          courtLabel: context.court.label,
+          playerDisplayName: context.profile.displayName ?? "Player",
+          ownerDisplayName: context.organization.name,
+          startTimeIso: context.reservation.startTime.toISOString(),
+          endTimeIso: context.reservation.endTime.toISOString(),
+        });
+      } catch {
+        // Ignore missing/unauthorized reservations for inbox hydration.
+      }
+    }
+
+    return results;
   }
 }

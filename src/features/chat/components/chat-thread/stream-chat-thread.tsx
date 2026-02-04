@@ -31,6 +31,7 @@ import {
   PromptInputTextarea,
   usePromptInputAttachments,
 } from "@/components/ai-elements/prompt-input";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useStreamChannel } from "../../hooks/useStreamChannel";
 
@@ -95,7 +96,9 @@ export interface StreamChatThreadProps {
   channelType?: string;
   members?: string[] | null;
   myUserId: string | null;
-  title?: string;
+  headerTitle?: string;
+  headerSubtitle?: string;
+  headerStatus?: string;
   emptyTitle?: string;
   emptyDescription?: string;
   minHeightClassName?: string;
@@ -107,7 +110,9 @@ export function StreamChatThread({
   channelType = "messaging",
   members = null,
   myUserId,
-  title = "Messages",
+  headerTitle = "Messages",
+  headerSubtitle,
+  headerStatus,
   emptyTitle = "No messages yet",
   emptyDescription = "Say hi to start the conversation",
   minHeightClassName = "min-h-[520px]",
@@ -193,10 +198,34 @@ export function StreamChatThread({
     [channel, sendFiles, sendMessage],
   );
 
+  const statusClassName =
+    headerStatus === "CONFIRMED"
+      ? "bg-success/10 text-success border-success/20"
+      : headerStatus === "CANCELLED" || headerStatus === "EXPIRED"
+        ? "bg-destructive/10 text-destructive border-destructive/20"
+        : "bg-warning/10 text-warning border-warning/20";
+
   return (
     <div className={`flex flex-col ${minHeightClassName}`}>
       <div className="flex items-center justify-between border-b px-4 py-3">
-        <div className="text-sm font-medium">{title}</div>
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            {headerStatus ? (
+              <Badge
+                variant="outline"
+                className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium ${statusClassName}`}
+              >
+                {headerStatus}
+              </Badge>
+            ) : null}
+            <div className="truncate text-sm font-medium">{headerTitle}</div>
+          </div>
+          {headerSubtitle ? (
+            <div className="truncate text-xs text-muted-foreground mt-0.5">
+              {headerSubtitle}
+            </div>
+          ) : null}
+        </div>
         <Button
           type="button"
           variant="ghost"

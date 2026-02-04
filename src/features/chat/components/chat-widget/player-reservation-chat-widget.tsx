@@ -2,6 +2,7 @@
 
 import { MessagesSquare, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { formatInTimeZone, formatTimeRangeInTimeZone } from "@/common/format";
 import { useMediaQuery } from "@/common/hooks/use-media-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -142,21 +143,41 @@ export function PlayerReservationChatWidget({
                 ? clientError.message
                 : "Unable to connect to chat."}
             </div>
-          ) : reservationStatus === "CREATED" ? (
-            <div className="p-6 text-sm text-muted-foreground">
-              You can send a message now. The owner will see it as soon as they
-              open their inbox.
-            </div>
           ) : (
-            <StreamChatThread
-              client={isReady ? client : null}
-              channelId={session?.channel.channelId ?? null}
-              channelType={session?.channel.channelType ?? "messaging"}
-              members={session?.channel.memberIds ?? null}
-              myUserId={session?.auth.user.id ?? null}
-              title="Conversation"
-              minHeightClassName="min-h-0 flex-1"
-            />
+            <>
+              {reservationStatus === "CREATED" ? (
+                <div className="border-b bg-muted/40 px-5 py-3 text-xs text-muted-foreground">
+                  Waiting for owner confirmation. You can still message the
+                  venue.
+                </div>
+              ) : null}
+
+              <StreamChatThread
+                client={isReady ? client : null}
+                channelId={session?.channel.channelId ?? null}
+                channelType={session?.channel.channelType ?? "messaging"}
+                members={session?.channel.memberIds ?? null}
+                myUserId={session?.auth.user.id ?? null}
+                headerStatus={
+                  session?.meta.reservation.status ?? reservationStatus
+                }
+                headerTitle={session?.meta.place.name ?? "Venue"}
+                headerSubtitle={
+                  session?.meta
+                    ? `${session.meta.court.label} • ${formatInTimeZone(
+                        session.meta.reservation.startTimeIso,
+                        session.meta.place.timeZone,
+                        "EEE MMM d",
+                      )} • ${formatTimeRangeInTimeZone(
+                        session.meta.reservation.startTimeIso,
+                        session.meta.reservation.endTimeIso,
+                        session.meta.place.timeZone,
+                      )}`
+                    : undefined
+                }
+                minHeightClassName="min-h-0 flex-1"
+              />
+            </>
           )}
         </SheetContent>
       </Sheet>

@@ -42,3 +42,31 @@ export interface ChatTranscriptExport {
   reservationId: string;
   messages: ChatExportedMessage[];
 }
+
+export interface ReservationChatMeta {
+  reservation: {
+    id: string;
+    status: string;
+    startTimeIso: string;
+    endTimeIso: string;
+  };
+  place: {
+    id: string;
+    name: string;
+    timeZone: string;
+  };
+  court: {
+    id: string;
+    label: string;
+  };
+  participants: {
+    player: {
+      userId: string;
+      displayName: string;
+    };
+    owner: {
+      userId: string;
+      displayName: string;
+    };
+  };
+}
