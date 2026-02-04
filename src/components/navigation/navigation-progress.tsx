@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 type ProgressStatus = "idle" | "starting" | "active" | "finishing";
@@ -82,50 +82,47 @@ export function NavigationProgress() {
   const finishTimerRef = useRef<number | null>(null);
   const tickTimerRef = useRef<number | null>(null);
 
-  const setStatusSafe = (nextStatus: ProgressStatus) => {
+  const setStatusSafe = useCallback((nextStatus: ProgressStatus) => {
     statusRef.current = nextStatus;
     setStatus(nextStatus);
-  };
+  }, []);
 
-  const setProgressSafe = (nextValue: number) => {
+  const setProgressSafe = useCallback((nextValue: number) => {
     progressRef.current = nextValue;
     setProgress(nextValue);
-  };
+  }, []);
 
-  const clearTimer = (ref: { current: number | null }) => {
+  const clearTimer = useCallback((ref: { current: number | null }) => {
     if (ref.current !== null) {
       window.clearTimeout(ref.current);
       ref.current = null;
     }
-  };
+  }, []);
 
-  const stopTick = () => {
+  const stopTick = useCallback(() => {
     if (tickTimerRef.current !== null) {
       window.clearTimeout(tickTimerRef.current);
       tickTimerRef.current = null;
     }
-  };
+  }, []);
 
-  const startTick = () => {
+  const startTick = useCallback(() => {
     stopTick();
     const tick = () => {
       setProgress((prev) => {
         const next =
           prev >= MAX_PROGRESS
             ? prev
-            : Math.min(
-                MAX_PROGRESS,
-                prev + 2 + Math.round(Math.random() * 4),
-              );
+            : Math.min(MAX_PROGRESS, prev + 2 + Math.round(Math.random() * 4));
         progressRef.current = next;
         return next;
       });
       tickTimerRef.current = window.setTimeout(tick, TICK_INTERVAL_MS);
     };
     tickTimerRef.current = window.setTimeout(tick, TICK_INTERVAL_MS);
-  };
+  }, [stopTick]);
 
-  const finish = () => {
+  const finish = useCallback(() => {
     clearTimer(startTimerRef);
     stopTick();
 
@@ -141,26 +138,26 @@ export function NavigationProgress() {
       setStatusSafe("idle");
       setProgressSafe(0);
     }, FINISH_FADE_MS);
-  };
+  }, [clearTimer, setProgressSafe, setStatusSafe, stopTick]);
 
-  const start = (
-    nextPathname: string,
-    currentPathname = window.location.pathname,
-  ) => {
-    if (!nextPathname || nextPathname === currentPathname) return;
-    if (statusRef.current === "active" || statusRef.current === "starting") {
-      return;
-    }
-    clearTimer(finishTimerRef);
-    setStatusSafe("starting");
-    setProgressSafe(0);
-    clearTimer(startTimerRef);
-    startTimerRef.current = window.setTimeout(() => {
-      setStatusSafe("active");
-      setProgressSafe(START_PROGRESS);
-      startTick();
-    }, START_DELAY_MS);
-  };
+  const start = useCallback(
+    (nextPathname: string, currentPathname = window.location.pathname) => {
+      if (!nextPathname || nextPathname === currentPathname) return;
+      if (statusRef.current === "active" || statusRef.current === "starting") {
+        return;
+      }
+      clearTimer(finishTimerRef);
+      setStatusSafe("starting");
+      setProgressSafe(0);
+      clearTimer(startTimerRef);
+      startTimerRef.current = window.setTimeout(() => {
+        setStatusSafe("active");
+        setProgressSafe(START_PROGRESS);
+        startTick();
+      }, START_DELAY_MS);
+    },
+    [clearTimer, setProgressSafe, setStatusSafe, startTick],
+  );
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
@@ -182,9 +179,7 @@ export function NavigationProgress() {
 
     const handleHistoryCall = (url?: string | URL | null) => {
       if (!url) return;
-      const resolvedUrl = toUrl(
-        typeof url === "string" ? url : url.toString(),
-      );
+      const resolvedUrl = toUrl(typeof url === "string" ? url : url.toString());
       if (!resolvedUrl) return;
       if (resolvedUrl.origin !== window.location.origin) return;
       if (resolvedUrl.pathname === window.location.pathname) return;
@@ -210,7 +205,7 @@ export function NavigationProgress() {
       window.history.pushState = originalPushState;
       window.history.replaceState = originalReplaceState;
     };
-  }, []);
+  }, [start]);
 
   useEffect(() => {
     if (previousPathRef.current === pathname) return;
@@ -219,7 +214,7 @@ export function NavigationProgress() {
     settleTimerRef.current = window.setTimeout(() => {
       finish();
     }, SETTLE_DELAY_MS);
-  }, [pathname]);
+  }, [pathname, clearTimer, finish]);
 
   useEffect(() => {
     const mainContent = document.getElementById("main-content");
@@ -238,7 +233,7 @@ export function NavigationProgress() {
       clearTimer(finishTimerRef);
       stopTick();
     };
-  }, []);
+  }, [clearTimer, stopTick]);
 
   const isVisible = status !== "idle";
 

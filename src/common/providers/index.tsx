@@ -9,8 +9,8 @@ import {
 } from "@trpc/client";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { useState } from "react";
-import { Toaster } from "@/components/ui/sonner";
 import { NavigationProgress } from "@/components/navigation/navigation-progress";
+import { Toaster } from "@/components/ui/sonner";
 import { trpc } from "@/trpc/client";
 import { getQueryClient } from "@/trpc/query-client";
 
