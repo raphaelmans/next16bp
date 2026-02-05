@@ -26,11 +26,14 @@ import { ReservationRepository } from "../repositories/reservation.repository";
 import { ReservationEventRepository } from "../repositories/reservation-event.repository";
 import { ReservationService } from "../services/reservation.service";
 import { ReservationOwnerService } from "../services/reservation-owner.service";
+import { ExpireStaleReservationsUseCase } from "../use-cases/expire-stale-reservations.use-case";
 
 let reservationRepository: ReservationRepository | null = null;
 let reservationEventRepository: ReservationEventRepository | null = null;
 let reservationService: ReservationService | null = null;
 let reservationOwnerService: ReservationOwnerService | null = null;
+let expireStaleReservationsUseCase: ExpireStaleReservationsUseCase | null =
+  null;
 
 export function makeReservationRepository(): ReservationRepository {
   if (!reservationRepository) {
@@ -46,6 +49,17 @@ export function makeReservationEventRepository(): ReservationEventRepository {
     );
   }
   return reservationEventRepository;
+}
+
+export function makeExpireStaleReservationsUseCase(): ExpireStaleReservationsUseCase {
+  if (!expireStaleReservationsUseCase) {
+    expireStaleReservationsUseCase = new ExpireStaleReservationsUseCase(
+      makeReservationRepository(),
+      makeReservationEventRepository(),
+      getContainer().transactionManager,
+    );
+  }
+  return expireStaleReservationsUseCase;
 }
 
 export function makeReservationService(): ReservationService {
@@ -83,6 +97,7 @@ export function makeReservationOwnerService(): ReservationOwnerService {
       makeOrganizationReservationPolicyRepository(),
       makeOrganizationRepository(),
       getContainer().transactionManager,
+      makeExpireStaleReservationsUseCase(),
       makePaymentProofRepository(),
       makeGuestProfileRepository(),
       makeCourtHoursRepository(),

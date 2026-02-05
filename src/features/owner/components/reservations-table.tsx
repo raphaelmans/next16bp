@@ -74,6 +74,21 @@ const stageConfig: Record<
   },
 };
 
+function parseIsoDate(value: string | null | undefined): Date | null {
+  if (!value) return null;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function shouldShowTtl(status: Reservation["reservationStatus"]) {
+  return (
+    status === "CREATED" ||
+    status === "AWAITING_PAYMENT" ||
+    status === "PAYMENT_MARKED_BY_USER" ||
+    status === "EXPIRED"
+  );
+}
+
 export function ReservationsTable({
   reservations,
   onConfirm,
@@ -104,6 +119,15 @@ export function ReservationsTable({
     const canReject = canAccept || canConfirm;
     const confirmLabel = canAccept ? "Accept" : "Confirm";
 
+    const createdAtDate = parseIsoDate(reservation.createdAt);
+    const expiresAtDate = parseIsoDate(reservation.expiresAt);
+    const ttlLabel =
+      shouldShowTtl(reservation.reservationStatus) && expiresAtDate
+        ? reservation.reservationStatus === "EXPIRED"
+          ? `Expired ${format(expiresAtDate, "MMM d, h:mm a")}`
+          : `Expires ${format(expiresAtDate, "MMM d, h:mm a")}`
+        : null;
+
     return (
       <Card className="mb-3">
         <CardContent className="p-4">
@@ -114,8 +138,24 @@ export function ReservationsTable({
                 {format(new Date(reservation.date), "MMM d, yyyy")} &middot;{" "}
                 {reservation.startTime} - {reservation.endTime}
               </p>
+              <p className="text-xs text-muted-foreground">
+                Created{" "}
+                {createdAtDate ? format(createdAtDate, "MMM d, h:mm a") : "--"}
+              </p>
             </div>
-            <Badge variant={config.variant}>{config.label}</Badge>
+            <div className="flex flex-col items-end gap-1">
+              <Badge
+                variant={config.variant}
+                className={cn("whitespace-nowrap", config.className)}
+              >
+                {config.label}
+              </Badge>
+              {ttlLabel ? (
+                <p className="text-xs text-muted-foreground whitespace-nowrap">
+                  {ttlLabel}
+                </p>
+              ) : null}
+            </div>
           </div>
 
           <div className="flex items-center justify-between text-sm">
@@ -247,6 +287,15 @@ export function ReservationsTable({
                 reservation.reservationStatus === "PAYMENT_MARKED_BY_USER";
               const canReject = canAccept || canConfirm;
 
+              const createdAtDate = parseIsoDate(reservation.createdAt);
+              const expiresAtDate = parseIsoDate(reservation.expiresAt);
+              const ttlLabel =
+                shouldShowTtl(reservation.reservationStatus) && expiresAtDate
+                  ? reservation.reservationStatus === "EXPIRED"
+                    ? `Expired ${format(expiresAtDate, "MMM d, h:mm a")}`
+                    : `Expires ${format(expiresAtDate, "MMM d, h:mm a")}`
+                  : null;
+
               return (
                 <React.Fragment key={reservation.id}>
                   <TableRow
@@ -282,6 +331,12 @@ export function ReservationsTable({
                         <p className="text-sm text-muted-foreground">
                           {reservation.startTime} - {reservation.endTime}
                         </p>
+                        <p className="text-xs text-muted-foreground">
+                          Created{" "}
+                          {createdAtDate
+                            ? format(createdAtDate, "MMM d, h:mm a")
+                            : "--"}
+                        </p>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -291,12 +346,19 @@ export function ReservationsTable({
                       )}
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        variant={config.variant}
-                        className={config.className}
-                      >
-                        {config.label}
-                      </Badge>
+                      <div className="space-y-1">
+                        <Badge
+                          variant={config.variant}
+                          className={config.className}
+                        >
+                          {config.label}
+                        </Badge>
+                        {ttlLabel ? (
+                          <p className="text-xs text-muted-foreground">
+                            {ttlLabel}
+                          </p>
+                        ) : null}
+                      </div>
                     </TableCell>
                     <TableCell className="text-right">
                       {canReject && (

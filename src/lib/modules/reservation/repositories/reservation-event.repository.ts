@@ -16,6 +16,10 @@ export interface IReservationEventRepository {
     data: InsertReservationEvent,
     ctx?: RequestContext,
   ): Promise<ReservationEventRecord>;
+  createMany(
+    data: InsertReservationEvent[],
+    ctx?: RequestContext,
+  ): Promise<ReservationEventRecord[]>;
 }
 
 export class ReservationEventRepository implements IReservationEventRepository {
@@ -47,5 +51,14 @@ export class ReservationEventRepository implements IReservationEventRepository {
       .values(data)
       .returning();
     return result[0];
+  }
+
+  async createMany(
+    data: InsertReservationEvent[],
+    ctx?: RequestContext,
+  ): Promise<ReservationEventRecord[]> {
+    if (data.length === 0) return [];
+    const client = this.getClient(ctx);
+    return client.insert(reservationEvent).values(data).returning();
   }
 }

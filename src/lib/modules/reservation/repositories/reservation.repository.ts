@@ -79,6 +79,25 @@ export interface IReservationRepository {
     },
     ctx?: RequestContext,
   ): Promise<ReservationWithDetails[]>;
+
+  findStaleByOrganization(
+    organizationId: string,
+    now: Date,
+    statuses: ("CREATED" | "AWAITING_PAYMENT" | "PAYMENT_MARKED_BY_USER")[],
+    ctx?: RequestContext,
+  ): Promise<
+    {
+      id: string;
+      status: ReservationRecord["status"];
+    }[]
+  >;
+
+  expireStaleByIds(
+    reservationIds: string[],
+    now: Date,
+    statuses: ("CREATED" | "AWAITING_PAYMENT" | "PAYMENT_MARKED_BY_USER")[],
+    ctx: RequestContext,
+  ): Promise<string[]>;
   create(
     data: InsertReservation,
     ctx?: RequestContext,
@@ -465,6 +484,60 @@ export class ReservationRepository implements IReservationRepository {
           : null,
       };
     });
+  }
+
+  async findStaleByOrganization(
+    organizationId: string,
+    now: Date,
+    statuses: ("CREATED" | "AWAITING_PAYMENT" | "PAYMENT_MARKED_BY_USER")[],
+    ctx?: RequestContext,
+  ): Promise<
+    {
+      id: string;
+      status: ReservationRecord["status"];
+    }[]
+  > {
+    const client = this.getClient(ctx);
+
+    return client
+      .select({
+        id: reservation.id,
+        status: reservation.status,
+      })
+      .from(reservation)
+      .innerJoin(court, eq(reservation.courtId, court.id))
+      .innerJoin(place, eq(court.placeId, place.id))
+      .where(
+        and(
+          eq(place.organizationId, organizationId),
+          lt(reservation.expiresAt, now),
+          inArray(reservation.status, statuses),
+        ),
+      );
+  }
+
+  async expireStaleByIds(
+    reservationIds: string[],
+    now: Date,
+    statuses: ("CREATED" | "AWAITING_PAYMENT" | "PAYMENT_MARKED_BY_USER")[],
+    ctx: RequestContext,
+  ): Promise<string[]> {
+    if (reservationIds.length === 0) return [];
+    const client = this.getClient(ctx);
+
+    const updated = await client
+      .update(reservation)
+      .set({ status: "EXPIRED", updatedAt: now })
+      .where(
+        and(
+          inArray(reservation.id, reservationIds),
+          inArray(reservation.status, statuses),
+          lt(reservation.expiresAt, now),
+        ),
+      )
+      .returning({ id: reservation.id });
+
+    return updated.map((r) => r.id);
   }
 
   async create(

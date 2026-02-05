@@ -53,6 +53,7 @@ import {
 } from "../errors/reservation.errors";
 import type { IReservationRepository } from "../repositories/reservation.repository";
 import type { IReservationEventRepository } from "../repositories/reservation-event.repository";
+import type { IExpireStaleReservationsUseCase } from "../use-cases/expire-stale-reservations.use-case";
 
 const DEFAULT_PAYMENT_HOLD_MINUTES = 45;
 
@@ -105,6 +106,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     private organizationReservationPolicyRepository: IOrganizationReservationPolicyRepository,
     private organizationRepository: IOrganizationRepository,
     private transactionManager: TransactionManager,
+    private expireStaleReservationsUseCase: IExpireStaleReservationsUseCase,
     private paymentProofRepository?: IPaymentProofRepository,
     private guestProfileRepository?: IGuestProfileRepository,
     private courtHoursRepository?: ICourtHoursRepository,
@@ -997,6 +999,10 @@ export class ReservationOwnerService implements IReservationOwnerService {
       throw new NotOrganizationOwnerError();
     }
 
+    await this.expireStaleReservationsUseCase.executeForOrganization(
+      filters.organizationId,
+    );
+
     const results =
       await this.reservationRepository.findWithDetailsByOrganization(
         filters.organizationId,
@@ -1023,6 +1029,10 @@ export class ReservationOwnerService implements IReservationOwnerService {
     if (!org || org.ownerUserId !== userId) {
       throw new NotOrganizationOwnerError();
     }
+
+    await this.expireStaleReservationsUseCase.executeForOrganization(
+      organizationId,
+    );
 
     return this.reservationRepository.countByOrganizationAndStatuses(
       organizationId,
