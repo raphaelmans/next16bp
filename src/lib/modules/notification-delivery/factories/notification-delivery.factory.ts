@@ -1,3 +1,4 @@
+import { makePushSubscriptionRepository } from "@/lib/modules/push-subscription/factories/push-subscription.factory";
 import { getContainer } from "@/lib/shared/infra/container";
 import { NotificationDeliveryJobRepository } from "../repositories/notification-delivery-job.repository";
 import { NotificationRecipientRepository } from "../repositories/notification-recipient.repository";
@@ -32,6 +33,7 @@ export function makeNotificationDeliveryService() {
     notificationDeliveryService = new NotificationDeliveryService(
       makeNotificationDeliveryJobRepository(),
       makeNotificationRecipientRepository(),
+      makePushSubscriptionRepository(),
     );
   }
   return notificationDeliveryService;

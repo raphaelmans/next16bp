@@ -17,7 +17,7 @@ This system currently supports:
 - Channels: EMAIL (Resend) + SMS (Semaphore) when contact details exist
 - Delivery: async outbox jobs (`notification_delivery_job`) dispatched by cron
 
-Not in scope yet (intentionally deferred): in-app inbox, push notifications, user notification preferences, multi-event templates.
+Not in scope yet (intentionally deferred): in-app inbox, user notification preferences, multi-event templates.
 
 ## 1) Delivery pipeline (MVP)
 

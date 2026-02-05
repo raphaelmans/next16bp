@@ -22,5 +22,5 @@
 - Recipients:
   - Admins (`user_roles.role = "admin"`)
   - Court owner (org contact or owner profile)
-- Channels: email + SMS (when contact details exist)
+- Channels: email + SMS (when contact details exist) + browser notifications (WEB_PUSH) when a push subscription exists
 - Delivery: async outbox jobs dispatched by cron

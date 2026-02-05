@@ -26,12 +26,22 @@ export type OwnerRecipient = {
   phoneNumber: string | null;
 };
 
+export type PlayerRecipient = {
+  userId: string;
+  email: string | null;
+  phoneNumber: string | null;
+};
+
 export interface INotificationRecipientRepository {
   findAdminRecipients(ctx?: RequestContext): Promise<AdminRecipient[]>;
   findOwnerRecipientByOrganizationId(
     organizationId: string,
     ctx?: RequestContext,
   ): Promise<OwnerRecipient | null>;
+  findPlayerRecipientByReservationId(
+    reservationId: string,
+    ctx?: RequestContext,
+  ): Promise<PlayerRecipient | null>;
   findOwnerRecipientByReservationId(
     reservationId: string,
     ctx?: RequestContext,
@@ -105,6 +115,32 @@ export class NotificationRecipientRepository
       ownerUserId: row.ownerUserId,
       email: row.orgContactEmail ?? row.ownerEmail ?? null,
       phoneNumber: row.orgContactPhone ?? row.ownerPhone ?? null,
+    };
+  }
+
+  async findPlayerRecipientByReservationId(
+    reservationId: string,
+    ctx?: RequestContext,
+  ): Promise<PlayerRecipient | null> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select({
+        userId: profile.userId,
+        email: profile.email,
+        phoneNumber: profile.phoneNumber,
+      })
+      .from(reservation)
+      .innerJoin(profile, eq(profile.id, reservation.playerId))
+      .where(eq(reservation.id, reservationId))
+      .limit(1);
+
+    const row = result[0];
+    if (!row) return null;
+
+    return {
+      userId: row.userId,
+      email: row.email ?? null,
+      phoneNumber: row.phoneNumber ?? null,
     };
   }
 

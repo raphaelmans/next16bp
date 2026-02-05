@@ -19,4 +19,4 @@ This documentation is split into multiple levels of detail so you can share the 
   - `place_verification.approved|rejected` -> notify court owner
   - `claim_request.approved|rejected` -> notify court owner
 - Delivery is asynchronous via outbox jobs and a cron dispatcher.
-- Channels: Email (Resend) and SMS (Semaphore) when contact details exist.
+- Channels: Email (Resend), SMS (Semaphore) when contact details exist, and Web Push (browser notifications) when a push subscription exists.

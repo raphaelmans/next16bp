@@ -17,6 +17,7 @@ import type { ICourtPriceOverrideRepository } from "@/lib/modules/court-price-ov
 import type { ICourtRateRuleRepository } from "@/lib/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import { GuestProfileNotFoundError } from "@/lib/modules/guest-profile/errors/guest-profile.errors";
 import type { IGuestProfileRepository } from "@/lib/modules/guest-profile/repositories/guest-profile.repository";
+import type { NotificationDeliveryService } from "@/lib/modules/notification-delivery/services/notification-delivery.service";
 import { NotOrganizationOwnerError } from "@/lib/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
 import type { IOrganizationPaymentMethodRepository } from "@/lib/modules/organization-payment/repositories/organization-payment-method.repository";
@@ -107,6 +108,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     private organizationRepository: IOrganizationRepository,
     private transactionManager: TransactionManager,
     private expireStaleReservationsUseCase: IExpireStaleReservationsUseCase,
+    private notificationDeliveryService: NotificationDeliveryService,
     private paymentProofRepository?: IPaymentProofRepository,
     private guestProfileRepository?: IGuestProfileRepository,
     private courtHoursRepository?: ICourtHoursRepository,
@@ -250,6 +252,19 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       await this.verifyCourtOwnership(userId, reservation.courtId, ctx);
 
+      const court = await this.courtRepository.findById(
+        reservation.courtId,
+        ctx,
+      );
+      if (!court) {
+        throw new CourtNotFoundError(reservation.courtId);
+      }
+      const placeId = this.requireCourtPlaceId(court.placeId);
+      const place = await this.placeRepository.findById(placeId, ctx);
+      if (!place) {
+        throw new PlaceNotFoundError(placeId);
+      }
+
       if (reservation.status !== "CREATED") {
         throw new InvalidReservationStatusError(
           reservationId,
@@ -305,6 +320,22 @@ export class ReservationOwnerService implements IReservationOwnerService {
           "Reservation accepted by owner",
         );
 
+        await this.notificationDeliveryService.enqueuePlayerReservationAwaitingPayment(
+          {
+            reservationId,
+            placeName: place.name,
+            courtLabel: court.label,
+            startTimeIso: updated.startTime.toISOString(),
+            endTimeIso: updated.endTime.toISOString(),
+            expiresAtIso: updated.expiresAt
+              ? new Date(updated.expiresAt).toISOString()
+              : null,
+            totalPriceCents: updated.totalPriceCents,
+            currency: updated.currency,
+          },
+          ctx,
+        );
+
         return updated;
       }
 
@@ -339,6 +370,17 @@ export class ReservationOwnerService implements IReservationOwnerService {
         "Reservation confirmed by owner",
       );
 
+      await this.notificationDeliveryService.enqueuePlayerReservationConfirmed(
+        {
+          reservationId,
+          placeName: place.name,
+          courtLabel: court.label,
+          startTimeIso: updated.startTime.toISOString(),
+          endTimeIso: updated.endTime.toISOString(),
+        },
+        ctx,
+      );
+
       return updated;
     });
   }
@@ -360,6 +402,19 @@ export class ReservationOwnerService implements IReservationOwnerService {
       }
 
       await this.verifyCourtOwnership(userId, reservation.courtId, ctx);
+
+      const court = await this.courtRepository.findById(
+        reservation.courtId,
+        ctx,
+      );
+      if (!court) {
+        throw new CourtNotFoundError(reservation.courtId);
+      }
+      const placeId = this.requireCourtPlaceId(court.placeId);
+      const place = await this.placeRepository.findById(placeId, ctx);
+      if (!place) {
+        throw new PlaceNotFoundError(placeId);
+      }
 
       if (reservation.status !== "PAYMENT_MARKED_BY_USER") {
         throw new InvalidReservationStatusError(
@@ -408,6 +463,17 @@ export class ReservationOwnerService implements IReservationOwnerService {
         "Reservation payment confirmed by owner",
       );
 
+      await this.notificationDeliveryService.enqueuePlayerReservationConfirmed(
+        {
+          reservationId: data.reservationId,
+          placeName: place.name,
+          courtLabel: court.label,
+          startTimeIso: updated.startTime.toISOString(),
+          endTimeIso: updated.endTime.toISOString(),
+        },
+        ctx,
+      );
+
       return updated;
     });
   }
@@ -432,6 +498,19 @@ export class ReservationOwnerService implements IReservationOwnerService {
         reservation.courtId,
         ctx,
       );
+
+      const court = await this.courtRepository.findById(
+        reservation.courtId,
+        ctx,
+      );
+      if (!court) {
+        throw new CourtNotFoundError(reservation.courtId);
+      }
+      const placeId = this.requireCourtPlaceId(court.placeId);
+      const place = await this.placeRepository.findById(placeId, ctx);
+      if (!place) {
+        throw new PlaceNotFoundError(placeId);
+      }
 
       if (reservation.status !== "CREATED") {
         throw new InvalidReservationStatusError(
@@ -526,6 +605,17 @@ export class ReservationOwnerService implements IReservationOwnerService {
         "Reservation confirmed as paid offline by owner",
       );
 
+      await this.notificationDeliveryService.enqueuePlayerReservationConfirmed(
+        {
+          reservationId: data.reservationId,
+          placeName: place.name,
+          courtLabel: court.label,
+          startTimeIso: updated.startTime.toISOString(),
+          endTimeIso: updated.endTime.toISOString(),
+        },
+        ctx,
+      );
+
       return updated;
     });
   }
@@ -546,6 +636,19 @@ export class ReservationOwnerService implements IReservationOwnerService {
       }
 
       await this.verifyCourtOwnership(userId, reservation.courtId, ctx);
+
+      const court = await this.courtRepository.findById(
+        reservation.courtId,
+        ctx,
+      );
+      if (!court) {
+        throw new CourtNotFoundError(reservation.courtId);
+      }
+      const placeId = this.requireCourtPlaceId(court.placeId);
+      const place = await this.placeRepository.findById(placeId, ctx);
+      if (!place) {
+        throw new PlaceNotFoundError(placeId);
+      }
 
       if (
         reservation.status !== "CREATED" &&
@@ -592,6 +695,18 @@ export class ReservationOwnerService implements IReservationOwnerService {
           reason: data.reason,
         },
         "Reservation rejected by owner",
+      );
+
+      await this.notificationDeliveryService.enqueuePlayerReservationRejected(
+        {
+          reservationId: data.reservationId,
+          placeName: place.name,
+          courtLabel: court.label,
+          startTimeIso: updated.startTime.toISOString(),
+          endTimeIso: updated.endTime.toISOString(),
+          reason: data.reason,
+        },
+        ctx,
       );
 
       return updated;

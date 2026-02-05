@@ -32,6 +32,8 @@ export * from "./place-amenity";
 export * from "./place-photo";
 export * from "./place-verification";
 export * from "./profile";
+// Push subscription
+export * from "./push-subscription";
 // Reservation-related tables
 export * from "./reservation";
 export * from "./reservation-chat";

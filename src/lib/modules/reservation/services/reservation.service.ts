@@ -817,6 +817,34 @@ export class ReservationService implements IReservationService {
         "Player marked payment",
       );
 
+      try {
+        const court = await this.courtRepository.findById(
+          reservation.courtId,
+          ctx,
+        );
+        if (court?.placeId) {
+          const place = await this.placeRepository.findById(court.placeId, ctx);
+          if (place) {
+            await this.notificationDeliveryService.enqueueOwnerReservationPaymentMarked(
+              {
+                reservationId: data.reservationId,
+                placeName: place.name,
+                courtLabel: court.label,
+                startTimeIso: updated.startTime.toISOString(),
+                endTimeIso: updated.endTime.toISOString(),
+                playerName: updated.playerNameSnapshot ?? "Player",
+              },
+              ctx,
+            );
+          }
+        }
+      } catch (error) {
+        logger.warn(
+          { err: error, reservationId: data.reservationId },
+          "Failed to enqueue reservation.payment_marked notification",
+        );
+      }
+
       return updated;
     });
   }
@@ -909,6 +937,35 @@ export class ReservationService implements IReservationService {
         },
         "Reservation cancelled by player",
       );
+
+      try {
+        const court = await this.courtRepository.findById(
+          reservation.courtId,
+          ctx,
+        );
+        if (court?.placeId) {
+          const place = await this.placeRepository.findById(court.placeId, ctx);
+          if (place) {
+            await this.notificationDeliveryService.enqueueOwnerReservationCancelled(
+              {
+                reservationId: data.reservationId,
+                placeName: place.name,
+                courtLabel: court.label,
+                startTimeIso: updated.startTime.toISOString(),
+                endTimeIso: updated.endTime.toISOString(),
+                playerName: updated.playerNameSnapshot ?? "Player",
+                reason: data.reason,
+              },
+              ctx,
+            );
+          }
+        }
+      } catch (error) {
+        logger.warn(
+          { err: error, reservationId: data.reservationId },
+          "Failed to enqueue reservation.cancelled notification",
+        );
+      }
 
       return updated;
     });

@@ -32,12 +32,21 @@
 - `NEXT_PUBLIC_APP_URL` (optional; used for deep links)
 - `CRON_SECRET`
 
+Web Push:
+- `NOTIFICATION_WEB_PUSH_ENABLED` (default: true)
+- `WEB_PUSH_VAPID_PUBLIC_KEY`
+- `WEB_PUSH_VAPID_PRIVATE_KEY`
+- `WEB_PUSH_VAPID_SUBJECT`
+
 ## Channel toggles
 
 - `NOTIFICATION_EMAIL_ENABLED` (default: true)
   - Set to `false` to permanently skip EMAIL jobs (marked `SKIPPED` with `DISABLED_CHANNEL:EMAIL`).
 - `NOTIFICATION_SMS_ENABLED` (default: true)
   - Set to `false` to permanently skip SMS jobs (marked `SKIPPED` with `DISABLED_CHANNEL:SMS`).
+
+- `NOTIFICATION_WEB_PUSH_ENABLED` (default: true)
+  - Set to `false` to permanently skip WEB_PUSH jobs (marked `SKIPPED` with `DISABLED_CHANNEL:WEB_PUSH`).
 
 Notes:
 - When a channel is disabled, enqueue will stop creating jobs for that channel.

@@ -49,6 +49,24 @@ export const env = createEnv({
       .string()
       .transform((v) => v !== "false")
       .optional(),
+
+    NOTIFICATION_WEB_PUSH_ENABLED: z
+      .string()
+      .transform((v) => v !== "false")
+      .optional(),
+
+    WEB_PUSH_VAPID_PUBLIC_KEY: z.preprocess(
+      (v) => (v === "" ? undefined : v),
+      z.string().min(1).optional(),
+    ),
+    WEB_PUSH_VAPID_PRIVATE_KEY: z.preprocess(
+      (v) => (v === "" ? undefined : v),
+      z.string().min(1).optional(),
+    ),
+    WEB_PUSH_VAPID_SUBJECT: z.preprocess(
+      (v) => (v === "" ? undefined : v),
+      z.string().min(1).optional(),
+    ),
   },
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),

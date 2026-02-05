@@ -29,6 +29,10 @@
 - Vendor outages do not block owner workflows.
 - Jobs are retried with exponential backoff before giving up.
 
+### Browser notifications (Web Push)
+- When a user enables browser notifications, the platform can deliver short, Facebook-like notifications via the browser notification UI.
+- If a user has not enabled notifications (no push subscription), the underlying event still succeeds but no browser notification is sent.
+
 ### Admin experience
 - Notifications include a direct link to the review screen:
   - `/admin/verification/[requestId]`

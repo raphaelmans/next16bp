@@ -75,6 +75,12 @@ Court owner:
 - Resolved via `organization_profile.contactEmail/contactPhone`.
 - Fallback to `profile.email/phoneNumber` for `organization.ownerUserId`.
 
+## Web Push (browser) channel
+
+- Channel enum includes `WEB_PUSH`.
+- For `WEB_PUSH` jobs, `notification_delivery_job.target` stores a `push_subscription.id` (one job per device/subscription).
+- If a subscription is invalid/expired (HTTP 404/410 from the push service), mark the job `SKIPPED` and revoke the subscription.
+
 ## Idempotency
 
 Each job has a unique `idempotencyKey` to prevent duplicates.
@@ -92,6 +98,9 @@ Format (MVP):
 - `claim_request.approved:<requestId>:org:<organizationId>:sms`
 - `claim_request.rejected:<requestId>:org:<organizationId>:email`
 - `claim_request.rejected:<requestId>:org:<organizationId>:sms`
+
+Web Push adds a per-subscription suffix:
+- `reservation.created:<reservationId>:org:<organizationId>:web_push:<pushSubscriptionId>`
 
 ## Payload contract
 

@@ -27,6 +27,7 @@ import { placeManagementRouter } from "@/lib/modules/place/place-management.rout
 import { placeVerificationAdminRouter } from "@/lib/modules/place-verification/admin/place-verification-admin.router";
 import { placeVerificationRouter } from "@/lib/modules/place-verification/place-verification.router";
 import { profileRouter } from "@/lib/modules/profile/profile.router";
+import { pushSubscriptionRouter } from "@/lib/modules/push-subscription/push-subscription.router";
 import { reservationRouter } from "@/lib/modules/reservation/reservation.router";
 import { reservationOwnerRouter } from "@/lib/modules/reservation/reservation-owner.router";
 import { sportRouter } from "@/lib/modules/sport/sport.router";
@@ -63,6 +64,7 @@ export const appRouter = router({
   bookingsImport: bookingsImportRouter,
   reservation: reservationRouter,
   reservationOwner: reservationOwnerRouter,
+  pushSubscription: pushSubscriptionRouter,
   admin: router({
     claim: claimAdminRouter,
     court: adminCourtRouter,

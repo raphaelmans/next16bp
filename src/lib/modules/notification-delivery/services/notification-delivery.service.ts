@@ -1,5 +1,6 @@
 import { normalizePhMobile } from "@/common/phone";
 import { env } from "@/lib/env";
+import type { IPushSubscriptionRepository } from "@/lib/modules/push-subscription/repositories/push-subscription.repository";
 import type { InsertNotificationDeliveryJob } from "@/lib/shared/infra/db/schema";
 import { logger } from "@/lib/shared/infra/logger";
 import type { RequestContext } from "@/lib/shared/kernel/context";
@@ -51,11 +52,91 @@ export type OwnerClaimReviewedPayload = {
   reviewNotes?: string | null;
 };
 
+export type PlayerReservationAwaitingPaymentPayload = {
+  reservationId: string;
+  placeName: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  expiresAtIso: string | null;
+  totalPriceCents: number;
+  currency: string;
+};
+
+export type OwnerReservationPaymentMarkedPayload = {
+  reservationId: string;
+  placeName: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  playerName: string;
+};
+
+export type PlayerReservationConfirmedPayload = {
+  reservationId: string;
+  placeName: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+};
+
+export type PlayerReservationRejectedPayload = {
+  reservationId: string;
+  placeName: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  reason?: string | null;
+};
+
+export type OwnerReservationCancelledPayload = {
+  reservationId: string;
+  placeName: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  playerName: string;
+  reason?: string | null;
+};
+
 export class NotificationDeliveryService {
   constructor(
     private jobRepository: INotificationDeliveryJobRepository,
     private recipientRepository: INotificationRecipientRepository,
+    private pushSubscriptionRepository: IPushSubscriptionRepository,
   ) {}
+
+  private async enqueueWebPushForUser(options: {
+    userId: string;
+    eventType: string;
+    payload: Record<string, unknown>;
+    reservationId?: string;
+    organizationId?: string;
+    placeVerificationRequestId?: string;
+    idempotencyKeyBase: string;
+    ctx?: RequestContext;
+  }): Promise<InsertNotificationDeliveryJob[]> {
+    if (env.NOTIFICATION_WEB_PUSH_ENABLED === false) return [];
+
+    const subscriptions =
+      await this.pushSubscriptionRepository.listActiveByUserId(
+        options.userId,
+        options.ctx,
+      );
+
+    if (!subscriptions.length) return [];
+
+    return subscriptions.map((sub) => ({
+      eventType: options.eventType,
+      channel: "WEB_PUSH",
+      target: sub.id,
+      organizationId: options.organizationId,
+      reservationId: options.reservationId,
+      placeVerificationRequestId: options.placeVerificationRequestId,
+      payload: options.payload,
+      idempotencyKey: `${options.idempotencyKeyBase}:web_push:${sub.id}`,
+    }));
+  }
 
   async enqueueAdminVerificationRequested(
     payload: AdminVerificationRequestedPayload,
@@ -102,6 +183,17 @@ export class NotificationDeliveryService {
           idempotencyKey: `place_verification.requested:${payload.requestId}:admin:${recipient.userId}:sms`,
         });
       }
+
+      const webPushJobs = await this.enqueueWebPushForUser({
+        userId: recipient.userId,
+        eventType: "place_verification.requested",
+        organizationId: payload.organizationId,
+        placeVerificationRequestId: payload.requestId,
+        payload: basePayload,
+        idempotencyKeyBase: `place_verification.requested:${payload.requestId}:admin:${recipient.userId}`,
+        ctx,
+      });
+      jobs.push(...webPushJobs);
     }
 
     if (!jobs.length) {
@@ -204,6 +296,17 @@ export class NotificationDeliveryService {
       });
     }
 
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: recipient.ownerUserId,
+      eventType: "reservation.created",
+      organizationId: payload.organizationId,
+      reservationId: payload.reservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation.created:${payload.reservationId}:org:${payload.organizationId}`,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
     if (!jobs.length) {
       logger.warn(
         {
@@ -299,6 +402,17 @@ export class NotificationDeliveryService {
       });
     }
 
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: recipient.ownerUserId,
+      eventType,
+      organizationId: payload.organizationId,
+      placeVerificationRequestId: payload.requestId,
+      payload: basePayload,
+      idempotencyKeyBase: `${eventType}:${payload.requestId}:org:${payload.organizationId}`,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
     if (!jobs.length) {
       logger.warn(
         {
@@ -392,6 +506,16 @@ export class NotificationDeliveryService {
       });
     }
 
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: recipient.ownerUserId,
+      eventType,
+      organizationId: payload.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase: `${eventType}:${payload.requestId}:org:${payload.organizationId}`,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
     if (!jobs.length) {
       logger.warn(
         {
@@ -418,6 +542,195 @@ export class NotificationDeliveryService {
       "Enqueued owner claim request review notification jobs",
     );
 
+    return { jobCount: jobs.length };
+  }
+
+  async enqueuePlayerReservationAwaitingPayment(
+    payload: PlayerReservationAwaitingPaymentPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    if (env.NOTIFICATION_WEB_PUSH_ENABLED === false) return { jobCount: 0 };
+
+    const recipient =
+      await this.recipientRepository.findPlayerRecipientByReservationId(
+        payload.reservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      expiresAtIso: payload.expiresAtIso,
+      totalPriceCents: payload.totalPriceCents,
+      currency: payload.currency,
+    };
+
+    const jobs = await this.enqueueWebPushForUser({
+      userId: recipient.userId,
+      eventType: "reservation.awaiting_payment",
+      reservationId: payload.reservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation.awaiting_payment:${payload.reservationId}:user:${recipient.userId}`,
+      ctx,
+    });
+
+    await this.jobRepository.createMany(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueueOwnerReservationPaymentMarked(
+    payload: OwnerReservationPaymentMarkedPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    if (env.NOTIFICATION_WEB_PUSH_ENABLED === false) return { jobCount: 0 };
+
+    const owner =
+      await this.recipientRepository.findOwnerRecipientByReservationId(
+        payload.reservationId,
+        ctx,
+      );
+    if (!owner) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      playerName: payload.playerName,
+    };
+
+    const jobs = await this.enqueueWebPushForUser({
+      userId: owner.ownerUserId,
+      eventType: "reservation.payment_marked",
+      reservationId: payload.reservationId,
+      organizationId: owner.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation.payment_marked:${payload.reservationId}:org:${owner.organizationId}`,
+      ctx,
+    });
+
+    await this.jobRepository.createMany(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueuePlayerReservationConfirmed(
+    payload: PlayerReservationConfirmedPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    if (env.NOTIFICATION_WEB_PUSH_ENABLED === false) return { jobCount: 0 };
+
+    const recipient =
+      await this.recipientRepository.findPlayerRecipientByReservationId(
+        payload.reservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+    };
+
+    const jobs = await this.enqueueWebPushForUser({
+      userId: recipient.userId,
+      eventType: "reservation.confirmed",
+      reservationId: payload.reservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation.confirmed:${payload.reservationId}:user:${recipient.userId}`,
+      ctx,
+    });
+
+    await this.jobRepository.createMany(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueuePlayerReservationRejected(
+    payload: PlayerReservationRejectedPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    if (env.NOTIFICATION_WEB_PUSH_ENABLED === false) return { jobCount: 0 };
+
+    const recipient =
+      await this.recipientRepository.findPlayerRecipientByReservationId(
+        payload.reservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      reason: payload.reason ?? null,
+    };
+
+    const jobs = await this.enqueueWebPushForUser({
+      userId: recipient.userId,
+      eventType: "reservation.rejected",
+      reservationId: payload.reservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation.rejected:${payload.reservationId}:user:${recipient.userId}`,
+      ctx,
+    });
+
+    await this.jobRepository.createMany(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueueOwnerReservationCancelled(
+    payload: OwnerReservationCancelledPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    if (env.NOTIFICATION_WEB_PUSH_ENABLED === false) return { jobCount: 0 };
+
+    const owner =
+      await this.recipientRepository.findOwnerRecipientByReservationId(
+        payload.reservationId,
+        ctx,
+      );
+    if (!owner) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      playerName: payload.playerName,
+      reason: payload.reason ?? null,
+    };
+
+    const jobs = await this.enqueueWebPushForUser({
+      userId: owner.ownerUserId,
+      eventType: "reservation.cancelled",
+      reservationId: payload.reservationId,
+      organizationId: owner.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation.cancelled:${payload.reservationId}:org:${owner.organizationId}`,
+      ctx,
+    });
+
+    await this.jobRepository.createMany(jobs, ctx);
     return { jobCount: jobs.length };
   }
 }

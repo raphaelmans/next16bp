@@ -61,6 +61,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useLogout, useSession } from "@/features/auth";
+import { WebPushSettingsCard } from "@/features/notifications/components/web-push-settings";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
   RemovalRequestModal,
@@ -501,6 +502,8 @@ export default function OwnerSettingsPage() {
             </Button>
           </div>
         </StandardFormProvider>
+
+        <WebPushSettingsCard />
 
         <Card id={SETTINGS_SECTION_IDS.paymentMethods}>
           <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

@@ -154,7 +154,7 @@ export const bookingsImportRowStatusEnum = pgEnum(
  */
 export const notificationDeliveryChannelEnum = pgEnum(
   "notification_delivery_channel",
-  ["EMAIL", "SMS"],
+  ["EMAIL", "SMS", "WEB_PUSH"],
 );
 
 /**

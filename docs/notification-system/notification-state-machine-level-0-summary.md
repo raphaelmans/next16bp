@@ -8,5 +8,5 @@
   - `reservation.created` -> notify court owner
   - `place_verification.approved|rejected` -> notify court owner
   - `claim_request.approved|rejected` -> notify court owner
-- Channels: Email (Resend) + SMS (Semaphore) when contact details exist.
+- Channels: Email (Resend) + SMS (Semaphore) when contact details exist + Web Push (browser notifications) when a push subscription exists.
 - Job states: `PENDING -> SENDING -> SENT | FAILED | SKIPPED` with retries and backoff.
