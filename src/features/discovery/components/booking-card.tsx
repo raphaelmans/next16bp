@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
 import { formatCurrency } from "@/common/format";
+import { useNowMs } from "@/common/hooks/use-now";
 import { getZonedToday } from "@/common/time-zone";
 import {
   KudosDatePicker,
@@ -48,7 +49,13 @@ export function BookingCard({
   className,
 }: BookingCardProps) {
   const router = useRouter();
-  const selectedSlot = slots.find((s) => s.id === selectedSlotId);
+  const nowMs = useNowMs({ intervalMs: 10_000 });
+  const selectedSlotRaw = slots.find((s) => s.id === selectedSlotId);
+  const selectedSlot =
+    selectedSlotRaw && Date.parse(selectedSlotRaw.startTime) >= nowMs
+      ? selectedSlotRaw
+      : undefined;
+  const effectiveSelectedSlotId = selectedSlot ? selectedSlotId : undefined;
   const selectedSlotPrice = selectedSlot?.priceCents ?? pricePerHourCents;
   const hasSelectedPrice = selectedSlotPrice !== undefined;
   const isFreeCourt = isFree;
@@ -121,7 +128,7 @@ export function BookingCard({
             ) : slots.length > 0 ? (
               <TimeSlotPicker
                 slots={slots}
-                selectedId={selectedSlotId}
+                selectedId={effectiveSelectedSlotId}
                 onSelect={onSlotSelect}
                 showPrice={true}
                 timeZone={timeZone}

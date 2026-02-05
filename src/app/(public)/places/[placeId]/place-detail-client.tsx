@@ -36,6 +36,7 @@ import {
   formatInTimeZone,
 } from "@/common/format";
 import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import { useNowMs } from "@/common/hooks/use-now";
 import { buildViberDeepLink, toDialablePhone } from "@/common/phone";
 import { S } from "@/common/schemas";
 import {
@@ -231,6 +232,14 @@ export default function PlaceDetailPage() {
     isBookable,
     defaultDurationMinutes: DEFAULT_DURATION_MINUTES,
   });
+
+  const nowMs = useNowMs({ intervalMs: 10_000 });
+
+  React.useEffect(() => {
+    if (!selectedStartTime) return;
+    if (Date.parse(selectedStartTime) >= nowMs) return;
+    clearSelection(true);
+  }, [clearSelection, nowMs, selectedStartTime]);
 
   const scrollToSection = React.useCallback(
     (ref: React.RefObject<HTMLElement | null>) => {

@@ -28,6 +28,7 @@ import {
   formatDuration,
   formatInTimeZone,
 } from "@/common/format";
+import { useNowMs } from "@/common/hooks/use-now";
 import {
   getZonedDayKey,
   getZonedDayRangeForInstant,
@@ -444,6 +445,14 @@ export default function CourtDetailClient({
     setStartTimeParam(null);
     setDurationParam(DEFAULT_DURATION_MINUTES);
   }, [setDurationParam, setStartTimeParam]);
+
+  const nowMs = useNowMs({ intervalMs: 10_000 });
+
+  React.useEffect(() => {
+    if (!startTimeParam) return;
+    if (Date.parse(startTimeParam) >= nowMs) return;
+    clearSelection();
+  }, [clearSelection, nowMs, startTimeParam]);
 
   const handleRangeChange = React.useCallback(
     (range: { startTime: string; durationMinutes: number }) => {

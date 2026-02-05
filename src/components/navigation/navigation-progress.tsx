@@ -249,7 +249,7 @@ export function NavigationProgress() {
       aria-valuemax={100}
       aria-valuenow={Math.round(progress)}
     >
-      <div className="relative h-[3px] w-full">
+      <div className="relative h-[6px] w-full">
         <div
           className={cn(
             "relative h-full origin-left overflow-hidden rounded-full transition-[width] duration-150 ease-out",
