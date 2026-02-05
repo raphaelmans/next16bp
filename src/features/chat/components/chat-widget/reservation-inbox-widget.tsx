@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  ChevronDown,
-  MessagesSquare,
-  RefreshCw,
-  Search,
-  X,
-} from "lucide-react";
+import { ChevronDown, MessagesSquare, RefreshCw, Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Channel } from "stream-chat";
 import { formatInTimeZone, formatTimeRangeInTimeZone } from "@/common/format";
@@ -520,16 +514,6 @@ export function ReservationInboxWidget({
                 {config.ui.sheetDescription}
               </SheetDescription>
             </div>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9"
-              onClick={() => setOpen(false)}
-            >
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close</span>
-            </Button>
           </div>
 
           {authQuery.isLoading ? (

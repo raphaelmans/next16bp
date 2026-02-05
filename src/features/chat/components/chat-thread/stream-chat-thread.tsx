@@ -131,7 +131,6 @@ export function StreamChatThread({
     error: channelWatchError,
     sendMessage,
     sendFiles,
-    loadMore,
     refresh,
     markRead,
   } = useStreamChannel({
