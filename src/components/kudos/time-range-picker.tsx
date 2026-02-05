@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { useShallow } from "zustand/shallow";
 import { formatCurrency, formatTimeInTimeZone } from "@/common/format";
+import { useNowMs } from "@/common/hooks/use-now";
 import { useTouchIntent } from "@/common/use-touch-intent";
 import { cn } from "@/lib/utils";
 import {
@@ -29,22 +30,26 @@ export interface TimeRangePickerProps {
   onContinue?: () => void;
   continueLabel?: string;
   className?: string;
-  currentTimeISO?: string;
 }
 
 function isSlotAvailable(slot: TimeSlot): boolean {
   return slot.status === "available";
 }
 
+function isSlotSelectable(slot: TimeSlot, nowMs: number): boolean {
+  return isSlotAvailable(slot) && Date.parse(slot.startTime) >= nowMs;
+}
+
 function computeContiguousRange(
   slots: TimeSlot[],
   anchorIdx: number,
   currentIdx: number,
+  nowMs: number,
 ): { startIdx: number; endIdx: number } | null {
   const startIdx = Math.min(anchorIdx, currentIdx);
   const endIdx = Math.max(anchorIdx, currentIdx);
   for (let i = startIdx; i <= endIdx; i++) {
-    if (!isSlotAvailable(slots[i])) return null;
+    if (!isSlotSelectable(slots[i], nowMs)) return null;
   }
   const slotCount = endIdx - startIdx + 1;
   if (slotCount * SLOT_STEP_MINUTES > MAX_DURATION_MINUTES) return null;
@@ -55,12 +60,13 @@ function clampToContiguous(
   slots: TimeSlot[],
   anchorIdx: number,
   targetIdx: number,
+  nowMs: number,
 ): number {
   const direction = targetIdx >= anchorIdx ? 1 : -1;
   let lastValid = anchorIdx;
   let i = anchorIdx + direction;
   while (direction > 0 ? i <= targetIdx : i >= targetIdx) {
-    if (!isSlotAvailable(slots[i])) break;
+    if (!isSlotSelectable(slots[i], nowMs)) break;
     const slotCount = Math.abs(i - anchorIdx) + 1;
     if (slotCount * SLOT_STEP_MINUTES > MAX_DURATION_MINUTES) break;
     lastValid = i;
@@ -393,30 +399,32 @@ export function TimeRangePicker({
   onContinue,
   continueLabel = "Continue to review",
   className,
-  currentTimeISO,
 }: TimeRangePickerProps) {
+  const nowMs = useNowMs({ intervalMs: 10_000 });
+
   // Compute committed range from props
   const committedRange = React.useMemo(() => {
     if (!selectedStartTime || !selectedDurationMinutes) return null;
+    if (Date.parse(selectedStartTime) < nowMs) return null;
     const startIdx = slots.findIndex((s) => s.startTime === selectedStartTime);
     if (startIdx === -1) return null;
     const slotCount = selectedDurationMinutes / SLOT_STEP_MINUTES;
     const endIdx = startIdx + slotCount - 1;
     if (endIdx >= slots.length) return null;
     return { startIdx, endIdx };
-  }, [selectedStartTime, selectedDurationMinutes, slots]);
+  }, [nowMs, selectedStartTime, selectedDurationMinutes, slots]);
 
   // Build config — stable reference via useMemo
   const config = React.useMemo<RangeSelectionConfig>(
     () => ({
       isCellAvailable: (idx) => {
         const slot = slots[idx];
-        return slot ? isSlotAvailable(slot) : false;
+        return slot ? isSlotSelectable(slot, nowMs) : false;
       },
       computeRange: (anchorIdx, targetIdx) =>
-        computeContiguousRange(slots, anchorIdx, targetIdx),
+        computeContiguousRange(slots, anchorIdx, targetIdx, nowMs),
       clampToContiguous: (anchorIdx, targetIdx) =>
-        clampToContiguous(slots, anchorIdx, targetIdx),
+        clampToContiguous(slots, anchorIdx, targetIdx, nowMs),
       commitRange: (startIdx, endIdx) => {
         const startSlot = slots[startIdx];
         if (!startSlot) return;
@@ -427,7 +435,7 @@ export function TimeRangePicker({
         });
       },
     }),
-    [slots, onChange],
+    [slots, nowMs, onChange],
   );
 
   return (
@@ -440,7 +448,7 @@ export function TimeRangePicker({
         onContinue={onContinue}
         continueLabel={continueLabel}
         className={className}
-        currentTimeISO={currentTimeISO}
+        nowMs={nowMs}
       />
     </RangeSelectionProvider>
   );
@@ -455,7 +463,7 @@ function TimeRangePickerInner({
   onContinue,
   continueLabel,
   className,
-  currentTimeISO,
+  nowMs,
 }: {
   slots: TimeSlot[];
   timeZone: string;
@@ -464,7 +472,7 @@ function TimeRangePickerInner({
   onContinue?: () => void;
   continueLabel: string;
   className?: string;
-  currentTimeISO?: string;
+  nowMs: number;
 }) {
   const { pointerUp, setHoveredIdx } = useRangeSelection(
     useShallow((s) => ({
@@ -510,7 +518,7 @@ function TimeRangePickerInner({
             slot={slot}
             timeZone={timeZone}
             showPrice={showPrice}
-            isPast={currentTimeISO ? slot.startTime < currentTimeISO : false}
+            isPast={Date.parse(slot.startTime) < nowMs}
           />
         ))}
       </div>

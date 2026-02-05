@@ -5,6 +5,7 @@ import {
   formatTime,
   formatTimeInTimeZone,
 } from "@/common/format";
+import { useNowMs } from "@/common/hooks/use-now";
 import { cn } from "@/lib/utils";
 
 export type TimeSlotStatus = "available" | "booked" | "selected" | "held";
@@ -42,6 +43,8 @@ export function TimeSlotPicker({
   className,
   renderSlotAction,
 }: TimeSlotPickerProps) {
+  const nowMs = useNowMs({ intervalMs: 10_000 });
+
   return (
     <div
       className={cn(
@@ -51,7 +54,7 @@ export function TimeSlotPicker({
     >
       {slots.map((slot) => {
         const isSelected = slot.id === selectedId;
-        const { isDisabled } = getSlotState(slot);
+        const { isDisabled } = getSlotState(slot, nowMs);
         const action = renderSlotAction?.({ slot, isSelected, isDisabled });
         const button = (
           <TimeSlotButton
@@ -60,6 +63,7 @@ export function TimeSlotPicker({
             onClick={() => onSelect?.(slot)}
             showPrice={showPrice}
             timeZone={timeZone}
+            nowMs={nowMs}
           />
         );
 
@@ -88,6 +92,7 @@ interface TimeSlotButtonProps {
   onClick: () => void;
   showPrice?: boolean;
   timeZone?: string;
+  nowMs: number;
 }
 
 function TimeSlotButton({
@@ -96,8 +101,12 @@ function TimeSlotButton({
   onClick,
   showPrice,
   timeZone,
+  nowMs,
 }: TimeSlotButtonProps) {
-  const { isAvailable, isBooked, isHeld, isDisabled } = getSlotState(slot);
+  const { isAvailable, isBooked, isHeld, isPast, isDisabled } = getSlotState(
+    slot,
+    nowMs,
+  );
   const startLabel = timeZone
     ? formatTimeInTimeZone(slot.startTime, timeZone)
     : formatTime(slot.startTime);
@@ -115,10 +124,14 @@ function TimeSlotButton({
         // Available
         isAvailable &&
           !isSelected &&
+          !isPast &&
           "bg-success/10 text-success border-success/20 hover:bg-success/20 hover:border-success/40",
         // Selected
         isSelected &&
           "bg-primary/10 text-primary border-primary ring-2 ring-primary/50",
+        // Past
+        isPast &&
+          "bg-muted/60 text-muted-foreground border-border/60 cursor-not-allowed",
         // Booked
         isBooked &&
           "bg-muted/60 text-muted-foreground border-border/60 cursor-not-allowed",
@@ -145,12 +158,13 @@ function TimeSlotButton({
   );
 }
 
-function getSlotState(slot: TimeSlot) {
+function getSlotState(slot: TimeSlot, nowMs: number) {
   const isAvailable = slot.status === "available";
   const isBooked = slot.status === "booked";
   const isHeld = slot.status === "held";
-  const isDisabled = isBooked || isHeld;
-  return { isAvailable, isBooked, isHeld, isDisabled };
+  const isPast = Date.parse(slot.startTime) < nowMs;
+  const isDisabled = isBooked || isHeld || isPast;
+  return { isAvailable, isBooked, isHeld, isPast, isDisabled };
 }
 
 function getUnavailableLabel(reason?: TimeSlot["unavailableReason"]): string {

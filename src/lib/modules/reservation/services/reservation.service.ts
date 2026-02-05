@@ -53,6 +53,7 @@ import {
   ReservationCancellationWindowError,
   ReservationExpiredError,
   ReservationNotFoundError,
+  ReservationStartTimeInPastError,
   TermsNotAcceptedError,
 } from "../errors/reservation.errors";
 import type { IReservationRepository } from "../repositories/reservation.repository";
@@ -212,6 +213,13 @@ export class ReservationService implements IReservationService {
     }
   }
 
+  private assertStartTimeNotInPast(startTime: Date): void {
+    const now = new Date();
+    if (startTime.getTime() < now.getTime()) {
+      throw new ReservationStartTimeInPastError(startTime, now);
+    }
+  }
+
   private async assertPlaceBookable(
     placeId: string,
     ctx?: RequestContext,
@@ -320,6 +328,7 @@ export class ReservationService implements IReservationService {
     await this.assertPlaceBookable(placeId);
 
     const startTime = new Date(data.startTime);
+    this.assertStartTimeNotInPast(startTime);
     this.assertWithinBookingWindow(startTime);
 
     const pricing = await this.computeCourtPricing({
@@ -522,6 +531,7 @@ export class ReservationService implements IReservationService {
     }
 
     const startTime = new Date(data.startTime);
+    this.assertStartTimeNotInPast(startTime);
     this.assertWithinBookingWindow(startTime);
     const endTime = addMinutes(startTime, data.durationMinutes);
     const courtIds = activeCourts.map((court) => court.id);

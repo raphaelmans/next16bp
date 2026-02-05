@@ -303,19 +303,6 @@ export default function PlaceDetailPage() {
     [placeTimeZone, today],
   );
 
-  const currentHour = React.useMemo(() => {
-    const now = new Date();
-    const parts = new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      hour12: false,
-      timeZone: placeTimeZone,
-    }).formatToParts(now);
-    const hourPart = parts.find((p) => p.type === "hour");
-    return hourPart ? Number.parseInt(hourPart.value, 10) : 0;
-  }, [placeTimeZone]);
-
-  const currentTimeISO = React.useMemo(() => new Date().toISOString(), []);
-
   React.useEffect(() => {
     if (!showBooking) return;
     if (!selectedDate) {
@@ -1529,7 +1516,6 @@ export default function PlaceDetailPage() {
                           onContinue={handleReserve}
                           todayDayKey={todayDayKey}
                           maxDayKey={maxDayKey}
-                          currentHour={currentHour}
                         />
                       )
                     ) : !selectedDate ? (
@@ -1548,7 +1534,6 @@ export default function PlaceDetailPage() {
                         onChange={handleAnyRangeChange}
                         onClear={() => clearSelection(true)}
                         onContinue={handleReserve}
-                        currentTimeISO={currentTimeISO}
                       />
                     ) : (
                       <AvailabilityEmptyState
@@ -1608,7 +1593,6 @@ export default function PlaceDetailPage() {
                       onChange={handleCourtRangeChange}
                       onClear={() => clearSelection(true)}
                       onContinue={handleReserve}
-                      currentTimeISO={currentTimeISO}
                     />
                   ) : (
                     <AvailabilityEmptyState
@@ -2342,7 +2326,6 @@ export default function PlaceDetailPage() {
                     }
                     onClear={() => clearSelection(true)}
                     onContinue={handleReserve}
-                    currentTimeISO={currentTimeISO}
                   />
                 ) : (
                   <div className="py-6 text-center text-sm text-muted-foreground">

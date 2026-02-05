@@ -144,3 +144,14 @@ export class BookingWindowExceededError extends ValidationError {
     });
   }
 }
+
+export class ReservationStartTimeInPastError extends ValidationError {
+  readonly code = "RESERVATION_START_TIME_IN_PAST";
+
+  constructor(startTime: Date, now: Date) {
+    super("Start time must be in the future", {
+      startTime: startTime.toISOString(),
+      now: now.toISOString(),
+    });
+  }
+}

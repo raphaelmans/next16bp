@@ -1,23 +1,27 @@
 # Project Instructions
 
 ## Commands (pnpm)
+
 Run all commands from repo root.
 
 ### Dev / Build
+
 ```bash
 pnpm dev        # Start Next.js dev server
 pnpm dev:grab   # Run opencode + next dev
-pnpm build      # Production build
+pnpm build      # Production build, IMPORTANT: never run this unless instructed to. Use lint instead for validation.
 pnpm start      # Start production server
 ```
 
 ### Lint / Format
+
 ```bash
 pnpm lint       # biome check
 pnpm format     # biome format --write
 ```
 
 ### Database (Drizzle + dotenvx)
+
 ```bash
 pnpm db:pull         # Pull schema from DB
 pnpm db:generate     # Generate migrations
@@ -29,6 +33,7 @@ pnpm db:seed:buckets # Seed storage buckets
 ```
 
 ### Scripts (Normalization)
+
 ```bash
 pnpm script:normalize-data
 pnpm script:contract-test-normalize-data
@@ -37,10 +42,12 @@ pnpm script:promote-tier3
 ```
 
 ### Tests
+
 - No test runner is configured. Use `pnpm lint` + `TZ=UTC pnpm build` for validation.
 - If you add a test runner, update this file with the exact single-test command.
 
 ## Stack
+
 - Next.js 16 App Router + React 19
 - TypeScript (strict)
 - tRPC + TanStack Query
@@ -50,6 +57,7 @@ pnpm script:promote-tier3
 - Biome for lint/format
 
 ## Architecture (current + target)
+
 - Routes: `src/app`
 - Frontend features: `src/features`
 - Shared UI: `src/components`
@@ -59,6 +67,7 @@ pnpm script:promote-tier3
 - tRPC client: `src/trpc`
 
 ## Conventions
+
 - Formatting: Biome, 2-space indent, double quotes, semicolons; keep changes minimal.
 - Imports: use `@/` alias; group external → internal alias → relative.
 - Frontend: add "use client" to client components; StandardForm in `src/components/form`; URL state via `nuqs`; `trpc` from `@/trpc/client`; invalidate via `trpc.useUtils()`; helpers in `src/features/<feature>/helpers.ts`.
@@ -67,16 +76,19 @@ pnpm script:promote-tier3
 - Time zones: treat `place.timeZone` as canonical; use `src/common/time-zone.ts` and `src/common/format.ts`.
 
 ## Environment
+
 - Copy `.env.example` to `.env.local`; DB scripts expect `dotenvx`.
 - Required: `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 
 ## Documentation References
+
 - `@guides/context.md`
 - `@guides/README.md`
 - `@guides/client/README.md`
 - `@guides/server/README.md`
 
 ## Agent Rules
+
 - When instructions reference files via `@path`, load them with the Read tool.
 - When using `ui-ux-pro-max`, read `@business-contexts/kudoscourts-design-system.md` first and follow its palette/typography.
 - IMPORTANT: After completing a complex implementation (multi-file changes, new features, architectural changes, or any non-trivial work), ask the user: "Should I run `/agent-context` to log this work?" Do not run it automatically — always ask first.

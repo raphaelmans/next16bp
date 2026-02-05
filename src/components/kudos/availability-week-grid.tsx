@@ -8,6 +8,7 @@ import {
   formatInTimeZone,
   formatTimeInTimeZone,
 } from "@/common/format";
+import { useNowMs } from "@/common/hooks/use-now";
 import { getZonedDayRangeFromDayKey } from "@/common/time-zone";
 import { cn } from "@/lib/utils";
 import {
@@ -39,6 +40,10 @@ function isSlotAvailable(slot: TimeSlot): boolean {
   return slot.status === "available";
 }
 
+function isSlotSelectable(slot: TimeSlot, nowMs: number): boolean {
+  return isSlotAvailable(slot) && Date.parse(slot.startTime) >= nowMs;
+}
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -59,7 +64,6 @@ export type AvailabilityWeekGridProps = {
   continueLabel?: string;
   todayDayKey: string;
   maxDayKey: string;
-  currentHour?: number;
 };
 
 // ---------------------------------------------------------------------------
@@ -271,6 +275,7 @@ const WeekGridCell = React.memo(function WeekGridCell({
   );
 
   const available = slot ? isSlotAvailable(slot) : false;
+  const canSelect = Boolean(slot && available && !isDisabled);
   const isBooked = slot?.status === "booked" || slot?.status === "held";
   const isMaintenance = slot?.unavailableReason === "MAINTENANCE";
   const isReserved = isBooked && !isMaintenance;
@@ -314,15 +319,16 @@ const WeekGridCell = React.memo(function WeekGridCell({
       }}
       className={cn(
         "group/cell relative flex w-full items-center justify-center border-t border-border/50 transition-all duration-150 touch-none",
-        available &&
+        canSelect &&
           !inRange &&
           !inHoverPreview &&
           "cursor-pointer bg-success-light/20 hover:bg-success-light/50",
-        inHoverPreview && "bg-primary/5 cursor-pointer",
+        canSelect && inHoverPreview && "bg-primary/5 cursor-pointer",
         inRange && !isPendingStart && "bg-primary/8",
         isPendingStart && "bg-primary/15 ring-1 ring-inset ring-primary/25",
         isReserved && "bg-destructive-light/40",
         isMaintenance && "bg-warning-light/50",
+        isDisabled && "cursor-not-allowed bg-muted/40",
         !slot && "bg-transparent",
       )}
       style={{ height: WEEK_ROW_HEIGHT }}
@@ -398,8 +404,9 @@ export function AvailabilityWeekGrid({
   continueLabel = "Continue to review",
   todayDayKey,
   maxDayKey,
-  currentHour,
 }: AvailabilityWeekGridProps) {
+  const nowMs = useNowMs({ intervalMs: 10_000 });
+
   const allHours = React.useMemo(() => {
     let minHour = 23;
     let maxHour = 0;
@@ -437,6 +444,7 @@ export function AvailabilityWeekGrid({
   // Committed selection → linear indices
   const committedRange = React.useMemo(() => {
     if (!selectedRange) return null;
+    if (Date.parse(selectedRange.startTime) < nowMs) return null;
     for (let di = 0; di < dayKeys.length; di++) {
       const dk = dayKeys[di];
       const hourMap = slotLookup.get(dk);
@@ -453,7 +461,7 @@ export function AvailabilityWeekGrid({
       }
     }
     return null;
-  }, [selectedRange, dayKeys, slotLookup, allHours, toLinear]);
+  }, [selectedRange, dayKeys, slotLookup, allHours, toLinear, nowMs]);
 
   // Build config
   const config = React.useMemo<RangeSelectionConfig>(() => {
@@ -469,7 +477,7 @@ export function AvailabilityWeekGrid({
         if (!dk) return false;
         const hourMap = slotLookup.get(dk);
         const slot = hourMap?.get(allHours[hourIdx]);
-        return slot ? isSlotAvailable(slot) : false;
+        return slot ? isSlotSelectable(slot, nowMs) : false;
       },
       computeRange: (anchorIdx, targetIdx) => {
         const a = getDayHour(anchorIdx);
@@ -483,7 +491,7 @@ export function AvailabilityWeekGrid({
         const hi = Math.max(a.hourIdx, t.hourIdx);
         for (let i = lo; i <= hi; i++) {
           const slot = hourMap.get(allHours[i]);
-          if (!slot || !isSlotAvailable(slot)) return null;
+          if (!slot || !isSlotSelectable(slot, nowMs)) return null;
         }
         return {
           startIdx: toLinear(a.dayColIdx, lo),
@@ -502,7 +510,7 @@ export function AvailabilityWeekGrid({
         let i = a.hourIdx + direction;
         while (direction > 0 ? i <= t.hourIdx : i >= t.hourIdx) {
           const slot = hourMap.get(allHours[i]);
-          if (!slot || !isSlotAvailable(slot)) break;
+          if (!slot || !isSlotSelectable(slot, nowMs)) break;
           lastValid = i;
           i += direction;
         }
@@ -522,7 +530,15 @@ export function AvailabilityWeekGrid({
         });
       },
     };
-  }, [dayKeys, slotLookup, allHours, hoursPerDay, toLinear, onRangeChange]);
+  }, [
+    dayKeys,
+    slotLookup,
+    allHours,
+    hoursPerDay,
+    toLinear,
+    onRangeChange,
+    nowMs,
+  ]);
 
   const hasAnySlots = dayKeys.some(
     (dk) => (slotsByDay.get(dk)?.length ?? 0) > 0,
@@ -551,7 +567,7 @@ export function AvailabilityWeekGrid({
         todayDayKey={todayDayKey}
         maxDayKey={maxDayKey}
         toLinear={toLinear}
-        currentHour={currentHour}
+        nowMs={nowMs}
       />
     </RangeSelectionProvider>
   );
@@ -574,7 +590,7 @@ interface WeekGridInnerProps {
   todayDayKey: string;
   maxDayKey: string;
   toLinear: (dayColIdx: number, hourIdx: number) => number;
-  currentHour?: number;
+  nowMs: number;
 }
 
 function WeekGridInner({
@@ -590,7 +606,7 @@ function WeekGridInner({
   todayDayKey,
   maxDayKey,
   toLinear,
-  currentHour,
+  nowMs,
 }: WeekGridInnerProps) {
   const { pointerUp, setHoveredIdx } = useRangeSelection(
     useShallow((s) => ({
@@ -713,9 +729,9 @@ function WeekGridInner({
                   {allHours.map((hour, hourIdx) => {
                     const slot = hourMap?.get(hour);
                     const isPastSlot =
-                      isToday &&
-                      currentHour !== undefined &&
-                      hour < currentHour;
+                      isToday && slot
+                        ? Date.parse(slot.startTime) < nowMs
+                        : false;
                     return (
                       <WeekGridCell
                         key={`${dk}-${hour}`}
