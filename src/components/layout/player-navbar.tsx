@@ -4,6 +4,7 @@ import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { KudosLogo } from "@/components/kudos";
 import { UserDropdown } from "@/features/discovery/components/user-dropdown";
+import { NotificationBell } from "@/features/notifications/components/notification-bell";
 
 interface PlayerNavbarProps {
   user: {
@@ -40,6 +41,7 @@ export function PlayerNavbar({
       </div>
 
       <div className="flex items-center gap-2">
+        <NotificationBell portal="player" />
         <UserDropdown
           user={user}
           isOwner={isOwner}

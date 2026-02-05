@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import { useAdminSidebarStats } from "@/features/admin/hooks";
 import { useLogout, useSession } from "@/features/auth";
+import { WebPushSettingsCard } from "@/features/notifications/components/web-push-settings";
 import { trpc } from "@/trpc/client";
 
 type ReviewedKind = "place_verification" | "claim_request";
@@ -39,6 +40,10 @@ export default function AdminNotificationTestPage() {
     trpc.admin.notificationDelivery.enqueuePlaceVerificationReviewedTest.useMutation();
   const claimReviewedMutation =
     trpc.admin.notificationDelivery.enqueueClaimReviewedTest.useMutation();
+  const webPushSubscriptionsQuery =
+    trpc.admin.notificationDelivery.listMyWebPushSubscriptions.useQuery();
+  const webPushTestMutation =
+    trpc.admin.notificationDelivery.enqueueWebPushTest.useMutation();
 
   const [dispatchConfirm, setDispatchConfirm] = React.useState(false);
 
@@ -74,6 +79,23 @@ export default function AdminNotificationTestPage() {
   const [reviewedPlaceName, setReviewedPlaceName] =
     React.useState("Test Venue");
   const [reviewedNotes, setReviewedNotes] = React.useState("");
+
+  const [webPushSubscriptionId, setWebPushSubscriptionId] = React.useState("");
+  const [webPushTitle, setWebPushTitle] = React.useState("Test notification");
+  const [webPushBody, setWebPushBody] = React.useState(
+    "This is a Web Push test",
+  );
+  const [webPushUrl, setWebPushUrl] = React.useState(appRoutes.admin.base);
+  const [webPushTag, setWebPushTag] = React.useState("test.web_push");
+
+  const webPushSubscriptions =
+    webPushSubscriptionsQuery.data?.subscriptions ?? [];
+
+  React.useEffect(() => {
+    if (!webPushSubscriptionId && webPushSubscriptions.length > 0) {
+      setWebPushSubscriptionId(webPushSubscriptions[0].id);
+    }
+  }, [webPushSubscriptionId, webPushSubscriptions]);
 
   const goBack = () => {
     window.location.assign(appRoutes.admin.base);
@@ -147,6 +169,30 @@ export default function AdminNotificationTestPage() {
       });
     } catch (error) {
       toast.error("Failed to enqueue", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
+
+  const handleEnqueueWebPush = async () => {
+    if (!webPushSubscriptionId) {
+      toast.error("Select a Web Push subscription first");
+      return;
+    }
+
+    try {
+      const result = await webPushTestMutation.mutateAsync({
+        subscriptionId: webPushSubscriptionId,
+        title: webPushTitle,
+        body: webPushBody,
+        url: webPushUrl,
+        tag: webPushTag,
+      });
+      toast.success("Enqueued Web Push test", {
+        description: `jobCount: ${result.jobCount}`,
+      });
+    } catch (error) {
+      toast.error("Failed to enqueue Web Push test", {
         description: getClientErrorMessage(error, "Please try again"),
       });
     }
@@ -247,6 +293,115 @@ export default function AdminNotificationTestPage() {
             {dispatchMutation.data ? (
               <pre className="rounded-md border bg-muted/20 p-3 text-xs overflow-auto">
                 {JSON.stringify(dispatchMutation.data, null, 2)}
+              </pre>
+            ) : null}
+          </CardContent>
+        </Card>
+
+        <WebPushSettingsCard />
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Web Push: send test notification</CardTitle>
+            <CardDescription>
+              Enqueues a WEB_PUSH job for your active subscriptions. Use
+              Dispatch to send.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="webPushSubscription">Subscription</Label>
+              {webPushSubscriptionsQuery.isLoading ? (
+                <div className="text-sm text-muted-foreground">
+                  Loading subscriptions...
+                </div>
+              ) : webPushSubscriptions.length === 0 ? (
+                <div className="text-sm text-muted-foreground">
+                  No active subscriptions found. Register this browser above.
+                </div>
+              ) : (
+                <select
+                  id="webPushSubscription"
+                  className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+                  value={webPushSubscriptionId}
+                  onChange={(event) =>
+                    setWebPushSubscriptionId(event.target.value)
+                  }
+                >
+                  {webPushSubscriptions.map((subscription) => (
+                    <option key={subscription.id} value={subscription.id}>
+                      {subscription.userAgent
+                        ? `${subscription.userAgent.slice(0, 40)} (${subscription.id.slice(0, 8)})`
+                        : `Subscription ${subscription.id.slice(0, 8)}`}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="webPushTitle">Title</Label>
+                <Input
+                  id="webPushTitle"
+                  value={webPushTitle}
+                  onChange={(event) => setWebPushTitle(event.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="webPushTag">Tag</Label>
+                <Input
+                  id="webPushTag"
+                  value={webPushTag}
+                  onChange={(event) => setWebPushTag(event.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="webPushBody">Body</Label>
+              <Textarea
+                id="webPushBody"
+                value={webPushBody}
+                onChange={(event) => setWebPushBody(event.target.value)}
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="webPushUrl">URL (optional)</Label>
+              <Input
+                id="webPushUrl"
+                value={webPushUrl}
+                onChange={(event) => setWebPushUrl(event.target.value)}
+                placeholder="/admin"
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => webPushSubscriptionsQuery.refetch()}
+              >
+                Refresh subscriptions
+              </Button>
+              <Button
+                onClick={handleEnqueueWebPush}
+                disabled={
+                  webPushTestMutation.isPending ||
+                  webPushSubscriptions.length === 0
+                }
+              >
+                {webPushTestMutation.isPending
+                  ? "Enqueuing..."
+                  : "Enqueue Web Push"}
+              </Button>
+            </div>
+
+            {webPushTestMutation.data ? (
+              <pre className="rounded-md border bg-muted/20 p-3 text-xs overflow-auto">
+                {JSON.stringify(webPushTestMutation.data, null, 2)}
               </pre>
             ) : null}
           </CardContent>

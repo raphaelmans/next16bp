@@ -2,7 +2,9 @@
 
 import { Suspense } from "react";
 import { appRoutes } from "@/common/app-routes";
+import { SETTINGS_SECTION_IDS } from "@/common/section-hashes";
 import { PageHeader } from "@/components/ui/page-header";
+import { WebPushSettingsCard } from "@/features/notifications/components/web-push-settings";
 import { OwnerCtaSection } from "@/features/reservation/components/owner-cta-section";
 import { ProfileForm } from "@/features/reservation/components/profile-form";
 import { ProfileFormSkeleton } from "@/features/reservation/components/skeletons";
@@ -26,8 +28,9 @@ export default function ProfilePage() {
             <ProfileForm />
           </Suspense>
         </div>
-        <div>
+        <div className="space-y-6">
           <OwnerCtaSection />
+          <WebPushSettingsCard id={SETTINGS_SECTION_IDS.browserNotifications} />
         </div>
       </div>
     </div>

@@ -109,6 +109,13 @@ const reservationCancelledSchema = z.object({
   reason: z.string().nullable().optional(),
 });
 
+const testWebPushSchema = z.object({
+  title: z.string(),
+  body: z.string().nullable().optional(),
+  url: z.string().nullable().optional(),
+  tag: z.string().nullable().optional(),
+});
+
 const getAppUrl = (): string => {
   const appUrl = env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
   return appUrl ?? "";
@@ -149,6 +156,10 @@ const parseReservationRejectedPayload = (
 const parseReservationCancelledPayload = (
   payload: Record<string, unknown> | null | undefined,
 ) => reservationCancelledSchema.safeParse(payload ?? {});
+
+const parseTestWebPushPayload = (
+  payload: Record<string, unknown> | null | undefined,
+) => testWebPushSchema.safeParse(payload ?? {});
 
 const toLocalCurrency = (totalPriceCents: number, currency: string) => {
   const amount = (totalPriceCents / 100).toFixed(2);
@@ -558,6 +569,23 @@ export async function GET(request: NextRequest) {
       pushBody = `${parsed.data.playerName} cancelled ${parsed.data.placeName}`;
       pushUrl = appRoutes.owner.reservationDetail(parsed.data.reservationId);
       pushTag = `reservation.cancelled:${parsed.data.reservationId}`;
+    } else if (job.eventType === "test.web_push") {
+      const parsed = parseTestWebPushPayload(
+        job.payload as Record<string, unknown> | null,
+      );
+      if (!parsed.success) {
+        skippedCount += 1;
+        await jobRepository.update(job.id, {
+          status: "SKIPPED",
+          lastError: "INVALID_PAYLOAD",
+          nextAttemptAt: null,
+        });
+        continue;
+      }
+      pushTitle = parsed.data.title;
+      pushBody = parsed.data.body ?? null;
+      pushUrl = parsed.data.url ?? null;
+      pushTag = parsed.data.tag ?? null;
     } else {
       skippedCount += 1;
       await jobRepository.update(job.id, {

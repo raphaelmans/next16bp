@@ -503,7 +503,7 @@ export default function OwnerSettingsPage() {
           </div>
         </StandardFormProvider>
 
-        <WebPushSettingsCard />
+        <WebPushSettingsCard id={SETTINGS_SECTION_IDS.browserNotifications} />
 
         <Card id={SETTINGS_SECTION_IDS.paymentMethods}>
           <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

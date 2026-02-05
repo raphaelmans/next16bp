@@ -22,6 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { NotificationBell } from "@/features/notifications/components/notification-bell";
 
 interface OwnerNavbarProps {
   organizationName?: string;
@@ -59,6 +60,7 @@ export function OwnerNavbar({
 
       {/* Right side - User menu */}
       <div className="flex items-center gap-2">
+        {user && <NotificationBell portal="owner" />}
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

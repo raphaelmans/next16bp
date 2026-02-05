@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { normalizePhMobile } from "@/common/phone";
 import { makeNotificationDeliveryJobRepository } from "@/lib/modules/notification-delivery/factories/notification-delivery.factory";
+import { makePushSubscriptionRepository } from "@/lib/modules/push-subscription/factories/push-subscription.factory";
 import type { InsertNotificationDeliveryJob } from "@/lib/shared/infra/db/schema";
 import { adminProcedure, router } from "@/lib/shared/infra/trpc/trpc";
 
@@ -24,7 +25,68 @@ const toPhone = (value: string | undefined) => {
 const buildTestIdempotencyKey = (eventType: string, runId: string) =>
   `test:${eventType}:${runId}`;
 
+const webPushTestSchema = z.object({
+  subscriptionId: z.string().min(1),
+  title: z.string().min(1),
+  body: z.string().optional().or(z.literal("")),
+  url: z.string().optional().or(z.literal("")),
+  tag: z.string().optional().or(z.literal("")),
+});
+
 export const notificationDeliveryAdminRouter = router({
+  listMyWebPushSubscriptions: adminProcedure.query(async ({ ctx }) => {
+    const repo = makePushSubscriptionRepository();
+    const subscriptions = await repo.listActiveByUserId(ctx.userId);
+    return {
+      subscriptions: subscriptions.map((subscription) => ({
+        id: subscription.id,
+        userAgent: subscription.userAgent ?? null,
+        createdAt: subscription.createdAt,
+        updatedAt: subscription.updatedAt,
+      })),
+    };
+  }),
+
+  enqueueWebPushTest: adminProcedure
+    .input(webPushTestSchema)
+    .mutation(async ({ input, ctx }) => {
+      const repo = makePushSubscriptionRepository();
+      const subscription = await repo.findById(input.subscriptionId);
+      if (!subscription || subscription.userId !== ctx.userId) {
+        return { jobCount: 0, message: "Subscription not found" };
+      }
+
+      if (subscription.revokedAt) {
+        return { jobCount: 0, message: "Subscription is revoked" };
+      }
+
+      const jobRepo = makeNotificationDeliveryJobRepository();
+      const runId = globalThis.crypto.randomUUID();
+      const payload = {
+        title: input.title.trim(),
+        body: input.body?.trim() ? input.body.trim() : null,
+        url: input.url?.trim() ? input.url.trim() : null,
+        tag: input.tag?.trim() ? input.tag.trim() : null,
+      };
+
+      const jobs: InsertNotificationDeliveryJob[] = [
+        {
+          eventType: "test.web_push",
+          channel: "WEB_PUSH",
+          target: subscription.id,
+          payload,
+          idempotencyKey: `${buildTestIdempotencyKey("test.web_push", runId)}:web_push:${subscription.id}`,
+        },
+      ];
+
+      const created = await jobRepo.createMany(jobs);
+      return {
+        jobCount: created.length,
+        runId,
+        jobIds: created.map((job) => job.id),
+      };
+    }),
+
   enqueueReservationCreatedTest: adminProcedure
     .input(
       baseTargetSchema.merge(
