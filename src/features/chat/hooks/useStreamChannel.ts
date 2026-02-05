@@ -37,6 +37,7 @@ export function useStreamChannel({
 
   const [messages, setMessages] = useState<LocalMessage[]>([]);
   const [isWatching, setIsWatching] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<unknown>(null);
 
   useEffect(() => {
@@ -133,6 +134,31 @@ export function useStreamChannel({
     setMessages(current.state.messages);
   };
 
+  const refresh = async () => {
+    const current = channelRef.current;
+    if (!current) {
+      return;
+    }
+
+    setIsRefreshing(true);
+    try {
+      if (!isWatching) {
+        await current.watch({ messages: { limit: messageLimit } });
+        setIsWatching(true);
+      } else {
+        await current.query({
+          messages: {
+            limit: messageLimit,
+          },
+        });
+      }
+
+      setMessages(current.state.messages);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   const sendFiles = async (files: File[]) => {
     const current = channelRef.current;
     if (!current) {
@@ -167,10 +193,12 @@ export function useStreamChannel({
     channel,
     messages,
     isWatching,
+    isRefreshing,
     error,
     sendMessage,
     sendFiles,
     loadMore,
+    refresh,
     markRead,
   };
 }

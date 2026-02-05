@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { and, eq, inArray, or } from "drizzle-orm";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
 import { NotOrganizationOwnerError } from "@/lib/modules/organization/errors/organization.errors";
@@ -9,6 +10,15 @@ import { ProfileNotFoundError } from "@/lib/modules/profile/errors/profile.error
 import type { IProfileRepository } from "@/lib/modules/profile/repositories/profile.repository";
 import { ReservationNotFoundError } from "@/lib/modules/reservation/errors/reservation.errors";
 import type { IReservationRepository } from "@/lib/modules/reservation/repositories/reservation.repository";
+import { getContainer } from "@/lib/shared/infra/container";
+import {
+  court,
+  organization,
+  place,
+  profile,
+  reservation,
+} from "@/lib/shared/infra/db/schema";
+import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";
 import type { RequestContext } from "@/lib/shared/kernel/context";
 import {
   ReservationChatGuestReservationNotSupportedError,
@@ -377,45 +387,50 @@ export class ReservationChatService {
       endTimeIso: string;
     }>
   > {
-    const results: Array<{
-      reservationId: string;
-      status: string;
-      placeName: string;
-      timeZone: string;
-      courtLabel: string;
-      playerDisplayName: string;
-      ownerDisplayName: string;
-      startTimeIso: string;
-      endTimeIso: string;
-    }> = [];
+    const client: DbClient | DrizzleTransaction =
+      (ctx?.tx as DrizzleTransaction) ?? getContainer().db;
 
-    for (const reservationId of reservationIds) {
-      try {
-        const context = await this.getReservationContext(reservationId, ctx);
-        const memberIds = [
-          context.profile.userId,
-          context.organization.ownerUserId,
-        ];
-        if (!memberIds.includes(userId)) {
-          continue;
-        }
+    const rows = await client
+      .select({
+        reservationId: reservation.id,
+        status: reservation.status,
+        startTime: reservation.startTime,
+        endTime: reservation.endTime,
+        courtLabel: court.label,
+        placeName: place.name,
+        timeZone: place.timeZone,
+        playerUserId: profile.userId,
+        playerDisplayName: profile.displayName,
+        ownerUserId: organization.ownerUserId,
+        ownerDisplayName: organization.name,
+      })
+      .from(reservation)
+      .innerJoin(court, eq(reservation.courtId, court.id))
+      .innerJoin(place, eq(court.placeId, place.id))
+      .innerJoin(organization, eq(place.organizationId, organization.id))
+      .innerJoin(profile, eq(reservation.playerId, profile.id))
+      .where(
+        and(
+          inArray(reservation.id, reservationIds),
+          // Authorization: return if caller is participant (player or owner)
+          or(eq(profile.userId, userId), eq(organization.ownerUserId, userId)),
+        ),
+      );
 
-        results.push({
-          reservationId: context.reservation.id,
-          status: context.reservation.status,
-          placeName: context.place.name,
-          timeZone: context.place.timeZone,
-          courtLabel: context.court.label,
-          playerDisplayName: context.profile.displayName ?? "Player",
-          ownerDisplayName: context.organization.name,
-          startTimeIso: context.reservation.startTime.toISOString(),
-          endTimeIso: context.reservation.endTime.toISOString(),
-        });
-      } catch {
-        // Ignore missing/unauthorized reservations for inbox hydration.
-      }
-    }
-
-    return results;
+    return rows.map((r: (typeof rows)[number]) => ({
+      reservationId: r.reservationId,
+      status: r.status,
+      placeName: r.placeName,
+      timeZone: r.timeZone,
+      courtLabel: r.courtLabel,
+      playerDisplayName: r.playerDisplayName ?? "Player",
+      ownerDisplayName: r.ownerDisplayName,
+      startTimeIso:
+        r.startTime instanceof Date
+          ? r.startTime.toISOString()
+          : String(r.startTime),
+      endTimeIso:
+        r.endTime instanceof Date ? r.endTime.toISOString() : String(r.endTime),
+    }));
   }
 }

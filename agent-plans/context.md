@@ -113,6 +113,7 @@ References and context for planning artifacts.
 | 19-place-verification | `agent-plans/user-stories/19-place-verification/` | Per-place owner verification before enabling reservations |
 | 66-bookings-import | `agent-plans/user-stories/66-bookings-import/` | Import existing bookings (calendar/spreadsheet) into reservation blocks |
 | 58-contact-us | `agent-plans/user-stories/58-contact-us/` | Public contact page submissions + email delivery |
+| 67-reservation-chat | `agent-plans/user-stories/67-reservation-chat/` | Reservation-scoped player/owner chat + owner inbox + admin transcript snapshots |
 
 ---
 

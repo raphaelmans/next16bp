@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useLogout, useSession } from "@/features/auth";
+import { PlayerChatWidget } from "@/features/chat/components/chat-widget/player-chat-widget";
 import { trpc } from "@/trpc/client";
 import { AppShell } from "./app-shell";
 import { PlayerNavbar } from "./player-navbar";
@@ -53,6 +54,7 @@ export function PlayerShell({ children }: PlayerShellProps) {
           onLogout={handleLogout}
         />
       }
+      floatingPanel={<PlayerChatWidget />}
     >
       {children}
     </AppShell>

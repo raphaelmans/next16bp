@@ -53,6 +53,7 @@ pnpm script:promote-tier3
 - tRPC + TanStack Query
 - Drizzle ORM + Postgres (Supabase)
 - Supabase (auth/storage)
+- Stream Chat (GetStream) via `stream-chat` (reservation chat)
 - Tailwind CSS + shadcn/ui
 - Biome for lint/format
 

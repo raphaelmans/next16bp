@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChatStatus, FileUIPart, UIMessage } from "ai";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Attachment, LocalMessage, StreamChat } from "stream-chat";
 import {
@@ -99,6 +99,8 @@ export interface StreamChatThreadProps {
   headerTitle?: string;
   headerSubtitle?: string;
   headerStatus?: string;
+  readOnly?: boolean;
+  readOnlyReason?: string;
   emptyTitle?: string;
   emptyDescription?: string;
   minHeightClassName?: string;
@@ -113,6 +115,8 @@ export function StreamChatThread({
   headerTitle = "Messages",
   headerSubtitle,
   headerStatus,
+  readOnly = false,
+  readOnlyReason,
   emptyTitle = "No messages yet",
   emptyDescription = "Say hi to start the conversation",
   minHeightClassName = "min-h-[520px]",
@@ -123,10 +127,12 @@ export function StreamChatThread({
     channel,
     messages,
     isWatching,
+    isRefreshing,
     error: channelWatchError,
     sendMessage,
     sendFiles,
     loadMore,
+    refresh,
     markRead,
   } = useStreamChannel({
     client,
@@ -226,21 +232,29 @@ export function StreamChatThread({
             </div>
           ) : null}
         </div>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          disabled={!channel || renderedMessages.length === 0}
-          onClick={() => loadMore().catch(() => undefined)}
-        >
-          Load older
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            disabled={!channel || isRefreshing}
+            onClick={() => refresh().catch(() => undefined)}
+          >
+            <RefreshCw className="h-4 w-4" />
+            <span className="sr-only">Refresh</span>
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col">
         <div className="flex-1 p-3">
           <Conversation className="h-full">
             <ConversationContent>
+              {readOnlyReason ? (
+                <div className="mb-3 rounded-md border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+                  {readOnlyReason}
+                </div>
+              ) : null}
               {channelWatchError ? (
                 <div className="text-sm text-destructive">
                   {channelWatchError instanceof Error
@@ -309,27 +323,33 @@ export function StreamChatThread({
           </Conversation>
         </div>
 
-        <div className="border-t p-3">
-          <PromptInput
-            className="w-full"
-            onSubmit={handleSend}
-            globalDrop
-            multiple
-          >
-            <PromptInputHeader>
-              <PromptInputAttachmentsDisplay />
-            </PromptInputHeader>
-            <PromptInputBody>
-              <PromptInputTextarea
-                placeholder={channel ? "Write a message…" : ""}
-                disabled={!channel}
-              />
-            </PromptInputBody>
-            <PromptInputFooter>
-              <PromptInputSubmit status={sendStatus} disabled={!channel} />
-            </PromptInputFooter>
-          </PromptInput>
-        </div>
+        {readOnly ? (
+          <div className="border-t p-3 text-xs text-muted-foreground">
+            This conversation is archived and read-only.
+          </div>
+        ) : (
+          <div className="border-t p-3">
+            <PromptInput
+              className="w-full"
+              onSubmit={handleSend}
+              globalDrop
+              multiple
+            >
+              <PromptInputHeader>
+                <PromptInputAttachmentsDisplay />
+              </PromptInputHeader>
+              <PromptInputBody>
+                <PromptInputTextarea
+                  placeholder={channel ? "Write a message…" : ""}
+                  disabled={!channel}
+                />
+              </PromptInputBody>
+              <PromptInputFooter>
+                <PromptInputSubmit status={sendStatus} disabled={!channel} />
+              </PromptInputFooter>
+            </PromptInput>
+          </div>
+        )}
       </div>
     </div>
   );
