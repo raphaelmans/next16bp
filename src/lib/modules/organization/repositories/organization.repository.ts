@@ -6,6 +6,7 @@ import {
 } from "@/lib/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";
 import type { RequestContext } from "@/lib/shared/kernel/context";
+import { SlugAlreadyExistsError } from "../errors/organization.errors";
 
 export interface IOrganizationRepository {
   findById(
@@ -29,7 +30,11 @@ export interface IOrganizationRepository {
     data: Partial<InsertOrganization>,
     ctx?: RequestContext,
   ): Promise<OrganizationRecord>;
-  slugExists(slug: string, excludeId?: string): Promise<boolean>;
+  slugExists(
+    slug: string,
+    excludeId?: string,
+    ctx?: RequestContext,
+  ): Promise<boolean>;
 }
 
 export class OrganizationRepository implements IOrganizationRepository {
@@ -85,9 +90,22 @@ export class OrganizationRepository implements IOrganizationRepository {
     ctx?: RequestContext,
   ): Promise<OrganizationRecord> {
     const client = this.getClient(ctx);
-    const result = await client.insert(organization).values(data).returning();
+    try {
+      const result = await client.insert(organization).values(data).returning();
 
-    return result[0];
+      return result[0];
+    } catch (error) {
+      const code =
+        typeof error === "object" && error && "code" in error
+          ? (error as { code?: unknown }).code
+          : null;
+
+      if (code === "23505" && data.slug) {
+        throw new SlugAlreadyExistsError(data.slug);
+      }
+
+      throw error;
+    }
   }
 
   async update(
@@ -96,22 +114,40 @@ export class OrganizationRepository implements IOrganizationRepository {
     ctx?: RequestContext,
   ): Promise<OrganizationRecord> {
     const client = this.getClient(ctx);
-    const result = await client
-      .update(organization)
-      .set({ ...data, updatedAt: new Date() })
-      .where(eq(organization.id, id))
-      .returning();
+    try {
+      const result = await client
+        .update(organization)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(organization.id, id))
+        .returning();
 
-    return result[0];
+      return result[0];
+    } catch (error) {
+      const code =
+        typeof error === "object" && error && "code" in error
+          ? (error as { code?: unknown }).code
+          : null;
+
+      if (code === "23505" && data.slug) {
+        throw new SlugAlreadyExistsError(data.slug);
+      }
+
+      throw error;
+    }
   }
 
-  async slugExists(slug: string, excludeId?: string): Promise<boolean> {
+  async slugExists(
+    slug: string,
+    excludeId?: string,
+    ctx?: RequestContext,
+  ): Promise<boolean> {
+    const client = this.getClient(ctx);
     const conditions = [eq(organization.slug, slug)];
     if (excludeId) {
       conditions.push(ne(organization.id, excludeId));
     }
 
-    const result = await this.db
+    const result = await client
       .select({ id: organization.id })
       .from(organization)
       .where(and(...conditions))

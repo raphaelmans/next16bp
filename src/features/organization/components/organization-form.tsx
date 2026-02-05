@@ -10,13 +10,6 @@ import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import { allowEmptyString, S } from "@/common/schemas";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { trpc } from "@/trpc/client";
 
 const organizationFormSchema = z.object({
@@ -92,62 +85,59 @@ export function OrganizationForm({
   };
 
   return (
-    <Card className="w-full max-w-lg">
-      <CardHeader className="text-center">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+    <div className="w-full space-y-6">
+      <div className="text-center space-y-2">
+        <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
           <Building2 className="h-6 w-6 text-primary" />
         </div>
-        <CardTitle>Create Your Organization</CardTitle>
-        <CardDescription>
+        <h2 className="text-lg font-heading font-semibold">
+          Create Your Organization
+        </h2>
+        <p className="text-sm text-muted-foreground">
           Set up your organization to start listing courts on Kudos
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <StandardFormProvider
-          form={form}
-          onSubmit={onSubmit}
-          className="space-y-6"
-        >
+        </p>
+      </div>
+
+      <StandardFormProvider
+        form={form}
+        onSubmit={onSubmit}
+        className="space-y-6"
+      >
+        <StandardFormInput<OrganizationFormValues>
+          name="name"
+          label="Organization Name"
+          placeholder="My Sports Club (Pickleball)"
+          required
+        />
+
+        <div className="space-y-2">
           <StandardFormInput<OrganizationFormValues>
-            name="name"
-            label="Organization Name"
-            placeholder="My Sports Club (Pickleball)"
-            required
+            name="slug"
+            label="Custom URL (optional)"
+            placeholder={previewSlug}
           />
+          <p className="text-xs text-muted-foreground">
+            Preview: kudoscourts.com/{previewSlug}
+          </p>
+        </div>
 
-          <div className="space-y-2">
-            <StandardFormInput<OrganizationFormValues>
-              name="slug"
-              label="Custom URL (optional)"
-              placeholder={previewSlug}
-            />
-            <p className="text-xs text-muted-foreground">
-              Preview: kudoscourts.com/{previewSlug}
-            </p>
-          </div>
-
-          <div className="flex gap-4">
-            {onCancel && (
-              <Button
-                type="button"
-                variant="outline"
-                className="flex-1"
-                onClick={onCancel}
-              >
-                Cancel
-              </Button>
-            )}
+        <div className="flex gap-4">
+          {onCancel && (
             <Button
-              type="submit"
+              type="button"
+              variant="outline"
               className="flex-1"
-              disabled={isSubmitDisabled}
+              onClick={onCancel}
             >
-              {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Create Organization
+              Cancel
             </Button>
-          </div>
-        </StandardFormProvider>
-      </CardContent>
-    </Card>
+          )}
+          <Button type="submit" className="flex-1" disabled={isSubmitDisabled}>
+            {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Create Organization
+          </Button>
+        </div>
+      </StandardFormProvider>
+    </div>
   );
 }

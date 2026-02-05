@@ -10,7 +10,7 @@ import {
   type PlaceCardPlace,
 } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
 interface PlaceMapItem extends PlaceCardPlace {
@@ -87,11 +87,11 @@ export function PlaceMap({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 md:relative md:h-[600px] md:rounded-xl md:overflow-hidden",
+        "flex flex-col gap-4 md:flex-row md:gap-0 md:h-[600px] md:min-h-0 md:rounded-xl md:overflow-hidden md:border md:border-border/60",
         className,
       )}
     >
-      <div className="relative h-[320px] overflow-hidden rounded-xl border border-border/60 sm:h-[360px] md:absolute md:inset-0 md:h-auto md:rounded-none md:border-0">
+      <div className="relative h-[320px] overflow-hidden rounded-xl border border-border/60 sm:h-[360px] md:h-full md:flex-1 md:min-w-0 md:rounded-none md:border-0">
         <GoogleMapsEmbed
           title={mapTitle}
           lat={selectedPlace?.lat}
@@ -108,7 +108,7 @@ export function PlaceMap({
         )}
 
         {openInMapsUrl && (
-          <div className="absolute top-3 right-3 z-10 sm:top-4 sm:right-4">
+          <div className="absolute top-3 right-3 z-20 sm:top-4 sm:right-4">
             <Button
               asChild
               variant="outline"
@@ -124,16 +124,16 @@ export function PlaceMap({
         )}
       </div>
 
-      <ScrollArea className="md:absolute md:bottom-4 md:left-4 md:right-4 md:z-10">
-        <div className="flex flex-col gap-3 md:flex-row">
+      <ScrollArea className="w-full md:h-full md:min-h-0 md:w-[360px] md:shrink-0 md:border-l md:border-border/60 lg:w-[420px] [&_[data-slot=scroll-area-scrollbar]]:hidden md:[&_[data-slot=scroll-area-scrollbar]]:flex">
+        <div className="flex flex-col gap-3 md:p-4">
           {places.map((place) => (
             <button
               type="button"
               key={place.id}
               className={cn(
-                "w-full shrink-0 text-left cursor-pointer transition-all bg-transparent border-none p-0 md:w-72",
+                "w-full text-left cursor-pointer transition-all bg-transparent border-none p-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 place.id === selectedPlaceId &&
-                  "ring-2 ring-primary rounded-xl",
+                  "ring-2 ring-primary ring-offset-2 ring-offset-background",
               )}
               onClick={() => handleSelect(place)}
             >
@@ -146,7 +146,6 @@ export function PlaceMap({
             </button>
           ))}
         </div>
-        <ScrollBar orientation="horizontal" className="hidden md:flex" />
       </ScrollArea>
     </div>
   );

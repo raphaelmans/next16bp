@@ -187,8 +187,11 @@ export class OrganizationService implements IOrganizationService {
         }
 
         // User provided slug - check if it exists
-        const exists =
-          await this.organizationRepository.slugExists(requestedSlug);
+        const exists = await this.organizationRepository.slugExists(
+          requestedSlug,
+          undefined,
+          ctx,
+        );
         if (exists) {
           throw new SlugAlreadyExistsError(requestedSlug);
         }
@@ -199,7 +202,11 @@ export class OrganizationService implements IOrganizationService {
           if (isReservedOrgRootSlug(candidate)) {
             return true;
           }
-          return await this.organizationRepository.slugExists(candidate);
+          return await this.organizationRepository.slugExists(
+            candidate,
+            undefined,
+            ctx,
+          );
         });
       }
 
@@ -401,6 +408,7 @@ export class OrganizationService implements IOrganizationService {
         const slugExists = await this.organizationRepository.slugExists(
           requestedSlug,
           org.id,
+          ctx,
         );
         if (slugExists) {
           throw new SlugAlreadyExistsError(requestedSlug);

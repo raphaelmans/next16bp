@@ -12,12 +12,14 @@ import {
   useSaveCourtRateRules,
 } from "@/features/owner/hooks";
 import {
+  type BlockIntervals,
   type BlockRow,
   buildIntervals,
   buildRowsByDay,
   buildScheduleValidation,
   createDefaultRowsByDay,
   createEmptyRow,
+  createRowId,
   DAY_KEYS,
   DEFAULT_CURRENCY,
   getErrorMessage,
@@ -153,6 +155,33 @@ export const useCourtScheduleEditor = ({
         );
         if (!sourceRow || sourceRow.hourlyRate === "") return prev;
 
+        const overlaps = (a: BlockIntervals, b: BlockIntervals) =>
+          Math.max(a.startMinute, b.startMinute) <
+          Math.min(a.endMinute, b.endMinute);
+
+        const buildIntervalMap = (predicate: (row: BlockRow) => boolean) => {
+          const map = new Map<number, BlockIntervals[]>();
+          DAY_KEYS.forEach((day) => {
+            map.set(day, []);
+          });
+
+          Object.values(prev).forEach((rows) => {
+            rows.forEach((row) => {
+              if (!predicate(row)) return;
+              buildIntervals(row).forEach((interval) => {
+                map.get(interval.dayOfWeek)?.push(interval);
+              });
+            });
+          });
+
+          return map;
+        };
+
+        const hoursIntervalsByDay = buildIntervalMap((row) => row.isOpen);
+        const pricingIntervalsByDay = buildIntervalMap(
+          (row) => row.hourlyRate !== "",
+        );
+
         const next: Record<number, BlockRow[]> = {
           0: [],
           1: [],
@@ -163,25 +192,89 @@ export const useCourtScheduleEditor = ({
           6: [],
         };
 
+        let applied = 0;
+        let skipped = 0;
+
         DAY_KEYS.forEach((currentDay) => {
-          next[currentDay] = (prev[currentDay] ?? []).map((row) => {
-            if (row.id === sourceRowId) return row;
-            if (!row.isOpen) return row;
-            return {
-              ...row,
-              startTime: sourceRow.startTime,
-              endTime: sourceRow.endTime,
-              hourlyRate: sourceRow.hourlyRate,
-              currency: sourceRow.currency,
-              allowPricing: true,
-            };
-          });
+          const existingRows = prev[currentDay] ?? [];
+          next[currentDay] = [...existingRows];
+
+          if (currentDay === sourceDay) return;
+
+          const alreadyExists = existingRows.some(
+            (row) =>
+              row.startTime === sourceRow.startTime &&
+              row.endTime === sourceRow.endTime &&
+              row.isOpen === sourceRow.isOpen &&
+              row.hourlyRate === sourceRow.hourlyRate &&
+              row.currency === sourceRow.currency &&
+              row.allowPricing === true,
+          );
+          if (alreadyExists) {
+            skipped += 1;
+            return;
+          }
+
+          const candidate: BlockRow = {
+            ...sourceRow,
+            id: createRowId(),
+            dayOfWeek: currentDay,
+            allowPricing: true,
+          };
+          const candidateIntervals = buildIntervals(candidate);
+          const hasHoursOverlap =
+            candidate.isOpen &&
+            candidateIntervals.some((interval) =>
+              (hoursIntervalsByDay.get(interval.dayOfWeek) ?? []).some(
+                (existing) => overlaps(interval, existing),
+              ),
+            );
+          const hasPricingOverlap =
+            candidate.hourlyRate !== "" &&
+            candidateIntervals.some((interval) =>
+              (pricingIntervalsByDay.get(interval.dayOfWeek) ?? []).some(
+                (existing) => overlaps(interval, existing),
+              ),
+            );
+
+          if (hasHoursOverlap || hasPricingOverlap) {
+            skipped += 1;
+            return;
+          }
+
+          next[currentDay].push(candidate);
+          applied += 1;
+
+          if (candidate.isOpen) {
+            candidateIntervals.forEach((interval) => {
+              hoursIntervalsByDay.get(interval.dayOfWeek)?.push(interval);
+            });
+          }
+          if (candidate.hourlyRate !== "") {
+            candidateIntervals.forEach((interval) => {
+              pricingIntervalsByDay.get(interval.dayOfWeek)?.push(interval);
+            });
+          }
         });
+
+        if (applied === 0) {
+          toast.info("No days updated", {
+            description: skipped > 0 ? "All days were skipped." : undefined,
+          });
+        } else {
+          toast.success(
+            `Copied block to ${applied} day${applied === 1 ? "" : "s"}`,
+            {
+              description:
+                skipped > 0
+                  ? `Skipped ${skipped} day${skipped === 1 ? "" : "s"} due to overlaps or existing blocks.`
+                  : undefined,
+            },
+          );
+        }
 
         return next;
       });
-
-      toast.success("Applied to all open blocks");
     },
     [],
   );

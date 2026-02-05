@@ -902,7 +902,7 @@ function ClaimSearchDialog({
           </div>
 
           {searchQuery.length >= 2 && (
-            <div className="max-h-64 overflow-y-auto space-y-2">
+            <div className="max-h-64 overflow-y-auto space-y-2 pb-2">
               {searching ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -926,6 +926,7 @@ function ClaimSearchDialog({
                     </div>
                     <Button
                       size="sm"
+                      className="shrink-0"
                       onClick={() => handleSubmitClaim(item.place.id)}
                       disabled={submitClaimMutation.isPending}
                     >

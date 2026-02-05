@@ -264,9 +264,15 @@ export function CourtHoursEditor({
                       <Label>End</Label>
                       <Input
                         type="time"
-                        value={row.endTime}
+                        value={row.endTime === "24:00" ? "00:00" : row.endTime}
                         onChange={(event) =>
-                          handleRowChange(index, "endTime", event.target.value)
+                          handleRowChange(
+                            index,
+                            "endTime",
+                            event.target.value === "00:00"
+                              ? "24:00"
+                              : event.target.value,
+                          )
                         }
                       />
                     </div>

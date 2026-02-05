@@ -283,10 +283,17 @@ export function CourtScheduleEditor({
                                     <Input
                                       id={`end-${day.value}-${row.id}`}
                                       type="time"
-                                      value={row.endTime}
+                                      value={
+                                        row.endTime === "24:00"
+                                          ? "00:00"
+                                          : row.endTime
+                                      }
                                       onChange={(event) =>
                                         handleRowChange(day.value, row.id, {
-                                          endTime: event.target.value,
+                                          endTime:
+                                            event.target.value === "00:00"
+                                              ? "24:00"
+                                              : event.target.value,
                                         })
                                       }
                                       className={cn(
@@ -390,7 +397,7 @@ export function CourtScheduleEditor({
                                           handleApplyToAll(day.value, row.id)
                                         }
                                       >
-                                        Apply to all
+                                        Copy to all
                                       </Button>
                                     </div>
                                   ) : (
@@ -509,10 +516,17 @@ export function CourtScheduleEditor({
                                   <TableCell>
                                     <Input
                                       type="time"
-                                      value={row.endTime}
+                                      value={
+                                        row.endTime === "24:00"
+                                          ? "00:00"
+                                          : row.endTime
+                                      }
                                       onChange={(event) =>
                                         handleRowChange(day.value, row.id, {
-                                          endTime: event.target.value,
+                                          endTime:
+                                            event.target.value === "00:00"
+                                              ? "24:00"
+                                              : event.target.value,
                                         })
                                       }
                                       className={cn(
@@ -591,7 +605,7 @@ export function CourtScheduleEditor({
                                             handleApplyToAll(day.value, row.id)
                                           }
                                         >
-                                          Apply to all
+                                          Copy to all
                                         </Button>
                                       </div>
                                     ) : (
