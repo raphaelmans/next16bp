@@ -105,7 +105,9 @@ export function PlayerReservationChatWidget({
 
         <SheetContent
           side={isDesktop ? "right" : "bottom"}
-          className={"flex h-[86vh] flex-col gap-0 p-0 sm:h-full sm:max-w-lg"}
+          className={
+            "flex h-[86vh] flex-col gap-0 p-0 sm:h-full sm:max-w-lg [&>button]:hidden"
+          }
         >
           <div className="flex items-start justify-between border-b px-5 py-4">
             <div className="space-y-0.5">

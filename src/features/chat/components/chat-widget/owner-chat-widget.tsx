@@ -224,7 +224,9 @@ export function OwnerChatWidget() {
 
         <SheetContent
           side={isSmall ? "right" : "bottom"}
-          className={"flex h-[88vh] flex-col gap-0 p-0 sm:h-full sm:max-w-5xl"}
+          className={
+            "flex h-[88vh] flex-col gap-0 p-0 sm:h-full sm:max-w-5xl [&>button]:hidden"
+          }
         >
           <div className="flex items-start justify-between border-b px-5 py-4">
             <div className="space-y-0.5">
