@@ -426,10 +426,11 @@ export class PlaceRepository implements IPlaceRepository {
     const amenitiesFilter = Array.from(
       new Set(
         (filters.amenities ?? [])
-          .map((amenity) => amenity.trim())
+          .map((amenity) => amenity.trim().toLowerCase())
           .filter((amenity) => amenity.length > 0),
       ),
     );
+    const canonicalAmenityName = sql`lower(btrim(${placeAmenity.name}))`;
     const verificationTier = filters.verificationTier;
     const verificationJoin = placeVerification;
     const verificationRank = sql<number>`case
@@ -515,12 +516,12 @@ export class PlaceRepository implements IPlaceRepository {
               and(
                 baseCondition,
                 eq(court.sportId, filters.sportId),
-                inArray(placeAmenity.name, amenitiesFilter),
+                inArray(canonicalAmenityName, amenitiesFilter),
               ),
             )
             .groupBy(place.id)
             .having(
-              sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`,
+              sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
             )
             .as("place_ids"),
         );
@@ -535,11 +536,13 @@ export class PlaceRepository implements IPlaceRepository {
             and(
               baseCondition,
               eq(court.sportId, filters.sportId),
-              inArray(placeAmenity.name, amenitiesFilter),
+              inArray(canonicalAmenityName, amenitiesFilter),
             ),
           )
           .groupBy(place.id)
-          .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
+          .having(
+            sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
+          )
           .orderBy(...featuredOrder)
           .limit(filters.limit)
           .offset(filters.offset);
@@ -687,10 +690,12 @@ export class PlaceRepository implements IPlaceRepository {
           .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
           .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
           .where(
-            and(baseCondition, inArray(placeAmenity.name, amenitiesFilter)),
+            and(baseCondition, inArray(canonicalAmenityName, amenitiesFilter)),
           )
           .groupBy(place.id)
-          .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
+          .having(
+            sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
+          )
           .as("place_ids"),
       );
 
@@ -699,9 +704,13 @@ export class PlaceRepository implements IPlaceRepository {
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
-        .where(and(baseCondition, inArray(placeAmenity.name, amenitiesFilter)))
+        .where(
+          and(baseCondition, inArray(canonicalAmenityName, amenitiesFilter)),
+        )
         .groupBy(place.id)
-        .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
+        .having(
+          sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
+        )
         .orderBy(...featuredOrder)
         .limit(filters.limit)
         .offset(filters.offset);
@@ -910,10 +919,11 @@ export class PlaceRepository implements IPlaceRepository {
     const amenitiesFilter = Array.from(
       new Set(
         (filters.amenities ?? [])
-          .map((amenity) => amenity.trim())
+          .map((amenity) => amenity.trim().toLowerCase())
           .filter((amenity) => amenity.length > 0),
       ),
     );
+    const canonicalAmenityName = sql`lower(btrim(${placeAmenity.name}))`;
     const verificationTier = filters.verificationTier;
     const verificationJoin = placeVerification;
     const verificationRank = sql<number>`case
@@ -999,12 +1009,12 @@ export class PlaceRepository implements IPlaceRepository {
               and(
                 baseCondition,
                 eq(court.sportId, filters.sportId),
-                inArray(placeAmenity.name, amenitiesFilter),
+                inArray(canonicalAmenityName, amenitiesFilter),
               ),
             )
             .groupBy(place.id)
             .having(
-              sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`,
+              sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
             )
             .as("place_ids"),
         );
@@ -1019,11 +1029,13 @@ export class PlaceRepository implements IPlaceRepository {
             and(
               baseCondition,
               eq(court.sportId, filters.sportId),
-              inArray(placeAmenity.name, amenitiesFilter),
+              inArray(canonicalAmenityName, amenitiesFilter),
             ),
           )
           .groupBy(place.id)
-          .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
+          .having(
+            sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
+          )
           .orderBy(...featuredOrder)
           .limit(filters.limit)
           .offset(filters.offset);
@@ -1084,10 +1096,12 @@ export class PlaceRepository implements IPlaceRepository {
           .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
           .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
           .where(
-            and(baseCondition, inArray(placeAmenity.name, amenitiesFilter)),
+            and(baseCondition, inArray(canonicalAmenityName, amenitiesFilter)),
           )
           .groupBy(place.id)
-          .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
+          .having(
+            sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
+          )
           .as("place_ids"),
       );
 
@@ -1096,9 +1110,13 @@ export class PlaceRepository implements IPlaceRepository {
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
-        .where(and(baseCondition, inArray(placeAmenity.name, amenitiesFilter)))
+        .where(
+          and(baseCondition, inArray(canonicalAmenityName, amenitiesFilter)),
+        )
         .groupBy(place.id)
-        .having(sql`count(distinct ${placeAmenity.name}) = ${amenitiesCount}`)
+        .having(
+          sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
+        )
         .orderBy(...featuredOrder)
         .limit(filters.limit)
         .offset(filters.offset);

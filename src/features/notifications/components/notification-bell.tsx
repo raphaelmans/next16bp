@@ -20,11 +20,6 @@ type Portal = "owner" | "player" | "admin";
 export function NotificationBell({ portal }: { portal: Portal }) {
   const webPush = useWebPush();
 
-  const showAttentionDot =
-    webPush.supported &&
-    webPush.configured &&
-    (webPush.permission !== "granted" || !webPush.enabledOnThisDevice);
-
   const settingsHref =
     portal === "owner"
       ? `${appRoutes.owner.settings}${SETTINGS_SECTION_HASHES.browserNotifications}`
@@ -60,20 +55,16 @@ export function NotificationBell({ portal }: { portal: Portal }) {
         <Button type="button" variant="ghost" size="icon" className="relative">
           <Bell className="h-4 w-4" />
           <span className="sr-only">Notifications</span>
-          {showAttentionDot ? (
-            <span
-              className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-orange-500 ring-2 ring-background"
-              aria-hidden
-            />
-          ) : null}
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80">
         <div className="space-y-3">
           <div className="space-y-1">
-            <p className="text-sm font-heading font-semibold">Notifications</p>
+            <p className="text-sm font-heading font-semibold">
+              Notification settings
+            </p>
             <p className="text-xs text-muted-foreground">
-              Get alerts for reservation updates.
+              Manage browser alerts for reservation updates.
             </p>
           </div>
 

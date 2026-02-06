@@ -1,6 +1,13 @@
 "use client";
 
-import { Ban, CalendarDays, Clock, MoreHorizontal, Pencil } from "lucide-react";
+import {
+  Ban,
+  CalendarDays,
+  Clock,
+  ImageOff,
+  MoreHorizontal,
+  Pencil,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -82,8 +89,9 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                         className="object-cover"
                       />
                     ) : (
-                      <div className="flex h-full items-center justify-center text-muted-foreground text-[10px]">
-                        No img
+                      <div className="flex h-full items-center justify-center text-muted-foreground">
+                        <ImageOff className="h-4 w-4" aria-hidden />
+                        <span className="sr-only">No court image</span>
                       </div>
                     )}
                   </div>
@@ -145,8 +153,9 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center text-muted-foreground text-xs">
-                      No img
+                    <div className="flex h-full items-center justify-center text-muted-foreground">
+                      <ImageOff className="h-5 w-5" aria-hidden />
+                      <span className="sr-only">No court image</span>
                     </div>
                   )}
                 </div>

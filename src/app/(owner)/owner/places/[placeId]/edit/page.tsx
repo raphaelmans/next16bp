@@ -223,14 +223,16 @@ export default function EditPlacePage() {
           </CardContent>
         </Card>
 
-        <PlacePhotoUpload
-          placeId={resolvedPlaceId}
-          photos={(placeData.photos ?? []).map((photo) => ({
-            id: photo.id,
-            url: photo.url,
-            displayOrder: photo.displayOrder,
-          }))}
-        />
+        <div id="venue-photos" className="scroll-mt-24">
+          <PlacePhotoUpload
+            placeId={resolvedPlaceId}
+            photos={(placeData.photos ?? []).map((photo) => ({
+              id: photo.id,
+              url: photo.url,
+              displayOrder: photo.displayOrder,
+            }))}
+          />
+        </div>
 
         <Card className="border-destructive/60">
           <CardHeader>

@@ -1,10 +1,13 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
 import { AppShell } from "@/components/layout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
@@ -142,6 +145,25 @@ export default function EditPlaceCourtPage() {
           isEditing
           disablePlaceSelect
         />
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Photos</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-muted-foreground">
+              Court photos are not configurable yet. You can manage venue photos
+              in the venue settings.
+            </p>
+            <Button asChild variant="outline">
+              <Link
+                href={`${appRoutes.owner.places.edit(placeId)}#venue-photos`}
+              >
+                Manage venue photos
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </AppShell>
   );

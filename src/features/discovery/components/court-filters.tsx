@@ -298,8 +298,8 @@ export function PlaceFilters({
                   <CommandItem
                     key={amenity}
                     value={amenity}
-                    onSelect={(value) => {
-                      handleAmenitiesChange(value);
+                    onSelect={() => {
+                      handleAmenitiesChange(amenity);
                     }}
                   >
                     <Check
