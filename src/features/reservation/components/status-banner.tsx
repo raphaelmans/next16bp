@@ -14,7 +14,15 @@ interface StatusBannerProps {
   expiresAt?: Date | string;
   cancellationReason?: string;
   className?: string;
+  onMessageOwner?: (() => void) | undefined;
 }
+
+const CHAT_ENABLED_STATUSES: ReservationStatus[] = [
+  "CREATED",
+  "AWAITING_PAYMENT",
+  "PAYMENT_MARKED_BY_USER",
+  "CONFIRMED",
+];
 
 export function StatusBanner({
   status,
@@ -22,6 +30,7 @@ export function StatusBanner({
   expiresAt,
   cancellationReason,
   className,
+  onMessageOwner,
 }: StatusBannerProps) {
   const config = statusBannerConfig[status];
 
@@ -29,6 +38,8 @@ export function StatusBanner({
 
   const Icon = config.icon;
   const showPayButton = status === "AWAITING_PAYMENT";
+  const showMessageOwnerButton =
+    !!onMessageOwner && CHAT_ENABLED_STATUSES.includes(status);
   const showCountdown = status === "AWAITING_PAYMENT" && expiresAt;
 
   return (
@@ -51,11 +62,28 @@ export function StatusBanner({
             ? `Reason: ${cancellationReason}`
             : config.description}
         </span>
-        {showPayButton && (
-          <Button size="sm" asChild className="w-fit">
-            <Link href={`/reservations/${reservationId}/payment`}>Pay Now</Link>
-          </Button>
-        )}
+        {showMessageOwnerButton || showPayButton ? (
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
+            {showMessageOwnerButton ? (
+              <Button
+                size="sm"
+                variant="outline"
+                type="button"
+                className="w-full sm:w-auto"
+                onClick={onMessageOwner}
+              >
+                Message Owner
+              </Button>
+            ) : null}
+            {showPayButton ? (
+              <Button size="sm" asChild className="w-full sm:w-auto">
+                <Link href={`/reservations/${reservationId}/payment`}>
+                  Pay Now
+                </Link>
+              </Button>
+            ) : null}
+          </div>
+        ) : null}
       </AlertDescription>
     </Alert>
   );
@@ -90,8 +118,7 @@ const statusBannerConfig: Record<
   PAYMENT_MARKED_BY_USER: {
     icon: Clock,
     title: "Payment Pending Confirmation",
-    description:
-      "Your payment is being verified by the court owner. This usually takes a few hours.",
+    description: "Your payment is being verified by the court owner.",
     className:
       "border-primary/20 bg-primary/5 text-primary [&>svg]:text-primary",
     variant: "default",

@@ -179,6 +179,18 @@ export default function ReservationDetailPage() {
   const formatEventTimestamp = (timestamp: Date | string) =>
     `${formatDateShort(timestamp)} · ${formatTime(timestamp)}`;
 
+  const handleOpenChatFromBanner = () => {
+    window.dispatchEvent(
+      new CustomEvent("reservation-chat:open", {
+        detail: {
+          kind: "player",
+          reservationId: reservation.id,
+          source: "reservation-status-banner",
+        },
+      }),
+    );
+  };
+
   if (reservation.status === "EXPIRED") {
     return (
       <Container className="py-6">
@@ -224,6 +236,7 @@ export default function ReservationDetailPage() {
         reservationId={reservation.id}
         expiresAt={reservation.expiresAt ?? undefined}
         cancellationReason={reservation.cancellationReason ?? undefined}
+        onMessageOwner={handleOpenChatFromBanner}
       />
 
       <div className="grid gap-6 lg:grid-cols-3 mt-6 overflow-hidden">

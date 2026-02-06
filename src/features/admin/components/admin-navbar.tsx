@@ -1,8 +1,6 @@
 "use client";
 
 import {
-  ArrowLeft,
-  Building2,
   CalendarDays,
   ChevronDown,
   LogOut,
@@ -12,6 +10,7 @@ import {
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { KudosLogo } from "@/components/kudos";
+import { PortalSwitcher } from "@/components/layout/portal-switcher";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -95,12 +94,7 @@ export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href={appRoutes.courts.base}>
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to Player View
-                </Link>
-              </DropdownMenuItem>
+              <PortalSwitcher variant="menu-items" isAdmin isOwner={isOwner} />
               <DropdownMenuItem asChild>
                 <Link href={appRoutes.reservations.base}>
                   <CalendarDays className="mr-2 h-4 w-4" />
@@ -114,16 +108,6 @@ export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              {/* TODO: Show conditionally based on user having an organization */}
-              {isOwner && (
-                <DropdownMenuItem asChild>
-                  <Link href={appRoutes.owner.base}>
-                    <Building2 className="mr-2 h-4 w-4" />
-                    Owner Dashboard
-                  </Link>
-                </DropdownMenuItem>
-              )}
-              {isOwner && <DropdownMenuSeparator />}
               <DropdownMenuItem asChild>
                 <Link href={appRoutes.account.profile}>
                   <User className="mr-2 h-4 w-4" />

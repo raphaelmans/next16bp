@@ -1,15 +1,9 @@
 "use client";
 
-import {
-  Building,
-  Calendar,
-  ChevronDown,
-  LogOut,
-  Shield,
-  User,
-} from "lucide-react";
+import { Calendar, ChevronDown, LogOut, User } from "lucide-react";
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
+import { PortalSwitcher } from "@/components/layout/portal-switcher";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -108,22 +102,11 @@ export function UserDropdown({
           <>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              {isOwner && (
-                <DropdownMenuItem asChild>
-                  <Link href={appRoutes.owner.base} className="cursor-pointer">
-                    <Building className="mr-2 h-4 w-4" />
-                    <span>Owner Dashboard</span>
-                  </Link>
-                </DropdownMenuItem>
-              )}
-              {isAdmin && (
-                <DropdownMenuItem asChild>
-                  <Link href={appRoutes.admin.base} className="cursor-pointer">
-                    <Shield className="mr-2 h-4 w-4" />
-                    <span>Admin Dashboard</span>
-                  </Link>
-                </DropdownMenuItem>
-              )}
+              <PortalSwitcher
+                variant="menu-items"
+                isOwner={isOwner}
+                isAdmin={isAdmin}
+              />
             </DropdownMenuGroup>
           </>
         )}

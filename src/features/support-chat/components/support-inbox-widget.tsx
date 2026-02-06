@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, MessagesSquare, RefreshCw, Search } from "lucide-react";
+import { ChevronDown, RefreshCw, Search } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Channel } from "stream-chat";
 import { useMediaQuery } from "@/common/hooks/use-media-query";
@@ -13,15 +13,9 @@ import {
 } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StreamChatThread } from "@/features/chat/components/chat-thread/stream-chat-thread";
+import { InboxFloatingSheet } from "@/features/chat/components/inbox-shell/inbox-floating-sheet";
 import { useStreamClient } from "@/features/chat/hooks/useStreamClient";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
@@ -80,6 +74,7 @@ export function SupportInboxWidget() {
   const [query, setQuery] = useState("");
   const [isLoadingChannels, setIsLoadingChannels] = useState(false);
   const [archiveOpen, setArchiveOpen] = useState(false);
+  const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
 
   const authQuery = trpc.chat.getAuth.useQuery();
   const auth = authQuery.data;
@@ -103,6 +98,9 @@ export function SupportInboxWidget() {
 
   useEffect(() => {
     writeLocalStorage(storageKeys.open, open ? "1" : "0");
+    if (!open) {
+      setMobilePane("list");
+    }
   }, [open, storageKeys.open]);
 
   useEffect(() => {
@@ -238,7 +236,12 @@ export function SupportInboxWidget() {
           "w-full text-left px-4 py-3 transition-colors",
           isActive ? "bg-muted" : "hover:bg-muted/60",
         )}
-        onClick={() => setActiveChannelId(id)}
+        onClick={() => {
+          setActiveChannelId(id);
+          if (!isDesktop) {
+            setMobilePane("thread");
+          }
+        }}
       >
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
@@ -270,166 +273,139 @@ export function SupportInboxWidget() {
     );
   };
 
-  return (
-    <div className="fixed bottom-6 right-6 z-50">
-      <Sheet open={open} onOpenChange={setOpen}>
-        <Button
-          type="button"
-          size="icon"
-          variant="secondary"
-          className={cn("relative h-12 w-12 rounded-full shadow-lg border")}
-          onClick={() => setOpen(true)}
-        >
-          <MessagesSquare className="h-5 w-5" />
-          <span className="sr-only">Open support messages</span>
-          {unreadCount > 0 ? (
-            <Badge className="absolute -right-1 -top-1 h-5 min-w-5 justify-center rounded-full px-1 text-[11px]">
-              {unreadCount > 99 ? "99+" : unreadCount}
-            </Badge>
-          ) : null}
-        </Button>
-
-        <SheetContent
-          side={isSmall ? "right" : "bottom"}
-          className={"flex h-[88vh] flex-col gap-0 p-0 sm:h-full sm:max-w-5xl"}
-        >
-          <div className="flex items-start justify-between border-b px-5 py-4">
-            <div className="space-y-0.5">
-              <SheetTitle className="font-heading">Support Inbox</SheetTitle>
-              <SheetDescription className="text-xs">
-                Conversations with owners about claims and verification.
-              </SheetDescription>
-            </div>
+  const listPane = (
+    <div
+      className={cn(
+        "flex min-h-0 w-full flex-1 flex-col",
+        isDesktop && "w-[360px] flex-none",
+      )}
+    >
+      <div className="border-b px-4 py-3">
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search by id or message…"
+              className="pl-9"
+            />
           </div>
 
-          {authQuery.isLoading ? (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9"
+            disabled={isLoadingChannels}
+            onClick={() => refreshInbox().catch(() => undefined)}
+          >
+            <RefreshCw
+              className={cn("h-4 w-4", isLoadingChannels && "animate-spin")}
+            />
+            <span className="sr-only">Refresh inbox</span>
+          </Button>
+        </div>
+      </div>
+
+      <ScrollArea className="min-h-0 flex-1">
+        <div className="divide-y">
+          {isLoadingChannels && supportChannels.length === 0 ? (
+            <div className="space-y-3 p-4">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ) : supportChannels.length === 0 ? (
             <div className="p-6 text-sm text-muted-foreground">
-              Loading chat…
-            </div>
-          ) : authQuery.isError ? (
-            <div className="p-6 text-sm text-destructive">
-              {authQuery.error.message}
-            </div>
-          ) : clientError ? (
-            <div className="p-6 text-sm text-destructive">
-              {clientError instanceof Error
-                ? clientError.message
-                : "Unable to connect to chat."}
+              No support threads yet. Open a request’s chat to join it.
             </div>
           ) : (
-            <div
-              className={cn("flex flex-1 flex-col", isDesktop && "flex-row")}
-            >
-              <div className={cn("w-full", isDesktop && "w-[360px]")}>
-                <div className="border-b px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <div className="relative flex-1">
-                      <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search by id or message…"
-                        className="pl-9"
-                      />
-                    </div>
-
-                    <Button
+            <>
+              {activeChannels.map(renderRow)}
+              {archivedChannels.length > 0 ? (
+                <Collapsible open={archiveOpen} onOpenChange={setArchiveOpen}>
+                  <CollapsibleTrigger asChild>
+                    <button
                       type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-9 w-9"
-                      disabled={isLoadingChannels}
-                      onClick={() => refreshInbox().catch(() => undefined)}
+                      className="flex w-full items-center justify-between px-4 py-3 text-xs font-medium text-muted-foreground hover:bg-muted/60"
                     >
-                      <RefreshCw
+                      <span>Archive ({archivedChannels.length})</span>
+                      <ChevronDown
                         className={cn(
-                          "h-4 w-4",
-                          isLoadingChannels && "animate-spin",
+                          "h-4 w-4 transition-transform",
+                          archiveOpen && "rotate-180",
                         )}
                       />
-                      <span className="sr-only">Refresh inbox</span>
-                    </Button>
-                  </div>
-                </div>
-
-                <ScrollArea className={cn("h-[38vh]", isDesktop && "h-full")}>
-                  <div className="divide-y">
-                    {isLoadingChannels && supportChannels.length === 0 ? (
-                      <div className="space-y-3 p-4">
-                        <Skeleton className="h-10 w-full" />
-                        <Skeleton className="h-10 w-full" />
-                        <Skeleton className="h-10 w-full" />
-                      </div>
-                    ) : supportChannels.length === 0 ? (
-                      <div className="p-6 text-sm text-muted-foreground">
-                        No support threads yet. Open a request’s chat to join
-                        it.
-                      </div>
-                    ) : (
-                      <>
-                        {activeChannels.map(renderRow)}
-                        {archivedChannels.length > 0 ? (
-                          <Collapsible
-                            open={archiveOpen}
-                            onOpenChange={setArchiveOpen}
-                          >
-                            <CollapsibleTrigger asChild>
-                              <button
-                                type="button"
-                                className="flex w-full items-center justify-between px-4 py-3 text-xs font-medium text-muted-foreground hover:bg-muted/60"
-                              >
-                                <span>Archive ({archivedChannels.length})</span>
-                                <ChevronDown
-                                  className={cn(
-                                    "h-4 w-4 transition-transform",
-                                    archiveOpen && "rotate-180",
-                                  )}
-                                />
-                              </button>
-                            </CollapsibleTrigger>
-                            <CollapsibleContent>
-                              <div className="divide-y">
-                                {archivedChannels.map(renderRow)}
-                              </div>
-                            </CollapsibleContent>
-                          </Collapsible>
-                        ) : null}
-                      </>
-                    )}
-                  </div>
-                </ScrollArea>
-              </div>
-
-              {isDesktop ? <Separator orientation="vertical" /> : <Separator />}
-
-              <div className="flex-1">
-                <StreamChatThread
-                  client={isReady ? client : null}
-                  channelId={activeChannel?.id ?? null}
-                  channelType={activeChannel?.type ?? "messaging"}
-                  members={null}
-                  myUserId={myUserId}
-                  headerTitle={
-                    activeChannel?.id
-                      ? formatThreadTitle(activeChannel.id)
-                      : "Support chat"
-                  }
-                  headerSubtitle={
-                    activeChannel?.id
-                      ? getSupportKind(activeChannel.id) === "claim"
-                        ? "Claim support"
-                        : "Verification support"
-                      : undefined
-                  }
-                  readOnly={!isReady}
-                  readOnlyReason={!isReady ? "Connecting..." : undefined}
-                  minHeightClassName="min-h-0 flex-1"
-                />
-              </div>
-            </div>
+                    </button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <div className="divide-y">
+                      {archivedChannels.map(renderRow)}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              ) : null}
+            </>
           )}
-        </SheetContent>
-      </Sheet>
+        </div>
+      </ScrollArea>
     </div>
+  );
+
+  const threadPane = (
+    <div className="min-h-0 flex-1">
+      <StreamChatThread
+        client={isReady ? client : null}
+        channelId={activeChannel?.id ?? null}
+        channelType={activeChannel?.type ?? "messaging"}
+        members={null}
+        myUserId={myUserId}
+        headerTitle={
+          activeChannel?.id
+            ? formatThreadTitle(activeChannel.id)
+            : "Support chat"
+        }
+        headerSubtitle={
+          activeChannel?.id
+            ? getSupportKind(activeChannel.id) === "claim"
+              ? "Claim support"
+              : "Verification support"
+            : undefined
+        }
+        readOnly={!isReady}
+        readOnlyReason={!isReady ? "Connecting..." : undefined}
+        minHeightClassName="min-h-0 flex-1"
+        onBack={!isDesktop ? () => setMobilePane("list") : undefined}
+        backButtonLabel="Back to inbox"
+      />
+    </div>
+  );
+
+  return (
+    <InboxFloatingSheet
+      open={open}
+      onOpenChange={setOpen}
+      unreadCount={unreadCount}
+      triggerLabel="Open support messages"
+      triggerVariant="secondary"
+      triggerClassName="border"
+      sheetTitle="Support Inbox"
+      sheetDescription="Conversations with owners about claims and verification."
+      isSmall={isSmall}
+      isDesktop={isDesktop}
+      authLoading={authQuery.isLoading}
+      authErrorMessage={authQuery.isError ? authQuery.error.message : null}
+      clientErrorMessage={
+        clientError
+          ? clientError instanceof Error
+            ? clientError.message
+            : "Unable to connect to chat."
+          : null
+      }
+      mobilePane={mobilePane}
+      listPane={listPane}
+      threadPane={threadPane}
+    />
   );
 }

@@ -13,6 +13,14 @@ export interface EnsureReservationChannelInput {
   memberIds: string[];
 }
 
+export interface SendReservationMessageInput {
+  reservationId: string;
+  channelId: string;
+  createdById: string;
+  text: string;
+  messageId?: string;
+}
+
 export interface EnsureSupportChannelInput {
   channelId: string;
   createdById: string;
@@ -30,6 +38,7 @@ export interface IChatProvider {
   createUserToken(userId: string): Promise<string>;
   ensureDmChannel(input: EnsureDmChannelInput): Promise<void>;
   ensureReservationChannel(input: EnsureReservationChannelInput): Promise<void>;
+  sendReservationMessage(input: SendReservationMessageInput): Promise<void>;
   ensureSupportChannel(input: EnsureSupportChannelInput): Promise<void>;
   exportReservationChannelMessages(input: {
     reservationId: string;

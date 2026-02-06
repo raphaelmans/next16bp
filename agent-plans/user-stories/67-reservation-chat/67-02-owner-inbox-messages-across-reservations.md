@@ -46,6 +46,10 @@ As an **organization owner**, I want to **view and reply to reservation messages
 - When I send a message
 - Then it appears in the thread
 
+- Given a reservation was just moved to `CONFIRMED`
+- When I open its conversation thread in the inbox
+- Then I can see the default owner confirmation message in the timeline
+
 ### Archived Conversations Are Collapsed And Read-Only
 
 - Given a reservation is `CANCELLED` or `EXPIRED`
@@ -61,11 +65,19 @@ As an **organization owner**, I want to **view and reply to reservation messages
 
 - Given the inbox is open
 - When I click the refresh button
-- Then the channel list and labels refresh
+- Then the channel list and reservation metadata refresh together (status labels, archive grouping, read-only rules)
 
 - Given a thread is open
 - When I click refresh in the thread header
-- Then the message history refreshes
+- Then message history and reservation metadata refresh in the same sync cycle
+
+### Refresh Uses A Deterministic Sync State Model
+
+- Given refresh is triggered (manual button, thread refresh, or relevant chat event)
+- Then the UI transitions through a sync state model (`IDLE_SYNCED -> SYNCING_BOTH -> IDLE/PARTIAL/ERROR`)
+
+- Given one data lane fails (messages or reservation metadata)
+- Then the inbox shows a partial-sync warning and allows retry without losing the current thread context
 
 ---
 

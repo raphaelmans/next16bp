@@ -1,17 +1,10 @@
 "use client";
 
-import {
-  Building2,
-  CalendarDays,
-  Home,
-  MapPin,
-  Shield,
-  User,
-} from "lucide-react";
+import { CalendarDays, Home, MapPin, Shield, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
-import { KudosLogo } from "@/components/kudos";
+import { PortalSwitcher } from "@/components/layout/portal-switcher";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sidebar,
@@ -64,15 +57,7 @@ export function PlayerSidebar({
   return (
     <Sidebar>
       <SidebarHeader className="border-b">
-        <div className="flex items-center gap-2 p-2">
-          <KudosLogo size={28} variant="icon" />
-          <div className="flex flex-col">
-            <span className="text-sm font-heading font-semibold text-foreground">
-              Player View
-            </span>
-            <span className="text-xs text-muted-foreground">KudosCourts</span>
-          </div>
-        </div>
+        <PortalSwitcher variant="sidebar" isOwner={isOwner} isAdmin={isAdmin} />
       </SidebarHeader>
 
       <SidebarContent>
@@ -102,32 +87,11 @@ export function PlayerSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {(isOwner || isAdmin) && (
+        {isAdmin && (
           <SidebarGroup>
             <SidebarGroupLabel>Dashboards</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {isOwner && (
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname.startsWith(appRoutes.owner.base)}
-                      className={
-                        pathname.startsWith(appRoutes.owner.base)
-                          ? "bg-primary/10 text-primary border-l-2 border-primary"
-                          : ""
-                      }
-                    >
-                      <Link
-                        href={appRoutes.owner.base}
-                        className="font-heading"
-                      >
-                        <Building2 className="h-4 w-4" />
-                        <span>Owner Dashboard</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )}
                 {isAdmin && (
                   <SidebarMenuItem>
                     <SidebarMenuButton

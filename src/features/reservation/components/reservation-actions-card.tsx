@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, Mail, MapPin, Phone, X } from "lucide-react";
+import { Copy, Mail, MapPin, MessageSquare, Phone, X } from "lucide-react";
 import { copyToClipboard } from "@/common/utils/clipboard";
 import { KudosStatusBadge, type ReservationStatus } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,14 @@ export function ReservationActionsCard({
   canCancel,
   cancelDisabledReason,
 }: ReservationActionsCardProps) {
+  const activeChatStatuses: ReservationStatus[] = [
+    "CREATED",
+    "AWAITING_PAYMENT",
+    "PAYMENT_MARKED_BY_USER",
+    "CONFIRMED",
+  ];
+  const canMessageOwner = activeChatStatuses.includes(status);
+
   const resolvedCanCancel =
     canCancel ??
     ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"].includes(status);
@@ -43,6 +51,18 @@ export function ReservationActionsCard({
   const directionsUrl = hasCoordinates
     ? `https://www.google.com/maps/dir/?api=1&destination=${court.latitude},${court.longitude}`
     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${court.name} ${court.address} ${court.city}`)}`;
+
+  const handleOpenChat = () => {
+    window.dispatchEvent(
+      new CustomEvent("reservation-chat:open", {
+        detail: {
+          kind: "player",
+          reservationId,
+          source: "reservation-detail",
+        },
+      }),
+    );
+  };
 
   return (
     <Card className="sticky top-4 overflow-hidden">
@@ -80,6 +100,22 @@ export function ReservationActionsCard({
 
         {/* Actions */}
         <div className="space-y-2">
+          {canMessageOwner ? (
+            <>
+              <Button className="w-full justify-start" onClick={handleOpenChat}>
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Message Owner
+              </Button>
+              {(status === "AWAITING_PAYMENT" ||
+                status === "PAYMENT_MARKED_BY_USER") && (
+                <p className="px-1 text-xs text-muted-foreground">
+                  Need payment details or confirmation updates? Message the
+                  owner directly.
+                </p>
+              )}
+            </>
+          ) : null}
+
           <Button variant="outline" className="w-full justify-start" asChild>
             <a href={directionsUrl} target="_blank" rel="noopener noreferrer">
               <MapPin className="mr-2 h-4 w-4" />

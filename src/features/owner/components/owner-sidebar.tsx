@@ -14,6 +14,8 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
+import { PortalSwitcher } from "@/components/layout/portal-switcher";
+import { SidebarNavItem } from "@/components/layout/sidebar-nav-item";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Collapsible,
@@ -24,6 +26,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -43,7 +46,10 @@ import {
   SidebarMenuSubItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { useOwnerSidebarQuickLinks } from "@/features/owner/hooks";
+import {
+  useOwnerSidebarQuickLinks,
+  useReservationCounts,
+} from "@/features/owner/hooks";
 
 interface Organization {
   id: string;
@@ -94,8 +100,12 @@ export function OwnerSidebar({
   const pathname = usePathname();
   const { data: quickLinks = [], isLoading: quickLinksLoading } =
     useOwnerSidebarQuickLinks(currentOrganization?.id);
+  const { data: reservationCounts } = useReservationCounts(
+    currentOrganization?.id ?? null,
+  );
   const hasOrganization = Boolean(currentOrganization?.id);
   const showVenuesLoading = quickLinksLoading || !hasOrganization;
+  const reservationsBadgeCount = reservationCounts.pending;
 
   const isActive = (href: string) => {
     if (href === appRoutes.owner.base) {
@@ -139,28 +149,30 @@ export function OwnerSidebar({
                   </p>
                   <p className="text-xs text-muted-foreground">Owner</p>
                 </div>
-                {organizations.length > 1 && (
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                )}
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
               </button>
             </DropdownMenuTrigger>
-            {organizations.length > 1 && (
-              <DropdownMenuContent align="start" className="w-56">
-                {organizations.map((org) => (
-                  <DropdownMenuItem key={org.id} asChild>
-                    <Link
-                      href={`${appRoutes.owner.base}?org=${org.id}`}
-                      className="flex items-center gap-2"
-                    >
-                      <div className="flex h-6 w-6 items-center justify-center rounded bg-muted">
-                        <Building2 className="h-3 w-3" />
-                      </div>
-                      <span className="truncate">{org.name}</span>
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            )}
+            <DropdownMenuContent align="start" className="w-56">
+              <PortalSwitcher variant="menu-items" isOwner />
+              {organizations.length > 1 && (
+                <>
+                  <DropdownMenuSeparator />
+                  {organizations.map((org) => (
+                    <DropdownMenuItem key={org.id} asChild>
+                      <Link
+                        href={`${appRoutes.owner.base}?org=${org.id}`}
+                        className="flex items-center gap-2"
+                      >
+                        <div className="flex h-6 w-6 items-center justify-center rounded bg-muted">
+                          <Building2 className="h-3 w-3" />
+                        </div>
+                        <span className="truncate">{org.name}</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </>
+              )}
+            </DropdownMenuContent>
           </DropdownMenu>
         ) : (
           <div className="flex items-center gap-2 p-2">
@@ -181,22 +193,13 @@ export function OwnerSidebar({
           <SidebarGroupContent>
             <SidebarMenu>
               {/* Dashboard */}
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={isActive(appRoutes.owner.base)}
-                  className={
-                    isActive(appRoutes.owner.base)
-                      ? "bg-primary text-primary-foreground"
-                      : ""
-                  }
-                >
-                  <Link href={appRoutes.owner.base} className="font-heading">
-                    <LayoutDashboard className="h-4 w-4" />
-                    <span>Dashboard</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <SidebarNavItem
+                href={appRoutes.owner.base}
+                title="Dashboard"
+                icon={LayoutDashboard}
+                isActive={isActive(appRoutes.owner.base)}
+                activeClassName="bg-primary text-primary-foreground"
+              />
 
               {/* Venues - collapsible with nested venues > courts */}
               <Collapsible
@@ -301,22 +304,19 @@ export function OwnerSidebar({
 
               {/* Remaining nav items */}
               {navItems.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={isActive(item.href)}
-                    className={
-                      isActive(item.href)
-                        ? "bg-primary text-primary-foreground"
-                        : ""
-                    }
-                  >
-                    <Link href={item.href} className="font-heading">
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                <SidebarNavItem
+                  key={item.href}
+                  href={item.href}
+                  title={item.title}
+                  icon={item.icon}
+                  isActive={isActive(item.href)}
+                  activeClassName="bg-primary text-primary-foreground"
+                  badgeCount={
+                    item.href === appRoutes.owner.reservations
+                      ? reservationsBadgeCount
+                      : undefined
+                  }
+                />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>

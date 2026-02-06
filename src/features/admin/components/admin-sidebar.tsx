@@ -4,13 +4,13 @@ import {
   Building2,
   LayoutDashboard,
   MapPin,
-  Shield,
   ShieldCheck,
   Tag,
 } from "lucide-react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
+import { PortalSwitcher } from "@/components/layout/portal-switcher";
+import { SidebarNavItem } from "@/components/layout/sidebar-nav-item";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -22,8 +22,6 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
 interface AdminSidebarProps {
@@ -41,36 +39,31 @@ const navItems = [
     title: "Dashboard",
     href: appRoutes.admin.base,
     icon: LayoutDashboard,
-    badge: false,
-    badgeKey: "none" as const,
+    badgeKey: null,
   },
   {
     title: "Claims",
     href: appRoutes.admin.claims.base,
     icon: Tag,
-    badge: true,
     badgeKey: "claims" as const,
   },
   {
     title: "Verification",
     href: appRoutes.admin.placeVerification.base,
     icon: ShieldCheck,
-    badge: true,
     badgeKey: "verifications" as const,
   },
   {
     title: "Courts",
     href: appRoutes.admin.courts.base,
     icon: Building2,
-    badge: false,
-    badgeKey: "none" as const,
+    badgeKey: null,
   },
   {
     title: "Venues",
     href: appRoutes.admin.venues.base,
     icon: MapPin,
-    badge: false,
-    badgeKey: "none" as const,
+    badgeKey: null,
   },
 ] as const;
 
@@ -88,18 +81,18 @@ export function AdminSidebar({
     return pathname.startsWith(href);
   };
 
+  const getBadgeCount = (
+    badgeKey: (typeof navItems)[number]["badgeKey"],
+  ): number | undefined => {
+    if (badgeKey === "claims") return pendingClaimsCount;
+    if (badgeKey === "verifications") return pendingVerificationsCount;
+    return undefined;
+  };
+
   return (
     <Sidebar>
-      <SidebarHeader className="border-b px-6 py-4">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Shield className="h-4 w-4" />
-          </div>
-          <div>
-            <span className="font-heading font-semibold">Admin Panel</span>
-            <p className="text-xs text-muted-foreground">KudosCourts</p>
-          </div>
-        </div>
+      <SidebarHeader className="border-b">
+        <PortalSwitcher variant="sidebar" isAdmin />
       </SidebarHeader>
 
       <SidebarContent>
@@ -108,43 +101,21 @@ export function AdminSidebar({
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={isActive(item.href)}
-                    tooltip={item.title}
-                    className={
-                      isActive(item.href)
-                        ? "bg-primary/10 text-primary border-l-2 border-primary"
-                        : ""
-                    }
-                  >
-                    <Link href={item.href} className="font-heading">
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                      {item.badge &&
-                        item.badgeKey === "claims" &&
-                        pendingClaimsCount > 0 && (
-                          <Badge
-                            variant="secondary"
-                            className="ml-auto bg-warning/10 text-warning border border-warning/20"
-                          >
-                            {pendingClaimsCount}
-                          </Badge>
-                        )}
-                      {item.badge &&
-                        item.badgeKey === "verifications" &&
-                        pendingVerificationsCount > 0 && (
-                          <Badge
-                            variant="secondary"
-                            className="ml-auto bg-warning/10 text-warning border border-warning/20"
-                          >
-                            {pendingVerificationsCount}
-                          </Badge>
-                        )}
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                <SidebarNavItem
+                  key={item.href}
+                  href={item.href}
+                  title={item.title}
+                  icon={item.icon}
+                  isActive={isActive(item.href)}
+                  tooltip={item.title}
+                  activeClassName="bg-primary/10 text-primary border-l-2 border-primary"
+                  badgeCount={getBadgeCount(item.badgeKey)}
+                  badgeClassName={
+                    item.badgeKey
+                      ? "bg-warning/10 text-warning border border-warning/20"
+                      : undefined
+                  }
+                />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>

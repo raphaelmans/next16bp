@@ -227,7 +227,7 @@ export const reservationOwnerRouter = router({
     }),
 
   /**
-   * Get count of pending reservations (PAYMENT_MARKED_BY_USER) for an organization
+   * Get count of inbox reservations for an organization
    */
   getPendingCount: protectedProcedure
     .input(GetPendingCountSchema)

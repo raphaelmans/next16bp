@@ -178,6 +178,10 @@ export function PlayerReservationChatWidget({
                     : undefined
                 }
                 minHeightClassName="min-h-0 flex-1"
+                onRefreshContext={async () => {
+                  await sessionQuery.refetch();
+                }}
+                isContextRefreshing={sessionQuery.isRefetching}
               />
             </>
           )}

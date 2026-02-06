@@ -36,6 +36,22 @@ As a **player**, I want a **global chat widget on my reservations pages** so tha
 - When I select a different reservation thread
 - Then the active chat thread updates to that reservation
 
+### Reservation Detail CTA Opens Matching Thread
+
+- Given I am on reservation detail
+- When I click `Message Owner` from either the status banner or actions card
+- Then the chat widget opens immediately and focuses the matching reservation thread
+
+- Given my reservation is `AWAITING_PAYMENT`
+- When chat opens from the detail CTA
+- Then the thread remains active (not archived/read-only) so payment coordination can continue
+
+### Player Sees Auto Confirmation Message
+
+- Given the owner confirms the reservation and status becomes `CONFIRMED`
+- When I open the reservation thread
+- Then I see the default owner confirmation message in the thread history
+
 ### Active Thread Shows Reservation Context
 
 - Given a reservation thread is selected
@@ -59,11 +75,19 @@ As a **player**, I want a **global chat widget on my reservations pages** so tha
 
 - Given the chat widget is open
 - When I click the refresh button
-- Then the channel list refreshes
+- Then the channel list and reservation metadata refresh together (status labels, archive grouping, read-only rules)
 
 - Given a thread is open
 - When I click refresh in the thread header
-- Then the message history refreshes
+- Then message history and reservation metadata refresh in the same sync cycle
+
+### Refresh Uses A Deterministic Sync State Model
+
+- Given refresh is triggered (manual button, thread refresh, or relevant chat event)
+- Then the UI transitions through a sync state model (`IDLE_SYNCED -> SYNCING_BOTH -> IDLE/PARTIAL/ERROR`)
+
+- Given one data lane fails (messages or reservation metadata)
+- Then the widget shows a partial-sync warning and allows retry without forcing the player to reselect the thread
 
 ---
 

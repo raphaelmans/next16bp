@@ -94,6 +94,7 @@ export function makeReservationOwnerService(): ReservationOwnerService {
       makeReservationEventRepository(),
       makeCourtRepository(),
       makePlaceRepository(),
+      makeProfileRepository(),
       makeOrganizationReservationPolicyRepository(),
       makeOrganizationRepository(),
       getContainer().transactionManager,

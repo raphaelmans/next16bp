@@ -1,7 +1,7 @@
 "use client";
 
 import type { ChatStatus, FileUIPart, UIMessage } from "ai";
-import { MessageSquare, RefreshCw } from "lucide-react";
+import { ChevronLeft, MessageSquare, RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Attachment, LocalMessage, StreamChat } from "stream-chat";
 import {
@@ -104,6 +104,10 @@ export interface StreamChatThreadProps {
   emptyTitle?: string;
   emptyDescription?: string;
   minHeightClassName?: string;
+  onBack?: () => void;
+  backButtonLabel?: string;
+  onRefreshContext?: (() => Promise<void>) | null;
+  isContextRefreshing?: boolean;
 }
 
 export function StreamChatThread({
@@ -120,8 +124,13 @@ export function StreamChatThread({
   emptyTitle = "No messages yet",
   emptyDescription = "Say hi to start the conversation",
   minHeightClassName = "min-h-[520px]",
+  onBack,
+  backButtonLabel = "Back",
+  onRefreshContext = null,
+  isContextRefreshing = false,
 }: StreamChatThreadProps) {
   const [sendStatus, setSendStatus] = useState<ChatStatus>("ready");
+  const [isHeaderRefreshing, setIsHeaderRefreshing] = useState(false);
 
   const {
     channel,
@@ -210,44 +219,80 @@ export function StreamChatThread({
         ? "bg-destructive/10 text-destructive border-destructive/20"
         : "bg-warning/10 text-warning border-warning/20";
 
+  const isRefreshBusy =
+    isRefreshing || isContextRefreshing || isHeaderRefreshing;
+
+  const handleRefresh = useCallback(async () => {
+    if (isRefreshBusy) {
+      return;
+    }
+
+    setIsHeaderRefreshing(true);
+    try {
+      await refresh();
+      if (onRefreshContext) {
+        await onRefreshContext();
+      }
+    } finally {
+      setIsHeaderRefreshing(false);
+    }
+  }, [isRefreshBusy, onRefreshContext, refresh]);
+
   return (
-    <div className={`flex flex-col ${minHeightClassName}`}>
+    <div className={`flex h-full min-h-0 flex-col ${minHeightClassName}`}>
       <div className="flex items-center justify-between border-b px-4 py-3">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            {headerStatus ? (
-              <Badge
-                variant="outline"
-                className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium ${statusClassName}`}
-              >
-                {headerStatus}
-              </Badge>
-            ) : null}
-            <div className="truncate text-sm font-medium">{headerTitle}</div>
-          </div>
-          {headerSubtitle ? (
-            <div className="truncate text-xs text-muted-foreground mt-0.5">
-              {headerSubtitle}
-            </div>
+        <div className="flex min-w-0 items-start gap-2">
+          {onBack ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 shrink-0"
+              onClick={onBack}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">{backButtonLabel}</span>
+            </Button>
           ) : null}
+
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              {headerStatus ? (
+                <Badge
+                  variant="outline"
+                  className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium ${statusClassName}`}
+                >
+                  {headerStatus}
+                </Badge>
+              ) : null}
+              <div className="truncate text-sm font-medium">{headerTitle}</div>
+            </div>
+            {headerSubtitle ? (
+              <div className="truncate text-xs text-muted-foreground mt-0.5">
+                {headerSubtitle}
+              </div>
+            ) : null}
+          </div>
         </div>
         <div className="flex items-center gap-1">
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            disabled={!channel || isRefreshing}
-            onClick={() => refresh().catch(() => undefined)}
+            disabled={(!channel && !onRefreshContext) || isRefreshBusy}
+            onClick={() => handleRefresh().catch(() => undefined)}
           >
-            <RefreshCw className="h-4 w-4" />
+            <RefreshCw
+              className={isRefreshBusy ? "h-4 w-4 animate-spin" : "h-4 w-4"}
+            />
             <span className="sr-only">Refresh</span>
           </Button>
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col">
-        <div className="flex-1 p-3">
-          <Conversation className="h-full">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <div className="min-h-0 flex-1 p-3">
+          <Conversation className="h-full min-h-0">
             <ConversationContent>
               {readOnlyReason ? (
                 <div className="mb-3 rounded-md border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
@@ -323,11 +368,11 @@ export function StreamChatThread({
         </div>
 
         {readOnly ? (
-          <div className="border-t p-3 text-xs text-muted-foreground">
+          <div className="border-t px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] text-xs text-muted-foreground">
             This conversation is archived and read-only.
           </div>
         ) : (
-          <div className="border-t p-3">
+          <div className="border-t px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
             <PromptInput
               className="w-full"
               onSubmit={handleSend}

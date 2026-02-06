@@ -1,4 +1,5 @@
 import { addMinutes, differenceInMinutes } from "date-fns";
+import { postOwnerConfirmedMessage } from "@/lib/modules/chat/ops/post-owner-confirmed-message";
 import {
   CourtNotFoundError,
   NotCourtOwnerError,
@@ -25,6 +26,7 @@ import type { IOrganizationReservationPolicyRepository } from "@/lib/modules/org
 import type { IPaymentProofRepository } from "@/lib/modules/payment-proof/repositories/payment-proof.repository";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
+import type { IProfileRepository } from "@/lib/modules/profile/repositories/profile.repository";
 import { STORAGE_BUCKETS } from "@/lib/modules/storage/dtos";
 import type { IObjectStorageService } from "@/lib/modules/storage/services/object-storage.service";
 import type { ReservationRecord } from "@/lib/shared/infra/db/schema";
@@ -104,6 +106,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     private reservationEventRepository: IReservationEventRepository,
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
+    private profileRepository: IProfileRepository,
     private organizationReservationPolicyRepository: IOrganizationReservationPolicyRepository,
     private organizationRepository: IOrganizationRepository,
     private transactionManager: TransactionManager,
@@ -235,11 +238,47 @@ export class ReservationOwnerService implements IReservationOwnerService {
     return policy.paymentHoldMinutes ?? DEFAULT_PAYMENT_HOLD_MINUTES;
   }
 
+  private async postOwnerConfirmedMessageBestEffort(
+    reservation: ReservationRecord,
+    ownerUserId: string,
+  ) {
+    try {
+      if (!reservation.playerId) {
+        return;
+      }
+
+      const profile = await this.profileRepository.findById(
+        reservation.playerId,
+      );
+      const playerUserId = profile?.userId;
+
+      if (!playerUserId) {
+        return;
+      }
+
+      await postOwnerConfirmedMessage({
+        reservationId: reservation.id,
+        ownerUserId,
+        playerUserId,
+      });
+    } catch (error) {
+      logger.warn(
+        {
+          err: error,
+          event: "reservation.owner_confirmed_chat_message_failed",
+          reservationId: reservation.id,
+          ownerId: ownerUserId,
+        },
+        "Failed to post owner confirmed chat message",
+      );
+    }
+  }
+
   async acceptReservation(
     userId: string,
     reservationId: string,
   ): Promise<ReservationRecord> {
-    return this.transactionManager.run(async (tx) => {
+    const updated = await this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
       const reservation = await this.reservationRepository.findByIdForUpdate(
@@ -383,13 +422,19 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       return updated;
     });
+
+    if (updated.status === "CONFIRMED") {
+      await this.postOwnerConfirmedMessageBestEffort(updated, userId);
+    }
+
+    return updated;
   }
 
   async confirmPayment(
     userId: string,
     data: ConfirmPaymentDTO,
   ): Promise<ReservationRecord> {
-    return this.transactionManager.run(async (tx) => {
+    const updated = await this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
       const reservation = await this.reservationRepository.findByIdForUpdate(
@@ -476,13 +521,17 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       return updated;
     });
+
+    await this.postOwnerConfirmedMessageBestEffort(updated, userId);
+
+    return updated;
   }
 
   async confirmPaidOffline(
     userId: string,
     data: ConfirmPaidOfflineDTO,
   ): Promise<ReservationRecord> {
-    return this.transactionManager.run(async (tx) => {
+    const updated = await this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
       const reservation = await this.reservationRepository.findByIdForUpdate(
@@ -618,6 +667,10 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       return updated;
     });
+
+    await this.postOwnerConfirmedMessageBestEffort(updated, userId);
+
+    return updated;
   }
 
   async rejectReservation(
@@ -1151,7 +1204,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
     return this.reservationRepository.countByOrganizationAndStatuses(
       organizationId,
-      ["CREATED", "PAYMENT_MARKED_BY_USER"],
+      ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"],
     );
   }
 }

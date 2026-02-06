@@ -28,6 +28,10 @@ export function useCancelReservation() {
         }),
         utils.reservation.getMy.invalidate(),
         utils.reservation.getMyWithDetails.invalidate(),
+        utils.reservationChat.getThreadMetas.invalidate(),
+        utils.reservationChat.getSession.invalidate({
+          reservationId: variables.reservationId,
+        }),
       ]);
 
       router.push(appRoutes.reservations.base);
@@ -60,6 +64,8 @@ export function useCreateReservationForAnyCourt() {
       await Promise.all([
         utils.reservation.getMy.invalidate(),
         utils.reservation.getMyWithDetails.invalidate(),
+        utils.reservationChat.getThreadMetas.invalidate(),
+        utils.reservationChat.getSession.invalidate({ reservationId: data.id }),
       ]);
     },
     onError: (error) => {
@@ -87,6 +93,8 @@ export function useCreateReservationForCourt() {
       await Promise.all([
         utils.reservation.getMy.invalidate(),
         utils.reservation.getMyWithDetails.invalidate(),
+        utils.reservationChat.getThreadMetas.invalidate(),
+        utils.reservationChat.getSession.invalidate({ reservationId: data.id }),
       ]);
     },
     onError: (error) => {
@@ -126,6 +134,10 @@ export function useMarkPayment() {
         }),
         utils.reservation.getMy.invalidate(),
         utils.reservation.getMyWithDetails.invalidate(),
+        utils.reservationChat.getThreadMetas.invalidate(),
+        utils.reservationChat.getSession.invalidate({
+          reservationId: variables.reservationId,
+        }),
       ]);
     },
     onError: (error) => {

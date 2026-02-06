@@ -6,7 +6,30 @@ import type {
   EnsureReservationChannelInput,
   EnsureSupportChannelInput,
   IChatProvider,
+  SendReservationMessageInput,
 } from "./chat.provider";
+
+function isDuplicateMessageError(error: unknown) {
+  if (!error || typeof error !== "object") {
+    return false;
+  }
+
+  const code =
+    "code" in error && typeof error.code === "number" ? error.code : null;
+  const statusCode =
+    "status" in error && typeof error.status === "number" ? error.status : null;
+  const message =
+    "message" in error && typeof error.message === "string"
+      ? error.message.toLowerCase()
+      : "";
+
+  return (
+    code === 4 ||
+    statusCode === 409 ||
+    message.includes("already exists") ||
+    message.includes("duplicate")
+  );
+}
 
 export class StreamChatProvider implements IChatProvider {
   readonly providerId = "stream" as const;
@@ -93,6 +116,27 @@ export class StreamChatProvider implements IChatProvider {
     } as unknown as Record<string, unknown>);
 
     await channel.create();
+  }
+
+  async sendReservationMessage({
+    channelId,
+    createdById,
+    text,
+    messageId,
+  }: SendReservationMessageInput): Promise<void> {
+    const channel = this.client.channel("messaging", channelId);
+    try {
+      await channel.sendMessage({
+        id: messageId,
+        text,
+        user_id: createdById,
+      });
+    } catch (error) {
+      if (isDuplicateMessageError(error)) {
+        return;
+      }
+      throw error;
+    }
   }
 
   async ensureSupportChannel({

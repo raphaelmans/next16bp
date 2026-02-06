@@ -1217,8 +1217,15 @@ export function useAcceptReservation() {
   const utils = trpc.useUtils();
 
   return trpc.reservationOwner.accept.useMutation({
-    onSuccess: async () => {
-      await utils.reservationOwner.getForOrganization.invalidate();
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        utils.reservationOwner.getForOrganization.invalidate(),
+        utils.reservationOwner.getPendingCount.invalidate(),
+        utils.reservationChat.getThreadMetas.invalidate(),
+        utils.reservationChat.getSession.invalidate({
+          reservationId: variables.reservationId,
+        }),
+      ]);
     },
   });
 }
@@ -1230,8 +1237,15 @@ export function useConfirmReservation() {
   const utils = trpc.useUtils();
 
   return trpc.reservationOwner.confirmPayment.useMutation({
-    onSuccess: async () => {
-      await utils.reservationOwner.getForOrganization.invalidate();
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        utils.reservationOwner.getForOrganization.invalidate(),
+        utils.reservationOwner.getPendingCount.invalidate(),
+        utils.reservationChat.getThreadMetas.invalidate(),
+        utils.reservationChat.getSession.invalidate({
+          reservationId: variables.reservationId,
+        }),
+      ]);
     },
   });
 }
@@ -1243,8 +1257,15 @@ export function useRejectReservation() {
   const utils = trpc.useUtils();
 
   return trpc.reservationOwner.reject.useMutation({
-    onSuccess: async () => {
-      await utils.reservationOwner.getForOrganization.invalidate();
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        utils.reservationOwner.getForOrganization.invalidate(),
+        utils.reservationOwner.getPendingCount.invalidate(),
+        utils.reservationChat.getThreadMetas.invalidate(),
+        utils.reservationChat.getSession.invalidate({
+          reservationId: variables.reservationId,
+        }),
+      ]);
     },
   });
 }
