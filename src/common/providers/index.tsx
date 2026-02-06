@@ -8,7 +8,8 @@ import {
   splitLink,
 } from "@trpc/client";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { RouteScrollManager } from "@/common/providers/route-scroll-manager";
 import { NavigationProgress } from "@/components/navigation/navigation-progress";
 import { Toaster } from "@/components/ui/sonner";
 import { trpc } from "@/trpc/client";
@@ -56,6 +57,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <NuqsAdapter>
       <NavigationProgress />
+      <Suspense fallback={null}>
+        <RouteScrollManager />
+      </Suspense>
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           {children}

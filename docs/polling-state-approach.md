@@ -33,6 +33,7 @@ Applied to:
 ### Chat Freshness
 - Chat remains realtime via Stream events/subscriptions.
 - No fixed chat polling interval is used today.
+- Manual chat refresh must use targeted query invalidation + refetch for reservation metadata (not cache-only fetch) so status reconciliation is guaranteed even within stale-time windows.
 - Primary files:
   - `src/features/chat/hooks/useStreamChannel.ts`
   - `src/features/chat/components/chat-widget/reservation-inbox-widget.tsx`

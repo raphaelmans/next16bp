@@ -1,6 +1,6 @@
 import { addDays, addMinutes, endOfDay } from "date-fns";
 import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
-import { ensureReservationThreadForReservation } from "@/lib/modules/chat/ops/ensure-reservation-thread";
+import { postPlayerCreatedMessage } from "@/lib/modules/chat/ops/post-player-created-message";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
 import type { ICourtBlockRepository } from "@/lib/modules/court-block/repositories/court-block.repository";
@@ -301,6 +301,43 @@ export class ReservationService implements IReservationService {
     return reservations.length === 0 && blocks.length === 0;
   }
 
+  private async postPlayerCreatedMessageBestEffort(input: {
+    reservationId: string;
+    profileId: string;
+    organizationId: string;
+  }) {
+    try {
+      const [profile, organization] = await Promise.all([
+        this.profileRepository.findById(input.profileId),
+        this.organizationRepository.findById(input.organizationId),
+      ]);
+
+      const ownerUserId = organization?.ownerUserId ?? null;
+      const playerUserId = profile?.userId ?? null;
+
+      if (!ownerUserId || !playerUserId) {
+        return;
+      }
+
+      await postPlayerCreatedMessage({
+        reservationId: input.reservationId,
+        playerUserId,
+        ownerUserId,
+      });
+    } catch (error) {
+      logger.warn(
+        {
+          err: error,
+          event: "reservation.player_created_chat_message_failed",
+          reservationId: input.reservationId,
+          profileId: input.profileId,
+          organizationId: input.organizationId,
+        },
+        "Failed to post player created chat message",
+      );
+    }
+  }
+
   async createReservationForCourt(
     userId: string,
     profileId: string,
@@ -461,29 +498,12 @@ export class ReservationService implements IReservationService {
       return created;
     });
 
-    try {
-      if (place.organizationId) {
-        const [profile, organization] = await Promise.all([
-          this.profileRepository.findById(profileId),
-          this.organizationRepository.findById(place.organizationId),
-        ]);
-
-        const ownerUserId = organization?.ownerUserId ?? null;
-        const playerUserId = profile?.userId ?? null;
-
-        if (ownerUserId && playerUserId) {
-          await ensureReservationThreadForReservation({
-            reservationId: reservation.id,
-            memberIds: [playerUserId, ownerUserId],
-            createdByUserId: userId,
-          });
-        }
-      }
-    } catch (error) {
-      logger.warn(
-        { err: error, reservationId: reservation.id },
-        "Chat thread ensure failed",
-      );
+    if (place.organizationId) {
+      await this.postPlayerCreatedMessageBestEffort({
+        reservationId: reservation.id,
+        profileId,
+        organizationId: place.organizationId,
+      });
     }
 
     return {
@@ -712,29 +732,12 @@ export class ReservationService implements IReservationService {
       return created;
     });
 
-    try {
-      if (place.organizationId) {
-        const [profile, organization] = await Promise.all([
-          this.profileRepository.findById(profileId),
-          this.organizationRepository.findById(place.organizationId),
-        ]);
-
-        const ownerUserId = organization?.ownerUserId ?? null;
-        const playerUserId = profile?.userId ?? null;
-
-        if (ownerUserId && playerUserId) {
-          await ensureReservationThreadForReservation({
-            reservationId: reservation.id,
-            memberIds: [playerUserId, ownerUserId],
-            createdByUserId: userId,
-          });
-        }
-      }
-    } catch (error) {
-      logger.warn(
-        { err: error, reservationId: reservation.id },
-        "Chat thread ensure failed",
-      );
+    if (place.organizationId) {
+      await this.postPlayerCreatedMessageBestEffort({
+        reservationId: reservation.id,
+        profileId,
+        organizationId: place.organizationId,
+      });
     }
 
     return {

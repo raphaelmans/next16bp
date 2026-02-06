@@ -65,8 +65,8 @@ export function ReservationActionsCard({
   };
 
   return (
-    <Card className="sticky top-4 overflow-hidden">
-      <CardContent className="p-4 space-y-4">
+    <Card className="sticky top-4 min-w-0 overflow-hidden">
+      <CardContent className="min-w-0 space-y-4 p-4">
         {/* Status */}
         <div className="space-y-2">
           <div className="text-xs text-muted-foreground uppercase tracking-wide">
@@ -80,8 +80,8 @@ export function ReservationActionsCard({
           <div className="text-xs text-muted-foreground uppercase tracking-wide">
             Booking ID
           </div>
-          <div className="flex items-center gap-2">
-            <code className="text-sm font-mono bg-muted px-2 py-1 rounded truncate flex-1">
+          <div className="flex w-full min-w-0 items-center gap-2">
+            <code className="min-w-0 flex-1 truncate overflow-hidden rounded bg-muted px-2 py-1 font-mono text-sm">
               {reservationId}
             </code>
             <Button

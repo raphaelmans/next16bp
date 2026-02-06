@@ -311,6 +311,9 @@ export function ReservationInboxWidget({
     let metaError: unknown = null;
     if (shouldRefreshMetas) {
       try {
+        await utils.reservationChat.getThreadMetas.invalidate({
+          reservationIds,
+        });
         await utils.reservationChat.getThreadMetas.fetch({ reservationIds });
       } catch (error) {
         metaError = error;

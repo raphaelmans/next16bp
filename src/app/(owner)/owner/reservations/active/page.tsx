@@ -120,7 +120,11 @@ export default function OwnerActiveReservationsPage() {
     if (!organization?.id) return;
     setIsRefreshing(true);
     try {
-      await utils.reservationOwner.getForOrganization.invalidate();
+      await Promise.all([
+        utils.reservationOwner.getForOrganization.invalidate(),
+        utils.reservationOwner.getPendingCount.invalidate(),
+        utils.reservationChat.getThreadMetas.invalidate(),
+      ]);
     } finally {
       setIsRefreshing(false);
     }

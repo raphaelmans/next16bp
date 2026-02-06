@@ -155,6 +155,16 @@ export default function PlaceBookingPage() {
   const selectedSlot = availability.find(
     (slot) => slot.startTime === startTime,
   );
+  const hasResolvableInputs =
+    !!resolvedPlaceId &&
+    !!startTime &&
+    !!bookingDate &&
+    durationMinutes > 0 &&
+    (mode === "court" ? !!courtId : !!sportId);
+  const isResolvingAvailability =
+    hasResolvableInputs &&
+    !selectedSlot &&
+    (availabilityQuery.isLoading || availabilityQuery.isFetching);
 
   const assignedCourt = React.useMemo(() => {
     if (!place) return undefined;
@@ -265,6 +275,10 @@ export default function PlaceBookingPage() {
         </div>
       </Container>
     );
+  }
+
+  if (isResolvingAvailability) {
+    return <PlaceBookingSkeleton />;
   }
 
   if (!selectedSlot || !endTime) {

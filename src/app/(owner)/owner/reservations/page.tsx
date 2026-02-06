@@ -196,9 +196,15 @@ export default function OwnerReservationsPage() {
   const rejectMutation = useRejectReservation();
   const confirmPaidOfflineMutation =
     trpc.reservationOwner.confirmPaidOffline.useMutation({
-      onSuccess: () => {
-        void utils.reservationOwner.getForOrganization.invalidate();
-        void utils.reservationOwner.getPendingCount.invalidate();
+      onSuccess: async (_data, variables) => {
+        await Promise.all([
+          utils.reservationOwner.getForOrganization.invalidate(),
+          utils.reservationOwner.getPendingCount.invalidate(),
+          utils.reservationChat.getThreadMetas.invalidate(),
+          utils.reservationChat.getSession.invalidate({
+            reservationId: variables.reservationId,
+          }),
+        ]);
       },
     });
 
@@ -226,6 +232,7 @@ export default function OwnerReservationsPage() {
       await Promise.all([
         utils.reservationOwner.getForOrganization.invalidate(),
         utils.reservationOwner.getPendingCount.invalidate(),
+        utils.reservationChat.getThreadMetas.invalidate(),
       ]);
     } finally {
       setIsRefreshing(false);
