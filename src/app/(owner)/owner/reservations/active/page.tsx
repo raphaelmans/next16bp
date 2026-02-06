@@ -29,6 +29,8 @@ import {
   ReservationAlertsPanel,
 } from "@/features/owner/components";
 import {
+  OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
+  OWNER_UNRESOLVED_REFRESH_INTERVAL_SECONDS,
   type Reservation,
   useAcceptReservation,
   useConfirmReservation,
@@ -107,7 +109,7 @@ export default function OwnerActiveReservationsPage() {
     placeId: placeId || undefined,
     courtId: courtId || undefined,
     status: "all",
-    refetchIntervalMs: 15000,
+    refetchIntervalMs: OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
   });
 
   const acceptMutation = useAcceptReservation();
@@ -275,7 +277,8 @@ export default function OwnerActiveReservationsPage() {
                   Active Queue
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                  Updated every 15 seconds
+                  Updated every {OWNER_UNRESOLVED_REFRESH_INTERVAL_SECONDS}{" "}
+                  seconds
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">

@@ -29,6 +29,7 @@ export type ReservationThreadMeta = {
   courtLabel: string;
   playerDisplayName: string;
   ownerDisplayName: string;
+  updatedAtIso?: string;
   startTimeIso: string;
   endTimeIso: string;
 };
@@ -59,7 +60,20 @@ function extractReservationIds(channels: Channel[]) {
     )
     .map((channelId) => channelId.replace("res-", ""));
 
-  return Array.from(new Set(ids)).sort();
+  return Array.from(new Set(ids));
+}
+
+function parseTimestampMs(value: unknown): number {
+  if (value instanceof Date) {
+    return Number.isFinite(value.getTime()) ? value.getTime() : 0;
+  }
+
+  if (typeof value === "string") {
+    const ms = new Date(value).getTime();
+    return Number.isFinite(ms) ? ms : 0;
+  }
+
+  return 0;
 }
 
 export interface ReservationInboxWidgetConfig {
@@ -110,25 +124,6 @@ function isArchived(meta: ReservationThreadMeta | null, now: Date) {
     return new Date(meta.endTimeIso) < now;
   }
   return false;
-}
-
-function computePriority(meta: ReservationThreadMeta | null, now: Date) {
-  if (!meta) {
-    return 50;
-  }
-
-  const start = new Date(meta.startTimeIso);
-  const end = new Date(meta.endTimeIso);
-  const ongoing = now >= start && now <= end;
-  const action = meta.status === "AWAITING_PAYMENT";
-  const waiting =
-    meta.status === "CREATED" || meta.status === "PAYMENT_MARKED_BY_USER";
-
-  if (ongoing) return 0;
-  if (action) return 1;
-  if (waiting) return 2;
-  if (meta.status === "CONFIRMED" && start > now) return 3;
-  return 10;
 }
 
 function makeReadOnlyReason(meta: ReservationThreadMeta | null, now: Date) {
@@ -384,6 +379,41 @@ export function ReservationInboxWidget({
     [channels],
   );
 
+  const unreadByReservationId = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const channel of reservationChannels) {
+      const channelId = channel.id;
+      if (!channelId || !channelId.startsWith("res-")) {
+        continue;
+      }
+      map.set(channelId.replace("res-", ""), channel.state.unreadCount ?? 0);
+    }
+    return map;
+  }, [reservationChannels]);
+
+  const channelActivityMsByReservationId = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const channel of reservationChannels) {
+      const channelId = channel.id;
+      if (!channelId || !channelId.startsWith("res-")) {
+        continue;
+      }
+
+      const latestMessage = channel.state.latestMessages?.[0];
+      const stateRecord = channel.state as unknown as Record<string, unknown>;
+      const dataRecord = (channel.data ?? {}) as Record<string, unknown>;
+      const ms = Math.max(
+        parseTimestampMs(latestMessage?.updated_at),
+        parseTimestampMs(latestMessage?.created_at),
+        parseTimestampMs(stateRecord.last_message_at),
+        parseTimestampMs(dataRecord.last_message_at),
+      );
+
+      map.set(channelId.replace("res-", ""), ms);
+    }
+    return map;
+  }, [reservationChannels]);
+
   const reservationIds = useMemo(
     () => extractReservationIds(reservationChannels),
     [reservationChannels],
@@ -476,32 +506,43 @@ export function ReservationInboxWidget({
   }, [metasByReservationId, query, reservationIds]);
 
   const sortedReservationIds = useMemo(() => {
-    const now = new Date();
     return [...filteredReservationIds].sort((a, b) => {
       const aMeta = metasByReservationId.get(a) ?? null;
       const bMeta = metasByReservationId.get(b) ?? null;
-      const aArchived = isArchived(aMeta, now);
-      const bArchived = isArchived(bMeta, now);
-      if (aArchived !== bArchived) {
-        return aArchived ? 1 : -1;
+
+      const aActivityMs = Math.max(
+        channelActivityMsByReservationId.get(a) ?? 0,
+        parseTimestampMs(aMeta?.updatedAtIso),
+      );
+      const bActivityMs = Math.max(
+        channelActivityMsByReservationId.get(b) ?? 0,
+        parseTimestampMs(bMeta?.updatedAtIso),
+      );
+
+      if (aActivityMs !== bActivityMs) {
+        return bActivityMs - aActivityMs;
       }
 
-      if (aArchived && bArchived) {
-        const aTime = aMeta ? new Date(aMeta.startTimeIso).getTime() : 0;
-        const bTime = bMeta ? new Date(bMeta.startTimeIso).getTime() : 0;
-        return bTime - aTime;
+      const aUnread = unreadByReservationId.get(a) ?? 0;
+      const bUnread = unreadByReservationId.get(b) ?? 0;
+      if (aUnread !== bUnread) {
+        return bUnread - aUnread;
       }
 
-      const aPriority = computePriority(aMeta, now);
-      const bPriority = computePriority(bMeta, now);
-      if (aPriority !== bPriority) {
-        return aPriority - bPriority;
+      const aStartMs = parseTimestampMs(aMeta?.startTimeIso);
+      const bStartMs = parseTimestampMs(bMeta?.startTimeIso);
+      if (aStartMs !== bStartMs) {
+        return bStartMs - aStartMs;
       }
-      const aTime = aMeta ? new Date(aMeta.startTimeIso).getTime() : 0;
-      const bTime = bMeta ? new Date(bMeta.startTimeIso).getTime() : 0;
-      return aTime - bTime;
+
+      return a.localeCompare(b);
     });
-  }, [filteredReservationIds, metasByReservationId]);
+  }, [
+    channelActivityMsByReservationId,
+    filteredReservationIds,
+    metasByReservationId,
+    unreadByReservationId,
+  ]);
 
   const activeReservationIds = useMemo(() => {
     const now = new Date();

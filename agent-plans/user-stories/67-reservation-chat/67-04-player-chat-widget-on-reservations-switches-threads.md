@@ -46,6 +46,12 @@ As a **player**, I want a **global chat widget on my reservations pages** so tha
 - When chat opens from the detail CTA
 - Then the thread remains active (not archived/read-only) so payment coordination can continue
 
+### Payment Page CTA Opens Matching Thread
+
+- Given I am on `/reservations/[id]/payment`
+- When I click `Message Owner`
+- Then the chat widget opens immediately and focuses the matching reservation thread
+
 ### Player Sees Auto Confirmation Message
 
 - Given the owner confirms the reservation and status becomes `CONFIRMED`

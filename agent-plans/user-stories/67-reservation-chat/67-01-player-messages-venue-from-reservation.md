@@ -31,6 +31,7 @@ As a **player**, I want to **message the venue owner about my reservation** so t
 - Then I see direct `Message Owner` entry points that open the chat widget to this reservation thread:
   - top status banner action
   - reservation actions card action
+  - reservation payment page action (`/reservations/[id]/payment`)
 
 - Given my reservation is `AWAITING_PAYMENT`
 - When I click `Message Owner`

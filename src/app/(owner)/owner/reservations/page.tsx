@@ -51,6 +51,7 @@ import {
   ReservationsTable,
 } from "@/features/owner/components";
 import {
+  OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
   type Reservation,
   useAcceptReservation,
   useConfirmReservation,
@@ -187,6 +188,7 @@ export default function OwnerReservationsPage() {
       search: search || undefined,
       dateFrom,
       dateTo,
+      refetchIntervalMs: OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
     },
   );
   const acceptMutation = useAcceptReservation();
@@ -560,84 +562,92 @@ export default function OwnerReservationsPage() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <PlaceCourtFilter
-            places={places}
-            courts={courts}
-            placeId={placeId}
-            courtId={courtId}
-            onPlaceChange={(value) => setPlaceId(value === "all" ? "" : value)}
-            onCourtChange={(value) => setCourtId(value === "all" ? "" : value)}
-          />
+        <div className="space-y-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
+            <PlaceCourtFilter
+              places={places}
+              courts={courts}
+              placeId={placeId}
+              courtId={courtId}
+              onPlaceChange={(value) =>
+                setPlaceId(value === "all" ? "" : value)
+              }
+              onCourtChange={(value) =>
+                setCourtId(value === "all" ? "" : value)
+              }
+            />
 
-          <div className="flex gap-2">
-            <Popover>
-              <PopoverTrigger asChild>
+            <div className="flex flex-wrap gap-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "justify-start text-left font-normal",
+                      !dateFrom && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateFrom ? format(dateFrom, "MMM d") : "From"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={dateFrom}
+                    onSelect={setDateFrom}
+                  />
+                </PopoverContent>
+              </Popover>
+
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "justify-start text-left font-normal",
+                      !dateTo && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateTo ? format(dateTo, "MMM d") : "To"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={dateTo}
+                    onSelect={setDateTo}
+                    disabled={(date) => (dateFrom ? date < dateFrom : false)}
+                  />
+                </PopoverContent>
+              </Popover>
+
+              {(dateFrom || dateTo) && (
                 <Button
-                  variant="outline"
-                  className={cn(
-                    "justify-start text-left font-normal",
-                    !dateFrom && "text-muted-foreground",
-                  )}
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setDateFrom(undefined);
+                    setDateTo(undefined);
+                  }}
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {dateFrom ? format(dateFrom, "MMM d") : "From"}
+                  Clear
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={dateFrom}
-                  onSelect={setDateFrom}
-                />
-              </PopoverContent>
-            </Popover>
-
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "justify-start text-left font-normal",
-                    !dateTo && "text-muted-foreground",
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {dateTo ? format(dateTo, "MMM d") : "To"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={dateTo}
-                  onSelect={setDateTo}
-                  disabled={(date) => (dateFrom ? date < dateFrom : false)}
-                />
-              </PopoverContent>
-            </Popover>
-
-            {(dateFrom || dateTo) && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  setDateFrom(undefined);
-                  setDateTo(undefined);
-                }}
-              >
-                Clear
-              </Button>
-            )}
+              )}
+            </div>
           </div>
 
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search player name or phone..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9"
-            />
+          <div className="flex w-full">
+            <div className="relative w-full md:max-w-sm lg:ml-auto">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search player name or phone..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
           </div>
         </div>
 
@@ -646,33 +656,35 @@ export default function OwnerReservationsPage() {
           value={activeTab}
           onValueChange={(v) => setActiveTab(v as TabValue)}
         >
-          <TabsList>
-            {tabConfig.map((tabItem) => {
-              const count = tabCounts[tabItem.value];
-              const accessibleLabel =
-                count > 0 ? `${tabItem.label}, ${count}` : tabItem.label;
-              return (
-                <TabsTrigger
-                  key={tabItem.value}
-                  value={tabItem.value}
-                  className="gap-2"
-                  aria-label={accessibleLabel}
-                >
-                  {tabItem.label}
-                  {count > 0 ? (
-                    <Badge
-                      variant={
-                        activeTab === tabItem.value ? "default" : "secondary"
-                      }
-                      className="ml-1"
-                    >
-                      {count}
-                    </Badge>
-                  ) : null}
-                </TabsTrigger>
-              );
-            })}
-          </TabsList>
+          <div className="max-w-full overflow-x-auto">
+            <TabsList>
+              {tabConfig.map((tabItem) => {
+                const count = tabCounts[tabItem.value];
+                const accessibleLabel =
+                  count > 0 ? `${tabItem.label}, ${count}` : tabItem.label;
+                return (
+                  <TabsTrigger
+                    key={tabItem.value}
+                    value={tabItem.value}
+                    className="gap-2"
+                    aria-label={accessibleLabel}
+                  >
+                    {tabItem.label}
+                    {count > 0 ? (
+                      <Badge
+                        variant={
+                          activeTab === tabItem.value ? "default" : "secondary"
+                        }
+                        className="ml-1"
+                      >
+                        {count}
+                      </Badge>
+                    ) : null}
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+          </div>
 
           {tabConfig.map((tabItem) => {
             const tabReservations = reservationGroups.groups[tabItem.value];

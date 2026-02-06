@@ -2,7 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { differenceInMinutes, format } from "date-fns";
-import { ArrowLeft, CheckCircle, Clock, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle,
+  Clock,
+  Loader2,
+  MessageSquare,
+} from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -32,6 +38,7 @@ export default function PaymentPage() {
   const params = useParams();
   const router = useRouter();
   const reservationId = params.id as string;
+  const utils = trpc.useUtils();
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
 
@@ -55,6 +62,11 @@ export default function PaymentPage() {
     trpc.reservation.getDetail.useQuery({ reservationId });
 
   const reservation = reservationDetail?.reservation;
+  const isChatEnabledForReservationStatus =
+    reservation?.status === "CREATED" ||
+    reservation?.status === "AWAITING_PAYMENT" ||
+    reservation?.status === "PAYMENT_MARKED_BY_USER" ||
+    reservation?.status === "CONFIRMED";
 
   const { data: paymentInfo } = trpc.reservation.getPaymentInfo.useQuery(
     { reservationId },
@@ -113,6 +125,16 @@ export default function PaymentPage() {
       }
 
       await markPayment.mutateAsync({ reservationId, termsAccepted: true });
+
+      try {
+        await Promise.all([
+          utils.reservation.getDetail.fetch({ reservationId }),
+          utils.reservation.getMyWithDetails.fetch({ limit: 10, offset: 0 }),
+        ]);
+      } catch {
+        // Best-effort warmup; navigation should continue.
+      }
+
       reset({
         referenceNumber: values.referenceNumber ?? "",
         notes: values.notes ?? "",
@@ -122,6 +144,18 @@ export default function PaymentPage() {
     } catch (_error) {
       toast.error("Failed to submit payment");
     }
+  };
+
+  const handleOpenChat = () => {
+    window.dispatchEvent(
+      new CustomEvent("reservation-chat:open", {
+        detail: {
+          kind: "player",
+          reservationId,
+          source: "reservation-payment",
+        },
+      }),
+    );
   };
 
   // Loading state
@@ -199,6 +233,17 @@ export default function PaymentPage() {
                     ? "Your reservation is confirmed!"
                     : "This reservation has been processed."}
               </p>
+              {isChatEnabledForReservationStatus ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="mb-3 w-full"
+                  onClick={handleOpenChat}
+                >
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Message Owner
+                </Button>
+              ) : null}
               <Button asChild>
                 <Link href={`/reservations/${reservationId}`}>
                   View Reservation
@@ -282,6 +327,18 @@ export default function PaymentPage() {
             expiresInMinutes={expiresInMinutes}
           />
         </div>
+
+        {isChatEnabledForReservationStatus ? (
+          <Button
+            type="button"
+            variant="outline"
+            className="mb-6 w-full"
+            onClick={handleOpenChat}
+          >
+            <MessageSquare className="mr-2 h-4 w-4" />
+            Message Owner
+          </Button>
+        ) : null}
 
         <StandardFormProvider
           form={form}

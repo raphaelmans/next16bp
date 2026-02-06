@@ -383,6 +383,7 @@ export class ReservationChatService {
       courtLabel: string;
       playerDisplayName: string;
       ownerDisplayName: string;
+      updatedAtIso: string;
       startTimeIso: string;
       endTimeIso: string;
     }>
@@ -398,6 +399,7 @@ export class ReservationChatService {
       .select({
         reservationId: reservation.id,
         status: reservation.status,
+        updatedAt: reservation.updatedAt,
         startTime: reservation.startTime,
         endTime: reservation.endTime,
         courtLabel: court.label,
@@ -429,6 +431,10 @@ export class ReservationChatService {
       courtLabel: r.courtLabel,
       playerDisplayName: r.playerDisplayName ?? "Player",
       ownerDisplayName: r.ownerDisplayName,
+      updatedAtIso:
+        r.updatedAt instanceof Date
+          ? r.updatedAt.toISOString()
+          : String(r.updatedAt),
       startTimeIso:
         r.startTime instanceof Date
           ? r.startTime.toISOString()

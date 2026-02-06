@@ -31,6 +31,8 @@ interface ReservationEvent {
   createdAt: Date | string;
 }
 
+const RESERVATION_DETAIL_REFETCH_INTERVAL_MS = 15_000;
+
 export default function ReservationDetailPage() {
   const params = useParams();
   const id = params.id as string;
@@ -42,7 +44,13 @@ export default function ReservationDetailPage() {
     data: reservationDetail,
     isLoading: isLoadingReservation,
     isFetching: isFetchingReservation,
-  } = trpc.reservation.getDetail.useQuery({ reservationId: id });
+  } = trpc.reservation.getDetail.useQuery(
+    { reservationId: id },
+    {
+      enabled: Boolean(id),
+      refetchInterval: RESERVATION_DETAIL_REFETCH_INTERVAL_MS,
+    },
+  );
 
   const reservation = reservationDetail?.reservation;
   const events: ReservationEvent[] = reservationDetail?.events ?? [];
@@ -127,6 +135,7 @@ export default function ReservationDetailPage() {
     endTime: reservation.endTime,
     priceCents: reservation.totalPriceCents,
     currency: reservation.currency,
+    createdAt: reservation.createdAt,
   };
 
   const isFreeSlot = transformedTimeSlot.priceCents === 0;

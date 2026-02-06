@@ -8,6 +8,10 @@ import { toast } from "sonner";
 import { trpc } from "@/trpc/client";
 import type { CourtFormData, PlaceFormData } from "./schemas";
 
+export const OWNER_UNRESOLVED_REFRESH_INTERVAL_MS = 15_000;
+export const OWNER_UNRESOLVED_REFRESH_INTERVAL_SECONDS =
+  OWNER_UNRESOLVED_REFRESH_INTERVAL_MS / 1000;
+
 // ============================================================================
 // From use-court-form.ts
 // ============================================================================
@@ -642,7 +646,10 @@ export function useOwnerStats(organizationId: string | null) {
   const { data: pendingCount, isLoading: pendingLoading } =
     trpc.reservationOwner.getPendingCount.useQuery(
       { organizationId: organizationId ?? "" },
-      { enabled: !!organizationId },
+      {
+        enabled: !!organizationId,
+        refetchInterval: OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
+      },
     );
 
   return {
@@ -1276,7 +1283,10 @@ export function useRejectReservation() {
 export function useReservationCounts(organizationId: string | null) {
   const { data: pendingCount } = trpc.reservationOwner.getPendingCount.useQuery(
     { organizationId: organizationId ?? "" },
-    { enabled: !!organizationId },
+    {
+      enabled: !!organizationId,
+      refetchInterval: OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
+    },
   );
 
   return {
@@ -1662,6 +1672,6 @@ export function useReservationAlerts(
     placeId: options.placeId,
     courtId: options.courtId,
     status: "all",
-    refetchIntervalMs: 15000,
+    refetchIntervalMs: OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
   });
 }

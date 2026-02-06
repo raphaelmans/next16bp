@@ -132,6 +132,9 @@ export function useMarkPayment() {
         utils.reservation.getById.invalidate({
           reservationId: variables.reservationId,
         }),
+        utils.reservation.getDetail.invalidate({
+          reservationId: variables.reservationId,
+        }),
         utils.reservation.getMy.invalidate(),
         utils.reservation.getMyWithDetails.invalidate(),
         utils.reservationChat.getThreadMetas.invalidate(),
@@ -494,12 +497,20 @@ export function useUploadPaymentProof() {
   const utils = trpc.useUtils();
 
   return trpc.paymentProof.upload.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (_data, variables) => {
       toast.success("Payment proof uploaded successfully!", {
         description: "The court owner will review your payment shortly.",
       });
 
+      const reservationId =
+        variables instanceof FormData
+          ? variables.get("reservationId")
+          : undefined;
+
       await Promise.all([
+        typeof reservationId === "string" && reservationId.length > 0
+          ? utils.reservation.getDetail.invalidate({ reservationId })
+          : Promise.resolve(),
         utils.reservation.getMy.invalidate(),
         utils.reservation.getMyWithDetails.invalidate(),
       ]);

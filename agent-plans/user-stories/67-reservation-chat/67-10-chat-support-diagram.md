@@ -14,6 +14,7 @@ This document captures the current reservation chat mounting behavior, reservati
 - Reservation detail adds two in-page `Message Owner` CTA surfaces that open and focus the global widget on the current reservation thread:
   - top status banner CTA
   - reservation actions card CTA
+- Reservation payment page (`/reservations/[id]/payment`) also includes a `Message Owner` CTA for fast support during payment flow.
 - Primary product target remains reservation workflows (`/reservations` and reservation detail views inside the same shell).
 
 ### Owner
@@ -88,6 +89,7 @@ Refresh contract:
 - Inbox refresh and thread-header refresh both run the two-lane sync.
 - Reservation status mutations invalidate reservation + chat metadata queries so list/thread state converges quickly.
 - Reservation detail CTAs dispatch a widget-open event (`reservation-chat:open`) with `reservationId` to open and focus chat immediately.
+- Reservation payment page CTA dispatches the same widget-open event (`reservation-chat:open`) with `reservationId`.
 
 ---
 

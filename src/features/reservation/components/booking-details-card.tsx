@@ -2,7 +2,13 @@
 
 import { Calendar, Clock, ExternalLink, MapPin } from "lucide-react";
 import Image from "next/image";
-import { formatCurrency, formatDate, formatTimeRange } from "@/common/format";
+import {
+  formatCurrency,
+  formatDate,
+  formatDateShort,
+  formatTime,
+  formatTimeRange,
+} from "@/common/format";
 import { GoogleMapsEmbed } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +27,7 @@ interface BookingDetailsCardProps {
     endTime: string;
     priceCents: number;
     currency: string;
+    createdAt?: string | Date;
   };
 }
 
@@ -103,6 +110,17 @@ export function BookingDetailsCard({
               {formatCurrency(timeSlot.priceCents, timeSlot.currency)}
             </p>
           </div>
+          {timeSlot.createdAt ? (
+            <div className="space-y-1">
+              <div className="text-xs text-muted-foreground uppercase tracking-wide">
+                Booked on
+              </div>
+              <p className="font-medium">
+                {formatDateShort(timeSlot.createdAt)} ·{" "}
+                {formatTime(timeSlot.createdAt)}
+              </p>
+            </div>
+          ) : null}
         </div>
 
         <div className="space-y-2">

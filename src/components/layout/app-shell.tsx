@@ -32,7 +32,7 @@ export function AppShell({
         navbar={navbar}
         className={cn("w-full", className)}
       >
-        <div id="main-content" className="w-full">
+        <div id="main-content" className="min-w-0 w-full">
           {children}
         </div>
       </DashboardLayout>

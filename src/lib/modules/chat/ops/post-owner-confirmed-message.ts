@@ -6,19 +6,33 @@ import { ensureReservationThreadForReservation } from "./ensure-reservation-thre
 
 function buildOwnerConfirmedMessage(reservationId: string) {
   const appUrl = env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "";
+
+  const buildAppLink = (path: string) => {
+    if (!appUrl) {
+      return path;
+    }
+
+    try {
+      const baseUrl = new URL(appUrl);
+      if (baseUrl.protocol !== "https:" && baseUrl.protocol !== "http:") {
+        return path;
+      }
+      return new URL(path, baseUrl).toString();
+    } catch {
+      return path;
+    }
+  };
+
   const playerReservationPath = appRoutes.reservations.detail(reservationId);
   const ownerReservationsPath = appRoutes.owner.reservations;
-  const playerReservationUrl = appUrl
-    ? `${appUrl}${playerReservationPath}`
-    : playerReservationPath;
-  const ownerReservationsUrl = appUrl
-    ? `${appUrl}${ownerReservationsPath}`
-    : ownerReservationsPath;
+  const playerReservationUrl = buildAppLink(playerReservationPath);
+  const ownerReservationsUrl = buildAppLink(ownerReservationsPath);
 
   return [
     "Your reservation is confirmed. If you need anything before your schedule, message us here.",
-    `Player reservation: ${playerReservationUrl}`,
-    `Owner reservations: ${ownerReservationsUrl}`,
+    "",
+    `- [View your reservation](${playerReservationUrl})`,
+    `- [Open owner reservations](${ownerReservationsUrl})`,
   ].join("\n");
 }
 
