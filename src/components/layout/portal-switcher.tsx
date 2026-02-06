@@ -116,7 +116,11 @@ export function PortalSwitcher({
             <DropdownMenuItem
               key={portal}
               onSelect={() => switchPortal(portal)}
-              className={portal === currentPortal ? "bg-accent" : ""}
+              className={
+                portal === currentPortal
+                  ? "bg-accent text-accent-foreground [&_svg:not([class*='text-'])]:text-accent-foreground"
+                  : ""
+              }
             >
               <Icon className="mr-2 h-4 w-4" />
               <span>{option.label}</span>
@@ -157,7 +161,7 @@ export function PortalSwitcher({
               onSelect={() => switchPortal(portal)}
               className={
                 portal === currentPortal
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                  ? "bg-sidebar-accent text-sidebar-accent-foreground [&_svg:not([class*='text-'])]:text-sidebar-accent-foreground"
                   : ""
               }
             >
