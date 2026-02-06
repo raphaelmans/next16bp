@@ -1,8 +1,15 @@
 "use client";
 
+import { useOwnerOrganization } from "@/features/owner";
 import { ReservationInboxWidget } from "./reservation-inbox-widget";
 
 export function OwnerChatWidget() {
+  const { isOwner, isLoading } = useOwnerOrganization();
+
+  if (isLoading || !isOwner) {
+    return null;
+  }
+
   return (
     <ReservationInboxWidget
       config={{

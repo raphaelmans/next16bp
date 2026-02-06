@@ -13,6 +13,13 @@ export interface EnsureReservationChannelInput {
   memberIds: string[];
 }
 
+export interface EnsureSupportChannelInput {
+  channelId: string;
+  createdById: string;
+  memberIds: string[];
+  data?: Record<string, unknown>;
+}
+
 /**
  * Provider abstraction to keep chat backend swappable (e.g. Stream now, self-hosted later).
  */
@@ -23,6 +30,7 @@ export interface IChatProvider {
   createUserToken(userId: string): Promise<string>;
   ensureDmChannel(input: EnsureDmChannelInput): Promise<void>;
   ensureReservationChannel(input: EnsureReservationChannelInput): Promise<void>;
+  ensureSupportChannel(input: EnsureSupportChannelInput): Promise<void>;
   exportReservationChannelMessages(input: {
     reservationId: string;
     channelId: string;

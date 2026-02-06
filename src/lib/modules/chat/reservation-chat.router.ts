@@ -86,7 +86,7 @@ export const reservationChatRouter = router({
   getThreadMetas: protectedProcedure
     .input(
       z.object({
-        reservationIds: z.array(S.ids.generic).min(1).max(30),
+        reservationIds: z.array(S.ids.generic).max(30),
       }),
     )
     .query(async ({ input, ctx }) => {

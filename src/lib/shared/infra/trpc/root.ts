@@ -5,6 +5,7 @@ import { bookingsImportRouter } from "@/lib/modules/bookings-import/bookings-imp
 import { chatRouter } from "@/lib/modules/chat/chat.router";
 import { chatPocRouter } from "@/lib/modules/chat/chat-poc.router";
 import { reservationChatRouter } from "@/lib/modules/chat/reservation-chat.router";
+import { supportChatRouter } from "@/lib/modules/chat/support-chat.router";
 import { claimAdminRouter } from "@/lib/modules/claim-request/admin/claim-admin.router";
 import { claimRequestRouter } from "@/lib/modules/claim-request/claim-request.router";
 import { contactRouter } from "@/lib/modules/contact/contact.router";
@@ -58,6 +59,7 @@ export const appRouter = router({
   chat: chatRouter,
   chatPoc: chatPocRouter,
   reservationChat: reservationChatRouter,
+  supportChat: supportChatRouter,
   contact: contactRouter,
   audit: auditRouter,
   availability: availabilityRouter,

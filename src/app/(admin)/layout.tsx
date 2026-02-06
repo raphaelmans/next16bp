@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { appRoutes } from "@/common/app-routes";
+import { SupportInboxWidget } from "@/features/support-chat/components/support-inbox-widget";
 import { requireAdminSession } from "@/lib/shared/infra/auth/server-session";
 
 /**
@@ -24,5 +25,10 @@ export default async function AdminLayout({
 
   await requireAdminSession(pathname);
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <SupportInboxWidget />
+    </>
+  );
 }

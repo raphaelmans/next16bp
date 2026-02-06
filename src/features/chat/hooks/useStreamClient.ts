@@ -30,8 +30,12 @@ export function useStreamClient({
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<unknown>(null);
 
+  const userId = user?.id ?? null;
+  const userName = user?.name;
+  const userImage = user?.image;
+
   useEffect(() => {
-    if (!client || !user || !tokenOrProvider) {
+    if (!client || !userId || !tokenOrProvider) {
       setIsReady(false);
       setError(null);
       return;
@@ -41,28 +45,54 @@ export function useStreamClient({
     setIsReady(false);
     setError(null);
 
-    client
-      .connectUser(
-        user as unknown as OwnUserResponse | UserResponse,
-        tokenOrProvider,
-      )
-      .then(() => {
+    const userPayload = {
+      id: userId,
+      ...(userName ? { name: userName } : {}),
+      ...(userImage ? { image: userImage } : {}),
+    };
+
+    const connectAsync = async () => {
+      try {
+        const currentUserId = (client as unknown as { userID?: unknown })
+          .userID;
+
+        if (currentUserId === userId) {
+          if (!cancelled) {
+            setIsReady(true);
+          }
+          return;
+        }
+
+        if (
+          typeof currentUserId === "string" &&
+          currentUserId.length > 0 &&
+          currentUserId !== userId
+        ) {
+          await client.disconnectUser();
+        }
+
+        await client.connectUser(
+          userPayload as unknown as OwnUserResponse | UserResponse,
+          tokenOrProvider,
+        );
+
         if (!cancelled) {
           setIsReady(true);
         }
-      })
-      .catch((err: unknown) => {
+      } catch (err: unknown) {
         if (!cancelled) {
           setError(err);
         }
-      });
+      }
+    };
+
+    void connectAsync();
 
     return () => {
       cancelled = true;
       setIsReady(false);
-      client.disconnectUser().catch(() => undefined);
     };
-  }, [client, user, tokenOrProvider]);
+  }, [client, tokenOrProvider, userId, userImage, userName]);
 
   return { client, isReady, error };
 }

@@ -387,6 +387,10 @@ export class ReservationChatService {
       endTimeIso: string;
     }>
   > {
+    if (reservationIds.length === 0) {
+      return [];
+    }
+
     const client: DbClient | DrizzleTransaction =
       (ctx?.tx as DrizzleTransaction) ?? getContainer().db;
 

@@ -165,7 +165,11 @@ export function ReservationInboxWidget({
   );
   const [query, setQuery] = useState("");
   const [isLoadingChannels, setIsLoadingChannels] = useState(false);
+  const [channelsError, setChannelsError] = useState<unknown>(null);
+  const [hasLoadedChannelsOnce, setHasLoadedChannelsOnce] = useState(false);
+  const [hasLoadedMetasOnce, setHasLoadedMetasOnce] = useState(false);
   const [archiveOpen, setArchiveOpen] = useState(false);
+  const previousReservationIdsKeyRef = useRef<string>("");
 
   const authQuery = trpc.chat.getAuth.useQuery();
   const auth = authQuery.data;
@@ -209,6 +213,7 @@ export function ReservationInboxWidget({
     }
 
     setIsLoadingChannels(true);
+    setChannelsError(null);
     try {
       const results = await client.queryChannels(
         {
@@ -219,13 +224,19 @@ export function ReservationInboxWidget({
         { limit: 30, message_limit: 1 },
       );
       setChannels(results);
+    } catch (error) {
+      setChannelsError(error);
     } finally {
       setIsLoadingChannels(false);
+      setHasLoadedChannelsOnce(true);
     }
   };
 
   const refreshInbox = async () => {
-    await Promise.all([fetchChannels.current?.(), metasQuery.refetch()]);
+    await fetchChannels.current?.();
+    if (reservationIds.length > 0) {
+      await metasQuery.refetch();
+    }
   };
 
   useEffect(() => {
@@ -234,6 +245,17 @@ export function ReservationInboxWidget({
     }
     fetchChannels.current?.().catch(() => undefined);
   }, [open]);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    if (!isReady || !client || !auth?.user.id) {
+      return;
+    }
+
+    fetchChannels.current?.().catch(() => undefined);
+  }, [auth?.user.id, client, isReady, open]);
 
   useEffect(() => {
     if (!isReady || !client) {
@@ -266,6 +288,11 @@ export function ReservationInboxWidget({
     return Array.from(new Set(ids)).sort();
   }, [reservationChannels]);
 
+  const reservationIdsKey = useMemo(
+    () => reservationIds.join(","),
+    [reservationIds],
+  );
+
   const metasQuery = trpc.reservationChat.getThreadMetas.useQuery(
     { reservationIds },
     {
@@ -273,6 +300,35 @@ export function ReservationInboxWidget({
       placeholderData: (prev) => prev,
     },
   );
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    if (previousReservationIdsKeyRef.current !== reservationIdsKey) {
+      setHasLoadedMetasOnce(false);
+      previousReservationIdsKeyRef.current = reservationIdsKey;
+    }
+  }, [open, reservationIdsKey]);
+
+  useEffect(() => {
+    if (!open || reservationIds.length === 0) {
+      return;
+    }
+
+    if (metasQuery.isSuccess || metasQuery.isError) {
+      setHasLoadedMetasOnce(true);
+    }
+  }, [metasQuery.isError, metasQuery.isSuccess, open, reservationIds.length]);
+
+  useEffect(() => {
+    if (!open) {
+      setHasLoadedChannelsOnce(false);
+      setHasLoadedMetasOnce(false);
+      setChannelsError(null);
+    }
+  }, [open]);
 
   const metasByReservationId = useMemo(() => {
     const map = new Map<string, ReservationThreadMeta>();
@@ -282,8 +338,17 @@ export function ReservationInboxWidget({
     return map;
   }, [metasQuery.data]);
 
-  const isMetaPending = metasQuery.isPending;
   const isMetaFetching = metasQuery.isFetching && !metasQuery.isPending;
+  const showMetaSkeletons = reservationIds.length > 0 && !hasLoadedMetasOnce;
+
+  const isStreamConnecting =
+    open && authQuery.isSuccess && !clientError && !isReady;
+  const isInitialLoading =
+    open &&
+    (authQuery.isLoading ||
+      isStreamConnecting ||
+      (!hasLoadedChannelsOnce && !channelsError) ||
+      (reservationIds.length > 0 && !hasLoadedMetasOnce));
 
   const filteredReservationIds = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -408,9 +473,9 @@ export function ReservationInboxWidget({
     const primary = meta
       ? (config.labels.listPrimary(meta, reservationId) ??
         `Reservation ${reservationId.slice(0, 8).toUpperCase()}`)
-      : !isMetaPending
-        ? `Reservation ${reservationId.slice(0, 8).toUpperCase()}`
-        : null;
+      : showMetaSkeletons
+        ? null
+        : `Reservation ${reservationId.slice(0, 8).toUpperCase()}`;
     const secondary = config.labels.listSecondary(meta);
 
     return (
@@ -435,7 +500,7 @@ export function ReservationInboxWidget({
 
               {meta ? (
                 <StatusPill status={meta.status} />
-              ) : isMetaPending ? (
+              ) : showMetaSkeletons ? (
                 <Skeleton className="h-5 w-16 rounded-full" />
               ) : null}
 
@@ -460,7 +525,7 @@ export function ReservationInboxWidget({
                       meta.timeZone,
                     )}`}
               </div>
-            ) : isMetaPending ? (
+            ) : showMetaSkeletons ? (
               <Skeleton className="mt-1 h-3 w-56" />
             ) : (
               <div className="truncate text-xs text-muted-foreground mt-0.5">
@@ -569,14 +634,19 @@ export function ReservationInboxWidget({
 
                 <ScrollArea className={cn("h-[38vh]", isDesktop && "h-full")}>
                   <div className="divide-y">
-                    {isLoadingChannels && reservationIds.length === 0 ? (
+                    {isInitialLoading ? (
                       <div className="space-y-3 p-4">
                         <Skeleton className="h-10 w-full" />
                         <Skeleton className="h-10 w-full" />
                         <Skeleton className="h-10 w-full" />
                         <Skeleton className="h-10 w-full" />
                       </div>
-                    ) : activeReservationIds.length === 0 &&
+                    ) : channelsError ? (
+                      <div className="p-4 text-sm text-destructive">
+                        Failed to load conversations. Try refreshing.
+                      </div>
+                    ) : hasLoadedChannelsOnce &&
+                      activeReservationIds.length === 0 &&
                       archivedReservationIds.length === 0 ? (
                       <div className="p-4 text-sm text-muted-foreground">
                         No reservation chats yet.

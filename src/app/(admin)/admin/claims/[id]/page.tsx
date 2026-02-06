@@ -53,6 +53,7 @@ import {
   useRejectClaim,
 } from "@/features/admin/hooks";
 import { useLogout, useSession } from "@/features/auth";
+import { SupportChatSheet } from "@/features/support-chat/components/support-chat-sheet";
 import { cn } from "@/lib/utils";
 
 const statusConfig = {
@@ -449,6 +450,23 @@ export default function ClaimDetailPage() {
 
           {/* Right column - Actions */}
           <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Support Chat</CardTitle>
+                <CardDescription>
+                  Message the requester for clarification before you decide.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <SupportChatSheet
+                  kind="claim"
+                  requestId={claimId}
+                  triggerLabel="Message owner"
+                  triggerVariant="outline"
+                />
+              </CardContent>
+            </Card>
+
             {isPending ? (
               <ClaimReviewActions
                 claimType={claim.type}

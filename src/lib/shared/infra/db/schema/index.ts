@@ -38,5 +38,6 @@ export * from "./push-subscription";
 export * from "./reservation";
 export * from "./reservation-chat";
 export * from "./sport";
+export * from "./support-chat";
 export * from "./user-preferences";
 export * from "./user-roles";

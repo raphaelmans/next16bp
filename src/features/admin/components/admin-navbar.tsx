@@ -23,6 +23,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { NotificationBell } from "@/features/notifications/components/notification-bell";
 
 interface AdminNavbarProps {
   user?: {
@@ -55,6 +56,7 @@ export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
 
       {/* Right side - User menu */}
       <div className="flex items-center gap-2">
+        {user && <NotificationBell portal="admin" />}
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

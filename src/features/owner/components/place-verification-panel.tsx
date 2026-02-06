@@ -30,6 +30,7 @@ import {
   useSubmitPlaceVerification,
   useTogglePlaceReservations,
 } from "@/features/owner/hooks";
+import { SupportChatSheet } from "@/features/support-chat/components/support-chat-sheet";
 import {
   FILE_SIZE_LIMITS_READABLE,
   MAX_VERIFICATION_DOCUMENT_SIZE,
@@ -217,13 +218,24 @@ export function PlaceVerificationPanel({
               Verify {placeName} to unlock reservations and build trust.
             </p>
           </div>
-          <Badge
-            variant={config.badgeVariant}
-            className={cn("px-3 py-1", config.toneClass)}
-          >
-            <StatusIcon className="h-3 w-3" />
-            {config.label}
-          </Badge>
+          <div className="flex flex-wrap items-center gap-2">
+            {request?.id && (isPending || isRejected) ? (
+              <SupportChatSheet
+                kind="verification"
+                requestId={request.id}
+                triggerLabel="Message admin"
+                triggerVariant="outline"
+                triggerSize="sm"
+              />
+            ) : null}
+            <Badge
+              variant={config.badgeVariant}
+              className={cn("px-3 py-1", config.toneClass)}
+            >
+              <StatusIcon className="h-3 w-3" />
+              {config.label}
+            </Badge>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">

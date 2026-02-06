@@ -4,6 +4,7 @@ import type { ChatTranscriptExport, ChatUser } from "../types";
 import type {
   EnsureDmChannelInput,
   EnsureReservationChannelInput,
+  EnsureSupportChannelInput,
   IChatProvider,
 } from "./chat.provider";
 
@@ -89,6 +90,42 @@ export class StreamChatProvider implements IChatProvider {
       created_by_id: createdById,
       members: memberIds,
       reservation_id: reservationId,
+    } as unknown as Record<string, unknown>);
+
+    await channel.create();
+  }
+
+  async ensureSupportChannel({
+    channelId,
+    createdById,
+    memberIds,
+    data,
+  }: EnsureSupportChannelInput): Promise<void> {
+    const channels = await this.client.queryChannels(
+      {
+        type: "messaging",
+        id: { $eq: channelId },
+      },
+      {},
+      { limit: 1 },
+    );
+
+    if (channels.length > 0) {
+      const channel = channels[0];
+      const existingMemberIds = new Set(
+        Object.keys(channel.state.members ?? {}),
+      );
+      const missing = memberIds.filter((id) => !existingMemberIds.has(id));
+      if (missing.length > 0) {
+        await channel.addMembers(missing);
+      }
+      return;
+    }
+
+    const channel = this.client.channel("messaging", channelId, {
+      created_by_id: createdById,
+      members: memberIds,
+      ...(data ?? {}),
     } as unknown as Record<string, unknown>);
 
     await channel.create();

@@ -38,6 +38,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
 import { useOwnerSetupStatus } from "@/features/owner/hooks";
+import { SupportChatSheet } from "@/features/support-chat/components/support-chat-sheet";
 import { trpc } from "@/trpc/client";
 
 const getSafeNextHref = (nextHref: string | null): string | null => {
@@ -493,6 +494,14 @@ function ClaimListingCard({
   hasPendingClaim: boolean;
   onSearchClick: () => void;
 }) {
+  const { data: myClaims } = trpc.claimRequest.getMy.useQuery(undefined, {
+    enabled: hasPendingClaim,
+  });
+
+  const pendingClaimId =
+    myClaims?.find((c) => c.status === "PENDING" && c.requestType === "CLAIM")
+      ?.id ?? null;
+
   if (hasPendingClaim) {
     return (
       <Card className="border-yellow-500/20 bg-yellow-50/50 dark:bg-yellow-950/20">
@@ -512,6 +521,17 @@ function ClaimListingCard({
                 Your claim request is being reviewed. We will notify you once it
                 is approved.
               </p>
+              {pendingClaimId ? (
+                <div className="pt-2">
+                  <SupportChatSheet
+                    kind="claim"
+                    requestId={pendingClaimId}
+                    triggerLabel="Message admin"
+                    triggerVariant="outline"
+                    triggerSize="sm"
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
         </CardContent>

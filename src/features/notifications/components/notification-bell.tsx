@@ -15,7 +15,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { useWebPush } from "../hooks/use-web-push";
 
-type Portal = "owner" | "player";
+type Portal = "owner" | "player" | "admin";
 
 export function NotificationBell({ portal }: { portal: Portal }) {
   const webPush = useWebPush();

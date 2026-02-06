@@ -38,6 +38,7 @@ import {
   useRejectPlaceVerification,
 } from "@/features/admin/hooks";
 import { useLogout, useSession } from "@/features/auth";
+import { SupportChatSheet } from "@/features/support-chat/components/support-chat-sheet";
 import { cn } from "@/lib/utils";
 
 const statusConfig = {
@@ -430,6 +431,23 @@ export default function AdminVerificationDetailPage() {
           </div>
 
           <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Support Chat</CardTitle>
+                <CardDescription>
+                  Message the owner for clarifications and missing details.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <SupportChatSheet
+                  kind="verification"
+                  requestId={requestId}
+                  triggerLabel="Message owner"
+                  triggerVariant="outline"
+                />
+              </CardContent>
+            </Card>
+
             {isPending ? (
               <PlaceVerificationReviewActions
                 placeName={place.name}
