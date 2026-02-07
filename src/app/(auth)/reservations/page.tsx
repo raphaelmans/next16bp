@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { appRoutes } from "@/common/app-routes";
 import { PageHeader } from "@/components/ui/page-header";
-import { OwnerPaymentMethodReminder } from "@/features/owner/components";
 import { ReservationTabs } from "@/features/reservation/components/reservation-tabs";
 
 export const metadata = {
@@ -17,9 +16,6 @@ export default function MyReservationsPage() {
         description="View and manage your court bookings"
         backHref={appRoutes.home.base}
       />
-
-      <OwnerPaymentMethodReminder />
-
       {/* Tabs + list */}
       <Suspense fallback={null}>
         <ReservationTabs />

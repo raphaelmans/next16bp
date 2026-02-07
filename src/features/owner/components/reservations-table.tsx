@@ -258,14 +258,14 @@ export function ReservationsTable({
   return (
     <>
       {/* Mobile view */}
-      <div className="md:hidden">
+      <div className="xl:hidden">
         {reservations.map((reservation) => (
           <MobileCard key={reservation.id} reservation={reservation} />
         ))}
       </div>
 
       {/* Desktop view */}
-      <div className="hidden md:block rounded-md border">
+      <div className="hidden xl:block rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>

@@ -47,6 +47,11 @@ export function ReservationActionsCard({
     canCancel ??
     ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"].includes(status);
 
+  const mobileReservationId =
+    reservationId.length > 20
+      ? `${reservationId.slice(0, 8)}...${reservationId.slice(-8)}`
+      : reservationId;
+
   const hasCoordinates = court.latitude && court.longitude;
   const directionsUrl = hasCoordinates
     ? `https://www.google.com/maps/dir/?api=1&destination=${court.latitude},${court.longitude}`
@@ -80,9 +85,12 @@ export function ReservationActionsCard({
           <div className="text-xs text-muted-foreground uppercase tracking-wide">
             Booking ID
           </div>
-          <div className="flex w-full min-w-0 items-center gap-2">
-            <code className="min-w-0 flex-1 truncate overflow-hidden rounded bg-muted px-2 py-1 font-mono text-sm">
-              {reservationId}
+          <div className="flex w-full min-w-0 items-center gap-2 overflow-hidden">
+            <code className="min-w-0 flex-1 overflow-hidden rounded bg-muted px-2 py-1 font-mono text-sm">
+              <span className="block truncate sm:hidden">
+                {mobileReservationId}
+              </span>
+              <span className="hidden break-all sm:block">{reservationId}</span>
             </code>
             <Button
               variant="ghost"

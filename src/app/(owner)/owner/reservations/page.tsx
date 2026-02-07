@@ -45,6 +45,7 @@ import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
   ConfirmDialog,
+  OwnerPaymentMethodReminder,
   PlaceCourtFilter,
   RejectModal,
   ReservationAlertsPanel,
@@ -567,6 +568,8 @@ export default function OwnerReservationsPage() {
             Refresh
           </Button>
         </div>
+
+        <OwnerPaymentMethodReminder />
 
         {/* Filters */}
         <div className="space-y-4">
