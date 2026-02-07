@@ -21,6 +21,7 @@ type BookingStudioViewOptions = {
   weekStartsOn?: number;
   defaultView?: StudioView;
   forceDayOnMobile?: boolean;
+  forceView?: StudioView;
 };
 
 export const useBookingStudioViewState = (
@@ -31,6 +32,7 @@ export const useBookingStudioViewState = (
     weekStartsOn = 0,
     defaultView = "week",
     forceDayOnMobile = true,
+    forceView,
   } = options;
 
   const isMobile = useIsMobile();
@@ -44,7 +46,15 @@ export const useBookingStudioViewState = (
   );
 
   const view = (viewParam ?? defaultView) as StudioView;
-  const isWeekView = view === "week";
+
+  const effectiveView = forceView ?? view;
+  const isWeekView = effectiveView === "week";
+
+  React.useEffect(() => {
+    if (forceView && view !== forceView) {
+      setViewParam(forceView);
+    }
+  }, [forceView, setViewParam, view]);
 
   const fallbackDayKey = React.useMemo(
     () => getZonedDayKey(getZonedToday(timeZone), timeZone),
@@ -59,10 +69,10 @@ export const useBookingStudioViewState = (
   }, [dayKeyParam, fallbackDayKey, setDayKeyParam]);
 
   React.useEffect(() => {
-    if (isMobile && forceDayOnMobile && view !== "day") {
+    if (!forceView && isMobile && forceDayOnMobile && view !== "day") {
       setViewParam("day");
     }
-  }, [forceDayOnMobile, isMobile, setViewParam, view]);
+  }, [forceDayOnMobile, forceView, isMobile, setViewParam, view]);
 
   const selectedDayRange = React.useMemo(
     () => getZonedDayRangeFromDayKey(dayKey, timeZone),
@@ -131,7 +141,7 @@ export const useBookingStudioViewState = (
   return {
     dayKey,
     setDayKeyParam,
-    view,
+    view: effectiveView,
     setViewParam,
     isWeekView,
     isMobile,

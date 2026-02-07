@@ -7,18 +7,19 @@
 
 ## Story
 
-As a **player**, I want to **view my reservations split into Upcoming, Past, and Cancelled** so that **I can quickly understand what I still need to attend or act on**.
+As a **player**, I want to **view my reservations split into Upcoming, Pending, Past, and Cancelled** so that **I can quickly see what I need to attend, complete, or review**.
 
 ---
 
 ## Context
 
-The current UI renders tab triggers but no tab panels, which leads to broken `aria-controls` references. The list filtering is also status-based and uses `createdAt` as a placeholder for the reserved date/time, so the "Upcoming" tab does not actually reflect the reservation’s scheduled slot.
+The current "Upcoming" bucketing logic includes non-cancelled reservations that haven't reached a final confirmed state (e.g. `CREATED`, `AWAITING_PAYMENT`, `PAYMENT_MARKED_BY_USER`). This makes "Upcoming" misleading and inflates counts.
 
 This story standardizes the "My Reservations" experience around the reserved slot time:
 
-- **Upcoming:** future + in-progress reservations (based on `slotEndTime >= now`)
-- **Past:** completed reservations that ended (based on `slotEndTime < now`)
+- **Pending:** reservations that are not yet confirmed (awaiting acceptance, awaiting payment, payment awaiting verification)
+- **Upcoming:** confirmed reservations that are future + in-progress (based on `slotEndTime >= now`)
+- **Past:** confirmed reservations that already ended (based on `slotEndTime < now`)
 - **Cancelled:** cancelled or expired reservations
 
 ---
@@ -29,15 +30,23 @@ This story standardizes the "My Reservations" experience around the reserved slo
 
 - Given I am on `/reservations`
 - When the tabs render
-- Then each tab trigger has a corresponding tab panel
-- And `aria-controls` on each trigger points to an existing panel element
-- And screen readers announce the tab label including the count (e.g., “Past, 2”)
+- Then I see four tabs: **Upcoming**, **Pending**, **Past**, **Cancelled**
+- And each tab trigger has a corresponding tab panel
+- And screen readers announce the tab label including the count (e.g., “Pending, 2”)
+
+### Pending Bucket
+
+- Given I have reservations with status `CREATED`, `AWAITING_PAYMENT`, or `PAYMENT_MARKED_BY_USER`
+- When I view the "Pending" tab
+- Then I see those reservations
+- And those reservations do not appear in "Upcoming"
 
 ### Upcoming Uses Reserved Time
 
-- Given I have reservations with slot start/end times
+- Given I have confirmed reservations with slot start/end times
 - When I view the "Upcoming" tab
-- Then I see reservations whose **reserved end time** is greater than or equal to now
+- Then I see reservations where `status = CONFIRMED` whose **reserved end time** is greater than or equal to now
+- And pending reservations do not appear in Upcoming
 - And cancelled/expired reservations do not appear in Upcoming
 
 ### Past Uses Reserved Time
@@ -62,7 +71,7 @@ This story standardizes the "My Reservations" experience around the reserved slo
 
 - Given the tab badge count is displayed
 - When I switch tabs
-- Then the badge count matches the number of items shown for that tab
+- Then the badge count matches the number of items shown for that tab (using the same bucketing rules)
 
 ---
 
@@ -70,8 +79,9 @@ This story standardizes the "My Reservations" experience around the reserved slo
 
 | Scenario | Expected Behavior |
 |----------|-------------------|
-| Slot times are missing for a reservation | Fallback UI state; reservation still renders but does not break filtering logic |
+| Slot times are missing or invalid | Filtering does not crash; confirmed reservations with unknown end time appear in Upcoming (not Past) |
 | Reservation spans multiple time slots | Reserved time uses min(start) and max(end) across linked slots |
+| Pending reservation slot time already passed | Still appears in Pending until it becomes Cancelled/Expired or Confirmed |
 | Timezone differences | Comparisons are correct when server/runtime is in UTC |
 
 ---
@@ -80,5 +90,6 @@ This story standardizes the "My Reservations" experience around the reserved slo
 
 - UI: `src/app/(auth)/reservations/page.tsx`
 - Tabs: `src/features/reservation/components/reservation-tabs.tsx`
-- Data hook: `src/features/reservation/hooks/use-my-reservations.ts`
-- Backend query: `src/modules/reservation/reservation.router.ts` → `reservation.getMy`
+- List: `src/features/reservation/components/reservation-list.tsx`
+- Data hook: `src/features/reservation/hooks.ts`
+- Backend query: `src/lib/modules/reservation/reservation.router.ts` → `reservation.getMyWithDetails`

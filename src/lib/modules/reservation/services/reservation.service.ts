@@ -1,6 +1,7 @@
 import { addDays, addMinutes, endOfDay } from "date-fns";
 import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
 import { postPlayerCreatedMessage } from "@/lib/modules/chat/ops/post-player-created-message";
+import { postPlayerPaymentMarkedMessage } from "@/lib/modules/chat/ops/post-player-payment-marked-message";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
 import type { ICourtBlockRepository } from "@/lib/modules/court-block/repositories/court-block.repository";
@@ -334,6 +335,43 @@ export class ReservationService implements IReservationService {
           organizationId: input.organizationId,
         },
         "Failed to post player created chat message",
+      );
+    }
+  }
+
+  private async postPlayerPaymentMarkedMessageBestEffort(input: {
+    reservationId: string;
+    profileId: string;
+    organizationId: string;
+  }) {
+    try {
+      const [profile, organization] = await Promise.all([
+        this.profileRepository.findById(input.profileId),
+        this.organizationRepository.findById(input.organizationId),
+      ]);
+
+      const ownerUserId = organization?.ownerUserId ?? null;
+      const playerUserId = profile?.userId ?? null;
+
+      if (!ownerUserId || !playerUserId) {
+        return;
+      }
+
+      await postPlayerPaymentMarkedMessage({
+        reservationId: input.reservationId,
+        playerUserId,
+        ownerUserId,
+      });
+    } catch (error) {
+      logger.warn(
+        {
+          err: error,
+          event: "reservation.player_payment_marked_chat_message_failed",
+          reservationId: input.reservationId,
+          profileId: input.profileId,
+          organizationId: input.organizationId,
+        },
+        "Failed to post player payment marked chat message",
       );
     }
   }
@@ -758,98 +796,117 @@ export class ReservationService implements IReservationService {
       throw new TermsNotAcceptedError();
     }
 
-    return this.transactionManager.run(async (tx) => {
-      const ctx: RequestContext = { tx };
+    const { updated, organizationId } = await this.transactionManager.run(
+      async (tx) => {
+        const ctx: RequestContext = { tx };
 
-      const reservation = await this.reservationRepository.findByIdForUpdate(
-        data.reservationId,
-        ctx,
-      );
-
-      if (!reservation) {
-        throw new ReservationNotFoundError(data.reservationId);
-      }
-
-      if (reservation.playerId !== profileId) {
-        throw new NotReservationOwnerError();
-      }
-
-      if (reservation.status !== "AWAITING_PAYMENT") {
-        throw new InvalidReservationStatusError(
+        const reservation = await this.reservationRepository.findByIdForUpdate(
           data.reservationId,
-          reservation.status,
-          ["AWAITING_PAYMENT"],
-        );
-      }
-
-      if (
-        reservation.expiresAt &&
-        new Date(reservation.expiresAt) < new Date()
-      ) {
-        throw new ReservationExpiredError(data.reservationId);
-      }
-
-      const now = new Date();
-      const updated = await this.reservationRepository.update(
-        data.reservationId,
-        {
-          status: "PAYMENT_MARKED_BY_USER",
-          termsAcceptedAt: now,
-        },
-        ctx,
-      );
-
-      await this.reservationEventRepository.create(
-        {
-          reservationId: data.reservationId,
-          fromStatus: "AWAITING_PAYMENT",
-          toStatus: "PAYMENT_MARKED_BY_USER",
-          triggeredByUserId: userId,
-          triggeredByRole: "PLAYER",
-          notes: "Player marked payment as complete",
-        },
-        ctx,
-      );
-
-      logger.info(
-        {
-          event: "reservation.payment_marked",
-          reservationId: data.reservationId,
-          playerId: profileId,
-        },
-        "Player marked payment",
-      );
-
-      try {
-        const court = await this.courtRepository.findById(
-          reservation.courtId,
           ctx,
         );
-        if (court?.placeId) {
-          const place = await this.placeRepository.findById(court.placeId, ctx);
-          if (place) {
-            await this.notificationDeliveryService.enqueueOwnerReservationPaymentMarked(
-              {
-                reservationId: data.reservationId,
-                placeName: place.name,
-                courtLabel: court.label,
-                startTimeIso: updated.startTime.toISOString(),
-                endTimeIso: updated.endTime.toISOString(),
-                playerName: updated.playerNameSnapshot ?? "Player",
-              },
+
+        if (!reservation) {
+          throw new ReservationNotFoundError(data.reservationId);
+        }
+
+        if (reservation.playerId !== profileId) {
+          throw new NotReservationOwnerError();
+        }
+
+        if (reservation.status !== "AWAITING_PAYMENT") {
+          throw new InvalidReservationStatusError(
+            data.reservationId,
+            reservation.status,
+            ["AWAITING_PAYMENT"],
+          );
+        }
+
+        if (
+          reservation.expiresAt &&
+          new Date(reservation.expiresAt) < new Date()
+        ) {
+          throw new ReservationExpiredError(data.reservationId);
+        }
+
+        const now = new Date();
+        const updated = await this.reservationRepository.update(
+          data.reservationId,
+          {
+            status: "PAYMENT_MARKED_BY_USER",
+            termsAcceptedAt: now,
+          },
+          ctx,
+        );
+
+        await this.reservationEventRepository.create(
+          {
+            reservationId: data.reservationId,
+            fromStatus: "AWAITING_PAYMENT",
+            toStatus: "PAYMENT_MARKED_BY_USER",
+            triggeredByUserId: userId,
+            triggeredByRole: "PLAYER",
+            notes: "Player marked payment as complete",
+          },
+          ctx,
+        );
+
+        logger.info(
+          {
+            event: "reservation.payment_marked",
+            reservationId: data.reservationId,
+            playerId: profileId,
+          },
+          "Player marked payment",
+        );
+
+        let organizationId: string | null = null;
+
+        try {
+          const court = await this.courtRepository.findById(
+            reservation.courtId,
+            ctx,
+          );
+          if (court?.placeId) {
+            const place = await this.placeRepository.findById(
+              court.placeId,
               ctx,
             );
-          }
-        }
-      } catch (error) {
-        logger.warn(
-          { err: error, reservationId: data.reservationId },
-          "Failed to enqueue reservation.payment_marked notification",
-        );
-      }
+            if (place) {
+              organizationId = place.organizationId;
 
-      return updated;
-    });
+              await this.notificationDeliveryService.enqueueOwnerReservationPaymentMarked(
+                {
+                  reservationId: data.reservationId,
+                  placeName: place.name,
+                  courtLabel: court.label,
+                  startTimeIso: updated.startTime.toISOString(),
+                  endTimeIso: updated.endTime.toISOString(),
+                  playerName: updated.playerNameSnapshot ?? "Player",
+                },
+                ctx,
+              );
+            }
+          }
+        } catch (error) {
+          logger.warn(
+            { err: error, reservationId: data.reservationId },
+            "Failed to enqueue reservation.payment_marked notification",
+          );
+        }
+
+        return { updated, organizationId };
+      },
+    );
+
+    if (organizationId) {
+      await this.postPlayerPaymentMarkedMessageBestEffort({
+        reservationId: updated.id,
+        profileId,
+        organizationId,
+      });
+    }
+
+    return updated;
   }
 
   async cancelReservation(

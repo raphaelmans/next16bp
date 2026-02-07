@@ -2,7 +2,8 @@
 
 import { AlertTriangle, CheckCircle, Clock, Info, XCircle } from "lucide-react";
 import Link from "next/link";
-import { formatRelative } from "@/common/format";
+import { formatRelativeFrom } from "@/common/format";
+import { useNowMs } from "@/common/hooks/use-now";
 import type { ReservationStatus } from "@/components/kudos";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ export function StatusBanner({
   onMessageOwner,
 }: StatusBannerProps) {
   const config = statusBannerConfig[status];
+  const nowMs = useNowMs({ intervalMs: 30_000 });
 
   if (!config) return null;
 
@@ -41,6 +43,8 @@ export function StatusBanner({
   const showMessageOwnerButton =
     !!onMessageOwner && CHAT_ENABLED_STATUSES.includes(status);
   const showCountdown = status === "AWAITING_PAYMENT" && expiresAt;
+  const countdownLabel =
+    showCountdown && expiresAt ? formatRelativeFrom(expiresAt, nowMs) : null;
 
   return (
     <Alert
@@ -50,9 +54,9 @@ export function StatusBanner({
       <Icon className="h-4 w-4" />
       <AlertTitle className="flex items-center gap-2">
         {config.title}
-        {showCountdown && (
+        {showCountdown && countdownLabel && (
           <span className="text-sm font-normal">
-            (Expires {formatRelative(expiresAt)})
+            (Expires {countdownLabel})
           </span>
         )}
       </AlertTitle>

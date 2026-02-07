@@ -58,6 +58,15 @@ As a **player**, I want to **message the venue owner about my reservation** so t
 - Given confirmation is retried or the UI reloads
 - Then the default owner confirmation message is posted only once
 
+### Payment Submission Seeds A Default System Message
+
+- Given a reservation transitions from `AWAITING_PAYMENT` to `PAYMENT_MARKED_BY_USER` through a player payment submission
+- When either participant opens the reservation thread
+- Then a default system-generated payment-submitted message appears in the thread history
+
+- Given payment submission handling is retried or the UI reloads
+- Then the default payment-submitted message is posted only once
+
 ### Player Can Send Text And Attachments
 
 - Given the chat panel is open

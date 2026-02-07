@@ -116,6 +116,22 @@ import {
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 
+function useIs2xlUp() {
+  const [is2xlUp, setIs2xlUp] = React.useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(min-width: 1536px)").matches;
+  });
+
+  React.useEffect(() => {
+    const mql = window.matchMedia("(min-width: 1536px)");
+    const onChange = () => setIs2xlUp(mql.matches);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return is2xlUp;
+}
+
 export default function OwnerAvailabilityStudioPage() {
   return (
     <BookingStudioProvider initialDate={new Date()}>
@@ -156,6 +172,8 @@ function OwnerAvailabilityStudioInner() {
     [courtId, courts],
   );
 
+  const is2xlUp = useIs2xlUp();
+
   const {
     dayKey,
     setDayKeyParam,
@@ -174,7 +192,10 @@ function OwnerAvailabilityStudioInner() {
     handleMobileDateSelect,
     handleMobileToday,
     navigateWeek,
-  } = useBookingStudioViewState({ timeZone: placeTimeZone });
+  } = useBookingStudioViewState({
+    timeZone: placeTimeZone,
+    forceView: is2xlUp ? undefined : "day",
+  });
   const [jobIdParam, setJobIdParam] = useQueryState(
     "jobId",
     parseAsString.withOptions({ history: "replace" }),
@@ -1756,7 +1777,7 @@ function OwnerAvailabilityStudioInner() {
         <div className="space-y-6">
           <Skeleton className="h-8 w-60" />
           <Skeleton className="h-16 w-full" />
-          <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)_320px]">
+          <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
             <Skeleton className="h-[520px]" />
             <Skeleton className="h-[520px]" />
             <Skeleton className="h-[520px]" />
@@ -1958,7 +1979,7 @@ function OwnerAvailabilityStudioInner() {
                 onValueChange={(value) => {
                   if (value) setViewParam(value as StudioView);
                 }}
-                className="hidden lg:flex"
+                className="hidden 2xl:flex"
               >
                 <ToggleGroupItem value="day" aria-label="Day view">
                   Day
@@ -1972,7 +1993,7 @@ function OwnerAvailabilityStudioInner() {
         </Card>
 
         <AnimatePresence mode="wait" initial={false}>
-          {isWeekView ? (
+          {is2xlUp && isWeekView ? (
             <motion.div
               key="week"
               initial={{ opacity: 0, scale: 0.98 }}
@@ -2343,7 +2364,7 @@ function OwnerAvailabilityStudioInner() {
               exit={{ opacity: 0, scale: 1.02 }}
               transition={viewTransition}
             >
-              <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)_320px]">
+              <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
                 <div className="hidden lg:block space-y-6">
                   <Card>
                     <CardContent className="space-y-3 p-6">
@@ -2704,7 +2725,7 @@ function OwnerAvailabilityStudioInner() {
                       </RangeSelectionProvider>
                     )}
 
-                    <div className="lg:hidden">
+                    <div className="2xl:hidden">
                       <MobileDayBlocksList
                         blocks={dayBlocks}
                         isLoading={blocksQuery.isLoading}
@@ -2718,7 +2739,7 @@ function OwnerAvailabilityStudioInner() {
                   </CardContent>
                 </Card>
 
-                <Card className="hidden lg:block">
+                <Card className="hidden 2xl:block">
                   <CardContent className="space-y-4 p-6">
                     <div className="space-y-1">
                       <h3 className="text-lg font-heading font-semibold">

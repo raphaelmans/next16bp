@@ -187,8 +187,17 @@ interface UseMyReservationsOptions {
 
 const CANCELLED_STATUSES = new Set<ReservationStatus>(["CANCELLED", "EXPIRED"]);
 
-const parseIsoDate = (value: string | null | undefined) =>
-  value ? new Date(value) : null;
+const PENDING_STATUSES = new Set<ReservationStatus>([
+  "CREATED",
+  "AWAITING_PAYMENT",
+  "PAYMENT_MARKED_BY_USER",
+]);
+
+const parseIsoDate = (value: string | null | undefined) => {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
 
 const getSlotStartTime = (item: ReservationListItemData) =>
   parseIsoDate(item.slotStartTime) ?? parseIsoDate(item.createdAt);
@@ -199,8 +208,11 @@ const getSlotEndTime = (item: ReservationListItemData) =>
 const isCancelledReservation = (item: ReservationListItemData) =>
   CANCELLED_STATUSES.has(item.status);
 
+const isPendingReservation = (item: ReservationListItemData) =>
+  !isCancelledReservation(item) && PENDING_STATUSES.has(item.status);
+
 const isUpcomingReservation = (item: ReservationListItemData, now: Date) => {
-  if (isCancelledReservation(item)) return false;
+  if (item.status !== "CONFIRMED") return false;
   const endTime = getSlotEndTime(item);
   if (!endTime) return true;
   return endTime >= now;
@@ -231,15 +243,18 @@ const sortByStartTimeDesc = (
   return bTime - aTime;
 };
 
-const getStatusFilter = (tab: ReservationTab) =>
-  tab === "past" ? "CONFIRMED" : undefined;
+const getStatusFilter = (tab: ReservationTab) => {
+  if (tab === "upcoming") return "CONFIRMED";
+  if (tab === "past") return "CONFIRMED";
+  return undefined;
+};
 
 /**
  * Hook to fetch current user's reservations
  * Connected to reservation.getMyWithDetails tRPC endpoint
  */
 export function useMyReservations(options: UseMyReservationsOptions = {}) {
-  const { tab = "upcoming", page = 1, limit = 10, enabled = true } = options;
+  const { tab = "upcoming", page = 1, limit = 100, enabled = true } = options;
   const offset = (page - 1) * limit;
   const status = getStatusFilter(tab);
 
@@ -259,6 +274,9 @@ export function useMyReservations(options: UseMyReservationsOptions = {}) {
     ? reservations.filter((item) => {
         if (tab === "upcoming") {
           return isUpcomingReservation(item, now);
+        }
+        if (tab === "pending") {
+          return isPendingReservation(item);
         }
         if (tab === "past") {
           return isPastReservation(item, now);
@@ -322,8 +340,8 @@ export function useMyReservations(options: UseMyReservationsOptions = {}) {
  * This fetches counts for each tab to display badges
  */
 export function useReservationCounts() {
-  const [allQuery, pastQuery, cancelledQuery, expiredQuery] = trpc.useQueries(
-    (t) => [
+  const [allQuery, confirmedQuery, cancelledQuery, expiredQuery] =
+    trpc.useQueries((t) => [
       t.reservation.getMyWithDetails({
         limit: 100,
         offset: 0,
@@ -343,14 +361,17 @@ export function useReservationCounts() {
         limit: 100,
         offset: 0,
       }),
-    ],
-  );
+    ]);
 
   const now = new Date();
-  const upcomingCount = (allQuery.data ?? []).filter((item) =>
+
+  const pendingCount = (allQuery.data ?? []).filter((item) =>
+    isPendingReservation(item),
+  ).length;
+  const upcomingCount = (confirmedQuery.data ?? []).filter((item) =>
     isUpcomingReservation(item, now),
   ).length;
-  const pastCount = (pastQuery.data ?? []).filter((item) =>
+  const pastCount = (confirmedQuery.data ?? []).filter((item) =>
     isPastReservation(item, now),
   ).length;
   const cancelledCount =
@@ -359,12 +380,13 @@ export function useReservationCounts() {
   return {
     data: {
       upcoming: upcomingCount,
+      pending: pendingCount,
       past: pastCount,
       cancelled: cancelledCount,
     },
     isLoading:
       allQuery.isLoading ||
-      pastQuery.isLoading ||
+      confirmedQuery.isLoading ||
       cancelledQuery.isLoading ||
       expiredQuery.isLoading,
   };
@@ -471,7 +493,12 @@ export function useReservation(id: string) {
 // From use-reservations-tabs.ts
 // ============================================================================
 
-export const reservationTabs = ["upcoming", "past", "cancelled"] as const;
+export const reservationTabs = [
+  "upcoming",
+  "pending",
+  "past",
+  "cancelled",
+] as const;
 export type ReservationTab = (typeof reservationTabs)[number];
 
 export function useReservationsTabs() {

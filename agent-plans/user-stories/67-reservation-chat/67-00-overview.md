@@ -6,6 +6,12 @@ Reservation chat lets players and venue owners message each other in the context
 
 These stories are derived from the current, shipped chat behavior.
 
+- System-generated reservation chat messages are seeded for key lifecycle transitions:
+  - reservation request submitted
+  - player payment submitted
+  - owner confirmation
+- Seeded system messages are idempotent and should appear once per reservation transition.
+
 This domain is closely related to the notification system:
 
 - The platform supports async notifications via an outbox + cron dispatcher (email/SMS/Web Push).

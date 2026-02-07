@@ -1,6 +1,7 @@
 import { TZDate } from "@date-fns/tz";
 import {
   format,
+  formatDistance,
   formatDistanceToNow,
   isToday,
   isTomorrow,
@@ -109,6 +110,25 @@ export function formatTimeRange(
 export function formatRelative(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
   return formatDistanceToNow(d, { addSuffix: true });
+}
+
+/**
+ * Format relative time from a custom base date
+ * @example formatRelativeFrom("2025-01-01", Date.now()) -> "in 2 hours"
+ */
+export function formatRelativeFrom(
+  date: Date | string,
+  baseDate: Date | string | number,
+): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  const base =
+    typeof baseDate === "number"
+      ? new Date(baseDate)
+      : typeof baseDate === "string"
+        ? new Date(baseDate)
+        : baseDate;
+
+  return formatDistance(d, base, { addSuffix: true });
 }
 
 /**

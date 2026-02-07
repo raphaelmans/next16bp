@@ -109,6 +109,22 @@ import {
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 
+function useIs2xlUp() {
+  const [is2xlUp, setIs2xlUp] = React.useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(min-width: 1536px)").matches;
+  });
+
+  React.useEffect(() => {
+    const mql = window.matchMedia("(min-width: 1536px)");
+    const onChange = () => setIs2xlUp(mql.matches);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
+
+  return is2xlUp;
+}
+
 export default function OwnerCourtAvailabilityPage() {
   return (
     <BookingStudioProvider initialDate={new Date()}>
@@ -138,6 +154,7 @@ function OwnerCourtAvailabilityInner() {
     trpc.courtManagement.getById.useQuery({ courtId }, { enabled: !!courtId });
 
   const placeTimeZone = placeData?.place.timeZone ?? "Asia/Manila";
+  const is2xlUp = useIs2xlUp();
   const {
     dayKey,
     setDayKeyParam,
@@ -156,7 +173,10 @@ function OwnerCourtAvailabilityInner() {
     handleMobileDateSelect,
     handleMobileToday,
     navigateWeek,
-  } = useBookingStudioViewState({ timeZone: placeTimeZone });
+  } = useBookingStudioViewState({
+    timeZone: placeTimeZone,
+    forceView: is2xlUp ? undefined : "day",
+  });
 
   const navigateMonth = React.useCallback(
     (direction: 1 | -1) => {
@@ -1299,7 +1319,7 @@ function OwnerCourtAvailabilityInner() {
                 onValueChange={(value) => {
                   if (value) setViewParam(value as StudioView);
                 }}
-                className="hidden lg:flex"
+                className="hidden 2xl:flex"
               >
                 <ToggleGroupItem value="day" aria-label="Day view">
                   Day
@@ -1391,7 +1411,7 @@ function OwnerCourtAvailabilityInner() {
         )}
 
         <AnimatePresence mode="wait" initial={false}>
-          {isWeekView ? (
+          {is2xlUp && isWeekView ? (
             <motion.div
               key="week"
               initial={{ opacity: 0, scale: 0.98 }}
@@ -1725,7 +1745,7 @@ function OwnerCourtAvailabilityInner() {
               exit={{ opacity: 0, scale: 1.02 }}
               transition={viewTransition}
             >
-              <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)_320px]">
+              <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
                 {/* Left sidebar — calendar + create block panel */}
                 <div className="hidden lg:block space-y-6">
                   <Card>
@@ -2073,7 +2093,7 @@ function OwnerCourtAvailabilityInner() {
                     )}
 
                     {/* Mobile blocks list */}
-                    <div className="lg:hidden">
+                    <div className="2xl:hidden">
                       <MobileDayBlocksList
                         blocks={dayBlocks}
                         isLoading={blocksQuery.isLoading}
@@ -2087,7 +2107,7 @@ function OwnerCourtAvailabilityInner() {
                 </Card>
 
                 {/* Right sidebar — blocks list */}
-                <Card className="hidden lg:block">
+                <Card className="hidden 2xl:block">
                   <CardContent className="space-y-4 p-6">
                     <div className="space-y-1">
                       <h3 className="text-lg font-heading font-semibold">

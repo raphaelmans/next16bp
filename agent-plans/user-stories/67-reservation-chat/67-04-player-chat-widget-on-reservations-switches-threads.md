@@ -58,6 +58,12 @@ As a **player**, I want a **global chat widget on my reservations pages** so tha
 - When I open the reservation thread
 - Then I see the default owner confirmation message in the thread history
 
+### Player Sees Auto Payment-Submitted Message
+
+- Given I submit payment and reservation status becomes `PAYMENT_MARKED_BY_USER`
+- When I open the reservation thread
+- Then I see the default system-generated payment-submitted message in the thread history
+
 ### Active Thread Shows Reservation Context
 
 - Given a reservation thread is selected

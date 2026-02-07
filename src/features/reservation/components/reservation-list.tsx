@@ -29,6 +29,10 @@ const emptyStateConfig: Record<
     description:
       "You don't have any upcoming court reservations. Find a court and book a slot to get started!",
   },
+  pending: {
+    title: "No Pending Reservations",
+    description: "You don't have any pending reservations right now.",
+  },
   past: {
     title: "No Past Reservations",
     description:

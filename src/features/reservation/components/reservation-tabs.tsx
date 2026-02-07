@@ -13,6 +13,7 @@ import { ReservationList } from "./reservation-list";
 
 const tabLabels: Record<ReservationTab, string> = {
   upcoming: "Upcoming",
+  pending: "Pending",
   past: "Past",
   cancelled: "Cancelled",
 };
