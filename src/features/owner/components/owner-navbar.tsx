@@ -45,7 +45,7 @@ export function OwnerNavbar({
       {/* Left side - Logo and Organization name */}
       <div className="flex items-center gap-4">
         <Link
-          href={appRoutes.home.base}
+          href={appRoutes.postLogin.base}
           className="flex items-center gap-2 hover:opacity-80"
         >
           <KudosLogo size={28} variant="icon" />

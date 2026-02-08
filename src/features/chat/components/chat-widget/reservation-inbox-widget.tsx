@@ -190,9 +190,16 @@ export function ReservationInboxWidget({
   const [syncErrorMessage, setSyncErrorMessage] = useState<string | null>(null);
   const previousReservationIdsKeyRef = useRef<string>("");
   const syncRequestIdRef = useRef(0);
+  const openRef = useRef(open);
   const channelsRef = useRef<Channel[]>([]);
+  const syncInboxRef = useRef<(() => Promise<void>) | null>(null);
+  const didBackgroundHydrateUserIdRef = useRef<string | null>(null);
+  const fetchChannelsInFlightRef = useRef<Promise<ChannelRefreshResult> | null>(
+    null,
+  );
   const utils = trpc.useUtils();
 
+  openRef.current = open;
   channelsRef.current = channels;
 
   const authQuery = trpc.chat.getAuth.useQuery();
@@ -267,25 +274,40 @@ export function ReservationInboxWidget({
       };
     }
 
-    setIsLoadingChannels(true);
-    setChannelsError(null);
+    if (fetchChannelsInFlightRef.current) {
+      return fetchChannelsInFlightRef.current;
+    }
+
+    const request = (async (): Promise<ChannelRefreshResult> => {
+      setIsLoadingChannels(true);
+      setChannelsError(null);
+      try {
+        const results = await client.queryChannels(
+          {
+            type: "messaging",
+            members: { $in: [auth.user.id] },
+          } as unknown as Record<string, unknown>,
+          { last_message_at: -1 },
+          { limit: 30, message_limit: 1 },
+        );
+        setChannels(results);
+        return { ok: true, channels: results };
+      } catch (error) {
+        setChannelsError(error);
+        return { ok: false, channels: [], error };
+      } finally {
+        setIsLoadingChannels(false);
+        setHasLoadedChannelsOnce(true);
+      }
+    })();
+
+    fetchChannelsInFlightRef.current = request;
     try {
-      const results = await client.queryChannels(
-        {
-          type: "messaging",
-          members: { $in: [auth.user.id] },
-        } as unknown as Record<string, unknown>,
-        { last_message_at: -1 },
-        { limit: 30, message_limit: 1 },
-      );
-      setChannels(results);
-      return { ok: true, channels: results };
-    } catch (error) {
-      setChannelsError(error);
-      return { ok: false, channels: [], error };
+      return await request;
     } finally {
-      setIsLoadingChannels(false);
-      setHasLoadedChannelsOnce(true);
+      if (fetchChannelsInFlightRef.current === request) {
+        fetchChannelsInFlightRef.current = null;
+      }
     }
   };
 
@@ -348,6 +370,25 @@ export function ReservationInboxWidget({
         : "Reservation state refreshed, but messages may still be stale.",
     );
   }, [open, utils]);
+  syncInboxRef.current = syncInbox;
+
+  useEffect(() => {
+    if (!auth?.user.id) {
+      didBackgroundHydrateUserIdRef.current = null;
+      return;
+    }
+
+    if (!isReady || !client) {
+      return;
+    }
+
+    if (didBackgroundHydrateUserIdRef.current === auth.user.id) {
+      return;
+    }
+
+    didBackgroundHydrateUserIdRef.current = auth.user.id;
+    fetchChannels.current?.().catch(() => undefined);
+  }, [auth?.user.id, client, isReady]);
 
   useEffect(() => {
     if (!open || !isReady || !client || !auth?.user.id) {
@@ -362,20 +403,27 @@ export function ReservationInboxWidget({
     }
 
     const subscription = client.on((event) => {
-      if (event.type === "message.new") {
-        if (open) {
-          syncInbox().catch(() => undefined);
-          return;
-        }
+      const shouldRefresh =
+        event.type === "message.new" ||
+        event.type === "notification.message_new" ||
+        event.type === "notification.added_to_channel";
 
-        fetchChannels.current?.().catch(() => undefined);
+      if (!shouldRefresh) {
+        return;
       }
+
+      if (openRef.current) {
+        syncInboxRef.current?.().catch(() => undefined);
+        return;
+      }
+
+      fetchChannels.current?.().catch(() => undefined);
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [client, isReady, open, syncInbox]);
+  }, [client, isReady]);
 
   const reservationChannels = useMemo(
     () => channels.filter((c) => (c.id ?? "").startsWith("res-")),

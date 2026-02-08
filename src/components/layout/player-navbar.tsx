@@ -27,7 +27,7 @@ export function PlayerNavbar({
     <div className="flex flex-1 items-center justify-between">
       <div className="flex items-center gap-3">
         <Link
-          href={appRoutes.home.base}
+          href={appRoutes.postLogin.base}
           className="flex items-center gap-2 hover:opacity-80"
         >
           <KudosLogo size={28} variant="icon" />
