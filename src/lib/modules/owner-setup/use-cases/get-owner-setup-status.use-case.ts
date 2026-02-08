@@ -73,6 +73,7 @@ export class GetOwnerSetupStatusUseCase {
       : null;
     const hasVerification =
       verificationStatus === "PENDING" || verificationStatus === "VERIFIED";
+    const isVerificationConfirmed = verificationStatus === "VERIFIED";
 
     const courts = primaryPlace
       ? await this.courtRepository.findByPlaceId(primaryPlace.id)
@@ -81,7 +82,7 @@ export class GetOwnerSetupStatusUseCase {
     const hasActiveCourt = Boolean(activeCourt);
 
     const isSetupComplete =
-      hasOrganization && hasVenue && hasVerification && hasActiveCourt;
+      hasOrganization && hasVenue && isVerificationConfirmed && hasActiveCourt;
 
     const nextStep = !hasOrganization
       ? "create_organization"
@@ -93,7 +94,9 @@ export class GetOwnerSetupStatusUseCase {
             ? "verify_venue"
             : !hasActiveCourt
               ? "configure_courts"
-              : "complete";
+              : !isVerificationConfirmed
+                ? "verify_venue"
+                : "complete";
 
     return {
       hasOrganization,

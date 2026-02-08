@@ -54,6 +54,7 @@ export default function OwnerGetStartedPage() {
   const primaryPlaceId = setupStatus?.primaryPlace?.id;
   const primaryPlaceName = setupStatus?.primaryPlace?.name ?? "your venue";
   const verificationStatus = setupStatus?.verificationStatus ?? null;
+  const isVenueVerified = verificationStatus === "VERIFIED";
   const hasOrganization = setupStatus?.hasOrganization ?? false;
   const hasPendingClaim = setupStatus?.hasPendingClaim ?? false;
   const hasVenue = setupStatus?.hasVenue ?? false;
@@ -146,7 +147,7 @@ export default function OwnerGetStartedPage() {
             </Badge>
           </div>
 
-          {isSetupComplete && (
+          {isSetupComplete && isVenueVerified && (
             <Card className="border-primary/20 bg-primary/5">
               <CardContent className="p-6">
                 <div className="flex items-center gap-4">
@@ -158,7 +159,8 @@ export default function OwnerGetStartedPage() {
                       You&apos;re all set!
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Your venue is ready to accept bookings on KudosCourts.
+                      Your venue is verified and confirmed to accept bookings on
+                      KudosCourts.
                     </p>
                   </div>
                   <Button asChild>
@@ -568,7 +570,7 @@ function VerifyVenueCard({
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                {placeName} is verified and ready for reservations.
+                {placeName} is verified and confirmed for reservations.
               </p>
               <div className="pt-2">
                 <Button variant="outline" onClick={onVerifyClick}>

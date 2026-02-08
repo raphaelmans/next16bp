@@ -245,7 +245,7 @@ export function CourtScheduleEditor({
                               <div
                                 key={row.id}
                                 className={cn(
-                                  "rounded-lg border p-3 space-y-3",
+                                  "min-w-0 rounded-lg border p-3 space-y-3",
                                   hasError &&
                                     "border-destructive bg-destructive/5",
                                 )}
@@ -304,8 +304,8 @@ export function CourtScheduleEditor({
                                   </div>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-2 items-end">
-                                  <div>
+                                <div className="grid grid-cols-1 gap-2 items-end sm:grid-cols-2">
+                                  <div className="min-w-0">
                                     <label
                                       htmlFor={`status-${day.value}-${row.id}`}
                                       className="text-xs text-muted-foreground mb-1 block"
@@ -328,7 +328,7 @@ export function CourtScheduleEditor({
                                       </span>
                                     </div>
                                   </div>
-                                  <div>
+                                  <div className="min-w-0">
                                     <label
                                       htmlFor={`currency-${day.value}-${row.id}`}
                                       className="text-xs text-muted-foreground mb-1 block"
@@ -344,7 +344,7 @@ export function CourtScheduleEditor({
                                       }
                                       disabled={!row.allowPricing}
                                     >
-                                      <SelectTrigger>
+                                      <SelectTrigger className="w-full min-w-0">
                                         <SelectValue placeholder="Currency" />
                                       </SelectTrigger>
                                       <SelectContent>
@@ -369,7 +369,7 @@ export function CourtScheduleEditor({
                                     Hourly rate
                                   </label>
                                   {row.allowPricing ? (
-                                    <div className="flex items-center gap-1.5">
+                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                                       <Input
                                         id={`rate-${day.value}-${row.id}`}
                                         type="number"
@@ -383,6 +383,7 @@ export function CourtScheduleEditor({
                                           )
                                         }
                                         className={cn(
+                                          "w-full min-w-0",
                                           hasError &&
                                             "border-destructive focus-visible:ring-destructive/40",
                                         )}
@@ -391,7 +392,7 @@ export function CourtScheduleEditor({
                                         type="button"
                                         variant="outline"
                                         size="sm"
-                                        className="shrink-0 text-xs"
+                                        className="w-full text-xs sm:w-auto sm:shrink-0"
                                         disabled={row.hourlyRate === ""}
                                         onClick={() =>
                                           handleApplyToAll(day.value, row.id)

@@ -47,7 +47,10 @@ export default function OwnerDashboardPage() {
   const showSetupCta =
     !setupLoading && setupStatus ? !setupStatus.isSetupComplete : false;
   const nextStepLabel = setupStatus
-    ? OWNER_SETUP_NEXT_STEP_LABELS[setupStatus.nextStep]
+    ? setupStatus.nextStep === "verify_venue" &&
+      setupStatus.verificationStatus === "PENDING"
+      ? "Verification under review"
+      : OWNER_SETUP_NEXT_STEP_LABELS[setupStatus.nextStep]
     : null;
 
   const handleLogout = async () => {

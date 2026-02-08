@@ -257,6 +257,7 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
   });
 
   const available = isSlotAvailable(slot) && !isPast;
+  const isPassed = Boolean(isPast && isSlotAvailable(slot));
   const isBooked = slot.status === "booked" || slot.status === "held";
   const isMaintenance = slot.unavailableReason === "MAINTENANCE";
   const isReserved = isBooked && !isMaintenance;
@@ -270,7 +271,9 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
       tabIndex={available ? 0 : -1}
       disabled={!available}
       aria-pressed={inRange}
-      aria-label={`${startLabel} to ${endLabel}${!available ? " (unavailable)" : ""}`}
+      aria-label={`${startLabel} to ${endLabel}${
+        isPassed ? " (passed)" : !available ? " (unavailable)" : ""
+      }`}
       className={cn(
         "group flex w-full items-center gap-3 px-4 py-3 text-left transition-all duration-150",
         "appearance-none",
@@ -281,6 +284,7 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
           "bg-success-light/20 hover:bg-success-light/50 cursor-pointer",
         inHoverPreview && "bg-primary/5 cursor-pointer",
         inRange && "bg-primary/8 relative",
+        isPassed && "bg-muted/40 cursor-not-allowed",
         isReserved && "bg-destructive-light/40 cursor-not-allowed",
         isMaintenance && "bg-warning-light/50 cursor-not-allowed",
       )}
@@ -321,6 +325,8 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
           <div className="h-2 w-2 rounded-full bg-warning" />
         ) : isReserved ? (
           <div className="h-2 w-2 rounded-full bg-destructive/50" />
+        ) : isPassed ? (
+          <div className="h-2 w-2 rounded-full bg-muted-foreground/45" />
         ) : inRange ? (
           <motion.div
             initial={{ scale: 0.5 }}
@@ -343,6 +349,7 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
         className={cn(
           "w-[7.5rem] shrink-0 font-mono text-xs tabular-nums tracking-tight",
           inRange ? "text-primary font-semibold" : "text-foreground/80",
+          isPassed && "text-muted-foreground line-through",
           isReserved && "text-destructive/50 line-through",
           isMaintenance && "text-warning-foreground/60",
         )}
@@ -360,6 +367,11 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
         {isReserved && (
           <span className="inline-flex items-center rounded-md bg-destructive-light px-2 py-0.5 text-[11px] font-medium text-destructive">
             {slot.status === "held" ? "On hold" : "Reserved"}
+          </span>
+        )}
+        {isPassed && (
+          <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+            Passed
           </span>
         )}
         {available && showPrice && slot.priceCents !== undefined && (
