@@ -13,7 +13,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import {
-  type ReservationTab,
+  type ReservationListView,
   useMyReservations,
   useReservationsTabs,
 } from "../hooks";
@@ -21,7 +21,7 @@ import { ReservationListItem } from "./reservation-list-item";
 import { ReservationListSkeleton } from "./skeletons";
 
 const emptyStateConfig: Record<
-  ReservationTab,
+  ReservationListView,
   { title: string; description: string }
 > = {
   upcoming: {
@@ -46,7 +46,7 @@ const emptyStateConfig: Record<
 };
 
 interface ReservationListProps {
-  tab?: ReservationTab;
+  tab?: ReservationListView;
   isActive?: boolean;
 }
 

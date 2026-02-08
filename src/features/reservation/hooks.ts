@@ -179,7 +179,7 @@ type ReservationListItemData = {
 };
 
 interface UseMyReservationsOptions {
-  tab?: ReservationTab;
+  tab?: ReservationListView;
   page?: number;
   limit?: number;
   enabled?: boolean;
@@ -243,7 +243,7 @@ const sortByStartTimeDesc = (
   return bTime - aTime;
 };
 
-const getStatusFilter = (tab: ReservationTab) => {
+const getStatusFilter = (tab: ReservationListView) => {
   if (tab === "upcoming") return "CONFIRMED";
   if (tab === "past") return "CONFIRMED";
   return undefined;
@@ -493,13 +493,9 @@ export function useReservation(id: string) {
 // From use-reservations-tabs.ts
 // ============================================================================
 
-export const reservationTabs = [
-  "upcoming",
-  "pending",
-  "past",
-  "cancelled",
-] as const;
+export const reservationTabs = ["upcoming", "past", "cancelled"] as const;
 export type ReservationTab = (typeof reservationTabs)[number];
+export type ReservationListView = ReservationTab | "pending";
 
 export function useReservationsTabs() {
   const [tab, setTab] = useQueryState(
