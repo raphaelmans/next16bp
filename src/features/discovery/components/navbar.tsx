@@ -103,8 +103,7 @@ export function Navbar({ className }: NavbarProps) {
       return;
     }
 
-    const params = new URLSearchParams({ next: appRoutes.owner.places.new });
-    router.push(`${appRoutes.owner.getStarted}?${params.toString()}`);
+    router.push(appRoutes.owner.getStarted);
   };
 
   return (

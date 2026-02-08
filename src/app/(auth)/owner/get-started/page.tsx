@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { parseAsString, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
@@ -41,38 +40,11 @@ import { useOwnerSetupStatus } from "@/features/owner/hooks";
 import { SupportChatSheet } from "@/features/support-chat/components/support-chat-sheet";
 import { trpc } from "@/trpc/client";
 
-const getSafeNextHref = (nextHref: string | null): string | null => {
-  if (!nextHref) {
-    return null;
-  }
-
-  if (!nextHref.startsWith("/") || nextHref.startsWith("//")) {
-    return null;
-  }
-
-  if (
-    nextHref === appRoutes.owner.getStarted ||
-    nextHref === appRoutes.owner.onboarding
-  ) {
-    return null;
-  }
-
-  const ownerBase = appRoutes.owner.base;
-  const isOwnerPath =
-    nextHref === ownerBase || nextHref.startsWith(`${ownerBase}/`);
-  if (!isOwnerPath) {
-    return null;
-  }
-
-  return nextHref;
-};
-
 export default function OwnerGetStartedPage() {
   const router = useRouter();
   const [showOrgForm, setShowOrgForm] = useState(false);
   const [showClaimSearch, setShowClaimSearch] = useState(false);
   const [claimSearchQuery, setClaimSearchQuery] = useState("");
-  const [nextParam] = useQueryState("next", parseAsString);
 
   const utils = trpc.useUtils();
   const { data: setupStatus, isLoading: setupLoading } = useOwnerSetupStatus();
@@ -93,15 +65,6 @@ export default function OwnerGetStartedPage() {
   useEffect(() => {
     trackEvent({ event: "funnel.owner_setup_hub_viewed" });
   }, []);
-
-  const safeNextHref = getSafeNextHref(nextParam);
-  useEffect(() => {
-    if (!safeNextHref) return;
-    if (setupLoading) return;
-    if (!setupStatus?.hasOrganization) return;
-
-    router.replace(safeNextHref);
-  }, [router, safeNextHref, setupLoading, setupStatus?.hasOrganization]);
 
   const handleOrgCreated = () => {
     setShowOrgForm(false);

@@ -108,13 +108,7 @@ export default function NewPlacePage() {
                 You need an organization before adding venues.
               </p>
               <Button asChild>
-                <Link
-                  href={`${appRoutes.owner.getStarted}?next=${encodeURIComponent(
-                    appRoutes.owner.places.new,
-                  )}`}
-                >
-                  Get started
-                </Link>
+                <Link href={appRoutes.owner.getStarted}>Get started</Link>
               </Button>
             </CardContent>
           </Card>

@@ -112,13 +112,7 @@ export default function CreateCourtSetupPage() {
                 You need an organization before creating courts.
               </p>
               <Button asChild>
-                <Link
-                  href={`${appRoutes.owner.getStarted}?next=${encodeURIComponent(
-                    appRoutes.owner.courts.setupCreate,
-                  )}`}
-                >
-                  Get started
-                </Link>
+                <Link href={appRoutes.owner.getStarted}>Get started</Link>
               </Button>
             </CardContent>
           </Card>

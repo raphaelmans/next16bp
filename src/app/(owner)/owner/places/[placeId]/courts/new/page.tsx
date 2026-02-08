@@ -97,13 +97,7 @@ export default function NewPlaceCourtPage() {
                 You need an organization before creating courts.
               </p>
               <Button asChild>
-                <Link
-                  href={`${appRoutes.owner.getStarted}?next=${encodeURIComponent(
-                    appRoutes.owner.places.courts.new(placeId),
-                  )}`}
-                >
-                  Get started
-                </Link>
+                <Link href={appRoutes.owner.getStarted}>Get started</Link>
               </Button>
             </CardContent>
           </Card>

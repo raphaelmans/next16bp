@@ -6,6 +6,7 @@ import {
   CalendarRange,
   ChevronDown,
   ChevronRight,
+  ClipboardList,
   LayoutDashboard,
   MapPin,
   Settings,
@@ -47,6 +48,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import {
+  useOwnerSetupStatus,
   useOwnerSidebarQuickLinks,
   useReservationCounts,
 } from "@/features/owner/hooks";
@@ -100,12 +102,16 @@ export function OwnerSidebar({
   const pathname = usePathname();
   const { data: quickLinks = [], isLoading: quickLinksLoading } =
     useOwnerSidebarQuickLinks(currentOrganization?.id);
+  const { data: setupStatus, isLoading: setupStatusLoading } =
+    useOwnerSetupStatus();
   const { data: reservationCounts } = useReservationCounts(
     currentOrganization?.id ?? null,
   );
   const hasOrganization = Boolean(currentOrganization?.id);
   const showVenuesLoading = quickLinksLoading || !hasOrganization;
   const reservationsBadgeCount = reservationCounts.pending;
+  const shouldShowGetStarted =
+    !setupStatusLoading && (setupStatus ? !setupStatus.isSetupComplete : false);
 
   const isActive = (href: string) => {
     if (href === appRoutes.owner.base) {
@@ -200,6 +206,16 @@ export function OwnerSidebar({
                 isActive={isActive(appRoutes.owner.base)}
                 activeClassName="bg-primary text-primary-foreground"
               />
+
+              {shouldShowGetStarted && (
+                <SidebarNavItem
+                  href={appRoutes.owner.getStarted}
+                  title="Get started"
+                  icon={ClipboardList}
+                  isActive={isActive(appRoutes.owner.getStarted)}
+                  activeClassName="bg-primary text-primary-foreground"
+                />
+              )}
 
               {/* Venues - collapsible with nested venues > courts */}
               <Collapsible
