@@ -1,6 +1,7 @@
 "use client";
 
 import { SlidersHorizontal } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -21,6 +22,8 @@ interface PlaceFiltersSheetProps {
   city?: string;
   sportId?: string;
   verification?: "verified_reservable" | "curated" | "unverified_reservable";
+  hasClearableFilters?: boolean;
+  resetLocationHref?: string;
   onAmenitiesChange: (amenities: string[] | undefined) => void;
   onProvinceChange: (province: string | undefined) => void;
   onCityChange: (city: string | undefined) => void;
@@ -42,6 +45,8 @@ export function PlaceFiltersSheet({
   city,
   sportId,
   verification,
+  hasClearableFilters,
+  resetLocationHref,
   onAmenitiesChange,
   onProvinceChange,
   onCityChange,
@@ -63,6 +68,7 @@ export function PlaceFiltersSheet({
   }, [amenities, province, city, sportId, verification]);
 
   const hasFilters = activeCount > 0;
+  const canClearFilters = hasClearableFilters ?? hasFilters;
 
   const activeCountLabel = activeCount > 9 ? "9+" : String(activeCount);
 
@@ -124,7 +130,7 @@ export function PlaceFiltersSheet({
                 type="button"
                 variant="outline"
                 className="flex-1"
-                disabled={!hasFilters}
+                disabled={!canClearFilters}
                 onClick={onClearAll}
               >
                 Clear all
@@ -135,6 +141,16 @@ export function PlaceFiltersSheet({
                 </Button>
               </SheetClose>
             </div>
+            {resetLocationHref && (
+              <Button
+                type="button"
+                variant="ghost"
+                className="mt-2 w-full"
+                asChild
+              >
+                <Link href={resetLocationHref}>Reset location</Link>
+              </Button>
+            )}
           </div>
         </div>
       </SheetContent>
