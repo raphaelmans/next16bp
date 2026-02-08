@@ -161,7 +161,6 @@ function OwnerCourtAvailabilityInner() {
     view,
     setViewParam,
     isWeekView,
-    isMobile,
     selectedDayStart,
     selectedDate,
     selectedDayLabel,
@@ -1002,6 +1001,12 @@ function OwnerCourtAvailabilityInner() {
     [setCommittedRange, setMobileDrawerOpen],
   );
 
+  React.useEffect(() => {
+    if (is2xlUp) {
+      setMobileDrawerOpen(false);
+    }
+  }, [is2xlUp, setMobileDrawerOpen]);
+
   const selectedTimeLabel = React.useMemo(() => {
     if (!committedRange) return "";
     const s = buildDateFromDayKey(
@@ -1421,7 +1426,7 @@ function OwnerCourtAvailabilityInner() {
             >
               <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
                 {/* Left sidebar — calendar + create block panel */}
-                <div className="hidden lg:block space-y-6">
+                <div className="hidden 2xl:block space-y-6">
                   <Card>
                     <CardContent className="space-y-3 p-6">
                       <div className="flex items-center justify-between">
@@ -1745,9 +1750,9 @@ function OwnerCourtAvailabilityInner() {
               exit={{ opacity: 0, scale: 1.02 }}
               transition={viewTransition}
             >
-              <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
+              <div className="grid gap-6 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
                 {/* Left sidebar — calendar + create block panel */}
-                <div className="hidden lg:block space-y-6">
+                <div className="hidden 2xl:block space-y-6">
                   <Card>
                     <CardContent className="space-y-3 p-6">
                       <div className="flex items-center justify-between">
@@ -1898,7 +1903,7 @@ function OwnerCourtAvailabilityInner() {
                 <Card>
                   <CardContent className="space-y-4 p-6 pr-8 pb-6 lg:pr-6 lg:pb-6">
                     {/* Mobile header */}
-                    <div className="space-y-3 lg:hidden">
+                    <div className="space-y-3 2xl:hidden">
                       <div className="flex flex-wrap items-center gap-3">
                         <div className="flex items-center gap-2 min-w-0">
                           <Button
@@ -1978,7 +1983,7 @@ function OwnerCourtAvailabilityInner() {
                     </div>
 
                     {/* Desktop header */}
-                    <div className="hidden lg:flex flex-wrap items-center justify-between gap-3">
+                    <div className="hidden 2xl:flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <h2 className="text-lg font-heading font-semibold">
                           Day Timeline
@@ -2216,23 +2221,25 @@ function OwnerCourtAvailabilityInner() {
           placeTimeZone={placeTimeZone}
         />
 
-        <MobileCreateBlockDrawer
-          handleMobileSubmit={handleSelectionSubmit}
-          isCreatingBlock={isCreatingBlock}
-          mobileSelectedTimeLabel={selectedTimeLabel}
-          placeTimeZone={placeTimeZone}
-          organizationId={organization?.id ?? ""}
-          onDrawerClose={handleMobileDrawerClose}
-        />
+        {!is2xlUp ? (
+          <MobileCreateBlockDrawer
+            handleMobileSubmit={handleSelectionSubmit}
+            isCreatingBlock={isCreatingBlock}
+            mobileSelectedTimeLabel={selectedTimeLabel}
+            placeTimeZone={placeTimeZone}
+            organizationId={organization?.id ?? ""}
+            onDrawerClose={handleMobileDrawerClose}
+          />
+        ) : null}
 
-        {isMobile && (
+        {!is2xlUp && (
           <MobileSelectionPeekBar
             selectedTimeLabel={selectedTimeLabel}
             onOpen={() => setMobileDrawerOpen(true)}
           />
         )}
 
-        {!isMobile && (
+        {is2xlUp && (
           <ManageBlockDialog
             block={manageBlock.selectedBlock}
             timeZone={placeTimeZone}
@@ -2241,7 +2248,7 @@ function OwnerCourtAvailabilityInner() {
           />
         )}
 
-        {isMobile && (
+        {!is2xlUp && (
           <MobileManageBlockPeekBar
             block={manageBlock.selectedBlock}
             timeZone={placeTimeZone}

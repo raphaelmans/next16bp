@@ -5,6 +5,7 @@ import { addDays, addMinutes, differenceInMinutes } from "date-fns";
 import debounce from "debounce";
 import {
   CalendarIcon,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   MousePointerClick,
@@ -180,7 +181,6 @@ function OwnerAvailabilityStudioInner() {
     view,
     setViewParam,
     isWeekView,
-    isMobile,
     selectedDayStart,
     selectedDate,
     selectedDayLabel,
@@ -1385,6 +1385,12 @@ function OwnerAvailabilityStudioInner() {
     [setCommittedRange, setMobileDrawerOpen],
   );
 
+  React.useEffect(() => {
+    if (is2xlUp) {
+      setMobileDrawerOpen(false);
+    }
+  }, [is2xlUp, setMobileDrawerOpen]);
+
   // The effective dayKey for committed range display
   const committedDayKey = isWeekView ? (weekCommittedDayKey ?? dayKey) : dayKey;
 
@@ -1777,7 +1783,7 @@ function OwnerAvailabilityStudioInner() {
         <div className="space-y-6">
           <Skeleton className="h-8 w-60" />
           <Skeleton className="h-16 w-full" />
-          <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
+          <div className="grid gap-6 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
             <Skeleton className="h-[520px]" />
             <Skeleton className="h-[520px]" />
             <Skeleton className="h-[520px]" />
@@ -2002,7 +2008,7 @@ function OwnerAvailabilityStudioInner() {
               transition={viewTransition}
             >
               <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
-                <div className="hidden lg:block space-y-6">
+                <div className="hidden 2xl:block space-y-6">
                   <Card>
                     <CardContent className="space-y-3 p-6">
                       <div className="flex items-center justify-between">
@@ -2364,8 +2370,8 @@ function OwnerAvailabilityStudioInner() {
               exit={{ opacity: 0, scale: 1.02 }}
               transition={viewTransition}
             >
-              <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
-                <div className="hidden lg:block space-y-6">
+              <div className="grid gap-6 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
+                <div className="hidden 2xl:block space-y-6">
                   <Card>
                     <CardContent className="space-y-3 p-6">
                       <div className="flex items-center justify-between">
@@ -2551,17 +2557,26 @@ function OwnerAvailabilityStudioInner() {
 
                 <Card>
                   <CardContent className="space-y-4 p-6 pr-8 pb-6 lg:pr-6 lg:pb-6">
-                    <div className="space-y-3 lg:hidden">
+                    <div className="space-y-3 2xl:hidden">
                       <div className="flex items-center gap-2">
                         <Button
                           type="button"
                           variant="outline"
                           size="sm"
-                          className="flex-1 justify-start"
+                          className="min-w-0 flex-1 justify-start gap-1.5"
+                          aria-haspopup="dialog"
+                          aria-expanded={mobileCalendarOpen}
                           onClick={() => setMobileCalendarOpen(true)}
                         >
                           <CalendarIcon className="h-3.5 w-3.5" />
-                          {weekLabel}
+                          <span className="truncate">{weekLabel}</span>
+                          <ChevronDown
+                            aria-hidden="true"
+                            className={cn(
+                              "ml-auto h-3.5 w-3.5 shrink-0 transition-transform",
+                              mobileCalendarOpen && "rotate-180",
+                            )}
+                          />
                         </Button>
                         <Button
                           type="button"
@@ -2603,7 +2618,7 @@ function OwnerAvailabilityStudioInner() {
                       />
                     </div>
 
-                    <div className="hidden lg:flex flex-wrap items-center justify-between gap-3">
+                    <div className="hidden 2xl:flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <h2 className="text-lg font-heading font-semibold">
                           Day Timeline
@@ -2880,23 +2895,25 @@ function OwnerAvailabilityStudioInner() {
           submitLabel={isWalkInReplace ? "Convert to guest" : "Replace block"}
         />
 
-        {isMobile && (
+        {!is2xlUp && (
           <MobileSelectionPeekBar
             selectedTimeLabel={selectedTimeLabel}
             onOpen={() => setMobileDrawerOpen(true)}
           />
         )}
 
-        <MobileCreateBlockDrawer
-          handleMobileSubmit={handleSelectionSubmit}
-          isCreatingBlock={isCreatingBlock}
-          mobileSelectedTimeLabel={selectedTimeLabel}
-          placeTimeZone={placeTimeZone}
-          organizationId={organization?.id ?? ""}
-          onDrawerClose={handleMobileDrawerClose}
-        />
+        {!is2xlUp ? (
+          <MobileCreateBlockDrawer
+            handleMobileSubmit={handleSelectionSubmit}
+            isCreatingBlock={isCreatingBlock}
+            mobileSelectedTimeLabel={selectedTimeLabel}
+            placeTimeZone={placeTimeZone}
+            organizationId={organization?.id ?? ""}
+            onDrawerClose={handleMobileDrawerClose}
+          />
+        ) : null}
 
-        {!isMobile && (
+        {is2xlUp && (
           <ManageBlockDialog
             block={manageBlock.selectedBlock}
             timeZone={placeTimeZone}
@@ -2914,7 +2931,7 @@ function OwnerAvailabilityStudioInner() {
           />
         )}
 
-        {isMobile && (
+        {!is2xlUp && (
           <MobileManageBlockPeekBar
             block={manageBlock.selectedBlock}
             timeZone={placeTimeZone}

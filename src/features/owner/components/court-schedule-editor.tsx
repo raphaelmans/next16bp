@@ -211,7 +211,7 @@ export function CourtScheduleEditor({
                     ) : (
                       <div className="pt-3">
                         {/* Mobile card layout */}
-                        <div className="md:hidden space-y-3">
+                        <div className="xl:hidden space-y-3">
                           {dayRows.map((row) => {
                             const hasInvalidTime = validation.invalidRows.has(
                               row.id,
@@ -449,7 +449,7 @@ export function CourtScheduleEditor({
                         </div>
 
                         {/* Desktop table layout */}
-                        <Table className="hidden md:table">
+                        <Table className="hidden xl:table">
                           <TableHeader>
                             <TableRow>
                               <TableHead>Start</TableHead>
