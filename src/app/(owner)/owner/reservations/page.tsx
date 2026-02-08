@@ -420,12 +420,12 @@ export default function OwnerReservationsPage() {
       },
       {
         onSuccess: () => {
-          toast.success("Reservation confirmed as paid offline");
+          toast.success("Reservation marked as paid and confirmed");
           setPaidOfflineDialogOpen(false);
           setSelectedReservation(null);
         },
         onError: () => {
-          toast.error("Failed to confirm offline payment");
+          toast.error("Failed to mark reservation as paid and confirmed");
         },
       },
     );
@@ -789,26 +789,26 @@ export default function OwnerReservationsPage() {
         courtName={selectedReservation?.courtName}
       />
 
-      {/* Paid Offline Dialog */}
+      {/* Paid & Confirmed Dialog */}
       <Dialog
         open={paidOfflineDialogOpen}
         onOpenChange={setPaidOfflineDialogOpen}
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirm paid offline</DialogTitle>
+            <DialogTitle>Mark as Paid & Confirmed</DialogTitle>
             <DialogDescription>
-              Confirm that {selectedReservation?.playerName} has paid offline
-              for {selectedReservation?.courtName}. This will skip the payment
-              flow and mark the reservation as confirmed.
+              Confirm that {selectedReservation?.playerName} is paid and
+              confirmed for {selectedReservation?.courtName}. This skips the
+              regular payment flow.
             </DialogDescription>
           </DialogHeader>
           {activePaymentMethods.length === 0 ? (
             <div className="space-y-4">
               <div className="rounded-lg border border-dashed bg-muted/30 p-4 text-center">
                 <p className="text-sm text-muted-foreground mb-3">
-                  You need at least one active payment method to confirm offline
-                  payments.
+                  You need at least one active payment method to mark
+                  reservations as paid and confirmed.
                 </p>
                 <Button asChild>
                   <a
@@ -863,7 +863,7 @@ export default function OwnerReservationsPage() {
                   type="submit"
                   disabled={confirmPaidOfflineMutation.isPending}
                 >
-                  Confirm payment
+                  Mark Paid & Confirmed
                 </Button>
               </DialogFooter>
             </StandardFormProvider>

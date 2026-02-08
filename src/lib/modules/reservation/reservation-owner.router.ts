@@ -129,7 +129,7 @@ export const reservationOwnerRouter = router({
     }),
 
   /**
-   * Confirm a reservation as paid offline (CREATED -> CONFIRMED, owner only)
+   * Confirm a reservation as paid and confirmed (CREATED -> CONFIRMED, owner only)
    */
   confirmPaidOffline: protectedProcedure
     .input(ConfirmPaidOfflineSchema)

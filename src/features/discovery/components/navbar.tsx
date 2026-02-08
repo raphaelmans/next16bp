@@ -12,7 +12,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { parseAsString, useQueryState } from "nuqs";
+import { useEffect, useState } from "react";
 import { appRoutes } from "@/common/app-routes";
 import { trackEvent } from "@/common/clients/telemetry-client";
 import { URLQueryBuilder } from "@/common/url-query-builder";
@@ -32,8 +33,13 @@ interface NavbarProps {
 
 export function Navbar({ className }: NavbarProps) {
   const router = useRouter();
+  const [queryParam] = useQueryState("q", parseAsString);
   const [isOpen, setIsOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(queryParam ?? "");
+
+  useEffect(() => {
+    setSearchQuery(queryParam ?? "");
+  }, [queryParam]);
 
   const { data: sessionUser } = useSession();
   const { mutate: logout } = useLogout();

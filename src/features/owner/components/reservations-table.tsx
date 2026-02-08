@@ -233,7 +233,7 @@ export function ReservationsTable({
                       onClick={() => onConfirmPaidOffline?.(reservation.id)}
                       disabled={isLoading}
                     >
-                      Paid offline
+                      Paid & Confirmed
                     </Button>
                   )}
                   <Button
@@ -384,7 +384,7 @@ export function ReservationsTable({
                               }}
                               disabled={isLoading}
                             >
-                              Paid offline
+                              Paid & Confirmed
                             </Button>
                           )}
                           <Button

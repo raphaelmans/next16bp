@@ -625,7 +625,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
             reservationId: data.reservationId,
             referenceNumber: data.paymentReference,
             paymentMethodId: data.paymentMethodId,
-            notes: "Paid offline",
+            notes: "Paid & Confirmed",
             fileUrl: null,
           },
           ctx,
@@ -639,7 +639,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
           toStatus: "CONFIRMED",
           triggeredByUserId: userId,
           triggeredByRole: "OWNER",
-          notes: `Owner confirmed - paid offline (ref: ${data.paymentReference})`,
+          notes: `Owner marked as paid and confirmed (ref: ${data.paymentReference})`,
         },
         ctx,
       );
@@ -651,7 +651,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
           ownerId: userId,
           paymentReference: data.paymentReference,
         },
-        "Reservation confirmed as paid offline by owner",
+        "Reservation marked as paid and confirmed by owner",
       );
 
       await this.notificationDeliveryService.enqueuePlayerReservationConfirmed(
