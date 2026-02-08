@@ -62,6 +62,12 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return {
+      afterFiles: [
+        {
+          source: "/get-started",
+          destination: "/owners/get-started",
+        },
+      ],
       fallback: [
         {
           source: "/:orgSlug([a-z0-9-]{1,100})",
