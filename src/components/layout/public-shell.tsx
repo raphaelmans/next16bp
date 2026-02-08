@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Footer } from "@/features/discovery/components/footer";
 import { Navbar } from "@/features/discovery/components/navbar";
 import { cn } from "@/lib/utils";
@@ -16,7 +17,9 @@ export function PublicShell({ children, className }: PublicShellProps) {
       >
         Skip to content
       </a>
-      <Navbar />
+      <Suspense fallback={null}>
+        <Navbar />
+      </Suspense>
       <main id="main-content" className={cn("flex-1 w-full pt-24", className)}>
         {children}
       </main>

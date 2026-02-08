@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useMemo } from "react";
+import { appRoutes } from "@/common/app-routes";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
 import {
   findCityBySlug,
@@ -104,6 +105,20 @@ function CourtsPageContent({
   initialLocationLabel,
 }: CourtsPageContentProps) {
   const filters = useDiscoveryFilters();
+  const hasLocationDefaults = Boolean(
+    initialFilters?.province || initialFilters?.city,
+  );
+  const hasClearableFilters = Boolean(
+    filters.q ||
+      filters.province ||
+      filters.city ||
+      filters.sportId ||
+      filters.verification ||
+      (filters.amenities && filters.amenities.length > 0),
+  );
+  const resetLocationHref = hasLocationDefaults
+    ? appRoutes.courts.base
+    : undefined;
   const effectiveProvince =
     filters.province ?? initialFilters?.province ?? undefined;
   const effectiveCity = filters.city ?? initialFilters?.city ?? undefined;
@@ -200,6 +215,8 @@ function CourtsPageContent({
               city={effectiveCity ?? undefined}
               sportId={filters.sportId ?? undefined}
               verification={filters.verification ?? undefined}
+              hasClearableFilters={hasClearableFilters}
+              resetLocationHref={resetLocationHref}
               onAmenitiesChange={filters.setAmenities}
               onProvinceChange={filters.setProvince}
               onCityChange={filters.setCity}
@@ -218,6 +235,8 @@ function CourtsPageContent({
           city={effectiveCity ?? undefined}
           sportId={filters.sportId ?? undefined}
           verification={filters.verification ?? undefined}
+          hasClearableFilters={hasClearableFilters}
+          resetLocationHref={resetLocationHref}
           onAmenitiesChange={filters.setAmenities}
           onProvinceChange={filters.setProvince}
           onCityChange={filters.setCity}
@@ -305,7 +324,7 @@ function CourtsPageContent({
         ) : (
           <EmptyResults
             query={filters.q ?? undefined}
-            onClearFilters={filters.clearAll}
+            onClearFilters={hasClearableFilters ? filters.clearAll : undefined}
           />
         )}
       </div>

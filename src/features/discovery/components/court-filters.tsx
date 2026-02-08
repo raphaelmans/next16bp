@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, ChevronsUpDown, X } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useAmenitiesQuery } from "@/common/clients/amenities-client";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
@@ -44,6 +45,8 @@ interface PlaceFiltersProps {
   verification?: "verified_reservable" | "curated" | "unverified_reservable";
   layout?: "desktop" | "sheet";
   showClearButton?: boolean;
+  hasClearableFilters?: boolean;
+  resetLocationHref?: string;
   onAmenitiesChange: (amenities: string[] | undefined) => void;
   onProvinceChange: (province: string | undefined) => void;
   onCityChange: (city: string | undefined) => void;
@@ -67,6 +70,8 @@ export function PlaceFilters({
   verification,
   layout = "desktop",
   showClearButton = true,
+  hasClearableFilters,
+  resetLocationHref,
   onAmenitiesChange,
   onProvinceChange,
   onCityChange,
@@ -82,6 +87,7 @@ export function PlaceFilters({
     city ||
     sportId ||
     verification;
+  const canClearFilters = hasClearableFilters ?? Boolean(hasFilters);
   const { data: sports = [], isLoading: sportsLoading } =
     trpc.sport.list.useQuery({});
   const amenitiesQuery = useAmenitiesQuery();
@@ -495,10 +501,16 @@ export function PlaceFilters({
         </ToggleGroupItem>
       </ToggleGroup>
 
-      {showClearButton && hasFilters && (
+      {showClearButton && canClearFilters && (
         <Button variant="ghost" className="w-full" onClick={onClearAll}>
           <X className="h-4 w-4 mr-2" />
           Clear filters
+        </Button>
+      )}
+
+      {resetLocationHref && (
+        <Button variant="outline" className="w-full" asChild>
+          <Link href={resetLocationHref}>Reset location</Link>
         </Button>
       )}
     </div>
