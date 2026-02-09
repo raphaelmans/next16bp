@@ -159,14 +159,19 @@ export const useCourtScheduleEditor = ({
           Math.max(a.startMinute, b.startMinute) <
           Math.min(a.endMinute, b.endMinute);
 
-        const buildIntervalMap = (predicate: (row: BlockRow) => boolean) => {
+        const buildIntervalMap = (
+          rowsByDay: Record<number, BlockRow[]>,
+          predicate: (row: BlockRow) => boolean,
+          excludeRowId?: string,
+        ) => {
           const map = new Map<number, BlockIntervals[]>();
           DAY_KEYS.forEach((day) => {
             map.set(day, []);
           });
 
-          Object.values(prev).forEach((rows) => {
+          Object.values(rowsByDay).forEach((rows) => {
             rows.forEach((row) => {
+              if (excludeRowId && row.id === excludeRowId) return;
               if (!predicate(row)) return;
               buildIntervals(row).forEach((interval) => {
                 map.get(interval.dayOfWeek)?.push(interval);
@@ -176,28 +181,21 @@ export const useCourtScheduleEditor = ({
 
           return map;
         };
-
-        const hoursIntervalsByDay = buildIntervalMap((row) => row.isOpen);
-        const pricingIntervalsByDay = buildIntervalMap(
-          (row) => row.hourlyRate !== "",
-        );
-
         const next: Record<number, BlockRow[]> = {
-          0: [],
-          1: [],
-          2: [],
-          3: [],
-          4: [],
-          5: [],
-          6: [],
+          0: [...(prev[0] ?? [])],
+          1: [...(prev[1] ?? [])],
+          2: [...(prev[2] ?? [])],
+          3: [...(prev[3] ?? [])],
+          4: [...(prev[4] ?? [])],
+          5: [...(prev[5] ?? [])],
+          6: [...(prev[6] ?? [])],
         };
 
         let applied = 0;
         let skipped = 0;
 
         DAY_KEYS.forEach((currentDay) => {
-          const existingRows = prev[currentDay] ?? [];
-          next[currentDay] = [...existingRows];
+          const existingRows = next[currentDay] ?? [];
 
           if (currentDay === sourceDay) return;
 
@@ -215,12 +213,39 @@ export const useCourtScheduleEditor = ({
             return;
           }
 
-          const candidate: BlockRow = {
-            ...sourceRow,
-            id: createRowId(),
-            dayOfWeek: currentDay,
-            allowPricing: true,
-          };
+          const matchingRow = existingRows.find(
+            (row) =>
+              row.startTime === sourceRow.startTime &&
+              row.endTime === sourceRow.endTime,
+          );
+
+          const candidate: BlockRow = matchingRow
+            ? {
+                ...matchingRow,
+                startTime: sourceRow.startTime,
+                endTime: sourceRow.endTime,
+                isOpen: sourceRow.isOpen,
+                hourlyRate: sourceRow.hourlyRate,
+                currency: sourceRow.currency,
+                allowPricing: true,
+              }
+            : {
+                ...sourceRow,
+                id: createRowId(),
+                dayOfWeek: currentDay,
+                allowPricing: true,
+              };
+
+          const hoursIntervalsByDay = buildIntervalMap(
+            next,
+            (row) => row.isOpen,
+            matchingRow?.id,
+          );
+          const pricingIntervalsByDay = buildIntervalMap(
+            next,
+            (row) => row.hourlyRate !== "",
+            matchingRow?.id,
+          );
           const candidateIntervals = buildIntervals(candidate);
           const hasHoursOverlap =
             candidate.isOpen &&
@@ -242,19 +267,14 @@ export const useCourtScheduleEditor = ({
             return;
           }
 
-          next[currentDay].push(candidate);
+          if (matchingRow) {
+            next[currentDay] = existingRows.map((row) =>
+              row.id === matchingRow.id ? candidate : row,
+            );
+          } else {
+            next[currentDay].push(candidate);
+          }
           applied += 1;
-
-          if (candidate.isOpen) {
-            candidateIntervals.forEach((interval) => {
-              hoursIntervalsByDay.get(interval.dayOfWeek)?.push(interval);
-            });
-          }
-          if (candidate.hourlyRate !== "") {
-            candidateIntervals.forEach((interval) => {
-              pricingIntervalsByDay.get(interval.dayOfWeek)?.push(interval);
-            });
-          }
         });
 
         if (applied === 0) {
