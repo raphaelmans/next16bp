@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, RefreshCw, Search } from "lucide-react";
+import { ChevronDown, RefreshCw } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Channel } from "stream-chat";
 import { useMediaQuery } from "@/common/hooks/use-media-query";
@@ -11,7 +11,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StreamChatThread } from "@/features/chat/components/chat-thread/stream-chat-thread";
@@ -71,7 +70,6 @@ export function SupportInboxWidget() {
   const [open, setOpen] = useState(false);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [activeChannelId, setActiveChannelId] = useState<string | null>(null);
-  const [query, setQuery] = useState("");
   const [isLoadingChannels, setIsLoadingChannels] = useState(false);
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
@@ -167,16 +165,6 @@ export function SupportInboxWidget() {
     [channels],
   );
 
-  const filteredChannels = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return supportChannels;
-    return supportChannels.filter((c) => {
-      const id = (c.id ?? "").toLowerCase();
-      const last = (c.state.latestMessages?.[0]?.text ?? "").toLowerCase();
-      return id.includes(q) || last.includes(q);
-    });
-  }, [query, supportChannels]);
-
   // simple archive: no formal state; just hide older channels with no recent message
   const now = new Date();
   const isArchived = useMemo(() => {
@@ -190,12 +178,12 @@ export function SupportInboxWidget() {
   }, [now]);
 
   const activeChannels = useMemo(
-    () => filteredChannels.filter((c) => !isArchived(c)),
-    [filteredChannels, isArchived],
+    () => supportChannels.filter((c) => !isArchived(c)),
+    [isArchived, supportChannels],
   );
   const archivedChannels = useMemo(
-    () => filteredChannels.filter((c) => isArchived(c)),
-    [filteredChannels, isArchived],
+    () => supportChannels.filter((c) => isArchived(c)),
+    [isArchived, supportChannels],
   );
 
   useEffect(() => {
@@ -281,17 +269,7 @@ export function SupportInboxWidget() {
       )}
     >
       <div className="border-b px-4 py-3">
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by id or message…"
-              className="pl-9"
-            />
-          </div>
-
+        <div className="flex justify-end">
           <Button
             type="button"
             variant="ghost"

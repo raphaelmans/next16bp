@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, RefreshCw, Search } from "lucide-react";
+import { ChevronDown, RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Channel } from "stream-chat";
 import { formatInTimeZone, formatTimeRangeInTimeZone } from "@/common/format";
@@ -12,7 +12,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -85,7 +84,6 @@ export interface ReservationInboxWidgetConfig {
   ui: {
     sheetTitle: string;
     sheetDescription: string;
-    searchPlaceholder: string;
   };
   labels: {
     listPrimary: (
@@ -179,7 +177,6 @@ export function ReservationInboxWidget({
   const [activeReservationId, setActiveReservationId] = useState<string | null>(
     null,
   );
-  const [query, setQuery] = useState("");
   const [isLoadingChannels, setIsLoadingChannels] = useState(false);
   const [channelsError, setChannelsError] = useState<unknown>(null);
   const [hasLoadedChannelsOnce, setHasLoadedChannelsOnce] = useState(false);
@@ -538,26 +535,8 @@ export function ReservationInboxWidget({
       (!hasLoadedChannelsOnce && !channelsError) ||
       (reservationIds.length > 0 && !hasLoadedMetasOnce));
 
-  const filteredReservationIds = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) {
-      return reservationIds;
-    }
-
-    return reservationIds.filter((reservationId) => {
-      const meta = metasByReservationId.get(reservationId) ?? null;
-      if (!meta) {
-        return reservationId.toLowerCase().includes(q);
-      }
-      return (
-        meta.placeName.toLowerCase().includes(q) ||
-        meta.courtLabel.toLowerCase().includes(q)
-      );
-    });
-  }, [metasByReservationId, query, reservationIds]);
-
   const sortedReservationIds = useMemo(() => {
-    return [...filteredReservationIds].sort((a, b) => {
+    return [...reservationIds].sort((a, b) => {
       const aMeta = metasByReservationId.get(a) ?? null;
       const bMeta = metasByReservationId.get(b) ?? null;
 
@@ -590,8 +569,8 @@ export function ReservationInboxWidget({
     });
   }, [
     channelActivityMsByReservationId,
-    filteredReservationIds,
     metasByReservationId,
+    reservationIds,
     unreadByReservationId,
   ]);
 
@@ -756,17 +735,7 @@ export function ReservationInboxWidget({
       )}
     >
       <div className="border-b px-4 py-3">
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={config.ui.searchPlaceholder}
-              className="pl-9"
-            />
-          </div>
-
+        <div className="flex justify-end">
           <Button
             type="button"
             variant="ghost"

@@ -14,7 +14,6 @@ export function PlayerChatWidget() {
         ui: {
           sheetTitle: "Messages",
           sheetDescription: "Reservation conversations",
-          searchPlaceholder: "Search by venue or court…",
         },
         labels: {
           listPrimary: (meta) => (meta ? meta.placeName : null),

@@ -21,7 +21,6 @@ export function OwnerChatWidget() {
         ui: {
           sheetTitle: "Inbox",
           sheetDescription: "Reservation messages across your venues",
-          searchPlaceholder: "Search by player, venue, or court…",
         },
         labels: {
           listPrimary: (meta) => (meta ? meta.playerDisplayName : null),
