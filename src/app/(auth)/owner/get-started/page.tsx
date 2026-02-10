@@ -60,7 +60,11 @@ export default function OwnerGetStartedPage() {
   const hasVenue = setupStatus?.hasVenue ?? false;
   const hasVerification = setupStatus?.hasVerification ?? false;
   const hasActiveCourt = setupStatus?.hasActiveCourt ?? false;
+  const hasReadyCourt = setupStatus?.hasReadyCourt ?? false;
+  const hasCourtSchedule = setupStatus?.hasCourtSchedule ?? false;
+  const hasCourtPricing = setupStatus?.hasCourtPricing ?? false;
   const primaryCourtId = setupStatus?.primaryCourtId ?? undefined;
+  const readyCourtId = setupStatus?.readyCourtId ?? undefined;
   const isSetupComplete = setupStatus?.isSetupComplete ?? false;
 
   useEffect(() => {
@@ -137,8 +141,8 @@ export default function OwnerGetStartedPage() {
               )}
               Verify
             </Badge>
-            <Badge variant={hasActiveCourt ? "default" : "secondary"}>
-              {hasActiveCourt ? (
+            <Badge variant={hasReadyCourt ? "default" : "secondary"}>
+              {hasReadyCourt ? (
                 <Check className="mr-1 h-3 w-3" />
               ) : (
                 <span className="mr-1">4.</span>
@@ -198,8 +202,11 @@ export default function OwnerGetStartedPage() {
               <ConfigureVenueCourtsCard
                 hasVenue={hasVenue}
                 hasActiveCourt={hasActiveCourt}
+                hasReadyCourt={hasReadyCourt}
+                hasCourtSchedule={hasCourtSchedule}
+                hasCourtPricing={hasCourtPricing}
                 placeId={primaryPlaceId}
-                courtId={primaryCourtId}
+                courtId={readyCourtId ?? primaryCourtId}
                 onConfigureClick={handleConfigureCourts}
               />
 
@@ -679,17 +686,23 @@ function VerifyVenueCard({
 function ConfigureVenueCourtsCard({
   hasVenue,
   hasActiveCourt,
+  hasReadyCourt,
+  hasCourtSchedule,
+  hasCourtPricing,
   placeId,
   courtId,
   onConfigureClick,
 }: {
   hasVenue: boolean;
   hasActiveCourt: boolean;
+  hasReadyCourt: boolean;
+  hasCourtSchedule: boolean;
+  hasCourtPricing: boolean;
   placeId?: string;
   courtId?: string;
   onConfigureClick: () => void;
 }) {
-  if (hasActiveCourt) {
+  if (hasReadyCourt) {
     return (
       <Card className="border-primary/20 bg-primary/5">
         <CardContent className="p-6">
@@ -711,7 +724,10 @@ function ConfigureVenueCourtsCard({
                 {placeId ? (
                   <>
                     <Button variant="outline" asChild>
-                      <Link href={appRoutes.owner.places.courts.base(placeId)}>
+                      <Link
+                        href={appRoutes.owner.places.courts.base(placeId)}
+                        prefetch={false}
+                      >
                         Manage courts
                       </Link>
                     </Button>
@@ -722,8 +738,69 @@ function ConfigureVenueCourtsCard({
                             placeId,
                             courtId,
                           )}
+                          prefetch={false}
                         >
                           Manage availability
+                        </Link>
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <Button variant="outline" disabled>
+                    Manage courts
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (hasActiveCourt) {
+    const missingItems = [
+      !hasCourtSchedule ? "schedule hours" : null,
+      !hasCourtPricing ? "pricing rules" : null,
+    ].filter(Boolean);
+
+    return (
+      <Card className="border-warning/20 bg-warning/10">
+        <CardContent className="p-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-warning/15 text-warning">
+              <ClipboardList className="h-6 w-6" />
+            </div>
+            <div className="flex-1 space-y-1">
+              <div className="flex items-center gap-2">
+                <p className="font-heading font-semibold">
+                  Courts need updates
+                </p>
+                <Badge variant="outline" className="text-xs text-warning">
+                  Action needed
+                </Badge>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Add {missingItems.join(" and ")} to at least one active court to
+                enable bookings.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-2">
+                {placeId ? (
+                  <>
+                    <Button variant="outline" asChild>
+                      <Link href={appRoutes.owner.places.courts.base(placeId)}>
+                        Manage courts
+                      </Link>
+                    </Button>
+                    {courtId && (
+                      <Button variant="outline" asChild>
+                        <Link
+                          href={appRoutes.owner.places.courts.schedule(
+                            placeId,
+                            courtId,
+                          )}
+                        >
+                          Edit schedule & pricing
                         </Link>
                       </Button>
                     )}

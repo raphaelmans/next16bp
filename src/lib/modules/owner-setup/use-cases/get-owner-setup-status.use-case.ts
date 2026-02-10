@@ -1,5 +1,7 @@
 import type { IClaimRequestRepository } from "@/lib/modules/claim-request/repositories/claim-request.repository";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
+import type { ICourtHoursRepository } from "@/lib/modules/court-hours/repositories/court-hours.repository";
+import type { ICourtRateRuleRepository } from "@/lib/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import type { OwnerSetupStatus, OwnerSetupVerificationStatus } from "../dtos";
@@ -32,6 +34,8 @@ export class GetOwnerSetupStatusUseCase {
     private placeRepository: IPlaceRepository,
     private claimRequestRepository: IClaimRequestRepository,
     private courtRepository: ICourtRepository,
+    private courtHoursRepository: ICourtHoursRepository,
+    private courtRateRuleRepository: ICourtRateRuleRepository,
   ) {}
 
   async execute(userId: string): Promise<OwnerSetupStatus> {
@@ -56,7 +60,11 @@ export class GetOwnerSetupStatusUseCase {
         verificationStatus: null,
         hasVerification: false,
         hasActiveCourt: false,
+        hasReadyCourt: false,
+        hasCourtSchedule: false,
+        hasCourtPricing: false,
         primaryCourtId: null,
+        readyCourtId: null,
         isSetupComplete: false,
         nextStep: "create_organization",
       };
@@ -78,11 +86,37 @@ export class GetOwnerSetupStatusUseCase {
     const courts = primaryPlace
       ? await this.courtRepository.findByPlaceId(primaryPlace.id)
       : [];
-    const activeCourt = courts.find((court) => court.isActive);
+    const activeCourts = courts.filter((court) => court.isActive);
+    const activeCourt = activeCourts[0] ?? null;
+    const activeCourtIds = activeCourts.map((court) => court.id);
+
+    const [courtHoursWindows, courtRateRules] = await Promise.all([
+      this.courtHoursRepository.findByCourtIds(activeCourtIds),
+      this.courtRateRuleRepository.findByCourtIds(activeCourtIds),
+    ]);
+
+    const courtsWithHours = new Set(
+      courtHoursWindows.map((window) => window.courtId),
+    );
+    const courtsWithPricing = new Set(
+      courtRateRules.map((rule) => rule.courtId),
+    );
+
     const hasActiveCourt = Boolean(activeCourt);
+    const hasCourtSchedule = activeCourts.some((court) =>
+      courtsWithHours.has(court.id),
+    );
+    const hasCourtPricing = activeCourts.some((court) =>
+      courtsWithPricing.has(court.id),
+    );
+    const readyCourt = activeCourts.find(
+      (court) =>
+        courtsWithHours.has(court.id) && courtsWithPricing.has(court.id),
+    );
+    const hasReadyCourt = Boolean(readyCourt);
 
     const isSetupComplete =
-      hasOrganization && hasVenue && isVerificationConfirmed && hasActiveCourt;
+      hasOrganization && hasVenue && isVerificationConfirmed && hasReadyCourt;
 
     const nextStep = !hasOrganization
       ? "create_organization"
@@ -92,7 +126,7 @@ export class GetOwnerSetupStatusUseCase {
           ? "claim_pending"
           : !hasVerification
             ? "verify_venue"
-            : !hasActiveCourt
+            : !hasReadyCourt
               ? "configure_courts"
               : !isVerificationConfirmed
                 ? "verify_venue"
@@ -109,7 +143,11 @@ export class GetOwnerSetupStatusUseCase {
       verificationStatus,
       hasVerification,
       hasActiveCourt,
+      hasReadyCourt,
+      hasCourtSchedule,
+      hasCourtPricing,
       primaryCourtId: activeCourt?.id ?? null,
+      readyCourtId: readyCourt?.id ?? null,
       isSetupComplete,
       nextStep,
     };
