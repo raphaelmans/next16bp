@@ -4,9 +4,9 @@ import { env } from "@/lib/env";
 
 const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL(appRoutes.ownersGetStarted.base, appUrl);
-const title = "Get your venue bookable on KudosCourts";
+const title = "Free reservation system for venues";
 const description =
-  "Create an owner account, add or claim your venue, and submit verification to unlock online reservations on KudosCourts.";
+  "Create an owner account, list or claim your venue, submit verification, and start accepting online reservations. Free for venues in the Philippines.";
 
 export const metadata: Metadata = {
   title,

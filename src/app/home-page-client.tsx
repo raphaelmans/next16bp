@@ -64,7 +64,7 @@ const OWNER_BENEFITS = [
     icon: Eye,
     title: "Get Found",
     description:
-      "Thousands of players search for courts every week. Make sure they find yours.",
+      "Players are already searching for courts in your city. Make sure they find yours.",
     iconBg: "bg-primary/10 text-primary",
   },
   {
@@ -76,8 +76,9 @@ const OWNER_BENEFITS = [
   },
   {
     icon: Gift,
-    title: "Free to List",
-    description: "No fees, no commission. List your venue for free. Forever.",
+    title: "Free Reservation System",
+    description:
+      "No subscription fees. No commissions. Venues keep their existing payment methods.",
     iconBg: "bg-success/10 text-success",
   },
 ];
@@ -251,7 +252,7 @@ export default function HomePageClient({
             <div className="animate-fade-in-up">
               <div className="inline-flex items-center gap-2 font-mono text-[11px] font-medium text-primary bg-primary/5 border border-primary/12 px-3.5 py-1.5 rounded-full mb-6 uppercase tracking-[0.05em]">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                Live availability across the Philippines
+                Live availability across the Philippines · Free for venues
               </div>
 
               <h1 className="font-heading text-4xl sm:text-[56px] font-black leading-[1.06] tracking-[-0.04em] mb-5">
@@ -281,7 +282,7 @@ export default function HomePageClient({
                   href={appRoutes.listYourVenue.base}
                   className="text-accent font-semibold font-heading hover:underline"
                 >
-                  List your venue — free forever &rarr;
+                  List your venue — free for venues &rarr;
                 </Link>
               </p>
             </div>

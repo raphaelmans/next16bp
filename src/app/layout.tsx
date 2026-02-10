@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     template: "%s | KudosCourts",
   },
   description:
-    "Find pickleball and other sports courts in the Philippines and book your next game in seconds. The unified platform for players and court owners.",
+    "Find pickleball and other sports courts in the Philippines and book your next game in seconds. Free reservation system for venues.",
   keywords: [
     "pickleball",
     "pickleball courts Philippines",
@@ -80,6 +80,8 @@ export const metadata: Metadata = {
     "badminton court booking Philippines",
     "court booking",
     "court reservation",
+    "free reservation system",
+    "court booking system",
     "sports booking Philippines",
     "court discovery",
     "sports court booking Philippines",
@@ -101,13 +103,13 @@ export const metadata: Metadata = {
     siteName: "KudosCourts",
     title: "KudosCourts - Discover. Reserve. Play.",
     description:
-      "Find pickleball and other sports courts in the Philippines and book your next game in seconds. The unified platform for players and court owners.",
+      "Find pickleball and other sports courts in the Philippines and book your next game in seconds. Free reservation system for venues.",
   },
   twitter: {
     card: "summary_large_image",
     title: "KudosCourts - Discover. Reserve. Play.",
     description:
-      "Find pickleball and other sports courts in the Philippines and book your next game in seconds.",
+      "Find pickleball and other sports courts in the Philippines and book your next game in seconds. Free reservation system for venues.",
     creator: "@kudoscourts",
     site: "@kudoscourts",
   },

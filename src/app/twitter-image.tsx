@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 
 // Twitter/X Image metadata - 1200x630 for summary_large_image card
-export const alt = "KudosCourts - Discover. Reserve. Play.";
+export const alt =
+  "KudosCourts - Court discovery + free reservation system for venues.";
 export const size = {
   width: 1200,
   height: 630,
@@ -68,8 +69,8 @@ export default function TwitterImage() {
             lineHeight: 1.5,
           }}
         >
-          Find pickleball and other sports courts near you and book in seconds.
-          The unified platform for players.
+          Find sports courts in the Philippines and reserve time faster. Free
+          reservation system for venues.
         </div>
 
         {/* CTA hint */}
@@ -84,7 +85,7 @@ export default function TwitterImage() {
             color: "white",
           }}
         >
-          Join the Waitlist
+          List your venue — Free
         </div>
       </div>
 

@@ -114,7 +114,6 @@ export const appRoutes = {
     bookings: "/owner/bookings",
     getStarted: "/owner/get-started",
     onboarding: "/owner/onboarding",
-    pricing: "/owner/pricing",
     verify: "/owner/verify",
     verification: {
       base: "/owner/verify",

@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "List your venue on KudosCourts";
+export const alt =
+  "List your venue on KudosCourts - Free reservation system for venues";
 export const size = {
   width: 1200,
   height: 630,
@@ -78,7 +79,7 @@ export default function OpenGraphImage() {
           marginBottom: "24px",
         }}
       >
-        Get verified and start accepting bookings
+        Get verified and start accepting reservations — for free
       </div>
       <div
         style={{
@@ -86,7 +87,8 @@ export default function OpenGraphImage() {
           color: "rgba(255,255,255,0.85)",
         }}
       >
-        Create your organization, add a venue, and go live on KudosCourts
+        Create your organization, add or claim a venue, and go live—free for
+        venues
       </div>
 
       <div

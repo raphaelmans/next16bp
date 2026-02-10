@@ -9,7 +9,7 @@ const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL("/", appUrl);
 const title = "Find Pickleball & Sports Courts in the Philippines";
 const description =
-  "Discover pickleball, basketball, badminton, and tennis courts across the Philippines. Check availability and book your next game on KudosCourts.";
+  "Discover pickleball, basketball, badminton, and tennis courts across the Philippines. Check availability, book your next game, and list your venue with a free reservation system.";
 
 export const metadata: Metadata = {
   title,

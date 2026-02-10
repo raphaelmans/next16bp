@@ -46,7 +46,7 @@ const HIGHLIGHTS = [
   },
   {
     title: "Player support",
-    description: "Ask about reservations, availability, or pricing.",
+    description: "Ask about reservations, availability, or rates.",
     icon: MessageSquareText,
   },
   {

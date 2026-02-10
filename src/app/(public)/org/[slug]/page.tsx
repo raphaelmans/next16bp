@@ -302,7 +302,7 @@ export default async function OrgSlugPage({ params }: Props) {
                   Our Venues
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Browse venues, check sports and pricing, then book a schedule.
+                  Browse venues, check sports and rates, then book a schedule.
                 </p>
               </div>
               {hasVenues && (

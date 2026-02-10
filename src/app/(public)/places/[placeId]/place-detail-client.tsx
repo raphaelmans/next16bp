@@ -1837,7 +1837,7 @@ export default function PlaceDetailPage() {
                     </div>
                   ) : (
                     <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-                      Select a time to see pricing and continue.
+                      Select a time to see the price and continue.
                     </div>
                   )}
 

@@ -16,7 +16,6 @@ const FOOTER_LINKS = {
   owners: [
     { name: "List Your Venue", href: appRoutes.ownersGetStarted.base },
     { name: "Owner Dashboard", href: appRoutes.owner.base },
-    { name: "Pricing", href: appRoutes.owner.pricing },
   ],
   company: [
     { name: "About Us", href: appRoutes.about.base },
@@ -43,7 +42,7 @@ export function Footer() {
                 <KudosLogo size={40} variant="full" />
               </Link>
               <p className="mt-4 text-sm text-muted-foreground">
-                The unified platform for court discovery and venue booking.
+                Court discovery for players. Free reservation system for venues.
               </p>
               <Button asChild variant="outline" size="sm" className="mt-5">
                 <Link href={appRoutes.contactUs.base}>Contact us</Link>

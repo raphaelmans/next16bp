@@ -71,6 +71,18 @@ const FAQS = [
       "After you submit documents, our team reviews your request and emails you when it is approved or if updates are needed.",
   },
   {
+    id: "is-free",
+    question: "Is KudosCourts free for venues?",
+    answer:
+      "Yes. Core listing and reservation tools are free for venues. We aim to sustain the platform through advertising/sponsored placements—not subscriptions.",
+  },
+  {
+    id: "payments",
+    question: "Do you handle payments?",
+    answer:
+      "No payment processing. Venues keep their existing payment methods and players pay venues directly. KudosCourts focuses on availability, reservations, and communication.",
+  },
+  {
     id: "what-docs",
     question: "What documents should I prepare?",
     answer:
@@ -129,16 +141,17 @@ export default function OwnersGetStartedPage() {
                   For venue owners
                 </span>
                 <span>-</span>
-                <span>Free to list</span>
+                <span>Free reservation system</span>
               </div>
 
               <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-                Get your venue bookable on KudosCourts
+                Get your venue bookable — for free
               </h1>
 
               <p className="text-base text-muted-foreground sm:text-lg">
                 Create an owner account, add or claim your venue, and submit
-                verification. You control when bookings go live.
+                verification. Once verified, enable online reservations when
+                you’re ready.
               </p>
 
               <div className="flex flex-col gap-3 sm:flex-row">
@@ -304,7 +317,7 @@ export default function OwnersGetStartedPage() {
                 Already see your venue listed?
               </CardTitle>
               <CardDescription>
-                Claim ownership to manage courts, pricing, and enable
+                Claim ownership to manage courts, rates, and enable
                 reservations.
               </CardDescription>
             </CardHeader>
