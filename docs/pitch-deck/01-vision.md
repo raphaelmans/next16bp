@@ -1,7 +1,7 @@
 # Vision
 
-KudosCourts is a player-first, location-based sports venue discovery and reservation platform.
+KudosCourts is a court discovery platform for players and a free reservation system for sports venues in the Philippines.
 
-- For players: find the right place, see real availability, and request a booking in minutes.
-- For owners: publish hours, pricing, and slots - then manage bookings with lightweight ops tools.
-- For the platform: stay neutral (no in-app payments, no in-app messaging) while still enabling trust and accountability.
+- For players: find the right place, see real availability, and reserve time with less back-and-forth.
+- For venues: list for free, set hours and rates, and manage reservations with lightweight ops tools.
+- For the platform: no payment processing; verified owners + chat to coordinate clearly.

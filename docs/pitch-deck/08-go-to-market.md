@@ -14,9 +14,10 @@ Conversion loop
 
 Verification offer (early supply)
 
-- Verified venues are prioritized (ranking + onboarding support).
-- We act as a third party to validate ownership (phone + social links; docs as needed) to prevent fake owners.
-- First 100 verifications: reservation engine free for the first 6 months.
+Verification (trust)
+
+- We act as a third party to validate ownership (phone + official socials; docs as needed) to prevent fake owners.
+- Verified venues can enable online reservations when ready.
 - If a venue does not want to be listed, we remove it immediately on request.
 
 Channels (examples)

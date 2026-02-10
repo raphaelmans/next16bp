@@ -66,10 +66,10 @@ Design system styling (KudosCourts):
 
 5.8-8.0s
 
-- Visual: "Reservations: ON" + "6 months free" stamp.
-- Styling cue: "Reservations: ON" in teal; "6 months free" callout in orange (accent), not a second teal button.
-- On-screen text: "First 100: 6 months free" / "DM: VERIFY"
-- VO: "First 100 verified: six months free. DM 'VERIFY'."
+- Visual: "Reservations: ON" + "Free for venues" stamp.
+- Styling cue: "Reservations: ON" in teal; "Free for venues" callout in orange (accent), not a second teal button.
+- On-screen text: "Free for venues" / "DM: VERIFY"
+- VO: "Free for venues. DM 'VERIFY'."
 
 Footer (small text, optional): "Opt-out anytime."
 
@@ -81,4 +81,4 @@ Footer (small text, optional): "Opt-out anytime."
 
 ## Caption (for IG Reels / TikTok)
 
-"We curate court listings so players can discover venues. Want to turn your venue bookable? Claim + verify (phone + official socials) and enable reservations. First 100 verified venues: 6 months free. DM 'VERIFY' or comment VERIFY."
+"We curate court listings so players can discover venues. Want to turn your venue bookable? Claim + verify (phone + official socials) and enable reservations. Free for venues. DM 'VERIFY' or comment VERIFY."

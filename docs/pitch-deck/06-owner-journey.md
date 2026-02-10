@@ -6,7 +6,7 @@ From setup to daily ops
 2. Add a place (venue) and one or more courts.
 3. Configure:
    - Day-specific hours (including overnight)
-   - Hourly pricing rules
+   - Hourly rate rules
 4. Publish 60-minute slots (inventory).
 5. Manage reservations:
    - Inbox-first workflow
