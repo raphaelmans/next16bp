@@ -439,7 +439,13 @@ export default function CourtSetupWizardPage() {
                   organizationId={organization?.id ?? null}
                   timeZone={placeData.place.timeZone}
                   primaryActionLabel="Save & Continue"
-                  onSaved={() => goToStep("publish")}
+                  onSaved={() => {
+                    if (isFromSetup) {
+                      router.push(appRoutes.owner.getStarted);
+                      return;
+                    }
+                    goToStep("publish");
+                  }}
                 />
                 <div className="flex justify-between">
                   <Button variant="outline" onClick={() => goToStep("details")}>

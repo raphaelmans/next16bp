@@ -35,6 +35,7 @@ import type { OwnerCourt } from "../hooks";
 interface CourtsTableProps {
   courts: OwnerCourt[];
   onDeactivate?: (courtId: string) => void;
+  fromSetup?: boolean;
 }
 
 const statusBadgeVariant: Record<
@@ -45,7 +46,11 @@ const statusBadgeVariant: Record<
   inactive: "destructive",
 };
 
-export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
+export function CourtsTable({
+  courts,
+  onDeactivate,
+  fromSetup = false,
+}: CourtsTableProps) {
   const router = useRouter();
 
   const formatSlots = (court: OwnerCourt) => {
@@ -125,6 +130,7 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                   <CourtActionsDropdown
                     court={court}
                     onDeactivate={onDeactivate}
+                    fromSetup={fromSetup}
                     onContainerClick={(event) => event.stopPropagation()}
                   />
                 </TableCell>
@@ -173,6 +179,7 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
                       <CourtActionsDropdown
                         court={court}
                         onDeactivate={onDeactivate}
+                        fromSetup={fromSetup}
                         onContainerClick={(e) => e.stopPropagation()}
                       />
                     </div>
@@ -201,14 +208,25 @@ export function CourtsTable({ courts, onDeactivate }: CourtsTableProps) {
 interface CourtActionsDropdownProps {
   court: OwnerCourt;
   onDeactivate?: (courtId: string) => void;
+  fromSetup?: boolean;
   onContainerClick?: (e: React.MouseEvent) => void;
 }
 
 function CourtActionsDropdown({
   court,
   onDeactivate,
+  fromSetup = false,
   onContainerClick,
 }: CourtActionsDropdownProps) {
+  const scheduleHrefBase = appRoutes.owner.places.courts.setup(
+    court.placeId,
+    court.id,
+    "schedule",
+  );
+  const scheduleHref = fromSetup
+    ? `${scheduleHrefBase}&from=setup`
+    : scheduleHrefBase;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -234,13 +252,7 @@ function CourtActionsDropdown({
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
-          <Link
-            href={appRoutes.owner.places.courts.setup(
-              court.placeId,
-              court.id,
-              "schedule",
-            )}
-          >
+          <Link href={scheduleHref}>
             <Clock className="mr-2 h-4 w-4" />
             Schedule & Pricing
           </Link>

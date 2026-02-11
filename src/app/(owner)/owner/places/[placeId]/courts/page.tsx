@@ -2,7 +2,7 @@
 
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
 import { AppShell } from "@/components/layout";
@@ -24,7 +24,9 @@ import {
 
 export default function OwnerPlaceCourtsPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const placeId = params.placeId as string;
+  const isFromSetup = searchParams.get("from") === "setup";
 
   const { data: user } = useSession();
   const logoutMutation = useLogout();
@@ -54,6 +56,10 @@ export default function OwnerPlaceCourtsPage() {
       },
     );
   };
+
+  const addCourtHref = isFromSetup
+    ? `${appRoutes.owner.places.courts.setupCreate(placeId)}?from=setup`
+    : appRoutes.owner.places.courts.setupCreate(placeId);
 
   if (orgLoading || placeLoading) {
     return (
@@ -127,7 +133,7 @@ export default function OwnerPlaceCourtsPage() {
             </p>
           </div>
           <Button asChild>
-            <Link href={appRoutes.owner.places.courts.setupCreate(placeId)}>
+            <Link href={addCourtHref}>
               <Plus className="mr-2 h-4 w-4" />
               Add Court
             </Link>
@@ -141,7 +147,11 @@ export default function OwnerPlaceCourtsPage() {
             <Skeleton className="h-16 w-full" />
           </div>
         ) : courts.length > 0 ? (
-          <CourtsTable courts={courts} onDeactivate={handleDeactivate} />
+          <CourtsTable
+            courts={courts}
+            onDeactivate={handleDeactivate}
+            fromSetup={isFromSetup}
+          />
         ) : (
           <CourtsEmptyState />
         )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
 import { AppShell } from "@/components/layout";
 import { PageHeader } from "@/components/ui/page-header";
@@ -16,9 +16,11 @@ import { trpc } from "@/trpc/client";
 
 export default function CourtSchedulePage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const placeId = params.placeId as string;
   const courtId = params.courtId as string;
   const router = useRouter();
+  const isFromSetup = searchParams.get("from") === "setup";
 
   const { data: user } = useSession();
   const logoutMutation = useLogout();
@@ -103,6 +105,11 @@ export default function CourtSchedulePage() {
           organizationId={organization?.id ?? null}
           timeZone={placeData.place.timeZone}
           primaryActionLabel="Save schedule"
+          onSaved={() => {
+            if (isFromSetup) {
+              router.push(appRoutes.owner.getStarted);
+            }
+          }}
         />
       </div>
     </AppShell>

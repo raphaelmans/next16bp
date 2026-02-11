@@ -725,7 +725,7 @@ function ConfigureVenueCourtsCard({
                   <>
                     <Button variant="outline" asChild>
                       <Link
-                        href={appRoutes.owner.places.courts.base(placeId)}
+                        href={`${appRoutes.owner.places.courts.base(placeId)}?from=setup`}
                         prefetch={false}
                       >
                         Manage courts
@@ -734,10 +734,7 @@ function ConfigureVenueCourtsCard({
                     {courtId && (
                       <Button variant="outline" asChild>
                         <Link
-                          href={appRoutes.owner.places.courts.availability(
-                            placeId,
-                            courtId,
-                          )}
+                          href={`${appRoutes.owner.places.courts.availability(placeId, courtId)}?from=setup`}
                           prefetch={false}
                         >
                           Manage availability

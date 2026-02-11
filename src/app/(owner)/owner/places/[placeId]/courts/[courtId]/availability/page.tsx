@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -135,9 +135,11 @@ export default function OwnerCourtAvailabilityPage() {
 
 function OwnerCourtAvailabilityInner() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const placeId = params.placeId as string;
   const courtId = params.courtId as string;
   const router = useRouter();
+  const isFromSetup = searchParams.get("from") === "setup";
 
   const { data: user } = useSession();
   const logoutMutation = useLogout();
@@ -1231,7 +1233,13 @@ function OwnerCourtAvailabilityInner() {
     );
   };
 
-  const scheduleHref = appRoutes.owner.places.courts.schedule(placeId, courtId);
+  const scheduleHrefBase = appRoutes.owner.places.courts.schedule(
+    placeId,
+    courtId,
+  );
+  const scheduleHref = isFromSetup
+    ? `${scheduleHrefBase}?from=setup`
+    : scheduleHrefBase;
   const reservationsHref = `${appRoutes.owner.reservations}?placeId=${placeId}&courtId=${courtId}`;
 
   if (orgLoading || courtLoading || placeLoading) {
