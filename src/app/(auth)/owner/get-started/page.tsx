@@ -34,6 +34,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
 import { useOwnerSetupStatus } from "@/features/owner/hooks";
@@ -942,14 +943,14 @@ function ClaimSearchDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="max-h-[85dvh] overflow-hidden sm:max-w-2xl lg:max-w-3xl">
         <DialogHeader>
           <DialogTitle>Find your venue</DialogTitle>
           <DialogDescription>
             Search for your venue to claim ownership.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="flex min-h-0 flex-col gap-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -961,7 +962,7 @@ function ClaimSearchDialog({
           </div>
 
           {searchQuery.length >= 2 && (
-            <div className="max-h-64 overflow-y-auto space-y-2 pb-2">
+            <ScrollArea className="h-[min(50dvh,24rem)] w-full rounded-md border">
               {searching ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -972,33 +973,37 @@ function ClaimSearchDialog({
                   venue instead.
                 </p>
               ) : (
-                unclaimedResults.map((item) => (
-                  <div
-                    key={item.place.id}
-                    className="flex items-center justify-between gap-4 rounded-lg border p-3"
-                  >
-                    <div className="min-w-0">
-                      <p className="font-medium truncate">{item.place.name}</p>
-                      <p className="text-sm text-muted-foreground truncate">
-                        {item.place.city}, {item.place.province}
-                      </p>
-                    </div>
-                    <Button
-                      size="sm"
-                      className="shrink-0"
-                      onClick={() => handleSubmitClaim(item.place.id)}
-                      disabled={submitClaimMutation.isPending}
+                <div className="space-y-2 p-2">
+                  {unclaimedResults.map((item) => (
+                    <div
+                      key={item.place.id}
+                      className="flex items-start justify-between gap-3 rounded-lg border p-3"
                     >
-                      {submitClaimMutation.isPending ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        "Claim"
-                      )}
-                    </Button>
-                  </div>
-                ))
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium break-words">
+                          {item.place.name}
+                        </p>
+                        <p className="text-sm text-muted-foreground break-words">
+                          {item.place.city}, {item.place.province}
+                        </p>
+                      </div>
+                      <Button
+                        size="sm"
+                        className="shrink-0"
+                        onClick={() => handleSubmitClaim(item.place.id)}
+                        disabled={submitClaimMutation.isPending}
+                      >
+                        {submitClaimMutation.isPending ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          "Claim"
+                        )}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               )}
-            </div>
+            </ScrollArea>
           )}
 
           {searchQuery.length < 2 && (
