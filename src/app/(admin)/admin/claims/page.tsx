@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDistanceToNow } from "date-fns";
-import { MapPin, Search, Tag, Trash2 } from "lucide-react";
+import { MapPin, RefreshCw, Search, Tag, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
@@ -44,6 +44,7 @@ import {
   useClaims,
 } from "@/features/admin/hooks";
 import { useLogout, useSession } from "@/features/auth";
+import { cn } from "@/lib/utils";
 
 export default function AdminClaimsPage() {
   const router = useRouter();
@@ -59,7 +60,12 @@ export default function AdminClaimsPage() {
 
   const { data: stats } = useAdminSidebarStats();
   const { data: counts } = useClaimCounts();
-  const { data: claimsData, isLoading } = useClaims({
+  const {
+    data: claimsData,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useClaims({
     type: typeFilter,
     status: activeTab === "all" ? undefined : activeTab,
     search: search || undefined,
@@ -105,13 +111,26 @@ export default function AdminClaimsPage() {
     >
       <div className="space-y-6">
         {/* Page header */}
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight font-heading">
-            Claim Requests
-          </h1>
-          <p className="text-muted-foreground">
-            Review and manage court ownership claims
-          </p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight font-heading">
+              Claim Requests
+            </h1>
+            <p className="text-muted-foreground">
+              Review and manage court ownership claims
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void refetch()}
+            disabled={isFetching}
+          >
+            <RefreshCw
+              className={cn("mr-2 h-4 w-4", isFetching && "animate-spin")}
+            />
+            {isFetching ? "Refreshing" : "Refresh"}
+          </Button>
         </div>
 
         {/* Filters */}

@@ -24,13 +24,17 @@ export function useStreamChannel({
   members,
   messageLimit = 30,
 }: UseStreamChannelInput) {
+  const connectedUserId = client
+    ? ((client as unknown as { userID?: string }).userID ?? null)
+    : null;
+
   const channel = useMemo(() => {
-    if (!client || !channelId) {
+    if (!client || !channelId || !connectedUserId) {
       return null;
     }
 
     return client.channel(channelType, channelId, members ? { members } : {});
-  }, [client, channelType, channelId, members]);
+  }, [client, channelType, channelId, members, connectedUserId]);
 
   const channelRef = useRef<Channel | null>(null);
   channelRef.current = channel;

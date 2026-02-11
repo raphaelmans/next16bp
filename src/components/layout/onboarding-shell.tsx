@@ -8,7 +8,13 @@ import { KudosLogo } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
 import { useLogout } from "@/features/auth/hooks";
 
-export function OnboardingShell({ children }: { children: React.ReactNode }) {
+export function OnboardingShell({
+  children,
+  dashboardHref,
+}: {
+  children: React.ReactNode;
+  dashboardHref?: string;
+}) {
   const router = useRouter();
   const { mutate: logout } = useLogout();
 
@@ -34,6 +40,11 @@ export function OnboardingShell({ children }: { children: React.ReactNode }) {
                 Player View
               </a>
             </Button>
+            {dashboardHref ? (
+              <Button variant="ghost" size="sm" asChild>
+                <Link href={dashboardHref}>Go to dashboard</Link>
+              </Button>
+            ) : null}
             <Button
               variant="ghost"
               size="sm"

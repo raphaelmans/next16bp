@@ -23,5 +23,9 @@ export default async function OwnerOnboardingLayout({
 
   await requireSession(pathname);
 
-  return <OnboardingShell>{children}</OnboardingShell>;
+  return (
+    <OnboardingShell dashboardHref={appRoutes.owner.base}>
+      {children}
+    </OnboardingShell>
+  );
 }

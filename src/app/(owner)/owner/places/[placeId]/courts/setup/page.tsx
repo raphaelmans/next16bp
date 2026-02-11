@@ -108,6 +108,8 @@ export default function CourtSetupWizardPage() {
 
   const courtId = courtIdParam ?? "";
   const currentStep = courtIdParam ? normalizeStep(step) : "details";
+  const isDetailsStep = currentStep === "details";
+  const isPublishStep = currentStep === "publish";
   const stepIndex = Math.max(
     steps.findIndex((current) => current.key === currentStep),
     0,
@@ -131,11 +133,20 @@ export default function CourtSetupWizardPage() {
       { enabled: !!courtIdParam },
     );
 
-  const { data: sports = [], isLoading: sportsLoading } =
-    trpc.sport.list.useQuery({});
-  const { data: hours = [], isLoading: hoursLoading } = useCourtHours(courtId);
+  const shouldLoadSports = !courtIdParam || isDetailsStep;
+  const shouldLoadPublishPrereqs = !!courtIdParam && isPublishStep;
+
+  const { data: sports = [] } = trpc.sport.list.useQuery(
+    {},
+    { enabled: shouldLoadSports },
+  );
+  const { data: hours = [], isLoading: hoursLoading } = useCourtHours(courtId, {
+    enabled: shouldLoadPublishPrereqs,
+  });
   const { data: pricingRules = [], isLoading: pricingLoading } =
-    useCourtRateRules(courtId);
+    useCourtRateRules(courtId, {
+      enabled: shouldLoadPublishPrereqs,
+    });
 
   const [detailsDraft, setDetailsDraft] = React.useState<
     Partial<CourtFormData>
@@ -294,10 +305,7 @@ export default function CourtSetupWizardPage() {
   };
 
   const isLoading =
-    orgLoading ||
-    placeLoading ||
-    sportsLoading ||
-    (courtIdParam ? courtLoading : false);
+    orgLoading || placeLoading || (courtIdParam ? courtLoading : false);
 
   if (isLoading) {
     return (

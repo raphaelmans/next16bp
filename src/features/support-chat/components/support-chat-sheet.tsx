@@ -91,7 +91,7 @@ export function SupportChatSheet({
             <div className="text-sm text-destructive">{error.message}</div>
           ) : (
             <StreamChatThread
-              client={client}
+              client={isReady ? client : null}
               channelType={session?.channel.channelType}
               channelId={session?.channel.channelId ?? null}
               members={session?.channel.memberIds ?? null}

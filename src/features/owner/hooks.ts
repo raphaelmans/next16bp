@@ -102,8 +102,17 @@ export function useCourtDraft() {
 // From use-court-hours.ts
 // ============================================================================
 
-export function useCourtHours(courtId: string) {
-  return trpc.courtHours.get.useQuery({ courtId }, { enabled: !!courtId });
+export function useCourtHours(
+  courtId: string,
+  options?: {
+    enabled?: boolean;
+  },
+) {
+  const isEnabled = options?.enabled ?? true;
+  return trpc.courtHours.get.useQuery(
+    { courtId },
+    { enabled: !!courtId && isEnabled },
+  );
 }
 
 export function useSaveCourtHours(courtId: string) {
@@ -164,8 +173,17 @@ export function useReorderCourtPhotos(_courtId: string) {
 // From use-court-rate-rules.ts
 // ============================================================================
 
-export function useCourtRateRules(courtId: string) {
-  return trpc.courtRateRule.get.useQuery({ courtId }, { enabled: !!courtId });
+export function useCourtRateRules(
+  courtId: string,
+  options?: {
+    enabled?: boolean;
+  },
+) {
+  const isEnabled = options?.enabled ?? true;
+  return trpc.courtRateRule.get.useQuery(
+    { courtId },
+    { enabled: !!courtId && isEnabled },
+  );
 }
 
 export function useSaveCourtRateRules(courtId: string) {
