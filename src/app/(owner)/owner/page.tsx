@@ -45,7 +45,7 @@ export default function OwnerDashboardPage() {
   const logoutMutation = useLogout();
 
   const showSetupCta =
-    !setupLoading && setupStatus ? !setupStatus.isSetupComplete : false;
+    !setupLoading && setupStatus ? !setupStatus.hasAnyConfiguredVenue : false;
   const nextStepLabel = setupStatus
     ? setupStatus.nextStep === "verify_venue" &&
       setupStatus.verificationStatus === "PENDING"

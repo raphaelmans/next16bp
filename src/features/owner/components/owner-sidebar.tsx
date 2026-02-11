@@ -111,7 +111,8 @@ export function OwnerSidebar({
   const showVenuesLoading = quickLinksLoading || !hasOrganization;
   const reservationsBadgeCount = reservationCounts.pending;
   const shouldShowGetStarted =
-    !setupStatusLoading && (setupStatus ? !setupStatus.isSetupComplete : false);
+    !setupStatusLoading &&
+    (setupStatus ? !setupStatus.hasAnyConfiguredVenue : false);
 
   const isActive = (href: string) => {
     if (href === appRoutes.owner.base) {

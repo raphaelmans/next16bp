@@ -17,6 +17,7 @@ export type OwnerSetupStatus = {
   organization: { id: string; name: string } | null;
   hasPendingClaim: boolean;
   hasVenue: boolean;
+  hasAnyConfiguredVenue: boolean;
   primaryPlace: { id: string; name: string } | null;
   verificationStatus: OwnerSetupVerificationStatus | null;
   hasVerification: boolean;

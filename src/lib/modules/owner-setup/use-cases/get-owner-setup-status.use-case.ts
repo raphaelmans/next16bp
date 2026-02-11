@@ -56,6 +56,7 @@ export class GetOwnerSetupStatusUseCase {
         organization: null,
         hasPendingClaim,
         hasVenue: false,
+        hasAnyConfiguredVenue: false,
         primaryPlace: null,
         verificationStatus: null,
         hasVerification: false,
@@ -75,6 +76,61 @@ export class GetOwnerSetupStatusUseCase {
         organization.id,
       );
     const hasVenue = places.length > 0;
+
+    const placeCourtEntries: Array<
+      [string, Awaited<ReturnType<ICourtRepository["findByPlaceId"]>>]
+    > = await Promise.all(
+      places.map(async (place) => {
+        const placeCourts = await this.courtRepository.findByPlaceId(place.id);
+        return [place.id, placeCourts] as [
+          string,
+          Awaited<ReturnType<ICourtRepository["findByPlaceId"]>>,
+        ];
+      }),
+    );
+
+    const courtsByPlace = new Map(placeCourtEntries);
+
+    const activeCourtIdsByPlace = new Map<string, string[]>();
+    const allActiveCourtIds: string[] = [];
+
+    for (const place of places) {
+      const activeCourtIds = (courtsByPlace.get(place.id) ?? [])
+        .filter((court) => court.isActive)
+        .map((court) => court.id);
+
+      activeCourtIdsByPlace.set(place.id, activeCourtIds);
+      allActiveCourtIds.push(...activeCourtIds);
+    }
+
+    const [courtHoursWindows, courtRateRules] = await Promise.all([
+      this.courtHoursRepository.findByCourtIds(allActiveCourtIds),
+      this.courtRateRuleRepository.findByCourtIds(allActiveCourtIds),
+    ]);
+
+    const courtsWithHours = new Set(
+      courtHoursWindows.map((window) => window.courtId),
+    );
+    const courtsWithPricing = new Set(
+      courtRateRules.map((rule) => rule.courtId),
+    );
+
+    const hasAnyConfiguredVenue = places.some((place) => {
+      const placeVerificationStatus = toVerificationStatus(
+        place.verification?.status ?? null,
+      );
+
+      if (placeVerificationStatus !== "VERIFIED") {
+        return false;
+      }
+
+      const activeCourtIds = activeCourtIdsByPlace.get(place.id) ?? [];
+      return activeCourtIds.some(
+        (courtId) =>
+          courtsWithHours.has(courtId) && courtsWithPricing.has(courtId),
+      );
+    });
+
     const primaryPlace = pickPrimaryPlace(places);
     const verificationStatus = primaryPlace
       ? toVerificationStatus(primaryPlace.verification?.status ?? null)
@@ -84,23 +140,10 @@ export class GetOwnerSetupStatusUseCase {
     const isVerificationConfirmed = verificationStatus === "VERIFIED";
 
     const courts = primaryPlace
-      ? await this.courtRepository.findByPlaceId(primaryPlace.id)
+      ? (courtsByPlace.get(primaryPlace.id) ?? [])
       : [];
     const activeCourts = courts.filter((court) => court.isActive);
     const activeCourt = activeCourts[0] ?? null;
-    const activeCourtIds = activeCourts.map((court) => court.id);
-
-    const [courtHoursWindows, courtRateRules] = await Promise.all([
-      this.courtHoursRepository.findByCourtIds(activeCourtIds),
-      this.courtRateRuleRepository.findByCourtIds(activeCourtIds),
-    ]);
-
-    const courtsWithHours = new Set(
-      courtHoursWindows.map((window) => window.courtId),
-    );
-    const courtsWithPricing = new Set(
-      courtRateRules.map((rule) => rule.courtId),
-    );
 
     const hasActiveCourt = Boolean(activeCourt);
     const hasCourtSchedule = activeCourts.some((court) =>
@@ -137,6 +180,7 @@ export class GetOwnerSetupStatusUseCase {
       organization: { id: organization.id, name: organization.name },
       hasPendingClaim,
       hasVenue,
+      hasAnyConfiguredVenue,
       primaryPlace: primaryPlace
         ? { id: primaryPlace.id, name: primaryPlace.name }
         : null,
