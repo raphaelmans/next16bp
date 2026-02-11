@@ -49,7 +49,7 @@ export const claimAdminRouter = router({
   /**
    * Approve a claim request
    * Admin only + rate limited
-   * Transforms curated court to reservable court
+   * Applies approved ownership transition for the request type
    */
   approve: adminRateLimitedProcedure("mutation")
     .input(ApproveClaimRequestSchema)

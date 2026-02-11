@@ -60,7 +60,7 @@ export function ClaimReviewActions({
   const isRemoval = claimType === "removal";
 
   const approveDescription = isRemoval
-    ? "The court will be deactivated or returned to curated status. The organization will lose ownership."
+    ? "The venue will be returned to CURATED and UNCLAIMED. The organization will lose ownership."
     : "The court will become RESERVABLE and the organization will gain full ownership.";
 
   const rejectDescription = isRemoval
@@ -167,9 +167,8 @@ export function ClaimReviewActions({
               {decision === "approve" ? (
                 isRemoval ? (
                   <>
-                    This will deactivate <strong>{courtName}</strong> and remove{" "}
-                    <strong>{organizationName}</strong>&apos;s ownership. All
-                    pending reservations will be cancelled.
+                    This will return <strong>{courtName}</strong> to curated and
+                    remove <strong>{organizationName}</strong>&apos;s ownership.
                   </>
                 ) : (
                   <>

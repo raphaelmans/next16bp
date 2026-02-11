@@ -29,6 +29,7 @@ import {
 import {
   useAdminCourt,
   useAdminSidebarStats,
+  useRecuratePlace,
   useRemoveAdminCourtPhoto,
   useTransferPlaceToOrganization,
   useUpdateCuratedCourt,
@@ -63,17 +64,20 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   const uploadPhotoMutation = useUploadAdminCourtPhoto(courtId);
   const removePhotoMutation = useRemoveAdminCourtPhoto(courtId);
   const transferMutation = useTransferPlaceToOrganization();
+  const recurateMutation = useRecuratePlace();
 
   const [pendingPhotoId, setPendingPhotoId] = React.useState<string | null>(
     null,
   );
   const [isTransferOpen, setIsTransferOpen] = React.useState(false);
+  const [isRecurateOpen, setIsRecurateOpen] = React.useState(false);
   const [isOrgPopoverOpen, setIsOrgPopoverOpen] = React.useState(false);
   const [orgSearch, setOrgSearch] = React.useState("");
   const [selectedOrganization, setSelectedOrganization] = React.useState<
     OrganizationSearchItem | undefined
   >(undefined);
   const [autoVerifyAndEnable, setAutoVerifyAndEnable] = React.useState(true);
+  const [recurateReason, setRecurateReason] = React.useState("");
   const [featuredRankInput, setFeaturedRankInput] = React.useState("0");
   const [isSavingFeaturedRank, setIsSavingFeaturedRank] = React.useState(false);
 
@@ -254,6 +258,12 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
     setSelectedOrganization(undefined);
     setAutoVerifyAndEnable(true);
   }, [isTransferOpen]);
+
+  React.useEffect(() => {
+    if (!isRecurateOpen) {
+      setRecurateReason("");
+    }
+  }, [isRecurateOpen]);
 
   React.useEffect(() => {
     if (countryValue !== DEFAULT_COUNTRY) {
@@ -441,6 +451,29 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
     }
   };
 
+  const handleRecurate = async () => {
+    const reason = recurateReason.trim();
+    if (!reason) {
+      toast.error("Reason is required to return venue to curated");
+      return;
+    }
+
+    try {
+      await recurateMutation.mutateAsync({
+        placeId: courtId,
+        reason,
+      });
+      toast.success("Venue returned to curated", {
+        description: `${courtData?.place.name ?? "Venue"} is now unclaimed and curated.`,
+      });
+      setIsRecurateOpen(false);
+    } catch (error) {
+      toast.error("Failed to return venue to curated", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
+
   const handleSubmit = async (data: AdminCourtEditFormData) => {
     try {
       await updateMutation.mutateAsync({
@@ -538,6 +571,14 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
     selectedOrganizationId === currentOrganization?.id;
   const transferDisabled =
     !selectedOrganization || isSameOrganization || transferMutation.isPending;
+  const isAlreadyCuratedState =
+    courtData.place.placeType === "CURATED" &&
+    courtData.place.claimStatus === "UNCLAIMED" &&
+    !currentOrganization;
+  const recurateDisabled =
+    recurateMutation.isPending ||
+    isAlreadyCuratedState ||
+    recurateReason.trim().length === 0;
   const orgSearchLoading =
     orgSearchQuery.isLoading || orgSearchQuery.isFetching;
 
@@ -595,6 +636,13 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
           transferDisabled={transferDisabled}
           transferPending={transferMutation.isPending}
           onTransfer={handleTransfer}
+          isRecurateOpen={isRecurateOpen}
+          setIsRecurateOpen={setIsRecurateOpen}
+          recurateReason={recurateReason}
+          setRecurateReason={setRecurateReason}
+          recurateDisabled={recurateDisabled}
+          recuratePending={recurateMutation.isPending}
+          onRecurate={handleRecurate}
           onCopyOwnerLink={handleCopyOwnerLink}
           copyOwnerLinkDisabled={!currentOrganization}
         />

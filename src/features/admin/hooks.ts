@@ -243,6 +243,19 @@ export function useTransferPlaceToOrganization() {
   });
 }
 
+export function useRecuratePlace() {
+  const utils = trpc.useUtils();
+
+  return trpc.admin.court.recurate.useMutation({
+    onSuccess: async (_data, variables) => {
+      await Promise.all([
+        utils.admin.court.list.invalidate(),
+        utils.admin.court.getById.invalidate({ placeId: variables.placeId }),
+      ]);
+    },
+  });
+}
+
 export function useToggleCourtStatus() {
   const utils = trpc.useUtils();
   const activateMutation = trpc.admin.court.activate.useMutation({

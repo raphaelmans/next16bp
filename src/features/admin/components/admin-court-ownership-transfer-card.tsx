@@ -34,6 +34,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
 
 export type OrganizationSearchItem = {
   id: string;
@@ -62,6 +63,13 @@ type AdminCourtOwnershipTransferCardProps = {
   transferDisabled: boolean;
   transferPending: boolean;
   onTransfer: () => void;
+  isRecurateOpen: boolean;
+  setIsRecurateOpen: (open: boolean) => void;
+  recurateReason: string;
+  setRecurateReason: (value: string) => void;
+  recurateDisabled: boolean;
+  recuratePending: boolean;
+  onRecurate: () => void;
   onCopyOwnerLink: () => void;
   copyOwnerLinkDisabled: boolean;
 };
@@ -86,6 +94,13 @@ export function AdminCourtOwnershipTransferCard({
   transferDisabled,
   transferPending,
   onTransfer,
+  isRecurateOpen,
+  setIsRecurateOpen,
+  recurateReason,
+  setRecurateReason,
+  recurateDisabled,
+  recuratePending,
+  onRecurate,
   onCopyOwnerLink,
   copyOwnerLinkDisabled,
 }: AdminCourtOwnershipTransferCardProps) {
@@ -262,6 +277,57 @@ export function AdminCourtOwnershipTransferCard({
             </DialogContent>
           </Dialog>
 
+          <Dialog open={isRecurateOpen} onOpenChange={setIsRecurateOpen}>
+            <DialogTrigger asChild>
+              <Button type="button" variant="outline">
+                Return to curated
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-lg">
+              <DialogHeader>
+                <DialogTitle>Return venue to curated</DialogTitle>
+                <DialogDescription>
+                  This removes ownership and sets the venue back to CURATED and
+                  UNCLAIMED.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-2">
+                <Label htmlFor="recurate-reason">Reason</Label>
+                <Textarea
+                  id="recurate-reason"
+                  value={recurateReason}
+                  onChange={(event) => setRecurateReason(event.target.value)}
+                  placeholder="Explain why this venue is being returned to curated..."
+                  rows={4}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Reservations will be disabled until the venue is verified
+                  again.
+                </p>
+              </div>
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsRecurateOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={onRecurate}
+                  disabled={recurateDisabled}
+                >
+                  {recuratePending && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Return to curated
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
           <Button
             type="button"
             variant="outline"
@@ -274,7 +340,8 @@ export function AdminCourtOwnershipTransferCard({
         </div>
         <p className="text-xs text-muted-foreground">
           Transfers keep existing reservations and move all courts under this
-          venue.
+          venue. Returning to curated removes ownership and disables
+          reservations.
         </p>
       </CardContent>
     </Card>

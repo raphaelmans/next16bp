@@ -101,3 +101,11 @@ export class CourtNotReservableError extends ValidationError {
     super("Court is not reservable", { courtId });
   }
 }
+
+export class PlaceAlreadyCuratedError extends ConflictError {
+  readonly code = "PLACE_ALREADY_CURATED";
+
+  constructor(placeId: string) {
+    super("Venue is already curated", { placeId });
+  }
+}

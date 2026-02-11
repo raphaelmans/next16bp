@@ -12,6 +12,7 @@ import {
   CreateCuratedCourtBatchSchema,
   CreateCuratedCourtSchema,
   DeactivateCourtSchema,
+  RecuratePlaceSchema,
   RemoveCourtPhotoSchema,
   TransferPlaceSchema,
   UploadCourtPhotoSchema,
@@ -127,6 +128,17 @@ export const adminCourtRouter = router({
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
       return service.transferPlaceToOrganization(ctx.userId, input);
+    }),
+
+  /**
+   * Return a venue to curated state
+   * Admin only + rate limited
+   */
+  recurate: adminRateLimitedProcedure("mutation")
+    .input(RecuratePlaceSchema)
+    .mutation(async ({ input, ctx }) => {
+      const service = makeAdminCourtService();
+      return service.recuratePlace(ctx.userId, input);
     }),
 
   /**

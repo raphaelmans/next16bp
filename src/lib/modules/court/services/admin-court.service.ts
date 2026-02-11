@@ -20,11 +20,15 @@ import type {
   AdminCourtFiltersDTO,
   AdminUpdateCourtDTO,
   CreateCuratedCourtDTO,
+  RecuratePlaceDTO,
   RemoveCourtPhotoDTO,
   TransferPlaceDTO,
   UploadCourtPhotoInput,
 } from "../dtos";
-import { PlaceFeaturedRankTakenError } from "../errors/court.errors";
+import {
+  PlaceAlreadyCuratedError,
+  PlaceFeaturedRankTakenError,
+} from "../errors/court.errors";
 import type {
   AdminPlaceDetails,
   CreatedCuratedPlace,
@@ -94,6 +98,10 @@ export interface IAdminCourtService {
   transferPlaceToOrganization(
     adminUserId: string,
     data: TransferPlaceDTO,
+  ): Promise<PlaceRecord>;
+  recuratePlace(
+    adminUserId: string,
+    data: RecuratePlaceDTO,
   ): Promise<PlaceRecord>;
   getStats(): Promise<{ total: number; reservable: number }>;
 }
@@ -794,6 +802,68 @@ export class AdminCourtService implements IAdminCourtService {
           adminUserId,
         },
         "Admin transferred venue to organization",
+      );
+
+      return updated;
+    });
+  }
+
+  async recuratePlace(
+    adminUserId: string,
+    data: RecuratePlaceDTO,
+  ): Promise<PlaceRecord> {
+    return this.transactionManager.run(async (tx) => {
+      const ctx = { tx };
+
+      const place = await this.adminCourtRepository.findByIdForUpdate(
+        data.placeId,
+        ctx,
+      );
+      if (!place) {
+        throw new PlaceNotFoundError(data.placeId);
+      }
+
+      const isAlreadyCurated =
+        place.placeType === "CURATED" &&
+        place.claimStatus === "UNCLAIMED" &&
+        !place.organizationId;
+      if (isAlreadyCurated) {
+        throw new PlaceAlreadyCuratedError(data.placeId);
+      }
+
+      const fromOrganizationId = place.organizationId ?? null;
+
+      const updated = await this.adminCourtRepository.update(
+        place.id,
+        {
+          organizationId: null,
+          placeType: "CURATED",
+          claimStatus: "UNCLAIMED",
+        },
+        ctx,
+      );
+
+      await this.placeVerificationRepository.upsert(
+        {
+          placeId: place.id,
+          status: "UNVERIFIED",
+          verifiedAt: null,
+          verifiedByUserId: null,
+          reservationsEnabled: false,
+          reservationsEnabledAt: null,
+        },
+        ctx,
+      );
+
+      logger.info(
+        {
+          event: "place.recurated",
+          placeId: place.id,
+          fromOrganizationId,
+          adminUserId,
+          reason: data.reason,
+        },
+        "Admin returned venue to curated",
       );
 
       return updated;

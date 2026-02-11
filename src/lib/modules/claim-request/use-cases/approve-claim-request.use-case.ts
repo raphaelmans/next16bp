@@ -1,6 +1,6 @@
 import type { NotificationDeliveryService } from "@/lib/modules/notification-delivery/services/notification-delivery.service";
+import type { IPlaceVerificationRepository } from "@/lib/modules/place-verification/repositories/place-verification.repository";
 import type { ClaimRequestRecord } from "@/lib/shared/infra/db/schema";
-import type { DbClient } from "@/lib/shared/infra/db/types";
 import { logger } from "@/lib/shared/infra/logger";
 import type { TransactionManager } from "@/lib/shared/kernel/transaction";
 import {
@@ -26,10 +26,10 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
   constructor(
     private claimRequestRepository: IClaimRequestRepository,
     private placeRepository: IClaimPlaceRepository,
+    private placeVerificationRepository: IPlaceVerificationRepository,
     private claimRequestEventRepository: IClaimRequestEventRepository,
     private transactionManager: TransactionManager,
     private notificationDeliveryService: NotificationDeliveryService,
-    _db: DbClient,
   ) {}
 
   async execute(
@@ -73,15 +73,42 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
         ctx,
       );
 
-      await this.placeRepository.update(
-        place.id,
-        {
-          claimStatus: "CLAIMED",
-          placeType: "RESERVABLE",
-          organizationId: claimRequest.organizationId,
-        },
-        ctx,
-      );
+      const isRemovalRequest = claimRequest.requestType === "REMOVAL";
+      const fromOrganizationId = place.organizationId;
+
+      if (isRemovalRequest) {
+        await this.placeRepository.update(
+          place.id,
+          {
+            claimStatus: "UNCLAIMED",
+            placeType: "CURATED",
+            organizationId: null,
+          },
+          ctx,
+        );
+
+        await this.placeVerificationRepository.upsert(
+          {
+            placeId: place.id,
+            status: "UNVERIFIED",
+            verifiedAt: null,
+            verifiedByUserId: null,
+            reservationsEnabled: false,
+            reservationsEnabledAt: null,
+          },
+          ctx,
+        );
+      } else {
+        await this.placeRepository.update(
+          place.id,
+          {
+            claimStatus: "CLAIMED",
+            placeType: "RESERVABLE",
+            organizationId: claimRequest.organizationId,
+          },
+          ctx,
+        );
+      }
 
       await this.claimRequestEventRepository.create(
         {
@@ -98,11 +125,17 @@ export class ApproveClaimRequestUseCase implements IApproveClaimRequestUseCase {
         {
           event: "claim_request.approved",
           claimRequestId: requestId,
+          requestType: claimRequest.requestType,
           placeId: place.id,
-          organizationId: claimRequest.organizationId ?? place.organizationId,
+          fromOrganizationId,
+          toOrganizationId: isRemovalRequest
+            ? null
+            : (claimRequest.organizationId ?? place.organizationId),
           adminUserId,
         },
-        "Claim request approved - place transformed to reservable",
+        isRemovalRequest
+          ? "Removal request approved - place returned to curated"
+          : "Claim request approved - place transformed to reservable",
       );
 
       if (claimRequest.organizationId) {

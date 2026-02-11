@@ -1,4 +1,5 @@
 import { makeNotificationDeliveryService } from "@/lib/modules/notification-delivery/factories/notification-delivery.factory";
+import { makePlaceVerificationRepository } from "@/lib/modules/place-verification/factories/place-verification.factory";
 import { getContainer } from "@/lib/shared/infra/container";
 import {
   ClaimPlaceRepository,
@@ -66,10 +67,10 @@ export function makeApproveClaimRequestUseCase() {
     approveClaimRequestUseCase = new ApproveClaimRequestUseCase(
       makeClaimRequestRepository(),
       makeClaimPlaceRepository(),
+      makePlaceVerificationRepository(),
       makeClaimRequestEventRepository(),
       getContainer().transactionManager,
       makeNotificationDeliveryService(),
-      getContainer().db,
     );
   }
   return approveClaimRequestUseCase;
