@@ -35,6 +35,21 @@ export function LoginForm() {
     disallowRoutes: ["guest"],
   });
   const showBookingContext = redirectUrl.includes("/schedule");
+  const authError = searchParams.get("auth_error");
+
+  const authErrorMessage = (() => {
+    switch (authError) {
+      case "missing_token_hash":
+      case "missing_type":
+        return "The verification link is incomplete. Please request a new email.";
+      case "unknown_type":
+        return "The verification link is invalid. Please request a new email.";
+      case "otp_verify_error":
+        return "This verification link is invalid or expired. Please request a new email.";
+      default:
+        return null;
+    }
+  })();
 
   const form = useForm<LoginDTO>({
     resolver: zodResolver(LoginSchema),
@@ -101,6 +116,9 @@ export function LoginForm() {
           <p className="text-sm text-muted-foreground">
             You&apos;ll return to your reservation after signing in.
           </p>
+        )}
+        {authErrorMessage && (
+          <p className="text-sm text-destructive">{authErrorMessage}</p>
         )}
       </CardHeader>
       <StandardFormProvider form={form} onSubmit={onSubmit}>

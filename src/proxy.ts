@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import { appRoutes, isGuestRoute, isProtectedRoute } from "@/common/app-routes";
 import { getSafeRedirectPath } from "@/common/redirects";
+import { logger } from "@/lib/shared/infra/logger";
 
 /**
  * Next.js proxy for session refresh and route protection.
@@ -103,6 +104,18 @@ export async function proxy(request: NextRequest) {
 
   // Redirect unauthenticated users from protected routes
   if (!user && isProtectedRoute(path)) {
+    logger.warn(
+      {
+        scope: "proxy:auth_guard",
+        event: "auth.guard.redirected_to_login",
+        pathname: path,
+        redirectPath,
+        host: request.nextUrl.host,
+        forwardedHost: request.headers.get("x-forwarded-host"),
+      },
+      "Unauthenticated request to protected route",
+    );
+
     return NextResponse.redirect(
       new URL(appRoutes.login.from(redirectPath), request.url),
     );

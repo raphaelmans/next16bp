@@ -41,7 +41,7 @@ export function Navbar({ className }: NavbarProps) {
     setSearchQuery(queryParam ?? "");
   }, [queryParam]);
 
-  const { data: sessionUser } = useSession();
+  const { data: sessionUser, isLoading: sessionLoading } = useSession();
   const { mutate: logout } = useLogout();
 
   const { data: orgs } = trpc.organization.my.useQuery(undefined, {
@@ -49,6 +49,7 @@ export function Navbar({ className }: NavbarProps) {
   });
 
   const isAuthenticated = !!sessionUser;
+  const isResolvingSession = sessionLoading && !sessionUser;
 
   const user = sessionUser
     ? {
@@ -159,7 +160,11 @@ export function Navbar({ className }: NavbarProps) {
           List Your Venue
         </Button>
 
-        {isAuthenticated ? (
+        {isResolvingSession ? (
+          <Button variant="outline" className="font-heading" disabled>
+            Loading...
+          </Button>
+        ) : isAuthenticated ? (
           <UserDropdown
             user={user}
             isOwner={isOwner}
@@ -322,7 +327,11 @@ export function Navbar({ className }: NavbarProps) {
             <Separator />
 
             {/* Auth Actions */}
-            {isAuthenticated ? (
+            {isResolvingSession ? (
+              <Button variant="outline" className="w-full" disabled>
+                Loading...
+              </Button>
+            ) : isAuthenticated ? (
               <Button
                 variant="outline"
                 className="w-full justify-start text-destructive hover:text-destructive"

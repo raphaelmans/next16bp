@@ -25,14 +25,39 @@ export async function GET(request: NextRequest) {
     disallowPathname: request.nextUrl.pathname,
   });
   const redirectUrl = new URL(redirectPath, request.url);
-  const fallbackUrl = new URL(appRoutes.index.base, request.url);
+
+  const buildAuthErrorUrl = (reason: string) => {
+    const loginUrl = new URL(appRoutes.login.from(redirectPath), request.url);
+    loginUrl.searchParams.set("auth_error", reason);
+    return loginUrl;
+  };
+
+  if (redirectParam && redirectPath === appRoutes.postLogin.base) {
+    logger.warn(
+      {
+        scope: "auth:confirm",
+        event: "auth.confirm.redirect_sanitized",
+        redirectParam,
+        redirectPath,
+      },
+      "Unsafe or invalid redirect param sanitized to fallback",
+    );
+  }
 
   if (!token_hash || !type) {
     logger.warn(
-      { scope: "auth:confirm", token_hash: !!token_hash, type },
+      {
+        scope: "auth:confirm",
+        token_hash: !!token_hash,
+        type,
+        redirectPath,
+        reason: !token_hash ? "missing_token_hash" : "missing_type",
+      },
       "Missing token_hash or type parameter",
     );
-    return NextResponse.redirect(fallbackUrl);
+    return NextResponse.redirect(
+      buildAuthErrorUrl(!token_hash ? "missing_token_hash" : "missing_type"),
+    );
   }
 
   const cookieStore = await cookies();
@@ -50,6 +75,45 @@ export async function GET(request: NextRequest) {
       },
     },
   );
+
+  const handleVerificationError = async (
+    scope: string,
+    error: unknown,
+    reason = "otp_verify_error",
+  ) => {
+    logger.error(
+      {
+        scope,
+        reason,
+        redirectPath,
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      "Auth verification failed",
+    );
+
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        logger.warn(
+          {
+            scope,
+            reason,
+            userId: user.id,
+            redirectPath,
+          },
+          "Auth verification failed but session exists, continuing redirect",
+        );
+        return NextResponse.redirect(redirectUrl);
+      }
+    } catch {
+      // Ignore secondary session-check errors and continue fallback flow.
+    }
+
+    return NextResponse.redirect(buildAuthErrorUrl(reason));
+  };
 
   switch (type) {
     case "magiclink":
@@ -70,15 +134,8 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.redirect(redirectUrl);
       } catch (error) {
-        logger.error(
-          {
-            scope: "auth:magiclink_verification",
-            error: error instanceof Error ? error.message : "Unknown error",
-          },
-          "Magic link verification failed",
-        );
+        return handleVerificationError("auth:magiclink_verification", error);
       }
-      break;
 
     case "signup":
       try {
@@ -98,15 +155,8 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.redirect(redirectUrl);
       } catch (error) {
-        logger.error(
-          {
-            scope: "auth:signup_verification",
-            error: error instanceof Error ? error.message : "Unknown error",
-          },
-          "Signup verification failed",
-        );
+        return handleVerificationError("auth:signup_verification", error);
       }
-      break;
 
     case "recovery":
       try {
@@ -124,15 +174,8 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.redirect(redirectUrl);
       } catch (error) {
-        logger.error(
-          {
-            scope: "auth:recovery_verification",
-            error: error instanceof Error ? error.message : "Unknown error",
-          },
-          "Password recovery verification failed",
-        );
+        return handleVerificationError("auth:recovery_verification", error);
       }
-      break;
 
     case "invite":
       try {
@@ -152,15 +195,8 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.redirect(redirectUrl);
       } catch (error) {
-        logger.error(
-          {
-            scope: "auth:invite_verification",
-            error: error instanceof Error ? error.message : "Unknown error",
-          },
-          "Invite verification failed",
-        );
+        return handleVerificationError("auth:invite_verification", error);
       }
-      break;
 
     case "email_change":
       try {
@@ -180,15 +216,8 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.redirect(redirectUrl);
       } catch (error) {
-        logger.error(
-          {
-            scope: "auth:email_change_verification",
-            error: error instanceof Error ? error.message : "Unknown error",
-          },
-          "Email change verification failed",
-        );
+        return handleVerificationError("auth:email_change_verification", error);
       }
-      break;
 
     case "email":
       try {
@@ -208,20 +237,11 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.redirect(redirectUrl);
       } catch (error) {
-        logger.error(
-          {
-            scope: "auth:email_verification",
-            error: error instanceof Error ? error.message : "Unknown error",
-          },
-          "Email verification failed",
-        );
+        return handleVerificationError("auth:email_verification", error);
       }
-      break;
 
     default:
       logger.warn({ scope: "auth:confirm", type }, "Unknown verification type");
+      return NextResponse.redirect(buildAuthErrorUrl("unknown_type"));
   }
-
-  // Fallback: redirect to home on error
-  return NextResponse.redirect(fallbackUrl);
 }
