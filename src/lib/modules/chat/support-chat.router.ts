@@ -1,7 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { S } from "@/common/schemas";
-import { protectedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
+import {
+  adminProcedure,
+  protectedProcedure,
+  router,
+} from "@/lib/shared/infra/trpc/trpc";
 import { AppError } from "@/lib/shared/kernel/errors";
 import { makeSupportChatService } from "./factories/support-chat.factory";
 
@@ -25,6 +29,17 @@ function handleSupportChatError(error: unknown): never {
 }
 
 export const supportChatRouter = router({
+  backfillClaimThreads: adminProcedure.mutation(async ({ ctx }) => {
+    try {
+      const service = makeSupportChatService();
+      return await service.backfillPendingClaimThreads({
+        createdByUserId: ctx.userId,
+      });
+    } catch (error) {
+      handleSupportChatError(error);
+    }
+  }),
+
   getClaimSession: protectedProcedure
     .input(
       z.object({

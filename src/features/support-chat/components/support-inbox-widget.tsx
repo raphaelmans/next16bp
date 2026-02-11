@@ -75,7 +75,10 @@ export function SupportInboxWidget() {
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
 
   const authQuery = trpc.chat.getAuth.useQuery();
+  const backfillClaimThreadsMutation =
+    trpc.supportChat.backfillClaimThreads.useMutation();
   const auth = authQuery.data;
+  const backfillTriggeredForOpen = useRef(false);
 
   const {
     client,
@@ -137,6 +140,23 @@ export function SupportInboxWidget() {
     if (!open) return;
     fetchChannels.current?.().catch(() => undefined);
   }, [open]);
+
+  useEffect(() => {
+    if (!open) {
+      backfillTriggeredForOpen.current = false;
+      return;
+    }
+    if (backfillTriggeredForOpen.current) {
+      return;
+    }
+    backfillTriggeredForOpen.current = true;
+
+    backfillClaimThreadsMutation.mutate(undefined, {
+      onSettled: () => {
+        fetchChannels.current?.().catch(() => undefined);
+      },
+    });
+  }, [open, backfillClaimThreadsMutation]);
 
   useEffect(() => {
     if (!open) return;
@@ -296,7 +316,7 @@ export function SupportInboxWidget() {
             </div>
           ) : supportChannels.length === 0 ? (
             <div className="p-6 text-sm text-muted-foreground">
-              No support threads yet. Open a request’s chat to join it.
+              No support threads yet.
             </div>
           ) : (
             <>

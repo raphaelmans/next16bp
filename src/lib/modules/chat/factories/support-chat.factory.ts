@@ -1,4 +1,5 @@
 import { makeClaimRequestRepository } from "@/lib/modules/claim-request/factories/claim-request.factory";
+import { makeNotificationRecipientRepository } from "@/lib/modules/notification-delivery/factories/notification-delivery.factory";
 import { makePlaceRepository } from "@/lib/modules/place/factories/place.factory";
 import { makePlaceVerificationRequestRepository } from "@/lib/modules/place-verification/factories/place-verification.factory";
 import { getContainer } from "@/lib/shared/infra/container";
@@ -26,6 +27,7 @@ export function makeSupportChatService() {
       makePlaceRepository(),
       makeSupportChatThreadRepository(),
       makeChatProvider(),
+      makeNotificationRecipientRepository(),
     );
   }
   return supportChatService;
