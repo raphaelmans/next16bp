@@ -169,8 +169,8 @@ export default function OwnerGetStartedPage() {
                     </p>
                   </div>
                   <Button asChild>
-                    <Link href={appRoutes.owner.places.base}>
-                      Go to your venues
+                    <Link href={appRoutes.owner.bookings}>
+                      Manage reservations
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
