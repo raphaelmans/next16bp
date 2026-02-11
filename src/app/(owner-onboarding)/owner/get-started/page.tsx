@@ -471,9 +471,22 @@ function ClaimListingCard({
     enabled: hasPendingClaim,
   });
 
-  const pendingClaimId =
-    myClaims?.find((c) => c.status === "PENDING" && c.requestType === "CLAIM")
-      ?.id ?? null;
+  const pendingClaim =
+    myClaims?.find(
+      (c) => c.status === "PENDING" && c.requestType === "CLAIM",
+    ) ?? null;
+  const pendingClaimId = pendingClaim?.id ?? null;
+
+  const { data: pendingClaimDetails } = trpc.claimRequest.getById.useQuery(
+    {
+      id: pendingClaimId ?? "00000000-0000-0000-0000-000000000000",
+    },
+    {
+      enabled: hasPendingClaim && !!pendingClaimId,
+    },
+  );
+
+  const pendingClaimPlaceName = pendingClaimDetails?.place.name;
 
   if (hasPendingClaim) {
     return (
@@ -491,8 +504,9 @@ function ClaimListingCard({
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                Your claim request is being reviewed. We will notify you once it
-                is approved.
+                {pendingClaimPlaceName
+                  ? `Your claim request for ${pendingClaimPlaceName} is being reviewed. We will notify you once it is approved.`
+                  : "Your claim request is being reviewed. We will notify you once it is approved."}
               </p>
               {pendingClaimId ? (
                 <div className="pt-2">
@@ -786,17 +800,16 @@ function ConfigureVenueCourtsCard({
                 {placeId ? (
                   <>
                     <Button variant="outline" asChild>
-                      <Link href={appRoutes.owner.places.courts.base(placeId)}>
+                      <Link
+                        href={`${appRoutes.owner.places.courts.base(placeId)}?from=setup`}
+                      >
                         Manage courts
                       </Link>
                     </Button>
                     {courtId && (
                       <Button variant="outline" asChild>
                         <Link
-                          href={appRoutes.owner.places.courts.schedule(
-                            placeId,
-                            courtId,
-                          )}
+                          href={`${appRoutes.owner.places.courts.setup(placeId, courtId, "schedule")}&from=setup`}
                         >
                           Edit schedule & pricing
                         </Link>

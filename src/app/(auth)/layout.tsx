@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { appRoutes, getRouteType } from "@/common/app-routes";
-import { OnboardingShell } from "@/components/layout/onboarding-shell";
 import { PlayerShell } from "@/components/layout/player-shell";
 import { PublicShell } from "@/components/layout/public-shell";
 import {
@@ -45,10 +44,6 @@ export default async function AuthLayout({
     await requireAdminSession(pathname);
   } else {
     await requireSession(pathname);
-  }
-
-  if (pathname === "/owner/get-started") {
-    return <OnboardingShell>{children}</OnboardingShell>;
   }
 
   return <PlayerShell>{children}</PlayerShell>;
