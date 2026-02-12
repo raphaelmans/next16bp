@@ -6,6 +6,7 @@ import type {
   EnsureReservationChannelInput,
   EnsureSupportChannelInput,
   IChatProvider,
+  SendChatMessageInput,
   SendReservationMessageInput,
 } from "./chat.provider";
 
@@ -124,11 +125,29 @@ export class StreamChatProvider implements IChatProvider {
     text,
     messageId,
   }: SendReservationMessageInput): Promise<void> {
-    const channel = this.client.channel("messaging", channelId);
+    await this.sendMessage({
+      channelType: "messaging",
+      channelId,
+      createdById,
+      text,
+      messageId,
+    });
+  }
+
+  async sendMessage({
+    channelType,
+    channelId,
+    createdById,
+    text,
+    attachments,
+    messageId,
+  }: SendChatMessageInput): Promise<void> {
+    const channel = this.client.channel(channelType, channelId);
     try {
       await channel.sendMessage({
         id: messageId,
         text,
+        attachments,
         user_id: createdById,
       });
     } catch (error) {

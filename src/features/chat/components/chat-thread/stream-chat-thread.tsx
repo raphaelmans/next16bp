@@ -4,6 +4,7 @@ import type { ChatStatus, FileUIPart, UIMessage } from "ai";
 import { ChevronLeft, MessageSquare, RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Attachment, LocalMessage, StreamChat } from "stream-chat";
+import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import {
   Attachment as AiAttachment,
   AttachmentPreview,
@@ -108,6 +109,20 @@ export interface StreamChatThreadProps {
   backButtonLabel?: string;
   onRefreshContext?: (() => Promise<void>) | null;
   isContextRefreshing?: boolean;
+  onSendMessage?:
+    | ((payload: {
+        text?: string;
+        attachments?: Array<{
+          type?: string;
+          asset_url?: string;
+          image_url?: string;
+          thumb_url?: string;
+          title?: string;
+          file_size?: number;
+          mime_type?: string;
+        }>;
+      }) => Promise<void>)
+    | null;
 }
 
 export function StreamChatThread({
@@ -128,8 +143,10 @@ export function StreamChatThread({
   backButtonLabel = "Back",
   onRefreshContext = null,
   isContextRefreshing = false,
+  onSendMessage = null,
 }: StreamChatThreadProps) {
   const [sendStatus, setSendStatus] = useState<ChatStatus>("ready");
+  const [sendErrorMessage, setSendErrorMessage] = useState<string | null>(null);
   const [isHeaderRefreshing, setIsHeaderRefreshing] = useState(false);
 
   const {
@@ -139,7 +156,6 @@ export function StreamChatThread({
     isRefreshing,
     error: channelWatchError,
     sendMessage,
-    sendFiles,
     refresh,
     markRead,
   } = useStreamChannel({
@@ -175,41 +191,59 @@ export function StreamChatThread({
       }
 
       setSendStatus("submitted");
+      setSendErrorMessage(null);
 
       try {
         if (hasFiles) {
           const files = await Promise.all(message.files.map(filePartToFile));
 
-          if (hasText) {
-            const uploads = await Promise.all(
-              files.map(async (file) => {
-                const result = await channel.sendFile(file);
-                return { file, url: result.file };
-              }),
-            );
+          const uploads = await Promise.all(
+            files.map(async (file) => {
+              const result = await channel.sendFile(file);
+              return { file, url: result.file };
+            }),
+          );
 
-            const attachments: Attachment[] = uploads.map(({ file, url }) => ({
-              type: file.type.startsWith("image/") ? "image" : "file",
-              asset_url: url,
-              title: file.name,
-              file_size: file.size,
-              mime_type: file.type,
-            }));
+          const messageAttachments = uploads.map(({ file, url }) => ({
+            type: file.type.startsWith("image/") ? "image" : "file",
+            asset_url: url,
+            title: file.name,
+            file_size: file.size,
+            mime_type: file.type,
+          }));
+          const attachments: Attachment[] = messageAttachments;
 
-            await sendMessage({ text, attachments });
+          if (onSendMessage) {
+            await onSendMessage({
+              text: hasText ? text : undefined,
+              attachments: messageAttachments,
+            });
           } else {
-            await sendFiles(files);
+            await sendMessage({
+              text: hasText ? text : undefined,
+              attachments,
+            });
           }
         } else {
-          await sendMessage({ text });
+          if (onSendMessage) {
+            await onSendMessage({ text });
+          } else {
+            await sendMessage({ text });
+          }
         }
 
         setSendStatus("ready");
-      } catch {
+      } catch (error) {
+        setSendErrorMessage(
+          getClientErrorMessage(
+            error,
+            "Unable to send message. Please try again.",
+          ),
+        );
         setSendStatus("error");
       }
     },
-    [channel, sendFiles, sendMessage],
+    [channel, onSendMessage, sendMessage],
   );
 
   const statusClassName =
@@ -392,6 +426,11 @@ export function StreamChatThread({
                 <PromptInputSubmit status={sendStatus} disabled={!channel} />
               </PromptInputFooter>
             </PromptInput>
+            {sendErrorMessage ? (
+              <div className="mt-2 text-xs text-destructive">
+                {sendErrorMessage}
+              </div>
+            ) : null}
           </div>
         )}
       </div>

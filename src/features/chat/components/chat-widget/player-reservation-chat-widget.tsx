@@ -40,6 +40,7 @@ export function PlayerReservationChatWidget({
     { reservationId },
     { enabled: isActiveStatus },
   );
+  const sendMessageMutation = trpc.reservationChat.sendMessage.useMutation();
 
   const session = sessionQuery.data;
   const {
@@ -182,6 +183,13 @@ export function PlayerReservationChatWidget({
                   await sessionQuery.refetch();
                 }}
                 isContextRefreshing={sessionQuery.isRefetching}
+                onSendMessage={async (payload) => {
+                  await sendMessageMutation.mutateAsync({
+                    reservationId,
+                    text: payload.text,
+                    attachments: payload.attachments,
+                  });
+                }}
               />
             </>
           )}

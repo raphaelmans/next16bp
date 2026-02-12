@@ -195,6 +195,7 @@ export function ReservationInboxWidget({
     null,
   );
   const utils = trpc.useUtils();
+  const sendMessageMutation = trpc.reservationChat.sendMessage.useMutation();
 
   openRef.current = open;
   channelsRef.current = channels;
@@ -846,6 +847,17 @@ export function ReservationInboxWidget({
         isContextRefreshing={isSyncing}
         onBack={!isDesktop ? () => setMobilePane("list") : undefined}
         backButtonLabel="Back to inbox"
+        onSendMessage={async (payload) => {
+          if (!activeReservationId) {
+            throw new Error("Conversation not selected");
+          }
+
+          await sendMessageMutation.mutateAsync({
+            reservationId: activeReservationId,
+            text: payload.text,
+            attachments: payload.attachments,
+          });
+        }}
       />
     </div>
   );

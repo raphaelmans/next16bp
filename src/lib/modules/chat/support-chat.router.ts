@@ -4,10 +4,12 @@ import { S } from "@/common/schemas";
 import {
   adminProcedure,
   protectedProcedure,
+  protectedRateLimitedProcedure,
   router,
 } from "@/lib/shared/infra/trpc/trpc";
 import { AppError } from "@/lib/shared/kernel/errors";
 import { makeSupportChatService } from "./factories/support-chat.factory";
+import { SendChatMessageSchema } from "./schemas/send-chat-message.schema";
 
 function handleSupportChatError(error: unknown): never {
   if (error instanceof AppError) {
@@ -75,6 +77,56 @@ export const supportChatRouter = router({
           placeVerificationRequestId: input.placeVerificationRequestId,
           ctx,
         });
+      } catch (error) {
+        handleSupportChatError(error);
+      }
+    }),
+
+  sendClaimMessage: protectedRateLimitedProcedure("chatSend")
+    .input(
+      z
+        .object({
+          claimRequestId: S.ids.generic,
+        })
+        .merge(SendChatMessageSchema),
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeSupportChatService();
+        await service.sendClaimMessage({
+          viewerUserId: ctx.userId,
+          claimRequestId: input.claimRequestId,
+          text: input.text,
+          attachments: input.attachments,
+          ctx,
+        });
+
+        return { ok: true };
+      } catch (error) {
+        handleSupportChatError(error);
+      }
+    }),
+
+  sendVerificationMessage: protectedRateLimitedProcedure("chatSend")
+    .input(
+      z
+        .object({
+          placeVerificationRequestId: S.ids.generic,
+        })
+        .merge(SendChatMessageSchema),
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeSupportChatService();
+        await service.sendVerificationMessage({
+          viewerUserId: ctx.userId,
+          placeVerificationRequestId: input.placeVerificationRequestId,
+          text: input.text,
+          attachments: input.attachments,
+          ctx,
+        });
+
+        return { ok: true };
       } catch (error) {
         handleSupportChatError(error);
       }

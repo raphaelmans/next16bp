@@ -12,6 +12,8 @@ export const RATE_LIMIT_TIERS = {
   mutation: { requests: 30, window: "1 m" as const },
   /** Sensitive operations (reservations, claims) - 5 req/min */
   sensitive: { requests: 5, window: "1 m" as const },
+  /** User chat sends - 5 messages/min */
+  chatSend: { requests: 5, window: "1 m" as const },
 } as const;
 
 export type RateLimitTier = keyof typeof RATE_LIMIT_TIERS;

@@ -26,7 +26,10 @@ import {
   ReservationChatNotParticipantError,
 } from "../errors/reservation-chat.errors";
 import { makeReservationChannelId } from "../helpers/reservation-channel-id";
-import type { IChatProvider } from "../providers/chat.provider";
+import type {
+  ChatMessageAttachmentInput,
+  IChatProvider,
+} from "../providers/chat.provider";
 import type { IReservationChatThreadRepository } from "../repositories/reservation-chat-thread.repository";
 import type { IReservationChatTranscriptRepository } from "../repositories/reservation-chat-transcript.repository";
 import type {
@@ -306,6 +309,54 @@ export class ReservationChatService {
         },
       },
     };
+  }
+
+  async sendMessage(
+    userId: string,
+    reservationId: string,
+    message: {
+      text?: string;
+      attachments?: ChatMessageAttachmentInput[];
+      messageId?: string;
+    },
+    ctx?: RequestContext,
+  ): Promise<void> {
+    const reservation = await this.reservationRepository.findById(
+      reservationId,
+      ctx,
+    );
+    if (!reservation) {
+      throw new ReservationNotFoundError(reservationId);
+    }
+
+    if (!isChatEnabledForStatus(reservation.status)) {
+      throw new ReservationChatNotAvailableError(reservation.status);
+    }
+
+    const context = await this.getReservationContext(reservationId, ctx);
+    const memberIds = [
+      context.profile.userId,
+      context.organization.ownerUserId,
+    ];
+    if (!memberIds.includes(userId)) {
+      throw new ReservationChatNotParticipantError(reservationId);
+    }
+
+    const channel = await this.ensureThread(
+      reservationId,
+      memberIds,
+      userId,
+      ctx,
+    );
+
+    await this.chatProvider.sendMessage({
+      channelType: channel.channelType,
+      channelId: channel.channelId,
+      createdById: userId,
+      text: message.text,
+      attachments: message.attachments,
+      messageId: message.messageId,
+    });
   }
 
   async captureTranscriptSnapshot(

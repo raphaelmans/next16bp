@@ -58,6 +58,19 @@ function formatThreadTitle(channelId: string): string {
     : `Verification • VR-${short}`;
 }
 
+function getSupportRequestId(
+  channelId: string | null | undefined,
+): string | null {
+  const id = channelId ?? "";
+  if (id.startsWith("cr-")) {
+    return id.slice(3);
+  }
+  if (id.startsWith("vr-")) {
+    return id.slice(3);
+  }
+  return null;
+}
+
 export function SupportInboxWidget() {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const isSmall = useMediaQuery("(min-width: 640px)");
@@ -77,6 +90,10 @@ export function SupportInboxWidget() {
   const authQuery = trpc.chat.getAuth.useQuery();
   const backfillClaimThreadsMutation =
     trpc.supportChat.backfillClaimThreads.useMutation();
+  const sendClaimMessageMutation =
+    trpc.supportChat.sendClaimMessage.useMutation();
+  const sendVerificationMessageMutation =
+    trpc.supportChat.sendVerificationMessage.useMutation();
   const auth = authQuery.data;
   const backfillTriggeredForOpen = useRef(false);
 
@@ -376,6 +393,29 @@ export function SupportInboxWidget() {
         minHeightClassName="min-h-0 flex-1"
         onBack={!isDesktop ? () => setMobilePane("list") : undefined}
         backButtonLabel="Back to inbox"
+        onSendMessage={async (payload) => {
+          const channelId = activeChannel?.id ?? null;
+          const kind = getSupportKind(channelId);
+          const requestId = getSupportRequestId(channelId);
+          if (!kind || !requestId) {
+            throw new Error("Conversation not selected");
+          }
+
+          if (kind === "claim") {
+            await sendClaimMessageMutation.mutateAsync({
+              claimRequestId: requestId,
+              text: payload.text,
+              attachments: payload.attachments,
+            });
+            return;
+          }
+
+          await sendVerificationMessageMutation.mutateAsync({
+            placeVerificationRequestId: requestId,
+            text: payload.text,
+            attachments: payload.attachments,
+          });
+        }}
       />
     </div>
   );

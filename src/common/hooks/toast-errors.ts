@@ -49,6 +49,8 @@ const FRIENDLY_ERROR_MESSAGES: Record<string, string> = {
     "Schedule pricing does not cover that time range. Update the schedule and try again.",
   COURT_BLOCK_DURATION_INVALID: "Duration must be in 60-minute increments.",
   COURT_BLOCK_TIME_RANGE_INVALID: "End time must be after start time.",
+  RATE_LIMIT_EXCEEDED:
+    "You can send up to 5 messages per minute. Please wait and try again.",
 };
 
 const getCodeErrorMessage = (error: unknown): string | null => {

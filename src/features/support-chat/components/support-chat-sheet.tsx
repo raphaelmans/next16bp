@@ -38,6 +38,10 @@ export function SupportChatSheet({
     { claimRequestId: requestId },
     { enabled: open && kind === "claim" },
   );
+  const sendClaimMessageMutation =
+    trpc.supportChat.sendClaimMessage.useMutation();
+  const sendVerificationMessageMutation =
+    trpc.supportChat.sendVerificationMessage.useMutation();
   const verificationQuery = trpc.supportChat.getVerificationSession.useQuery(
     { placeVerificationRequestId: requestId },
     { enabled: open && kind === "verification" },
@@ -100,6 +104,22 @@ export function SupportChatSheet({
               headerSubtitle={headerSubtitle}
               readOnly={!isReady}
               readOnlyReason={!isReady ? "Connecting..." : undefined}
+              onSendMessage={async (payload) => {
+                if (kind === "claim") {
+                  await sendClaimMessageMutation.mutateAsync({
+                    claimRequestId: requestId,
+                    text: payload.text,
+                    attachments: payload.attachments,
+                  });
+                  return;
+                }
+
+                await sendVerificationMessageMutation.mutateAsync({
+                  placeVerificationRequestId: requestId,
+                  text: payload.text,
+                  attachments: payload.attachments,
+                });
+              }}
             />
           )}
         </div>

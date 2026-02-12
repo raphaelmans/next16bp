@@ -14,7 +14,10 @@ import {
 } from "../errors/support-chat.errors";
 import { makeClaimSupportChannelId } from "../helpers/claim-support-channel-id";
 import { makeVerificationSupportChannelId } from "../helpers/verification-support-channel-id";
-import type { IChatProvider } from "../providers/chat.provider";
+import type {
+  ChatMessageAttachmentInput,
+  IChatProvider,
+} from "../providers/chat.provider";
 import type { ISupportChatThreadRepository } from "../repositories/support-chat-thread.repository";
 
 export type SupportChatKind = "claim" | "verification";
@@ -108,6 +111,49 @@ export class SupportChatService {
       channelType,
       channelId,
       memberIds,
+    };
+  }
+
+  private async ensureVerificationThread(options: {
+    placeVerificationRequestId: string;
+    placeId: string;
+    createdByUserId: string;
+    memberIds: string[];
+    reqCtx?: RequestContext;
+  }): Promise<{ channelType: string; channelId: string; memberIds: string[] }> {
+    const channelId = makeVerificationSupportChannelId(
+      options.placeVerificationRequestId,
+    );
+    const channelType = "messaging";
+
+    await this.chatProvider.ensureUsers(
+      options.memberIds.map((id) => ({ id })),
+    );
+    await this.chatProvider.ensureSupportChannel({
+      channelId,
+      createdById: options.createdByUserId,
+      memberIds: options.memberIds,
+      data: {
+        place_verification_request_id: options.placeVerificationRequestId,
+        place_id: options.placeId,
+      },
+    });
+
+    await this.supportChatThreadRepository.upsertVerificationThread(
+      {
+        placeVerificationRequestId: options.placeVerificationRequestId,
+        providerId: this.chatProvider.providerId,
+        providerChannelType: channelType,
+        providerChannelId: channelId,
+        createdByUserId: options.createdByUserId,
+      },
+      options.reqCtx,
+    );
+
+    return {
+      channelType,
+      channelId,
+      memberIds: options.memberIds,
     };
   }
 
@@ -272,37 +318,17 @@ export class SupportChatService {
       throw new PlaceNotFoundError(request.placeId);
     }
 
-    const channelId = makeVerificationSupportChannelId(request.id);
-    const channelType = "messaging";
-
     const memberIds = isAdmin
       ? Array.from(new Set([ownerUserId, options.viewerUserId]))
       : [ownerUserId];
 
-    await this.chatProvider.ensureUsers([
-      { id: ownerUserId },
-      { id: options.viewerUserId, name: options.viewer.name },
-    ]);
-    await this.chatProvider.ensureSupportChannel({
-      channelId,
-      createdById: options.viewerUserId,
+    const { channelId, channelType } = await this.ensureVerificationThread({
+      placeVerificationRequestId: request.id,
+      placeId: request.placeId,
+      createdByUserId: options.viewerUserId,
       memberIds,
-      data: {
-        place_verification_request_id: request.id,
-        place_id: request.placeId,
-      },
+      reqCtx: options.reqCtx,
     });
-
-    await this.supportChatThreadRepository.upsertVerificationThread(
-      {
-        placeVerificationRequestId: request.id,
-        providerId: this.chatProvider.providerId,
-        providerChannelType: channelType,
-        providerChannelId: channelId,
-        createdByUserId: options.viewerUserId,
-      },
-      options.reqCtx,
-    );
 
     const token = await this.chatProvider.createUserToken(options.viewerUserId);
 
@@ -324,5 +350,93 @@ export class SupportChatService {
         placeName: place.name,
       },
     };
+  }
+
+  async sendClaimMessage(options: {
+    viewerUserId: string;
+    claimRequestId: string;
+    text?: string;
+    attachments?: ChatMessageAttachmentInput[];
+    ctx: AuthenticatedContext;
+    reqCtx?: RequestContext;
+  }): Promise<void> {
+    const claim = await this.claimRequestRepository.findById(
+      options.claimRequestId,
+      options.reqCtx,
+    );
+    if (!claim) {
+      throw new SupportChatClaimRequestNotFoundError(options.claimRequestId);
+    }
+
+    const ownerUserId = claim.requestedByUserId;
+    if (!ownerUserId) {
+      throw new SupportChatClaimRequestNotEligibleError(options.claimRequestId);
+    }
+
+    const isAdmin = options.ctx.session.role === "admin";
+    const isOwner = ownerUserId === options.viewerUserId;
+    if (!isAdmin && !isOwner) {
+      throw new SupportChatNotAllowedError();
+    }
+
+    const { channelId, channelType } = await this.ensureClaimThread({
+      claim,
+      createdByUserId: options.viewerUserId,
+      reqCtx: options.reqCtx,
+    });
+
+    await this.chatProvider.sendMessage({
+      channelType,
+      channelId,
+      createdById: options.viewerUserId,
+      text: options.text,
+      attachments: options.attachments,
+    });
+  }
+
+  async sendVerificationMessage(options: {
+    viewerUserId: string;
+    placeVerificationRequestId: string;
+    text?: string;
+    attachments?: ChatMessageAttachmentInput[];
+    ctx: AuthenticatedContext;
+    reqCtx?: RequestContext;
+  }): Promise<void> {
+    const request = await this.placeVerificationRequestRepository.findById(
+      options.placeVerificationRequestId,
+      options.reqCtx,
+    );
+    if (!request) {
+      throw new SupportChatVerificationRequestNotFoundError(
+        options.placeVerificationRequestId,
+      );
+    }
+
+    const ownerUserId = request.requestedByUserId;
+    const isAdmin = options.ctx.session.role === "admin";
+    const isOwner = ownerUserId === options.viewerUserId;
+    if (!isAdmin && !isOwner) {
+      throw new SupportChatNotAllowedError();
+    }
+
+    const memberIds = isAdmin
+      ? Array.from(new Set([ownerUserId, options.viewerUserId]))
+      : [ownerUserId];
+
+    const { channelId, channelType } = await this.ensureVerificationThread({
+      placeVerificationRequestId: request.id,
+      placeId: request.placeId,
+      createdByUserId: options.viewerUserId,
+      memberIds,
+      reqCtx: options.reqCtx,
+    });
+
+    await this.chatProvider.sendMessage({
+      channelType,
+      channelId,
+      createdById: options.viewerUserId,
+      text: options.text,
+      attachments: options.attachments,
+    });
   }
 }

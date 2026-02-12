@@ -21,6 +21,25 @@ export interface SendReservationMessageInput {
   messageId?: string;
 }
 
+export interface ChatMessageAttachmentInput {
+  type?: string;
+  asset_url?: string;
+  image_url?: string;
+  thumb_url?: string;
+  title?: string;
+  file_size?: number;
+  mime_type?: string;
+}
+
+export interface SendChatMessageInput {
+  channelType: string;
+  channelId: string;
+  createdById: string;
+  text?: string;
+  attachments?: ChatMessageAttachmentInput[];
+  messageId?: string;
+}
+
 export interface EnsureSupportChannelInput {
   channelId: string;
   createdById: string;
@@ -38,6 +57,7 @@ export interface IChatProvider {
   createUserToken(userId: string): Promise<string>;
   ensureDmChannel(input: EnsureDmChannelInput): Promise<void>;
   ensureReservationChannel(input: EnsureReservationChannelInput): Promise<void>;
+  sendMessage(input: SendChatMessageInput): Promise<void>;
   sendReservationMessage(input: SendReservationMessageInput): Promise<void>;
   ensureSupportChannel(input: EnsureSupportChannelInput): Promise<void>;
   exportReservationChannelMessages(input: {

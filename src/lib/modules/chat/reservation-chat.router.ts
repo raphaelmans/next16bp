@@ -9,6 +9,7 @@ import { ReservationNotFoundError } from "@/lib/modules/reservation/errors/reser
 import {
   adminProcedure,
   protectedProcedure,
+  protectedRateLimitedProcedure,
   router,
 } from "@/lib/shared/infra/trpc/trpc";
 import { AppError } from "@/lib/shared/kernel/errors";
@@ -18,6 +19,7 @@ import {
   ReservationChatNotParticipantError,
 } from "./errors/reservation-chat.errors";
 import { makeReservationChatService } from "./factories/reservation-chat.factory";
+import { SendChatMessageSchema } from "./schemas/send-chat-message.schema";
 
 function handleReservationChatError(error: unknown): never {
   if (
@@ -93,6 +95,28 @@ export const reservationChatRouter = router({
       try {
         const service = makeReservationChatService();
         return await service.getThreadMetas(ctx.userId, input.reservationIds);
+      } catch (error) {
+        handleReservationChatError(error);
+      }
+    }),
+
+  sendMessage: protectedRateLimitedProcedure("chatSend")
+    .input(
+      z
+        .object({
+          reservationId: S.ids.generic,
+        })
+        .merge(SendChatMessageSchema),
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationChatService();
+        await service.sendMessage(ctx.userId, input.reservationId, {
+          text: input.text,
+          attachments: input.attachments,
+        });
+
+        return { ok: true };
       } catch (error) {
         handleReservationChatError(error);
       }
