@@ -8,6 +8,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Loader2,
   MousePointerClick,
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -1954,8 +1955,15 @@ function OwnerAvailabilityStudioInner() {
                 onValueChange={setCourtId}
                 disabled={!placeId || courtsLoading}
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a court" />
+                <SelectTrigger className="relative pr-9">
+                  <SelectValue
+                    placeholder={
+                      courtsLoading ? "Loading courts..." : "Select a court"
+                    }
+                  />
+                  {courtsLoading ? (
+                    <Loader2 className="pointer-events-none absolute right-8 size-4 animate-spin text-muted-foreground" />
+                  ) : null}
                 </SelectTrigger>
                 <SelectContent>
                   {courts.map((court) => (
