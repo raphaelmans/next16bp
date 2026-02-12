@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftRight, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
@@ -34,12 +34,6 @@ export function OnboardingShell({
             <KudosLogo size={28} variant="full" />
           </Link>
           <div className="flex items-center gap-1">
-            <Button variant="ghost" size="sm" asChild>
-              <a href={appRoutes.home.base}>
-                <ArrowLeftRight className="mr-2 h-4 w-4" />
-                Player View
-              </a>
-            </Button>
             {dashboardHref ? (
               <Button variant="ghost" size="sm" asChild>
                 <Link href={dashboardHref}>Go to dashboard</Link>
