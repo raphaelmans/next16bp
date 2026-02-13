@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useLogout, useSession } from "@/features/auth";
-import { PlayerChatWidget } from "@/features/chat/components/chat-widget/player-chat-widget";
+import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { trpc } from "@/trpc/client";
 import { AppShell } from "./app-shell";
 import { PlayerNavbar } from "./player-navbar";
@@ -54,7 +54,28 @@ export function PlayerShell({ children }: PlayerShellProps) {
           onLogout={handleLogout}
         />
       }
-      floatingPanel={<PlayerChatWidget />}
+      floatingPanel={
+        <UnifiedChatInterface
+          surface="floating"
+          domain="reservation"
+          reservationConfig={{
+            kind: "player",
+            storageKeys: {
+              open: "player:chat:open",
+              activeReservationId: "player:chat:activeReservationId",
+            },
+            ui: {
+              sheetTitle: "Messages",
+              sheetDescription: "Reservation conversations",
+            },
+            labels: {
+              listPrimary: (meta) => (meta ? meta.placeName : null),
+              listSecondary: () => null,
+              threadTitle: (meta) => meta?.placeName ?? "Messages",
+            },
+          }}
+        />
+      }
     >
       {children}
     </AppShell>

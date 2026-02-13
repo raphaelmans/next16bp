@@ -22,6 +22,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import {
   buildPlaceVerificationFormData,
   type PlaceVerificationStatus,
@@ -30,7 +31,6 @@ import {
   useSubmitPlaceVerification,
   useTogglePlaceReservations,
 } from "@/features/owner/hooks";
-import { SupportChatSheet } from "@/features/support-chat/components/support-chat-sheet";
 import {
   FILE_SIZE_LIMITS_READABLE,
   MAX_VERIFICATION_DOCUMENT_SIZE,
@@ -220,7 +220,9 @@ export function PlaceVerificationPanel({
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {request?.id && (isPending || isRejected) ? (
-              <SupportChatSheet
+              <UnifiedChatInterface
+                surface="sheet"
+                domain="support"
                 kind="verification"
                 requestId={request.id}
                 triggerLabel="Message admin"

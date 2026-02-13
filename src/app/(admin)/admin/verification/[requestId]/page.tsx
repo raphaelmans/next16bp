@@ -38,7 +38,7 @@ import {
   useRejectPlaceVerification,
 } from "@/features/admin/hooks";
 import { useLogout, useSession } from "@/features/auth";
-import { SupportChatSheet } from "@/features/support-chat/components/support-chat-sheet";
+import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { cn } from "@/lib/utils";
 
 const statusConfig = {
@@ -439,7 +439,9 @@ export default function AdminVerificationDetailPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <SupportChatSheet
+                <UnifiedChatInterface
+                  surface="sheet"
+                  domain="support"
                   kind="verification"
                   requestId={requestId}
                   triggerLabel="Message owner"

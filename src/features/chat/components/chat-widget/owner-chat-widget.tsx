@@ -1,7 +1,7 @@
 "use client";
 
 import { useOwnerOrganization } from "@/features/owner";
-import { ReservationInboxWidget } from "./reservation-inbox-widget";
+import { UnifiedChatInterface } from "../unified-chat/unified-chat-interface";
 
 export function OwnerChatWidget() {
   const { isOwner, isLoading } = useOwnerOrganization();
@@ -11,8 +11,10 @@ export function OwnerChatWidget() {
   }
 
   return (
-    <ReservationInboxWidget
-      config={{
+    <UnifiedChatInterface
+      surface="floating"
+      domain="reservation"
+      reservationConfig={{
         kind: "owner",
         storageKeys: {
           open: "owner:chat:open",

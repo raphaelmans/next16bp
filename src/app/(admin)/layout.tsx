@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { appRoutes } from "@/common/app-routes";
-import { SupportInboxWidget } from "@/features/support-chat/components/support-inbox-widget";
+import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { requireAdminSession } from "@/lib/shared/infra/auth/server-session";
 
 /**
@@ -28,7 +28,7 @@ export default async function AdminLayout({
   return (
     <>
       {children}
-      <SupportInboxWidget />
+      <UnifiedChatInterface surface="floating" domain="support" />
     </>
   );
 }

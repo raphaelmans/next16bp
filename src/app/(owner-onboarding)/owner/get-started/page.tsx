@@ -36,9 +36,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
 import { useOwnerSetupStatus } from "@/features/owner/hooks";
-import { SupportChatSheet } from "@/features/support-chat/components/support-chat-sheet";
 import { trpc } from "@/trpc/client";
 
 export default function OwnerGetStartedPage() {
@@ -510,7 +510,9 @@ function ClaimListingCard({
               </p>
               {pendingClaimId ? (
                 <div className="pt-2">
-                  <SupportChatSheet
+                  <UnifiedChatInterface
+                    surface="sheet"
+                    domain="support"
                     kind="claim"
                     requestId={pendingClaimId}
                     triggerLabel="Message admin"

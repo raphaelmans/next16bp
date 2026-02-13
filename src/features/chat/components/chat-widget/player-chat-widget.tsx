@@ -1,11 +1,13 @@
 "use client";
 
-import { ReservationInboxWidget } from "./reservation-inbox-widget";
+import { UnifiedChatInterface } from "../unified-chat/unified-chat-interface";
 
 export function PlayerChatWidget() {
   return (
-    <ReservationInboxWidget
-      config={{
+    <UnifiedChatInterface
+      surface="floating"
+      domain="reservation"
+      reservationConfig={{
         kind: "player",
         storageKeys: {
           open: "player:chat:open",
