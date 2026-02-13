@@ -400,7 +400,7 @@ export function ReservationInboxWidget({
       return;
     }
 
-    const subscription = client.on((event) => {
+    const subscription = client.on((event: { type?: string }) => {
       const shouldRefresh =
         event.type === "message.new" ||
         event.type === "notification.message_new" ||
@@ -818,7 +818,7 @@ export function ReservationInboxWidget({
   );
 
   const threadPane = (
-    <div className="min-h-0 flex-1">
+    <div className="min-h-0 min-w-0 flex-1 overflow-hidden">
       <StreamChatThread
         client={isReady ? client : null}
         channelId={activeChannel?.id ?? null}

@@ -55,7 +55,7 @@ export function InboxFloatingSheet({
 
         <SheetContent
           side={isSmall ? "right" : "bottom"}
-          className="flex h-[88vh] flex-col gap-0 p-0 supports-[height:100dvh]:h-[88dvh] sm:h-full sm:max-w-5xl"
+          className="flex h-[88vh] min-h-0 flex-col gap-0 overflow-hidden p-0 supports-[height:100dvh]:h-[88dvh] sm:h-full sm:max-w-5xl"
         >
           <div className="flex items-start justify-between border-b px-5 py-4">
             <div className="space-y-0.5">
@@ -81,7 +81,7 @@ export function InboxFloatingSheet({
           ) : (
             <div
               className={cn(
-                "flex min-h-0 flex-1 flex-col",
+                "flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden",
                 isDesktop && "flex-row",
               )}
             >

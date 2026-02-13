@@ -407,7 +407,7 @@ function UnifiedSupportInbox() {
   );
 
   const threadPane = (
-    <div className="min-h-0 flex-1">
+    <div className="min-h-0 min-w-0 flex-1 overflow-hidden">
       <StreamChatThread
         client={isReady ? client : null}
         channelId={activeChannel?.id ?? null}
@@ -545,8 +545,11 @@ function UnifiedSupportThreadSheet({
           {triggerLabel}
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-full sm:max-w-xl">
-        <SheetHeader>
+      <SheetContent
+        side="right"
+        className="flex h-[88vh] min-h-0 flex-col gap-0 overflow-hidden p-0 supports-[height:100dvh]:h-[88dvh] sm:h-full sm:max-w-xl"
+      >
+        <SheetHeader className="border-b px-5 py-4 text-left">
           <SheetTitle className="font-heading">{headerTitle}</SheetTitle>
           <SheetDescription>
             {headerSubtitle
@@ -555,9 +558,9 @@ function UnifiedSupportThreadSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="mt-4">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-4">
           {isLoading ? (
-            <Skeleton className="h-[520px] w-full" />
+            <Skeleton className="h-full min-h-0 w-full" />
           ) : error ? (
             <div className="text-sm text-destructive">{error.message}</div>
           ) : (
@@ -571,6 +574,7 @@ function UnifiedSupportThreadSheet({
               headerSubtitle={headerSubtitle}
               readOnly={!isReady}
               readOnlyReason={!isReady ? "Connecting..." : undefined}
+              minHeightClassName="min-h-0 flex-1"
               onSendMessage={async (payload) => {
                 if (kind === "claim") {
                   await sendClaimMessageMutation.mutateAsync({
