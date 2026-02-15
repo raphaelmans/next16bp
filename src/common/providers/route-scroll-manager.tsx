@@ -1,15 +1,12 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 export function RouteScrollManager() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const search = searchParams.toString();
-  const currentRoute = search ? `${pathname}?${search}` : pathname;
   const skipNextScrollRef = useRef(false);
-  const previousRouteRef = useRef(currentRoute);
+  const previousPathnameRef = useRef(pathname);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -24,11 +21,11 @@ export function RouteScrollManager() {
   }, []);
 
   useEffect(() => {
-    if (previousRouteRef.current === currentRoute) {
+    if (previousPathnameRef.current === pathname) {
       return;
     }
 
-    previousRouteRef.current = currentRoute;
+    previousPathnameRef.current = pathname;
 
     if (skipNextScrollRef.current) {
       skipNextScrollRef.current = false;
@@ -40,7 +37,7 @@ export function RouteScrollManager() {
     }
 
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [currentRoute]);
+  }, [pathname]);
 
   return null;
 }
