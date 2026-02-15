@@ -151,7 +151,7 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
           <label className="block space-y-2">
             <span className="text-sm font-medium">Guest name</span>
             <input
-              className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+              className="w-full rounded-md border bg-transparent px-3 py-2 text-base"
               placeholder="Juan Dela Cruz"
               onChange={(e) => onGuestNameChange(e.target.value)}
             />
@@ -159,7 +159,7 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
           <label className="block space-y-2">
             <span className="text-sm font-medium">Phone (optional)</span>
             <input
-              className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+              className="w-full rounded-md border bg-transparent px-3 py-2 text-base"
               placeholder="09171234567"
               onChange={(e) => onGuestPhoneChange(e.target.value)}
             />
@@ -167,7 +167,7 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
           <label className="block space-y-2">
             <span className="text-sm font-medium">Email (optional)</span>
             <input
-              className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+              className="w-full rounded-md border bg-transparent px-3 py-2 text-base"
               placeholder="guest@example.com"
               onChange={(e) => onGuestEmailChange(e.target.value)}
             />
@@ -178,7 +178,7 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
       <label className="block space-y-2">
         <span className="text-sm font-medium">Notes (optional)</span>
         <textarea
-          className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+          className="w-full rounded-md border bg-transparent px-3 py-2 text-base"
           placeholder="Internal notes"
           rows={2}
           onChange={(e) => onNotesChange(e.target.value)}

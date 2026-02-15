@@ -57,7 +57,7 @@ export const SelectionPanelForm = React.memo(function SelectionPanelForm({
         <label className="block space-y-2">
           <span className="text-sm font-medium">Note (optional)</span>
           <textarea
-            className="w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+            className="w-full rounded-md border bg-transparent px-3 py-2 text-base"
             placeholder={
               blockType === "MAINTENANCE"
                 ? "e.g. Net replacement"
