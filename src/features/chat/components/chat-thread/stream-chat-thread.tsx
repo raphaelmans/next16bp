@@ -78,6 +78,22 @@ const streamAttachmentToAiFile = (
   };
 };
 
+const SYSTEM_RESERVATION_MESSAGE_ID_SUFFIXES = [
+  ":player-created:v1",
+  ":player-payment-marked:v1",
+  ":owner-confirmed:v1",
+] as const;
+
+function isSystemReservationMessage(msg: LocalMessage): boolean {
+  if (typeof msg.id !== "string") {
+    return false;
+  }
+
+  return SYSTEM_RESERVATION_MESSAGE_ID_SUFFIXES.some((suffix) =>
+    msg.id.endsWith(suffix),
+  );
+}
+
 async function filePartToFile(part: FileUIPart): Promise<File> {
   const url = part.url;
   if (!url) {
@@ -384,7 +400,8 @@ export function StreamChatThread({
                           <MessageResponse>{msg.text}</MessageResponse>
                         ) : null}
 
-                        {attachments.length > 0 ? (
+                        {attachments.length > 0 &&
+                        !isSystemReservationMessage(msg) ? (
                           <Attachments variant="grid">
                             {attachments.map((a) => (
                               <AiAttachment data={a} key={a.id}>
