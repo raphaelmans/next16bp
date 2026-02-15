@@ -19,6 +19,8 @@ const csp = [
   "base-uri 'self'",
   "object-src 'none'",
   "frame-ancestors 'none'",
+  "frame-src 'self' https://www.google.com https://maps.google.com https://maps.gstatic.com",
+  "child-src 'self' https://www.google.com https://maps.google.com https://maps.gstatic.com",
   "form-action 'self'",
   "img-src 'self' data: https:",
   "font-src 'self' data: https:",
