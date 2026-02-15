@@ -15,6 +15,7 @@ import {
 import { copyToClipboard } from "@/common/utils/clipboard";
 import type { PlaceDetail } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
+import { PlaceDetailAmenitiesCard } from "@/features/discovery/place-detail/components/place-detail-amenities-card";
 import { PlaceDetailContactCard } from "@/features/discovery/place-detail/components/place-detail-contact-card";
 import { PlaceDetailBookingDesktopSection } from "@/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section";
 import { PlaceDetailBookingMobileSection } from "@/features/discovery/place-detail/components/sections/place-detail-booking-mobile-section";
@@ -345,6 +346,8 @@ export function PlaceDetailBookingSection({
             copyToClipboard(viberNumber, "Viber number");
           }}
         />
+
+        <PlaceDetailAmenitiesCard amenities={place.amenities} />
       </div>
 
       <PlaceDetailCompound.Sidebar

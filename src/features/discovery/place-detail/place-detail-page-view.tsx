@@ -11,6 +11,7 @@ import { useSession } from "@/features/auth";
 import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
 import { usePlaceDetail } from "@/features/discovery/hooks";
 import { PlaceDetail } from "@/features/discovery/place-detail/components/place-detail";
+import { PlaceDetailAmenitiesCard } from "@/features/discovery/place-detail/components/place-detail-amenities-card";
 import { PlaceDetailContactCard } from "@/features/discovery/place-detail/components/place-detail-contact-card";
 import { PlaceDetailCourtsCard } from "@/features/discovery/place-detail/components/place-detail-courts-card";
 import { PlaceDetailBookingSection } from "@/features/discovery/place-detail/components/sections/place-detail-booking-section";
@@ -198,6 +199,8 @@ export default function PlaceDetailPageView() {
                 verificationStatusVariant={verificationStatusVariant}
                 courts={place.courts}
               />
+
+              <PlaceDetailAmenitiesCard amenities={place.amenities} />
             </div>
 
             <PlaceDetail.Sidebar

@@ -546,6 +546,7 @@ export interface PlaceDetail {
     reservationsEnabled: boolean;
   } | null;
   contactDetail?: PlaceContactDetail;
+  amenities: string[];
 }
 
 export interface AvailabilityOption {
@@ -651,6 +652,9 @@ export function usePlaceDetail({ placeIdOrSlug }: UsePlaceDetailOptions) {
               }
             : null,
           contactDetail,
+          amenities: response.amenities
+            .map((a) => a.name)
+            .filter((name): name is string => Boolean(name)),
         } satisfies PlaceDetail;
       },
     },
