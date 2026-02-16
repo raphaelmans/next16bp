@@ -23,3 +23,4 @@ export { ReservationAlertsPanel } from "./reservation-alerts-panel";
 export { ReservationsTable } from "./reservations-table";
 export { StatsCard } from "./stats-card";
 export { TodaysBookings } from "./todays-bookings";
+export { VenueQrCodeDialog } from "./venue-qr-code-dialog";

@@ -28,7 +28,10 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLogout, useSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
-import { ReservationAlertsPanel } from "@/features/owner/components";
+import {
+  ReservationAlertsPanel,
+  VenueQrCodeDialog,
+} from "@/features/owner/components";
 import {
   useOwnerOrganization,
   useOwnerPlaces,
@@ -396,6 +399,11 @@ export default function OwnerPlacesPage() {
                         View Public Page
                       </Link>
                     </Button>
+
+                    <VenueQrCodeDialog
+                      venueName={place.name}
+                      venueSlugOrId={place.slug ?? place.id}
+                    />
                   </div>
                 </CardContent>
               </Card>

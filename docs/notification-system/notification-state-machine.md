@@ -2,6 +2,8 @@
 
 This documentation is split into multiple levels of detail so you can share the right depth with product, stakeholders, and engineering.
 
+If you need a single cross-channel visual (including chat notifications), start with `docs/notification-system/notification-overview-all-channels.md`.
+
 ## Levels of detail
 - Level 0 (one-minute summary): `docs/notification-system/notification-state-machine-level-0-summary.md`
 - Level 1 (product narrative): `docs/notification-system/notification-state-machine-level-1-product.md`

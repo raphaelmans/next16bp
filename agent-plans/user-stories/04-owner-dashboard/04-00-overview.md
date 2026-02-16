@@ -31,6 +31,7 @@ The dashboard follows a consistent layout pattern with a sidebar for navigation 
 | ID | Story | Status | Supersedes |
 |----|-------|--------|------------|
 | US-04-01 | Owner Views Real Dashboard Data | Active | - |
+| US-04-02 | Owner Generates and Shares Venue QR Codes | Active | - |
 
 ---
 
@@ -46,6 +47,6 @@ The dashboard follows a consistent layout pattern with a sidebar for navigation 
 
 ## Summary
 
-- Total: 1
-- Active: 1
+- Total: 2
+- Active: 2
 - Superseded: 0

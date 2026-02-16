@@ -1,6 +1,7 @@
 # Notification System
 
 ## Documentation
+- Start here (product + sales overview): `docs/notification-system/notification-overview-all-channels.md`
 - State machine index: `docs/notification-system/notification-state-machine.md`
 - Level 0 (summary): `docs/notification-system/notification-state-machine-level-0-summary.md`
 - Level 1 (product): `docs/notification-system/notification-state-machine-level-1-product.md`

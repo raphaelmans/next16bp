@@ -2,6 +2,8 @@
 
 This level captures the delivery contract for engineering.
 
+For a non-engineering, cross-channel picture (core delivery + chat signal), see `docs/notification-system/notification-overview-all-channels.md`.
+
 ## Outbox job state model
 
 Jobs are persisted in `notification_delivery_job` and processed by cron.
