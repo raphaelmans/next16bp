@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
-import { publicProcedure, router } from "@/lib/shared/infra/trpc/trpc";
+import { rateLimitedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
 import {
   GetAvailabilityForCourtRangeSchema,
   GetAvailabilityForCourtSchema,
@@ -27,7 +27,7 @@ function handleAvailabilityError(error: unknown): never {
 }
 
 export const availabilityRouter = router({
-  getForCourt: publicProcedure
+  getForCourt: rateLimitedProcedure("default")
     .input(GetAvailabilityForCourtSchema)
     .query(async ({ input }) => {
       try {
@@ -38,7 +38,7 @@ export const availabilityRouter = router({
         handleAvailabilityError(error);
       }
     }),
-  getForCourts: publicProcedure
+  getForCourts: rateLimitedProcedure("default")
     .input(GetAvailabilityForCourtsSchema)
     .query(async ({ input }) => {
       try {
@@ -49,7 +49,7 @@ export const availabilityRouter = router({
         handleAvailabilityError(error);
       }
     }),
-  getForPlaceSport: publicProcedure
+  getForPlaceSport: rateLimitedProcedure("default")
     .input(GetAvailabilityForPlaceSportSchema)
     .query(async ({ input }) => {
       try {
@@ -60,7 +60,7 @@ export const availabilityRouter = router({
         handleAvailabilityError(error);
       }
     }),
-  getForCourtRange: publicProcedure
+  getForCourtRange: rateLimitedProcedure("default")
     .input(GetAvailabilityForCourtRangeSchema)
     .query(async ({ input }) => {
       try {
@@ -71,7 +71,7 @@ export const availabilityRouter = router({
         handleAvailabilityError(error);
       }
     }),
-  getForPlaceSportRange: publicProcedure
+  getForPlaceSportRange: rateLimitedProcedure("default")
     .input(GetAvailabilityForPlaceSportRangeSchema)
     .query(async ({ input }) => {
       try {

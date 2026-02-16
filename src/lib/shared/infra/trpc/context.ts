@@ -3,12 +3,15 @@ import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import { cookies } from "next/headers";
 import { env } from "@/lib/env";
 import { makeUserRoleRepository } from "@/lib/modules/user-role/factories/user-role.factory";
+import { getClientIdentifier } from "@/lib/shared/infra/http/client-identifier";
 import { createRequestLogger } from "@/lib/shared/infra/logger";
 import { createClient } from "@/lib/shared/infra/supabase/create-client";
 import type { Session } from "@/lib/shared/kernel/auth";
 
 export interface Context {
   requestId: string;
+  clientIdentifier: string;
+  clientIdentifierSource: "ip" | "fallback";
   session: Session | null;
   userId: string | null;
   cookies: CookieMethodsServer;
@@ -30,6 +33,7 @@ export async function createContext({
 }: FetchCreateContextFnOptions): Promise<Context> {
   const requestId =
     req.headers.get("x-request-id") ?? globalThis.crypto.randomUUID();
+  const clientIdentifier = getClientIdentifier(req);
   const cookieStore = await cookies();
 
   const cookieMethods: CookieMethodsServer = {
@@ -89,6 +93,8 @@ export async function createContext({
 
   return {
     requestId,
+    clientIdentifier: clientIdentifier.value,
+    clientIdentifierSource: clientIdentifier.source,
     session,
     userId: session?.userId ?? null,
     cookies: cookieMethods,

@@ -34,6 +34,7 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { validateChatUploadFiles } from "../../constants/upload-policy";
 import { useStreamChannel } from "../../hooks/useStreamChannel";
 
 function PromptInputAttachmentsDisplay() {
@@ -212,6 +213,10 @@ export function StreamChatThread({
       try {
         if (hasFiles) {
           const files = await Promise.all(message.files.map(filePartToFile));
+          const uploadValidationError = validateChatUploadFiles(files);
+          if (uploadValidationError) {
+            throw new Error(uploadValidationError);
+          }
 
           const uploads = await Promise.all(
             files.map(async (file) => {

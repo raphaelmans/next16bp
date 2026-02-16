@@ -3,7 +3,11 @@ import { normalizePhMobile } from "@/common/phone";
 import { makeNotificationDeliveryJobRepository } from "@/lib/modules/notification-delivery/factories/notification-delivery.factory";
 import { makePushSubscriptionRepository } from "@/lib/modules/push-subscription/factories/push-subscription.factory";
 import type { InsertNotificationDeliveryJob } from "@/lib/shared/infra/db/schema";
-import { adminProcedure, router } from "@/lib/shared/infra/trpc/trpc";
+import {
+  adminProcedure,
+  adminRateLimitedProcedure,
+  router,
+} from "@/lib/shared/infra/trpc/trpc";
 
 const baseTargetSchema = z.object({
   email: z.string().email().optional().or(z.literal("")),
@@ -47,7 +51,7 @@ export const notificationDeliveryAdminRouter = router({
     };
   }),
 
-  enqueueWebPushTest: adminProcedure
+  enqueueWebPushTest: adminRateLimitedProcedure("sensitive")
     .input(webPushTestSchema)
     .mutation(async ({ input, ctx }) => {
       const repo = makePushSubscriptionRepository();
@@ -87,7 +91,7 @@ export const notificationDeliveryAdminRouter = router({
       };
     }),
 
-  enqueueReservationCreatedTest: adminProcedure
+  enqueueReservationCreatedTest: adminRateLimitedProcedure("sensitive")
     .input(
       baseTargetSchema.merge(
         z.object({
@@ -167,7 +171,7 @@ export const notificationDeliveryAdminRouter = router({
       };
     }),
 
-  enqueuePlaceVerificationReviewedTest: adminProcedure
+  enqueuePlaceVerificationReviewedTest: adminRateLimitedProcedure("sensitive")
     .input(
       baseTargetSchema.merge(
         z.object({
@@ -237,7 +241,7 @@ export const notificationDeliveryAdminRouter = router({
       };
     }),
 
-  enqueueClaimReviewedTest: adminProcedure
+  enqueueClaimReviewedTest: adminRateLimitedProcedure("sensitive")
     .input(
       baseTargetSchema.merge(
         z.object({
@@ -307,7 +311,7 @@ export const notificationDeliveryAdminRouter = router({
       };
     }),
 
-  dispatchNow: adminProcedure
+  dispatchNow: adminRateLimitedProcedure("sensitive")
     .input(
       z.object({
         confirm: z.literal(true),

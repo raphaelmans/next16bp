@@ -34,6 +34,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/trpc/client";
+import { validateChatUploadFiles } from "../constants/upload-policy";
 import { useStreamChannel } from "../hooks/useStreamChannel";
 import { useStreamClient } from "../hooks/useStreamClient";
 
@@ -181,6 +182,10 @@ export function ReservationChatClient({
       try {
         if (hasFiles) {
           const files = await Promise.all(message.files.map(filePartToFile));
+          const uploadValidationError = validateChatUploadFiles(files);
+          if (uploadValidationError) {
+            throw new Error(uploadValidationError);
+          }
 
           if (hasText) {
             const uploads = await Promise.all(

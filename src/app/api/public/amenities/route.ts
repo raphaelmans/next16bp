@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { makePlaceDiscoveryService } from "@/lib/modules/place/factories/place.factory";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
+import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import type {
   ApiErrorResponse,
   ApiResponse,
@@ -15,6 +16,11 @@ export async function GET(req: Request) {
     req.headers.get("x-request-id") ?? globalThis.crypto.randomUUID();
 
   try {
+    const rl = await enforceRateLimit({ req, tier: "default", requestId });
+    if (!rl.ok) {
+      return rl.response;
+    }
+
     const service = makePlaceDiscoveryService();
     const amenities = await service.listAmenities();
     return NextResponse.json<ApiResponse<string[]>>(wrapResponse(amenities));

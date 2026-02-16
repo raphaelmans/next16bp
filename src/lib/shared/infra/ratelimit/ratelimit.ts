@@ -12,6 +12,21 @@ type RateLimiter = {
   }>;
 };
 
+export class RateLimiterUnavailableError extends Error {
+  constructor(message = "Rate limiter backend is not configured") {
+    super(message);
+    this.name = "RateLimiterUnavailableError";
+  }
+}
+
+const isRateLimiterConfigured = () =>
+  Boolean(
+    process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
+  );
+
+const isDevelopmentLikeEnv = () =>
+  process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
+
 /**
  * Cache for rate limiter instances by tier.
  * Each tier gets its own rate limiter with independent limits.
@@ -31,22 +46,30 @@ export function getRateLimiter(tier: RateLimitTier): RateLimiter {
     return existing;
   }
 
-  if (
-    !process.env.UPSTASH_REDIS_REST_URL ||
-    !process.env.UPSTASH_REDIS_REST_TOKEN
-  ) {
-    const noop: RateLimiter = {
-      limit: async () => ({
-        success: true,
-        limit: 0,
-        remaining: 0,
-        reset: 0,
-        pending: Promise.resolve(),
-      }),
+  if (!isRateLimiterConfigured()) {
+    if (isDevelopmentLikeEnv()) {
+      const noop: RateLimiter = {
+        limit: async () => ({
+          success: true,
+          limit: 0,
+          remaining: 0,
+          reset: 0,
+          pending: Promise.resolve(),
+        }),
+      };
+
+      rateLimiters.set(tier, noop);
+      return noop;
+    }
+
+    const unavailable: RateLimiter = {
+      limit: async () => {
+        throw new RateLimiterUnavailableError();
+      },
     };
 
-    rateLimiters.set(tier, noop);
-    return noop;
+    rateLimiters.set(tier, unavailable);
+    return unavailable;
   }
 
   const config = RATE_LIMIT_TIERS[tier];

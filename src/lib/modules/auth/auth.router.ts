@@ -25,7 +25,7 @@ export const authRouter = router({
     return { user: { id: result.user.id, email: result.user.email } };
   }),
 
-  requestEmailOtp: rateLimitedProcedure("auth")
+  requestEmailOtp: rateLimitedProcedure("authEmailSend")
     .input(RequestEmailOtpSchema)
     .mutation(async ({ input, ctx }) => {
       const authService = makeAuthService(ctx.cookies);
@@ -48,7 +48,7 @@ export const authRouter = router({
       };
     }),
 
-  loginWithMagicLink: publicProcedure
+  loginWithMagicLink: rateLimitedProcedure("authEmailSend")
     .input(MagicLinkSchema)
     .mutation(async ({ input, ctx }) => {
       const authService = makeAuthService(ctx.cookies);
@@ -71,7 +71,7 @@ export const authRouter = router({
       return { url: result.url };
     }),
 
-  register: publicProcedure
+  register: rateLimitedProcedure("authEmailSend")
     .input(RegisterSchema)
     .mutation(async ({ input, ctx }) => {
       const useCase = makeRegisterUserUseCase(ctx.cookies);
@@ -132,7 +132,7 @@ export const authRouter = router({
       };
     }),
 
-  resendSignUpOtp: publicProcedure
+  resendSignUpOtp: rateLimitedProcedure("authEmailSend")
     .input(RequestEmailOtpSchema)
     .mutation(async ({ input, ctx }) => {
       const authService = makeAuthService(ctx.cookies);

@@ -3,7 +3,8 @@ import path from "node:path";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
+export const revalidate = false;
 
 type ProvinceCity = {
   name: string;
@@ -89,9 +90,8 @@ async function loadProvincesCities(): Promise<ProvincesCities> {
   return cachedProvincesCities;
 }
 
-export async function GET(req: Request) {
-  const requestId =
-    req.headers.get("x-request-id") ?? globalThis.crypto.randomUUID();
+export async function GET() {
+  const requestId = globalThis.crypto.randomUUID();
 
   try {
     const provincesCities = await loadProvincesCities();

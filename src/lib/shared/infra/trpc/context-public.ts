@@ -17,6 +17,8 @@ export async function createPublicContext(): Promise<Context> {
 
   return {
     requestId,
+    clientIdentifier: "anon:fallback",
+    clientIdentifierSource: "fallback",
     session: null,
     userId: null,
     cookies: createCookieMethods(),

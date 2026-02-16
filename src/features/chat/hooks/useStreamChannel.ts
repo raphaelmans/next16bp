@@ -8,6 +8,7 @@ import type {
   LocalMessage,
   StreamChat,
 } from "stream-chat";
+import { validateChatUploadFiles } from "../constants/upload-policy";
 
 export interface UseStreamChannelInput {
   client: StreamChat | null;
@@ -167,6 +168,11 @@ export function useStreamChannel({
     const current = channelRef.current;
     if (!current) {
       throw new Error("Channel is not ready");
+    }
+
+    const uploadValidationError = validateChatUploadFiles(files);
+    if (uploadValidationError) {
+      throw new Error(uploadValidationError);
     }
 
     const uploads = await Promise.all(

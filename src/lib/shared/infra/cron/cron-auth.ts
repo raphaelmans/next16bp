@@ -9,9 +9,10 @@ type CronAuthResult =
 
 export function verifyCronAuth(request: Request): CronAuthResult {
   const cronSecret = process.env.CRON_SECRET;
-  const isProduction = process.env.NODE_ENV === "production";
+  const isDevelopmentLike =
+    process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
 
-  if (isProduction && !cronSecret) {
+  if (!cronSecret && !isDevelopmentLike) {
     return {
       ok: false,
       response: NextResponse.json(
@@ -21,7 +22,7 @@ export function verifyCronAuth(request: Request): CronAuthResult {
     };
   }
 
-  if (!cronSecret) {
+  if (!cronSecret && isDevelopmentLike) {
     return { ok: true };
   }
 

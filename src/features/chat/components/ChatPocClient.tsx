@@ -35,6 +35,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/trpc/client";
+import { validateChatUploadFiles } from "../constants/upload-policy";
 import { useStreamChannel } from "../hooks/useStreamChannel";
 import { useStreamClient } from "../hooks/useStreamClient";
 
@@ -201,6 +202,10 @@ export function ChatPocClient() {
       try {
         if (hasFiles) {
           const files = await Promise.all(message.files.map(filePartToFile));
+          const uploadValidationError = validateChatUploadFiles(files);
+          if (uploadValidationError) {
+            throw new Error(uploadValidationError);
+          }
 
           if (hasText) {
             const attachments: Attachment[] = [];

@@ -67,7 +67,7 @@ function handleReservationChatError(error: unknown): never {
 }
 
 export const reservationChatRouter = router({
-  getSession: protectedProcedure
+  getSession: protectedRateLimitedProcedure("chatSession")
     .input(
       z.object({
         reservationId: S.ids.generic,
@@ -76,10 +76,24 @@ export const reservationChatRouter = router({
     .query(async ({ input, ctx }) => {
       try {
         const service = makeReservationChatService();
-        return await service.getSession(ctx.userId, input.reservationId, {
-          id: ctx.userId,
-          name: ctx.session.email || ctx.userId,
-        });
+        const session = await service.getSession(
+          ctx.userId,
+          input.reservationId,
+          {
+            id: ctx.userId,
+            name: ctx.session.email || ctx.userId,
+          },
+        );
+
+        ctx.log.info(
+          {
+            event: "reservation_chat.session_issued",
+            reservationId: input.reservationId,
+          },
+          "Reservation chat session issued",
+        );
+
+        return session;
       } catch (error) {
         handleReservationChatError(error);
       }

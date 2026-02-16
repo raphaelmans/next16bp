@@ -1,7 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { S } from "@/common/schemas";
-import { protectedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
+import {
+  protectedProcedure,
+  protectedRateLimitedProcedure,
+  router,
+} from "@/lib/shared/infra/trpc/trpc";
 import { UpdateProfileSchema, UploadAvatarSchema } from "./dtos";
 import { ProfileNotFoundError } from "./errors/profile.errors";
 import { makeProfileService } from "./factories/profile.factory";
@@ -31,7 +35,7 @@ export const profileRouter = router({
    * Upload avatar image for current user.
    * Accepts FormData with image file.
    */
-  uploadAvatar: protectedProcedure
+  uploadAvatar: protectedRateLimitedProcedure("mutation")
     .input(UploadAvatarSchema)
     .mutation(async ({ input, ctx }) => {
       const profileService = makeProfileService();

@@ -2,8 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { S } from "@/common/schemas";
 import {
-  adminProcedure,
-  protectedProcedure,
+  adminRateLimitedProcedure,
   protectedRateLimitedProcedure,
   router,
 } from "@/lib/shared/infra/trpc/trpc";
@@ -31,18 +30,20 @@ function handleSupportChatError(error: unknown): never {
 }
 
 export const supportChatRouter = router({
-  backfillClaimThreads: adminProcedure.mutation(async ({ ctx }) => {
-    try {
-      const service = makeSupportChatService();
-      return await service.backfillPendingClaimThreads({
-        createdByUserId: ctx.userId,
-      });
-    } catch (error) {
-      handleSupportChatError(error);
-    }
-  }),
+  backfillClaimThreads: adminRateLimitedProcedure("sensitive").mutation(
+    async ({ ctx }) => {
+      try {
+        const service = makeSupportChatService();
+        return await service.backfillPendingClaimThreads({
+          createdByUserId: ctx.userId,
+        });
+      } catch (error) {
+        handleSupportChatError(error);
+      }
+    },
+  ),
 
-  getClaimSession: protectedProcedure
+  getClaimSession: protectedRateLimitedProcedure("chatSession")
     .input(
       z.object({
         claimRequestId: S.ids.generic,
@@ -51,18 +52,28 @@ export const supportChatRouter = router({
     .query(async ({ input, ctx }) => {
       try {
         const service = makeSupportChatService();
-        return await service.getClaimSession({
+        const session = await service.getClaimSession({
           viewerUserId: ctx.userId,
           viewer: { id: ctx.userId, name: ctx.session.email || ctx.userId },
           claimRequestId: input.claimRequestId,
           ctx,
         });
+
+        ctx.log.info(
+          {
+            event: "support_chat.claim_session_issued",
+            claimRequestId: input.claimRequestId,
+          },
+          "Support claim chat session issued",
+        );
+
+        return session;
       } catch (error) {
         handleSupportChatError(error);
       }
     }),
 
-  getVerificationSession: protectedProcedure
+  getVerificationSession: protectedRateLimitedProcedure("chatSession")
     .input(
       z.object({
         placeVerificationRequestId: S.ids.generic,
@@ -71,12 +82,22 @@ export const supportChatRouter = router({
     .query(async ({ input, ctx }) => {
       try {
         const service = makeSupportChatService();
-        return await service.getVerificationSession({
+        const session = await service.getVerificationSession({
           viewerUserId: ctx.userId,
           viewer: { id: ctx.userId, name: ctx.session.email || ctx.userId },
           placeVerificationRequestId: input.placeVerificationRequestId,
           ctx,
         });
+
+        ctx.log.info(
+          {
+            event: "support_chat.verification_session_issued",
+            placeVerificationRequestId: input.placeVerificationRequestId,
+          },
+          "Support verification chat session issued",
+        );
+
+        return session;
       } catch (error) {
         handleSupportChatError(error);
       }

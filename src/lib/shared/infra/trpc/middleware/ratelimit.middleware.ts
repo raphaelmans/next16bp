@@ -1,11 +1,15 @@
 import { TRPCError } from "@trpc/server";
 import { RateLimitError } from "@/lib/shared/kernel/errors";
-import { getRateLimiter, type RateLimitTier } from "../../ratelimit";
+import {
+  getRateLimiter,
+  RateLimiterUnavailableError,
+  type RateLimitTier,
+} from "../../ratelimit";
 import { middleware } from "../trpc";
 
 /**
  * Creates a rate limit middleware for the specified tier.
- * Uses userId for authenticated requests, requestId for anonymous.
+ * Uses userId for authenticated requests, client identifier for anonymous.
  *
  * @param tier - The rate limit tier to apply
  * @returns tRPC middleware that enforces rate limiting
@@ -14,10 +18,32 @@ export function createRateLimitMiddleware(tier: RateLimitTier) {
   const limiter = getRateLimiter(tier);
 
   return middleware(async ({ ctx, next }) => {
-    // Use userId if authenticated, otherwise use requestId as fallback
-    const identifier = ctx.userId ?? ctx.requestId;
+    const identifier = ctx.userId ?? ctx.clientIdentifier;
 
-    const { success, limit, remaining } = await limiter.limit(identifier);
+    let result: Awaited<ReturnType<typeof limiter.limit>>;
+    try {
+      result = await limiter.limit(identifier);
+    } catch (error) {
+      if (error instanceof RateLimiterUnavailableError) {
+        ctx.log.error(
+          {
+            tier,
+            identifierType: ctx.userId ? "user" : ctx.clientIdentifierSource,
+          },
+          "Rate limiter unavailable",
+        );
+
+        throw new TRPCError({
+          code: "SERVICE_UNAVAILABLE",
+          message: "Rate limiter unavailable. Please try again later.",
+          cause: error,
+        });
+      }
+
+      throw error;
+    }
+
+    const { success, limit, remaining } = result;
 
     if (!success) {
       ctx.log.warn(
@@ -25,7 +51,7 @@ export function createRateLimitMiddleware(tier: RateLimitTier) {
           tier,
           limit,
           remaining,
-          identifier: ctx.userId ? "user" : "anonymous",
+          identifierType: ctx.userId ? "user" : ctx.clientIdentifierSource,
         },
         "Rate limit exceeded",
       );

@@ -194,7 +194,7 @@ export const bookingsImportRouter = router({
       }
     }),
 
-  normalize: protectedProcedure
+  normalize: protectedRateLimitedProcedure("aiNormalize")
     .input(NormalizeJobSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -210,7 +210,7 @@ export const bookingsImportRouter = router({
       }
     }),
 
-  commit: protectedProcedure
+  commit: protectedRateLimitedProcedure("mutation")
     .input(CommitJobSchema)
     .mutation(async ({ input, ctx }) => {
       try {

@@ -13,7 +13,11 @@ import {
 import { GuestProfileNotFoundError } from "@/lib/modules/guest-profile/errors/guest-profile.errors";
 import { NotOrganizationOwnerError } from "@/lib/modules/organization/errors/organization.errors";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
-import { protectedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
+import {
+  protectedProcedure,
+  protectedRateLimitedProcedure,
+  router,
+} from "@/lib/shared/infra/trpc/trpc";
 import { AppError } from "@/lib/shared/kernel/errors";
 import {
   AcceptReservationSchema,
@@ -103,7 +107,7 @@ export const reservationOwnerRouter = router({
   /**
    * Accept a reservation (owner only)
    */
-  accept: protectedProcedure
+  accept: protectedRateLimitedProcedure("sensitive")
     .input(AcceptReservationSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -117,7 +121,7 @@ export const reservationOwnerRouter = router({
   /**
    * Confirm payment for a reservation (owner only)
    */
-  confirmPayment: protectedProcedure
+  confirmPayment: protectedRateLimitedProcedure("sensitive")
     .input(ConfirmPaymentSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -131,7 +135,7 @@ export const reservationOwnerRouter = router({
   /**
    * Confirm a reservation as paid and confirmed (CREATED -> CONFIRMED, owner only)
    */
-  confirmPaidOffline: protectedProcedure
+  confirmPaidOffline: protectedRateLimitedProcedure("sensitive")
     .input(ConfirmPaidOfflineSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -145,7 +149,7 @@ export const reservationOwnerRouter = router({
   /**
    * Reject a reservation (owner only)
    */
-  reject: protectedProcedure
+  reject: protectedRateLimitedProcedure("sensitive")
     .input(RejectReservationSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -159,7 +163,7 @@ export const reservationOwnerRouter = router({
   /**
    * Create a guest booking directly as CONFIRMED (owner only)
    */
-  createGuestBooking: protectedProcedure
+  createGuestBooking: protectedRateLimitedProcedure("sensitive")
     .input(CreateGuestBookingSchema)
     .mutation(async ({ input, ctx }) => {
       try {
@@ -173,7 +177,7 @@ export const reservationOwnerRouter = router({
   /**
    * Convert a walk-in block into a guest booking (owner only)
    */
-  convertWalkInBlockToGuest: protectedProcedure
+  convertWalkInBlockToGuest: protectedRateLimitedProcedure("sensitive")
     .input(ConvertWalkInBlockSchema)
     .mutation(async ({ input, ctx }) => {
       try {

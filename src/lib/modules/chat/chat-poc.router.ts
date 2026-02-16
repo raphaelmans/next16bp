@@ -2,7 +2,10 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { S } from "@/common/schemas";
 import { env } from "@/lib/env";
-import { protectedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
+import {
+  protectedRateLimitedProcedure,
+  router,
+} from "@/lib/shared/infra/trpc/trpc";
 import { AppError, NotFoundError } from "@/lib/shared/kernel/errors";
 import { makeChatService } from "./factories/chat.factory";
 
@@ -51,26 +54,28 @@ const toTrpcError = (error: AppError) =>
   });
 
 export const chatPocRouter = router({
-  getAuth: protectedProcedure.query(async ({ ctx }) => {
-    ensureChatPocEnabled();
+  getAuth: protectedRateLimitedProcedure("chatSession").query(
+    async ({ ctx }) => {
+      ensureChatPocEnabled();
 
-    const chatService = makeChatService();
-    const user = {
-      id: ctx.userId,
-      name: ctx.session.email || ctx.userId,
-    };
+      const chatService = makeChatService();
+      const user = {
+        id: ctx.userId,
+        name: ctx.session.email || ctx.userId,
+      };
 
-    try {
-      return await chatService.getAuth(user);
-    } catch (error) {
-      if (error instanceof AppError) {
-        throw toTrpcError(error);
+      try {
+        return await chatService.getAuth(user);
+      } catch (error) {
+        if (error instanceof AppError) {
+          throw toTrpcError(error);
+        }
+        throw error;
       }
-      throw error;
-    }
-  }),
+    },
+  ),
 
-  getOrCreateDm: protectedProcedure
+  getOrCreateDm: protectedRateLimitedProcedure("chatSession")
     .input(
       z.object({
         otherUserId: S.ids.generic,
