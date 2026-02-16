@@ -17,13 +17,26 @@ const urlBase64ToUint8Array = (base64String: string) => {
 
 export type UseWebPushResult = {
   supported: boolean;
+  isSecureContext: boolean;
   configured: boolean;
   permission: NotificationPermission | null;
   enabledOnThisDevice: boolean;
+  diagnosticsCode:
+    | "unsupported"
+    | "insecure_context"
+    | "permission_denied"
+    | "not_configured"
+    | "granted_not_registered"
+    | "enabled"
+    | "ready";
+  diagnosticsMessage: string;
+  localTestEnabled: boolean;
+  canSendLocalTest: boolean;
   busy: boolean;
   refresh: () => Promise<void>;
   enable: () => Promise<void>;
   disable: () => Promise<void>;
+  sendLocalTestNotification: () => Promise<void>;
 };
 
 export function useWebPush(): UseWebPushResult {
@@ -32,6 +45,9 @@ export function useWebPush(): UseWebPushResult {
     "Notification" in window &&
     "serviceWorker" in navigator &&
     "PushManager" in window;
+  const isSecureContext =
+    typeof window !== "undefined" ? window.isSecureContext : false;
+  const localTestEnabled = process.env.NODE_ENV !== "production";
 
   const vapidQuery = trpc.pushSubscription.getVapidPublicKey.useQuery(
     undefined,
@@ -63,14 +79,18 @@ export function useWebPush(): UseWebPushResult {
 
     setPermission(Notification.permission);
 
-    const reg = await navigator.serviceWorker.getRegistration("/");
-    if (!reg) {
-      setHasSubscription(false);
-      return;
-    }
+    try {
+      const reg = await navigator.serviceWorker.getRegistration("/");
+      if (!reg) {
+        setHasSubscription(false);
+        return;
+      }
 
-    const subscription = await reg.pushManager.getSubscription();
-    setHasSubscription(Boolean(subscription));
+      const subscription = await reg.pushManager.getSubscription();
+      setHasSubscription(Boolean(subscription));
+    } catch {
+      setHasSubscription(false);
+    }
   }, [supported]);
 
   React.useEffect(() => {
@@ -80,6 +100,9 @@ export function useWebPush(): UseWebPushResult {
   const enable = React.useCallback(async () => {
     if (!supported) {
       throw new Error("Browser notifications are not supported on this device");
+    }
+    if (!isSecureContext) {
+      throw new Error("Notifications require HTTPS or localhost");
     }
     if (!publicKey) {
       throw new Error("Web Push is not configured");
@@ -137,7 +160,7 @@ export function useWebPush(): UseWebPushResult {
     } finally {
       setBusy(false);
     }
-  }, [publicKey, supported, upsertMutation]);
+  }, [isSecureContext, publicKey, supported, upsertMutation]);
 
   const disable = React.useCallback(async () => {
     if (!supported) return;
@@ -163,14 +186,108 @@ export function useWebPush(): UseWebPushResult {
     }
   }, [revokeMutation, supported]);
 
+  const sendLocalTestNotification = React.useCallback(async () => {
+    if (!localTestEnabled) {
+      throw new Error(
+        "Test notifications are only available in non-production environments",
+      );
+    }
+    if (!supported) {
+      throw new Error("Browser notifications are not supported on this device");
+    }
+    if (!isSecureContext) {
+      throw new Error("Notifications require HTTPS or localhost");
+    }
+
+    setBusy(true);
+    try {
+      let nextPermission = Notification.permission;
+      if (nextPermission !== "granted") {
+        nextPermission = await Notification.requestPermission();
+      }
+      setPermission(nextPermission);
+
+      if (nextPermission !== "granted") {
+        throw new Error(
+          nextPermission === "denied"
+            ? "Permission was denied in your browser"
+            : "Permission was not granted",
+        );
+      }
+
+      const registration =
+        (await navigator.serviceWorker.getRegistration("/")) ??
+        (await navigator.serviceWorker.register("/sw.js"));
+
+      await registration.showNotification("KudosCourts test notification", {
+        body: "If you can see this, browser notifications are working on this device.",
+        icon: "/logo.png",
+        tag: "test.web_push.local",
+        data: {
+          url: "/",
+        },
+      });
+
+      await refresh();
+    } finally {
+      setBusy(false);
+    }
+  }, [isSecureContext, localTestEnabled, refresh, supported]);
+
+  const enabledOnThisDevice = permission === "granted" && hasSubscription;
+
+  const diagnosticsCode: UseWebPushResult["diagnosticsCode"] = !supported
+    ? "unsupported"
+    : !isSecureContext
+      ? "insecure_context"
+      : permission === "denied"
+        ? "permission_denied"
+        : enabledOnThisDevice
+          ? "enabled"
+          : !configured
+            ? "not_configured"
+            : permission === "granted"
+              ? "granted_not_registered"
+              : "ready";
+
+  const diagnosticsMessage =
+    diagnosticsCode === "unsupported"
+      ? "Your browser does not support push notifications."
+      : diagnosticsCode === "insecure_context"
+        ? "Use HTTPS (or localhost in dev) to enable notifications."
+        : diagnosticsCode === "permission_denied"
+          ? "Notifications are blocked for this site in browser settings."
+          : diagnosticsCode === "enabled"
+            ? "Notifications are enabled on this device."
+            : diagnosticsCode === "not_configured"
+              ? "Server Web Push is not configured yet."
+              : diagnosticsCode === "granted_not_registered"
+                ? "Permission is granted but this device is not subscribed yet."
+                : localTestEnabled
+                  ? "Ready to request permission and run a test notification."
+                  : "Ready to request permission and enable notifications.";
+
+  const canSendLocalTest =
+    localTestEnabled &&
+    supported &&
+    isSecureContext &&
+    permission !== "denied" &&
+    !busy;
+
   return {
     supported,
+    isSecureContext,
     configured,
     permission,
-    enabledOnThisDevice: permission === "granted" && hasSubscription,
+    enabledOnThisDevice,
+    diagnosticsCode,
+    diagnosticsMessage,
+    localTestEnabled,
+    canSendLocalTest,
     busy,
     refresh,
     enable,
     disable,
+    sendLocalTestNotification,
   };
 }

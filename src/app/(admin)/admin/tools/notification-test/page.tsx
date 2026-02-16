@@ -300,6 +300,12 @@ export default function AdminNotificationTestPage() {
 
         <WebPushSettingsCard />
 
+        <p className="text-sm text-muted-foreground">
+          Tip: in non-production environments, use the Browser Notifications
+          test button first to verify this browser can show notifications. The
+          tools below validate the full enqueue and dispatch pipeline.
+        </p>
+
         <Card>
           <CardHeader>
             <CardTitle>Web Push: send test notification</CardTitle>

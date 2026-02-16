@@ -44,6 +44,7 @@ export function NotificationBell({ portal }: { portal: Portal }) {
   const toggleDisabled =
     webPush.busy ||
     !webPush.supported ||
+    !webPush.isSecureContext ||
     !webPush.configured ||
     webPush.permission === "denied";
 
@@ -92,6 +93,11 @@ export function NotificationBell({ portal }: { portal: Portal }) {
               Your browser does not support push notifications.
             </p>
           ) : null}
+          {webPush.supported && !webPush.isSecureContext ? (
+            <p className="text-xs text-muted-foreground">
+              Notifications require HTTPS (localhost also works in dev).
+            </p>
+          ) : null}
           {webPush.supported && !webPush.configured ? (
             <p className="text-xs text-muted-foreground">
               Notifications are not configured on the server.
@@ -102,6 +108,9 @@ export function NotificationBell({ portal }: { portal: Portal }) {
               To enable, allow notifications for this site in your browser.
             </p>
           ) : null}
+          <p className="text-xs text-muted-foreground">
+            {webPush.diagnosticsMessage}
+          </p>
 
           <div className="flex items-center justify-end">
             <Button asChild type="button" variant="link" className="px-0">

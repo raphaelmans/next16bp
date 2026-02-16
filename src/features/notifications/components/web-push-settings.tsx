@@ -37,6 +37,19 @@ export function WebPushSettingsCard({ id }: { id?: string }) {
     }
   };
 
+  const sendLocalTest = async () => {
+    try {
+      await webPush.sendLocalTestNotification();
+      toast.success("Test notification sent", {
+        description: "Check your browser or OS notification center",
+      });
+    } catch (error) {
+      toast.error("Failed to send test notification", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
+
   const statusLabel = !webPush.supported
     ? "Unsupported"
     : !webPush.configured
@@ -83,7 +96,28 @@ export function WebPushSettingsCard({ id }: { id?: string }) {
           >
             Disable
           </Button>
+          {webPush.localTestEnabled ? (
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={sendLocalTest}
+              disabled={!webPush.canSendLocalTest}
+            >
+              Send test notification
+            </Button>
+          ) : null}
         </div>
+
+        <p className="text-xs text-muted-foreground">
+          {webPush.diagnosticsMessage}
+        </p>
+
+        {webPush.diagnosticsCode === "permission_denied" ? (
+          <p className="text-xs text-muted-foreground">
+            Reset site notification permissions in your browser settings to try
+            again.
+          </p>
+        ) : null}
       </CardContent>
     </Card>
   );
