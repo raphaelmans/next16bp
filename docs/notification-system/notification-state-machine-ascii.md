@@ -1,20 +1,17 @@
 # Notification State Machine (ASCII)
 
 This is an ASCII companion to:
-- `docs/notification-system/notification-state-machine.md`
-- `docs/notification-system/notification-state-machine-level-1-product.md`
-- `docs/notification-system/notification-state-machine-level-2-engineering.md`
+- [notification-state-machine.md](./notification-state-machine.md)
+- [notification-state-machine-level-1-product.md](./notification-state-machine-level-1-product.md)
+- [notification-state-machine-level-2-engineering.md](./notification-state-machine-level-2-engineering.md)
+- [notification-event-catalog.md](./notification-event-catalog.md)
 
-## 0) Current contract (MVP)
+## 0) Current contract
 
 This system currently supports:
 
-- Event types:
-  - `place_verification.requested` -> admins
-  - `reservation.created` -> court owner
-  - `place_verification.approved|rejected` -> court owner
-  - `claim_request.approved|rejected` -> court owner
-- Channels: EMAIL (Resend) + SMS (Semaphore) when contact details exist
+- Event types: see [notification-event-catalog.md](./notification-event-catalog.md)
+- Channels: EMAIL (Resend) + SMS (Semaphore) + WEB_PUSH (browser notifications)
 - Delivery: async outbox jobs (`notification_delivery_job`) dispatched by cron
 
 Not in scope yet (intentionally deferred): in-app inbox, user notification preferences, multi-event templates.
@@ -22,7 +19,7 @@ Not in scope yet (intentionally deferred): in-app inbox, user notification prefe
 ## 1) Delivery pipeline (MVP)
 
 ```text
-Owner submits verification
+Example flow: owner submits verification
   |
   | (same DB transaction)
   v
@@ -30,7 +27,7 @@ place_verification_request + event
   |
   | enqueue outbox jobs
   v
-notification_delivery_job (EMAIL/SMS)
+notification_delivery_job (EMAIL/SMS/WEB_PUSH)
   |
   | cron dispatcher
   v

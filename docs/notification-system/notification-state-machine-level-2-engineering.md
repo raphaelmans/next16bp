@@ -2,7 +2,8 @@
 
 This level captures the delivery contract for engineering.
 
-For a non-engineering, cross-channel picture (core delivery + chat signal), see `docs/notification-system/notification-overview-all-channels.md`.
+For a non-engineering, cross-channel picture (core delivery + chat signal), see [notification-overview-all-channels.md](./notification-overview-all-channels.md).
+For the full business event list, see [notification-event-catalog.md](./notification-event-catalog.md).
 
 ## Outbox job state model
 
@@ -19,7 +20,7 @@ States:
 
 ```mermaid
 stateDiagram-v2
-  [*] --> PENDING: enqueue within transaction
+  [*] --> PENDING: enqueue job
   PENDING --> SENDING: cron claims
   SENDING --> SENT: delivery success
   SENDING --> FAILED: delivery error
@@ -30,9 +31,9 @@ stateDiagram-v2
   SENT --> [*]
 ```
 
-## Enqueue chokepoints (MVP)
+## Where notification jobs are created (current)
 
-Events:
+Core delivery events (admins/owners):
 
 1) `place_verification.requested` (notify admins)
 - File: `src/lib/modules/place-verification/services/place-verification.service.ts`
@@ -66,7 +67,29 @@ Events:
   - `claim_request_event`
   - `place`
 
-## Recipients (MVP)
+Reservation lifecycle web push events:
+
+5) `reservation.awaiting_payment` (notify player)
+- File: `src/lib/modules/reservation/services/reservation-owner.service.ts`
+- Enqueue happens in the reservation-owner transaction path.
+
+6) `reservation.payment_marked` (notify owner)
+- File: `src/lib/modules/reservation/services/reservation.service.ts`
+- Enqueue is best-effort (warning log on enqueue failure; reservation flow still succeeds).
+
+7) `reservation.confirmed` (notify player)
+- File: `src/lib/modules/reservation/services/reservation-owner.service.ts`
+- Enqueue happens in reservation-owner transaction paths.
+
+8) `reservation.rejected` (notify player)
+- File: `src/lib/modules/reservation/services/reservation-owner.service.ts`
+- Enqueue happens in reservation-owner transaction path.
+
+9) `reservation.cancelled` (notify owner)
+- File: `src/lib/modules/reservation/services/reservation.service.ts`
+- Enqueue is best-effort (warning log on enqueue failure; reservation flow still succeeds).
+
+## Recipients (current)
 
 Admins:
 - Resolved via `user_roles.role = "admin"` joined to `profile`.
@@ -76,6 +99,10 @@ Admins:
 Court owner:
 - Resolved via `organization_profile.contactEmail/contactPhone`.
 - Fallback to `profile.email/phoneNumber` for `organization.ownerUserId`.
+
+Player:
+- Resolved from `reservation.playerId` joined to `profile`.
+- Currently used by reservation lifecycle web push events (`awaiting_payment`, `confirmed`, `rejected`).
 
 ## Web Push (browser) channel
 
@@ -87,7 +114,7 @@ Court owner:
 
 Each job has a unique `idempotencyKey` to prevent duplicates.
 
-Format (MVP):
+Representative formats:
 - `place_verification.requested:<requestId>:admin:<adminUserId>:email`
 - `place_verification.requested:<requestId>:admin:<adminUserId>:sms`
 - `reservation.created:<reservationId>:org:<organizationId>:email`
@@ -103,6 +130,11 @@ Format (MVP):
 
 Web Push adds a per-subscription suffix:
 - `reservation.created:<reservationId>:org:<organizationId>:web_push:<pushSubscriptionId>`
+- `reservation.awaiting_payment:<reservationId>:user:<userId>:web_push:<pushSubscriptionId>`
+- `reservation.payment_marked:<reservationId>:org:<organizationId>:web_push:<pushSubscriptionId>`
+- `reservation.confirmed:<reservationId>:user:<userId>:web_push:<pushSubscriptionId>`
+- `reservation.rejected:<reservationId>:user:<userId>:web_push:<pushSubscriptionId>`
+- `reservation.cancelled:<reservationId>:org:<organizationId>:web_push:<pushSubscriptionId>`
 
 ## Payload contract
 
@@ -146,6 +178,13 @@ Web Push adds a per-subscription suffix:
 - `placeName`
 - `status` (`APPROVED` | `REJECTED`)
 - `reviewNotes` (nullable)
+
+Reservation lifecycle web push payloads are also validated in the dispatcher for:
+- `reservation.awaiting_payment`
+- `reservation.payment_marked`
+- `reservation.confirmed`
+- `reservation.rejected`
+- `reservation.cancelled`
 
 ## Dispatcher contract
 

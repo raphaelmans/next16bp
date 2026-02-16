@@ -6,7 +6,8 @@
 
 ## Security
 - `CRON_SECRET` gate (Authorization: `Bearer <secret>`).
-- Requests without valid secret return 401.
+- Requests with invalid/missing bearer token return 401 when `CRON_SECRET` is configured.
+- In non-dev/test environments, missing `CRON_SECRET` configuration returns 500.
 
 ## Retry policy
 - Max attempts: 5
@@ -16,7 +17,7 @@
 ## Rate limits (Semaphore)
 - `/messages`: 120 requests per minute
 - `/priority`: not rate limited (2 credits per 160 chars)
-- Respect `Retry-After` when provided
+- App-level retry scheduling is handled by notification job backoff (`1m, 5m, 15m, 60m, 6h`)
 
 ## Logging
 - `notification_delivery.dispatch_complete`
@@ -33,7 +34,7 @@
 - `CRON_SECRET`
 
 Web Push:
-- `NOTIFICATION_WEB_PUSH_ENABLED` (default: true)
+- `NOTIFICATION_WEB_PUSH_ENABLED` (default: true; see Channel toggles)
 - `WEB_PUSH_VAPID_PUBLIC_KEY`
 - `WEB_PUSH_VAPID_PRIVATE_KEY`
 - `WEB_PUSH_VAPID_SUBJECT`

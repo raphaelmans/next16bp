@@ -2,6 +2,8 @@
 
 ## Narrative
 
+All currently supported business event types are listed in [notification-event-catalog.md](./notification-event-catalog.md).
+
 ### Venue verification (admin notifications)
 - An owner submits a venue verification request.
 - The request is saved immediately; the owner sees a success state.
@@ -24,13 +26,20 @@
 - When admins approve or reject a claim request, the owner is notified.
 - Messages include the venue name and a link back to owner pages.
 
+### Reservation lifecycle updates (player and owner notifications)
+- When an owner accepts a paid reservation, the player can receive a browser notification that payment is needed.
+- When a player marks payment, the owner can receive a browser notification.
+- When an owner confirms or rejects a reservation, the player can receive a browser notification.
+- When a player cancels a reservation, the owner can receive a browser notification.
+
 ### Delivery guarantees
 - Notifications are delivered **asynchronously** using an outbox job queue.
 - Vendor outages do not block owner workflows.
 - Jobs are retried with exponential backoff before giving up.
+- Most enqueue paths are transaction-coupled, while some reservation lifecycle notifications use best-effort enqueue with warning logs.
 
 ### Browser notifications (Web Push)
-- When a user enables browser notifications, the platform can deliver short, Facebook-like notifications via the browser notification UI.
+- When a user enables browser notifications, the platform can deliver short browser/OS notifications.
 - If a user has not enabled notifications (no push subscription), the underlying event still succeeds but no browser notification is sent.
 
 ### Admin experience
