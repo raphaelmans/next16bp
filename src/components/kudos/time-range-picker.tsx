@@ -9,8 +9,11 @@ import { useNowMs } from "@/common/hooks/use-now";
 import { useTouchIntent } from "@/common/use-touch-intent";
 import { cn } from "@/lib/utils";
 import {
+  deriveIsAwaitingEndClick,
   type RangeSelectionConfig,
   RangeSelectionProvider,
+  selectActiveEndIdx,
+  selectActiveStartIdx,
   useCellState,
   useRangeSelection,
 } from "./range-selection";
@@ -101,32 +104,11 @@ const SummaryBar = React.memo(function SummaryBar({
     ? { duration: 0 }
     : { duration: 0.15, ease: "easeOut" as const };
 
-  const activeStartIdx = useRangeSelection((s) => {
-    const { anchorIdx, hoverIdx, committedRange, config } = s;
-    if (anchorIdx !== null && hoverIdx !== null) {
-      const clamped = config.clampToContiguous(anchorIdx, hoverIdx);
-      const r = config.computeRange(anchorIdx, clamped);
-      return r?.startIdx ?? committedRange?.startIdx ?? null;
-    }
-    return committedRange?.startIdx ?? null;
-  });
-  const activeEndIdx = useRangeSelection((s) => {
-    const { anchorIdx, hoverIdx, committedRange, config } = s;
-    if (anchorIdx !== null && hoverIdx !== null) {
-      const clamped = config.clampToContiguous(anchorIdx, hoverIdx);
-      const r = config.computeRange(anchorIdx, clamped);
-      return r?.endIdx ?? committedRange?.endIdx ?? null;
-    }
-    return committedRange?.endIdx ?? null;
-  });
-  const isAwaitingEndClick = useRangeSelection((s) => {
-    const { anchorIdx, committedRange } = s;
-    return (
-      committedRange !== null &&
-      committedRange.startIdx === committedRange.endIdx &&
-      anchorIdx === null
-    );
-  });
+  const activeStartIdx = useRangeSelection(selectActiveStartIdx);
+  const activeEndIdx = useRangeSelection(selectActiveEndIdx);
+  const isAwaitingEndClick = useRangeSelection((s) =>
+    deriveIsAwaitingEndClick(s),
+  );
 
   if (activeStartIdx === null || activeEndIdx === null) return null;
 
@@ -250,7 +232,11 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
     onConfirm: React.useCallback(
       (e: React.PointerEvent) => {
         e.preventDefault();
-        pointerDown(idx);
+        pointerDown(idx, {
+          clientX: e.clientX,
+          clientY: e.clientY,
+          pointerType: e.pointerType,
+        });
       },
       [pointerDown, idx],
     ),
@@ -290,8 +276,12 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
       )}
       onPointerDown={touchIntent.onPointerDown}
       onPointerMove={touchIntent.onPointerMove}
-      onPointerEnter={() => {
-        pointerEnter(idx);
+      onPointerEnter={(e) => {
+        pointerEnter(idx, {
+          clientX: e.clientX,
+          clientY: e.clientY,
+          pointerType: e.pointerType,
+        });
         if (available) setHoveredIdx(idx);
       }}
       onPointerLeave={() => {

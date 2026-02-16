@@ -1,6 +1,11 @@
 "use client";
 
 import { useShallow } from "zustand/shallow";
+import {
+  deriveActiveRange,
+  deriveHoverPreviewRange,
+  deriveIsAwaitingEndClick,
+} from "./core/derived-range";
 import { useRangeSelection } from "./range-selection-provider";
 import type { CellVisualState } from "./types";
 
@@ -12,13 +17,12 @@ export function useCellState(idx: number): CellVisualState {
   return useRangeSelection(
     useShallow((s) => {
       const { anchorIdx, hoverIdx, committedRange, config, hoveredIdx } = s;
-
-      // Derive activeRange
-      let activeRange = committedRange;
-      if (anchorIdx !== null && hoverIdx !== null) {
-        const clamped = config.clampToContiguous(anchorIdx, hoverIdx);
-        activeRange = config.computeRange(anchorIdx, clamped) ?? committedRange;
-      }
+      const activeRange = deriveActiveRange({
+        anchorIdx,
+        hoverIdx,
+        committedRange,
+        config,
+      });
 
       const inRange =
         activeRange !== null &&
@@ -27,28 +31,23 @@ export function useCellState(idx: number): CellVisualState {
       const isStart = activeRange !== null && idx === activeRange.startIdx;
       const isEnd = activeRange !== null && idx === activeRange.endIdx;
 
-      // Hover preview for two-click flow
-      const isDragging = anchorIdx !== null;
-      const isAwaitingEndClick =
-        committedRange !== null &&
-        committedRange.startIdx === committedRange.endIdx &&
-        !isDragging;
+      const isAwaitingEndClick = deriveIsAwaitingEndClick({
+        anchorIdx,
+        committedRange,
+      });
+      const hoverPreviewRange = deriveHoverPreviewRange({
+        anchorIdx,
+        hoveredIdx,
+        committedRange,
+        config,
+      });
 
       let inHoverPreview = false;
-      if (
-        isAwaitingEndClick &&
-        committedRange &&
-        hoveredIdx !== null &&
-        hoveredIdx !== committedRange.startIdx
-      ) {
-        const hpRange = config.computeRange(
-          committedRange.startIdx,
-          hoveredIdx,
-        );
-        if (hpRange) {
-          inHoverPreview =
-            idx >= hpRange.startIdx && idx <= hpRange.endIdx && !inRange;
-        }
+      if (hoverPreviewRange) {
+        inHoverPreview =
+          idx >= hoverPreviewRange.startIdx &&
+          idx <= hoverPreviewRange.endIdx &&
+          !inRange;
       }
 
       const isPendingStart =

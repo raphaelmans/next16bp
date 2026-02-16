@@ -13,7 +13,7 @@ import {
   type RangeSelectionState,
   type RangeSelectionStoreApi,
 } from "./range-selection-store";
-import type { RangeSelectionConfig } from "./types";
+import type { RangeSelectionConfig, RangeSelectionRange } from "./types";
 
 const RangeSelectionStoreContext = createContext<RangeSelectionStoreApi | null>(
   null,
@@ -21,7 +21,7 @@ const RangeSelectionStoreContext = createContext<RangeSelectionStoreApi | null>(
 
 interface RangeSelectionProviderProps {
   config: RangeSelectionConfig;
-  committedRange: { startIdx: number; endIdx: number } | null;
+  committedRange: RangeSelectionRange | null;
   children: React.ReactNode;
 }
 
@@ -43,7 +43,13 @@ export function RangeSelectionProvider({
   }, [store, config]);
 
   useLayoutEffect(() => {
-    store.getState().setCommittedRange(committedRange);
+    const current = store.getState().committedRange;
+    const isSame =
+      current?.startIdx === committedRange?.startIdx &&
+      current?.endIdx === committedRange?.endIdx;
+    if (!isSame) {
+      store.getState().setCommittedRange(committedRange);
+    }
   }, [store, committedRange]);
 
   return (

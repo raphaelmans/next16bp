@@ -12,8 +12,11 @@ import { useNowMs } from "@/common/hooks/use-now";
 import { getZonedDayRangeFromDayKey } from "@/common/time-zone";
 import { cn } from "@/lib/utils";
 import {
+  deriveIsAwaitingEndClick,
   type RangeSelectionConfig,
   RangeSelectionProvider,
+  selectActiveEndIdx,
+  selectActiveStartIdx,
   useCellState,
   useRangeSelection,
 } from "./range-selection";
@@ -96,32 +99,11 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
     ? { duration: 0 }
     : { duration: 0.15, ease: "easeOut" as const };
 
-  const activeStartIdx = useRangeSelection((s) => {
-    const { anchorIdx, hoverIdx, committedRange, config } = s;
-    if (anchorIdx !== null && hoverIdx !== null) {
-      const clamped = config.clampToContiguous(anchorIdx, hoverIdx);
-      const r = config.computeRange(anchorIdx, clamped);
-      return r?.startIdx ?? committedRange?.startIdx ?? null;
-    }
-    return committedRange?.startIdx ?? null;
-  });
-  const activeEndIdx = useRangeSelection((s) => {
-    const { anchorIdx, hoverIdx, committedRange, config } = s;
-    if (anchorIdx !== null && hoverIdx !== null) {
-      const clamped = config.clampToContiguous(anchorIdx, hoverIdx);
-      const r = config.computeRange(anchorIdx, clamped);
-      return r?.endIdx ?? committedRange?.endIdx ?? null;
-    }
-    return committedRange?.endIdx ?? null;
-  });
-  const isAwaitingEndClick = useRangeSelection((s) => {
-    const { anchorIdx, committedRange } = s;
-    return (
-      committedRange !== null &&
-      committedRange.startIdx === committedRange.endIdx &&
-      anchorIdx === null
-    );
-  });
+  const activeStartIdx = useRangeSelection(selectActiveStartIdx);
+  const activeEndIdx = useRangeSelection(selectActiveEndIdx);
+  const isAwaitingEndClick = useRangeSelection((s) =>
+    deriveIsAwaitingEndClick(s),
+  );
 
   // Derive display data outside selector to avoid closing over props
   const summaryData = React.useMemo(() => {
@@ -294,11 +276,21 @@ const WeekGridCell = React.memo(function WeekGridCell({
       }
       onPointerDown={(e) => {
         e.preventDefault();
-        if (slot && available && !isDisabled) pointerDown(linearIdx);
+        if (slot && available && !isDisabled) {
+          pointerDown(linearIdx, {
+            clientX: e.clientX,
+            clientY: e.clientY,
+            pointerType: e.pointerType,
+          });
+        }
       }}
-      onPointerEnter={() => {
+      onPointerEnter={(e) => {
         if (!isDisabled) {
-          pointerEnter(linearIdx);
+          pointerEnter(linearIdx, {
+            clientX: e.clientX,
+            clientY: e.clientY,
+            pointerType: e.pointerType,
+          });
           if (available) setHoveredIdx(linearIdx);
         }
       }}

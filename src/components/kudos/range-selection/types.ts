@@ -12,6 +12,17 @@ export interface RangeSelectionConfig {
   commitRange: (startIdx: number, endIdx: number) => void;
 }
 
+export interface RangeSelectionRange {
+  startIdx: number;
+  endIdx: number;
+}
+
+export interface RangeSelectionPointerMeta {
+  clientX: number;
+  clientY: number;
+  pointerType?: string;
+}
+
 export interface CellVisualState {
   inRange: boolean;
   isStart: boolean;

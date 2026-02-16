@@ -1,5 +1,10 @@
 import { createStore } from "zustand/vanilla";
-import type { RangeSelectionConfig } from "./types";
+import { hasExceededDragThreshold } from "./core/pointer-intent";
+import type {
+  RangeSelectionConfig,
+  RangeSelectionPointerMeta,
+  RangeSelectionRange,
+} from "./types";
 
 export interface RangeSelectionState {
   // Interaction state
@@ -8,27 +13,26 @@ export interface RangeSelectionState {
   hoveredIdx: number | null;
   didDrag: boolean;
   suppressClick: boolean;
+  pointerDownMeta: RangeSelectionPointerMeta | null;
 
   // Synced from parent props
-  committedRange: { startIdx: number; endIdx: number } | null;
+  committedRange: RangeSelectionRange | null;
 
   // Injected config
   config: RangeSelectionConfig;
 
   // Actions
   setConfig: (config: RangeSelectionConfig) => void;
-  setCommittedRange: (
-    range: { startIdx: number; endIdx: number } | null,
-  ) => void;
-  pointerDown: (idx: number) => void;
-  pointerEnter: (idx: number) => void;
+  setCommittedRange: (range: RangeSelectionRange | null) => void;
+  pointerDown: (idx: number, meta?: RangeSelectionPointerMeta) => void;
+  pointerEnter: (idx: number, meta?: RangeSelectionPointerMeta) => void;
   pointerUp: () => void;
   click: (idx: number, shiftKey: boolean) => void;
   setHoveredIdx: (idx: number | null) => void;
   resetDrag: () => void;
 
   commitRangeInternal: (
-    range: { startIdx: number; endIdx: number },
+    range: RangeSelectionRange,
     opts?: { suppressClick?: boolean; clearDrag?: boolean },
   ) => void;
 }
@@ -64,6 +68,7 @@ export const createRangeSelectionStore = (
       hoveredIdx: null,
       didDrag: false,
       suppressClick: false,
+      pointerDownMeta: null,
       committedRange: null,
       config: initialConfig,
 
@@ -78,7 +83,7 @@ export const createRangeSelectionStore = (
       //       Regular click commits should not suppress subsequent clicks.
       //
       commitRangeInternal: (
-        range: { startIdx: number; endIdx: number },
+        range: RangeSelectionRange,
         opts?: {
           suppressClick?: boolean;
           clearDrag?: boolean;
@@ -89,16 +94,26 @@ export const createRangeSelectionStore = (
           committedRange: range,
           ...(opts?.suppressClick ? { suppressClick: true } : {}),
           ...(opts?.clearDrag
-            ? { anchorIdx: null, hoverIdx: null, didDrag: false }
+            ? {
+                anchorIdx: null,
+                hoverIdx: null,
+                didDrag: false,
+                pointerDownMeta: null,
+              }
             : {}),
         });
         config.commitRange(range.startIdx, range.endIdx);
       },
 
-      pointerDown: (idx) => {
+      pointerDown: (idx, meta) => {
         const { config } = get();
         if (!config.isCellAvailable(idx)) return;
-        set({ anchorIdx: idx, hoverIdx: idx, didDrag: false });
+        set({
+          anchorIdx: idx,
+          hoverIdx: idx,
+          didDrag: false,
+          pointerDownMeta: meta ?? null,
+        });
 
         // Register self-removing global pointerup
         removeGlobalListener();
@@ -108,11 +123,17 @@ export const createRangeSelectionStore = (
         window.addEventListener("pointerup", globalUpListener);
       },
 
-      pointerEnter: (idx) => {
-        const { anchorIdx } = get();
+      pointerEnter: (idx, meta) => {
+        const { anchorIdx, didDrag, pointerDownMeta } = get();
         if (anchorIdx === null) return;
         const updates: Partial<RangeSelectionState> = { hoverIdx: idx };
-        if (idx !== anchorIdx) updates.didDrag = true;
+        if (!didDrag && idx !== anchorIdx) {
+          if (!pointerDownMeta || !meta) {
+            updates.didDrag = true;
+          } else {
+            updates.didDrag = hasExceededDragThreshold(pointerDownMeta, meta);
+          }
+        }
         set(updates);
       },
 
@@ -121,7 +142,7 @@ export const createRangeSelectionStore = (
         const { anchorIdx, hoverIdx, didDrag, committedRange, config } = get();
 
         if (anchorIdx === null || hoverIdx === null) {
-          set({ anchorIdx: null, hoverIdx: null });
+          set({ anchorIdx: null, hoverIdx: null, pointerDownMeta: null });
           return;
         }
 
@@ -169,7 +190,12 @@ export const createRangeSelectionStore = (
           }
         }
 
-        set({ anchorIdx: null, hoverIdx: null, didDrag: false });
+        set({
+          anchorIdx: null,
+          hoverIdx: null,
+          didDrag: false,
+          pointerDownMeta: null,
+        });
       },
 
       click: (idx, shiftKey) => {
@@ -182,7 +208,12 @@ export const createRangeSelectionStore = (
         if (!config.isCellAvailable(idx)) return;
 
         // Clear stale drag state
-        set({ anchorIdx: null, hoverIdx: null });
+        set({
+          anchorIdx: null,
+          hoverIdx: null,
+          didDrag: false,
+          pointerDownMeta: null,
+        });
 
         // Shift+click: extend from committed start
         if (shiftKey && committedRange) {
@@ -218,6 +249,7 @@ export const createRangeSelectionStore = (
           hoverIdx: null,
           hoveredIdx: null,
           didDrag: false,
+          pointerDownMeta: null,
         }),
     };
   });
