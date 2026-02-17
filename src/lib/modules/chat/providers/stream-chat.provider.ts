@@ -119,6 +119,37 @@ export class StreamChatProvider implements IChatProvider {
     await channel.create();
   }
 
+  async removeMembersFromChannel(input: {
+    channelType: string;
+    channelId: string;
+    memberIds: string[];
+  }): Promise<void> {
+    if (input.memberIds.length === 0) {
+      return;
+    }
+
+    const channel = this.client.channel(input.channelType, input.channelId);
+    try {
+      await channel.removeMembers(input.memberIds);
+    } catch (error) {
+      // Best-effort: channel may not exist or member not present.
+      if (isDuplicateMessageError(error)) {
+        return;
+      }
+      // Stream errors are not always stable; ignore common 404/409-like cases.
+      if (error && typeof error === "object") {
+        const status =
+          "status" in error && typeof error.status === "number"
+            ? error.status
+            : null;
+        if (status === 404 || status === 409) {
+          return;
+        }
+      }
+      throw error;
+    }
+  }
+
   async sendReservationMessage({
     channelId,
     createdById,

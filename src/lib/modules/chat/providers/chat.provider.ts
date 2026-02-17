@@ -57,6 +57,11 @@ export interface IChatProvider {
   createUserToken(userId: string): Promise<string>;
   ensureDmChannel(input: EnsureDmChannelInput): Promise<void>;
   ensureReservationChannel(input: EnsureReservationChannelInput): Promise<void>;
+  removeMembersFromChannel(input: {
+    channelType: string;
+    channelId: string;
+    memberIds: string[];
+  }): Promise<void>;
   sendMessage(input: SendChatMessageInput): Promise<void>;
   sendReservationMessage(input: SendReservationMessageInput): Promise<void>;
   ensureSupportChannel(input: EnsureSupportChannelInput): Promise<void>;

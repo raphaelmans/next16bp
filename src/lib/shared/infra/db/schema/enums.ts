@@ -165,3 +165,49 @@ export const notificationDeliveryJobStatusEnum = pgEnum(
   "notification_delivery_job_status",
   ["PENDING", "SENDING", "SENT", "FAILED", "SKIPPED"],
 );
+
+/**
+ * Open play status enum
+ * Tracks the lifecycle of an open play session.
+ */
+export const openPlayStatusEnum = pgEnum("open_play_status", [
+  "ACTIVE",
+  "CLOSED",
+  "CANCELLED",
+]);
+
+/**
+ * Open play visibility enum
+ * PUBLIC: discoverable in venue lists.
+ * UNLISTED: accessible by link only.
+ */
+export const openPlayVisibilityEnum = pgEnum("open_play_visibility", [
+  "PUBLIC",
+  "UNLISTED",
+]);
+
+/**
+ * Open play join policy enum
+ * REQUEST: host approves participants.
+ * AUTO: auto-confirm if capacity is available.
+ */
+export const openPlayJoinPolicyEnum = pgEnum("open_play_join_policy", [
+  "REQUEST",
+  "AUTO",
+]);
+
+/**
+ * Open play participant role enum
+ */
+export const openPlayParticipantRoleEnum = pgEnum(
+  "open_play_participant_role",
+  ["HOST", "PLAYER"],
+);
+
+/**
+ * Open play participant status enum
+ */
+export const openPlayParticipantStatusEnum = pgEnum(
+  "open_play_participant_status",
+  ["REQUESTED", "CONFIRMED", "WAITLISTED", "DECLINED", "LEFT"],
+);

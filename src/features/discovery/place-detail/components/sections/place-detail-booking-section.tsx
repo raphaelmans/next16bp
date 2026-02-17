@@ -13,6 +13,9 @@ import {
   getZonedToday,
 } from "@/common/time-zone";
 import { copyToClipboard } from "@/common/utils/clipboard";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { PlaceDetail } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
 import { PlaceDetailAmenitiesCard } from "@/features/discovery/place-detail/components/place-detail-amenities-card";
@@ -21,6 +24,7 @@ import { PlaceDetailBookingDesktopSection } from "@/features/discovery/place-det
 import { PlaceDetailBookingMobileSection } from "@/features/discovery/place-detail/components/sections/place-detail-booking-mobile-section";
 import { usePlaceDetailAvailabilitySelection } from "@/features/discovery/place-detail/hooks/use-place-detail-availability-selection";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/state/place-detail-ui-store";
+import { OpenPlayVenuePanel } from "@/features/open-play/components/open-play-venue-panel";
 
 const DEFAULT_DURATION_MINUTES = 60;
 
@@ -65,6 +69,10 @@ export function PlaceDetailBookingSection({
   const router = useRouter();
   const setMobileSheetExpanded = usePlaceDetailUiStore(
     (s) => s.setMobileSheetExpanded,
+  );
+
+  const [primaryView, setPrimaryView] = React.useState<"book" | "openPlay">(
+    "book",
   );
 
   const {
@@ -282,6 +290,15 @@ export function PlaceDetailBookingSection({
     setMobileSheetExpanded,
   ]);
 
+  const handleHostOpenPlay = React.useCallback(() => {
+    setPrimaryView("book");
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      setMobileSheetExpanded(true);
+      return;
+    }
+    scrollToSection(availabilitySectionRef);
+  }, [availabilitySectionRef, scrollToSection, setMobileSheetExpanded]);
+
   const contactDetail = place.contactDetail;
   const phoneNumber = contactDetail?.phoneNumber?.trim();
   const viberNumber = contactDetail?.viberInfo?.trim();
@@ -299,36 +316,66 @@ export function PlaceDetailBookingSection({
   return (
     <>
       <div className="space-y-6 lg:col-span-2">
-        <PlaceDetailBookingDesktopSection
-          place={place}
-          placeTimeZone={placeTimeZone}
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-          durationMinutes={durationMinutes}
-          setDurationMinutes={setDurationMinutes}
-          selectedSportId={selectedSportId}
-          setSelectedSportId={setSelectedSportId}
-          selectionMode={selectionMode}
-          setSelectionMode={setSelectionMode}
-          selectedCourtId={selectedCourtId}
-          setSelectedCourtId={setSelectedCourtId}
-          selectedStartTime={selectedStartTime}
-          setSelectedStartTime={setSelectedStartTime}
-          courtViewMode={courtViewMode}
-          setCourtViewMode={setCourtViewMode}
-          anyViewMode={anyViewMode}
-          setAnyViewMode={setAnyViewMode}
-          courtsForSport={courtsForSport}
-          clearSelection={clearSelection}
-          today={today}
-          todayRangeStart={todayRangeStart}
-          maxBookingDate={maxBookingDate}
-          todayDayKey={todayDayKey}
-          maxDayKey={maxDayKey}
-          availabilitySectionRef={availabilitySectionRef}
-          onContinue={handleReserve}
-          onSelectionSummaryChange={handleSelectionSummaryChange}
-        />
+        <div className="flex items-center justify-between gap-3">
+          <ToggleGroup
+            type="single"
+            value={primaryView}
+            onValueChange={(value) => {
+              if (!value) return;
+              setPrimaryView(value as "book" | "openPlay");
+            }}
+            className="justify-start"
+          >
+            <ToggleGroupItem value="book" aria-label="Book">
+              Book
+            </ToggleGroupItem>
+            <ToggleGroupItem value="openPlay" aria-label="Open Play">
+              Open Play
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </div>
+
+        {primaryView === "openPlay" ? (
+          <OpenPlayVenuePanel
+            place={{ id: place.id, timeZone: placeTimeZone }}
+            hostCta={
+              <Button type="button" onClick={handleHostOpenPlay}>
+                Host an Open Play
+              </Button>
+            }
+          />
+        ) : (
+          <PlaceDetailBookingDesktopSection
+            place={place}
+            placeTimeZone={placeTimeZone}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            durationMinutes={durationMinutes}
+            setDurationMinutes={setDurationMinutes}
+            selectedSportId={selectedSportId}
+            setSelectedSportId={setSelectedSportId}
+            selectionMode={selectionMode}
+            setSelectionMode={setSelectionMode}
+            selectedCourtId={selectedCourtId}
+            setSelectedCourtId={setSelectedCourtId}
+            selectedStartTime={selectedStartTime}
+            setSelectedStartTime={setSelectedStartTime}
+            courtViewMode={courtViewMode}
+            setCourtViewMode={setCourtViewMode}
+            anyViewMode={anyViewMode}
+            setAnyViewMode={setAnyViewMode}
+            courtsForSport={courtsForSport}
+            clearSelection={clearSelection}
+            today={today}
+            todayRangeStart={todayRangeStart}
+            maxBookingDate={maxBookingDate}
+            todayDayKey={todayDayKey}
+            maxDayKey={maxDayKey}
+            availabilitySectionRef={availabilitySectionRef}
+            onContinue={handleReserve}
+            onSelectionSummaryChange={handleSelectionSummaryChange}
+          />
+        )}
 
         <PlaceDetailContactCard
           hasContactDetail={hasContactDetail}
@@ -350,56 +397,67 @@ export function PlaceDetailBookingSection({
         <PlaceDetailAmenitiesCard amenities={place.amenities} />
       </div>
 
-      <PlaceDetailCompound.Sidebar
-        placeName={place.name}
-        placePhotos={place.photos}
-        showBooking
-        showBookingVerificationUi={showBookingVerificationUi}
-        verificationMessage={verificationMessage}
-        verificationDescription={verificationDescription}
-        verificationStatusVariant={verificationStatusVariant}
-        placeLatitude={place.latitude}
-        placeLongitude={place.longitude}
-        placeExtGPlaceId={place.extGPlaceId}
-        mapQuery={mapQuery}
-        directionsUrl={directionsUrl}
-        openInMapsUrl={openInMapsUrl}
-        selectionMode={selectionMode}
-        courtsForSport={courtsForSport}
-        selectedCourtId={selectedCourtId}
-        durationMinutes={durationMinutes}
-        hasSelection={hasSelection}
-        selectionSummary={selectionSummary}
-        placeTimeZone={placeTimeZone}
-        summaryCtaVariant={summaryCtaVariant}
-        summaryCtaLabel={summaryCtaLabel}
-        onSummaryAction={handleSummaryAction}
-        isAuthenticated={isAuthenticated}
-      />
+      {primaryView === "book" ? (
+        <PlaceDetailCompound.Sidebar
+          placeName={place.name}
+          placePhotos={place.photos}
+          showBooking
+          showBookingVerificationUi={showBookingVerificationUi}
+          verificationMessage={verificationMessage}
+          verificationDescription={verificationDescription}
+          verificationStatusVariant={verificationStatusVariant}
+          placeLatitude={place.latitude}
+          placeLongitude={place.longitude}
+          placeExtGPlaceId={place.extGPlaceId}
+          mapQuery={mapQuery}
+          directionsUrl={directionsUrl}
+          openInMapsUrl={openInMapsUrl}
+          selectionMode={selectionMode}
+          courtsForSport={courtsForSport}
+          selectedCourtId={selectedCourtId}
+          durationMinutes={durationMinutes}
+          hasSelection={hasSelection}
+          selectionSummary={selectionSummary}
+          placeTimeZone={placeTimeZone}
+          summaryCtaVariant={summaryCtaVariant}
+          summaryCtaLabel={summaryCtaLabel}
+          onSummaryAction={handleSummaryAction}
+          isAuthenticated={isAuthenticated}
+        />
+      ) : (
+        <Card className="h-fit">
+          <CardContent className="p-4 text-sm text-muted-foreground">
+            Host an Open Play by booking a time slot, then mark it as Open Play
+            at checkout.
+          </CardContent>
+        </Card>
+      )}
 
-      <PlaceDetailBookingMobileSection
-        place={place}
-        placeTimeZone={placeTimeZone}
-        selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
-        durationMinutes={durationMinutes}
-        setDurationMinutes={setDurationMinutes}
-        selectedSportId={selectedSportId}
-        setSelectedSportId={setSelectedSportId}
-        selectionMode={selectionMode}
-        setSelectionMode={setSelectionMode}
-        selectedCourtId={selectedCourtId}
-        setSelectedCourtId={setSelectedCourtId}
-        selectedStartTime={selectedStartTime}
-        setSelectedStartTime={setSelectedStartTime}
-        courtsForSport={courtsForSport}
-        clearSelection={clearSelection}
-        today={today}
-        todayRangeStart={todayRangeStart}
-        maxBookingDate={maxBookingDate}
-        onContinue={handleReserve}
-        onSelectionSummaryChange={handleSelectionSummaryChange}
-      />
+      {primaryView === "book" ? (
+        <PlaceDetailBookingMobileSection
+          place={place}
+          placeTimeZone={placeTimeZone}
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          durationMinutes={durationMinutes}
+          setDurationMinutes={setDurationMinutes}
+          selectedSportId={selectedSportId}
+          setSelectedSportId={setSelectedSportId}
+          selectionMode={selectionMode}
+          setSelectionMode={setSelectionMode}
+          selectedCourtId={selectedCourtId}
+          setSelectedCourtId={setSelectedCourtId}
+          selectedStartTime={selectedStartTime}
+          setSelectedStartTime={setSelectedStartTime}
+          courtsForSport={courtsForSport}
+          clearSelection={clearSelection}
+          today={today}
+          todayRangeStart={todayRangeStart}
+          maxBookingDate={maxBookingDate}
+          onContinue={handleReserve}
+          onSelectionSummaryChange={handleSelectionSummaryChange}
+        />
+      ) : null}
     </>
   );
 }

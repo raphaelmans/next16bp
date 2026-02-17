@@ -325,6 +325,8 @@ export default function ReservationDetailPage() {
           <ReservationActionsCard
             reservationId={reservation.id}
             status={reservation.status}
+            reservationTotalPriceCents={reservation.totalPriceCents}
+            reservationCurrency={reservation.currency}
             court={court}
             organization={organization}
             onCancel={() => setShowCancelDialog(true)}

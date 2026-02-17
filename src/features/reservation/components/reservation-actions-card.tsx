@@ -1,15 +1,40 @@
 "use client";
 
 import { Copy, Mail, MapPin, MessageSquare, Phone, X } from "lucide-react";
+import Link from "next/link";
+import * as React from "react";
+import { appRoutes } from "@/common/app-routes";
+import { formatCurrency } from "@/common/format";
 import { copyToClipboard } from "@/common/utils/clipboard";
 import { KudosStatusBadge, type ReservationStatus } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import {
+  useCreateOpenPlayFromReservation,
+  useOpenPlayForReservation,
+} from "@/features/open-play/hooks";
 
 interface ReservationActionsCardProps {
   reservationId: string;
   status: ReservationStatus;
+  reservationTotalPriceCents: number;
+  reservationCurrency: string;
   court: {
     latitude?: number;
     longitude?: number;
@@ -29,6 +54,8 @@ interface ReservationActionsCardProps {
 export function ReservationActionsCard({
   reservationId,
   status,
+  reservationTotalPriceCents,
+  reservationCurrency,
   court,
   organization,
   onCancel,
@@ -42,6 +69,37 @@ export function ReservationActionsCard({
     "CONFIRMED",
   ];
   const canMessageOwner = activeChatStatuses.includes(status);
+
+  const canCreateOpenPlay = status === "CONFIRMED";
+  const existingOpenPlayQuery = useOpenPlayForReservation(
+    reservationId,
+    canCreateOpenPlay,
+  );
+  const createOpenPlayMutation = useCreateOpenPlayFromReservation();
+  const [openPlayDialogOpen, setOpenPlayDialogOpen] = React.useState(false);
+  const [openPlayMaxPlayers, setOpenPlayMaxPlayers] = React.useState(4);
+  const [openPlayJoinPolicy, setOpenPlayJoinPolicy] = React.useState<
+    "REQUEST" | "AUTO"
+  >("REQUEST");
+  const [openPlayVisibility, setOpenPlayVisibility] = React.useState<
+    "PUBLIC" | "UNLISTED"
+  >("PUBLIC");
+  const [openPlayNote, setOpenPlayNote] = React.useState("");
+  const [openPlayPaymentInstructions, setOpenPlayPaymentInstructions] =
+    React.useState("");
+  const [openPlayPaymentLinkUrl, setOpenPlayPaymentLinkUrl] =
+    React.useState("");
+
+  const suggestedSplitPerPlayerCents =
+    reservationTotalPriceCents > 0
+      ? Math.ceil(reservationTotalPriceCents / Math.max(1, openPlayMaxPlayers))
+      : 0;
+
+  React.useEffect(() => {
+    if (reservationTotalPriceCents > 0 && openPlayJoinPolicy !== "REQUEST") {
+      setOpenPlayJoinPolicy("REQUEST");
+    }
+  }, [openPlayJoinPolicy, reservationTotalPriceCents]);
 
   const resolvedCanCancel =
     canCancel ??
@@ -108,6 +166,38 @@ export function ReservationActionsCard({
 
         {/* Actions */}
         <div className="space-y-2">
+          {canCreateOpenPlay ? (
+            existingOpenPlayQuery.data ? (
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                asChild
+              >
+                <Link
+                  href={appRoutes.openPlay.detail(
+                    existingOpenPlayQuery.data.id,
+                  )}
+                >
+                  View Open Play
+                </Link>
+              </Button>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={() => setOpenPlayDialogOpen(true)}
+                >
+                  Create Open Play
+                </Button>
+                <p className="px-1 text-xs text-muted-foreground">
+                  Open Plays become visible to others only after your
+                  reservation is confirmed.
+                </p>
+              </>
+            )
+          ) : null}
+
           {canMessageOwner ? (
             <>
               <Button className="w-full justify-start" onClick={handleOpenChat}>
@@ -169,6 +259,192 @@ export function ReservationActionsCard({
             </>
           )}
         </div>
+
+        <Dialog open={openPlayDialogOpen} onOpenChange={setOpenPlayDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create Open Play</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="opMaxPlayers">Max players</Label>
+                <Input
+                  id="opMaxPlayers"
+                  type="number"
+                  min={2}
+                  max={32}
+                  value={openPlayMaxPlayers}
+                  onChange={(e) => {
+                    const next = Number.parseInt(e.target.value, 10);
+                    setOpenPlayMaxPlayers(Number.isFinite(next) ? next : 4);
+                  }}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Join policy</Label>
+                <Select
+                  value={openPlayJoinPolicy}
+                  onValueChange={(value) =>
+                    setOpenPlayJoinPolicy(value as "REQUEST" | "AUTO")
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="REQUEST">
+                      Request (Host approves)
+                    </SelectItem>
+                    <SelectItem
+                      value="AUTO"
+                      disabled={reservationTotalPriceCents > 0}
+                    >
+                      Auto-join (If spots)
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                {reservationTotalPriceCents > 0 ? (
+                  <p className="text-xs text-muted-foreground">
+                    Paid sessions require host approval.
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="space-y-2">
+                <Label>Visibility</Label>
+                <Select
+                  value={openPlayVisibility}
+                  onValueChange={(value) =>
+                    setOpenPlayVisibility(value as "PUBLIC" | "UNLISTED")
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="PUBLIC">Public</SelectItem>
+                    <SelectItem value="UNLISTED">
+                      Unlisted (Link only)
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="opNote">Note (optional)</Label>
+                <Input
+                  id="opNote"
+                  value={openPlayNote}
+                  onChange={(e) => setOpenPlayNote(e.target.value)}
+                  placeholder="e.g. Beginner-friendly"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Reservation total</Label>
+                <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
+                  {formatCurrency(
+                    reservationTotalPriceCents,
+                    reservationCurrency,
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Suggested split</Label>
+                <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
+                  Est.{" "}
+                  {formatCurrency(
+                    suggestedSplitPerPlayerCents,
+                    reservationCurrency,
+                  )}
+                  /player (based on {openPlayMaxPlayers} players)
+                </div>
+                {reservationTotalPriceCents > 0 ? (
+                  <p className="text-xs text-muted-foreground">
+                    For paid sessions, use Request so you can confirm players
+                    after payment.
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="opPaymentInstructions">
+                  Payment instructions (optional)
+                </Label>
+                <Input
+                  id="opPaymentInstructions"
+                  value={openPlayPaymentInstructions}
+                  onChange={(e) =>
+                    setOpenPlayPaymentInstructions(e.target.value)
+                  }
+                  placeholder="e.g. GCash 09xx..., send screenshot in chat"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="opPaymentLinkUrl">
+                  Payment link (optional)
+                </Label>
+                <Input
+                  id="opPaymentLinkUrl"
+                  type="url"
+                  value={openPlayPaymentLinkUrl}
+                  onChange={(e) => setOpenPlayPaymentLinkUrl(e.target.value)}
+                  placeholder="https://..."
+                />
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setOpenPlayDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      const created = await createOpenPlayMutation.mutateAsync({
+                        reservationId,
+                        maxPlayers: Math.max(
+                          2,
+                          Math.min(32, openPlayMaxPlayers),
+                        ),
+                        joinPolicy: openPlayJoinPolicy,
+                        visibility: openPlayVisibility,
+                        note:
+                          openPlayNote.trim().length > 0
+                            ? openPlayNote.trim()
+                            : undefined,
+                        paymentInstructions:
+                          openPlayPaymentInstructions.trim().length > 0
+                            ? openPlayPaymentInstructions.trim()
+                            : undefined,
+                        paymentLinkUrl:
+                          openPlayPaymentLinkUrl.trim().length > 0
+                            ? openPlayPaymentLinkUrl.trim()
+                            : undefined,
+                      });
+                      setOpenPlayDialogOpen(false);
+                      window.location.href = appRoutes.openPlay.detail(
+                        created.openPlayId,
+                      );
+                    } catch {
+                      // toast handled in hook
+                    }
+                  }}
+                  disabled={createOpenPlayMutation.isPending}
+                >
+                  Create
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );

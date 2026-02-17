@@ -103,6 +103,12 @@ export const appRoutes = {
     payment: (reservationId: string) =>
       `/reservations/${reservationId}/payment`,
   },
+  openPlay: {
+    base: "/open-play",
+    options: { type: "public" as const },
+    detail: (openPlayId: string) => `/open-play/${openPlayId}`,
+    byPlace: (placeIdOrSlug: string) => `/venues/${placeIdOrSlug}/open-play`,
+  },
   account: {
     base: "/account",
     options: { type: "protected" as const },
@@ -216,6 +222,7 @@ const publicBases = [
   appRoutes.ownersGetStarted.base,
   appRoutes.courts.base,
   appRoutes.places.base,
+  appRoutes.openPlay.base,
   appRoutes.terms.base,
   appRoutes.privacy.base,
   appRoutes.contactUs.base,

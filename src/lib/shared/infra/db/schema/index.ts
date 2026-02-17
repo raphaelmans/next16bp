@@ -23,6 +23,9 @@ export * from "./enums";
 export * from "./guest-profile";
 // Notification delivery
 export * from "./notification-delivery-job";
+// Open play
+export * from "./open-play";
+export * from "./open-play-chat";
 // Core tables
 export * from "./organization";
 export * from "./organization-payment";

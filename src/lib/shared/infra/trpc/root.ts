@@ -4,6 +4,7 @@ import { availabilityRouter } from "@/lib/modules/availability/availability.rout
 import { bookingsImportRouter } from "@/lib/modules/bookings-import/bookings-import.router";
 import { chatRouter } from "@/lib/modules/chat/chat.router";
 import { chatPocRouter } from "@/lib/modules/chat/chat-poc.router";
+import { openPlayChatRouter } from "@/lib/modules/chat/open-play-chat.router";
 import { reservationChatRouter } from "@/lib/modules/chat/reservation-chat.router";
 import { supportChatRouter } from "@/lib/modules/chat/support-chat.router";
 import { claimAdminRouter } from "@/lib/modules/claim-request/admin/claim-admin.router";
@@ -18,6 +19,7 @@ import { courtRateRuleRouter } from "@/lib/modules/court-rate-rule/court-rate-ru
 import { guestProfileRouter } from "@/lib/modules/guest-profile/guest-profile.router";
 import { healthRouter } from "@/lib/modules/health/health.router";
 import { notificationDeliveryAdminRouter } from "@/lib/modules/notification-delivery/admin/notification-delivery-admin.router";
+import { openPlayRouter } from "@/lib/modules/open-play/open-play.router";
 import { organizationAdminRouter } from "@/lib/modules/organization/admin/organization-admin.router";
 import { organizationRouter } from "@/lib/modules/organization/organization.router";
 import { organizationPaymentRouter } from "@/lib/modules/organization-payment/organization-payment.router";
@@ -60,6 +62,7 @@ export const appRouter = router({
   chat: chatRouter,
   chatPoc: chatPocRouter,
   reservationChat: reservationChatRouter,
+  openPlayChat: openPlayChatRouter,
   supportChat: supportChatRouter,
   contact: contactRouter,
   audit: auditRouter,
@@ -67,6 +70,7 @@ export const appRouter = router({
   bookingsImport: bookingsImportRouter,
   reservation: reservationRouter,
   reservationOwner: reservationOwnerRouter,
+  openPlay: openPlayRouter,
   pushSubscription: pushSubscriptionRouter,
   userPreference: userPreferenceRouter,
   admin: router({

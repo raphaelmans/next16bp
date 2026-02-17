@@ -3,7 +3,12 @@
 import { addMinutes } from "date-fns";
 import { CalendarCheck, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import {
   parseAsInteger,
   parseAsString,
@@ -19,7 +24,17 @@ import { getZonedDate } from "@/common/time-zone";
 import { Container } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import {
   usePlaceAvailability,
   usePlaceDetail,
@@ -32,6 +47,7 @@ import {
   useCreateReservationForCourt,
   useProfile,
 } from "@/features/reservation/hooks";
+import { trpc } from "@/trpc/client";
 
 const DEFAULT_DURATION_MINUTES = 60;
 const selectionModeSchema = ["any", "court"] as const;
@@ -40,6 +56,7 @@ export default function PlaceBookingPage() {
   const params = useParams();
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const placeIdOrSlug = (params.placeId ?? params.id) as string;
 
@@ -141,6 +158,7 @@ export default function PlaceBookingPage() {
   const { data: profile, isLoading: isLoadingProfile } = useProfile();
   const createForCourt = useCreateReservationForCourt();
   const createForAnyCourt = useCreateReservationForAnyCourt();
+  const createOpenPlay = trpc.openPlay.createFromReservation.useMutation();
 
   const availabilityQuery = usePlaceAvailability({
     place: place ?? undefined,
@@ -184,8 +202,39 @@ export default function PlaceBookingPage() {
   const currency = selectedSlot?.currency ?? "PHP";
 
   const [termsAccepted, setTermsAccepted] = React.useState(false);
+  const [hostAsOpenPlay, setHostAsOpenPlay] = React.useState(false);
+  const [openPlayMaxPlayers, setOpenPlayMaxPlayers] = React.useState(4);
+  const [openPlayJoinPolicy, setOpenPlayJoinPolicy] = React.useState<
+    "REQUEST" | "AUTO"
+  >("REQUEST");
+  const [openPlayVisibility, setOpenPlayVisibility] = React.useState<
+    "PUBLIC" | "UNLISTED"
+  >("PUBLIC");
+  const [openPlayNote, setOpenPlayNote] = React.useState("");
+  const [openPlayPaymentInstructions, setOpenPlayPaymentInstructions] =
+    React.useState("");
+  const [openPlayPaymentLinkUrl, setOpenPlayPaymentLinkUrl] =
+    React.useState("");
   const detailsSectionRef = React.useRef<HTMLDivElement | null>(null);
   const isSubmitting = createForCourt.isPending || createForAnyCourt.isPending;
+
+  const suggestedSplitPerPlayerCents =
+    totalPrice > 0
+      ? Math.ceil(totalPrice / Math.max(1, openPlayMaxPlayers))
+      : 0;
+
+  React.useEffect(() => {
+    const openPlayQuery = searchParams.get("openPlay");
+    if (openPlayQuery === "1" || openPlayQuery === "true") {
+      setHostAsOpenPlay(true);
+    }
+  }, [searchParams]);
+
+  React.useEffect(() => {
+    if (totalPrice > 0 && openPlayJoinPolicy !== "REQUEST") {
+      setOpenPlayJoinPolicy("REQUEST");
+    }
+  }, [openPlayJoinPolicy, totalPrice]);
 
   const isProfileComplete =
     !!profile?.displayName && (!!profile?.email || !!profile?.phoneNumber);
@@ -243,11 +292,40 @@ export default function PlaceBookingPage() {
         });
       }
 
+      let openPlayId: string | null = null;
+      if (hostAsOpenPlay) {
+        try {
+          const created = await createOpenPlay.mutateAsync({
+            reservationId: result.id,
+            maxPlayers: Math.max(2, Math.min(32, openPlayMaxPlayers)),
+            joinPolicy: openPlayJoinPolicy,
+            visibility: openPlayVisibility,
+            note:
+              openPlayNote.trim().length > 0 ? openPlayNote.trim() : undefined,
+            paymentInstructions:
+              openPlayPaymentInstructions.trim().length > 0
+                ? openPlayPaymentInstructions.trim()
+                : undefined,
+            paymentLinkUrl:
+              openPlayPaymentLinkUrl.trim().length > 0
+                ? openPlayPaymentLinkUrl.trim()
+                : undefined,
+          });
+          openPlayId = created.openPlayId;
+        } catch (_error) {
+          toast.error(
+            "Reservation created. Open Play wasn't created - you can create it from Reservation Details.",
+          );
+        }
+      }
+
       const requiresPayment = result.status === "AWAITING_PAYMENT";
       router.push(
         requiresPayment
           ? appRoutes.reservations.payment(result.id)
-          : appRoutes.reservations.detail(result.id),
+          : openPlayId
+            ? appRoutes.openPlay.detail(openPlayId)
+            : appRoutes.reservations.detail(result.id),
       );
     } catch (_error) {
       // toast handled by mutation hooks
@@ -382,6 +460,157 @@ export default function PlaceBookingPage() {
                   {formatCurrency(totalPrice, currency)}
                 </span>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Open Play</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="space-y-0.5">
+                  <div className="text-sm font-medium">Host as Open Play</div>
+                  <div className="text-xs text-muted-foreground">
+                    Create a joinable session for other players after your
+                    reservation is confirmed.
+                  </div>
+                </div>
+                <Switch
+                  checked={hostAsOpenPlay}
+                  onCheckedChange={setHostAsOpenPlay}
+                />
+              </div>
+
+              {hostAsOpenPlay ? (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="openPlayMaxPlayers">Max players</Label>
+                    <Input
+                      id="openPlayMaxPlayers"
+                      type="number"
+                      min={2}
+                      max={32}
+                      value={openPlayMaxPlayers}
+                      onChange={(e) => {
+                        const next = Number.parseInt(e.target.value, 10);
+                        setOpenPlayMaxPlayers(Number.isFinite(next) ? next : 4);
+                      }}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Includes you as the host.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Join policy</Label>
+                    <Select
+                      value={openPlayJoinPolicy}
+                      onValueChange={(value) =>
+                        setOpenPlayJoinPolicy(value as "REQUEST" | "AUTO")
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="REQUEST">
+                          Request (Host approves)
+                        </SelectItem>
+                        <SelectItem value="AUTO" disabled={totalPrice > 0}>
+                          Auto-join (If spots)
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {totalPrice > 0 ? (
+                      <p className="text-xs text-muted-foreground">
+                        Paid sessions require host approval.
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label>Visibility</Label>
+                    <Select
+                      value={openPlayVisibility}
+                      onValueChange={(value) =>
+                        setOpenPlayVisibility(value as "PUBLIC" | "UNLISTED")
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="PUBLIC">Public</SelectItem>
+                        <SelectItem value="UNLISTED">
+                          Unlisted (Link only)
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label htmlFor="openPlayNote">Note (optional)</Label>
+                    <Input
+                      id="openPlayNote"
+                      value={openPlayNote}
+                      onChange={(e) => setOpenPlayNote(e.target.value)}
+                      placeholder="e.g. Beginner-friendly, bring extra balls"
+                    />
+                  </div>
+
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label>Reservation total</Label>
+                    <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
+                      {formatCurrency(totalPrice, currency)}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label>Suggested split</Label>
+                    <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
+                      Est.{" "}
+                      {formatCurrency(suggestedSplitPerPlayerCents, currency)}
+                      /player (based on {openPlayMaxPlayers} players)
+                    </div>
+                    {totalPrice > 0 ? (
+                      <p className="text-xs text-muted-foreground">
+                        For paid sessions, use Request so you can confirm
+                        players after payment.
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label htmlFor="openPlayPaymentInstructions">
+                      Payment instructions (optional)
+                    </Label>
+                    <Input
+                      id="openPlayPaymentInstructions"
+                      value={openPlayPaymentInstructions}
+                      onChange={(e) =>
+                        setOpenPlayPaymentInstructions(e.target.value)
+                      }
+                      placeholder="e.g. GCash 09xx..., send screenshot in chat"
+                    />
+                  </div>
+
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label htmlFor="openPlayPaymentLinkUrl">
+                      Payment link (optional)
+                    </Label>
+                    <Input
+                      id="openPlayPaymentLinkUrl"
+                      type="url"
+                      value={openPlayPaymentLinkUrl}
+                      onChange={(e) =>
+                        setOpenPlayPaymentLinkUrl(e.target.value)
+                      }
+                      placeholder="https://..."
+                    />
+                  </div>
+                </div>
+              ) : null}
             </CardContent>
           </Card>
         </div>
