@@ -292,7 +292,7 @@ export default function PlaceBookingPage() {
         });
       }
 
-      let openPlayId: string | null = null;
+      let _openPlayId: string | null = null;
       if (hostAsOpenPlay) {
         try {
           const created = await createOpenPlay.mutateAsync({
@@ -311,7 +311,7 @@ export default function PlaceBookingPage() {
                 ? openPlayPaymentLinkUrl.trim()
                 : undefined,
           });
-          openPlayId = created.openPlayId;
+          _openPlayId = created.openPlayId;
         } catch (_error) {
           toast.error(
             "Reservation created. Open Play wasn't created - you can create it from Reservation Details.",
@@ -323,9 +323,7 @@ export default function PlaceBookingPage() {
       router.push(
         requiresPayment
           ? appRoutes.reservations.payment(result.id)
-          : openPlayId
-            ? appRoutes.openPlay.detail(openPlayId)
-            : appRoutes.reservations.detail(result.id),
+          : appRoutes.reservations.detail(result.id),
       );
     } catch (_error) {
       // toast handled by mutation hooks

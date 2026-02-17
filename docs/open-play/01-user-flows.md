@@ -16,6 +16,10 @@ This document describes the intended MVP flows and UX behavior.
    - Cost-sharing info (suggested split is shown; host adds payment instructions)
 4. System creates an Open Play linked to the reservation.
 
+After booking:
+- The user continues the normal reservation flow (payment if required, otherwise reservation details).
+- The Open Play is surfaced from Reservation Details (view/copy link, manage settings) without redirecting away from the reservation flow.
+
 Visibility:
 - Before the reservation is `CONFIRMED`, the Open Play is not visible/joinable to others.
 - Once the reservation is `CONFIRMED`, the Open Play becomes visible (if `PUBLIC`) and joinable.
@@ -33,6 +37,9 @@ Flow:
 3. Host configures the Open Play settings.
 4. System creates (or reuses) the Open Play.
 5. Host is redirected to Open Play detail.
+
+Note:
+- Prefer keeping the user on Reservation Details and surfacing Open Play there (avoid disrupting the reservation flow).
 
 ### C) Host shares Open Play
 

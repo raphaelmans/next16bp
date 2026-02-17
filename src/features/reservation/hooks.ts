@@ -176,6 +176,7 @@ type ReservationListItemData = {
   slotEndTime: string;
   amountCents: number | null;
   currency: string | null;
+  openPlayId: string | null;
 };
 
 interface UseMyReservationsOptions {
@@ -320,6 +321,7 @@ export function useMyReservations(options: UseMyReservationsOptions = {}) {
               priceCents,
               currency,
             },
+            openPlayId: item.openPlayId,
           };
         }),
         total: sortedData.length,
@@ -419,6 +421,7 @@ export interface ReservationListItem {
     priceCents: number;
     currency: string;
   };
+  openPlayId?: string | null;
 }
 
 // ============================================================================

@@ -25,14 +25,35 @@ export function useOpenPlaysByPlace(input: {
 export function useOpenPlayPublicDetail(openPlayId: string, enabled = true) {
   return trpc.openPlay.getPublicDetail.useQuery(
     { openPlayId },
-    { enabled: enabled && Boolean(openPlayId) },
+    {
+      enabled: enabled && Boolean(openPlayId),
+      refetchOnWindowFocus: true,
+      staleTime: 10_000,
+    },
   );
 }
 
 export function useOpenPlayDetail(openPlayId: string, enabled = true) {
   return trpc.openPlay.getDetail.useQuery(
     { openPlayId },
-    { enabled: enabled && Boolean(openPlayId) },
+    {
+      enabled: enabled && Boolean(openPlayId),
+      refetchOnWindowFocus: true,
+      staleTime: 10_000,
+      refetchInterval: (query) => {
+        const data = query.state.data;
+        if (!data) return false;
+        const hasStarted = Date.parse(data.openPlay.startsAtIso) <= Date.now();
+        if (hasStarted) return false;
+        if (data.openPlay.status !== "ACTIVE") return false;
+        // Poll on host view, or when joiner is awaiting a decision.
+        if (data.viewer.role === "host") return 15_000;
+        return data.viewer.myStatus === "REQUESTED" ||
+          data.viewer.myStatus === "WAITLISTED"
+          ? 15_000
+          : false;
+      },
+    },
   );
 }
 

@@ -2,6 +2,7 @@ import { and, asc, count, desc, eq, gt, inArray, lt, sql } from "drizzle-orm";
 import {
   court,
   type InsertReservation,
+  openPlay,
   paymentProof,
   place,
   placePhoto,
@@ -250,8 +251,10 @@ export class ReservationRepository implements IReservationRepository {
         slotEndTime: reservation.endTime,
         amountCents: reservation.totalPriceCents,
         currency: reservation.currency,
+        openPlayId: openPlay.id,
       })
       .from(reservation)
+      .leftJoin(openPlay, eq(openPlay.reservationId, reservation.id))
       .innerJoin(court, eq(reservation.courtId, court.id))
       .innerJoin(place, eq(court.placeId, place.id))
       .leftJoin(placePhoto, eq(placePhoto.placeId, place.id))
@@ -267,6 +270,7 @@ export class ReservationRepository implements IReservationRepository {
         reservation.endTime,
         reservation.totalPriceCents,
         reservation.currency,
+        openPlay.id,
         court.id,
         court.label,
         place.id,
@@ -291,6 +295,7 @@ export class ReservationRepository implements IReservationRepository {
       expiresAt: toIsoString(row.expiresAt),
       slotStartTime: toIsoString(row.slotStartTime) ?? "",
       slotEndTime: toIsoString(row.slotEndTime) ?? "",
+      openPlayId: row.openPlayId ?? null,
     }));
   }
 

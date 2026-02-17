@@ -31,6 +31,7 @@ export const ReservationListItemSchema = z.object({
   slotEndTime: z.string(),
   amountCents: z.number().nullable(),
   currency: z.string().nullable(),
+  openPlayId: S.ids.generic.nullable(),
 });
 
 export type ReservationListItemRecord = z.infer<

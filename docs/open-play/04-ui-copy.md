@@ -180,3 +180,12 @@ Keep errors user-actionable:
 - Past start: "This Open Play has already started."
 - Full: "This Open Play is full."
 - Join own: "You can't join your own Open Play."
+
+## 9) Reservations list (/reservations)
+
+Reservation list item badge:
+- "Open Play" (shown when the reservation has an Open Play set up)
+
+Reservation list item actions:
+- If Open Play exists: button "Open Play" -> opens Open Play detail
+- If no Open Play: button "Set up Open Play" -> opens reservation detail with setup dialog

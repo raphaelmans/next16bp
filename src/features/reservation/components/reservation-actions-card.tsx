@@ -70,11 +70,12 @@ export function ReservationActionsCard({
   ];
   const canMessageOwner = activeChatStatuses.includes(status);
 
-  const canCreateOpenPlay = status === "CONFIRMED";
-  const existingOpenPlayQuery = useOpenPlayForReservation(
-    reservationId,
-    canCreateOpenPlay,
-  );
+  const canCreateOpenPlay =
+    status === "CREATED" ||
+    status === "AWAITING_PAYMENT" ||
+    status === "PAYMENT_MARKED_BY_USER" ||
+    status === "CONFIRMED";
+  const existingOpenPlayQuery = useOpenPlayForReservation(reservationId, true);
   const createOpenPlayMutation = useCreateOpenPlayFromReservation();
   const [openPlayDialogOpen, setOpenPlayDialogOpen] = React.useState(false);
   const [openPlayMaxPlayers, setOpenPlayMaxPlayers] = React.useState(4);
@@ -127,6 +128,17 @@ export function ReservationActionsCard({
     );
   };
 
+  React.useEffect(() => {
+    if (canCreateOpenPlay) {
+      const openPlayQuery = new URLSearchParams(window.location.search).get(
+        "openPlay",
+      );
+      if (openPlayQuery === "1" || openPlayQuery === "true") {
+        setOpenPlayDialogOpen(true);
+      }
+    }
+  }, [canCreateOpenPlay]);
+
   return (
     <Card className="sticky top-4 min-w-0 overflow-hidden">
       <CardContent className="min-w-0 space-y-4 p-4">
@@ -168,19 +180,47 @@ export function ReservationActionsCard({
         <div className="space-y-2">
           {canCreateOpenPlay ? (
             existingOpenPlayQuery.data ? (
-              <Button
-                variant="outline"
-                className="w-full justify-start"
-                asChild
-              >
-                <Link
-                  href={appRoutes.openPlay.detail(
-                    existingOpenPlayQuery.data.id,
-                  )}
+              <div className="space-y-2">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start"
+                  asChild
+                  disabled={!existingOpenPlayQuery.data}
                 >
-                  View Open Play
-                </Link>
-              </Button>
+                  <Link
+                    href={appRoutes.openPlay.detail(
+                      existingOpenPlayQuery.data?.id ?? "",
+                    )}
+                  >
+                    View Open Play
+                  </Link>
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start"
+                  onClick={() =>
+                    existingOpenPlayQuery.data
+                      ? copyToClipboard(
+                          new URL(
+                            appRoutes.openPlay.detail(
+                              existingOpenPlayQuery.data.id,
+                            ),
+                            window.location.origin,
+                          ).toString(),
+                          "Open Play link",
+                        )
+                      : null
+                  }
+                >
+                  Copy Open Play link
+                </Button>
+                {status !== "CONFIRMED" ? (
+                  <p className="px-1 text-xs text-muted-foreground">
+                    Your Open Play becomes visible and joinable only after the
+                    reservation is confirmed.
+                  </p>
+                ) : null}
+              </div>
             ) : (
               <>
                 <Button
@@ -188,10 +228,10 @@ export function ReservationActionsCard({
                   className="w-full justify-start"
                   onClick={() => setOpenPlayDialogOpen(true)}
                 >
-                  Create Open Play
+                  Set up Open Play
                 </Button>
                 <p className="px-1 text-xs text-muted-foreground">
-                  Open Plays become visible to others only after your
+                  Set it up now. It becomes visible and joinable only after your
                   reservation is confirmed.
                 </p>
               </>
@@ -408,31 +448,31 @@ export function ReservationActionsCard({
                   type="button"
                   onClick={async () => {
                     try {
-                      const created = await createOpenPlayMutation.mutateAsync({
-                        reservationId,
-                        maxPlayers: Math.max(
-                          2,
-                          Math.min(32, openPlayMaxPlayers),
-                        ),
-                        joinPolicy: openPlayJoinPolicy,
-                        visibility: openPlayVisibility,
-                        note:
-                          openPlayNote.trim().length > 0
-                            ? openPlayNote.trim()
-                            : undefined,
-                        paymentInstructions:
-                          openPlayPaymentInstructions.trim().length > 0
-                            ? openPlayPaymentInstructions.trim()
-                            : undefined,
-                        paymentLinkUrl:
-                          openPlayPaymentLinkUrl.trim().length > 0
-                            ? openPlayPaymentLinkUrl.trim()
-                            : undefined,
-                      });
-                      setOpenPlayDialogOpen(false);
-                      window.location.href = appRoutes.openPlay.detail(
-                        created.openPlayId,
+                      const _created = await createOpenPlayMutation.mutateAsync(
+                        {
+                          reservationId,
+                          maxPlayers: Math.max(
+                            2,
+                            Math.min(32, openPlayMaxPlayers),
+                          ),
+                          joinPolicy: openPlayJoinPolicy,
+                          visibility: openPlayVisibility,
+                          note:
+                            openPlayNote.trim().length > 0
+                              ? openPlayNote.trim()
+                              : undefined,
+                          paymentInstructions:
+                            openPlayPaymentInstructions.trim().length > 0
+                              ? openPlayPaymentInstructions.trim()
+                              : undefined,
+                          paymentLinkUrl:
+                            openPlayPaymentLinkUrl.trim().length > 0
+                              ? openPlayPaymentLinkUrl.trim()
+                              : undefined,
+                        },
                       );
+                      setOpenPlayDialogOpen(false);
+                      // Preserve reservation flow; Open Play will appear via query invalidation.
                     } catch {
                       // toast handled in hook
                     }

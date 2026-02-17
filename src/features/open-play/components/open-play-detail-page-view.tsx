@@ -1,6 +1,7 @@
 "use client";
 
 import type { inferRouterOutputs } from "@trpc/server";
+import { RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import * as React from "react";
@@ -89,6 +90,8 @@ export default function OpenPlayDetailPageView() {
   const close = useCloseOpenPlay();
   const cancel = useCancelOpenPlay();
 
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
+
   const [joinDialogOpen, setJoinDialogOpen] = React.useState(false);
   const [joinMessage, setJoinMessage] = React.useState("");
 
@@ -133,6 +136,17 @@ export default function OpenPlayDetailPageView() {
       </Container>
     );
   }
+
+  const handleRefresh = async () => {
+    if (!isAuthed) return;
+    setIsRefreshing(true);
+    try {
+      await detailQuery.refetch();
+      await publicQuery.refetch();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const timeZone = data.place.timeZone;
   const dateLabel = formatInTimeZone(
@@ -440,7 +454,20 @@ export default function OpenPlayDetailPageView() {
           {isHost && participants ? (
             <Card>
               <CardHeader>
-                <CardTitle>Requests</CardTitle>
+                <div className="flex items-center justify-between gap-3">
+                  <CardTitle>Requests</CardTitle>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRefresh}
+                    disabled={isRefreshing}
+                  >
+                    <RefreshCw
+                      className={`mr-2 h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
+                    />
+                    Refresh
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 {costSharing.requiresPayment && isHost ? (
@@ -521,7 +548,20 @@ export default function OpenPlayDetailPageView() {
           {isHost && participants?.waitlisted ? (
             <Card>
               <CardHeader>
-                <CardTitle>Waitlist</CardTitle>
+                <div className="flex items-center justify-between gap-3">
+                  <CardTitle>Waitlist</CardTitle>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRefresh}
+                    disabled={isRefreshing}
+                  >
+                    <RefreshCw
+                      className={`mr-2 h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
+                    />
+                    Refresh
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 {participants.waitlisted.length ? (

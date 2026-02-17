@@ -3,12 +3,14 @@
 import { CreditCard, Eye, MoreHorizontal, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import {
   formatCurrency,
   formatDateShort,
   formatTimeRange,
 } from "@/common/format";
 import { KudosStatusBadge, type ReservationStatus } from "@/components/kudos";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -28,6 +30,7 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
   const { court, timeSlot, status, id } = reservation;
   const imageUrl = court.coverImageUrl?.trim();
   const canPay = status === "AWAITING_PAYMENT";
+  const hasOpenPlay = Boolean(reservation.openPlayId);
   const canCancel = [
     "CREATED",
     "AWAITING_PAYMENT",
@@ -64,11 +67,18 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
                 {court.address}
               </p>
             </div>
-            <KudosStatusBadge
-              status={status as ReservationStatus}
-              size="sm"
-              className="shrink-0"
-            />
+            <div className="flex items-center gap-2 shrink-0">
+              {hasOpenPlay ? (
+                <Badge variant="secondary" className="text-[11px]">
+                  Open Play
+                </Badge>
+              ) : null}
+              <KudosStatusBadge
+                status={status as ReservationStatus}
+                size="sm"
+                className="shrink-0"
+              />
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
@@ -85,6 +95,26 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
           <Button variant="outline" size="sm" asChild>
             <Link href={`/reservations/${id}`}>View</Link>
           </Button>
+          {hasOpenPlay ? (
+            <Button
+              variant="outline"
+              size="sm"
+              asChild
+              disabled={!reservation.openPlayId}
+            >
+              <Link
+                href={appRoutes.openPlay.detail(reservation.openPlayId ?? "")}
+              >
+                Open Play
+              </Link>
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" asChild>
+              <Link href={`/reservations/${id}?openPlay=1`}>
+                Set up Open Play
+              </Link>
+            </Button>
+          )}
           {canPay && (
             <Button size="sm" asChild>
               <Link href={`/reservations/${id}/payment`}>Pay Now</Link>
@@ -127,6 +157,25 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
           <Button variant="outline" size="sm" className="flex-1" asChild>
             <Link href={`/reservations/${id}`}>View Details</Link>
           </Button>
+          {hasOpenPlay ? (
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1"
+              asChild
+              disabled={!reservation.openPlayId}
+            >
+              <Link
+                href={appRoutes.openPlay.detail(reservation.openPlayId ?? "")}
+              >
+                Open Play
+              </Link>
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" className="flex-1" asChild>
+              <Link href={`/reservations/${id}?openPlay=1`}>Open Play</Link>
+            </Button>
+          )}
           {canPay && (
             <Button size="sm" className="flex-1" asChild>
               <Link href={`/reservations/${id}/payment`}>Pay Now</Link>
