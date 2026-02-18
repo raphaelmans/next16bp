@@ -19,6 +19,10 @@ export async function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", path);
 
+  if (path.startsWith("/api/mobile/")) {
+    return NextResponse.next({ request: { headers: requestHeaders } });
+  }
+
   const isExactOrChild = (pathname: string, base: string) =>
     pathname === base || pathname.startsWith(`${base}/`);
 

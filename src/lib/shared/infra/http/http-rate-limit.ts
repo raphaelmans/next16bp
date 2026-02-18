@@ -10,9 +10,10 @@ export async function enforceRateLimit(args: {
   req: Request;
   tier: RateLimitTier;
   requestId: string;
+  identifier?: string;
 }) {
   const limiter = getRateLimiter(args.tier);
-  const identifier = getClientIdentifier(args.req).value;
+  const identifier = args.identifier ?? getClientIdentifier(args.req).value;
 
   let result: Awaited<ReturnType<typeof limiter.limit>>;
   try {
