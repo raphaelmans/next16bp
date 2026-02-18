@@ -99,6 +99,13 @@ type RowRecord = {
   warnings: string[] | null;
 };
 
+type SourceRecord = {
+  id: string;
+  fileName: string;
+  fileSize?: number | null;
+  sourceType?: string | null;
+};
+
 const formatBytes = (bytes?: number | null) => {
   if (!bytes || bytes < 0) return "-";
   if (bytes < 1024) return `${bytes} B`;
@@ -272,7 +279,7 @@ export default function OwnerBookingsImportReviewView({
 
   const job = jobQuery.data;
   const rows = rowsQuery.data ?? [];
-  const sources = sourcesQuery.data ?? [];
+  const sources = (sourcesQuery.data ?? []) as SourceRecord[];
   const sourceItems =
     sources.length > 0 && job
       ? sources
@@ -373,7 +380,13 @@ export default function OwnerBookingsImportReviewView({
   const handleSaveEdit = () => {
     if (!editingRow) return;
 
-    const payload: Parameters<typeof updateRowMutation.mutate>[0] = {
+    const payload: {
+      rowId: string;
+      startTime: string | null;
+      endTime: string | null;
+      reason: string | null;
+      courtId?: string | null;
+    } = {
       rowId: editingRow.id,
       startTime: editStartTime ? new Date(editStartTime).toISOString() : null,
       endTime: editEndTime ? new Date(editEndTime).toISOString() : null,
@@ -384,7 +397,7 @@ export default function OwnerBookingsImportReviewView({
       payload.courtId = editCourtId || null;
     }
 
-    updateRowMutation.mutate(payload);
+    updateRowMutation.mutate(payload as any);
   };
 
   const handleDeleteRow = () => {

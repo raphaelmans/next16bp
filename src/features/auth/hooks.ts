@@ -11,11 +11,34 @@ import { getAuthApi } from "./api.runtime";
 
 const authApi = getAuthApi();
 
+export interface AuthSessionUser {
+  id?: string;
+  email?: string;
+  role?: string;
+  displayName?: string;
+  phoneNumber?: string;
+  avatarUrl?: string;
+  name?: string;
+  image?: string;
+}
+
+export interface AuthOrganization {
+  id: string;
+  name: string;
+  slug: string;
+  isActive?: boolean;
+}
+
 export function useQueryAuthSession() {
-  return useFeatureQuery(["auth", "me"], authApi.queryAuthMe, undefined, {
-    retry: false,
-    staleTime: 5 * 60 * 1000,
-  });
+  return useFeatureQuery<AuthSessionUser | null>(
+    ["auth", "me"],
+    authApi.queryAuthMe as (input?: unknown) => Promise<AuthSessionUser | null>,
+    undefined,
+    {
+      retry: false,
+      staleTime: 5 * 60 * 1000,
+    },
+  );
 }
 
 export function useMutAuthLogin() {
@@ -72,19 +95,35 @@ export function useMutAuthLogout() {
   const queryClient = useQueryClient();
   const setOwnerOnboardingIntent = useSetOwnerOnboardingIntent();
 
-  return useFeatureMutation(authApi.mutAuthLogout, {
+  const mutation = useFeatureMutation(authApi.mutAuthLogout, {
     onSuccess: async () => {
       await queryClient.cancelQueries(undefined, { silent: true });
       queryClient.clear();
       setOwnerOnboardingIntent.mutate(false);
     },
   });
+
+  return {
+    ...mutation,
+    mutate: (
+      _variables?: unknown,
+      options?: Parameters<typeof mutation.mutate>[1],
+    ) =>
+      mutation.mutate(undefined, options),
+    mutateAsync: (
+      _variables?: unknown,
+      options?: Parameters<typeof mutation.mutateAsync>[1],
+    ) =>
+      mutation.mutateAsync(undefined, options),
+  };
 }
 
 export function useQueryAuthMyOrganizations(enabled: boolean) {
-  return useFeatureQuery(
+  return useFeatureQuery<AuthOrganization[]>(
     ["organization", "my"],
-    authApi.queryOrganizationMy,
+    authApi.queryOrganizationMy as (
+      input?: unknown,
+    ) => Promise<AuthOrganization[]>,
     undefined,
     { enabled },
   );
@@ -103,9 +142,9 @@ export function useModPortalSwitcherData({
   inferOwner,
   onSetDefaultPortalError,
 }: UsePortalSwitcherDataOptions) {
-  const sessionQuery = useFeatureQuery(
+  const sessionQuery = useFeatureQuery<AuthSessionUser | null>(
     ["auth", "me"],
-    authApi.queryAuthMe,
+    authApi.queryAuthMe as (input?: unknown) => Promise<AuthSessionUser | null>,
     undefined,
     {
       retry: false,
@@ -113,9 +152,11 @@ export function useModPortalSwitcherData({
     },
   );
 
-  const organizationsQuery = useFeatureQuery(
+  const organizationsQuery = useFeatureQuery<AuthOrganization[]>(
     ["organization", "my"],
-    authApi.queryOrganizationMy,
+    authApi.queryOrganizationMy as (
+      input?: unknown,
+    ) => Promise<AuthOrganization[]>,
     undefined,
     {
       enabled: inferOwner && !!sessionQuery.data,
@@ -125,7 +166,7 @@ export function useModPortalSwitcherData({
   const setDefaultPortalMutation = useFeatureMutation(
     authApi.mutUserPreferenceSetDefaultPortal,
     {
-      onError: (error) => {
+      onError: (error: unknown) => {
         onSetDefaultPortalError?.(error);
       },
     },

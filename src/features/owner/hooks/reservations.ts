@@ -432,10 +432,11 @@ export function useModReservationAlerts(
   });
 }
 
-export function useMutOwnerConfirmPaidOffline() {
+export function useMutOwnerConfirmPaidOffline(options?: Record<string, unknown>) {
   const utils = trpc.useUtils();
   return useFeatureMutation(ownerApi.mutReservationOwnerConfirmPaidOffline, {
-    onSuccess: async (_data, variables) => {
+    ...(options ?? {}),
+    onSuccess: async (_data, variables, context) => {
       const payload = variables as { reservationId?: string } | undefined;
       await Promise.all([
         utils.reservationOwner.getForOrganization.invalidate(),
@@ -447,6 +448,14 @@ export function useMutOwnerConfirmPaidOffline() {
             })
           : Promise.resolve(),
       ]);
+      const userOnSuccess = options?.onSuccess;
+      if (typeof userOnSuccess === "function") {
+        await (userOnSuccess as (...args: unknown[]) => unknown)(
+          _data,
+          variables,
+          context,
+        );
+      }
     },
   });
 }

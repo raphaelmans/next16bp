@@ -11,12 +11,12 @@ import { parseDayKeyToDate } from "@/features/discovery/helpers";
 type DiscoveryPrefetchUtils = {
   availability: {
     getForPlaceSportRange: {
-      getData: (input: unknown) => unknown;
-      fetch: (input: unknown) => Promise<unknown>;
+      getData: (input: any) => unknown;
+      fetch: (input: any) => Promise<unknown>;
     };
     getForCourt: {
-      getData: (input: unknown) => unknown;
-      fetch: (input: unknown) => Promise<unknown>;
+      getData: (input: any) => unknown;
+      fetch: (input: any) => Promise<unknown>;
     };
   };
 };

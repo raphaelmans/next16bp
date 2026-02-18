@@ -89,10 +89,7 @@ export default function OwnerReservationDetailPage({
   );
 
   const { data: history = [], isLoading: historyLoading } =
-    useQueryOwnerReservationHistory(
-      { reservationId },
-      { enabled: !!reservationId },
-    );
+    useQueryOwnerReservationHistory({ reservationId });
 
   const reservation = reservations[0];
   const acceptMutation = useMutAcceptReservation();

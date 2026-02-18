@@ -173,7 +173,7 @@ export class AdminCourtService implements IAdminCourtService {
       );
 
       // 3. Create photos
-      const photos = [];
+      const photos: any[] = [];
       if (data.photos?.length) {
         for (let i = 0; i < data.photos.length; i++) {
           const photo = data.photos[i];
@@ -190,7 +190,7 @@ export class AdminCourtService implements IAdminCourtService {
       }
 
       // 4. Create amenities
-      const amenities = [];
+      const amenities: any[] = [];
       if (data.amenities?.length) {
         for (const name of data.amenities) {
           const created = await this.adminCourtRepository.createAmenity(

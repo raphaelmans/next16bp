@@ -81,6 +81,12 @@ export interface PlaceCardMetaItem {
   reservationsEnabled?: boolean | null;
 }
 
+type PlaceVerificationProjection = {
+  placeId: string;
+  status: typeof placeVerification.$inferSelect.status | null;
+  reservationsEnabled: boolean | null;
+};
+
 export interface PaginatedPlaces {
   items: PlaceListItem[];
   total: number;
@@ -580,11 +586,11 @@ export class PlaceRepository implements IPlaceRepository {
                 })
                 .from(placeVerification)
                 .where(inArray(placeVerification.placeId, placeIds))
-            : Promise.resolve([]),
+            : Promise.resolve<PlaceVerificationProjection[]>([]),
         ]);
 
-        const verificationByPlaceId = new Map(
-          verificationRows.map((row) => [row.placeId, row]),
+        const verificationByPlaceId = new Map<string, PlaceVerificationProjection>(
+          verificationRows.map((row) => [row.placeId, row] as const),
         );
         return {
           items: orderedPlaces.map((placeRecord) => {
@@ -651,11 +657,11 @@ export class PlaceRepository implements IPlaceRepository {
               })
               .from(placeVerification)
               .where(inArray(placeVerification.placeId, placeIds))
-          : Promise.resolve([]),
+          : Promise.resolve<PlaceVerificationProjection[]>([]),
       ]);
 
-      const verificationByPlaceId = new Map(
-        verificationRows.map((row) => [row.placeId, row]),
+      const verificationByPlaceId = new Map<string, PlaceVerificationProjection>(
+        verificationRows.map((row) => [row.placeId, row] as const),
       );
 
       return {
@@ -771,11 +777,11 @@ export class PlaceRepository implements IPlaceRepository {
             })
             .from(placeVerification)
             .where(inArray(placeVerification.placeId, placeIds))
-        : Promise.resolve([]),
+        : Promise.resolve<PlaceVerificationProjection[]>([]),
     ]);
 
-    const verificationByPlaceId = new Map(
-      verificationRows.map((row) => [row.placeId, row]),
+    const verificationByPlaceId = new Map<string, PlaceVerificationProjection>(
+      verificationRows.map((row) => [row.placeId, row] as const),
     );
 
     return {

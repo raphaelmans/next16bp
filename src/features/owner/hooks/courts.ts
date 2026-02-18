@@ -221,7 +221,7 @@ type CourtWithSportPayload = {
 
 function mapOwnerCourt(
   court: CourtWithSportPayload,
-  place: OwnerPlaceSimple | OwnerPlaceRecord,
+  place: OwnerPlaceSimple | OwnerPlaceBase,
 ): OwnerCourt {
   return {
     id: court.court.id,

@@ -40,18 +40,14 @@ export function useModOwnerInvalidation() {
   );
 
   const invalidateOwnerReservationsOverview = React.useCallback(
-    async (
-      ...sessionArgs: Parameters<
-        typeof cache.reservationChat.getSession.invalidate
-      >
-    ) =>
+    async (sessionArg?: { reservationId?: string }) =>
       Promise.all([
         cache.reservationOwner.getForOrganization.invalidate(),
         cache.reservationOwner.getPendingCount.invalidate(),
         cache.reservationChat.getThreadMetas.invalidate(),
-        ...sessionArgs.map((arg) =>
-          cache.reservationChat.getSession.invalidate(arg),
-        ),
+        sessionArg
+          ? cache.reservationChat.getSession.invalidate(sessionArg)
+          : cache.reservationChat.getSession.invalidate(),
       ]),
     [cache],
   );

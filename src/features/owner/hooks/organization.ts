@@ -301,6 +301,19 @@ export interface OwnerSidebarPlace {
   courts: OwnerSidebarCourt[];
 }
 
+type OwnerPlaceBase = {
+  id: string;
+  name: string;
+};
+
+type CourtWithSportPayload = {
+  court: {
+    id: string;
+    label: string;
+    isActive: boolean;
+  };
+};
+
 type OwnerSidebarPlaceRecord = Pick<OwnerPlaceBase, "id" | "name"> & {
   verification?: {
     status: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED" | null;

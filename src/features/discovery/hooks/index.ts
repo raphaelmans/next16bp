@@ -2,10 +2,21 @@
 
 import { trpc } from "@/trpc/client";
 
-export * from "./availability";
 export * from "./filters";
 export * from "./place-detail";
-export * from "./search";
+export {
+  useMutDiscoverySubmitClaim,
+  useMutDiscoverySubmitGuestRemoval,
+  useModDiscoveryPlaces,
+  useModDiscoveryPlaceSummaries,
+  useQueryDiscoveryAvailabilityForCourt,
+  useQueryDiscoveryAvailabilityForCourtRange,
+  useQueryDiscoveryAvailabilityForPlaceSportRange,
+  useQueryDiscoveryOrganizations,
+  useQueryDiscoverySports,
+  useQueryFeaturedPlaces,
+  type PlaceSummary,
+} from "./search";
 
 export function useModDiscoveryPrefetchPort() {
   return trpc.useUtils();
