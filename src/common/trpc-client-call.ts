@@ -6,7 +6,9 @@ import type { TrpcClientApi } from "@/trpc/client-api";
 type UnknownRecord = Record<string, unknown>;
 
 const asRecord = (value: unknown): UnknownRecord | null =>
-  value && typeof value === "object" ? (value as UnknownRecord) : null;
+  value && (typeof value === "object" || typeof value === "function")
+    ? (value as UnknownRecord)
+    : null;
 
 const getByPath = (source: unknown, path: readonly string[]): unknown => {
   let current: unknown = source;
