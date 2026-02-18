@@ -4,6 +4,11 @@ import {
   AuthenticationError,
   AuthorizationError,
 } from "@/lib/shared/kernel/errors";
+import {
+  canExposeErrorDetails,
+  GENERIC_PUBLIC_ERROR_MESSAGE,
+  getPublicErrorMessage,
+} from "@/lib/shared/kernel/public-error";
 import type { RateLimitTier } from "../ratelimit";
 import type { AuthenticatedContext, Context } from "./context";
 import { createRateLimitMiddleware } from "./middleware/ratelimit.middleware";
@@ -19,6 +24,10 @@ const t = initTRPC.context<Context>().create({
 
     // Known application error
     if (cause instanceof AppError) {
+      const publicMessage = getPublicErrorMessage(cause);
+      const includeDetails =
+        canExposeErrorDetails(cause) && cause.details !== undefined;
+
       ctx?.log.warn(
         {
           err: cause,
@@ -31,12 +40,13 @@ const t = initTRPC.context<Context>().create({
 
       return {
         ...shape,
+        message: publicMessage,
         data: {
           ...shape.data,
           code: cause.code,
           httpStatus: cause.httpStatus,
           requestId,
-          details: cause.details,
+          ...(includeDetails ? { details: cause.details } : {}),
         },
       };
     }
@@ -52,9 +62,11 @@ const t = initTRPC.context<Context>().create({
 
     return {
       ...shape,
+      message: GENERIC_PUBLIC_ERROR_MESSAGE,
       data: {
         ...shape.data,
         code: "INTERNAL_ERROR",
+        httpStatus: 500,
         requestId,
       },
     };

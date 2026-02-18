@@ -19,9 +19,21 @@ export async function proxy(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", path);
 
-  if (path.startsWith("/api/mobile/")) {
+  if (path === "/api/v1/openapi.json") {
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
+
+  if (path.startsWith("/api/v1/")) {
+    const url = request.nextUrl.clone();
+    url.pathname = path.replace(/^\/api\/v1\//, "/api/mobile/v1/");
+    return NextResponse.rewrite(url, { request: { headers: requestHeaders } });
+  }
+
+  // /api/mobile/ routes are excluded from the proxy matcher (see config below).
+  // They use Bearer-token auth and don't need Supabase session refresh.
+  // Note: NextResponse.next() for these paths triggers a 404 in Next.js 16
+  // proxy — a known Turbopack routing bug. Excluding them from the matcher
+  // avoids the issue entirely.
 
   const isExactOrChild = (pathname: string, base: string) =>
     pathname === base || pathname.startsWith(`${base}/`);
@@ -144,6 +156,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/mobile/|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

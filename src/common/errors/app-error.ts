@@ -11,6 +11,9 @@ export type AppError =
   | {
       kind: "network";
       message: string;
+      status?: number;
+      code?: string;
+      requestId?: string;
       cause?: unknown;
     }
   | {
@@ -32,5 +35,8 @@ export type AppError =
   | {
       kind: "unknown";
       message: string;
+      status?: number;
+      code?: string;
+      requestId?: string;
       cause?: unknown;
     };

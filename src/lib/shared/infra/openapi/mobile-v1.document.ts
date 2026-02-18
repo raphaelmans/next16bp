@@ -278,14 +278,17 @@ function publicGet(options: {
   };
 }
 
-export function createMobileV1OpenApiDocument(args: { baseUrl: string }) {
+export function createMobileV1OpenApiDocument(args: {
+  baseUrl: string;
+  basePath?: string;
+}) {
   return createDocument({
     openapi: "3.1.0",
     info: {
-      title: "KudosCourts Mobile API",
+      title: "KudosCourts API",
       version: "1.0.0",
     },
-    servers: [{ url: `${args.baseUrl}/api/mobile/v1` }],
+    servers: [{ url: `${args.baseUrl}${args.basePath ?? "/api/v1"}` }],
     components: {
       securitySchemes: {
         bearerAuth: {

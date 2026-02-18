@@ -66,6 +66,9 @@ export const toAppError = (err: unknown): AppError => {
       return {
         kind,
         message,
+        status,
+        code,
+        requestId,
         cause: err,
       };
     }
@@ -73,6 +76,9 @@ export const toAppError = (err: unknown): AppError => {
     return {
       kind: "unknown",
       message,
+      status,
+      code,
+      requestId,
       cause: err,
     };
   }

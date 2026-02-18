@@ -14,7 +14,7 @@ export async function GET(req: Request) {
     const baseUrl = url.origin;
     const document = createMobileV1OpenApiDocument({
       baseUrl,
-      basePath: "/api/mobile/v1",
+      basePath: "/api/v1",
     });
     return NextResponse.json(document);
   } catch (error) {

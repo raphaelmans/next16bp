@@ -1,5 +1,9 @@
 import { logger } from "@/lib/shared/infra/logger";
 import { AppError } from "@/lib/shared/kernel/errors";
+import {
+  canExposeErrorDetails,
+  getPublicErrorMessage,
+} from "@/lib/shared/kernel/public-error";
 import type { ApiErrorResponse } from "@/lib/shared/kernel/response";
 
 export function handleError(
@@ -7,6 +11,10 @@ export function handleError(
   requestId: string,
 ): { status: number; body: ApiErrorResponse } {
   if (error instanceof AppError) {
+    const publicMessage = getPublicErrorMessage(error);
+    const includeDetails =
+      canExposeErrorDetails(error) && error.details !== undefined;
+
     logger.warn(
       {
         err: error,
@@ -21,9 +29,9 @@ export function handleError(
       status: error.httpStatus,
       body: {
         code: error.code,
-        message: error.message,
+        message: publicMessage,
         requestId,
-        ...(error.details && { details: error.details }),
+        ...(includeDetails ? { details: error.details } : {}),
       },
     };
   }

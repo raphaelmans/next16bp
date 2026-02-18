@@ -40,6 +40,53 @@ const FRIENDLY_ERROR_MESSAGES: Record<string, string> = {
     "You can send up to 5 messages per minute. Please wait and try again.",
 };
 
+const INTERNAL_ERROR_CODES = new Set([
+  "INTERNAL_ERROR",
+  "BAD_GATEWAY",
+  "SERVICE_UNAVAILABLE",
+  "GATEWAY_TIMEOUT",
+]);
+
+const isInternalErrorCode = (code?: string): boolean => {
+  if (typeof code !== "string") return false;
+  const normalized = code.toUpperCase();
+  return (
+    INTERNAL_ERROR_CODES.has(normalized) ||
+    normalized.includes("INTERNAL") ||
+    normalized.includes("DATABASE")
+  );
+};
+
+const shouldUseFallbackMessage = (appError: AppError): boolean => {
+  if (appError.kind === "validation") return false;
+
+  const code =
+    appError.kind === "unauthorized" ||
+    appError.kind === "forbidden" ||
+    appError.kind === "not_found" ||
+    appError.kind === "rate_limited" ||
+    appError.kind === "network" ||
+    appError.kind === "unknown"
+      ? appError.code
+      : undefined;
+
+  const status =
+    appError.kind === "unauthorized" ||
+    appError.kind === "forbidden" ||
+    appError.kind === "not_found" ||
+    appError.kind === "rate_limited" ||
+    appError.kind === "network" ||
+    appError.kind === "unknown"
+      ? appError.status
+      : undefined;
+
+  if (appError.kind === "unknown") return true;
+  if (appError.kind === "network") return true;
+  if (typeof status === "number" && status >= 500) return true;
+
+  return isInternalErrorCode(code);
+};
+
 const getCodeErrorMessage = (error: unknown): string | null => {
   const appError = toAppError(error);
   const code =
@@ -86,6 +133,10 @@ export const getClientErrorMessage = (
 
   const validationMessage = getValidationMessage(error);
   if (validationMessage) return validationMessage;
+
+  if (shouldUseFallbackMessage(appError)) {
+    return fallback;
+  }
 
   if (appError.message.trim().length > 0) {
     return appError.message;

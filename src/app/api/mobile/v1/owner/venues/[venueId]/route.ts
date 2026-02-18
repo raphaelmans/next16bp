@@ -22,6 +22,33 @@ export const dynamic = "force-dynamic";
 
 type Params = Promise<{ venueId: string }>;
 
+const normalizeMobilePlaceInput = (
+  raw: Record<string, unknown>,
+): Record<string, unknown> => {
+  const normalized: Record<string, unknown> = { ...raw };
+
+  if (normalized.name === undefined && normalized.placeName !== undefined) {
+    normalized.name = normalized.placeName;
+  }
+
+  if (
+    normalized.address === undefined &&
+    normalized.streetAddress !== undefined
+  ) {
+    normalized.address = normalized.streetAddress;
+  }
+
+  if (normalized.province === undefined && normalized.state !== undefined) {
+    normalized.province = normalized.state;
+  }
+
+  if (normalized.timeZone === undefined && normalized.timezone !== undefined) {
+    normalized.timeZone = normalized.timezone;
+  }
+
+  return normalized;
+};
+
 export async function GET(req: Request, context: { params: Params }) {
   const requestId = getRequestId(req);
   try {
@@ -62,8 +89,11 @@ export async function PATCH(req: Request, context: { params: Params }) {
     if (!rl.ok) return rl.response;
 
     const raw = await parseJson(req);
+    const normalizedRaw = normalizeMobilePlaceInput(
+      raw as Record<string, unknown>,
+    );
     const input = validate(UpdatePlaceSchema, {
-      ...(raw as Record<string, unknown>),
+      ...normalizedRaw,
       placeId: venueId,
     });
 

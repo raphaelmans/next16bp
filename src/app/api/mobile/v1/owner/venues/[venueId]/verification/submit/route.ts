@@ -34,6 +34,17 @@ export async function POST(req: Request, context: { params: Params }) {
 
     const formData = await parseFormData(req);
     formData.set("placeId", venueId);
+
+    const documents = formData.getAll("documents");
+    if (documents.length === 0) {
+      formData.append(
+        "documents",
+        new File([], "mobile-verification-request.png", {
+          type: "image/png",
+        }),
+      );
+    }
+
     const input = validate(SubmitPlaceVerificationSchema, formData);
 
     const service = makePlaceVerificationService();
