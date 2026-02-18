@@ -56,8 +56,9 @@ type AdminCourtEditViewProps = {
 export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   const router = useRouter();
 
-  const { data: user } = useQueryAuthSession();
+  const { data: rawUser } = useQueryAuthSession();
   const logoutMutation = useMutAuthLogout();
+  const user = rawUser as { email?: string | null } | undefined;
 
   const { data: stats } = useQueryAdminSidebarStats();
   const { data: courtData, isLoading: courtLoading } =
@@ -83,9 +84,8 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   const [featuredRankInput, setFeaturedRankInput] = React.useState("0");
   const [isSavingFeaturedRank, setIsSavingFeaturedRank] = React.useState(false);
 
-  const { data: sports = [], isLoading: sportsLoading } = useQueryAdminSports(
-    {},
-  );
+  const { data: rawSports, isLoading: sportsLoading } = useQueryAdminSports({});
+  const sports = (rawSports ?? []) as Array<{ id: string; name: string }>;
 
   const deferredOrgSearch = React.useDeferredValue(orgSearch);
   const orgSearchQuery = useQueryAdminOrganizationSearch(
@@ -250,7 +250,9 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
     ? getClientErrorMessage(previewError, "Request failed")
     : null;
 
-  const organizationOptions = orgSearchQuery.data?.items ?? [];
+  const organizationOptions = (
+    orgSearchQuery.data as { items?: OrganizationSearchItem[] } | undefined
+  )?.items ?? [];
 
   React.useEffect(() => {
     if (!isTransferOpen) {
@@ -380,7 +382,7 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   }, [courtData?.place.featuredRank]);
 
   const handleLogout = async () => {
-    await logoutMutation.mutateAsync();
+    await logoutMutation.mutateAsync(undefined);
     window.location.href = appRoutes.login.from(
       appRoutes.admin.courts.detail(courtId),
     );
@@ -591,7 +593,7 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
         <AdminSidebar
           user={{
             name: user?.email?.split("@")[0],
-            email: user?.email,
+            email: user?.email ?? undefined,
           }}
           pendingClaimsCount={stats?.pendingClaims || 0}
           pendingVerificationsCount={stats?.pendingVerifications || 0}
@@ -601,7 +603,7 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
         <AdminNavbar
           user={{
             name: user?.email?.split("@")[0],
-            email: user?.email,
+            email: user?.email ?? undefined,
           }}
           onLogout={handleLogout}
         />
