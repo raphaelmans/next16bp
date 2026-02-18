@@ -42,7 +42,14 @@ const FRIENDLY_ERROR_MESSAGES: Record<string, string> = {
 
 const getCodeErrorMessage = (error: unknown): string | null => {
   const appError = toAppError(error);
-  const code = appError.code;
+  const code =
+    appError.kind === "validation" ||
+    appError.kind === "unauthorized" ||
+    appError.kind === "forbidden" ||
+    appError.kind === "not_found" ||
+    appError.kind === "rate_limited"
+      ? appError.code
+      : undefined;
   if (typeof code === "string" && code in FRIENDLY_ERROR_MESSAGES) {
     return FRIENDLY_ERROR_MESSAGES[code] ?? null;
   }

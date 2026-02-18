@@ -197,7 +197,15 @@ export const getAvailabilityErrorInfo = (
   }
 
   const appError = toAppError(error);
-  if (appError.code === "BOOKING_WINDOW_EXCEEDED") {
+  const code =
+    appError.kind === "validation" ||
+    appError.kind === "unauthorized" ||
+    appError.kind === "forbidden" ||
+    appError.kind === "not_found" ||
+    appError.kind === "rate_limited"
+      ? appError.code
+      : undefined;
+  if (code === "BOOKING_WINDOW_EXCEEDED") {
     return { isBookingWindowError: true, isError: true, refetch };
   }
 
