@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
-import { PortalSwitcher } from "@/components/layout/portal-switcher";
 import { SidebarNavItem } from "@/components/layout/sidebar-nav-item";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +22,7 @@ import {
   SidebarHeader,
   SidebarMenu,
 } from "@/components/ui/sidebar";
+import { PortalSwitcher } from "@/features/auth/components/portal-switcher";
 
 interface AdminSidebarProps {
   user?: {

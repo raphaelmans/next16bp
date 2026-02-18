@@ -4,7 +4,7 @@ import type * as React from "react";
 import { appRoutes } from "@/common/app-routes";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useOpenPlaysByPlace } from "../hooks";
+import { useModOpenPlaysByPlace } from "../hooks";
 import { OpenPlayList } from "./open-play-list";
 
 export function OpenPlayVenuePanel({
@@ -17,7 +17,7 @@ export function OpenPlayVenuePanel({
   };
   hostCta: React.ReactNode;
 }) {
-  const query = useOpenPlaysByPlace({
+  const query = useModOpenPlaysByPlace({
     placeId: place.id,
     limit: 20,
     enabled: Boolean(place.id),

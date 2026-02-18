@@ -2,10 +2,10 @@
 
 import { Bell } from "lucide-react";
 import Link from "next/link";
-import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -13,12 +13,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
-import { useWebPush } from "../hooks/use-web-push";
+import { useModWebPush } from "../hooks";
 
 type Portal = "owner" | "player" | "admin";
 
 export function NotificationBell({ portal }: { portal: Portal }) {
-  const webPush = useWebPush();
+  const webPush = useModWebPush();
 
   const settingsHref =
     portal === "owner"

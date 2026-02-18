@@ -20,6 +20,7 @@ import {
   type HighlighterGeneric,
   type ThemedToken,
 } from "shiki";
+import { createFeatureLogger } from "@/common/logging";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -29,6 +30,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+
+const logger = createFeatureLogger("ai-elements", "code-block");
 
 // Shiki uses bitflags for font styles: 1=italic, 2=bold, 4=underline
 const isItalic = (fontStyle: number | undefined) => fontStyle && fontStyle & 1;
@@ -219,7 +222,7 @@ export function highlightCode(
       }
     })
     .catch((error) => {
-      console.error("Failed to highlight code:", error);
+      logger.error("Failed to highlight code", { error });
       subscribers.delete(tokensCacheKey);
     });
 

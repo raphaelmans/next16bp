@@ -1,0 +1,1 @@
+export { getAuthApi } from "./api";

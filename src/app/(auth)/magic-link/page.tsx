@@ -5,6 +5,17 @@ export const metadata = {
   description: "Sign in with a magic link",
 };
 
-export default function MagicLinkPage() {
-  return <MagicLinkForm />;
+type MagicLinkPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function MagicLinkPage({
+  searchParams,
+}: MagicLinkPageProps) {
+  const queryParams = await searchParams;
+  const redirect = Array.isArray(queryParams.redirect)
+    ? queryParams.redirect[0]
+    : queryParams.redirect;
+
+  return <MagicLinkForm redirectParam={redirect} />;
 }

@@ -12,10 +12,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { trpc } from "@/trpc/client";
+import { useQueryAuthMyOrganizations } from "@/features/auth";
 
 export function OwnerCtaSection() {
-  const { data: orgs, isLoading } = trpc.organization.my.useQuery();
+  const { data: orgs, isLoading } = useQueryAuthMyOrganizations(true);
 
   if (isLoading) {
     return (

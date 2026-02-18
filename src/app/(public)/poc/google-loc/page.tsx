@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import GoogleLocPocPageClient from "./page-client";
+import { GoogleLocPocPage as DiscoveryGoogleLocPocPage } from "@/features/discovery/pages/google-loc-poc-page";
 
 export const metadata: Metadata = {
   title: "Google Maps URL Preview (PoC)",
@@ -16,5 +16,5 @@ export default function GoogleLocPocPage() {
   if (process.env.NODE_ENV === "production") {
     notFound();
   }
-  return <GoogleLocPocPageClient />;
+  return <DiscoveryGoogleLocPocPage />;
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { appRoutes } from "@/common/app-routes";
+import { DiscoveryCourtsPage } from "@/features/discovery/pages/courts-page";
 import { env } from "@/lib/env";
-import CourtsPageClient from "./courts-page-client";
 
 const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL(appRoutes.courts.base, appUrl);
@@ -27,5 +27,5 @@ export const metadata: Metadata = {
 };
 
 export default function CourtsPage() {
-  return <CourtsPageClient />;
+  return <DiscoveryCourtsPage />;
 }

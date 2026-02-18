@@ -3,31 +3,23 @@
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { KudosLogo } from "@/components/kudos";
-import { UserDropdown } from "@/features/discovery/components/user-dropdown";
-import { NotificationBell } from "@/features/notifications/components/notification-bell";
 
 interface PlayerNavbarProps {
-  user: {
-    name: string;
-    email: string;
-    avatarUrl?: string | null;
-  };
-  isOwner: boolean;
-  isAdmin: boolean;
-  onLogout?: () => void;
+  brandHref?: string;
+  roleLabel?: string;
+  rightContent?: React.ReactNode;
 }
 
 export function PlayerNavbar({
-  user,
-  isOwner,
-  isAdmin,
-  onLogout,
+  brandHref = appRoutes.postLogin.base,
+  roleLabel = "Player",
+  rightContent,
 }: PlayerNavbarProps) {
   return (
     <div className="flex flex-1 items-center justify-between">
       <div className="flex items-center gap-3">
         <Link
-          href={appRoutes.postLogin.base}
+          href={brandHref}
           className="flex items-center gap-2 hover:opacity-80"
         >
           <KudosLogo size={28} variant="icon" />
@@ -36,19 +28,11 @@ export function PlayerNavbar({
           </span>
         </Link>
         <span className="hidden sm:inline text-xs text-muted-foreground">
-          Player
+          {roleLabel}
         </span>
       </div>
 
-      <div className="flex items-center gap-2">
-        <NotificationBell portal="player" />
-        <UserDropdown
-          user={user}
-          isOwner={isOwner}
-          isAdmin={isAdmin}
-          onSignOut={onLogout}
-        />
-      </div>
+      <div className="flex items-center gap-2">{rightContent ?? null}</div>
     </div>
   );
 }

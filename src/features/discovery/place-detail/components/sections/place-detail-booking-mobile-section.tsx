@@ -15,11 +15,15 @@ import {
   mapAvailabilityOptionsToSlots,
   parseDayKeyToDate,
 } from "@/features/discovery/helpers";
-import type { PlaceDetail } from "@/features/discovery/hooks";
+import {
+  type PlaceDetail,
+  useModDiscoveryPrefetchPort,
+  useQueryDiscoveryAvailabilityForCourt,
+  useQueryDiscoveryAvailabilityForPlaceSportRange,
+} from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
-import { useMobileWeekPrefetch } from "@/features/discovery/place-detail/hooks/use-mobile-week-prefetch";
-import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/state/place-detail-ui-store";
-import { trpc } from "@/trpc/client";
+import { useModMobileWeekPrefetch } from "@/features/discovery/place-detail/hooks/use-mobile-week-prefetch";
+import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 
 const TIMELINE_SLOT_DURATION = 60;
 
@@ -77,7 +81,7 @@ export function PlaceDetailBookingMobileSection({
   onContinue,
   onSelectionSummaryChange,
 }: PlaceDetailBookingMobileSectionProps) {
-  const utils = trpc.useUtils();
+  const utils = useModDiscoveryPrefetchPort();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const mobileSheetExpanded = usePlaceDetailUiStore(
     (s) => s.mobileSheetExpanded,
@@ -105,7 +109,7 @@ export function PlaceDetailBookingMobileSection({
     [placeTimeZone, selectedDate, today],
   );
 
-  const mobileAnyDayQuery = trpc.availability.getForPlaceSportRange.useQuery(
+  const mobileAnyDayQuery = useQueryDiscoveryAvailabilityForPlaceSportRange(
     {
       placeId: place.id,
       sportId: selectedSportId ?? "",
@@ -122,33 +126,25 @@ export function PlaceDetailBookingMobileSection({
       includeUnavailable: true,
       includeCourtOptions: false,
     },
-    {
-      enabled:
-        !isDesktop &&
-        mobileSheetExpanded &&
-        selectionMode === "any" &&
-        !!selectedSportId &&
-        !!mobileDayDateIso,
-      placeholderData: (prev) => prev,
-    },
+    !isDesktop &&
+      mobileSheetExpanded &&
+      selectionMode === "any" &&
+      !!selectedSportId &&
+      !!mobileDayDateIso,
   );
 
-  const mobileCourtDayQuery = trpc.availability.getForCourt.useQuery(
+  const mobileCourtDayQuery = useQueryDiscoveryAvailabilityForCourt(
     {
       courtId: selectedCourtId ?? "",
       date: mobileDayDateIso,
       durationMinutes: TIMELINE_SLOT_DURATION,
       includeUnavailable: true,
     },
-    {
-      enabled:
-        !isDesktop &&
-        mobileSheetExpanded &&
-        selectionMode === "court" &&
-        !!selectedCourtId &&
-        !!mobileDayDateIso,
-      placeholderData: (prev) => prev,
-    },
+    !isDesktop &&
+      mobileSheetExpanded &&
+      selectionMode === "court" &&
+      !!selectedCourtId &&
+      !!mobileDayDateIso,
   );
 
   const prefetchedMobileWeekRef = React.useRef<Set<string>>(new Set());
@@ -163,7 +159,7 @@ export function PlaceDetailBookingMobileSection({
     prefetchedMobileWeekRef.current.delete(key);
   }, []);
 
-  useMobileWeekPrefetch({
+  useModMobileWeekPrefetch({
     showBooking: true,
     isDesktop,
     mobileSheetExpanded,

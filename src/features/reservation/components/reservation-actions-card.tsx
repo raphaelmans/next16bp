@@ -26,8 +26,8 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import {
-  useCreateOpenPlayFromReservation,
-  useOpenPlayForReservation,
+  useMutCreateOpenPlayFromReservation,
+  useQueryOpenPlayForReservation,
 } from "@/features/open-play/hooks";
 
 interface ReservationActionsCardProps {
@@ -75,8 +75,11 @@ export function ReservationActionsCard({
     status === "AWAITING_PAYMENT" ||
     status === "PAYMENT_MARKED_BY_USER" ||
     status === "CONFIRMED";
-  const existingOpenPlayQuery = useOpenPlayForReservation(reservationId, true);
-  const createOpenPlayMutation = useCreateOpenPlayFromReservation();
+  const existingOpenPlayQuery = useQueryOpenPlayForReservation(
+    reservationId,
+    true,
+  );
+  const createOpenPlayMutation = useMutCreateOpenPlayFromReservation();
   const [openPlayDialogOpen, setOpenPlayDialogOpen] = React.useState(false);
   const [openPlayMaxPlayers, setOpenPlayMaxPlayers] = React.useState(4);
   const [openPlayJoinPolicy, setOpenPlayJoinPolicy] = React.useState<

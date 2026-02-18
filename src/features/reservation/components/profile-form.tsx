@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { parseAsString, useQueryState } from "nuqs";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -18,17 +18,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useProfile, useUpdateProfile, useUploadAvatar } from "../hooks";
+import {
+  useMutUpdateProfile,
+  useMutUploadAvatar,
+  useQueryProfile,
+} from "../hooks";
 import { type ProfileFormValues, profileSchema } from "../schemas";
 import { AvatarUpload } from "./avatar-upload";
 import { ProfileFormSkeleton } from "./skeletons";
 
 export function ProfileForm() {
   const router = useRouter();
-  const { data: profile, isLoading } = useProfile();
+  const { data: profile, isLoading } = useQueryProfile();
   const [redirect] = useQueryState("redirect", parseAsString);
-  const updateProfile = useUpdateProfile();
-  const uploadAvatar = useUploadAvatar();
+  const updateProfile = useMutUpdateProfile();
+  const uploadAvatar = useMutUploadAvatar();
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),

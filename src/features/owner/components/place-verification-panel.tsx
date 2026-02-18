@@ -15,8 +15,8 @@ import {
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
+import { toast } from "@/common/toast";
 import { StandardFormProvider, StandardFormTextarea } from "@/components/form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -27,16 +27,16 @@ import {
   buildPlaceVerificationFormData,
   type PlaceVerificationStatus,
   type UploadPlaceVerificationInput,
-  usePlaceVerification,
-  useSubmitPlaceVerification,
-  useTogglePlaceReservations,
+  useModOwnerPlaceVerificationPostSubmit,
+  useMutSubmitPlaceVerification,
+  useMutTogglePlaceReservations,
+  useQueryPlaceVerification,
 } from "@/features/owner/hooks";
 import {
   FILE_SIZE_LIMITS_READABLE,
   MAX_VERIFICATION_DOCUMENT_SIZE,
 } from "@/lib/modules/storage/dtos";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/trpc/client";
 
 const STATUS_CONFIG: Record<
   PlaceVerificationStatus,
@@ -108,10 +108,10 @@ export function PlaceVerificationPanel({
   returnTo,
 }: PlaceVerificationPanelProps) {
   const router = useRouter();
-  const utils = trpc.useUtils();
-  const { data, isLoading } = usePlaceVerification(placeId);
-  const submitVerification = useSubmitPlaceVerification(placeId);
-  const toggleReservations = useTogglePlaceReservations(placeId);
+  const { fetchCourtsByPlace } = useModOwnerPlaceVerificationPostSubmit();
+  const { data, isLoading } = useQueryPlaceVerification(placeId);
+  const submitVerification = useMutSubmitPlaceVerification(placeId);
+  const toggleReservations = useMutTogglePlaceReservations(placeId);
 
   const [documents, setDocuments] = React.useState<DocumentPreview[]>([]);
 
@@ -189,9 +189,7 @@ export function PlaceVerificationPanel({
       return;
     }
 
-    const courts = await utils.courtManagement.listByPlace
-      .fetch({ placeId })
-      .catch(() => null);
+    const courts = await fetchCourtsByPlace(placeId);
 
     if (courts && courts.length === 0) {
       router.push(appRoutes.owner.places.courts.base(placeId));

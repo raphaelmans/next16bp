@@ -33,10 +33,10 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { trpc } from "@/trpc/client";
 import { validateChatUploadFiles } from "../constants/upload-policy";
-import { useStreamChannel } from "../hooks/useStreamChannel";
-import { useStreamClient } from "../hooks/useStreamClient";
+import { useQueryReservationChatSession } from "../hooks/use-chat-trpc";
+import { useModStreamChannel } from "../hooks/useModStreamChannel";
+import { useModStreamClient } from "../hooks/useModStreamClient";
 
 const CHAT_ENABLED_STATUSES = [
   "AWAITING_PAYMENT",
@@ -114,7 +114,7 @@ export function ReservationChatClient({
 
   const [sendStatus, setSendStatus] = useState<ChatStatus>("ready");
 
-  const sessionQuery = trpc.reservationChat.getSession.useQuery(
+  const sessionQuery = useQueryReservationChatSession(
     { reservationId },
     { enabled: isChatEnabled },
   );
@@ -124,7 +124,7 @@ export function ReservationChatClient({
     client,
     isReady,
     error: clientError,
-  } = useStreamClient(
+  } = useModStreamClient(
     session
       ? {
           apiKey: session.auth.apiKey,
@@ -143,7 +143,7 @@ export function ReservationChatClient({
     sendFiles,
     loadMore,
     markRead,
-  } = useStreamChannel({
+  } = useModStreamChannel({
     client: isReady ? client : null,
     channelType: session?.channel.channelType ?? "messaging",
     channelId: session?.channel.channelId ?? null,

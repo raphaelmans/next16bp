@@ -7,7 +7,19 @@ import {
   toUtcISOString,
 } from "@/common/time-zone";
 import { parseDayKeyToDate } from "@/features/discovery/helpers";
-import type { trpc } from "@/trpc/client";
+
+type DiscoveryPrefetchUtils = {
+  availability: {
+    getForPlaceSportRange: {
+      getData: (input: unknown) => unknown;
+      fetch: (input: unknown) => Promise<unknown>;
+    };
+    getForCourt: {
+      getData: (input: unknown) => unknown;
+      fetch: (input: unknown) => Promise<unknown>;
+    };
+  };
+};
 
 type UseMobileWeekPrefetchOptions = {
   showBooking: boolean;
@@ -24,10 +36,10 @@ type UseMobileWeekPrefetchOptions = {
   hasPrefetchedMobileWeek: (key: string) => boolean;
   markPrefetchedMobileWeek: (key: string) => void;
   clearPrefetchedMobileWeek: (key: string) => void;
-  utils: ReturnType<typeof trpc.useUtils>;
+  utils: DiscoveryPrefetchUtils;
 };
 
-export function useMobileWeekPrefetch({
+export function useModMobileWeekPrefetch({
   showBooking,
   isDesktop,
   mobileSheetExpanded,

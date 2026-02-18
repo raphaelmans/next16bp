@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
+import { CourtDetailPage as DiscoveryCourtDetailPage } from "@/features/discovery/place-detail/pages/court-detail-page";
 import { env } from "@/lib/env";
-import { createServerCaller } from "@/lib/shared/infra/trpc/server";
+import { getPlaceDetailsForCourtRoute } from "@/lib/modules/discovery/server/court-detail-page";
 import { isUuid } from "@/lib/slug";
-import CourtDetailClient from "./court-detail-client";
 
 type PageProps = {
   params: Promise<{ placeId: string; courtId: string }>;
@@ -38,10 +38,7 @@ export async function generateMetadata({
   let imageUrl: string | undefined;
 
   try {
-    const caller = await createServerCaller(appRoutes.places.detail(placeId));
-    const placeDetails = await caller.place.getByIdOrSlug({
-      placeIdOrSlug: placeId,
-    });
+    const placeDetails = await getPlaceDetailsForCourtRoute(placeId);
     const place = placeDetails.place;
     const court = placeDetails.courts.find((c) => c.court.id === courtId);
 
@@ -100,10 +97,7 @@ export default async function CourtDetailPage({
   const queryParams = await searchParams;
 
   try {
-    const caller = await createServerCaller(appRoutes.places.detail(placeId));
-    const placeDetails = await caller.place.getByIdOrSlug({
-      placeIdOrSlug: placeId,
-    });
+    const placeDetails = await getPlaceDetailsForCourtRoute(placeId);
     const place = placeDetails.place;
     const slug = place.slug;
 
@@ -131,7 +125,7 @@ export default async function CourtDetailPage({
     const placeSlugOrId = slug ?? place.id;
 
     return (
-      <CourtDetailClient
+      <DiscoveryCourtDetailPage
         placeSlugOrId={placeSlugOrId}
         placeId={place.id}
         placeName={place.name}

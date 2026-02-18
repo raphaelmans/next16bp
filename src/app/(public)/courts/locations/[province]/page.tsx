@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { findProvinceBySlug } from "@/common/ph-location-data";
+import { DiscoveryCourtsPage } from "@/features/discovery/pages/courts-page";
 import { env } from "@/lib/env";
 import { getPHProvincesCities } from "@/lib/shared/lib/ph-location-data.server";
-import CourtsPageClient from "../../courts-page-client";
 
 type CourtsProvincePageProps = {
   params: Promise<{ province: string }>;
@@ -62,7 +62,7 @@ export default async function CourtsProvincePage({
   }
 
   return (
-    <CourtsPageClient
+    <DiscoveryCourtsPage
       initialFilters={{ province: province.slug }}
       initialLocationLabel={province.displayName}
     />

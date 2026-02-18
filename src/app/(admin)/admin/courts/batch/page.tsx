@@ -1,7 +1,1 @@
-"use client";
-
-import AdminCourtsBatchView from "@/features/admin/components/admin-courts-batch-view";
-
-export default function AdminCourtsBatchPage() {
-  return <AdminCourtsBatchView />;
-}
+export { default } from "@/features/admin/pages/admin-courts-batch-page";

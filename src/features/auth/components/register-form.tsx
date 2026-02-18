@@ -2,13 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import { getSafeRedirectPath } from "@/common/redirects";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,10 +23,10 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { type RegisterDTO, RegisterSchema } from "@/lib/modules/auth/dtos";
 import {
-  useLoginWithGoogle,
-  useRegister,
-  useResendSignUpOtp,
-  useVerifySignUpOtp,
+  useMutAuthLoginWithGoogle,
+  useMutAuthRegister,
+  useMutAuthResendSignUpOtp,
+  useMutAuthVerifySignUpOtp,
 } from "../hooks";
 import { EmailVerificationScreen } from "./email-verification-screen";
 
@@ -34,23 +34,24 @@ export interface RegisterFormProps {
   title?: string;
   description?: string;
   defaultRedirect?: string;
+  redirectParam?: string | null;
 }
 
 export function RegisterForm({
   title = "Create Account",
   description = "Enter your details to create an account",
   defaultRedirect = appRoutes.postLogin.base,
+  redirectParam,
 }: RegisterFormProps = {}) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [success, setSuccess] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState("");
-  const registerMutation = useRegister();
-  const googleLoginMutation = useLoginWithGoogle();
-  const verifySignUpOtpMutation = useVerifySignUpOtp();
-  const resendSignUpOtpMutation = useResendSignUpOtp();
+  const registerMutation = useMutAuthRegister();
+  const googleLoginMutation = useMutAuthLoginWithGoogle();
+  const verifySignUpOtpMutation = useMutAuthVerifySignUpOtp();
+  const resendSignUpOtpMutation = useMutAuthResendSignUpOtp();
 
-  const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
+  const redirectUrl = getSafeRedirectPath(redirectParam ?? null, {
     fallback: defaultRedirect,
     origin: typeof window !== "undefined" ? window.location.origin : undefined,
     disallowRoutes: ["guest"],

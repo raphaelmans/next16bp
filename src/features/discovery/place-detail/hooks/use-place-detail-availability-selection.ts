@@ -12,7 +12,7 @@ type UsePlaceDetailAvailabilitySelectionOptions = {
   defaultDurationMinutes?: number;
 };
 
-export function usePlaceDetailAvailabilitySelection({
+export function useModPlaceDetailAvailabilitySelection({
   place,
   isBookable,
   defaultDurationMinutes = 60,

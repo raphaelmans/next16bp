@@ -3,9 +3,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
-import { useSession } from "@/features/auth";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
+import { useQueryAuthSession } from "@/features/auth";
+import {
+  useModDiscoveryInvalidation,
+  useMutDiscoverySubmitClaim,
+  useMutDiscoverySubmitGuestRemoval,
+  useQueryDiscoveryOrganizations,
+} from "@/features/discovery/hooks";
 import { PlaceDetailListingHelpCard } from "@/features/discovery/place-detail/components/place-detail-listing-help-card";
 import {
   type ClaimFormData,
@@ -13,8 +19,7 @@ import {
   type RemovalFormData,
   removalFormSchema,
 } from "@/features/discovery/place-detail/forms/schemas";
-import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/state/place-detail-ui-store";
-import { trpc } from "@/trpc/client";
+import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 
 type PlaceDetailListingHelpSectionProps = {
   placeId: string;
@@ -29,16 +34,12 @@ export function PlaceDetailListingHelpSection({
   isCurated,
   claimStatus,
 }: PlaceDetailListingHelpSectionProps) {
-  const { data: session } = useSession();
+  const { data: session } = useQueryAuthSession();
   const isAuthenticated = !!session;
-  const utils = trpc.useUtils();
+  const { invalidatePlaceByIdOrSlug } = useModDiscoveryInvalidation();
 
-  const { data: organizations = [] } = trpc.organization.my.useQuery(
-    undefined,
-    {
-      enabled: isAuthenticated,
-    },
-  );
+  const { data: organizations = [] } =
+    useQueryDiscoveryOrganizations(isAuthenticated);
   const isOwner = organizations.length > 0;
   const canSubmitClaim =
     isCurated && claimStatus === "UNCLAIMED" && isAuthenticated && isOwner;
@@ -87,8 +88,8 @@ export function PlaceDetailListingHelpSection({
   const isRemovalOpen = usePlaceDetailUiStore((s) => s.isRemovalOpen);
   const setIsRemovalOpen = usePlaceDetailUiStore((s) => s.setIsRemovalOpen);
 
-  const claimMutation = trpc.claimRequest.submitClaim.useMutation();
-  const removalMutation = trpc.claimRequest.submitGuestRemoval.useMutation();
+  const claimMutation = useMutDiscoverySubmitClaim();
+  const removalMutation = useMutDiscoverySubmitGuestRemoval();
 
   React.useEffect(() => {
     if (!defaultOrganizationId) return;
@@ -147,7 +148,7 @@ export function PlaceDetailListingHelpSection({
         requestNotes: "",
       });
       setIsClaimOpen(false);
-      await utils.place.getByIdOrSlug.invalidate({ placeIdOrSlug });
+      await invalidatePlaceByIdOrSlug({ placeIdOrSlug });
     } catch (error) {
       toast.error("Unable to submit claim", {
         description: getClientErrorMessage(error, "Please try again"),
@@ -168,7 +169,7 @@ export function PlaceDetailListingHelpSection({
       });
       resetRemovalForm({ guestName: "", guestEmail: "", requestNotes: "" });
       setIsRemovalOpen(false);
-      await utils.place.getByIdOrSlug.invalidate({ placeIdOrSlug });
+      await invalidatePlaceByIdOrSlug({ placeIdOrSlug });
     } catch (error) {
       toast.error("Unable to submit removal request", {
         description: getClientErrorMessage(error, "Please try again"),

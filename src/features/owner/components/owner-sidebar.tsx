@@ -15,7 +15,6 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
-import { PortalSwitcher } from "@/components/layout/portal-switcher";
 import { SidebarNavItem } from "@/components/layout/sidebar-nav-item";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -47,10 +46,11 @@ import {
   SidebarMenuSubItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
+import { PortalSwitcher } from "@/features/auth/components/portal-switcher";
 import {
-  useOwnerSetupStatus,
-  useOwnerSidebarQuickLinks,
-  useReservationCounts,
+  useQueryOwnerSetupStatus,
+  useQueryOwnerSidebarQuickLinks,
+  useQueryReservationCounts,
 } from "@/features/owner/hooks";
 
 interface Organization {
@@ -101,10 +101,10 @@ export function OwnerSidebar({
 }: OwnerSidebarProps) {
   const pathname = usePathname();
   const { data: quickLinks = [], isLoading: quickLinksLoading } =
-    useOwnerSidebarQuickLinks(currentOrganization?.id);
+    useQueryOwnerSidebarQuickLinks(currentOrganization?.id);
   const { data: setupStatus, isLoading: setupStatusLoading } =
-    useOwnerSetupStatus();
-  const { data: reservationCounts } = useReservationCounts(
+    useQueryOwnerSetupStatus();
+  const { data: reservationCounts } = useQueryReservationCounts(
     currentOrganization?.id ?? null,
   );
   const hasOrganization = Boolean(currentOrganization?.id);

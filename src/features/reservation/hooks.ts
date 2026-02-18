@@ -2,9 +2,18 @@
 
 import { useRouter } from "next/navigation";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
-import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
+import {
+  createFeatureQueryOptions,
+  useFeatureMutation,
+  useFeatureQueries,
+  useFeatureQuery,
+} from "@/common/feature-api-hooks";
+import { toast } from "@/common/toast";
 import { trpc } from "@/trpc/client";
+import { getReservationApi } from "./api.runtime";
+
+const reservationApi = getReservationApi();
 
 // ============================================================================
 // From use-cancel-reservation.ts
@@ -14,11 +23,11 @@ import { trpc } from "@/trpc/client";
  * Hook to cancel a reservation
  * Connected to reservation.cancel tRPC endpoint
  */
-export function useCancelReservation() {
+export function useMutCancelReservation() {
   const router = useRouter();
   const utils = trpc.useUtils();
 
-  return trpc.reservation.cancel.useMutation({
+  return useFeatureMutation(reservationApi.mutReservationCancel, {
     onSuccess: async (_data, variables) => {
       toast.success("Reservation cancelled successfully");
 
@@ -49,10 +58,10 @@ export function useCancelReservation() {
 // From use-create-reservation-for-any-court.ts
 // ============================================================================
 
-export function useCreateReservationForAnyCourt() {
+export function useMutCreateReservationForAnyCourt() {
   const utils = trpc.useUtils();
 
-  return trpc.reservation.createForAnyCourt.useMutation({
+  return useFeatureMutation(reservationApi.mutReservationCreateForAnyCourt, {
     onSuccess: async (data) => {
       const message =
         data.status === "CREATED"
@@ -78,10 +87,10 @@ export function useCreateReservationForAnyCourt() {
 // From use-create-reservation-for-court.ts
 // ============================================================================
 
-export function useCreateReservationForCourt() {
+export function useMutCreateReservationForCourt() {
   const utils = trpc.useUtils();
 
-  return trpc.reservation.createForCourt.useMutation({
+  return useFeatureMutation(reservationApi.mutReservationCreateForCourt, {
     onSuccess: async (data) => {
       const message =
         data.status === "CREATED"
@@ -111,10 +120,10 @@ export function useCreateReservationForCourt() {
  * Hook to mark payment as completed for a reservation
  * Connected to reservation.markPayment tRPC endpoint
  */
-export function useMarkPayment() {
+export function useMutMarkPayment() {
   const utils = trpc.useUtils();
 
-  return trpc.reservation.markPayment.useMutation({
+  return useFeatureMutation(reservationApi.mutReservationMarkPayment, {
     onSuccess: async (data, variables) => {
       const isConfirmed = data.status === "CONFIRMED";
       toast.success(
@@ -254,12 +263,14 @@ const getStatusFilter = (tab: ReservationListView) => {
  * Hook to fetch current user's reservations
  * Connected to reservation.getMyWithDetails tRPC endpoint
  */
-export function useMyReservations(options: UseMyReservationsOptions = {}) {
+export function useModMyReservations(options: UseMyReservationsOptions = {}) {
   const { tab = "upcoming", page = 1, limit = 100, enabled = true } = options;
   const offset = (page - 1) * limit;
   const status = getStatusFilter(tab);
 
-  const query = trpc.reservation.getMyWithDetails.useQuery(
+  const query = useFeatureQuery(
+    ["reservation", "getMyWithDetails"],
+    reservationApi.queryReservationGetMyWithDetails,
     {
       status,
       limit,
@@ -341,29 +352,45 @@ export function useMyReservations(options: UseMyReservationsOptions = {}) {
  * Hook to get reservation counts by tab
  * This fetches counts for each tab to display badges
  */
-export function useReservationCounts() {
+export function useQueryReservationCounts() {
   const [allQuery, confirmedQuery, cancelledQuery, expiredQuery] =
-    trpc.useQueries((t) => [
-      t.reservation.getMyWithDetails({
-        limit: 100,
-        offset: 0,
-      }),
-      t.reservation.getMyWithDetails({
-        status: "CONFIRMED",
-        limit: 100,
-        offset: 0,
-      }),
-      t.reservation.getMyWithDetails({
-        status: "CANCELLED",
-        limit: 100,
-        offset: 0,
-      }),
-      t.reservation.getMyWithDetails({
-        status: "EXPIRED",
-        limit: 100,
-        offset: 0,
-      }),
-    ]);
+    useFeatureQueries([
+      createFeatureQueryOptions(
+        ["reservation", "getMyWithDetails"],
+        reservationApi.queryReservationGetMyWithDetails,
+        {
+          limit: 100,
+          offset: 0,
+        },
+      ),
+      createFeatureQueryOptions(
+        ["reservation", "getMyWithDetails"],
+        reservationApi.queryReservationGetMyWithDetails,
+        {
+          status: "CONFIRMED",
+          limit: 100,
+          offset: 0,
+        },
+      ),
+      createFeatureQueryOptions(
+        ["reservation", "getMyWithDetails"],
+        reservationApi.queryReservationGetMyWithDetails,
+        {
+          status: "CANCELLED",
+          limit: 100,
+          offset: 0,
+        },
+      ),
+      createFeatureQueryOptions(
+        ["reservation", "getMyWithDetails"],
+        reservationApi.queryReservationGetMyWithDetails,
+        {
+          status: "EXPIRED",
+          limit: 100,
+          offset: 0,
+        },
+      ),
+    ] as const);
 
   const now = new Date();
 
@@ -439,17 +466,17 @@ export interface Profile {
 /**
  * Hook to fetch current user's profile
  */
-export function useProfile() {
-  return trpc.profile.me.useQuery();
+export function useQueryProfile() {
+  return useFeatureQuery(["profile", "me"], reservationApi.queryProfileMe);
 }
 
 /**
  * Hook to update current user's profile
  */
-export function useUpdateProfile() {
+export function useMutUpdateProfile() {
   const utils = trpc.useUtils();
 
-  return trpc.profile.update.useMutation({
+  return useFeatureMutation(reservationApi.mutProfileUpdate, {
     onSuccess: async () => {
       toast.success("Profile updated successfully");
       await utils.profile.me.invalidate();
@@ -463,10 +490,10 @@ export function useUpdateProfile() {
 /**
  * Hook to upload user avatar
  */
-export function useUploadAvatar() {
+export function useMutUploadAvatar() {
   const utils = trpc.useUtils();
 
-  return trpc.profile.uploadAvatar.useMutation({
+  return useFeatureMutation(reservationApi.mutProfileUploadAvatar, {
     onSuccess: async () => {
       toast.success("Avatar uploaded successfully");
       await utils.profile.me.invalidate();
@@ -485,11 +512,48 @@ export function useUploadAvatar() {
  * Hook to fetch a single reservation by ID
  * Connected to reservation.getById tRPC endpoint
  */
-export function useReservation(id: string) {
-  return trpc.reservation.getById.useQuery(
+export function useQueryReservation(id: string) {
+  return useFeatureQuery(
+    ["reservation", "getById"],
+    reservationApi.queryReservationGetById,
     { reservationId: id },
     { enabled: !!id },
   );
+}
+
+export function useQueryReservationDetail(
+  reservationId: string,
+  refetchInterval?: number,
+) {
+  return useFeatureQuery(
+    ["reservation", "getDetail"],
+    reservationApi.queryReservationGetDetail,
+    { reservationId },
+    {
+      enabled: Boolean(reservationId),
+      refetchInterval,
+    },
+  );
+}
+
+export function useQueryReservationPaymentInfo(
+  reservationId: string,
+  enabled: boolean,
+) {
+  return useFeatureQuery(
+    ["reservation", "getPaymentInfo"],
+    reservationApi.queryReservationGetPaymentInfo,
+    { reservationId },
+    { enabled },
+  );
+}
+
+export function useMutAddPaymentProof() {
+  return useFeatureMutation(reservationApi.mutPaymentProofAdd, {
+    onError: (error) => {
+      toast.error(error.message || "Failed to submit payment proof");
+    },
+  });
 }
 
 // ============================================================================
@@ -500,7 +564,7 @@ export const reservationTabs = ["upcoming", "past", "cancelled"] as const;
 export type ReservationTab = (typeof reservationTabs)[number];
 export type ReservationListView = ReservationTab | "pending";
 
-export function useReservationsTabs() {
+export function useModReservationsTabs() {
   const [tab, setTab] = useQueryState(
     "tab",
     parseAsStringLiteral(reservationTabs)
@@ -519,10 +583,10 @@ export function useReservationsTabs() {
  * Hook to upload payment proof for a reservation
  * Connected to paymentProof.upload tRPC endpoint
  */
-export function useUploadPaymentProof() {
+export function useMutUploadPaymentProof() {
   const utils = trpc.useUtils();
 
-  return trpc.paymentProof.upload.useMutation({
+  return useFeatureMutation(reservationApi.mutPaymentProofUpload, {
     onSuccess: async (_data, variables) => {
       toast.success("Payment proof uploaded successfully!", {
         description: "The court owner will review your payment shortly.",
@@ -545,4 +609,28 @@ export function useUploadPaymentProof() {
       toast.error(error.message || "Failed to upload payment proof");
     },
   });
+}
+
+export function useModReservationInvalidation() {
+  const cache = trpc.useUtils();
+
+  const invalidateReservationDetail = (
+    ...args: Parameters<typeof cache.reservation.getDetail.invalidate>
+  ) => cache.reservation.getDetail.invalidate(...args);
+
+  return {
+    invalidateReservationDetail,
+  };
+}
+
+export function useModReservationPostPaymentWarmup() {
+  const cache = trpc.useUtils();
+
+  return {
+    warmupAfterPayment: async (reservationId: string) =>
+      Promise.all([
+        cache.reservation.getDetail.fetch({ reservationId }),
+        cache.reservation.getMyWithDetails.fetch({ limit: 10, offset: 0 }),
+      ]),
+  };
 }

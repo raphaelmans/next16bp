@@ -7,13 +7,25 @@ export const metadata = {
   description: "Create an owner account to list your venue on KudosCourts",
 };
 
-export default function RegisterOwnerPage() {
+type RegisterOwnerPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function RegisterOwnerPage({
+  searchParams,
+}: RegisterOwnerPageProps) {
+  const queryParams = await searchParams;
+  const redirect = Array.isArray(queryParams.redirect)
+    ? queryParams.redirect[0]
+    : queryParams.redirect;
+
   return (
     <Suspense fallback={<RegisterFormSkeleton />}>
       <RegisterForm
         title="Create Owner Account"
         description="Set up your owner account to list your venue, add courts, and accept bookings."
         defaultRedirect={appRoutes.owner.getStarted}
+        redirectParam={redirect}
       />
     </Suspense>
   );

@@ -34,8 +34,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useQueryDiscoverySports } from "@/features/discovery/hooks";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/trpc/client";
 
 interface PlaceFiltersProps {
   amenities?: string[];
@@ -89,7 +89,7 @@ export function PlaceFilters({
     verification;
   const canClearFilters = hasClearableFilters ?? Boolean(hasFilters);
   const { data: sports = [], isLoading: sportsLoading } =
-    trpc.sport.list.useQuery({});
+    useQueryDiscoverySports();
   const amenitiesQuery = useAmenitiesQuery();
   const amenitiesList = amenitiesQuery.data ?? [];
   const provincesCitiesQuery = usePHProvincesCitiesQuery();

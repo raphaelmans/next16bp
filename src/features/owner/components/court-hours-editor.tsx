@@ -2,7 +2,7 @@
 
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import * as React from "react";
-import { toast } from "sonner";
+import { toast } from "@/common/toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,10 +15,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  useCopyCourtHours,
-  useCourtHours,
-  useOwnerCourts,
-  useSaveCourtHours,
+  useModCourtHours,
+  useMutCopyCourtHours,
+  useMutSaveCourtHours,
+  useQueryOwnerCourts,
 } from "@/features/owner/hooks";
 import { CourtConfigCopyDialog } from "./court-config-copy-dialog";
 
@@ -67,10 +67,11 @@ export function CourtHoursEditor({
   showCopyButton = true,
   onSaved,
 }: CourtHoursEditorProps) {
-  const { data: hours = [], isLoading: hoursLoading } = useCourtHours(courtId);
-  const saveHours = useSaveCourtHours(courtId);
-  const copyHours = useCopyCourtHours(courtId);
-  const { data: courts = [] } = useOwnerCourts(organizationId ?? null);
+  const { data: hours = [], isLoading: hoursLoading } =
+    useModCourtHours(courtId);
+  const saveHours = useMutSaveCourtHours(courtId);
+  const copyHours = useMutCopyCourtHours(courtId);
+  const { data: courts = [] } = useQueryOwnerCourts(organizationId ?? null);
 
   const [rows, setRows] = React.useState<HoursRow[]>([]);
   const [copyOpen, setCopyOpen] = React.useState(false);

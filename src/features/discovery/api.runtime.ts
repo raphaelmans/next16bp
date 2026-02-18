@@ -1,0 +1,1 @@
+export { getDiscoveryApi } from "./api";

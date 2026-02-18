@@ -1,1 +1,1 @@
-export { default } from "../places/page";
+export { default } from "@/features/owner/pages/owner-places-page";

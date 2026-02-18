@@ -3,9 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { toast } from "sonner";
 import type { z } from "zod";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import {
   StandardFormCheckbox,
   StandardFormInput,

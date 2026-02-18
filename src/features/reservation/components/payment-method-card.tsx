@@ -2,12 +2,12 @@
 
 import { Building2, Check, Copy, Smartphone, Star } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 import {
   PAYMENT_PROVIDER_LABELS,
   type PaymentMethodProvider,
   type PaymentMethodType,
 } from "@/common/payment-methods";
+import { toast } from "@/common/toast";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 

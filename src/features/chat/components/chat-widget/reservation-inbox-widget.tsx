@@ -15,8 +15,13 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/trpc/client";
-import { useStreamClient } from "../../hooks/useStreamClient";
+import {
+  useModChatInvalidation,
+  useMutReservationChatSendMessage,
+  useQueryChatAuth,
+  useQueryReservationChatThreadMetas,
+} from "../../hooks/use-chat-trpc";
+import { useModStreamClient } from "../../hooks/useModStreamClient";
 import { StreamChatThread } from "../chat-thread/stream-chat-thread";
 import { InboxFloatingSheet } from "../inbox-shell/inbox-floating-sheet";
 
@@ -194,20 +199,21 @@ export function ReservationInboxWidget({
   const fetchChannelsInFlightRef = useRef<Promise<ChannelRefreshResult> | null>(
     null,
   );
-  const utils = trpc.useUtils();
-  const sendMessageMutation = trpc.reservationChat.sendMessage.useMutation();
+  const { fetchReservationThreadMetas, invalidateReservationThreadMetas } =
+    useModChatInvalidation();
+  const sendMessageMutation = useMutReservationChatSendMessage();
 
   openRef.current = open;
   channelsRef.current = channels;
 
-  const authQuery = trpc.chat.getAuth.useQuery();
+  const authQuery = useQueryChatAuth();
   const auth = authQuery.data;
 
   const {
     client,
     isReady,
     error: clientError,
-  } = useStreamClient(
+  } = useModStreamClient(
     auth
       ? { apiKey: auth.apiKey, user: auth.user, tokenOrProvider: auth.token }
       : { apiKey: null, user: null, tokenOrProvider: null },
@@ -331,10 +337,10 @@ export function ReservationInboxWidget({
     let metaError: unknown = null;
     if (shouldRefreshMetas) {
       try {
-        await utils.reservationChat.getThreadMetas.invalidate({
+        await invalidateReservationThreadMetas({
           reservationIds,
         });
-        await utils.reservationChat.getThreadMetas.fetch({ reservationIds });
+        await fetchReservationThreadMetas({ reservationIds });
       } catch (error) {
         metaError = error;
       }
@@ -367,7 +373,7 @@ export function ReservationInboxWidget({
         ? "Messages refreshed, but reservation state may still be stale."
         : "Reservation state refreshed, but messages may still be stale.",
     );
-  }, [open, utils]);
+  }, [fetchReservationThreadMetas, invalidateReservationThreadMetas, open]);
   syncInboxRef.current = syncInbox;
 
   useEffect(() => {
@@ -473,7 +479,7 @@ export function ReservationInboxWidget({
     [reservationIds],
   );
 
-  const metasQuery = trpc.reservationChat.getThreadMetas.useQuery(
+  const metasQuery = useQueryReservationChatThreadMetas(
     { reservationIds },
     {
       enabled: open && reservationIds.length > 0,

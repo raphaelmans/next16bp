@@ -1,14 +1,19 @@
 import { Suspense } from "react";
-import { Footer } from "@/features/discovery/components/footer";
-import { Navbar } from "@/features/discovery/components/navbar";
 import { cn } from "@/lib/utils";
 
 interface PublicShellProps {
   children: React.ReactNode;
   className?: string;
+  navbar?: React.ReactNode;
+  footer?: React.ReactNode;
 }
 
-export function PublicShell({ children, className }: PublicShellProps) {
+export function PublicShell({
+  children,
+  className,
+  navbar,
+  footer,
+}: PublicShellProps) {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <a
@@ -17,13 +22,11 @@ export function PublicShell({ children, className }: PublicShellProps) {
       >
         Skip to content
       </a>
-      <Suspense fallback={null}>
-        <Navbar />
-      </Suspense>
+      <Suspense fallback={null}>{navbar ?? null}</Suspense>
       <main id="main-content" className={cn("flex-1 w-full pt-24", className)}>
         {children}
       </main>
-      <Footer />
+      {footer ?? null}
     </div>
   );
 }

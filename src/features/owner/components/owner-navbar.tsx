@@ -10,7 +10,6 @@ import {
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { KudosLogo } from "@/components/kudos";
-import { PortalSwitcher } from "@/components/layout/portal-switcher";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { PortalSwitcher } from "@/features/auth/components/portal-switcher";
 import { NotificationBell } from "@/features/notifications/components/notification-bell";
 
 interface OwnerNavbarProps {

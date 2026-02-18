@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { appRoutes } from "@/common/app-routes";
-import { OnboardingShell } from "@/components/layout/onboarding-shell";
+import { AuthOnboardingShell } from "@/features/auth/components/onboarding-shell";
 import { requireSession } from "@/lib/shared/infra/auth/server-session";
 
 export const dynamic = "force-dynamic";
@@ -24,8 +24,8 @@ export default async function OwnerOnboardingLayout({
   await requireSession(pathname);
 
   return (
-    <OnboardingShell dashboardHref={appRoutes.owner.base}>
+    <AuthOnboardingShell dashboardHref={appRoutes.owner.base}>
       {children}
-    </OnboardingShell>
+    </AuthOnboardingShell>
   );
 }

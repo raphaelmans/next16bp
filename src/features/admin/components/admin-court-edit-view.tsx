@@ -5,11 +5,9 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
 import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import {
   buildCityOptions,
   buildProvinceOptions,
@@ -17,6 +15,8 @@ import {
   findProvinceByName,
   resolveProvinceCityValues,
 } from "@/common/ph-location-data";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import { AppShell } from "@/components/layout";
 import { PageHeader } from "@/components/ui/page-header";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
@@ -27,22 +27,23 @@ import {
   type OrganizationSearchItem,
 } from "@/features/admin/components/admin-court-ownership-transfer-card";
 import {
-  useAdminCourt,
-  useAdminSidebarStats,
-  useRecuratePlace,
-  useRemoveAdminCourtPhoto,
-  useTransferPlaceToOrganization,
-  useUpdateCuratedCourt,
-  useUploadAdminCourtPhoto,
+  useMutRecuratePlace,
+  useMutRemoveAdminCourtPhoto,
+  useMutTransferPlaceToOrganization,
+  useMutUpdateCuratedCourt,
+  useMutUploadAdminCourtPhoto,
+  useQueryAdminCourt,
+  useQueryAdminOrganizationSearch,
+  useQueryAdminSidebarStats,
+  useQueryAdminSports,
 } from "@/features/admin/hooks";
 import {
   type AdminCourtEditFormData,
   adminCourtEditSchema,
 } from "@/features/admin/schemas";
-import { useLogout, useSession } from "@/features/auth";
+import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { PLACE_TIME_ZONES } from "@/features/owner/schemas";
 import { env } from "@/lib/env";
-import { trpc } from "@/trpc/client";
 
 const DEFAULT_COUNTRY = "PH";
 const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
@@ -55,16 +56,17 @@ type AdminCourtEditViewProps = {
 export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   const router = useRouter();
 
-  const { data: user } = useSession();
-  const logoutMutation = useLogout();
+  const { data: user } = useQueryAuthSession();
+  const logoutMutation = useMutAuthLogout();
 
-  const { data: stats } = useAdminSidebarStats();
-  const { data: courtData, isLoading: courtLoading } = useAdminCourt(courtId);
-  const updateMutation = useUpdateCuratedCourt();
-  const uploadPhotoMutation = useUploadAdminCourtPhoto(courtId);
-  const removePhotoMutation = useRemoveAdminCourtPhoto(courtId);
-  const transferMutation = useTransferPlaceToOrganization();
-  const recurateMutation = useRecuratePlace();
+  const { data: stats } = useQueryAdminSidebarStats();
+  const { data: courtData, isLoading: courtLoading } =
+    useQueryAdminCourt(courtId);
+  const updateMutation = useMutUpdateCuratedCourt();
+  const uploadPhotoMutation = useMutUploadAdminCourtPhoto(courtId);
+  const removePhotoMutation = useMutRemoveAdminCourtPhoto(courtId);
+  const transferMutation = useMutTransferPlaceToOrganization();
+  const recurateMutation = useMutRecuratePlace();
 
   const [pendingPhotoId, setPendingPhotoId] = React.useState<string | null>(
     null,
@@ -81,11 +83,12 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   const [featuredRankInput, setFeaturedRankInput] = React.useState("0");
   const [isSavingFeaturedRank, setIsSavingFeaturedRank] = React.useState(false);
 
-  const { data: sports = [], isLoading: sportsLoading } =
-    trpc.sport.list.useQuery({});
+  const { data: sports = [], isLoading: sportsLoading } = useQueryAdminSports(
+    {},
+  );
 
   const deferredOrgSearch = React.useDeferredValue(orgSearch);
-  const orgSearchQuery = trpc.admin.organization.search.useQuery(
+  const orgSearchQuery = useQueryAdminOrganizationSearch(
     {
       query: deferredOrgSearch.trim() || undefined,
       limit: 20,

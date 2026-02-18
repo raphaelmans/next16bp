@@ -2,22 +2,22 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StreamChatThread } from "@/features/chat/components/chat-thread/stream-chat-thread";
-import { useStreamClient } from "@/features/chat/hooks/useStreamClient";
-import { trpc } from "@/trpc/client";
+import { useModStreamClient } from "@/features/chat/hooks";
+import {
+  useMutOpenPlayChatSendMessage,
+  useQueryOpenPlayChatSession,
+} from "@/features/open-play/hooks";
 
 export function OpenPlayChatPanel({ openPlayId }: { openPlayId: string }) {
-  const sessionQuery = trpc.openPlayChat.getSession.useQuery(
-    { openPlayId },
-    { enabled: Boolean(openPlayId) },
-  );
-  const sendMessageMutation = trpc.openPlayChat.sendMessage.useMutation();
+  const sessionQuery = useQueryOpenPlayChatSession(openPlayId);
+  const sendMessageMutation = useMutOpenPlayChatSendMessage();
 
   const session = sessionQuery.data;
   const {
     client,
     isReady,
     error: clientError,
-  } = useStreamClient(
+  } = useModStreamClient(
     session
       ? {
           apiKey: session.auth.apiKey,

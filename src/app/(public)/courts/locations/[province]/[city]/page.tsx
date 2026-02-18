@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { findCityBySlug, findProvinceBySlug } from "@/common/ph-location-data";
+import { DiscoveryCourtsPage } from "@/features/discovery/pages/courts-page";
 import { env } from "@/lib/env";
 import { getPHProvincesCities } from "@/lib/shared/lib/ph-location-data.server";
-import CourtsPageClient from "../../../courts-page-client";
 
 type CourtsCityPageProps = {
   params: Promise<{ province: string; city: string }>;
@@ -65,7 +65,7 @@ export default async function CourtsCityPage({ params }: CourtsCityPageProps) {
   }
 
   return (
-    <CourtsPageClient
+    <DiscoveryCourtsPage
       initialFilters={{ province: province.slug, city: city.slug }}
       initialLocationLabel={`${city.displayName}, ${province.displayName}`}
     />

@@ -1,20 +1,33 @@
 "use client";
 
-import { trpc } from "@/trpc/client";
+import { useFeatureQuery } from "@/common/feature-api-hooks";
+import { getHomeApi } from "./api.runtime";
+
+const homeApi = getHomeApi();
 
 // ============================================================================
 // From use-home-data.ts
 // ============================================================================
 
-export function useHomeData() {
-  const profileQuery = trpc.profile.me.useQuery();
+export function useQueryHomeData() {
+  const profileQuery = useFeatureQuery(
+    ["profile", "me"],
+    homeApi.queryProfileMe,
+  );
 
-  const reservationsQuery = trpc.reservation.getMyWithDetails.useQuery({
-    limit: 10,
-    offset: 0,
-  });
+  const reservationsQuery = useFeatureQuery(
+    ["reservation", "getMyWithDetails"],
+    homeApi.queryReservationGetMyWithDetails,
+    {
+      limit: 10,
+      offset: 0,
+    },
+  );
 
-  const orgsQuery = trpc.organization.my.useQuery();
+  const orgsQuery = useFeatureQuery(
+    ["organization", "my"],
+    homeApi.queryOrganizationMy,
+  );
 
   const organization = orgsQuery.data?.[0] ?? null;
 
@@ -33,4 +46,8 @@ export function useHomeData() {
       reservationsQuery.isLoading ||
       orgsQuery.isLoading,
   };
+}
+
+export function useQueryHomePlaceStats() {
+  return useFeatureQuery(["place", "stats"], homeApi.queryPlaceStats);
 }

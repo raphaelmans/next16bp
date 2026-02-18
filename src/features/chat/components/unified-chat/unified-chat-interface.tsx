@@ -22,8 +22,15 @@ import {
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/trpc/client";
-import { useStreamClient } from "../../hooks/useStreamClient";
+import {
+  useMutSupportChatBackfillClaimThreads,
+  useMutSupportChatSendClaimMessage,
+  useMutSupportChatSendVerificationMessage,
+  useQueryChatAuth,
+  useQuerySupportChatClaimSession,
+  useQuerySupportChatVerificationSession,
+} from "../../hooks/use-chat-trpc";
+import { useModStreamClient } from "../../hooks/useModStreamClient";
 import { StreamChatThread } from "../chat-thread/stream-chat-thread";
 import {
   ReservationInboxWidget,
@@ -126,13 +133,11 @@ function UnifiedSupportInbox() {
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
 
-  const authQuery = trpc.chat.getAuth.useQuery();
-  const backfillClaimThreadsMutation =
-    trpc.supportChat.backfillClaimThreads.useMutation();
-  const sendClaimMessageMutation =
-    trpc.supportChat.sendClaimMessage.useMutation();
+  const authQuery = useQueryChatAuth();
+  const backfillClaimThreadsMutation = useMutSupportChatBackfillClaimThreads();
+  const sendClaimMessageMutation = useMutSupportChatSendClaimMessage();
   const sendVerificationMessageMutation =
-    trpc.supportChat.sendVerificationMessage.useMutation();
+    useMutSupportChatSendVerificationMessage();
   const auth = authQuery.data;
   const backfillTriggeredForOpen = useRef(false);
 
@@ -140,7 +145,7 @@ function UnifiedSupportInbox() {
     client,
     isReady,
     error: clientError,
-  } = useStreamClient(
+  } = useModStreamClient(
     auth
       ? { apiKey: auth.apiKey, user: auth.user, tokenOrProvider: auth.token }
       : { apiKey: null, user: null, tokenOrProvider: null },
@@ -501,15 +506,14 @@ function UnifiedSupportThreadSheet({
 }) {
   const [open, setOpen] = useState(false);
 
-  const claimQuery = trpc.supportChat.getClaimSession.useQuery(
+  const claimQuery = useQuerySupportChatClaimSession(
     { claimRequestId: requestId },
     { enabled: open && kind === "claim" },
   );
-  const sendClaimMessageMutation =
-    trpc.supportChat.sendClaimMessage.useMutation();
+  const sendClaimMessageMutation = useMutSupportChatSendClaimMessage();
   const sendVerificationMessageMutation =
-    trpc.supportChat.sendVerificationMessage.useMutation();
-  const verificationQuery = trpc.supportChat.getVerificationSession.useQuery(
+    useMutSupportChatSendVerificationMessage();
+  const verificationQuery = useQuerySupportChatVerificationSession(
     { placeVerificationRequestId: requestId },
     { enabled: open && kind === "verification" },
   );
@@ -522,7 +526,7 @@ function UnifiedSupportThreadSheet({
   const streamAuth = session?.auth ?? null;
   const myUserId = streamAuth?.user.id ?? null;
 
-  const { client, isReady } = useStreamClient({
+  const { client, isReady } = useModStreamClient({
     apiKey: streamAuth?.apiKey ?? null,
     user: streamAuth?.user ?? null,
     tokenOrProvider: streamAuth?.token ?? null,

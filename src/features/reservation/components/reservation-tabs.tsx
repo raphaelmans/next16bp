@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 import {
   type ReservationTab,
   reservationTabs,
-  useReservationCounts,
-  useReservationsTabs,
+  useModReservationsTabs,
+  useQueryReservationCounts,
 } from "../hooks";
 import { ReservationList } from "./reservation-list";
 
@@ -18,8 +18,8 @@ const tabLabels: Record<ReservationTab, string> = {
 };
 
 export function ReservationTabs() {
-  const { tab, setTab } = useReservationsTabs();
-  const { data: counts } = useReservationCounts();
+  const { tab, setTab } = useModReservationsTabs();
+  const { data: counts } = useQueryReservationCounts();
   const pendingCount = counts?.pending ?? 0;
 
   return (

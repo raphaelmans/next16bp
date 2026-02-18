@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { appRoutes, getRouteType } from "@/common/app-routes";
-import { PlayerShell } from "@/components/layout/player-shell";
-import { PublicShell } from "@/components/layout/public-shell";
+import { AuthPlayerShell } from "@/features/auth/components/player-shell";
+import { DiscoveryPublicShell } from "@/features/discovery/components/public-shell";
 import {
   requireAdminSession,
   requireSession,
@@ -28,16 +28,16 @@ export default async function AuthLayout({
 
   if (routeType === "guest") {
     return (
-      <PublicShell>
+      <DiscoveryPublicShell>
         <div className="flex min-h-[calc(100vh-6rem)] items-center justify-center px-4 py-12">
           {children}
         </div>
-      </PublicShell>
+      </DiscoveryPublicShell>
     );
   }
 
   if (routeType === "public") {
-    return <PublicShell>{children}</PublicShell>;
+    return <DiscoveryPublicShell>{children}</DiscoveryPublicShell>;
   }
 
   if (routeType === "admin") {
@@ -46,5 +46,5 @@ export default async function AuthLayout({
     await requireSession(pathname);
   }
 
-  return <PlayerShell>{children}</PlayerShell>;
+  return <AuthPlayerShell>{children}</AuthPlayerShell>;
 }

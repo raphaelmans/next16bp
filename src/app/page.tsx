@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { unstable_cache } from "next/cache";
-import HomePageClient from "@/app/home-page-client";
-import { mapPlaceSummary } from "@/features/discovery/helpers";
+import { HomeLandingPage } from "@/features/home/pages/home-landing-page";
 import { env } from "@/lib/env";
-import { HydrateClient, publicCaller, trpc } from "@/trpc/server";
+import {
+  getHomeFeaturedPlaces,
+  prefetchHomeData,
+} from "@/lib/modules/home/server/home-page-data";
+import { HydrateClient } from "@/trpc/server";
 
 const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL("/", appUrl);
@@ -30,28 +32,14 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
-const getFeaturedPlaces = unstable_cache(
-  async () => {
-    const featuredInput = {
-      featuredOnly: true,
-      limit: 3,
-      offset: 0,
-    };
-    const featuredResponse = await publicCaller.place.list(featuredInput);
-    return featuredResponse.items.map(mapPlaceSummary);
-  },
-  ["home-featured"],
-  { tags: ["home:featured"] },
-);
-
 export default async function HomePage() {
-  const featuredPlaces = await getFeaturedPlaces();
+  const featuredPlaces = await getHomeFeaturedPlaces();
 
-  await trpc.place.stats.prefetch();
+  await prefetchHomeData();
 
   return (
     <HydrateClient>
-      <HomePageClient featuredPlaces={featuredPlaces} />
+      <HomeLandingPage featuredPlaces={featuredPlaces} />
     </HydrateClient>
   );
 }

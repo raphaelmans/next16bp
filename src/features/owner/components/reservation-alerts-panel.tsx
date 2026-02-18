@@ -4,8 +4,8 @@ import { differenceInSeconds, format } from "date-fns";
 import { Bell, Clock, ExternalLink, X } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
-import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
+import { toast } from "@/common/toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
@@ -16,15 +16,15 @@ import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
 import { PlaceCourtFilter } from "@/features/owner/components/place-court-filter";
 import { RejectModal } from "@/features/owner/components/reject-modal";
 import {
-  useAcceptReservation,
-  useConfirmReservation,
-  useOwnerCourtFilter,
-  useOwnerCourts,
-  useOwnerOrganization,
-  useOwnerPlaceFilter,
-  useOwnerPlaces,
-  useRejectReservation,
-  useReservationAlerts,
+  useModOwnerCourtFilter,
+  useModOwnerPlaceFilter,
+  useModReservationAlerts,
+  useMutAcceptReservation,
+  useMutConfirmReservation,
+  useMutRejectReservation,
+  useQueryOwnerCourts,
+  useQueryOwnerOrganization,
+  useQueryOwnerPlaces,
 } from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
 
@@ -47,11 +47,11 @@ export function ReservationAlertsPanel({
   const [newIds, setNewIds] = React.useState<Set<string>>(new Set());
   const lastPollRef = React.useRef<number | null>(null);
 
-  const { organization } = useOwnerOrganization();
-  const { data: places = [] } = useOwnerPlaces(organization?.id ?? null);
-  const { data: courts = [] } = useOwnerCourts(organization?.id ?? null);
-  const { placeId, setPlaceId } = useOwnerPlaceFilter({ syncToUrl });
-  const { courtId, setCourtId } = useOwnerCourtFilter({ syncToUrl });
+  const { organization } = useQueryOwnerOrganization();
+  const { data: places = [] } = useQueryOwnerPlaces(organization?.id ?? null);
+  const { data: courts = [] } = useQueryOwnerCourts(organization?.id ?? null);
+  const { placeId, setPlaceId } = useModOwnerPlaceFilter({ syncToUrl });
+  const { courtId, setCourtId } = useModOwnerCourtFilter({ syncToUrl });
   const effectiveOrganizationId = organizationId ?? organization?.id ?? null;
 
   const reservationsActiveHref = React.useMemo(() => {
@@ -68,13 +68,13 @@ export function ReservationAlertsPanel({
       : appRoutes.owner.reservationsActive;
   }, [courtId, placeId]);
 
-  const alertsQuery = useReservationAlerts(effectiveOrganizationId, {
+  const alertsQuery = useModReservationAlerts(effectiveOrganizationId, {
     placeId: placeId || undefined,
     courtId: courtId || undefined,
   });
-  const acceptMutation = useAcceptReservation();
-  const confirmMutation = useConfirmReservation();
-  const rejectMutation = useRejectReservation();
+  const acceptMutation = useMutAcceptReservation();
+  const confirmMutation = useMutConfirmReservation();
+  const rejectMutation = useMutRejectReservation();
 
   const activeReservations = React.useMemo(() => {
     return (alertsQuery.data ?? []).filter(

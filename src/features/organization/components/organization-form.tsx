@@ -4,13 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2, Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import { allowEmptyString, S } from "@/common/schemas";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
-import { trpc } from "@/trpc/client";
+import { useMutOrganizationCreate } from "@/features/organization/hooks";
 
 const organizationFormSchema = z.object({
   name: S.organization.name,
@@ -35,15 +35,7 @@ export function OrganizationForm({
   onSuccess,
   onCancel,
 }: OrganizationFormProps) {
-  const utils = trpc.useUtils();
-
-  const createMutation = trpc.organization.create.useMutation({
-    onSuccess: async (data) => {
-      utils.organization.my.setData(undefined, [data.organization]);
-      await utils.organization.invalidate();
-      onSuccess?.({ id: data.organization.id });
-    },
-  });
+  const createMutation = useMutOrganizationCreate(onSuccess);
 
   const form = useForm<OrganizationFormValues>({
     resolver: zodResolver(organizationFormSchema),

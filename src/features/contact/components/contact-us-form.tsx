@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MailCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import {
   StandardFormInput,
   StandardFormProvider,
@@ -24,7 +24,7 @@ import {
   type SubmitContactMessageDTO,
   SubmitContactMessageSchema,
 } from "@/lib/modules/contact/dtos";
-import { useSubmitContactMessage } from "../hooks";
+import { useMutSubmitContactMessage } from "../hooks";
 
 const defaultValues: SubmitContactMessageDTO = {
   name: "",
@@ -34,7 +34,7 @@ const defaultValues: SubmitContactMessageDTO = {
 };
 
 export function ContactUsForm() {
-  const submitMutation = useSubmitContactMessage();
+  const submitMutation = useMutSubmitContactMessage();
   const [submitted, setSubmitted] = useState(false);
 
   const form = useForm<SubmitContactMessageDTO>({

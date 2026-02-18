@@ -1,9 +1,12 @@
-"use client";
+import OwnerBookingsImportReviewPage from "@/features/owner/pages/owner-bookings-import-review-page";
 
-import { useParams } from "next/navigation";
-import OwnerBookingsImportReviewView from "@/features/owner/components/owner-bookings-import-review-view";
+type OwnerBookingsImportReviewRoutePageProps = {
+  params: Promise<{ jobId: string }>;
+};
 
-export default function OwnerBookingsImportReviewPage() {
-  const params = useParams<{ jobId: string }>();
-  return <OwnerBookingsImportReviewView jobId={params.jobId} />;
+export default async function OwnerBookingsImportReviewRoutePage({
+  params,
+}: OwnerBookingsImportReviewRoutePageProps) {
+  const { jobId } = await params;
+  return <OwnerBookingsImportReviewPage jobId={jobId} />;
 }

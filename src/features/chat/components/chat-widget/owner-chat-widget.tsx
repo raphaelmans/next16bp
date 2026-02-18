@@ -1,10 +1,10 @@
 "use client";
 
-import { useOwnerOrganization } from "@/features/owner";
+import { useQueryOwnerOrganization } from "@/features/owner";
 import { UnifiedChatInterface } from "../unified-chat/unified-chat-interface";
 
 export function OwnerChatWidget() {
-  const { isOwner, isLoading } = useOwnerOrganization();
+  const { isOwner, isLoading } = useQueryOwnerOrganization();
 
   if (isLoading || !isOwner) {
     return null;

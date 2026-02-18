@@ -1,7 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { trpc } from "@/trpc/client";
+import {
+  useFeatureMutation,
+  useFeatureQuery,
+} from "@/common/feature-api-hooks";
+import { getNotificationsApi } from "../api.runtime";
+
+const notificationsApi = getNotificationsApi();
 
 const urlBase64ToUint8Array = (base64String: string) => {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -39,7 +45,7 @@ export type UseWebPushResult = {
   sendLocalTestNotification: () => Promise<void>;
 };
 
-export function useWebPush(): UseWebPushResult {
+export function useModWebPush(): UseWebPushResult {
   const supported =
     typeof window !== "undefined" &&
     "Notification" in window &&
@@ -49,16 +55,20 @@ export function useWebPush(): UseWebPushResult {
     typeof window !== "undefined" ? window.isSecureContext : false;
   const localTestEnabled = process.env.NODE_ENV !== "production";
 
-  const vapidQuery = trpc.pushSubscription.getVapidPublicKey.useQuery(
+  const vapidQuery = useFeatureQuery(
+    ["pushSubscription", "getVapidPublicKey"],
+    notificationsApi.queryPushSubscriptionGetVapidPublicKey,
     undefined,
     {
       staleTime: 60_000,
     },
   );
-  const upsertMutation =
-    trpc.pushSubscription.upsertMySubscription.useMutation();
-  const revokeMutation =
-    trpc.pushSubscription.revokeMySubscription.useMutation();
+  const upsertMutation = useFeatureMutation(
+    notificationsApi.mutPushSubscriptionUpsertMySubscription,
+  );
+  const revokeMutation = useFeatureMutation(
+    notificationsApi.mutPushSubscriptionRevokeMySubscription,
+  );
 
   const [permission, setPermission] =
     React.useState<NotificationPermission | null>(

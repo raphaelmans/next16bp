@@ -22,9 +22,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useLogout, useSession } from "@/features/auth/hooks";
+import {
+  useMutAuthLogout,
+  useQueryAuthMyOrganizations,
+  useQueryAuthSession,
+} from "@/features/auth/hooks";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/trpc/client";
 import { UserDropdown } from "./user-dropdown";
 
 interface NavbarProps {
@@ -41,12 +44,11 @@ export function Navbar({ className }: NavbarProps) {
     setSearchQuery(queryParam ?? "");
   }, [queryParam]);
 
-  const { data: sessionUser, isLoading: sessionLoading } = useSession();
-  const { mutate: logout } = useLogout();
+  const { data: sessionUser, isLoading: sessionLoading } =
+    useQueryAuthSession();
+  const { mutate: logout } = useMutAuthLogout();
 
-  const { data: orgs } = trpc.organization.my.useQuery(undefined, {
-    enabled: !!sessionUser,
-  });
+  const { data: orgs } = useQueryAuthMyOrganizations(!!sessionUser);
 
   const isAuthenticated = !!sessionUser;
   const isResolvingSession = sessionLoading && !sessionUser;

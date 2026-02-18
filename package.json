@@ -8,6 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
+    "lint:arch": "bash scripts/architecture/check-client-conformance.sh",
+    "validate:client-arch": "pnpm lint && pnpm lint:arch",
     "format": "biome format --write",
     "db:list-place-locations": "dotenvx run --env-file=.env.local -- tsx scripts/list-place-locations.ts",
     "db:backfill:ext-g-place-id": "dotenvx run --env-file=.env.local -- tsx scripts/list-place-locations.ts",

@@ -3,7 +3,7 @@
 import { Image as ImageIcon, Loader2, X } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
-import { useRemoveCourtPhoto, useUploadCourtPhoto } from "../hooks";
+import { useMutRemoveCourtPhoto, useMutUploadCourtPhoto } from "../hooks";
 
 interface CourtPhoto {
   id: string;
@@ -23,8 +23,8 @@ export function CourtPhotoUpload({
   maxPhotos = 10,
 }: CourtPhotoUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const uploadPhoto = useUploadCourtPhoto(courtId);
-  const removePhoto = useRemoveCourtPhoto(courtId);
+  const uploadPhoto = useMutUploadCourtPhoto(courtId);
+  const removePhoto = useMutRemoveCourtPhoto(courtId);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

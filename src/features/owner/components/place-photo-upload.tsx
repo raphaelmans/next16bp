@@ -10,13 +10,13 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import * as React from "react";
-import { toast } from "sonner";
+import { toast } from "@/common/toast";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
-  useRemovePlacePhoto,
-  useReorderPlacePhotos,
-  useUploadPlacePhoto,
+  useMutRemovePlacePhoto,
+  useMutReorderPlacePhotos,
+  useMutUploadPlacePhoto,
 } from "../hooks";
 
 interface PlacePhoto {
@@ -37,9 +37,9 @@ export function PlacePhotoUpload({
   maxPhotos = 10,
 }: PlacePhotoUploadProps) {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const uploadPhoto = useUploadPlacePhoto(placeId);
-  const removePhoto = useRemovePlacePhoto(placeId);
-  const reorderPhotos = useReorderPlacePhotos(placeId);
+  const uploadPhoto = useMutUploadPlacePhoto(placeId);
+  const removePhoto = useMutRemovePlacePhoto(placeId);
+  const reorderPhotos = useMutReorderPlacePhotos(placeId);
 
   const sortedPhotos = React.useMemo(
     () => [...photos].sort((a, b) => a.displayOrder - b.displayOrder),

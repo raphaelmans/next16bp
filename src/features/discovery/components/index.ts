@@ -9,5 +9,6 @@ export { MobileDateStrip } from "./mobile-date-strip";
 export { Navbar } from "./navbar";
 export { PhotoCarousel } from "./photo-carousel";
 export { PlaceFiltersSheet } from "./place-filters-sheet";
+export { DiscoveryPublicShell } from "./public-shell";
 export { UserDropdown, type UserDropdownUser } from "./user-dropdown";
 export { ViewToggle } from "./view-toggle";

@@ -34,10 +34,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { trpc } from "@/trpc/client";
 import { validateChatUploadFiles } from "../constants/upload-policy";
-import { useStreamChannel } from "../hooks/useStreamChannel";
-import { useStreamClient } from "../hooks/useStreamClient";
+import {
+  useMutChatPocGetOrCreateDm,
+  useQueryChatPocAuth,
+} from "../hooks/use-chat-trpc";
+import { useModStreamChannel } from "../hooks/useModStreamChannel";
+import { useModStreamClient } from "../hooks/useModStreamClient";
 
 function PromptInputAttachmentsDisplay() {
   const attachments = usePromptInputAttachments();
@@ -106,15 +109,15 @@ export function ChatPocClient() {
   const [channelError, setChannelError] = useState<string | null>(null);
   const [sendStatus, setSendStatus] = useState<ChatStatus>("ready");
 
-  const authQuery = trpc.chatPoc.getAuth.useQuery();
-  const dmMutation = trpc.chatPoc.getOrCreateDm.useMutation();
+  const authQuery = useQueryChatPocAuth();
+  const dmMutation = useMutChatPocGetOrCreateDm();
 
   const auth = authQuery.data;
   const {
     client,
     isReady,
     error: clientError,
-  } = useStreamClient(
+  } = useModStreamClient(
     auth
       ? {
           apiKey: auth.apiKey,
@@ -137,7 +140,7 @@ export function ChatPocClient() {
     sendFiles,
     loadMore,
     markRead,
-  } = useStreamChannel({
+  } = useModStreamChannel({
     client: isReady ? client : null,
     channelType: "messaging",
     channelId,

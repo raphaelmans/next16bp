@@ -22,8 +22,8 @@ import { PlaceDetailAmenitiesCard } from "@/features/discovery/place-detail/comp
 import { PlaceDetailContactCard } from "@/features/discovery/place-detail/components/place-detail-contact-card";
 import { PlaceDetailBookingDesktopSection } from "@/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section";
 import { PlaceDetailBookingMobileSection } from "@/features/discovery/place-detail/components/sections/place-detail-booking-mobile-section";
-import { usePlaceDetailAvailabilitySelection } from "@/features/discovery/place-detail/hooks/use-place-detail-availability-selection";
-import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/state/place-detail-ui-store";
+import { useModPlaceDetailAvailabilitySelection } from "@/features/discovery/place-detail/hooks/use-place-detail-availability-selection";
+import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 import { OpenPlayVenuePanel } from "@/features/open-play/components/open-play-venue-panel";
 
 const DEFAULT_DURATION_MINUTES = 60;
@@ -94,7 +94,7 @@ export function PlaceDetailBookingSection({
     setAnyViewMode,
     courtsForSport,
     clearSelection,
-  } = usePlaceDetailAvailabilitySelection({
+  } = useModPlaceDetailAvailabilitySelection({
     place,
     isBookable,
     defaultDurationMinutes: DEFAULT_DURATION_MINUTES,

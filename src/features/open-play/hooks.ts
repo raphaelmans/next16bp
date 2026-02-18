@@ -1,9 +1,16 @@
 "use client";
 
-import { toast } from "sonner";
+import {
+  useFeatureMutation,
+  useFeatureQuery,
+} from "@/common/feature-api-hooks";
+import { toast } from "@/common/toast";
 import { trpc } from "@/trpc/client";
+import { getOpenPlayApi } from "./api.runtime";
 
-export function useOpenPlaysByPlace(input: {
+const openPlayApi = getOpenPlayApi();
+
+export function useModOpenPlaysByPlace(input: {
   placeId: string;
   fromIso?: string;
   toIso?: string;
@@ -11,7 +18,9 @@ export function useOpenPlaysByPlace(input: {
   enabled?: boolean;
 }) {
   const { enabled = true, limit = 20, ...rest } = input;
-  return trpc.openPlay.listByPlace.useQuery(
+  return useFeatureQuery(
+    ["openPlay", "listByPlace"],
+    openPlayApi.queryOpenPlayListByPlace,
     {
       placeId: rest.placeId,
       fromIso: rest.fromIso,
@@ -22,8 +31,13 @@ export function useOpenPlaysByPlace(input: {
   );
 }
 
-export function useOpenPlayPublicDetail(openPlayId: string, enabled = true) {
-  return trpc.openPlay.getPublicDetail.useQuery(
+export function useQueryOpenPlayPublicDetail(
+  openPlayId: string,
+  enabled = true,
+) {
+  return useFeatureQuery(
+    ["openPlay", "getPublicDetail"],
+    openPlayApi.queryOpenPlayGetPublicDetail,
     { openPlayId },
     {
       enabled: enabled && Boolean(openPlayId),
@@ -33,8 +47,10 @@ export function useOpenPlayPublicDetail(openPlayId: string, enabled = true) {
   );
 }
 
-export function useOpenPlayDetail(openPlayId: string, enabled = true) {
-  return trpc.openPlay.getDetail.useQuery(
+export function useQueryOpenPlayDetail(openPlayId: string, enabled = true) {
+  return useFeatureQuery(
+    ["openPlay", "getDetail"],
+    openPlayApi.queryOpenPlayGetDetail,
     { openPlayId },
     {
       enabled: enabled && Boolean(openPlayId),
@@ -46,7 +62,6 @@ export function useOpenPlayDetail(openPlayId: string, enabled = true) {
         const hasStarted = Date.parse(data.openPlay.startsAtIso) <= Date.now();
         if (hasStarted) return false;
         if (data.openPlay.status !== "ACTIVE") return false;
-        // Poll on host view, or when joiner is awaiting a decision.
         if (data.viewer.role === "host") return 15_000;
         return data.viewer.myStatus === "REQUESTED" ||
           data.viewer.myStatus === "WAITLISTED"
@@ -57,20 +72,22 @@ export function useOpenPlayDetail(openPlayId: string, enabled = true) {
   );
 }
 
-export function useOpenPlayForReservation(
+export function useQueryOpenPlayForReservation(
   reservationId: string,
   enabled = true,
 ) {
-  return trpc.openPlay.getForReservation.useQuery(
+  return useFeatureQuery(
+    ["openPlay", "getForReservation"],
+    openPlayApi.queryOpenPlayGetForReservation,
     { reservationId },
     { enabled: enabled && Boolean(reservationId) },
   );
 }
 
-export function useCreateOpenPlayFromReservation() {
+export function useMutCreateOpenPlayFromReservation() {
   const utils = trpc.useUtils();
 
-  return trpc.openPlay.createFromReservation.useMutation({
+  return useFeatureMutation(openPlayApi.mutOpenPlayCreateFromReservation, {
     onSuccess: async (data, variables) => {
       toast.success("Open Play created");
       await Promise.all([
@@ -84,15 +101,15 @@ export function useCreateOpenPlayFromReservation() {
       ]);
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to create Open Play");
+      toast.error(error?.message || "Failed to create Open Play");
     },
   });
 }
 
-export function useRequestJoinOpenPlay() {
+export function useMutRequestJoinOpenPlay() {
   const utils = trpc.useUtils();
 
-  return trpc.openPlay.requestToJoin.useMutation({
+  return useFeatureMutation(openPlayApi.mutOpenPlayRequestToJoin, {
     onSuccess: async (data, variables) => {
       toast.success(
         data.status === "CONFIRMED"
@@ -111,15 +128,15 @@ export function useRequestJoinOpenPlay() {
       ]);
     },
     onError: (error) => {
-      toast.error(error.message || "Unable to join Open Play");
+      toast.error(error?.message || "Unable to join Open Play");
     },
   });
 }
 
-export function useLeaveOpenPlay() {
+export function useMutLeaveOpenPlay() {
   const utils = trpc.useUtils();
 
-  return trpc.openPlay.leave.useMutation({
+  return useFeatureMutation(openPlayApi.mutOpenPlayLeave, {
     onSuccess: async (_data, variables) => {
       toast.success("Left Open Play");
       await Promise.all([
@@ -132,29 +149,28 @@ export function useLeaveOpenPlay() {
       ]);
     },
     onError: (error) => {
-      toast.error(error.message || "Unable to leave Open Play");
+      toast.error(error?.message || "Unable to leave Open Play");
     },
   });
 }
 
-export function useDecideOpenPlayParticipant() {
+export function useMutDecideOpenPlayParticipant() {
   const utils = trpc.useUtils();
 
-  return trpc.openPlay.decideParticipant.useMutation({
-    onSuccess: async (_data, _variables) => {
+  return useFeatureMutation(openPlayApi.mutOpenPlayDecideParticipant, {
+    onSuccess: async () => {
       toast.success("Participant updated");
-      // We don't know openPlayId here; refresh will happen via detail refetch.
       await utils.openPlay.getDetail.invalidate();
     },
     onError: (error) => {
-      toast.error(error.message || "Unable to update participant");
+      toast.error(error?.message || "Unable to update participant");
     },
   });
 }
 
-export function useCloseOpenPlay() {
+export function useMutCloseOpenPlay() {
   const utils = trpc.useUtils();
-  return trpc.openPlay.close.useMutation({
+  return useFeatureMutation(openPlayApi.mutOpenPlayClose, {
     onSuccess: async (_data, variables) => {
       toast.success("Open Play closed");
       await Promise.all([
@@ -167,14 +183,14 @@ export function useCloseOpenPlay() {
       ]);
     },
     onError: (error) => {
-      toast.error(error.message || "Unable to close Open Play");
+      toast.error(error?.message || "Unable to close Open Play");
     },
   });
 }
 
-export function useCancelOpenPlay() {
+export function useMutCancelOpenPlay() {
   const utils = trpc.useUtils();
-  return trpc.openPlay.cancel.useMutation({
+  return useFeatureMutation(openPlayApi.mutOpenPlayCancel, {
     onSuccess: async (_data, variables) => {
       toast.success("Open Play cancelled");
       await Promise.all([
@@ -187,7 +203,20 @@ export function useCancelOpenPlay() {
       ]);
     },
     onError: (error) => {
-      toast.error(error.message || "Unable to cancel Open Play");
+      toast.error(error?.message || "Unable to cancel Open Play");
     },
   });
+}
+
+export function useQueryOpenPlayChatSession(openPlayId: string) {
+  return useFeatureQuery(
+    ["openPlayChat", "getSession"],
+    openPlayApi.queryOpenPlayChatGetSession,
+    { openPlayId },
+    { enabled: Boolean(openPlayId) },
+  );
+}
+
+export function useMutOpenPlayChatSendMessage() {
+  return useFeatureMutation(openPlayApi.mutOpenPlayChatSendMessage);
 }

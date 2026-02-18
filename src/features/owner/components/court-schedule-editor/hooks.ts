@@ -1,15 +1,15 @@
 "use client";
 
 import * as React from "react";
-import { toast } from "sonner";
+import { toast } from "@/common/toast";
 import {
-  useCopyCourtHours,
-  useCopyCourtRateRules,
-  useCourtHours,
-  useCourtRateRules,
-  useOwnerCourts,
-  useSaveCourtHours,
-  useSaveCourtRateRules,
+  useModCourtHours,
+  useModCourtRateRules,
+  useMutCopyCourtHours,
+  useMutCopyCourtRateRules,
+  useMutSaveCourtHours,
+  useMutSaveCourtRateRules,
+  useQueryOwnerCourts,
 } from "@/features/owner/hooks";
 import {
   type BlockIntervals,
@@ -41,14 +41,15 @@ export const useCourtScheduleEditor = ({
   onSaved,
   onCopyComplete,
 }: UseCourtScheduleEditorOptions) => {
-  const { data: hours = [], isLoading: hoursLoading } = useCourtHours(courtId);
+  const { data: hours = [], isLoading: hoursLoading } =
+    useModCourtHours(courtId);
   const { data: rules = [], isLoading: rulesLoading } =
-    useCourtRateRules(courtId);
-  const saveHours = useSaveCourtHours(courtId);
-  const saveRules = useSaveCourtRateRules(courtId);
-  const copyHours = useCopyCourtHours(courtId);
-  const copyRules = useCopyCourtRateRules(courtId);
-  const { data: courts = [] } = useOwnerCourts(organizationId ?? null);
+    useModCourtRateRules(courtId);
+  const saveHours = useMutSaveCourtHours(courtId);
+  const saveRules = useMutSaveCourtRateRules(courtId);
+  const copyHours = useMutCopyCourtHours(courtId);
+  const copyRules = useMutCopyCourtRateRules(courtId);
+  const { data: courts = [] } = useQueryOwnerCourts(organizationId ?? null);
 
   const [rowsByDay, setRowsByDay] = React.useState<Record<number, BlockRow[]>>({
     0: [],

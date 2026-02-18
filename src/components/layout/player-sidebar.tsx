@@ -4,7 +4,6 @@ import { CalendarDays, Home, MapPin, Shield, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
-import { PortalSwitcher } from "@/components/layout/portal-switcher";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sidebar,
@@ -25,7 +24,7 @@ interface PlayerSidebarProps {
     email?: string;
     avatarUrl?: string | null;
   };
-  isOwner?: boolean;
+  portalSwitcher?: React.ReactNode;
   isAdmin?: boolean;
 }
 
@@ -42,7 +41,7 @@ const playerNavItems = [
 
 export function PlayerSidebar({
   user,
-  isOwner = false,
+  portalSwitcher,
   isAdmin = false,
 }: PlayerSidebarProps) {
   const pathname = usePathname();
@@ -57,7 +56,7 @@ export function PlayerSidebar({
   return (
     <Sidebar>
       <SidebarHeader className="border-b">
-        <PortalSwitcher variant="sidebar" isOwner={isOwner} isAdmin={isAdmin} />
+        {portalSwitcher ?? null}
       </SidebarHeader>
 
       <SidebarContent>

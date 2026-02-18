@@ -1,9 +1,9 @@
-import { PublicShell } from "@/components/layout/public-shell";
+import { DiscoveryPublicShell } from "@/features/discovery/components/public-shell";
 
 export default function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <PublicShell>{children}</PublicShell>;
+  return <DiscoveryPublicShell>{children}</DiscoveryPublicShell>;
 }

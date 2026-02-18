@@ -8,6 +8,7 @@ export { PlaceDetailListingHelpCard } from "./components/place-detail-listing-he
 export { PlaceDetailLocationCard } from "./components/place-detail-location-card";
 export { PlaceDetailMobileSheet } from "./components/place-detail-mobile-sheet";
 export { PlaceDetailNextStepsCard } from "./components/place-detail-next-steps-card";
+export { default as PlaceDetailPageView } from "./components/place-detail-page-view";
 export { PlaceDetailSidebar } from "./components/place-detail-sidebar";
 export { PlaceDetailSkeleton } from "./components/place-detail-skeleton";
 export { PlaceDetailBookingDesktopSection } from "./components/sections/place-detail-booking-desktop-section";
@@ -20,7 +21,6 @@ export {
   type RemovalFormData,
   removalFormSchema,
 } from "./forms/schemas";
-export { useMobileWeekPrefetch } from "./hooks/use-mobile-week-prefetch";
-export { usePlaceDetailAvailabilitySelection } from "./hooks/use-place-detail-availability-selection";
-export { default as PlaceDetailPageView } from "./place-detail-page-view";
-export { usePlaceDetailUiStore } from "./state/place-detail-ui-store";
+export { useModMobileWeekPrefetch } from "./hooks/use-mobile-week-prefetch";
+export { useModPlaceDetailAvailabilitySelection } from "./hooks/use-place-detail-availability-selection";
+export { usePlaceDetailUiStore } from "./stores/place-detail-ui-store";

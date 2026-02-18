@@ -1,24 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
 import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { usePlaceDetail } from "@/features/discovery/hooks";
-import { useOpenPlaysByPlace } from "../hooks";
+import { useModPlaceDetail } from "@/features/discovery/hooks";
+import { useModOpenPlaysByPlace } from "../hooks";
 import { OpenPlayList } from "./open-play-list";
 
-export default function OpenPlayPlacePageView() {
-  const params = useParams();
-  const placeIdOrSlug = (params.placeId ?? params.id) as string;
+type OpenPlayPlacePageViewProps = {
+  placeIdOrSlug: string;
+};
 
-  const placeQuery = usePlaceDetail({ placeIdOrSlug });
+export default function OpenPlayPlacePageView({
+  placeIdOrSlug,
+}: OpenPlayPlacePageViewProps) {
+  const placeQuery = useModPlaceDetail({ placeIdOrSlug });
   const place = placeQuery.data;
 
-  const listQuery = useOpenPlaysByPlace({
+  const listQuery = useModOpenPlaysByPlace({
     placeId: place?.id ?? "",
     enabled: Boolean(place?.id),
     limit: 50,

@@ -12,8 +12,11 @@ import {
   SheetDescription,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { trpc } from "@/trpc/client";
-import { useStreamClient } from "../../hooks/useStreamClient";
+import {
+  useMutReservationChatSendMessage,
+  useQueryReservationChatSession,
+} from "../../hooks/use-chat-trpc";
+import { useModStreamClient } from "../../hooks/useModStreamClient";
 import { StreamChatThread } from "../chat-thread/stream-chat-thread";
 
 const AUTO_OPEN_PREFIX = "chat:autoOpen:reservation:";
@@ -36,18 +39,18 @@ export function PlayerReservationChatWidget({
 
   const [open, setOpen] = useState(false);
 
-  const sessionQuery = trpc.reservationChat.getSession.useQuery(
+  const sessionQuery = useQueryReservationChatSession(
     { reservationId },
     { enabled: isActiveStatus },
   );
-  const sendMessageMutation = trpc.reservationChat.sendMessage.useMutation();
+  const sendMessageMutation = useMutReservationChatSendMessage();
 
   const session = sessionQuery.data;
   const {
     client,
     isReady,
     error: clientError,
-  } = useStreamClient(
+  } = useModStreamClient(
     session
       ? {
           apiKey: session.auth.apiKey,

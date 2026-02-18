@@ -2,13 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import { getSafeRedirectPath } from "@/common/redirects";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,17 +20,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { type MagicLinkDTO, MagicLinkSchema } from "@/lib/modules/auth/dtos";
-import { useMagicLink, useVerifyEmailOtp } from "../hooks";
+import { useMutAuthMagicLink, useMutAuthVerifyEmailOtp } from "../hooks";
 import { EmailVerificationScreen } from "./email-verification-screen";
 
-export function MagicLinkForm() {
-  const searchParams = useSearchParams();
+export interface MagicLinkFormProps {
+  redirectParam?: string | null;
+}
+
+export function MagicLinkForm({ redirectParam }: MagicLinkFormProps = {}) {
   const router = useRouter();
   const [success, setSuccess] = useState(false);
   const [sentEmail, setSentEmail] = useState("");
-  const magicLinkMutation = useMagicLink();
-  const verifyEmailOtpMutation = useVerifyEmailOtp();
-  const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
+  const magicLinkMutation = useMutAuthMagicLink();
+  const verifyEmailOtpMutation = useMutAuthVerifyEmailOtp();
+  const redirectUrl = getSafeRedirectPath(redirectParam ?? null, {
     fallback: appRoutes.postLogin.base,
     origin: typeof window !== "undefined" ? window.location.origin : undefined,
     disallowRoutes: ["guest"],

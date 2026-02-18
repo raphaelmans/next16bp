@@ -1,9 +1,8 @@
 "use client";
 
 import type { inferRouterOutputs } from "@trpc/server";
-import { RefreshCw } from "lucide-react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
 import {
@@ -24,7 +23,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -35,20 +33,29 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { useSession } from "@/features/auth";
+import { useQueryAuthSession } from "@/features/auth";
 import type { AppRouter } from "@/lib/shared/infra/trpc/root";
 import {
-  useCancelOpenPlay,
-  useCloseOpenPlay,
-  useDecideOpenPlayParticipant,
-  useLeaveOpenPlay,
-  useOpenPlayDetail,
-  useOpenPlayPublicDetail,
-  useRequestJoinOpenPlay,
+  useMutCancelOpenPlay,
+  useMutCloseOpenPlay,
+  useMutDecideOpenPlayParticipant,
+  useMutLeaveOpenPlay,
+  useMutRequestJoinOpenPlay,
+  useQueryOpenPlayDetail,
+  useQueryOpenPlayPublicDetail,
 } from "../hooks";
 import { OpenPlayChatPanel } from "./open-play-chat-panel";
+import {
+  OpenPlayCostSharingCard,
+  OpenPlayDetailErrorState,
+  OpenPlayDetailLoadingState,
+  OpenPlayDetailNotFoundState,
+  OpenPlayParticipantsCard,
+  OpenPlayRequestsCard,
+  OpenPlayShareCard,
+  OpenPlayStatusBadges,
+} from "./open-play-detail-sections";
 
 type RouterOutputs = inferRouterOutputs<AppRouter>;
 type OpenPlayPublicDetail = RouterOutputs["openPlay"]["getPublicDetail"];
@@ -61,18 +68,22 @@ function initials(value: string) {
   return `${first}${last}`.toUpperCase();
 }
 
-export default function OpenPlayDetailPageView() {
-  const params = useParams();
+type OpenPlayDetailPageViewProps = {
+  openPlayId: string;
+};
+
+export default function OpenPlayDetailPageView({
+  openPlayId,
+}: OpenPlayDetailPageViewProps) {
   const pathname = usePathname();
-  const openPlayId = params.openPlayId as string;
-  const { data: session } = useSession();
+  const { data: session } = useQueryAuthSession();
   const isAuthed = Boolean(session);
 
-  const publicQuery = useOpenPlayPublicDetail(
+  const publicQuery = useQueryOpenPlayPublicDetail(
     openPlayId,
     !isAuthed && Boolean(openPlayId),
   );
-  const detailQuery = useOpenPlayDetail(
+  const detailQuery = useQueryOpenPlayDetail(
     openPlayId,
     isAuthed && Boolean(openPlayId),
   );
@@ -84,11 +95,11 @@ export default function OpenPlayDetailPageView() {
     (!isAuthed && publicQuery.isLoading) || (isAuthed && detailQuery.isLoading);
   const error = (isAuthed ? detailQuery.error : publicQuery.error) ?? null;
 
-  const join = useRequestJoinOpenPlay();
-  const leave = useLeaveOpenPlay();
-  const decide = useDecideOpenPlayParticipant();
-  const close = useCloseOpenPlay();
-  const cancel = useCancelOpenPlay();
+  const join = useMutRequestJoinOpenPlay();
+  const leave = useMutLeaveOpenPlay();
+  const decide = useMutDecideOpenPlayParticipant();
+  const close = useMutCloseOpenPlay();
+  const cancel = useMutCancelOpenPlay();
 
   const [isRefreshing, setIsRefreshing] = React.useState(false);
 
@@ -102,39 +113,15 @@ export default function OpenPlayDetailPageView() {
   }, [joinDialogOpen]);
 
   if (isLoading) {
-    return (
-      <Container className="py-8">
-        <div className="space-y-4">
-          <Skeleton className="h-8 w-64" />
-          <Skeleton className="h-24 w-full" />
-          <Skeleton className="h-64 w-full" />
-        </div>
-      </Container>
-    );
+    return <OpenPlayDetailLoadingState />;
   }
 
   if (error) {
-    return (
-      <Container className="py-8">
-        <Card>
-          <CardContent className="p-6 text-sm text-destructive">
-            {error.message}
-          </CardContent>
-        </Card>
-      </Container>
-    );
+    return <OpenPlayDetailErrorState message={error.message} />;
   }
 
   if (!data) {
-    return (
-      <Container className="py-8">
-        <Card>
-          <CardContent className="p-6 text-sm text-muted-foreground">
-            Open Play not found.
-          </CardContent>
-        </Card>
-      </Container>
-    );
+    return <OpenPlayDetailNotFoundState />;
   }
 
   const handleRefresh = async () => {
@@ -232,25 +219,12 @@ export default function OpenPlayDetailPageView() {
                     </span>
                   </p>
                 </div>
-                <div className="flex flex-col items-end gap-2">
-                  <Badge variant={statusBadgeVariant}>{statusLabel}</Badge>
-                  <Badge
-                    variant={
-                      data.openPlay.availableSpots === 0
-                        ? "destructive"
-                        : "default"
-                    }
-                  >
-                    {data.openPlay.availableSpots === 0
-                      ? "Full"
-                      : `${data.openPlay.availableSpots} spot${data.openPlay.availableSpots === 1 ? "" : "s"} left`}
-                  </Badge>
-                  <Badge variant="outline">
-                    {data.openPlay.joinPolicy === "AUTO"
-                      ? "Auto-join"
-                      : "Request"}
-                  </Badge>
-                </div>
+                <OpenPlayStatusBadges
+                  statusLabel={statusLabel}
+                  statusVariant={statusBadgeVariant}
+                  availableSpots={data.openPlay.availableSpots}
+                  joinPolicy={data.openPlay.joinPolicy}
+                />
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -452,272 +426,74 @@ export default function OpenPlayDetailPageView() {
           </Card>
 
           {isHost && participants ? (
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between gap-3">
-                  <CardTitle>Requests</CardTitle>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleRefresh}
-                    disabled={isRefreshing}
-                  >
-                    <RefreshCw
-                      className={`mr-2 h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
-                    />
-                    Refresh
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {costSharing.requiresPayment && isHost ? (
-                  <p className="text-xs text-muted-foreground">
-                    Paid session tip: use Request and confirm players after
-                    payment is received.
-                  </p>
-                ) : null}
-                {participants.requested?.length ? (
-                  <div className="space-y-3">
-                    {participants.requested.map((p) => (
-                      <div
-                        key={p.participantId}
-                        className="flex items-center justify-between gap-3 rounded-md border p-3"
-                      >
-                        <div className="min-w-0">
-                          <div className="font-medium truncate">
-                            {p.displayName}
-                          </div>
-                          {p.message ? (
-                            <div className="text-xs text-muted-foreground truncate">
-                              {p.message}
-                            </div>
-                          ) : null}
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            onClick={() =>
-                              decide.mutate({
-                                participantId: p.participantId,
-                                decision: "CONFIRM",
-                              })
-                            }
-                            disabled={decide.isPending || hostActionsDisabled}
-                          >
-                            Confirm
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              decide.mutate({
-                                participantId: p.participantId,
-                                decision: "WAITLIST",
-                              })
-                            }
-                            disabled={decide.isPending || hostActionsDisabled}
-                          >
-                            Waitlist
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() =>
-                              decide.mutate({
-                                participantId: p.participantId,
-                                decision: "DECLINE",
-                              })
-                            }
-                            disabled={decide.isPending || hostActionsDisabled}
-                          >
-                            Decline
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-sm text-muted-foreground">
-                    No requests yet.
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <OpenPlayRequestsCard
+              title="Requests"
+              participants={participants.requested ?? []}
+              emptyMessage="No requests yet."
+              helperText={
+                costSharing.requiresPayment
+                  ? "Paid session tip: use Request and confirm players after payment is received."
+                  : undefined
+              }
+              onRefresh={handleRefresh}
+              isRefreshing={isRefreshing}
+              onConfirm={(participantId) =>
+                decide.mutate({ participantId, decision: "CONFIRM" })
+              }
+              onWaitlist={(participantId) =>
+                decide.mutate({ participantId, decision: "WAITLIST" })
+              }
+              onDecline={(participantId) =>
+                decide.mutate({ participantId, decision: "DECLINE" })
+              }
+              decisionsDisabled={hostActionsDisabled}
+              isMutating={decide.isPending}
+            />
           ) : null}
 
           {isHost && participants?.waitlisted ? (
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between gap-3">
-                  <CardTitle>Waitlist</CardTitle>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleRefresh}
-                    disabled={isRefreshing}
-                  >
-                    <RefreshCw
-                      className={`mr-2 h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
-                    />
-                    Refresh
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {participants.waitlisted.length ? (
-                  <div className="space-y-3">
-                    {participants.waitlisted.map((p) => (
-                      <div
-                        key={p.participantId}
-                        className="flex items-center justify-between gap-3 rounded-md border p-3"
-                      >
-                        <div className="min-w-0">
-                          <div className="font-medium truncate">
-                            {p.displayName}
-                          </div>
-                          {p.message ? (
-                            <div className="text-xs text-muted-foreground truncate">
-                              {p.message}
-                            </div>
-                          ) : null}
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            onClick={() =>
-                              decide.mutate({
-                                participantId: p.participantId,
-                                decision: "CONFIRM",
-                              })
-                            }
-                            disabled={decide.isPending || hostActionsDisabled}
-                          >
-                            Confirm
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() =>
-                              decide.mutate({
-                                participantId: p.participantId,
-                                decision: "DECLINE",
-                              })
-                            }
-                            disabled={decide.isPending || hostActionsDisabled}
-                          >
-                            Decline
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-sm text-muted-foreground">
-                    No one is waitlisted.
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <OpenPlayRequestsCard
+              title="Waitlist"
+              participants={participants.waitlisted}
+              emptyMessage="No one is waitlisted."
+              onRefresh={handleRefresh}
+              isRefreshing={isRefreshing}
+              onConfirm={(participantId) =>
+                decide.mutate({ participantId, decision: "CONFIRM" })
+              }
+              onDecline={(participantId) =>
+                decide.mutate({ participantId, decision: "DECLINE" })
+              }
+              decisionsDisabled={hostActionsDisabled}
+              isMutating={decide.isPending}
+            />
           ) : null}
 
           {canChat ? <OpenPlayChatPanel openPlayId={openPlayId} /> : null}
         </div>
 
         <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Cost sharing</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-muted-foreground">Reservation total</span>
-                <span className="font-medium">{reservationTotalLabel}</span>
-              </div>
+          <OpenPlayCostSharingCard
+            reservationTotalLabel={reservationTotalLabel}
+            requiresPayment={costSharing.requiresPayment}
+            suggestedSplitLabel={suggestedSplitLabel}
+            splitBasisPlayers={costSharing.splitBasisPlayers}
+            paymentInstructions={costSharing.paymentInstructions}
+            paymentLinkUrl={costSharing.paymentLinkUrl}
+          />
 
-              {costSharing.requiresPayment ? (
-                <>
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="text-muted-foreground">
-                      Suggested split
-                    </span>
-                    <span className="font-medium">
-                      Est. {suggestedSplitLabel}/player
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Based on {costSharing.splitBasisPlayers} players (includes
-                    host).
-                  </p>
+          <OpenPlayParticipantsCard
+            confirmedCount={data.openPlay.confirmedCount}
+            maxPlayers={data.openPlay.maxPlayers}
+          />
 
-                  {costSharing.paymentInstructions ? (
-                    <div className="rounded-md border bg-muted/20 p-3 text-xs text-muted-foreground whitespace-pre-wrap">
-                      {costSharing.paymentInstructions}
-                    </div>
-                  ) : null}
-
-                  {costSharing.paymentLinkUrl ? (
-                    <Button variant="outline" className="w-full" asChild>
-                      <a
-                        href={costSharing.paymentLinkUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Open payment link
-                      </a>
-                    </Button>
-                  ) : null}
-
-                  <p className="text-xs text-muted-foreground">
-                    KudosCourts does not process payments. Pay the host directly
-                    using the instructions above.
-                  </p>
-                </>
-              ) : (
-                <p className="text-muted-foreground">No payment required.</p>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Participants</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm">
-              <div className="flex items-center justify-between">
-                <span>Confirmed</span>
-                <span className="font-medium">
-                  {data.openPlay.confirmedCount}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-muted-foreground">
-                <span>Capacity</span>
-                <span>{data.openPlay.maxPlayers} total</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Share</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={async () => {
-                  await navigator.clipboard.writeText(
-                    window.location.origin +
-                      appRoutes.openPlay.detail(openPlayId),
-                  );
-                }}
-              >
-                Copy link
-              </Button>
-              <p className="mt-2 text-xs text-muted-foreground">
-                Share this link to invite friends to join.
-              </p>
-            </CardContent>
-          </Card>
+          <OpenPlayShareCard
+            onCopyLink={async () => {
+              await navigator.clipboard.writeText(
+                window.location.origin + appRoutes.openPlay.detail(openPlayId),
+              );
+            }}
+          />
         </div>
       </div>
     </Container>

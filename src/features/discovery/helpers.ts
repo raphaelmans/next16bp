@@ -1,4 +1,5 @@
 import { addDays } from "date-fns";
+import { toAppError } from "@/common/errors/to-app-error";
 import { getReservationEnablement } from "@/common/reservation-enablement";
 import { getZonedDayKey, getZonedDayRangeFromDayKey } from "@/common/time-zone";
 import type { PlaceCardPlace, TimeSlot } from "@/components/kudos";
@@ -195,22 +196,13 @@ export const getAvailabilityErrorInfo = (
     return { isBookingWindowError: false, isError: false, refetch };
   }
 
-  const isRecord = (v: unknown): v is Record<string, unknown> =>
-    typeof v === "object" && v !== null;
+  const appError = toAppError(error);
+  if (appError.code === "BOOKING_WINDOW_EXCEEDED") {
+    return { isBookingWindowError: true, isError: true, refetch };
+  }
 
-  if (isRecord(error)) {
-    const data = isRecord(error.data) ? error.data : null;
-    if (data?.code === "BOOKING_WINDOW_EXCEEDED") {
-      return { isBookingWindowError: true, isError: true, refetch };
-    }
-
-    const message = error.message;
-    if (
-      typeof message === "string" &&
-      message.includes("beyond the maximum booking window")
-    ) {
-      return { isBookingWindowError: true, isError: true, refetch };
-    }
+  if (appError.message.includes("beyond the maximum booking window")) {
+    return { isBookingWindowError: true, isError: true, refetch };
   }
 
   return { isBookingWindowError: false, isError: true, refetch };

@@ -1,11 +1,12 @@
-"use client";
+import AdminCourtEditPage from "@/features/admin/pages/admin-court-edit-page";
 
-import { useParams } from "next/navigation";
-import { AdminCourtEditView } from "@/features/admin/components/admin-court-edit-view";
+type AdminCourtEditRoutePageProps = {
+  params: Promise<{ id: string }>;
+};
 
-export default function AdminCourtEditPage() {
-  const params = useParams();
-  const courtId = params.id as string;
-
-  return <AdminCourtEditView courtId={courtId} />;
+export default async function AdminCourtEditRoutePage({
+  params,
+}: AdminCourtEditRoutePageProps) {
+  const { id } = await params;
+  return <AdminCourtEditPage courtId={id} />;
 }

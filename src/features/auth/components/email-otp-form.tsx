@@ -2,13 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import { getSafeRedirectPath } from "@/common/redirects";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import {
   StandardFormField,
   StandardFormInput,
@@ -35,23 +35,26 @@ import {
   type VerifyEmailOtpDTO,
   VerifyEmailOtpSchema,
 } from "@/lib/modules/auth/dtos";
-import { useRequestEmailOtp, useVerifyEmailOtp } from "../hooks";
+import { useMutAuthRequestEmailOtp, useMutAuthVerifyEmailOtp } from "../hooks";
 
 const RESEND_COOLDOWN_SECONDS = 60;
 
 type OtpStep = "request" | "verify";
 
-export function EmailOtpForm() {
+export interface EmailOtpFormProps {
+  redirectParam?: string | null;
+}
+
+export function EmailOtpForm({ redirectParam }: EmailOtpFormProps = {}) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [step, setStep] = useState<OtpStep>("request");
   const [email, setEmail] = useState("");
   const [cooldown, setCooldown] = useState(0);
 
-  const requestMutation = useRequestEmailOtp();
-  const verifyMutation = useVerifyEmailOtp();
+  const requestMutation = useMutAuthRequestEmailOtp();
+  const verifyMutation = useMutAuthVerifyEmailOtp();
 
-  const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
+  const redirectUrl = getSafeRedirectPath(redirectParam ?? null, {
     fallback: appRoutes.postLogin.base,
     origin: typeof window !== "undefined" ? window.location.origin : undefined,
     disallowRoutes: ["guest"],

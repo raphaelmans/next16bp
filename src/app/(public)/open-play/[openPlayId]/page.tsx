@@ -5,9 +5,9 @@ import {
   formatInTimeZone,
   formatTimeRangeInTimeZone,
 } from "@/common/format";
-import OpenPlayDetailPageView from "@/features/open-play/components/open-play-detail-page-view";
+import { OpenPlayDetailPage as OpenPlayDetailFeaturePage } from "@/features/open-play/pages/open-play-detail-page";
 import { env } from "@/lib/env";
-import { publicCaller } from "@/trpc/server";
+import { getOpenPlayPublicDetail } from "@/lib/modules/open-play/server/open-play-public-detail";
 
 type OpenPlayDetailPageParams = {
   openPlayId: string;
@@ -28,7 +28,7 @@ export async function generateMetadata({
     "Join an Open Play session on KudosCourts and play with other nearby players.";
 
   try {
-    const detail = await publicCaller.openPlay.getPublicDetail({ openPlayId });
+    const detail = await getOpenPlayPublicDetail(openPlayId);
     const dateLabel = formatInTimeZone(
       detail.openPlay.startsAtIso,
       detail.place.timeZone,
@@ -80,6 +80,11 @@ export async function generateMetadata({
   };
 }
 
-export default function OpenPlayDetailPage() {
-  return <OpenPlayDetailPageView />;
+export default async function OpenPlayDetailPage({
+  params,
+}: {
+  params: Promise<OpenPlayDetailPageParams>;
+}) {
+  const { openPlayId } = await params;
+  return <OpenPlayDetailFeaturePage openPlayId={openPlayId} />;
 }

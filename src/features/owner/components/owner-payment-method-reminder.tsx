@@ -3,14 +3,14 @@
 import { appRoutes } from "@/common/app-routes";
 import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
 import {
-  useOrganizationPaymentMethods,
-  useOwnerOrganization,
+  useQueryOrganizationPaymentMethods,
+  useQueryOwnerOrganization,
 } from "@/features/owner/hooks";
 import { PaymentMethodReminderCard } from "./payment-method-reminder-card";
 
 export function OwnerPaymentMethodReminder() {
-  const { organizationId, isLoading } = useOwnerOrganization();
-  const paymentMethodsQuery = useOrganizationPaymentMethods(
+  const { organizationId, isLoading } = useQueryOwnerOrganization();
+  const paymentMethodsQuery = useQueryOrganizationPaymentMethods(
     organizationId ?? undefined,
   );
   const paymentMethods = paymentMethodsQuery.data?.methods ?? [];

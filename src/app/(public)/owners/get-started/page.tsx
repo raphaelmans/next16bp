@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { appRoutes } from "@/common/app-routes";
+import { OwnerPublicGetStartedPage } from "@/features/owner/pages/owner-public-get-started-page";
 import { env } from "@/lib/env";
-import OwnersGetStartedClient from "./page-client";
 
 const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL(appRoutes.ownersGetStarted.base, appUrl);
@@ -57,7 +57,7 @@ export default function OwnersGetStartedPage() {
       >
         {JSON.stringify(structuredData)}
       </Script>
-      <OwnersGetStartedClient />
+      <OwnerPublicGetStartedPage />
     </>
   );
 }

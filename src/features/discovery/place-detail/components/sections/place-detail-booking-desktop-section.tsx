@@ -18,9 +18,13 @@ import {
   mapAvailabilityOptionsToSlots,
   parseDayKeyToDate,
 } from "@/features/discovery/helpers";
-import type { PlaceDetail } from "@/features/discovery/hooks";
+import {
+  type PlaceDetail,
+  useQueryDiscoveryAvailabilityForCourt,
+  useQueryDiscoveryAvailabilityForCourtRange,
+  useQueryDiscoveryAvailabilityForPlaceSportRange,
+} from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
-import { trpc } from "@/trpc/client";
 
 const TIMELINE_SLOT_DURATION = 60;
 
@@ -143,40 +147,33 @@ export function PlaceDetailBookingDesktopSection({
     return getZonedStartOfDayIso(selectedDate ?? today, placeTimeZone);
   }, [anyViewMode, placeTimeZone, selectedDate, selectionMode, today]);
 
-  const courtDayAvailabilityQuery = trpc.availability.getForCourt.useQuery(
+  const courtDayAvailabilityQuery = useQueryDiscoveryAvailabilityForCourt(
     {
       courtId: selectedCourtId ?? "",
       date: courtDayDateIso,
       durationMinutes: TIMELINE_SLOT_DURATION,
       includeUnavailable: true,
     },
-    {
-      enabled:
-        isDesktop &&
-        isCourtMode &&
-        !isCourtWeekView &&
-        !!selectedCourtId &&
-        !!courtDayDateIso,
-    },
+    isDesktop &&
+      isCourtMode &&
+      !isCourtWeekView &&
+      !!selectedCourtId &&
+      !!courtDayDateIso,
   );
 
-  const courtWeekAvailabilityQuery =
-    trpc.availability.getForCourtRange.useQuery(
-      {
-        courtId: selectedCourtId ?? "",
-        startDate: weekRangeStartIso,
-        endDate: weekRangeEndIso,
-        durationMinutes: TIMELINE_SLOT_DURATION,
-        includeUnavailable: true,
-      },
-      {
-        enabled:
-          isDesktop && isCourtMode && isCourtWeekView && !!selectedCourtId,
-      },
-    );
+  const courtWeekAvailabilityQuery = useQueryDiscoveryAvailabilityForCourtRange(
+    {
+      courtId: selectedCourtId ?? "",
+      startDate: weekRangeStartIso,
+      endDate: weekRangeEndIso,
+      durationMinutes: TIMELINE_SLOT_DURATION,
+      includeUnavailable: true,
+    },
+    isDesktop && isCourtMode && isCourtWeekView && !!selectedCourtId,
+  );
 
   const anyWeekAvailabilityQuery =
-    trpc.availability.getForPlaceSportRange.useQuery(
+    useQueryDiscoveryAvailabilityForPlaceSportRange(
       {
         placeId: place.id,
         sportId: selectedSportId ?? "",
@@ -186,17 +183,14 @@ export function PlaceDetailBookingDesktopSection({
         includeUnavailable: true,
         includeCourtOptions: false,
       },
-      {
-        enabled:
-          isDesktop &&
-          selectionMode === "any" &&
-          anyViewMode === "week" &&
-          !!selectedSportId,
-      },
+      isDesktop &&
+        selectionMode === "any" &&
+        anyViewMode === "week" &&
+        !!selectedSportId,
     );
 
   const anyDayAvailabilityQuery =
-    trpc.availability.getForPlaceSportRange.useQuery(
+    useQueryDiscoveryAvailabilityForPlaceSportRange(
       {
         placeId: place.id,
         sportId: selectedSportId ?? "",
@@ -213,14 +207,11 @@ export function PlaceDetailBookingDesktopSection({
         includeUnavailable: true,
         includeCourtOptions: false,
       },
-      {
-        enabled:
-          isDesktop &&
-          selectionMode === "any" &&
-          anyViewMode === "day" &&
-          !!selectedSportId &&
-          !!anyWeekDayDateIso,
-      },
+      isDesktop &&
+        selectionMode === "any" &&
+        anyViewMode === "day" &&
+        !!selectedSportId &&
+        !!anyWeekDayDateIso,
     );
 
   const anyWeekSlotsByDay = React.useMemo(() => {

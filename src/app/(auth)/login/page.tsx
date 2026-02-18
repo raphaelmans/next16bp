@@ -6,10 +6,22 @@ export const metadata = {
   description: "Sign in to your account",
 };
 
-export default function LoginPage() {
+type LoginPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const queryParams = await searchParams;
+  const redirect = Array.isArray(queryParams.redirect)
+    ? queryParams.redirect[0]
+    : queryParams.redirect;
+  const authError = Array.isArray(queryParams.auth_error)
+    ? queryParams.auth_error[0]
+    : queryParams.auth_error;
+
   return (
     <Suspense fallback={<LoginFormSkeleton />}>
-      <LoginForm />
+      <LoginForm redirectParam={redirect} authErrorParam={authError} />
     </Suspense>
   );
 }

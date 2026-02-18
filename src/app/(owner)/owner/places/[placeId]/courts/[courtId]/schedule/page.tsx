@@ -1,117 +1,25 @@
-"use client";
+import OwnerPlaceCourtSchedulePage from "@/features/owner/pages/owner-place-court-schedule-page";
 
-import { Loader2 } from "lucide-react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { appRoutes } from "@/common/app-routes";
-import { AppShell } from "@/components/layout";
-import { PageHeader } from "@/components/ui/page-header";
-import { useLogout, useSession } from "@/features/auth";
-import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
-import {
-  CourtScheduleEditor,
-  ReservationAlertsPanel,
-} from "@/features/owner/components";
-import { useOwnerOrganization } from "@/features/owner/hooks";
-import { trpc } from "@/trpc/client";
+type OwnerPlaceCourtScheduleRoutePageProps = {
+  params: Promise<{ placeId: string; courtId: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
-export default function CourtSchedulePage() {
-  const params = useParams();
-  const searchParams = useSearchParams();
-  const placeId = params.placeId as string;
-  const courtId = params.courtId as string;
-  const router = useRouter();
-  const isFromSetup = searchParams.get("from") === "setup";
-
-  const { data: user } = useSession();
-  const logoutMutation = useLogout();
-  const {
-    organization,
-    organizations,
-    isLoading: orgLoading,
-  } = useOwnerOrganization();
-
-  const { data: placeData, isLoading: placeLoading } =
-    trpc.placeManagement.getById.useQuery({ placeId }, { enabled: !!placeId });
-
-  const { data: courtData, isLoading: courtLoading } =
-    trpc.courtManagement.getById.useQuery({ courtId }, { enabled: !!courtId });
-
-  const handleLogout = async () => {
-    await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(
-      appRoutes.owner.places.courts.schedule(placeId, courtId),
-    );
-  };
-
-  if (orgLoading || courtLoading || placeLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
-
-  if (!courtData || !placeData) {
-    router.push(appRoutes.owner.places.courts.base(placeId));
-    return null;
-  }
+export default async function OwnerPlaceCourtScheduleRoutePage({
+  params,
+  searchParams,
+}: OwnerPlaceCourtScheduleRoutePageProps) {
+  const { placeId, courtId } = await params;
+  const queryParams = await searchParams;
+  const from = Array.isArray(queryParams.from)
+    ? queryParams.from[0]
+    : queryParams.from;
 
   return (
-    <AppShell
-      className="overflow-x-visible"
-      sidebar={
-        <OwnerSidebar
-          currentOrganization={
-            organization ?? { id: "", name: "No Organization" }
-          }
-          organizations={organizations}
-          user={{
-            name: user?.email?.split("@")[0],
-            email: user?.email,
-          }}
-        />
-      }
-      navbar={
-        <OwnerNavbar
-          organizationName={organization?.name ?? "No Organization"}
-          user={{
-            name: user?.email?.split("@")[0],
-            email: user?.email,
-          }}
-          onLogout={handleLogout}
-        />
-      }
-      floatingPanel={
-        <ReservationAlertsPanel organizationId={organization?.id ?? null} />
-      }
-    >
-      <div className="space-y-6">
-        <PageHeader
-          title={`Schedule & Pricing · ${courtData.court.label}`}
-          description="Define open hours and pricing blocks for each day"
-          breadcrumbs={[
-            { label: "My Venues", href: appRoutes.owner.places.base },
-            {
-              label: placeData.place.name,
-              href: appRoutes.owner.places.courts.base(placeId),
-            },
-            { label: "Schedule" },
-          ]}
-          backHref={appRoutes.owner.places.courts.base(placeId)}
-        />
-
-        <CourtScheduleEditor
-          courtId={courtId}
-          organizationId={organization?.id ?? null}
-          timeZone={placeData.place.timeZone}
-          primaryActionLabel="Save schedule"
-          onSaved={() => {
-            if (isFromSetup) {
-              router.push(appRoutes.owner.getStarted);
-            }
-          }}
-        />
-      </div>
-    </AppShell>
+    <OwnerPlaceCourtSchedulePage
+      placeId={placeId}
+      courtId={courtId}
+      fromSetup={from === "setup"}
+    />
   );
 }

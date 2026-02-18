@@ -4,7 +4,7 @@ import type { ChatStatus, FileUIPart, UIMessage } from "ai";
 import { ChevronLeft, MessageSquare, RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Attachment, LocalMessage, StreamChat } from "stream-chat";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import {
   Attachment as AiAttachment,
   AttachmentPreview,
@@ -35,7 +35,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { validateChatUploadFiles } from "../../constants/upload-policy";
-import { useStreamChannel } from "../../hooks/useStreamChannel";
+import { useModStreamChannel } from "../../hooks/useModStreamChannel";
 
 function PromptInputAttachmentsDisplay() {
   const attachments = usePromptInputAttachments();
@@ -175,7 +175,7 @@ export function StreamChatThread({
     sendMessage,
     refresh,
     markRead,
-  } = useStreamChannel({
+  } = useModStreamChannel({
     client,
     channelType,
     channelId,

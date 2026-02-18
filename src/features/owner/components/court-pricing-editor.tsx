@@ -2,7 +2,7 @@
 
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import * as React from "react";
-import { toast } from "sonner";
+import { toast } from "@/common/toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,10 +15,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  useCopyCourtRateRules,
-  useCourtRateRules,
-  useOwnerCourts,
-  useSaveCourtRateRules,
+  useModCourtRateRules,
+  useMutCopyCourtRateRules,
+  useMutSaveCourtRateRules,
+  useQueryOwnerCourts,
 } from "@/features/owner/hooks";
 import { CourtConfigCopyDialog } from "./court-config-copy-dialog";
 
@@ -72,10 +72,10 @@ export function CourtPricingEditor({
   onSaved,
 }: CourtPricingEditorProps) {
   const { data: rules = [], isLoading: rulesLoading } =
-    useCourtRateRules(courtId);
-  const saveRules = useSaveCourtRateRules(courtId);
-  const copyRules = useCopyCourtRateRules(courtId);
-  const { data: courts = [] } = useOwnerCourts(organizationId ?? null);
+    useModCourtRateRules(courtId);
+  const saveRules = useMutSaveCourtRateRules(courtId);
+  const copyRules = useMutCopyCourtRateRules(courtId);
+  const { data: courts = [] } = useQueryOwnerCourts(organizationId ?? null);
 
   const [rows, setRows] = React.useState<RateRuleRow[]>([]);
   const [copyOpen, setCopyOpen] = React.useState(false);

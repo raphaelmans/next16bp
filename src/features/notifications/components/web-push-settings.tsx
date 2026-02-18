@@ -1,7 +1,7 @@
 "use client";
 
-import { toast } from "sonner";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,10 +10,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useWebPush } from "../hooks/use-web-push";
+import { useModWebPush } from "../hooks";
 
 export function WebPushSettingsCard({ id }: { id?: string }) {
-  const webPush = useWebPush();
+  const webPush = useModWebPush();
 
   const enable = async () => {
     try {

@@ -3,10 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { toast } from "sonner";
 import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import {
   buildCityOptions,
   buildProvinceOptions,
@@ -14,6 +12,8 @@ import {
   findProvinceByName,
   resolveProvinceCityValues,
 } from "@/common/ph-location-data";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import { env } from "@/lib/env";
 import { PLACE_TIME_ZONES, placeFormSchema } from "../schemas";
 import {

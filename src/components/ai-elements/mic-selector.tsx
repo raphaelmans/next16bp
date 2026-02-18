@@ -12,6 +12,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { createFeatureLogger } from "@/common/logging";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -28,6 +29,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const deviceIdRegex = /\(([\da-fA-F]{4}:[\da-fA-F]{4})\)$/;
+const logger = createFeatureLogger("ai-elements", "mic-selector");
 
 interface MicSelectorContextType {
   data: MediaDeviceInfo[];
@@ -227,7 +229,7 @@ export const MicSelectorLabel = ({
 }: MicSelectorLabelProps) => {
   const matches = device.label.match(deviceIdRegex);
 
-  console.log(matches, device.label);
+  logger.debug("Mic label parse result", { matches, label: device.label });
 
   if (!matches) {
     return (
@@ -296,7 +298,7 @@ export const useAudioDevices = () => {
         err instanceof Error ? err.message : "Failed to get audio devices";
 
       setError(message);
-      console.error("Error getting audio devices:", message);
+      logger.error("Error getting audio devices", { message });
     } finally {
       setLoading(false);
     }
@@ -331,7 +333,7 @@ export const useAudioDevices = () => {
         err instanceof Error ? err.message : "Failed to get audio devices";
 
       setError(message);
-      console.error("Error getting audio devices:", message);
+      logger.error("Error getting audio devices", { message });
     } finally {
       setLoading(false);
     }

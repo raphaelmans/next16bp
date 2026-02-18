@@ -8,9 +8,12 @@ import {
   useRef,
   useState,
 } from "react";
+import { createFeatureLogger } from "@/common/logging";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
+
+const logger = createFeatureLogger("ai-elements", "speech-input");
 
 interface SpeechRecognition extends EventTarget {
   continuous: boolean;
@@ -156,7 +159,7 @@ export const SpeechInput = ({
     };
 
     speechRecognition.onerror = (event) => {
-      console.error("Speech recognition error:", event.error);
+      logger.error("Speech recognition error", { error: event.error });
       setIsListening(false);
     };
 
@@ -173,8 +176,8 @@ export const SpeechInput = ({
   // Start MediaRecorder recording
   const startMediaRecorder = useCallback(async () => {
     if (!onAudioRecorded) {
-      console.warn(
-        "SpeechInput: onAudioRecorded callback is required for MediaRecorder fallback",
+      logger.warn(
+        "onAudioRecorded callback is required for MediaRecorder fallback",
       );
       return;
     }
@@ -208,7 +211,7 @@ export const SpeechInput = ({
               onTranscriptionChange?.(transcript);
             }
           } catch (error) {
-            console.error("Transcription error:", error);
+            logger.error("Transcription error", { error });
           } finally {
             setIsProcessing(false);
           }
@@ -216,7 +219,7 @@ export const SpeechInput = ({
       };
 
       mediaRecorder.onerror = (event) => {
-        console.error("MediaRecorder error:", event);
+        logger.error("MediaRecorder error", { event });
         setIsListening(false);
         // Stop all tracks on error
         for (const track of stream.getTracks()) {
@@ -228,7 +231,7 @@ export const SpeechInput = ({
       mediaRecorder.start();
       setIsListening(true);
     } catch (error) {
-      console.error("Failed to start MediaRecorder:", error);
+      logger.error("Failed to start MediaRecorder", { error });
       setIsListening(false);
     }
   }, [onAudioRecorded, onTranscriptionChange]);

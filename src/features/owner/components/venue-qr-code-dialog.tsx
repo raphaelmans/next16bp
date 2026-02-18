@@ -3,8 +3,8 @@
 import { Copy, Download, QrCode, Share2 } from "lucide-react";
 import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
+import { toast } from "@/common/toast";
 import { copyToClipboard } from "@/common/utils/clipboard";
 import { Button } from "@/components/ui/button";
 import {

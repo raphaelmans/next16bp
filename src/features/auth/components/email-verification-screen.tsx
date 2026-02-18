@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import { StandardFormField, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {

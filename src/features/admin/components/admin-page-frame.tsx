@@ -6,8 +6,8 @@ import { appRoutes } from "@/common/app-routes";
 import { AppShell } from "@/components/layout";
 import { AdminNavbar } from "@/features/admin/components/admin-navbar";
 import { AdminSidebar } from "@/features/admin/components/admin-sidebar";
-import { useAdminSidebarStats } from "@/features/admin/hooks";
-import { useLogout, useSession } from "@/features/auth";
+import { useQueryAdminSidebarStats } from "@/features/admin/hooks";
+import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 
 interface AdminPageFrameProps {
   children: React.ReactNode;
@@ -18,9 +18,9 @@ export function AdminPageFrame({
   children,
   redirectPath,
 }: AdminPageFrameProps) {
-  const { data: user } = useSession();
-  const logoutMutation = useLogout();
-  const { data: stats } = useAdminSidebarStats();
+  const { data: user } = useQueryAuthSession();
+  const logoutMutation = useMutAuthLogout();
+  const { data: stats } = useQueryAdminSidebarStats();
   const pathname = usePathname();
 
   const handleLogout = async () => {

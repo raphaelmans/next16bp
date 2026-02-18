@@ -18,7 +18,7 @@ export interface UseStreamClientInput {
   tokenOrProvider: TokenOrProvider | null;
 }
 
-export function useStreamClient({
+export function useModStreamClient({
   apiKey,
   user,
   tokenOrProvider,

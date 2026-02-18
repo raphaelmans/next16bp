@@ -1,0 +1,1 @@
+export { getOwnerApi } from "./api";

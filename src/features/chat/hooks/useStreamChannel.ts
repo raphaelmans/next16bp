@@ -18,7 +18,7 @@ export interface UseStreamChannelInput {
   messageLimit?: number;
 }
 
-export function useStreamChannel({
+export function useModStreamChannel({
   client,
   channelType,
   channelId,

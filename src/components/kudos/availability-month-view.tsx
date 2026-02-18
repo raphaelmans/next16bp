@@ -5,6 +5,7 @@ import type * as React from "react";
 import { useMemo, useState } from "react";
 import { formatInTimeZone } from "@/common/format";
 import { getZonedDayKey, getZonedToday } from "@/common/time-zone";
+import { MobileDateStrip } from "@/components/kudos/mobile-date-strip";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -13,7 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MobileDateStrip } from "@/features/discovery/components/mobile-date-strip";
 import { TimeRangePicker, TimeRangePickerSkeleton } from "./time-range-picker";
 import {
   type TimeSlot,

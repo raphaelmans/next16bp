@@ -16,8 +16,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useQueryOwnerGuestProfiles } from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/trpc/client";
 
 export const MobileGuestForm = React.memo(function MobileGuestForm({
   guestMode,
@@ -53,7 +53,7 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
     return () => clearTimeout(timer);
   }, [mobileGuestSearch]);
 
-  const mobileGuestProfilesQuery = trpc.guestProfile.list.useQuery(
+  const mobileGuestProfilesQuery = useQueryOwnerGuestProfiles(
     {
       organizationId,
       query: debouncedMobileGuestSearch || undefined,

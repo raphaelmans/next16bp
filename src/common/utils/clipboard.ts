@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { toast } from "@/common/toast";
 
 /**
  * Copy text to clipboard with toast notification

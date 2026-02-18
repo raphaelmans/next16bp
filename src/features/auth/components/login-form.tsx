@@ -2,12 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { appRoutes } from "@/common/app-routes";
-import { getClientErrorMessage } from "@/common/hooks/toast-errors";
 import { getSafeRedirectPath } from "@/common/redirects";
+import { toast } from "@/common/toast";
+import { getClientErrorMessage } from "@/common/toast/errors";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,21 +21,28 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { type LoginDTO, LoginSchema } from "@/lib/modules/auth/dtos";
-import { useLogin, useLoginWithGoogle } from "../hooks";
+import { useMutAuthLogin, useMutAuthLoginWithGoogle } from "../hooks";
 
-export function LoginForm() {
+export interface LoginFormProps {
+  redirectParam?: string | null;
+  authErrorParam?: string | null;
+}
+
+export function LoginForm({
+  redirectParam,
+  authErrorParam,
+}: LoginFormProps = {}) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const loginMutation = useLogin();
-  const googleLoginMutation = useLoginWithGoogle();
+  const loginMutation = useMutAuthLogin();
+  const googleLoginMutation = useMutAuthLoginWithGoogle();
 
-  const redirectUrl = getSafeRedirectPath(searchParams.get("redirect"), {
+  const redirectUrl = getSafeRedirectPath(redirectParam ?? null, {
     fallback: appRoutes.postLogin.base,
     origin: typeof window !== "undefined" ? window.location.origin : undefined,
     disallowRoutes: ["guest"],
   });
   const showBookingContext = redirectUrl.includes("/schedule");
-  const authError = searchParams.get("auth_error");
+  const authError = authErrorParam ?? null;
 
   const authErrorMessage = (() => {
     switch (authError) {

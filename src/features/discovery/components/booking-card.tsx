@@ -16,7 +16,7 @@ import {
 } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSession } from "@/features/auth/hooks";
+import { useQueryAuthSession } from "@/features/auth/hooks";
 import { cn } from "@/lib/utils";
 
 interface BookingCardProps {
@@ -64,7 +64,7 @@ export function BookingCard({
     MAX_BOOKING_WINDOW_DAYS,
   );
 
-  const { data: sessionUser } = useSession();
+  const { data: sessionUser } = useQueryAuthSession();
   const isAuthenticated = !!sessionUser;
 
   const handleReserveClick = () => {
