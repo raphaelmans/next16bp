@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { GetPendingCountSchema } from "@/lib/modules/reservation/dtos";
 import { makeReservationOwnerService } from "@/lib/modules/reservation/factories/reservation.factory";
+import type { IReservationOwnerService } from "@/lib/modules/reservation/services/reservation-owner.service";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
@@ -16,6 +17,9 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ organizationId: string }>;
+type PendingCountMobileResponse = Awaited<
+  ReturnType<IReservationOwnerService["getPendingCount"]>
+>;
 
 export async function GET(req: Request, context: { params: Params }) {
   const requestId = getRequestId(req);
@@ -39,7 +43,9 @@ export async function GET(req: Request, context: { params: Params }) {
       input.organizationId,
     );
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(count));
+    return NextResponse.json<ApiResponse<PendingCountMobileResponse>>(
+      wrapResponse(count),
+    );
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

@@ -4,6 +4,7 @@ import {
   ListMyPlacesSchema,
 } from "@/lib/modules/place/dtos";
 import { makePlaceManagementService } from "@/lib/modules/place/factories/place.factory";
+import type { IPlaceManagementService } from "@/lib/modules/place/services/place-management.service";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
@@ -20,6 +21,12 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ organizationId: string }>;
+type ListMyPlacesMobileResponse = Awaited<
+  ReturnType<IPlaceManagementService["listMyPlaces"]>
+>;
+type CreatePlaceMobileResponse = Awaited<
+  ReturnType<IPlaceManagementService["createPlace"]>
+>;
 
 const normalizeMobilePlaceInput = (
   raw: Record<string, unknown>,
@@ -67,7 +74,9 @@ export async function GET(req: Request, context: { params: Params }) {
     const service = makePlaceManagementService();
     const places = await service.listMyPlaces(session.userId, input);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(places));
+    return NextResponse.json<ApiResponse<ListMyPlacesMobileResponse>>(
+      wrapResponse(places),
+    );
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
@@ -101,7 +110,9 @@ export async function POST(req: Request, context: { params: Params }) {
     const service = makePlaceManagementService();
     const place = await service.createPlace(session.userId, input);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(place));
+    return NextResponse.json<ApiResponse<CreatePlaceMobileResponse>>(
+      wrapResponse(place),
+    );
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

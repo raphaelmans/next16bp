@@ -4,6 +4,7 @@ import {
   ListCourtsByPlaceSchema,
 } from "@/lib/modules/court/dtos";
 import { makeCourtManagementService } from "@/lib/modules/court/factories/court.factory";
+import type { ICourtManagementService } from "@/lib/modules/court/services/court-management.service";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
@@ -20,6 +21,12 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ venueId: string }>;
+type ListCourtsByPlaceMobileResponse = Awaited<
+  ReturnType<ICourtManagementService["listCourtsByPlace"]>
+>;
+type CreateCourtMobileResponse = Awaited<
+  ReturnType<ICourtManagementService["createCourt"]>
+>;
 
 export async function GET(req: Request, context: { params: Params }) {
   const requestId = getRequestId(req);
@@ -39,7 +46,9 @@ export async function GET(req: Request, context: { params: Params }) {
     const service = makeCourtManagementService();
     const courts = await service.listCourtsByPlace(session.userId, input);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(courts));
+    return NextResponse.json<ApiResponse<ListCourtsByPlaceMobileResponse>>(
+      wrapResponse(courts),
+    );
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
@@ -69,7 +78,9 @@ export async function POST(req: Request, context: { params: Params }) {
     const service = makeCourtManagementService();
     const court = await service.createCourt(session.userId, input);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(court));
+    return NextResponse.json<ApiResponse<CreateCourtMobileResponse>>(
+      wrapResponse(court),
+    );
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

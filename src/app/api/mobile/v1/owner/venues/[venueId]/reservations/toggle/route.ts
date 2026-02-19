@@ -17,6 +17,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ venueId: string }>;
+type TogglePlaceReservationsMobileResponse = { success: true };
 
 export async function POST(req: Request, context: { params: Params }) {
   const requestId = getRequestId(req);
@@ -41,9 +42,9 @@ export async function POST(req: Request, context: { params: Params }) {
     const service = makePlaceVerificationService();
     await service.toggleReservations(session.userId, input);
 
-    return NextResponse.json<ApiResponse<{ success: true }>>(
-      wrapResponse({ success: true }),
-    );
+    return NextResponse.json<
+      ApiResponse<TogglePlaceReservationsMobileResponse>
+    >(wrapResponse({ success: true }));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

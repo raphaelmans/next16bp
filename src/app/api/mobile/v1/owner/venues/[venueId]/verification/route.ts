@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { GetPlaceVerificationByPlaceSchema } from "@/lib/modules/place-verification/dtos";
 import { makePlaceVerificationService } from "@/lib/modules/place-verification/factories/place-verification.factory";
+import type { IPlaceVerificationService } from "@/lib/modules/place-verification/services/place-verification.service";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
@@ -16,6 +17,9 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ venueId: string }>;
+type GetPlaceVerificationMobileResponse = Awaited<
+  ReturnType<IPlaceVerificationService["getByPlace"]>
+>;
 
 export async function GET(req: Request, context: { params: Params }) {
   const requestId = getRequestId(req);
@@ -37,7 +41,9 @@ export async function GET(req: Request, context: { params: Params }) {
     const service = makePlaceVerificationService();
     const result = await service.getByPlace(session.userId, input);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<GetPlaceVerificationMobileResponse>>(
+      wrapResponse(result),
+    );
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
