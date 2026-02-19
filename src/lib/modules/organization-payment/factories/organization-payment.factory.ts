@@ -31,6 +31,7 @@ export function makeOrganizationPaymentService(): OrganizationPaymentService {
     organizationPaymentService = new OrganizationPaymentService(
       makeOrganizationRepository(),
       makeOrganizationPaymentMethodRepository(),
+      makeOrganizationReservationPolicyRepository(),
       getContainer().transactionManager,
     );
   }

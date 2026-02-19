@@ -42,7 +42,7 @@ export async function GET(req: Request, context: { params: Params }) {
       throw new NotOrganizationOwnerError();
     }
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<typeof result>>(wrapResponse(result));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
@@ -73,7 +73,7 @@ export async function PATCH(req: Request, context: { params: Params }) {
     const service = makeOrganizationService();
     const result = await service.updateOrganization(session.userId, input);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<typeof result>>(wrapResponse(result));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

@@ -39,7 +39,7 @@ export async function GET(req: Request, context: { params: Params }) {
     const service = makeCourtManagementService();
     const court = await service.getCourtById(session.userId, input.courtId);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(court));
+    return NextResponse.json<ApiResponse<typeof court>>(wrapResponse(court));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
@@ -69,7 +69,7 @@ export async function PATCH(req: Request, context: { params: Params }) {
     const service = makeCourtManagementService();
     const court = await service.updateCourt(session.userId, input);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(court));
+    return NextResponse.json<ApiResponse<typeof court>>(wrapResponse(court));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

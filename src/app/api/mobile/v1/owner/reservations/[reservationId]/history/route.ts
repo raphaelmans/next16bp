@@ -40,7 +40,7 @@ export async function GET(req: Request, context: { params: Params }) {
       input.reservationId,
     );
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(events));
+    return NextResponse.json<ApiResponse<typeof events>>(wrapResponse(events));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

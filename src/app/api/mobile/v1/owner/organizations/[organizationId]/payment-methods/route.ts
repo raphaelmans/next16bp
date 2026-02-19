@@ -44,10 +44,9 @@ export async function GET(req: Request, context: { params: Params }) {
       session.userId,
       input.organizationId,
     );
+    const data = { methods };
 
-    return NextResponse.json<ApiResponse<{ methods: unknown }>>(
-      wrapResponse({ methods }),
-    );
+    return NextResponse.json<ApiResponse<typeof data>>(wrapResponse(data));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
@@ -77,10 +76,9 @@ export async function POST(req: Request, context: { params: Params }) {
 
     const service = makeOrganizationPaymentService();
     const method = await service.createMethod(session.userId, input);
+    const data = { method };
 
-    return NextResponse.json<ApiResponse<{ method: unknown }>>(
-      wrapResponse({ method }),
-    );
+    return NextResponse.json<ApiResponse<typeof data>>(wrapResponse(data));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

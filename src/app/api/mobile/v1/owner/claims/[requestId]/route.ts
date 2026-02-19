@@ -35,7 +35,7 @@ export async function GET(req: Request, context: { params: Params }) {
     const service = makeClaimRequestService();
     const result = await service.getClaimRequestById(session.userId, input.id);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<typeof result>>(wrapResponse(result));
   } catch (error) {
     const { status, body } = handleError(error, requestIdHeader);
     return NextResponse.json<ApiErrorResponse>(body, { status });

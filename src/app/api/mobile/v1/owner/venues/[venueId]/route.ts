@@ -67,7 +67,7 @@ export async function GET(req: Request, context: { params: Params }) {
     const service = makePlaceManagementService();
     const place = await service.getPlaceById(session.userId, input.placeId);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(place));
+    return NextResponse.json<ApiResponse<typeof place>>(wrapResponse(place));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
@@ -100,7 +100,7 @@ export async function PATCH(req: Request, context: { params: Params }) {
     const service = makePlaceManagementService();
     const place = await service.updatePlace(session.userId, input);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(place));
+    return NextResponse.json<ApiResponse<typeof place>>(wrapResponse(place));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

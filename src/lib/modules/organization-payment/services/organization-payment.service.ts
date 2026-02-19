@@ -3,7 +3,11 @@ import {
   OrganizationNotFoundError,
 } from "@/lib/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
-import type { OrganizationPaymentMethodRecord } from "@/lib/shared/infra/db/schema";
+import type {
+  InsertOrganizationReservationPolicy,
+  OrganizationPaymentMethodRecord,
+  OrganizationReservationPolicyRecord,
+} from "@/lib/shared/infra/db/schema";
 import { logger } from "@/lib/shared/infra/logger";
 import type { RequestContext } from "@/lib/shared/kernel/context";
 import type { TransactionManager } from "@/lib/shared/kernel/transaction";
@@ -17,6 +21,7 @@ import {
   OrganizationPaymentMethodNotFoundError,
 } from "../errors/organization-payment.errors";
 import type { IOrganizationPaymentMethodRepository } from "../repositories/organization-payment-method.repository";
+import type { IOrganizationReservationPolicyRepository } from "../repositories/organization-reservation-policy.repository";
 
 export interface IOrganizationPaymentService {
   listMethods(
@@ -33,12 +38,22 @@ export interface IOrganizationPaymentService {
   ): Promise<OrganizationPaymentMethodRecord>;
   deleteMethod(userId: string, paymentMethodId: string): Promise<void>;
   setDefaultMethod(userId: string, paymentMethodId: string): Promise<void>;
+  getReservationPolicy(
+    userId: string,
+    organizationId: string,
+  ): Promise<OrganizationReservationPolicyRecord>;
+  updateReservationPolicy(
+    userId: string,
+    organizationId: string,
+    data: Partial<InsertOrganizationReservationPolicy>,
+  ): Promise<OrganizationReservationPolicyRecord>;
 }
 
 export class OrganizationPaymentService implements IOrganizationPaymentService {
   constructor(
     private organizationRepository: IOrganizationRepository,
     private paymentMethodRepository: IOrganizationPaymentMethodRepository,
+    private organizationReservationPolicyRepository: IOrganizationReservationPolicyRepository,
     private transactionManager: TransactionManager,
   ) {}
 
@@ -279,6 +294,36 @@ export class OrganizationPaymentService implements IOrganizationPaymentService {
           paymentMethodId: method.id,
         },
         "Organization payment method set as default",
+      );
+    });
+  }
+
+  async getReservationPolicy(userId: string, organizationId: string) {
+    await this.assertOwner(userId, organizationId);
+    return this.organizationReservationPolicyRepository.ensureForOrganization(
+      organizationId,
+    );
+  }
+
+  async updateReservationPolicy(
+    userId: string,
+    organizationId: string,
+    data: Partial<InsertOrganizationReservationPolicy>,
+  ) {
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+      await this.assertOwner(userId, organizationId, ctx);
+
+      const current =
+        await this.organizationReservationPolicyRepository.ensureForOrganization(
+          organizationId,
+          ctx,
+        );
+
+      return this.organizationReservationPolicyRepository.update(
+        current.id,
+        data,
+        ctx,
       );
     });
   }

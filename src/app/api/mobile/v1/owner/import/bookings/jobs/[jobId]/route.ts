@@ -36,7 +36,7 @@ export async function GET(req: Request, context: { params: Params }) {
     const service = makeBookingsImportService();
     const result = await service.getJob(session.userId, input.jobId);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<typeof result>>(wrapResponse(result));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

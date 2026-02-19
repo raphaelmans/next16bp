@@ -34,7 +34,7 @@ export async function GET(req: Request) {
     const service = makeClaimRequestService();
     const result = await service.getMyClaimRequests(session.userId);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<typeof result>>(wrapResponse(result));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
@@ -81,7 +81,9 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(claimRequest));
+    return NextResponse.json<ApiResponse<typeof claimRequest>>(
+      wrapResponse(claimRequest),
+    );
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

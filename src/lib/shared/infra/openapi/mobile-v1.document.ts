@@ -9,8 +9,51 @@ const ApiErrorResponseSchema = z.object({
   details: z.record(z.string(), z.unknown()).optional(),
 });
 
-const GenericDataResponseSchema = z.object({
-  data: z.unknown(),
+const GenericJsonObjectSchema = z.object({}).passthrough();
+const GenericJsonArraySchema = z.array(GenericJsonObjectSchema);
+
+const GenericObjectResponseSchema = z.object({
+  data: GenericJsonObjectSchema,
+});
+
+const GenericObjectOrCollectionResponseSchema = z.object({
+  data: z.union([GenericJsonObjectSchema, GenericJsonArraySchema]),
+});
+
+const SuccessResponseSchema = z.object({
+  data: z.object({
+    success: z.literal(true),
+  }),
+});
+
+const OkResponseSchema = z.object({
+  data: z.object({
+    ok: z.literal(true),
+  }),
+});
+
+const UrlResponseSchema = z.object({
+  data: z.object({
+    url: z.string(),
+  }),
+});
+
+const MethodResponseSchema = z.object({
+  data: z.object({
+    method: GenericJsonObjectSchema,
+  }),
+});
+
+const MethodsResponseSchema = z.object({
+  data: z.object({
+    methods: GenericJsonArraySchema,
+  }),
+});
+
+const PhotosResponseSchema = z.object({
+  data: z.object({
+    photos: GenericJsonArraySchema,
+  }),
 });
 
 const GenericJsonBodySchema = z.object({}).passthrough();
@@ -117,7 +160,9 @@ const StringSchema = z.string();
 
 const security = [{ bearerAuth: [] }];
 
-function responses(successSchema: z.ZodTypeAny = GenericDataResponseSchema) {
+function responses(
+  successSchema: z.ZodTypeAny = GenericObjectOrCollectionResponseSchema,
+) {
   return {
     "200": {
       description: "OK",
@@ -347,6 +392,7 @@ export function createMobileV1OpenApiDocument(args: {
           operationId: "ownerOrganizationUpdateProfile",
           path: z.object({ organizationId: UuidSchema }),
           bodyType: "json",
+          successSchema: GenericObjectResponseSchema,
         }),
       },
 
@@ -355,6 +401,7 @@ export function createMobileV1OpenApiDocument(args: {
           operationId: "ownerOrganizationUploadLogo",
           path: z.object({ organizationId: UuidSchema }),
           bodyType: "multipart",
+          successSchema: UrlResponseSchema,
         }),
       },
 
@@ -383,6 +430,7 @@ export function createMobileV1OpenApiDocument(args: {
         delete: protectedMutation({
           operationId: "ownerVenueDelete",
           path: z.object({ venueId: UuidSchema }),
+          successSchema: SuccessResponseSchema,
         }),
       },
 
@@ -398,6 +446,7 @@ export function createMobileV1OpenApiDocument(args: {
         delete: protectedMutation({
           operationId: "ownerVenueDeletePhoto",
           path: z.object({ venueId: UuidSchema, photoId: UuidSchema }),
+          successSchema: SuccessResponseSchema,
         }),
       },
 
@@ -406,6 +455,7 @@ export function createMobileV1OpenApiDocument(args: {
           operationId: "ownerVenueReorderPhotos",
           path: z.object({ venueId: UuidSchema }),
           bodyType: "json",
+          successSchema: PhotosResponseSchema,
         }),
       },
 
@@ -605,11 +655,13 @@ export function createMobileV1OpenApiDocument(args: {
         get: protectedGet({
           operationId: "ownerPaymentMethodList",
           path: z.object({ organizationId: UuidSchema }),
+          successSchema: MethodsResponseSchema,
         }),
         post: protectedMutation({
           operationId: "ownerPaymentMethodCreate",
           path: z.object({ organizationId: UuidSchema }),
           bodyType: "json",
+          successSchema: MethodResponseSchema,
         }),
       },
 
@@ -618,10 +670,12 @@ export function createMobileV1OpenApiDocument(args: {
           operationId: "ownerPaymentMethodUpdate",
           path: z.object({ paymentMethodId: UuidSchema }),
           bodyType: "json",
+          successSchema: MethodResponseSchema,
         }),
         delete: protectedMutation({
           operationId: "ownerPaymentMethodDelete",
           path: z.object({ paymentMethodId: UuidSchema }),
+          successSchema: SuccessResponseSchema,
         }),
       },
 
@@ -629,6 +683,7 @@ export function createMobileV1OpenApiDocument(args: {
         post: protectedMutation({
           operationId: "ownerPaymentMethodSetDefault",
           path: z.object({ paymentMethodId: UuidSchema }),
+          successSchema: SuccessResponseSchema,
         }),
       },
 
@@ -644,6 +699,7 @@ export function createMobileV1OpenApiDocument(args: {
           operationId: "ownerPlaceVerificationSubmit",
           path: z.object({ venueId: UuidSchema }),
           bodyType: "multipart",
+          successSchema: SuccessResponseSchema,
         }),
       },
 
@@ -652,6 +708,7 @@ export function createMobileV1OpenApiDocument(args: {
           operationId: "ownerPlaceToggleReservations",
           path: z.object({ venueId: UuidSchema }),
           bodyType: "json",
+          successSchema: SuccessResponseSchema,
         }),
       },
 
@@ -748,6 +805,7 @@ export function createMobileV1OpenApiDocument(args: {
         post: protectedMutation({
           operationId: "ownerBookingsImportJobDiscard",
           path: z.object({ jobId: UuidSchema }),
+          successSchema: SuccessResponseSchema,
         }),
       },
 
@@ -775,6 +833,7 @@ export function createMobileV1OpenApiDocument(args: {
         delete: protectedMutation({
           operationId: "ownerBookingsImportRowDelete",
           path: z.object({ rowId: UuidSchema }),
+          successSchema: SuccessResponseSchema,
         }),
       },
 
@@ -816,6 +875,7 @@ export function createMobileV1OpenApiDocument(args: {
           operationId: "ownerReservationChatSendMessage",
           path: z.object({ reservationId: UuidSchema }),
           bodyType: "json",
+          successSchema: OkResponseSchema,
         }),
       },
 
@@ -831,6 +891,7 @@ export function createMobileV1OpenApiDocument(args: {
           operationId: "ownerSupportChatClaimSendMessage",
           path: z.object({ claimRequestId: UuidSchema }),
           bodyType: "json",
+          successSchema: OkResponseSchema,
         }),
       },
 
@@ -846,18 +907,21 @@ export function createMobileV1OpenApiDocument(args: {
           operationId: "ownerSupportChatVerificationSendMessage",
           path: z.object({ placeVerificationRequestId: UuidSchema }),
           bodyType: "json",
+          successSchema: OkResponseSchema,
         }),
       },
 
       "/public/sports": {
         get: publicGet({
           operationId: "publicSportsList",
+          successSchema: GenericObjectOrCollectionResponseSchema,
         }),
       },
 
       "/public/venues": {
         get: publicGet({
           operationId: "publicVenuesList",
+          successSchema: GenericObjectOrCollectionResponseSchema,
         }),
       },
 
@@ -865,6 +929,7 @@ export function createMobileV1OpenApiDocument(args: {
         get: publicGet({
           operationId: "publicVenueGetByIdOrSlug",
           path: z.object({ placeIdOrSlug: StringSchema }),
+          successSchema: GenericObjectOrCollectionResponseSchema,
         }),
       },
     },

@@ -49,7 +49,7 @@ export async function GET(req: Request) {
     const service = makePlaceDiscoveryService();
     const result = await service.listPlaceSummaries(input);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<typeof result>>(wrapResponse(result));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

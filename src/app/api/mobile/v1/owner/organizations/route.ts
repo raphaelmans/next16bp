@@ -35,10 +35,9 @@ export async function GET(req: Request) {
 
     const service = makeOrganizationService();
     const organizations = await service.getMyOrganizations(session.userId);
+    const data = serializeDates(organizations);
 
-    return NextResponse.json<ApiResponse<unknown>>(
-      wrapResponse(serializeDates(organizations)),
-    );
+    return NextResponse.json<ApiResponse<typeof data>>(wrapResponse(data));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
@@ -63,10 +62,9 @@ export async function POST(req: Request) {
 
     const service = makeOrganizationService();
     const result = await service.createOrganization(session.userId, input);
+    const data = serializeDates(result);
 
-    return NextResponse.json<ApiResponse<unknown>>(
-      wrapResponse(serializeDates(result)),
-    );
+    return NextResponse.json<ApiResponse<typeof data>>(wrapResponse(data));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

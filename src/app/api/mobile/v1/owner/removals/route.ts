@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     const service = makeClaimRequestService();
     const result = await service.submitRemovalRequest(session.userId, input);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<typeof result>>(wrapResponse(result));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

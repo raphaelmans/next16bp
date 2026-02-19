@@ -44,7 +44,7 @@ export async function POST(req: Request, context: { params: Params }) {
       input.image,
     );
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(photo));
+    return NextResponse.json<ApiResponse<typeof photo>>(wrapResponse(photo));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

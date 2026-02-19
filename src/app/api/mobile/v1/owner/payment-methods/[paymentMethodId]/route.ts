@@ -43,10 +43,9 @@ export async function PATCH(req: Request, context: { params: Params }) {
 
     const service = makeOrganizationPaymentService();
     const method = await service.updateMethod(session.userId, input);
+    const data = { method };
 
-    return NextResponse.json<ApiResponse<{ method: unknown }>>(
-      wrapResponse({ method }),
-    );
+    return NextResponse.json<ApiResponse<typeof data>>(wrapResponse(data));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

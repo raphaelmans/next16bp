@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
-import { makeOrganizationReservationPolicyRepository } from "@/lib/modules/organization-payment/factories/organization-payment.factory";
+import { makeOrganizationPaymentService } from "@/lib/modules/organization-payment/factories/organization-payment.factory";
+import type { IOrganizationPaymentService } from "@/lib/modules/organization-payment/services/organization-payment.service";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { parseJson } from "@/lib/shared/infra/http/parse";
 import { getRequestId } from "@/lib/shared/infra/http/request-id";
 import { validate } from "@/lib/shared/infra/http/validate";
-import { AuthorizationError, NotFoundError } from "@/lib/shared/kernel/errors";
 import type {
   ApiErrorResponse,
   ApiResponse,
@@ -19,6 +18,12 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ organizationId: string }>;
+type GetReservationPolicyMobileResponse = Awaited<
+  ReturnType<IOrganizationPaymentService["getReservationPolicy"]>
+>;
+type UpdateReservationPolicyMobileResponse = Awaited<
+  ReturnType<IOrganizationPaymentService["updateReservationPolicy"]>
+>;
 
 const UpdateReservationPolicySchema = z.object({
   requiresOwnerConfirmation: z.boolean().optional(),
@@ -26,19 +31,6 @@ const UpdateReservationPolicySchema = z.object({
   ownerReviewMinutes: z.number().int().min(0).optional(),
   cancellationCutoffMinutes: z.number().int().min(0).optional(),
 });
-
-async function assertOrgOwner(userId: string, organizationId: string) {
-  const organization =
-    await makeOrganizationRepository().findById(organizationId);
-  if (!organization) {
-    throw new NotFoundError("Organization not found", { organizationId });
-  }
-  if (organization.ownerUserId !== userId) {
-    throw new AuthorizationError("You are not the owner of this organization", {
-      organizationId,
-    });
-  }
-}
 
 export async function GET(req: Request, context: { params: Params }) {
   const requestId = getRequestId(req);
@@ -55,12 +47,15 @@ export async function GET(req: Request, context: { params: Params }) {
     });
     if (!rl.ok) return rl.response;
 
-    await assertOrgOwner(session.userId, organizationId);
+    const service = makeOrganizationPaymentService();
+    const policy = await service.getReservationPolicy(
+      session.userId,
+      organizationId,
+    );
 
-    const repository = makeOrganizationReservationPolicyRepository();
-    const policy = await repository.ensureForOrganization(organizationId);
-
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(policy));
+    return NextResponse.json<ApiResponse<GetReservationPolicyMobileResponse>>(
+      wrapResponse(policy),
+    );
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
@@ -82,16 +77,19 @@ export async function PATCH(req: Request, context: { params: Params }) {
     });
     if (!rl.ok) return rl.response;
 
-    await assertOrgOwner(session.userId, organizationId);
-
     const raw = await parseJson(req);
     const input = validate(UpdateReservationPolicySchema, raw);
 
-    const repository = makeOrganizationReservationPolicyRepository();
-    const current = await repository.ensureForOrganization(organizationId);
-    const updated = await repository.update(current.id, input);
+    const service = makeOrganizationPaymentService();
+    const updated = await service.updateReservationPolicy(
+      session.userId,
+      organizationId,
+      input,
+    );
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(updated));
+    return NextResponse.json<
+      ApiResponse<UpdateReservationPolicyMobileResponse>
+    >(wrapResponse(updated));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

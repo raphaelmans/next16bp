@@ -39,7 +39,7 @@ export async function GET(req: Request, context: { params: Params }) {
     const service = makeCourtHoursService();
     const result = await service.getHours(input.courtId);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<typeof result>>(wrapResponse(result));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
@@ -69,7 +69,7 @@ export async function PUT(req: Request, context: { params: Params }) {
     const service = makeCourtHoursService();
     const result = await service.setHours(session.userId, input);
 
-    return NextResponse.json<ApiResponse<unknown>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<typeof result>>(wrapResponse(result));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

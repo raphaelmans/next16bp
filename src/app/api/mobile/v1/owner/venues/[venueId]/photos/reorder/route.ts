@@ -44,10 +44,9 @@ export async function POST(req: Request, context: { params: Params }) {
       input.placeId,
       input.orderedIds,
     );
+    const data = { photos };
 
-    return NextResponse.json<ApiResponse<{ photos: unknown }>>(
-      wrapResponse({ photos }),
-    );
+    return NextResponse.json<ApiResponse<typeof data>>(wrapResponse(data));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
