@@ -47,6 +47,7 @@ export const AdminUpdateCourtSchema = z.object({
   extGPlaceId: S.place.googlePlaceId,
   timeZone: S.place.timeZone.optional(),
   featuredRank: S.common.displayOrder.optional(),
+  provinceRank: S.common.displayOrder.optional(),
   // Contact details
   facebookUrl: optionalUrlSchema,
   instagramUrl: optionalUrlSchema,

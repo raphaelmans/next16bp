@@ -450,6 +450,10 @@ export class PlaceRepository implements IPlaceRepository {
       when ${place.featuredRank} = 0 then 1
       else 0
     end`;
+    const provinceBucket = sql<number>`case
+      when ${place.provinceRank} = 0 then 1
+      else 0
+    end`;
     const featuredOrder = [
       featuredBucket,
       asc(place.featuredRank),
@@ -457,6 +461,17 @@ export class PlaceRepository implements IPlaceRepository {
       asc(place.name),
       asc(place.id),
     ] as const;
+    const provinceScopedOrder = [
+      provinceBucket,
+      asc(place.provinceRank),
+      verificationRank,
+      asc(place.name),
+      asc(place.featuredRank),
+      asc(place.id),
+    ] as const;
+    const discoveryOrder = filters.province
+      ? provinceScopedOrder
+      : featuredOrder;
 
     if (filters.province) {
       conditions.push(ilike(place.province, filters.province));
@@ -549,7 +564,7 @@ export class PlaceRepository implements IPlaceRepository {
           .having(
             sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
           )
-          .orderBy(...featuredOrder)
+          .orderBy(...discoveryOrder)
           .limit(filters.limit)
           .offset(filters.offset);
 
@@ -627,7 +642,7 @@ export class PlaceRepository implements IPlaceRepository {
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .innerJoin(court, eq(court.placeId, place.id))
         .where(and(baseCondition, eq(court.sportId, filters.sportId)))
-        .orderBy(...featuredOrder)
+        .orderBy(...discoveryOrder)
         .limit(filters.limit)
         .offset(filters.offset);
 
@@ -719,7 +734,7 @@ export class PlaceRepository implements IPlaceRepository {
         .having(
           sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
         )
-        .orderBy(...featuredOrder)
+        .orderBy(...discoveryOrder)
         .limit(filters.limit)
         .offset(filters.offset);
 
@@ -746,7 +761,7 @@ export class PlaceRepository implements IPlaceRepository {
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .where(baseCondition)
-        .orderBy(...featuredOrder)
+        .orderBy(...discoveryOrder)
         .limit(filters.limit)
         .offset(filters.offset);
 
@@ -945,6 +960,10 @@ export class PlaceRepository implements IPlaceRepository {
       when ${place.featuredRank} = 0 then 1
       else 0
     end`;
+    const provinceBucket = sql<number>`case
+      when ${place.provinceRank} = 0 then 1
+      else 0
+    end`;
     const featuredOrder = [
       featuredBucket,
       asc(place.featuredRank),
@@ -952,6 +971,17 @@ export class PlaceRepository implements IPlaceRepository {
       asc(place.name),
       asc(place.id),
     ] as const;
+    const provinceScopedOrder = [
+      provinceBucket,
+      asc(place.provinceRank),
+      verificationRank,
+      asc(place.name),
+      asc(place.featuredRank),
+      asc(place.id),
+    ] as const;
+    const discoveryOrder = filters.province
+      ? provinceScopedOrder
+      : featuredOrder;
 
     if (filters.province) {
       conditions.push(ilike(place.province, filters.province));
@@ -1044,7 +1074,7 @@ export class PlaceRepository implements IPlaceRepository {
           .having(
             sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
           )
-          .orderBy(...featuredOrder)
+          .orderBy(...discoveryOrder)
           .limit(filters.limit)
           .offset(filters.offset);
 
@@ -1078,7 +1108,7 @@ export class PlaceRepository implements IPlaceRepository {
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .innerJoin(court, eq(court.placeId, place.id))
         .where(and(baseCondition, eq(court.sportId, filters.sportId)))
-        .orderBy(...featuredOrder)
+        .orderBy(...discoveryOrder)
         .limit(filters.limit)
         .offset(filters.offset);
 
@@ -1125,7 +1155,7 @@ export class PlaceRepository implements IPlaceRepository {
         .having(
           sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
         )
-        .orderBy(...featuredOrder)
+        .orderBy(...discoveryOrder)
         .limit(filters.limit)
         .offset(filters.offset);
 
@@ -1152,7 +1182,7 @@ export class PlaceRepository implements IPlaceRepository {
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
         .where(baseCondition)
-        .orderBy(...featuredOrder)
+        .orderBy(...discoveryOrder)
         .limit(filters.limit)
         .offset(filters.offset);
 

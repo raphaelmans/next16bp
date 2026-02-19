@@ -28,6 +28,7 @@ import type {
 import {
   PlaceAlreadyCuratedError,
   PlaceFeaturedRankTakenError,
+  PlaceProvinceRankTakenError,
 } from "../errors/court.errors";
 import type {
   AdminPlaceDetails,
@@ -497,6 +498,38 @@ export class AdminCourtService implements IAdminCourtService {
           }
         }
         updateData.featuredRank = data.featuredRank;
+      }
+      const provinceChanged =
+        data.province !== undefined && data.province !== existing.province;
+      const provinceRankChanged =
+        data.provinceRank !== undefined &&
+        data.provinceRank !== existing.provinceRank;
+      if (provinceChanged || provinceRankChanged) {
+        const targetProvince = data.province ?? existing.province;
+        const targetProvinceRank =
+          data.provinceRank ?? existing.provinceRank ?? 0;
+
+        if (targetProvinceRank > 0) {
+          const existingProvinceRank =
+            await this.adminCourtRepository.findByProvinceAndProvinceRank(
+              targetProvince,
+              targetProvinceRank,
+              ctx,
+            );
+          if (
+            existingProvinceRank &&
+            existingProvinceRank.id !== data.placeId
+          ) {
+            throw new PlaceProvinceRankTakenError(
+              targetProvince,
+              targetProvinceRank,
+              existingProvinceRank.id,
+            );
+          }
+        }
+      }
+      if (data.provinceRank !== undefined) {
+        updateData.provinceRank = data.provinceRank;
       }
 
       const updated = await this.adminCourtRepository.update(

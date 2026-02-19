@@ -15,16 +15,24 @@ import { Label } from "@/components/ui/label";
 type AdminCourtFeaturedPlacementCardProps = {
   featuredRankInput: string;
   setFeaturedRankInput: (value: string) => void;
-  onSave: () => void;
-  isSaving: boolean;
+  provinceRankInput: string;
+  setProvinceRankInput: (value: string) => void;
+  onSaveFeaturedRank: () => void;
+  onSaveProvinceRank: () => void;
+  isSavingFeaturedRank: boolean;
+  isSavingProvinceRank: boolean;
   isUpdating: boolean;
 };
 
 export function AdminCourtFeaturedPlacementCard({
   featuredRankInput,
   setFeaturedRankInput,
-  onSave,
-  isSaving,
+  provinceRankInput,
+  setProvinceRankInput,
+  onSaveFeaturedRank,
+  onSaveProvinceRank,
+  isSavingFeaturedRank,
+  isSavingProvinceRank,
   isUpdating,
 }: AdminCourtFeaturedPlacementCardProps) {
   return (
@@ -32,7 +40,7 @@ export function AdminCourtFeaturedPlacementCard({
       <CardHeader>
         <CardTitle>Featured Placement</CardTitle>
         <CardDescription>
-          Set the featured rank for landing page visibility.
+          Manage global and province-scoped ranking priorities.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -46,17 +54,43 @@ export function AdminCourtFeaturedPlacementCard({
             placeholder="0"
           />
           <p className="text-xs text-muted-foreground">
-            Use 0 to remove featuring. Lower numbers are higher priority.
+            Global ranking for home and unfiltered discovery. Use 0 to disable.
           </p>
+          <Button
+            type="button"
+            onClick={onSaveFeaturedRank}
+            disabled={isSavingFeaturedRank || isUpdating}
+          >
+            {isSavingFeaturedRank ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : null}
+            Save featured rank
+          </Button>
         </div>
-        <Button
-          type="button"
-          onClick={onSave}
-          disabled={isSaving || isUpdating}
-        >
-          {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-          Save featured rank
-        </Button>
+        <div className="max-w-xs space-y-2">
+          <Label htmlFor="province-rank">Province rank</Label>
+          <Input
+            id="province-rank"
+            value={provinceRankInput}
+            onChange={(event) => setProvinceRankInput(event.target.value)}
+            inputMode="numeric"
+            placeholder="0"
+          />
+          <p className="text-xs text-muted-foreground">
+            Province-scoped ranking for province-filtered discovery. Use 0 to
+            disable.
+          </p>
+          <Button
+            type="button"
+            onClick={onSaveProvinceRank}
+            disabled={isSavingProvinceRank || isUpdating}
+          >
+            {isSavingProvinceRank ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : null}
+            Save province rank
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

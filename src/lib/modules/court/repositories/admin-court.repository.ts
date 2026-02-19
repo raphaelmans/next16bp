@@ -120,6 +120,11 @@ export interface IAdminCourtRepository {
     featuredRank: number,
     ctx?: RequestContext,
   ): Promise<PlaceRecord | null>;
+  findByProvinceAndProvinceRank(
+    province: string,
+    provinceRank: number,
+    ctx?: RequestContext,
+  ): Promise<PlaceRecord | null>;
   findByIdForUpdate(
     id: string,
     ctx: RequestContext,
@@ -450,6 +455,22 @@ export class AdminCourtRepository implements IAdminCourtRepository {
       .select()
       .from(place)
       .where(eq(place.featuredRank, featuredRank))
+      .limit(1);
+    return result[0] ?? null;
+  }
+
+  async findByProvinceAndProvinceRank(
+    province: string,
+    provinceRank: number,
+    ctx?: RequestContext,
+  ): Promise<PlaceRecord | null> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select()
+      .from(place)
+      .where(
+        and(eq(place.province, province), eq(place.provinceRank, provinceRank)),
+      )
       .limit(1);
     return result[0] ?? null;
   }

@@ -44,6 +44,7 @@ export const place = pgTable(
       .notNull()
       .default("UNCLAIMED"),
     featuredRank: integer("featured_rank").notNull().default(0),
+    provinceRank: integer("province_rank").notNull().default(0),
     isActive: boolean("is_active").notNull().default(true),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
@@ -77,6 +78,9 @@ export const place = pgTable(
     uniqueIndex("idx_place_featured_rank_unique")
       .on(table.featuredRank)
       .where(sql`${table.featuredRank} > 0`),
+    uniqueIndex("idx_place_province_rank_per_province_unique")
+      .on(table.province, table.provinceRank)
+      .where(sql`${table.provinceRank} > 0`),
   ],
 );
 

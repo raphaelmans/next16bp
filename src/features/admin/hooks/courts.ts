@@ -59,6 +59,7 @@ export interface AdminCourtDetail {
       | "REMOVAL_REQUESTED";
     isActive: boolean;
     featuredRank: number;
+    provinceRank: number;
   };
   contactDetail: {
     facebookUrl: string | null;

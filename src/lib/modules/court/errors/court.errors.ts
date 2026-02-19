@@ -48,6 +48,21 @@ export class PlaceFeaturedRankTakenError extends ConflictError {
   }
 }
 
+export class PlaceProvinceRankTakenError extends ConflictError {
+  readonly code = "PLACE_PROVINCE_RANK_TAKEN";
+
+  constructor(province: string, provinceRank: number, placeId?: string) {
+    super(
+      "Province rank is already assigned to another venue in this province",
+      {
+        province,
+        provinceRank,
+        placeId,
+      },
+    );
+  }
+}
+
 export class InvalidCourtTypeError extends ValidationError {
   readonly code = "INVALID_COURT_TYPE";
 

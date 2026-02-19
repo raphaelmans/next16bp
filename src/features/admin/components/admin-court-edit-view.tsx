@@ -82,7 +82,9 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   const [autoVerifyAndEnable, setAutoVerifyAndEnable] = React.useState(true);
   const [recurateReason, setRecurateReason] = React.useState("");
   const [featuredRankInput, setFeaturedRankInput] = React.useState("0");
+  const [provinceRankInput, setProvinceRankInput] = React.useState("0");
   const [isSavingFeaturedRank, setIsSavingFeaturedRank] = React.useState(false);
+  const [isSavingProvinceRank, setIsSavingProvinceRank] = React.useState(false);
 
   const { data: rawSports, isLoading: sportsLoading } = useQueryAdminSports({});
   const sports = (rawSports ?? []) as Array<{ id: string; name: string }>;
@@ -381,6 +383,11 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
     setFeaturedRankInput(courtData.place.featuredRank.toString());
   }, [courtData?.place.featuredRank]);
 
+  React.useEffect(() => {
+    if (courtData?.place.provinceRank === undefined) return;
+    setProvinceRankInput(courtData.place.provinceRank.toString());
+  }, [courtData?.place.provinceRank]);
+
   const handleLogout = async () => {
     await logoutMutation.mutateAsync(undefined);
     window.location.href = appRoutes.login.from(
@@ -549,6 +556,33 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
     }
   };
 
+  const handleSaveProvinceRank = async () => {
+    const trimmed = provinceRankInput.trim();
+    const parsed = Number(trimmed);
+    if (!Number.isInteger(parsed) || parsed < 0) {
+      toast.error("Province rank must be a whole number of 0 or more");
+      return;
+    }
+
+    try {
+      setIsSavingProvinceRank(true);
+      await updateMutation.mutateAsync({
+        placeId: courtId,
+        latitude: undefined,
+        longitude: undefined,
+        provinceRank: parsed,
+      });
+      setProvinceRankInput(parsed.toString());
+      toast.success("Province rank updated");
+    } catch (error) {
+      toast.error("Failed to update province rank", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    } finally {
+      setIsSavingProvinceRank(false);
+    }
+  };
+
   const sportOptions = sports.map((sport) => ({
     label: sport.name,
     value: sport.id,
@@ -655,8 +689,12 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
         <AdminCourtFeaturedPlacementCard
           featuredRankInput={featuredRankInput}
           setFeaturedRankInput={setFeaturedRankInput}
-          onSave={handleSaveFeaturedRank}
-          isSaving={isSavingFeaturedRank}
+          provinceRankInput={provinceRankInput}
+          setProvinceRankInput={setProvinceRankInput}
+          onSaveFeaturedRank={handleSaveFeaturedRank}
+          onSaveProvinceRank={handleSaveProvinceRank}
+          isSavingFeaturedRank={isSavingFeaturedRank}
+          isSavingProvinceRank={isSavingProvinceRank}
           isUpdating={updateMutation.isPending}
         />
 
