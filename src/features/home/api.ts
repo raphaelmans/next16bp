@@ -17,7 +17,7 @@ export type HomeApiDeps = {
   toAppError?: (err: unknown) => AppError;
 };
 
-export class HomeApi implements IHomeApi {
+export class HomeApi {
   readonly clientApi: TrpcClientApi;
   private readonly toAppError: (err: unknown) => AppError;
 
@@ -30,28 +30,41 @@ export class HomeApi implements IHomeApi {
     callTrpcQuery(
       this.clientApi,
       ["organization", "my"],
+      (clientApi) => clientApi.organization.my.query,
       input,
       this.toAppError,
     );
 
   queryPlaceStats = async (input?: unknown) =>
-    callTrpcQuery(this.clientApi, ["place", "stats"], input, this.toAppError);
+    callTrpcQuery(
+      this.clientApi,
+      ["place", "stats"],
+      (clientApi) => clientApi.place.stats.query,
+      input,
+      this.toAppError,
+    );
 
   queryProfileMe = async (input?: unknown) =>
-    callTrpcQuery(this.clientApi, ["profile", "me"], input, this.toAppError);
+    callTrpcQuery(
+      this.clientApi,
+      ["profile", "me"],
+      (clientApi) => clientApi.profile.me.query,
+      input,
+      this.toAppError,
+    );
 
   queryReservationGetMyWithDetails = async (input?: unknown) =>
     callTrpcQuery(
       this.clientApi,
       ["reservation", "getMyWithDetails"],
+      (clientApi) => clientApi.reservation.getMyWithDetails.query,
       input,
       this.toAppError,
     );
 }
 
-export const createHomeApi = (deps: HomeApiDeps = {}): IHomeApi =>
-  new HomeApi(deps);
+export const createHomeApi = (deps: HomeApiDeps = {}) => new HomeApi(deps);
 
 const HOME_API_SINGLETON = createHomeApi();
 
-export const getHomeApi = (): IHomeApi => HOME_API_SINGLETON;
+export const getHomeApi = () => HOME_API_SINGLETON;

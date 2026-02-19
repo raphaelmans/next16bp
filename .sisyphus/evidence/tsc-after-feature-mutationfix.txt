@@ -1,0 +1,1035 @@
+src/features/admin/components/admin-court-edit-view.tsx(598,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/components/admin-court-edit-view.tsx(599,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/components/admin-page-frame.tsx(39,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/components/admin-page-frame.tsx(40,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/components/courts-batch/courts-batch-coordinator.tsx(504,22): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'SetStateAction<CuratedCourtBatchResult | null>'.
+src/features/admin/components/courts-batch/courts-batch-coordinator.tsx(507,28): error TS18046: 'result' is of type 'unknown'.
+src/features/admin/components/courts-batch/courts-batch-coordinator.tsx(532,25): error TS18046: 'result' is of type 'unknown'.
+src/features/admin/components/courts-batch/courts-batch-coordinator.tsx(532,60): error TS18046: 'result' is of type 'unknown'.
+src/features/admin/components/courts-batch/courts-batch-coordinator.tsx(532,95): error TS18046: 'result' is of type 'unknown'.
+src/features/admin/components/courts-batch/courts-batch-coordinator.tsx(564,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/components/courts-batch/courts-batch-coordinator.tsx(565,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/components/places-list/places-list-coordinator.tsx(903,38): error TS2345: Argument of type '{}' is not assignable to parameter of type 'number'.
+src/features/admin/components/places-list/places-list-coordinator.tsx(903,60): error TS2322: Type '{}' is not assignable to type 'ReactNode'.
+src/features/admin/hooks/claims.ts(72,69): error TS2339: Property 'map' does not exist on type '{}'.
+src/features/admin/hooks/claims.ts(175,17): error TS18046: 'query.data.items' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(201,31): error TS18046: 'query.data.total' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(226,13): error TS18046: 'query.data.claimRequest' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(227,16): error TS18046: 'query.data.claimRequest' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(230,17): error TS18046: 'query.data.claimRequest' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(231,18): error TS18046: 'query.data.place' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(232,20): error TS18046: 'query.data.place' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(233,23): error TS18046: 'query.data.place' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(235,11): error TS18046: 'query.data.place' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(236,50): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/admin/hooks/claims.ts(237,52): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/admin/hooks/claims.ts(238,45): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/admin/hooks/claims.ts(240,20): error TS18046: 'query.data.claimRequest' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(241,21): error TS18046: 'query.data.claimRequest' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(242,21): error TS18046: 'query.data.claimRequest' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(243,16): error TS18046: 'query.data.claimRequest' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(244,22): error TS18046: 'query.data.claimRequest' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(245,22): error TS18046: 'query.data.claimRequest' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(246,21): error TS18046: 'query.data.claimRequest' is of type 'unknown'.
+src/features/admin/hooks/claims.ts(270,68): error TS2339: Property 'map' does not exist on type '{}'.
+src/features/admin/hooks/courts.ts(207,5): error TS18046: 'query.data.items' is of type 'unknown'.
+src/features/admin/hooks/courts.ts(218,33): error TS2362: The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+src/features/admin/hooks/courts.ts(245,57): error TS18046: 'variables' is of type 'unknown'.
+src/features/admin/hooks/courts.ts(258,57): error TS18046: 'variables' is of type 'unknown'.
+src/features/admin/hooks/organization.ts(37,7): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/hooks/organization.ts(38,7): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/hooks/organization.ts(77,5): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/hooks/organization.ts(78,5): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/hooks/organization.ts(79,5): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/hooks/organization.ts(80,5): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/hooks/place-verification.ts(50,16): error TS18046: 'query.data.items' is of type 'unknown'.
+src/features/admin/hooks/place-verification.ts(66,31): error TS18046: 'query.data.total' is of type 'unknown'.
+src/features/admin/pages/admin-claim-detail-page.tsx(148,13): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-claim-detail-page.tsx(149,13): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-claim-detail-page.tsx(173,13): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-claim-detail-page.tsx(174,13): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-claim-detail-page.tsx(203,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-claim-detail-page.tsx(204,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-claims-page.tsx(98,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-claims-page.tsx(99,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-claims-page.tsx(183,19): error TS2322: Type '{}' is not assignable to type 'ReactNode'.
+src/features/admin/pages/admin-claims-page.tsx(293,44): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'number'.
+src/features/admin/pages/admin-claims-page.tsx(294,23): error TS2322: Type 'unknown' is not assignable to type 'ReactNode'.
+src/features/admin/pages/admin-courts-new-page.tsx(335,38): error TS18046: 'created' is of type 'unknown'.
+src/features/admin/pages/admin-courts-new-page.tsx(351,49): error TS18046: 'created' is of type 'unknown'.
+src/features/admin/pages/admin-courts-new-page.tsx(383,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-courts-new-page.tsx(384,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-notification-test-page.tsx(100,56): error TS2339: Property 'length' does not exist on type '{}'.
+src/features/admin/pages/admin-notification-test-page.tsx(117,12): error TS18046: 'result' is of type 'unknown'.
+src/features/admin/pages/admin-notification-test-page.tsx(119,35): error TS18046: 'result' is of type 'unknown'.
+src/features/admin/pages/admin-notification-test-page.tsx(124,33): error TS18046: 'result' is of type 'unknown'.
+src/features/admin/pages/admin-notification-test-page.tsx(150,35): error TS18046: 'result' is of type 'unknown'.
+src/features/admin/pages/admin-notification-test-page.tsx(173,35): error TS18046: 'result' is of type 'unknown'.
+src/features/admin/pages/admin-notification-test-page.tsx(197,35): error TS18046: 'result' is of type 'unknown'.
+src/features/admin/pages/admin-notification-test-page.tsx(214,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-notification-test-page.tsx(215,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-notification-test-page.tsx(329,40): error TS2339: Property 'length' does not exist on type '{}'.
+src/features/admin/pages/admin-notification-test-page.tsx(342,41): error TS2339: Property 'map' does not exist on type '{}'.
+src/features/admin/pages/admin-notification-test-page.tsx(404,40): error TS2339: Property 'length' does not exist on type '{}'.
+src/features/admin/pages/admin-revalidate-page.tsx(69,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-revalidate-page.tsx(70,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-verification-detail-page.tsx(128,13): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-verification-detail-page.tsx(129,13): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-verification-detail-page.tsx(153,13): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-verification-detail-page.tsx(154,13): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-verification-detail-page.tsx(186,13): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-verification-detail-page.tsx(187,13): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-verification-detail-page.tsx(219,39): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(221,29): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(228,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-verification-detail-page.tsx(229,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-verification-detail-page.tsx(260,50): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(269,22): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(272,55): error TS2339: Property 'createdAt' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(276,25): error TS2339: Property 'reviewedAt' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(279,42): error TS2339: Property 'reviewedAt' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(280,26): error TS2339: Property 'reviewerUserId' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(280,58): error TS2339: Property 'reviewerUserId' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(299,63): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(301,28): error TS2339: Property 'address' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(301,45): error TS2339: Property 'city' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(305,36): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(319,34): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(321,32): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(323,52): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(340,28): error TS2339: Property 'length' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(345,29): error TS2339: Property 'map' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(379,22): error TS2339: Property 'requestNotes' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(386,30): error TS2339: Property 'requestNotes' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(401,27): error TS2339: Property 'map' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(412,41): error TS2339: Property 'length' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(459,34): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(460,49): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(475,32): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(481,34): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(486,30): error TS2339: Property 'reviewNotes' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(490,36): error TS2339: Property 'reviewNotes' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(495,32): error TS2339: Property 'reviewedAt' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-detail-page.tsx(496,66): error TS2339: Property 'reviewedAt' does not exist on type '{}'.
+src/features/admin/pages/admin-verification-page.tsx(88,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-verification-page.tsx(89,11): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/admin/pages/admin-verification-page.tsx(115,15): error TS2322: Type '{}' is not assignable to type 'ReactNode'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(56,19): error TS18046: 'session.auth' is of type 'unknown'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(57,17): error TS18046: 'session.auth' is of type 'unknown'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(58,28): error TS18046: 'session.auth' is of type 'unknown'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(163,28): error TS18046: 'session.channel' is of type 'unknown'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(164,30): error TS18046: 'session.channel' is of type 'unknown'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(165,26): error TS18046: 'session.channel' is of type 'unknown'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(166,27): error TS18046: 'session.auth' is of type 'unknown'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(168,19): error TS18046: 'session.meta' is of type 'unknown'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(170,30): error TS18046: 'session.meta' is of type 'unknown'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(173,39): error TS2339: Property 'court' does not exist on type '{}'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(174,38): error TS2339: Property 'reservation' does not exist on type '{}'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(175,38): error TS2339: Property 'place' does not exist on type '{}'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(178,38): error TS2339: Property 'reservation' does not exist on type '{}'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(179,38): error TS2339: Property 'reservation' does not exist on type '{}'.
+src/features/chat/components/chat-widget/player-reservation-chat-widget.tsx(180,38): error TS2339: Property 'place' does not exist on type '{}'.
+src/features/chat/components/chat-widget/reservation-inbox-widget.tsx(217,5): error TS2345: Argument of type '{ apiKey: unknown; user: unknown; tokenOrProvider: unknown; }' is not assignable to parameter of type 'UseStreamClientInput'.
+  Types of property 'apiKey' are incompatible.
+    Type 'unknown' is not assignable to type 'string | null'.
+src/features/chat/components/chat-widget/reservation-inbox-widget.tsx(273,33): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/chat-widget/reservation-inbox-widget.tsx(292,30): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/chat-widget/reservation-inbox-widget.tsx(380,10): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/chat-widget/reservation-inbox-widget.tsx(389,61): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/chat/components/chat-widget/reservation-inbox-widget.tsx(393,55): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/chat/components/chat-widget/reservation-inbox-widget.tsx(395,7): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/chat-widget/reservation-inbox-widget.tsx(398,42): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/chat-widget/reservation-inbox-widget.tsx(402,7): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/chat-widget/reservation-inbox-widget.tsx(525,15): error TS18046: 'meta' is of type 'unknown'.
+src/features/chat/components/chat-widget/reservation-inbox-widget.tsx(638,20): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/ChatPocClient.tsx(121,5): error TS2345: Argument of type '{ apiKey: unknown; user: unknown; tokenOrProvider: unknown; }' is not assignable to parameter of type 'UseStreamClientInput'.
+  Types of property 'apiKey' are incompatible.
+    Type 'unknown' is not assignable to type 'string | null'.
+src/features/chat/components/ChatPocClient.tsx(150,20): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/ChatPocClient.tsx(176,20): error TS18046: 'result' is of type 'unknown'.
+src/features/chat/components/ChatPocClient.tsx(177,18): error TS18046: 'result' is of type 'unknown'.
+src/features/chat/components/ChatPocClient.tsx(277,25): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/ReservationChatClient.tsx(130,19): error TS18046: 'session.auth' is of type 'unknown'.
+src/features/chat/components/ReservationChatClient.tsx(131,17): error TS18046: 'session.auth' is of type 'unknown'.
+src/features/chat/components/ReservationChatClient.tsx(132,28): error TS18046: 'session.auth' is of type 'unknown'.
+src/features/chat/components/ReservationChatClient.tsx(148,18): error TS18046: 'session.channel' is of type 'unknown'.
+src/features/chat/components/ReservationChatClient.tsx(149,16): error TS18046: 'session.channel' is of type 'unknown'.
+src/features/chat/components/ReservationChatClient.tsx(150,14): error TS18046: 'session.channel' is of type 'unknown'.
+src/features/chat/components/ReservationChatClient.tsx(153,20): error TS18046: 'session.auth' is of type 'unknown'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(149,5): error TS2345: Argument of type '{ apiKey: unknown; user: unknown; tokenOrProvider: unknown; }' is not assignable to parameter of type 'UseStreamClientInput'.
+  Types of property 'apiKey' are incompatible.
+    Type 'unknown' is not assignable to type 'string | null'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(176,33): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(185,38): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(224,33): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(226,7): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(290,20): error TS18046: 'auth.user' is of type 'unknown'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(527,32): error TS2339: Property 'user' does not exist on type '{}'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(530,25): error TS2339: Property 'apiKey' does not exist on type '{}'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(531,23): error TS2339: Property 'user' does not exist on type '{}'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(532,34): error TS2339: Property 'token' does not exist on type '{}'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(537,12): error TS18046: 'session.meta' is of type 'unknown'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(542,36): error TS18046: 'session.meta' is of type 'unknown'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(573,28): error TS18046: 'session.channel' is of type 'unknown'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(574,26): error TS18046: 'session.channel' is of type 'unknown'.
+src/features/chat/components/unified-chat/unified-chat-interface.tsx(575,24): error TS18046: 'session.channel' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(42,13): error TS18046: 'query.data.court' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(43,16): error TS18046: 'query.data.court' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(44,20): error TS18046: 'query.data.court' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(45,19): error TS18046: 'query.data.court' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(46,18): error TS18046: 'query.data.court' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(48,15): error TS18046: 'query.data.sport' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(49,17): error TS18046: 'query.data.sport' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(50,17): error TS18046: 'query.data.sport' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(86,47): error TS2339: Property 'map' does not exist on type '{}'.
+src/features/discovery/hooks/place-detail.ts(175,24): error TS2488: Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/features/discovery/hooks/place-detail.ts(186,24): error TS2488: Type '{}' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/features/discovery/hooks/place-detail.ts(308,38): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(317,24): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(320,19): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(323,29): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(324,30): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(334,31): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(336,27): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(337,28): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(338,29): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(339,28): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(340,26): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(342,17): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(347,15): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(348,17): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(349,17): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(350,20): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(351,17): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(354,24): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(355,21): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(358,20): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(362,22): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(363,24): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(364,25): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(366,25): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(371,38): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(375,22): error TS18046: 'response' is of type 'unknown'.
+src/features/discovery/hooks/place-detail.ts(547,24): error TS2339: Property 'map' does not exist on type '{}'.
+src/features/discovery/hooks/search.ts(242,9): error TS2322: Type '{ places: any; total: unknown; page: number; limit: number; hasMore: boolean; } | undefined' is not assignable to type 'DiscoveryResult | undefined'.
+  Type '{ places: any; total: unknown; page: number; limit: number; hasMore: boolean; }' is not assignable to type 'DiscoveryResult'.
+    Types of property 'total' are incompatible.
+      Type 'unknown' is not assignable to type 'number'.
+src/features/discovery/hooks/search.ts(244,17): error TS18046: 'query.data.items' is of type 'unknown'.
+src/features/discovery/hooks/search.ts(248,27): error TS18046: 'query.data.items' is of type 'unknown'.
+src/features/discovery/hooks/search.ts(248,53): error TS18046: 'query.data.total' is of type 'unknown'.
+src/features/discovery/hooks/search.ts(307,9): error TS2322: Type '{ places: any; total: unknown; page: number; limit: number; hasMore: boolean; } | undefined' is not assignable to type 'DiscoverySummaryResult | undefined'.
+  Type '{ places: any; total: unknown; page: number; limit: number; hasMore: boolean; }' is not assignable to type 'DiscoverySummaryResult'.
+    Types of property 'total' are incompatible.
+      Type 'unknown' is not assignable to type 'number'.
+src/features/discovery/hooks/search.ts(309,17): error TS18046: 'query.data.items' is of type 'unknown'.
+src/features/discovery/hooks/search.ts(313,27): error TS18046: 'query.data.items' is of type 'unknown'.
+src/features/discovery/hooks/search.ts(313,53): error TS18046: 'query.data.total' is of type 'unknown'.
+src/features/discovery/hooks/search.ts(335,7): error TS18046: 'query.data.items' is of type 'unknown'.
+src/features/discovery/place-detail/components/court-detail-client.tsx(320,30): error TS2345: Argument of type '{}' is not assignable to parameter of type '{ courtId: string; startTime: string; endTime: string; totalPriceCents: number; currency: string | null; status?: string | undefined; unavailableReason?: string | null | undefined; }[]'.
+  Type '{}' is missing the following properties from type '{ courtId: string; startTime: string; endTime: string; totalPriceCents: number; currency: string | null; status?: string | undefined; unavailableReason?: string | null | undefined; }[]': length, pop, push, concat, and 35 more.
+src/features/discovery/place-detail/components/court-detail-client.tsx(332,7): error TS2345: Argument of type '{}' is not assignable to parameter of type '{ courtId: string; startTime: string; endTime: string; totalPriceCents: number; currency: string | null; status?: string | undefined; unavailableReason?: string | null | undefined; }[]'.
+  Type '{}' is missing the following properties from type '{ courtId: string; startTime: string; endTime: string; totalPriceCents: number; currency: string | null; status?: string | undefined; unavailableReason?: string | null | undefined; }[]': length, pop, push, concat, and 35 more.
+src/features/discovery/place-detail/components/court-detail-client.tsx(902,21): error TS2322: Type '{} | null' is not assignable to type 'AvailabilityDiagnostics | null | undefined'.
+  Type '{}' is missing the following properties from type 'AvailabilityDiagnostics': hasHoursWindows, hasRateRules, dayHasHours, allSlotsBooked
+src/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section.tsx(222,7): error TS2345: Argument of type '{}' is not assignable to parameter of type 'AvailabilitySlotOption[]'.
+  Type '{}' is missing the following properties from type 'AvailabilitySlotOption[]': length, pop, push, concat, and 35 more.
+src/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section.tsx(236,7): error TS2345: Argument of type '{}' is not assignable to parameter of type 'AvailabilitySlotOption[]'.
+  Type '{}' is missing the following properties from type 'AvailabilitySlotOption[]': length, pop, push, concat, and 35 more.
+src/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section.tsx(245,7): error TS2345: Argument of type '{}' is not assignable to parameter of type 'AvailabilitySlotOption[]'.
+  Type '{}' is missing the following properties from type 'AvailabilitySlotOption[]': length, pop, push, concat, and 35 more.
+src/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section.tsx(263,7): error TS2345: Argument of type '{}' is not assignable to parameter of type 'AvailabilitySlotOption[]'.
+  Type '{}' is missing the following properties from type 'AvailabilitySlotOption[]': length, pop, push, concat, and 35 more.
+src/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section.tsx(546,7): error TS2322: Type '{} | null' is not assignable to type 'AvailabilityDiagnostics | null'.
+  Type '{}' is missing the following properties from type 'AvailabilityDiagnostics': hasHoursWindows, hasRateRules, dayHasHours, allSlotsBooked
+src/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section.tsx(547,7): error TS2322: Type '{} | null' is not assignable to type 'AvailabilityDiagnostics | null'.
+  Type '{}' is missing the following properties from type 'AvailabilityDiagnostics': hasHoursWindows, hasRateRules, dayHasHours, allSlotsBooked
+src/features/discovery/place-detail/components/sections/place-detail-booking-mobile-section.tsx(186,7): error TS2345: Argument of type '{}' is not assignable to parameter of type 'AvailabilitySlotOption[]'.
+  Type '{}' is missing the following properties from type 'AvailabilitySlotOption[]': length, pop, push, concat, and 35 more.
+src/features/discovery/place-detail/components/sections/place-detail-listing-help-section.tsx(47,51): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/health/components/health-check.tsx(26,44): error TS2322: Type 'unknown' is not assignable to type 'ReactNode'.
+src/features/health/components/health-check.tsx(28,29): error TS2345: Argument of type '{}' is not assignable to parameter of type 'number'.
+src/features/home/components/home-page-client.tsx(124,19): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/home/components/home-page-client.tsx(139,19): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/home/components/home-page-client.tsx(150,12): error TS2365: Operator '>=' cannot be applied to types '{}' and 'number'.
+src/features/home/components/home-page-client.tsx(155,21): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/home/components/home-page-client.tsx(171,19): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/home/components/home-page-client.tsx(606,18): error TS2322: Type '{}' is not assignable to type 'number'.
+src/features/home/pages/home-page.tsx(72,11): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(73,11): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(76,25): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(77,22): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(78,13): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(79,24): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(84,24): error TS18046: 'a' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(85,22): error TS18046: 'a' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(86,13): error TS18046: 'a' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(87,24): error TS18046: 'a' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(89,24): error TS18046: 'b' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(90,22): error TS18046: 'b' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(91,13): error TS18046: 'b' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(92,24): error TS18046: 'b' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(103,27): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(104,22): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(105,13): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(106,24): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(110,15): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(112,19): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(114,19): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(115,22): error TS18046: 'reservation' is of type 'unknown'.
+src/features/home/pages/home-page.tsx(134,9): error TS2322: Type '{} | undefined' is not assignable to type 'string | null | undefined'.
+  Type '{}' is not assignable to type 'string'.
+src/features/home/pages/home-page.tsx(154,13): error TS2322: Type '{} | null' is not assignable to type '{ id: string; name: string; slug: string; } | null'.
+  Type '{}' is missing the following properties from type '{ id: string; name: string; slug: string; }': id, name, slug
+src/features/notifications/hooks/use-web-push.ts(144,55): error TS2345: Argument of type '{}' is not assignable to parameter of type 'string'.
+src/features/open-play/components/open-play-chat-panel.tsx(23,19): error TS18046: 'session.auth' is of type 'unknown'.
+src/features/open-play/components/open-play-chat-panel.tsx(24,17): error TS18046: 'session.auth' is of type 'unknown'.
+src/features/open-play/components/open-play-chat-panel.tsx(25,28): error TS18046: 'session.auth' is of type 'unknown'.
+src/features/open-play/components/open-play-chat-panel.tsx(51,24): error TS18046: 'session.channel' is of type 'unknown'.
+src/features/open-play/components/open-play-chat-panel.tsx(52,26): error TS18046: 'session.channel' is of type 'unknown'.
+src/features/open-play/components/open-play-chat-panel.tsx(53,22): error TS18046: 'session.channel' is of type 'unknown'.
+src/features/open-play/components/open-play-chat-panel.tsx(54,23): error TS18046: 'session.auth' is of type 'unknown'.
+src/features/open-play/components/open-play-chat-panel.tsx(55,26): error TS18046: 'session.meta' is of type 'unknown'.
+src/features/open-play/components/open-play-chat-panel.tsx(58,35): error TS2339: Property 'sport' does not exist on type '{}'.
+src/features/open-play/components/open-play-chat-panel.tsx(58,64): error TS2339: Property 'court' does not exist on type '{}'.
+src/features/open-play/components/open-play-detail-page-view.tsx(91,9): error TS2322: Type 'UnknownFallback | undefined' is not assignable to type '{ host: { profileId: string; displayName: string; avatarUrl: string | null; }; place: { id: string; name: string; timeZone: string; }; court: { id: string; label: string; }; sport: { id: string; name: string; }; openPlay: { ...; }; costSharing: { ...; }; } | { ...; } | undefined'.
+  Type 'UnknownFallback' is not assignable to type '{ host: { profileId: string; displayName: string; avatarUrl: string | null; }; place: { id: string; name: string; timeZone: string; }; court: { id: string; label: string; }; sport: { id: string; name: string; }; openPlay: { ...; }; costSharing: { ...; }; } | { ...; } | undefined'.
+    Type 'unknown[] & Record<string, unknown>' is missing the following properties from type '{ host: { profileId: string; displayName: string; avatarUrl: string | null; }; place: { id: string; name: string; timeZone: string; }; court: { id: string; label: string; }; sport: { id: string; name: string; }; ... 4 more ...; participants: { ...; } | null; }': host, place, court, sport, and 5 more.
+src/features/open-play/components/open-play-detail-page-view.tsx(162,26): error TS2339: Property 'role' does not exist on type '{}'.
+src/features/open-play/components/open-play-detail-page-view.tsx(163,28): error TS2339: Property 'myStatus' does not exist on type '{}'.
+src/features/open-play/components/open-play-detail-page-view.tsx(431,42): error TS2339: Property 'requested' does not exist on type '{}'.
+src/features/open-play/components/open-play-detail-page-view.tsx(454,36): error TS2339: Property 'waitlisted' does not exist on type '{}'.
+src/features/open-play/components/open-play-detail-page-view.tsx(457,42): error TS2339: Property 'waitlisted' does not exist on type '{}'.
+src/features/open-play/components/open-play-place-page-view.tsx(107,13): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type '{ id: string; startsAtIso: string; endsAtIso: string; title: string | null; joinPolicy: "REQUEST" | "AUTO"; maxPlayers: number; confirmedCount: number; availableSpots: number; costSharing: { ...; }; courtLabel: string; sportName: string; host: { ...; }; }[]'.
+  Type 'UnknownFallback' is not assignable to type '{ id: string; startsAtIso: string; endsAtIso: string; title: string | null; joinPolicy: "REQUEST" | "AUTO"; maxPlayers: number; confirmedCount: number; availableSpots: number; costSharing: { ...; }; courtLabel: string; sportName: string; host: { ...; }; }[]'.
+    The types returned by 'pop()' are incompatible between these types.
+      Type 'unknown' is not assignable to type '{ id: string; startsAtIso: string; endsAtIso: string; title: string | null; joinPolicy: "REQUEST" | "AUTO"; maxPlayers: number; confirmedCount: number; availableSpots: number; costSharing: { ...; }; courtLabel: string; sportName: string; host: { ...; }; } | undefined'.
+src/features/open-play/components/open-play-venue-panel.tsx(67,9): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type '{ id: string; startsAtIso: string; endsAtIso: string; title: string | null; joinPolicy: "REQUEST" | "AUTO"; maxPlayers: number; confirmedCount: number; availableSpots: number; costSharing: { ...; }; courtLabel: string; sportName: string; host: { ...; }; }[]'.
+  Type 'UnknownFallback' is not assignable to type '{ id: string; startsAtIso: string; endsAtIso: string; title: string | null; joinPolicy: "REQUEST" | "AUTO"; maxPlayers: number; confirmedCount: number; availableSpots: number; costSharing: { ...; }; courtLabel: string; sportName: string; host: { ...; }; }[]'.
+    The types returned by 'pop()' are incompatible between these types.
+      Type 'unknown' is not assignable to type '{ id: string; startsAtIso: string; endsAtIso: string; title: string | null; joinPolicy: "REQUEST" | "AUTO"; maxPlayers: number; confirmedCount: number; availableSpots: number; costSharing: { ...; }; courtLabel: string; sportName: string; host: { ...; }; } | undefined'.
+src/features/open-play/hooks.ts(62,44): error TS2339: Property 'openPlay' does not exist on type '{}'.
+src/features/open-play/hooks.ts(64,18): error TS2339: Property 'openPlay' does not exist on type '{}'.
+src/features/open-play/hooks.ts(65,18): error TS2339: Property 'viewer' does not exist on type '{}'.
+src/features/open-play/hooks.ts(66,21): error TS2339: Property 'viewer' does not exist on type '{}'.
+src/features/open-play/hooks.ts(67,16): error TS2339: Property 'viewer' does not exist on type '{}'.
+src/features/open-play/hooks.ts(95,23): error TS18046: 'data' is of type 'unknown'.
+src/features/open-play/hooks.ts(97,59): error TS18046: 'data' is of type 'unknown'.
+src/features/open-play/hooks.ts(99,26): error TS18046: 'variables' is of type 'unknown'.
+src/features/open-play/hooks.ts(115,9): error TS18046: 'data' is of type 'unknown'.
+src/features/open-play/hooks.ts(117,13): error TS18046: 'data' is of type 'unknown'.
+src/features/open-play/hooks.ts(123,23): error TS18046: 'variables' is of type 'unknown'.
+src/features/open-play/hooks.ts(126,23): error TS18046: 'variables' is of type 'unknown'.
+src/features/open-play/hooks.ts(144,23): error TS18046: 'variables' is of type 'unknown'.
+src/features/open-play/hooks.ts(147,23): error TS18046: 'variables' is of type 'unknown'.
+src/features/open-play/hooks.ts(178,23): error TS18046: 'variables' is of type 'unknown'.
+src/features/open-play/hooks.ts(181,23): error TS18046: 'variables' is of type 'unknown'.
+src/features/open-play/hooks.ts(198,23): error TS18046: 'variables' is of type 'unknown'.
+src/features/open-play/hooks.ts(201,23): error TS18046: 'variables' is of type 'unknown'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(156,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(216,18): error TS2345: Argument of type '{}' is not assignable to parameter of type 'string'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(264,61): error TS2322: Type 'UnknownFallback | undefined' is not assignable to type '{ status?: string | null | undefined; errorRowCount?: number | null | undefined; } | null | undefined'.
+  Type 'UnknownFallback' is not assignable to type '{ status?: string | null | undefined; errorRowCount?: number | null | undefined; } | null | undefined'.
+    Type 'UnknownFallback' has no properties in common with type '{ status?: string | null | undefined; errorRowCount?: number | null | undefined; }'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(323,30): error TS2345: Argument of type 'UnknownFallback | never[]' is not assignable to parameter of type '{ dayOfWeek: number; startMinute: number; endMinute: number; }[]'.
+  Type 'UnknownFallback' is not assignable to type '{ dayOfWeek: number; startMinute: number; endMinute: number; }[]'.
+    The types returned by 'pop()' are incompatible between these types.
+      Type 'unknown' is not assignable to type '{ dayOfWeek: number; startMinute: number; endMinute: number; } | undefined'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(329,7): error TS2345: Argument of type 'UnknownFallback | never[]' is not assignable to parameter of type 'CourtHoursWindow[]'.
+  Type 'UnknownFallback' is not assignable to type 'CourtHoursWindow[]'.
+    The types returned by 'pop()' are incompatible between these types.
+      Type 'unknown' is not assignable to type 'CourtHoursWindow | undefined'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(839,37): error TS18046: 'serverBlock' is of type 'unknown'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(840,35): error TS18046: 'serverBlock' is of type 'unknown'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(843,70): error TS2345: Argument of type '(old: { type: "MAINTENANCE" | "WALK_IN"; id: string; createdAt: string; updatedAt: string; isActive: boolean; courtId: string; startTime: string; endTime: string; reason: string | null; totalPriceCents: number; currency: string; cancelledAt: string | null; }[] | undefined) => unknown[]' is not assignable to parameter of type 'Updater<{ type: "MAINTENANCE" | "WALK_IN"; id: string; createdAt: string; updatedAt: string; isActive: boolean; courtId: string; startTime: string; endTime: string; reason: string | null; totalPriceCents: number; currency: string; cancelledAt: string | null; }[] | undefined, { ...; }[] | undefined>'.
+  Type '(old: { type: "MAINTENANCE" | "WALK_IN"; id: string; createdAt: string; updatedAt: string; isActive: boolean; courtId: string; startTime: string; endTime: string; reason: string | null; totalPriceCents: number; currency: string; cancelledAt: string | null; }[] | undefined) => unknown[]' is not assignable to type '(input: { type: "MAINTENANCE" | "WALK_IN"; id: string; createdAt: string; updatedAt: string; isActive: boolean; courtId: string; startTime: string; endTime: string; reason: string | null; totalPriceCents: number; currency: string; cancelledAt: string | null; }[] | undefined) => { ...; }[] | undefined'.
+    Type 'unknown[]' is not assignable to type '{ type: "MAINTENANCE" | "WALK_IN"; id: string; createdAt: string; updatedAt: string; isActive: boolean; courtId: string; startTime: string; endTime: string; reason: string | null; totalPriceCents: number; currency: string; cancelledAt: string | null; }[]'.
+      Type 'unknown' is not assignable to type '{ type: "MAINTENANCE" | "WALK_IN"; id: string; createdAt: string; updatedAt: string; isActive: boolean; courtId: string; startTime: string; endTime: string; reason: string | null; totalPriceCents: number; currency: string; cancelledAt: string | null; }'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1022,37): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1026,75): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1058,43): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1063,28): error TS18046: 'guest' is of type 'unknown'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1092,21): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1295,11): error TS18046: 'result' is of type 'unknown'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1297,24): error TS18046: 'result' is of type 'unknown'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1297,54): error TS18046: 'result' is of type 'unknown'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1300,36): error TS18046: 'result' is of type 'unknown'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1334,9): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'CourtHoursWindow[]'.
+  Type 'UnknownFallback' is not assignable to type 'CourtHoursWindow[]'.
+    The types returned by 'pop()' are incompatible between these types.
+      Type 'unknown' is not assignable to type 'CourtHoursWindow | undefined'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1457,9): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'CourtHoursWindow[]'.
+  Type 'UnknownFallback' is not assignable to type 'CourtHoursWindow[]'.
+    The types returned by 'pop()' are incompatible between these types.
+      Type 'unknown' is not assignable to type 'CourtHoursWindow | undefined'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1683,43): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1688,24): error TS18046: 'guest' is of type 'unknown'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1741,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1762,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1765,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1774,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1783,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1835,51): error TS2322: Type '{}' is not assignable to type 'ReactNode'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1840,23): error TS2322: Type '{}' is not assignable to type 'ReactNode'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1846,23): error TS2322: Type '{}' is not assignable to type 'ReactNode'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1849,20): error TS2365: Operator '>' cannot be applied to types '{}' and 'number'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1853,25): error TS2322: Type 'unknown' is not assignable to type 'ReactNode'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1881,54): error TS2322: Type 'unknown' is not assignable to type 'ReactNode'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(1977,61): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(2244,31): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'CourtHoursWindow[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'CourtHoursWindow[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'CourtHoursWindow[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'CourtHoursWindow | undefined'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(2337,61): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/availability-studio/availability-studio-coordinator.tsx(2815,43): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(185,40): error TS2345: Argument of type '{ jobId: string; placeId: unknown; }' is not assignable to parameter of type 'string | Record<string, string> | string[][] | URLSearchParams | undefined'.
+  Types of property 'placeId' are incompatible.
+    Type 'unknown' is not assignable to type 'string | undefined'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(196,7): error TS2322: Type '{}' is not assignable to type 'string'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(210,9): error TS2322: Type '{}' is not assignable to type 'string'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(309,14): error TS2339: Property 'find' does not exist on type '{}'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(326,26): error TS2339: Property 'toUpperCase' does not exist on type '{}'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(338,33): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(351,11): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(352,16): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(473,13): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(476,13): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(485,45): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(518,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(521,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(530,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(542,34): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(569,53): error TS2322: Type '{}' is not assignable to type 'ReactNode'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(574,25): error TS2322: Type '{}' is not assignable to type 'ReactNode'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(580,25): error TS2322: Type '{}' is not assignable to type 'ReactNode'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(583,22): error TS2365: Operator '>' cannot be applied to types '{}' and 'number'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(589,27): error TS2322: Type 'unknown' is not assignable to type 'ReactNode'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(721,38): error TS2339: Property 'find' does not exist on type '{}'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(721,65): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(723,31): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(727,38): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(730,35): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(736,41): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(742,59): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(748,36): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(750,65): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(751,60): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(752,40): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(756,54): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(758,68): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(759,67): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(760,75): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(760,112): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(768,34): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(770,38): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(773,34): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(773,48): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(775,38): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(776,52): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(782,34): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(783,35): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(797,73): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(826,40): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(828,37): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(833,38): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(839,45): error TS2339: Property 'find' does not exist on type '{}'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(840,61): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(842,39): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(849,38): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(852,52): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(854,62): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(863,38): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(865,67): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(866,62): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(875,38): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(883,63): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(884,40): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(884,54): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(886,44): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(887,58): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(896,38): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(897,39): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(912,64): error TS18046: 'row' is of type 'unknown'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(1041,44): error TS2322: Type 'unknown' is not assignable to type 'ReactNode'.
+src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx(1094,31): error TS2339: Property 'map' does not exist on type '{}'.
+src/features/owner/components/court-hours-editor.tsx(167,13): error TS18046: 'result' is of type 'unknown'.
+src/features/owner/components/court-pricing-editor.tsx(199,13): error TS18046: 'result' is of type 'unknown'.
+src/features/owner/components/court-schedule-editor/hooks.ts(310,41): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'HoursWindow[]'.
+src/features/owner/components/owner-payment-method-reminder.tsx(23,20): error TS2339: Property 'length' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(179,25): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(272,30): error TS2345: Argument of type 'UnknownFallback | never[]' is not assignable to parameter of type '{ dayOfWeek: number; startMinute: number; endMinute: number; }[]'.
+  Type 'UnknownFallback' is not assignable to type '{ dayOfWeek: number; startMinute: number; endMinute: number; }[]'.
+    The types returned by 'pop()' are incompatible between these types.
+      Type 'unknown' is not assignable to type '{ dayOfWeek: number; startMinute: number; endMinute: number; } | undefined'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(278,7): error TS2345: Argument of type 'UnknownFallback | never[]' is not assignable to parameter of type 'CourtHoursWindow[]'.
+  Type 'UnknownFallback' is not assignable to type 'CourtHoursWindow[]'.
+    The types returned by 'pop()' are incompatible between these types.
+      Type 'unknown' is not assignable to type 'CourtHoursWindow | undefined'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(538,37): error TS18046: 'serverBlock' is of type 'unknown'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(539,35): error TS18046: 'serverBlock' is of type 'unknown'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(542,70): error TS2345: Argument of type '(old: { type: "MAINTENANCE" | "WALK_IN"; id: string; createdAt: string; updatedAt: string; isActive: boolean; courtId: string; startTime: string; endTime: string; reason: string | null; totalPriceCents: number; currency: string; cancelledAt: string | null; }[] | undefined) => unknown[]' is not assignable to parameter of type 'Updater<{ type: "MAINTENANCE" | "WALK_IN"; id: string; createdAt: string; updatedAt: string; isActive: boolean; courtId: string; startTime: string; endTime: string; reason: string | null; totalPriceCents: number; currency: string; cancelledAt: string | null; }[] | undefined, { ...; }[] | undefined>'.
+  Type '(old: { type: "MAINTENANCE" | "WALK_IN"; id: string; createdAt: string; updatedAt: string; isActive: boolean; courtId: string; startTime: string; endTime: string; reason: string | null; totalPriceCents: number; currency: string; cancelledAt: string | null; }[] | undefined) => unknown[]' is not assignable to type '(input: { type: "MAINTENANCE" | "WALK_IN"; id: string; createdAt: string; updatedAt: string; isActive: boolean; courtId: string; startTime: string; endTime: string; reason: string | null; totalPriceCents: number; currency: string; cancelledAt: string | null; }[] | undefined) => { ...; }[] | undefined'.
+    Type 'unknown[]' is not assignable to type '{ type: "MAINTENANCE" | "WALK_IN"; id: string; createdAt: string; updatedAt: string; isActive: boolean; courtId: string; startTime: string; endTime: string; reason: string | null; totalPriceCents: number; currency: string; cancelledAt: string | null; }[]'.
+      Type 'unknown' is not assignable to type '{ type: "MAINTENANCE" | "WALK_IN"; id: string; createdAt: string; updatedAt: string; isActive: boolean; courtId: string; startTime: string; endTime: string; reason: string | null; totalPriceCents: number; currency: string; cancelledAt: string | null; }'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(615,9): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'CourtHoursWindow[]'.
+  Type 'UnknownFallback' is not assignable to type 'CourtHoursWindow[]'.
+    The types returned by 'pop()' are incompatible between these types.
+      Type 'unknown' is not assignable to type 'CourtHoursWindow | undefined'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(901,37): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(905,52): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(933,43): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(938,28): error TS18046: 'guest' is of type 'unknown'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(967,21): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(998,9): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'CourtHoursWindow[]'.
+  Type 'UnknownFallback' is not assignable to type 'CourtHoursWindow[]'.
+    The types returned by 'pop()' are incompatible between these types.
+      Type 'unknown' is not assignable to type 'CourtHoursWindow | undefined'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1186,43): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1191,24): error TS18046: 'guest' is of type 'unknown'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1244,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1276,54): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1278,29): error TS2339: Property 'reservationsEnabled' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1286,16): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1306,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1309,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1318,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1327,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1333,24): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1337,22): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1459,61): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1678,31): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'CourtHoursWindow[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'CourtHoursWindow[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'CourtHoursWindow[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'CourtHoursWindow | undefined'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(1785,61): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx(2194,43): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/reservation-alerts-panel.tsx(51,67): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/reservation-alerts-panel.tsx(52,67): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/components/reservation-alerts-panel.tsx(55,67): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/hooks/courts.ts(47,54): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/hooks/courts.ts(59,54): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/hooks/courts.ts(275,33): error TS2339: Property 'map' does not exist on type '{}'.
+src/features/owner/hooks/courts.ts(275,69): error TS2345: Argument of type '{}' is not assignable to parameter of type 'OwnerPlaceBase | OwnerPlaceSimple'.
+src/features/owner/hooks/courts.ts(294,19): error TS18046: 'courtQuery.data.court' is of type 'unknown'.
+src/features/owner/hooks/courts.ts(305,26): error TS2345: Argument of type 'UnknownFallback' is not assignable to parameter of type 'CourtWithSportPayload'.
+  Type 'unknown[] & Record<string, unknown>' is missing the following properties from type 'CourtWithSportPayload': court, sport
+src/features/owner/hooks/organization.ts(123,42): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/hooks/organization.ts(139,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/hooks/organization.ts(140,21): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/hooks/organization.ts(141,21): error TS2339: Property 'slug' does not exist on type '{}'.
+src/features/owner/hooks/organization.ts(142,33): error TS2339: Property 'description' does not exist on type '{}'.
+src/features/owner/hooks/organization.ts(143,29): error TS2339: Property 'logoUrl' does not exist on type '{}'.
+src/features/owner/hooks/organization.ts(144,27): error TS2339: Property 'contactEmail' does not exist on type '{}'.
+src/features/owner/hooks/organization.ts(145,27): error TS2339: Property 'contactPhone' does not exist on type '{}'.
+src/features/owner/hooks/organization.ts(146,29): error TS2339: Property 'address' does not exist on type '{}'.
+src/features/owner/hooks/organization.ts(147,26): error TS2339: Property 'createdAt' does not exist on type '{}'.
+src/features/owner/hooks/organization.ts(263,35): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/hooks/organization.ts(369,28): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'OwnerSidebarPlaceRecord'.
+  Type 'unknown' is not assignable to type 'Pick<OwnerPlaceBase, "name" | "id">'.
+src/features/owner/hooks/place-verification.ts(48,23): error TS18046: 'data' is of type 'unknown'.
+src/features/owner/hooks/place-verification.ts(50,23): error TS18046: 'data' is of type 'unknown'.
+src/features/owner/hooks/place-verification.ts(51,36): error TS18046: 'data' is of type 'unknown'.
+src/features/owner/hooks/place-verification.ts(52,27): error TS18046: 'data' is of type 'unknown'.
+src/features/owner/hooks/place-verification.ts(53,38): error TS18046: 'data' is of type 'unknown'.
+src/features/owner/hooks/place-verification.ts(56,18): error TS18046: 'data' is of type 'unknown'.
+src/features/owner/hooks/place-verification.ts(58,19): error TS18046: 'data' is of type 'unknown'.
+src/features/owner/hooks/place-verification.ts(59,23): error TS18046: 'data' is of type 'unknown'.
+src/features/owner/hooks/place-verification.ts(60,29): error TS18046: 'data' is of type 'unknown'.
+src/features/owner/hooks/place-verification.ts(61,26): error TS18046: 'data' is of type 'unknown'.
+src/features/owner/pages/owner-active-reservations-page.tsx(56,67): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-active-reservations-page.tsx(57,67): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-active-reservations-page.tsx(108,45): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-active-reservations-page.tsx(120,24): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-active-reservations-page.tsx(224,11): error TS2322: Type '{} | undefined' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-active-reservations-page.tsx(225,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-active-reservations-page.tsx(234,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-active-reservations-page.tsx(243,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-bookings-import-page.tsx(150,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-bookings-import-page.tsx(259,53): error TS18046: 'job' is of type 'unknown'.
+src/features/owner/pages/owner-bookings-import-page.tsx(260,50): error TS18046: 'job' is of type 'unknown'.
+src/features/owner/pages/owner-bookings-import-page.tsx(303,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-bookings-import-page.tsx(306,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-bookings-import-page.tsx(315,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-court-edit-page.tsx(43,39): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-court-edit-page.tsx(44,34): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-court-edit-page.tsx(83,14): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-court-edit-page.tsx(84,14): error TS18046: 'courtData.sport' is of type 'unknown'.
+src/features/owner/pages/owner-court-edit-page.tsx(85,12): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-court-edit-page.tsx(86,16): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-court-edit-page.tsx(87,15): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-court-edit-page.tsx(105,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-court-edit-page.tsx(108,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-court-edit-page.tsx(117,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-court-edit-page.tsx(126,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-court-edit-page.tsx(131,33): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-court-edit-page.tsx(135,22): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-court-setup-page.tsx(36,39): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-court-setup-page.tsx(37,34): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-court-setup-page.tsx(91,13): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-court-setup-page.tsx(144,11): error TS2739: Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-court-setup-page.tsx(145,11): error TS2322: Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+    The types returned by 'pop()' are incompatible between these types.
+      Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-court-setup-page.tsx(154,42): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-court-setup-page.tsx(163,62): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-courts-page.tsx(39,67): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-courts-page.tsx(44,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-courts-page.tsx(116,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-courts-page.tsx(119,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-courts-page.tsx(128,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-courts-page.tsx(137,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-dashboard-page.tsx(42,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-dashboard-page.tsx(54,38): error TS2538: Type 'unknown' cannot be used as an index type.
+src/features/owner/pages/owner-dashboard-page.tsx(106,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-dashboard-page.tsx(109,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-dashboard-page.tsx(118,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-dashboard-page.tsx(127,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-get-started-page.tsx(61,40): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-get-started-page.tsx(62,53): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-get-started-page.tsx(63,55): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-get-started-page.tsx(192,17): error TS2322: Type '{}' is not assignable to type 'boolean'.
+src/features/owner/pages/owner-get-started-page.tsx(194,17): error TS2322: Type '{} | undefined' is not assignable to type '{ id: string; name: string; } | undefined'.
+  Type '{}' is missing the following properties from type '{ id: string; name: string; }': id, name
+src/features/owner/pages/owner-get-started-page.tsx(199,17): error TS2322: Type '{}' is not assignable to type 'boolean'.
+src/features/owner/pages/owner-get-started-page.tsx(200,17): error TS2322: Type '{}' is not assignable to type 'boolean'.
+src/features/owner/pages/owner-get-started-page.tsx(205,17): error TS2322: Type '{}' is not assignable to type 'boolean'.
+src/features/owner/pages/owner-get-started-page.tsx(206,17): error TS2322: Type '{}' is not assignable to type 'boolean'.
+src/features/owner/pages/owner-get-started-page.tsx(211,17): error TS2322: Type '{}' is not assignable to type 'boolean'.
+src/features/owner/pages/owner-get-started-page.tsx(212,17): error TS2322: Type '{}' is not assignable to type 'boolean'.
+src/features/owner/pages/owner-get-started-page.tsx(213,17): error TS2322: Type '{}' is not assignable to type 'boolean'.
+src/features/owner/pages/owner-get-started-page.tsx(214,17): error TS2322: Type '{}' is not assignable to type 'boolean'.
+src/features/owner/pages/owner-get-started-page.tsx(215,17): error TS2322: Type '{}' is not assignable to type 'boolean'.
+src/features/owner/pages/owner-get-started-page.tsx(217,17): error TS2322: Type '{} | undefined' is not assignable to type 'string | undefined'.
+  Type '{}' is not assignable to type 'string'.
+src/features/owner/pages/owner-get-started-page.tsx(222,17): error TS2322: Type '{}' is not assignable to type 'boolean'.
+src/features/owner/pages/owner-get-started-page.tsx(224,17): error TS2322: Type '{} | null' is not assignable to type 'string | null | undefined'.
+  Type '{}' is not assignable to type 'string'.
+src/features/owner/pages/owner-get-started-page.tsx(229,17): error TS2322: Type '{}' is not assignable to type 'boolean'.
+src/features/owner/pages/owner-get-started-page.tsx(483,14): error TS18046: 'c' is of type 'unknown'.
+src/features/owner/pages/owner-get-started-page.tsx(483,40): error TS18046: 'c' is of type 'unknown'.
+src/features/owner/pages/owner-get-started-page.tsx(485,40): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-get-started-page.tsx(496,33): error TS18046: 'pendingClaimDetails.place' is of type 'unknown'.
+src/features/owner/pages/owner-get-started-page.tsx(965,27): error TS2339: Property 'filter' does not exist on type '{}'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(89,14): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(90,14): error TS18046: 'courtData.sport' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(91,12): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(92,16): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(93,15): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(98,11): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(99,13): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(100,13): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(113,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-place-court-edit-page.tsx(116,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(125,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(134,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(139,34): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(144,22): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-edit-page.tsx(147,22): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-new-page.tsx(82,13): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-place-court-new-page.tsx(129,11): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-new-page.tsx(130,13): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-new-page.tsx(131,13): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-new-page.tsx(144,11): error TS2739: Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-place-court-new-page.tsx(145,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-place-court-new-page.tsx(154,42): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-place-court-new-page.tsx(163,62): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-court-new-page.tsx(172,22): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-new-page.tsx(172,68): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-schedule-page.tsx(77,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-place-court-schedule-page.tsx(80,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-place-court-schedule-page.tsx(89,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-place-court-schedule-page.tsx(98,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-court-schedule-page.tsx(103,42): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-schedule-page.tsx(108,22): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-schedule-page.tsx(118,41): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-court-schedule-page.tsx(119,21): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(179,22): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(202,16): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(203,16): error TS18046: 'courtData.sport' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(204,14): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(205,18): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(206,17): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(223,15): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(224,17): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(225,17): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(250,29): error TS18046: 'window' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(251,25): error TS18046: 'a' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(251,41): error TS18046: 'b' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(253,27): error TS18046: 'rule' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(254,25): error TS18046: 'a' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(254,41): error TS18046: 'b' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(257,28): error TS18046: 'window' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(257,48): error TS18046: 'window' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(261,33): error TS18046: 'rule' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(261,51): error TS18046: 'rule' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(262,13): error TS18046: 'rule' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(263,13): error TS18046: 'rule' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(339,24): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(340,24): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(350,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-place-court-setup-page.tsx(353,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(362,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(372,41): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(384,22): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(457,49): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(458,29): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(512,32): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(582,33): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(587,32): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(598,34): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(606,34): error TS18046: 'courtData.sport' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(614,34): error TS18046: 'courtData.court' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(622,34): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-court-setup-page.tsx(630,34): error TS18046: 'placeData.place' is of type 'unknown'.
+src/features/owner/pages/owner-place-courts-page.tsx(103,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-place-courts-page.tsx(106,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-place-courts-page.tsx(115,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-place-courts-page.tsx(124,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(83,25): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(85,40): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(148,11): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(149,14): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(150,11): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(151,15): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(152,14): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(153,15): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(153,50): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(154,16): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(154,52): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(155,15): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(156,15): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(157,42): error TS2339: Property 'websiteUrl' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(158,43): error TS2339: Property 'facebookUrl' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(159,44): error TS2339: Property 'instagramUrl' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(160,43): error TS2339: Property 'phoneNumber' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(161,41): error TS2339: Property 'viberInfo' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(162,48): error TS2339: Property 'otherContactInfo' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(163,44): error TS2339: Property 'map' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(165,67): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(171,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-place-edit-page.tsx(174,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-place-edit-page.tsx(183,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(192,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(197,33): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(201,22): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(221,23): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(235,46): error TS2339: Property 'map' does not exist on type '{}'.
+src/features/owner/pages/owner-place-edit-page.tsx(275,45): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(285,24): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-edit-page.tsx(294,34): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-place-new-page.tsx(43,35): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-new-page.tsx(55,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-new-page.tsx(59,21): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-place-new-page.tsx(62,20): error TS2339: Property 'length' does not exist on type '{}'.
+src/features/owner/pages/owner-place-new-page.tsx(88,13): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-place-new-page.tsx(130,11): error TS2739: Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-place-new-page.tsx(131,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-place-new-page.tsx(140,42): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-place-new-page.tsx(149,62): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-places-page.tsx(51,25): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-places-page.tsx(52,32): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-places-page.tsx(54,65): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-places-page.tsx(56,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-places-page.tsx(114,59): error TS2339: Property 'logoUrl' does not exist on type '{}'.
+src/features/owner/pages/owner-places-page.tsx(115,42): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-places-page.tsx(126,24): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-places-page.tsx(148,52): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-places-page.tsx(166,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-places-page.tsx(169,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-places-page.tsx(178,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-places-page.tsx(187,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-reservation-detail-page.tsx(87,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-reservation-detail-page.tsx(167,11): error TS2322: Type '{} | undefined' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-reservation-detail-page.tsx(168,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-reservation-detail-page.tsx(177,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-reservation-detail-page.tsx(186,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-reservations-page.tsx(157,67): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-reservations-page.tsx(158,67): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-reservations-page.tsx(185,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-reservations-page.tsx(208,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-reservations-page.tsx(211,47): error TS2339: Property 'filter' does not exist on type '{}'.
+src/features/owner/pages/owner-reservations-page.tsx(225,24): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-reservations-page.tsx(515,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-reservations-page.tsx(518,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-reservations-page.tsx(527,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-reservations-page.tsx(536,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-settings-page.tsx(407,13): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-settings-page.tsx(408,13): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-settings-page.tsx(414,39): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-settings-page.tsx(433,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-settings-page.tsx(434,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-settings-page.tsx(440,37): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-settings-page.tsx(446,57): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-verification-landing-page.tsx(28,19): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-verification-landing-page.tsx(67,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-verification-landing-page.tsx(70,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-verification-landing-page.tsx(76,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-verification-landing-page.tsx(82,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-verification-place-page.tsx(73,11): error TS2322: Type '{} | { id: string; name: string; }' is not assignable to type 'Organization | undefined'.
+  Type '{}' is missing the following properties from type 'Organization': id, name
+src/features/owner/pages/owner-verification-place-page.tsx(76,11): error TS2322: Type 'UnknownFallback | never[]' is not assignable to type 'Organization[] | undefined'.
+  Type 'UnknownFallback' is not assignable to type 'Organization[] | undefined'.
+    Type 'UnknownFallback' is not assignable to type 'Organization[]'.
+      The types returned by 'pop()' are incompatible between these types.
+        Type 'unknown' is not assignable to type 'Organization | undefined'.
+src/features/owner/pages/owner-verification-place-page.tsx(85,43): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/owner/pages/owner-verification-place-page.tsx(94,63): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/owner/pages/owner-verification-place-page.tsx(99,28): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-verification-place-page.tsx(103,22): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-verification-place-page.tsx(103,68): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-verification-place-page.tsx(106,49): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-verification-place-page.tsx(111,57): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-verification-place-page.tsx(116,53): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-verification-place-page.tsx(116,67): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-verification-place-page.tsx(130,21): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-verification-place-page.tsx(137,22): error TS18046: 'place' is of type 'unknown'.
+src/features/owner/pages/owner-verification-place-page.tsx(138,31): error TS18046: 'place' is of type 'unknown'.
+src/features/reservation/components/profile-form.tsx(56,9): error TS2322: Type '{}' is not assignable to type 'string'.
+src/features/reservation/components/profile-form.tsx(57,9): error TS2322: Type '{}' is not assignable to type 'string'.
+src/features/reservation/components/profile-form.tsx(58,9): error TS2322: Type '{}' is not assignable to type 'string'.
+src/features/reservation/components/profile-form.tsx(59,9): error TS2322: Type '{}' is not assignable to type 'string'.
+src/features/reservation/components/profile-form.tsx(113,13): error TS2322: Type '{} | undefined' is not assignable to type 'string | undefined'.
+  Type '{}' is not assignable to type 'string'.
+src/features/reservation/components/profile-form.tsx(114,13): error TS2322: Type '{} | undefined' is not assignable to type 'string | undefined'.
+  Type '{}' is not assignable to type 'string'.
+src/features/reservation/components/reservation-actions-card.tsx(195,23): error TS2345: Argument of type '{}' is not assignable to parameter of type 'string'.
+src/features/reservation/components/reservation-actions-card.tsx(209,31): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string'.
+src/features/reservation/hooks.ts(36,26): error TS18046: 'variables' is of type 'unknown'.
+src/features/reservation/hooks.ts(42,26): error TS18046: 'variables' is of type 'unknown'.
+src/features/reservation/hooks.ts(67,9): error TS18046: 'data' is of type 'unknown'.
+src/features/reservation/hooks.ts(69,13): error TS18046: 'data' is of type 'unknown'.
+src/features/reservation/hooks.ts(77,70): error TS18046: 'data' is of type 'unknown'.
+src/features/reservation/hooks.ts(96,9): error TS18046: 'data' is of type 'unknown'.
+src/features/reservation/hooks.ts(98,13): error TS18046: 'data' is of type 'unknown'.
+src/features/reservation/hooks.ts(106,70): error TS18046: 'data' is of type 'unknown'.
+src/features/reservation/hooks.ts(128,27): error TS18046: 'data' is of type 'unknown'.
+src/features/reservation/hooks.ts(142,26): error TS18046: 'variables' is of type 'unknown'.
+src/features/reservation/hooks.ts(145,26): error TS18046: 'variables' is of type 'unknown'.
+src/features/reservation/hooks.ts(151,26): error TS18046: 'variables' is of type 'unknown'.
+src/features/reservation/hooks.ts(288,40): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'ReservationListItemData'.
+src/features/reservation/hooks.ts(291,39): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'ReservationListItemData'.
+src/features/reservation/hooks.ts(294,36): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'ReservationListItemData'.
+src/features/reservation/hooks.ts(296,39): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'ReservationListItemData'.
+src/features/reservation/hooks.ts(302,9): error TS2345: Argument of type '(a: ReservationListItemData, b: ReservationListItemData) => number' is not assignable to parameter of type '(a: unknown, b: unknown) => number'.
+  Types of parameters 'a' and 'a' are incompatible.
+    Type 'unknown' is not assignable to type 'ReservationListItemData'.
+src/features/reservation/hooks.ts(310,13): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(310,35): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(311,27): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(312,30): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(313,28): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(316,17): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(317,21): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(318,24): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(319,24): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(320,25): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(321,26): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(323,19): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(324,21): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(325,24): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(326,30): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(329,19): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(335,25): error TS18046: 'item' is of type 'unknown'.
+src/features/reservation/hooks.ts(397,46): error TS2339: Property 'filter' does not exist on type '{}'.
+src/features/reservation/hooks.ts(400,53): error TS2339: Property 'filter' does not exist on type '{}'.
+src/features/reservation/hooks.ts(403,49): error TS2339: Property 'filter' does not exist on type '{}'.
+src/features/reservation/hooks.ts(407,27): error TS2339: Property 'length' does not exist on type '{}'.
+src/features/reservation/hooks.ts(407,62): error TS2339: Property 'length' does not exist on type '{}'.
+src/features/reservation/pages/place-booking-page.tsx(277,9): error TS2322: Type 'unknown' is not assignable to type '{ status: string; id: string; }'.
+src/features/reservation/pages/place-booking-page.tsx(286,9): error TS2322: Type 'unknown' is not assignable to type '{ status: string; id: string; }'.
+src/features/reservation/pages/place-booking-page.tsx(312,25): error TS18046: 'created' is of type 'unknown'.
+src/features/reservation/pages/place-booking-page.tsx(431,15): error TS2322: Type '{} | undefined' is not assignable to type 'string | undefined'.
+  Type '{}' is not assignable to type 'string'.
+src/features/reservation/pages/place-booking-page.tsx(432,15): error TS2322: Type '{} | undefined' is not assignable to type 'string | undefined'.
+  Type '{}' is not assignable to type 'string'.
+src/features/reservation/pages/place-booking-page.tsx(433,15): error TS2322: Type '{} | undefined' is not assignable to type 'string | undefined'.
+  Type '{}' is not assignable to type 'string'.
+src/features/reservation/pages/place-booking-page.tsx(434,15): error TS2322: Type '{} | undefined' is not assignable to type 'string | undefined'.
+  Type '{}' is not assignable to type 'string'.
+src/features/reservation/pages/reservation-detail-page.tsx(57,9): error TS2740: Type '{}' is missing the following properties from type 'ReservationEvent[]': length, pop, push, concat, and 35 more.
+src/features/reservation/pages/reservation-detail-page.tsx(103,36): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(103,58): error TS2339: Property 'label' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(105,21): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(107,26): error TS2339: Property 'address' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(108,23): error TS2339: Property 'city' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(110,27): error TS2339: Property 'latitude' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(111,39): error TS2339: Property 'latitude' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(113,28): error TS2339: Property 'longitude' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(114,39): error TS2339: Property 'longitude' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(120,32): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(121,34): error TS2339: Property 'name' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(126,17): error TS2339: Property 'placeType' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(129,40): error TS2339: Property 'contactEmail' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(130,40): error TS2339: Property 'contactPhone' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(134,21): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(135,28): error TS2339: Property 'startTime' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(136,26): error TS2339: Property 'endTime' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(137,29): error TS2339: Property 'totalPriceCents' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(138,27): error TS2339: Property 'currency' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(139,28): error TS2339: Property 'createdAt' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(145,33): error TS2339: Property 'cancellationCutoffMinutes' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(152,17): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(152,53): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(197,38): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(204,19): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(245,29): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(246,36): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(247,32): error TS2339: Property 'expiresAt' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(248,41): error TS2339: Property 'cancellationReason' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(327,40): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(328,33): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(329,53): error TS2339: Property 'totalPriceCents' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(330,46): error TS2339: Property 'currency' does not exist on type '{}'.
+src/features/reservation/pages/reservation-detail-page.tsx(341,36): error TS2339: Property 'id' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(73,18): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(74,18): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(75,18): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(76,18): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(80,18): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(81,20): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(90,22): error TS2339: Property 'expiresAt' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(91,41): error TS2339: Property 'expiresAt' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(93,20): error TS2339: Property 'expiresAt' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(170,18): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(171,44): error TS2339: Property 'totalPriceCents' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(172,38): error TS2339: Property 'currency' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(177,33): error TS2339: Property 'startTime' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(178,35): error TS2339: Property 'startTime' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(180,33): error TS2339: Property 'startTime' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(181,38): error TS2339: Property 'startTime' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(182,30): error TS2339: Property 'endTime' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(195,41): error TS2339: Property 'expiresAt' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(198,50): error TS2339: Property 'expiresAt' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(206,33): error TS2339: Property 'courtId' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(216,20): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(227,31): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(229,34): error TS2339: Property 'status' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(278,23): error TS2339: Property 'expiresAt' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(281,38): error TS2339: Property 'expiresAt' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(297,49): error TS2339: Property 'startTime' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(300,49): error TS2339: Property 'endTime' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(305,44): error TS2339: Property 'startTime' does not exist on type '{}'.
+src/features/reservation/pages/reservation-payment-page.tsx(323,13): error TS2322: Type 'unknown' is not assignable to type 'PaymentMethod[] | undefined'.

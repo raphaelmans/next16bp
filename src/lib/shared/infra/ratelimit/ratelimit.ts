@@ -2,15 +2,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { RATE_LIMIT_TIERS, type RateLimitTier } from "./config";
 
-type RateLimiter = {
-  limit: (identifier: string) => Promise<{
-    success: boolean;
-    limit: number;
-    remaining: number;
-    reset: number;
-    pending: Promise<void>;
-  }>;
-};
+type RateLimiter = Pick<Ratelimit, "limit">;
 
 export class RateLimiterUnavailableError extends Error {
   constructor(message = "Rate limiter backend is not configured") {
@@ -80,8 +72,8 @@ export function getRateLimiter(tier: RateLimitTier): RateLimiter {
     analytics: true,
   });
 
-  rateLimiters.set(tier, limiter as unknown as RateLimiter);
-  return limiter as unknown as RateLimiter;
+  rateLimiters.set(tier, limiter);
+  return limiter;
 }
 
 /**

@@ -24,7 +24,7 @@ export type ChatApiDeps = {
   toAppError?: (err: unknown) => AppError;
 };
 
-export class ChatApi implements IChatApi {
+export class ChatApi {
   readonly clientApi: TrpcClientApi;
   private readonly toAppError: (err: unknown) => AppError;
 
@@ -34,12 +34,19 @@ export class ChatApi implements IChatApi {
   }
 
   queryChatGetAuth = async (input?: unknown) =>
-    callTrpcQuery(this.clientApi, ["chat", "getAuth"], input, this.toAppError);
+    callTrpcQuery(
+      this.clientApi,
+      ["chat", "getAuth"],
+      (clientApi) => clientApi.chat.getAuth.query,
+      input,
+      this.toAppError,
+    );
 
   queryChatPocGetAuth = async (input?: unknown) =>
     callTrpcQuery(
       this.clientApi,
       ["chatPoc", "getAuth"],
+      (clientApi) => clientApi.chatPoc.getAuth.query,
       input,
       this.toAppError,
     );
@@ -48,6 +55,7 @@ export class ChatApi implements IChatApi {
     callTrpcMutation(
       this.clientApi,
       ["chatPoc", "getOrCreateDm"],
+      (clientApi) => clientApi.chatPoc.getOrCreateDm.mutate,
       input,
       this.toAppError,
     );
@@ -56,6 +64,7 @@ export class ChatApi implements IChatApi {
     callTrpcQuery(
       this.clientApi,
       ["reservationChat", "getSession"],
+      (clientApi) => clientApi.reservationChat.getSession.query,
       input,
       this.toAppError,
     );
@@ -64,6 +73,7 @@ export class ChatApi implements IChatApi {
     callTrpcMutation(
       this.clientApi,
       ["reservationChat", "sendMessage"],
+      (clientApi) => clientApi.reservationChat.sendMessage.mutate,
       input,
       this.toAppError,
     );
@@ -72,6 +82,7 @@ export class ChatApi implements IChatApi {
     callTrpcQuery(
       this.clientApi,
       ["reservationChat", "getThreadMetas"],
+      (clientApi) => clientApi.reservationChat.getThreadMetas.query,
       input,
       this.toAppError,
     );
@@ -80,6 +91,7 @@ export class ChatApi implements IChatApi {
     callTrpcMutation(
       this.clientApi,
       ["supportChat", "backfillClaimThreads"],
+      (clientApi) => clientApi.supportChat.backfillClaimThreads.mutate,
       input,
       this.toAppError,
     );
@@ -88,6 +100,7 @@ export class ChatApi implements IChatApi {
     callTrpcMutation(
       this.clientApi,
       ["supportChat", "sendClaimMessage"],
+      (clientApi) => clientApi.supportChat.sendClaimMessage.mutate,
       input,
       this.toAppError,
     );
@@ -96,6 +109,7 @@ export class ChatApi implements IChatApi {
     callTrpcMutation(
       this.clientApi,
       ["supportChat", "sendVerificationMessage"],
+      (clientApi) => clientApi.supportChat.sendVerificationMessage.mutate,
       input,
       this.toAppError,
     );
@@ -104,6 +118,7 @@ export class ChatApi implements IChatApi {
     callTrpcQuery(
       this.clientApi,
       ["supportChat", "getClaimSession"],
+      (clientApi) => clientApi.supportChat.getClaimSession.query,
       input,
       this.toAppError,
     );
@@ -112,14 +127,14 @@ export class ChatApi implements IChatApi {
     callTrpcQuery(
       this.clientApi,
       ["supportChat", "getVerificationSession"],
+      (clientApi) => clientApi.supportChat.getVerificationSession.query,
       input,
       this.toAppError,
     );
 }
 
-export const createChatApi = (deps: ChatApiDeps = {}): IChatApi =>
-  new ChatApi(deps);
+export const createChatApi = (deps: ChatApiDeps = {}) => new ChatApi(deps);
 
 const CHAT_API_SINGLETON = createChatApi();
 
-export const getChatApi = (): IChatApi => CHAT_API_SINGLETON;
+export const getChatApi = () => CHAT_API_SINGLETON;

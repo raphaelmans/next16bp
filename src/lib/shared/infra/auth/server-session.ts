@@ -5,7 +5,7 @@ import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
 import { makeUserRoleRepository } from "@/lib/modules/user-role/factories/user-role.factory";
 import { createClient } from "@/lib/shared/infra/supabase/create-client";
-import type { Session } from "@/lib/shared/kernel/auth";
+import { normalizeUserRole, type Session } from "@/lib/shared/kernel/auth";
 
 const createCookieMethods = async (): Promise<CookieMethodsServer> => {
   const cookieStore = await cookies();
@@ -48,7 +48,7 @@ export async function getServerSession(): Promise<Session | null> {
     return {
       userId: user.id,
       email: user.email ?? "",
-      role: (userRole?.role as Session["role"]) ?? "member",
+      role: normalizeUserRole(userRole?.role),
     };
   } catch {
     return null;

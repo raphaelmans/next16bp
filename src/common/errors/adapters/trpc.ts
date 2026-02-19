@@ -1,5 +1,7 @@
-const asRecord = (value: unknown): Record<string, unknown> =>
-  value && typeof value === "object" ? (value as Record<string, unknown>) : {};
+import { isRecord } from "@/common/type-guards";
+
+const toRecordOrEmpty = (value: unknown): Record<string, unknown> =>
+  isRecord(value) ? value : {};
 
 export type TrpcErrorMeta = {
   code?: string;
@@ -13,10 +15,10 @@ export const toTrpcErrorMeta = (err: unknown): TrpcErrorMeta => {
     return {};
   }
 
-  const errRecord = asRecord(err);
-  const data = asRecord(errRecord.data);
-  const zodError = asRecord(data.zodError);
-  const fieldErrors = asRecord(zodError.fieldErrors);
+  const errRecord = toRecordOrEmpty(err);
+  const data = toRecordOrEmpty(errRecord.data);
+  const zodError = toRecordOrEmpty(data.zodError);
+  const fieldErrors = toRecordOrEmpty(zodError.fieldErrors);
 
   const normalizedFieldErrors: Record<string, string> = {};
   for (const [key, value] of Object.entries(fieldErrors)) {

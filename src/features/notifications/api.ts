@@ -20,7 +20,7 @@ export type NotificationsApiDeps = {
   toAppError?: (err: unknown) => AppError;
 };
 
-export class NotificationsApi implements INotificationsApi {
+export class NotificationsApi {
   readonly clientApi: TrpcClientApi;
   private readonly toAppError: (err: unknown) => AppError;
 
@@ -33,6 +33,7 @@ export class NotificationsApi implements INotificationsApi {
     callTrpcMutation(
       this.clientApi,
       ["pushSubscription", "revokeMySubscription"],
+      (clientApi) => clientApi.pushSubscription.revokeMySubscription.mutate,
       input,
       this.toAppError,
     );
@@ -41,6 +42,7 @@ export class NotificationsApi implements INotificationsApi {
     callTrpcMutation(
       this.clientApi,
       ["pushSubscription", "upsertMySubscription"],
+      (clientApi) => clientApi.pushSubscription.upsertMySubscription.mutate,
       input,
       this.toAppError,
     );
@@ -49,16 +51,15 @@ export class NotificationsApi implements INotificationsApi {
     callTrpcQuery(
       this.clientApi,
       ["pushSubscription", "getVapidPublicKey"],
+      (clientApi) => clientApi.pushSubscription.getVapidPublicKey.query,
       input,
       this.toAppError,
     );
 }
 
-export const createNotificationsApi = (
-  deps: NotificationsApiDeps = {},
-): INotificationsApi => new NotificationsApi(deps);
+export const createNotificationsApi = (deps: NotificationsApiDeps = {}) =>
+  new NotificationsApi(deps);
 
 const NOTIFICATIONS_API_SINGLETON = createNotificationsApi();
 
-export const getNotificationsApi = (): INotificationsApi =>
-  NOTIFICATIONS_API_SINGLETON;
+export const getNotificationsApi = () => NOTIFICATIONS_API_SINGLETON;

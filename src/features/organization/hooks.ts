@@ -13,10 +13,11 @@ export function useMutOrganizationCreate(
 
   return useFeatureMutation(organizationApi.mutOrganizationCreate, {
     onSuccess: async (data) => {
-      const payload = data as { organization: { id: string } };
-      utils.organization.my.setData(undefined, [payload.organization] as any);
+      utils.organization.my.setData(undefined, (prev) =>
+        prev ? [...prev, data.organization] : [data.organization],
+      );
       await utils.organization.invalidate();
-      onSuccess?.({ id: payload.organization.id });
+      onSuccess?.({ id: data.organization.id });
     },
   });
 }

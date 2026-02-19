@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
+    "lint:assertions": "tsx scripts/quality/assertion-gate.ts",
     "lint:arch": "bash scripts/architecture/check-client-conformance.sh",
     "validate:client-arch": "pnpm lint && pnpm lint:arch",
     "format": "biome format --write",

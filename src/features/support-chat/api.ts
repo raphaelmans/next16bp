@@ -18,7 +18,7 @@ export type SupportChatApiDeps = {
   toAppError?: (err: unknown) => AppError;
 };
 
-export class SupportChatApi implements ISupportChatApi {
+export class SupportChatApi {
   readonly clientApi: TrpcClientApi;
   private readonly toAppError: (err: unknown) => AppError;
 
@@ -31,6 +31,7 @@ export class SupportChatApi implements ISupportChatApi {
     callTrpcMutation(
       this.clientApi,
       ["supportChat", "backfillClaimThreads"],
+      (clientApi) => clientApi.supportChat.backfillClaimThreads.mutate,
       input,
       this.toAppError,
     );
@@ -39,6 +40,7 @@ export class SupportChatApi implements ISupportChatApi {
     callTrpcMutation(
       this.clientApi,
       ["supportChat", "sendClaimMessage"],
+      (clientApi) => clientApi.supportChat.sendClaimMessage.mutate,
       input,
       this.toAppError,
     );
@@ -47,6 +49,7 @@ export class SupportChatApi implements ISupportChatApi {
     callTrpcMutation(
       this.clientApi,
       ["supportChat", "sendVerificationMessage"],
+      (clientApi) => clientApi.supportChat.sendVerificationMessage.mutate,
       input,
       this.toAppError,
     );
@@ -55,6 +58,7 @@ export class SupportChatApi implements ISupportChatApi {
     callTrpcQuery(
       this.clientApi,
       ["supportChat", "getClaimSession"],
+      (clientApi) => clientApi.supportChat.getClaimSession.query,
       input,
       this.toAppError,
     );
@@ -63,16 +67,15 @@ export class SupportChatApi implements ISupportChatApi {
     callTrpcQuery(
       this.clientApi,
       ["supportChat", "getVerificationSession"],
+      (clientApi) => clientApi.supportChat.getVerificationSession.query,
       input,
       this.toAppError,
     );
 }
 
-export const createSupportChatApi = (
-  deps: SupportChatApiDeps = {},
-): ISupportChatApi => new SupportChatApi(deps);
+export const createSupportChatApi = (deps: SupportChatApiDeps = {}) =>
+  new SupportChatApi(deps);
 
 const SUPPORT_CHAT_API_SINGLETON = createSupportChatApi();
 
-export const getSupportChatApi = (): ISupportChatApi =>
-  SUPPORT_CHAT_API_SINGLETON;
+export const getSupportChatApi = () => SUPPORT_CHAT_API_SINGLETON;

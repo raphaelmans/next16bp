@@ -4,9 +4,12 @@ import type { AppError } from "@/common/errors/app-error";
 import { toAppError as defaultToAppError } from "@/common/errors/to-app-error";
 import { callTrpcMutation } from "@/common/trpc-client-call";
 import { getClientApi, type TrpcClientApi } from "@/trpc/client-api";
+import type { RouterInputs, RouterOutputs } from "@/trpc/types";
 
 export interface IOrganizationApi {
-  mutOrganizationCreate: (input?: unknown) => Promise<unknown>;
+  mutOrganizationCreate: (
+    input: RouterInputs["organization"]["create"],
+  ) => Promise<RouterOutputs["organization"]["create"]>;
 }
 
 export type OrganizationApiDeps = {
@@ -14,7 +17,7 @@ export type OrganizationApiDeps = {
   toAppError?: (err: unknown) => AppError;
 };
 
-export class OrganizationApi implements IOrganizationApi {
+export class OrganizationApi {
   readonly clientApi: TrpcClientApi;
   private readonly toAppError: (err: unknown) => AppError;
 
@@ -23,20 +26,21 @@ export class OrganizationApi implements IOrganizationApi {
     this.toAppError = deps.toAppError ?? defaultToAppError;
   }
 
-  mutOrganizationCreate = async (input?: unknown) =>
+  mutOrganizationCreate = async (
+    input: RouterInputs["organization"]["create"],
+  ) =>
     callTrpcMutation(
       this.clientApi,
       ["organization", "create"],
+      (clientApi) => clientApi.organization.create.mutate,
       input,
       this.toAppError,
     );
 }
 
-export const createOrganizationApi = (
-  deps: OrganizationApiDeps = {},
-): IOrganizationApi => new OrganizationApi(deps);
+export const createOrganizationApi = (deps: OrganizationApiDeps = {}) =>
+  new OrganizationApi(deps);
 
 const ORGANIZATION_API_SINGLETON = createOrganizationApi();
 
-export const getOrganizationApi = (): IOrganizationApi =>
-  ORGANIZATION_API_SINGLETON;
+export const getOrganizationApi = () => ORGANIZATION_API_SINGLETON;

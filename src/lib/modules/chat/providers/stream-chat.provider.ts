@@ -114,7 +114,7 @@ export class StreamChatProvider implements IChatProvider {
       created_by_id: createdById,
       members: memberIds,
       reservation_id: reservationId,
-    } as unknown as Record<string, unknown>);
+    });
 
     await channel.create();
   }

@@ -25,7 +25,7 @@ export type OpenPlayApiDeps = {
   toAppError?: (err: unknown) => AppError;
 };
 
-export class OpenPlayApi implements IOpenPlayApi {
+export class OpenPlayApi {
   readonly clientApi: TrpcClientApi;
   private readonly toAppError: (err: unknown) => AppError;
 
@@ -38,6 +38,7 @@ export class OpenPlayApi implements IOpenPlayApi {
     callTrpcMutation(
       this.clientApi,
       ["openPlay", "cancel"],
+      (clientApi) => clientApi.openPlay.cancel.mutate,
       input,
       this.toAppError,
     );
@@ -46,6 +47,7 @@ export class OpenPlayApi implements IOpenPlayApi {
     callTrpcMutation(
       this.clientApi,
       ["openPlayChat", "sendMessage"],
+      (clientApi) => clientApi.openPlayChat.sendMessage.mutate,
       input,
       this.toAppError,
     );
@@ -54,6 +56,7 @@ export class OpenPlayApi implements IOpenPlayApi {
     callTrpcMutation(
       this.clientApi,
       ["openPlay", "close"],
+      (clientApi) => clientApi.openPlay.close.mutate,
       input,
       this.toAppError,
     );
@@ -62,6 +65,7 @@ export class OpenPlayApi implements IOpenPlayApi {
     callTrpcMutation(
       this.clientApi,
       ["openPlay", "createFromReservation"],
+      (clientApi) => clientApi.openPlay.createFromReservation.mutate,
       input,
       this.toAppError,
     );
@@ -70,6 +74,7 @@ export class OpenPlayApi implements IOpenPlayApi {
     callTrpcMutation(
       this.clientApi,
       ["openPlay", "decideParticipant"],
+      (clientApi) => clientApi.openPlay.decideParticipant.mutate,
       input,
       this.toAppError,
     );
@@ -78,6 +83,7 @@ export class OpenPlayApi implements IOpenPlayApi {
     callTrpcMutation(
       this.clientApi,
       ["openPlay", "leave"],
+      (clientApi) => clientApi.openPlay.leave.mutate,
       input,
       this.toAppError,
     );
@@ -86,6 +92,7 @@ export class OpenPlayApi implements IOpenPlayApi {
     callTrpcMutation(
       this.clientApi,
       ["openPlay", "requestToJoin"],
+      (clientApi) => clientApi.openPlay.requestToJoin.mutate,
       input,
       this.toAppError,
     );
@@ -94,6 +101,7 @@ export class OpenPlayApi implements IOpenPlayApi {
     callTrpcQuery(
       this.clientApi,
       ["openPlayChat", "getSession"],
+      (clientApi) => clientApi.openPlayChat.getSession.query,
       input,
       this.toAppError,
     );
@@ -102,6 +110,7 @@ export class OpenPlayApi implements IOpenPlayApi {
     callTrpcQuery(
       this.clientApi,
       ["openPlay", "getDetail"],
+      (clientApi) => clientApi.openPlay.getDetail.query,
       input,
       this.toAppError,
     );
@@ -110,6 +119,7 @@ export class OpenPlayApi implements IOpenPlayApi {
     callTrpcQuery(
       this.clientApi,
       ["openPlay", "getForReservation"],
+      (clientApi) => clientApi.openPlay.getForReservation.query,
       input,
       this.toAppError,
     );
@@ -118,6 +128,7 @@ export class OpenPlayApi implements IOpenPlayApi {
     callTrpcQuery(
       this.clientApi,
       ["openPlay", "getPublicDetail"],
+      (clientApi) => clientApi.openPlay.getPublicDetail.query,
       input,
       this.toAppError,
     );
@@ -126,14 +137,15 @@ export class OpenPlayApi implements IOpenPlayApi {
     callTrpcQuery(
       this.clientApi,
       ["openPlay", "listByPlace"],
+      (clientApi) => clientApi.openPlay.listByPlace.query,
       input,
       this.toAppError,
     );
 }
 
-export const createOpenPlayApi = (deps: OpenPlayApiDeps = {}): IOpenPlayApi =>
+export const createOpenPlayApi = (deps: OpenPlayApiDeps = {}) =>
   new OpenPlayApi(deps);
 
 const OPEN_PLAY_API_SINGLETON = createOpenPlayApi();
 
-export const getOpenPlayApi = (): IOpenPlayApi => OPEN_PLAY_API_SINGLETON;
+export const getOpenPlayApi = () => OPEN_PLAY_API_SINGLETON;

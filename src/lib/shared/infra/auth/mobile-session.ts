@@ -2,7 +2,7 @@ import type { User } from "@supabase/supabase-js";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/lib/env";
 import { makeUserRoleRepository } from "@/lib/modules/user-role/factories/user-role.factory";
-import type { Session } from "@/lib/shared/kernel/auth";
+import { normalizeUserRole, type Session } from "@/lib/shared/kernel/auth";
 import { AuthenticationError } from "@/lib/shared/kernel/errors";
 
 function parseBearerToken(req: Request): string | null {
@@ -53,7 +53,7 @@ export async function getMobileSession(req: Request): Promise<Session | null> {
   return {
     userId: user.id,
     email: user.email ?? "",
-    role: (userRole?.role as Session["role"]) ?? "member",
+    role: normalizeUserRole(userRole?.role),
   };
 }
 

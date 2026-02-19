@@ -5,17 +5,17 @@ import { trpc } from "@/trpc/client";
 export * from "./filters";
 export * from "./place-detail";
 export {
+  type PlaceSummary,
+  useModDiscoveryPlaceSummaries,
+  useModDiscoveryPlaces,
   useMutDiscoverySubmitClaim,
   useMutDiscoverySubmitGuestRemoval,
-  useModDiscoveryPlaces,
-  useModDiscoveryPlaceSummaries,
   useQueryDiscoveryAvailabilityForCourt,
   useQueryDiscoveryAvailabilityForCourtRange,
   useQueryDiscoveryAvailabilityForPlaceSportRange,
   useQueryDiscoveryOrganizations,
   useQueryDiscoverySports,
   useQueryFeaturedPlaces,
-  type PlaceSummary,
 } from "./search";
 
 export function useModDiscoveryPrefetchPort() {

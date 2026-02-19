@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { appRoutes } from "@/common/app-routes";
 import { formatDateShort, formatTime } from "@/common/format";
 import { toast } from "@/common/toast";
+import { isRecord } from "@/common/type-guards";
 import { AppShell } from "@/components/layout";
 import {
   AlertDialog,
@@ -177,10 +178,9 @@ export default function OwnerBookingsImportReviewView({
   const studioHref = useMemo(() => {
     const job = jobQuery.data;
     if (!job) return null;
-    const metadata = job.metadata as Record<string, unknown> | null;
     const selectedCourtId =
-      metadata && typeof metadata.selectedCourtId === "string"
-        ? metadata.selectedCourtId
+      isRecord(job.metadata) && typeof job.metadata.selectedCourtId === "string"
+        ? job.metadata.selectedCourtId
         : null;
     const params = new URLSearchParams({
       jobId,
@@ -278,8 +278,8 @@ export default function OwnerBookingsImportReviewView({
   });
 
   const job = jobQuery.data;
-  const rows = rowsQuery.data ?? [];
-  const sources = (sourcesQuery.data ?? []) as SourceRecord[];
+  const rows: RowRecord[] = rowsQuery.data ?? [];
+  const sources: SourceRecord[] = sourcesQuery.data ?? [];
   const sourceItems =
     sources.length > 0 && job
       ? sources
@@ -298,8 +298,8 @@ export default function OwnerBookingsImportReviewView({
   const place = placeData?.place;
 
   const selectedCourtId = useMemo(() => {
-    if (!job?.metadata || typeof job.metadata !== "object") return null;
-    const value = (job.metadata as Record<string, unknown>).selectedCourtId;
+    if (!isRecord(job?.metadata)) return null;
+    const value = job.metadata.selectedCourtId;
     return typeof value === "string" && value.length > 0 ? value : null;
   }, [job?.metadata]);
 
@@ -397,7 +397,7 @@ export default function OwnerBookingsImportReviewView({
       payload.courtId = editCourtId || null;
     }
 
-    updateRowMutation.mutate(payload as any);
+    updateRowMutation.mutate(payload);
   };
 
   const handleDeleteRow = () => {
@@ -716,7 +716,6 @@ export default function OwnerBookingsImportReviewView({
                         {/* Mobile card layout */}
                         <div className="space-y-2 md:hidden">
                           {filteredRows.map((row) => {
-                            const typedRow = row as RowRecord;
                             const courtLabel =
                               courts.find((c) => c.court.id === row.courtId)
                                 ?.court.label ??
@@ -736,7 +735,7 @@ export default function OwnerBookingsImportReviewView({
                                       #{row.lineNumber}
                                     </span>
                                     <span className="truncate">
-                                      {getRowSourceLabel(typedRow)}
+                                      {getRowSourceLabel(row)}
                                     </span>
                                   </div>
                                   <RowStatusBadge status={row.status} />
@@ -786,7 +785,7 @@ export default function OwnerBookingsImportReviewView({
                                         variant="ghost"
                                         size="icon"
                                         className="h-7 w-7"
-                                        onClick={() => handleEditRow(typedRow)}
+                                        onClick={() => handleEditRow(row)}
                                       >
                                         <Edit className="h-3.5 w-3.5" />
                                       </Button>
@@ -833,7 +832,7 @@ export default function OwnerBookingsImportReviewView({
                                     {row.lineNumber}
                                   </TableCell>
                                   <TableCell className="max-w-[180px] truncate text-xs text-muted-foreground">
-                                    {getRowSourceLabel(row as RowRecord)}
+                                    {getRowSourceLabel(row)}
                                   </TableCell>
                                   <TableCell>
                                     {courts.find(
@@ -899,9 +898,7 @@ export default function OwnerBookingsImportReviewView({
                                           <Button
                                             variant="ghost"
                                             size="icon"
-                                            onClick={() =>
-                                              handleEditRow(row as RowRecord)
-                                            }
+                                            onClick={() => handleEditRow(row)}
                                           >
                                             <Edit className="h-4 w-4" />
                                           </Button>
@@ -1022,7 +1019,7 @@ export default function OwnerBookingsImportReviewView({
                     >
                       <span className="truncate">{source.fileName}</span>
                       <span className="text-xs text-muted-foreground">
-                        {source.sourceType.toUpperCase()} ·{" "}
+                        {(source.sourceType ?? "unknown").toUpperCase()} ·{" "}
                         {formatBytes(source.fileSize)}
                       </span>
                     </div>

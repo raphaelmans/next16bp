@@ -240,9 +240,10 @@ export function useMutTransferPlaceToOrganization() {
 
   return useFeatureMutation(adminApi.mutAdminCourtTransfer, {
     onSuccess: async (_data, variables) => {
+      const placeId = (variables as { placeId: string }).placeId;
       await Promise.all([
         utils.admin.court.list.invalidate(),
-        utils.admin.court.getById.invalidate({ placeId: variables.placeId }),
+        utils.admin.court.getById.invalidate({ placeId }),
       ]);
     },
   });
@@ -253,9 +254,10 @@ export function useMutRecuratePlace() {
 
   return useFeatureMutation(adminApi.mutAdminCourtRecurate, {
     onSuccess: async (_data, variables) => {
+      const placeId = (variables as { placeId: string }).placeId;
       await Promise.all([
         utils.admin.court.list.invalidate(),
-        utils.admin.court.getById.invalidate({ placeId: variables.placeId }),
+        utils.admin.court.getById.invalidate({ placeId }),
       ]);
     },
   });

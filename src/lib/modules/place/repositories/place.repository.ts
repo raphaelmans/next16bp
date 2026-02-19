@@ -589,9 +589,10 @@ export class PlaceRepository implements IPlaceRepository {
             : Promise.resolve<PlaceVerificationProjection[]>([]),
         ]);
 
-        const verificationByPlaceId = new Map<string, PlaceVerificationProjection>(
-          verificationRows.map((row) => [row.placeId, row] as const),
-        );
+        const verificationByPlaceId = new Map<
+          string,
+          PlaceVerificationProjection
+        >(verificationRows.map((row) => [row.placeId, row] as const));
         return {
           items: orderedPlaces.map((placeRecord) => {
             const lowestPrice = lowestPrices.get(placeRecord.id);
@@ -660,9 +661,10 @@ export class PlaceRepository implements IPlaceRepository {
           : Promise.resolve<PlaceVerificationProjection[]>([]),
       ]);
 
-      const verificationByPlaceId = new Map<string, PlaceVerificationProjection>(
-        verificationRows.map((row) => [row.placeId, row] as const),
-      );
+      const verificationByPlaceId = new Map<
+        string,
+        PlaceVerificationProjection
+      >(verificationRows.map((row) => [row.placeId, row] as const));
 
       return {
         items: uniquePlaces.map((placeRecord) => {

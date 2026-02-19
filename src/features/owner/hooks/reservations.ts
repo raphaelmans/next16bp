@@ -432,7 +432,9 @@ export function useModReservationAlerts(
   });
 }
 
-export function useMutOwnerConfirmPaidOffline(options?: Record<string, unknown>) {
+export function useMutOwnerConfirmPaidOffline(
+  options?: Record<string, unknown>,
+) {
   const utils = trpc.useUtils();
   return useFeatureMutation(ownerApi.mutReservationOwnerConfirmPaidOffline, {
     ...(options ?? {}),

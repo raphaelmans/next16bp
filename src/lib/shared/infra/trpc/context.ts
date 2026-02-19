@@ -6,7 +6,7 @@ import { makeUserRoleRepository } from "@/lib/modules/user-role/factories/user-r
 import { getClientIdentifier } from "@/lib/shared/infra/http/client-identifier";
 import { createRequestLogger } from "@/lib/shared/infra/logger";
 import { createClient } from "@/lib/shared/infra/supabase/create-client";
-import type { Session } from "@/lib/shared/kernel/auth";
+import { normalizeUserRole, type Session } from "@/lib/shared/kernel/auth";
 
 export interface Context {
   requestId: string;
@@ -69,7 +69,7 @@ export async function createContext({
       session = {
         userId: user.id,
         email: user.email ?? "",
-        role: (userRole?.role as Session["role"]) ?? "member",
+        role: normalizeUserRole(userRole?.role),
       };
     }
   } catch {

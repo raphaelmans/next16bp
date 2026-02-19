@@ -1,0 +1,567 @@
+
+> next16bp@0.1.0 lint:assertions /Users/raphaelm/Documents/Coding/boilerplates/next16bp
+> tsx scripts/quality/assertion-gate.ts
+
+Assertion gate summary
+- Files scanned: 1168
+- Assertions found: 523
+- Files with assertions: 214
+
+Classification totals
+- as any: 2
+- as never: 8
+- as unknown as: 11
+- as const: 144
+- as Record<string, unknown>: 11
+- raw as Record<string, unknown>: 28
+- other: 319
+
+Top 15 files by assertion count
+- src/common/app-routes.ts: 22
+- src/lib/modules/bookings-import/services/bookings-import.service.ts: 15
+- src/lib/modules/open-play/services/open-play.service.ts: 15
+- src/app/sitemap.ts: 13
+- src/lib/modules/chat/providers/stream-chat.provider.ts: 13
+- src/components/ui/chart.tsx: 11
+- src/app/api/cron/dispatch-notification-delivery/route.ts: 10
+- src/features/discovery/place-detail/components/court-detail-client.tsx: 9
+- src/features/owner/components/availability-studio/availability-studio-coordinator.tsx: 9
+- src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx: 9
+- src/features/owner/hooks/places.ts: 9
+- src/lib/modules/storage/dtos/upload.dto.ts: 9
+- src/lib/shared/infra/ratelimit/config.ts: 9
+- src/common/feature-api-hooks.ts: 8
+- src/features/owner/hooks/reservations.ts: 8
+
+Findings
+- src/app/(public)/owners/get-started/page.tsx:13:24 [as const] { "@context": "https://schema.org", "@type": "WebApplication", name: "KudosCourts", applicationCategory: "BusinessApplication", operatingSystem: "All", url: canonicalUrl.toString(), description: "Free reservation system for sports venues in the Philippines. List or claim a venue, verify ownership, and accept online reservations.", offers: { "@type": "Offer", price: "0", priceCurrency: "PHP", }, areaServed: { "@type": "Country", name: "Philippines", }, isAccessibleForFree: true, } as const
+- src/app/api/cron/dispatch-notification-delivery/route.ts:464:11 [other] job.payload as Record<string, unknown> | null
+- src/app/api/cron/dispatch-notification-delivery/route.ts:489:11 [other] job.payload as Record<string, unknown> | null
+- src/app/api/cron/dispatch-notification-delivery/route.ts:515:11 [other] job.payload as Record<string, unknown> | null
+- src/app/api/cron/dispatch-notification-delivery/route.ts:543:11 [other] job.payload as Record<string, unknown> | null
+- src/app/api/cron/dispatch-notification-delivery/route.ts:568:11 [other] job.payload as Record<string, unknown> | null
+- src/app/api/cron/dispatch-notification-delivery/route.ts:585:11 [other] job.payload as Record<string, unknown> | null
+- src/app/api/cron/dispatch-notification-delivery/route.ts:602:11 [other] job.payload as Record<string, unknown> | null
+- src/app/api/cron/dispatch-notification-delivery/route.ts:619:11 [other] job.payload as Record<string, unknown> | null
+- src/app/api/cron/dispatch-notification-delivery/route.ts:636:11 [other] job.payload as Record<string, unknown> | null
+- src/app/api/cron/dispatch-notification-delivery/route.ts:653:11 [other] job.payload as Record<string, unknown> | null
+- src/app/api/mobile/v1/owner/blocks/[blockId]/convert-to-guest/route.ts:38:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/blocks/[blockId]/range/route.ts:37:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/chat/claims/[claimRequestId]/messages/route.ts:45:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/chat/claims/[claimRequestId]/messages/route.ts:55:12 [as never] { session } as never
+- src/app/api/mobile/v1/owner/chat/claims/[claimRequestId]/session/route.ts:43:12 [as never] { session } as never
+- src/app/api/mobile/v1/owner/chat/reservations/[reservationId]/messages/route.ts:45:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/chat/verifications/[placeVerificationRequestId]/messages/route.ts:45:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/chat/verifications/[placeVerificationRequestId]/messages/route.ts:55:12 [as never] { session } as never
+- src/app/api/mobile/v1/owner/chat/verifications/[placeVerificationRequestId]/session/route.ts:47:12 [as never] { session } as never
+- src/app/api/mobile/v1/owner/courts/[courtId]/blocks/maintenance/route.ts:37:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/courts/[courtId]/blocks/walk-in/route.ts:37:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/courts/[courtId]/hours/copy-from/route.ts:38:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/courts/[courtId]/hours/route.ts:65:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/courts/[courtId]/rate-rules/copy-from/route.ts:38:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/courts/[courtId]/rate-rules/route.ts:65:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/courts/[courtId]/route.ts:65:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/import/bookings/jobs/[jobId]/normalize/route.ts:37:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/import/bookings/rows/[rowId]/replace-with-guest/route.ts:38:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/import/bookings/rows/[rowId]/route.ts:40:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/organizations/[organizationId]/guest-profiles/route.ts:76:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/organizations/[organizationId]/payment-methods/route.ts:74:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/organizations/[organizationId]/profile/route.ts:38:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/organizations/[organizationId]/route.ts:69:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/organizations/[organizationId]/venues/route.ts:94:7 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/organizations/route.ts:20:10 [other] JSON.parse(JSON.stringify(value)) as T
+- src/app/api/mobile/v1/owner/payment-methods/[paymentMethodId]/route.ts:40:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/reservations/[reservationId]/confirm-paid-offline/route.ts:38:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/reservations/[reservationId]/confirm-payment/route.ts:38:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/reservations/[reservationId]/reject/route.ts:38:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/venues/[venueId]/courts/route.ts:65:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/venues/[venueId]/photos/reorder/route.ts:37:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/venues/[venueId]/reservations/toggle/route.ts:37:11 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/mobile/v1/owner/venues/[venueId]/route.ts:93:7 [raw as Record<string, unknown>] raw as Record<string, unknown>
+- src/app/api/poc/google-loc/nearby/route.ts:75:21 [as Record<string, unknown>] body as Record<string, unknown>
+- src/app/api/poc/google-loc/nearby/route.ts:104:18 [other] (await response.json()) as { status?: string; error_message?: string; results?: Array<{ name?: string; place_id?: string }>; }
+- src/app/api/poc/google-loc/route.ts:252:12 [other] body as { url?: unknown }
+- src/app/api/public/countries/route.ts:30:18 [other] JSON.parse(raw) as Country[]
+- src/app/api/public/ph-provinces-cities/route.ts:87:18 [other] JSON.parse(raw) as unknown
+- src/app/api/public/track/route.ts:52:27 [other] [] as string[]
+- src/app/auth/confirm/route.ts:17:16 [other] searchParams.get("type") as EmailOtpType | null
+- src/app/sitemap.ts:51:24 [as const] "daily" as const
+- src/app/sitemap.ts:56:24 [as const] "daily" as const
+- src/app/sitemap.ts:61:24 [as const] "weekly" as const
+- src/app/sitemap.ts:66:24 [as const] "monthly" as const
+- src/app/sitemap.ts:71:24 [as const] "monthly" as const
+- src/app/sitemap.ts:76:24 [as const] "weekly" as const
+- src/app/sitemap.ts:81:24 [as const] "yearly" as const
+- src/app/sitemap.ts:86:24 [as const] "yearly" as const
+- src/app/sitemap.ts:91:24 [as const] "yearly" as const
+- src/app/sitemap.ts:99:24 [as const] "weekly" as const
+- src/app/sitemap.ts:104:24 [as const] "weekly" as const
+- src/app/sitemap.ts:112:22 [as const] "weekly" as const
+- src/app/sitemap.ts:119:22 [as const] "weekly" as const
+- src/common/amenities.ts:1:32 [as const] [ "Parking", "Restrooms", "Lights", "Showers", "Locker Rooms", "Equipment Rental", "Pro Shop", "Seating Area", "Food/Drinks", "WiFi", "Air Conditioning", "Covered Courts", "Pet Friendly", ] as const
+- src/common/app-routes.ts:20:22 [as const] "public" as const
+- src/common/app-routes.ts:24:22 [as const] "public" as const
+- src/common/app-routes.ts:28:22 [as const] "public" as const
+- src/common/app-routes.ts:32:22 [as const] "public" as const
+- src/common/app-routes.ts:40:22 [as const] "public" as const
+- src/common/app-routes.ts:51:22 [as const] "guest" as const
+- src/common/app-routes.ts:56:22 [as const] "guest" as const
+- src/common/app-routes.ts:61:22 [as const] "guest" as const
+- src/common/app-routes.ts:65:22 [as const] "protected" as const
+- src/common/app-routes.ts:69:22 [as const] "protected" as const
+- src/common/app-routes.ts:73:22 [as const] "public" as const
+- src/common/app-routes.ts:77:22 [as const] "public" as const
+- src/common/app-routes.ts:81:22 [as const] "public" as const
+- src/common/app-routes.ts:85:22 [as const] "public" as const
+- src/common/app-routes.ts:89:22 [as const] "public" as const
+- src/common/app-routes.ts:93:22 [as const] "public" as const
+- src/common/app-routes.ts:97:22 [as const] "protected" as const
+- src/common/app-routes.ts:101:22 [as const] "protected" as const
+- src/common/app-routes.ts:108:22 [as const] "public" as const
+- src/common/app-routes.ts:114:22 [as const] "protected" as const
+- src/common/app-routes.ts:119:22 [as const] "owner" as const
+- src/common/app-routes.ts:176:22 [as const] "admin" as const
+- src/common/clients/amenities-client/index.ts:56:18 [other] (await response.json()) as unknown
+- src/common/clients/google-loc-client/index.ts:107:18 [other] (await response.json()) as unknown
+- src/common/clients/google-loc-client/index.ts:156:18 [other] (await response.json()) as unknown
+- src/common/clients/ph-provinces-cities-client/index.ts:65:18 [other] (await response.json()) as unknown
+- src/common/feature-api-hooks.ts:23:3 [as never] ({ queryKey: buildTrpcQueryKey(path, input), queryFn: () => queryFn(input), ...(options ?? {}), }) as never
+- src/common/feature-api-hooks.ts:35:3 [other] useQuery({ queryKey: buildTrpcQueryKey(path, input), queryFn: () => queryFn(input), ...(options ?? {}), } as never) as UseQueryResult<TData, AppError>
+- src/common/feature-api-hooks.ts:35:12 [as never] { queryKey: buildTrpcQueryKey(path, input), queryFn: () => queryFn(input), ...(options ?? {}), } as never
+- src/common/feature-api-hooks.ts:63:20 [other] useMutation({ mutationFn: (input: unknown) => mutationFn(input), ...(options ?? {}), } as never) as UseMutationResult<TData, AppError, unknown, unknown>
+- src/common/feature-api-hooks.ts:63:32 [as never] { mutationFn: (input: unknown) => mutationFn(input), ...(options ?? {}), } as never
+- src/common/feature-api-hooks.ts:68:10 [other] { ...mutation, mutate: (input?: unknown, mutateOptions?: Parameters<typeof mutation.mutate>[1]) => { mutation.mutate(input, mutateOptions); }, mutateAsync: ( input?: unknown, mutateOptions?: Parameters<typeof mutation.mutateAsync>[1], ) => mutation.mutateAsync(input, mutateOptions), } as FeatureMutationResult<TData>
+- src/common/feature-api-hooks.ts:86:3 [other] useQueries({ queries: queries as never, }) as any[]
+- src/common/feature-api-hooks.ts:87:14 [as never] queries as never
+- src/common/hooks/owner-onboarding-intent.ts:12:36 [as const] ["owner-onboarding-intent"] as const
+- src/common/logging/logger.ts:26:13 [other] second as LogMeta
+- src/common/payment-methods.ts:1:37 [as const] ["MOBILE_WALLET", "BANK"] as const
+- src/common/payment-methods.ts:3:40 [as const] ["GCASH", "MAYA"] as const
+- src/common/payment-methods.ts:5:31 [as const] [ "BPI", "BDO", "METROBANK", "UNIONBANK", "RCBC", "LANDBANK", "SECURITY_BANK", "CHINABANK", "PNB", "EASTWEST", ] as const
+- src/common/payment-methods.ts:18:41 [as const] [ ...MOBILE_WALLET_PROVIDERS, ...BANK_PROVIDERS, ] as const
+- src/common/query-keys/index.ts:4:8 [as const] ["app"] as const
+- src/common/schemas.ts:49:10 [as unknown as] schema.extend(overrides as z.ZodRawShape) as unknown as z.ZodObject< Omit<Shape, keyof Overrides> & Overrides >
+- src/common/schemas.ts:49:10 [other] schema.extend(overrides as z.ZodRawShape) as unknown
+- src/common/schemas.ts:49:24 [other] overrides as z.ZodRawShape
+- src/common/section-hashes.ts:1:37 [as const] { organizationProfile: "organization-profile", contactInformation: "contact-information", browserNotifications: "browser-notifications", paymentMethods: "payment-methods", dangerZone: "danger-zone", } as const
+- src/common/section-hashes.ts:9:40 [as const] { organizationProfile: `#${SETTINGS_SECTION_IDS.organizationProfile}`, contactInformation: `#${SETTINGS_SECTION_IDS.contactInformation}`, browserNotifications: `#${SETTINGS_SECTION_IDS.browserNotifications}`, paymentMethods: `#${SETTINGS_SECTION_IDS.paymentMethods}`, dangerZone: `#${SETTINGS_SECTION_IDS.dangerZone}`, } as const
+- src/common/toast/errors.ts:112:5 [other] appError.fieldErrors as unknown
+- src/common/trpc-client-call.ts:10:8 [other] value as UnknownRecord
+- src/common/trpc-client-call.ts:39:21 [other] getByPath(clientApi, path) as UnknownRecord | undefined
+- src/common/trpc-client-call.ts:47:19 [other] query as (value: unknown) => Promise<unknown>
+- src/common/trpc-client-call.ts:59:21 [other] getByPath(clientApi, path) as UnknownRecord | undefined
+- src/common/trpc-client-call.ts:69:19 [other] mutate as (value: unknown) => Promise<unknown>
+- src/common/validation-database.ts:3:35 [as const] { common: { string: { required: { message: "This field is required" }, type: { message: "This field must be a string" }, }, nonEmpty: { min: { value: 1, message: "This field is required" }, }, email: { required: { message: "Email is required" }, type: { message: "Email must be a string" }, min: { value: 1, message: "Email is required" }, max: { value: 255, message: "Email must be 255 characters or less" }, invalid: { message: "Please enter a valid email address" }, }, url: { invalid: { message: "Please enter a valid URL" }, }, slug: { min: { value: 1, message: "Slug is required" }, max: { value: 100, message: "Slug must be 100 characters or less" }, pattern: { value: /^[a-z0-9-]+$/, message: "Slug must be lowercase alphanumeric with hyphens", }, }, phone: { max: { value: 20, message: "Phone number must be 20 characters or less" }, pattern: { value: /^[0-9+\-() ]*$/, message: "Invalid phone number format", }, }, country: { length: { value: 2, message: "Country must be a 2-letter code" }, }, currency: { length: { value: 3, message: "Currency must be a 3-letter code" }, }, coordinate: { invalid: { message: "Coordinate must be a valid decimal number" }, latitude: { message: "Latitude must be a valid decimal number" }, longitude: { message: "Longitude must be a valid decimal number" }, latitudeRequired: { message: "Latitude is required" }, longitudeRequired: { message: "Longitude is required" }, }, isoDateTime: { invalid: { message: "Invalid datetime" }, }, date: { invalid: { message: "Invalid date" }, }, pagination: { limit: { min: { value: 1, message: "Limit must be at least 1" }, max: { value: 100, message: "Limit must be 100 or less" }, }, offset: { min: { value: 0, message: "Offset must be 0 or greater" }, }, }, displayOrder: { min: { value: 0, message: "Display order must be 0 or greater" }, }, items: { min: { value: 1, message: "At least one item is required" }, }, }, ids: { generic: { required: { message: "ID is required" }, invalid: { message: "ID must be a valid UUID" }, }, organizationId: { required: { message: "Organization is required" }, invalid: { message: "Organization must be a valid ID" }, }, placeId: { required: { message: "Venue is required" }, invalid: { message: "Venue must be a valid ID" }, }, courtId: { required: { message: "Court is required" }, invalid: { message: "Court must be a valid ID" }, }, reservationId: { required: { message: "Reservation is required" }, invalid: { message: "Reservation must be a valid ID" }, }, sportId: { required: { message: "Sport is required" }, invalid: { message: "Sport must be a valid ID" }, }, paymentMethodId: { required: { message: "Payment method is required" }, invalid: { message: "Payment method must be a valid ID" }, }, requestId: { required: { message: "Request is required" }, invalid: { message: "Request must be a valid ID" }, }, blockId: { required: { message: "Block is required" }, invalid: { message: "Block must be a valid ID" }, }, jobId: { required: { message: "Import job is required" }, invalid: { message: "Import job must be a valid ID" }, }, rowId: { required: { message: "Row is required" }, invalid: { message: "Row must be a valid ID" }, }, photoId: { required: { message: "Photo is required" }, invalid: { message: "Photo must be a valid ID" }, }, amenityId: { required: { message: "Amenity is required" }, invalid: { message: "Amenity must be a valid ID" }, }, }, auth: { password: { min: { value: 8, message: "Password must be at least 8 characters" }, max: { value: 100, message: "Password must be 100 characters or less" }, required: { message: "Password is required" }, type: { message: "Password must be a string" }, }, }, organization: { name: { min: { value: 1, message: "Organization name is required" }, max: { value: 150, message: "Organization name must be 150 characters or less", }, }, slug: { min: { value: 1, message: "Slug is required" }, max: { value: 100, message: "Slug must be 100 characters or less" }, }, description: { max: { value: 500, message: "Description must be 500 characters or less", }, }, contactEmail: { max: { value: 255, message: "Email must be 255 characters or less" }, }, contactPhone: { max: { value: 20, message: "Phone must be 20 characters or less" }, }, address: { max: { value: 200, message: "Address must be 200 characters or less" }, }, search: { limit: { min: { value: 1, message: "Limit must be at least 1" }, max: { value: 50, message: "Limit must be 50 or less" }, }, offset: { min: { value: 0, message: "Offset must be 0 or greater" }, }, }, }, place: { search: { min: { value: 1, message: "Search term must be at least 1 character" }, max: { value: 100, message: "Search term must be 100 characters or less", }, }, idOrSlug: { min: { value: 1, message: "Place ID or slug is required" }, max: { value: 200, message: "Place ID or slug must be 200 characters or less", }, }, name: { min: { value: 1, message: "Venue name is required" }, max: { value: 200, message: "Venue name must be 200 characters or less" }, }, address: { min: { value: 1, message: "Address is required" }, max: { value: 200, message: "Address must be 200 characters or less" }, }, city: { min: { value: 1, message: "City is required" }, max: { value: 100, message: "City must be 100 characters or less" }, }, province: { min: { value: 1, message: "Province is required" }, max: { value: 100, message: "Province must be 100 characters or less" }, }, timeZone: { min: { value: 1, message: "Time zone is required" }, max: { value: 64, message: "Time zone must be 64 characters or less" }, }, phoneNumber: { max: { value: 20, message: "Phone number must be 20 characters or less" }, }, viberInfo: { max: { value: 100, message: "Viber info must be 100 characters or less" }, }, otherContactInfo: { max: { value: 500, message: "Contact info must be 500 characters or less", }, }, googlePlaceId: { max: { value: 128, message: "Google place ID must be 128 characters or less", }, }, amenity: { min: { value: 1, message: "Amenity name is required" }, max: { value: 100, message: "Amenity name must be 100 characters or less", }, }, type: { invalid: { message: "Place type is invalid" }, }, photos: { min: { value: 1, message: "At least one photo is required" }, max: { value: 10, message: "You can upload up to 10 photos" }, }, }, court: { label: { min: { value: 1, message: "Court label is required" }, max: { value: 100, message: "Court label must be 100 characters or less", }, }, tierLabel: { max: { value: 20, message: "Tier label must be 20 characters or less" }, }, name: { min: { value: 1, message: "Court name is required" }, max: { value: 200, message: "Court name must be 200 characters or less" }, }, simpleName: { min: { value: 1, message: "Court name is required" }, max: { value: 150, message: "Court name must be 150 characters or less" }, }, description: { max: { value: 1000, message: "Description must be 1000 characters or less", }, }, type: { invalid: { message: "Court type is invalid" }, }, list: { min: { value: 1, message: "At least one court is required" }, }, }, contact: { name: { min: { value: 2, message: "Name must be at least 2 characters" }, max: { value: 150, message: "Name must be 150 characters or less" }, }, subject: { min: { value: 2, message: "Subject must be at least 2 characters" }, max: { value: 200, message: "Subject must be 200 characters or less" }, }, message: { min: { value: 10, message: "Message must be at least 10 characters" }, max: { value: 2000, message: "Message must be 2000 characters or less" }, }, }, profile: { displayName: { min: { value: 1, message: "Display name is required" }, max: { value: 100, message: "Display name must be 100 characters or less", }, }, }, paymentMethod: { accountName: { min: { value: 1, message: "Account name is required" }, max: { value: 150, message: "Account name must be 150 characters or less", }, }, accountNumber: { min: { value: 1, message: "Account number is required" }, max: { value: 50, message: "Account number must be 50 characters or less", }, }, instructions: { max: { value: 500, message: "Instructions must be 500 characters or less", }, }, displayOrder: { min: { value: 0, message: "Display order must be 0 or greater" }, }, type: { invalid: { message: "Payment method type is invalid" }, }, provider: { invalid: { message: "Payment method provider is invalid" }, }, }, paymentProof: { referenceNumber: { max: { value: 100, message: "Reference number must be 100 characters or less", }, }, notes: { max: { value: 500, message: "Notes must be 500 characters or less" }, }, }, claimRequest: { requestNotes: { min: { value: 10, message: "Please share more details" }, max: { value: 1000, message: "Notes must be 1000 characters or less" }, }, guestName: { min: { value: 2, message: "Name must be at least 2 characters" }, max: { value: 150, message: "Name must be 150 characters or less" }, }, reviewNotes: { min: { value: 1, message: "Review notes are required" }, max: { value: 1000, message: "Review notes must be 1000 characters or less", }, }, reason: { min: { value: 1, message: "Reason is required" }, max: { value: 500, message: "Reason must be 500 characters or less" }, }, removalReason: { min: { value: 10, message: "Please provide a more detailed reason (at least 10 characters)", }, max: { value: 500, message: "Reason must be 500 characters or less" }, }, acknowledgeReservations: { message: "You must acknowledge that pending reservations will be cancelled", }, acknowledgeApproval: { message: "You must acknowledge that this requires admin approval", }, }, placeVerification: { documents: { min: { value: 1, message: "Please attach at least one document" }, }, }, reservation: { notes: { max: { value: 500, message: "Notes must be 500 characters or less" }, }, cancelReason: { max: { value: 500, message: "Reason must be 500 characters or less" }, }, rejectReason: { min: { value: 1, message: "Reason is required" }, max: { value: 500, message: "Reason must be 500 characters or less" }, }, termsAccepted: { message: "Terms must be accepted", }, disclaimerAcknowledged: { message: "You must acknowledge the payment disclaimer", }, referenceNumber: { min: { value: 1, message: "Reference number is required" }, }, startTimeWithinWindow: { value: MAX_BOOKING_WINDOW_DAYS, message: `Start time must be within ${MAX_BOOKING_WINDOW_DAYS} days`, }, status: { invalid: { message: "Status is invalid" }, }, }, availability: { dateWithinWindow: { value: MAX_BOOKING_WINDOW_DAYS, message: `Date must be within ${MAX_BOOKING_WINDOW_DAYS} days`, }, rangeWithinWindow: { value: MAX_BOOKING_WINDOW_DAYS, message: `Date range must be within ${MAX_BOOKING_WINDOW_DAYS} days`, }, rangeEndAfterStart: { message: "End date must be after start date", }, durationMinutes: { min: { value: 60, message: "Duration must be at least 60 minutes" }, max: { value: 1440, message: "Duration must be 1440 minutes or less" }, multipleOf: { value: 60, message: "Duration must be a multiple of 60 minutes", }, }, courtIds: { min: { value: 1, message: "At least one court is required" }, max: { value: 50, message: "Too many courts requested" }, }, }, courtBlock: { reason: { max: { value: 255, message: "Reason must be 255 characters or less" }, }, }, bookingsImport: { sourceType: { invalid: { message: "Import source must be valid" }, }, normalizeMode: { invalid: { message: "Normalize mode must be valid" }, }, confirmAiOnce: { message: "confirmAiOnce must be true when using AI mode (one-time per venue)", }, courtLabel: { max: { value: 100, message: "Court label must be 100 characters or less", }, }, reason: { max: { value: 500, message: "Reason must be 500 characters or less" }, }, }, admin: { searchQuery: { max: { value: 150, message: "Query must be 150 characters or less" }, }, placeType: { invalid: { message: "Place type is invalid" }, }, claimStatus: { invalid: { message: "Claim status is invalid" }, }, }, tracking: { event: { min: { value: 1, message: "Event is required" }, max: { value: 120, message: "Event must be 120 characters or less" }, pattern: { value: /^funnel\.[a-z0-9_.-]+$/, message: "Event must match funnel.<name>", }, }, }, courtRateRule: { dayOfWeek: { min: { value: 0, message: "Day of week must be 0-6" }, max: { value: 6, message: "Day of week must be 0-6" }, }, startMinute: { min: { value: 0, message: "Start minute must be 0-1439" }, max: { value: 1439, message: "Start minute must be 0-1439" }, }, endMinute: { min: { value: 1, message: "End minute must be 1-1440" }, max: { value: 1440, message: "End minute must be 1-1440" }, }, hourlyRateCents: { min: { value: 0, message: "Hourly rate must be 0 or greater" }, }, rules: { max: { value: 100, message: "Rules must be 100 items or less" }, }, startBeforeEnd: { message: "Start minute must be before end minute" }, }, pricing: { priceCents: { min: { value: 0, message: "Price must be 0 or greater" }, }, }, courtHours: { windows: { max: { value: 50, message: "Windows must be 50 items or less" }, }, }, } as const
+- src/components/ai-elements/attachments.tsx:103:48 [as const] "grid" as const
+- src/components/ai-elements/audio-player.tsx:36:7 [other] { "--media-button-icon-width": "1rem", "--media-button-icon-height": "1rem", "--media-icon-color": "currentColor", "--media-font": "var(--font-sans)", "--media-font-size": "10px", "--media-control-background": "transparent", "--media-control-hover-background": "var(--color-accent)", "--media-control-padding": "0", "--media-background-color": "transparent", "--media-primary-color": "var(--color-primary)", "--media-secondary-color": "var(--color-secondary)", "--media-text-color": "var(--color-foreground)", "--media-tooltip-background": "var(--color-background)", "--media-range-bar-color": "var(--color-primary)", "--media-tooltip-arrow-display": "none", "--media-tooltip-border-radius": "var(--radius-md)", "--media-preview-time-text-shadow": "none", "--media-preview-time-background": "var(--color-background)", "--media-preview-time-border-radius": "var(--radius-md)", "--media-range-track-background": "var(--color-secondary)", ...style, } as CSSProperties
+- src/components/ai-elements/code-block.tsx:66:7 [other] { color: token.color, backgroundColor: token.bgColor, ...token.htmlStyle, fontStyle: isItalic(token.fontStyle) ? "italic" : undefined, fontWeight: isBold(token.fontStyle) ? "bold" : undefined, textDecoration: isUnderline(token.fontStyle) ? "underline" : undefined, } as CSSProperties
+- src/components/ai-elements/code-block.tsx:160:11 [other] { content: line, color: "inherit", } as ThemedToken
+- src/components/ai-elements/code-block.tsx:458:17 [other] error as Error
+- src/components/ai-elements/commit.tsx:226:17 [other] error as Error
+- src/components/ai-elements/edge.tsx:54:12 [as const] [0, 0] as const
+- src/components/ai-elements/edge.tsx:83:10 [as const] [x, y] as const
+- src/components/ai-elements/environment-variables.tsx:266:17 [other] error as Error
+- src/components/ai-elements/mic-selector.tsx:120:27 [other] entry.target as HTMLElement
+- src/components/ai-elements/persona.tsx:207:17 [other] ((loadedRive) => callbacksRef.current.onLoad?.( loadedRive, )) as RiveParameters["onLoad"]
+- src/components/ai-elements/persona.tsx:211:22 [other] ((err) => callbacksRef.current.onLoadError?.( err, )) as RiveParameters["onLoadError"]
+- src/components/ai-elements/persona.tsx:216:18 [other] ((event) => callbacksRef.current.onPause?.(event)) as RiveParameters["onPause"]
+- src/components/ai-elements/persona.tsx:218:17 [other] ((event) => callbacksRef.current.onPlay?.(event)) as RiveParameters["onPlay"]
+- src/components/ai-elements/persona.tsx:220:17 [other] ((event) => callbacksRef.current.onStop?.(event)) as RiveParameters["onStop"]
+- src/components/ai-elements/prompt-input.tsx:164:17 [as const] "file" as const
+- src/components/ai-elements/prompt-input.tsx:653:42 [other] reader.result as string
+- src/components/ai-elements/prompt-input.tsx:699:19 [other] formData.get("message") as string
+- src/components/ai-elements/prompt-input.tsx:836:28 [other] form?.querySelector( 'button[type="submit"]', ) as HTMLButtonElement | null
+- src/components/ai-elements/shimmer.tsx:29:5 [other] Component as keyof JSX.IntrinsicElements
+- src/components/ai-elements/shimmer.tsx:47:9 [other] { "--spread": `${dynamicSpread}px`, backgroundImage: "var(--bg), linear-gradient(var(--color-muted-foreground), var(--color-muted-foreground))", } as CSSProperties
+- src/components/ai-elements/snippet.tsx:114:17 [other] error as Error
+- src/components/ai-elements/stack-trace.tsx:315:19 [other] error as Error
+- src/components/ai-elements/terminal.tsx:174:17 [other] error as Error
+- src/components/ai-elements/tool.tsx:155:22 [other] output as ReactNode
+- src/components/ai-elements/web-preview.tsx:150:22 [other] event.target as HTMLInputElement
+- src/components/form/StandardFormError.tsx:17:21 [other] errors.root?.message as string | undefined
+- src/components/kudos/availability-week-grid.tsx:100:31 [as const] "easeOut" as const
+- src/components/kudos/availability-week-grid.tsx:134:18 [other] slot.priceCents as number
+- src/components/kudos/availability-week-grid.tsx:245:31 [as const] "easeOut" as const
+- src/components/kudos/availability-week-grid.tsx:412:35 [other] [] as number[]
+- src/components/kudos/time-range-picker.tsx:105:31 [as const] "easeOut" as const
+- src/components/kudos/time-range-picker.tsx:123:18 [other] slots[i].priceCents as number
+- src/components/kudos/time-range-picker.tsx:218:31 [as const] "easeOut" as const
+- src/components/layout/portal-switcher.tsx:22:22 [as const] { player: { label: "Player View", icon: Home, }, owner: { label: "Owner View", icon: Building2, }, admin: { label: "Admin View", icon: Shield, }, } as const
+- src/components/navigation/navigation-progress.tsx:27:10 [other] target.closest("a[href]") as HTMLAnchorElement | null
+- src/components/ui/chart.tsx:9:16 [as const] { light: "", dark: ".dark" } as const
+- src/components/ui/chart.tsx:88:26 [other] theme as keyof typeof itemConfig.theme
+- src/components/ui/chart.tsx:137:18 [other] label as keyof typeof config
+- src/components/ui/chart.tsx:213:29 [other] { "--color-bg": indicatorColor, "--color-border": indicatorColor, } as React.CSSProperties
+- src/components/ui/chart.tsx:328:20 [other] key as keyof typeof payload
+- src/components/ui/chart.tsx:330:22 [other] payload[key as keyof typeof payload] as string
+- src/components/ui/chart.tsx:330:30 [other] key as keyof typeof payload
+- src/components/ui/chart.tsx:334:27 [other] key as keyof typeof payloadPayload
+- src/components/ui/chart.tsx:336:22 [other] payloadPayload[ key as keyof typeof payloadPayload ] as string
+- src/components/ui/chart.tsx:337:7 [other] key as keyof typeof payloadPayload
+- src/components/ui/chart.tsx:343:14 [other] key as keyof typeof config
+- src/components/ui/draggable-panel.tsx:33:22 [other] JSON.parse(stored) as { x: number; y: number }
+- src/components/ui/form.tsx:28:3 [other] {} as FormFieldContextValue
+- src/components/ui/form.tsx:72:3 [other] {} as FormItemContextValue
+- src/components/ui/sidebar.tsx:144:13 [other] { "--sidebar-width": SIDEBAR_WIDTH, "--sidebar-width-icon": SIDEBAR_WIDTH_ICON, ...style, } as React.CSSProperties
+- src/components/ui/sidebar.tsx:201:13 [other] { "--sidebar-width": SIDEBAR_WIDTH_MOBILE, } as React.CSSProperties
+- src/components/ui/sidebar.tsx:640:11 [other] { "--skeleton-width": width, } as React.CSSProperties
+- src/components/ui/sonner.tsx:18:14 [other] theme as ToasterProps["theme"]
+- src/components/ui/sonner.tsx:30:9 [other] { "--normal-bg": "var(--popover)", "--normal-text": "var(--popover-foreground)", "--normal-border": "var(--border)", "--border-radius": "var(--radius)", "--success-bg": "var(--success)", "--success-text": "var(--success-foreground)", "--success-border": "var(--success)", "--info-bg": "var(--primary)", "--info-text": "var(--primary-foreground)", "--info-border": "var(--primary)", "--warning-bg": "var(--warning)", "--warning-text": "var(--warning-foreground)", "--warning-border": "var(--warning)", "--error-bg": "var(--destructive)", "--error-text": "var(--destructive-foreground)", "--error-border": "var(--destructive)", } as React.CSSProperties
+- src/components/ui/toggle-group.tsx:36:14 [other] { "--gap": spacing } as React.CSSProperties
+- src/features/admin/components/admin-court-edit-form.tsx:405:32 [as const] `courts.${index}.id` as const
+- src/features/admin/components/admin-court-edit-form.tsx:531:20 [other] field.value as string[]
+- src/features/admin/components/admin-court-edit-view.tsx:61:16 [other] rawUser as { email?: string | null } | undefined
+- src/features/admin/components/admin-court-edit-view.tsx:88:18 [other] (rawSports ?? []) as Array<{ id: string; name: string }>
+- src/features/admin/components/admin-court-edit-view.tsx:254:5 [other] orgSearchQuery.data as { items?: OrganizationSearchItem[] } | undefined
+- src/features/admin/components/admin-sidebar.tsx:37:18 [as const] [ { title: "Dashboard", href: appRoutes.admin.base, icon: LayoutDashboard, badgeKey: null, }, { title: "Claims", href: appRoutes.admin.claims.base, icon: Tag, badgeKey: "claims" as const, }, { title: "Verification", href: appRoutes.admin.placeVerification.base, icon: ShieldCheck, badgeKey: "verifications" as const, }, { title: "Courts", href: appRoutes.admin.courts.base, icon: Building2, badgeKey: null, }, { title: "Venues", href: appRoutes.admin.venues.base, icon: MapPin, badgeKey: null, }, ] as const
+- src/features/admin/components/admin-sidebar.tsx:48:15 [as const] "claims" as const
+- src/features/admin/components/admin-sidebar.tsx:54:15 [as const] "verifications" as const
+- src/features/admin/components/claim-review-actions.tsx:79:47 [other] v as "approve" | "reject"
+- src/features/admin/components/courts-batch/batch-results-panel.tsx:13:23 [as const] { created: "Created", skipped_duplicate: "Skipped", error: "Failed", } as const
+- src/features/admin/components/courts-batch/batch-results-panel.tsx:19:25 [as const] { created: "success", skipped_duplicate: "warning", error: "destructive", } as const
+- src/features/admin/components/courts-batch/courts-batch-coordinator.tsx:89:14 [other] [] as string[]
+- src/features/admin/components/courts-batch/courts-batch-coordinator.tsx:108:11 [as const] `courts.${placeIndex}.courts` as const
+- src/features/admin/components/courts-batch/courts-batch-coordinator.tsx:938:36 [other] field.value as string[]
+- src/features/admin/components/place-verification-review-actions.tsx:67:27 [other] value as "approve" | "reject"
+- src/features/admin/components/places-list/admin-places-filters.tsx:97:32 [other] value as CourtType | "all"
+- src/features/admin/components/places-list/admin-places-filters.tsx:114:34 [other] value as CourtStatus | "all"
+- src/features/admin/components/places-list/admin-places-filters.tsx:130:36 [other] value as FeaturedFilter
+- src/features/admin/components/places-list/admin-places-filters.tsx:182:39 [other] value as ClaimStatusFilter | "all"
+- src/features/admin/hooks/claims.ts:177:17 [other] (item.requestType === "REMOVAL" ? "removal" : "claim") as ClaimType
+- src/features/admin/hooks/claims.ts:180:19 [other] item.status.toLowerCase() as ClaimStatus
+- src/features/admin/hooks/claims.ts:184:24 [as const] "curated" as const
+- src/features/admin/hooks/claims.ts:227:15 [other] (query.data.claimRequest.requestType === "REMOVAL" ? "removal" : "claim") as ClaimType
+- src/features/admin/hooks/claims.ts:230:17 [other] query.data.claimRequest.status.toLowerCase() as ClaimStatus
+- src/features/admin/hooks/courts.ts:109:46 [as const] "claim_pending" as const
+- src/features/admin/hooks/courts.ts:110:50 [as const] "removal_requested" as const
+- src/features/admin/hooks/courts.ts:111:42 [as const] "unclaimed" as const
+- src/features/admin/hooks/courts.ts:112:40 [as const] "claimed" as const
+- src/features/admin/hooks/courts.ts:234:11 [other] query.data as AdminCourtDetail | undefined
+- src/features/admin/hooks/place-verification.ts:55:19 [other] item.request.status.toLowerCase() as | "pending" | "approved" | "rejected"
+- src/features/admin/pages/admin-claim-detail-page.tsx:62:14 [as const] "secondary" as const
+- src/features/admin/pages/admin-claim-detail-page.tsx:69:14 [as const] "secondary" as const
+- src/features/admin/pages/admin-claim-detail-page.tsx:76:14 [as const] "outline" as const
+- src/features/admin/pages/admin-claims-page.tsx:140:49 [other] v as ClaimType | "all"
+- src/features/admin/pages/admin-claims-page.tsx:176:46 [other] v as ClaimStatus | "all"
+- src/features/admin/pages/admin-courts-new-page.tsx:768:24 [other] field.value as string[]
+- src/features/admin/pages/admin-verification-detail-page.tsx:47:14 [as const] "warning" as const
+- src/features/admin/pages/admin-verification-detail-page.tsx:54:14 [as const] "success" as const
+- src/features/admin/pages/admin-verification-detail-page.tsx:61:14 [as const] "destructive" as const
+- src/features/admin/pages/admin-verification-page.tsx:38:19 [as const] "warning" as const
+- src/features/admin/pages/admin-verification-page.tsx:43:19 [as const] "success" as const
+- src/features/admin/pages/admin-verification-page.tsx:48:19 [as const] "destructive" as const
+- src/features/auth/components/portal-switcher.tsx:67:27 [as const] ["owner"] as const
+- src/features/auth/components/portal-switcher.tsx:68:27 [as const] ["admin"] as const
+- src/features/auth/hooks.ts:35:5 [other] authApi.queryAuthMe as (input?: unknown) => Promise<AuthSessionUser | null>
+- src/features/auth/hooks.ts:124:5 [other] authApi.queryOrganizationMy as ( input?: unknown, ) => Promise<AuthOrganization[]>
+- src/features/auth/hooks.ts:147:5 [other] authApi.queryAuthMe as (input?: unknown) => Promise<AuthSessionUser | null>
+- src/features/auth/hooks.ts:157:5 [other] authApi.queryOrganizationMy as ( input?: unknown, ) => Promise<AuthOrganization[]>
+- src/features/chat/components/chat-thread/stream-chat-thread.tsx:82:48 [as const] [ ":player-created:v1", ":player-payment-marked:v1", ":owner-confirmed:v1", ] as const
+- src/features/chat/components/chat-widget/reservation-inbox-widget.tsx:246:27 [other] event as CustomEvent<ReservationChatOpenDetail>
+- src/features/chat/components/chat-widget/reservation-inbox-widget.tsx:290:11 [as unknown as] { type: "messaging", members: { $in: [auth.user.id] }, } as unknown as Record<string, unknown>
+- src/features/chat/components/chat-widget/reservation-inbox-widget.tsx:290:11 [other] { type: "messaging", members: { $in: [auth.user.id] }, } as unknown
+- src/features/chat/components/chat-widget/reservation-inbox-widget.tsx:458:27 [as unknown as] channel.state as unknown as Record<string, unknown>
+- src/features/chat/components/chat-widget/reservation-inbox-widget.tsx:458:27 [other] channel.state as unknown
+- src/features/chat/components/chat-widget/reservation-inbox-widget.tsx:459:26 [as Record<string, unknown>] (channel.data ?? {}) as Record<string, unknown>
+- src/features/chat/components/chat-widget/reservation-inbox-widget.tsx:525:35 [other] meta as ReservationThreadMeta
+- src/features/chat/components/ReservationChatClient.tsx:41:31 [as const] [ "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER", "CONFIRMED", ] as const
+- src/features/chat/components/ReservationChatClient.tsx:111:26 [other] CHAT_ENABLED_STATUSES as readonly string[]
+- src/features/chat/components/unified-chat/unified-chat-interface.tsx:124:23 [as const] { open: "admin_support_inbox_open", activeChannelId: "admin_support_inbox_active_channel", } as const
+- src/features/chat/components/unified-chat/unified-chat-interface.tsx:183:9 [as unknown as] { type: "messaging", members: { $in: [auth.user.id] }, } as unknown as Record<string, unknown>
+- src/features/chat/components/unified-chat/unified-chat-interface.tsx:183:9 [other] { type: "messaging", members: { $in: [auth.user.id] }, } as unknown
+- src/features/chat/components/unified-chat/unified-chat-interface.tsx:190:19 [other] results as SupportChannel[]
+- src/features/chat/constants/upload-policy.ts:1:35 [as const] { maxFilesPerMessage: 5, maxFileSizeBytes: 20 * 1024 * 1024, } as const
+- src/features/chat/hooks/useStreamChannel.ts:29:9 [as unknown as] client as unknown as { userID?: string }
+- src/features/chat/hooks/useStreamChannel.ts:29:9 [other] client as unknown
+- src/features/chat/hooks/useStreamClient.ts:56:32 [as unknown as] client as unknown as { userID?: unknown }
+- src/features/chat/hooks/useStreamClient.ts:56:32 [other] client as unknown
+- src/features/chat/hooks/useStreamClient.ts:75:11 [as unknown as] userPayload as unknown as OwnUserResponse | UserResponse
+- src/features/chat/hooks/useStreamClient.ts:75:11 [other] userPayload as unknown
+- src/features/discovery/components/court-filters.tsx:473:18 [other] value as | "verified_reservable" | "curated" | "unverified_reservable"
+- src/features/discovery/components/verification-status-banner.tsx:6:17 [as const] { warning: <Clock className="h-4 w-4 text-warning" />, destructive: <XCircle className="h-4 w-4 text-destructive" />, muted: <AlertCircle className="h-4 w-4 text-muted-foreground" />, success: null, } as const
+- src/features/discovery/helpers.ts:241:8 [other] option.unavailableReason as TimeSlot["unavailableReason"]
+- src/features/discovery/hooks/place-detail.ts:366:25 [other] response.verification.status as | "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED"
+- src/features/discovery/hooks/search.ts:252:10 [other] { ...query, data: transformedData, } as typeof query & { data: DiscoveryResult | undefined }
+- src/features/discovery/hooks/search.ts:317:10 [other] { ...query, data: transformedData, } as typeof query & { data: DiscoverySummaryResult | undefined }
+- src/features/discovery/hooks/search.ts:338:10 [other] { ...query, data: places, } as typeof query & { data: PlaceSummary[] }
+- src/features/discovery/place-detail/components/court-detail-client.tsx:70:24 [as const] ["week", "day"] as const
+- src/features/discovery/place-detail/components/court-detail-client.tsx:147:16 [other] placeType as PlaceVerificationDisplayInput["placeType"]
+- src/features/discovery/place-detail/components/court-detail-client.tsx:149:7 [other] verificationStatus as PlaceVerificationDisplayInput["verificationStatus"]
+- src/features/discovery/place-detail/components/court-detail-client.tsx:308:16 [as const] "booked" as const
+- src/features/discovery/place-detail/components/court-detail-client.tsx:309:16 [as const] "available" as const
+- src/features/discovery/place-detail/components/court-detail-client.tsx:311:12 [other] option.unavailableReason as TimeSlot["unavailableReason"]
+- src/features/discovery/place-detail/components/court-detail-client.tsx:388:23 [other] allSlots[i].priceCents as number
+- src/features/discovery/place-detail/components/court-detail-client.tsx:435:20 [other] value as ViewMode
+- src/features/discovery/place-detail/components/court-detail-client.tsx:556:31 [as const] "easeOut" as const
+- src/features/discovery/place-detail/components/place-detail-availability-desktop.tsx:183:41 [other] value as "any" | "court"
+- src/features/discovery/place-detail/components/place-detail-availability-desktop.tsx:242:41 [other] value as "week" | "day"
+- src/features/discovery/place-detail/components/place-detail-availability-desktop.tsx:338:43 [other] value as "week" | "day"
+- src/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section.tsx:338:23 [other] slotsForDay[i].priceCents as number
+- src/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section.tsx:391:24 [other] value as "week" | "day"
+- src/features/discovery/place-detail/components/sections/place-detail-booking-mobile-section.tsx:227:23 [other] mobileDaySlots[i].priceCents as number
+- src/features/discovery/place-detail/components/sections/place-detail-booking-section.tsx:325:30 [other] value as "book" | "openPlay"
+- src/features/discovery/place-detail/state/place-detail-url-state.ts:10:36 [as const] ["any", "court"] as const
+- src/features/discovery/place-detail/state/place-detail-url-state.ts:11:31 [as const] ["week", "day"] as const
+- src/features/discovery/schemas.ts:15:30 [as const] ["list", "map"] as const
+- src/features/discovery/schemas.ts:25:38 [as const] [ "verified_reservable", "curated", "unverified_reservable", ] as const
+- src/features/organization/hooks.ts:16:23 [other] data as { organization: { id: string } }
+- src/features/organization/hooks.ts:17:48 [as any] [payload.organization] as any
+- src/features/owner/booking-studio/helpers.ts:291:29 [other] row.startTime as Date | string
+- src/features/owner/booking-studio/helpers.ts:292:27 [other] row.endTime as Date | string
+- src/features/owner/booking-studio/helpers.ts:464:21 [other] (a.status ?? "PENDING") as DraftRowStatus
+- src/features/owner/booking-studio/helpers.ts:465:21 [other] (b.status ?? "PENDING") as DraftRowStatus
+- src/features/owner/booking-studio/helpers.ts:477:30 [other] row.courtBlockId as string
+- src/features/owner/booking-studio/helpers.ts:480:30 [other] row.courtBlockId as string
+- src/features/owner/booking-studio/hooks.ts:48:16 [other] (viewParam ?? defaultView) as StudioView
+- src/features/owner/components/availability-studio/availability-studio-coordinator.tsx:240:22 [other] jobQuery.data?.metadata as Record<string, unknown> | null
+- src/features/owner/components/availability-studio/availability-studio-coordinator.tsx:253:21 [other] (rowsQuery.data ?? []) as DraftRowItem[]
+- src/features/owner/components/availability-studio/availability-studio-coordinator.tsx:412:11 [other] (reservationsQuery.data ?? []) as ReservationItem[]
+- src/features/owner/components/availability-studio/availability-studio-coordinator.tsx:418:8 [other] (blocksQuery.data ?? []) as CourtBlockItem[]
+- src/features/owner/components/availability-studio/availability-studio-coordinator.tsx:927:18 [other] variables.courtId as string | null
+- src/features/owner/components/availability-studio/availability-studio-coordinator.tsx:931:18 [other] variables.courtLabel as string | null
+- src/features/owner/components/availability-studio/availability-studio-coordinator.tsx:1404:31 [as const] "easeOut" as const
+- src/features/owner/components/availability-studio/availability-studio-coordinator.tsx:2760:13 [other] (guestProfilesQuery.data ?? []) as Array<{ id: string; displayName: string; phoneNumber: string | null; }>
+- src/features/owner/components/availability-studio/availability-studio-coordinator.tsx:2778:13 [other] (guestProfilesQuery.data ?? []) as Array<{ id: string; displayName: string; phoneNumber: string | null; }>
+- src/features/owner/components/availability-studio/availability-studio-toolbar.tsx:121:42 [other] nextView as StudioView
+- src/features/owner/components/booking-studio/draft-row-card.tsx:21:18 [other] (row.status ?? "PENDING") as DraftRowStatus
+- src/features/owner/components/booking-studio/draft-row-card.tsx:23:21 [other] row.startTime as Date | string | null
+- src/features/owner/components/booking-studio/draft-row-card.tsx:24:19 [other] row.endTime as Date | string | null
+- src/features/owner/components/booking-studio/draft-row-card.tsx:71:18 [other] (row.status ?? "PENDING") as DraftRowStatus
+- src/features/owner/components/booking-studio/draft-row-card.tsx:74:21 [other] row.startTime as Date | string | null
+- src/features/owner/components/booking-studio/draft-row-card.tsx:75:19 [other] row.endTime as Date | string | null
+- src/features/owner/components/booking-studio/resize-helpers.ts:52:16 [other] Math.sign(hoursDelta) as 1 | -1
+- src/features/owner/components/booking-studio/selection-panel-form.tsx:40:15 [other] value as "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING"
+- src/features/owner/components/booking-studio/types.ts:20:33 [as const] ["day", "week"] as const
+- src/features/owner/components/booking-studio/types.ts:233:33 [as const] [ { value: "MAINTENANCE", label: "Maintenance" }, { value: "WALK_IN", label: "Walk-in" }, ] as const
+- src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx:180:22 [other] job.metadata as Record<string, unknown> | null
+- src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx:282:19 [other] (sourcesQuery.data ?? []) as SourceRecord[]
+- src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx:302:20 [as Record<string, unknown>] job.metadata as Record<string, unknown>
+- src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx:352:16 [other] row.status as RowStatus
+- src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx:400:30 [as any] payload as any
+- src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx:677:61 [other] v as RowStatus
+- src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx:719:46 [other] row as RowRecord
+- src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx:836:56 [other] row as RowRecord
+- src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx:903:61 [other] row as RowRecord
+- src/features/owner/components/court-schedule-editor/helpers.ts:1:28 [as const] [ { value: 0, label: "Sunday" }, { value: 1, label: "Monday" }, { value: 2, label: "Tuesday" }, { value: 3, label: "Wednesday" }, { value: 4, label: "Thursday" }, { value: 5, label: "Friday" }, { value: 6, label: "Saturday" }, ] as const
+- src/features/owner/components/court-schedule-editor/helpers.ts:12:33 [as const] ["PHP", "USD"] as const
+- src/features/owner/components/court-schedule-editor/helpers.ts:113:37 [other] [] as BlockRow[]
+- src/features/owner/components/court-schedule-editor/hooks.ts:69:7 [other] hours as HoursWindow[]
+- src/features/owner/components/court-schedule-editor/hooks.ts:70:7 [other] rules as RateRule[]
+- src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx:363:11 [other] (reservationsQuery.data ?? []) as ReservationItem[]
+- src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx:369:8 [other] (blocksQuery.data ?? []) as CourtBlockItem[]
+- src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx:1051:31 [as const] "easeOut" as const
+- src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx:1350:43 [other] value as StudioView
+- src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx:2178:13 [other] (guestProfilesQuery.data ?? []) as Array<{ id: string; displayName: string; phoneNumber: string | null; }>
+- src/features/owner/components/place-form.tsx:222:20 [other] field.value as string[]
+- src/features/owner/hooks/place-verification.ts:50:23 [other] data.verification.status as PlaceVerificationStatus
+- src/features/owner/hooks/place-verification.ts:59:23 [other] data.request.status as PlaceVerificationStatus
+- src/features/owner/hooks/places.ts:230:18 [other] (placesQuery.data ?? []) as OwnerPlaceRecord[]
+- src/features/owner/hooks/places.ts:245:21 [other] query.data as CourtWithSportPayload[] | undefined
+- src/features/owner/hooks/places.ts:280:24 [other] placeQuery.data as OwnerPlaceByIdResponse | undefined
+- src/features/owner/hooks/places.ts:282:6 [other] courtsQuery.data as CourtWithSportPayload[] | undefined
+- src/features/owner/hooks/places.ts:315:24 [other] placeQuery.data as OwnerPlaceByIdResponse | undefined
+- src/features/owner/hooks/places.ts:317:6 [other] courtsQuery.data as CourtWithSportPayload[] | undefined
+- src/features/owner/hooks/places.ts:320:31 [other] [] as OwnerCourt[]
+- src/features/owner/hooks/places.ts:359:21 [other] result as { id?: string } | undefined
+- src/features/owner/hooks/places.ts:372:21 [other] result as { id?: string } | undefined
+- src/features/owner/hooks/reservations.ts:233:25 [other] pendingCountQuery.data as number | undefined
+- src/features/owner/hooks/reservations.ts:290:30 [other] data as OwnerReservationRecord[]
+- src/features/owner/hooks/reservations.ts:341:23 [other] variables as { reservationId?: string } | undefined
+- src/features/owner/hooks/reservations.ts:361:23 [other] variables as { reservationId?: string } | undefined
+- src/features/owner/hooks/reservations.ts:381:23 [other] variables as { reservationId?: string } | undefined
+- src/features/owner/hooks/reservations.ts:407:25 [other] pendingCountQuery.data as number | undefined
+- src/features/owner/hooks/reservations.ts:440:23 [other] variables as { reservationId?: string } | undefined
+- src/features/owner/hooks/reservations.ts:453:16 [other] userOnSuccess as (...args: unknown[]) => unknown
+- src/features/owner/pages/owner-active-reservations-page.tsx:300:55 [other] value as ActiveFilter
+- src/features/owner/pages/owner-bookings-import-page.tsx:58:27 [as const] [ { value: "ics", label: "ICS (Calendar export)", description: "Google or Apple calendar export", extensions: ".ics", icon: CalendarDays, }, { value: "csv", label: "CSV", description: "Spreadsheet export", extensions: ".csv", icon: FileText, }, { value: "xlsx", label: "XLSX", description: "Excel workbook", extensions: ".xlsx", icon: FileSpreadsheet, }, { value: "image", label: "Calendar screenshot", description: "Photo of your calendar", extensions: ".png, .jpg", icon: ImageIcon, }, ] as const
+- src/features/owner/pages/owner-bookings-import-page.tsx:397:34 [other] value as CourtScope
+- src/features/owner/pages/owner-dashboard-page.tsx:25:38 [as const] { create_organization: "Create your organization", add_or_claim_venue: "Add or claim a venue", claim_pending: "Claim pending review", verify_venue: "Submit verification", configure_courts: "Set up courts", complete: "Setup complete", } as const
+- src/features/owner/pages/owner-place-court-setup-page.tsx:35:18 [as const] [ "details", "schedule", "publish", "hours", "pricing", ] as const
+- src/features/owner/pages/owner-place-court-setup-page.tsx:46:15 [as const] [ { key: "details", label: "Details" }, { key: "schedule", label: "Schedule" }, { key: "publish", label: "Publish" }, ] as const
+- src/features/owner/pages/owner-place-court-setup-page.tsx:52:21 [as const] [ { value: 0, label: "Sunday" }, { value: 1, label: "Monday" }, { value: 2, label: "Tuesday" }, { value: 3, label: "Wednesday" }, { value: 4, label: "Thursday" }, { value: 5, label: "Friday" }, { value: 6, label: "Saturday" }, ] as const
+- src/features/owner/pages/owner-reservation-detail-page.tsx:33:21 [as const] { CREATED: { label: "Needs acceptance", className: "bg-amber-50 text-amber-700 border-amber-200", }, AWAITING_PAYMENT: { label: "Awaiting payment", className: "bg-warning/10 text-warning border-warning/20", }, PAYMENT_MARKED_BY_USER: { label: "Payment marked", className: "bg-primary/10 text-primary border-primary/20", }, CONFIRMED: { label: "Confirmed", className: "bg-green-50 text-green-700 border-green-200", }, EXPIRED: { label: "Expired", className: "bg-red-50 text-red-700 border-red-200", }, CANCELLED: { label: "Cancelled", className: "bg-slate-50 text-slate-700 border-slate-200", }, } as const
+- src/features/owner/pages/owner-reservations-page.tsx:658:46 [other] v as TabValue
+- src/features/owner/pages/owner-settings-page.tsx:236:26 [other] (paymentMethodsQuery.data?.methods ?? []) as OrganizationPaymentMethodItem[]
+- src/features/reservation/components/profile-form.tsx:65:25 [other] Object.fromEntries( Object.entries(data).filter(([_, value]) => value !== ""), ) as ProfileFormValues
+- src/features/reservation/components/reservation-actions-card.tsx:332:43 [other] value as "REQUEST" | "AUTO"
+- src/features/reservation/components/reservation-actions-card.tsx:362:43 [other] value as "PUBLIC" | "UNLISTED"
+- src/features/reservation/components/reservation-list-item.tsx:77:25 [other] status as ReservationStatus
+- src/features/reservation/components/reservation-tabs.tsx:41:42 [other] value as ReservationTab
+- src/features/reservation/components/status-banner.tsx:52:16 [other] config.variant as "default" | "destructive"
+- src/features/reservation/hooks.ts:357:23 [as const] [ createFeatureQueryOptions( ["reservation", "getMyWithDetails"], reservationApi.queryReservationGetMyWithDetails, { limit: 100, offset: 0, }, ), createFeatureQueryOptions( ["reservation", "getMyWithDetails"], reservationApi.queryReservationGetMyWithDetails, { status: "CONFIRMED", limit: 100, offset: 0, }, ), createFeatureQueryOptions( ["reservation", "getMyWithDetails"], reservationApi.queryReservationGetMyWithDetails, { status: "CANCELLED", limit: 100, offset: 0, }, ), createFeatureQueryOptions( ["reservation", "getMyWithDetails"], reservationApi.queryReservationGetMyWithDetails, { status: "EXPIRED", limit: 100, offset: 0, }, ), ] as const
+- src/features/reservation/hooks.ts:563:32 [as const] ["upcoming", "past", "cancelled"] as const
+- src/features/reservation/pages/place-booking-page.tsx:48:29 [as const] ["any", "court"] as const
+- src/features/reservation/pages/place-booking-page.tsx:506:47 [other] value as "REQUEST" | "AUTO"
+- src/features/reservation/pages/place-booking-page.tsx:533:47 [other] value as "PUBLIC" | "UNLISTED"
+- src/lib/modules/admin/server/revalidate-actions.ts:18:11 [as const] false as const
+- src/lib/modules/admin/server/revalidate-actions.ts:27:9 [as const] true as const
+- src/lib/modules/audit/services/audit.service.ts:52:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/auth/repositories/auth.repository.ts:18:22 [other] error as { message?: unknown }
+- src/lib/modules/bookings-import/lib/ics-parser.ts:36:18 [as Record<string, unknown>] item as Record<string, unknown>
+- src/lib/modules/bookings-import/lib/xlsx-parser.ts:28:17 [other] rawRows as unknown[][]
+- src/lib/modules/bookings-import/repositories/bookings-import-job.repository.ts:63:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/bookings-import/repositories/bookings-import-row.repository.ts:69:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/bookings-import/repositories/bookings-import-row.repository.ts:226:16 [other] row.status as BookingsImportRowStatus
+- src/lib/modules/bookings-import/repositories/bookings-import-source.repository.ts:36:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:440:36 [other] job.status as BookingsImportJobStatus
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:451:39 [other] row.status as BookingsImportRowStatus
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:568:36 [other] job.status as BookingsImportJobStatus
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:579:40 [other] row.status as BookingsImportRowStatus
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:632:39 [other] job.status as BookingsImportJobStatus
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:704:15 [as Record<string, unknown>] job.metadata as Record<string, unknown>
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:706:12 [other] (job.metadata as Record<string, unknown>).selectedCourtId as string
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:706:13 [as Record<string, unknown>] job.metadata as Record<string, unknown>
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:719:25 [other] job.sourceType as ImportSource
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:808:23 [other] source.sourceType as ImportSource
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:890:33 [other] row.errors as string[] | null
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:976:15 [as Record<string, unknown>] job.metadata as Record<string, unknown>
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:978:12 [other] (job.metadata as Record<string, unknown>).selectedCourtId as string
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:978:13 [as Record<string, unknown>] job.metadata as Record<string, unknown>
+- src/lib/modules/bookings-import/services/bookings-import.service.ts:1235:21 [other] Object.entries(SOURCE_CONFIG) as Array< [ImportSource, SourceConfig] >
+- src/lib/modules/chat/providers/stream-chat.provider.ts:36:25 [as const] "stream" as const
+- src/lib/modules/chat/providers/stream-chat.provider.ts:113:65 [as unknown as] { created_by_id: createdById, members: memberIds, reservation_id: reservationId, } as unknown as Record<string, unknown>
+- src/lib/modules/chat/providers/stream-chat.provider.ts:113:65 [other] { created_by_id: createdById, members: memberIds, reservation_id: reservationId, } as unknown
+- src/lib/modules/chat/providers/stream-chat.provider.ts:219:65 [as unknown as] { created_by_id: createdById, members: memberIds, ...(data ?? {}), } as unknown as Record<string, unknown>
+- src/lib/modules/chat/providers/stream-chat.provider.ts:219:65 [other] { created_by_id: createdById, members: memberIds, ...(data ?? {}), } as unknown
+- src/lib/modules/chat/providers/stream-chat.provider.ts:258:9 [as unknown as] channel as unknown as { query: (args: unknown) => Promise<{ messages?: unknown[] }>; }
+- src/lib/modules/chat/providers/stream-chat.provider.ts:258:9 [other] channel as unknown
+- src/lib/modules/chat/providers/stream-chat.provider.ts:276:17 [other] last as { id?: unknown } | null
+- src/lib/modules/chat/providers/stream-chat.provider.ts:277:14 [other] last as { id: string }
+- src/lib/modules/chat/providers/stream-chat.provider.ts:291:21 [as Record<string, unknown>] m as Record<string, unknown>
+- src/lib/modules/chat/providers/stream-chat.provider.ts:292:22 [other] msg.user as Record<string, unknown> | undefined
+- src/lib/modules/chat/providers/stream-chat.provider.ts:296:51 [other] user.id as string
+- src/lib/modules/chat/providers/stream-chat.provider.ts:301:16 [other] msg.attachments as unknown[]
+- src/lib/modules/chat/repositories/open-play-chat-thread.repository.ts:27:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/chat/repositories/reservation-chat-thread.repository.ts:27:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/chat/repositories/reservation-chat-transcript.repository.ts:27:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/chat/repositories/support-chat-thread.repository.ts:35:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/chat/schemas/send-chat-message.schema.ts:3:42 [as const] [ "stream-io-api.com", "stream-io-cdn.com", "getstream.io", ] as const
+- src/lib/modules/chat/schemas/send-chat-message.schema.ts:38:23 [as const] [ { key: "asset_url", value: attachment.asset_url }, { key: "image_url", value: attachment.image_url }, { key: "thumb_url", value: attachment.thumb_url }, ] as const
+- src/lib/modules/chat/services/reservation-chat.service.ts:41:31 [as const] [ "CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER", "CONFIRMED", ] as const
+- src/lib/modules/chat/services/reservation-chat.service.ts:49:4 [other] CHAT_ENABLED_STATUSES as readonly string[]
+- src/lib/modules/chat/services/reservation-chat.service.ts:66:20 [as Record<string, unknown>] value as Record<string, unknown>
+- src/lib/modules/chat/services/reservation-chat.service.ts:411:25 [as unknown as] exportPayload as unknown as Record<string, unknown>
+- src/lib/modules/chat/services/reservation-chat.service.ts:411:25 [other] exportPayload as unknown
+- src/lib/modules/chat/services/reservation-chat.service.ts:447:8 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/claim-request/repositories/claim-request-event.repository.ts:27:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/claim-request/repositories/claim-request.repository.ts:69:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/claim-request/repositories/claim-request.repository.ts:90:20 [other] this.getClient(ctx) as DrizzleTransaction
+- src/lib/modules/claim-request/repositories/claim-request.repository.ts:248:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/claim-request/repositories/claim-request.repository.ts:283:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/claim-request/repositories/claim-request.repository.ts:304:20 [other] this.getClient(ctx) as DrizzleTransaction
+- src/lib/modules/contact/repositories/contact-message.repository.ts:26:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/court-block/repositories/court-block.repository.ts:45:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/court-hours/repositories/court-hours.repository.ts:30:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/court-price-override/repositories/court-price-override.repository.ts:24:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/court-rate-rule/repositories/court-rate-rule.repository.ts:36:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/court/repositories/admin-court.repository.ts:156:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/court/repositories/admin-court.repository.ts:461:20 [other] this.getClient(ctx) as DrizzleTransaction
+- src/lib/modules/court/repositories/court-amenity.repository.ts:31:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/court/repositories/court-photo.repository.ts:33:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/court/repositories/court.repository.ts:50:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/court/repositories/court.repository.ts:77:20 [other] this.getClient(ctx) as DrizzleTransaction
+- src/lib/modules/court/services/admin-court.service.ts:571:11 [other] data.courts.map((court) => court.id).filter(Boolean) as string[]
+- src/lib/modules/guest-profile/repositories/guest-profile.repository.ts:30:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/notification-delivery/admin/notification-delivery-admin.router.ts:351:17 [other] JSON.parse(text) as unknown
+- src/lib/modules/notification-delivery/repositories/notification-delivery-job.repository.ts:33:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/notification-delivery/repositories/notification-recipient.repository.ts:65:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/open-play/repositories/open-play-participant.repository.ts:56:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/open-play/repositories/open-play.repository.ts:103:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/open-play/services/open-play.service.ts:301:21 [other] item.joinPolicy as OpenPlayJoinPolicy
+- src/lib/modules/open-play/services/open-play.service.ts:350:17 [other] context.openPlay.status as OpenPlayStatus
+- src/lib/modules/open-play/services/open-play.service.ts:351:21 [other] context.openPlay.visibility as OpenPlayVisibility
+- src/lib/modules/open-play/services/open-play.service.ts:352:21 [other] context.openPlay.joinPolicy as OpenPlayJoinPolicy
+- src/lib/modules/open-play/services/open-play.service.ts:447:14 [other] myParticipant?.status as OpenPlayParticipantStatus
+- src/lib/modules/open-play/services/open-play.service.ts:476:17 [other] p.participant.status as OpenPlayParticipantStatus
+- src/lib/modules/open-play/services/open-play.service.ts:487:17 [other] p.participant.status as OpenPlayParticipantStatus
+- src/lib/modules/open-play/services/open-play.service.ts:495:20 [other] myParticipant?.status as OpenPlayParticipantStatus
+- src/lib/modules/open-play/services/open-play.service.ts:540:22 [other] tx as DrizzleTransaction
+- src/lib/modules/open-play/services/open-play.service.ts:703:26 [other] context.openPlay.joinPolicy as OpenPlayJoinPolicy
+- src/lib/modules/open-play/services/open-play.service.ts:813:30 [other] existing.status as OpenPlayParticipantStatus
+- src/lib/modules/open-play/services/open-play.service.ts:853:22 [other] tx as DrizzleTransaction
+- src/lib/modules/open-play/services/open-play.service.ts:892:30 [other] row.participant .status as OpenPlayParticipantStatus
+- src/lib/modules/open-play/services/open-play.service.ts:949:22 [other] tx as DrizzleTransaction
+- src/lib/modules/open-play/services/open-play.service.ts:995:22 [other] tx as DrizzleTransaction
+- src/lib/modules/organization-payment/repositories/organization-payment-method.repository.ts:38:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/organization-payment/repositories/organization-reservation-policy.repository.ts:37:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/organization/repositories/organization-profile.repository.ts:32:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/organization/repositories/organization.repository.ts:44:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/organization/repositories/organization.repository.ts:100:14 [other] error as { code?: unknown }
+- src/lib/modules/organization/repositories/organization.repository.ts:128:14 [other] error as { code?: unknown }
+- src/lib/modules/organization/services/organization.service.ts:44:22 [other] node as { base?: unknown }
+- src/lib/modules/organization/services/organization.service.ts:49:37 [as Record<string, unknown>] node as Record<string, unknown>
+- src/lib/modules/owner-setup/use-cases/get-owner-setup-status.use-case.ts:85:16 [other] [place.id, placeCourts] as [ string, Awaited<ReturnType<ICourtRepository["findByPlaceId"]>>, ]
+- src/lib/modules/payment-proof/repositories/payment-proof.repository.ts:34:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/payment-proof/repositories/payment-proof.repository.ts:88:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/payment-proof/repositories/payment-proof.repository.ts:120:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/place-verification/repositories/place-verification.repository.ts:106:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/place-verification/repositories/place-verification.repository.ts:181:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/place-verification/repositories/place-verification.repository.ts:202:20 [other] this.getClient(ctx) as DrizzleTransaction
+- src/lib/modules/place-verification/repositories/place-verification.repository.ts:313:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/place-verification/repositories/place-verification.repository.ts:349:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/place/repositories/place-photo.repository.ts:33:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/place/repositories/place.repository.ts:208:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/place/repositories/place.repository.ts:249:20 [other] this.getClient(ctx) as DrizzleTransaction
+- src/lib/modules/place/repositories/place.repository.ts:453:27 [as const] [ featuredBucket, asc(place.featuredRank), verificationRank, asc(place.name), asc(place.id), ] as const
+- src/lib/modules/place/repositories/place.repository.ts:593:41 [as const] [row.placeId, row] as const
+- src/lib/modules/place/repositories/place.repository.ts:664:39 [as const] [row.placeId, row] as const
+- src/lib/modules/place/repositories/place.repository.ts:784:37 [as const] [row.placeId, row] as const
+- src/lib/modules/place/repositories/place.repository.ts:946:27 [as const] [ featuredBucket, asc(place.featuredRank), verificationRank, asc(place.name), asc(place.id), ] as const
+- src/lib/modules/place/repositories/place.repository.ts:1366:22 [as const] [[row.placeId, row.count]] as const
+- src/lib/modules/profile/repositories/profile.repository.ts:28:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/push-subscription/repositories/push-subscription.repository.ts:43:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/reservation/repositories/reservation-event.repository.ts:29:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/reservation/repositories/reservation.repository.ts:126:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/reservation/repositories/reservation.repository.ts:146:20 [other] this.getClient(ctx) as DrizzleTransaction
+- src/lib/modules/reservation/repositories/reservation.repository.ts:173:11 [other] options.status as | "CREATED" | "AWAITING_PAYMENT" | "PAYMENT_MARKED_BY_USER" | "CONFIRMED" | "EXPIRED" | "CANCELLED"
+- src/lib/modules/reservation/repositories/reservation.repository.ts:218:11 [other] filters.status as | "CREATED" | "AWAITING_PAYMENT" | "PAYMENT_MARKED_BY_USER" | "CONFIRMED" | "EXPIRED" | "CANCELLED"
+- src/lib/modules/reservation/repositories/reservation.repository.ts:418:11 [other] filters.status as | "CREATED" | "AWAITING_PAYMENT" | "PAYMENT_MARKED_BY_USER" | "CONFIRMED" | "EXPIRED" | "CANCELLED"
+- src/lib/modules/reservation/use-cases/expire-stale-reservations.use-case.ts:6:36 [as const] [ "CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER", ] as const
+- src/lib/modules/reservation/use-cases/expire-stale-reservations.use-case.ts:46:26 [as const] [r.id, r.status as StaleReservationStatus] as const
+- src/lib/modules/reservation/use-cases/expire-stale-reservations.use-case.ts:46:33 [other] r.status as StaleReservationStatus
+- src/lib/modules/sport/repositories/sport.repository.ts:14:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/storage/dtos/upload.dto.ts:26:36 [as const] [ "image/jpeg", "image/png", "image/webp", ] as const
+- src/lib/modules/storage/dtos/upload.dto.ts:35:42 [as const] [ "text/calendar", "text/csv", "application/csv", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "image/jpeg", "image/png", ] as const
+- src/lib/modules/storage/dtos/upload.dto.ts:48:52 [as const] [ ...ALLOWED_IMAGE_TYPES, "application/pdf", "application/x-pdf", ] as const
+- src/lib/modules/storage/dtos/upload.dto.ts:57:42 [as const] { PROFILE_IMAGE: "5MB", COURT_PHOTO: "5MB", PLACE_PHOTO: "5MB", ORG_LOGO: "5MB", PAYMENT_PROOF: "10MB", VERIFICATION_DOCUMENT: "10MB", IMPORT_FILE: "20MB", } as const
+- src/lib/modules/storage/dtos/upload.dto.ts:70:32 [as const] { AVATARS: "avatars", PAYMENT_PROOFS: "payment-proofs", COURT_PHOTOS: "court-photos", PLACE_PHOTOS: "place-photos", ORGANIZATION_ASSETS: "organization-assets", BOOKINGS_IMPORTS: "bookings-imports", PLACE_VERIFICATION_DOCS: "place-verification-docs", } as const
+- src/lib/modules/storage/dtos/upload.dto.ts:105:9 [other] file.type as (typeof ALLOWED_IMAGE_TYPES)[number]
+- src/lib/modules/storage/dtos/upload.dto.ts:123:9 [other] file.type as (typeof ALLOWED_IMAGE_TYPES)[number]
+- src/lib/modules/storage/dtos/upload.dto.ts:141:9 [other] file.type as (typeof ALLOWED_VERIFICATION_DOCUMENT_TYPES)[number]
+- src/lib/modules/storage/dtos/upload.dto.ts:159:9 [other] file.type as (typeof ALLOWED_IMPORT_FILE_TYPES)[number]
+- src/lib/modules/user-preference/repositories/user-preference.repository.ts:25:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/modules/user-role/repositories/user-role.repository.ts:22:13 [other] ctx?.tx as DrizzleTransaction
+- src/lib/shared/infra/db/transaction.ts:15:17 [other] tx as TransactionContext
+- src/lib/shared/infra/http/client-identifier.ts:1:27 [as const] [ "cf-connecting-ip", "x-real-ip", "x-forwarded-for", ] as const
+- src/lib/shared/infra/http/http-rate-limit.ts:24:13 [as const] false as const
+- src/lib/shared/infra/http/http-rate-limit.ts:40:18 [as const] true as const
+- src/lib/shared/infra/http/http-rate-limit.ts:44:9 [as const] false as const
+- src/lib/shared/infra/ratelimit/config.ts:6:33 [as const] { /** Standard read endpoints - 100 req/min */ default: { requests: 100, window: "1 m" as const }, /** Authentication endpoints - 10 req/min */ auth: { requests: 10, window: "1 m" as const }, /** Auth endpoints that can trigger outbound email - 5 req/5 min */ authEmailSend: { requests: 5, window: "5 m" as const }, /** Create/update operations - 30 req/min */ mutation: { requests: 30, window: "1 m" as const }, /** Sensitive operations (reservations, claims) - 5 req/min */ sensitive: { requests: 5, window: "1 m" as const }, /** User chat sends - 5 messages/min */ chatSend: { requests: 5, window: "1 m" as const }, /** Chat auth/session provisioning - 12 req/min */ chatSession: { requests: 12, window: "1 m" as const }, /** AI-powered normalization operations - 3 req/10 min */ aiNormalize: { requests: 3, window: "10 m" as const }, } as const
+- src/lib/shared/infra/ratelimit/config.ts:8:37 [as const] "1 m" as const
+- src/lib/shared/infra/ratelimit/config.ts:10:33 [as const] "1 m" as const
+- src/lib/shared/infra/ratelimit/config.ts:12:41 [as const] "5 m" as const
+- src/lib/shared/infra/ratelimit/config.ts:14:37 [as const] "1 m" as const
+- src/lib/shared/infra/ratelimit/config.ts:16:37 [as const] "1 m" as const
+- src/lib/shared/infra/ratelimit/config.ts:18:36 [as const] "1 m" as const
+- src/lib/shared/infra/ratelimit/config.ts:20:40 [as const] "1 m" as const
+- src/lib/shared/infra/ratelimit/config.ts:22:39 [as const] "10 m" as const
+- src/lib/shared/infra/sms/semaphore-sms.service.ts:75:21 [other] parsed[0] as SemaphoreMessage | undefined
+- src/lib/shared/infra/trpc/server.ts:23:9 [as const] "unknown" as const
+- src/lib/shared/infra/trpc/trpc.ts:134:10 [other] ctx as AuthenticatedContext
+- src/lib/shared/infra/trpc/trpc.ts:175:10 [other] ctx as AuthenticatedContext
+- src/lib/shared/infra/web-push/web-push.provider.ts:64:19 [other] error as WebPushLibError
+- src/lib/shared/kernel/auth.ts:16:20 [as const] ["admin", "member", "viewer"] as const
+- src/lib/shared/kernel/auth.ts:33:10 [as const] ["read", "write", "delete", "manage_users"] as const
+- src/lib/shared/kernel/auth.ts:34:11 [as const] ["read", "write"] as const
+- src/lib/shared/kernel/auth.ts:35:11 [as const] ["read"] as const
+- src/lib/shared/kernel/auth.ts:45:11 [other] ROLE_PERMISSIONS[role] as readonly string[]
+- src/lib/shared/lib/google-maps/resolve-google-place-id.ts:103:16 [other] (await response.json()) as { status?: string; candidates?: Array<{ place_id?: string; name?: string }>; }
+- src/lib/shared/lib/ph-location-data.server.ts:24:12 [other] JSON.parse(raw) as PHProvincesCities
+
+Baseline comparison
+- Baseline findings tracked: 528
+- Baseline allowlist entries: 0
+- New non-as const assertions: 0
+- New as const assertions: 0
+
+Assertion gate passed: no new non-as const assertions were introduced.

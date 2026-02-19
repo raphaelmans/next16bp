@@ -250,9 +250,9 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
     ? getClientErrorMessage(previewError, "Request failed")
     : null;
 
-  const organizationOptions = (
-    orgSearchQuery.data as { items?: OrganizationSearchItem[] } | undefined
-  )?.items ?? [];
+  const organizationOptions =
+    (orgSearchQuery.data as { items?: OrganizationSearchItem[] } | undefined)
+      ?.items ?? [];
 
   React.useEffect(() => {
     if (!isTransferOpen) {

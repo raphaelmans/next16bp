@@ -54,7 +54,7 @@ export type AdminApiDeps = {
   toAppError?: (err: unknown) => AppError;
 };
 
-export class AdminApi implements IAdminApi {
+export class AdminApi {
   readonly clientApi: TrpcClientApi;
   private readonly toAppError: (err: unknown) => AppError;
 
@@ -67,6 +67,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "claim", "approve"],
+      (clientApi) => clientApi.admin.claim.approve.mutate,
       input,
       this.toAppError,
     );
@@ -75,6 +76,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "claim", "reject"],
+      (clientApi) => clientApi.admin.claim.reject.mutate,
       input,
       this.toAppError,
     );
@@ -83,6 +85,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "activate"],
+      (clientApi) => clientApi.admin.court.activate.mutate,
       input,
       this.toAppError,
     );
@@ -91,6 +94,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "createCurated"],
+      (clientApi) => clientApi.admin.court.createCurated.mutate,
       input,
       this.toAppError,
     );
@@ -99,6 +103,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "createCuratedBatch"],
+      (clientApi) => clientApi.admin.court.createCuratedBatch.mutate,
       input,
       this.toAppError,
     );
@@ -107,6 +112,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "deactivate"],
+      (clientApi) => clientApi.admin.court.deactivate.mutate,
       input,
       this.toAppError,
     );
@@ -115,6 +121,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "deletePlace"],
+      (clientApi) => clientApi.admin.court.deletePlace.mutate,
       input,
       this.toAppError,
     );
@@ -123,6 +130,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "recurate"],
+      (clientApi) => clientApi.admin.court.recurate.mutate,
       input,
       this.toAppError,
     );
@@ -131,6 +139,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "removePhoto"],
+      (clientApi) => clientApi.admin.court.removePhoto.mutate,
       input,
       this.toAppError,
     );
@@ -139,6 +148,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "transfer"],
+      (clientApi) => clientApi.admin.court.transfer.mutate,
       input,
       this.toAppError,
     );
@@ -147,6 +157,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "update"],
+      (clientApi) => clientApi.admin.court.update.mutate,
       input,
       this.toAppError,
     );
@@ -155,6 +166,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "uploadPhoto"],
+      (clientApi) => clientApi.admin.court.uploadPhoto.mutate,
       input,
       this.toAppError,
     );
@@ -163,6 +175,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "placeVerification", "approve"],
+      (clientApi) => clientApi.admin.placeVerification.approve.mutate,
       input,
       this.toAppError,
     );
@@ -171,6 +184,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "placeVerification", "reject"],
+      (clientApi) => clientApi.admin.placeVerification.reject.mutate,
       input,
       this.toAppError,
     );
@@ -179,6 +193,7 @@ export class AdminApi implements IAdminApi {
     callTrpcQuery(
       this.clientApi,
       ["admin", "claim", "getById"],
+      (clientApi) => clientApi.admin.claim.getById.query,
       input,
       this.toAppError,
     );
@@ -187,6 +202,7 @@ export class AdminApi implements IAdminApi {
     callTrpcQuery(
       this.clientApi,
       ["admin", "claim", "getPending"],
+      (clientApi) => clientApi.admin.claim.getPending.query,
       input,
       this.toAppError,
     );
@@ -195,6 +211,7 @@ export class AdminApi implements IAdminApi {
     callTrpcQuery(
       this.clientApi,
       ["admin", "court", "getById"],
+      (clientApi) => clientApi.admin.court.getById.query,
       input,
       this.toAppError,
     );
@@ -203,6 +220,7 @@ export class AdminApi implements IAdminApi {
     callTrpcQuery(
       this.clientApi,
       ["admin", "court", "list"],
+      (clientApi) => clientApi.admin.court.list.query,
       input,
       this.toAppError,
     );
@@ -211,6 +229,7 @@ export class AdminApi implements IAdminApi {
     callTrpcQuery(
       this.clientApi,
       ["admin", "court", "stats"],
+      (clientApi) => clientApi.admin.court.stats.query,
       input,
       this.toAppError,
     );
@@ -219,6 +238,7 @@ export class AdminApi implements IAdminApi {
     callTrpcQuery(
       this.clientApi,
       ["admin", "placeVerification", "getById"],
+      (clientApi) => clientApi.admin.placeVerification.getById.query,
       input,
       this.toAppError,
     );
@@ -227,17 +247,25 @@ export class AdminApi implements IAdminApi {
     callTrpcQuery(
       this.clientApi,
       ["admin", "placeVerification", "getPending"],
+      (clientApi) => clientApi.admin.placeVerification.getPending.query,
       input,
       this.toAppError,
     );
 
   querySportList = async (input?: unknown) =>
-    callTrpcQuery(this.clientApi, ["sport", "list"], input, this.toAppError);
+    callTrpcQuery(
+      this.clientApi,
+      ["sport", "list"],
+      (clientApi) => clientApi.sport.list.query,
+      input,
+      this.toAppError,
+    );
 
   queryAdminOrganizationSearch = async (input?: unknown) =>
     callTrpcQuery(
       this.clientApi,
       ["admin", "organization", "search"],
+      (clientApi) => clientApi.admin.organization.search.query,
       input,
       this.toAppError,
     );
@@ -246,6 +274,7 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "notificationDelivery", "dispatchNow"],
+      (clientApi) => clientApi.admin.notificationDelivery.dispatchNow.mutate,
       input,
       this.toAppError,
     );
@@ -256,6 +285,9 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "notificationDelivery", "enqueueReservationCreatedTest"],
+      (clientApi) =>
+        clientApi.admin.notificationDelivery.enqueueReservationCreatedTest
+          .mutate,
       input,
       this.toAppError,
     );
@@ -266,6 +298,9 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "notificationDelivery", "enqueuePlaceVerificationReviewedTest"],
+      (clientApi) =>
+        clientApi.admin.notificationDelivery
+          .enqueuePlaceVerificationReviewedTest.mutate,
       input,
       this.toAppError,
     );
@@ -276,6 +311,8 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "notificationDelivery", "enqueueClaimReviewedTest"],
+      (clientApi) =>
+        clientApi.admin.notificationDelivery.enqueueClaimReviewedTest.mutate,
       input,
       this.toAppError,
     );
@@ -286,6 +323,8 @@ export class AdminApi implements IAdminApi {
     callTrpcQuery(
       this.clientApi,
       ["admin", "notificationDelivery", "listMyWebPushSubscriptions"],
+      (clientApi) =>
+        clientApi.admin.notificationDelivery.listMyWebPushSubscriptions.query,
       input,
       this.toAppError,
     );
@@ -294,14 +333,15 @@ export class AdminApi implements IAdminApi {
     callTrpcMutation(
       this.clientApi,
       ["admin", "notificationDelivery", "enqueueWebPushTest"],
+      (clientApi) =>
+        clientApi.admin.notificationDelivery.enqueueWebPushTest.mutate,
       input,
       this.toAppError,
     );
 }
 
-export const createAdminApi = (deps: AdminApiDeps = {}): IAdminApi =>
-  new AdminApi(deps);
+export const createAdminApi = (deps: AdminApiDeps = {}) => new AdminApi(deps);
 
 const ADMIN_API_SINGLETON = createAdminApi();
 
-export const getAdminApi = (): IAdminApi => ADMIN_API_SINGLETON;
+export const getAdminApi = () => ADMIN_API_SINGLETON;

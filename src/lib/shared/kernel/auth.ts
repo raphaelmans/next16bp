@@ -13,6 +13,19 @@ export interface Session {
  */
 export type UserRole = "admin" | "member" | "viewer";
 
+const USER_ROLES = ["admin", "member", "viewer"] as const;
+
+export function isUserRole(value: unknown): value is UserRole {
+  return USER_ROLES.some((role) => role === value);
+}
+
+export function normalizeUserRole(
+  value: unknown,
+  fallback: UserRole = "member",
+): UserRole {
+  return isUserRole(value) ? value : fallback;
+}
+
 /**
  * Role-based permissions mapping.
  */

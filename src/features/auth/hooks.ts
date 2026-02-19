@@ -108,13 +108,11 @@ export function useMutAuthLogout() {
     mutate: (
       _variables?: unknown,
       options?: Parameters<typeof mutation.mutate>[1],
-    ) =>
-      mutation.mutate(undefined, options),
+    ) => mutation.mutate(undefined, options),
     mutateAsync: (
       _variables?: unknown,
       options?: Parameters<typeof mutation.mutateAsync>[1],
-    ) =>
-      mutation.mutateAsync(undefined, options),
+    ) => mutation.mutateAsync(undefined, options),
   };
 }
 

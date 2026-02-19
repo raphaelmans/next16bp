@@ -3,26 +3,19 @@
 import type { AppError } from "@/common/errors/app-error";
 import type { TrpcClientApi } from "@/trpc/client-api";
 
-type UnknownRecord = Record<string, unknown>;
+type QueryInvoker<TOutput> =
+  | ((clientApi: TrpcClientApi) => {
+      bivarianceHack(input: unknown): Promise<TOutput>;
+    }["bivarianceHack"])
+  | null
+  | undefined;
 
-const asRecord = (value: unknown): UnknownRecord | null =>
-  value && (typeof value === "object" || typeof value === "function")
-    ? (value as UnknownRecord)
-    : null;
-
-const getByPath = (source: unknown, path: readonly string[]): unknown => {
-  let current: unknown = source;
-
-  for (const segment of path) {
-    const record = asRecord(current);
-    if (!record) {
-      return undefined;
-    }
-    current = record[segment];
-  }
-
-  return current;
-};
+type MutationInvoker<TOutput> =
+  | ((clientApi: TrpcClientApi) => {
+      bivarianceHack(input: unknown): Promise<TOutput>;
+    }["bivarianceHack"])
+  | null
+  | undefined;
 
 export const buildTrpcQueryKey = (
   path: readonly string[],
@@ -30,43 +23,43 @@ export const buildTrpcQueryKey = (
 ): readonly unknown[] =>
   input === undefined ? ["trpc", ...path] : ["trpc", ...path, input];
 
-export const callTrpcQuery = async (
+export const callTrpcQuery = async <TInput, TOutput>(
   clientApi: TrpcClientApi,
   path: readonly string[],
-  input: unknown,
+  invoker: QueryInvoker<TOutput>,
+  input: TInput,
   toAppError: (err: unknown) => AppError,
-): Promise<unknown> => {
-  const procedure = getByPath(clientApi, path) as UnknownRecord | undefined;
-  const query = procedure?.query;
-
-  if (typeof query !== "function") {
+): Promise<TOutput> => {
+  if (!invoker) {
     throw new Error(`Missing query handler for procedure: ${path.join(".")}`);
   }
 
+  const query = invoker(clientApi);
+
   try {
-    return await (query as (value: unknown) => Promise<unknown>)(input);
+    return await query(input);
   } catch (err) {
     throw toAppError(err);
   }
 };
 
-export const callTrpcMutation = async (
+export const callTrpcMutation = async <TInput, TOutput>(
   clientApi: TrpcClientApi,
   path: readonly string[],
-  input: unknown,
+  invoker: MutationInvoker<TOutput>,
+  input: TInput,
   toAppError: (err: unknown) => AppError,
-): Promise<unknown> => {
-  const procedure = getByPath(clientApi, path) as UnknownRecord | undefined;
-  const mutate = procedure?.mutate;
-
-  if (typeof mutate !== "function") {
+): Promise<TOutput> => {
+  if (!invoker) {
     throw new Error(
       `Missing mutation handler for procedure: ${path.join(".")}`,
     );
   }
 
+  const mutate = invoker(clientApi);
+
   try {
-    return await (mutate as (value: unknown) => Promise<unknown>)(input);
+    return await mutate(input);
   } catch (err) {
     throw toAppError(err);
   }

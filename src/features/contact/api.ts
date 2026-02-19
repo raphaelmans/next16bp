@@ -14,7 +14,7 @@ export type ContactApiDeps = {
   toAppError?: (err: unknown) => AppError;
 };
 
-export class ContactApi implements IContactApi {
+export class ContactApi {
   readonly clientApi: TrpcClientApi;
   private readonly toAppError: (err: unknown) => AppError;
 
@@ -27,14 +27,15 @@ export class ContactApi implements IContactApi {
     callTrpcMutation(
       this.clientApi,
       ["contact", "submit"],
+      (clientApi) => clientApi.contact.submit.mutate,
       input,
       this.toAppError,
     );
 }
 
-export const createContactApi = (deps: ContactApiDeps = {}): IContactApi =>
+export const createContactApi = (deps: ContactApiDeps = {}) =>
   new ContactApi(deps);
 
 const CONTACT_API_SINGLETON = createContactApi();
 
-export const getContactApi = (): IContactApi => CONTACT_API_SINGLETON;
+export const getContactApi = () => CONTACT_API_SINGLETON;

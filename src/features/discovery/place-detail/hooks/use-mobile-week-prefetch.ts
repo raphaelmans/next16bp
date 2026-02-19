@@ -7,16 +7,23 @@ import {
   toUtcISOString,
 } from "@/common/time-zone";
 import { parseDayKeyToDate } from "@/features/discovery/helpers";
+import type { RouterInputs } from "@/trpc/types";
 
 type DiscoveryPrefetchUtils = {
   availability: {
     getForPlaceSportRange: {
-      getData: (input: any) => unknown;
-      fetch: (input: any) => Promise<unknown>;
+      getData: (
+        input: RouterInputs["availability"]["getForPlaceSportRange"],
+      ) => unknown;
+      fetch: (
+        input: RouterInputs["availability"]["getForPlaceSportRange"],
+      ) => Promise<unknown>;
     };
     getForCourt: {
-      getData: (input: any) => unknown;
-      fetch: (input: any) => Promise<unknown>;
+      getData: (input: RouterInputs["availability"]["getForCourt"]) => unknown;
+      fetch: (
+        input: RouterInputs["availability"]["getForCourt"],
+      ) => Promise<unknown>;
     };
   };
 };

@@ -26,7 +26,7 @@ export type ReservationApiDeps = {
   toAppError?: (err: unknown) => AppError;
 };
 
-export class ReservationApi implements IReservationApi {
+export class ReservationApi {
   readonly clientApi: TrpcClientApi;
   private readonly toAppError: (err: unknown) => AppError;
 
@@ -39,6 +39,7 @@ export class ReservationApi implements IReservationApi {
     callTrpcMutation(
       this.clientApi,
       ["paymentProof", "add"],
+      (clientApi) => clientApi.paymentProof.add.mutate,
       input,
       this.toAppError,
     );
@@ -47,6 +48,7 @@ export class ReservationApi implements IReservationApi {
     callTrpcMutation(
       this.clientApi,
       ["paymentProof", "upload"],
+      (clientApi) => clientApi.paymentProof.upload.mutate,
       input,
       this.toAppError,
     );
@@ -55,6 +57,7 @@ export class ReservationApi implements IReservationApi {
     callTrpcMutation(
       this.clientApi,
       ["profile", "update"],
+      (clientApi) => clientApi.profile.update.mutate,
       input,
       this.toAppError,
     );
@@ -63,6 +66,7 @@ export class ReservationApi implements IReservationApi {
     callTrpcMutation(
       this.clientApi,
       ["profile", "uploadAvatar"],
+      (clientApi) => clientApi.profile.uploadAvatar.mutate,
       input,
       this.toAppError,
     );
@@ -71,6 +75,7 @@ export class ReservationApi implements IReservationApi {
     callTrpcMutation(
       this.clientApi,
       ["reservation", "cancel"],
+      (clientApi) => clientApi.reservation.cancel.mutate,
       input,
       this.toAppError,
     );
@@ -79,6 +84,7 @@ export class ReservationApi implements IReservationApi {
     callTrpcMutation(
       this.clientApi,
       ["reservation", "createForAnyCourt"],
+      (clientApi) => clientApi.reservation.createForAnyCourt.mutate,
       input,
       this.toAppError,
     );
@@ -87,6 +93,7 @@ export class ReservationApi implements IReservationApi {
     callTrpcMutation(
       this.clientApi,
       ["reservation", "createForCourt"],
+      (clientApi) => clientApi.reservation.createForCourt.mutate,
       input,
       this.toAppError,
     );
@@ -95,17 +102,25 @@ export class ReservationApi implements IReservationApi {
     callTrpcMutation(
       this.clientApi,
       ["reservation", "markPayment"],
+      (clientApi) => clientApi.reservation.markPayment.mutate,
       input,
       this.toAppError,
     );
 
   queryProfileMe = async (input?: unknown) =>
-    callTrpcQuery(this.clientApi, ["profile", "me"], input, this.toAppError);
+    callTrpcQuery(
+      this.clientApi,
+      ["profile", "me"],
+      (clientApi) => clientApi.profile.me.query,
+      input,
+      this.toAppError,
+    );
 
   queryReservationGetById = async (input?: unknown) =>
     callTrpcQuery(
       this.clientApi,
       ["reservation", "getById"],
+      (clientApi) => clientApi.reservation.getById.query,
       input,
       this.toAppError,
     );
@@ -114,6 +129,7 @@ export class ReservationApi implements IReservationApi {
     callTrpcQuery(
       this.clientApi,
       ["reservation", "getDetail"],
+      (clientApi) => clientApi.reservation.getDetail.query,
       input,
       this.toAppError,
     );
@@ -122,6 +138,7 @@ export class ReservationApi implements IReservationApi {
     callTrpcQuery(
       this.clientApi,
       ["reservation", "getMyWithDetails"],
+      (clientApi) => clientApi.reservation.getMyWithDetails.query,
       input,
       this.toAppError,
     );
@@ -130,16 +147,15 @@ export class ReservationApi implements IReservationApi {
     callTrpcQuery(
       this.clientApi,
       ["reservation", "getPaymentInfo"],
+      (clientApi) => clientApi.reservation.getPaymentInfo.query,
       input,
       this.toAppError,
     );
 }
 
-export const createReservationApi = (
-  deps: ReservationApiDeps = {},
-): IReservationApi => new ReservationApi(deps);
+export const createReservationApi = (deps: ReservationApiDeps = {}) =>
+  new ReservationApi(deps);
 
 const RESERVATION_API_SINGLETON = createReservationApi();
 
-export const getReservationApi = (): IReservationApi =>
-  RESERVATION_API_SINGLETON;
+export const getReservationApi = () => RESERVATION_API_SINGLETON;

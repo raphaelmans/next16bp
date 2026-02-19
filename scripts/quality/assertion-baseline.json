@@ -1,0 +1,3175 @@
+{
+  "version": 1,
+  "generatedAt": "2026-02-18T19:37:21.793Z",
+  "findings": [
+    {
+      "key": "b89d5ae279ee22cd8b48651792e5352ee6e50455",
+      "file": "src/app/(public)/owners/get-started/page.tsx",
+      "classification": "as const",
+      "nodeText": "{ \"@context\": \"https://schema.org\", \"@type\": \"WebApplication\", name: \"KudosCourts\", applicationCategory: \"BusinessApplication\", operatingSystem: \"All\", url: canonicalUrl.toString(), description: \"Free reservation system for sports venues in the Philippines. List or claim a venue, verify ownership, and accept online reservations.\", offers: { \"@type\": \"Offer\", price: \"0\", priceCurrency: \"PHP\", }, areaServed: { \"@type\": \"Country\", name: \"Philippines\", }, isAccessibleForFree: true, } as const"
+    },
+    {
+      "key": "03bac1ad51d71159e0281f98fa321456d30d8312",
+      "file": "src/app/api/cron/dispatch-notification-delivery/route.ts",
+      "classification": "other",
+      "nodeText": "job.payload as Record<string, unknown> | null"
+    },
+    {
+      "key": "03bac1ad51d71159e0281f98fa321456d30d8312",
+      "file": "src/app/api/cron/dispatch-notification-delivery/route.ts",
+      "classification": "other",
+      "nodeText": "job.payload as Record<string, unknown> | null"
+    },
+    {
+      "key": "03bac1ad51d71159e0281f98fa321456d30d8312",
+      "file": "src/app/api/cron/dispatch-notification-delivery/route.ts",
+      "classification": "other",
+      "nodeText": "job.payload as Record<string, unknown> | null"
+    },
+    {
+      "key": "03bac1ad51d71159e0281f98fa321456d30d8312",
+      "file": "src/app/api/cron/dispatch-notification-delivery/route.ts",
+      "classification": "other",
+      "nodeText": "job.payload as Record<string, unknown> | null"
+    },
+    {
+      "key": "03bac1ad51d71159e0281f98fa321456d30d8312",
+      "file": "src/app/api/cron/dispatch-notification-delivery/route.ts",
+      "classification": "other",
+      "nodeText": "job.payload as Record<string, unknown> | null"
+    },
+    {
+      "key": "03bac1ad51d71159e0281f98fa321456d30d8312",
+      "file": "src/app/api/cron/dispatch-notification-delivery/route.ts",
+      "classification": "other",
+      "nodeText": "job.payload as Record<string, unknown> | null"
+    },
+    {
+      "key": "03bac1ad51d71159e0281f98fa321456d30d8312",
+      "file": "src/app/api/cron/dispatch-notification-delivery/route.ts",
+      "classification": "other",
+      "nodeText": "job.payload as Record<string, unknown> | null"
+    },
+    {
+      "key": "03bac1ad51d71159e0281f98fa321456d30d8312",
+      "file": "src/app/api/cron/dispatch-notification-delivery/route.ts",
+      "classification": "other",
+      "nodeText": "job.payload as Record<string, unknown> | null"
+    },
+    {
+      "key": "03bac1ad51d71159e0281f98fa321456d30d8312",
+      "file": "src/app/api/cron/dispatch-notification-delivery/route.ts",
+      "classification": "other",
+      "nodeText": "job.payload as Record<string, unknown> | null"
+    },
+    {
+      "key": "03bac1ad51d71159e0281f98fa321456d30d8312",
+      "file": "src/app/api/cron/dispatch-notification-delivery/route.ts",
+      "classification": "other",
+      "nodeText": "job.payload as Record<string, unknown> | null"
+    },
+    {
+      "key": "b097cbe03d01cd45850a6f475270b1d2e94c354e",
+      "file": "src/app/api/mobile/v1/owner/blocks/[blockId]/convert-to-guest/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "88bd7e90038a5723e3556e3f9d21875d821ac636",
+      "file": "src/app/api/mobile/v1/owner/blocks/[blockId]/range/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "a84c18df31ce3dd3f5fcdd3800c63b37c3fdaf50",
+      "file": "src/app/api/mobile/v1/owner/chat/claims/[claimRequestId]/messages/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "d89f8d9282754bfd7626b7ccbc1d8b1f7a07021b",
+      "file": "src/app/api/mobile/v1/owner/chat/claims/[claimRequestId]/messages/route.ts",
+      "classification": "as never",
+      "nodeText": "{ session } as never"
+    },
+    {
+      "key": "35f76ce1b3a79668c264d5cbfdb5dfc47085ef0d",
+      "file": "src/app/api/mobile/v1/owner/chat/claims/[claimRequestId]/session/route.ts",
+      "classification": "as never",
+      "nodeText": "{ session } as never"
+    },
+    {
+      "key": "c347438ea9290d4bc8637c79fb476ebaa7146ff3",
+      "file": "src/app/api/mobile/v1/owner/chat/reservations/[reservationId]/messages/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "05c0452986ebf0ac76f3decb49db830e5b3fd00d",
+      "file": "src/app/api/mobile/v1/owner/chat/verifications/[placeVerificationRequestId]/messages/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "d058613bf29dc0b5787a9dbcd632029c6f57fe27",
+      "file": "src/app/api/mobile/v1/owner/chat/verifications/[placeVerificationRequestId]/messages/route.ts",
+      "classification": "as never",
+      "nodeText": "{ session } as never"
+    },
+    {
+      "key": "0a182dd13b0be6353dda9140388f8ad076e5537d",
+      "file": "src/app/api/mobile/v1/owner/chat/verifications/[placeVerificationRequestId]/session/route.ts",
+      "classification": "as never",
+      "nodeText": "{ session } as never"
+    },
+    {
+      "key": "cfcf20bf44924dcb5e8baf9818db0f6d81d5b90b",
+      "file": "src/app/api/mobile/v1/owner/courts/[courtId]/blocks/maintenance/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "3254dc506f4ff51eeea0fd0bd551a6d445b2106b",
+      "file": "src/app/api/mobile/v1/owner/courts/[courtId]/blocks/walk-in/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "63bf1dc2cf5c824f4259af937bc6bb8c41d10c72",
+      "file": "src/app/api/mobile/v1/owner/courts/[courtId]/hours/copy-from/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "0c4a2b9c5be1436687ff2b0b7121e97e2942ebc7",
+      "file": "src/app/api/mobile/v1/owner/courts/[courtId]/hours/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "3ca100c437807df09161b38d83b33d1570c5f999",
+      "file": "src/app/api/mobile/v1/owner/courts/[courtId]/rate-rules/copy-from/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "d900a1c1db399f564e7aba290507a77ea5506577",
+      "file": "src/app/api/mobile/v1/owner/courts/[courtId]/rate-rules/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "7b8ffeabc24d0672b396628bc7adf6755bf9ca58",
+      "file": "src/app/api/mobile/v1/owner/courts/[courtId]/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "50da8ba3576585c7502676723282185a435b663f",
+      "file": "src/app/api/mobile/v1/owner/import/bookings/jobs/[jobId]/normalize/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "f691d00dac2cd6a4d9d1aa01846f47e570acb771",
+      "file": "src/app/api/mobile/v1/owner/import/bookings/rows/[rowId]/replace-with-guest/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "70738f518ae346fb78d2f62726721c5e80e6961b",
+      "file": "src/app/api/mobile/v1/owner/import/bookings/rows/[rowId]/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "d12d944c1f24612ea7460ceabcd4a1db195d543f",
+      "file": "src/app/api/mobile/v1/owner/organizations/[organizationId]/guest-profiles/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "c8b751295d0655196c359b59f1d6c1fe7d8a37a3",
+      "file": "src/app/api/mobile/v1/owner/organizations/[organizationId]/payment-methods/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "5a5fd7c756269cbbf749b89dc6f8bba457372005",
+      "file": "src/app/api/mobile/v1/owner/organizations/[organizationId]/profile/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "254e930837a3e1b33177ed9889717feebb82ebf7",
+      "file": "src/app/api/mobile/v1/owner/organizations/[organizationId]/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "78d4d5b9d3f7b2c06ff23907001c91ed266465b4",
+      "file": "src/app/api/mobile/v1/owner/organizations/[organizationId]/venues/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "cfb8909851ce58db9b11ec832fb7241f6caa4081",
+      "file": "src/app/api/mobile/v1/owner/organizations/route.ts",
+      "classification": "other",
+      "nodeText": "JSON.parse(JSON.stringify(value)) as T"
+    },
+    {
+      "key": "98db299a9f50d92d554ef6c714355229a130bf61",
+      "file": "src/app/api/mobile/v1/owner/payment-methods/[paymentMethodId]/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "d7940073c9a3f794a109890653ee9612f0d5c0fa",
+      "file": "src/app/api/mobile/v1/owner/reservations/[reservationId]/confirm-paid-offline/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "cefd6e786e13a0dc576bfaa50346e6e7c90a7570",
+      "file": "src/app/api/mobile/v1/owner/reservations/[reservationId]/confirm-payment/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "9253df1d90503e5e36d58e3b896b82a7a39bba88",
+      "file": "src/app/api/mobile/v1/owner/reservations/[reservationId]/reject/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "379d5f3bbd1567244cc884cbb787d6f80771b3d7",
+      "file": "src/app/api/mobile/v1/owner/venues/[venueId]/courts/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "e14117e2d47f33be5163723802a25a5debf3ce84",
+      "file": "src/app/api/mobile/v1/owner/venues/[venueId]/photos/reorder/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "a9c440909705343557ea2dfe138d079aba245a64",
+      "file": "src/app/api/mobile/v1/owner/venues/[venueId]/reservations/toggle/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "3de6986a50ae8af92dd76d168b5bf20a3e90f497",
+      "file": "src/app/api/mobile/v1/owner/venues/[venueId]/route.ts",
+      "classification": "raw as Record<string, unknown>",
+      "nodeText": "raw as Record<string, unknown>"
+    },
+    {
+      "key": "7d8dd813de16eefac913307d405522ded362928a",
+      "file": "src/app/api/poc/google-loc/nearby/route.ts",
+      "classification": "as Record<string, unknown>",
+      "nodeText": "body as Record<string, unknown>"
+    },
+    {
+      "key": "788af63d015c8cb0cc0000fc6ad50c45c519ca59",
+      "file": "src/app/api/poc/google-loc/nearby/route.ts",
+      "classification": "other",
+      "nodeText": "(await response.json()) as { status?: string; error_message?: string; results?: Array<{ name?: string; place_id?: string }>; }"
+    },
+    {
+      "key": "916c65573320f5bff279c18af3f1436fa53214a9",
+      "file": "src/app/api/poc/google-loc/route.ts",
+      "classification": "other",
+      "nodeText": "body as { url?: unknown }"
+    },
+    {
+      "key": "5a8f21d4455ab28d6a0b1afb0df24c6528c43396",
+      "file": "src/app/api/public/countries/route.ts",
+      "classification": "other",
+      "nodeText": "JSON.parse(raw) as Country[]"
+    },
+    {
+      "key": "b70f9703ea76b10daf4e02370275f86a93b26658",
+      "file": "src/app/api/public/ph-provinces-cities/route.ts",
+      "classification": "other",
+      "nodeText": "JSON.parse(raw) as unknown"
+    },
+    {
+      "key": "2f077ce0ca28f23f997eb98ed3092cc6a84a72a2",
+      "file": "src/app/api/public/track/route.ts",
+      "classification": "other",
+      "nodeText": "[] as string[]"
+    },
+    {
+      "key": "641923d156446746dbf4f0cb278f27a3f4eee604",
+      "file": "src/app/auth/confirm/route.ts",
+      "classification": "other",
+      "nodeText": "searchParams.get(\"type\") as EmailOtpType | null"
+    },
+    {
+      "key": "cd74efa0c5bc6533bc2bff358367fae94943c36a",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"daily\" as const"
+    },
+    {
+      "key": "cd74efa0c5bc6533bc2bff358367fae94943c36a",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"daily\" as const"
+    },
+    {
+      "key": "8cdfee83107ad05b9f78e166a2fb5b6acdce80f1",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"weekly\" as const"
+    },
+    {
+      "key": "cc15d7b51a39a8d800fed26968afcdc05e298a7b",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"monthly\" as const"
+    },
+    {
+      "key": "cc15d7b51a39a8d800fed26968afcdc05e298a7b",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"monthly\" as const"
+    },
+    {
+      "key": "8cdfee83107ad05b9f78e166a2fb5b6acdce80f1",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"weekly\" as const"
+    },
+    {
+      "key": "dc2d2a97e3ef103e64d31521a166b8f3d4607c14",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"yearly\" as const"
+    },
+    {
+      "key": "dc2d2a97e3ef103e64d31521a166b8f3d4607c14",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"yearly\" as const"
+    },
+    {
+      "key": "dc2d2a97e3ef103e64d31521a166b8f3d4607c14",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"yearly\" as const"
+    },
+    {
+      "key": "8cdfee83107ad05b9f78e166a2fb5b6acdce80f1",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"weekly\" as const"
+    },
+    {
+      "key": "8cdfee83107ad05b9f78e166a2fb5b6acdce80f1",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"weekly\" as const"
+    },
+    {
+      "key": "8cdfee83107ad05b9f78e166a2fb5b6acdce80f1",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"weekly\" as const"
+    },
+    {
+      "key": "8cdfee83107ad05b9f78e166a2fb5b6acdce80f1",
+      "file": "src/app/sitemap.ts",
+      "classification": "as const",
+      "nodeText": "\"weekly\" as const"
+    },
+    {
+      "key": "27f800d7c14db526b6e26ffa7cbb0f214c2833f3",
+      "file": "src/common/amenities.ts",
+      "classification": "as const",
+      "nodeText": "[ \"Parking\", \"Restrooms\", \"Lights\", \"Showers\", \"Locker Rooms\", \"Equipment Rental\", \"Pro Shop\", \"Seating Area\", \"Food/Drinks\", \"WiFi\", \"Air Conditioning\", \"Covered Courts\", \"Pet Friendly\", ] as const"
+    },
+    {
+      "key": "6f220c9c70b334da33dcdf9c0ec1489b33af5ecb",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"public\" as const"
+    },
+    {
+      "key": "6f220c9c70b334da33dcdf9c0ec1489b33af5ecb",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"public\" as const"
+    },
+    {
+      "key": "6f220c9c70b334da33dcdf9c0ec1489b33af5ecb",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"public\" as const"
+    },
+    {
+      "key": "6f220c9c70b334da33dcdf9c0ec1489b33af5ecb",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"public\" as const"
+    },
+    {
+      "key": "6f220c9c70b334da33dcdf9c0ec1489b33af5ecb",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"public\" as const"
+    },
+    {
+      "key": "7508e30c6a77f4745ac470371b084f701356b545",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"guest\" as const"
+    },
+    {
+      "key": "7508e30c6a77f4745ac470371b084f701356b545",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"guest\" as const"
+    },
+    {
+      "key": "7508e30c6a77f4745ac470371b084f701356b545",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"guest\" as const"
+    },
+    {
+      "key": "8d777020ddbe1c520227799df5effa367049884a",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"protected\" as const"
+    },
+    {
+      "key": "8d777020ddbe1c520227799df5effa367049884a",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"protected\" as const"
+    },
+    {
+      "key": "6f220c9c70b334da33dcdf9c0ec1489b33af5ecb",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"public\" as const"
+    },
+    {
+      "key": "6f220c9c70b334da33dcdf9c0ec1489b33af5ecb",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"public\" as const"
+    },
+    {
+      "key": "6f220c9c70b334da33dcdf9c0ec1489b33af5ecb",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"public\" as const"
+    },
+    {
+      "key": "6f220c9c70b334da33dcdf9c0ec1489b33af5ecb",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"public\" as const"
+    },
+    {
+      "key": "6f220c9c70b334da33dcdf9c0ec1489b33af5ecb",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"public\" as const"
+    },
+    {
+      "key": "6f220c9c70b334da33dcdf9c0ec1489b33af5ecb",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"public\" as const"
+    },
+    {
+      "key": "8d777020ddbe1c520227799df5effa367049884a",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"protected\" as const"
+    },
+    {
+      "key": "8d777020ddbe1c520227799df5effa367049884a",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"protected\" as const"
+    },
+    {
+      "key": "6f220c9c70b334da33dcdf9c0ec1489b33af5ecb",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"public\" as const"
+    },
+    {
+      "key": "8d777020ddbe1c520227799df5effa367049884a",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"protected\" as const"
+    },
+    {
+      "key": "fffc7b9224dd209f214dc203fdc3ee474c15f262",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"owner\" as const"
+    },
+    {
+      "key": "278dd8c976cef4d63c10df4192cc30eadefe7e84",
+      "file": "src/common/app-routes.ts",
+      "classification": "as const",
+      "nodeText": "\"admin\" as const"
+    },
+    {
+      "key": "8d97403f50d883a973cd45db4c8fcdf1424406cb",
+      "file": "src/common/clients/amenities-client/index.ts",
+      "classification": "other",
+      "nodeText": "(await response.json()) as unknown"
+    },
+    {
+      "key": "0a9345b0486ed228e0de7ae173a4a9525b47ef6e",
+      "file": "src/common/clients/google-loc-client/index.ts",
+      "classification": "other",
+      "nodeText": "(await response.json()) as unknown"
+    },
+    {
+      "key": "0a9345b0486ed228e0de7ae173a4a9525b47ef6e",
+      "file": "src/common/clients/google-loc-client/index.ts",
+      "classification": "other",
+      "nodeText": "(await response.json()) as unknown"
+    },
+    {
+      "key": "e72d52daf51b9b5b056e4497bb3fdb2bb1a98db1",
+      "file": "src/common/clients/ph-provinces-cities-client/index.ts",
+      "classification": "other",
+      "nodeText": "(await response.json()) as unknown"
+    },
+    {
+      "key": "b41b5b92f274e62b37ccd0bab4dc0d07cd48e697",
+      "file": "src/common/errors/adapters/trpc.ts",
+      "classification": "as Record<string, unknown>",
+      "nodeText": "value as Record<string, unknown>"
+    },
+    {
+      "key": "15246d49daebccb578a46e3d9b5820b80503efbe",
+      "file": "src/common/feature-api-hooks.ts",
+      "classification": "as never",
+      "nodeText": "({ queryKey: buildTrpcQueryKey(path, input), queryFn: () => queryFn(input), ...(options ?? {}), }) as never"
+    },
+    {
+      "key": "275eddc93419872da0ab2272095c71c1133d40fc",
+      "file": "src/common/feature-api-hooks.ts",
+      "classification": "other",
+      "nodeText": "useQuery({ queryKey: buildTrpcQueryKey(path, input), queryFn: () => queryFn(input), ...(options ?? {}), } as never) as UseQueryResult<TData, AppError>"
+    },
+    {
+      "key": "37f40b404702bf77ed16af949a2f9ccf2aa29d9d",
+      "file": "src/common/feature-api-hooks.ts",
+      "classification": "as never",
+      "nodeText": "{ queryKey: buildTrpcQueryKey(path, input), queryFn: () => queryFn(input), ...(options ?? {}), } as never"
+    },
+    {
+      "key": "04194ff08730eb0e27eac2cf9d4a5beaafb44036",
+      "file": "src/common/feature-api-hooks.ts",
+      "classification": "other",
+      "nodeText": "useMutation({ mutationFn: (input: unknown) => mutationFn(input), ...(options ?? {}), } as never) as UseMutationResult<TData, AppError, unknown, unknown>"
+    },
+    {
+      "key": "743812288b63c58321941bd52cc41b70875da0c3",
+      "file": "src/common/feature-api-hooks.ts",
+      "classification": "as never",
+      "nodeText": "{ mutationFn: (input: unknown) => mutationFn(input), ...(options ?? {}), } as never"
+    },
+    {
+      "key": "55c89369982f812d26a3aac596dd268398a9e0fb",
+      "file": "src/common/feature-api-hooks.ts",
+      "classification": "other",
+      "nodeText": "{ ...mutation, mutate: (input?: unknown, mutateOptions?: Parameters<typeof mutation.mutate>[1]) => { mutation.mutate(input, mutateOptions); }, mutateAsync: ( input?: unknown, mutateOptions?: Parameters<typeof mutation.mutateAsync>[1], ) => mutation.mutateAsync(input, mutateOptions), } as FeatureMutationResult<TData>"
+    },
+    {
+      "key": "e000d07e837303310545c952763e182f9a8bf5d3",
+      "file": "src/common/feature-api-hooks.ts",
+      "classification": "other",
+      "nodeText": "useQueries({ queries: queries as never, }) as any[]"
+    },
+    {
+      "key": "b671cc894eeec1a7153496a711ba2cb098922a01",
+      "file": "src/common/feature-api-hooks.ts",
+      "classification": "as never",
+      "nodeText": "queries as never"
+    },
+    {
+      "key": "421499594352f5673814ccea2a099dd20f534078",
+      "file": "src/common/hooks/owner-onboarding-intent.ts",
+      "classification": "as const",
+      "nodeText": "[\"owner-onboarding-intent\"] as const"
+    },
+    {
+      "key": "3b33467d9ee3b80988ffd523c8073165e161d0bf",
+      "file": "src/common/logging/logger.ts",
+      "classification": "other",
+      "nodeText": "second as LogMeta"
+    },
+    {
+      "key": "ebfa9f849b68b430c3656adc7fa9e1fecdb52752",
+      "file": "src/common/payment-methods.ts",
+      "classification": "as const",
+      "nodeText": "[\"MOBILE_WALLET\", \"BANK\"] as const"
+    },
+    {
+      "key": "1bd726e815469942ec47668a52251cdc52888e22",
+      "file": "src/common/payment-methods.ts",
+      "classification": "as const",
+      "nodeText": "[\"GCASH\", \"MAYA\"] as const"
+    },
+    {
+      "key": "310802d8bc9fa0e326d5d8e8c688e6eb4f310db5",
+      "file": "src/common/payment-methods.ts",
+      "classification": "as const",
+      "nodeText": "[ \"BPI\", \"BDO\", \"METROBANK\", \"UNIONBANK\", \"RCBC\", \"LANDBANK\", \"SECURITY_BANK\", \"CHINABANK\", \"PNB\", \"EASTWEST\", ] as const"
+    },
+    {
+      "key": "0eef06d538644e1ea902dc9d74ead9d4af4489b5",
+      "file": "src/common/payment-methods.ts",
+      "classification": "as const",
+      "nodeText": "[ ...MOBILE_WALLET_PROVIDERS, ...BANK_PROVIDERS, ] as const"
+    },
+    {
+      "key": "be7505ce4708dfd9ce65da35900b6e2019d61981",
+      "file": "src/common/query-keys/index.ts",
+      "classification": "as const",
+      "nodeText": "[\"app\"] as const"
+    },
+    {
+      "key": "d59c08f6dabf920c466994da25e9ddeb00d145bc",
+      "file": "src/common/schemas.ts",
+      "classification": "as unknown as",
+      "nodeText": "schema.extend(overrides as z.ZodRawShape) as unknown as z.ZodObject< Omit<Shape, keyof Overrides> & Overrides >"
+    },
+    {
+      "key": "103fad63d1dfd9bafa4f7079a7619f38be3a3d36",
+      "file": "src/common/schemas.ts",
+      "classification": "other",
+      "nodeText": "schema.extend(overrides as z.ZodRawShape) as unknown"
+    },
+    {
+      "key": "8895e1116afb98a4a2617382caaa912d0b5835e0",
+      "file": "src/common/schemas.ts",
+      "classification": "other",
+      "nodeText": "overrides as z.ZodRawShape"
+    },
+    {
+      "key": "b05cf4f6aa51e5da10d31f62a58f2ad81567dd32",
+      "file": "src/common/section-hashes.ts",
+      "classification": "as const",
+      "nodeText": "{ organizationProfile: \"organization-profile\", contactInformation: \"contact-information\", browserNotifications: \"browser-notifications\", paymentMethods: \"payment-methods\", dangerZone: \"danger-zone\", } as const"
+    },
+    {
+      "key": "d2d2ef1ea8243562ca4cdc89d6d3ab92ae282cd8",
+      "file": "src/common/section-hashes.ts",
+      "classification": "as const",
+      "nodeText": "{ organizationProfile: `#${SETTINGS_SECTION_IDS.organizationProfile}`, contactInformation: `#${SETTINGS_SECTION_IDS.contactInformation}`, browserNotifications: `#${SETTINGS_SECTION_IDS.browserNotifications}`, paymentMethods: `#${SETTINGS_SECTION_IDS.paymentMethods}`, dangerZone: `#${SETTINGS_SECTION_IDS.dangerZone}`, } as const"
+    },
+    {
+      "key": "6b6c2a7c3dce0269a3f50f94b71ad66cd6525001",
+      "file": "src/common/toast/errors.ts",
+      "classification": "other",
+      "nodeText": "appError.fieldErrors as unknown"
+    },
+    {
+      "key": "5d12397b83fb0fd6e20e0c82d95f54901b8e623e",
+      "file": "src/common/trpc-client-call.ts",
+      "classification": "other",
+      "nodeText": "value as UnknownRecord"
+    },
+    {
+      "key": "b89aa5ec0b09f15c0d65b253c943badb2a590bee",
+      "file": "src/common/trpc-client-call.ts",
+      "classification": "other",
+      "nodeText": "getByPath(clientApi, path) as UnknownRecord | undefined"
+    },
+    {
+      "key": "8bae4c0782232e5d8ea11f632eaf9ef1a6522bd4",
+      "file": "src/common/trpc-client-call.ts",
+      "classification": "other",
+      "nodeText": "query as (value: unknown) => Promise<unknown>"
+    },
+    {
+      "key": "b89aa5ec0b09f15c0d65b253c943badb2a590bee",
+      "file": "src/common/trpc-client-call.ts",
+      "classification": "other",
+      "nodeText": "getByPath(clientApi, path) as UnknownRecord | undefined"
+    },
+    {
+      "key": "c5550cd20a83224c94c98fe11e6fc8c8c959f6aa",
+      "file": "src/common/trpc-client-call.ts",
+      "classification": "other",
+      "nodeText": "mutate as (value: unknown) => Promise<unknown>"
+    },
+    {
+      "key": "3e36d106d978435ca6ba309b75cc12610152effb",
+      "file": "src/common/validation-database.ts",
+      "classification": "as const",
+      "nodeText": "{ common: { string: { required: { message: \"This field is required\" }, type: { message: \"This field must be a string\" }, }, nonEmpty: { min: { value: 1, message: \"This field is required\" }, }, email: { required: { message: \"Email is required\" }, type: { message: \"Email must be a string\" }, min: { value: 1, message: \"Email is required\" }, max: { value: 255, message: \"Email must be 255 characters or less\" }, invalid: { message: \"Please enter a valid email address\" }, }, url: { invalid: { message: \"Please enter a valid URL\" }, }, slug: { min: { value: 1, message: \"Slug is required\" }, max: { value: 100, message: \"Slug must be 100 characters or less\" }, pattern: { value: /^[a-z0-9-]+$/, message: \"Slug must be lowercase alphanumeric with hyphens\", }, }, phone: { max: { value: 20, message: \"Phone number must be 20 characters or less\" }, pattern: { value: /^[0-9+\\-() ]*$/, message: \"Invalid phone number format\", }, }, country: { length: { value: 2, message: \"Country must be a 2-letter code\" }, }, currency: { length: { value: 3, message: \"Currency must be a 3-letter code\" }, }, coordinate: { invalid: { message: \"Coordinate must be a valid decimal number\" }, latitude: { message: \"Latitude must be a valid decimal number\" }, longitude: { message: \"Longitude must be a valid decimal number\" }, latitudeRequired: { message: \"Latitude is required\" }, longitudeRequired: { message: \"Longitude is required\" }, }, isoDateTime: { invalid: { message: \"Invalid datetime\" }, }, date: { invalid: { message: \"Invalid date\" }, }, pagination: { limit: { min: { value: 1, message: \"Limit must be at least 1\" }, max: { value: 100, message: \"Limit must be 100 or less\" }, }, offset: { min: { value: 0, message: \"Offset must be 0 or greater\" }, }, }, displayOrder: { min: { value: 0, message: \"Display order must be 0 or greater\" }, }, items: { min: { value: 1, message: \"At least one item is required\" }, }, }, ids: { generic: { required: { message: \"ID is required\" }, invalid: { message: \"ID must be a valid UUID\" }, }, organizationId: { required: { message: \"Organization is required\" }, invalid: { message: \"Organization must be a valid ID\" }, }, placeId: { required: { message: \"Venue is required\" }, invalid: { message: \"Venue must be a valid ID\" }, }, courtId: { required: { message: \"Court is required\" }, invalid: { message: \"Court must be a valid ID\" }, }, reservationId: { required: { message: \"Reservation is required\" }, invalid: { message: \"Reservation must be a valid ID\" }, }, sportId: { required: { message: \"Sport is required\" }, invalid: { message: \"Sport must be a valid ID\" }, }, paymentMethodId: { required: { message: \"Payment method is required\" }, invalid: { message: \"Payment method must be a valid ID\" }, }, requestId: { required: { message: \"Request is required\" }, invalid: { message: \"Request must be a valid ID\" }, }, blockId: { required: { message: \"Block is required\" }, invalid: { message: \"Block must be a valid ID\" }, }, jobId: { required: { message: \"Import job is required\" }, invalid: { message: \"Import job must be a valid ID\" }, }, rowId: { required: { message: \"Row is required\" }, invalid: { message: \"Row must be a valid ID\" }, }, photoId: { required: { message: \"Photo is required\" }, invalid: { message: \"Photo must be a valid ID\" }, }, amenityId: { required: { message: \"Amenity is required\" }, invalid: { message: \"Amenity must be a valid ID\" }, }, }, auth: { password: { min: { value: 8, message: \"Password must be at least 8 characters\" }, max: { value: 100, message: \"Password must be 100 characters or less\" }, required: { message: \"Password is required\" }, type: { message: \"Password must be a string\" }, }, }, organization: { name: { min: { value: 1, message: \"Organization name is required\" }, max: { value: 150, message: \"Organization name must be 150 characters or less\", }, }, slug: { min: { value: 1, message: \"Slug is required\" }, max: { value: 100, message: \"Slug must be 100 characters or less\" }, }, description: { max: { value: 500, message: \"Description must be 500 characters or less\", }, }, contactEmail: { max: { value: 255, message: \"Email must be 255 characters or less\" }, }, contactPhone: { max: { value: 20, message: \"Phone must be 20 characters or less\" }, }, address: { max: { value: 200, message: \"Address must be 200 characters or less\" }, }, search: { limit: { min: { value: 1, message: \"Limit must be at least 1\" }, max: { value: 50, message: \"Limit must be 50 or less\" }, }, offset: { min: { value: 0, message: \"Offset must be 0 or greater\" }, }, }, }, place: { search: { min: { value: 1, message: \"Search term must be at least 1 character\" }, max: { value: 100, message: \"Search term must be 100 characters or less\", }, }, idOrSlug: { min: { value: 1, message: \"Place ID or slug is required\" }, max: { value: 200, message: \"Place ID or slug must be 200 characters or less\", }, }, name: { min: { value: 1, message: \"Venue name is required\" }, max: { value: 200, message: \"Venue name must be 200 characters or less\" }, }, address: { min: { value: 1, message: \"Address is required\" }, max: { value: 200, message: \"Address must be 200 characters or less\" }, }, city: { min: { value: 1, message: \"City is required\" }, max: { value: 100, message: \"City must be 100 characters or less\" }, }, province: { min: { value: 1, message: \"Province is required\" }, max: { value: 100, message: \"Province must be 100 characters or less\" }, }, timeZone: { min: { value: 1, message: \"Time zone is required\" }, max: { value: 64, message: \"Time zone must be 64 characters or less\" }, }, phoneNumber: { max: { value: 20, message: \"Phone number must be 20 characters or less\" }, }, viberInfo: { max: { value: 100, message: \"Viber info must be 100 characters or less\" }, }, otherContactInfo: { max: { value: 500, message: \"Contact info must be 500 characters or less\", }, }, googlePlaceId: { max: { value: 128, message: \"Google place ID must be 128 characters or less\", }, }, amenity: { min: { value: 1, message: \"Amenity name is required\" }, max: { value: 100, message: \"Amenity name must be 100 characters or less\", }, }, type: { invalid: { message: \"Place type is invalid\" }, }, photos: { min: { value: 1, message: \"At least one photo is required\" }, max: { value: 10, message: \"You can upload up to 10 photos\" }, }, }, court: { label: { min: { value: 1, message: \"Court label is required\" }, max: { value: 100, message: \"Court label must be 100 characters or less\", }, }, tierLabel: { max: { value: 20, message: \"Tier label must be 20 characters or less\" }, }, name: { min: { value: 1, message: \"Court name is required\" }, max: { value: 200, message: \"Court name must be 200 characters or less\" }, }, simpleName: { min: { value: 1, message: \"Court name is required\" }, max: { value: 150, message: \"Court name must be 150 characters or less\" }, }, description: { max: { value: 1000, message: \"Description must be 1000 characters or less\", }, }, type: { invalid: { message: \"Court type is invalid\" }, }, list: { min: { value: 1, message: \"At least one court is required\" }, }, }, contact: { name: { min: { value: 2, message: \"Name must be at least 2 characters\" }, max: { value: 150, message: \"Name must be 150 characters or less\" }, }, subject: { min: { value: 2, message: \"Subject must be at least 2 characters\" }, max: { value: 200, message: \"Subject must be 200 characters or less\" }, }, message: { min: { value: 10, message: \"Message must be at least 10 characters\" }, max: { value: 2000, message: \"Message must be 2000 characters or less\" }, }, }, profile: { displayName: { min: { value: 1, message: \"Display name is required\" }, max: { value: 100, message: \"Display name must be 100 characters or less\", }, }, }, paymentMethod: { accountName: { min: { value: 1, message: \"Account name is required\" }, max: { value: 150, message: \"Account name must be 150 characters or less\", }, }, accountNumber: { min: { value: 1, message: \"Account number is required\" }, max: { value: 50, message: \"Account number must be 50 characters or less\", }, }, instructions: { max: { value: 500, message: \"Instructions must be 500 characters or less\", }, }, displayOrder: { min: { value: 0, message: \"Display order must be 0 or greater\" }, }, type: { invalid: { message: \"Payment method type is invalid\" }, }, provider: { invalid: { message: \"Payment method provider is invalid\" }, }, }, paymentProof: { referenceNumber: { max: { value: 100, message: \"Reference number must be 100 characters or less\", }, }, notes: { max: { value: 500, message: \"Notes must be 500 characters or less\" }, }, }, claimRequest: { requestNotes: { min: { value: 10, message: \"Please share more details\" }, max: { value: 1000, message: \"Notes must be 1000 characters or less\" }, }, guestName: { min: { value: 2, message: \"Name must be at least 2 characters\" }, max: { value: 150, message: \"Name must be 150 characters or less\" }, }, reviewNotes: { min: { value: 1, message: \"Review notes are required\" }, max: { value: 1000, message: \"Review notes must be 1000 characters or less\", }, }, reason: { min: { value: 1, message: \"Reason is required\" }, max: { value: 500, message: \"Reason must be 500 characters or less\" }, }, removalReason: { min: { value: 10, message: \"Please provide a more detailed reason (at least 10 characters)\", }, max: { value: 500, message: \"Reason must be 500 characters or less\" }, }, acknowledgeReservations: { message: \"You must acknowledge that pending reservations will be cancelled\", }, acknowledgeApproval: { message: \"You must acknowledge that this requires admin approval\", }, }, placeVerification: { documents: { min: { value: 1, message: \"Please attach at least one document\" }, }, }, reservation: { notes: { max: { value: 500, message: \"Notes must be 500 characters or less\" }, }, cancelReason: { max: { value: 500, message: \"Reason must be 500 characters or less\" }, }, rejectReason: { min: { value: 1, message: \"Reason is required\" }, max: { value: 500, message: \"Reason must be 500 characters or less\" }, }, termsAccepted: { message: \"Terms must be accepted\", }, disclaimerAcknowledged: { message: \"You must acknowledge the payment disclaimer\", }, referenceNumber: { min: { value: 1, message: \"Reference number is required\" }, }, startTimeWithinWindow: { value: MAX_BOOKING_WINDOW_DAYS, message: `Start time must be within ${MAX_BOOKING_WINDOW_DAYS} days`, }, status: { invalid: { message: \"Status is invalid\" }, }, }, availability: { dateWithinWindow: { value: MAX_BOOKING_WINDOW_DAYS, message: `Date must be within ${MAX_BOOKING_WINDOW_DAYS} days`, }, rangeWithinWindow: { value: MAX_BOOKING_WINDOW_DAYS, message: `Date range must be within ${MAX_BOOKING_WINDOW_DAYS} days`, }, rangeEndAfterStart: { message: \"End date must be after start date\", }, durationMinutes: { min: { value: 60, message: \"Duration must be at least 60 minutes\" }, max: { value: 1440, message: \"Duration must be 1440 minutes or less\" }, multipleOf: { value: 60, message: \"Duration must be a multiple of 60 minutes\", }, }, courtIds: { min: { value: 1, message: \"At least one court is required\" }, max: { value: 50, message: \"Too many courts requested\" }, }, }, courtBlock: { reason: { max: { value: 255, message: \"Reason must be 255 characters or less\" }, }, }, bookingsImport: { sourceType: { invalid: { message: \"Import source must be valid\" }, }, normalizeMode: { invalid: { message: \"Normalize mode must be valid\" }, }, confirmAiOnce: { message: \"confirmAiOnce must be true when using AI mode (one-time per venue)\", }, courtLabel: { max: { value: 100, message: \"Court label must be 100 characters or less\", }, }, reason: { max: { value: 500, message: \"Reason must be 500 characters or less\" }, }, }, admin: { searchQuery: { max: { value: 150, message: \"Query must be 150 characters or less\" }, }, placeType: { invalid: { message: \"Place type is invalid\" }, }, claimStatus: { invalid: { message: \"Claim status is invalid\" }, }, }, tracking: { event: { min: { value: 1, message: \"Event is required\" }, max: { value: 120, message: \"Event must be 120 characters or less\" }, pattern: { value: /^funnel\\.[a-z0-9_.-]+$/, message: \"Event must match funnel.<name>\", }, }, }, courtRateRule: { dayOfWeek: { min: { value: 0, message: \"Day of week must be 0-6\" }, max: { value: 6, message: \"Day of week must be 0-6\" }, }, startMinute: { min: { value: 0, message: \"Start minute must be 0-1439\" }, max: { value: 1439, message: \"Start minute must be 0-1439\" }, }, endMinute: { min: { value: 1, message: \"End minute must be 1-1440\" }, max: { value: 1440, message: \"End minute must be 1-1440\" }, }, hourlyRateCents: { min: { value: 0, message: \"Hourly rate must be 0 or greater\" }, }, rules: { max: { value: 100, message: \"Rules must be 100 items or less\" }, }, startBeforeEnd: { message: \"Start minute must be before end minute\" }, }, pricing: { priceCents: { min: { value: 0, message: \"Price must be 0 or greater\" }, }, }, courtHours: { windows: { max: { value: 50, message: \"Windows must be 50 items or less\" }, }, }, } as const"
+    },
+    {
+      "key": "412a96ace87b7b27e2866f49acb3740b4fe3f30f",
+      "file": "src/components/ai-elements/attachments.tsx",
+      "classification": "as const",
+      "nodeText": "\"grid\" as const"
+    },
+    {
+      "key": "0ca135bda4cb207f3604918046c9d29edcaa001d",
+      "file": "src/components/ai-elements/audio-player.tsx",
+      "classification": "other",
+      "nodeText": "{ \"--media-button-icon-width\": \"1rem\", \"--media-button-icon-height\": \"1rem\", \"--media-icon-color\": \"currentColor\", \"--media-font\": \"var(--font-sans)\", \"--media-font-size\": \"10px\", \"--media-control-background\": \"transparent\", \"--media-control-hover-background\": \"var(--color-accent)\", \"--media-control-padding\": \"0\", \"--media-background-color\": \"transparent\", \"--media-primary-color\": \"var(--color-primary)\", \"--media-secondary-color\": \"var(--color-secondary)\", \"--media-text-color\": \"var(--color-foreground)\", \"--media-tooltip-background\": \"var(--color-background)\", \"--media-range-bar-color\": \"var(--color-primary)\", \"--media-tooltip-arrow-display\": \"none\", \"--media-tooltip-border-radius\": \"var(--radius-md)\", \"--media-preview-time-text-shadow\": \"none\", \"--media-preview-time-background\": \"var(--color-background)\", \"--media-preview-time-border-radius\": \"var(--radius-md)\", \"--media-range-track-background\": \"var(--color-secondary)\", ...style, } as CSSProperties"
+    },
+    {
+      "key": "6a41e7a342419e757d9bd7555f7e3f7d84a2433b",
+      "file": "src/components/ai-elements/code-block.tsx",
+      "classification": "other",
+      "nodeText": "{ color: token.color, backgroundColor: token.bgColor, ...token.htmlStyle, fontStyle: isItalic(token.fontStyle) ? \"italic\" : undefined, fontWeight: isBold(token.fontStyle) ? \"bold\" : undefined, textDecoration: isUnderline(token.fontStyle) ? \"underline\" : undefined, } as CSSProperties"
+    },
+    {
+      "key": "55135eb277c1b2e71115c8d414fc81179f58c318",
+      "file": "src/components/ai-elements/code-block.tsx",
+      "classification": "other",
+      "nodeText": "{ content: line, color: \"inherit\", } as ThemedToken"
+    },
+    {
+      "key": "948a2c0730d9b474e6d139a9e13999b4dcf384b0",
+      "file": "src/components/ai-elements/code-block.tsx",
+      "classification": "other",
+      "nodeText": "error as Error"
+    },
+    {
+      "key": "1b3f93197a90ff36d78747760bc368819a21f065",
+      "file": "src/components/ai-elements/commit.tsx",
+      "classification": "other",
+      "nodeText": "error as Error"
+    },
+    {
+      "key": "c5c491cfd347fdb556950737e750ab2789ebfc58",
+      "file": "src/components/ai-elements/edge.tsx",
+      "classification": "as const",
+      "nodeText": "[0, 0] as const"
+    },
+    {
+      "key": "0fa0f381befdde94bed02fe72a2106496f9d942d",
+      "file": "src/components/ai-elements/edge.tsx",
+      "classification": "as const",
+      "nodeText": "[x, y] as const"
+    },
+    {
+      "key": "849241c6ba306d3221c4b1a392ab16234e5a3ea7",
+      "file": "src/components/ai-elements/environment-variables.tsx",
+      "classification": "other",
+      "nodeText": "error as Error"
+    },
+    {
+      "key": "b7c2733da85a1ef7c222a2588464ac385c3ccbc9",
+      "file": "src/components/ai-elements/mic-selector.tsx",
+      "classification": "other",
+      "nodeText": "entry.target as HTMLElement"
+    },
+    {
+      "key": "4e625abf85b11d1bad35e31600ad38f4dced1a29",
+      "file": "src/components/ai-elements/persona.tsx",
+      "classification": "other",
+      "nodeText": "((loadedRive) => callbacksRef.current.onLoad?.( loadedRive, )) as RiveParameters[\"onLoad\"]"
+    },
+    {
+      "key": "ce5ac1d8c58cdf4d24dac0c0a199ceedddaae1f4",
+      "file": "src/components/ai-elements/persona.tsx",
+      "classification": "other",
+      "nodeText": "((err) => callbacksRef.current.onLoadError?.( err, )) as RiveParameters[\"onLoadError\"]"
+    },
+    {
+      "key": "dd662620cabec8c3c983113d214675d2932e1ecd",
+      "file": "src/components/ai-elements/persona.tsx",
+      "classification": "other",
+      "nodeText": "((event) => callbacksRef.current.onPause?.(event)) as RiveParameters[\"onPause\"]"
+    },
+    {
+      "key": "8af9fd54ea07d0343acd27585dff8a23f08d40da",
+      "file": "src/components/ai-elements/persona.tsx",
+      "classification": "other",
+      "nodeText": "((event) => callbacksRef.current.onPlay?.(event)) as RiveParameters[\"onPlay\"]"
+    },
+    {
+      "key": "cfb1e762cf04f7fa9e496a3419954fefa4c7278d",
+      "file": "src/components/ai-elements/persona.tsx",
+      "classification": "other",
+      "nodeText": "((event) => callbacksRef.current.onStop?.(event)) as RiveParameters[\"onStop\"]"
+    },
+    {
+      "key": "4aaaf563935b3a1a9a4a8ea8527cff7009c56bee",
+      "file": "src/components/ai-elements/prompt-input.tsx",
+      "classification": "as const",
+      "nodeText": "\"file\" as const"
+    },
+    {
+      "key": "cd3e9139337e07dee276386aaebf67cd9e3f2787",
+      "file": "src/components/ai-elements/prompt-input.tsx",
+      "classification": "other",
+      "nodeText": "reader.result as string"
+    },
+    {
+      "key": "d588f77622eb9132bedd116055d23587330b5839",
+      "file": "src/components/ai-elements/prompt-input.tsx",
+      "classification": "other",
+      "nodeText": "formData.get(\"message\") as string"
+    },
+    {
+      "key": "4fb146fcc92b4914bbd11bc35771b7d3904f7436",
+      "file": "src/components/ai-elements/prompt-input.tsx",
+      "classification": "other",
+      "nodeText": "form?.querySelector( 'button[type=\"submit\"]', ) as HTMLButtonElement | null"
+    },
+    {
+      "key": "ac783b88e4e13e6619eac0f4b90d6752f24310e1",
+      "file": "src/components/ai-elements/shimmer.tsx",
+      "classification": "other",
+      "nodeText": "Component as keyof JSX.IntrinsicElements"
+    },
+    {
+      "key": "cfa2e70c3875c62768d01e151f53f8b0b2a2ab83",
+      "file": "src/components/ai-elements/shimmer.tsx",
+      "classification": "other",
+      "nodeText": "{ \"--spread\": `${dynamicSpread}px`, backgroundImage: \"var(--bg), linear-gradient(var(--color-muted-foreground), var(--color-muted-foreground))\", } as CSSProperties"
+    },
+    {
+      "key": "49fb0766017fbf32453dc108345bac98331bb01a",
+      "file": "src/components/ai-elements/snippet.tsx",
+      "classification": "other",
+      "nodeText": "error as Error"
+    },
+    {
+      "key": "c473ac4fc0949dd59dec002f41c5f9ec514a4c92",
+      "file": "src/components/ai-elements/stack-trace.tsx",
+      "classification": "other",
+      "nodeText": "error as Error"
+    },
+    {
+      "key": "e7d3f0fb6ffa60fb1a974f41f3ffa5f16773d521",
+      "file": "src/components/ai-elements/terminal.tsx",
+      "classification": "other",
+      "nodeText": "error as Error"
+    },
+    {
+      "key": "69aa86eb9d62375a6f74a1b808ead325de144cd6",
+      "file": "src/components/ai-elements/tool.tsx",
+      "classification": "other",
+      "nodeText": "output as ReactNode"
+    },
+    {
+      "key": "88b7612567ec0fa2e3e3ce1b67cdad8f63c0965f",
+      "file": "src/components/ai-elements/web-preview.tsx",
+      "classification": "other",
+      "nodeText": "event.target as HTMLInputElement"
+    },
+    {
+      "key": "62812dd590796001e2ca5a9f139f1416a2707f37",
+      "file": "src/components/form/StandardFormError.tsx",
+      "classification": "other",
+      "nodeText": "errors.root?.message as string | undefined"
+    },
+    {
+      "key": "0f789db19bc33ec29f8b6e2e3e2315dd617dc046",
+      "file": "src/components/kudos/availability-week-grid.tsx",
+      "classification": "as const",
+      "nodeText": "\"easeOut\" as const"
+    },
+    {
+      "key": "4773b9fe8e50b0f63b5139b70eb030a5d391181f",
+      "file": "src/components/kudos/availability-week-grid.tsx",
+      "classification": "other",
+      "nodeText": "slot.priceCents as number"
+    },
+    {
+      "key": "0f789db19bc33ec29f8b6e2e3e2315dd617dc046",
+      "file": "src/components/kudos/availability-week-grid.tsx",
+      "classification": "as const",
+      "nodeText": "\"easeOut\" as const"
+    },
+    {
+      "key": "1781032c4f140edef823df8c46f0221327123fd6",
+      "file": "src/components/kudos/availability-week-grid.tsx",
+      "classification": "other",
+      "nodeText": "[] as number[]"
+    },
+    {
+      "key": "f881d0dc45b64944dc94d37fde2712d108d631cc",
+      "file": "src/components/kudos/time-range-picker.tsx",
+      "classification": "as const",
+      "nodeText": "\"easeOut\" as const"
+    },
+    {
+      "key": "0f0bead9b6a6449b440469c1e11d83ae9af9a6a5",
+      "file": "src/components/kudos/time-range-picker.tsx",
+      "classification": "other",
+      "nodeText": "slots[i].priceCents as number"
+    },
+    {
+      "key": "f881d0dc45b64944dc94d37fde2712d108d631cc",
+      "file": "src/components/kudos/time-range-picker.tsx",
+      "classification": "as const",
+      "nodeText": "\"easeOut\" as const"
+    },
+    {
+      "key": "fe0fa9e9cc6a2561e4bc7363a3677203dc8adce6",
+      "file": "src/components/layout/portal-switcher.tsx",
+      "classification": "as const",
+      "nodeText": "{ player: { label: \"Player View\", icon: Home, }, owner: { label: \"Owner View\", icon: Building2, }, admin: { label: \"Admin View\", icon: Shield, }, } as const"
+    },
+    {
+      "key": "da3248e7ba531e9e43f9dbaeac263f41ba0d5be6",
+      "file": "src/components/navigation/navigation-progress.tsx",
+      "classification": "other",
+      "nodeText": "target.closest(\"a[href]\") as HTMLAnchorElement | null"
+    },
+    {
+      "key": "2cecb2a650c0499699c66f23fd8fa0e8df86d968",
+      "file": "src/components/ui/chart.tsx",
+      "classification": "as const",
+      "nodeText": "{ light: \"\", dark: \".dark\" } as const"
+    },
+    {
+      "key": "e7dcf4d9be0476ba850a194391ac02bd7ceec52e",
+      "file": "src/components/ui/chart.tsx",
+      "classification": "other",
+      "nodeText": "theme as keyof typeof itemConfig.theme"
+    },
+    {
+      "key": "b732fb9d676a496dd09c8b69aeccc389ffb14155",
+      "file": "src/components/ui/chart.tsx",
+      "classification": "other",
+      "nodeText": "label as keyof typeof config"
+    },
+    {
+      "key": "d9655ff2ac5222bbd09f0b6a8e2b3ce2b6762b7d",
+      "file": "src/components/ui/chart.tsx",
+      "classification": "other",
+      "nodeText": "{ \"--color-bg\": indicatorColor, \"--color-border\": indicatorColor, } as React.CSSProperties"
+    },
+    {
+      "key": "bf9fa1cae2c21e963f64e0df3b9bed1063b631bb",
+      "file": "src/components/ui/chart.tsx",
+      "classification": "other",
+      "nodeText": "key as keyof typeof payload"
+    },
+    {
+      "key": "556659cf7b11e544ce014dd4e35776b8122121cd",
+      "file": "src/components/ui/chart.tsx",
+      "classification": "other",
+      "nodeText": "payload[key as keyof typeof payload] as string"
+    },
+    {
+      "key": "bf9fa1cae2c21e963f64e0df3b9bed1063b631bb",
+      "file": "src/components/ui/chart.tsx",
+      "classification": "other",
+      "nodeText": "key as keyof typeof payload"
+    },
+    {
+      "key": "50e3064066c69366c2e26a8820535b9b1e9c43e0",
+      "file": "src/components/ui/chart.tsx",
+      "classification": "other",
+      "nodeText": "key as keyof typeof payloadPayload"
+    },
+    {
+      "key": "6c91a5208a0163f8619a3ae5c60ef3613b24e096",
+      "file": "src/components/ui/chart.tsx",
+      "classification": "other",
+      "nodeText": "payloadPayload[ key as keyof typeof payloadPayload ] as string"
+    },
+    {
+      "key": "50e3064066c69366c2e26a8820535b9b1e9c43e0",
+      "file": "src/components/ui/chart.tsx",
+      "classification": "other",
+      "nodeText": "key as keyof typeof payloadPayload"
+    },
+    {
+      "key": "c86e784adb7ad1c2409a9d6653da82f24617af34",
+      "file": "src/components/ui/chart.tsx",
+      "classification": "other",
+      "nodeText": "key as keyof typeof config"
+    },
+    {
+      "key": "d75df4416d24dc55db6699aefc74fd3968ecca8b",
+      "file": "src/components/ui/draggable-panel.tsx",
+      "classification": "other",
+      "nodeText": "JSON.parse(stored) as { x: number; y: number }"
+    },
+    {
+      "key": "941d81b64ac7fca80ba7f18112f11ad0c285c78a",
+      "file": "src/components/ui/form.tsx",
+      "classification": "other",
+      "nodeText": "{} as FormFieldContextValue"
+    },
+    {
+      "key": "d280aa7837e64282657d68848411d9222e3c8756",
+      "file": "src/components/ui/form.tsx",
+      "classification": "other",
+      "nodeText": "{} as FormItemContextValue"
+    },
+    {
+      "key": "3805d1c8187f5de4ee99d413d61b61ef2edfe257",
+      "file": "src/components/ui/sidebar.tsx",
+      "classification": "other",
+      "nodeText": "{ \"--sidebar-width\": SIDEBAR_WIDTH, \"--sidebar-width-icon\": SIDEBAR_WIDTH_ICON, ...style, } as React.CSSProperties"
+    },
+    {
+      "key": "25b39721a472f8ef2c0bcb27e9ec3e2d6bdf4ced",
+      "file": "src/components/ui/sidebar.tsx",
+      "classification": "other",
+      "nodeText": "{ \"--sidebar-width\": SIDEBAR_WIDTH_MOBILE, } as React.CSSProperties"
+    },
+    {
+      "key": "38d50e42a090c688624c8481c7abdb2ce7fdd76b",
+      "file": "src/components/ui/sidebar.tsx",
+      "classification": "other",
+      "nodeText": "{ \"--skeleton-width\": width, } as React.CSSProperties"
+    },
+    {
+      "key": "ca37ef4895f35ab5f411fe3e348c589d516e554d",
+      "file": "src/components/ui/sonner.tsx",
+      "classification": "other",
+      "nodeText": "theme as ToasterProps[\"theme\"]"
+    },
+    {
+      "key": "c5b3a7d13dde6e6b9cc2fe4a9e10cc8dc2cbacca",
+      "file": "src/components/ui/sonner.tsx",
+      "classification": "other",
+      "nodeText": "{ \"--normal-bg\": \"var(--popover)\", \"--normal-text\": \"var(--popover-foreground)\", \"--normal-border\": \"var(--border)\", \"--border-radius\": \"var(--radius)\", \"--success-bg\": \"var(--success)\", \"--success-text\": \"var(--success-foreground)\", \"--success-border\": \"var(--success)\", \"--info-bg\": \"var(--primary)\", \"--info-text\": \"var(--primary-foreground)\", \"--info-border\": \"var(--primary)\", \"--warning-bg\": \"var(--warning)\", \"--warning-text\": \"var(--warning-foreground)\", \"--warning-border\": \"var(--warning)\", \"--error-bg\": \"var(--destructive)\", \"--error-text\": \"var(--destructive-foreground)\", \"--error-border\": \"var(--destructive)\", } as React.CSSProperties"
+    },
+    {
+      "key": "2724724a4619021e57250a3727ee5332b705210a",
+      "file": "src/components/ui/toggle-group.tsx",
+      "classification": "other",
+      "nodeText": "{ \"--gap\": spacing } as React.CSSProperties"
+    },
+    {
+      "key": "529705bb8ea2facbaf7c2847b35b200737eb9966",
+      "file": "src/features/admin/components/admin-court-edit-form.tsx",
+      "classification": "as const",
+      "nodeText": "`courts.${index}.id` as const"
+    },
+    {
+      "key": "9d58c1f2c4b9168fb636e21aa6169e9804f830c1",
+      "file": "src/features/admin/components/admin-court-edit-form.tsx",
+      "classification": "other",
+      "nodeText": "field.value as string[]"
+    },
+    {
+      "key": "5c94f4fe9d71ca7b248f495b0084e6d4005aaeee",
+      "file": "src/features/admin/components/admin-court-edit-view.tsx",
+      "classification": "other",
+      "nodeText": "rawUser as { email?: string | null } | undefined"
+    },
+    {
+      "key": "8362a85a6de795b3e11ed1eb22532c4ddf40525c",
+      "file": "src/features/admin/components/admin-court-edit-view.tsx",
+      "classification": "other",
+      "nodeText": "(rawSports ?? []) as Array<{ id: string; name: string }>"
+    },
+    {
+      "key": "6b356cd100ed22c54b7e80cfe8ea003c36609621",
+      "file": "src/features/admin/components/admin-court-edit-view.tsx",
+      "classification": "other",
+      "nodeText": "orgSearchQuery.data as { items?: OrganizationSearchItem[] } | undefined"
+    },
+    {
+      "key": "2550a7dc4050cd289a539feb88b8deff16c65eed",
+      "file": "src/features/admin/components/admin-sidebar.tsx",
+      "classification": "as const",
+      "nodeText": "[ { title: \"Dashboard\", href: appRoutes.admin.base, icon: LayoutDashboard, badgeKey: null, }, { title: \"Claims\", href: appRoutes.admin.claims.base, icon: Tag, badgeKey: \"claims\" as const, }, { title: \"Verification\", href: appRoutes.admin.placeVerification.base, icon: ShieldCheck, badgeKey: \"verifications\" as const, }, { title: \"Courts\", href: appRoutes.admin.courts.base, icon: Building2, badgeKey: null, }, { title: \"Venues\", href: appRoutes.admin.venues.base, icon: MapPin, badgeKey: null, }, ] as const"
+    },
+    {
+      "key": "01405bfe53ae3ba3101196013bf246136e3c3d06",
+      "file": "src/features/admin/components/admin-sidebar.tsx",
+      "classification": "as const",
+      "nodeText": "\"claims\" as const"
+    },
+    {
+      "key": "e18cbd339cd329e0b47f8d16b025fb19d2c5564c",
+      "file": "src/features/admin/components/admin-sidebar.tsx",
+      "classification": "as const",
+      "nodeText": "\"verifications\" as const"
+    },
+    {
+      "key": "13006d6093d84cd54d40751d7f5696c668017275",
+      "file": "src/features/admin/components/claim-review-actions.tsx",
+      "classification": "other",
+      "nodeText": "v as \"approve\" | \"reject\""
+    },
+    {
+      "key": "bb49699ff9658e1b16a43fffec8127b2bdc944f4",
+      "file": "src/features/admin/components/courts-batch/batch-results-panel.tsx",
+      "classification": "as const",
+      "nodeText": "{ created: \"Created\", skipped_duplicate: \"Skipped\", error: \"Failed\", } as const"
+    },
+    {
+      "key": "e89ebe5b82ec9644925c3e3db97b49657824c601",
+      "file": "src/features/admin/components/courts-batch/batch-results-panel.tsx",
+      "classification": "as const",
+      "nodeText": "{ created: \"success\", skipped_duplicate: \"warning\", error: \"destructive\", } as const"
+    },
+    {
+      "key": "12513b84357086acc0b275b54d58532be1708b81",
+      "file": "src/features/admin/components/courts-batch/courts-batch-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "[] as string[]"
+    },
+    {
+      "key": "153380813da28f8d4ebb1a456c6a72b5d6fa668f",
+      "file": "src/features/admin/components/courts-batch/courts-batch-coordinator.tsx",
+      "classification": "as const",
+      "nodeText": "`courts.${placeIndex}.courts` as const"
+    },
+    {
+      "key": "c55997355752acfa2fc63c0a089591122f19f59c",
+      "file": "src/features/admin/components/courts-batch/courts-batch-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "field.value as string[]"
+    },
+    {
+      "key": "3900a783bb2fe443f67c30f3ef13e6e619539c95",
+      "file": "src/features/admin/components/place-verification-review-actions.tsx",
+      "classification": "other",
+      "nodeText": "value as \"approve\" | \"reject\""
+    },
+    {
+      "key": "72dac241950ed0ad18576550fcc1615d870c52c0",
+      "file": "src/features/admin/components/places-list/admin-places-filters.tsx",
+      "classification": "other",
+      "nodeText": "value as CourtType | \"all\""
+    },
+    {
+      "key": "d06af2a53a5e8253f742b532c1889272f20ac136",
+      "file": "src/features/admin/components/places-list/admin-places-filters.tsx",
+      "classification": "other",
+      "nodeText": "value as CourtStatus | \"all\""
+    },
+    {
+      "key": "cf6489f8ed890ef00ca0c1f37fa968e1732dcede",
+      "file": "src/features/admin/components/places-list/admin-places-filters.tsx",
+      "classification": "other",
+      "nodeText": "value as FeaturedFilter"
+    },
+    {
+      "key": "b8bf9e0a975f1448ace2b7806c42e8cbc1407f2e",
+      "file": "src/features/admin/components/places-list/admin-places-filters.tsx",
+      "classification": "other",
+      "nodeText": "value as ClaimStatusFilter | \"all\""
+    },
+    {
+      "key": "a6ee7df4641ba793ee80ada0e1f8f428c1745ea3",
+      "file": "src/features/admin/hooks/claims.ts",
+      "classification": "other",
+      "nodeText": "(item.requestType === \"REMOVAL\" ? \"removal\" : \"claim\") as ClaimType"
+    },
+    {
+      "key": "b6671c2e542d22f038b94ac624cf447d0cf00636",
+      "file": "src/features/admin/hooks/claims.ts",
+      "classification": "other",
+      "nodeText": "item.status.toLowerCase() as ClaimStatus"
+    },
+    {
+      "key": "3fb2e042e1a6c8faece970e80a0886590799a4b0",
+      "file": "src/features/admin/hooks/claims.ts",
+      "classification": "as const",
+      "nodeText": "\"curated\" as const"
+    },
+    {
+      "key": "86dc6e4e5cf5fb23bfe1f4d0838728741131ca2a",
+      "file": "src/features/admin/hooks/claims.ts",
+      "classification": "other",
+      "nodeText": "(query.data.claimRequest.requestType === \"REMOVAL\" ? \"removal\" : \"claim\") as ClaimType"
+    },
+    {
+      "key": "df1af6772dc4e655f130d6a453df706bd03bd924",
+      "file": "src/features/admin/hooks/claims.ts",
+      "classification": "other",
+      "nodeText": "query.data.claimRequest.status.toLowerCase() as ClaimStatus"
+    },
+    {
+      "key": "56a733c9f81a70181f050386cc759945a0a54744",
+      "file": "src/features/admin/hooks/courts.ts",
+      "classification": "as const",
+      "nodeText": "\"claim_pending\" as const"
+    },
+    {
+      "key": "c557cae0c639ba18f0bc2e5f2be81965437ee8f0",
+      "file": "src/features/admin/hooks/courts.ts",
+      "classification": "as const",
+      "nodeText": "\"removal_requested\" as const"
+    },
+    {
+      "key": "6f2d93d6244d47c6e45577ed3f5d7beb4c161767",
+      "file": "src/features/admin/hooks/courts.ts",
+      "classification": "as const",
+      "nodeText": "\"unclaimed\" as const"
+    },
+    {
+      "key": "56409d4ff29bbe62da495dc46dc1f46cd90988ab",
+      "file": "src/features/admin/hooks/courts.ts",
+      "classification": "as const",
+      "nodeText": "\"claimed\" as const"
+    },
+    {
+      "key": "7f59e9f4c428c435a046ae9895d0c7eea97a1da6",
+      "file": "src/features/admin/hooks/courts.ts",
+      "classification": "other",
+      "nodeText": "query.data as AdminCourtDetail | undefined"
+    },
+    {
+      "key": "1eb34c9bbc08c6abb15be34fd9a0590b26a46468",
+      "file": "src/features/admin/hooks/place-verification.ts",
+      "classification": "other",
+      "nodeText": "item.request.status.toLowerCase() as | \"pending\" | \"approved\" | \"rejected\""
+    },
+    {
+      "key": "5c79730d952ef2d1f4afe54cfe8393fd1965594b",
+      "file": "src/features/admin/pages/admin-claim-detail-page.tsx",
+      "classification": "as const",
+      "nodeText": "\"secondary\" as const"
+    },
+    {
+      "key": "5c79730d952ef2d1f4afe54cfe8393fd1965594b",
+      "file": "src/features/admin/pages/admin-claim-detail-page.tsx",
+      "classification": "as const",
+      "nodeText": "\"secondary\" as const"
+    },
+    {
+      "key": "c4511ad88376832353dd633c03d4f270c6579451",
+      "file": "src/features/admin/pages/admin-claim-detail-page.tsx",
+      "classification": "as const",
+      "nodeText": "\"outline\" as const"
+    },
+    {
+      "key": "dd381b91d37be6387f5732626c760b90d7353205",
+      "file": "src/features/admin/pages/admin-claims-page.tsx",
+      "classification": "other",
+      "nodeText": "v as ClaimType | \"all\""
+    },
+    {
+      "key": "8bde5d89f4a8048b72f9811a31defd39af1e5d90",
+      "file": "src/features/admin/pages/admin-claims-page.tsx",
+      "classification": "other",
+      "nodeText": "v as ClaimStatus | \"all\""
+    },
+    {
+      "key": "ecf45ad8d26de41c3dd4ae5a519df0d6c750f982",
+      "file": "src/features/admin/pages/admin-courts-new-page.tsx",
+      "classification": "other",
+      "nodeText": "field.value as string[]"
+    },
+    {
+      "key": "aebe015034b619ceb1d34fe4d9a1b41ae8c2f269",
+      "file": "src/features/admin/pages/admin-verification-detail-page.tsx",
+      "classification": "as const",
+      "nodeText": "\"warning\" as const"
+    },
+    {
+      "key": "d912b517c58d4cd86fea426b5dc68a20a03ba6d3",
+      "file": "src/features/admin/pages/admin-verification-detail-page.tsx",
+      "classification": "as const",
+      "nodeText": "\"success\" as const"
+    },
+    {
+      "key": "d7b228fe725977c65e1a2f9b44ffa41e68b2d6c9",
+      "file": "src/features/admin/pages/admin-verification-detail-page.tsx",
+      "classification": "as const",
+      "nodeText": "\"destructive\" as const"
+    },
+    {
+      "key": "467e7fbfd9e965ae483722a116e511c640c1c9de",
+      "file": "src/features/admin/pages/admin-verification-page.tsx",
+      "classification": "as const",
+      "nodeText": "\"warning\" as const"
+    },
+    {
+      "key": "b8b0b5ba3003f35b4da643a634527d777f5b2cdf",
+      "file": "src/features/admin/pages/admin-verification-page.tsx",
+      "classification": "as const",
+      "nodeText": "\"success\" as const"
+    },
+    {
+      "key": "aac61d6ba3e093235f4b837a9736d4eae0e3c910",
+      "file": "src/features/admin/pages/admin-verification-page.tsx",
+      "classification": "as const",
+      "nodeText": "\"destructive\" as const"
+    },
+    {
+      "key": "7edcdb6e3e34fff238f827180f6c00e599654010",
+      "file": "src/features/auth/components/portal-switcher.tsx",
+      "classification": "as const",
+      "nodeText": "[\"owner\"] as const"
+    },
+    {
+      "key": "dc6708053697d8e96fb2b4838f45ca3d3b49faad",
+      "file": "src/features/auth/components/portal-switcher.tsx",
+      "classification": "as const",
+      "nodeText": "[\"admin\"] as const"
+    },
+    {
+      "key": "a49eed1f01938eaf261b8ead71e001979735a2ac",
+      "file": "src/features/auth/hooks.ts",
+      "classification": "other",
+      "nodeText": "authApi.queryAuthMe as (input?: unknown) => Promise<AuthSessionUser | null>"
+    },
+    {
+      "key": "ad01b4666a504ee094b796c9e2799032bfdee881",
+      "file": "src/features/auth/hooks.ts",
+      "classification": "other",
+      "nodeText": "authApi.queryOrganizationMy as ( input?: unknown, ) => Promise<AuthOrganization[]>"
+    },
+    {
+      "key": "a49eed1f01938eaf261b8ead71e001979735a2ac",
+      "file": "src/features/auth/hooks.ts",
+      "classification": "other",
+      "nodeText": "authApi.queryAuthMe as (input?: unknown) => Promise<AuthSessionUser | null>"
+    },
+    {
+      "key": "ad01b4666a504ee094b796c9e2799032bfdee881",
+      "file": "src/features/auth/hooks.ts",
+      "classification": "other",
+      "nodeText": "authApi.queryOrganizationMy as ( input?: unknown, ) => Promise<AuthOrganization[]>"
+    },
+    {
+      "key": "95d2bd62640e390a42f7717bd6db26c2009e0bcd",
+      "file": "src/features/chat/components/chat-thread/stream-chat-thread.tsx",
+      "classification": "as const",
+      "nodeText": "[ \":player-created:v1\", \":player-payment-marked:v1\", \":owner-confirmed:v1\", ] as const"
+    },
+    {
+      "key": "4f077657234a70aa24493b33aad3535e027706ca",
+      "file": "src/features/chat/components/chat-widget/reservation-inbox-widget.tsx",
+      "classification": "other",
+      "nodeText": "event as CustomEvent<ReservationChatOpenDetail>"
+    },
+    {
+      "key": "0ba311be1f826255544fdaf38c5c1063c3756500",
+      "file": "src/features/chat/components/chat-widget/reservation-inbox-widget.tsx",
+      "classification": "as unknown as",
+      "nodeText": "{ type: \"messaging\", members: { $in: [auth.user.id] }, } as unknown as Record<string, unknown>"
+    },
+    {
+      "key": "fb3bf502a26af31fe3a1a127682831fb1f628ed2",
+      "file": "src/features/chat/components/chat-widget/reservation-inbox-widget.tsx",
+      "classification": "other",
+      "nodeText": "{ type: \"messaging\", members: { $in: [auth.user.id] }, } as unknown"
+    },
+    {
+      "key": "172e91131d4115d0402cd37dfdde95e430721d76",
+      "file": "src/features/chat/components/chat-widget/reservation-inbox-widget.tsx",
+      "classification": "as unknown as",
+      "nodeText": "channel.state as unknown as Record<string, unknown>"
+    },
+    {
+      "key": "92075654171b3ff3b4c66ab9a2977358dbc6c8af",
+      "file": "src/features/chat/components/chat-widget/reservation-inbox-widget.tsx",
+      "classification": "other",
+      "nodeText": "channel.state as unknown"
+    },
+    {
+      "key": "3c7d7b10a73e114f259dd454dea17d6b14851708",
+      "file": "src/features/chat/components/chat-widget/reservation-inbox-widget.tsx",
+      "classification": "as Record<string, unknown>",
+      "nodeText": "(channel.data ?? {}) as Record<string, unknown>"
+    },
+    {
+      "key": "703f81e91b54408cda9e0f12eea56efe12efd1d4",
+      "file": "src/features/chat/components/chat-widget/reservation-inbox-widget.tsx",
+      "classification": "other",
+      "nodeText": "meta as ReservationThreadMeta"
+    },
+    {
+      "key": "3383021bc44a0de60706141521291bc3b49d3775",
+      "file": "src/features/chat/components/ReservationChatClient.tsx",
+      "classification": "as const",
+      "nodeText": "[ \"AWAITING_PAYMENT\", \"PAYMENT_MARKED_BY_USER\", \"CONFIRMED\", ] as const"
+    },
+    {
+      "key": "2b2116624c3c8f2931505636aa56743132fab02d",
+      "file": "src/features/chat/components/ReservationChatClient.tsx",
+      "classification": "other",
+      "nodeText": "CHAT_ENABLED_STATUSES as readonly string[]"
+    },
+    {
+      "key": "d2a099ff0e5edcda50b6531498748e0f7947324f",
+      "file": "src/features/chat/components/unified-chat/unified-chat-interface.tsx",
+      "classification": "as const",
+      "nodeText": "{ open: \"admin_support_inbox_open\", activeChannelId: \"admin_support_inbox_active_channel\", } as const"
+    },
+    {
+      "key": "830d3174831408c5700b0f93560203b5faf2e420",
+      "file": "src/features/chat/components/unified-chat/unified-chat-interface.tsx",
+      "classification": "as unknown as",
+      "nodeText": "{ type: \"messaging\", members: { $in: [auth.user.id] }, } as unknown as Record<string, unknown>"
+    },
+    {
+      "key": "251bd499cf07765a8b834c3f9e2820f750d1ea0f",
+      "file": "src/features/chat/components/unified-chat/unified-chat-interface.tsx",
+      "classification": "other",
+      "nodeText": "{ type: \"messaging\", members: { $in: [auth.user.id] }, } as unknown"
+    },
+    {
+      "key": "2a8980b5b09e2d089c299a35be07f5a69ae2d7b9",
+      "file": "src/features/chat/components/unified-chat/unified-chat-interface.tsx",
+      "classification": "other",
+      "nodeText": "results as SupportChannel[]"
+    },
+    {
+      "key": "8266902e62e3e9ed72b0c6c86db888b6811b4960",
+      "file": "src/features/chat/constants/upload-policy.ts",
+      "classification": "as const",
+      "nodeText": "{ maxFilesPerMessage: 5, maxFileSizeBytes: 20 * 1024 * 1024, } as const"
+    },
+    {
+      "key": "03242a0927b8a8d8ee54b8bbb8c2450165ed4349",
+      "file": "src/features/chat/hooks/useStreamChannel.ts",
+      "classification": "as unknown as",
+      "nodeText": "client as unknown as { userID?: string }"
+    },
+    {
+      "key": "3179ca5f7606232263c431904aa1bf3d1b2a0f30",
+      "file": "src/features/chat/hooks/useStreamChannel.ts",
+      "classification": "other",
+      "nodeText": "client as unknown"
+    },
+    {
+      "key": "d6fa93cef3a0eaa91d570a039cbf229cb74d6579",
+      "file": "src/features/chat/hooks/useStreamClient.ts",
+      "classification": "as unknown as",
+      "nodeText": "client as unknown as { userID?: unknown }"
+    },
+    {
+      "key": "f585cee07922d9e5b8138c63a573ebda7ac34f40",
+      "file": "src/features/chat/hooks/useStreamClient.ts",
+      "classification": "other",
+      "nodeText": "client as unknown"
+    },
+    {
+      "key": "18c656d5b5bf24a2dfb07968c75b028811f330dd",
+      "file": "src/features/chat/hooks/useStreamClient.ts",
+      "classification": "as unknown as",
+      "nodeText": "userPayload as unknown as OwnUserResponse | UserResponse"
+    },
+    {
+      "key": "6fc6e2764057cc1ad19b3a57b4111660eecab0c8",
+      "file": "src/features/chat/hooks/useStreamClient.ts",
+      "classification": "other",
+      "nodeText": "userPayload as unknown"
+    },
+    {
+      "key": "d71f059f416f105e4e0f4757683619b2c92cbbf9",
+      "file": "src/features/discovery/components/court-filters.tsx",
+      "classification": "other",
+      "nodeText": "value as | \"verified_reservable\" | \"curated\" | \"unverified_reservable\""
+    },
+    {
+      "key": "2a5dc3b55a39871741448a79552c4e356df50949",
+      "file": "src/features/discovery/components/verification-status-banner.tsx",
+      "classification": "as const",
+      "nodeText": "{ warning: <Clock className=\"h-4 w-4 text-warning\" />, destructive: <XCircle className=\"h-4 w-4 text-destructive\" />, muted: <AlertCircle className=\"h-4 w-4 text-muted-foreground\" />, success: null, } as const"
+    },
+    {
+      "key": "4912eeeaaad4b044f256cfce674ab95bab8bfa97",
+      "file": "src/features/discovery/helpers.ts",
+      "classification": "other",
+      "nodeText": "option.unavailableReason as TimeSlot[\"unavailableReason\"]"
+    },
+    {
+      "key": "c4842151d3a9bce60002989365632d6f960ade28",
+      "file": "src/features/discovery/hooks/place-detail.ts",
+      "classification": "other",
+      "nodeText": "response.verification.status as | \"UNVERIFIED\" | \"PENDING\" | \"VERIFIED\" | \"REJECTED\""
+    },
+    {
+      "key": "7b679f61bcc0af4535b398e3ad91c12bfad102ab",
+      "file": "src/features/discovery/hooks/search.ts",
+      "classification": "other",
+      "nodeText": "{ ...query, data: transformedData, } as typeof query & { data: DiscoveryResult | undefined }"
+    },
+    {
+      "key": "6484a6bb6ce3a9d8fcbd2f99a7a0775928e17571",
+      "file": "src/features/discovery/hooks/search.ts",
+      "classification": "other",
+      "nodeText": "{ ...query, data: transformedData, } as typeof query & { data: DiscoverySummaryResult | undefined }"
+    },
+    {
+      "key": "7771ba6e3d819b6367f785e9ddcb39739f2fabe3",
+      "file": "src/features/discovery/hooks/search.ts",
+      "classification": "other",
+      "nodeText": "{ ...query, data: places, } as typeof query & { data: PlaceSummary[] }"
+    },
+    {
+      "key": "214407e134813a11e420e7fd98109ca0c91993fb",
+      "file": "src/features/discovery/place-detail/components/court-detail-client.tsx",
+      "classification": "as const",
+      "nodeText": "[\"week\", \"day\"] as const"
+    },
+    {
+      "key": "aaec5fe938b162e94a95f6f18b4679c721dc1011",
+      "file": "src/features/discovery/place-detail/components/court-detail-client.tsx",
+      "classification": "other",
+      "nodeText": "placeType as PlaceVerificationDisplayInput[\"placeType\"]"
+    },
+    {
+      "key": "9fa0b8d600f44dde31f9bdf1194ed1365f255d40",
+      "file": "src/features/discovery/place-detail/components/court-detail-client.tsx",
+      "classification": "other",
+      "nodeText": "verificationStatus as PlaceVerificationDisplayInput[\"verificationStatus\"]"
+    },
+    {
+      "key": "1a34e8b4d404d190e1b8bd67ec9a457294b270eb",
+      "file": "src/features/discovery/place-detail/components/court-detail-client.tsx",
+      "classification": "as const",
+      "nodeText": "\"booked\" as const"
+    },
+    {
+      "key": "8cb7ece361d64ed557d5449e6204af4d55e591a2",
+      "file": "src/features/discovery/place-detail/components/court-detail-client.tsx",
+      "classification": "as const",
+      "nodeText": "\"available\" as const"
+    },
+    {
+      "key": "781f7f5e146920965ed962dbfc604e67fe486d4a",
+      "file": "src/features/discovery/place-detail/components/court-detail-client.tsx",
+      "classification": "other",
+      "nodeText": "option.unavailableReason as TimeSlot[\"unavailableReason\"]"
+    },
+    {
+      "key": "c9ac9c8f962adb98273d05ea06be97ed78a42feb",
+      "file": "src/features/discovery/place-detail/components/court-detail-client.tsx",
+      "classification": "other",
+      "nodeText": "allSlots[i].priceCents as number"
+    },
+    {
+      "key": "774e81e8b625d3c9ee43472063ca8ad9cb4036cd",
+      "file": "src/features/discovery/place-detail/components/court-detail-client.tsx",
+      "classification": "other",
+      "nodeText": "value as ViewMode"
+    },
+    {
+      "key": "c16ae323cfd4831d90e261482c36b74b0216eef1",
+      "file": "src/features/discovery/place-detail/components/court-detail-client.tsx",
+      "classification": "as const",
+      "nodeText": "\"easeOut\" as const"
+    },
+    {
+      "key": "0d9099692b7839d2355aee256232e1cdd16370d4",
+      "file": "src/features/discovery/place-detail/components/place-detail-availability-desktop.tsx",
+      "classification": "other",
+      "nodeText": "value as \"any\" | \"court\""
+    },
+    {
+      "key": "57f8e6d8f463ece7159acb32c543df1017711522",
+      "file": "src/features/discovery/place-detail/components/place-detail-availability-desktop.tsx",
+      "classification": "other",
+      "nodeText": "value as \"week\" | \"day\""
+    },
+    {
+      "key": "57f8e6d8f463ece7159acb32c543df1017711522",
+      "file": "src/features/discovery/place-detail/components/place-detail-availability-desktop.tsx",
+      "classification": "other",
+      "nodeText": "value as \"week\" | \"day\""
+    },
+    {
+      "key": "ff615beee445a91cb128905c4210aec6fc020090",
+      "file": "src/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section.tsx",
+      "classification": "other",
+      "nodeText": "slotsForDay[i].priceCents as number"
+    },
+    {
+      "key": "5895230aba1f8ed3a5a660be6938f1879852a2d2",
+      "file": "src/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section.tsx",
+      "classification": "other",
+      "nodeText": "value as \"week\" | \"day\""
+    },
+    {
+      "key": "b05eda6198828f87d66041f84f002fbb3921446d",
+      "file": "src/features/discovery/place-detail/components/sections/place-detail-booking-mobile-section.tsx",
+      "classification": "other",
+      "nodeText": "mobileDaySlots[i].priceCents as number"
+    },
+    {
+      "key": "de6e09fe42e43f2c0aa065b003406efcc93881c9",
+      "file": "src/features/discovery/place-detail/components/sections/place-detail-booking-section.tsx",
+      "classification": "other",
+      "nodeText": "value as \"book\" | \"openPlay\""
+    },
+    {
+      "key": "50135a948153cbc6721cb94db8e83e70da004e3d",
+      "file": "src/features/discovery/place-detail/state/place-detail-url-state.ts",
+      "classification": "as const",
+      "nodeText": "[\"any\", \"court\"] as const"
+    },
+    {
+      "key": "71c8f986369ba5c97e2d9c60c7ce81e9d374e52d",
+      "file": "src/features/discovery/place-detail/state/place-detail-url-state.ts",
+      "classification": "as const",
+      "nodeText": "[\"week\", \"day\"] as const"
+    },
+    {
+      "key": "44c320f8fa32a8123993a4e829d79dd8595189f9",
+      "file": "src/features/discovery/schemas.ts",
+      "classification": "as const",
+      "nodeText": "[\"list\", \"map\"] as const"
+    },
+    {
+      "key": "88f8d07e80a70c36e77e7e56fbc67e05eae75de1",
+      "file": "src/features/discovery/schemas.ts",
+      "classification": "as const",
+      "nodeText": "[ \"verified_reservable\", \"curated\", \"unverified_reservable\", ] as const"
+    },
+    {
+      "key": "3b80df4dee05e56d8a43ad4044d078c52cb0ba98",
+      "file": "src/features/organization/hooks.ts",
+      "classification": "other",
+      "nodeText": "data as { organization: { id: string } }"
+    },
+    {
+      "key": "b084e47e13a9906f40aaae1e1fb01f21720bd865",
+      "file": "src/features/organization/hooks.ts",
+      "classification": "as any",
+      "nodeText": "[payload.organization] as any"
+    },
+    {
+      "key": "889dd569bc4e05496c32d6f4d8c21000eb0ebe67",
+      "file": "src/features/owner/booking-studio/helpers.ts",
+      "classification": "other",
+      "nodeText": "row.startTime as Date | string"
+    },
+    {
+      "key": "f950eea2b7994565bd8d298771c4ea7f9b6bec01",
+      "file": "src/features/owner/booking-studio/helpers.ts",
+      "classification": "other",
+      "nodeText": "row.endTime as Date | string"
+    },
+    {
+      "key": "921ed907ce5374a982f087779cb04eaefbdd3029",
+      "file": "src/features/owner/booking-studio/helpers.ts",
+      "classification": "other",
+      "nodeText": "(a.status ?? \"PENDING\") as DraftRowStatus"
+    },
+    {
+      "key": "bedf72ea5ca5fb2a26c333d0ad9b29aa064bda82",
+      "file": "src/features/owner/booking-studio/helpers.ts",
+      "classification": "other",
+      "nodeText": "(b.status ?? \"PENDING\") as DraftRowStatus"
+    },
+    {
+      "key": "e90df5d48984f5024e5be6f6387fe8ffe6427b40",
+      "file": "src/features/owner/booking-studio/helpers.ts",
+      "classification": "other",
+      "nodeText": "row.courtBlockId as string"
+    },
+    {
+      "key": "e90df5d48984f5024e5be6f6387fe8ffe6427b40",
+      "file": "src/features/owner/booking-studio/helpers.ts",
+      "classification": "other",
+      "nodeText": "row.courtBlockId as string"
+    },
+    {
+      "key": "c16ae1f7339bb939f0865680e0a0eb484cad99b5",
+      "file": "src/features/owner/booking-studio/hooks.ts",
+      "classification": "other",
+      "nodeText": "(viewParam ?? defaultView) as StudioView"
+    },
+    {
+      "key": "dee540464066c33da47b15cffe97f8f77a7429b6",
+      "file": "src/features/owner/components/availability-studio/availability-studio-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "jobQuery.data?.metadata as Record<string, unknown> | null"
+    },
+    {
+      "key": "169b463412e32ef11b0c54cf9b8e12321bc50684",
+      "file": "src/features/owner/components/availability-studio/availability-studio-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "(rowsQuery.data ?? []) as DraftRowItem[]"
+    },
+    {
+      "key": "3198a891aaf614fe2692a21416683376f9c865b7",
+      "file": "src/features/owner/components/availability-studio/availability-studio-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "(reservationsQuery.data ?? []) as ReservationItem[]"
+    },
+    {
+      "key": "74ce23d884603bddd97cbaec2ff9a6b5665cb752",
+      "file": "src/features/owner/components/availability-studio/availability-studio-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "(blocksQuery.data ?? []) as CourtBlockItem[]"
+    },
+    {
+      "key": "9d94029da5405af9d04652f376fc845e33c531e9",
+      "file": "src/features/owner/components/availability-studio/availability-studio-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "variables.courtId as string | null"
+    },
+    {
+      "key": "9140616fc01d688e12f3efb56b1a7746276b45ac",
+      "file": "src/features/owner/components/availability-studio/availability-studio-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "variables.courtLabel as string | null"
+    },
+    {
+      "key": "90872d6bbe1589e278f507ac7abc08a128e4f5bf",
+      "file": "src/features/owner/components/availability-studio/availability-studio-coordinator.tsx",
+      "classification": "as const",
+      "nodeText": "\"easeOut\" as const"
+    },
+    {
+      "key": "cc10a12bc532bf07a317fea1206b63a815b03723",
+      "file": "src/features/owner/components/availability-studio/availability-studio-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "(guestProfilesQuery.data ?? []) as Array<{ id: string; displayName: string; phoneNumber: string | null; }>"
+    },
+    {
+      "key": "cc10a12bc532bf07a317fea1206b63a815b03723",
+      "file": "src/features/owner/components/availability-studio/availability-studio-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "(guestProfilesQuery.data ?? []) as Array<{ id: string; displayName: string; phoneNumber: string | null; }>"
+    },
+    {
+      "key": "abb5175171ed5c0a934a562b34e66783e380cd3e",
+      "file": "src/features/owner/components/availability-studio/availability-studio-toolbar.tsx",
+      "classification": "other",
+      "nodeText": "nextView as StudioView"
+    },
+    {
+      "key": "9d0762bbb99ac965df35b72d0fc7aaa220d91fe4",
+      "file": "src/features/owner/components/booking-studio/draft-row-card.tsx",
+      "classification": "other",
+      "nodeText": "(row.status ?? \"PENDING\") as DraftRowStatus"
+    },
+    {
+      "key": "e0d015edae231879d5a85ebb7022024075d1645a",
+      "file": "src/features/owner/components/booking-studio/draft-row-card.tsx",
+      "classification": "other",
+      "nodeText": "row.startTime as Date | string | null"
+    },
+    {
+      "key": "c4dcb9db327012d347545b46acff3b5b194904cf",
+      "file": "src/features/owner/components/booking-studio/draft-row-card.tsx",
+      "classification": "other",
+      "nodeText": "row.endTime as Date | string | null"
+    },
+    {
+      "key": "9d0762bbb99ac965df35b72d0fc7aaa220d91fe4",
+      "file": "src/features/owner/components/booking-studio/draft-row-card.tsx",
+      "classification": "other",
+      "nodeText": "(row.status ?? \"PENDING\") as DraftRowStatus"
+    },
+    {
+      "key": "e0d015edae231879d5a85ebb7022024075d1645a",
+      "file": "src/features/owner/components/booking-studio/draft-row-card.tsx",
+      "classification": "other",
+      "nodeText": "row.startTime as Date | string | null"
+    },
+    {
+      "key": "c4dcb9db327012d347545b46acff3b5b194904cf",
+      "file": "src/features/owner/components/booking-studio/draft-row-card.tsx",
+      "classification": "other",
+      "nodeText": "row.endTime as Date | string | null"
+    },
+    {
+      "key": "44eb88755ca1e28d1a77db71e32ef28d01ac7341",
+      "file": "src/features/owner/components/booking-studio/resize-helpers.ts",
+      "classification": "other",
+      "nodeText": "Math.sign(hoursDelta) as 1 | -1"
+    },
+    {
+      "key": "31fe184d69d56525a993a1ec0f92f0e0b11ac623",
+      "file": "src/features/owner/components/booking-studio/selection-panel-form.tsx",
+      "classification": "other",
+      "nodeText": "value as \"WALK_IN\" | \"MAINTENANCE\" | \"GUEST_BOOKING\""
+    },
+    {
+      "key": "5f2337873ceae86e44a1f0168be14e9b842eec79",
+      "file": "src/features/owner/components/booking-studio/types.ts",
+      "classification": "as const",
+      "nodeText": "[\"day\", \"week\"] as const"
+    },
+    {
+      "key": "f10ab3126af30787cc8f0c224e85953c0ca9de2c",
+      "file": "src/features/owner/components/booking-studio/types.ts",
+      "classification": "as const",
+      "nodeText": "[ { value: \"MAINTENANCE\", label: \"Maintenance\" }, { value: \"WALK_IN\", label: \"Walk-in\" }, ] as const"
+    },
+    {
+      "key": "0875ff093dc407becb6a938bc3fc6856a0b3659c",
+      "file": "src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "job.metadata as Record<string, unknown> | null"
+    },
+    {
+      "key": "3ea5a459f387a01947e978e5bb0d937a0a764b1a",
+      "file": "src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "(sourcesQuery.data ?? []) as SourceRecord[]"
+    },
+    {
+      "key": "fc2e23ffac7b1c56a1ab74f3029d9da673e24faa",
+      "file": "src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx",
+      "classification": "as Record<string, unknown>",
+      "nodeText": "job.metadata as Record<string, unknown>"
+    },
+    {
+      "key": "c7c79be0fbd45ba6daa73f25c5b08507aea98825",
+      "file": "src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "row.status as RowStatus"
+    },
+    {
+      "key": "e0ce1adbdac4f02fe0ea1c761394619236bb49c7",
+      "file": "src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx",
+      "classification": "as any",
+      "nodeText": "payload as any"
+    },
+    {
+      "key": "22a16c20f258806447bf8e068728147fde321788",
+      "file": "src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "v as RowStatus"
+    },
+    {
+      "key": "f7aea0e9ddf3a7c5d2ef93ad6aa97ecc194249a9",
+      "file": "src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "row as RowRecord"
+    },
+    {
+      "key": "f7aea0e9ddf3a7c5d2ef93ad6aa97ecc194249a9",
+      "file": "src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "row as RowRecord"
+    },
+    {
+      "key": "f7aea0e9ddf3a7c5d2ef93ad6aa97ecc194249a9",
+      "file": "src/features/owner/components/bookings-import/bookings-import-review-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "row as RowRecord"
+    },
+    {
+      "key": "bdbea4198cb63c952dda550a7acc6eefd63ccfe4",
+      "file": "src/features/owner/components/court-schedule-editor/helpers.ts",
+      "classification": "as const",
+      "nodeText": "[ { value: 0, label: \"Sunday\" }, { value: 1, label: \"Monday\" }, { value: 2, label: \"Tuesday\" }, { value: 3, label: \"Wednesday\" }, { value: 4, label: \"Thursday\" }, { value: 5, label: \"Friday\" }, { value: 6, label: \"Saturday\" }, ] as const"
+    },
+    {
+      "key": "ac15fb2903687d5cd66ae9fc4244aa9d81afa379",
+      "file": "src/features/owner/components/court-schedule-editor/helpers.ts",
+      "classification": "as const",
+      "nodeText": "[\"PHP\", \"USD\"] as const"
+    },
+    {
+      "key": "ef7f94b5803893bedd9052d126ed6c0cb217d4c4",
+      "file": "src/features/owner/components/court-schedule-editor/helpers.ts",
+      "classification": "other",
+      "nodeText": "[] as BlockRow[]"
+    },
+    {
+      "key": "6d0f6be7944e1c5330040015fe71d63c66696ab1",
+      "file": "src/features/owner/components/court-schedule-editor/hooks.ts",
+      "classification": "other",
+      "nodeText": "hours as HoursWindow[]"
+    },
+    {
+      "key": "ffb48e0375dffe5939ff6bdbfbd3d80bdac8e4aa",
+      "file": "src/features/owner/components/court-schedule-editor/hooks.ts",
+      "classification": "other",
+      "nodeText": "rules as RateRule[]"
+    },
+    {
+      "key": "2d00f54338bfab3c60d865681798b8e5f6ea4cec",
+      "file": "src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "(reservationsQuery.data ?? []) as ReservationItem[]"
+    },
+    {
+      "key": "ae34b527ff99679dced16dd94c96099acca4f311",
+      "file": "src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "(blocksQuery.data ?? []) as CourtBlockItem[]"
+    },
+    {
+      "key": "3d5628e67eb521f41d7dcc2ea2e976abde11ec1b",
+      "file": "src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx",
+      "classification": "as const",
+      "nodeText": "\"easeOut\" as const"
+    },
+    {
+      "key": "77861acc55589ace611817d2bd60b594f571d265",
+      "file": "src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "value as StudioView"
+    },
+    {
+      "key": "08d41406b52ed0ca5b24ededaa95e835397fa17c",
+      "file": "src/features/owner/components/place-court-availability/place-court-availability-coordinator.tsx",
+      "classification": "other",
+      "nodeText": "(guestProfilesQuery.data ?? []) as Array<{ id: string; displayName: string; phoneNumber: string | null; }>"
+    },
+    {
+      "key": "a81e1f4bd9fb3a3c9c39f69d75ac3db4bbf3b850",
+      "file": "src/features/owner/components/place-form.tsx",
+      "classification": "other",
+      "nodeText": "field.value as string[]"
+    },
+    {
+      "key": "bca789672251683fe590b8ee39941437b1ea82db",
+      "file": "src/features/owner/hooks/place-verification.ts",
+      "classification": "other",
+      "nodeText": "data.verification.status as PlaceVerificationStatus"
+    },
+    {
+      "key": "7e727e91c400c9a16c6c3e9d0661d4d19ee0e858",
+      "file": "src/features/owner/hooks/place-verification.ts",
+      "classification": "other",
+      "nodeText": "data.request.status as PlaceVerificationStatus"
+    },
+    {
+      "key": "33e056e875e7c64f25f84969590629f4ad2317ce",
+      "file": "src/features/owner/hooks/places.ts",
+      "classification": "other",
+      "nodeText": "(placesQuery.data ?? []) as OwnerPlaceRecord[]"
+    },
+    {
+      "key": "17c41ab8647f491fc958e05a3d53afd14081ddcb",
+      "file": "src/features/owner/hooks/places.ts",
+      "classification": "other",
+      "nodeText": "query.data as CourtWithSportPayload[] | undefined"
+    },
+    {
+      "key": "ca2d7c088c6c562f92c70af7badf6d9d7dc03dae",
+      "file": "src/features/owner/hooks/places.ts",
+      "classification": "other",
+      "nodeText": "placeQuery.data as OwnerPlaceByIdResponse | undefined"
+    },
+    {
+      "key": "240c38da5d6a8df245a1d980e8d488160813fd44",
+      "file": "src/features/owner/hooks/places.ts",
+      "classification": "other",
+      "nodeText": "courtsQuery.data as CourtWithSportPayload[] | undefined"
+    },
+    {
+      "key": "ca2d7c088c6c562f92c70af7badf6d9d7dc03dae",
+      "file": "src/features/owner/hooks/places.ts",
+      "classification": "other",
+      "nodeText": "placeQuery.data as OwnerPlaceByIdResponse | undefined"
+    },
+    {
+      "key": "240c38da5d6a8df245a1d980e8d488160813fd44",
+      "file": "src/features/owner/hooks/places.ts",
+      "classification": "other",
+      "nodeText": "courtsQuery.data as CourtWithSportPayload[] | undefined"
+    },
+    {
+      "key": "c325362c9c952959bd0226c024c77ad4cc97b6f1",
+      "file": "src/features/owner/hooks/places.ts",
+      "classification": "other",
+      "nodeText": "[] as OwnerCourt[]"
+    },
+    {
+      "key": "0fb68df33226a2179030467f08022c36f2620203",
+      "file": "src/features/owner/hooks/places.ts",
+      "classification": "other",
+      "nodeText": "result as { id?: string } | undefined"
+    },
+    {
+      "key": "0fb68df33226a2179030467f08022c36f2620203",
+      "file": "src/features/owner/hooks/places.ts",
+      "classification": "other",
+      "nodeText": "result as { id?: string } | undefined"
+    },
+    {
+      "key": "7b4ef40ad90c1f0aaec85ccf68931ccf6445604d",
+      "file": "src/features/owner/hooks/reservations.ts",
+      "classification": "other",
+      "nodeText": "pendingCountQuery.data as number | undefined"
+    },
+    {
+      "key": "ff7b1287fe142c5ed9f695e4422a94a54383d8a6",
+      "file": "src/features/owner/hooks/reservations.ts",
+      "classification": "other",
+      "nodeText": "data as OwnerReservationRecord[]"
+    },
+    {
+      "key": "23a2831c28cb46e750cd04e9ee75e1e1f07b439f",
+      "file": "src/features/owner/hooks/reservations.ts",
+      "classification": "other",
+      "nodeText": "variables as { reservationId?: string } | undefined"
+    },
+    {
+      "key": "23a2831c28cb46e750cd04e9ee75e1e1f07b439f",
+      "file": "src/features/owner/hooks/reservations.ts",
+      "classification": "other",
+      "nodeText": "variables as { reservationId?: string } | undefined"
+    },
+    {
+      "key": "23a2831c28cb46e750cd04e9ee75e1e1f07b439f",
+      "file": "src/features/owner/hooks/reservations.ts",
+      "classification": "other",
+      "nodeText": "variables as { reservationId?: string } | undefined"
+    },
+    {
+      "key": "7b4ef40ad90c1f0aaec85ccf68931ccf6445604d",
+      "file": "src/features/owner/hooks/reservations.ts",
+      "classification": "other",
+      "nodeText": "pendingCountQuery.data as number | undefined"
+    },
+    {
+      "key": "23a2831c28cb46e750cd04e9ee75e1e1f07b439f",
+      "file": "src/features/owner/hooks/reservations.ts",
+      "classification": "other",
+      "nodeText": "variables as { reservationId?: string } | undefined"
+    },
+    {
+      "key": "66fcefb0b50d91a130f5e991d52f84df26b4ed5b",
+      "file": "src/features/owner/hooks/reservations.ts",
+      "classification": "other",
+      "nodeText": "userOnSuccess as (...args: unknown[]) => unknown"
+    },
+    {
+      "key": "43a3e0bbfe8c136a7a10ea0de79e4583034b84de",
+      "file": "src/features/owner/pages/owner-active-reservations-page.tsx",
+      "classification": "other",
+      "nodeText": "value as ActiveFilter"
+    },
+    {
+      "key": "7da145707b48a43499fd056be099b2c6fe5a586b",
+      "file": "src/features/owner/pages/owner-bookings-import-page.tsx",
+      "classification": "as const",
+      "nodeText": "[ { value: \"ics\", label: \"ICS (Calendar export)\", description: \"Google or Apple calendar export\", extensions: \".ics\", icon: CalendarDays, }, { value: \"csv\", label: \"CSV\", description: \"Spreadsheet export\", extensions: \".csv\", icon: FileText, }, { value: \"xlsx\", label: \"XLSX\", description: \"Excel workbook\", extensions: \".xlsx\", icon: FileSpreadsheet, }, { value: \"image\", label: \"Calendar screenshot\", description: \"Photo of your calendar\", extensions: \".png, .jpg\", icon: ImageIcon, }, ] as const"
+    },
+    {
+      "key": "c86dca01030d66ceac2bf51e7cdeeab4208e432b",
+      "file": "src/features/owner/pages/owner-bookings-import-page.tsx",
+      "classification": "other",
+      "nodeText": "value as CourtScope"
+    },
+    {
+      "key": "b1d2ebc0a3ca1785e7c1ac02a6baf3c09dacde8e",
+      "file": "src/features/owner/pages/owner-dashboard-page.tsx",
+      "classification": "as const",
+      "nodeText": "{ create_organization: \"Create your organization\", add_or_claim_venue: \"Add or claim a venue\", claim_pending: \"Claim pending review\", verify_venue: \"Submit verification\", configure_courts: \"Set up courts\", complete: \"Setup complete\", } as const"
+    },
+    {
+      "key": "e22318fe66d7d1937cb79dcaee9e7362c1491378",
+      "file": "src/features/owner/pages/owner-place-court-setup-page.tsx",
+      "classification": "as const",
+      "nodeText": "[ \"details\", \"schedule\", \"publish\", \"hours\", \"pricing\", ] as const"
+    },
+    {
+      "key": "9fcb57d6b2026cb483f2ffeabd0a41a143a74bf8",
+      "file": "src/features/owner/pages/owner-place-court-setup-page.tsx",
+      "classification": "as const",
+      "nodeText": "[ { key: \"details\", label: \"Details\" }, { key: \"schedule\", label: \"Schedule\" }, { key: \"publish\", label: \"Publish\" }, ] as const"
+    },
+    {
+      "key": "63d303404965283b91c3ef30b57c8c2e70bc7c71",
+      "file": "src/features/owner/pages/owner-place-court-setup-page.tsx",
+      "classification": "as const",
+      "nodeText": "[ { value: 0, label: \"Sunday\" }, { value: 1, label: \"Monday\" }, { value: 2, label: \"Tuesday\" }, { value: 3, label: \"Wednesday\" }, { value: 4, label: \"Thursday\" }, { value: 5, label: \"Friday\" }, { value: 6, label: \"Saturday\" }, ] as const"
+    },
+    {
+      "key": "5b55b5be66addfc57b56408a183af2f102aceaa8",
+      "file": "src/features/owner/pages/owner-reservation-detail-page.tsx",
+      "classification": "as const",
+      "nodeText": "{ CREATED: { label: \"Needs acceptance\", className: \"bg-amber-50 text-amber-700 border-amber-200\", }, AWAITING_PAYMENT: { label: \"Awaiting payment\", className: \"bg-warning/10 text-warning border-warning/20\", }, PAYMENT_MARKED_BY_USER: { label: \"Payment marked\", className: \"bg-primary/10 text-primary border-primary/20\", }, CONFIRMED: { label: \"Confirmed\", className: \"bg-green-50 text-green-700 border-green-200\", }, EXPIRED: { label: \"Expired\", className: \"bg-red-50 text-red-700 border-red-200\", }, CANCELLED: { label: \"Cancelled\", className: \"bg-slate-50 text-slate-700 border-slate-200\", }, } as const"
+    },
+    {
+      "key": "3b262b16a1d0b97609fa2086cca726f7ea97382b",
+      "file": "src/features/owner/pages/owner-reservations-page.tsx",
+      "classification": "other",
+      "nodeText": "v as TabValue"
+    },
+    {
+      "key": "7216f9e14d8643da55b3764318922ad2e95108ac",
+      "file": "src/features/owner/pages/owner-settings-page.tsx",
+      "classification": "other",
+      "nodeText": "(paymentMethodsQuery.data?.methods ?? []) as OrganizationPaymentMethodItem[]"
+    },
+    {
+      "key": "90dc0b022b106804da93c510a33d6265badfdc30",
+      "file": "src/features/reservation/components/profile-form.tsx",
+      "classification": "other",
+      "nodeText": "Object.fromEntries( Object.entries(data).filter(([_, value]) => value !== \"\"), ) as ProfileFormValues"
+    },
+    {
+      "key": "ecca215322901ba6ec5f545e1b1ecd2db7b03c7a",
+      "file": "src/features/reservation/components/reservation-actions-card.tsx",
+      "classification": "other",
+      "nodeText": "value as \"REQUEST\" | \"AUTO\""
+    },
+    {
+      "key": "3be5e14197ec17b774837a352fcaf1eedd0c991a",
+      "file": "src/features/reservation/components/reservation-actions-card.tsx",
+      "classification": "other",
+      "nodeText": "value as \"PUBLIC\" | \"UNLISTED\""
+    },
+    {
+      "key": "6d844da332c307e8fa10f4c2a38d3bd33180cee0",
+      "file": "src/features/reservation/components/reservation-list-item.tsx",
+      "classification": "other",
+      "nodeText": "status as ReservationStatus"
+    },
+    {
+      "key": "df90570f529fe54521a1527461f68d41807890f2",
+      "file": "src/features/reservation/components/reservation-tabs.tsx",
+      "classification": "other",
+      "nodeText": "value as ReservationTab"
+    },
+    {
+      "key": "780e2d376c73214176bc560034132404d964ca73",
+      "file": "src/features/reservation/components/status-banner.tsx",
+      "classification": "other",
+      "nodeText": "config.variant as \"default\" | \"destructive\""
+    },
+    {
+      "key": "7224dd21f1376fd9e59e293eec7eedf67e2aaa5e",
+      "file": "src/features/reservation/hooks.ts",
+      "classification": "as const",
+      "nodeText": "[ createFeatureQueryOptions( [\"reservation\", \"getMyWithDetails\"], reservationApi.queryReservationGetMyWithDetails, { limit: 100, offset: 0, }, ), createFeatureQueryOptions( [\"reservation\", \"getMyWithDetails\"], reservationApi.queryReservationGetMyWithDetails, { status: \"CONFIRMED\", limit: 100, offset: 0, }, ), createFeatureQueryOptions( [\"reservation\", \"getMyWithDetails\"], reservationApi.queryReservationGetMyWithDetails, { status: \"CANCELLED\", limit: 100, offset: 0, }, ), createFeatureQueryOptions( [\"reservation\", \"getMyWithDetails\"], reservationApi.queryReservationGetMyWithDetails, { status: \"EXPIRED\", limit: 100, offset: 0, }, ), ] as const"
+    },
+    {
+      "key": "a91b24808dc0a5a9d58f0294124b72c85d116740",
+      "file": "src/features/reservation/hooks.ts",
+      "classification": "as const",
+      "nodeText": "[\"upcoming\", \"past\", \"cancelled\"] as const"
+    },
+    {
+      "key": "5876efb3fbd1eb06a8355276aa506f01aac013c0",
+      "file": "src/features/reservation/pages/place-booking-page.tsx",
+      "classification": "as const",
+      "nodeText": "[\"any\", \"court\"] as const"
+    },
+    {
+      "key": "d641a907969ac51d7ab2ed2fe8de8644773eb9a4",
+      "file": "src/features/reservation/pages/place-booking-page.tsx",
+      "classification": "other",
+      "nodeText": "value as \"REQUEST\" | \"AUTO\""
+    },
+    {
+      "key": "553ff050a319abfe01003be043b60982a5167a8a",
+      "file": "src/features/reservation/pages/place-booking-page.tsx",
+      "classification": "other",
+      "nodeText": "value as \"PUBLIC\" | \"UNLISTED\""
+    },
+    {
+      "key": "5bf6f15f0c1631ceeb84ebad33cda8f1a429bdc6",
+      "file": "src/lib/modules/admin/server/revalidate-actions.ts",
+      "classification": "as const",
+      "nodeText": "false as const"
+    },
+    {
+      "key": "7722e0b93c655c20e0a1b6bff8a44d137b05cbd7",
+      "file": "src/lib/modules/admin/server/revalidate-actions.ts",
+      "classification": "as const",
+      "nodeText": "true as const"
+    },
+    {
+      "key": "fec569b40a748cc61be66c12806eb2e0dc1cd2fd",
+      "file": "src/lib/modules/audit/services/audit.service.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "5164121e762b3e9a76d6bcff45d297b5f63fdadf",
+      "file": "src/lib/modules/auth/repositories/auth.repository.ts",
+      "classification": "other",
+      "nodeText": "error as { message?: unknown }"
+    },
+    {
+      "key": "0a5e21dabd61e2bafcdf6a4bd31b96153aa855bf",
+      "file": "src/lib/modules/bookings-import/lib/ics-parser.ts",
+      "classification": "as Record<string, unknown>",
+      "nodeText": "item as Record<string, unknown>"
+    },
+    {
+      "key": "b0ca47ca2d5d7871113d61e2010dbb8966510abb",
+      "file": "src/lib/modules/bookings-import/lib/xlsx-parser.ts",
+      "classification": "other",
+      "nodeText": "rawRows as unknown[][]"
+    },
+    {
+      "key": "ee9b46f66830864ed62ed2d956c38bee2ec133f3",
+      "file": "src/lib/modules/bookings-import/repositories/bookings-import-job.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "0720e40f92102163179d8c59b49d15975fbe294f",
+      "file": "src/lib/modules/bookings-import/repositories/bookings-import-row.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "46d7ce4a60ab92ae839cad223609b64d16d68a25",
+      "file": "src/lib/modules/bookings-import/repositories/bookings-import-row.repository.ts",
+      "classification": "other",
+      "nodeText": "row.status as BookingsImportRowStatus"
+    },
+    {
+      "key": "27cd5e0735527208db685f011d96453fe1584597",
+      "file": "src/lib/modules/bookings-import/repositories/bookings-import-source.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "9e69d1a547ef613a7961aac46e5067d7b5588334",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "other",
+      "nodeText": "job.status as BookingsImportJobStatus"
+    },
+    {
+      "key": "b2af32c71def8eacdbb0ccab50e962da4970bbde",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "other",
+      "nodeText": "row.status as BookingsImportRowStatus"
+    },
+    {
+      "key": "9e69d1a547ef613a7961aac46e5067d7b5588334",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "other",
+      "nodeText": "job.status as BookingsImportJobStatus"
+    },
+    {
+      "key": "b2af32c71def8eacdbb0ccab50e962da4970bbde",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "other",
+      "nodeText": "row.status as BookingsImportRowStatus"
+    },
+    {
+      "key": "9e69d1a547ef613a7961aac46e5067d7b5588334",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "other",
+      "nodeText": "job.status as BookingsImportJobStatus"
+    },
+    {
+      "key": "e2e8c2bbd81a572b8479600dc8bd9fc9b910d93b",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "as Record<string, unknown>",
+      "nodeText": "job.metadata as Record<string, unknown>"
+    },
+    {
+      "key": "e545d4e3109e12a4da44f73e7f71f99eddb8f2b8",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "other",
+      "nodeText": "(job.metadata as Record<string, unknown>).selectedCourtId as string"
+    },
+    {
+      "key": "e2e8c2bbd81a572b8479600dc8bd9fc9b910d93b",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "as Record<string, unknown>",
+      "nodeText": "job.metadata as Record<string, unknown>"
+    },
+    {
+      "key": "e46444e491b400b4547c68c7677a0ae7620a3345",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "other",
+      "nodeText": "job.sourceType as ImportSource"
+    },
+    {
+      "key": "2c3fd9e8aed8995a1ac6683b32a512c7ae83ac6b",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "other",
+      "nodeText": "source.sourceType as ImportSource"
+    },
+    {
+      "key": "1d343a17fd1ee7d93d18b05af68cf2fa8664c123",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "other",
+      "nodeText": "row.errors as string[] | null"
+    },
+    {
+      "key": "e2e8c2bbd81a572b8479600dc8bd9fc9b910d93b",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "as Record<string, unknown>",
+      "nodeText": "job.metadata as Record<string, unknown>"
+    },
+    {
+      "key": "e545d4e3109e12a4da44f73e7f71f99eddb8f2b8",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "other",
+      "nodeText": "(job.metadata as Record<string, unknown>).selectedCourtId as string"
+    },
+    {
+      "key": "e2e8c2bbd81a572b8479600dc8bd9fc9b910d93b",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "as Record<string, unknown>",
+      "nodeText": "job.metadata as Record<string, unknown>"
+    },
+    {
+      "key": "82620d864ffe711f0351f26a9f5820e45be804b8",
+      "file": "src/lib/modules/bookings-import/services/bookings-import.service.ts",
+      "classification": "other",
+      "nodeText": "Object.entries(SOURCE_CONFIG) as Array< [ImportSource, SourceConfig] >"
+    },
+    {
+      "key": "f5d2ebb0188dd586ffc4cafee0940587825670a4",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "as const",
+      "nodeText": "\"stream\" as const"
+    },
+    {
+      "key": "ebc38d691803c10af837c48e43dec5b8e9600b36",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "as unknown as",
+      "nodeText": "{ created_by_id: createdById, members: memberIds, reservation_id: reservationId, } as unknown as Record<string, unknown>"
+    },
+    {
+      "key": "a7d437e040b57370ba133f7a9cc7d8bf917a6826",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "other",
+      "nodeText": "{ created_by_id: createdById, members: memberIds, reservation_id: reservationId, } as unknown"
+    },
+    {
+      "key": "9eed88230afe1d44fc1472e7ea2b22d9a2dbe425",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "as unknown as",
+      "nodeText": "{ created_by_id: createdById, members: memberIds, ...(data ?? {}), } as unknown as Record<string, unknown>"
+    },
+    {
+      "key": "146c4a07ba312a274b4a5d84ad1cec424967350f",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "other",
+      "nodeText": "{ created_by_id: createdById, members: memberIds, ...(data ?? {}), } as unknown"
+    },
+    {
+      "key": "191adaf6c122e4b71a70917dde70ce13988bea21",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "as unknown as",
+      "nodeText": "channel as unknown as { query: (args: unknown) => Promise<{ messages?: unknown[] }>; }"
+    },
+    {
+      "key": "35e30483e594f91959cd617816eebac4c2c5af9d",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "other",
+      "nodeText": "channel as unknown"
+    },
+    {
+      "key": "2d439b4580076138d2ca3dbff57e5925c6af0d8d",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "other",
+      "nodeText": "last as { id?: unknown } | null"
+    },
+    {
+      "key": "39768b3890428ef35cc315f0383362263440c279",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "other",
+      "nodeText": "last as { id: string }"
+    },
+    {
+      "key": "3f73d2f732f21c95d429df6e7c8f3dceb95b0c5c",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "as Record<string, unknown>",
+      "nodeText": "m as Record<string, unknown>"
+    },
+    {
+      "key": "b345ce7c0748543b4e9920fcedc02ada6aa393fb",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "other",
+      "nodeText": "msg.user as Record<string, unknown> | undefined"
+    },
+    {
+      "key": "9f406be920072becce0d15157a3c4d780fc2cd55",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "other",
+      "nodeText": "user.id as string"
+    },
+    {
+      "key": "e9a45c17d34e523efeaed28a7e80cc5d59515cfc",
+      "file": "src/lib/modules/chat/providers/stream-chat.provider.ts",
+      "classification": "other",
+      "nodeText": "msg.attachments as unknown[]"
+    },
+    {
+      "key": "a0524e27d409c2410577f2bde47ef3cf1065a77b",
+      "file": "src/lib/modules/chat/repositories/open-play-chat-thread.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "c54969fd7edc8584adf82add2a6cd965fe870d86",
+      "file": "src/lib/modules/chat/repositories/reservation-chat-thread.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "f31f8be3bc1bc46abe4cf070f1183cd4a724ecd7",
+      "file": "src/lib/modules/chat/repositories/reservation-chat-transcript.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "047f655ecd28cd78d06fb53be329854be66063b4",
+      "file": "src/lib/modules/chat/repositories/support-chat-thread.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "b7cc2e624a678392a01167f00ae1bcb28184206e",
+      "file": "src/lib/modules/chat/schemas/send-chat-message.schema.ts",
+      "classification": "as const",
+      "nodeText": "[ \"stream-io-api.com\", \"stream-io-cdn.com\", \"getstream.io\", ] as const"
+    },
+    {
+      "key": "5a7e2ed4a929f3fda4e0ef7a05c83453ddb6564d",
+      "file": "src/lib/modules/chat/schemas/send-chat-message.schema.ts",
+      "classification": "as const",
+      "nodeText": "[ { key: \"asset_url\", value: attachment.asset_url }, { key: \"image_url\", value: attachment.image_url }, { key: \"thumb_url\", value: attachment.thumb_url }, ] as const"
+    },
+    {
+      "key": "eb1d574ceab1ecedcc2d4901956644ee2beff321",
+      "file": "src/lib/modules/chat/services/reservation-chat.service.ts",
+      "classification": "as const",
+      "nodeText": "[ \"CREATED\", \"AWAITING_PAYMENT\", \"PAYMENT_MARKED_BY_USER\", \"CONFIRMED\", ] as const"
+    },
+    {
+      "key": "b5f9460bc6b511bf3924c6d4f7ebb5c229919a3e",
+      "file": "src/lib/modules/chat/services/reservation-chat.service.ts",
+      "classification": "other",
+      "nodeText": "CHAT_ENABLED_STATUSES as readonly string[]"
+    },
+    {
+      "key": "20f104a7f692d1d6626d21ca4b8fb2f5805a4d77",
+      "file": "src/lib/modules/chat/services/reservation-chat.service.ts",
+      "classification": "as Record<string, unknown>",
+      "nodeText": "value as Record<string, unknown>"
+    },
+    {
+      "key": "cdb59eda3320402cf5d4c05ad58cc474807aac93",
+      "file": "src/lib/modules/chat/services/reservation-chat.service.ts",
+      "classification": "as unknown as",
+      "nodeText": "exportPayload as unknown as Record<string, unknown>"
+    },
+    {
+      "key": "c12580e8acaca083d2f4d2e0e342e46a565f414c",
+      "file": "src/lib/modules/chat/services/reservation-chat.service.ts",
+      "classification": "other",
+      "nodeText": "exportPayload as unknown"
+    },
+    {
+      "key": "d788069d30e76e2577fdf495024699e660f1bcdf",
+      "file": "src/lib/modules/chat/services/reservation-chat.service.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "2c39e0a41e7ac9afd4ec39a0ff5f2c2ddbf618d8",
+      "file": "src/lib/modules/claim-request/repositories/claim-request-event.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "88a6afe937320f2af7938dd834791a10ca02cb4c",
+      "file": "src/lib/modules/claim-request/repositories/claim-request.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "bf883369130eb533bea848e7a867d67fbe661f25",
+      "file": "src/lib/modules/claim-request/repositories/claim-request.repository.ts",
+      "classification": "other",
+      "nodeText": "this.getClient(ctx) as DrizzleTransaction"
+    },
+    {
+      "key": "88a6afe937320f2af7938dd834791a10ca02cb4c",
+      "file": "src/lib/modules/claim-request/repositories/claim-request.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "88a6afe937320f2af7938dd834791a10ca02cb4c",
+      "file": "src/lib/modules/claim-request/repositories/claim-request.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "bf883369130eb533bea848e7a867d67fbe661f25",
+      "file": "src/lib/modules/claim-request/repositories/claim-request.repository.ts",
+      "classification": "other",
+      "nodeText": "this.getClient(ctx) as DrizzleTransaction"
+    },
+    {
+      "key": "5dd04be10b06dbced06f35a904a0b9f55634b8c8",
+      "file": "src/lib/modules/contact/repositories/contact-message.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "62ef269548b8b4e6c5d5380e7ea4326f2a9236ec",
+      "file": "src/lib/modules/court-block/repositories/court-block.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "61967f4b82be537929e5545ecc8c3f7f7dd72057",
+      "file": "src/lib/modules/court-hours/repositories/court-hours.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "513c943064ec0280010b7a1d86723a2609be75ac",
+      "file": "src/lib/modules/court-price-override/repositories/court-price-override.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "02ad12974f6b31cbbfec7cbe93effe9aa9fd8ef6",
+      "file": "src/lib/modules/court-rate-rule/repositories/court-rate-rule.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "8776e6b388597cc128940761e4cbc6ed768818d1",
+      "file": "src/lib/modules/court/repositories/admin-court.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "5b350814784293bcd9eb23f2a2c9378c369fc5db",
+      "file": "src/lib/modules/court/repositories/admin-court.repository.ts",
+      "classification": "other",
+      "nodeText": "this.getClient(ctx) as DrizzleTransaction"
+    },
+    {
+      "key": "74a317328736a56207a5a47e215dd8ecc5f6365f",
+      "file": "src/lib/modules/court/repositories/court-amenity.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "890736d917df19877c474cf7c74a35e22303802b",
+      "file": "src/lib/modules/court/repositories/court-photo.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "cb80ab9140dd35be949e798ba947ff498a62b283",
+      "file": "src/lib/modules/court/repositories/court.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "ada06d0d8c9917c9213af31e118deb7ff317cab6",
+      "file": "src/lib/modules/court/repositories/court.repository.ts",
+      "classification": "other",
+      "nodeText": "this.getClient(ctx) as DrizzleTransaction"
+    },
+    {
+      "key": "a6b862497b277aa25feda1225afab134189c2096",
+      "file": "src/lib/modules/court/services/admin-court.service.ts",
+      "classification": "other",
+      "nodeText": "data.courts.map((court) => court.id).filter(Boolean) as string[]"
+    },
+    {
+      "key": "6b50c1aedf48f27c400d8ff0aec8b09d229bee6b",
+      "file": "src/lib/modules/guest-profile/repositories/guest-profile.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "16d79470b6723123356ce4386308decd08f2e3ce",
+      "file": "src/lib/modules/notification-delivery/admin/notification-delivery-admin.router.ts",
+      "classification": "other",
+      "nodeText": "JSON.parse(text) as unknown"
+    },
+    {
+      "key": "e27edb75584f4145d4077078ebf421338dde6d0a",
+      "file": "src/lib/modules/notification-delivery/repositories/notification-delivery-job.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "c9dd6fb515897f139c907d1ba9102ee941540461",
+      "file": "src/lib/modules/notification-delivery/repositories/notification-recipient.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "400623c245ee9ed8bb0df321d2063b2e3a538d12",
+      "file": "src/lib/modules/open-play/repositories/open-play-participant.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "1f89c266a9519ced60a3ab0f35ba98c147b62125",
+      "file": "src/lib/modules/open-play/repositories/open-play.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "6a0b04747e57cb2f1685e7d18d7ab92ea9eea356",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "item.joinPolicy as OpenPlayJoinPolicy"
+    },
+    {
+      "key": "fa87428610551b9c036ee4fc06fcf4dd10f4ec70",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "context.openPlay.status as OpenPlayStatus"
+    },
+    {
+      "key": "bed48fb8c092445fb518d38e326c48c60965c5c9",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "context.openPlay.visibility as OpenPlayVisibility"
+    },
+    {
+      "key": "5cfa1ab9a99e9063a8c7371d4072e8a1e0df6acc",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "context.openPlay.joinPolicy as OpenPlayJoinPolicy"
+    },
+    {
+      "key": "a53f365785b668e35aac1133cf4c97728978feff",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "myParticipant?.status as OpenPlayParticipantStatus"
+    },
+    {
+      "key": "05f4c448430e7428094696e76a75e14a8e326f72",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "p.participant.status as OpenPlayParticipantStatus"
+    },
+    {
+      "key": "05f4c448430e7428094696e76a75e14a8e326f72",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "p.participant.status as OpenPlayParticipantStatus"
+    },
+    {
+      "key": "a53f365785b668e35aac1133cf4c97728978feff",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "myParticipant?.status as OpenPlayParticipantStatus"
+    },
+    {
+      "key": "80ac09a3b884d0bce744e4a16a77d14acb324bf2",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "tx as DrizzleTransaction"
+    },
+    {
+      "key": "5cfa1ab9a99e9063a8c7371d4072e8a1e0df6acc",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "context.openPlay.joinPolicy as OpenPlayJoinPolicy"
+    },
+    {
+      "key": "f5635b20fe1569e5054a298885fe6998bf5e4311",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "existing.status as OpenPlayParticipantStatus"
+    },
+    {
+      "key": "80ac09a3b884d0bce744e4a16a77d14acb324bf2",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "tx as DrizzleTransaction"
+    },
+    {
+      "key": "50de89865390fe1345c358595e68652bd8b861dc",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "row.participant .status as OpenPlayParticipantStatus"
+    },
+    {
+      "key": "80ac09a3b884d0bce744e4a16a77d14acb324bf2",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "tx as DrizzleTransaction"
+    },
+    {
+      "key": "80ac09a3b884d0bce744e4a16a77d14acb324bf2",
+      "file": "src/lib/modules/open-play/services/open-play.service.ts",
+      "classification": "other",
+      "nodeText": "tx as DrizzleTransaction"
+    },
+    {
+      "key": "83d1e4ecdda5fd7f8edd80488cde91713b271454",
+      "file": "src/lib/modules/organization-payment/repositories/organization-payment-method.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "ca8eadd33213c3c4d23097f2bbdc4c5ca2eb1e05",
+      "file": "src/lib/modules/organization-payment/repositories/organization-reservation-policy.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "2995d1529327d363d013cb2cd31454ff25c6a348",
+      "file": "src/lib/modules/organization/repositories/organization-profile.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "ea20d4032d44984f3678a87028c1833494f83783",
+      "file": "src/lib/modules/organization/repositories/organization.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "ec899ad488748def82b62f548dd1d64bd2642987",
+      "file": "src/lib/modules/organization/repositories/organization.repository.ts",
+      "classification": "other",
+      "nodeText": "error as { code?: unknown }"
+    },
+    {
+      "key": "ec899ad488748def82b62f548dd1d64bd2642987",
+      "file": "src/lib/modules/organization/repositories/organization.repository.ts",
+      "classification": "other",
+      "nodeText": "error as { code?: unknown }"
+    },
+    {
+      "key": "46f93e2a0b4becc328961caa5b225d796d70def9",
+      "file": "src/lib/modules/organization/services/organization.service.ts",
+      "classification": "other",
+      "nodeText": "node as { base?: unknown }"
+    },
+    {
+      "key": "5d9abfa6e5a07248903be61bcccdd3cc3a75f5bd",
+      "file": "src/lib/modules/organization/services/organization.service.ts",
+      "classification": "as Record<string, unknown>",
+      "nodeText": "node as Record<string, unknown>"
+    },
+    {
+      "key": "1c4084e4f123d62e590eb1028db973a2113f9906",
+      "file": "src/lib/modules/owner-setup/use-cases/get-owner-setup-status.use-case.ts",
+      "classification": "other",
+      "nodeText": "[place.id, placeCourts] as [ string, Awaited<ReturnType<ICourtRepository[\"findByPlaceId\"]>>, ]"
+    },
+    {
+      "key": "907098498c6360eec59074c46a68a68b7184ae62",
+      "file": "src/lib/modules/payment-proof/repositories/payment-proof.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "907098498c6360eec59074c46a68a68b7184ae62",
+      "file": "src/lib/modules/payment-proof/repositories/payment-proof.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "907098498c6360eec59074c46a68a68b7184ae62",
+      "file": "src/lib/modules/payment-proof/repositories/payment-proof.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "7018518cff600ea813b3808ef57f49e0863f4e4d",
+      "file": "src/lib/modules/place-verification/repositories/place-verification.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "7018518cff600ea813b3808ef57f49e0863f4e4d",
+      "file": "src/lib/modules/place-verification/repositories/place-verification.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "2ddc0259064fa78daf154ccc020cc19274a7833b",
+      "file": "src/lib/modules/place-verification/repositories/place-verification.repository.ts",
+      "classification": "other",
+      "nodeText": "this.getClient(ctx) as DrizzleTransaction"
+    },
+    {
+      "key": "7018518cff600ea813b3808ef57f49e0863f4e4d",
+      "file": "src/lib/modules/place-verification/repositories/place-verification.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "7018518cff600ea813b3808ef57f49e0863f4e4d",
+      "file": "src/lib/modules/place-verification/repositories/place-verification.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "18c2fd6cb871a1667ad5b629ca93778bb4402958",
+      "file": "src/lib/modules/place/repositories/place-photo.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "cee01e3380c5a130c53c5488f782c0b2c9aedf4a",
+      "file": "src/lib/modules/place/repositories/place.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "482ac44085f606d54be43a97a569739a220a1779",
+      "file": "src/lib/modules/place/repositories/place.repository.ts",
+      "classification": "other",
+      "nodeText": "this.getClient(ctx) as DrizzleTransaction"
+    },
+    {
+      "key": "4885e5f13efb587a1930040ed781ebb4445dda89",
+      "file": "src/lib/modules/place/repositories/place.repository.ts",
+      "classification": "as const",
+      "nodeText": "[ featuredBucket, asc(place.featuredRank), verificationRank, asc(place.name), asc(place.id), ] as const"
+    },
+    {
+      "key": "480634561bee714f7b3a7e08e4c9273d7076f09f",
+      "file": "src/lib/modules/place/repositories/place.repository.ts",
+      "classification": "as const",
+      "nodeText": "[row.placeId, row] as const"
+    },
+    {
+      "key": "480634561bee714f7b3a7e08e4c9273d7076f09f",
+      "file": "src/lib/modules/place/repositories/place.repository.ts",
+      "classification": "as const",
+      "nodeText": "[row.placeId, row] as const"
+    },
+    {
+      "key": "480634561bee714f7b3a7e08e4c9273d7076f09f",
+      "file": "src/lib/modules/place/repositories/place.repository.ts",
+      "classification": "as const",
+      "nodeText": "[row.placeId, row] as const"
+    },
+    {
+      "key": "4885e5f13efb587a1930040ed781ebb4445dda89",
+      "file": "src/lib/modules/place/repositories/place.repository.ts",
+      "classification": "as const",
+      "nodeText": "[ featuredBucket, asc(place.featuredRank), verificationRank, asc(place.name), asc(place.id), ] as const"
+    },
+    {
+      "key": "ebda03c9541cc58c0efe35a8c31880fe6287f515",
+      "file": "src/lib/modules/place/repositories/place.repository.ts",
+      "classification": "as const",
+      "nodeText": "[[row.placeId, row.count]] as const"
+    },
+    {
+      "key": "8dcc9e568f647eed7ad3d7b2a0ecd0cc921a337e",
+      "file": "src/lib/modules/profile/repositories/profile.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "5e61821cdfa814ce222f8625f9f32b07397ccb12",
+      "file": "src/lib/modules/push-subscription/repositories/push-subscription.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "8d1b3555127e828e28301bc9b90b8ef526c485cb",
+      "file": "src/lib/modules/reservation/repositories/reservation-event.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "1a56dda70b01bfcbfb31881f36ed0be39c93b2d0",
+      "file": "src/lib/modules/reservation/repositories/reservation.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "7447f540b797ebacc5527ede036f9455f471d867",
+      "file": "src/lib/modules/reservation/repositories/reservation.repository.ts",
+      "classification": "other",
+      "nodeText": "this.getClient(ctx) as DrizzleTransaction"
+    },
+    {
+      "key": "5f70d1c071c18d495cbb879e4f97c233943a79b3",
+      "file": "src/lib/modules/reservation/repositories/reservation.repository.ts",
+      "classification": "other",
+      "nodeText": "options.status as | \"CREATED\" | \"AWAITING_PAYMENT\" | \"PAYMENT_MARKED_BY_USER\" | \"CONFIRMED\" | \"EXPIRED\" | \"CANCELLED\""
+    },
+    {
+      "key": "e5533c566af61f716a5916125f6e3bfd86228109",
+      "file": "src/lib/modules/reservation/repositories/reservation.repository.ts",
+      "classification": "other",
+      "nodeText": "filters.status as | \"CREATED\" | \"AWAITING_PAYMENT\" | \"PAYMENT_MARKED_BY_USER\" | \"CONFIRMED\" | \"EXPIRED\" | \"CANCELLED\""
+    },
+    {
+      "key": "e5533c566af61f716a5916125f6e3bfd86228109",
+      "file": "src/lib/modules/reservation/repositories/reservation.repository.ts",
+      "classification": "other",
+      "nodeText": "filters.status as | \"CREATED\" | \"AWAITING_PAYMENT\" | \"PAYMENT_MARKED_BY_USER\" | \"CONFIRMED\" | \"EXPIRED\" | \"CANCELLED\""
+    },
+    {
+      "key": "ebe6d7d4041025298850a4a7283b3518e9b583cb",
+      "file": "src/lib/modules/reservation/use-cases/expire-stale-reservations.use-case.ts",
+      "classification": "as const",
+      "nodeText": "[ \"CREATED\", \"AWAITING_PAYMENT\", \"PAYMENT_MARKED_BY_USER\", ] as const"
+    },
+    {
+      "key": "b8c7042318a30bcf6802c81209f5f6835116f587",
+      "file": "src/lib/modules/reservation/use-cases/expire-stale-reservations.use-case.ts",
+      "classification": "as const",
+      "nodeText": "[r.id, r.status as StaleReservationStatus] as const"
+    },
+    {
+      "key": "bc843404ac7898c5a5d4ab5456529dc30c28b706",
+      "file": "src/lib/modules/reservation/use-cases/expire-stale-reservations.use-case.ts",
+      "classification": "other",
+      "nodeText": "r.status as StaleReservationStatus"
+    },
+    {
+      "key": "c3338fbf2f9ebd4eb166cb48d1ee137d0f2f4969",
+      "file": "src/lib/modules/sport/repositories/sport.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "a1caf31ec7fa142e67763303c6d11ecf01434478",
+      "file": "src/lib/modules/storage/dtos/upload.dto.ts",
+      "classification": "as const",
+      "nodeText": "[ \"image/jpeg\", \"image/png\", \"image/webp\", ] as const"
+    },
+    {
+      "key": "c81733f3f04e3eb977b0675fb5fb12a9124becb2",
+      "file": "src/lib/modules/storage/dtos/upload.dto.ts",
+      "classification": "as const",
+      "nodeText": "[ \"text/calendar\", \"text/csv\", \"application/csv\", \"application/vnd.ms-excel\", \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\", \"image/jpeg\", \"image/png\", ] as const"
+    },
+    {
+      "key": "22071025c216126fb1b9b4f977a6920d5f9d84eb",
+      "file": "src/lib/modules/storage/dtos/upload.dto.ts",
+      "classification": "as const",
+      "nodeText": "[ ...ALLOWED_IMAGE_TYPES, \"application/pdf\", \"application/x-pdf\", ] as const"
+    },
+    {
+      "key": "13892d299d27c032c65e4009f9a4eca3a31a2247",
+      "file": "src/lib/modules/storage/dtos/upload.dto.ts",
+      "classification": "as const",
+      "nodeText": "{ PROFILE_IMAGE: \"5MB\", COURT_PHOTO: \"5MB\", PLACE_PHOTO: \"5MB\", ORG_LOGO: \"5MB\", PAYMENT_PROOF: \"10MB\", VERIFICATION_DOCUMENT: \"10MB\", IMPORT_FILE: \"20MB\", } as const"
+    },
+    {
+      "key": "16a76b0bbc762159f295489597dbccca8b5df070",
+      "file": "src/lib/modules/storage/dtos/upload.dto.ts",
+      "classification": "as const",
+      "nodeText": "{ AVATARS: \"avatars\", PAYMENT_PROOFS: \"payment-proofs\", COURT_PHOTOS: \"court-photos\", PLACE_PHOTOS: \"place-photos\", ORGANIZATION_ASSETS: \"organization-assets\", BOOKINGS_IMPORTS: \"bookings-imports\", PLACE_VERIFICATION_DOCS: \"place-verification-docs\", } as const"
+    },
+    {
+      "key": "2880d71575ff4bc8caab1eb6e13a83eb502b01eb",
+      "file": "src/lib/modules/storage/dtos/upload.dto.ts",
+      "classification": "other",
+      "nodeText": "file.type as (typeof ALLOWED_IMAGE_TYPES)[number]"
+    },
+    {
+      "key": "2880d71575ff4bc8caab1eb6e13a83eb502b01eb",
+      "file": "src/lib/modules/storage/dtos/upload.dto.ts",
+      "classification": "other",
+      "nodeText": "file.type as (typeof ALLOWED_IMAGE_TYPES)[number]"
+    },
+    {
+      "key": "59be95e0b5278d509c2f3e9945a2d13049e39814",
+      "file": "src/lib/modules/storage/dtos/upload.dto.ts",
+      "classification": "other",
+      "nodeText": "file.type as (typeof ALLOWED_VERIFICATION_DOCUMENT_TYPES)[number]"
+    },
+    {
+      "key": "22d968e2ab7e48f94b12259323ef542968bb7e21",
+      "file": "src/lib/modules/storage/dtos/upload.dto.ts",
+      "classification": "other",
+      "nodeText": "file.type as (typeof ALLOWED_IMPORT_FILE_TYPES)[number]"
+    },
+    {
+      "key": "17f5460e64a192c4c0a108b466588f4641d81c6d",
+      "file": "src/lib/modules/user-preference/repositories/user-preference.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "2df78fa6b4e3e1699a9f77a2548c82c094f753ae",
+      "file": "src/lib/modules/user-role/repositories/user-role.repository.ts",
+      "classification": "other",
+      "nodeText": "ctx?.tx as DrizzleTransaction"
+    },
+    {
+      "key": "654d9485bf7a56d60085eb840111763025bdfd87",
+      "file": "src/lib/shared/infra/db/transaction.ts",
+      "classification": "other",
+      "nodeText": "tx as TransactionContext"
+    },
+    {
+      "key": "5dfb9c51cfb8db0073624ffa2848337d28b49eff",
+      "file": "src/lib/shared/infra/http/client-identifier.ts",
+      "classification": "as const",
+      "nodeText": "[ \"cf-connecting-ip\", \"x-real-ip\", \"x-forwarded-for\", ] as const"
+    },
+    {
+      "key": "d186fd7cb33b0d18498153e581fac180feb22b7a",
+      "file": "src/lib/shared/infra/http/http-rate-limit.ts",
+      "classification": "as const",
+      "nodeText": "false as const"
+    },
+    {
+      "key": "6420804e5c48579e4e60a0fc69a5dc6c15a80b06",
+      "file": "src/lib/shared/infra/http/http-rate-limit.ts",
+      "classification": "as const",
+      "nodeText": "true as const"
+    },
+    {
+      "key": "d186fd7cb33b0d18498153e581fac180feb22b7a",
+      "file": "src/lib/shared/infra/http/http-rate-limit.ts",
+      "classification": "as const",
+      "nodeText": "false as const"
+    },
+    {
+      "key": "564e117a872eb40199c1d6f0180122d350a0d8fa",
+      "file": "src/lib/shared/infra/ratelimit/config.ts",
+      "classification": "as const",
+      "nodeText": "{ /** Standard read endpoints - 100 req/min */ default: { requests: 100, window: \"1 m\" as const }, /** Authentication endpoints - 10 req/min */ auth: { requests: 10, window: \"1 m\" as const }, /** Auth endpoints that can trigger outbound email - 5 req/5 min */ authEmailSend: { requests: 5, window: \"5 m\" as const }, /** Create/update operations - 30 req/min */ mutation: { requests: 30, window: \"1 m\" as const }, /** Sensitive operations (reservations, claims) - 5 req/min */ sensitive: { requests: 5, window: \"1 m\" as const }, /** User chat sends - 5 messages/min */ chatSend: { requests: 5, window: \"1 m\" as const }, /** Chat auth/session provisioning - 12 req/min */ chatSession: { requests: 12, window: \"1 m\" as const }, /** AI-powered normalization operations - 3 req/10 min */ aiNormalize: { requests: 3, window: \"10 m\" as const }, } as const"
+    },
+    {
+      "key": "c5ef3a09e0cd1b052e5a123127004c29b9058238",
+      "file": "src/lib/shared/infra/ratelimit/config.ts",
+      "classification": "as const",
+      "nodeText": "\"1 m\" as const"
+    },
+    {
+      "key": "c5ef3a09e0cd1b052e5a123127004c29b9058238",
+      "file": "src/lib/shared/infra/ratelimit/config.ts",
+      "classification": "as const",
+      "nodeText": "\"1 m\" as const"
+    },
+    {
+      "key": "e545366a7281bf70c0ec8c58870fbccc4a26be55",
+      "file": "src/lib/shared/infra/ratelimit/config.ts",
+      "classification": "as const",
+      "nodeText": "\"5 m\" as const"
+    },
+    {
+      "key": "c5ef3a09e0cd1b052e5a123127004c29b9058238",
+      "file": "src/lib/shared/infra/ratelimit/config.ts",
+      "classification": "as const",
+      "nodeText": "\"1 m\" as const"
+    },
+    {
+      "key": "c5ef3a09e0cd1b052e5a123127004c29b9058238",
+      "file": "src/lib/shared/infra/ratelimit/config.ts",
+      "classification": "as const",
+      "nodeText": "\"1 m\" as const"
+    },
+    {
+      "key": "c5ef3a09e0cd1b052e5a123127004c29b9058238",
+      "file": "src/lib/shared/infra/ratelimit/config.ts",
+      "classification": "as const",
+      "nodeText": "\"1 m\" as const"
+    },
+    {
+      "key": "c5ef3a09e0cd1b052e5a123127004c29b9058238",
+      "file": "src/lib/shared/infra/ratelimit/config.ts",
+      "classification": "as const",
+      "nodeText": "\"1 m\" as const"
+    },
+    {
+      "key": "d250a4a0e2e396229815978b9dfe539aa79dc445",
+      "file": "src/lib/shared/infra/ratelimit/config.ts",
+      "classification": "as const",
+      "nodeText": "\"10 m\" as const"
+    },
+    {
+      "key": "96e525654e3177407132be6ef8e33dd342144834",
+      "file": "src/lib/shared/infra/ratelimit/ratelimit.ts",
+      "classification": "as unknown as",
+      "nodeText": "limiter as unknown as RateLimiter"
+    },
+    {
+      "key": "16515e4bfa4fcd73d49765c45747dfab2bcddce7",
+      "file": "src/lib/shared/infra/ratelimit/ratelimit.ts",
+      "classification": "other",
+      "nodeText": "limiter as unknown"
+    },
+    {
+      "key": "96e525654e3177407132be6ef8e33dd342144834",
+      "file": "src/lib/shared/infra/ratelimit/ratelimit.ts",
+      "classification": "as unknown as",
+      "nodeText": "limiter as unknown as RateLimiter"
+    },
+    {
+      "key": "16515e4bfa4fcd73d49765c45747dfab2bcddce7",
+      "file": "src/lib/shared/infra/ratelimit/ratelimit.ts",
+      "classification": "other",
+      "nodeText": "limiter as unknown"
+    },
+    {
+      "key": "219648c19d2de13894260fa342d2467d4edcd8cb",
+      "file": "src/lib/shared/infra/sms/semaphore-sms.service.ts",
+      "classification": "other",
+      "nodeText": "parsed[0] as SemaphoreMessage | undefined"
+    },
+    {
+      "key": "328886e700e570cb596ee52632274280e15d178c",
+      "file": "src/lib/shared/infra/trpc/server.ts",
+      "classification": "as const",
+      "nodeText": "\"unknown\" as const"
+    },
+    {
+      "key": "6d8905a4242167f624b0434e14dc3b159f63b60e",
+      "file": "src/lib/shared/infra/trpc/trpc.ts",
+      "classification": "other",
+      "nodeText": "ctx as AuthenticatedContext"
+    },
+    {
+      "key": "6d8905a4242167f624b0434e14dc3b159f63b60e",
+      "file": "src/lib/shared/infra/trpc/trpc.ts",
+      "classification": "other",
+      "nodeText": "ctx as AuthenticatedContext"
+    },
+    {
+      "key": "a6ce030348129193b224636eeac8c27e10501439",
+      "file": "src/lib/shared/infra/web-push/web-push.provider.ts",
+      "classification": "other",
+      "nodeText": "error as WebPushLibError"
+    },
+    {
+      "key": "a6889f3de164f73027aaffeaccb8204b256fd9ba",
+      "file": "src/lib/shared/kernel/auth.ts",
+      "classification": "as const",
+      "nodeText": "[\"admin\", \"member\", \"viewer\"] as const"
+    },
+    {
+      "key": "5c7ca7c206cdb54be2d57a099c751514d285d195",
+      "file": "src/lib/shared/kernel/auth.ts",
+      "classification": "as const",
+      "nodeText": "[\"read\", \"write\", \"delete\", \"manage_users\"] as const"
+    },
+    {
+      "key": "cba93cb05bec839914ae7758ca1b151e4426c2dd",
+      "file": "src/lib/shared/kernel/auth.ts",
+      "classification": "as const",
+      "nodeText": "[\"read\", \"write\"] as const"
+    },
+    {
+      "key": "383afb62e53dddc912430af05ddb9e1211e022d3",
+      "file": "src/lib/shared/kernel/auth.ts",
+      "classification": "as const",
+      "nodeText": "[\"read\"] as const"
+    },
+    {
+      "key": "22f987a2344837c27dde43b8bdda1d6929dd5477",
+      "file": "src/lib/shared/kernel/auth.ts",
+      "classification": "other",
+      "nodeText": "ROLE_PERMISSIONS[role] as readonly string[]"
+    },
+    {
+      "key": "6b7c40977730a8f7bea29415879d9888a9554ccc",
+      "file": "src/lib/shared/lib/google-maps/resolve-google-place-id.ts",
+      "classification": "other",
+      "nodeText": "(await response.json()) as { status?: string; candidates?: Array<{ place_id?: string; name?: string }>; }"
+    },
+    {
+      "key": "0274e9bdf91a9ac0481ebed94cc593db025c64e4",
+      "file": "src/lib/shared/lib/ph-location-data.server.ts",
+      "classification": "other",
+      "nodeText": "JSON.parse(raw) as PHProvincesCities"
+    }
+  ],
+  "allowlist": []
+}

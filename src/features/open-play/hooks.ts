@@ -89,6 +89,8 @@ export function useMutCreateOpenPlayFromReservation() {
 
   return useFeatureMutation(openPlayApi.mutOpenPlayCreateFromReservation, {
     onSuccess: async (data, variables) => {
+      const reservationId = (variables as { reservationId: string })
+        .reservationId;
       toast.success("Open Play created");
       await Promise.all([
         utils.openPlay.getPublicDetail.invalidate({
@@ -96,7 +98,7 @@ export function useMutCreateOpenPlayFromReservation() {
         }),
         utils.openPlay.getDetail.invalidate({ openPlayId: data.openPlayId }),
         utils.openPlay.getForReservation.invalidate({
-          reservationId: variables.reservationId,
+          reservationId,
         }),
       ]);
     },
@@ -111,6 +113,7 @@ export function useMutRequestJoinOpenPlay() {
 
   return useFeatureMutation(openPlayApi.mutOpenPlayRequestToJoin, {
     onSuccess: async (data, variables) => {
+      const openPlayId = (variables as { openPlayId: string }).openPlayId;
       toast.success(
         data.status === "CONFIRMED"
           ? "Joined Open Play"
@@ -120,10 +123,10 @@ export function useMutRequestJoinOpenPlay() {
       );
       await Promise.all([
         utils.openPlay.getPublicDetail.invalidate({
-          openPlayId: variables.openPlayId,
+          openPlayId,
         }),
         utils.openPlay.getDetail.invalidate({
-          openPlayId: variables.openPlayId,
+          openPlayId,
         }),
       ]);
     },
@@ -138,13 +141,14 @@ export function useMutLeaveOpenPlay() {
 
   return useFeatureMutation(openPlayApi.mutOpenPlayLeave, {
     onSuccess: async (_data, variables) => {
+      const openPlayId = (variables as { openPlayId: string }).openPlayId;
       toast.success("Left Open Play");
       await Promise.all([
         utils.openPlay.getPublicDetail.invalidate({
-          openPlayId: variables.openPlayId,
+          openPlayId,
         }),
         utils.openPlay.getDetail.invalidate({
-          openPlayId: variables.openPlayId,
+          openPlayId,
         }),
       ]);
     },
@@ -172,13 +176,14 @@ export function useMutCloseOpenPlay() {
   const utils = trpc.useUtils();
   return useFeatureMutation(openPlayApi.mutOpenPlayClose, {
     onSuccess: async (_data, variables) => {
+      const openPlayId = (variables as { openPlayId: string }).openPlayId;
       toast.success("Open Play closed");
       await Promise.all([
         utils.openPlay.getPublicDetail.invalidate({
-          openPlayId: variables.openPlayId,
+          openPlayId,
         }),
         utils.openPlay.getDetail.invalidate({
-          openPlayId: variables.openPlayId,
+          openPlayId,
         }),
       ]);
     },
@@ -192,13 +197,14 @@ export function useMutCancelOpenPlay() {
   const utils = trpc.useUtils();
   return useFeatureMutation(openPlayApi.mutOpenPlayCancel, {
     onSuccess: async (_data, variables) => {
+      const openPlayId = (variables as { openPlayId: string }).openPlayId;
       toast.success("Open Play cancelled");
       await Promise.all([
         utils.openPlay.getPublicDetail.invalidate({
-          openPlayId: variables.openPlayId,
+          openPlayId,
         }),
         utils.openPlay.getDetail.invalidate({
-          openPlayId: variables.openPlayId,
+          openPlayId,
         }),
       ]);
     },

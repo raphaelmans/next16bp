@@ -27,7 +27,7 @@ export type DiscoveryApiDeps = {
   toAppError?: (err: unknown) => AppError;
 };
 
-export class DiscoveryApi implements IDiscoveryApi {
+export class DiscoveryApi {
   readonly clientApi: TrpcClientApi;
   private readonly toAppError: (err: unknown) => AppError;
 
@@ -40,6 +40,7 @@ export class DiscoveryApi implements IDiscoveryApi {
     callTrpcMutation(
       this.clientApi,
       ["claimRequest", "submitClaim"],
+      (clientApi) => clientApi.claimRequest.submitClaim.mutate,
       input,
       this.toAppError,
     );
@@ -48,6 +49,7 @@ export class DiscoveryApi implements IDiscoveryApi {
     callTrpcMutation(
       this.clientApi,
       ["claimRequest", "submitGuestRemoval"],
+      (clientApi) => clientApi.claimRequest.submitGuestRemoval.mutate,
       input,
       this.toAppError,
     );
@@ -56,6 +58,7 @@ export class DiscoveryApi implements IDiscoveryApi {
     callTrpcQuery(
       this.clientApi,
       ["availability", "getForCourt"],
+      (clientApi) => clientApi.availability.getForCourt.query,
       input,
       this.toAppError,
     );
@@ -64,6 +67,7 @@ export class DiscoveryApi implements IDiscoveryApi {
     callTrpcQuery(
       this.clientApi,
       ["availability", "getForCourtRange"],
+      (clientApi) => clientApi.availability.getForCourtRange.query,
       input,
       this.toAppError,
     );
@@ -72,6 +76,7 @@ export class DiscoveryApi implements IDiscoveryApi {
     callTrpcQuery(
       this.clientApi,
       ["availability", "getForPlaceSport"],
+      (clientApi) => clientApi.availability.getForPlaceSport.query,
       input,
       this.toAppError,
     );
@@ -80,17 +85,25 @@ export class DiscoveryApi implements IDiscoveryApi {
     callTrpcQuery(
       this.clientApi,
       ["availability", "getForPlaceSportRange"],
+      (clientApi) => clientApi.availability.getForPlaceSportRange.query,
       input,
       this.toAppError,
     );
 
   queryCourtGetById = async (input?: unknown) =>
-    callTrpcQuery(this.clientApi, ["court", "getById"], input, this.toAppError);
+    callTrpcQuery(
+      this.clientApi,
+      ["court", "getById"],
+      (clientApi) => clientApi.court.getById.query,
+      input,
+      this.toAppError,
+    );
 
   queryOrganizationMy = async (input?: unknown) =>
     callTrpcQuery(
       this.clientApi,
       ["organization", "my"],
+      (clientApi) => clientApi.organization.my.query,
       input,
       this.toAppError,
     );
@@ -99,28 +112,43 @@ export class DiscoveryApi implements IDiscoveryApi {
     callTrpcQuery(
       this.clientApi,
       ["place", "getByIdOrSlug"],
+      (clientApi) => clientApi.place.getByIdOrSlug.query,
       input,
       this.toAppError,
     );
 
   queryPlaceList = async (input?: unknown) =>
-    callTrpcQuery(this.clientApi, ["place", "list"], input, this.toAppError);
+    callTrpcQuery(
+      this.clientApi,
+      ["place", "list"],
+      (clientApi) => clientApi.place.list.query,
+      input,
+      this.toAppError,
+    );
 
   queryPlaceListSummary = async (input?: unknown) =>
     callTrpcQuery(
       this.clientApi,
       ["place", "listSummary"],
+      (clientApi) => clientApi.place.listSummary.query,
       input,
       this.toAppError,
     );
 
   querySportList = async (input?: unknown) =>
-    callTrpcQuery(this.clientApi, ["sport", "list"], input, this.toAppError);
+    callTrpcQuery(
+      this.clientApi,
+      ["sport", "list"],
+      (clientApi) => clientApi.sport.list.query,
+      input,
+      this.toAppError,
+    );
 
   queryPlaceCardMediaByIds = async (input?: unknown) =>
     callTrpcQuery(
       this.clientApi,
       ["place", "cardMediaByIds"],
+      (clientApi) => clientApi.place.cardMediaByIds.query,
       input,
       this.toAppError,
     );
@@ -129,15 +157,15 @@ export class DiscoveryApi implements IDiscoveryApi {
     callTrpcQuery(
       this.clientApi,
       ["place", "cardMetaByIds"],
+      (clientApi) => clientApi.place.cardMetaByIds.query,
       input,
       this.toAppError,
     );
 }
 
-export const createDiscoveryApi = (
-  deps: DiscoveryApiDeps = {},
-): IDiscoveryApi => new DiscoveryApi(deps);
+export const createDiscoveryApi = (deps: DiscoveryApiDeps = {}) =>
+  new DiscoveryApi(deps);
 
 const DISCOVERY_API_SINGLETON = createDiscoveryApi();
 
-export const getDiscoveryApi = (): IDiscoveryApi => DISCOVERY_API_SINGLETON;
+export const getDiscoveryApi = () => DISCOVERY_API_SINGLETON;

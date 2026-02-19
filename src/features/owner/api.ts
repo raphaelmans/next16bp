@@ -85,7 +85,7 @@ export type OwnerApiDeps = {
   toAppError?: (err: unknown) => AppError;
 };
 
-export class OwnerApi implements IOwnerApi {
+export class OwnerApi {
   readonly clientApi: TrpcClientApi;
   private readonly toAppError: (err: unknown) => AppError;
 
@@ -98,6 +98,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["courtHours", "copyFromCourt"],
+      (clientApi) => clientApi.courtHours.copyFromCourt.mutate,
       input,
       this.toAppError,
     );
@@ -106,6 +107,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["courtHours", "set"],
+      (clientApi) => clientApi.courtHours.set.mutate,
       input,
       this.toAppError,
     );
@@ -114,6 +116,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["courtManagement", "create"],
+      (clientApi) => clientApi.courtManagement.create.mutate,
       input,
       this.toAppError,
     );
@@ -122,6 +125,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["courtManagement", "update"],
+      (clientApi) => clientApi.courtManagement.update.mutate,
       input,
       this.toAppError,
     );
@@ -130,6 +134,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["courtRateRule", "copyFromCourt"],
+      (clientApi) => clientApi.courtRateRule.copyFromCourt.mutate,
       input,
       this.toAppError,
     );
@@ -138,6 +143,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["courtRateRule", "set"],
+      (clientApi) => clientApi.courtRateRule.set.mutate,
       input,
       this.toAppError,
     );
@@ -146,6 +152,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["organizationPayment", "createMethod"],
+      (clientApi) => clientApi.organizationPayment.createMethod.mutate,
       input,
       this.toAppError,
     );
@@ -154,6 +161,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["organizationPayment", "deleteMethod"],
+      (clientApi) => clientApi.organizationPayment.deleteMethod.mutate,
       input,
       this.toAppError,
     );
@@ -162,6 +170,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["organizationPayment", "setDefault"],
+      (clientApi) => clientApi.organizationPayment.setDefault.mutate,
       input,
       this.toAppError,
     );
@@ -170,6 +179,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["organizationPayment", "updateMethod"],
+      (clientApi) => clientApi.organizationPayment.updateMethod.mutate,
       input,
       this.toAppError,
     );
@@ -178,6 +188,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["organization", "update"],
+      (clientApi) => clientApi.organization.update.mutate,
       input,
       this.toAppError,
     );
@@ -186,6 +197,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["organization", "updateProfile"],
+      (clientApi) => clientApi.organization.updateProfile.mutate,
       input,
       this.toAppError,
     );
@@ -194,6 +206,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["organization", "uploadLogo"],
+      (clientApi) => clientApi.organization.uploadLogo.mutate,
       input,
       this.toAppError,
     );
@@ -202,6 +215,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["placeManagement", "create"],
+      (clientApi) => clientApi.placeManagement.create.mutate,
       input,
       this.toAppError,
     );
@@ -210,6 +224,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["placeManagement", "removePhoto"],
+      (clientApi) => clientApi.placeManagement.removePhoto.mutate,
       input,
       this.toAppError,
     );
@@ -218,6 +233,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["placeManagement", "reorderPhotos"],
+      (clientApi) => clientApi.placeManagement.reorderPhotos.mutate,
       input,
       this.toAppError,
     );
@@ -226,6 +242,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["placeManagement", "update"],
+      (clientApi) => clientApi.placeManagement.update.mutate,
       input,
       this.toAppError,
     );
@@ -234,6 +251,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["placeManagement", "uploadPhoto"],
+      (clientApi) => clientApi.placeManagement.uploadPhoto.mutate,
       input,
       this.toAppError,
     );
@@ -242,6 +260,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["placeVerification", "submit"],
+      (clientApi) => clientApi.placeVerification.submit.mutate,
       input,
       this.toAppError,
     );
@@ -250,6 +269,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["placeVerification", "toggleReservations"],
+      (clientApi) => clientApi.placeVerification.toggleReservations.mutate,
       input,
       this.toAppError,
     );
@@ -258,6 +278,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["reservationOwner", "accept"],
+      (clientApi) => clientApi.reservationOwner.accept.mutate,
       input,
       this.toAppError,
     );
@@ -266,6 +287,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["reservationOwner", "confirmPayment"],
+      (clientApi) => clientApi.reservationOwner.confirmPayment.mutate,
       input,
       this.toAppError,
     );
@@ -274,6 +296,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["reservationOwner", "reject"],
+      (clientApi) => clientApi.reservationOwner.reject.mutate,
       input,
       this.toAppError,
     );
@@ -282,6 +305,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["courtHours", "get"],
+      (clientApi) => clientApi.courtHours.get.query,
       input,
       this.toAppError,
     );
@@ -290,6 +314,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["courtManagement", "getById"],
+      (clientApi) => clientApi.courtManagement.getById.query,
       input,
       this.toAppError,
     );
@@ -298,6 +323,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["courtManagement", "listByPlace"],
+      (clientApi) => clientApi.courtManagement.listByPlace.query,
       input,
       this.toAppError,
     );
@@ -306,6 +332,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["courtRateRule", "get"],
+      (clientApi) => clientApi.courtRateRule.get.query,
       input,
       this.toAppError,
     );
@@ -314,6 +341,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["organization", "get"],
+      (clientApi) => clientApi.organization.get.query,
       input,
       this.toAppError,
     );
@@ -322,6 +350,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["organization", "my"],
+      (clientApi) => clientApi.organization.my.query,
       input,
       this.toAppError,
     );
@@ -330,6 +359,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["organizationPayment", "listMethods"],
+      (clientApi) => clientApi.organizationPayment.listMethods.query,
       input,
       this.toAppError,
     );
@@ -338,6 +368,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["ownerSetup", "getStatus"],
+      (clientApi) => clientApi.ownerSetup.getStatus.query,
       input,
       this.toAppError,
     );
@@ -346,6 +377,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["placeManagement", "getById"],
+      (clientApi) => clientApi.placeManagement.getById.query,
       input,
       this.toAppError,
     );
@@ -354,6 +386,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["placeManagement", "list"],
+      (clientApi) => clientApi.placeManagement.list.query,
       input,
       this.toAppError,
     );
@@ -362,6 +395,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["placeVerification", "getByPlace"],
+      (clientApi) => clientApi.placeVerification.getByPlace.query,
       input,
       this.toAppError,
     );
@@ -370,6 +404,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["reservationOwner", "getForOrganization"],
+      (clientApi) => clientApi.reservationOwner.getForOrganization.query,
       input,
       this.toAppError,
     );
@@ -378,17 +413,25 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["reservationOwner", "getPendingCount"],
+      (clientApi) => clientApi.reservationOwner.getPendingCount.query,
       input,
       this.toAppError,
     );
 
   querySportList = async (input?: unknown) =>
-    callTrpcQuery(this.clientApi, ["sport", "list"], input, this.toAppError);
+    callTrpcQuery(
+      this.clientApi,
+      ["sport", "list"],
+      (clientApi) => clientApi.sport.list.query,
+      input,
+      this.toAppError,
+    );
 
   queryCourtBlockListForCourtRange = async (input?: unknown) =>
     callTrpcQuery(
       this.clientApi,
       ["courtBlock", "listForCourtRange"],
+      (clientApi) => clientApi.courtBlock.listForCourtRange.query,
       input,
       this.toAppError,
     );
@@ -397,6 +440,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["courtBlock", "updateRange"],
+      (clientApi) => clientApi.courtBlock.updateRange.mutate,
       input,
       this.toAppError,
     );
@@ -405,6 +449,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["courtBlock", "createMaintenance"],
+      (clientApi) => clientApi.courtBlock.createMaintenance.mutate,
       input,
       this.toAppError,
     );
@@ -413,6 +458,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["courtBlock", "createWalkIn"],
+      (clientApi) => clientApi.courtBlock.createWalkIn.mutate,
       input,
       this.toAppError,
     );
@@ -421,6 +467,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["courtBlock", "cancel"],
+      (clientApi) => clientApi.courtBlock.cancel.mutate,
       input,
       this.toAppError,
     );
@@ -429,6 +476,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["reservationOwner", "getActiveForCourtRange"],
+      (clientApi) => clientApi.reservationOwner.getActiveForCourtRange.query,
       input,
       this.toAppError,
     );
@@ -437,6 +485,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["reservationOwner", "createGuestBooking"],
+      (clientApi) => clientApi.reservationOwner.createGuestBooking.mutate,
       input,
       this.toAppError,
     );
@@ -445,6 +494,8 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["reservationOwner", "convertWalkInBlockToGuest"],
+      (clientApi) =>
+        clientApi.reservationOwner.convertWalkInBlockToGuest.mutate,
       input,
       this.toAppError,
     );
@@ -453,6 +504,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["guestProfile", "list"],
+      (clientApi) => clientApi.guestProfile.list.query,
       input,
       this.toAppError,
     );
@@ -461,6 +513,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["guestProfile", "create"],
+      (clientApi) => clientApi.guestProfile.create.mutate,
       input,
       this.toAppError,
     );
@@ -469,6 +522,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["claimRequest", "getMy"],
+      (clientApi) => clientApi.claimRequest.getMy.query,
       input,
       this.toAppError,
     );
@@ -477,6 +531,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["claimRequest", "getById"],
+      (clientApi) => clientApi.claimRequest.getById.query,
       input,
       this.toAppError,
     );
@@ -485,20 +540,34 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["claimRequest", "submitClaim"],
+      (clientApi) => clientApi.claimRequest.submitClaim.mutate,
       input,
       this.toAppError,
     );
 
   queryPlaceList = async (input?: unknown) =>
-    callTrpcQuery(this.clientApi, ["place", "list"], input, this.toAppError);
+    callTrpcQuery(
+      this.clientApi,
+      ["place", "list"],
+      (clientApi) => clientApi.place.list.query,
+      input,
+      this.toAppError,
+    );
 
   queryPlaceGetById = async (input?: unknown) =>
-    callTrpcQuery(this.clientApi, ["place", "getById"], input, this.toAppError);
+    callTrpcQuery(
+      this.clientApi,
+      ["place", "getById"],
+      (clientApi) => clientApi.place.getById.query,
+      input,
+      this.toAppError,
+    );
 
   mutPlaceManagementDelete = async (input?: unknown) =>
     callTrpcMutation(
       this.clientApi,
       ["placeManagement", "delete"],
+      (clientApi) => clientApi.placeManagement.delete.mutate,
       input,
       this.toAppError,
     );
@@ -507,6 +576,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["bookingsImport", "aiUsage"],
+      (clientApi) => clientApi.bookingsImport.aiUsage.query,
       input,
       this.toAppError,
     );
@@ -515,6 +585,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["bookingsImport", "getJob"],
+      (clientApi) => clientApi.bookingsImport.getJob.query,
       input,
       this.toAppError,
     );
@@ -523,6 +594,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["bookingsImport", "listRows"],
+      (clientApi) => clientApi.bookingsImport.listRows.query,
       input,
       this.toAppError,
     );
@@ -531,6 +603,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["bookingsImport", "listSources"],
+      (clientApi) => clientApi.bookingsImport.listSources.query,
       input,
       this.toAppError,
     );
@@ -539,6 +612,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "createDraft"],
+      (clientApi) => clientApi.bookingsImport.createDraft.mutate,
       input,
       this.toAppError,
     );
@@ -547,6 +621,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "normalize"],
+      (clientApi) => clientApi.bookingsImport.normalize.mutate,
       input,
       this.toAppError,
     );
@@ -555,6 +630,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "updateRow"],
+      (clientApi) => clientApi.bookingsImport.updateRow.mutate,
       input,
       this.toAppError,
     );
@@ -563,6 +639,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "deleteRow"],
+      (clientApi) => clientApi.bookingsImport.deleteRow.mutate,
       input,
       this.toAppError,
     );
@@ -571,6 +648,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "discardJob"],
+      (clientApi) => clientApi.bookingsImport.discardJob.mutate,
       input,
       this.toAppError,
     );
@@ -579,6 +657,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "commit"],
+      (clientApi) => clientApi.bookingsImport.commit.mutate,
       input,
       this.toAppError,
     );
@@ -587,6 +666,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "replaceWithGuest"],
+      (clientApi) => clientApi.bookingsImport.replaceWithGuest.mutate,
       input,
       this.toAppError,
     );
@@ -595,6 +675,7 @@ export class OwnerApi implements IOwnerApi {
     callTrpcMutation(
       this.clientApi,
       ["reservationOwner", "confirmPaidOffline"],
+      (clientApi) => clientApi.reservationOwner.confirmPaidOffline.mutate,
       input,
       this.toAppError,
     );
@@ -603,14 +684,14 @@ export class OwnerApi implements IOwnerApi {
     callTrpcQuery(
       this.clientApi,
       ["audit", "reservationHistory"],
+      (clientApi) => clientApi.audit.reservationHistory.query,
       input,
       this.toAppError,
     );
 }
 
-export const createOwnerApi = (deps: OwnerApiDeps = {}): IOwnerApi =>
-  new OwnerApi(deps);
+export const createOwnerApi = (deps: OwnerApiDeps = {}) => new OwnerApi(deps);
 
 const OWNER_API_SINGLETON = createOwnerApi();
 
-export const getOwnerApi = (): IOwnerApi => OWNER_API_SINGLETON;
+export const getOwnerApi = () => OWNER_API_SINGLETON;

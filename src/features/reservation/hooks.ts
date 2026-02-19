@@ -29,17 +29,19 @@ export function useMutCancelReservation() {
 
   return useFeatureMutation(reservationApi.mutReservationCancel, {
     onSuccess: async (_data, variables) => {
+      const reservationId = (variables as { reservationId: string })
+        .reservationId;
       toast.success("Reservation cancelled successfully");
 
       await Promise.all([
         utils.reservation.getById.invalidate({
-          reservationId: variables.reservationId,
+          reservationId,
         }),
         utils.reservation.getMy.invalidate(),
         utils.reservation.getMyWithDetails.invalidate(),
         utils.reservationChat.getThreadMetas.invalidate(),
         utils.reservationChat.getSession.invalidate({
-          reservationId: variables.reservationId,
+          reservationId,
         }),
       ]);
 
@@ -125,6 +127,8 @@ export function useMutMarkPayment() {
 
   return useFeatureMutation(reservationApi.mutReservationMarkPayment, {
     onSuccess: async (data, variables) => {
+      const reservationId = (variables as { reservationId: string })
+        .reservationId;
       const isConfirmed = data.status === "CONFIRMED";
       toast.success(
         isConfirmed
@@ -139,16 +143,16 @@ export function useMutMarkPayment() {
 
       await Promise.all([
         utils.reservation.getById.invalidate({
-          reservationId: variables.reservationId,
+          reservationId,
         }),
         utils.reservation.getDetail.invalidate({
-          reservationId: variables.reservationId,
+          reservationId,
         }),
         utils.reservation.getMy.invalidate(),
         utils.reservation.getMyWithDetails.invalidate(),
         utils.reservationChat.getThreadMetas.invalidate(),
         utils.reservationChat.getSession.invalidate({
-          reservationId: variables.reservationId,
+          reservationId,
         }),
       ]);
     },
