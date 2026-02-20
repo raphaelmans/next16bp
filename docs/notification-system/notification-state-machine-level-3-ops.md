@@ -39,6 +39,10 @@ Web Push:
 - `WEB_PUSH_VAPID_PRIVATE_KEY`
 - `WEB_PUSH_VAPID_SUBJECT`
 
+Mobile Push (Expo):
+- `NOTIFICATION_MOBILE_PUSH_ENABLED` (default: true; see Channel toggles)
+- `EXPO_PUSH_ACCESS_TOKEN` (optional; required only when Expo enhanced push security is enabled)
+
 ## Channel toggles
 
 - `NOTIFICATION_EMAIL_ENABLED` (default: true)
@@ -48,6 +52,9 @@ Web Push:
 
 - `NOTIFICATION_WEB_PUSH_ENABLED` (default: true)
   - Set to `false` to permanently skip WEB_PUSH jobs (marked `SKIPPED` with `DISABLED_CHANNEL:WEB_PUSH`).
+
+- `NOTIFICATION_MOBILE_PUSH_ENABLED` (default: true)
+  - Set to `false` to permanently skip MOBILE_PUSH jobs (marked `SKIPPED` with `DISABLED_CHANNEL:MOBILE_PUSH`).
 
 Notes:
 - When a channel is disabled, enqueue will stop creating jobs for that channel.

@@ -1181,6 +1181,8 @@ export class ReservationService implements IReservationService {
     return this.reservationRepository.findWithDetailsByPlayerId(profileId, {
       status: filters.status,
       upcoming: filters.upcoming,
+      dateFrom: filters.dateFrom,
+      dateTo: filters.dateTo,
       limit: filters.limit,
       offset: filters.offset,
     });

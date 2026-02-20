@@ -27,5 +27,5 @@
 
 - Canonical event list: [notification-event-catalog.md](./notification-event-catalog.md)
 - Recipients include admins, owners, and players depending on event type
-- Channels: Email, SMS, and Browser Push (WEB_PUSH)
+- Channels: Email, SMS, Browser Push (`WEB_PUSH`), and Mobile Push (`MOBILE_PUSH` via Expo)
 - Delivery: async outbox jobs dispatched by cron

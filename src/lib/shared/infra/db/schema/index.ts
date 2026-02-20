@@ -37,6 +37,8 @@ export * from "./place-verification";
 export * from "./profile";
 // Push subscription
 export * from "./push-subscription";
+// Mobile push token
+export * from "./mobile-push-token";
 // Reservation-related tables
 export * from "./reservation";
 export * from "./reservation-chat";

@@ -141,6 +141,11 @@ The `/api/v1/` alias rewrite still works because `/api/v1/` is NOT excluded from
 
 - `GET /auth/me`
 
+### Push Tokens (Mobile Push)
+
+- `PUT /push-tokens`
+- `DELETE /push-tokens`
+
 ### Owner Setup
 
 - `GET /owner/setup/status`
@@ -249,6 +254,8 @@ The `/api/v1/` alias rewrite still works because `/api/v1/` is NOT excluded from
 - `GET /public/venues/{placeIdOrSlug}`
 
 For request/response schemas and operation IDs, use the generated spec at runtime.
+
+Push token endpoints are used by Expo clients to register/revoke `ExponentPushToken[...]` values. These tokens are persisted in `mobile_push_token` and consumed by the notification outbox dispatcher through the `MOBILE_PUSH` channel.
 
 ## Route Handler Standard
 

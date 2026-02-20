@@ -24,6 +24,10 @@ export const GetMyReservationsSchema = z.object({
   status: ReservationStatusSchema.optional(),
   /** Filter for future reservations only (startTime > now) */
   upcoming: z.boolean().optional(),
+  /** ISO datetime lower bound for startTime (inclusive) */
+  dateFrom: z.string().datetime().optional(),
+  /** ISO datetime upper bound for startTime (inclusive) */
+  dateTo: z.string().datetime().optional(),
   limit: S.pagination.limit.default(20),
   offset: S.pagination.offset.default(0),
 });

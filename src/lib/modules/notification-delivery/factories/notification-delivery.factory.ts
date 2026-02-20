@@ -1,3 +1,4 @@
+import { makeMobilePushTokenRepository } from "@/lib/modules/mobile-push-token/factories/mobile-push-token.factory";
 import { makePushSubscriptionRepository } from "@/lib/modules/push-subscription/factories/push-subscription.factory";
 import { getContainer } from "@/lib/shared/infra/container";
 import { NotificationDeliveryJobRepository } from "../repositories/notification-delivery-job.repository";
@@ -34,6 +35,7 @@ export function makeNotificationDeliveryService() {
       makeNotificationDeliveryJobRepository(),
       makeNotificationRecipientRepository(),
       makePushSubscriptionRepository(),
+      makeMobilePushTokenRepository(),
     );
   }
   return notificationDeliveryService;

@@ -1,5 +1,6 @@
 import { normalizePhMobile } from "@/common/phone";
 import { env } from "@/lib/env";
+import type { IMobilePushTokenRepository } from "@/lib/modules/mobile-push-token/repositories/mobile-push-token.repository";
 import type { IPushSubscriptionRepository } from "@/lib/modules/push-subscription/repositories/push-subscription.repository";
 import type { InsertNotificationDeliveryJob } from "@/lib/shared/infra/db/schema";
 import { logger } from "@/lib/shared/infra/logger";
@@ -104,6 +105,7 @@ export class NotificationDeliveryService {
     private jobRepository: INotificationDeliveryJobRepository,
     private recipientRepository: INotificationRecipientRepository,
     private pushSubscriptionRepository: IPushSubscriptionRepository,
+    private mobilePushTokenRepository: IMobilePushTokenRepository,
   ) {}
 
   private async enqueueWebPushForUser(options: {
@@ -135,6 +137,37 @@ export class NotificationDeliveryService {
       placeVerificationRequestId: options.placeVerificationRequestId,
       payload: options.payload,
       idempotencyKey: `${options.idempotencyKeyBase}:web_push:${sub.id}`,
+    }));
+  }
+
+  private async enqueueMobilePushForUser(options: {
+    userId: string;
+    eventType: string;
+    payload: Record<string, unknown>;
+    reservationId?: string;
+    organizationId?: string;
+    placeVerificationRequestId?: string;
+    idempotencyKeyBase: string;
+    ctx?: RequestContext;
+  }): Promise<InsertNotificationDeliveryJob[]> {
+    if (env.NOTIFICATION_MOBILE_PUSH_ENABLED === false) return [];
+
+    const tokens = await this.mobilePushTokenRepository.listActiveByUserId(
+      options.userId,
+      options.ctx,
+    );
+
+    if (!tokens.length) return [];
+
+    return tokens.map((token) => ({
+      eventType: options.eventType,
+      channel: "MOBILE_PUSH",
+      target: token.id,
+      organizationId: options.organizationId,
+      reservationId: options.reservationId,
+      placeVerificationRequestId: options.placeVerificationRequestId,
+      payload: options.payload,
+      idempotencyKey: `${options.idempotencyKeyBase}:mobile_push:${token.id}`,
     }));
   }
 
@@ -194,6 +227,17 @@ export class NotificationDeliveryService {
         ctx,
       });
       jobs.push(...webPushJobs);
+
+      const mobilePushJobs = await this.enqueueMobilePushForUser({
+        userId: recipient.userId,
+        eventType: "place_verification.requested",
+        organizationId: payload.organizationId,
+        placeVerificationRequestId: payload.requestId,
+        payload: basePayload,
+        idempotencyKeyBase: `place_verification.requested:${payload.requestId}:admin:${recipient.userId}`,
+        ctx,
+      });
+      jobs.push(...mobilePushJobs);
     }
 
     if (!jobs.length) {
@@ -307,6 +351,17 @@ export class NotificationDeliveryService {
     });
     jobs.push(...webPushJobs);
 
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.ownerUserId,
+      eventType: "reservation.created",
+      organizationId: payload.organizationId,
+      reservationId: payload.reservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation.created:${payload.reservationId}:org:${payload.organizationId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
     if (!jobs.length) {
       logger.warn(
         {
@@ -413,6 +468,17 @@ export class NotificationDeliveryService {
     });
     jobs.push(...webPushJobs);
 
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.ownerUserId,
+      eventType,
+      organizationId: payload.organizationId,
+      placeVerificationRequestId: payload.requestId,
+      payload: basePayload,
+      idempotencyKeyBase: `${eventType}:${payload.requestId}:org:${payload.organizationId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
     if (!jobs.length) {
       logger.warn(
         {
@@ -516,6 +582,16 @@ export class NotificationDeliveryService {
     });
     jobs.push(...webPushJobs);
 
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.ownerUserId,
+      eventType,
+      organizationId: payload.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase: `${eventType}:${payload.requestId}:org:${payload.organizationId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
     if (!jobs.length) {
       logger.warn(
         {
@@ -549,7 +625,12 @@ export class NotificationDeliveryService {
     payload: PlayerReservationAwaitingPaymentPayload,
     ctx?: RequestContext,
   ): Promise<{ jobCount: number }> {
-    if (env.NOTIFICATION_WEB_PUSH_ENABLED === false) return { jobCount: 0 };
+    if (
+      env.NOTIFICATION_WEB_PUSH_ENABLED === false &&
+      env.NOTIFICATION_MOBILE_PUSH_ENABLED === false
+    ) {
+      return { jobCount: 0 };
+    }
 
     const recipient =
       await this.recipientRepository.findPlayerRecipientByReservationId(
@@ -571,7 +652,9 @@ export class NotificationDeliveryService {
       currency: payload.currency,
     };
 
-    const jobs = await this.enqueueWebPushForUser({
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    const webPushJobs = await this.enqueueWebPushForUser({
       userId: recipient.userId,
       eventType: "reservation.awaiting_payment",
       reservationId: payload.reservationId,
@@ -579,6 +662,17 @@ export class NotificationDeliveryService {
       idempotencyKeyBase: `reservation.awaiting_payment:${payload.reservationId}:user:${recipient.userId}`,
       ctx,
     });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.userId,
+      eventType: "reservation.awaiting_payment",
+      reservationId: payload.reservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation.awaiting_payment:${payload.reservationId}:user:${recipient.userId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
 
     await this.jobRepository.createMany(jobs, ctx);
     return { jobCount: jobs.length };
@@ -588,7 +682,12 @@ export class NotificationDeliveryService {
     payload: OwnerReservationPaymentMarkedPayload,
     ctx?: RequestContext,
   ): Promise<{ jobCount: number }> {
-    if (env.NOTIFICATION_WEB_PUSH_ENABLED === false) return { jobCount: 0 };
+    if (
+      env.NOTIFICATION_WEB_PUSH_ENABLED === false &&
+      env.NOTIFICATION_MOBILE_PUSH_ENABLED === false
+    ) {
+      return { jobCount: 0 };
+    }
 
     const owner =
       await this.recipientRepository.findOwnerRecipientByReservationId(
@@ -608,7 +707,9 @@ export class NotificationDeliveryService {
       playerName: payload.playerName,
     };
 
-    const jobs = await this.enqueueWebPushForUser({
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    const webPushJobs = await this.enqueueWebPushForUser({
       userId: owner.ownerUserId,
       eventType: "reservation.payment_marked",
       reservationId: payload.reservationId,
@@ -617,6 +718,18 @@ export class NotificationDeliveryService {
       idempotencyKeyBase: `reservation.payment_marked:${payload.reservationId}:org:${owner.organizationId}`,
       ctx,
     });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: owner.ownerUserId,
+      eventType: "reservation.payment_marked",
+      reservationId: payload.reservationId,
+      organizationId: owner.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation.payment_marked:${payload.reservationId}:org:${owner.organizationId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
 
     await this.jobRepository.createMany(jobs, ctx);
     return { jobCount: jobs.length };
@@ -626,7 +739,12 @@ export class NotificationDeliveryService {
     payload: PlayerReservationConfirmedPayload,
     ctx?: RequestContext,
   ): Promise<{ jobCount: number }> {
-    if (env.NOTIFICATION_WEB_PUSH_ENABLED === false) return { jobCount: 0 };
+    if (
+      env.NOTIFICATION_WEB_PUSH_ENABLED === false &&
+      env.NOTIFICATION_MOBILE_PUSH_ENABLED === false
+    ) {
+      return { jobCount: 0 };
+    }
 
     const recipient =
       await this.recipientRepository.findPlayerRecipientByReservationId(
@@ -645,7 +763,9 @@ export class NotificationDeliveryService {
       endTimeIso: payload.endTimeIso,
     };
 
-    const jobs = await this.enqueueWebPushForUser({
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    const webPushJobs = await this.enqueueWebPushForUser({
       userId: recipient.userId,
       eventType: "reservation.confirmed",
       reservationId: payload.reservationId,
@@ -653,6 +773,17 @@ export class NotificationDeliveryService {
       idempotencyKeyBase: `reservation.confirmed:${payload.reservationId}:user:${recipient.userId}`,
       ctx,
     });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.userId,
+      eventType: "reservation.confirmed",
+      reservationId: payload.reservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation.confirmed:${payload.reservationId}:user:${recipient.userId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
 
     await this.jobRepository.createMany(jobs, ctx);
     return { jobCount: jobs.length };
@@ -662,7 +793,12 @@ export class NotificationDeliveryService {
     payload: PlayerReservationRejectedPayload,
     ctx?: RequestContext,
   ): Promise<{ jobCount: number }> {
-    if (env.NOTIFICATION_WEB_PUSH_ENABLED === false) return { jobCount: 0 };
+    if (
+      env.NOTIFICATION_WEB_PUSH_ENABLED === false &&
+      env.NOTIFICATION_MOBILE_PUSH_ENABLED === false
+    ) {
+      return { jobCount: 0 };
+    }
 
     const recipient =
       await this.recipientRepository.findPlayerRecipientByReservationId(
@@ -682,7 +818,9 @@ export class NotificationDeliveryService {
       reason: payload.reason ?? null,
     };
 
-    const jobs = await this.enqueueWebPushForUser({
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    const webPushJobs = await this.enqueueWebPushForUser({
       userId: recipient.userId,
       eventType: "reservation.rejected",
       reservationId: payload.reservationId,
@@ -690,6 +828,17 @@ export class NotificationDeliveryService {
       idempotencyKeyBase: `reservation.rejected:${payload.reservationId}:user:${recipient.userId}`,
       ctx,
     });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.userId,
+      eventType: "reservation.rejected",
+      reservationId: payload.reservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation.rejected:${payload.reservationId}:user:${recipient.userId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
 
     await this.jobRepository.createMany(jobs, ctx);
     return { jobCount: jobs.length };
@@ -699,7 +848,12 @@ export class NotificationDeliveryService {
     payload: OwnerReservationCancelledPayload,
     ctx?: RequestContext,
   ): Promise<{ jobCount: number }> {
-    if (env.NOTIFICATION_WEB_PUSH_ENABLED === false) return { jobCount: 0 };
+    if (
+      env.NOTIFICATION_WEB_PUSH_ENABLED === false &&
+      env.NOTIFICATION_MOBILE_PUSH_ENABLED === false
+    ) {
+      return { jobCount: 0 };
+    }
 
     const owner =
       await this.recipientRepository.findOwnerRecipientByReservationId(
@@ -720,7 +874,9 @@ export class NotificationDeliveryService {
       reason: payload.reason ?? null,
     };
 
-    const jobs = await this.enqueueWebPushForUser({
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    const webPushJobs = await this.enqueueWebPushForUser({
       userId: owner.ownerUserId,
       eventType: "reservation.cancelled",
       reservationId: payload.reservationId,
@@ -729,6 +885,18 @@ export class NotificationDeliveryService {
       idempotencyKeyBase: `reservation.cancelled:${payload.reservationId}:org:${owner.organizationId}`,
       ctx,
     });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: owner.ownerUserId,
+      eventType: "reservation.cancelled",
+      reservationId: payload.reservationId,
+      organizationId: owner.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation.cancelled:${payload.reservationId}:org:${owner.organizationId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
 
     await this.jobRepository.createMany(jobs, ctx);
     return { jobCount: jobs.length };

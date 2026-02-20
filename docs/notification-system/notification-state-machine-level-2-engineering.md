@@ -110,6 +110,13 @@ Player:
 - For `WEB_PUSH` jobs, `notification_delivery_job.target` stores a `push_subscription.id` (one job per device/subscription).
 - If a subscription is invalid/expired (HTTP 404/410 from the push service), mark the job `SKIPPED` and revoke the subscription.
 
+## Mobile Push (Expo) channel
+
+- Channel enum includes `MOBILE_PUSH`.
+- For `MOBILE_PUSH` jobs, `notification_delivery_job.target` stores a `mobile_push_token.id` (one job per active mobile token).
+- The dispatcher sends notifications through Expo Push API (`https://exp.host/--/api/v2/push/send`).
+- If Expo returns `DeviceNotRegistered`, the token is revoked and the job is marked `SKIPPED`.
+
 ## Idempotency
 
 Each job has a unique `idempotencyKey` to prevent duplicates.
@@ -135,6 +142,14 @@ Web Push adds a per-subscription suffix:
 - `reservation.confirmed:<reservationId>:user:<userId>:web_push:<pushSubscriptionId>`
 - `reservation.rejected:<reservationId>:user:<userId>:web_push:<pushSubscriptionId>`
 - `reservation.cancelled:<reservationId>:org:<organizationId>:web_push:<pushSubscriptionId>`
+
+Mobile Push adds a per-token suffix:
+- `reservation.created:<reservationId>:org:<organizationId>:mobile_push:<mobilePushTokenId>`
+- `reservation.awaiting_payment:<reservationId>:user:<userId>:mobile_push:<mobilePushTokenId>`
+- `reservation.payment_marked:<reservationId>:org:<organizationId>:mobile_push:<mobilePushTokenId>`
+- `reservation.confirmed:<reservationId>:user:<userId>:mobile_push:<mobilePushTokenId>`
+- `reservation.rejected:<reservationId>:user:<userId>:mobile_push:<mobilePushTokenId>`
+- `reservation.cancelled:<reservationId>:org:<organizationId>:mobile_push:<mobilePushTokenId>`
 
 ## Payload contract
 

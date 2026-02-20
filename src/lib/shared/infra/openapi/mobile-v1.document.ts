@@ -911,6 +911,28 @@ export function createMobileV1OpenApiDocument(args: {
         }),
       },
 
+      "/push-tokens": {
+        put: protectedMutation({
+          operationId: "pushTokenUpsert",
+          bodyType: "json",
+          bodySchema: z.object({
+            expoPushToken: z.string(),
+            platform: z.enum(["ios", "android"]),
+          }),
+          successSchema: z.object({
+            data: z.object({ expoPushToken: z.string() }),
+          }),
+        }),
+        delete: protectedMutation({
+          operationId: "pushTokenRevoke",
+          bodyType: "json",
+          bodySchema: z.object({
+            expoPushToken: z.string(),
+          }),
+          successSchema: SuccessResponseSchema,
+        }),
+      },
+
       "/public/sports": {
         get: publicGet({
           operationId: "publicSportsList",

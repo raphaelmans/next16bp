@@ -3,11 +3,14 @@ import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
+import { MobilePushTokenRepository } from "@/lib/modules/mobile-push-token/repositories/mobile-push-token.repository";
 import { NotificationDeliveryJobRepository } from "@/lib/modules/notification-delivery/repositories/notification-delivery-job.repository";
 import { PushSubscriptionRepository } from "@/lib/modules/push-subscription/repositories/push-subscription.repository";
 import { getContainer } from "@/lib/shared/infra/container";
 import { verifyCronAuth } from "@/lib/shared/infra/cron/cron-auth";
 import { makeEmailService } from "@/lib/shared/infra/email/email.factory";
+import { makeExpoPushService } from "@/lib/shared/infra/expo-push/expo-push.factory";
+import { ExpoPushError } from "@/lib/shared/infra/expo-push/expo-push-service";
 import { logger } from "@/lib/shared/infra/logger";
 import { makeSmsService } from "@/lib/shared/infra/sms/sms.factory";
 import { makeWebPushService } from "@/lib/shared/infra/web-push/web-push.factory";
@@ -327,6 +330,9 @@ export async function GET(request: NextRequest) {
     const pushSubscriptionRepository = new PushSubscriptionRepository(
       getContainer().db,
     );
+    const mobilePushTokenRepository = new MobilePushTokenRepository(
+      getContainer().db,
+    );
     const jobs = await jobRepository.claimBatch({
       limit: BATCH_LIMIT,
       now,
@@ -345,13 +351,16 @@ export async function GET(request: NextRequest) {
     const emailEnabled = env.NOTIFICATION_EMAIL_ENABLED !== false;
     const smsEnabled = env.NOTIFICATION_SMS_ENABLED !== false;
     const webPushEnabled = env.NOTIFICATION_WEB_PUSH_ENABLED !== false;
+    const mobilePushEnabled = env.NOTIFICATION_MOBILE_PUSH_ENABLED !== false;
 
     let emailService: ReturnType<typeof makeEmailService> | null = null;
     let smsService: ReturnType<typeof makeSmsService> | null = null;
     let webPushService: ReturnType<typeof makeWebPushService> | null = null;
+    let expoPushService: ReturnType<typeof makeExpoPushService> | null = null;
     let emailServiceInitError: string | null = null;
     let smsServiceInitError: string | null = null;
     let webPushServiceInitError: string | null = null;
+    let expoPushServiceInitError: string | null = null;
 
     if (emailEnabled) {
       try {
@@ -404,6 +413,23 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    if (mobilePushEnabled) {
+      try {
+        expoPushService = makeExpoPushService();
+      } catch (error) {
+        expoPushServiceInitError =
+          error instanceof Error ? error.message : "Unknown error";
+        logger.error(
+          {
+            event: "notification_delivery.channel_init_failed",
+            channel: "MOBILE_PUSH",
+            error: expoPushServiceInitError,
+          },
+          "Expo Push service initialization failed",
+        );
+      }
+    }
+
     const appUrl = getAppUrl();
 
     let sentCount = 0;
@@ -436,6 +462,16 @@ export async function GET(request: NextRequest) {
         await jobRepository.update(job.id, {
           status: "SKIPPED",
           lastError: "DISABLED_CHANNEL:WEB_PUSH",
+          nextAttemptAt: null,
+        });
+        continue;
+      }
+
+      if (job.channel === "MOBILE_PUSH" && !mobilePushEnabled) {
+        skippedCount += 1;
+        await jobRepository.update(job.id, {
+          status: "SKIPPED",
+          lastError: "DISABLED_CHANNEL:MOBILE_PUSH",
           nextAttemptAt: null,
         });
         continue;
@@ -773,6 +809,48 @@ export async function GET(request: NextRequest) {
           });
 
           providerMessageId = `HTTP:${result.statusCode}`;
+        } else if (job.channel === "MOBILE_PUSH") {
+          if (expoPushServiceInitError) {
+            throw new Error(
+              `MOBILE_PUSH_SERVICE_INIT_FAILED:${expoPushServiceInitError}`,
+            );
+          }
+          if (!expoPushService) {
+            throw new Error("Expo Push service is disabled");
+          }
+
+          const mobilePushToken = await mobilePushTokenRepository.findById(
+            job.target,
+          );
+          if (!mobilePushToken || mobilePushToken.revokedAt) {
+            skippedCount += 1;
+            await jobRepository.update(job.id, {
+              status: "SKIPPED",
+              attemptCount,
+              lastError: mobilePushToken
+                ? "MOBILE_PUSH_TOKEN_REVOKED"
+                : "MISSING_MOBILE_PUSH_TOKEN",
+              nextAttemptAt: null,
+            });
+            continue;
+          }
+
+          if (!pushTitle) {
+            throw new Error("MISSING_MOBILE_PUSH_CONTENT");
+          }
+
+          const result = await expoPushService.sendPush({
+            to: mobilePushToken.token,
+            title: pushTitle,
+            body: pushBody ?? undefined,
+            sound: "default",
+            data: {
+              url: pushUrl ?? null,
+              eventType: job.eventType,
+            },
+          });
+
+          providerMessageId = result.ticketId;
         } else {
           throw new Error(`Unsupported channel: ${job.channel}`);
         }
@@ -840,6 +918,43 @@ export async function GET(request: NextRequest) {
             continue;
           }
         }
+
+        if (error instanceof ExpoPushError) {
+          if (error.code === "DeviceNotRegistered") {
+            skippedCount += 1;
+            failedCount -= 1;
+
+            try {
+              await mobilePushTokenRepository.revokeById(job.target);
+              await jobRepository.update(job.id, {
+                status: "SKIPPED",
+                attemptCount,
+                lastError: "MOBILE_PUSH_TOKEN_NOT_REGISTERED",
+                nextAttemptAt: null,
+              });
+            } catch (persistenceError) {
+              const persistenceMessage =
+                persistenceError instanceof Error
+                  ? persistenceError.message
+                  : "Unknown persistence error";
+
+              logger.error(
+                {
+                  event: "notification_delivery.persistence_failed",
+                  jobId: job.id,
+                  channel: job.channel,
+                  error: persistenceMessage,
+                },
+                "Failed to persist mobile push revocation result",
+              );
+
+              throw persistenceError;
+            }
+
+            continue;
+          }
+        }
+
         const isFinalAttempt = attemptCount >= MAX_ATTEMPTS;
         const backoffIndex = Math.min(
           attemptCount - 1,

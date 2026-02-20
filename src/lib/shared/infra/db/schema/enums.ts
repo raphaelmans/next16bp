@@ -154,7 +154,7 @@ export const bookingsImportRowStatusEnum = pgEnum(
  */
 export const notificationDeliveryChannelEnum = pgEnum(
   "notification_delivery_channel",
-  ["EMAIL", "SMS", "WEB_PUSH"],
+  ["EMAIL", "SMS", "WEB_PUSH", "MOBILE_PUSH"],
 );
 
 /**
@@ -210,4 +210,13 @@ export const openPlayParticipantRoleEnum = pgEnum(
 export const openPlayParticipantStatusEnum = pgEnum(
   "open_play_participant_status",
   ["REQUESTED", "CONFIRMED", "WAITLISTED", "DECLINED", "LEFT"],
+);
+
+/**
+ * Mobile push token platform enum
+ * Identifies the mobile OS for Expo push tokens
+ */
+export const mobilePushTokenPlatformEnum = pgEnum(
+  "mobile_push_token_platform",
+  ["ios", "android"],
 );

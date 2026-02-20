@@ -1,4 +1,4 @@
-import { and, asc, count, desc, eq, gt, inArray, lt, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, gt, inArray, lt, lte, sql } from "drizzle-orm";
 import {
   court,
   type InsertReservation,
@@ -34,6 +34,8 @@ export interface IReservationRepository {
     filters: {
       status?: string;
       upcoming?: boolean;
+      dateFrom?: string;
+      dateTo?: string;
       limit: number;
       offset: number;
     },
@@ -203,6 +205,8 @@ export class ReservationRepository implements IReservationRepository {
     filters: {
       status?: string;
       upcoming?: boolean;
+      dateFrom?: string;
+      dateTo?: string;
       limit: number;
       offset: number;
     },
@@ -228,6 +232,14 @@ export class ReservationRepository implements IReservationRepository {
 
     if (filters.upcoming) {
       conditions.push(sql`${reservation.startTime} > now()`);
+    }
+
+    if (filters.dateFrom) {
+      conditions.push(gte(reservation.startTime, new Date(filters.dateFrom)));
+    }
+
+    if (filters.dateTo) {
+      conditions.push(lte(reservation.startTime, new Date(filters.dateTo)));
     }
 
     const query = client
