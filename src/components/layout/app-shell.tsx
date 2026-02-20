@@ -1,6 +1,6 @@
 "use client";
 
-import type * as React from "react";
+import * as React from "react";
 import { cn } from "@/lib/utils";
 import { DashboardLayout } from "./dashboard-layout";
 
@@ -12,6 +12,8 @@ interface AppShellProps {
   className?: string;
 }
 
+const AppShellNestingContext = React.createContext(false);
+
 export function AppShell({
   children,
   sidebar,
@@ -19,24 +21,32 @@ export function AppShell({
   floatingPanel,
   className,
 }: AppShellProps) {
+  const isNestedShell = React.useContext(AppShellNestingContext);
+
+  if (isNestedShell) {
+    return <>{children}</>;
+  }
+
   return (
-    <div className="min-h-screen bg-background">
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 rounded-md bg-background px-3 py-2 text-sm font-heading font-semibold text-foreground shadow-md"
-      >
-        Skip to content
-      </a>
-      <DashboardLayout
-        sidebar={sidebar}
-        navbar={navbar}
-        className={cn("w-full", className)}
-      >
-        <div id="main-content" className="min-w-0 w-full">
-          {children}
-        </div>
-      </DashboardLayout>
-      {floatingPanel}
-    </div>
+    <AppShellNestingContext.Provider value={true}>
+      <div className="min-h-screen bg-background">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 rounded-md bg-background px-3 py-2 text-sm font-heading font-semibold text-foreground shadow-md"
+        >
+          Skip to content
+        </a>
+        <DashboardLayout
+          sidebar={sidebar}
+          navbar={navbar}
+          className={cn("w-full", className)}
+        >
+          <div id="main-content" className="min-w-0 w-full">
+            {children}
+          </div>
+        </DashboardLayout>
+        {floatingPanel}
+      </div>
+    </AppShellNestingContext.Provider>
   );
 }

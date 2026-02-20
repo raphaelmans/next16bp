@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
 import { OwnerChatWidget } from "@/features/chat/components/chat-widget/owner-chat-widget";
 import { OwnerOnboardingIntentClearer } from "@/features/owner/components/owner-onboarding-intent-clearer";
+import { OwnerShell } from "@/features/owner/components/owner-shell";
 import { makeOrganizationService } from "@/lib/modules/organization/factories/organization.factory";
 import { requireSession } from "@/lib/shared/infra/auth/server-session";
 
@@ -33,7 +34,12 @@ export default async function OwnerLayout({
     session.userId,
   );
 
-  if (organizations.length === 0) {
+  const isOnboardingRoute =
+    pathname === appRoutes.owner.getStarted ||
+    pathname === appRoutes.owner.onboarding;
+  const hasOrganizations = organizations.length > 0;
+
+  if (!hasOrganizations && !isOnboardingRoute) {
     redirect(appRoutes.owner.getStarted);
   }
 
@@ -41,7 +47,7 @@ export default async function OwnerLayout({
     <>
       <OwnerOnboardingIntentClearer />
       <OwnerChatWidget />
-      {children}
+      <OwnerShell hasOrganizations={hasOrganizations}>{children}</OwnerShell>
     </>
   );
 }

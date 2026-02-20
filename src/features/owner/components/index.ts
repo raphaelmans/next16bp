@@ -9,6 +9,7 @@ export { CourtsTable } from "./courts-table";
 export { default as OwnerBookingsImportReviewView } from "./owner-bookings-import-review-view";
 export { OwnerNavbar } from "./owner-navbar";
 export { OwnerPaymentMethodReminder } from "./owner-payment-method-reminder";
+export { OwnerShell } from "./owner-shell";
 export { OwnerSidebar } from "./owner-sidebar";
 export { PaymentMethodReminderCard } from "./payment-method-reminder-card";
 export { PendingActions } from "./pending-actions";
