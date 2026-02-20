@@ -29,6 +29,10 @@ export interface AuthOrganization {
   isActive?: boolean;
 }
 
+export interface AuthUserPreference {
+  defaultPortal: "player" | "owner";
+}
+
 export function useQueryAuthSession() {
   return useFeatureQuery<AuthSessionUser | null>(
     ["auth", "me"],
@@ -127,6 +131,17 @@ export function useQueryAuthMyOrganizations(enabled: boolean) {
   );
 }
 
+export function useQueryAuthUserPreference(enabled: boolean) {
+  return useFeatureQuery<AuthUserPreference>(
+    ["userPreference", "me"],
+    authApi.queryUserPreferenceMe as (
+      input?: unknown,
+    ) => Promise<AuthUserPreference>,
+    undefined,
+    { enabled },
+  );
+}
+
 type PortalDefault = "player" | "owner";
 
 type UsePortalSwitcherDataOptions = {
@@ -161,6 +176,17 @@ export function useModPortalSwitcherData({
     },
   );
 
+  const userPreferenceQuery = useFeatureQuery<AuthUserPreference>(
+    ["userPreference", "me"],
+    authApi.queryUserPreferenceMe as (
+      input?: unknown,
+    ) => Promise<AuthUserPreference>,
+    undefined,
+    {
+      enabled: inferOwner && !!sessionQuery.data,
+    },
+  );
+
   const setDefaultPortalMutation = useFeatureMutation(
     authApi.mutUserPreferenceSetDefaultPortal,
     {
@@ -179,6 +205,7 @@ export function useModPortalSwitcherData({
   return {
     sessionUser: sessionQuery.data,
     organizations: organizationsQuery.data,
+    userPreference: userPreferenceQuery.data,
     setDefaultPortal,
     setDefaultPortalMutation,
   };

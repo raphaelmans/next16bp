@@ -24,7 +24,7 @@ export interface UserDropdownUser {
 
 interface UserDropdownProps {
   user: UserDropdownUser;
-  isOwner: boolean;
+  isOwner?: boolean;
   isAdmin: boolean;
   onSignOut?: () => void;
 }
@@ -98,18 +98,14 @@ export function UserDropdown({
         </DropdownMenuGroup>
 
         {/* Dashboard Links */}
-        {(isOwner || isAdmin) && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <PortalSwitcher
-                variant="menu-items"
-                isOwner={isOwner}
-                isAdmin={isAdmin}
-              />
-            </DropdownMenuGroup>
-          </>
-        )}
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <PortalSwitcher
+            variant="menu-items"
+            isOwner={isOwner || undefined}
+            isAdmin={isAdmin}
+          />
+        </DropdownMenuGroup>
 
         {/* Sign Out */}
         <DropdownMenuSeparator />

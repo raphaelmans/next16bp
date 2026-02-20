@@ -15,6 +15,7 @@ type PortalSwitcherProps = {
   variant: "sidebar" | "menu-items";
   currentPortal: Portal;
   portalOptions: Portal[];
+  ownerSetupRequired?: boolean;
   onSwitchPortal: (portal: Portal) => void;
   className?: string;
 };
@@ -38,6 +39,7 @@ export function PortalSwitcher({
   variant,
   currentPortal,
   portalOptions,
+  ownerSetupRequired = false,
   onSwitchPortal,
   className,
 }: PortalSwitcherProps) {
@@ -60,6 +62,11 @@ export function PortalSwitcher({
             >
               <Icon className="mr-2 h-4 w-4" />
               <span>{option.label}</span>
+              {portal === "owner" && ownerSetupRequired && (
+                <span className="ml-auto text-[11px] text-muted-foreground">
+                  Setup
+                </span>
+              )}
             </DropdownMenuItem>
           );
         })}
@@ -79,7 +86,9 @@ export function PortalSwitcher({
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-heading font-semibold truncate">
-              {portalConfig[currentPortal].label}
+              {currentPortal === "owner" && ownerSetupRequired
+                ? "Owner Setup"
+                : portalConfig[currentPortal].label}
             </p>
             <p className="text-xs text-muted-foreground">KudosCourts</p>
           </div>
@@ -103,6 +112,11 @@ export function PortalSwitcher({
             >
               <Icon className="h-4 w-4" />
               <span>{option.label}</span>
+              {portal === "owner" && ownerSetupRequired && (
+                <span className="ml-auto text-[11px] text-muted-foreground">
+                  Setup
+                </span>
+              )}
             </DropdownMenuItem>
           );
         })}

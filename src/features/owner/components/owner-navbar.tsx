@@ -25,6 +25,7 @@ import { NotificationBell } from "@/features/notifications/components/notificati
 
 interface OwnerNavbarProps {
   organizationName?: string;
+  noOrgMode?: boolean;
   user?: {
     name?: string;
     email?: string;
@@ -36,6 +37,7 @@ interface OwnerNavbarProps {
 
 export function OwnerNavbar({
   organizationName,
+  noOrgMode = false,
   user,
   onLogout,
   isAdmin,
@@ -97,7 +99,12 @@ export function OwnerNavbar({
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <PortalSwitcher variant="menu-items" isOwner isAdmin={isAdmin} />
+              <PortalSwitcher
+                variant="menu-items"
+                isOwner
+                isAdmin={isAdmin}
+                ownerSetupRequired={noOrgMode}
+              />
               <DropdownMenuItem asChild>
                 <Link href={appRoutes.reservations.base}>
                   <CalendarDays className="mr-2 h-4 w-4" />

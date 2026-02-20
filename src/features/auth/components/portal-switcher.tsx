@@ -14,6 +14,7 @@ type PortalSwitcherProps = {
   variant: "sidebar" | "menu-items";
   isOwner?: boolean;
   isAdmin?: boolean;
+  ownerSetupRequired?: boolean;
   className?: string;
 };
 
@@ -39,6 +40,7 @@ export function PortalSwitcher({
   variant,
   isOwner,
   isAdmin,
+  ownerSetupRequired: ownerSetupRequiredOverride,
   className,
 }: PortalSwitcherProps) {
   const router = useRouter();
@@ -48,7 +50,7 @@ export function PortalSwitcher({
   const shouldInferAdmin = isAdmin === undefined;
   const shouldInferOwner = isOwner === undefined;
 
-  const { sessionUser, organizations, setDefaultPortal } =
+  const { sessionUser, organizations, userPreference, setDefaultPortal } =
     useModPortalSwitcherData({
       inferAdmin: shouldInferAdmin,
       inferOwner: shouldInferOwner,
@@ -59,7 +61,14 @@ export function PortalSwitcher({
       },
     });
 
-  const canAccessOwner = isOwner ?? (organizations?.length ?? 0) > 0;
+  const hasOwnerOrganization = (organizations?.length ?? 0) > 0;
+  const ownerSetupRequired =
+    ownerSetupRequiredOverride ??
+    (shouldInferOwner
+      ? !hasOwnerOrganization
+      : !hasOwnerOrganization && userPreference?.defaultPortal === "owner");
+  const canAccessOwner =
+    (isOwner ?? hasOwnerOrganization) || ownerSetupRequired;
   const canAccessAdmin = isAdmin ?? sessionUser?.role === "admin";
 
   const portalOptions: Portal[] = [
@@ -73,7 +82,11 @@ export function PortalSwitcher({
       return;
     }
 
-    router.push(portalRoutes[portal]);
+    if (portal === "owner" && ownerSetupRequired) {
+      router.push(appRoutes.owner.getStarted);
+    } else {
+      router.push(portalRoutes[portal]);
+    }
 
     if (portal === "player" || portal === "owner") {
       setDefaultPortal(portal);
@@ -85,6 +98,7 @@ export function PortalSwitcher({
       variant={variant}
       currentPortal={currentPortal}
       portalOptions={portalOptions}
+      ownerSetupRequired={ownerSetupRequired}
       onSwitchPortal={switchPortal}
       className={className}
     />

@@ -53,7 +53,7 @@ export function AuthPlayerShell({ children }: AuthPlayerShellProps) {
           portalSwitcher={
             <PortalSwitcher
               variant="sidebar"
-              isOwner={isOwner}
+              isOwner={isOwner || undefined}
               isAdmin={isAdmin}
             />
           }

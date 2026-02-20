@@ -137,7 +137,36 @@ export function OwnerSidebar({
     <Sidebar>
       <SidebarHeader className="border-b">
         {/* Organization switcher */}
-        {currentOrganization && !noOrgMode ? (
+        {noOrgMode ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="flex w-full items-center gap-2 rounded-md p-2 text-left hover:bg-sidebar-accent"
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+                  <Building2 className="h-4 w-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-heading font-medium">
+                    Owner Setup
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Complete onboarding
+                  </p>
+                </div>
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-56">
+              <PortalSwitcher variant="menu-items" isOwner ownerSetupRequired />
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href={appRoutes.owner.getStarted}>Go to setup hub</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : currentOrganization ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button

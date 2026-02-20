@@ -3,6 +3,15 @@ import { protectedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
 import { makeUserPreferenceService } from "./factories/user-preference.factory";
 
 export const userPreferenceRouter = router({
+  me: protectedProcedure.query(async ({ ctx }) => {
+    const service = makeUserPreferenceService();
+    const preference = await service.findByUserId(ctx.userId);
+
+    return {
+      defaultPortal: preference?.defaultPortal ?? "player",
+    };
+  }),
+
   setDefaultPortal: protectedProcedure
     .input(
       z.object({

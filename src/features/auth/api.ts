@@ -34,6 +34,8 @@ export type UserPreferenceSetDefaultPortalInput =
   RouterInputs["userPreference"]["setDefaultPortal"];
 export type UserPreferenceSetDefaultPortalOutput =
   RouterOutputs["userPreference"]["setDefaultPortal"];
+export type UserPreferenceMeInput = RouterInputs["userPreference"]["me"];
+export type UserPreferenceMeOutput = RouterOutputs["userPreference"]["me"];
 export type AuthMeInput = RouterInputs["auth"]["me"];
 export type AuthMeOutput = RouterOutputs["auth"]["me"];
 export type OrganizationMyInput = RouterInputs["organization"]["my"];
@@ -64,6 +66,9 @@ export interface IAuthApi {
   mutUserPreferenceSetDefaultPortal: (
     input: UserPreferenceSetDefaultPortalInput,
   ) => Promise<UserPreferenceSetDefaultPortalOutput>;
+  queryUserPreferenceMe: (
+    input?: UserPreferenceMeInput,
+  ) => Promise<UserPreferenceMeOutput>;
   queryAuthMe: (input?: AuthMeInput) => Promise<AuthMeOutput>;
   queryOrganizationMy: (
     input?: OrganizationMyInput,
@@ -175,6 +180,15 @@ export class AuthApi {
       this.clientApi,
       ["userPreference", "setDefaultPortal"],
       (clientApi) => clientApi.userPreference.setDefaultPortal.mutate,
+      input,
+      this.toAppError,
+    );
+
+  queryUserPreferenceMe = async (input: UserPreferenceMeInput = undefined) =>
+    callTrpcQuery<UserPreferenceMeInput, UserPreferenceMeOutput>(
+      this.clientApi,
+      ["userPreference", "me"],
+      (clientApi) => clientApi.userPreference.me.query,
       input,
       this.toAppError,
     );

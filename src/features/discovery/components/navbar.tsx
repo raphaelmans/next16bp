@@ -67,6 +67,8 @@ export function Navbar({ className }: NavbarProps) {
 
   const isOwner = (orgs?.length ?? 0) > 0;
   const isAdmin = sessionUser?.role === "admin";
+  const ownerSetupRequired = !isOwner;
+  const canAccessOwner = isOwner || ownerSetupRequired;
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -286,17 +288,21 @@ export function Navbar({ className }: NavbarProps) {
             )}
 
             {/* Dashboard Links */}
-            {isAuthenticated && (isOwner || isAdmin) && (
+            {isAuthenticated && (canAccessOwner || isAdmin) && (
               <>
                 <Separator />
-                {isOwner && (
+                {canAccessOwner && (
                   <Link
-                    href={appRoutes.owner.base}
+                    href={
+                      ownerSetupRequired
+                        ? appRoutes.owner.getStarted
+                        : appRoutes.owner.base
+                    }
                     className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
                     onClick={() => setIsOpen(false)}
                   >
                     <Building className="h-5 w-5" />
-                    Owner Dashboard
+                    {ownerSetupRequired ? "Owner Setup" : "Owner Dashboard"}
                   </Link>
                 )}
                 {isAdmin && (

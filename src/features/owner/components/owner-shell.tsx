@@ -6,8 +6,8 @@ import { AppShell } from "@/components/layout";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { useQueryOwnerOrganization } from "@/features/owner/hooks";
 import { OwnerNavbar } from "./owner-navbar";
-import { ReservationAlertsPanel } from "./reservation-alerts-panel";
 import { OwnerSidebar } from "./owner-sidebar";
+import { ReservationAlertsPanel } from "./reservation-alerts-panel";
 
 interface OwnerShellProps {
   children: React.ReactNode;
@@ -18,13 +18,16 @@ export function OwnerShell({ children, hasOrganizations }: OwnerShellProps) {
   const pathname = usePathname();
   const { data: user } = useQueryAuthSession();
   const logoutMutation = useMutAuthLogout();
-  const { organization, organizations, isLoading } = useQueryOwnerOrganization();
+  const { organization, organizations, isLoading } =
+    useQueryOwnerOrganization();
 
   const noOrgMode = !hasOrganizations || (!isLoading && !organization?.id);
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(pathname || appRoutes.owner.base);
+    window.location.href = appRoutes.login.from(
+      pathname || appRoutes.owner.base,
+    );
   };
 
   return (
@@ -43,8 +46,10 @@ export function OwnerShell({ children, hasOrganizations }: OwnerShellProps) {
       navbar={
         <OwnerNavbar
           organizationName={
-            organization?.name ?? (noOrgMode ? "Owner Setup" : "Owner Dashboard")
+            organization?.name ??
+            (noOrgMode ? "Owner Setup" : "Owner Dashboard")
           }
+          noOrgMode={noOrgMode}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,

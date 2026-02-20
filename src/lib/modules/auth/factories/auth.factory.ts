@@ -1,5 +1,6 @@
 import type { CookieMethodsServer } from "@supabase/ssr";
 import { env } from "@/lib/env";
+import { makeUserPreferenceService } from "@/lib/modules/user-preference/factories/user-preference.factory";
 import { makeUserRoleService } from "@/lib/modules/user-role/factories/user-role.factory";
 import { getContainer } from "@/lib/shared/infra/container";
 import { createClient } from "@/lib/shared/infra/supabase/create-client";
@@ -28,6 +29,7 @@ export function makeRegisterUserUseCase(cookies: CookieMethodsServer) {
   return new RegisterUserUseCase(
     makeAuthService(cookies),
     makeUserRoleService(),
+    makeUserPreferenceService(),
     getContainer().transactionManager,
   );
 }
