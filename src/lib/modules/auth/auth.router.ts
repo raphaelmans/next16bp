@@ -64,11 +64,39 @@ export const authRouter = router({
     .input(StartGoogleOAuthSchema)
     .mutation(async ({ input, ctx }) => {
       const authService = makeAuthService(ctx.cookies);
-      const result = await authService.startGoogleOAuth(
-        ctx.origin,
-        input.redirect,
-      );
-      return { url: result.url };
+      const redirectPath = (() => {
+        if (!input.redirect) {
+          return null;
+        }
+
+        try {
+          return new URL(input.redirect, ctx.origin).pathname;
+        } catch {
+          return "invalid";
+        }
+      })();
+
+      try {
+        const result = await authService.startGoogleOAuth(
+          ctx.origin,
+          input.redirect,
+        );
+        return { url: result.url };
+      } catch (error) {
+        ctx.log.error(
+          {
+            scope: "auth:login_with_google",
+            event: "auth.google_oauth_start_failed",
+            hasRedirect: Boolean(input.redirect),
+            redirectPath,
+            clientIdentifierSource: ctx.clientIdentifierSource,
+            err: error,
+          },
+          "Failed to start Google OAuth",
+        );
+
+        throw error;
+      }
     }),
 
   register: rateLimitedProcedure("authEmailSend")
