@@ -58,6 +58,102 @@ pnpm script:promote-tier3
 - Tailwind CSS + shadcn/ui
 - Biome for lint/format
 
+## Architecture Guides
+
+This project uses architecture guides from `guides/`. They are maintained externally and copied via `copy-guides.sh`. Do not edit files inside `guides/` directly.
+
+### Behavior Rules
+
+- **No automatic refactoring.** If existing code does not follow a guide, note the deviation and continue. Do NOT refactor code outside the current task scope unless explicitly asked.
+- **Core is mandatory for new and modified files.** Any file you create or modify must comply with the core standards listed below.
+- **Framework guides are additive.** They layer on top of core; they do not replace it.
+- **Ignore guides that do not apply to this project.** Do not import new libraries or suggest patterns from irrelevant guides.
+
+### Mandatory - Client Core
+
+Read and follow all of these for any client-side work:
+
+- `guides/client/core/overview.md`
+- `guides/client/core/architecture.md`
+- `guides/client/core/conventions.md`
+- `guides/client/core/folder-structure.md`
+- `guides/client/core/client-api-architecture.md`
+- `guides/client/core/domain-logic.md`
+- `guides/client/core/error-handling.md`
+- `guides/client/core/validation-zod.md`
+- `guides/client/core/server-state-tanstack-query.md`
+- `guides/client/core/query-keys.md`
+- `guides/client/core/state-management.md`
+- `guides/client/core/logging.md`
+- `guides/client/core/testing.md`
+
+### Mandatory - Server Core
+
+Read and follow all of these for any server-side work:
+
+- `guides/server/core/overview.md`
+- `guides/server/core/conventions.md`
+- `guides/server/core/api-contracts-zod-first.md`
+- `guides/server/core/api-response.md`
+- `guides/server/core/error-handling.md`
+- `guides/server/core/endpoint-naming.md`
+- `guides/server/core/id-generation.md`
+- `guides/server/core/transaction.md`
+- `guides/server/core/logging.md`
+- `guides/server/core/rate-limiting.md`
+- `guides/server/core/testing-service-layer.md`
+
+### Framework Guides - React
+
+- `guides/client/frameworks/reactjs/overview.md`
+- `guides/client/frameworks/reactjs/conventions.md`
+- `guides/client/frameworks/reactjs/composition-react.md`
+- `guides/client/frameworks/reactjs/error-handling.md`
+- `guides/client/frameworks/reactjs/server-state-patterns-react.md`
+- `guides/client/frameworks/reactjs/forms-react-hook-form.md`
+- `guides/client/frameworks/reactjs/state-zustand.md`
+- `guides/client/frameworks/reactjs/ui-shadcn-radix.md`
+
+### Framework Guides - Next.js Client
+
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/overview.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/folder-structure.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/routing-ssr-params.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/environment.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/url-state-nuqs.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/trpc.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/ky-fetch.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/query-keys.md`
+
+### Framework Guides - Next.js Server
+
+- `guides/server/runtime/nodejs/metaframeworks/nextjs/route-handlers.md`
+- `guides/server/runtime/nodejs/metaframeworks/nextjs/caching-revalidation.md`
+- `guides/server/runtime/nodejs/metaframeworks/nextjs/next-config-security.md`
+- `guides/server/runtime/nodejs/metaframeworks/nextjs/formdata-transport.md`
+- `guides/server/runtime/nodejs/metaframeworks/nextjs/cron-routes.md`
+- `guides/server/runtime/nodejs/metaframeworks/nextjs/metadata-seo.md`
+
+### Framework Guides - tRPC
+
+- `guides/server/runtime/nodejs/libraries/trpc/integration.md`
+- `guides/server/runtime/nodejs/libraries/trpc/authentication.md`
+- `guides/server/runtime/nodejs/libraries/trpc/rate-limiting.md`
+
+### Framework Guides - Supabase
+
+- `guides/server/runtime/nodejs/libraries/supabase/integration.md`
+- `guides/server/runtime/nodejs/libraries/supabase/auth.md`
+
+### Framework Guides - OpenAPI
+
+- `guides/server/core/zod-openapi-generation.md`
+- `guides/server/runtime/nodejs/libraries/openapi/parity-testing.md`
+
+### Feature Guides - Async Jobs
+
+- `guides/server/core/async-jobs-outbox.md`
+
 ## Frontend Architecture Contract (Authoritative)
 
 ### Core Paths
@@ -158,15 +254,6 @@ For each feature, standardize on:
 
 - Copy `.env.example` to `.env.local`; DB scripts expect `dotenvx`.
 - Required: `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
-
-## Canonical External References (Absolute Paths)
-
-Use these as architecture source-of-truth for this migration:
-
-- `/Users/raphaelm/Documents/Coding/node-architecture/client/core/*.md`
-- `/Users/raphaelm/Documents/Coding/node-architecture/client/frameworks/reactjs/metaframeworks/nextjs/*.md`
-- `/Users/raphaelm/Documents/Coding/node-architecture/OPENCODE-INTEGRATION.md`
-- `/Users/raphaelm/Documents/Coding/node-architecture/README.md`
 
 ## Agent Rules
 
