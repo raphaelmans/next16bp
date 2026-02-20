@@ -64,14 +64,15 @@ pnpm script:promote-tier3
 - Shared UI: `src/components`
 - Server (current): `src/lib/shared` and `src/lib/modules`
 - Shared helpers: `src/common`
-- Target: all server-only code under `src/lib` (no client/browser imports)
+- Target: server-only infra under `src/lib` (no client/browser imports), except runtime-safe pure shared files under `src/lib/modules/*/shared`
 - tRPC client: `src/trpc`
 
 ## Conventions
 
 - Formatting: Biome, 2-space indent, double quotes, semicolons; keep changes minimal.
 - Imports: use `@/` alias; group external → internal alias → relative.
-- Frontend: add "use client" to client components; StandardForm in `src/components/form`; URL state via `nuqs`; `trpc` from `@/trpc/client`; invalidate via `trpc.useUtils()`; helpers in `src/features/<feature>/helpers.ts`.
+- Frontend: add "use client" to client components; StandardForm in `src/components/form`; URL state via `nuqs`; `trpc` from `@/trpc/client`; invalidate via `trpc.useUtils()`; pure feature logic in `src/features/<feature>/(domain.ts|helpers.ts)`.
+- Domain/helper convention: keep deterministic, side-effect-free transforms in `domain.ts`/`helpers.ts`; for cross-runtime reuse use `src/lib/modules/<module>/shared/(domain.ts|transform.ts|helpers.ts)`; avoid React components/hooks, DB/auth/network calls, and `process.env` in these files.
 - IMPORTANT: Component placement: `src/app/**` is routes only (e.g. `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`). Do not add new component modules under `src/app/**` (existing route-local components are legacy); put feature UI in `src/features/<feature>/components`, shared UI in `src/components`, shared helpers in `src/common` (see `@guides/client/core/folder-structure.md`).
 - Backend: repository/service/use-case/router layering; repositories return `null`; services own transactions; routers validate input; log business events as `<entity>.<past_tense_action>`.
 - Time zones: treat `place.timeZone` as canonical; use `src/common/time-zone.ts` and `src/common/format.ts`.

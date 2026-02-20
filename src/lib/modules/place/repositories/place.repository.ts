@@ -58,6 +58,7 @@ export interface PlaceSummaryItem {
     name: string;
     address: string;
     city: string;
+    province: string;
     latitude: string | null;
     longitude: string | null;
     placeType?: "CURATED" | "RESERVABLE";
@@ -850,6 +851,7 @@ export class PlaceRepository implements IPlaceRepository {
           name: placeRecord.name,
           address: placeRecord.address,
           city: placeRecord.city,
+          province: placeRecord.province,
           latitude: placeRecord.latitude ?? null,
           longitude: placeRecord.longitude ?? null,
           placeType: placeRecord.placeType,

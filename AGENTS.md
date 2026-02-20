@@ -76,7 +76,8 @@ pnpm script:promote-tier3
 - Put feature UI in `src/features/<feature>/components`.
 - Put shared UI in `src/components`.
 - Put shared client-safe logic in `src/common`.
-- Keep server-only code under `src/lib` and avoid browser/client imports there.
+- Keep server-only infra code under `src/lib` and avoid browser/client imports there.
+- Exception: `src/lib/modules/<module>/shared/*` may contain pure runtime-safe logic importable by both server and client.
 
 ### Canonical Client Data Chain
 
@@ -89,6 +90,16 @@ Rules:
 - No direct `trpc.*.useQuery/useMutation` usage in pages or presentation components after migration.
 - Transport and cache behavior must be centralized in feature query adapters/hooks.
 - Components should orchestrate UI state only.
+
+### Domain and Helper Function Convention
+
+- Prefer pure-function files for domain rules and UI-driving transforms.
+- Feature-local UI/view-model logic belongs in `src/features/<feature>/(domain.ts|helpers.ts)`.
+- Cross-runtime reusable logic belongs in `src/lib/modules/<module>/shared/(domain.ts|transform.ts|helpers.ts)`.
+- App-wide client-safe pure helpers belong in `src/common/*`.
+- `domain.ts` and `helpers.ts` are both valid; this repo currently uses `helpers.ts` heavily.
+- Keep these files deterministic and side-effect free: no React components/hooks, no network/storage/DB/auth calls, no `process.env`.
+- Rendering stays in `.tsx` components; domain/helpers return typed values used by UI.
 
 ## tRPC-Retained Conventions
 
