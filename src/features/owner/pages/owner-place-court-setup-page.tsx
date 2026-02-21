@@ -17,6 +17,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
+  CourtAddonEditor,
   CourtForm,
   CourtScheduleEditor,
   ReservationAlertsPanel,
@@ -465,6 +466,7 @@ export default function CourtSetupWizardPage({
                     goToStep("publish");
                   }}
                 />
+                <CourtAddonEditor courtId={courtId} />
                 <div className="flex justify-between">
                   <Button variant="outline" onClick={() => goToStep("details")}>
                     Back to Details

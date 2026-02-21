@@ -16,6 +16,12 @@ import { copyToClipboard } from "@/common/utils/clipboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  getAutoAddonIds,
+  PlayerAddonSelector,
+  sanitizeSelectedAddonIds,
+  useQueryCourtAddons,
+} from "@/features/court-addons";
 import type { PlaceDetail } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
 import { PlaceDetailAmenitiesCard } from "@/features/discovery/place-detail/components/place-detail-amenities-card";
@@ -86,6 +92,8 @@ export function PlaceDetailBookingSection({
     setSelectionMode,
     selectedCourtId,
     setSelectedCourtId,
+    selectedAddonIds,
+    setSelectedAddonIds,
     selectedStartTime,
     setSelectedStartTime,
     courtViewMode,
@@ -179,6 +187,32 @@ export function PlaceDetailBookingSection({
 
   const [selectionSummary, setSelectionSummary] =
     React.useState<SelectionSummary | null>(null);
+
+  const courtAddonsQuery = useQueryCourtAddons(selectedCourtId ?? "", {
+    enabled: isAuthenticated && selectionMode === "court" && !!selectedCourtId,
+  });
+
+  const availableCourtAddons = courtAddonsQuery.data ?? [];
+
+  React.useEffect(() => {
+    if (availableCourtAddons.length === 0 && selectedAddonIds.length === 0) {
+      return;
+    }
+
+    const sanitized = sanitizeSelectedAddonIds(
+      selectedAddonIds,
+      availableCourtAddons,
+    );
+    const autoAddonIds = getAutoAddonIds(availableCourtAddons);
+    const nextIds = Array.from(new Set([...sanitized, ...autoAddonIds]));
+
+    if (
+      nextIds.length !== selectedAddonIds.length ||
+      nextIds.some((addonId, index) => addonId !== selectedAddonIds[index])
+    ) {
+      setSelectedAddonIds(nextIds);
+    }
+  }, [availableCourtAddons, selectedAddonIds, setSelectedAddonIds]);
   const handleSelectionSummaryChange = React.useCallback(
     (next: SelectionSummary | null) => {
       setSelectionSummary((prev) => {
@@ -207,6 +241,9 @@ export function PlaceDetailBookingSection({
     }
     if (selectionMode === "court" && selectedCourtId) {
       params.set("courtId", selectedCourtId);
+    }
+    if (selectedAddonIds.length > 0) {
+      params.set("addonIds", selectedAddonIds.join(","));
     }
     params.set("startTime", selectedStartTime);
 
@@ -246,6 +283,7 @@ export function PlaceDetailBookingSection({
     router,
     selectedCourtId,
     selectedDate,
+    selectedAddonIds,
     selectedSportId,
     selectedStartTime,
     selectionMode,
@@ -345,36 +383,60 @@ export function PlaceDetailBookingSection({
             }
           />
         ) : (
-          <PlaceDetailBookingDesktopSection
-            place={place}
-            placeTimeZone={placeTimeZone}
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            durationMinutes={durationMinutes}
-            setDurationMinutes={setDurationMinutes}
-            selectedSportId={selectedSportId}
-            setSelectedSportId={setSelectedSportId}
-            selectionMode={selectionMode}
-            setSelectionMode={setSelectionMode}
-            selectedCourtId={selectedCourtId}
-            setSelectedCourtId={setSelectedCourtId}
-            selectedStartTime={selectedStartTime}
-            setSelectedStartTime={setSelectedStartTime}
-            courtViewMode={courtViewMode}
-            setCourtViewMode={setCourtViewMode}
-            anyViewMode={anyViewMode}
-            setAnyViewMode={setAnyViewMode}
-            courtsForSport={courtsForSport}
-            clearSelection={clearSelection}
-            today={today}
-            todayRangeStart={todayRangeStart}
-            maxBookingDate={maxBookingDate}
-            todayDayKey={todayDayKey}
-            maxDayKey={maxDayKey}
-            availabilitySectionRef={availabilitySectionRef}
-            onContinue={handleReserve}
-            onSelectionSummaryChange={handleSelectionSummaryChange}
-          />
+          <div className="space-y-4">
+            <PlaceDetailBookingDesktopSection
+              place={place}
+              placeTimeZone={placeTimeZone}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              durationMinutes={durationMinutes}
+              setDurationMinutes={setDurationMinutes}
+              selectedSportId={selectedSportId}
+              setSelectedSportId={setSelectedSportId}
+              selectionMode={selectionMode}
+              setSelectionMode={setSelectionMode}
+              selectedCourtId={selectedCourtId}
+              setSelectedCourtId={setSelectedCourtId}
+              selectedAddonIds={selectedAddonIds}
+              selectedStartTime={selectedStartTime}
+              setSelectedStartTime={setSelectedStartTime}
+              courtViewMode={courtViewMode}
+              setCourtViewMode={setCourtViewMode}
+              anyViewMode={anyViewMode}
+              setAnyViewMode={setAnyViewMode}
+              courtsForSport={courtsForSport}
+              clearSelection={clearSelection}
+              today={today}
+              todayRangeStart={todayRangeStart}
+              maxBookingDate={maxBookingDate}
+              todayDayKey={todayDayKey}
+              maxDayKey={maxDayKey}
+              availabilitySectionRef={availabilitySectionRef}
+              onContinue={handleReserve}
+              onSelectionSummaryChange={handleSelectionSummaryChange}
+            />
+
+            {isAuthenticated &&
+              selectionMode === "court" &&
+              !!selectedCourtId && (
+                <Card>
+                  <CardContent className="space-y-3 p-4">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium">Optional extras</p>
+                      <p className="text-xs text-muted-foreground">
+                        Select extras now to preview add-on-aware totals before
+                        checkout.
+                      </p>
+                    </div>
+                    <PlayerAddonSelector
+                      addons={availableCourtAddons}
+                      selectedAddonIds={selectedAddonIds}
+                      onSelectedAddonIdsChange={setSelectedAddonIds}
+                    />
+                  </CardContent>
+                </Card>
+              )}
+          </div>
         )}
 
         <PlaceDetailContactCard
@@ -415,6 +477,7 @@ export function PlaceDetailBookingSection({
           selectionMode={selectionMode}
           courtsForSport={courtsForSport}
           selectedCourtId={selectedCourtId}
+          selectedAddonCount={selectedAddonIds.length}
           durationMinutes={durationMinutes}
           hasSelection={hasSelection}
           selectionSummary={selectionSummary}
@@ -446,6 +509,7 @@ export function PlaceDetailBookingSection({
           selectionMode={selectionMode}
           setSelectionMode={setSelectionMode}
           selectedCourtId={selectedCourtId}
+          selectedAddonIds={selectedAddonIds}
           setSelectedCourtId={setSelectedCourtId}
           selectedStartTime={selectedStartTime}
           setSelectedStartTime={setSelectedStartTime}

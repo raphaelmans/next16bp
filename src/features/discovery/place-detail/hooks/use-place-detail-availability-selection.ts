@@ -35,6 +35,7 @@ export function useModPlaceDetailAvailabilitySelection({
   const selectedSportId = urlState.sportId ?? undefined;
   const selectionMode = urlState.mode ?? "court";
   const selectedCourtId = urlState.courtId ?? undefined;
+  const selectedAddonIds = urlState.addonIds ?? [];
   const selectedStartTime = urlState.startTime ?? undefined;
   const courtViewMode = urlState.courtView ?? "week";
   const anyViewMode = urlState.anyView ?? "week";
@@ -90,6 +91,13 @@ export function useModPlaceDetailAvailabilitySelection({
     [setUrlState],
   );
 
+  const setSelectedAddonIds = useCallback(
+    (addonIds: string[]) => {
+      void setUrlState({ addonIds: addonIds.length > 0 ? addonIds : null });
+    },
+    [setUrlState],
+  );
+
   const setCourtViewMode = useCallback(
     (mode: "week" | "day") => {
       void setUrlState({ courtView: mode });
@@ -141,6 +149,8 @@ export function useModPlaceDetailAvailabilitySelection({
     setSelectionMode,
     selectedCourtId,
     setSelectedCourtId,
+    selectedAddonIds,
+    setSelectedAddonIds,
     selectedStartTime,
     setSelectedStartTime,
     courtViewMode,

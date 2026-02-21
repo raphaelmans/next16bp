@@ -1,4 +1,5 @@
 import { makeCourtRepository } from "@/lib/modules/court/factories/court.factory";
+import { makeCourtAddonRepository } from "@/lib/modules/court-addon/factories/court-addon.factory";
 import { makeCourtBlockRepository } from "@/lib/modules/court-block/factories/court-block.factory";
 import { makeCourtHoursRepository } from "@/lib/modules/court-hours/factories/court-hours.factory";
 import { makeCourtPriceOverrideRepository } from "@/lib/modules/court-price-override/factories/court-price-override.factory";
@@ -78,6 +79,7 @@ export function makeReservationService(): ReservationService {
       makeOrganizationProfileRepository(),
       makeCourtHoursRepository(),
       makeCourtRateRuleRepository(),
+      makeCourtAddonRepository(),
       makeCourtBlockRepository(),
       makeCourtPriceOverrideRepository(),
       getContainer().transactionManager,

@@ -14,6 +14,7 @@ import { contactRouter } from "@/lib/modules/contact/contact.router";
 import { adminCourtRouter } from "@/lib/modules/court/admin/admin-court.router";
 import { courtRouter } from "@/lib/modules/court/court.router";
 import { courtManagementRouter } from "@/lib/modules/court/court-management.router";
+import { courtAddonRouter } from "@/lib/modules/court-addon/court-addon.router";
 import { courtBlockRouter } from "@/lib/modules/court-block/court-block.router";
 import { courtHoursRouter } from "@/lib/modules/court-hours/court-hours.router";
 import { courtRateRuleRouter } from "@/lib/modules/court-rate-rule/court-rate-rule.router";
@@ -46,6 +47,7 @@ export const appRouter = router({
   auth: authRouter,
   court: courtRouter,
   courtManagement: courtManagementRouter,
+  courtAddon: courtAddonRouter,
   courtBlock: courtBlockRouter,
   guestProfile: guestProfileRouter,
   courtHours: courtHoursRouter,

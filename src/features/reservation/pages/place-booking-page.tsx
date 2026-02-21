@@ -5,6 +5,7 @@ import { CalendarCheck, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  parseAsArrayOf,
   parseAsInteger,
   parseAsString,
   parseAsStringLiteral,
@@ -30,6 +31,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import {
+  getAutoAddonIds,
+  PlayerAddonSelector,
+  sanitizeSelectedAddonIds,
+  useQueryCourtAddons,
+} from "@/features/court-addons";
 import {
   useModPlaceAvailability,
   useModPlaceDetail,
@@ -59,12 +66,13 @@ export default function PlaceBookingPage({
   const pathname = usePathname();
   const router = useRouter();
 
-  const [bookingParams] = useQueryStates({
+  const [bookingParams, setBookingParams] = useQueryStates({
     startTime: parseAsString,
     duration: parseAsInteger,
     sportId: parseAsString,
     mode: parseAsStringLiteral(selectionModeSchema),
     courtId: parseAsString,
+    addonIds: parseAsArrayOf(parseAsString),
   });
 
   const startTime = bookingParams.startTime ?? undefined;
@@ -73,6 +81,7 @@ export default function PlaceBookingPage({
   const modeParam = bookingParams.mode ?? undefined;
   const mode = modeParam ?? "any";
   const courtId = bookingParams.courtId ?? undefined;
+  const selectedAddonIds = bookingParams.addonIds ?? [];
 
   const durationMinutes = normalizeDurationMinutes(
     durationParam ?? DEFAULT_DURATION_MINUTES,
@@ -113,10 +122,21 @@ export default function PlaceBookingPage({
     if (courtId) {
       params.set("courtId", courtId);
     }
+    if (selectedAddonIds.length > 0) {
+      params.set("addonIds", selectedAddonIds.join(","));
+    }
 
     const query = params.toString();
     return query ? `${pathname}?${query}` : pathname;
-  }, [courtId, durationParam, modeParam, pathname, sportId, startTime]);
+  }, [
+    selectedAddonIds,
+    courtId,
+    durationParam,
+    modeParam,
+    pathname,
+    sportId,
+    startTime,
+  ]);
 
   React.useEffect(() => {
     if (!place?.slug) return;
@@ -138,6 +158,9 @@ export default function PlaceBookingPage({
     if (courtId) {
       params.set("courtId", courtId);
     }
+    if (selectedAddonIds.length > 0) {
+      params.set("addonIds", selectedAddonIds.join(","));
+    }
 
     const query = params.toString();
     const nextPath = query
@@ -151,6 +174,7 @@ export default function PlaceBookingPage({
     place?.slug,
     placeIdOrSlug,
     router,
+    selectedAddonIds,
     sportId,
     startTime,
   ]);
@@ -160,6 +184,16 @@ export default function PlaceBookingPage({
   const createOpenPlay = useMutCreateOpenPlayFromReservation();
 
   const availabilityQuery = useModPlaceAvailability({
+    place: place ?? undefined,
+    sportId,
+    courtId,
+    selectedAddonIds,
+    date: bookingDate,
+    durationMinutes,
+    mode,
+  });
+
+  const availabilityWithoutAddonsQuery = useModPlaceAvailability({
     place: place ?? undefined,
     sportId,
     courtId,
@@ -193,12 +227,63 @@ export default function PlaceBookingPage({
   const assignedCourtLabel =
     assignedCourt?.label ?? selectedSlot?.courtLabel ?? "Assigned at checkout";
 
+  const addonCourtId = assignedCourt?.id ?? selectedSlot?.courtId;
+  const courtAddonsQuery = useQueryCourtAddons(addonCourtId ?? "", {
+    enabled: !!addonCourtId,
+  });
+  const availableCourtAddons = courtAddonsQuery.data ?? [];
+
+  React.useEffect(() => {
+    if (!addonCourtId) return;
+    const sanitizedAddonIds = sanitizeSelectedAddonIds(
+      selectedAddonIds,
+      availableCourtAddons,
+    );
+    const autoAddonIds = getAutoAddonIds(availableCourtAddons);
+    const nextAddonIds = Array.from(
+      new Set([...sanitizedAddonIds, ...autoAddonIds]),
+    );
+
+    const hasChanged =
+      nextAddonIds.length !== selectedAddonIds.length ||
+      nextAddonIds.some(
+        (addonId, index) => addonId !== selectedAddonIds[index],
+      );
+
+    if (hasChanged) {
+      void setBookingParams({
+        addonIds: nextAddonIds.length > 0 ? nextAddonIds : null,
+      });
+    }
+  }, [addonCourtId, availableCourtAddons, selectedAddonIds, setBookingParams]);
+
+  const handleSelectedAddonIdsChange = React.useCallback(
+    (nextAddonIds: string[]) => {
+      void setBookingParams({
+        addonIds: nextAddonIds.length > 0 ? nextAddonIds : null,
+      });
+    },
+    [setBookingParams],
+  );
+
   const endTime = startTime
     ? addMinutes(new Date(startTime), durationMinutes).toISOString()
     : undefined;
 
   const totalPrice = selectedSlot?.totalPriceCents ?? 0;
   const currency = selectedSlot?.currency ?? "PHP";
+  const baseSelectedSlot = (availabilityWithoutAddonsQuery.data ?? []).find(
+    (slot) => slot.startTime === startTime,
+  );
+  const basePriceCents =
+    selectedAddonIds.length > 0
+      ? (baseSelectedSlot?.totalPriceCents ?? undefined)
+      : totalPrice;
+  const addonPriceCents =
+    basePriceCents !== undefined ? Math.max(0, totalPrice - basePriceCents) : 0;
+  const pricingWarnings =
+    (selectedSlot as { pricingWarnings?: string[] } | undefined)
+      ?.pricingWarnings ?? [];
 
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [hostAsOpenPlay, setHostAsOpenPlay] = React.useState(false);
@@ -271,6 +356,8 @@ export default function PlaceBookingPage({
       const payload = {
         startTime: selectedSlot.startTime,
         durationMinutes,
+        selectedAddonIds:
+          selectedAddonIds.length > 0 ? selectedAddonIds : undefined,
       };
       let result: { status: string; id: string };
       if (mode === "court" && courtId) {
@@ -425,6 +512,24 @@ export default function PlaceBookingPage({
               )}
             </CardContent>
           </Card>
+
+          {addonCourtId ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Optional extras</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Extras adjust your final booking total instantly.
+                </p>
+                <PlayerAddonSelector
+                  addons={availableCourtAddons}
+                  selectedAddonIds={selectedAddonIds}
+                  onSelectedAddonIdsChange={handleSelectedAddonIdsChange}
+                />
+              </CardContent>
+            </Card>
+          ) : null}
 
           <ProfilePreviewCard
             profile={{
@@ -614,6 +719,9 @@ export default function PlaceBookingPage({
         <div>
           <OrderSummary
             timeSlot={timeSlot}
+            basePriceCents={basePriceCents}
+            addonPriceCents={addonPriceCents}
+            pricingWarnings={pricingWarnings}
             timeZone={placeTimeZone}
             termsAccepted={termsAccepted}
             onTermsChange={setTermsAccepted}

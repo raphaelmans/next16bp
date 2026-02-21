@@ -13,6 +13,7 @@ type ProcedureFn<TProcedure> = TProcedure extends (
   : never;
 
 export interface IOwnerApi {
+  mutCourtAddonSet: ProcedureFn<TrpcClientApi["courtAddon"]["set"]["mutate"]>;
   mutCourtHoursCopyFromCourt: ProcedureFn<
     TrpcClientApi["courtHours"]["copyFromCourt"]["mutate"]
   >;
@@ -80,6 +81,7 @@ export interface IOwnerApi {
   mutReservationOwnerReject: ProcedureFn<
     TrpcClientApi["reservationOwner"]["reject"]["mutate"]
   >;
+  queryCourtAddonGet: ProcedureFn<TrpcClientApi["courtAddon"]["get"]["query"]>;
   queryCourtHoursGet: ProcedureFn<TrpcClientApi["courtHours"]["get"]["query"]>;
   queryCourtManagementGetById: ProcedureFn<
     TrpcClientApi["courtManagement"]["getById"]["query"]
@@ -282,6 +284,16 @@ export class OwnerApi {
       this.toAppError,
     );
 
+  mutCourtAddonSet: ProcedureFn<TrpcClientApi["courtAddon"]["set"]["mutate"]> =
+    async (input) =>
+      callTrpcMutation(
+        this.clientApi,
+        ["courtAddon", "set"],
+        (clientApi) => clientApi.courtAddon.set.mutate,
+        input,
+        this.toAppError,
+      );
+
   mutOrganizationPaymentCreateMethod: ProcedureFn<
     TrpcClientApi["organizationPayment"]["createMethod"]["mutate"]
   > = async (input) =>
@@ -475,6 +487,16 @@ export class OwnerApi {
         this.clientApi,
         ["courtHours", "get"],
         (clientApi) => clientApi.courtHours.get.query,
+        input,
+        this.toAppError,
+      );
+
+  queryCourtAddonGet: ProcedureFn<TrpcClientApi["courtAddon"]["get"]["query"]> =
+    async (input) =>
+      callTrpcQuery(
+        this.clientApi,
+        ["courtAddon", "get"],
+        (clientApi) => clientApi.courtAddon.get.query,
         input,
         this.toAppError,
       );

@@ -37,6 +37,7 @@ type PlaceDetailSidebarProps = {
   selectionMode: "any" | "court";
   courtsForSport: CourtOption[];
   selectedCourtId?: string;
+  selectedAddonCount: number;
   durationMinutes: number;
   hasSelection: boolean;
   selectionSummary: SelectionSummary | null;
@@ -65,6 +66,7 @@ export function PlaceDetailSidebar({
   selectionMode,
   courtsForSport,
   selectedCourtId,
+  selectedAddonCount,
   durationMinutes,
   hasSelection,
   selectionSummary,
@@ -89,6 +91,7 @@ export function PlaceDetailSidebar({
             selectionMode={selectionMode}
             courtsForSport={courtsForSport}
             selectedCourtId={selectedCourtId}
+            selectedAddonCount={selectedAddonCount}
             durationMinutes={durationMinutes}
             hasSelection={hasSelection}
             selectionSummary={selectionSummary}

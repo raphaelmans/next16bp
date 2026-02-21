@@ -43,6 +43,5 @@ next-env.d.ts
 
 # next-agents-md
 .next-docs/
-
-
+# spec-gen analysis artifacts
 .spec-gen/

@@ -24,6 +24,7 @@ type PlaceDetailBookingSummaryCardProps = {
   selectionMode: "any" | "court";
   courtsForSport: CourtOption[];
   selectedCourtId?: string;
+  selectedAddonCount: number;
   durationMinutes: number;
   hasSelection: boolean;
   selectionSummary: SelectionSummary | null;
@@ -38,6 +39,7 @@ export function PlaceDetailBookingSummaryCard({
   selectionMode,
   courtsForSport,
   selectedCourtId,
+  selectedAddonCount,
   durationMinutes,
   hasSelection,
   selectionSummary,
@@ -65,6 +67,14 @@ export function PlaceDetailBookingSummaryCard({
         <div className="space-y-1">
           <p className="text-sm text-muted-foreground">Duration</p>
           <p className="font-medium">{formatDuration(durationMinutes)}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="text-sm text-muted-foreground">Optional extras</p>
+          <p className="font-medium">
+            {selectedAddonCount > 0
+              ? `${selectedAddonCount} selected`
+              : "Choose extras during booking"}
+          </p>
         </div>
         {hasSelection && selectionSummary ? (
           <div className="space-y-1">

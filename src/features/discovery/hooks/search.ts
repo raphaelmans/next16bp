@@ -24,6 +24,7 @@ type DiscoveryAvailabilityForCourtInput = {
   date: string;
   durationMinutes: number;
   includeUnavailable: boolean;
+  selectedAddonIds?: string[];
 };
 
 type DiscoveryAvailabilityForCourtRangeInput = {
@@ -32,6 +33,7 @@ type DiscoveryAvailabilityForCourtRangeInput = {
   endDate: string;
   durationMinutes: number;
   includeUnavailable: boolean;
+  selectedAddonIds?: string[];
 };
 
 type DiscoveryAvailabilityForPlaceSportRangeInput = {
@@ -42,6 +44,7 @@ type DiscoveryAvailabilityForPlaceSportRangeInput = {
   durationMinutes: number;
   includeUnavailable: boolean;
   includeCourtOptions: boolean;
+  selectedAddonIds?: string[];
 };
 
 export function useQueryDiscoverySports() {

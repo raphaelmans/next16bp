@@ -15,6 +15,8 @@ export * from "./claim-request";
 export * from "./contact-message";
 // Court-related tables
 export * from "./court";
+export * from "./court-addon";
+export * from "./court-addon-rate-rule";
 export * from "./court-block";
 export * from "./court-hours-window";
 export * from "./court-price-override";

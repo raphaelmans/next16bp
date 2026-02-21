@@ -47,6 +47,7 @@ type PlaceDetailBookingMobileSectionProps = {
   setSelectionMode: (mode: "any" | "court") => void;
   selectedCourtId?: string;
   setSelectedCourtId: (courtId: string | undefined) => void;
+  selectedAddonIds: string[];
   selectedStartTime?: string;
   setSelectedStartTime: (startTime: string | undefined) => void;
   courtsForSport: { id: string; label: string }[];
@@ -71,6 +72,7 @@ export function PlaceDetailBookingMobileSection({
   setSelectionMode,
   selectedCourtId,
   setSelectedCourtId,
+  selectedAddonIds,
   selectedStartTime,
   setSelectedStartTime,
   courtsForSport,
@@ -125,6 +127,8 @@ export function PlaceDetailBookingMobileSection({
       durationMinutes: TIMELINE_SLOT_DURATION,
       includeUnavailable: true,
       includeCourtOptions: false,
+      selectedAddonIds:
+        selectionMode === "court" ? selectedAddonIds : undefined,
     },
     !isDesktop &&
       mobileSheetExpanded &&
@@ -139,6 +143,7 @@ export function PlaceDetailBookingMobileSection({
       date: mobileDayDateIso,
       durationMinutes: TIMELINE_SLOT_DURATION,
       includeUnavailable: true,
+      selectedAddonIds,
     },
     !isDesktop &&
       mobileSheetExpanded &&
@@ -168,6 +173,7 @@ export function PlaceDetailBookingMobileSection({
     selectionMode,
     selectedSportId,
     selectedCourtId,
+    selectedAddonIds,
     weekStartDayKey,
     weekDayKeys,
     durationMinutes: TIMELINE_SLOT_DURATION,

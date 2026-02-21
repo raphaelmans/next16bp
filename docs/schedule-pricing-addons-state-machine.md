@@ -1,6 +1,6 @@
 # Schedule & Pricing State Machines (Current vs Add-ons)
 
-Scope: this document models the **pricing evaluation** flow used by schedule/availability. It intentionally omits reservation/payment lifecycle.
+Scope: this document models pricing evaluation for schedule/availability only.
 
 References:
 - Base pricing: `/Users/raphaelm/Documents/Coding/boilerplates/next16bp/src/lib/shared/lib/schedule-availability.ts`
@@ -8,13 +8,7 @@ References:
 
 ---
 
-## (1) Current: base slot pricing (no add-ons)
-
-This reflects the behavior of `computeSchedulePrice()`:
-- Validate duration (hourly only)
-- Iterate in 60-minute segments
-- Require hours coverage + rate coverage for every segment
-- Enforce single currency across the slot
+## (1) Current flow: base slot pricing
 
 ```mermaid
 stateDiagram-v2
@@ -25,19 +19,17 @@ stateDiagram-v2
   ValidateDuration --> Init
 
   Init --> NextSegment
-
   NextSegment --> Done: cursor >= endTime
   NextSegment --> ResolveSegment: cursor < endTime
 
-  ResolveSegment --> Reject: not covered by hours window
+  ResolveSegment --> Reject: segment not covered by hours
   ResolveSegment --> ResolveBaseRate
 
-  ResolveBaseRate --> Reject: no override and no rule
+  ResolveBaseRate --> Reject: no override and no base rule
   ResolveBaseRate --> CurrencyCheck
 
   CurrencyCheck --> Reject: currency mismatch
   CurrencyCheck --> Accumulate
-
   Accumulate --> NextSegment: cursor += 60m
 
   Done --> Return
@@ -47,19 +39,16 @@ stateDiagram-v2
 
 ---
 
-## (2) Proposed: base pricing + applied add-ons (PER_HOUR + PER_BOOKING)
+## (2) Proposed v2 flow: base pricing + add-ons
 
-This extends the state machine to include **owner-defined add-ons** that can be:
-- `AUTO`: always applied
-- `OPTIONAL`: applied only when selected
-- `PER_HOUR`: segment-scoped hourly surcharge
-- `PER_BOOKING`: booking-scoped one-time fee (triggered by overlap with a fee rule)
+Add-ons are evaluated from a single set of add-on rules:
+- `pricing_type = HOURLY`: add per covered segment.
+- `pricing_type = FLAT`: charge once on first overlap with a rule window.
 
-For each 60-minute segment:
-- Compute the base rate exactly as today.
-- Apply **PER_HOUR** add-on surcharges when a matching add-on rule covers the segment.
-- Track whether any **PER_BOOKING** add-on fee rule is “triggered” by segment overlap.
-- Reject if an applied add-on attempts to introduce a currency mismatch.
+Mode semantics:
+- `OPTIONAL`: only if player selected.
+- `AUTO`: apply-when-ruled.
+- `AUTO_STRICT`: deferred.
 
 ```mermaid
 stateDiagram-v2
@@ -70,40 +59,36 @@ stateDiagram-v2
   ValidateDuration --> DetermineAppliedAddOns
 
   DetermineAppliedAddOns --> Init
-
   Init --> NextSegment
 
   NextSegment --> Done: cursor >= endTime
   NextSegment --> ResolveSegment: cursor < endTime
 
-  ResolveSegment --> Reject: not covered by hours window
+  ResolveSegment --> Reject: segment not covered by hours
   ResolveSegment --> ResolveBaseRate
 
-  ResolveBaseRate --> Reject: no override and no rule
-  ResolveBaseRate --> ApplySegmentAddOns
+  ResolveBaseRate --> Reject: no override and no base rule
+  ResolveBaseRate --> ApplyHourlyAddOns
 
-  ApplySegmentAddOns --> Reject: add-on currency mismatch
-  ApplySegmentAddOns --> TrackBookingFeeTriggers
+  ApplyHourlyAddOns --> Reject: add-on currency mismatch
+  ApplyHourlyAddOns --> TriggerFlatAddOns
 
-  TrackBookingFeeTriggers --> CurrencyCheck
+  TriggerFlatAddOns --> Reject: add-on currency mismatch
+  TriggerFlatAddOns --> CurrencyCheck
 
   CurrencyCheck --> Reject: base currency mismatch across segments
   CurrencyCheck --> Accumulate
 
   Accumulate --> NextSegment: cursor += 60m
 
-  Done --> ApplyBookingFees
-  ApplyBookingFees --> Reject: add-on currency mismatch
-  ApplyBookingFees --> Return
+  Done --> FinalizeFlatCharges
+  FinalizeFlatCharges --> Return
   Return --> [*]
   Reject --> [*]
 ```
 
-### Notes (selected semantics)
-- `PER_BOOKING` overlap rule: recommended is “apply once per add-on if **any** segment overlaps a fee rule; if multiple rules match, take the **max** fee for that add-on.”
-- `AUTO` + missing rule behavior (example):
-  - Add-on: **Lights** (`AUTO`, `PER_HOUR`), rule only for 18:00–22:00 (+200/hour).
-  - Booking: 17:00–19:00 (two 60-minute segments: 17–18, 18–19).
-    - **Reject slot** approach: booking becomes “not priceable” because segment 17–18 has no lights rule, so the slot disappears from availability.
-    - **$0 outside window** approach: segment 17–18 adds +0, segment 18–19 adds +200; booking is priceable and the surcharge matches the configured “lights hours”.
-  - Selected behavior: treat add-on rules as **both applicability + price**. If no rule covers a segment, the add-on simply **does not apply** to that segment (so +$0), even if `AUTO`.
+### Selected semantics
+- If no add-on rule covers a segment, that add-on contributes `+0` for that segment.
+- `AUTO` never rejects due to missing add-on coverage; it applies only where rules match.
+- `FLAT` charges once per add-on when the first segment overlap occurs.
+- `AUTO_STRICT` is deferred and intentionally not part of current behavior.

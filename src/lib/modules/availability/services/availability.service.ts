@@ -3,8 +3,10 @@ import {
   getZonedDayRangeForInstant,
   toUtcISOString,
 } from "@/common/time-zone";
+import { env } from "@/lib/env";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
+import type { ICourtAddonRepository } from "@/lib/modules/court-addon/repositories/court-addon.repository";
 import type { ICourtBlockRepository } from "@/lib/modules/court-block/repositories/court-block.repository";
 import type { ICourtHoursRepository } from "@/lib/modules/court-hours/repositories/court-hours.repository";
 import type { ICourtPriceOverrideRepository } from "@/lib/modules/court-price-override/repositories/court-price-override.repository";
@@ -14,6 +16,8 @@ import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.re
 import type { IPlaceVerificationRepository } from "@/lib/modules/place-verification/repositories/place-verification.repository";
 import type { IReservationRepository } from "@/lib/modules/reservation/repositories/reservation.repository";
 import type {
+  CourtAddonRateRuleRecord,
+  CourtAddonRecord,
   CourtBlockRecord,
   CourtHoursWindowRecord,
   CourtPriceOverrideRecord,
@@ -22,8 +26,9 @@ import type {
   PlaceVerificationRecord,
   ReservationRecord,
 } from "@/lib/shared/infra/db/schema";
+import { logger } from "@/lib/shared/infra/logger";
 import {
-  computeSchedulePrice,
+  computeSchedulePriceDetailed,
   rangesOverlap,
 } from "@/lib/shared/lib/schedule-availability";
 import type {
@@ -91,6 +96,7 @@ export class AvailabilityService implements IAvailabilityService {
     private placeVerificationRepository: IPlaceVerificationRepository,
     private courtHoursRepository: ICourtHoursRepository,
     private courtRateRuleRepository: ICourtRateRuleRepository,
+    private courtAddonRepository: ICourtAddonRepository,
     private reservationRepository: IReservationRepository,
     private courtBlockRepository: ICourtBlockRepository,
     private courtPriceOverrideRepository: ICourtPriceOverrideRepository,
@@ -145,21 +151,31 @@ export class AvailabilityService implements IAvailabilityService {
     );
     const courtIds = [court.id];
 
-    const [hours, rules, reservations, blocks, overrides] = await Promise.all([
-      this.courtHoursRepository.findByCourtIds(courtIds),
-      this.courtRateRuleRepository.findByCourtIds(courtIds),
-      this.reservationRepository.findOverlappingActiveByCourtIds(
-        courtIds,
-        start,
-        end,
-      ),
-      this.courtBlockRepository.findOverlappingByCourtIds(courtIds, start, end),
-      this.courtPriceOverrideRepository.findOverlappingByCourtIds(
-        courtIds,
-        start,
-        end,
-      ),
-    ]);
+    const [hours, rules, reservations, blocks, overrides, addons] =
+      await Promise.all([
+        this.courtHoursRepository.findByCourtIds(courtIds),
+        this.courtRateRuleRepository.findByCourtIds(courtIds),
+        this.reservationRepository.findOverlappingActiveByCourtIds(
+          courtIds,
+          start,
+          end,
+        ),
+        this.courtBlockRepository.findOverlappingByCourtIds(
+          courtIds,
+          start,
+          end,
+        ),
+        this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+          courtIds,
+          start,
+          end,
+        ),
+        this.courtAddonRepository.findActiveByCourtIds(courtIds),
+      ]);
+
+    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
+      addons.map((addon) => addon.id),
+    );
 
     return this.buildAvailabilityForCourtRange({
       court,
@@ -169,9 +185,12 @@ export class AvailabilityService implements IAvailabilityService {
       timeZone: place.timeZone,
       hours,
       rules,
+      addons,
+      addonRules,
       reservations,
       blocks,
       overrides,
+      selectedAddonIds: data.selectedAddonIds,
       includeUnavailable: data.includeUnavailable ?? false,
     });
   }
@@ -239,10 +258,15 @@ export class AvailabilityService implements IAvailabilityService {
     }
 
     const allCourtIds = eligibleCourts.map((court) => court.id);
-    const [hours, rules] = await Promise.all([
+    const [hours, rules, addons] = await Promise.all([
       this.courtHoursRepository.findByCourtIds(allCourtIds),
       this.courtRateRuleRepository.findByCourtIds(allCourtIds),
+      this.courtAddonRepository.findActiveByCourtIds(allCourtIds),
     ]);
+
+    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
+      addons.map((addon) => addon.id),
+    );
 
     const options: AvailabilityOption[] = [];
     const aggregatedDiagnostics: AvailabilityDiagnostics = {
@@ -291,9 +315,12 @@ export class AvailabilityService implements IAvailabilityService {
           timeZone: place.timeZone,
           hours,
           rules,
+          addons,
+          addonRules,
           reservations,
           blocks,
           overrides,
+          selectedAddonIds: data.selectedAddonIds,
           includeUnavailable: data.includeUnavailable ?? false,
         });
         options.push(...result.options);
@@ -366,21 +393,31 @@ export class AvailabilityService implements IAvailabilityService {
     );
     const courtIds = activeCourts.map((court) => court.id);
 
-    const [hours, rules, reservations, blocks, overrides] = await Promise.all([
-      this.courtHoursRepository.findByCourtIds(courtIds),
-      this.courtRateRuleRepository.findByCourtIds(courtIds),
-      this.reservationRepository.findOverlappingActiveByCourtIds(
-        courtIds,
-        start,
-        end,
-      ),
-      this.courtBlockRepository.findOverlappingByCourtIds(courtIds, start, end),
-      this.courtPriceOverrideRepository.findOverlappingByCourtIds(
-        courtIds,
-        start,
-        end,
-      ),
-    ]);
+    const [hours, rules, reservations, blocks, overrides, addons] =
+      await Promise.all([
+        this.courtHoursRepository.findByCourtIds(courtIds),
+        this.courtRateRuleRepository.findByCourtIds(courtIds),
+        this.reservationRepository.findOverlappingActiveByCourtIds(
+          courtIds,
+          start,
+          end,
+        ),
+        this.courtBlockRepository.findOverlappingByCourtIds(
+          courtIds,
+          start,
+          end,
+        ),
+        this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+          courtIds,
+          start,
+          end,
+        ),
+        this.courtAddonRepository.findActiveByCourtIds(courtIds),
+      ]);
+
+    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
+      addons.map((addon) => addon.id),
+    );
 
     const optionsByStart = new Map<number, AvailabilityOption>();
     const courtOptionsByStart = new Map<number, AvailabilityCourtOption[]>();
@@ -405,9 +442,12 @@ export class AvailabilityService implements IAvailabilityService {
         timeZone: place.timeZone,
         hours,
         rules,
+        addons,
+        addonRules,
         reservations,
         blocks,
         overrides,
+        selectedAddonIds: data.selectedAddonIds,
         includeUnavailable,
       });
 
@@ -509,25 +549,31 @@ export class AvailabilityService implements IAvailabilityService {
     const rangeEnd = new Date(data.endDate);
     const courtIds = [court.id];
 
-    const [hours, rules, reservations, blocks, overrides] = await Promise.all([
-      this.courtHoursRepository.findByCourtIds(courtIds),
-      this.courtRateRuleRepository.findByCourtIds(courtIds),
-      this.reservationRepository.findOverlappingActiveByCourtIds(
-        courtIds,
-        rangeStart,
-        rangeEnd,
-      ),
-      this.courtBlockRepository.findOverlappingByCourtIds(
-        courtIds,
-        rangeStart,
-        rangeEnd,
-      ),
-      this.courtPriceOverrideRepository.findOverlappingByCourtIds(
-        courtIds,
-        rangeStart,
-        rangeEnd,
-      ),
-    ]);
+    const [hours, rules, reservations, blocks, overrides, addons] =
+      await Promise.all([
+        this.courtHoursRepository.findByCourtIds(courtIds),
+        this.courtRateRuleRepository.findByCourtIds(courtIds),
+        this.reservationRepository.findOverlappingActiveByCourtIds(
+          courtIds,
+          rangeStart,
+          rangeEnd,
+        ),
+        this.courtBlockRepository.findOverlappingByCourtIds(
+          courtIds,
+          rangeStart,
+          rangeEnd,
+        ),
+        this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+          courtIds,
+          rangeStart,
+          rangeEnd,
+        ),
+        this.courtAddonRepository.findActiveByCourtIds(courtIds),
+      ]);
+
+    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
+      addons.map((addon) => addon.id),
+    );
 
     return this.buildAvailabilityForCourtRange({
       court,
@@ -537,9 +583,12 @@ export class AvailabilityService implements IAvailabilityService {
       timeZone: place.timeZone,
       hours,
       rules,
+      addons,
+      addonRules,
       reservations,
       blocks,
       overrides,
+      selectedAddonIds: data.selectedAddonIds,
       includeUnavailable: data.includeUnavailable ?? false,
     });
   }
@@ -588,25 +637,31 @@ export class AvailabilityService implements IAvailabilityService {
     const rangeEnd = new Date(data.endDate);
     const courtIds = activeCourts.map((court) => court.id);
 
-    const [hours, rules, reservations, blocks, overrides] = await Promise.all([
-      this.courtHoursRepository.findByCourtIds(courtIds),
-      this.courtRateRuleRepository.findByCourtIds(courtIds),
-      this.reservationRepository.findOverlappingActiveByCourtIds(
-        courtIds,
-        rangeStart,
-        rangeEnd,
-      ),
-      this.courtBlockRepository.findOverlappingByCourtIds(
-        courtIds,
-        rangeStart,
-        rangeEnd,
-      ),
-      this.courtPriceOverrideRepository.findOverlappingByCourtIds(
-        courtIds,
-        rangeStart,
-        rangeEnd,
-      ),
-    ]);
+    const [hours, rules, reservations, blocks, overrides, addons] =
+      await Promise.all([
+        this.courtHoursRepository.findByCourtIds(courtIds),
+        this.courtRateRuleRepository.findByCourtIds(courtIds),
+        this.reservationRepository.findOverlappingActiveByCourtIds(
+          courtIds,
+          rangeStart,
+          rangeEnd,
+        ),
+        this.courtBlockRepository.findOverlappingByCourtIds(
+          courtIds,
+          rangeStart,
+          rangeEnd,
+        ),
+        this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+          courtIds,
+          rangeStart,
+          rangeEnd,
+        ),
+        this.courtAddonRepository.findActiveByCourtIds(courtIds),
+      ]);
+
+    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
+      addons.map((addon) => addon.id),
+    );
 
     const optionsByStart = new Map<number, AvailabilityOption>();
     const courtOptionsByStart = new Map<number, AvailabilityCourtOption[]>();
@@ -631,9 +686,12 @@ export class AvailabilityService implements IAvailabilityService {
         timeZone: place.timeZone,
         hours,
         rules,
+        addons,
+        addonRules,
         reservations,
         blocks,
         overrides,
+        selectedAddonIds: data.selectedAddonIds,
         includeUnavailable,
       });
 
@@ -721,9 +779,12 @@ export class AvailabilityService implements IAvailabilityService {
     timeZone: string;
     hours: CourtHoursWindowRecord[];
     rules: CourtRateRuleRecord[];
+    addons: CourtAddonRecord[];
+    addonRules: CourtAddonRateRuleRecord[];
     reservations: ReservationRecord[];
     blocks: CourtBlockRecord[];
     overrides: CourtPriceOverrideRecord[];
+    selectedAddonIds?: string[];
     includeUnavailable?: boolean;
   }): { options: AvailabilityOption[]; diagnostics: AvailabilityDiagnostics } {
     const {
@@ -734,9 +795,12 @@ export class AvailabilityService implements IAvailabilityService {
       timeZone,
       hours,
       rules,
+      addons,
+      addonRules,
       reservations,
       blocks,
       overrides,
+      selectedAddonIds,
       includeUnavailable,
     } = options;
 
@@ -747,6 +811,12 @@ export class AvailabilityService implements IAvailabilityService {
     const priceOverrides = overrides.filter(
       (override) => override.courtId === court.id,
     );
+    const courtAddons = addons
+      .filter((addon) => addon.courtId === court.id)
+      .map((addon) => ({
+        addon,
+        rules: addonRules.filter((rule) => rule.addonId === addon.id),
+      }));
 
     const baseDiagnostics: AvailabilityDiagnostics = {
       hasHoursWindows: hoursWindows.length > 0,
@@ -782,6 +852,7 @@ export class AvailabilityService implements IAvailabilityService {
     let anyDayHasHours = false;
     let totalSlotsGenerated = 0;
     let bookedSlotsCount = 0;
+    let hasAddonCurrencyMismatch = false;
 
     while (dayCursor <= rangeEndDay) {
       const dayStart = getZonedDayRangeForInstant(dayCursor, timeZone).start;
@@ -812,16 +883,35 @@ export class AvailabilityService implements IAvailabilityService {
         const startTime = getZonedDate(dayStart, timeZone);
         startTime.setHours(Math.floor(minute / 60), minute % 60, 0, 0);
 
-        const pricing = computeSchedulePrice({
+        const pricingDetailed = computeSchedulePriceDetailed({
           startTime,
           durationMinutes,
           timeZone,
           hoursWindows,
           rateRules,
           priceOverrides,
+          addons: courtAddons,
+          selectedAddonIds,
+          enableAddonPricing: env.ENABLE_ADDON_PRICING_V2 !== false,
         });
+        const pricing = pricingDetailed.result;
         if (!pricing) {
+          if (pricingDetailed.failureReason === "ADDON_CURRENCY_MISMATCH") {
+            hasAddonCurrencyMismatch = true;
+          }
           continue;
+        }
+
+        if (pricing.warnings.length > 0) {
+          logger.warn(
+            {
+              event: "availability.pricing_addon_warnings",
+              courtId: court.id,
+              warningCodes: pricing.warnings.map((warning) => warning.code),
+              warningCount: pricing.warnings.length,
+            },
+            "Availability pricing completed with addon warnings",
+          );
         }
 
         const endTime = pricing.endTime;
@@ -890,6 +980,18 @@ export class AvailabilityService implements IAvailabilityService {
         totalSlotsGenerated > 0 && bookedSlotsCount === totalSlotsGenerated,
       reservationsDisabled: false,
     };
+
+    if (hasAddonCurrencyMismatch) {
+      logger.warn(
+        {
+          event: "availability.pricing_addon_currency_mismatch",
+          courtId: court.id,
+          rangeStart: rangeStart.toISOString(),
+          rangeEnd: rangeEnd.toISOString(),
+        },
+        "Availability encountered addon currency mismatch",
+      );
+    }
 
     return { options: sortedOptions, diagnostics };
   }

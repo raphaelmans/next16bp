@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  parseAsArrayOf,
   parseAsInteger,
   parseAsString,
   parseAsStringLiteral,
@@ -18,6 +19,7 @@ export const placeDetailUrlParams = {
     history: "replace",
   }),
   courtId: parseAsString.withOptions({ history: "replace" }),
+  addonIds: parseAsArrayOf(parseAsString).withOptions({ history: "replace" }),
   startTime: parseAsString.withOptions({ history: "replace" }),
   anyView: parseAsStringLiteral(viewModeSchema).withOptions({
     history: "replace",

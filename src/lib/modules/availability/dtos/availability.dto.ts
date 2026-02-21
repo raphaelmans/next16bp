@@ -17,6 +17,7 @@ export const GetAvailabilityForCourtSchema = z.object({
   date: BookingWindowDateSchema,
   durationMinutes: S.availability.durationMinutes,
   includeUnavailable: z.boolean().optional(),
+  selectedAddonIds: z.array(S.ids.generic).max(20).optional(),
 });
 
 export const GetAvailabilityForCourtsSchema = z.object({
@@ -31,6 +32,7 @@ export const GetAvailabilityForCourtsSchema = z.object({
   date: BookingWindowDateSchema,
   durationMinutes: S.availability.durationMinutes,
   includeUnavailable: z.boolean().optional(),
+  selectedAddonIds: z.array(S.ids.generic).max(20).optional(),
 });
 
 export const GetAvailabilityForPlaceSportSchema = z.object({
@@ -40,6 +42,7 @@ export const GetAvailabilityForPlaceSportSchema = z.object({
   durationMinutes: S.availability.durationMinutes,
   includeUnavailable: z.boolean().optional(),
   includeCourtOptions: z.boolean().optional(),
+  selectedAddonIds: z.array(S.ids.generic).max(20).optional(),
 });
 
 const MAX_AVAILABILITY_RANGE_DAYS = V.availability.rangeWithinWindow.value;
@@ -70,6 +73,7 @@ export const GetAvailabilityForCourtRangeSchema =
     courtId: S.ids.courtId,
     durationMinutes: S.availability.durationMinutes,
     includeUnavailable: z.boolean().optional(),
+    selectedAddonIds: z.array(S.ids.generic).max(20).optional(),
   });
 
 export const GetAvailabilityForPlaceSportRangeSchema =
@@ -79,6 +83,7 @@ export const GetAvailabilityForPlaceSportRangeSchema =
     durationMinutes: S.availability.durationMinutes,
     includeUnavailable: z.boolean().optional(),
     includeCourtOptions: z.boolean().optional(),
+    selectedAddonIds: z.array(S.ids.generic).max(20).optional(),
   });
 
 export type GetAvailabilityForCourtDTO = z.infer<

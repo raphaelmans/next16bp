@@ -1,9 +1,11 @@
 import { addDays, addMinutes, endOfDay } from "date-fns";
 import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
+import { env } from "@/lib/env";
 import { postPlayerCreatedMessage } from "@/lib/modules/chat/ops/post-player-created-message";
 import { postPlayerPaymentMarkedMessage } from "@/lib/modules/chat/ops/post-player-payment-marked-message";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
+import type { ICourtAddonRepository } from "@/lib/modules/court-addon/repositories/court-addon.repository";
 import type { ICourtBlockRepository } from "@/lib/modules/court-block/repositories/court-block.repository";
 import type { ICourtHoursRepository } from "@/lib/modules/court-hours/repositories/court-hours.repository";
 import type { ICourtPriceOverrideRepository } from "@/lib/modules/court-price-override/repositories/court-price-override.repository";
@@ -37,7 +39,7 @@ import type {
 import { logger } from "@/lib/shared/infra/logger";
 import type { RequestContext } from "@/lib/shared/kernel/context";
 import type { TransactionManager } from "@/lib/shared/kernel/transaction";
-import { computeSchedulePrice } from "@/lib/shared/lib/schedule-availability";
+import { computeSchedulePriceDetailed } from "@/lib/shared/lib/schedule-availability";
 import type {
   CancelReservationDTO,
   CreateReservationForAnyCourtDTO,
@@ -70,6 +72,7 @@ interface CourtAvailabilitySelection {
   endTime: Date;
   totalPriceCents: number;
   currency: string;
+  pricingWarnings: string[];
 }
 
 export interface ReservationCreationResult extends ReservationRecord {
@@ -77,6 +80,7 @@ export interface ReservationCreationResult extends ReservationRecord {
   courtLabel: string;
   totalPriceCents: number;
   currency: string;
+  pricingWarnings: string[];
 }
 
 export interface ReservationPaymentMethod {
@@ -161,6 +165,7 @@ export class ReservationService implements IReservationService {
     private organizationProfileRepository: IOrganizationProfileRepository,
     private courtHoursRepository: ICourtHoursRepository,
     private courtRateRuleRepository: ICourtRateRuleRepository,
+    private courtAddonRepository: ICourtAddonRepository,
     private courtBlockRepository: ICourtBlockRepository,
     private courtPriceOverrideRepository: ICourtPriceOverrideRepository,
     private transactionManager: TransactionManager,
@@ -245,34 +250,97 @@ export class ReservationService implements IReservationService {
     startTime: Date;
     durationMinutes: number;
     timeZone: string;
+    selectedAddonIds?: string[];
     ctx?: RequestContext;
   }): Promise<{
     endTime: Date;
     totalPriceCents: number;
     currency: string;
+    pricingWarnings: string[];
   } | null> {
-    const { courtId, startTime, durationMinutes, timeZone, ctx } = options;
+    const {
+      courtId,
+      startTime,
+      durationMinutes,
+      timeZone,
+      selectedAddonIds,
+      ctx,
+    } = options;
     const endTime = addMinutes(startTime, durationMinutes);
 
-    const [hoursWindows, rateRules, priceOverrides] = await Promise.all([
-      this.courtHoursRepository.findByCourtIds([courtId], ctx),
-      this.courtRateRuleRepository.findByCourtIds([courtId], ctx),
-      this.courtPriceOverrideRepository.findOverlappingByCourtIds(
-        [courtId],
-        startTime,
-        endTime,
-        ctx,
-      ),
-    ]);
+    const [hoursWindows, rateRules, priceOverrides, addons] = await Promise.all(
+      [
+        this.courtHoursRepository.findByCourtIds([courtId], ctx),
+        this.courtRateRuleRepository.findByCourtIds([courtId], ctx),
+        this.courtPriceOverrideRepository.findOverlappingByCourtIds(
+          [courtId],
+          startTime,
+          endTime,
+          ctx,
+        ),
+        this.courtAddonRepository.findActiveByCourtIds([courtId], ctx),
+      ],
+    );
 
-    return computeSchedulePrice({
+    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
+      addons.map((addon) => addon.id),
+      ctx,
+    );
+
+    const computed = computeSchedulePriceDetailed({
       startTime,
       durationMinutes,
       timeZone,
       hoursWindows,
       rateRules,
       priceOverrides,
+      addons: addons.map((addon) => ({
+        addon,
+        rules: addonRules.filter((rule) => rule.addonId === addon.id),
+      })),
+      selectedAddonIds,
+      enableAddonPricing: env.ENABLE_ADDON_PRICING_V2 !== false,
     });
+
+    if (
+      !computed.result &&
+      computed.failureReason === "ADDON_CURRENCY_MISMATCH"
+    ) {
+      logger.warn(
+        {
+          event: "reservation.pricing_addon_currency_mismatch",
+          courtId,
+          startTime: startTime.toISOString(),
+          durationMinutes,
+        },
+        "Addon currency mismatch while computing reservation pricing",
+      );
+    }
+
+    if (!computed.result) {
+      return null;
+    }
+
+    if (computed.result.warnings.length > 0) {
+      logger.warn(
+        {
+          event: "reservation.pricing_addon_warnings",
+          courtId,
+          warningCodes: computed.result.warnings.map((warning) => warning.code),
+          warningCount: computed.result.warnings.length,
+        },
+        "Reservation pricing completed with addon warnings",
+      );
+    }
+
+    return {
+      endTime: computed.result.endTime,
+      totalPriceCents: computed.result.totalPriceCents,
+      currency: computed.result.currency,
+      pricingWarnings: computed.result.warnings.map(
+        (warning) => warning.message,
+      ),
+    };
   }
 
   private async isCourtRangeAvailable(options: {
@@ -411,6 +479,7 @@ export class ReservationService implements IReservationService {
       startTime,
       durationMinutes: data.durationMinutes,
       timeZone: place.timeZone,
+      selectedAddonIds: data.selectedAddonIds,
     });
 
     if (!pricing) {
@@ -550,6 +619,7 @@ export class ReservationService implements IReservationService {
       courtLabel: court.label,
       totalPriceCents: pricing.totalPriceCents,
       currency: pricing.currency,
+      pricingWarnings: pricing.pricingWarnings,
     };
   }
 
@@ -594,7 +664,7 @@ export class ReservationService implements IReservationService {
     const endTime = addMinutes(startTime, data.durationMinutes);
     const courtIds = activeCourts.map((court) => court.id);
 
-    const [hoursWindows, rateRules, overrides, reservations, blocks] =
+    const [hoursWindows, rateRules, overrides, reservations, blocks, addons] =
       await Promise.all([
         this.courtHoursRepository.findByCourtIds(courtIds),
         this.courtRateRuleRepository.findByCourtIds(courtIds),
@@ -613,7 +683,12 @@ export class ReservationService implements IReservationService {
           startTime,
           endTime,
         ),
+        this.courtAddonRepository.findActiveByCourtIds(courtIds),
       ]);
+
+    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
+      addons.map((addon) => addon.id),
+    );
 
     const hasBlockingReservation = new Set(
       reservations.map((reservation) => reservation.courtId),
@@ -634,16 +709,40 @@ export class ReservationService implements IReservationService {
         (override) => override.courtId === court.id,
       );
 
-      const pricing = computeSchedulePrice({
+      const courtAddons = addons
+        .filter((addon) => addon.courtId === court.id)
+        .map((addon) => ({
+          addon,
+          rules: addonRules.filter((rule) => rule.addonId === addon.id),
+        }));
+
+      const pricingDetailed = computeSchedulePriceDetailed({
         startTime,
         durationMinutes: data.durationMinutes,
         timeZone: place.timeZone,
         hoursWindows: courtHours,
         rateRules: courtRules,
         priceOverrides: courtOverrides,
+        addons: courtAddons,
+        selectedAddonIds: data.selectedAddonIds,
+        enableAddonPricing: env.ENABLE_ADDON_PRICING_V2 !== false,
       });
 
+      const pricing = pricingDetailed.result;
+
       if (!pricing) continue;
+
+      if (pricing.warnings.length > 0) {
+        logger.warn(
+          {
+            event: "reservation.any_court_pricing_addon_warnings",
+            courtId: court.id,
+            warningCodes: pricing.warnings.map((warning) => warning.code),
+            warningCount: pricing.warnings.length,
+          },
+          "Any-court pricing completed with addon warnings",
+        );
+      }
 
       const candidate: CourtAvailabilitySelection = {
         courtId: court.id,
@@ -652,6 +751,7 @@ export class ReservationService implements IReservationService {
         endTime: pricing.endTime,
         totalPriceCents: pricing.totalPriceCents,
         currency: pricing.currency,
+        pricingWarnings: pricing.warnings.map((warning) => warning.message),
       };
 
       selected = selected
@@ -784,6 +884,7 @@ export class ReservationService implements IReservationService {
       courtLabel: selected.courtLabel,
       totalPriceCents: selected.totalPriceCents,
       currency: selected.currency,
+      pricingWarnings: selected.pricingWarnings,
     };
   }
 

@@ -468,6 +468,7 @@ interface UsePlaceAvailabilityOptions {
   place?: PlaceDetail;
   sportId?: string;
   courtId?: string;
+  selectedAddonIds?: string[];
   date?: Date;
   durationMinutes: number;
   mode: "any" | "court";
@@ -492,6 +493,7 @@ export function useModPlaceAvailability({
   place,
   sportId,
   courtId,
+  selectedAddonIds,
   date,
   durationMinutes,
   mode,
@@ -509,6 +511,7 @@ export function useModPlaceAvailability({
       date: dateIso,
       durationMinutes: safeDuration,
       includeUnavailable,
+      selectedAddonIds,
     },
     {
       enabled:
@@ -530,6 +533,7 @@ export function useModPlaceAvailability({
       durationMinutes: safeDuration,
       includeUnavailable,
       includeCourtOptions,
+      selectedAddonIds,
     },
     {
       enabled:

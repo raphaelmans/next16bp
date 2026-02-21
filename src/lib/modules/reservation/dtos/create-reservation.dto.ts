@@ -17,6 +17,7 @@ export const CreateReservationForCourtSchema = z.object({
   courtId: S.ids.courtId,
   startTime: BookingWindowStartTimeSchema,
   durationMinutes: S.availability.durationMinutes,
+  selectedAddonIds: z.array(S.ids.generic).max(20).optional(),
 });
 
 export const CreateReservationForAnyCourtSchema = z.object({
@@ -24,6 +25,7 @@ export const CreateReservationForAnyCourtSchema = z.object({
   sportId: S.ids.sportId,
   startTime: BookingWindowStartTimeSchema,
   durationMinutes: S.availability.durationMinutes,
+  selectedAddonIds: z.array(S.ids.generic).max(20).optional(),
 });
 
 export type CreateReservationForCourtDTO = z.infer<

@@ -58,6 +58,10 @@ export const env = createEnv({
       .string()
       .transform((v) => v !== "false")
       .optional(),
+    ENABLE_ADDON_PRICING_V2: z
+      .string()
+      .transform((v) => v !== "false")
+      .optional(),
     EXPO_PUSH_ACCESS_TOKEN: z.preprocess(
       (v) => (v === "" ? undefined : v),
       z.string().min(1).optional(),
