@@ -403,6 +403,10 @@ export default function OwnerPlacesPage() {
                     <VenueQrCodeDialog
                       venueName={place.name}
                       venueSlugOrId={place.slug ?? place.id}
+                      venueAddress={place.address}
+                      venueCity={place.city}
+                      venueSports={place.sports.map((s) => s.name)}
+                      venueCourtCount={place.courtCount}
                     />
                   </div>
                 </CardContent>

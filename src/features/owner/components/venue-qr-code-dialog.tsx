@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, Download, QrCode, Share2 } from "lucide-react";
+import { Copy, Download, MapPin, QrCode, Share2 } from "lucide-react";
 import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { appRoutes } from "@/common/app-routes";
@@ -20,9 +20,20 @@ import { env } from "@/lib/env";
 type VenueQrCodeDialogProps = {
   venueName: string;
   venueSlugOrId: string;
+  venueAddress?: string;
+  venueCity?: string;
+  venueSports?: string[];
+  venueCourtCount?: number;
 };
 
 const QR_SIZE = 280;
+const LOGO_SIZE = 48;
+const QR_IMAGE_SETTINGS = {
+  src: "/logo.png",
+  height: LOGO_SIZE,
+  width: LOGO_SIZE,
+  excavate: true,
+} as const;
 
 const createBaseFileName = (venueName: string) => {
   const normalized = venueName
@@ -65,6 +76,10 @@ const canvasToPngBlob = (canvas: HTMLCanvasElement) => {
 export function VenueQrCodeDialog({
   venueName,
   venueSlugOrId,
+  venueAddress,
+  venueCity,
+  venueSports,
+  venueCourtCount,
 }: VenueQrCodeDialogProps) {
   const canvasWrapperRef = useRef<HTMLDivElement | null>(null);
   const svgWrapperRef = useRef<HTMLDivElement | null>(null);
@@ -224,28 +239,72 @@ export function VenueQrCodeDialog({
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="rounded-lg border bg-white p-4">
-            <div ref={canvasWrapperRef} className="mx-auto w-fit">
-              <QRCodeCanvas
-                value={publicUrl}
-                size={QR_SIZE}
-                level="M"
-                marginSize={4}
-                bgColor="#FFFFFF"
-                fgColor="#000000"
-                title={qrTitle}
-              />
+          <div className="overflow-hidden rounded-lg border bg-white">
+            <div className="h-1.5 bg-gradient-to-r from-teal-700 to-teal-500" />
+
+            <div className="px-4 pt-4 pb-3">
+              <div ref={canvasWrapperRef} className="mx-auto w-fit">
+                <QRCodeCanvas
+                  value={publicUrl}
+                  size={QR_SIZE}
+                  level="H"
+                  marginSize={4}
+                  bgColor="#FFFFFF"
+                  fgColor="#000000"
+                  title={qrTitle}
+                  imageSettings={QR_IMAGE_SETTINGS}
+                />
+              </div>
+              <div ref={svgWrapperRef} className="hidden" aria-hidden>
+                <QRCodeSVG
+                  value={publicUrl}
+                  size={QR_SIZE}
+                  level="H"
+                  marginSize={4}
+                  bgColor="#FFFFFF"
+                  fgColor="#000000"
+                  title={qrTitle}
+                  imageSettings={QR_IMAGE_SETTINGS}
+                />
+              </div>
             </div>
-            <div ref={svgWrapperRef} className="hidden" aria-hidden>
-              <QRCodeSVG
-                value={publicUrl}
-                size={QR_SIZE}
-                level="M"
-                marginSize={4}
-                bgColor="#FFFFFF"
-                fgColor="#000000"
-                title={qrTitle}
-              />
+
+            <div className="space-y-1.5 border-t bg-stone-50 px-4 py-3">
+              <p className="font-heading text-sm font-semibold text-stone-900">
+                {venueName}
+              </p>
+              {venueAddress && (
+                <p className="flex items-start gap-1 text-xs text-stone-500">
+                  <MapPin className="mt-0.5 h-3 w-3 shrink-0" />
+                  <span>
+                    {venueAddress}
+                    {venueCity ? `, ${venueCity}` : ""}
+                  </span>
+                </p>
+              )}
+              {((venueSports && venueSports.length > 0) ||
+                (venueCourtCount != null && venueCourtCount > 0)) && (
+                <p className="text-xs text-stone-400">
+                  {venueSports && venueSports.length > 0
+                    ? venueSports.join(", ")
+                    : ""}
+                  {venueSports &&
+                    venueSports.length > 0 &&
+                    venueCourtCount != null &&
+                    venueCourtCount > 0 &&
+                    " · "}
+                  {venueCourtCount != null && venueCourtCount > 0
+                    ? `${venueCourtCount} ${venueCourtCount === 1 ? "court" : "courts"}`
+                    : ""}
+                </p>
+              )}
+              <div className="flex items-center justify-center gap-1.5 pt-1">
+                <div className="h-px flex-1 bg-stone-200" />
+                <span className="font-heading text-[10px] font-semibold tracking-wider text-stone-300 uppercase">
+                  KudosCourts
+                </span>
+                <div className="h-px flex-1 bg-stone-200" />
+              </div>
             </div>
           </div>
 
