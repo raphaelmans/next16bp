@@ -5,12 +5,29 @@ import { toAppError as defaultToAppError } from "@/common/errors/to-app-error";
 import { callTrpcMutation, callTrpcQuery } from "@/common/trpc-client-call";
 import { getClientApi, type TrpcClientApi } from "@/trpc/client-api";
 
+type ProcedureFn<TProcedure> = TProcedure extends (
+  input: infer TInput,
+  ...rest: infer _TRest
+) => Promise<infer TResult>
+  ? (input?: TInput) => Promise<TResult>
+  : never;
+
 export interface ISupportChatApi {
-  mutSupportChatBackfillClaimThreads: (input?: unknown) => Promise<unknown>;
-  mutSupportChatSendClaimMessage: (input?: unknown) => Promise<unknown>;
-  mutSupportChatSendVerificationMessage: (input?: unknown) => Promise<unknown>;
-  querySupportChatGetClaimSession: (input?: unknown) => Promise<unknown>;
-  querySupportChatGetVerificationSession: (input?: unknown) => Promise<unknown>;
+  mutSupportChatBackfillClaimThreads: ProcedureFn<
+    TrpcClientApi["supportChat"]["backfillClaimThreads"]["mutate"]
+  >;
+  mutSupportChatSendClaimMessage: ProcedureFn<
+    TrpcClientApi["supportChat"]["sendClaimMessage"]["mutate"]
+  >;
+  mutSupportChatSendVerificationMessage: ProcedureFn<
+    TrpcClientApi["supportChat"]["sendVerificationMessage"]["mutate"]
+  >;
+  querySupportChatGetClaimSession: ProcedureFn<
+    TrpcClientApi["supportChat"]["getClaimSession"]["query"]
+  >;
+  querySupportChatGetVerificationSession: ProcedureFn<
+    TrpcClientApi["supportChat"]["getVerificationSession"]["query"]
+  >;
 }
 
 export type SupportChatApiDeps = {
@@ -27,7 +44,9 @@ export class SupportChatApi {
     this.toAppError = deps.toAppError ?? defaultToAppError;
   }
 
-  mutSupportChatBackfillClaimThreads = async (input?: unknown) =>
+  mutSupportChatBackfillClaimThreads: ProcedureFn<
+    TrpcClientApi["supportChat"]["backfillClaimThreads"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["supportChat", "backfillClaimThreads"],
@@ -36,7 +55,9 @@ export class SupportChatApi {
       this.toAppError,
     );
 
-  mutSupportChatSendClaimMessage = async (input?: unknown) =>
+  mutSupportChatSendClaimMessage: ProcedureFn<
+    TrpcClientApi["supportChat"]["sendClaimMessage"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["supportChat", "sendClaimMessage"],
@@ -45,7 +66,9 @@ export class SupportChatApi {
       this.toAppError,
     );
 
-  mutSupportChatSendVerificationMessage = async (input?: unknown) =>
+  mutSupportChatSendVerificationMessage: ProcedureFn<
+    TrpcClientApi["supportChat"]["sendVerificationMessage"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["supportChat", "sendVerificationMessage"],
@@ -54,7 +77,9 @@ export class SupportChatApi {
       this.toAppError,
     );
 
-  querySupportChatGetClaimSession = async (input?: unknown) =>
+  querySupportChatGetClaimSession: ProcedureFn<
+    TrpcClientApi["supportChat"]["getClaimSession"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["supportChat", "getClaimSession"],
@@ -63,7 +88,9 @@ export class SupportChatApi {
       this.toAppError,
     );
 
-  querySupportChatGetVerificationSession = async (input?: unknown) =>
+  querySupportChatGetVerificationSession: ProcedureFn<
+    TrpcClientApi["supportChat"]["getVerificationSession"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["supportChat", "getVerificationSession"],

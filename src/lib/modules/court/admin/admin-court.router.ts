@@ -160,4 +160,15 @@ export const adminCourtRouter = router({
     const service = makeAdminCourtService();
     return service.getStats();
   }),
+
+  /**
+   * Get onboarding status for a place (verification + per-court config)
+   * Admin only
+   */
+  getOnboardingStatus: adminProcedure
+    .input(AdminCourtDetailSchema)
+    .query(async ({ input, ctx }) => {
+      const service = makeAdminCourtService();
+      return service.getPlaceOnboardingStatus(ctx.userId, input);
+    }),
 });

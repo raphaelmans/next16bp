@@ -353,7 +353,7 @@ export function useMutReorderCourtPhotos(_courtId: string) {
 }
 
 export function useQueryOwnerCourtById(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.queryCourtManagementGetById>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -365,7 +365,7 @@ export function useQueryOwnerCourtById(
 }
 
 export function useQueryOwnerSports(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.querySportList>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -377,7 +377,7 @@ export function useQueryOwnerSports(
 }
 
 export function useQueryOwnerCourtBlocksForRange(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.queryCourtBlockListForCourtRange>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -389,7 +389,9 @@ export function useQueryOwnerCourtBlocksForRange(
 }
 
 export function useQueryOwnerActiveReservationsForCourtRange(
-  input?: unknown,
+  input?: Parameters<
+    typeof ownerApi.queryReservationOwnerGetActiveForCourtRange
+  >[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -423,7 +425,7 @@ export function useMutOwnerCourtBlockCancel(options?: Record<string, unknown>) {
 }
 
 export function useQueryOwnerGuestProfiles(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.queryGuestProfileList>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(

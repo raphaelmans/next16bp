@@ -5,21 +5,50 @@ import { toAppError as defaultToAppError } from "@/common/errors/to-app-error";
 import { callTrpcMutation, callTrpcQuery } from "@/common/trpc-client-call";
 import { getClientApi, type TrpcClientApi } from "@/trpc/client-api";
 
+type ProcedureFn<TProcedure> = TProcedure extends (
+  input: infer TInput,
+  ...rest: infer _TRest
+) => Promise<infer TResult>
+  ? (input?: TInput) => Promise<TResult>
+  : never;
+
 export interface IDiscoveryApi {
-  mutClaimRequestSubmitClaim: (input?: unknown) => Promise<unknown>;
-  mutClaimRequestSubmitGuestRemoval: (input?: unknown) => Promise<unknown>;
-  queryAvailabilityGetForCourt: (input?: unknown) => Promise<unknown>;
-  queryAvailabilityGetForCourtRange: (input?: unknown) => Promise<unknown>;
-  queryAvailabilityGetForPlaceSport: (input?: unknown) => Promise<unknown>;
-  queryAvailabilityGetForPlaceSportRange: (input?: unknown) => Promise<unknown>;
-  queryCourtGetById: (input?: unknown) => Promise<unknown>;
-  queryOrganizationMy: (input?: unknown) => Promise<unknown>;
-  queryPlaceGetByIdOrSlug: (input?: unknown) => Promise<unknown>;
-  queryPlaceList: (input?: unknown) => Promise<unknown>;
-  queryPlaceListSummary: (input?: unknown) => Promise<unknown>;
-  querySportList: (input?: unknown) => Promise<unknown>;
-  queryPlaceCardMediaByIds: (input?: unknown) => Promise<unknown>;
-  queryPlaceCardMetaByIds: (input?: unknown) => Promise<unknown>;
+  mutClaimRequestSubmitClaim: ProcedureFn<
+    TrpcClientApi["claimRequest"]["submitClaim"]["mutate"]
+  >;
+  mutClaimRequestSubmitGuestRemoval: ProcedureFn<
+    TrpcClientApi["claimRequest"]["submitGuestRemoval"]["mutate"]
+  >;
+  queryAvailabilityGetForCourt: ProcedureFn<
+    TrpcClientApi["availability"]["getForCourt"]["query"]
+  >;
+  queryAvailabilityGetForCourtRange: ProcedureFn<
+    TrpcClientApi["availability"]["getForCourtRange"]["query"]
+  >;
+  queryAvailabilityGetForPlaceSport: ProcedureFn<
+    TrpcClientApi["availability"]["getForPlaceSport"]["query"]
+  >;
+  queryAvailabilityGetForPlaceSportRange: ProcedureFn<
+    TrpcClientApi["availability"]["getForPlaceSportRange"]["query"]
+  >;
+  queryCourtGetById: ProcedureFn<TrpcClientApi["court"]["getById"]["query"]>;
+  queryOrganizationMy: ProcedureFn<
+    TrpcClientApi["organization"]["my"]["query"]
+  >;
+  queryPlaceGetByIdOrSlug: ProcedureFn<
+    TrpcClientApi["place"]["getByIdOrSlug"]["query"]
+  >;
+  queryPlaceList: ProcedureFn<TrpcClientApi["place"]["list"]["query"]>;
+  queryPlaceListSummary: ProcedureFn<
+    TrpcClientApi["place"]["listSummary"]["query"]
+  >;
+  querySportList: ProcedureFn<TrpcClientApi["sport"]["list"]["query"]>;
+  queryPlaceCardMediaByIds: ProcedureFn<
+    TrpcClientApi["place"]["cardMediaByIds"]["query"]
+  >;
+  queryPlaceCardMetaByIds: ProcedureFn<
+    TrpcClientApi["place"]["cardMetaByIds"]["query"]
+  >;
 }
 
 export type DiscoveryApiDeps = {
@@ -36,7 +65,9 @@ export class DiscoveryApi {
     this.toAppError = deps.toAppError ?? defaultToAppError;
   }
 
-  mutClaimRequestSubmitClaim = async (input?: unknown) =>
+  mutClaimRequestSubmitClaim: ProcedureFn<
+    TrpcClientApi["claimRequest"]["submitClaim"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["claimRequest", "submitClaim"],
@@ -45,7 +76,9 @@ export class DiscoveryApi {
       this.toAppError,
     );
 
-  mutClaimRequestSubmitGuestRemoval = async (input?: unknown) =>
+  mutClaimRequestSubmitGuestRemoval: ProcedureFn<
+    TrpcClientApi["claimRequest"]["submitGuestRemoval"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["claimRequest", "submitGuestRemoval"],
@@ -54,7 +87,9 @@ export class DiscoveryApi {
       this.toAppError,
     );
 
-  queryAvailabilityGetForCourt = async (input?: unknown) =>
+  queryAvailabilityGetForCourt: ProcedureFn<
+    TrpcClientApi["availability"]["getForCourt"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["availability", "getForCourt"],
@@ -63,7 +98,9 @@ export class DiscoveryApi {
       this.toAppError,
     );
 
-  queryAvailabilityGetForCourtRange = async (input?: unknown) =>
+  queryAvailabilityGetForCourtRange: ProcedureFn<
+    TrpcClientApi["availability"]["getForCourtRange"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["availability", "getForCourtRange"],
@@ -72,7 +109,9 @@ export class DiscoveryApi {
       this.toAppError,
     );
 
-  queryAvailabilityGetForPlaceSport = async (input?: unknown) =>
+  queryAvailabilityGetForPlaceSport: ProcedureFn<
+    TrpcClientApi["availability"]["getForPlaceSport"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["availability", "getForPlaceSport"],
@@ -81,7 +120,9 @@ export class DiscoveryApi {
       this.toAppError,
     );
 
-  queryAvailabilityGetForPlaceSportRange = async (input?: unknown) =>
+  queryAvailabilityGetForPlaceSportRange: ProcedureFn<
+    TrpcClientApi["availability"]["getForPlaceSportRange"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["availability", "getForPlaceSportRange"],
@@ -90,16 +131,19 @@ export class DiscoveryApi {
       this.toAppError,
     );
 
-  queryCourtGetById = async (input?: unknown) =>
-    callTrpcQuery(
-      this.clientApi,
-      ["court", "getById"],
-      (clientApi) => clientApi.court.getById.query,
-      input,
-      this.toAppError,
-    );
+  queryCourtGetById: ProcedureFn<TrpcClientApi["court"]["getById"]["query"]> =
+    async (input) =>
+      callTrpcQuery(
+        this.clientApi,
+        ["court", "getById"],
+        (clientApi) => clientApi.court.getById.query,
+        input,
+        this.toAppError,
+      );
 
-  queryOrganizationMy = async (input?: unknown) =>
+  queryOrganizationMy: ProcedureFn<
+    TrpcClientApi["organization"]["my"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["organization", "my"],
@@ -108,7 +152,9 @@ export class DiscoveryApi {
       this.toAppError,
     );
 
-  queryPlaceGetByIdOrSlug = async (input?: unknown) =>
+  queryPlaceGetByIdOrSlug: ProcedureFn<
+    TrpcClientApi["place"]["getByIdOrSlug"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["place", "getByIdOrSlug"],
@@ -117,7 +163,9 @@ export class DiscoveryApi {
       this.toAppError,
     );
 
-  queryPlaceList = async (input?: unknown) =>
+  queryPlaceList: ProcedureFn<TrpcClientApi["place"]["list"]["query"]> = async (
+    input,
+  ) =>
     callTrpcQuery(
       this.clientApi,
       ["place", "list"],
@@ -126,7 +174,9 @@ export class DiscoveryApi {
       this.toAppError,
     );
 
-  queryPlaceListSummary = async (input?: unknown) =>
+  queryPlaceListSummary: ProcedureFn<
+    TrpcClientApi["place"]["listSummary"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["place", "listSummary"],
@@ -135,7 +185,9 @@ export class DiscoveryApi {
       this.toAppError,
     );
 
-  querySportList = async (input?: unknown) =>
+  querySportList: ProcedureFn<TrpcClientApi["sport"]["list"]["query"]> = async (
+    input,
+  ) =>
     callTrpcQuery(
       this.clientApi,
       ["sport", "list"],
@@ -144,7 +196,9 @@ export class DiscoveryApi {
       this.toAppError,
     );
 
-  queryPlaceCardMediaByIds = async (input?: unknown) =>
+  queryPlaceCardMediaByIds: ProcedureFn<
+    TrpcClientApi["place"]["cardMediaByIds"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["place", "cardMediaByIds"],
@@ -153,7 +207,9 @@ export class DiscoveryApi {
       this.toAppError,
     );
 
-  queryPlaceCardMetaByIds = async (input?: unknown) =>
+  queryPlaceCardMetaByIds: ProcedureFn<
+    TrpcClientApi["place"]["cardMetaByIds"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["place", "cardMetaByIds"],

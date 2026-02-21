@@ -5,20 +5,49 @@ import { toAppError as defaultToAppError } from "@/common/errors/to-app-error";
 import { callTrpcMutation, callTrpcQuery } from "@/common/trpc-client-call";
 import { getClientApi, type TrpcClientApi } from "@/trpc/client-api";
 
+type ProcedureFn<TProcedure> = TProcedure extends (
+  input: infer TInput,
+  ...rest: infer _TRest
+) => Promise<infer TResult>
+  ? (input?: TInput) => Promise<TResult>
+  : never;
+
 export interface IReservationApi {
-  mutPaymentProofAdd: (input?: unknown) => Promise<unknown>;
-  mutPaymentProofUpload: (input?: unknown) => Promise<unknown>;
-  mutProfileUpdate: (input?: unknown) => Promise<unknown>;
-  mutProfileUploadAvatar: (input?: unknown) => Promise<unknown>;
-  mutReservationCancel: (input?: unknown) => Promise<unknown>;
-  mutReservationCreateForAnyCourt: (input?: unknown) => Promise<unknown>;
-  mutReservationCreateForCourt: (input?: unknown) => Promise<unknown>;
-  mutReservationMarkPayment: (input?: unknown) => Promise<unknown>;
-  queryProfileMe: (input?: unknown) => Promise<unknown>;
-  queryReservationGetById: (input?: unknown) => Promise<unknown>;
-  queryReservationGetDetail: (input?: unknown) => Promise<unknown>;
-  queryReservationGetMyWithDetails: (input?: unknown) => Promise<unknown>;
-  queryReservationGetPaymentInfo: (input?: unknown) => Promise<unknown>;
+  mutPaymentProofAdd: ProcedureFn<
+    TrpcClientApi["paymentProof"]["add"]["mutate"]
+  >;
+  mutPaymentProofUpload: ProcedureFn<
+    TrpcClientApi["paymentProof"]["upload"]["mutate"]
+  >;
+  mutProfileUpdate: ProcedureFn<TrpcClientApi["profile"]["update"]["mutate"]>;
+  mutProfileUploadAvatar: ProcedureFn<
+    TrpcClientApi["profile"]["uploadAvatar"]["mutate"]
+  >;
+  mutReservationCancel: ProcedureFn<
+    TrpcClientApi["reservation"]["cancel"]["mutate"]
+  >;
+  mutReservationCreateForAnyCourt: ProcedureFn<
+    TrpcClientApi["reservation"]["createForAnyCourt"]["mutate"]
+  >;
+  mutReservationCreateForCourt: ProcedureFn<
+    TrpcClientApi["reservation"]["createForCourt"]["mutate"]
+  >;
+  mutReservationMarkPayment: ProcedureFn<
+    TrpcClientApi["reservation"]["markPayment"]["mutate"]
+  >;
+  queryProfileMe: ProcedureFn<TrpcClientApi["profile"]["me"]["query"]>;
+  queryReservationGetById: ProcedureFn<
+    TrpcClientApi["reservation"]["getById"]["query"]
+  >;
+  queryReservationGetDetail: ProcedureFn<
+    TrpcClientApi["reservation"]["getDetail"]["query"]
+  >;
+  queryReservationGetMyWithDetails: ProcedureFn<
+    TrpcClientApi["reservation"]["getMyWithDetails"]["query"]
+  >;
+  queryReservationGetPaymentInfo: ProcedureFn<
+    TrpcClientApi["reservation"]["getPaymentInfo"]["query"]
+  >;
 }
 
 export type ReservationApiDeps = {
@@ -35,7 +64,9 @@ export class ReservationApi {
     this.toAppError = deps.toAppError ?? defaultToAppError;
   }
 
-  mutPaymentProofAdd = async (input?: unknown) =>
+  mutPaymentProofAdd: ProcedureFn<
+    TrpcClientApi["paymentProof"]["add"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["paymentProof", "add"],
@@ -44,7 +75,9 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  mutPaymentProofUpload = async (input?: unknown) =>
+  mutPaymentProofUpload: ProcedureFn<
+    TrpcClientApi["paymentProof"]["upload"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["paymentProof", "upload"],
@@ -53,16 +86,19 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  mutProfileUpdate = async (input?: unknown) =>
-    callTrpcMutation(
-      this.clientApi,
-      ["profile", "update"],
-      (clientApi) => clientApi.profile.update.mutate,
-      input,
-      this.toAppError,
-    );
+  mutProfileUpdate: ProcedureFn<TrpcClientApi["profile"]["update"]["mutate"]> =
+    async (input) =>
+      callTrpcMutation(
+        this.clientApi,
+        ["profile", "update"],
+        (clientApi) => clientApi.profile.update.mutate,
+        input,
+        this.toAppError,
+      );
 
-  mutProfileUploadAvatar = async (input?: unknown) =>
+  mutProfileUploadAvatar: ProcedureFn<
+    TrpcClientApi["profile"]["uploadAvatar"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["profile", "uploadAvatar"],
@@ -71,7 +107,9 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  mutReservationCancel = async (input?: unknown) =>
+  mutReservationCancel: ProcedureFn<
+    TrpcClientApi["reservation"]["cancel"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["reservation", "cancel"],
@@ -80,7 +118,9 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  mutReservationCreateForAnyCourt = async (input?: unknown) =>
+  mutReservationCreateForAnyCourt: ProcedureFn<
+    TrpcClientApi["reservation"]["createForAnyCourt"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["reservation", "createForAnyCourt"],
@@ -89,7 +129,9 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  mutReservationCreateForCourt = async (input?: unknown) =>
+  mutReservationCreateForCourt: ProcedureFn<
+    TrpcClientApi["reservation"]["createForCourt"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["reservation", "createForCourt"],
@@ -98,7 +140,9 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  mutReservationMarkPayment = async (input?: unknown) =>
+  mutReservationMarkPayment: ProcedureFn<
+    TrpcClientApi["reservation"]["markPayment"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["reservation", "markPayment"],
@@ -107,7 +151,9 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  queryProfileMe = async (input?: unknown) =>
+  queryProfileMe: ProcedureFn<TrpcClientApi["profile"]["me"]["query"]> = async (
+    input,
+  ) =>
     callTrpcQuery(
       this.clientApi,
       ["profile", "me"],
@@ -116,7 +162,9 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  queryReservationGetById = async (input?: unknown) =>
+  queryReservationGetById: ProcedureFn<
+    TrpcClientApi["reservation"]["getById"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["reservation", "getById"],
@@ -125,7 +173,9 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  queryReservationGetDetail = async (input?: unknown) =>
+  queryReservationGetDetail: ProcedureFn<
+    TrpcClientApi["reservation"]["getDetail"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["reservation", "getDetail"],
@@ -134,7 +184,9 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  queryReservationGetMyWithDetails = async (input?: unknown) =>
+  queryReservationGetMyWithDetails: ProcedureFn<
+    TrpcClientApi["reservation"]["getMyWithDetails"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["reservation", "getMyWithDetails"],
@@ -143,7 +195,9 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  queryReservationGetPaymentInfo = async (input?: unknown) =>
+  queryReservationGetPaymentInfo: ProcedureFn<
+    TrpcClientApi["reservation"]["getPaymentInfo"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["reservation", "getPaymentInfo"],

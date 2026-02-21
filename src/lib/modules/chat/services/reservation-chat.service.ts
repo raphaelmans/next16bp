@@ -12,6 +12,7 @@ import { ReservationNotFoundError } from "@/lib/modules/reservation/errors/reser
 import type { IReservationRepository } from "@/lib/modules/reservation/repositories/reservation.repository";
 import { getContainer } from "@/lib/shared/infra/container";
 import {
+  chatInboxArchive,
   court,
   organization,
   place,
@@ -424,6 +425,9 @@ export class ReservationChatService {
   async getThreadMetas(
     userId: string,
     reservationIds: string[],
+    options?: {
+      includeArchived?: boolean;
+    },
     ctx?: RequestContext,
   ): Promise<
     Array<{
@@ -474,24 +478,77 @@ export class ReservationChatService {
         ),
       );
 
-    return rows.map((r: (typeof rows)[number]) => ({
-      reservationId: r.reservationId,
-      status: r.status,
-      placeName: r.placeName,
-      timeZone: r.timeZone,
-      courtLabel: r.courtLabel,
-      playerDisplayName: r.playerDisplayName ?? "Player",
-      ownerDisplayName: r.ownerDisplayName,
-      updatedAtIso:
-        r.updatedAt instanceof Date
-          ? r.updatedAt.toISOString()
-          : String(r.updatedAt),
-      startTimeIso:
-        r.startTime instanceof Date
-          ? r.startTime.toISOString()
-          : String(r.startTime),
-      endTimeIso:
-        r.endTime instanceof Date ? r.endTime.toISOString() : String(r.endTime),
-    }));
+    const shouldIncludeArchived = options?.includeArchived === true;
+
+    const archivedThreadIds = new Set<string>();
+    if (!shouldIncludeArchived) {
+      const threadIds = rows.map((row) => `res-${row.reservationId}`);
+      if (threadIds.length > 0) {
+        const archivedRows = await client
+          .select({ threadId: chatInboxArchive.threadId })
+          .from(chatInboxArchive)
+          .where(
+            and(
+              eq(chatInboxArchive.userId, userId),
+              eq(chatInboxArchive.threadKind, "reservation"),
+              inArray(chatInboxArchive.threadId, threadIds),
+            ),
+          );
+
+        for (const archivedRow of archivedRows) {
+          archivedThreadIds.add(archivedRow.threadId);
+        }
+      }
+    }
+
+    return rows
+      .filter((row) => {
+        if (shouldIncludeArchived) {
+          return true;
+        }
+
+        if (archivedThreadIds.has(`res-${row.reservationId}`)) {
+          return false;
+        }
+
+        if (
+          row.status === "CREATED" ||
+          row.status === "AWAITING_PAYMENT" ||
+          row.status === "PAYMENT_MARKED_BY_USER"
+        ) {
+          return true;
+        }
+
+        if (row.status === "CONFIRMED") {
+          const endTime =
+            row.endTime instanceof Date
+              ? row.endTime
+              : new Date(String(row.endTime));
+          return endTime.getTime() >= Date.now();
+        }
+
+        return false;
+      })
+      .map((r: (typeof rows)[number]) => ({
+        reservationId: r.reservationId,
+        status: r.status,
+        placeName: r.placeName,
+        timeZone: r.timeZone,
+        courtLabel: r.courtLabel,
+        playerDisplayName: r.playerDisplayName ?? "Player",
+        ownerDisplayName: r.ownerDisplayName,
+        updatedAtIso:
+          r.updatedAt instanceof Date
+            ? r.updatedAt.toISOString()
+            : String(r.updatedAt),
+        startTimeIso:
+          r.startTime instanceof Date
+            ? r.startTime.toISOString()
+            : String(r.startTime),
+        endTimeIso:
+          r.endTime instanceof Date
+            ? r.endTime.toISOString()
+            : String(r.endTime),
+      }));
   }
 }

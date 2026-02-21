@@ -103,12 +103,15 @@ export const reservationChatRouter = router({
     .input(
       z.object({
         reservationIds: z.array(S.ids.generic).max(30),
+        includeArchived: z.boolean().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
       try {
         const service = makeReservationChatService();
-        return await service.getThreadMetas(ctx.userId, input.reservationIds);
+        return await service.getThreadMetas(ctx.userId, input.reservationIds, {
+          includeArchived: input.includeArchived,
+        });
       } catch (error) {
         handleReservationChatError(error);
       }

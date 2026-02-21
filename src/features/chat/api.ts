@@ -5,18 +5,54 @@ import { toAppError as defaultToAppError } from "@/common/errors/to-app-error";
 import { callTrpcMutation, callTrpcQuery } from "@/common/trpc-client-call";
 import { getClientApi, type TrpcClientApi } from "@/trpc/client-api";
 
+type ProcedureFn<TProcedure> = TProcedure extends (
+  input: infer TInput,
+  ...rest: infer _TRest
+) => Promise<infer TResult>
+  ? (input?: TInput) => Promise<TResult>
+  : never;
+
 export interface IChatApi {
-  queryChatGetAuth: (input?: unknown) => Promise<unknown>;
-  queryChatPocGetAuth: (input?: unknown) => Promise<unknown>;
-  mutChatPocGetOrCreateDm: (input?: unknown) => Promise<unknown>;
-  queryReservationChatGetSession: (input?: unknown) => Promise<unknown>;
-  mutReservationChatSendMessage: (input?: unknown) => Promise<unknown>;
-  queryReservationChatGetThreadMetas: (input?: unknown) => Promise<unknown>;
-  mutSupportChatBackfillClaimThreads: (input?: unknown) => Promise<unknown>;
-  mutSupportChatSendClaimMessage: (input?: unknown) => Promise<unknown>;
-  mutSupportChatSendVerificationMessage: (input?: unknown) => Promise<unknown>;
-  querySupportChatGetClaimSession: (input?: unknown) => Promise<unknown>;
-  querySupportChatGetVerificationSession: (input?: unknown) => Promise<unknown>;
+  queryChatGetAuth: ProcedureFn<TrpcClientApi["chat"]["getAuth"]["query"]>;
+  queryChatPocGetAuth: ProcedureFn<
+    TrpcClientApi["chatPoc"]["getAuth"]["query"]
+  >;
+  mutChatPocGetOrCreateDm: ProcedureFn<
+    TrpcClientApi["chatPoc"]["getOrCreateDm"]["mutate"]
+  >;
+  queryReservationChatGetSession: ProcedureFn<
+    TrpcClientApi["reservationChat"]["getSession"]["query"]
+  >;
+  mutReservationChatSendMessage: ProcedureFn<
+    TrpcClientApi["reservationChat"]["sendMessage"]["mutate"]
+  >;
+  queryReservationChatGetThreadMetas: ProcedureFn<
+    TrpcClientApi["reservationChat"]["getThreadMetas"]["query"]
+  >;
+  mutSupportChatBackfillClaimThreads: ProcedureFn<
+    TrpcClientApi["supportChat"]["backfillClaimThreads"]["mutate"]
+  >;
+  mutSupportChatSendClaimMessage: ProcedureFn<
+    TrpcClientApi["supportChat"]["sendClaimMessage"]["mutate"]
+  >;
+  mutSupportChatSendVerificationMessage: ProcedureFn<
+    TrpcClientApi["supportChat"]["sendVerificationMessage"]["mutate"]
+  >;
+  querySupportChatGetClaimSession: ProcedureFn<
+    TrpcClientApi["supportChat"]["getClaimSession"]["query"]
+  >;
+  querySupportChatGetVerificationSession: ProcedureFn<
+    TrpcClientApi["supportChat"]["getVerificationSession"]["query"]
+  >;
+  mutChatInboxArchiveThread: ProcedureFn<
+    TrpcClientApi["chatInbox"]["archiveThread"]["mutate"]
+  >;
+  mutChatInboxUnarchiveThread: ProcedureFn<
+    TrpcClientApi["chatInbox"]["unarchiveThread"]["mutate"]
+  >;
+  queryChatInboxListArchivedThreadIds: ProcedureFn<
+    TrpcClientApi["chatInbox"]["listArchivedThreadIds"]["query"]
+  >;
 }
 
 export type ChatApiDeps = {
@@ -33,16 +69,19 @@ export class ChatApi {
     this.toAppError = deps.toAppError ?? defaultToAppError;
   }
 
-  queryChatGetAuth = async (input?: unknown) =>
-    callTrpcQuery(
-      this.clientApi,
-      ["chat", "getAuth"],
-      (clientApi) => clientApi.chat.getAuth.query,
-      input,
-      this.toAppError,
-    );
+  queryChatGetAuth: ProcedureFn<TrpcClientApi["chat"]["getAuth"]["query"]> =
+    async (input) =>
+      callTrpcQuery(
+        this.clientApi,
+        ["chat", "getAuth"],
+        (clientApi) => clientApi.chat.getAuth.query,
+        input,
+        this.toAppError,
+      );
 
-  queryChatPocGetAuth = async (input?: unknown) =>
+  queryChatPocGetAuth: ProcedureFn<
+    TrpcClientApi["chatPoc"]["getAuth"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["chatPoc", "getAuth"],
@@ -51,7 +90,9 @@ export class ChatApi {
       this.toAppError,
     );
 
-  mutChatPocGetOrCreateDm = async (input?: unknown) =>
+  mutChatPocGetOrCreateDm: ProcedureFn<
+    TrpcClientApi["chatPoc"]["getOrCreateDm"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["chatPoc", "getOrCreateDm"],
@@ -60,7 +101,9 @@ export class ChatApi {
       this.toAppError,
     );
 
-  queryReservationChatGetSession = async (input?: unknown) =>
+  queryReservationChatGetSession: ProcedureFn<
+    TrpcClientApi["reservationChat"]["getSession"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["reservationChat", "getSession"],
@@ -69,7 +112,9 @@ export class ChatApi {
       this.toAppError,
     );
 
-  mutReservationChatSendMessage = async (input?: unknown) =>
+  mutReservationChatSendMessage: ProcedureFn<
+    TrpcClientApi["reservationChat"]["sendMessage"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["reservationChat", "sendMessage"],
@@ -78,7 +123,9 @@ export class ChatApi {
       this.toAppError,
     );
 
-  queryReservationChatGetThreadMetas = async (input?: unknown) =>
+  queryReservationChatGetThreadMetas: ProcedureFn<
+    TrpcClientApi["reservationChat"]["getThreadMetas"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["reservationChat", "getThreadMetas"],
@@ -87,7 +134,9 @@ export class ChatApi {
       this.toAppError,
     );
 
-  mutSupportChatBackfillClaimThreads = async (input?: unknown) =>
+  mutSupportChatBackfillClaimThreads: ProcedureFn<
+    TrpcClientApi["supportChat"]["backfillClaimThreads"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["supportChat", "backfillClaimThreads"],
@@ -96,7 +145,9 @@ export class ChatApi {
       this.toAppError,
     );
 
-  mutSupportChatSendClaimMessage = async (input?: unknown) =>
+  mutSupportChatSendClaimMessage: ProcedureFn<
+    TrpcClientApi["supportChat"]["sendClaimMessage"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["supportChat", "sendClaimMessage"],
@@ -105,7 +156,9 @@ export class ChatApi {
       this.toAppError,
     );
 
-  mutSupportChatSendVerificationMessage = async (input?: unknown) =>
+  mutSupportChatSendVerificationMessage: ProcedureFn<
+    TrpcClientApi["supportChat"]["sendVerificationMessage"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["supportChat", "sendVerificationMessage"],
@@ -114,7 +167,9 @@ export class ChatApi {
       this.toAppError,
     );
 
-  querySupportChatGetClaimSession = async (input?: unknown) =>
+  querySupportChatGetClaimSession: ProcedureFn<
+    TrpcClientApi["supportChat"]["getClaimSession"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["supportChat", "getClaimSession"],
@@ -123,11 +178,46 @@ export class ChatApi {
       this.toAppError,
     );
 
-  querySupportChatGetVerificationSession = async (input?: unknown) =>
+  querySupportChatGetVerificationSession: ProcedureFn<
+    TrpcClientApi["supportChat"]["getVerificationSession"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["supportChat", "getVerificationSession"],
       (clientApi) => clientApi.supportChat.getVerificationSession.query,
+      input,
+      this.toAppError,
+    );
+
+  mutChatInboxArchiveThread: ProcedureFn<
+    TrpcClientApi["chatInbox"]["archiveThread"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["chatInbox", "archiveThread"],
+      (clientApi) => clientApi.chatInbox.archiveThread.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutChatInboxUnarchiveThread: ProcedureFn<
+    TrpcClientApi["chatInbox"]["unarchiveThread"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["chatInbox", "unarchiveThread"],
+      (clientApi) => clientApi.chatInbox.unarchiveThread.mutate,
+      input,
+      this.toAppError,
+    );
+
+  queryChatInboxListArchivedThreadIds: ProcedureFn<
+    TrpcClientApi["chatInbox"]["listArchivedThreadIds"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["chatInbox", "listArchivedThreadIds"],
+      (clientApi) => clientApi.chatInbox.listArchivedThreadIds.query,
       input,
       this.toAppError,
     );

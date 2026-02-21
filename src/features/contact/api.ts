@@ -5,8 +5,15 @@ import { toAppError as defaultToAppError } from "@/common/errors/to-app-error";
 import { callTrpcMutation } from "@/common/trpc-client-call";
 import { getClientApi, type TrpcClientApi } from "@/trpc/client-api";
 
+type ProcedureFn<TProcedure> = TProcedure extends (
+  input: infer TInput,
+  ...rest: infer _TRest
+) => Promise<infer TResult>
+  ? (input?: TInput) => Promise<TResult>
+  : never;
+
 export interface IContactApi {
-  mutContactSubmit: (input?: unknown) => Promise<unknown>;
+  mutContactSubmit: ProcedureFn<TrpcClientApi["contact"]["submit"]["mutate"]>;
 }
 
 export type ContactApiDeps = {
@@ -23,14 +30,15 @@ export class ContactApi {
     this.toAppError = deps.toAppError ?? defaultToAppError;
   }
 
-  mutContactSubmit = async (input?: unknown) =>
-    callTrpcMutation(
-      this.clientApi,
-      ["contact", "submit"],
-      (clientApi) => clientApi.contact.submit.mutate,
-      input,
-      this.toAppError,
-    );
+  mutContactSubmit: ProcedureFn<TrpcClientApi["contact"]["submit"]["mutate"]> =
+    async (input) =>
+      callTrpcMutation(
+        this.clientApi,
+        ["contact", "submit"],
+        (clientApi) => clientApi.contact.submit.mutate,
+        input,
+        this.toAppError,
+      );
 }
 
 export const createContactApi = (deps: ContactApiDeps = {}) =>

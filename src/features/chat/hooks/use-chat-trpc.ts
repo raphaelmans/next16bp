@@ -10,7 +10,7 @@ import { getChatApi } from "../api.runtime";
 const chatApi = getChatApi();
 
 export function useQueryChatAuth(
-  input?: unknown,
+  input?: Parameters<typeof chatApi.queryChatGetAuth>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -22,7 +22,7 @@ export function useQueryChatAuth(
 }
 
 export function useQueryChatPocAuth(
-  input?: unknown,
+  input?: Parameters<typeof chatApi.queryChatPocGetAuth>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -38,7 +38,7 @@ export function useMutChatPocGetOrCreateDm(options?: Record<string, unknown>) {
 }
 
 export function useQueryReservationChatSession(
-  input?: unknown,
+  input?: Parameters<typeof chatApi.queryReservationChatGetSession>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -56,7 +56,7 @@ export function useMutReservationChatSendMessage(
 }
 
 export function useQueryReservationChatThreadMetas(
-  input?: unknown,
+  input?: Parameters<typeof chatApi.queryReservationChatGetThreadMetas>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -92,7 +92,7 @@ export function useMutSupportChatSendVerificationMessage(
 }
 
 export function useQuerySupportChatClaimSession(
-  input?: unknown,
+  input?: Parameters<typeof chatApi.querySupportChatGetClaimSession>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -104,12 +104,36 @@ export function useQuerySupportChatClaimSession(
 }
 
 export function useQuerySupportChatVerificationSession(
-  input?: unknown,
+  input?: Parameters<typeof chatApi.querySupportChatGetVerificationSession>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
     ["supportChat", "getVerificationSession"],
     chatApi.querySupportChatGetVerificationSession,
+    input,
+    options,
+  );
+}
+
+export function useMutChatInboxArchiveThread(
+  options?: Record<string, unknown>,
+) {
+  return useFeatureMutation(chatApi.mutChatInboxArchiveThread, options);
+}
+
+export function useMutChatInboxUnarchiveThread(
+  options?: Record<string, unknown>,
+) {
+  return useFeatureMutation(chatApi.mutChatInboxUnarchiveThread, options);
+}
+
+export function useQueryChatInboxListArchivedThreadIds(
+  input?: Parameters<typeof chatApi.queryChatInboxListArchivedThreadIds>[0],
+  options?: Record<string, unknown>,
+) {
+  return useFeatureQuery(
+    ["chatInbox", "listArchivedThreadIds"],
+    chatApi.queryChatInboxListArchivedThreadIds,
     input,
     options,
   );
@@ -126,8 +150,18 @@ export function useModChatInvalidation() {
     ...args: Parameters<typeof cache.reservationChat.getThreadMetas.fetch>
   ) => cache.reservationChat.getThreadMetas.fetch(...args);
 
+  const invalidateChatInboxListArchivedThreadIds = (
+    ...args: Parameters<typeof cache.chatInbox.listArchivedThreadIds.invalidate>
+  ) => cache.chatInbox.listArchivedThreadIds.invalidate(...args);
+
+  const fetchChatInboxListArchivedThreadIds = (
+    ...args: Parameters<typeof cache.chatInbox.listArchivedThreadIds.fetch>
+  ) => cache.chatInbox.listArchivedThreadIds.fetch(...args);
+
   return {
     invalidateReservationThreadMetas,
     fetchReservationThreadMetas,
+    invalidateChatInboxListArchivedThreadIds,
+    fetchChatInboxListArchivedThreadIds,
   };
 }

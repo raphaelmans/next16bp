@@ -5,11 +5,22 @@ import { toAppError as defaultToAppError } from "@/common/errors/to-app-error";
 import { callTrpcQuery } from "@/common/trpc-client-call";
 import { getClientApi, type TrpcClientApi } from "@/trpc/client-api";
 
+type ProcedureFn<TProcedure> = TProcedure extends (
+  input: infer TInput,
+  ...rest: infer _TRest
+) => Promise<infer TResult>
+  ? (input?: TInput) => Promise<TResult>
+  : never;
+
 export interface IHomeApi {
-  queryOrganizationMy: (input?: unknown) => Promise<unknown>;
-  queryPlaceStats: (input?: unknown) => Promise<unknown>;
-  queryProfileMe: (input?: unknown) => Promise<unknown>;
-  queryReservationGetMyWithDetails: (input?: unknown) => Promise<unknown>;
+  queryOrganizationMy: ProcedureFn<
+    TrpcClientApi["organization"]["my"]["query"]
+  >;
+  queryPlaceStats: ProcedureFn<TrpcClientApi["place"]["stats"]["query"]>;
+  queryProfileMe: ProcedureFn<TrpcClientApi["profile"]["me"]["query"]>;
+  queryReservationGetMyWithDetails: ProcedureFn<
+    TrpcClientApi["reservation"]["getMyWithDetails"]["query"]
+  >;
 }
 
 export type HomeApiDeps = {
@@ -26,7 +37,9 @@ export class HomeApi {
     this.toAppError = deps.toAppError ?? defaultToAppError;
   }
 
-  queryOrganizationMy = async (input?: unknown) =>
+  queryOrganizationMy: ProcedureFn<
+    TrpcClientApi["organization"]["my"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["organization", "my"],
@@ -35,16 +48,19 @@ export class HomeApi {
       this.toAppError,
     );
 
-  queryPlaceStats = async (input?: unknown) =>
-    callTrpcQuery(
-      this.clientApi,
-      ["place", "stats"],
-      (clientApi) => clientApi.place.stats.query,
-      input,
-      this.toAppError,
-    );
+  queryPlaceStats: ProcedureFn<TrpcClientApi["place"]["stats"]["query"]> =
+    async (input) =>
+      callTrpcQuery(
+        this.clientApi,
+        ["place", "stats"],
+        (clientApi) => clientApi.place.stats.query,
+        input,
+        this.toAppError,
+      );
 
-  queryProfileMe = async (input?: unknown) =>
+  queryProfileMe: ProcedureFn<TrpcClientApi["profile"]["me"]["query"]> = async (
+    input,
+  ) =>
     callTrpcQuery(
       this.clientApi,
       ["profile", "me"],
@@ -53,7 +69,9 @@ export class HomeApi {
       this.toAppError,
     );
 
-  queryReservationGetMyWithDetails = async (input?: unknown) =>
+  queryReservationGetMyWithDetails: ProcedureFn<
+    TrpcClientApi["reservation"]["getMyWithDetails"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["reservation", "getMyWithDetails"],

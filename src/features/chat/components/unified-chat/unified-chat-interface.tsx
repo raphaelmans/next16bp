@@ -1,16 +1,19 @@
 "use client";
 
-import { ChevronDown, MessagesSquare, RefreshCw } from "lucide-react";
+import { ArchiveRestore, MessagesSquare, RefreshCw } from "lucide-react";
 import type * as React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMediaQuery } from "@/common/hooks/use-media-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sheet,
@@ -23,10 +26,19 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import {
+  formatSupportThreadTitle,
+  getSupportThreadKind,
+  getSupportThreadRequestId,
+  type SupportThreadKind,
+} from "../../domain";
+import {
+  useMutChatInboxArchiveThread,
+  useMutChatInboxUnarchiveThread,
   useMutSupportChatBackfillClaimThreads,
   useMutSupportChatSendClaimMessage,
   useMutSupportChatSendVerificationMessage,
   useQueryChatAuth,
+  useQueryChatInboxListArchivedThreadIds,
   useQuerySupportChatClaimSession,
   useQuerySupportChatVerificationSession,
 } from "../../hooks/use-chat-trpc";
@@ -38,7 +50,7 @@ import {
 } from "../chat-widget/reservation-inbox-widget";
 import { InboxFloatingSheet } from "../inbox-shell/inbox-floating-sheet";
 
-type SupportChatKind = "claim" | "verification";
+type SupportChatKind = SupportThreadKind;
 
 type SupportChannel = {
   id?: string;
@@ -86,37 +98,6 @@ function writeLocalStorage(key: string, value: string) {
   }
 }
 
-function getSupportKind(
-  channelId: string | null | undefined,
-): SupportChatKind | null {
-  const id = channelId ?? "";
-  if (id.startsWith("cr-")) return "claim";
-  if (id.startsWith("vr-")) return "verification";
-  return null;
-}
-
-function formatThreadTitle(channelId: string): string {
-  const kind = getSupportKind(channelId);
-  const short = channelId
-    .replace(/^cr-/, "")
-    .replace(/^vr-/, "")
-    .slice(0, 8)
-    .toUpperCase();
-  return kind === "claim"
-    ? `Claim • CR-${short}`
-    : `Verification • VR-${short}`;
-}
-
-function getSupportRequestId(
-  channelId: string | null | undefined,
-): string | null {
-  const id = channelId ?? "";
-  if (id.startsWith("cr-") || id.startsWith("vr-")) {
-    return id.slice(3);
-  }
-  return null;
-}
-
 function UnifiedSupportInbox() {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const isSmall = useMediaQuery("(min-width: 640px)");
@@ -130,7 +111,8 @@ function UnifiedSupportInbox() {
   const [channels, setChannels] = useState<SupportChannel[]>([]);
   const [activeChannelId, setActiveChannelId] = useState<string | null>(null);
   const [isLoadingChannels, setIsLoadingChannels] = useState(false);
-  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archivedDialogOpen, setArchivedDialogOpen] = useState(false);
+  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
 
   const authQuery = useQueryChatAuth();
@@ -138,6 +120,12 @@ function UnifiedSupportInbox() {
   const sendClaimMessageMutation = useMutSupportChatSendClaimMessage();
   const sendVerificationMessageMutation =
     useMutSupportChatSendVerificationMessage();
+  const archiveThreadMutation = useMutChatInboxArchiveThread();
+  const unarchiveThreadMutation = useMutChatInboxUnarchiveThread();
+  const archivedThreadIdsQuery = useQueryChatInboxListArchivedThreadIds(
+    { threadKind: "support" },
+    { enabled: open },
+  );
   const auth = authQuery.data;
   const backfillTriggeredForOpen = useRef(false);
 
@@ -194,7 +182,10 @@ function UnifiedSupportInbox() {
   };
 
   const refreshInbox = async () => {
-    await fetchChannels.current?.();
+    await Promise.all([
+      fetchChannels.current?.() ?? Promise.resolve(),
+      archivedThreadIdsQuery.refetch(),
+    ]);
   };
 
   useEffect(() => {
@@ -241,39 +232,42 @@ function UnifiedSupportInbox() {
     () =>
       channels.filter((c) => {
         const id = c.id ?? "";
-        return id.startsWith("cr-") || id.startsWith("vr-");
+        return getSupportThreadKind(id) !== null;
       }),
     [channels],
   );
 
-  const now = new Date();
-  const isArchived = useMemo(() => {
-    return (channel: SupportChannel) => {
-      const last = channel.state.last_message_at;
-      if (!last) return false;
-      const lastDate = last instanceof Date ? last : new Date(String(last));
-      const days = (now.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24);
-      return days > 30;
-    };
-  }, [now]);
-
-  const activeChannels = useMemo(
-    () => supportChannels.filter((c) => !isArchived(c)),
-    [isArchived, supportChannels],
+  const archivedThreadIdsSet = useMemo(
+    () => new Set(archivedThreadIdsQuery.data?.threadIds ?? []),
+    [archivedThreadIdsQuery.data?.threadIds],
   );
+
+  const visibleChannels = useMemo(
+    () =>
+      supportChannels.filter((channel) => {
+        const id = channel.id ?? "";
+        return !archivedThreadIdsSet.has(id);
+      }),
+    [archivedThreadIdsSet, supportChannels],
+  );
+
   const archivedChannels = useMemo(
-    () => supportChannels.filter((c) => isArchived(c)),
-    [isArchived, supportChannels],
+    () =>
+      supportChannels.filter((channel) => {
+        const id = channel.id ?? "";
+        return archivedThreadIdsSet.has(id);
+      }),
+    [archivedThreadIdsSet, supportChannels],
   );
 
   useEffect(() => {
     if (!open) return;
     if (activeChannelId) return;
-    const first = activeChannels[0] ?? archivedChannels[0] ?? null;
+    const first = visibleChannels[0] ?? null;
     if (first?.id) {
       setActiveChannelId(first.id);
     }
-  }, [activeChannelId, activeChannels, archivedChannels, open]);
+  }, [activeChannelId, open, visibleChannels]);
 
   const activeChannel = useMemo(() => {
     if (!activeChannelId) return null;
@@ -288,12 +282,39 @@ function UnifiedSupportInbox() {
   }, [supportChannels]);
 
   const myUserId = auth?.user.id ?? null;
+  const activeChannelIsArchived =
+    !!activeChannelId && archivedThreadIdsSet.has(activeChannelId);
+
+  const handleArchiveThread = async () => {
+    if (!activeChannelId) {
+      return;
+    }
+
+    await archiveThreadMutation.mutateAsync({
+      threadKind: "support",
+      threadId: activeChannelId,
+    });
+    await refreshInbox();
+  };
+
+  const handleUnarchiveThread = async (threadId?: string) => {
+    const targetThreadId = threadId ?? activeChannelId;
+    if (!targetThreadId) {
+      return;
+    }
+
+    await unarchiveThreadMutation.mutateAsync({
+      threadKind: "support",
+      threadId: targetThreadId,
+    });
+    await refreshInbox();
+  };
 
   const renderRow = (channel: SupportChannel) => {
     const id = channel.id ?? "";
     const unread = channel.state.unreadCount ?? 0;
     const lastMessage = channel.state.latestMessages?.[0]?.text ?? "";
-    const kind = getSupportKind(id);
+    const kind = getSupportThreadKind(id);
     const isActive = id === activeChannelId;
 
     return (
@@ -315,7 +336,7 @@ function UnifiedSupportInbox() {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <p className="truncate text-sm font-medium">
-                {formatThreadTitle(id)}
+                {formatSupportThreadTitle(id)}
               </p>
               {kind ? (
                 <Badge
@@ -349,17 +370,82 @@ function UnifiedSupportInbox() {
       )}
     >
       <div className="border-b px-4 py-3">
-        <div className="flex justify-end">
+        <div className="flex items-center justify-end gap-2">
+          <Dialog
+            open={archivedDialogOpen}
+            onOpenChange={setArchivedDialogOpen}
+          >
+            <DialogTrigger asChild>
+              <Button type="button" variant="outline" size="sm" className="h-8">
+                Archived ({archivedChannels.length})
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Archived support threads</DialogTitle>
+                <DialogDescription>
+                  Unarchive a support thread to return it to the inbox.
+                </DialogDescription>
+              </DialogHeader>
+              <ScrollArea className="max-h-[420px] pr-2">
+                <div className="space-y-2">
+                  {archivedChannels.length === 0 ? (
+                    <div className="text-sm text-muted-foreground">
+                      No archived support threads.
+                    </div>
+                  ) : (
+                    archivedChannels.map((channel) => {
+                      const id = channel.id ?? "";
+                      const lastMessage =
+                        channel.state.latestMessages?.[0]?.text ?? "";
+                      return (
+                        <div
+                          key={id}
+                          className="flex items-center justify-between rounded-md border px-3 py-2"
+                        >
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-medium">
+                              {formatSupportThreadTitle(id)}
+                            </p>
+                            <p className="truncate text-xs text-muted-foreground">
+                              {lastMessage || "No messages yet"}
+                            </p>
+                          </div>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            disabled={unarchiveThreadMutation.isPending}
+                            onClick={() =>
+                              handleUnarchiveThread(id).catch(() => undefined)
+                            }
+                          >
+                            <ArchiveRestore className="mr-2 h-4 w-4" />
+                            Unarchive
+                          </Button>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </ScrollArea>
+            </DialogContent>
+          </Dialog>
           <Button
             type="button"
             variant="ghost"
             size="icon"
             className="h-9 w-9"
-            disabled={isLoadingChannels}
-            onClick={() => refreshInbox().catch(() => undefined)}
+            disabled={isManualRefreshing}
+            onClick={() => {
+              setIsManualRefreshing(true);
+              refreshInbox()
+                .catch(() => undefined)
+                .finally(() => setIsManualRefreshing(false));
+            }}
           >
             <RefreshCw
-              className={cn("h-4 w-4", isLoadingChannels && "animate-spin")}
+              className={cn("h-4 w-4", isManualRefreshing && "animate-spin")}
             />
             <span className="sr-only">Refresh inbox</span>
           </Button>
@@ -374,37 +460,12 @@ function UnifiedSupportInbox() {
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
             </div>
-          ) : supportChannels.length === 0 ? (
+          ) : visibleChannels.length === 0 ? (
             <div className="p-6 text-sm text-muted-foreground">
               No support threads yet.
             </div>
           ) : (
-            <>
-              {activeChannels.map(renderRow)}
-              {archivedChannels.length > 0 ? (
-                <Collapsible open={archiveOpen} onOpenChange={setArchiveOpen}>
-                  <CollapsibleTrigger asChild>
-                    <button
-                      type="button"
-                      className="flex w-full items-center justify-between px-4 py-3 text-xs font-medium text-muted-foreground hover:bg-muted/60"
-                    >
-                      <span>Archive ({archivedChannels.length})</span>
-                      <ChevronDown
-                        className={cn(
-                          "h-4 w-4 transition-transform",
-                          archiveOpen && "rotate-180",
-                        )}
-                      />
-                    </button>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <div className="divide-y">
-                      {archivedChannels.map(renderRow)}
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
-              ) : null}
-            </>
+            visibleChannels.map(renderRow)
           )}
         </div>
       </ScrollArea>
@@ -421,12 +482,12 @@ function UnifiedSupportInbox() {
         myUserId={myUserId}
         headerTitle={
           activeChannel?.id
-            ? formatThreadTitle(activeChannel.id)
+            ? formatSupportThreadTitle(activeChannel.id)
             : "Support chat"
         }
         headerSubtitle={
           activeChannel?.id
-            ? getSupportKind(activeChannel.id) === "claim"
+            ? getSupportThreadKind(activeChannel.id) === "claim"
               ? "Claim support"
               : "Verification support"
             : undefined
@@ -434,12 +495,38 @@ function UnifiedSupportInbox() {
         readOnly={!isReady}
         readOnlyReason={!isReady ? "Connecting..." : undefined}
         minHeightClassName="min-h-0 flex-1"
+        onRefreshContext={async () => {
+          setIsManualRefreshing(true);
+          try {
+            await refreshInbox();
+          } finally {
+            setIsManualRefreshing(false);
+          }
+        }}
+        isContextRefreshing={isManualRefreshing}
+        archiveActionLabel={
+          activeChannelId
+            ? activeChannelIsArchived
+              ? "Unarchive"
+              : "Archive"
+            : undefined
+        }
+        onArchiveAction={
+          activeChannelId
+            ? activeChannelIsArchived
+              ? () => handleUnarchiveThread()
+              : () => handleArchiveThread()
+            : null
+        }
+        isArchiveActionBusy={
+          archiveThreadMutation.isPending || unarchiveThreadMutation.isPending
+        }
         onBack={!isDesktop ? () => setMobilePane("list") : undefined}
         backButtonLabel="Back to inbox"
         onSendMessage={async (payload) => {
           const channelId = activeChannel?.id ?? null;
-          const kind = getSupportKind(channelId);
-          const requestId = getSupportRequestId(channelId);
+          const kind = getSupportThreadKind(channelId);
+          const requestId = getSupportThreadRequestId(channelId);
           if (!kind || !requestId) {
             throw new Error("Conversation not selected");
           }

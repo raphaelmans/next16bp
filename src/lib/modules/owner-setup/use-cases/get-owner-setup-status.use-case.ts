@@ -4,7 +4,12 @@ import type { ICourtHoursRepository } from "@/lib/modules/court-hours/repositori
 import type { ICourtRateRuleRepository } from "@/lib/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
-import type { OwnerSetupStatus, OwnerSetupVerificationStatus } from "../dtos";
+import type { OwnerSetupStatus } from "../dtos";
+import {
+  computeNextStep,
+  computePlaceOnboardingStatus,
+  normalizeVerificationStatus,
+} from "../shared";
 
 type PlaceWithVerification = Awaited<
   ReturnType<IPlaceRepository["findByOrganizationIdWithVerification"]>
@@ -23,10 +28,6 @@ const pickPrimaryPlace = (
     return placeTime > latestTime ? place : latest;
   });
 };
-
-const toVerificationStatus = (
-  status: OwnerSetupVerificationStatus | null | undefined,
-): OwnerSetupVerificationStatus => status ?? "UNVERIFIED";
 
 export class GetOwnerSetupStatusUseCase {
   constructor(
@@ -116,7 +117,7 @@ export class GetOwnerSetupStatusUseCase {
     );
 
     const hasAnyConfiguredVenue = places.some((place) => {
-      const placeVerificationStatus = toVerificationStatus(
+      const placeVerificationStatus = normalizeVerificationStatus(
         place.verification?.status ?? null,
       );
 
@@ -133,47 +134,44 @@ export class GetOwnerSetupStatusUseCase {
 
     const primaryPlace = pickPrimaryPlace(places);
     const verificationStatus = primaryPlace
-      ? toVerificationStatus(primaryPlace.verification?.status ?? null)
+      ? normalizeVerificationStatus(primaryPlace.verification?.status ?? null)
       : null;
-    const hasVerification =
-      verificationStatus === "PENDING" || verificationStatus === "VERIFIED";
-    const isVerificationConfirmed = verificationStatus === "VERIFIED";
 
-    const courts = primaryPlace
+    const primaryCourts = primaryPlace
       ? (courtsByPlace.get(primaryPlace.id) ?? [])
       : [];
-    const activeCourts = courts.filter((court) => court.isActive);
-    const activeCourt = activeCourts[0] ?? null;
 
-    const hasActiveCourt = Boolean(activeCourt);
-    const hasCourtSchedule = activeCourts.some((court) =>
-      courtsWithHours.has(court.id),
-    );
-    const hasCourtPricing = activeCourts.some((court) =>
-      courtsWithPricing.has(court.id),
-    );
+    const primaryOnboarding = computePlaceOnboardingStatus({
+      verificationStatus: verificationStatus ?? "UNVERIFIED",
+      courts: primaryCourts.map((c) => ({
+        courtId: c.id,
+        isActive: c.isActive,
+      })),
+      courtsWithHours,
+      courtsWithPricing,
+    });
+
+    const activeCourts = primaryCourts.filter((court) => court.isActive);
+    const activeCourt = activeCourts[0] ?? null;
     const readyCourt = activeCourts.find(
       (court) =>
         courtsWithHours.has(court.id) && courtsWithPricing.has(court.id),
     );
-    const hasReadyCourt = Boolean(readyCourt);
 
     const isSetupComplete =
-      hasOrganization && hasVenue && isVerificationConfirmed && hasReadyCourt;
+      hasOrganization &&
+      hasVenue &&
+      primaryOnboarding.isVerified &&
+      primaryOnboarding.hasReadyCourt;
 
-    const nextStep = !hasOrganization
-      ? "create_organization"
-      : !hasVenue && !hasPendingClaim
-        ? "add_or_claim_venue"
-        : !hasVenue && hasPendingClaim
-          ? "claim_pending"
-          : !hasVerification
-            ? "verify_venue"
-            : !hasReadyCourt
-              ? "configure_courts"
-              : !isVerificationConfirmed
-                ? "verify_venue"
-                : "complete";
+    const nextStep = computeNextStep({
+      hasOrganization,
+      hasPendingClaim,
+      hasVenue,
+      hasVerification: primaryOnboarding.hasVerification,
+      isVerificationConfirmed: primaryOnboarding.isVerified,
+      hasReadyCourt: primaryOnboarding.hasReadyCourt,
+    });
 
     return {
       hasOrganization,
@@ -185,11 +183,11 @@ export class GetOwnerSetupStatusUseCase {
         ? { id: primaryPlace.id, name: primaryPlace.name }
         : null,
       verificationStatus,
-      hasVerification,
-      hasActiveCourt,
-      hasReadyCourt,
-      hasCourtSchedule,
-      hasCourtPricing,
+      hasVerification: primaryOnboarding.hasVerification,
+      hasActiveCourt: primaryOnboarding.hasActiveCourt,
+      hasReadyCourt: primaryOnboarding.hasReadyCourt,
+      hasCourtSchedule: primaryOnboarding.hasAnyCourtSchedule,
+      hasCourtPricing: primaryOnboarding.hasAnyCourtPricing,
       primaryCourtId: activeCourt?.id ?? null,
       readyCourtId: readyCourt?.id ?? null,
       isSetupComplete,

@@ -95,7 +95,7 @@ export function useQueryAdminStats() {
 }
 
 export function useQueryAdminOrganizationSearch(
-  input?: unknown,
+  input?: Parameters<typeof adminApi.queryAdminOrganizationSearch>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(

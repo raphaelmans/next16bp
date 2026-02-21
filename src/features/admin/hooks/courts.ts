@@ -236,6 +236,18 @@ export function useQueryAdminCourt(courtId: string) {
   };
 }
 
+export function useQueryAdminCourtOnboardingStatus(
+  placeId: string,
+  options?: { enabled?: boolean },
+) {
+  return useFeatureQuery(
+    ["admin", "court", "getOnboardingStatus"],
+    adminApi.queryAdminCourtGetOnboardingStatus,
+    { placeId },
+    { enabled: !!placeId, ...options },
+  );
+}
+
 export function useMutTransferPlaceToOrganization() {
   const utils = trpc.useUtils();
 
@@ -455,7 +467,7 @@ export function useModCities() {
 }
 
 export function useQueryAdminSports(
-  input?: unknown,
+  input?: Parameters<typeof adminApi.querySportList>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(

@@ -64,8 +64,8 @@ check_empty \
   "rg -n '\\.[A-Za-z0-9_]+\\.use(Query|Mutation)\\(' . -g 'src/features/*/hooks.ts' -g 'src/features/*/hooks/**/*.ts'"
 
 check_empty \
-  "Feature APIs must not use pass-through TrpcFeatureApi proxies at cutover" \
-  "rg -n 'createTrpcFeatureApi|extends TrpcFeatureApi|declare readonly .*: unknown;' src/features/*/api.ts"
+  "Feature APIs must not expose unknown input/output contracts or legacy pass-through proxies" \
+  "rg -n 'createTrpcFeatureApi|extends TrpcFeatureApi|declare readonly .*: unknown;|input\\?: unknown|Promise<unknown>' src/features/*/api.ts"
 
 check_empty \
   "Feature hooks must not use namespace .query() calls" \

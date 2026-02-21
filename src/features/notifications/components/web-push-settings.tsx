@@ -10,6 +10,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  getWebPushSettingsStatusLabel,
+  isWebPushDisableActionDisabled,
+  isWebPushEnableActionDisabled,
+} from "../domain";
 import { useModWebPush } from "../hooks";
 
 export function WebPushSettingsCard({ id }: { id?: string }) {
@@ -50,15 +55,25 @@ export function WebPushSettingsCard({ id }: { id?: string }) {
     }
   };
 
-  const statusLabel = !webPush.supported
-    ? "Unsupported"
-    : !webPush.configured
-      ? "Not configured"
-      : webPush.enabledOnThisDevice
-        ? "enabled"
-        : webPush.permission === "granted"
-          ? "granted (not registered)"
-          : (webPush.permission ?? "unknown");
+  const statusLabel = getWebPushSettingsStatusLabel({
+    supported: webPush.supported,
+    configured: webPush.configured,
+    enabledOnThisDevice: webPush.enabledOnThisDevice,
+    permission: webPush.permission,
+  });
+
+  const enableDisabled = isWebPushEnableActionDisabled({
+    busy: webPush.busy,
+    supported: webPush.supported,
+    configured: webPush.configured,
+    enabledOnThisDevice: webPush.enabledOnThisDevice,
+  });
+
+  const disableDisabled = isWebPushDisableActionDisabled({
+    busy: webPush.busy,
+    supported: webPush.supported,
+    enabledOnThisDevice: webPush.enabledOnThisDevice,
+  });
 
   return (
     <Card id={id}>
@@ -74,25 +89,14 @@ export function WebPushSettingsCard({ id }: { id?: string }) {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            onClick={enable}
-            disabled={
-              webPush.busy ||
-              !webPush.supported ||
-              !webPush.configured ||
-              webPush.enabledOnThisDevice
-            }
-          >
+          <Button type="button" onClick={enable} disabled={enableDisabled}>
             Enable
           </Button>
           <Button
             type="button"
             variant="outline"
             onClick={disable}
-            disabled={
-              webPush.busy || !webPush.supported || !webPush.enabledOnThisDevice
-            }
+            disabled={disableDisabled}
           >
             Disable
           </Button>

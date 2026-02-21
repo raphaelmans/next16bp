@@ -123,7 +123,7 @@ export function useModOwnerPlaceVerificationPostSubmit() {
 }
 
 export function useQueryOwnerClaimRequests(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.queryClaimRequestGetMy>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -135,7 +135,7 @@ export function useQueryOwnerClaimRequests(
 }
 
 export function useQueryOwnerClaimRequestById(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.queryClaimRequestGetById>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -147,7 +147,7 @@ export function useQueryOwnerClaimRequestById(
 }
 
 export function useQueryOwnerClaimablePlaces(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.queryPlaceList>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(

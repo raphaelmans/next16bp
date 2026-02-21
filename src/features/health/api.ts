@@ -9,8 +9,15 @@ import type { RouterInputs, RouterOutputs } from "@/trpc/types";
 export type HealthCheckInput = RouterInputs["health"]["check"];
 export type HealthCheckOutput = RouterOutputs["health"]["check"];
 
+type ProcedureFn<TProcedure> = TProcedure extends (
+  input: infer TInput,
+  ...rest: infer _TRest
+) => Promise<infer TResult>
+  ? (input?: TInput) => Promise<TResult>
+  : never;
+
 export interface IHealthApi {
-  queryHealthCheck: (input?: unknown) => Promise<unknown>;
+  queryHealthCheck: ProcedureFn<TrpcClientApi["health"]["check"]["query"]>;
 }
 
 export type HealthApiDeps = {
@@ -27,14 +34,15 @@ export class HealthApi {
     this.toAppError = deps.toAppError ?? defaultToAppError;
   }
 
-  queryHealthCheck = async (input?: unknown) =>
-    callTrpcQuery(
-      this.clientApi,
-      ["health", "check"],
-      (clientApi) => clientApi.health.check.query,
-      input,
-      this.toAppError,
-    );
+  queryHealthCheck: ProcedureFn<TrpcClientApi["health"]["check"]["query"]> =
+    async (input) =>
+      callTrpcQuery(
+        this.clientApi,
+        ["health", "check"],
+        (clientApi) => clientApi.health.check.query,
+        input,
+        this.toAppError,
+      );
 }
 
 export const createHealthApi = (deps: HealthApiDeps = {}) =>

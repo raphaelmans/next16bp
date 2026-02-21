@@ -13,6 +13,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
+import {
+  getNotificationBellPermissionLabel,
+  getNotificationBellToggleDisabled,
+} from "../domain";
 import { useModWebPush } from "../hooks";
 
 type Portal = "owner" | "player" | "admin";
@@ -41,14 +45,19 @@ export function NotificationBell({ portal }: { portal: Portal }) {
     }
   };
 
-  const toggleDisabled =
-    webPush.busy ||
-    !webPush.supported ||
-    !webPush.isSecureContext ||
-    !webPush.configured ||
-    webPush.permission === "denied";
+  const toggleDisabled = getNotificationBellToggleDisabled({
+    busy: webPush.busy,
+    supported: webPush.supported,
+    isSecureContext: webPush.isSecureContext,
+    configured: webPush.configured,
+    permission: webPush.permission,
+  });
 
   const checked = webPush.enabledOnThisDevice;
+  const permissionLabel = getNotificationBellPermissionLabel({
+    permission: webPush.permission,
+    enabledOnThisDevice: checked,
+  });
 
   return (
     <Popover>
@@ -67,18 +76,15 @@ export function NotificationBell({ portal }: { portal: Portal }) {
             <p className="text-xs text-muted-foreground">
               Manage browser alerts for reservation updates.
             </p>
+            <p className="text-xs text-muted-foreground">
+              Chat unread counts are shown in the chat inbox/widget.
+            </p>
           </div>
 
           <div className="flex items-center justify-between gap-3 rounded-md border bg-muted/30 px-3 py-2">
             <div className="min-w-0">
               <p className="text-sm font-medium">Browser notifications</p>
-              <p className="text-xs text-muted-foreground">
-                {webPush.permission === "denied"
-                  ? "Blocked in your browser settings"
-                  : checked
-                    ? "Enabled on this device"
-                    : "Off"}
-              </p>
+              <p className="text-xs text-muted-foreground">{permissionLabel}</p>
             </div>
             <Switch
               checked={checked}

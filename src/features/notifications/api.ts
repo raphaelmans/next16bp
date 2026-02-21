@@ -5,14 +5,23 @@ import { toAppError as defaultToAppError } from "@/common/errors/to-app-error";
 import { callTrpcMutation, callTrpcQuery } from "@/common/trpc-client-call";
 import { getClientApi, type TrpcClientApi } from "@/trpc/client-api";
 
+type ProcedureFn<TProcedure> = TProcedure extends (
+  input: infer TInput,
+  ...rest: infer _TRest
+) => Promise<infer TResult>
+  ? (input?: TInput) => Promise<TResult>
+  : never;
+
 export interface INotificationsApi {
-  mutPushSubscriptionRevokeMySubscription: (
-    input?: unknown,
-  ) => Promise<unknown>;
-  mutPushSubscriptionUpsertMySubscription: (
-    input?: unknown,
-  ) => Promise<unknown>;
-  queryPushSubscriptionGetVapidPublicKey: (input?: unknown) => Promise<unknown>;
+  mutPushSubscriptionRevokeMySubscription: ProcedureFn<
+    TrpcClientApi["pushSubscription"]["revokeMySubscription"]["mutate"]
+  >;
+  mutPushSubscriptionUpsertMySubscription: ProcedureFn<
+    TrpcClientApi["pushSubscription"]["upsertMySubscription"]["mutate"]
+  >;
+  queryPushSubscriptionGetVapidPublicKey: ProcedureFn<
+    TrpcClientApi["pushSubscription"]["getVapidPublicKey"]["query"]
+  >;
 }
 
 export type NotificationsApiDeps = {
@@ -29,7 +38,9 @@ export class NotificationsApi {
     this.toAppError = deps.toAppError ?? defaultToAppError;
   }
 
-  mutPushSubscriptionRevokeMySubscription = async (input?: unknown) =>
+  mutPushSubscriptionRevokeMySubscription: ProcedureFn<
+    TrpcClientApi["pushSubscription"]["revokeMySubscription"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["pushSubscription", "revokeMySubscription"],
@@ -38,7 +49,9 @@ export class NotificationsApi {
       this.toAppError,
     );
 
-  mutPushSubscriptionUpsertMySubscription = async (input?: unknown) =>
+  mutPushSubscriptionUpsertMySubscription: ProcedureFn<
+    TrpcClientApi["pushSubscription"]["upsertMySubscription"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["pushSubscription", "upsertMySubscription"],
@@ -47,7 +60,9 @@ export class NotificationsApi {
       this.toAppError,
     );
 
-  queryPushSubscriptionGetVapidPublicKey = async (input?: unknown) =>
+  queryPushSubscriptionGetVapidPublicKey: ProcedureFn<
+    TrpcClientApi["pushSubscription"]["getVapidPublicKey"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["pushSubscription", "getVapidPublicKey"],

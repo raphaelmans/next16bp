@@ -26,6 +26,7 @@ import {
   AdminCourtOwnershipTransferCard,
   type OrganizationSearchItem,
 } from "@/features/admin/components/admin-court-ownership-transfer-card";
+import { AdminVenueOnboardingStatusCard } from "@/features/admin/components/admin-venue-onboarding-status-card";
 import {
   useMutRecuratePlace,
   useMutRemoveAdminCourtPhoto,
@@ -684,6 +685,15 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
           onRecurate={handleRecurate}
           onCopyOwnerLink={handleCopyOwnerLink}
           copyOwnerLinkDisabled={!currentOrganization}
+        />
+
+        <AdminVenueOnboardingStatusCard
+          placeId={courtId}
+          placeIsActive={courtData.place.isActive}
+          courtLabels={courtData.courts.map((c) => ({
+            courtId: c.court.id,
+            label: c.court.label,
+          }))}
         />
 
         <AdminCourtFeaturedPlacementCard

@@ -7,6 +7,8 @@
 export * from "./bookings-import-job";
 export * from "./bookings-import-row";
 export * from "./bookings-import-source";
+// Chat inbox archive
+export * from "./chat-inbox-archive";
 // Claim request tables
 export * from "./claim-request";
 // Contact messages
@@ -21,6 +23,8 @@ export * from "./court-rate-rule";
 export * from "./enums";
 // Guest profile
 export * from "./guest-profile";
+// Mobile push token
+export * from "./mobile-push-token";
 // Notification delivery
 export * from "./notification-delivery-job";
 // Open play
@@ -37,8 +41,6 @@ export * from "./place-verification";
 export * from "./profile";
 // Push subscription
 export * from "./push-subscription";
-// Mobile push token
-export * from "./mobile-push-token";
 // Reservation-related tables
 export * from "./reservation";
 export * from "./reservation-chat";

@@ -5,6 +5,10 @@ import {
   useFeatureMutation,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
+import {
+  deriveWebPushState,
+  type WebPushDiagnosticsCode,
+} from "@/features/notifications/domain";
 import { getNotificationsApi } from "../api.runtime";
 
 const notificationsApi = getNotificationsApi();
@@ -27,14 +31,7 @@ export type UseWebPushResult = {
   configured: boolean;
   permission: NotificationPermission | null;
   enabledOnThisDevice: boolean;
-  diagnosticsCode:
-    | "unsupported"
-    | "insecure_context"
-    | "permission_denied"
-    | "not_configured"
-    | "granted_not_registered"
-    | "enabled"
-    | "ready";
+  diagnosticsCode: WebPushDiagnosticsCode;
   diagnosticsMessage: string;
   localTestEnabled: boolean;
   canSendLocalTest: boolean;
@@ -244,45 +241,20 @@ export function useModWebPush(): UseWebPushResult {
     }
   }, [isSecureContext, localTestEnabled, refresh, supported]);
 
-  const enabledOnThisDevice = permission === "granted" && hasSubscription;
-
-  const diagnosticsCode: UseWebPushResult["diagnosticsCode"] = !supported
-    ? "unsupported"
-    : !isSecureContext
-      ? "insecure_context"
-      : permission === "denied"
-        ? "permission_denied"
-        : enabledOnThisDevice
-          ? "enabled"
-          : !configured
-            ? "not_configured"
-            : permission === "granted"
-              ? "granted_not_registered"
-              : "ready";
-
-  const diagnosticsMessage =
-    diagnosticsCode === "unsupported"
-      ? "Your browser does not support push notifications."
-      : diagnosticsCode === "insecure_context"
-        ? "Use HTTPS (or localhost in dev) to enable notifications."
-        : diagnosticsCode === "permission_denied"
-          ? "Notifications are blocked for this site in browser settings."
-          : diagnosticsCode === "enabled"
-            ? "Notifications are enabled on this device."
-            : diagnosticsCode === "not_configured"
-              ? "Server Web Push is not configured yet."
-              : diagnosticsCode === "granted_not_registered"
-                ? "Permission is granted but this device is not subscribed yet."
-                : localTestEnabled
-                  ? "Ready to request permission and run a test notification."
-                  : "Ready to request permission and enable notifications.";
-
-  const canSendLocalTest =
-    localTestEnabled &&
-    supported &&
-    isSecureContext &&
-    permission !== "denied" &&
-    !busy;
+  const {
+    enabledOnThisDevice,
+    diagnosticsCode,
+    diagnosticsMessage,
+    canSendLocalTest,
+  } = deriveWebPushState({
+    supported,
+    isSecureContext,
+    configured,
+    permission,
+    hasSubscription,
+    localTestEnabled,
+    busy,
+  });
 
   return {
     supported,

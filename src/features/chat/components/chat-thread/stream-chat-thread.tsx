@@ -34,7 +34,9 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { isSystemReservationMessageId } from "@/lib/modules/chat/shared/domain";
 import { validateChatUploadFiles } from "../../constants/upload-policy";
+import { getChatStatusBadgeClassName } from "../../domain";
 import { useModStreamChannel } from "../../hooks/useModStreamChannel";
 
 function PromptInputAttachmentsDisplay() {
@@ -79,22 +81,6 @@ const streamAttachmentToAiFile = (
   };
 };
 
-const SYSTEM_RESERVATION_MESSAGE_ID_SUFFIXES = [
-  ":player-created:v1",
-  ":player-payment-marked:v1",
-  ":owner-confirmed:v1",
-] as const;
-
-function isSystemReservationMessage(msg: LocalMessage): boolean {
-  if (typeof msg.id !== "string") {
-    return false;
-  }
-
-  return SYSTEM_RESERVATION_MESSAGE_ID_SUFFIXES.some((suffix) =>
-    msg.id.endsWith(suffix),
-  );
-}
-
 async function filePartToFile(part: FileUIPart): Promise<File> {
   const url = part.url;
   if (!url) {
@@ -126,6 +112,9 @@ export interface StreamChatThreadProps {
   backButtonLabel?: string;
   onRefreshContext?: (() => Promise<void>) | null;
   isContextRefreshing?: boolean;
+  archiveActionLabel?: string;
+  onArchiveAction?: (() => Promise<void>) | null;
+  isArchiveActionBusy?: boolean;
   onSendMessage?:
     | ((payload: {
         text?: string;
@@ -160,6 +149,9 @@ export function StreamChatThread({
   backButtonLabel = "Back",
   onRefreshContext = null,
   isContextRefreshing = false,
+  archiveActionLabel,
+  onArchiveAction = null,
+  isArchiveActionBusy = false,
   onSendMessage = null,
 }: StreamChatThreadProps) {
   const [sendStatus, setSendStatus] = useState<ChatStatus>("ready");
@@ -267,15 +259,11 @@ export function StreamChatThread({
     [channel, onSendMessage, sendMessage],
   );
 
-  const statusClassName =
-    headerStatus === "CONFIRMED"
-      ? "bg-success/10 text-success border-success/20"
-      : headerStatus === "CANCELLED" || headerStatus === "EXPIRED"
-        ? "bg-destructive/10 text-destructive border-destructive/20"
-        : "bg-warning/10 text-warning border-warning/20";
+  const statusClassName = getChatStatusBadgeClassName(headerStatus);
 
   const isRefreshBusy =
     isRefreshing || isContextRefreshing || isHeaderRefreshing;
+  const canRunArchiveAction = Boolean(onArchiveAction && archiveActionLabel);
 
   const handleRefresh = useCallback(async () => {
     if (isRefreshBusy) {
@@ -332,6 +320,18 @@ export function StreamChatThread({
           </div>
         </div>
         <div className="flex items-center gap-1">
+          {canRunArchiveAction ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-8"
+              disabled={isArchiveActionBusy}
+              onClick={() => onArchiveAction?.().catch(() => undefined)}
+            >
+              {archiveActionLabel}
+            </Button>
+          ) : null}
           <Button
             type="button"
             variant="ghost"
@@ -406,7 +406,7 @@ export function StreamChatThread({
                         ) : null}
 
                         {attachments.length > 0 &&
-                        !isSystemReservationMessage(msg) ? (
+                        !isSystemReservationMessageId(msg.id) ? (
                           <Attachments variant="grid">
                             {attachments.map((a) => (
                               <AiAttachment data={a} key={a.id}>

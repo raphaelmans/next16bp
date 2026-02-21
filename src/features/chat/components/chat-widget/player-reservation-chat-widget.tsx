@@ -13,6 +13,10 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import {
+  getPlayerReservationStatusLabel,
+  isReservationStatusChatEnabled,
+} from "../../domain";
+import {
   useMutReservationChatSendMessage,
   useQueryReservationChatSession,
 } from "../../hooks/use-chat-trpc";
@@ -30,12 +34,7 @@ export function PlayerReservationChatWidget({
 }) {
   const isDesktop = useMediaQuery("(min-width: 640px)");
   const isConfirmed = reservationStatus === "CONFIRMED";
-  const isActiveStatus = [
-    "CREATED",
-    "AWAITING_PAYMENT",
-    "PAYMENT_MARKED_BY_USER",
-    "CONFIRMED",
-  ].includes(reservationStatus);
+  const isActiveStatus = isReservationStatusChatEnabled(reservationStatus);
 
   const [open, setOpen] = useState(false);
 
@@ -80,14 +79,7 @@ export function PlayerReservationChatWidget({
     return null;
   }
 
-  const statusLabel =
-    reservationStatus === "CREATED"
-      ? "Waiting for owner confirmation"
-      : reservationStatus === "AWAITING_PAYMENT"
-        ? "Owner accepted - awaiting payment"
-        : reservationStatus === "PAYMENT_MARKED_BY_USER"
-          ? "Payment marked - awaiting owner review"
-          : "Confirmed";
+  const statusLabel = getPlayerReservationStatusLabel(reservationStatus);
 
   return (
     <div className="fixed bottom-6 right-6 z-50">

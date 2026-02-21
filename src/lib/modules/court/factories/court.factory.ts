@@ -1,3 +1,5 @@
+import { makeCourtHoursRepository } from "@/lib/modules/court-hours/factories/court-hours.factory";
+import { makeCourtRateRuleRepository } from "@/lib/modules/court-rate-rule/factories/court-rate-rule.factory";
 import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
 import { makePlaceRepository } from "@/lib/modules/place/factories/place.factory";
 import { makePlaceVerificationRepository } from "@/lib/modules/place-verification/factories/place-verification.factory";
@@ -44,6 +46,8 @@ export function makeAdminCourtService(): AdminCourtService {
       makeObjectStorageService(),
       makeOrganizationRepository(),
       makePlaceVerificationRepository(),
+      makeCourtHoursRepository(),
+      makeCourtRateRuleRepository(),
     );
   }
   return adminCourtService;

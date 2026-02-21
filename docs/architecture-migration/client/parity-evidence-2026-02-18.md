@@ -97,10 +97,12 @@ Strict numeric target snapshot:
 7. `rg -n -F '[\"invalidate\"](' src/features src/components src/app` -> `0`
 8. `rg -n -F '.invalidate(' src/features/*/components src/features/*/pages` -> `0`
 9. `find src/features -type f -path '*/server/*'` -> empty
-10. `rg -n 'createTrpcFeatureApi|extends TrpcFeatureApi|declare readonly .*: unknown;' src/features/*/api.ts` -> `0`
+10. `rg -n 'createTrpcFeatureApi|extends TrpcFeatureApi|declare readonly .*: unknown;|input\?: unknown|Promise<unknown>' src/features/*/api.ts` -> `0`
 11. `rg -n '\\.[A-Za-z0-9_]+\\.query\\(' ...hooks...` -> `0`
 12. `rg -n '\\.[A-Za-z0-9_]+\\.mutation\\(' ...hooks...` -> `0`
 13. `rg -n '\\b[A-Za-z0-9_]+\\.queries\\(' ...hooks...` -> `0`
+
+Superseded note (`2026-02-21`): the original check `#10` did not catch `input?: unknown` / `Promise<unknown>` Feature API contracts. The command above reflects the corrected scope.
 
 Lint note:
 

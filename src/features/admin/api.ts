@@ -5,48 +5,102 @@ import { toAppError as defaultToAppError } from "@/common/errors/to-app-error";
 import { callTrpcMutation, callTrpcQuery } from "@/common/trpc-client-call";
 import { getClientApi, type TrpcClientApi } from "@/trpc/client-api";
 
+type ProcedureFn<TProcedure> = TProcedure extends (
+  input: infer TInput,
+  ...rest: infer _TRest
+) => Promise<infer TResult>
+  ? (input?: TInput) => Promise<TResult>
+  : never;
+
 export interface IAdminApi {
-  mutAdminClaimApprove: (input?: unknown) => Promise<unknown>;
-  mutAdminClaimReject: (input?: unknown) => Promise<unknown>;
-  mutAdminCourtActivate: (input?: unknown) => Promise<unknown>;
-  mutAdminCourtCreateCurated: (input?: unknown) => Promise<unknown>;
-  mutAdminCourtCreateCuratedBatch: (input?: unknown) => Promise<unknown>;
-  mutAdminCourtDeactivate: (input?: unknown) => Promise<unknown>;
-  mutAdminCourtDeletePlace: (input?: unknown) => Promise<unknown>;
-  mutAdminCourtRecurate: (input?: unknown) => Promise<unknown>;
-  mutAdminCourtRemovePhoto: (input?: unknown) => Promise<unknown>;
-  mutAdminCourtTransfer: (input?: unknown) => Promise<unknown>;
-  mutAdminCourtUpdate: (input?: unknown) => Promise<unknown>;
-  mutAdminCourtUploadPhoto: (input?: unknown) => Promise<unknown>;
-  mutAdminPlaceVerificationApprove: (input?: unknown) => Promise<unknown>;
-  mutAdminPlaceVerificationReject: (input?: unknown) => Promise<unknown>;
-  queryAdminClaimGetById: (input?: unknown) => Promise<unknown>;
-  queryAdminClaimGetPending: (input?: unknown) => Promise<unknown>;
-  queryAdminCourtGetById: (input?: unknown) => Promise<unknown>;
-  queryAdminCourtList: (input?: unknown) => Promise<unknown>;
-  queryAdminCourtStats: (input?: unknown) => Promise<unknown>;
-  queryAdminPlaceVerificationGetById: (input?: unknown) => Promise<unknown>;
-  queryAdminPlaceVerificationGetPending: (input?: unknown) => Promise<unknown>;
-  querySportList: (input?: unknown) => Promise<unknown>;
-  queryAdminOrganizationSearch: (input?: unknown) => Promise<unknown>;
-  mutAdminNotificationDeliveryDispatchNow: (
-    input?: unknown,
-  ) => Promise<unknown>;
-  mutAdminNotificationDeliveryEnqueueReservationCreatedTest: (
-    input?: unknown,
-  ) => Promise<unknown>;
-  mutAdminNotificationDeliveryEnqueuePlaceVerificationReviewedTest: (
-    input?: unknown,
-  ) => Promise<unknown>;
-  mutAdminNotificationDeliveryEnqueueClaimReviewedTest: (
-    input?: unknown,
-  ) => Promise<unknown>;
-  queryAdminNotificationDeliveryListMyWebPushSubscriptions: (
-    input?: unknown,
-  ) => Promise<unknown>;
-  mutAdminNotificationDeliveryEnqueueWebPushTest: (
-    input?: unknown,
-  ) => Promise<unknown>;
+  mutAdminClaimApprove: ProcedureFn<
+    TrpcClientApi["admin"]["claim"]["approve"]["mutate"]
+  >;
+  mutAdminClaimReject: ProcedureFn<
+    TrpcClientApi["admin"]["claim"]["reject"]["mutate"]
+  >;
+  mutAdminCourtActivate: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["activate"]["mutate"]
+  >;
+  mutAdminCourtCreateCurated: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["createCurated"]["mutate"]
+  >;
+  mutAdminCourtCreateCuratedBatch: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["createCuratedBatch"]["mutate"]
+  >;
+  mutAdminCourtDeactivate: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["deactivate"]["mutate"]
+  >;
+  mutAdminCourtDeletePlace: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["deletePlace"]["mutate"]
+  >;
+  mutAdminCourtRecurate: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["recurate"]["mutate"]
+  >;
+  mutAdminCourtRemovePhoto: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["removePhoto"]["mutate"]
+  >;
+  mutAdminCourtTransfer: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["transfer"]["mutate"]
+  >;
+  mutAdminCourtUpdate: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["update"]["mutate"]
+  >;
+  mutAdminCourtUploadPhoto: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["uploadPhoto"]["mutate"]
+  >;
+  mutAdminPlaceVerificationApprove: ProcedureFn<
+    TrpcClientApi["admin"]["placeVerification"]["approve"]["mutate"]
+  >;
+  mutAdminPlaceVerificationReject: ProcedureFn<
+    TrpcClientApi["admin"]["placeVerification"]["reject"]["mutate"]
+  >;
+  queryAdminClaimGetById: ProcedureFn<
+    TrpcClientApi["admin"]["claim"]["getById"]["query"]
+  >;
+  queryAdminClaimGetPending: ProcedureFn<
+    TrpcClientApi["admin"]["claim"]["getPending"]["query"]
+  >;
+  queryAdminCourtGetById: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["getById"]["query"]
+  >;
+  queryAdminCourtList: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["list"]["query"]
+  >;
+  queryAdminCourtStats: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["stats"]["query"]
+  >;
+  queryAdminCourtGetOnboardingStatus: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["getOnboardingStatus"]["query"]
+  >;
+  queryAdminPlaceVerificationGetById: ProcedureFn<
+    TrpcClientApi["admin"]["placeVerification"]["getById"]["query"]
+  >;
+  queryAdminPlaceVerificationGetPending: ProcedureFn<
+    TrpcClientApi["admin"]["placeVerification"]["getPending"]["query"]
+  >;
+  querySportList: ProcedureFn<TrpcClientApi["sport"]["list"]["query"]>;
+  queryAdminOrganizationSearch: ProcedureFn<
+    TrpcClientApi["admin"]["organization"]["search"]["query"]
+  >;
+  mutAdminNotificationDeliveryDispatchNow: ProcedureFn<
+    TrpcClientApi["admin"]["notificationDelivery"]["dispatchNow"]["mutate"]
+  >;
+  mutAdminNotificationDeliveryEnqueueReservationCreatedTest: ProcedureFn<
+    TrpcClientApi["admin"]["notificationDelivery"]["enqueueReservationCreatedTest"]["mutate"]
+  >;
+  mutAdminNotificationDeliveryEnqueuePlaceVerificationReviewedTest: ProcedureFn<
+    TrpcClientApi["admin"]["notificationDelivery"]["enqueuePlaceVerificationReviewedTest"]["mutate"]
+  >;
+  mutAdminNotificationDeliveryEnqueueClaimReviewedTest: ProcedureFn<
+    TrpcClientApi["admin"]["notificationDelivery"]["enqueueClaimReviewedTest"]["mutate"]
+  >;
+  queryAdminNotificationDeliveryListMyWebPushSubscriptions: ProcedureFn<
+    TrpcClientApi["admin"]["notificationDelivery"]["listMyWebPushSubscriptions"]["query"]
+  >;
+  mutAdminNotificationDeliveryEnqueueWebPushTest: ProcedureFn<
+    TrpcClientApi["admin"]["notificationDelivery"]["enqueueWebPushTest"]["mutate"]
+  >;
 }
 
 export type AdminApiDeps = {
@@ -63,7 +117,9 @@ export class AdminApi {
     this.toAppError = deps.toAppError ?? defaultToAppError;
   }
 
-  mutAdminClaimApprove = async (input?: unknown) =>
+  mutAdminClaimApprove: ProcedureFn<
+    TrpcClientApi["admin"]["claim"]["approve"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "claim", "approve"],
@@ -72,7 +128,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminClaimReject = async (input?: unknown) =>
+  mutAdminClaimReject: ProcedureFn<
+    TrpcClientApi["admin"]["claim"]["reject"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "claim", "reject"],
@@ -81,7 +139,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminCourtActivate = async (input?: unknown) =>
+  mutAdminCourtActivate: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["activate"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "activate"],
@@ -90,7 +150,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminCourtCreateCurated = async (input?: unknown) =>
+  mutAdminCourtCreateCurated: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["createCurated"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "createCurated"],
@@ -99,7 +161,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminCourtCreateCuratedBatch = async (input?: unknown) =>
+  mutAdminCourtCreateCuratedBatch: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["createCuratedBatch"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "createCuratedBatch"],
@@ -108,7 +172,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminCourtDeactivate = async (input?: unknown) =>
+  mutAdminCourtDeactivate: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["deactivate"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "deactivate"],
@@ -117,7 +183,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminCourtDeletePlace = async (input?: unknown) =>
+  mutAdminCourtDeletePlace: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["deletePlace"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "deletePlace"],
@@ -126,7 +194,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminCourtRecurate = async (input?: unknown) =>
+  mutAdminCourtRecurate: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["recurate"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "recurate"],
@@ -135,7 +205,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminCourtRemovePhoto = async (input?: unknown) =>
+  mutAdminCourtRemovePhoto: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["removePhoto"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "removePhoto"],
@@ -144,7 +216,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminCourtTransfer = async (input?: unknown) =>
+  mutAdminCourtTransfer: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["transfer"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "transfer"],
@@ -153,7 +227,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminCourtUpdate = async (input?: unknown) =>
+  mutAdminCourtUpdate: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["update"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "update"],
@@ -162,7 +238,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminCourtUploadPhoto = async (input?: unknown) =>
+  mutAdminCourtUploadPhoto: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["uploadPhoto"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "court", "uploadPhoto"],
@@ -171,7 +249,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminPlaceVerificationApprove = async (input?: unknown) =>
+  mutAdminPlaceVerificationApprove: ProcedureFn<
+    TrpcClientApi["admin"]["placeVerification"]["approve"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "placeVerification", "approve"],
@@ -180,7 +260,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminPlaceVerificationReject = async (input?: unknown) =>
+  mutAdminPlaceVerificationReject: ProcedureFn<
+    TrpcClientApi["admin"]["placeVerification"]["reject"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "placeVerification", "reject"],
@@ -189,7 +271,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  queryAdminClaimGetById = async (input?: unknown) =>
+  queryAdminClaimGetById: ProcedureFn<
+    TrpcClientApi["admin"]["claim"]["getById"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["admin", "claim", "getById"],
@@ -198,7 +282,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  queryAdminClaimGetPending = async (input?: unknown) =>
+  queryAdminClaimGetPending: ProcedureFn<
+    TrpcClientApi["admin"]["claim"]["getPending"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["admin", "claim", "getPending"],
@@ -207,7 +293,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  queryAdminCourtGetById = async (input?: unknown) =>
+  queryAdminCourtGetById: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["getById"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["admin", "court", "getById"],
@@ -216,7 +304,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  queryAdminCourtList = async (input?: unknown) =>
+  queryAdminCourtList: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["list"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["admin", "court", "list"],
@@ -225,7 +315,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  queryAdminCourtStats = async (input?: unknown) =>
+  queryAdminCourtStats: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["stats"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["admin", "court", "stats"],
@@ -234,7 +326,20 @@ export class AdminApi {
       this.toAppError,
     );
 
-  queryAdminPlaceVerificationGetById = async (input?: unknown) =>
+  queryAdminCourtGetOnboardingStatus: ProcedureFn<
+    TrpcClientApi["admin"]["court"]["getOnboardingStatus"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["admin", "court", "getOnboardingStatus"],
+      (clientApi) => clientApi.admin.court.getOnboardingStatus.query,
+      input,
+      this.toAppError,
+    );
+
+  queryAdminPlaceVerificationGetById: ProcedureFn<
+    TrpcClientApi["admin"]["placeVerification"]["getById"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["admin", "placeVerification", "getById"],
@@ -243,7 +348,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  queryAdminPlaceVerificationGetPending = async (input?: unknown) =>
+  queryAdminPlaceVerificationGetPending: ProcedureFn<
+    TrpcClientApi["admin"]["placeVerification"]["getPending"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["admin", "placeVerification", "getPending"],
@@ -252,7 +359,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  querySportList = async (input?: unknown) =>
+  querySportList: ProcedureFn<TrpcClientApi["sport"]["list"]["query"]> = async (
+    input,
+  ) =>
     callTrpcQuery(
       this.clientApi,
       ["sport", "list"],
@@ -261,7 +370,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  queryAdminOrganizationSearch = async (input?: unknown) =>
+  queryAdminOrganizationSearch: ProcedureFn<
+    TrpcClientApi["admin"]["organization"]["search"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["admin", "organization", "search"],
@@ -270,7 +381,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminNotificationDeliveryDispatchNow = async (input?: unknown) =>
+  mutAdminNotificationDeliveryDispatchNow: ProcedureFn<
+    TrpcClientApi["admin"]["notificationDelivery"]["dispatchNow"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "notificationDelivery", "dispatchNow"],
@@ -279,9 +392,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminNotificationDeliveryEnqueueReservationCreatedTest = async (
-    input?: unknown,
-  ) =>
+  mutAdminNotificationDeliveryEnqueueReservationCreatedTest: ProcedureFn<
+    TrpcClientApi["admin"]["notificationDelivery"]["enqueueReservationCreatedTest"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "notificationDelivery", "enqueueReservationCreatedTest"],
@@ -292,9 +405,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminNotificationDeliveryEnqueuePlaceVerificationReviewedTest = async (
-    input?: unknown,
-  ) =>
+  mutAdminNotificationDeliveryEnqueuePlaceVerificationReviewedTest: ProcedureFn<
+    TrpcClientApi["admin"]["notificationDelivery"]["enqueuePlaceVerificationReviewedTest"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "notificationDelivery", "enqueuePlaceVerificationReviewedTest"],
@@ -305,9 +418,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminNotificationDeliveryEnqueueClaimReviewedTest = async (
-    input?: unknown,
-  ) =>
+  mutAdminNotificationDeliveryEnqueueClaimReviewedTest: ProcedureFn<
+    TrpcClientApi["admin"]["notificationDelivery"]["enqueueClaimReviewedTest"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "notificationDelivery", "enqueueClaimReviewedTest"],
@@ -317,9 +430,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  queryAdminNotificationDeliveryListMyWebPushSubscriptions = async (
-    input?: unknown,
-  ) =>
+  queryAdminNotificationDeliveryListMyWebPushSubscriptions: ProcedureFn<
+    TrpcClientApi["admin"]["notificationDelivery"]["listMyWebPushSubscriptions"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["admin", "notificationDelivery", "listMyWebPushSubscriptions"],
@@ -329,7 +442,9 @@ export class AdminApi {
       this.toAppError,
     );
 
-  mutAdminNotificationDeliveryEnqueueWebPushTest = async (input?: unknown) =>
+  mutAdminNotificationDeliveryEnqueueWebPushTest: ProcedureFn<
+    TrpcClientApi["admin"]["notificationDelivery"]["enqueueWebPushTest"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["admin", "notificationDelivery", "enqueueWebPushTest"],

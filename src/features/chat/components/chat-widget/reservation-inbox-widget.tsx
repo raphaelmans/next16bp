@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, RefreshCw } from "lucide-react";
+import { ArchiveRestore, RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Channel } from "stream-chat";
 import { formatInTimeZone, formatTimeRangeInTimeZone } from "@/common/format";
@@ -8,17 +8,35 @@ import { useMediaQuery } from "@/common/hooks/use-media-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  makeReservationThreadId,
+  parseReservationThreadId,
+} from "@/lib/modules/chat/shared/domain";
+import { toReservationIdsFromThreadIds } from "@/lib/modules/chat/shared/transform";
 import { cn } from "@/lib/utils";
 import {
+  getChatStatusBadgeClassName,
+  getReservationReadOnlyReason,
+  isReservationMetaArchived,
+  parseTimestampMs,
+  sortReservationInboxIds,
+} from "../../domain";
+import {
   useModChatInvalidation,
+  useMutChatInboxArchiveThread,
+  useMutChatInboxUnarchiveThread,
   useMutReservationChatSendMessage,
   useQueryChatAuth,
+  useQueryChatInboxListArchivedThreadIds,
   useQueryReservationChatThreadMetas,
 } from "../../hooks/use-chat-trpc";
 import { useModStreamClient } from "../../hooks/useModStreamClient";
@@ -54,31 +72,6 @@ type ReservationChatOpenDetail = {
 };
 
 const RESERVATION_CHAT_OPEN_EVENT = "reservation-chat:open";
-
-function extractReservationIds(channels: Channel[]) {
-  const ids = channels
-    .map((channel) => channel.id)
-    .filter(
-      (channelId): channelId is string =>
-        typeof channelId === "string" && channelId.startsWith("res-"),
-    )
-    .map((channelId) => channelId.replace("res-", ""));
-
-  return Array.from(new Set(ids));
-}
-
-function parseTimestampMs(value: unknown): number {
-  if (value instanceof Date) {
-    return Number.isFinite(value.getTime()) ? value.getTime() : 0;
-  }
-
-  if (typeof value === "string") {
-    const ms = new Date(value).getTime();
-    return Number.isFinite(ms) ? ms : 0;
-  }
-
-  return 0;
-}
 
 export interface ReservationInboxWidgetConfig {
   kind: InboxKind;
@@ -116,48 +109,12 @@ function writeLocalStorage(key: string, value: string) {
   }
 }
 
-function isArchived(meta: ReservationThreadMeta | null, now: Date) {
-  if (!meta) {
-    return false;
-  }
-  if (meta.status === "CANCELLED" || meta.status === "EXPIRED") {
-    return true;
-  }
-  if (meta.status === "CONFIRMED") {
-    return new Date(meta.endTimeIso) < now;
-  }
-  return false;
-}
-
-function makeReadOnlyReason(meta: ReservationThreadMeta | null, now: Date) {
-  if (!meta) {
-    return null;
-  }
-
-  if (meta.status === "CANCELLED") {
-    return "Reservation cancelled. This conversation is archived and read-only.";
-  }
-  if (meta.status === "EXPIRED") {
-    return "Reservation expired. This conversation is archived and read-only.";
-  }
-  if (meta.status === "CONFIRMED" && new Date(meta.endTimeIso) < now) {
-    return "Reservation complete. This conversation is archived and read-only.";
-  }
-
-  return null;
-}
-
 function StatusPill({ status }: { status: string | null }) {
   if (!status) {
     return null;
   }
 
-  const className =
-    status === "CONFIRMED"
-      ? "bg-success/10 text-success border-success/20"
-      : status === "CANCELLED" || status === "EXPIRED"
-        ? "bg-destructive/10 text-destructive border-destructive/20"
-        : "bg-warning/10 text-warning border-warning/20";
+  const className = getChatStatusBadgeClassName(status);
 
   return (
     <Badge
@@ -182,14 +139,15 @@ export function ReservationInboxWidget({
   const [activeReservationId, setActiveReservationId] = useState<string | null>(
     null,
   );
-  const [isLoadingChannels, setIsLoadingChannels] = useState(false);
+  const [_isLoadingChannels, setIsLoadingChannels] = useState(false);
   const [channelsError, setChannelsError] = useState<unknown>(null);
   const [hasLoadedChannelsOnce, setHasLoadedChannelsOnce] = useState(false);
   const [hasLoadedMetasOnce, setHasLoadedMetasOnce] = useState(false);
-  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archivedDialogOpen, setArchivedDialogOpen] = useState(false);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
   const [syncPhase, setSyncPhase] = useState<SyncPhase>("idle");
   const [syncErrorMessage, setSyncErrorMessage] = useState<string | null>(null);
+  const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const previousReservationIdsKeyRef = useRef<string>("");
   const syncRequestIdRef = useRef(0);
   const openRef = useRef(open);
@@ -199,9 +157,14 @@ export function ReservationInboxWidget({
   const fetchChannelsInFlightRef = useRef<Promise<ChannelRefreshResult> | null>(
     null,
   );
-  const { fetchReservationThreadMetas, invalidateReservationThreadMetas } =
-    useModChatInvalidation();
+  const {
+    fetchReservationThreadMetas,
+    invalidateReservationThreadMetas,
+    invalidateChatInboxListArchivedThreadIds,
+  } = useModChatInvalidation();
   const sendMessageMutation = useMutReservationChatSendMessage();
+  const archiveThreadMutation = useMutChatInboxArchiveThread();
+  const unarchiveThreadMutation = useMutChatInboxUnarchiveThread();
 
   openRef.current = open;
   channelsRef.current = channels;
@@ -329,9 +292,11 @@ export function ReservationInboxWidget({
           error: new Error("Unable to refresh conversations"),
         };
 
-    const reservationIds = streamResult.ok
-      ? extractReservationIds(streamResult.channels)
-      : extractReservationIds(channelsRef.current);
+    const reservationIds = toReservationIdsFromThreadIds(
+      (streamResult.ok ? streamResult.channels : channelsRef.current).map(
+        (channel) => channel.id,
+      ),
+    );
 
     const shouldRefreshMetas = open && reservationIds.length > 0;
     let metaError: unknown = null;
@@ -430,7 +395,13 @@ export function ReservationInboxWidget({
   }, [client, isReady]);
 
   const reservationChannels = useMemo(
-    () => channels.filter((c) => (c.id ?? "").startsWith("res-")),
+    () =>
+      channels.filter((channel) => {
+        const channelId = channel.id;
+        return (
+          typeof channelId === "string" && !!parseReservationThreadId(channelId)
+        );
+      }),
     [channels],
   );
 
@@ -438,10 +409,16 @@ export function ReservationInboxWidget({
     const map = new Map<string, number>();
     for (const channel of reservationChannels) {
       const channelId = channel.id;
-      if (!channelId || !channelId.startsWith("res-")) {
+      if (!channelId) {
         continue;
       }
-      map.set(channelId.replace("res-", ""), channel.state.unreadCount ?? 0);
+
+      const parsed = parseReservationThreadId(channelId);
+      if (!parsed) {
+        continue;
+      }
+
+      map.set(parsed.reservationId, channel.state.unreadCount ?? 0);
     }
     return map;
   }, [reservationChannels]);
@@ -450,7 +427,12 @@ export function ReservationInboxWidget({
     const map = new Map<string, number>();
     for (const channel of reservationChannels) {
       const channelId = channel.id;
-      if (!channelId || !channelId.startsWith("res-")) {
+      if (!channelId) {
+        continue;
+      }
+
+      const parsed = parseReservationThreadId(channelId);
+      if (!parsed) {
         continue;
       }
 
@@ -464,13 +446,13 @@ export function ReservationInboxWidget({
         parseTimestampMs(dataRecord.last_message_at),
       );
 
-      map.set(channelId.replace("res-", ""), ms);
+      map.set(parsed.reservationId, ms);
     }
     return map;
   }, [reservationChannels]);
 
   const reservationIds = useMemo(
-    () => extractReservationIds(reservationChannels),
+    () => toReservationIdsFromThreadIds(reservationChannels.map((c) => c.id)),
     [reservationChannels],
   );
 
@@ -480,12 +462,50 @@ export function ReservationInboxWidget({
   );
 
   const metasQuery = useQueryReservationChatThreadMetas(
-    { reservationIds },
+    { reservationIds, includeArchived: false },
     {
       enabled: open && reservationIds.length > 0,
       placeholderData: (prev) => prev,
     },
   );
+
+  const archivedThreadIdsQuery = useQueryChatInboxListArchivedThreadIds(
+    { threadKind: "reservation" },
+    {
+      enabled: open,
+    },
+  );
+
+  const archivedReservationIdsFromStore = useMemo(() => {
+    return toReservationIdsFromThreadIds(
+      archivedThreadIdsQuery.data?.threadIds ?? [],
+    );
+  }, [archivedThreadIdsQuery.data?.threadIds]);
+
+  const archivedMetasQuery = useQueryReservationChatThreadMetas(
+    { reservationIds: archivedReservationIdsFromStore, includeArchived: true },
+    {
+      enabled: open && archivedReservationIdsFromStore.length > 0,
+      placeholderData: (prev) => prev,
+    },
+  );
+
+  const activeReservationFallbackMetasQuery =
+    useQueryReservationChatThreadMetas(
+      {
+        reservationIds: activeReservationId ? [activeReservationId] : [],
+        includeArchived: true,
+      },
+      {
+        enabled:
+          open &&
+          Boolean(activeReservationId) &&
+          !metasQuery.data?.some(
+            (meta) => meta.reservationId === activeReservationId,
+          ),
+        placeholderData: (prev) => prev,
+      },
+    );
 
   useEffect(() => {
     if (!open) {
@@ -527,10 +547,24 @@ export function ReservationInboxWidget({
     return map;
   }, [metasQuery.data]);
 
-  const isMetaFetching = metasQuery.isFetching && !metasQuery.isPending;
-  const isSyncing = syncPhase === "syncing";
+  const archivedMetasByReservationId = useMemo(() => {
+    const map = new Map<string, ReservationThreadMeta>();
+    for (const meta of archivedMetasQuery.data ?? []) {
+      map.set(meta.reservationId, meta as ReservationThreadMeta);
+    }
+    return map;
+  }, [archivedMetasQuery.data]);
+
+  const activeFallbackMetaByReservationId = useMemo(() => {
+    const map = new Map<string, ReservationThreadMeta>();
+    for (const meta of activeReservationFallbackMetasQuery.data ?? []) {
+      map.set(meta.reservationId, meta as ReservationThreadMeta);
+    }
+    return map;
+  }, [activeReservationFallbackMetasQuery.data]);
+
   const showSyncWarning = syncPhase === "partial" || syncPhase === "error";
-  const isRefreshBusy = isSyncing || isLoadingChannels || isMetaFetching;
+  const isRefreshBusy = isManualRefreshing;
   const showMetaSkeletons = reservationIds.length > 0 && !hasLoadedMetasOnce;
 
   const isStreamConnecting =
@@ -542,58 +576,29 @@ export function ReservationInboxWidget({
       (!hasLoadedChannelsOnce && !channelsError) ||
       (reservationIds.length > 0 && !hasLoadedMetasOnce));
 
-  const sortedReservationIds = useMemo(() => {
-    return [...reservationIds].sort((a, b) => {
-      const aMeta = metasByReservationId.get(a) ?? null;
-      const bMeta = metasByReservationId.get(b) ?? null;
+  const sortedReservationIds = useMemo(
+    () =>
+      sortReservationInboxIds({
+        reservationIds,
+        metasByReservationId,
+        unreadByReservationId,
+        channelActivityMsByReservationId,
+      }),
+    [
+      channelActivityMsByReservationId,
+      metasByReservationId,
+      reservationIds,
+      unreadByReservationId,
+    ],
+  );
 
-      const aActivityMs = Math.max(
-        channelActivityMsByReservationId.get(a) ?? 0,
-        parseTimestampMs(aMeta?.updatedAtIso),
-      );
-      const bActivityMs = Math.max(
-        channelActivityMsByReservationId.get(b) ?? 0,
-        parseTimestampMs(bMeta?.updatedAtIso),
-      );
-
-      if (aActivityMs !== bActivityMs) {
-        return bActivityMs - aActivityMs;
-      }
-
-      const aUnread = unreadByReservationId.get(a) ?? 0;
-      const bUnread = unreadByReservationId.get(b) ?? 0;
-      if (aUnread !== bUnread) {
-        return bUnread - aUnread;
-      }
-
-      const aStartMs = parseTimestampMs(aMeta?.startTimeIso);
-      const bStartMs = parseTimestampMs(bMeta?.startTimeIso);
-      if (aStartMs !== bStartMs) {
-        return bStartMs - aStartMs;
-      }
-
-      return a.localeCompare(b);
-    });
-  }, [
-    channelActivityMsByReservationId,
-    metasByReservationId,
-    reservationIds,
-    unreadByReservationId,
-  ]);
-
-  const activeReservationIds = useMemo(() => {
-    const now = new Date();
-    return sortedReservationIds.filter(
-      (id) => !isArchived(metasByReservationId.get(id) ?? null, now),
-    );
-  }, [metasByReservationId, sortedReservationIds]);
-
-  const archivedReservationIds = useMemo(() => {
-    const now = new Date();
-    return sortedReservationIds.filter((id) =>
-      isArchived(metasByReservationId.get(id) ?? null, now),
-    );
-  }, [metasByReservationId, sortedReservationIds]);
+  const visibleReservationIds = useMemo(
+    () =>
+      sortedReservationIds.filter((reservationId) =>
+        metasByReservationId.has(reservationId),
+      ),
+    [metasByReservationId, sortedReservationIds],
+  );
 
   useEffect(() => {
     if (!open) {
@@ -604,21 +609,29 @@ export function ReservationInboxWidget({
       return;
     }
 
-    const first = activeReservationIds[0] ?? archivedReservationIds[0] ?? null;
+    const first = visibleReservationIds[0] ?? null;
     if (first) {
       setActiveReservationId(first);
     }
-  }, [activeReservationId, activeReservationIds, archivedReservationIds, open]);
+  }, [activeReservationId, open, visibleReservationIds]);
 
   const activeMeta = useMemo(() => {
     if (!activeReservationId) {
       return null;
     }
-    return metasByReservationId.get(activeReservationId) ?? null;
-  }, [activeReservationId, metasByReservationId]);
+    return (
+      metasByReservationId.get(activeReservationId) ??
+      activeFallbackMetaByReservationId.get(activeReservationId) ??
+      null
+    );
+  }, [
+    activeFallbackMetaByReservationId,
+    activeReservationId,
+    metasByReservationId,
+  ]);
 
   const activeChannelId = activeReservationId
-    ? `res-${activeReservationId}`
+    ? makeReservationThreadId(activeReservationId)
     : null;
 
   const activeChannel = useMemo(() => {
@@ -637,13 +650,71 @@ export function ReservationInboxWidget({
 
   const myUserId = auth?.user.id ?? null;
   const now = new Date();
-  const readOnly = isArchived(activeMeta, now);
-  const readOnlyReason = makeReadOnlyReason(activeMeta, now);
+  const readOnly = isReservationMetaArchived(activeMeta, now);
+  const readOnlyReason = getReservationReadOnlyReason(activeMeta, now);
+  const activeThreadId = activeChannel?.id ?? null;
+  const archivedThreadIds = archivedThreadIdsQuery.data?.threadIds ?? [];
+  const activeThreadIsArchived =
+    !!activeThreadId && archivedThreadIds.includes(activeThreadId);
+
+  const handleArchiveThread = useCallback(async () => {
+    if (!activeThreadId) {
+      return;
+    }
+
+    await archiveThreadMutation.mutateAsync({
+      threadKind: "reservation",
+      threadId: activeThreadId,
+    });
+    await Promise.all([
+      invalidateChatInboxListArchivedThreadIds({ threadKind: "reservation" }),
+      invalidateReservationThreadMetas({ reservationIds }),
+    ]);
+  }, [
+    activeThreadId,
+    archiveThreadMutation,
+    invalidateChatInboxListArchivedThreadIds,
+    invalidateReservationThreadMetas,
+    reservationIds,
+  ]);
+
+  const handleUnarchiveThread = useCallback(
+    async (threadId?: string) => {
+      const targetThreadId = threadId ?? activeThreadId;
+      if (!targetThreadId) {
+        return;
+      }
+
+      await unarchiveThreadMutation.mutateAsync({
+        threadKind: "reservation",
+        threadId: targetThreadId,
+      });
+      await Promise.all([
+        invalidateChatInboxListArchivedThreadIds({ threadKind: "reservation" }),
+        invalidateReservationThreadMetas({ reservationIds }),
+      ]);
+    },
+    [
+      activeThreadId,
+      invalidateChatInboxListArchivedThreadIds,
+      invalidateReservationThreadMetas,
+      reservationIds,
+      unarchiveThreadMutation,
+    ],
+  );
+
+  const archivedReservationItems = useMemo(() => {
+    return archivedReservationIdsFromStore.map((reservationId) => ({
+      reservationId,
+      meta: archivedMetasByReservationId.get(reservationId) ?? null,
+      threadId: makeReservationThreadId(reservationId),
+    }));
+  }, [archivedMetasByReservationId, archivedReservationIdsFromStore]);
 
   const renderListRow = (reservationId: string) => {
     const meta = metasByReservationId.get(reservationId) ?? null;
     const channel = reservationChannels.find(
-      (c) => c.id === `res-${reservationId}`,
+      (c) => c.id === makeReservationThreadId(reservationId),
     );
     const unread = channel?.state.unreadCount ?? 0;
     const lastMessage = channel?.state.latestMessages?.[0]?.text ?? "";
@@ -742,14 +813,94 @@ export function ReservationInboxWidget({
       )}
     >
       <div className="border-b px-4 py-3">
-        <div className="flex justify-end">
+        <div className="flex items-center justify-end gap-2">
+          <Dialog
+            open={archivedDialogOpen}
+            onOpenChange={setArchivedDialogOpen}
+          >
+            <DialogTrigger asChild>
+              <Button type="button" variant="outline" size="sm" className="h-8">
+                Archived ({archivedReservationItems.length})
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Archived reservation threads</DialogTitle>
+                <DialogDescription>
+                  Manually unarchive a thread to make it eligible for the inbox
+                  again.
+                </DialogDescription>
+              </DialogHeader>
+              <ScrollArea className="max-h-[420px] pr-2">
+                <div className="space-y-2">
+                  {archivedReservationItems.length === 0 ? (
+                    <div className="text-sm text-muted-foreground">
+                      No archived reservation threads.
+                    </div>
+                  ) : (
+                    archivedReservationItems.map((item) => {
+                      const primary = item.meta
+                        ? (config.labels.listPrimary(
+                            item.meta,
+                            item.reservationId,
+                          ) ??
+                          `Reservation ${item.reservationId.slice(0, 8).toUpperCase()}`)
+                        : `Reservation ${item.reservationId.slice(0, 8).toUpperCase()}`;
+
+                      return (
+                        <div
+                          key={item.reservationId}
+                          className="flex items-center justify-between rounded-md border px-3 py-2"
+                        >
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-medium">
+                              {primary}
+                            </p>
+                            {item.meta ? (
+                              <p className="truncate text-xs text-muted-foreground">
+                                {item.meta.courtLabel} •{" "}
+                                {formatInTimeZone(
+                                  item.meta.startTimeIso,
+                                  item.meta.timeZone,
+                                  "EEE MMM d",
+                                )}
+                              </p>
+                            ) : null}
+                          </div>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            disabled={unarchiveThreadMutation.isPending}
+                            onClick={() =>
+                              handleUnarchiveThread(item.threadId).catch(
+                                () => undefined,
+                              )
+                            }
+                          >
+                            <ArchiveRestore className="mr-2 h-4 w-4" />
+                            Unarchive
+                          </Button>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </ScrollArea>
+            </DialogContent>
+          </Dialog>
           <Button
             type="button"
             variant="ghost"
             size="icon"
             className="h-9 w-9"
             disabled={isRefreshBusy}
-            onClick={() => syncInbox().catch(() => undefined)}
+            onClick={() => {
+              setIsManualRefreshing(true);
+              syncInbox()
+                .catch(() => undefined)
+                .finally(() => setIsManualRefreshing(false));
+            }}
           >
             <RefreshCw
               className={cn("h-4 w-4", isRefreshBusy && "animate-spin")}
@@ -783,40 +934,12 @@ export function ReservationInboxWidget({
             <div className="p-4 text-sm text-destructive">
               Failed to load conversations. Try refreshing.
             </div>
-          ) : hasLoadedChannelsOnce &&
-            activeReservationIds.length === 0 &&
-            archivedReservationIds.length === 0 ? (
+          ) : hasLoadedChannelsOnce && visibleReservationIds.length === 0 ? (
             <div className="p-4 text-sm text-muted-foreground">
               No reservation chats yet.
             </div>
           ) : (
-            <>
-              {activeReservationIds.map(renderListRow)}
-
-              {archivedReservationIds.length > 0 ? (
-                <Collapsible open={archiveOpen} onOpenChange={setArchiveOpen}>
-                  <CollapsibleTrigger asChild>
-                    <button
-                      type="button"
-                      className="flex w-full items-center justify-between px-4 py-3 text-xs font-medium text-muted-foreground hover:bg-muted/60"
-                    >
-                      <span>Archive ({archivedReservationIds.length})</span>
-                      <ChevronDown
-                        className={cn(
-                          "h-4 w-4 transition-transform",
-                          archiveOpen && "rotate-180",
-                        )}
-                      />
-                    </button>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <div className="divide-y">
-                      {archivedReservationIds.map(renderListRow)}
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
-              ) : null}
-            </>
+            visibleReservationIds.map(renderListRow)
           )}
         </div>
       </ScrollArea>
@@ -849,8 +972,32 @@ export function ReservationInboxWidget({
         readOnly={readOnly}
         readOnlyReason={readOnlyReason ?? undefined}
         minHeightClassName="min-h-0 flex-1"
-        onRefreshContext={syncInbox}
-        isContextRefreshing={isSyncing}
+        onRefreshContext={async () => {
+          setIsManualRefreshing(true);
+          try {
+            await syncInbox();
+          } finally {
+            setIsManualRefreshing(false);
+          }
+        }}
+        isContextRefreshing={isManualRefreshing}
+        archiveActionLabel={
+          activeThreadId
+            ? activeThreadIsArchived
+              ? "Unarchive"
+              : "Archive"
+            : undefined
+        }
+        onArchiveAction={
+          activeThreadId
+            ? activeThreadIsArchived
+              ? () => handleUnarchiveThread()
+              : () => handleArchiveThread()
+            : null
+        }
+        isArchiveActionBusy={
+          archiveThreadMutation.isPending || unarchiveThreadMutation.isPending
+        }
         onBack={!isDesktop ? () => setMobilePane("list") : undefined}
         backButtonLabel="Back to inbox"
         onSendMessage={async (payload) => {

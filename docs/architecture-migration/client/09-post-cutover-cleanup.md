@@ -56,7 +56,7 @@ All items must be true:
 - [x] Feature hooks own all query/mutation/invalidation behavior.
 - [x] No namespace `.query/.mutation/.queries` hook calls remain.
 - [x] Each active feature has endpoint-scoped `api.ts` contract.
-- [x] No `createTrpcFeatureApi` / `extends TrpcFeatureApi` / `declare readonly ...: unknown` remains in feature APIs.
+- [x] No `createTrpcFeatureApi` / `extends TrpcFeatureApi` / `declare readonly ...: unknown` / `input?: unknown` / `Promise<unknown>` remains in feature API method contracts.
 - [x] `src/app` contains route conventions only for new architecture.
 - [x] Shared error contract is centralized and used by UI.
 - [x] No transport-shape `error.data` parsing remains outside adapters.

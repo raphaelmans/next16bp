@@ -34,9 +34,11 @@ export interface AuthUserPreference {
 }
 
 export function useQueryAuthSession() {
-  return useFeatureQuery<AuthSessionUser | null>(
+  return useFeatureQuery(
     ["auth", "me"],
-    authApi.queryAuthMe as (input?: unknown) => Promise<AuthSessionUser | null>,
+    authApi.queryAuthMe as (
+      input?: Parameters<typeof authApi.queryAuthMe>[0],
+    ) => Promise<AuthSessionUser | null>,
     undefined,
     {
       retry: false,
@@ -110,21 +112,21 @@ export function useMutAuthLogout() {
   return {
     ...mutation,
     mutate: (
-      _variables?: unknown,
+      _variables?: undefined,
       options?: Parameters<typeof mutation.mutate>[1],
     ) => mutation.mutate(undefined, options),
     mutateAsync: (
-      _variables?: unknown,
+      _variables?: undefined,
       options?: Parameters<typeof mutation.mutateAsync>[1],
     ) => mutation.mutateAsync(undefined, options),
   };
 }
 
 export function useQueryAuthMyOrganizations(enabled: boolean) {
-  return useFeatureQuery<AuthOrganization[]>(
+  return useFeatureQuery(
     ["organization", "my"],
     authApi.queryOrganizationMy as (
-      input?: unknown,
+      input?: Parameters<typeof authApi.queryOrganizationMy>[0],
     ) => Promise<AuthOrganization[]>,
     undefined,
     { enabled },
@@ -132,10 +134,10 @@ export function useQueryAuthMyOrganizations(enabled: boolean) {
 }
 
 export function useQueryAuthUserPreference(enabled: boolean) {
-  return useFeatureQuery<AuthUserPreference>(
+  return useFeatureQuery(
     ["userPreference", "me"],
     authApi.queryUserPreferenceMe as (
-      input?: unknown,
+      input?: Parameters<typeof authApi.queryUserPreferenceMe>[0],
     ) => Promise<AuthUserPreference>,
     undefined,
     { enabled },
@@ -155,9 +157,11 @@ export function useModPortalSwitcherData({
   inferOwner,
   onSetDefaultPortalError,
 }: UsePortalSwitcherDataOptions) {
-  const sessionQuery = useFeatureQuery<AuthSessionUser | null>(
+  const sessionQuery = useFeatureQuery(
     ["auth", "me"],
-    authApi.queryAuthMe as (input?: unknown) => Promise<AuthSessionUser | null>,
+    authApi.queryAuthMe as (
+      input?: Parameters<typeof authApi.queryAuthMe>[0],
+    ) => Promise<AuthSessionUser | null>,
     undefined,
     {
       retry: false,
@@ -165,10 +169,10 @@ export function useModPortalSwitcherData({
     },
   );
 
-  const organizationsQuery = useFeatureQuery<AuthOrganization[]>(
+  const organizationsQuery = useFeatureQuery(
     ["organization", "my"],
     authApi.queryOrganizationMy as (
-      input?: unknown,
+      input?: Parameters<typeof authApi.queryOrganizationMy>[0],
     ) => Promise<AuthOrganization[]>,
     undefined,
     {
@@ -176,10 +180,10 @@ export function useModPortalSwitcherData({
     },
   );
 
-  const userPreferenceQuery = useFeatureQuery<AuthUserPreference>(
+  const userPreferenceQuery = useFeatureQuery(
     ["userPreference", "me"],
     authApi.queryUserPreferenceMe as (
-      input?: unknown,
+      input?: Parameters<typeof authApi.queryUserPreferenceMe>[0],
     ) => Promise<AuthUserPreference>,
     undefined,
     {

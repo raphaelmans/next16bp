@@ -45,7 +45,9 @@ export function useMutAdminNotificationEnqueueClaimReviewedTest(
 }
 
 export function useQueryAdminNotificationMyWebPushSubscriptions(
-  input?: unknown,
+  input?: Parameters<
+    typeof adminApi.queryAdminNotificationDeliveryListMyWebPushSubscriptions
+  >[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(

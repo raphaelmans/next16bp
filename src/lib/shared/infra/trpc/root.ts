@@ -3,6 +3,7 @@ import { authRouter } from "@/lib/modules/auth/auth.router";
 import { availabilityRouter } from "@/lib/modules/availability/availability.router";
 import { bookingsImportRouter } from "@/lib/modules/bookings-import/bookings-import.router";
 import { chatRouter } from "@/lib/modules/chat/chat.router";
+import { chatInboxRouter } from "@/lib/modules/chat/chat-inbox.router";
 import { chatPocRouter } from "@/lib/modules/chat/chat-poc.router";
 import { openPlayChatRouter } from "@/lib/modules/chat/open-play-chat.router";
 import { reservationChatRouter } from "@/lib/modules/chat/reservation-chat.router";
@@ -60,6 +61,7 @@ export const appRouter = router({
   paymentProof: paymentProofRouter,
   claimRequest: claimRequestRouter,
   chat: chatRouter,
+  chatInbox: chatInboxRouter,
   chatPoc: chatPocRouter,
   reservationChat: reservationChatRouter,
   openPlayChat: openPlayChatRouter,

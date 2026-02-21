@@ -5,19 +5,44 @@ import { toAppError as defaultToAppError } from "@/common/errors/to-app-error";
 import { callTrpcMutation, callTrpcQuery } from "@/common/trpc-client-call";
 import { getClientApi, type TrpcClientApi } from "@/trpc/client-api";
 
+type ProcedureFn<TProcedure> = TProcedure extends (
+  input: infer TInput,
+  ...rest: infer _TRest
+) => Promise<infer TResult>
+  ? (input?: TInput) => Promise<TResult>
+  : never;
+
 export interface IOpenPlayApi {
-  mutOpenPlayCancel: (input?: unknown) => Promise<unknown>;
-  mutOpenPlayChatSendMessage: (input?: unknown) => Promise<unknown>;
-  mutOpenPlayClose: (input?: unknown) => Promise<unknown>;
-  mutOpenPlayCreateFromReservation: (input?: unknown) => Promise<unknown>;
-  mutOpenPlayDecideParticipant: (input?: unknown) => Promise<unknown>;
-  mutOpenPlayLeave: (input?: unknown) => Promise<unknown>;
-  mutOpenPlayRequestToJoin: (input?: unknown) => Promise<unknown>;
-  queryOpenPlayChatGetSession: (input?: unknown) => Promise<unknown>;
-  queryOpenPlayGetDetail: (input?: unknown) => Promise<unknown>;
-  queryOpenPlayGetForReservation: (input?: unknown) => Promise<unknown>;
-  queryOpenPlayGetPublicDetail: (input?: unknown) => Promise<unknown>;
-  queryOpenPlayListByPlace: (input?: unknown) => Promise<unknown>;
+  mutOpenPlayCancel: ProcedureFn<TrpcClientApi["openPlay"]["cancel"]["mutate"]>;
+  mutOpenPlayChatSendMessage: ProcedureFn<
+    TrpcClientApi["openPlayChat"]["sendMessage"]["mutate"]
+  >;
+  mutOpenPlayClose: ProcedureFn<TrpcClientApi["openPlay"]["close"]["mutate"]>;
+  mutOpenPlayCreateFromReservation: ProcedureFn<
+    TrpcClientApi["openPlay"]["createFromReservation"]["mutate"]
+  >;
+  mutOpenPlayDecideParticipant: ProcedureFn<
+    TrpcClientApi["openPlay"]["decideParticipant"]["mutate"]
+  >;
+  mutOpenPlayLeave: ProcedureFn<TrpcClientApi["openPlay"]["leave"]["mutate"]>;
+  mutOpenPlayRequestToJoin: ProcedureFn<
+    TrpcClientApi["openPlay"]["requestToJoin"]["mutate"]
+  >;
+  queryOpenPlayChatGetSession: ProcedureFn<
+    TrpcClientApi["openPlayChat"]["getSession"]["query"]
+  >;
+  queryOpenPlayGetDetail: ProcedureFn<
+    TrpcClientApi["openPlay"]["getDetail"]["query"]
+  >;
+  queryOpenPlayGetForReservation: ProcedureFn<
+    TrpcClientApi["openPlay"]["getForReservation"]["query"]
+  >;
+  queryOpenPlayGetPublicDetail: ProcedureFn<
+    TrpcClientApi["openPlay"]["getPublicDetail"]["query"]
+  >;
+  queryOpenPlayListByPlace: ProcedureFn<
+    TrpcClientApi["openPlay"]["listByPlace"]["query"]
+  >;
 }
 
 export type OpenPlayApiDeps = {
@@ -34,7 +59,9 @@ export class OpenPlayApi {
     this.toAppError = deps.toAppError ?? defaultToAppError;
   }
 
-  mutOpenPlayCancel = async (input?: unknown) =>
+  mutOpenPlayCancel: ProcedureFn<
+    TrpcClientApi["openPlay"]["cancel"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["openPlay", "cancel"],
@@ -43,7 +70,9 @@ export class OpenPlayApi {
       this.toAppError,
     );
 
-  mutOpenPlayChatSendMessage = async (input?: unknown) =>
+  mutOpenPlayChatSendMessage: ProcedureFn<
+    TrpcClientApi["openPlayChat"]["sendMessage"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["openPlayChat", "sendMessage"],
@@ -52,16 +81,19 @@ export class OpenPlayApi {
       this.toAppError,
     );
 
-  mutOpenPlayClose = async (input?: unknown) =>
-    callTrpcMutation(
-      this.clientApi,
-      ["openPlay", "close"],
-      (clientApi) => clientApi.openPlay.close.mutate,
-      input,
-      this.toAppError,
-    );
+  mutOpenPlayClose: ProcedureFn<TrpcClientApi["openPlay"]["close"]["mutate"]> =
+    async (input) =>
+      callTrpcMutation(
+        this.clientApi,
+        ["openPlay", "close"],
+        (clientApi) => clientApi.openPlay.close.mutate,
+        input,
+        this.toAppError,
+      );
 
-  mutOpenPlayCreateFromReservation = async (input?: unknown) =>
+  mutOpenPlayCreateFromReservation: ProcedureFn<
+    TrpcClientApi["openPlay"]["createFromReservation"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["openPlay", "createFromReservation"],
@@ -70,7 +102,9 @@ export class OpenPlayApi {
       this.toAppError,
     );
 
-  mutOpenPlayDecideParticipant = async (input?: unknown) =>
+  mutOpenPlayDecideParticipant: ProcedureFn<
+    TrpcClientApi["openPlay"]["decideParticipant"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["openPlay", "decideParticipant"],
@@ -79,16 +113,19 @@ export class OpenPlayApi {
       this.toAppError,
     );
 
-  mutOpenPlayLeave = async (input?: unknown) =>
-    callTrpcMutation(
-      this.clientApi,
-      ["openPlay", "leave"],
-      (clientApi) => clientApi.openPlay.leave.mutate,
-      input,
-      this.toAppError,
-    );
+  mutOpenPlayLeave: ProcedureFn<TrpcClientApi["openPlay"]["leave"]["mutate"]> =
+    async (input) =>
+      callTrpcMutation(
+        this.clientApi,
+        ["openPlay", "leave"],
+        (clientApi) => clientApi.openPlay.leave.mutate,
+        input,
+        this.toAppError,
+      );
 
-  mutOpenPlayRequestToJoin = async (input?: unknown) =>
+  mutOpenPlayRequestToJoin: ProcedureFn<
+    TrpcClientApi["openPlay"]["requestToJoin"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["openPlay", "requestToJoin"],
@@ -97,7 +134,9 @@ export class OpenPlayApi {
       this.toAppError,
     );
 
-  queryOpenPlayChatGetSession = async (input?: unknown) =>
+  queryOpenPlayChatGetSession: ProcedureFn<
+    TrpcClientApi["openPlayChat"]["getSession"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["openPlayChat", "getSession"],
@@ -106,7 +145,9 @@ export class OpenPlayApi {
       this.toAppError,
     );
 
-  queryOpenPlayGetDetail = async (input?: unknown) =>
+  queryOpenPlayGetDetail: ProcedureFn<
+    TrpcClientApi["openPlay"]["getDetail"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["openPlay", "getDetail"],
@@ -115,7 +156,9 @@ export class OpenPlayApi {
       this.toAppError,
     );
 
-  queryOpenPlayGetForReservation = async (input?: unknown) =>
+  queryOpenPlayGetForReservation: ProcedureFn<
+    TrpcClientApi["openPlay"]["getForReservation"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["openPlay", "getForReservation"],
@@ -124,7 +167,9 @@ export class OpenPlayApi {
       this.toAppError,
     );
 
-  queryOpenPlayGetPublicDetail = async (input?: unknown) =>
+  queryOpenPlayGetPublicDetail: ProcedureFn<
+    TrpcClientApi["openPlay"]["getPublicDetail"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["openPlay", "getPublicDetail"],
@@ -133,7 +178,9 @@ export class OpenPlayApi {
       this.toAppError,
     );
 
-  queryOpenPlayListByPlace = async (input?: unknown) =>
+  queryOpenPlayListByPlace: ProcedureFn<
+    TrpcClientApi["openPlay"]["listByPlace"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["openPlay", "listByPlace"],

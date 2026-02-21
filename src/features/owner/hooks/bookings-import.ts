@@ -15,7 +15,7 @@ export function useMutOwnerImportCreateDraft(
 }
 
 export function useQueryOwnerImportAiUsage(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.queryBookingsImportAiUsage>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -27,7 +27,7 @@ export function useQueryOwnerImportAiUsage(
 }
 
 export function useQueryOwnerImportJob(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.queryBookingsImportGetJob>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -39,7 +39,7 @@ export function useQueryOwnerImportJob(
 }
 
 export function useQueryOwnerImportRows(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.queryBookingsImportListRows>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -51,7 +51,7 @@ export function useQueryOwnerImportRows(
 }
 
 export function useQueryOwnerImportSources(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.queryBookingsImportListSources>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(

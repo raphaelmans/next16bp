@@ -1,6 +1,13 @@
 import { randomUUID } from "node:crypto";
+import type { ICourtHoursRepository } from "@/lib/modules/court-hours/repositories/court-hours.repository";
+import type { ICourtRateRuleRepository } from "@/lib/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import { OrganizationNotFoundError } from "@/lib/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
+import type { PlaceOnboardingStatus } from "@/lib/modules/owner-setup/shared";
+import {
+  computePlaceOnboardingStatus,
+  normalizeVerificationStatus,
+} from "@/lib/modules/owner-setup/shared";
 import {
   MaxPlacePhotosExceededError,
   PlaceNotFoundError,
@@ -105,6 +112,10 @@ export interface IAdminCourtService {
     data: RecuratePlaceDTO,
   ): Promise<PlaceRecord>;
   getStats(): Promise<{ total: number; reservable: number }>;
+  getPlaceOnboardingStatus(
+    adminUserId: string,
+    data: AdminCourtDetailDTO,
+  ): Promise<PlaceOnboardingStatus>;
 }
 
 export class AdminCourtService implements IAdminCourtService {
@@ -114,6 +125,8 @@ export class AdminCourtService implements IAdminCourtService {
     private storageService: IObjectStorageService,
     private organizationRepository: IOrganizationRepository,
     private placeVerificationRepository: IPlaceVerificationRepository,
+    private courtHoursRepository: ICourtHoursRepository,
+    private courtRateRuleRepository: ICourtRateRuleRepository,
   ) {}
 
   private extractPublicStoragePath(url: string, bucket: string): string | null {
@@ -900,6 +913,50 @@ export class AdminCourtService implements IAdminCourtService {
       );
 
       return updated;
+    });
+  }
+
+  async getPlaceOnboardingStatus(
+    _adminUserId: string,
+    data: AdminCourtDetailDTO,
+  ): Promise<PlaceOnboardingStatus> {
+    const place = await this.adminCourtRepository.findById(data.placeId);
+    if (!place) {
+      throw new PlaceNotFoundError(data.placeId);
+    }
+
+    const verification = await this.placeVerificationRepository.findByPlaceId(
+      data.placeId,
+    );
+
+    const courts = await this.adminCourtRepository.findCourtsByPlaceId(
+      data.placeId,
+    );
+
+    const courtIds = courts.map((c) => c.id);
+    const [courtHoursWindows, courtRateRules] =
+      courtIds.length > 0
+        ? await Promise.all([
+            this.courtHoursRepository.findByCourtIds(courtIds),
+            this.courtRateRuleRepository.findByCourtIds(courtIds),
+          ])
+        : [[], []];
+
+    const courtsWithHours = new Set(courtHoursWindows.map((w) => w.courtId));
+    const courtsWithPricing = new Set(courtRateRules.map((r) => r.courtId));
+
+    const verificationStatus = normalizeVerificationStatus(
+      verification?.status ?? null,
+    );
+
+    return computePlaceOnboardingStatus({
+      verificationStatus,
+      courts: courts.map((c) => ({
+        courtId: c.id,
+        isActive: c.isActive,
+      })),
+      courtsWithHours,
+      courtsWithPricing,
     });
   }
 }

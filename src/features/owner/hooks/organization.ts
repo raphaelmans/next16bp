@@ -378,7 +378,7 @@ export function useQueryOwnerSidebarQuickLinks(organizationId?: string | null) {
 }
 
 export function useQueryOwnerOrganizations(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.queryOrganizationMy>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(
@@ -390,7 +390,7 @@ export function useQueryOwnerOrganizations(
 }
 
 export function useQueryOwnerOrganizationDetails(
-  input?: unknown,
+  input?: Parameters<typeof ownerApi.queryOrganizationGet>[0],
   options?: Record<string, unknown>,
 ) {
   return useFeatureQuery(

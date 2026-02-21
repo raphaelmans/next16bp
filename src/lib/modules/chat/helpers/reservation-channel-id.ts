@@ -1,3 +1,5 @@
+import { makeReservationThreadId } from "../shared/domain";
+
 export function makeReservationChannelId(reservationId: string): string {
-  return `res-${reservationId}`;
+  return makeReservationThreadId(reservationId);
 }

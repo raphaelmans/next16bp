@@ -5,79 +5,202 @@ import { toAppError as defaultToAppError } from "@/common/errors/to-app-error";
 import { callTrpcMutation, callTrpcQuery } from "@/common/trpc-client-call";
 import { getClientApi, type TrpcClientApi } from "@/trpc/client-api";
 
+type ProcedureFn<TProcedure> = TProcedure extends (
+  input: infer TInput,
+  ...rest: infer _TRest
+) => Promise<infer TResult>
+  ? (input?: TInput) => Promise<TResult>
+  : never;
+
 export interface IOwnerApi {
-  mutCourtHoursCopyFromCourt: (input?: unknown) => Promise<unknown>;
-  mutCourtHoursSet: (input?: unknown) => Promise<unknown>;
-  mutCourtManagementCreate: (input?: unknown) => Promise<unknown>;
-  mutCourtManagementUpdate: (input?: unknown) => Promise<unknown>;
-  mutCourtRateRuleCopyFromCourt: (input?: unknown) => Promise<unknown>;
-  mutCourtRateRuleSet: (input?: unknown) => Promise<unknown>;
-  mutOrganizationPaymentCreateMethod: (input?: unknown) => Promise<unknown>;
-  mutOrganizationPaymentDeleteMethod: (input?: unknown) => Promise<unknown>;
-  mutOrganizationPaymentSetDefault: (input?: unknown) => Promise<unknown>;
-  mutOrganizationPaymentUpdateMethod: (input?: unknown) => Promise<unknown>;
-  mutOrganizationUpdate: (input?: unknown) => Promise<unknown>;
-  mutOrganizationUpdateProfile: (input?: unknown) => Promise<unknown>;
-  mutOrganizationUploadLogo: (input?: unknown) => Promise<unknown>;
-  mutPlaceManagementCreate: (input?: unknown) => Promise<unknown>;
-  mutPlaceManagementRemovePhoto: (input?: unknown) => Promise<unknown>;
-  mutPlaceManagementReorderPhotos: (input?: unknown) => Promise<unknown>;
-  mutPlaceManagementUpdate: (input?: unknown) => Promise<unknown>;
-  mutPlaceManagementUploadPhoto: (input?: unknown) => Promise<unknown>;
-  mutPlaceVerificationSubmit: (input?: unknown) => Promise<unknown>;
-  mutPlaceVerificationToggleReservations: (input?: unknown) => Promise<unknown>;
-  mutReservationOwnerAccept: (input?: unknown) => Promise<unknown>;
-  mutReservationOwnerConfirmPayment: (input?: unknown) => Promise<unknown>;
-  mutReservationOwnerReject: (input?: unknown) => Promise<unknown>;
-  queryCourtHoursGet: (input?: unknown) => Promise<unknown>;
-  queryCourtManagementGetById: (input?: unknown) => Promise<unknown>;
-  queryCourtManagementListByPlace: (input?: unknown) => Promise<unknown>;
-  queryCourtRateRuleGet: (input?: unknown) => Promise<unknown>;
-  queryOrganizationGet: (input?: unknown) => Promise<unknown>;
-  queryOrganizationMy: (input?: unknown) => Promise<unknown>;
-  queryOrganizationPaymentListMethods: (input?: unknown) => Promise<unknown>;
-  queryOwnerSetupGetStatus: (input?: unknown) => Promise<unknown>;
-  queryPlaceManagementGetById: (input?: unknown) => Promise<unknown>;
-  queryPlaceManagementList: (input?: unknown) => Promise<unknown>;
-  queryPlaceVerificationGetByPlace: (input?: unknown) => Promise<unknown>;
-  queryReservationOwnerGetForOrganization: (
-    input?: unknown,
-  ) => Promise<unknown>;
-  queryReservationOwnerGetPendingCount: (input?: unknown) => Promise<unknown>;
-  querySportList: (input?: unknown) => Promise<unknown>;
-  queryCourtBlockListForCourtRange: (input?: unknown) => Promise<unknown>;
-  mutCourtBlockUpdateRange: (input?: unknown) => Promise<unknown>;
-  mutCourtBlockCreateMaintenance: (input?: unknown) => Promise<unknown>;
-  mutCourtBlockCreateWalkIn: (input?: unknown) => Promise<unknown>;
-  mutCourtBlockCancel: (input?: unknown) => Promise<unknown>;
-  queryReservationOwnerGetActiveForCourtRange: (
-    input?: unknown,
-  ) => Promise<unknown>;
-  mutReservationOwnerCreateGuestBooking: (input?: unknown) => Promise<unknown>;
-  mutReservationOwnerConvertWalkInBlockToGuest: (
-    input?: unknown,
-  ) => Promise<unknown>;
-  queryGuestProfileList: (input?: unknown) => Promise<unknown>;
-  mutGuestProfileCreate: (input?: unknown) => Promise<unknown>;
-  queryClaimRequestGetMy: (input?: unknown) => Promise<unknown>;
-  queryClaimRequestGetById: (input?: unknown) => Promise<unknown>;
-  mutClaimRequestSubmitClaim: (input?: unknown) => Promise<unknown>;
-  queryPlaceList: (input?: unknown) => Promise<unknown>;
-  queryPlaceGetById: (input?: unknown) => Promise<unknown>;
-  mutPlaceManagementDelete: (input?: unknown) => Promise<unknown>;
-  queryBookingsImportAiUsage: (input?: unknown) => Promise<unknown>;
-  queryBookingsImportGetJob: (input?: unknown) => Promise<unknown>;
-  queryBookingsImportListRows: (input?: unknown) => Promise<unknown>;
-  queryBookingsImportListSources: (input?: unknown) => Promise<unknown>;
-  mutBookingsImportCreateDraft: (input?: unknown) => Promise<unknown>;
-  mutBookingsImportNormalize: (input?: unknown) => Promise<unknown>;
-  mutBookingsImportUpdateRow: (input?: unknown) => Promise<unknown>;
-  mutBookingsImportDeleteRow: (input?: unknown) => Promise<unknown>;
-  mutBookingsImportDiscardJob: (input?: unknown) => Promise<unknown>;
-  mutBookingsImportCommit: (input?: unknown) => Promise<unknown>;
-  mutBookingsImportReplaceWithGuest: (input?: unknown) => Promise<unknown>;
-  mutReservationOwnerConfirmPaidOffline: (input?: unknown) => Promise<unknown>;
-  queryAuditReservationHistory: (input?: unknown) => Promise<unknown>;
+  mutCourtHoursCopyFromCourt: ProcedureFn<
+    TrpcClientApi["courtHours"]["copyFromCourt"]["mutate"]
+  >;
+  mutCourtHoursSet: ProcedureFn<TrpcClientApi["courtHours"]["set"]["mutate"]>;
+  mutCourtManagementCreate: ProcedureFn<
+    TrpcClientApi["courtManagement"]["create"]["mutate"]
+  >;
+  mutCourtManagementUpdate: ProcedureFn<
+    TrpcClientApi["courtManagement"]["update"]["mutate"]
+  >;
+  mutCourtRateRuleCopyFromCourt: ProcedureFn<
+    TrpcClientApi["courtRateRule"]["copyFromCourt"]["mutate"]
+  >;
+  mutCourtRateRuleSet: ProcedureFn<
+    TrpcClientApi["courtRateRule"]["set"]["mutate"]
+  >;
+  mutOrganizationPaymentCreateMethod: ProcedureFn<
+    TrpcClientApi["organizationPayment"]["createMethod"]["mutate"]
+  >;
+  mutOrganizationPaymentDeleteMethod: ProcedureFn<
+    TrpcClientApi["organizationPayment"]["deleteMethod"]["mutate"]
+  >;
+  mutOrganizationPaymentSetDefault: ProcedureFn<
+    TrpcClientApi["organizationPayment"]["setDefault"]["mutate"]
+  >;
+  mutOrganizationPaymentUpdateMethod: ProcedureFn<
+    TrpcClientApi["organizationPayment"]["updateMethod"]["mutate"]
+  >;
+  mutOrganizationUpdate: ProcedureFn<
+    TrpcClientApi["organization"]["update"]["mutate"]
+  >;
+  mutOrganizationUpdateProfile: ProcedureFn<
+    TrpcClientApi["organization"]["updateProfile"]["mutate"]
+  >;
+  mutOrganizationUploadLogo: ProcedureFn<
+    TrpcClientApi["organization"]["uploadLogo"]["mutate"]
+  >;
+  mutPlaceManagementCreate: ProcedureFn<
+    TrpcClientApi["placeManagement"]["create"]["mutate"]
+  >;
+  mutPlaceManagementRemovePhoto: ProcedureFn<
+    TrpcClientApi["placeManagement"]["removePhoto"]["mutate"]
+  >;
+  mutPlaceManagementReorderPhotos: ProcedureFn<
+    TrpcClientApi["placeManagement"]["reorderPhotos"]["mutate"]
+  >;
+  mutPlaceManagementUpdate: ProcedureFn<
+    TrpcClientApi["placeManagement"]["update"]["mutate"]
+  >;
+  mutPlaceManagementUploadPhoto: ProcedureFn<
+    TrpcClientApi["placeManagement"]["uploadPhoto"]["mutate"]
+  >;
+  mutPlaceVerificationSubmit: ProcedureFn<
+    TrpcClientApi["placeVerification"]["submit"]["mutate"]
+  >;
+  mutPlaceVerificationToggleReservations: ProcedureFn<
+    TrpcClientApi["placeVerification"]["toggleReservations"]["mutate"]
+  >;
+  mutReservationOwnerAccept: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["accept"]["mutate"]
+  >;
+  mutReservationOwnerConfirmPayment: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["confirmPayment"]["mutate"]
+  >;
+  mutReservationOwnerReject: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["reject"]["mutate"]
+  >;
+  queryCourtHoursGet: ProcedureFn<TrpcClientApi["courtHours"]["get"]["query"]>;
+  queryCourtManagementGetById: ProcedureFn<
+    TrpcClientApi["courtManagement"]["getById"]["query"]
+  >;
+  queryCourtManagementListByPlace: ProcedureFn<
+    TrpcClientApi["courtManagement"]["listByPlace"]["query"]
+  >;
+  queryCourtRateRuleGet: ProcedureFn<
+    TrpcClientApi["courtRateRule"]["get"]["query"]
+  >;
+  queryOrganizationGet: ProcedureFn<
+    TrpcClientApi["organization"]["get"]["query"]
+  >;
+  queryOrganizationMy: ProcedureFn<
+    TrpcClientApi["organization"]["my"]["query"]
+  >;
+  queryOrganizationPaymentListMethods: ProcedureFn<
+    TrpcClientApi["organizationPayment"]["listMethods"]["query"]
+  >;
+  queryOwnerSetupGetStatus: ProcedureFn<
+    TrpcClientApi["ownerSetup"]["getStatus"]["query"]
+  >;
+  queryPlaceManagementGetById: ProcedureFn<
+    TrpcClientApi["placeManagement"]["getById"]["query"]
+  >;
+  queryPlaceManagementList: ProcedureFn<
+    TrpcClientApi["placeManagement"]["list"]["query"]
+  >;
+  queryPlaceVerificationGetByPlace: ProcedureFn<
+    TrpcClientApi["placeVerification"]["getByPlace"]["query"]
+  >;
+  queryReservationOwnerGetForOrganization: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["getForOrganization"]["query"]
+  >;
+  queryReservationOwnerGetPendingCount: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["getPendingCount"]["query"]
+  >;
+  querySportList: ProcedureFn<TrpcClientApi["sport"]["list"]["query"]>;
+  queryCourtBlockListForCourtRange: ProcedureFn<
+    TrpcClientApi["courtBlock"]["listForCourtRange"]["query"]
+  >;
+  mutCourtBlockUpdateRange: ProcedureFn<
+    TrpcClientApi["courtBlock"]["updateRange"]["mutate"]
+  >;
+  mutCourtBlockCreateMaintenance: ProcedureFn<
+    TrpcClientApi["courtBlock"]["createMaintenance"]["mutate"]
+  >;
+  mutCourtBlockCreateWalkIn: ProcedureFn<
+    TrpcClientApi["courtBlock"]["createWalkIn"]["mutate"]
+  >;
+  mutCourtBlockCancel: ProcedureFn<
+    TrpcClientApi["courtBlock"]["cancel"]["mutate"]
+  >;
+  queryReservationOwnerGetActiveForCourtRange: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["getActiveForCourtRange"]["query"]
+  >;
+  mutReservationOwnerCreateGuestBooking: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["createGuestBooking"]["mutate"]
+  >;
+  mutReservationOwnerConvertWalkInBlockToGuest: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["convertWalkInBlockToGuest"]["mutate"]
+  >;
+  queryGuestProfileList: ProcedureFn<
+    TrpcClientApi["guestProfile"]["list"]["query"]
+  >;
+  mutGuestProfileCreate: ProcedureFn<
+    TrpcClientApi["guestProfile"]["create"]["mutate"]
+  >;
+  queryClaimRequestGetMy: ProcedureFn<
+    TrpcClientApi["claimRequest"]["getMy"]["query"]
+  >;
+  queryClaimRequestGetById: ProcedureFn<
+    TrpcClientApi["claimRequest"]["getById"]["query"]
+  >;
+  mutClaimRequestSubmitClaim: ProcedureFn<
+    TrpcClientApi["claimRequest"]["submitClaim"]["mutate"]
+  >;
+  queryPlaceList: ProcedureFn<TrpcClientApi["place"]["list"]["query"]>;
+  queryPlaceGetById: ProcedureFn<TrpcClientApi["place"]["getById"]["query"]>;
+  mutPlaceManagementDelete: ProcedureFn<
+    TrpcClientApi["placeManagement"]["delete"]["mutate"]
+  >;
+  queryBookingsImportAiUsage: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["aiUsage"]["query"]
+  >;
+  queryBookingsImportGetJob: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["getJob"]["query"]
+  >;
+  queryBookingsImportListRows: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["listRows"]["query"]
+  >;
+  queryBookingsImportListSources: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["listSources"]["query"]
+  >;
+  mutBookingsImportCreateDraft: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["createDraft"]["mutate"]
+  >;
+  mutBookingsImportNormalize: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["normalize"]["mutate"]
+  >;
+  mutBookingsImportUpdateRow: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["updateRow"]["mutate"]
+  >;
+  mutBookingsImportDeleteRow: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["deleteRow"]["mutate"]
+  >;
+  mutBookingsImportDiscardJob: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["discardJob"]["mutate"]
+  >;
+  mutBookingsImportCommit: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["commit"]["mutate"]
+  >;
+  mutBookingsImportReplaceWithGuest: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["replaceWithGuest"]["mutate"]
+  >;
+  mutReservationOwnerConfirmPaidOffline: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["confirmPaidOffline"]["mutate"]
+  >;
+  queryAuditReservationHistory: ProcedureFn<
+    TrpcClientApi["audit"]["reservationHistory"]["query"]
+  >;
 }
 
 export type OwnerApiDeps = {
@@ -94,7 +217,9 @@ export class OwnerApi {
     this.toAppError = deps.toAppError ?? defaultToAppError;
   }
 
-  mutCourtHoursCopyFromCourt = async (input?: unknown) =>
+  mutCourtHoursCopyFromCourt: ProcedureFn<
+    TrpcClientApi["courtHours"]["copyFromCourt"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["courtHours", "copyFromCourt"],
@@ -103,16 +228,19 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutCourtHoursSet = async (input?: unknown) =>
-    callTrpcMutation(
-      this.clientApi,
-      ["courtHours", "set"],
-      (clientApi) => clientApi.courtHours.set.mutate,
-      input,
-      this.toAppError,
-    );
+  mutCourtHoursSet: ProcedureFn<TrpcClientApi["courtHours"]["set"]["mutate"]> =
+    async (input) =>
+      callTrpcMutation(
+        this.clientApi,
+        ["courtHours", "set"],
+        (clientApi) => clientApi.courtHours.set.mutate,
+        input,
+        this.toAppError,
+      );
 
-  mutCourtManagementCreate = async (input?: unknown) =>
+  mutCourtManagementCreate: ProcedureFn<
+    TrpcClientApi["courtManagement"]["create"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["courtManagement", "create"],
@@ -121,7 +249,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutCourtManagementUpdate = async (input?: unknown) =>
+  mutCourtManagementUpdate: ProcedureFn<
+    TrpcClientApi["courtManagement"]["update"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["courtManagement", "update"],
@@ -130,7 +260,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutCourtRateRuleCopyFromCourt = async (input?: unknown) =>
+  mutCourtRateRuleCopyFromCourt: ProcedureFn<
+    TrpcClientApi["courtRateRule"]["copyFromCourt"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["courtRateRule", "copyFromCourt"],
@@ -139,7 +271,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutCourtRateRuleSet = async (input?: unknown) =>
+  mutCourtRateRuleSet: ProcedureFn<
+    TrpcClientApi["courtRateRule"]["set"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["courtRateRule", "set"],
@@ -148,7 +282,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutOrganizationPaymentCreateMethod = async (input?: unknown) =>
+  mutOrganizationPaymentCreateMethod: ProcedureFn<
+    TrpcClientApi["organizationPayment"]["createMethod"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["organizationPayment", "createMethod"],
@@ -157,7 +293,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutOrganizationPaymentDeleteMethod = async (input?: unknown) =>
+  mutOrganizationPaymentDeleteMethod: ProcedureFn<
+    TrpcClientApi["organizationPayment"]["deleteMethod"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["organizationPayment", "deleteMethod"],
@@ -166,7 +304,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutOrganizationPaymentSetDefault = async (input?: unknown) =>
+  mutOrganizationPaymentSetDefault: ProcedureFn<
+    TrpcClientApi["organizationPayment"]["setDefault"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["organizationPayment", "setDefault"],
@@ -175,7 +315,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutOrganizationPaymentUpdateMethod = async (input?: unknown) =>
+  mutOrganizationPaymentUpdateMethod: ProcedureFn<
+    TrpcClientApi["organizationPayment"]["updateMethod"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["organizationPayment", "updateMethod"],
@@ -184,7 +326,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutOrganizationUpdate = async (input?: unknown) =>
+  mutOrganizationUpdate: ProcedureFn<
+    TrpcClientApi["organization"]["update"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["organization", "update"],
@@ -193,7 +337,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutOrganizationUpdateProfile = async (input?: unknown) =>
+  mutOrganizationUpdateProfile: ProcedureFn<
+    TrpcClientApi["organization"]["updateProfile"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["organization", "updateProfile"],
@@ -202,7 +348,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutOrganizationUploadLogo = async (input?: unknown) =>
+  mutOrganizationUploadLogo: ProcedureFn<
+    TrpcClientApi["organization"]["uploadLogo"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["organization", "uploadLogo"],
@@ -211,7 +359,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutPlaceManagementCreate = async (input?: unknown) =>
+  mutPlaceManagementCreate: ProcedureFn<
+    TrpcClientApi["placeManagement"]["create"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["placeManagement", "create"],
@@ -220,7 +370,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutPlaceManagementRemovePhoto = async (input?: unknown) =>
+  mutPlaceManagementRemovePhoto: ProcedureFn<
+    TrpcClientApi["placeManagement"]["removePhoto"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["placeManagement", "removePhoto"],
@@ -229,7 +381,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutPlaceManagementReorderPhotos = async (input?: unknown) =>
+  mutPlaceManagementReorderPhotos: ProcedureFn<
+    TrpcClientApi["placeManagement"]["reorderPhotos"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["placeManagement", "reorderPhotos"],
@@ -238,7 +392,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutPlaceManagementUpdate = async (input?: unknown) =>
+  mutPlaceManagementUpdate: ProcedureFn<
+    TrpcClientApi["placeManagement"]["update"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["placeManagement", "update"],
@@ -247,7 +403,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutPlaceManagementUploadPhoto = async (input?: unknown) =>
+  mutPlaceManagementUploadPhoto: ProcedureFn<
+    TrpcClientApi["placeManagement"]["uploadPhoto"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["placeManagement", "uploadPhoto"],
@@ -256,7 +414,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutPlaceVerificationSubmit = async (input?: unknown) =>
+  mutPlaceVerificationSubmit: ProcedureFn<
+    TrpcClientApi["placeVerification"]["submit"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["placeVerification", "submit"],
@@ -265,7 +425,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutPlaceVerificationToggleReservations = async (input?: unknown) =>
+  mutPlaceVerificationToggleReservations: ProcedureFn<
+    TrpcClientApi["placeVerification"]["toggleReservations"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["placeVerification", "toggleReservations"],
@@ -274,7 +436,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutReservationOwnerAccept = async (input?: unknown) =>
+  mutReservationOwnerAccept: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["accept"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["reservationOwner", "accept"],
@@ -283,7 +447,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutReservationOwnerConfirmPayment = async (input?: unknown) =>
+  mutReservationOwnerConfirmPayment: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["confirmPayment"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["reservationOwner", "confirmPayment"],
@@ -292,7 +458,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutReservationOwnerReject = async (input?: unknown) =>
+  mutReservationOwnerReject: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["reject"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["reservationOwner", "reject"],
@@ -301,16 +469,19 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryCourtHoursGet = async (input?: unknown) =>
-    callTrpcQuery(
-      this.clientApi,
-      ["courtHours", "get"],
-      (clientApi) => clientApi.courtHours.get.query,
-      input,
-      this.toAppError,
-    );
+  queryCourtHoursGet: ProcedureFn<TrpcClientApi["courtHours"]["get"]["query"]> =
+    async (input) =>
+      callTrpcQuery(
+        this.clientApi,
+        ["courtHours", "get"],
+        (clientApi) => clientApi.courtHours.get.query,
+        input,
+        this.toAppError,
+      );
 
-  queryCourtManagementGetById = async (input?: unknown) =>
+  queryCourtManagementGetById: ProcedureFn<
+    TrpcClientApi["courtManagement"]["getById"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["courtManagement", "getById"],
@@ -319,7 +490,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryCourtManagementListByPlace = async (input?: unknown) =>
+  queryCourtManagementListByPlace: ProcedureFn<
+    TrpcClientApi["courtManagement"]["listByPlace"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["courtManagement", "listByPlace"],
@@ -328,7 +501,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryCourtRateRuleGet = async (input?: unknown) =>
+  queryCourtRateRuleGet: ProcedureFn<
+    TrpcClientApi["courtRateRule"]["get"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["courtRateRule", "get"],
@@ -337,7 +512,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryOrganizationGet = async (input?: unknown) =>
+  queryOrganizationGet: ProcedureFn<
+    TrpcClientApi["organization"]["get"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["organization", "get"],
@@ -346,7 +523,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryOrganizationMy = async (input?: unknown) =>
+  queryOrganizationMy: ProcedureFn<
+    TrpcClientApi["organization"]["my"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["organization", "my"],
@@ -355,7 +534,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryOrganizationPaymentListMethods = async (input?: unknown) =>
+  queryOrganizationPaymentListMethods: ProcedureFn<
+    TrpcClientApi["organizationPayment"]["listMethods"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["organizationPayment", "listMethods"],
@@ -364,7 +545,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryOwnerSetupGetStatus = async (input?: unknown) =>
+  queryOwnerSetupGetStatus: ProcedureFn<
+    TrpcClientApi["ownerSetup"]["getStatus"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["ownerSetup", "getStatus"],
@@ -373,7 +556,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryPlaceManagementGetById = async (input?: unknown) =>
+  queryPlaceManagementGetById: ProcedureFn<
+    TrpcClientApi["placeManagement"]["getById"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["placeManagement", "getById"],
@@ -382,7 +567,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryPlaceManagementList = async (input?: unknown) =>
+  queryPlaceManagementList: ProcedureFn<
+    TrpcClientApi["placeManagement"]["list"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["placeManagement", "list"],
@@ -391,7 +578,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryPlaceVerificationGetByPlace = async (input?: unknown) =>
+  queryPlaceVerificationGetByPlace: ProcedureFn<
+    TrpcClientApi["placeVerification"]["getByPlace"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["placeVerification", "getByPlace"],
@@ -400,7 +589,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryReservationOwnerGetForOrganization = async (input?: unknown) =>
+  queryReservationOwnerGetForOrganization: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["getForOrganization"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["reservationOwner", "getForOrganization"],
@@ -409,7 +600,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryReservationOwnerGetPendingCount = async (input?: unknown) =>
+  queryReservationOwnerGetPendingCount: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["getPendingCount"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["reservationOwner", "getPendingCount"],
@@ -418,7 +611,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  querySportList = async (input?: unknown) =>
+  querySportList: ProcedureFn<TrpcClientApi["sport"]["list"]["query"]> = async (
+    input,
+  ) =>
     callTrpcQuery(
       this.clientApi,
       ["sport", "list"],
@@ -427,7 +622,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryCourtBlockListForCourtRange = async (input?: unknown) =>
+  queryCourtBlockListForCourtRange: ProcedureFn<
+    TrpcClientApi["courtBlock"]["listForCourtRange"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["courtBlock", "listForCourtRange"],
@@ -436,7 +633,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutCourtBlockUpdateRange = async (input?: unknown) =>
+  mutCourtBlockUpdateRange: ProcedureFn<
+    TrpcClientApi["courtBlock"]["updateRange"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["courtBlock", "updateRange"],
@@ -445,7 +644,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutCourtBlockCreateMaintenance = async (input?: unknown) =>
+  mutCourtBlockCreateMaintenance: ProcedureFn<
+    TrpcClientApi["courtBlock"]["createMaintenance"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["courtBlock", "createMaintenance"],
@@ -454,7 +655,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutCourtBlockCreateWalkIn = async (input?: unknown) =>
+  mutCourtBlockCreateWalkIn: ProcedureFn<
+    TrpcClientApi["courtBlock"]["createWalkIn"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["courtBlock", "createWalkIn"],
@@ -463,7 +666,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutCourtBlockCancel = async (input?: unknown) =>
+  mutCourtBlockCancel: ProcedureFn<
+    TrpcClientApi["courtBlock"]["cancel"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["courtBlock", "cancel"],
@@ -472,7 +677,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryReservationOwnerGetActiveForCourtRange = async (input?: unknown) =>
+  queryReservationOwnerGetActiveForCourtRange: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["getActiveForCourtRange"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["reservationOwner", "getActiveForCourtRange"],
@@ -481,7 +688,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutReservationOwnerCreateGuestBooking = async (input?: unknown) =>
+  mutReservationOwnerCreateGuestBooking: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["createGuestBooking"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["reservationOwner", "createGuestBooking"],
@@ -490,7 +699,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutReservationOwnerConvertWalkInBlockToGuest = async (input?: unknown) =>
+  mutReservationOwnerConvertWalkInBlockToGuest: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["convertWalkInBlockToGuest"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["reservationOwner", "convertWalkInBlockToGuest"],
@@ -500,7 +711,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryGuestProfileList = async (input?: unknown) =>
+  queryGuestProfileList: ProcedureFn<
+    TrpcClientApi["guestProfile"]["list"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["guestProfile", "list"],
@@ -509,7 +722,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutGuestProfileCreate = async (input?: unknown) =>
+  mutGuestProfileCreate: ProcedureFn<
+    TrpcClientApi["guestProfile"]["create"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["guestProfile", "create"],
@@ -518,7 +733,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryClaimRequestGetMy = async (input?: unknown) =>
+  queryClaimRequestGetMy: ProcedureFn<
+    TrpcClientApi["claimRequest"]["getMy"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["claimRequest", "getMy"],
@@ -527,7 +744,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryClaimRequestGetById = async (input?: unknown) =>
+  queryClaimRequestGetById: ProcedureFn<
+    TrpcClientApi["claimRequest"]["getById"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["claimRequest", "getById"],
@@ -536,7 +755,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutClaimRequestSubmitClaim = async (input?: unknown) =>
+  mutClaimRequestSubmitClaim: ProcedureFn<
+    TrpcClientApi["claimRequest"]["submitClaim"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["claimRequest", "submitClaim"],
@@ -545,7 +766,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryPlaceList = async (input?: unknown) =>
+  queryPlaceList: ProcedureFn<TrpcClientApi["place"]["list"]["query"]> = async (
+    input,
+  ) =>
     callTrpcQuery(
       this.clientApi,
       ["place", "list"],
@@ -554,16 +777,19 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryPlaceGetById = async (input?: unknown) =>
-    callTrpcQuery(
-      this.clientApi,
-      ["place", "getById"],
-      (clientApi) => clientApi.place.getById.query,
-      input,
-      this.toAppError,
-    );
+  queryPlaceGetById: ProcedureFn<TrpcClientApi["place"]["getById"]["query"]> =
+    async (input) =>
+      callTrpcQuery(
+        this.clientApi,
+        ["place", "getById"],
+        (clientApi) => clientApi.place.getById.query,
+        input,
+        this.toAppError,
+      );
 
-  mutPlaceManagementDelete = async (input?: unknown) =>
+  mutPlaceManagementDelete: ProcedureFn<
+    TrpcClientApi["placeManagement"]["delete"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["placeManagement", "delete"],
@@ -572,7 +798,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryBookingsImportAiUsage = async (input?: unknown) =>
+  queryBookingsImportAiUsage: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["aiUsage"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["bookingsImport", "aiUsage"],
@@ -581,7 +809,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryBookingsImportGetJob = async (input?: unknown) =>
+  queryBookingsImportGetJob: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["getJob"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["bookingsImport", "getJob"],
@@ -590,7 +820,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryBookingsImportListRows = async (input?: unknown) =>
+  queryBookingsImportListRows: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["listRows"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["bookingsImport", "listRows"],
@@ -599,7 +831,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryBookingsImportListSources = async (input?: unknown) =>
+  queryBookingsImportListSources: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["listSources"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["bookingsImport", "listSources"],
@@ -608,7 +842,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutBookingsImportCreateDraft = async (input?: unknown) =>
+  mutBookingsImportCreateDraft: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["createDraft"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "createDraft"],
@@ -617,7 +853,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutBookingsImportNormalize = async (input?: unknown) =>
+  mutBookingsImportNormalize: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["normalize"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "normalize"],
@@ -626,7 +864,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutBookingsImportUpdateRow = async (input?: unknown) =>
+  mutBookingsImportUpdateRow: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["updateRow"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "updateRow"],
@@ -635,7 +875,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutBookingsImportDeleteRow = async (input?: unknown) =>
+  mutBookingsImportDeleteRow: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["deleteRow"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "deleteRow"],
@@ -644,7 +886,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutBookingsImportDiscardJob = async (input?: unknown) =>
+  mutBookingsImportDiscardJob: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["discardJob"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "discardJob"],
@@ -653,7 +897,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutBookingsImportCommit = async (input?: unknown) =>
+  mutBookingsImportCommit: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["commit"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "commit"],
@@ -662,7 +908,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutBookingsImportReplaceWithGuest = async (input?: unknown) =>
+  mutBookingsImportReplaceWithGuest: ProcedureFn<
+    TrpcClientApi["bookingsImport"]["replaceWithGuest"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["bookingsImport", "replaceWithGuest"],
@@ -671,7 +919,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutReservationOwnerConfirmPaidOffline = async (input?: unknown) =>
+  mutReservationOwnerConfirmPaidOffline: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["confirmPaidOffline"]["mutate"]
+  > = async (input) =>
     callTrpcMutation(
       this.clientApi,
       ["reservationOwner", "confirmPaidOffline"],
@@ -680,7 +930,9 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryAuditReservationHistory = async (input?: unknown) =>
+  queryAuditReservationHistory: ProcedureFn<
+    TrpcClientApi["audit"]["reservationHistory"]["query"]
+  > = async (input) =>
     callTrpcQuery(
       this.clientApi,
       ["audit", "reservationHistory"],
