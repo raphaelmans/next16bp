@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, ShieldCheck } from "lucide-react";
+import { MapPin, ShieldCheck, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
@@ -34,6 +34,7 @@ export interface PlaceCardPlace {
   verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
   reservationsEnabled?: boolean;
   featuredRank?: number;
+  provinceRank?: number;
 }
 
 export type PlaceCardLinkScope = "card" | "title" | "none";
@@ -107,10 +108,15 @@ export function PlaceCard({
   const isVerifiedReservable =
     place.placeType === "RESERVABLE" && place.verificationStatus === "VERIFIED";
   const isCurated = place.placeType === "CURATED";
-  const isFeatured = (place.featuredRank ?? 0) > 0;
+  const isGlobalFeatured = (place.featuredRank ?? 0) > 0;
+  const isProvinceFeatured = (place.provinceRank ?? 0) > 0;
   const showStatusRow =
     variant !== "compact" &&
-    (isVerifiedReservable || isCurated || isFeatured || isMetaLoading);
+    (isVerifiedReservable ||
+      isCurated ||
+      isGlobalFeatured ||
+      isProvinceFeatured ||
+      isMetaLoading);
   const showVerificationSkeleton =
     isMetaLoading && place.placeType === "RESERVABLE" && !isVerifiedReservable;
   const showSportsRow = isMetaLoading || place.sports.length > 0;
@@ -196,9 +202,14 @@ export function PlaceCard({
             </h3>
             {showStatusRow && (
               <div className="flex flex-wrap items-center gap-2">
-                {isFeatured && (
+                {isGlobalFeatured && (
                   <Badge variant="paid" className="gap-1 text-[10px]">
-                    Featured #{place.featuredRank}
+                    <Star className="h-3 w-3" />
+                  </Badge>
+                )}
+                {isProvinceFeatured && (
+                  <Badge variant="paid" className="text-[10px]">
+                    Featured
                   </Badge>
                 )}
                 {isVerifiedReservable && (

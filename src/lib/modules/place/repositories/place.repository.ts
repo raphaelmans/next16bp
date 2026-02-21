@@ -62,6 +62,7 @@ export interface PlaceSummaryItem {
     longitude: string | null;
     placeType?: "CURATED" | "RESERVABLE";
     featuredRank?: number | null;
+    provinceRank?: number | null;
   };
 }
 
@@ -853,6 +854,7 @@ export class PlaceRepository implements IPlaceRepository {
           longitude: placeRecord.longitude ?? null,
           placeType: placeRecord.placeType,
           featuredRank: placeRecord.featuredRank ?? null,
+          provinceRank: placeRecord.provinceRank ?? null,
         },
       })),
       total,

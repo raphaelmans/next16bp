@@ -123,6 +123,7 @@ export interface DiscoveryPlaceSummary {
   city: string;
   placeType?: "CURATED" | "RESERVABLE";
   featuredRank?: number;
+  provinceRank?: number;
   latitude?: number;
   longitude?: number;
 }
@@ -152,6 +153,7 @@ interface PlaceSummaryListItem {
     longitude: string | null;
     placeType?: "CURATED" | "RESERVABLE";
     featuredRank?: number | null;
+    provinceRank?: number | null;
   };
 }
 
@@ -187,6 +189,7 @@ const mapPlaceSummaryItem = (
     city: item.place.city,
     placeType: item.place.placeType,
     featuredRank: item.place.featuredRank ?? 0,
+    provinceRank: item.place.provinceRank ?? 0,
     latitude: Number.isFinite(latitude) ? latitude : undefined,
     longitude: Number.isFinite(longitude) ? longitude : undefined,
   };

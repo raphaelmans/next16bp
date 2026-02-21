@@ -108,6 +108,7 @@ export interface DiscoveryPlaceSummary {
   city: string;
   placeType?: "CURATED" | "RESERVABLE";
   featuredRank?: number;
+  provinceRank?: number;
   latitude?: number;
   longitude?: number;
 }
@@ -146,6 +147,7 @@ export const buildDiscoveryPlaceCard = (
   verificationStatus: meta?.verificationStatus,
   reservationsEnabled: meta?.reservationsEnabled,
   featuredRank: summary.featuredRank,
+  provinceRank: summary.provinceRank,
 });
 
 export function useModDiscoveryPlaceCardDetails(
