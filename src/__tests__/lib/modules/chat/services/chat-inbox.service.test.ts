@@ -8,12 +8,12 @@ import { ValidationError } from "@/lib/shared/kernel/errors";
 
 type Viewer = {
   userId: string;
-  role: "admin" | "owner" | "player";
+  role: "admin" | "member" | "viewer";
 };
 
 const viewer: Viewer = {
   userId: "user-1",
-  role: "player",
+  role: "member",
 };
 
 const makeArchiveRepository = (): IChatInboxArchiveRepository => ({
@@ -52,7 +52,7 @@ describe("ChatInboxService", () => {
       // Arrange
       const archiveRepository = makeArchiveRepository();
       const service = new ChatInboxService({} as never, archiveRepository);
-      vi.spyOn(service as never, "assertViewerAccess").mockResolvedValue(
+      vi.spyOn(service as any, "assertViewerAccess").mockResolvedValue(
         undefined,
       );
 
@@ -80,7 +80,7 @@ describe("ChatInboxService", () => {
       // Arrange
       const archiveRepository = makeArchiveRepository();
       const service = new ChatInboxService({} as never, archiveRepository);
-      vi.spyOn(service as never, "assertViewerAccess").mockResolvedValue(
+      vi.spyOn(service as any, "assertViewerAccess").mockResolvedValue(
         undefined,
       );
 

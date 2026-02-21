@@ -210,6 +210,7 @@ export default function PlaceDetailPageView({
               placeName={place.name}
               placePhotos={place.photos}
               showBooking={false}
+              selectedAddonCount={0}
               showBookingVerificationUi={showBookingVerificationUi}
               verificationMessage={verificationMessage}
               verificationDescription={verificationDescription}
