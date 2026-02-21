@@ -1,0 +1,759 @@
+# Backend Architecture Conventions
+
+> Core architectural conventions defining layer responsibilities, dependency injection, and the kernel.
+
+## Layer Responsibilities
+
+### Transport + Contract Strategy
+
+- Contract source of truth is `Zod` schemas (see `./api-contracts-zod-first.md`).
+- Current primary transport is `tRPC`; OpenAPI is supported as migration/coexistence transport.
+- Transport adapters (tRPC routers, OpenAPI route handlers/controllers) must call the same usecase/service boundaries.
+- Business/domain layers MUST NOT import transport-specific types.
+- Capability naming and transport mapping rules are defined in `./endpoint-naming.md`.
+
+### Canonical Layer Chain
+
+All backend modules follow this chain:
+
+`controller -> usecase (optional, for complex orchestration) -> service (SRP domain logic) -> repository`
+
+Dependency and testing boundaries must align to this flow.
+
+Canonical testing rules are defined in:
+
+- [Testing Service Layer](./testing-service-layer.md)
+
+### Routers/Controllers
+
+**Responsibilities:**
+
+- Handle HTTP/tRPC/OpenAPI concerns only
+- Parse requests into DTOs
+- Call **one** use case or **one** service per operation
+- Map results/errors to HTTP responses
+
+**Rules:**
+
+- No business logic
+- No repository access
+- No service-to-service orchestration
+- Router handles null check for `findById` (throws `NotFoundError` if null)
+- Cross-cutting controls (auth, rate limiting) belong in transport middleware/procedures
+
+```typescript
+// modules/user/user.router.ts
+
+import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
+
+export const userRouter = router({
+  getById: protectedProcedure
+    .input(z.object({ id: S.ids.generic }))
+    .query(async ({ input }) => {
+      const user = await makeUserService().findById(input.id);
+      if (!user) {
+        throw new UserNotFoundError(input.id);
+      }
+      return wrapResponse(omitSensitive(user));
+    }),
+});
+```
+
+### Use Cases (Application Layer)
+
+**What is a Use Case?**  
+A use case represents a **business action or workflow**, not an HTTP endpoint.
+
+**Responsibilities:**
+
+- Orchestrate multiple services
+- Own transaction boundaries for multi-service operations
+- Coordinate side effects (email, audit, events)
+
+**Rules:**
+
+- Use cases may depend on multiple services
+- Use cases do **not** know about HTTP or ORM details
+- Use cases are class-based with an `execute` method
+- Constructor dependencies MUST be interface types (not concrete classes)
+
+**When to create a use case:**
+
+- Multi-service orchestration
+- Side effects (email, audit, events)
+- Complex workflows
+
+For background delivery side effects, prefer transactional enqueue using the outbox pattern:
+- [Async Jobs + Outbox](./async-jobs-outbox.md)
+
+**When NOT to create a use case:**
+
+- Simple read-only queries (call service directly)
+- Single-service writes (service owns the transaction)
+
+```typescript
+// modules/user/use-cases/register-user.use-case.ts
+
+export class RegisterUserUseCase {
+  constructor(
+    private userService: IUserService,
+    private workspaceService: IWorkspaceService,
+    private emailService: IEmailService,
+    private transactionManager: TransactionManager,
+  ) {}
+
+  async execute(input: RegisterUserDTO): Promise<UserPublic> {
+    const user = await this.transactionManager.run(async (tx) => {
+      const user = await this.userService.create(input.userData, { tx });
+
+      if (input.workspaceId) {
+        await this.workspaceService.addMember(input.workspaceId, user.id, {
+          tx,
+        });
+      }
+
+      return user;
+    });
+
+    // Side effects outside transaction
+    await this.emailService.sendWelcomeEmail(user.email, user.name);
+
+    return omitSensitive(user);
+  }
+}
+```
+
+### Services (Domain Layer)
+
+**Responsibilities:**
+
+- Encapsulate business rules
+- Operate on entities
+- Remain stateless
+- Own transactions for single-service writes
+
+**Rules:**
+
+- A service must not call another service
+- No orchestration logic
+- No infrastructure knowledge
+- Accept optional `RequestContext` for external transaction participation
+- Constructor dependencies MUST be interface types (not concrete classes)
+
+**Method patterns:**
+
+- `create(data)` — owns its own transaction
+- `create(data, ctx?)` — participates in external transaction if ctx provided, otherwise owns
+
+```typescript
+// modules/user/services/user.service.ts
+
+export class UserService implements IUserService {
+  constructor(
+    private userRepository: IUserRepository,
+    private transactionManager: TransactionManager,
+  ) {}
+
+  async findById(id: string, ctx?: RequestContext): Promise<User | null> {
+    return this.userRepository.findById(id, ctx);
+  }
+
+  async create(data: UserInsert, ctx?: RequestContext): Promise<User> {
+    // If ctx has transaction, participate in it
+    if (ctx?.tx) {
+      return this.createInternal(data, ctx);
+    }
+
+    // Otherwise, own the transaction
+    return this.transactionManager.run(async (tx) => {
+      return this.createInternal(data, { tx });
+    });
+  }
+
+  private async createInternal(
+    data: UserInsert,
+    ctx: RequestContext,
+  ): Promise<User> {
+    const existing = await this.userRepository.findByEmail(data.email, ctx);
+    if (existing) {
+      throw new UserEmailConflictError(data.email);
+    }
+    return this.userRepository.create(data, ctx);
+  }
+}
+```
+
+### Repositories (Data Access Layer)
+
+**Responsibilities:**
+
+- Handle persistence
+- Translate between database records and entities
+
+**Rules:**
+
+- Repositories return entities, not DTOs
+- ORM/database code lives here
+- Accept transaction context via `RequestContext`
+- Never create transactions
+- Repository interfaces MUST be defined and implemented explicitly
+
+```typescript
+// modules/user/repositories/user.repository.ts
+
+export class UserRepository implements IUserRepository {
+  constructor(private db: DbClient) {}
+
+  private getClient(ctx?: RequestContext): DbClient | DrizzleTransaction {
+    return (ctx?.tx as DrizzleTransaction) ?? this.db;
+  }
+
+  async findById(id: string, ctx?: RequestContext): Promise<User | null> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select()
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
+
+    return result[0] ?? null;
+  }
+
+  async create(data: UserInsert, ctx?: RequestContext): Promise<User> {
+    const client = this.getClient(ctx);
+    const result = await client.insert(users).values(data).returning();
+
+    return result[0];
+  }
+}
+```
+
+## Dependency Injection & Factories
+
+We use **manual DI with factories**.
+
+**Why:**
+
+- Explicit wiring
+- Easy testing
+- No hidden magic
+
+**Rules:**
+
+- No `new` across layers
+- Factories own all object creation
+- Factories MUST wire interfaces to implementations in one place for isolated testing
+
+### Factory Organization
+
+**Structure:** Per-module factories with a shared composition root.
+
+```
+src/lib/
+├─ shared/
+│  └─ infra/
+│     └─ container.ts       # Composition root - shared infra
+│
+├─ modules/
+│  └─ user/
+│     └─ factories/
+│        ├─ user.factory.ts # Module-specific wiring
+│        └─ index.ts
+```
+
+**Composition root (shared infrastructure):**
+
+```typescript
+// shared/infra/container.ts
+
+import { db } from "./db/drizzle";
+import { DrizzleTransactionManager } from "./db/transaction";
+import type { TransactionManager } from "@/shared/kernel/transaction";
+
+export interface Container {
+  db: typeof db;
+  transactionManager: TransactionManager;
+}
+
+let container: Container | null = null;
+
+export function getContainer(): Container {
+  if (!container) {
+    container = {
+      db,
+      transactionManager: new DrizzleTransactionManager(db),
+    };
+  }
+  return container;
+}
+```
+
+**Module factory (lazy singletons):**
+
+```typescript
+// modules/user/factories/user.factory.ts
+
+import { getContainer } from "@/shared/infra/container";
+import { UserRepository } from "../repositories/user.repository";
+import { UserService } from "../services/user.service";
+import { RegisterUserUseCase } from "../use-cases/register-user.use-case";
+
+let userRepository: UserRepository | null = null;
+let userService: UserService | null = null;
+
+export function makeUserRepository() {
+  if (!userRepository) {
+    userRepository = new UserRepository(getContainer().db);
+  }
+  return userRepository;
+}
+
+export function makeUserService() {
+  if (!userService) {
+    userService = new UserService(
+      makeUserRepository(),
+      getContainer().transactionManager,
+    );
+  }
+  return userService;
+}
+
+// Use cases: new instance per invocation
+export function makeRegisterUserUseCase() {
+  return new RegisterUserUseCase(
+    makeUserService(),
+    makeWorkspaceService(),
+    makeEmailService(),
+    getContainer().transactionManager,
+  );
+}
+```
+
+**Key principles:**
+
+- Container owns shared infrastructure (database, transaction manager, logger)
+- Module factories own module-specific wiring
+- Repositories and services are lazy singletons (stateless)
+- Use cases are new instances per operation
+- Factories are the _only_ place dependencies are instantiated
+
+## Kernel (Shared Core)
+
+### What is the Kernel?
+
+The **kernel** is the smallest, most stable core of the system.
+
+It contains:
+
+- Cross-cutting contracts
+- Fundamental abstractions
+- Zero domain or infrastructure logic
+
+Think of it as the **laws of the system**.
+
+### Kernel Rules
+
+Kernel code:
+
+- Must be framework-agnostic
+- Must be infra-agnostic
+- Must be domain-agnostic
+
+Kernel may import:
+
+- TypeScript / Node built-ins
+- Approved libraries (see below)
+
+Kernel must NOT import:
+
+- `infra/`
+- `modules/`
+
+### Approved Kernel Dependencies
+
+- **zod** — Schema validation and type inference
+  - Used for: DTO validation, config parsing, runtime type checks
+
+### Kernel Contents
+
+```
+shared/kernel/
+├─ dtos/              # Cross-module DTOs
+│  ├─ common.ts       # Shared schemas (file upload, etc.)
+│  └─ index.ts
+├─ transaction.ts     # TransactionManager + TransactionContext
+├─ context.ts         # RequestContext
+├─ errors.ts          # Base AppError definitions
+├─ pagination.ts      # Pagination types and schemas
+├─ response.ts        # API response types
+└─ auth.ts            # Session, UserRole, Permission types
+```
+
+**Why these belong in kernel:**
+
+- They are universal contracts
+- They are depended on by many layers
+- They must remain stable over time
+
+## DTOs vs Entities
+
+### Entities
+
+- Represent domain state
+- Used internally (services, repositories)
+- Contain business behavior
+- Do NOT represent API contracts
+
+**Approach:** Use Drizzle schema types for database records. Add domain entity classes only when you need behavior attached to data.
+
+```typescript
+// shared/infra/db/schema.ts
+
+import { pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
+import { createSelectSchema, createInsertSchema } from "drizzle-zod";
+
+export const users = pgTable("users", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull().unique(),
+  name: text("name").notNull(),
+  passwordHash: text("password_hash").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const UserSchema = createSelectSchema(users);
+export type User = z.infer<typeof UserSchema>;
+```
+
+### DTOs (Data Transfer Objects)
+
+- Represent data crossing boundaries
+- Used by controllers and use cases
+- Shaped for API consumers
+- Safe to change independently
+
+**Zod-based DTO pattern:**
+
+```typescript
+// modules/user/dtos/create-user.dto.ts
+
+import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
+
+export const CreateUserSchema = z.object({
+  email: S.common.email,
+  name: S.common.requiredText,
+  role: z.enum(["admin", "member"]).default("member"),
+});
+
+export type CreateUserDTO = z.infer<typeof CreateUserSchema>;
+```
+
+### Cross-Module DTOs
+
+DTOs that are shared across multiple modules live in `shared/kernel/dtos/`.
+
+**When to use shared DTOs (`shared/kernel/dtos/`):**
+
+- Schemas used by multiple modules (e.g., file upload, image asset)
+- Common input patterns (pagination is already in `shared/kernel/pagination.ts`)
+- DTOs consumed by the frontend
+
+**When to use module DTOs (`lib/modules/<module>/dtos/`):**
+
+- Input/output specific to one module
+- DTOs that may change independently of other modules
+
+**Example - shared DTO:**
+
+```typescript
+// shared/kernel/dtos/common.ts
+
+import { z } from "zod";
+
+export const ImageAssetSchema = z.object({
+  file: z.custom<File>().optional(),
+  url: z.string(),
+});
+
+export type ImageAsset = z.infer<typeof ImageAssetSchema>;
+
+export const FileUploadSchema = z.object({
+  imageAsset: ImageAssetSchema,
+});
+```
+
+**Example - module DTO using shared schema:**
+
+```typescript
+// modules/user/dtos/update-user.dto.ts
+
+import { z } from "zod";
+import { ImageAssetSchema } from "@/shared/kernel/dtos/common";
+
+export const UpdateUserSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  avatar: ImageAssetSchema.optional(),
+});
+
+export type UpdateUserDTO = z.infer<typeof UpdateUserSchema>;
+```
+
+## Module Shared Code (`lib/modules/<module>/shared/`)
+
+Some modules need **shared, reusable code** that is still domain-specific (not kernel).
+
+Convention:
+
+- Put module-owned shared code in `lib/modules/<module>/shared/`.
+- Treat it as potentially **isomorphic**: safe to import from both server and client code when needed.
+
+Typical contents:
+
+- Zod schemas + inferred types that represent module concepts
+- deterministic calculations and invariants (pure functions)
+- domain-specific error types that do not depend on server infrastructure
+
+Rules:
+
+- Must not import `shared/infra/*` (DB, logger, auth, tRPC init).
+- Must not depend on framework-only code.
+- Keep it pure and portable so it can be extracted to a workspace package later.
+
+Example (pattern reference):
+
+- `modules/webhooks/shared/webhook.schemas.ts`
+- `modules/webhooks/shared/webhook.errors.ts`
+
+### Mapping Rules
+
+- Controllers never receive entities directly (omit sensitive fields first)
+- Repositories never return DTOs
+- Mapping happens in routers, use cases, or mappers
+
+## Complete Dependency Graph
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                           Factory                               │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │ makeUserRepository() ──► UserRepository(db)             │   │
+│  │         │                                               │   │
+│  │         ▼                                               │   │
+│  │ makeUserService() ──► UserService(                      │   │
+│  │         │               userRepository,                 │   │
+│  │         │               transactionManager)             │   │
+│  │         │                                               │   │
+│  │         ▼                                               │   │
+│  │ makeRegisterUserUseCase() ──► RegisterUserUseCase(      │   │
+│  │                                userService,             │   │
+│  │                                workspaceService,        │   │
+│  │                                emailService,            │   │
+│  │                                transactionManager)      │   │
+│  └─────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                       Router/Controller                         │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │                                                         │   │
+│  │ Simple read:                                            │   │
+│  │   userRouter.getById ──► UserService.findById()         │   │
+│  │                                                         │   │
+│  │ Simple write (single service):                          │   │
+│  │   userRouter.create ──► UserService.create()            │   │
+│  │                              │                          │   │
+│  │                              ▼                          │   │
+│  │                     UserRepository.create()             │   │
+│  │                                                         │   │
+│  │ Multi-service orchestration:                            │   │
+│  │   userRouter.register ──► RegisterUserUseCase.execute() │   │
+│  │                              │                          │   │
+│  │                    ┌─────────┴─────────┐                │   │
+│  │                    ▼                   ▼                │   │
+│  │           UserService        WorkspaceService           │   │
+│  │                    │                   │                │   │
+│  │                    ▼                   ▼                │   │
+│  │           UserRepository     WorkspaceRepository        │   │
+│  │                                                         │   │
+│  └─────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## Return Type Summary
+
+| Layer             | Returns       | Type Source                      |
+| ----------------- | ------------- | -------------------------------- |
+| Repository        | Entity        | drizzle-zod `createSelectSchema` |
+| Service           | Entity        | Same as Repository               |
+| Use Case          | Entity or DTO | DTO when transforming/omitting   |
+| Router/Controller | Entity or DTO | What API consumers see           |
+
+**Rule:** Return entities by default. Introduce DTOs when you need to transform, omit sensitive fields, or combine data.
+
+## Non-Goals (Deferred)
+
+These are **explicitly deferred**:
+
+- Event-driven architecture
+- Microservices
+- Full CQRS
+
+See [Async Jobs + Outbox](./async-jobs-outbox.md) for the recommended pattern when background delivery is required.
+Event-driven architecture and full CQRS are still deferred.
+
+---
+
+## Layer-by-Layer Checklist
+
+Use this comprehensive checklist for EVERY module to ensure nothing is missed.
+
+### Errors Layer (`errors/<module>.errors.ts`)
+
+```typescript
+// Template - EVERY error class MUST follow this
+export class <Entity><ErrorType>Error extends <BaseError> {
+  readonly code = '<MODULE>_<ERROR_TYPE>';  // REQUIRED
+  constructor(<entityId>: string) {
+    super('<User-safe message>', { <entityId> });
+  }
+}
+```
+
+- [ ] Each error extends appropriate base (`NotFoundError`, `ConflictError`, `AuthenticationError`, etc.)
+- [ ] Each error has `readonly code = '<MODULE>_<ERROR_TYPE>'` (SCREAMING_SNAKE_CASE)
+- [ ] Code is unique across the entire application
+- [ ] Constructor passes IDs to details object
+- [ ] Message is user-safe (no internal details, stack traces)
+
+### Repository Layer (`repositories/<module>.repository.ts`)
+
+- [ ] Interface `I<Entity>Repository` defined with all method signatures
+- [ ] Class implements interface: `implements I<Entity>Repository`
+- [ ] Constructor accepts `DbClient`
+- [ ] `getClient(ctx)` helper: `return (ctx?.tx as DrizzleTransaction) ?? this.db`
+- [ ] All methods accept `ctx?: RequestContext`
+- [ ] Returns `null` for not found (never throws)
+- [ ] No business logic
+- [ ] No logging
+
+### Service Layer (`services/<module>.service.ts`)
+
+- [ ] Interface `I<Entity>Service` defined with all method signatures
+- [ ] Class implements interface: `implements I<Entity>Service`
+- [ ] Constructor accepts **interface** types: `I<Entity>Repository` (not concrete)
+- [ ] Constructor accepts `TransactionManager`
+- [ ] Read methods: pass `ctx` through to repository
+- [ ] Write methods: check `ctx?.tx` - participate if exists, else create transaction
+- [ ] Business events logged: `logger.info({ event: '<entity>.<action>', ... }, 'Message')`
+- [ ] Event names: `<entity>.<past_tense_action>` format
+- [ ] Returns `null` for not found (router handles throwing)
+- [ ] No service-to-service calls
+
+### Use Case Layer (`use-cases/<name>.use-case.ts`)
+
+- [ ] Only created for multi-service orchestration or side effects
+- [ ] Constructor accepts **interface** types (not concrete classes)
+- [ ] Constructor accepts `TransactionManager`
+- [ ] Throws **domain errors** (NOT generic `Error`)
+- [ ] External service calls OUTSIDE transaction
+- [ ] DB operations INSIDE transaction
+- [ ] Side effects AFTER transaction commits
+- [ ] No logging (services log the events)
+
+```typescript
+// CORRECT - domain error
+if (!result) throw new EntityNotFoundError(id);
+
+// WRONG - generic error
+if (!result) throw new Error('Entity not found');
+```
+
+### Factory Layer (`factories/<module>.factory.ts`)
+
+- [ ] Lazy singleton for DB-backed modules (repository, service)
+- [ ] Request-scoped for request-dependent modules (auth with cookies)
+- [ ] Returns interface type in JSDoc/type hints
+- [ ] Uses `getContainer()` for shared dependencies
+
+### DTO Layer (`dtos/`)
+
+- [ ] Zod schemas for all inputs
+- [ ] Type exported: `export type <Name>DTO = z.infer<typeof <Name>Schema>`
+- [ ] Index file exports all schemas and types
+- [ ] Validation rules match business requirements
+- [ ] Sensitive fields excluded from output DTOs
+
+### Router Layer (`<module>.router.ts`)
+
+- [ ] Uses `publicProcedure` or `protectedProcedure` (includes logging middleware)
+- [ ] Input validated with `.input(ZodSchema)`
+- [ ] Calls factory: `make<Entity>Service()` or `make<UseCase>()`
+- [ ] Handles null: `if (!entity) throw new EntityNotFoundError(id)`
+- [ ] One service OR one use case per endpoint (not both)
+- [ ] No business logic
+- [ ] No direct logging (handled by middleware)
+- [ ] Sensitive fields omitted before returning
+
+### Transport Infrastructure (`shared/infra/trpc/`, OpenAPI handlers/controllers)
+
+Common:
+
+- [ ] Zod schema contracts reused from canonical contract definitions
+- [ ] No business logic in transport adapter
+- [ ] Request-scoped metadata (`requestId`) present in error mapping
+- [ ] Auth/rate-limit enforcement applied at transport boundary
+
+tRPC-specific:
+
+- [ ] Logger middleware applied to ALL procedures
+- [ ] `publicProcedure = loggedProcedure`
+- [ ] `protectedProcedure = loggedProcedure.use(authMiddleware)`
+- [ ] Error formatter logs include `requestId`
+- [ ] Known errors (`AppError`) logged at `warn` level
+- [ ] Unknown errors logged at `error` level
+- [ ] Context includes `log` (child logger with requestId)
+
+OpenAPI-specific:
+
+- [ ] Route handlers/controllers validate inputs with shared Zod schemas
+- [ ] Error mapping returns shared error contract (`code`, `message`, `requestId`, `details?`)
+- [ ] Response payload shape follows shared API contract guidance
+
+```typescript
+// Error formatter MUST include requestId
+ctx?.log.warn(
+  { err: cause, code: cause.code, details: cause.details, requestId },
+  cause.message,
+);
+```
+
+### Root Router Registration
+
+- [ ] tRPC router imported in `shared/infra/trpc/root.ts` (if tRPC is enabled)
+- [ ] OpenAPI route/controller wired in runtime router tree (if OpenAPI is enabled)
+
+### Testability Standard (MUST)
+
+- [ ] Layer tests exist for all implemented layers in the module:
+  - controller/router tests
+  - use case tests (if use case exists)
+  - service tests
+  - repository tests
+- [ ] Test doubles (stub/spy/mock/fake) are chosen per boundary and documented in tests
+- [ ] Fixture-based regression tests exist for unstable boundary contracts
+- [ ] Dual-transport capabilities include parity tests (tRPC vs OpenAPI)
+- [ ] Test structure follows `core/testing-service-layer.md`
+
+### Final Module Verification
+
+- [ ] TypeScript compiles without errors
+- [ ] All interfaces have implementations
+- [ ] Layer test suites pass for implemented layers
+- [ ] All error classes have unique codes
+- [ ] Business events logged in service layer
+- [ ] No logging in repository layer
+- [ ] No generic `Error` throws in use cases
+- [ ] `requestId` included in all error logs
