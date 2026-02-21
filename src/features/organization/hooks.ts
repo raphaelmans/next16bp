@@ -16,7 +16,10 @@ export function useMutOrganizationCreate(
       utils.organization.my.setData(undefined, (prev) =>
         prev ? [...prev, data.organization] : [data.organization],
       );
-      await utils.organization.invalidate();
+      await Promise.all([
+        utils.organization.invalidate(),
+        utils.ownerSetup.getStatus.invalidate(),
+      ]);
       onSuccess?.({ id: data.organization.id });
     },
   });

@@ -158,6 +158,27 @@ export function useQueryOwnerClaimablePlaces(
   );
 }
 
-export function useMutOwnerSubmitClaim(options?: Record<string, unknown>) {
-  return useFeatureMutation(ownerApi.mutClaimRequestSubmitClaim, options);
+export function useMutOwnerSubmitClaim(
+  options?: Record<string, unknown> & {
+    onSuccess?: (...args: unknown[]) => unknown;
+  },
+) {
+  const utils = trpc.useUtils();
+  const onSuccess = options?.onSuccess;
+  const nextOptions = { ...(options ?? {}) };
+  delete nextOptions.onSuccess;
+
+  return useFeatureMutation(ownerApi.mutClaimRequestSubmitClaim, {
+    ...nextOptions,
+    onSuccess: async (...args: unknown[]) => {
+      await Promise.allSettled([
+        utils.claimRequest.getMy.invalidate(),
+        utils.ownerSetup.getStatus.invalidate(),
+      ]);
+
+      if (onSuccess) {
+        await Promise.resolve(onSuccess(...args));
+      }
+    },
+  });
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { skipToken } from "@tanstack/react-query";
 import type { AppError } from "@/common/errors/app-error";
 import type { TrpcClientApi } from "@/trpc/client-api";
 
@@ -20,8 +21,17 @@ type MutationInvoker<TOutput> =
 export const buildTrpcQueryKey = (
   path: readonly string[],
   input?: unknown,
-): readonly unknown[] =>
-  input === undefined ? ["trpc", ...path] : ["trpc", ...path, input];
+): readonly unknown[] => {
+  const splitPath = path.flatMap((part) => part.split("."));
+
+  return [
+    splitPath,
+    {
+      ...(typeof input !== "undefined" && input !== skipToken ? { input } : {}),
+      type: "query" as const,
+    },
+  ];
+};
 
 export const callTrpcQuery = async <TInput, TOutput>(
   clientApi: TrpcClientApi,
