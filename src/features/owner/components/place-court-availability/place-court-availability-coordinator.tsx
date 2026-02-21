@@ -912,16 +912,19 @@ function OwnerCourtAvailabilityInner({
     },
   });
 
+  const isSubmittingGuestBookingRef = React.useRef(false);
   const handleGuestBookingSubmit = React.useCallback(
     async (values: GuestBookingFormValues) => {
-      const start = parseDateTimeInput(values.startTime, placeTimeZone);
-      const end = parseDateTimeInput(values.endTime, placeTimeZone);
-      if (!start || !end) {
-        toast.error("Invalid date or time");
-        return;
-      }
-
+      if (isSubmittingGuestBookingRef.current) return;
+      isSubmittingGuestBookingRef.current = true;
       try {
+        const start = parseDateTimeInput(values.startTime, placeTimeZone);
+        const end = parseDateTimeInput(values.endTime, placeTimeZone);
+        if (!start || !end) {
+          toast.error("Invalid date or time");
+          return;
+        }
+
         let guestProfileId = values.guestProfileId;
 
         if (values.guestMode === "new") {
@@ -957,6 +960,8 @@ function OwnerCourtAvailabilityInner({
         toast.error("Unable to add guest booking", {
           description: getClientErrorMessage(error, "Please try again"),
         });
+      } finally {
+        isSubmittingGuestBookingRef.current = false;
       }
     },
     [
@@ -1156,25 +1161,28 @@ function OwnerCourtAvailabilityInner({
     createWalkIn.isPending ||
     createGuestBooking.isPending;
 
+  const isSubmittingSelectionRef = React.useRef(false);
   const handleSelectionSubmit = React.useCallback(async () => {
-    if (!committedRange) {
-      toast.error("Select a time range first");
-      return;
-    }
-    const s = buildDateFromDayKey(
-      committedDayKey,
-      (committedRange.startIdx + startHour) * 60,
-      placeTimeZone,
-    );
-    const e = buildDateFromDayKey(
-      committedDayKey,
-      (committedRange.endIdx + startHour + 1) * 60,
-      placeTimeZone,
-    );
+    if (isSubmittingSelectionRef.current) return;
+    isSubmittingSelectionRef.current = true;
+    try {
+      if (!committedRange) {
+        toast.error("Select a time range first");
+        return;
+      }
+      const s = buildDateFromDayKey(
+        committedDayKey,
+        (committedRange.startIdx + startHour) * 60,
+        placeTimeZone,
+      );
+      const e = buildDateFromDayKey(
+        committedDayKey,
+        (committedRange.endIdx + startHour + 1) * 60,
+        placeTimeZone,
+      );
 
-    if (selectionBlockType === "GUEST_BOOKING") {
-      const currentGuestMode = guestModeRef.current;
-      try {
+      if (selectionBlockType === "GUEST_BOOKING") {
+        const currentGuestMode = guestModeRef.current;
         let gProfileId = guestProfileIdRef.current;
         if (currentGuestMode === "new") {
           const name = guestNameRef.current.trim();
@@ -1202,14 +1210,7 @@ function OwnerCourtAvailabilityInner({
           notes: notesRef.current.trim() || undefined,
         });
         toast.success("Guest booking added");
-      } catch (error) {
-        toast.error("Unable to add guest booking", {
-          description: getClientErrorMessage(error, "Please try again"),
-        });
-        return;
-      }
-    } else {
-      try {
+      } else {
         const payload = {
           courtId,
           startTime: toUtcISOString(s),
@@ -1222,16 +1223,21 @@ function OwnerCourtAvailabilityInner({
           await createWalkIn.mutateAsync(payload);
         }
         toast.success("Block created");
-      } catch (error) {
-        toast.error("Unable to create block", {
-          description: getClientErrorMessage(error, "Please try again"),
-        });
-        return;
       }
-    }
 
-    resetSelectionPanel();
-    setWeekCommittedDayKey(null);
+      resetSelectionPanel();
+      setWeekCommittedDayKey(null);
+    } catch (error) {
+      const msg =
+        selectionBlockType === "GUEST_BOOKING"
+          ? "Unable to add guest booking"
+          : "Unable to create block";
+      toast.error(msg, {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    } finally {
+      isSubmittingSelectionRef.current = false;
+    }
   }, [
     committedDayKey,
     committedRange,

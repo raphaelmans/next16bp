@@ -1033,20 +1033,23 @@ function OwnerAvailabilityStudioInner() {
     },
   });
 
+  const isSubmittingGuestBookingRef = React.useRef(false);
   const handleGuestBookingSubmit = React.useCallback(
     async (values: GuestBookingFormValues) => {
-      if (!courtId) {
-        toast.error("Select a court first");
-        return;
-      }
-      const start = parseDateTimeInput(values.startTime, placeTimeZone);
-      const end = parseDateTimeInput(values.endTime, placeTimeZone);
-      if (!start || !end) {
-        toast.error("Invalid date or time");
-        return;
-      }
-
+      if (isSubmittingGuestBookingRef.current) return;
+      isSubmittingGuestBookingRef.current = true;
       try {
+        if (!courtId) {
+          toast.error("Select a court first");
+          return;
+        }
+        const start = parseDateTimeInput(values.startTime, placeTimeZone);
+        const end = parseDateTimeInput(values.endTime, placeTimeZone);
+        if (!start || !end) {
+          toast.error("Invalid date or time");
+          return;
+        }
+
         let guestProfileId = values.guestProfileId;
 
         if (values.guestMode === "new") {
@@ -1082,6 +1085,8 @@ function OwnerAvailabilityStudioInner() {
         toast.error("Unable to add guest booking", {
           description: getClientErrorMessage(error, "Please try again"),
         });
+      } finally {
+        isSubmittingGuestBookingRef.current = false;
       }
     },
     [
@@ -1174,52 +1179,59 @@ function OwnerAvailabilityStudioInner() {
     },
   });
 
+  const isSubmittingReplaceRef = React.useRef(false);
   const handleReplaceWithGuestSubmit = React.useCallback(
     async (values: GuestBookingFormValues) => {
-      const guestProfileId =
-        values.guestMode === "existing"
-          ? (values.guestProfileId ?? undefined)
-          : undefined;
-      const newGuestName =
-        values.guestMode === "new"
-          ? (values.newGuestName ?? undefined)
-          : undefined;
-      const newGuestPhone =
-        values.guestMode === "new"
-          ? (values.newGuestPhone ?? undefined)
-          : undefined;
-      const newGuestEmail =
-        values.guestMode === "new"
-          ? (values.newGuestEmail ?? undefined)
-          : undefined;
+      if (isSubmittingReplaceRef.current) return;
+      isSubmittingReplaceRef.current = true;
+      try {
+        const guestProfileId =
+          values.guestMode === "existing"
+            ? (values.guestProfileId ?? undefined)
+            : undefined;
+        const newGuestName =
+          values.guestMode === "new"
+            ? (values.newGuestName ?? undefined)
+            : undefined;
+        const newGuestPhone =
+          values.guestMode === "new"
+            ? (values.newGuestPhone ?? undefined)
+            : undefined;
+        const newGuestEmail =
+          values.guestMode === "new"
+            ? (values.newGuestEmail ?? undefined)
+            : undefined;
 
-      if (replaceRow) {
-        await replaceWithGuestMutation.mutateAsync({
-          rowId: replaceRow.id,
-          guestMode: values.guestMode,
-          guestProfileId,
-          newGuestName,
-          newGuestPhone,
-          newGuestEmail,
-          notes: values.notes ?? undefined,
-        });
-        return;
+        if (replaceRow) {
+          await replaceWithGuestMutation.mutateAsync({
+            rowId: replaceRow.id,
+            guestMode: values.guestMode,
+            guestProfileId,
+            newGuestName,
+            newGuestPhone,
+            newGuestEmail,
+            notes: values.notes ?? undefined,
+          });
+          return;
+        }
+
+        if (replaceBlock && replaceBlock.type === "WALK_IN") {
+          await convertWalkInMutation.mutateAsync({
+            blockId: replaceBlock.id,
+            guestMode: values.guestMode,
+            guestProfileId,
+            newGuestName,
+            newGuestPhone,
+            newGuestEmail,
+            notes: values.notes ?? undefined,
+          });
+          return;
+        }
+
+        toast.error("No valid block found to convert");
+      } finally {
+        isSubmittingReplaceRef.current = false;
       }
-
-      if (replaceBlock && replaceBlock.type === "WALK_IN") {
-        await convertWalkInMutation.mutateAsync({
-          blockId: replaceBlock.id,
-          guestMode: values.guestMode,
-          guestProfileId,
-          newGuestName,
-          newGuestPhone,
-          newGuestEmail,
-          notes: values.notes ?? undefined,
-        });
-        return;
-      }
-
-      toast.error("No valid block found to convert");
     },
     [convertWalkInMutation, replaceBlock, replaceRow, replaceWithGuestMutation],
   );
@@ -1650,28 +1662,31 @@ function OwnerAvailabilityStudioInner() {
   guestProfileIdRef.current = storeGuestProfileId;
   notesRef.current = storeNotes;
 
+  const isSubmittingSelectionRef = React.useRef(false);
   const handleSelectionSubmit = React.useCallback(async () => {
-    if (!courtId || !committedRange) {
-      toast.error("Select a court and time range first");
-      return;
-    }
-    const effectiveDayKey = isWeekView
-      ? (weekCommittedDayKey ?? dayKey)
-      : dayKey;
-    const s = buildDateFromDayKey(
-      effectiveDayKey,
-      (committedRange.startIdx + startHour) * 60,
-      placeTimeZone,
-    );
-    const e = buildDateFromDayKey(
-      effectiveDayKey,
-      (committedRange.endIdx + startHour + 1) * 60,
-      placeTimeZone,
-    );
+    if (isSubmittingSelectionRef.current) return;
+    isSubmittingSelectionRef.current = true;
+    try {
+      if (!courtId || !committedRange) {
+        toast.error("Select a court and time range first");
+        return;
+      }
+      const effectiveDayKey = isWeekView
+        ? (weekCommittedDayKey ?? dayKey)
+        : dayKey;
+      const s = buildDateFromDayKey(
+        effectiveDayKey,
+        (committedRange.startIdx + startHour) * 60,
+        placeTimeZone,
+      );
+      const e = buildDateFromDayKey(
+        effectiveDayKey,
+        (committedRange.endIdx + startHour + 1) * 60,
+        placeTimeZone,
+      );
 
-    if (selectionBlockType === "GUEST_BOOKING") {
-      const currentGuestMode = guestModeRef.current;
-      try {
+      if (selectionBlockType === "GUEST_BOOKING") {
+        const currentGuestMode = guestModeRef.current;
         let gProfileId = guestProfileIdRef.current;
         if (currentGuestMode === "new") {
           const name = guestNameRef.current.trim();
@@ -1699,14 +1714,7 @@ function OwnerAvailabilityStudioInner() {
           notes: notesRef.current.trim() || undefined,
         });
         toast.success("Guest booking added");
-      } catch (error) {
-        toast.error("Unable to add guest booking", {
-          description: getClientErrorMessage(error, "Please try again"),
-        });
-        return;
-      }
-    } else {
-      try {
+      } else {
         const payload = {
           courtId,
           startTime: toUtcISOString(s),
@@ -1719,15 +1727,20 @@ function OwnerAvailabilityStudioInner() {
           await createWalkIn.mutateAsync(payload);
         }
         toast.success("Block created");
-      } catch (error) {
-        toast.error("Unable to create block", {
-          description: getClientErrorMessage(error, "Please try again"),
-        });
-        return;
       }
-    }
 
-    resetSelectionPanel();
+      resetSelectionPanel();
+    } catch (error) {
+      const msg =
+        selectionBlockType === "GUEST_BOOKING"
+          ? "Unable to add guest booking"
+          : "Unable to create block";
+      toast.error(msg, {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    } finally {
+      isSubmittingSelectionRef.current = false;
+    }
   }, [
     courtId,
     createGuestBooking,
