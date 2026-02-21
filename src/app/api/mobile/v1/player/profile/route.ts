@@ -65,10 +65,7 @@ export async function PATCH(req: Request) {
     if (!rl.ok) return rl.response;
 
     const raw = await parseJson(req);
-    const input = validate(
-      UpdateProfileSchema,
-      raw as Record<string, unknown>,
-    );
+    const input = validate(UpdateProfileSchema, raw as Record<string, unknown>);
 
     const service = makeProfileService();
     const result = await service.updateProfile(session.userId, input);

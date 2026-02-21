@@ -357,7 +357,7 @@ Hover: translateY(-4px), shadow-hover
 - Radius: 20px (pill)
 - Letter-spacing: 0.3px
 
-### 5.4 Time Slots
+### 5.4 Time Slots (Player Booking Flow)
 
 **Available Slot**
 ```
@@ -385,6 +385,38 @@ Hover: translateY(-4px), shadow-hover
 │          │  border: 1px #0D9488
 └──────────┘
 ```
+
+### 5.4.1 Availability Studio Block Types
+
+The Availability Studio uses semantically distinct colors for each block type.
+Green signals "open/available", gray signals "inactive/blocked", and orange
+shades represent different reservation states (dashed = unconfirmed hold,
+solid = confirmed).
+
+| Block Type    | Background    | Text          | Border             | Dot Color  | Semantic Meaning                  |
+|---------------|---------------|---------------|--------------------|------------|-----------------------------------|
+| Available     | emerald-50    | emerald-700   | dashed emerald-200 | emerald-500| Open — invites booking            |
+| Maintenance   | muted/60      | muted-fg      | solid border       | muted-fg/60| Blocked — inactive, no action     |
+| Walk-in       | orange-50     | orange-600    | dashed orange-200  | orange-400 | Reservation hold, not confirmed   |
+| Guest Booking | orange-100    | orange-700    | solid orange-300   | orange-500 | Owner-created, confirmed          |
+| Booked        | orange-200/60 | orange-800    | solid orange-300   | orange-600 | Player-booked through platform    |
+
+**Design rationale:**
+- **Green = available**: "Go" signal — invites players to book
+- **Gray = maintenance**: Neutral/inactive — no action needed
+- **Orange shades = reserved**: Three distinct intensities (light → medium → strong) for walk-in holds, guest bookings, and platform bookings
+- **Dashed borders** on Available and Walk-in signal "open/unconfirmed"
+- **Solid borders** on Guest Booking and Booked signal "confirmed"
+
+**Hex values (for HTML/external use):**
+
+| Block Type    | Background | Text    | Border  |
+|---------------|------------|---------|---------|
+| Available     | #ECFDF5    | #059669 | #A7F3D0 |
+| Maintenance   | #F3F4F6    | #6B7280 | #E5E7EB |
+| Walk-in       | #FFF7ED    | #EA580C | #FDBA74 |
+| Guest Booking | #FFEDD5    | #C2410C | #FDBA74 |
+| Booked        | #FED7AA    | #9A3412 | #FB923C |
 
 ### 5.5 Location Pin (from Logo)
 
@@ -435,11 +467,12 @@ Focus state:
 
 | Status | Color | Icon | Usage |
 |--------|-------|------|-------|
-| Available | Success | ✓ | Open slots |
-| Confirmed | Success | ✓ | Confirmed reservations |
-| Awaiting | Warning | ⏳ | Pending payment |
+| Available | Emerald (green) | ✓ | Open slots |
+| Confirmed | Orange | ✓ | Confirmed reservations (guest + platform booked) |
+| Walk-in Hold | Light Orange | ⏸ | Reserved for walk-in customers |
+| Awaiting | Warning (amber) | ⏳ | Pending payment |
 | Expired | Red | ✕ | Expired reservations |
-| Blocked | Muted | 🚫 | Blocked slots |
+| Blocked | Muted (gray) | 🚫 | Maintenance / blocked slots |
 
 ---
 

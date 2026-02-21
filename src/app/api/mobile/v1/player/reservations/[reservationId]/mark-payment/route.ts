@@ -48,11 +48,7 @@ export async function POST(req: Request, context: { params: Params }) {
     });
 
     const service = makeReservationService();
-    const result = await service.markPayment(
-      session.userId,
-      profile.id,
-      input,
-    );
+    const result = await service.markPayment(session.userId, profile.id, input);
 
     return NextResponse.json<ApiResponse<MarkPaymentMobileResponse>>(
       wrapResponse(result),

@@ -42,10 +42,7 @@ export const mobilePushToken = pgTable(
 );
 
 export const MobilePushTokenSchema = createSelectSchema(mobilePushToken);
-export const InsertMobilePushTokenSchema =
-  createInsertSchema(mobilePushToken);
+export const InsertMobilePushTokenSchema = createInsertSchema(mobilePushToken);
 
 export type MobilePushTokenRecord = z.infer<typeof MobilePushTokenSchema>;
-export type InsertMobilePushToken = z.infer<
-  typeof InsertMobilePushTokenSchema
->;
+export type InsertMobilePushToken = z.infer<typeof InsertMobilePushTokenSchema>;

@@ -1,17 +1,23 @@
 "use client";
 
-import { ChevronDown, Loader2, Plus, Trash2 } from "lucide-react";
+import { CirclePlus, Loader2, Trash2 } from "lucide-react";
 import * as React from "react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import {
   Select,
   SelectContent,
@@ -20,18 +26,233 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { CourtConfigCopyDialog } from "./court-config-copy-dialog";
+import type { BlockRow } from "./court-schedule-editor/helpers";
 import { CURRENCY_OPTIONS, DAY_OPTIONS } from "./court-schedule-editor/helpers";
 import { useCourtScheduleEditor } from "./court-schedule-editor/hooks";
+
+/* ─── Local constants & helpers ─── */
+
+const DAY_INITIALS: Record<number, string> = {
+  0: "S",
+  1: "M",
+  2: "T",
+  3: "W",
+  4: "Th",
+  5: "F",
+  6: "S",
+};
+
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  PHP: "₱",
+  USD: "$",
+};
+
+function formatMinutesAs12h(time: string): string {
+  if (!time) return "";
+  const [h, m] = time.split(":").map(Number);
+  if (Number.isNaN(h) || Number.isNaN(m)) return time;
+  const totalMinutes = h * 60 + m;
+  if (totalMinutes === 0 || totalMinutes === 1440) return "12:00 MN";
+  if (totalMinutes === 720) return "12:00 NN";
+  const suffix = h < 12 ? "AM" : "PM";
+  const display = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  return `${display}:${String(m).padStart(2, "0")} ${suffix}`;
+}
+
+function buildDaySummary(rows: BlockRow[]): string {
+  if (rows.length === 0) return "";
+  const first = rows[0];
+  const last = rows[rows.length - 1];
+  const timeRange = `${formatMinutesAs12h(first.startTime)} – ${formatMinutesAs12h(last.endTime)}`;
+  const priced = rows.find((r) => r.hourlyRate !== "");
+  if (priced) {
+    const sym = CURRENCY_SYMBOLS[priced.currency] ?? priced.currency;
+    return `${timeRange} · ${sym}${priced.hourlyRate}`;
+  }
+  return timeRange;
+}
+
+/* ─── ScheduleSlotRow ─── */
+
+type ScheduleSlotRowProps = {
+  row: BlockRow;
+  dayValue: number;
+  isLast: boolean;
+  hasError: boolean;
+  issueLabels: string[];
+  validation: ReturnType<typeof useCourtScheduleEditor>["validation"];
+  onRowChange: (day: number, rowId: string, changes: Partial<BlockRow>) => void;
+  onHourlyRateInput: (day: number, rowId: string, value: string) => void;
+  onApplyToAll: (day: number, rowId: string) => void;
+  onRemoveRow: (day: number, rowId: string) => void;
+  onAddRow: (day: number) => void;
+};
+
+function ScheduleSlotRow({
+  row,
+  dayValue,
+  isLast,
+  hasError,
+  issueLabels,
+  onRowChange,
+  onHourlyRateInput,
+  onApplyToAll,
+  onRemoveRow,
+  onAddRow,
+}: ScheduleSlotRowProps) {
+  return (
+    <div
+      className={cn(
+        "rounded-lg border p-3 space-y-2",
+        hasError && "border-destructive bg-destructive/5",
+      )}
+    >
+      <div className="flex flex-wrap items-center gap-3">
+        {/* Time range */}
+        <Input
+          type="time"
+          value={row.startTime}
+          onChange={(e) =>
+            onRowChange(dayValue, row.id, { startTime: e.target.value })
+          }
+          className={cn(
+            "w-[120px]",
+            hasError && "border-destructive focus-visible:ring-destructive/40",
+          )}
+        />
+        <span className="text-muted-foreground text-sm">–</span>
+        <Input
+          type="time"
+          value={row.endTime === "24:00" ? "00:00" : row.endTime}
+          onChange={(e) =>
+            onRowChange(dayValue, row.id, {
+              endTime: e.target.value === "00:00" ? "24:00" : e.target.value,
+            })
+          }
+          className={cn(
+            "w-[120px]",
+            hasError && "border-destructive focus-visible:ring-destructive/40",
+          )}
+        />
+
+        {/* Open/Closed toggle */}
+        <div className="flex items-center gap-2 min-w-[80px]">
+          <Switch
+            checked={row.isOpen}
+            onCheckedChange={(checked) =>
+              onRowChange(dayValue, row.id, { isOpen: checked })
+            }
+            aria-label="Toggle open hours"
+          />
+          <span className="text-xs text-muted-foreground">
+            {row.isOpen ? "Open" : "Closed"}
+          </span>
+        </div>
+
+        {/* Currency select (only when pricing enabled) */}
+        {row.allowPricing && (
+          <Select
+            value={row.currency}
+            onValueChange={(value) =>
+              onRowChange(dayValue, row.id, { currency: value })
+            }
+          >
+            <SelectTrigger className="w-[90px]">
+              <SelectValue placeholder="Currency" />
+            </SelectTrigger>
+            <SelectContent>
+              {CURRENCY_OPTIONS.map((currency) => (
+                <SelectItem key={currency} value={currency}>
+                  {currency}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+
+        {/* Hourly rate */}
+        {row.allowPricing ? (
+          <InputGroup className="w-[160px]">
+            <InputGroupAddon>
+              {CURRENCY_SYMBOLS[row.currency] ?? row.currency}
+            </InputGroupAddon>
+            <InputGroupInput
+              type="number"
+              min={0}
+              placeholder="Rate"
+              value={row.hourlyRate}
+              onChange={(e) =>
+                onHourlyRateInput(dayValue, row.id, e.target.value)
+              }
+            />
+          </InputGroup>
+        ) : (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() =>
+              onRowChange(dayValue, row.id, { allowPricing: true })
+            }
+          >
+            Add pricing
+          </Button>
+        )}
+
+        {/* Actions — pushed right */}
+        <div className="flex items-center gap-1 ml-auto">
+          {row.allowPricing && row.hourlyRate !== "" && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="text-xs"
+              onClick={() => onApplyToAll(dayValue, row.id)}
+            >
+              Copy to all
+            </Button>
+          )}
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() => onRemoveRow(dayValue, row.id)}
+            aria-label="Remove block"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+          {isLast && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => onAddRow(dayValue)}
+              aria-label="Add block"
+            >
+              <CirclePlus className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Issue labels */}
+      {issueLabels.length > 0 && (
+        <div
+          className={cn(
+            "text-xs",
+            hasError ? "text-destructive" : "text-muted-foreground",
+          )}
+        >
+          {issueLabels.join(" · ")}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Main component ─── */
 
 interface CourtScheduleEditorProps {
   courtId: string;
@@ -49,10 +270,10 @@ export function CourtScheduleEditor({
   onSaved,
 }: CourtScheduleEditorProps) {
   const [copyOpen, setCopyOpen] = React.useState(false);
+  const [activeDay, setActiveDay] = React.useState<string>("");
+
   const {
     rowsByDay,
-    openDays,
-    setOpenDays,
     isLoading,
     isSaving,
     isCopying,
@@ -69,7 +290,10 @@ export function CourtScheduleEditor({
     courtId,
     organizationId,
     onSaved,
-    onCopyComplete: () => setCopyOpen(false),
+    onCopyComplete: () => {
+      setCopyOpen(false);
+      setActiveDay("0");
+    },
   });
 
   if (isLoading) {
@@ -119,554 +343,144 @@ export function CourtScheduleEditor({
           </Button>
         </div>
 
-        <div className="space-y-3">
-          {DAY_OPTIONS.map((day) => {
-            const dayRows = rowsByDay[day.value] ?? [];
-            const isOpen = openDays.includes(day.value);
-            const missingPriceCount = dayRows.filter((row) =>
-              validation.openWithoutPrice.has(row.id),
-            ).length;
-            const overlapCount = dayRows.filter(
-              (row) =>
-                validation.overlappingHours.has(row.id) ||
-                validation.overlappingPricing.has(row.id),
-            ).length;
-            const invalidCount = dayRows.filter((row) =>
-              validation.invalidRows.has(row.id),
-            ).length;
-            const overnightCount = dayRows.filter((row) =>
-              validation.overnightRows.has(row.id),
-            ).length;
+        <div className="rounded-xl border p-2">
+          <Accordion
+            type="single"
+            collapsible
+            value={activeDay}
+            onValueChange={(v) => setActiveDay(v)}
+          >
+            {DAY_OPTIONS.map((day) => {
+              const dayRows = rowsByDay[day.value] ?? [];
+              const hasSlots = dayRows.length > 0;
 
-            return (
-              <Collapsible
-                key={day.value}
-                open={isOpen}
-                onOpenChange={(open) =>
-                  setOpenDays((prev) =>
-                    open
-                      ? Array.from(new Set([...prev, day.value]))
-                      : prev.filter((value) => value !== day.value),
-                  )
-                }
-              >
-                <div className="rounded-lg border">
-                  <CollapsibleTrigger asChild>
-                    <button
-                      type="button"
-                      className="flex w-full items-center justify-between gap-4 rounded-lg px-4 py-3 text-left transition hover:bg-muted/40"
-                    >
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span className="text-sm font-medium">{day.label}</span>
-                        <div className="flex flex-wrap gap-2">
-                          <Badge variant="secondary">
-                            {dayRows.length} blocks
-                          </Badge>
-                          {missingPriceCount > 0 && (
-                            <Badge variant="warning">
-                              {missingPriceCount} missing price
-                            </Badge>
-                          )}
-                          {overlapCount > 0 && (
-                            <Badge variant="destructive">
-                              {overlapCount} overlaps
-                            </Badge>
-                          )}
-                          {invalidCount > 0 && (
-                            <Badge variant="destructive">
-                              {invalidCount} invalid
-                            </Badge>
-                          )}
-                          {overnightCount > 0 && (
-                            <Badge variant="outline">
-                              {overnightCount} overnight
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                      <ChevronDown
+              const errorCount = dayRows.filter(
+                (row) =>
+                  validation.invalidRows.has(row.id) ||
+                  validation.overlappingHours.has(row.id) ||
+                  validation.overlappingPricing.has(row.id),
+              ).length;
+              const warningCount = dayRows.filter(
+                (row) =>
+                  validation.openWithoutPrice.has(row.id) ||
+                  validation.overnightRows.has(row.id),
+              ).length;
+
+              const isExpanded = activeDay === String(day.value);
+
+              return (
+                <AccordionItem key={day.value} value={String(day.value)}>
+                  <AccordionTrigger className="px-2 hover:no-underline">
+                    <div className="flex items-center gap-3">
+                      {/* Circular day badge */}
+                      <span
                         className={cn(
-                          "h-4 w-4 text-muted-foreground transition-transform",
-                          isOpen && "rotate-180",
+                          "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
+                          hasSlots
+                            ? "bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300"
+                            : "bg-muted text-muted-foreground",
                         )}
-                      />
-                    </button>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="border-t px-4 pb-4 pt-4">
-                    <div className="flex flex-wrap gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => handleAddRow(day.value)}
                       >
-                        <Plus className="mr-2 h-4 w-4" />
-                        Add block
-                      </Button>
+                        {DAY_INITIALS[day.value]}
+                      </span>
+
+                      {/* Day name + summary */}
+                      <div className="flex flex-col items-start gap-0.5">
+                        <span className="text-sm font-medium">{day.label}</span>
+                        {!isExpanded && hasSlots && (
+                          <span className="text-xs text-muted-foreground">
+                            {buildDaySummary(dayRows)}
+                          </span>
+                        )}
+                        {!isExpanded && !hasSlots && (
+                          <span className="text-xs text-muted-foreground italic">
+                            Set a schedule
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Validation badges */}
+                      {errorCount > 0 && (
+                        <Badge variant="destructive" className="ml-1">
+                          {errorCount} {errorCount === 1 ? "error" : "errors"}
+                        </Badge>
+                      )}
+                      {warningCount > 0 && (
+                        <Badge variant="warning" className="ml-1">
+                          {warningCount}{" "}
+                          {warningCount === 1 ? "warning" : "warnings"}
+                        </Badge>
+                      )}
                     </div>
+                  </AccordionTrigger>
 
+                  <AccordionContent className="px-2">
                     {dayRows.length === 0 ? (
-                      <p className="pt-3 text-sm text-muted-foreground">
-                        No blocks for this day yet. Add a block to start.
-                      </p>
+                      <div className="flex justify-center py-4">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => handleAddRow(day.value)}
+                        >
+                          <CirclePlus className="mr-2 h-4 w-4" />
+                          Add block
+                        </Button>
+                      </div>
                     ) : (
-                      <div className="pt-3">
-                        {/* Mobile card layout */}
-                        <div className="xl:hidden space-y-3">
-                          {dayRows.map((row) => {
-                            const hasInvalidTime = validation.invalidRows.has(
-                              row.id,
-                            );
-                            const overlapsHours =
-                              validation.overlappingHours.has(row.id);
-                            const overlapsPricing =
-                              validation.overlappingPricing.has(row.id);
-                            const missingPrice =
-                              validation.openWithoutPrice.has(row.id);
-                            const closedWithPrice =
-                              validation.closedWithPrice.has(row.id);
-                            const isOvernight = validation.overnightRows.has(
-                              row.id,
-                            );
-                            const hasError =
-                              hasInvalidTime ||
-                              overlapsHours ||
-                              overlapsPricing;
+                      <div className="space-y-2">
+                        {dayRows.map((row, idx) => {
+                          const hasInvalidTime = validation.invalidRows.has(
+                            row.id,
+                          );
+                          const overlapsHours = validation.overlappingHours.has(
+                            row.id,
+                          );
+                          const overlapsPricing =
+                            validation.overlappingPricing.has(row.id);
+                          const missingPrice = validation.openWithoutPrice.has(
+                            row.id,
+                          );
+                          const closedWithPrice =
+                            validation.closedWithPrice.has(row.id);
+                          const isOvernight = validation.overnightRows.has(
+                            row.id,
+                          );
+                          const hasError =
+                            hasInvalidTime || overlapsHours || overlapsPricing;
 
-                            const issueLabels = [
-                              hasInvalidTime ? "Invalid time" : null,
-                              overlapsHours ? "Hours overlap" : null,
-                              overlapsPricing ? "Pricing overlap" : null,
-                              missingPrice ? "Needs price" : null,
-                              closedWithPrice ? "Closed + priced" : null,
-                              isOvernight ? "Overnight" : null,
-                            ].filter(Boolean);
+                          const issueLabels = [
+                            hasInvalidTime ? "Invalid time" : null,
+                            overlapsHours ? "Hours overlap" : null,
+                            overlapsPricing ? "Pricing overlap" : null,
+                            missingPrice ? "Needs price" : null,
+                            closedWithPrice ? "Closed + priced" : null,
+                            isOvernight ? "Overnight" : null,
+                          ].filter(Boolean) as string[];
 
-                            return (
-                              <div
-                                key={row.id}
-                                className={cn(
-                                  "min-w-0 rounded-lg border p-3 space-y-3",
-                                  hasError &&
-                                    "border-destructive bg-destructive/5",
-                                )}
-                              >
-                                <div className="space-y-2">
-                                  <div>
-                                    <label
-                                      htmlFor={`start-${day.value}-${row.id}`}
-                                      className="text-xs text-muted-foreground mb-1 block"
-                                    >
-                                      Start
-                                    </label>
-                                    <Input
-                                      id={`start-${day.value}-${row.id}`}
-                                      type="time"
-                                      value={row.startTime}
-                                      onChange={(event) =>
-                                        handleRowChange(day.value, row.id, {
-                                          startTime: event.target.value,
-                                        })
-                                      }
-                                      className={cn(
-                                        hasError &&
-                                          "border-destructive focus-visible:ring-destructive/40",
-                                      )}
-                                    />
-                                  </div>
-                                  <div>
-                                    <label
-                                      htmlFor={`end-${day.value}-${row.id}`}
-                                      className="text-xs text-muted-foreground mb-1 block"
-                                    >
-                                      End
-                                    </label>
-                                    <Input
-                                      id={`end-${day.value}-${row.id}`}
-                                      type="time"
-                                      value={
-                                        row.endTime === "24:00"
-                                          ? "00:00"
-                                          : row.endTime
-                                      }
-                                      onChange={(event) =>
-                                        handleRowChange(day.value, row.id, {
-                                          endTime:
-                                            event.target.value === "00:00"
-                                              ? "24:00"
-                                              : event.target.value,
-                                        })
-                                      }
-                                      className={cn(
-                                        hasError &&
-                                          "border-destructive focus-visible:ring-destructive/40",
-                                      )}
-                                    />
-                                  </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 gap-2 items-end sm:grid-cols-2">
-                                  <div className="min-w-0">
-                                    <label
-                                      htmlFor={`status-${day.value}-${row.id}`}
-                                      className="text-xs text-muted-foreground mb-1 block"
-                                    >
-                                      Status
-                                    </label>
-                                    <div className="flex items-center gap-2">
-                                      <Switch
-                                        id={`status-${day.value}-${row.id}`}
-                                        checked={row.isOpen}
-                                        onCheckedChange={(checked) =>
-                                          handleRowChange(day.value, row.id, {
-                                            isOpen: checked,
-                                          })
-                                        }
-                                        aria-label="Toggle open hours"
-                                      />
-                                      <span className="text-xs text-muted-foreground">
-                                        {row.isOpen ? "Open" : "Closed"}
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="min-w-0">
-                                    <label
-                                      htmlFor={`currency-${day.value}-${row.id}`}
-                                      className="text-xs text-muted-foreground mb-1 block"
-                                    >
-                                      Currency
-                                    </label>
-                                    <Select
-                                      value={row.currency}
-                                      onValueChange={(value) =>
-                                        handleRowChange(day.value, row.id, {
-                                          currency: value,
-                                        })
-                                      }
-                                      disabled={!row.allowPricing}
-                                    >
-                                      <SelectTrigger className="w-full min-w-0">
-                                        <SelectValue placeholder="Currency" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        {CURRENCY_OPTIONS.map((currency) => (
-                                          <SelectItem
-                                            key={currency}
-                                            value={currency}
-                                          >
-                                            {currency}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                </div>
-
-                                <div>
-                                  <label
-                                    htmlFor={`rate-${day.value}-${row.id}`}
-                                    className="text-xs text-muted-foreground mb-1 block"
-                                  >
-                                    Hourly rate
-                                  </label>
-                                  {row.allowPricing ? (
-                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                                      <Input
-                                        id={`rate-${day.value}-${row.id}`}
-                                        type="number"
-                                        min={0}
-                                        value={row.hourlyRate}
-                                        onChange={(event) =>
-                                          handleHourlyRateInput(
-                                            day.value,
-                                            row.id,
-                                            event.target.value,
-                                          )
-                                        }
-                                        className={cn(
-                                          "w-full min-w-0",
-                                          hasError &&
-                                            "border-destructive focus-visible:ring-destructive/40",
-                                        )}
-                                      />
-                                      <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="sm"
-                                        className="w-full text-xs sm:w-auto sm:shrink-0"
-                                        disabled={row.hourlyRate === ""}
-                                        onClick={() =>
-                                          handleApplyToAll(day.value, row.id)
-                                        }
-                                      >
-                                        Copy to all
-                                      </Button>
-                                    </div>
-                                  ) : (
-                                    <Button
-                                      type="button"
-                                      variant="ghost"
-                                      size="sm"
-                                      onClick={() =>
-                                        handleRowChange(day.value, row.id, {
-                                          allowPricing: true,
-                                        })
-                                      }
-                                    >
-                                      Add pricing
-                                    </Button>
-                                  )}
-                                </div>
-
-                                <div className="flex items-center justify-between">
-                                  <div>
-                                    {issueLabels.length > 0 && (
-                                      <div
-                                        className={cn(
-                                          "text-xs",
-                                          hasError
-                                            ? "text-destructive"
-                                            : "text-muted-foreground",
-                                        )}
-                                      >
-                                        {issueLabels.join(" · ")}
-                                      </div>
-                                    )}
-                                  </div>
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() =>
-                                      handleRemoveRow(day.value, row.id)
-                                    }
-                                    aria-label="Remove block"
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-
-                        {/* Desktop table layout */}
-                        <Table className="hidden xl:table">
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Start</TableHead>
-                              <TableHead>End</TableHead>
-                              <TableHead>Open</TableHead>
-                              <TableHead>Currency</TableHead>
-                              <TableHead>Hourly rate</TableHead>
-                              <TableHead>Issues</TableHead>
-                              <TableHead className="text-right">
-                                Remove
-                              </TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {dayRows.map((row) => {
-                              const hasInvalidTime = validation.invalidRows.has(
-                                row.id,
-                              );
-                              const overlapsHours =
-                                validation.overlappingHours.has(row.id);
-                              const overlapsPricing =
-                                validation.overlappingPricing.has(row.id);
-                              const missingPrice =
-                                validation.openWithoutPrice.has(row.id);
-                              const closedWithPrice =
-                                validation.closedWithPrice.has(row.id);
-                              const isOvernight = validation.overnightRows.has(
-                                row.id,
-                              );
-                              const hasError =
-                                hasInvalidTime ||
-                                overlapsHours ||
-                                overlapsPricing;
-
-                              const issueLabels = [
-                                hasInvalidTime ? "Invalid time" : null,
-                                overlapsHours ? "Hours overlap" : null,
-                                overlapsPricing ? "Pricing overlap" : null,
-                                missingPrice ? "Needs price" : null,
-                                closedWithPrice ? "Closed + priced" : null,
-                                isOvernight ? "Overnight" : null,
-                              ].filter(Boolean);
-
-                              return (
-                                <TableRow
-                                  key={row.id}
-                                  className={cn(hasError && "bg-destructive/5")}
-                                >
-                                  <TableCell>
-                                    <Input
-                                      type="time"
-                                      value={row.startTime}
-                                      onChange={(event) =>
-                                        handleRowChange(day.value, row.id, {
-                                          startTime: event.target.value,
-                                        })
-                                      }
-                                      className={cn(
-                                        hasError &&
-                                          "border-destructive focus-visible:ring-destructive/40",
-                                      )}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <Input
-                                      type="time"
-                                      value={
-                                        row.endTime === "24:00"
-                                          ? "00:00"
-                                          : row.endTime
-                                      }
-                                      onChange={(event) =>
-                                        handleRowChange(day.value, row.id, {
-                                          endTime:
-                                            event.target.value === "00:00"
-                                              ? "24:00"
-                                              : event.target.value,
-                                        })
-                                      }
-                                      className={cn(
-                                        hasError &&
-                                          "border-destructive focus-visible:ring-destructive/40",
-                                      )}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <div className="flex items-center gap-2">
-                                      <Switch
-                                        checked={row.isOpen}
-                                        onCheckedChange={(checked) =>
-                                          handleRowChange(day.value, row.id, {
-                                            isOpen: checked,
-                                          })
-                                        }
-                                        aria-label="Toggle open hours"
-                                      />
-                                      <span className="text-xs text-muted-foreground">
-                                        {row.isOpen ? "Open" : "Closed"}
-                                      </span>
-                                    </div>
-                                  </TableCell>
-                                  <TableCell>
-                                    <Select
-                                      value={row.currency}
-                                      onValueChange={(value) =>
-                                        handleRowChange(day.value, row.id, {
-                                          currency: value,
-                                        })
-                                      }
-                                      disabled={!row.allowPricing}
-                                    >
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Currency" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        {CURRENCY_OPTIONS.map((currency) => (
-                                          <SelectItem
-                                            key={currency}
-                                            value={currency}
-                                          >
-                                            {currency}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-                                  </TableCell>
-                                  <TableCell>
-                                    {row.allowPricing ? (
-                                      <div className="flex items-center gap-1.5">
-                                        <Input
-                                          type="number"
-                                          min={0}
-                                          value={row.hourlyRate}
-                                          onChange={(event) =>
-                                            handleHourlyRateInput(
-                                              day.value,
-                                              row.id,
-                                              event.target.value,
-                                            )
-                                          }
-                                          className={cn(
-                                            hasError &&
-                                              "border-destructive focus-visible:ring-destructive/40",
-                                          )}
-                                        />
-                                        <Button
-                                          type="button"
-                                          variant="outline"
-                                          size="sm"
-                                          className="shrink-0 text-xs"
-                                          disabled={row.hourlyRate === ""}
-                                          onClick={() =>
-                                            handleApplyToAll(day.value, row.id)
-                                          }
-                                        >
-                                          Copy to all
-                                        </Button>
-                                      </div>
-                                    ) : (
-                                      <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() =>
-                                          handleRowChange(day.value, row.id, {
-                                            allowPricing: true,
-                                          })
-                                        }
-                                      >
-                                        Add pricing
-                                      </Button>
-                                    )}
-                                  </TableCell>
-                                  <TableCell>
-                                    {issueLabels.length > 0 ? (
-                                      <div
-                                        className={cn(
-                                          "text-xs",
-                                          hasError
-                                            ? "text-destructive"
-                                            : "text-muted-foreground",
-                                        )}
-                                      >
-                                        {issueLabels.join(" · ")}
-                                      </div>
-                                    ) : (
-                                      <span className="text-xs text-muted-foreground">
-                                        —
-                                      </span>
-                                    )}
-                                  </TableCell>
-                                  <TableCell className="text-right">
-                                    <Button
-                                      type="button"
-                                      variant="ghost"
-                                      size="icon"
-                                      onClick={() =>
-                                        handleRemoveRow(day.value, row.id)
-                                      }
-                                      aria-label="Remove block"
-                                    >
-                                      <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                  </TableCell>
-                                </TableRow>
-                              );
-                            })}
-                          </TableBody>
-                        </Table>
+                          return (
+                            <ScheduleSlotRow
+                              key={row.id}
+                              row={row}
+                              dayValue={day.value}
+                              isLast={idx === dayRows.length - 1}
+                              hasError={hasError}
+                              issueLabels={issueLabels}
+                              validation={validation}
+                              onRowChange={handleRowChange}
+                              onHourlyRateInput={handleHourlyRateInput}
+                              onApplyToAll={handleApplyToAll}
+                              onRemoveRow={handleRemoveRow}
+                              onAddRow={handleAddRow}
+                            />
+                          );
+                        })}
                       </div>
                     )}
-                  </CollapsibleContent>
-                </div>
-              </Collapsible>
-            );
-          })}
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
         </div>
 
         <div className="flex justify-end">
