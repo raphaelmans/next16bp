@@ -12,8 +12,8 @@ type PlaceDetailContactCardProps = {
   dialablePhone: string;
   viberNumber?: string;
   viberLink: string;
-  onCopyPhone: () => void;
-  onCopyViber: () => void;
+  onCopyPhone?: () => void;
+  onCopyViber?: () => void;
 };
 
 export function PlaceDetailContactCard({
@@ -47,15 +47,17 @@ export function PlaceDetailContactCard({
                   {phoneNumber}
                 </a>
               </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                aria-label="Copy phone number"
-                onClick={onCopyPhone}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
+              {onCopyPhone ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label="Copy phone number"
+                  onClick={onCopyPhone}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              ) : null}
             </div>
           </div>
         )}
@@ -111,15 +113,17 @@ export function PlaceDetailContactCard({
                   {viberNumber}
                 </a>
               </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                aria-label="Copy Viber number"
-                onClick={onCopyViber}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
+              {onCopyViber ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label="Copy Viber number"
+                  onClick={onCopyViber}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              ) : null}
             </div>
           </div>
         )}

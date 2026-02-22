@@ -35,6 +35,12 @@ async function getUserFromAccessToken(token: string): Promise<User | null> {
   const { data, error } = await supabase.auth.getUser(token);
 
   if (error) {
+    console.error("[mobile-session] getUser failed", {
+      errorMessage: error.message,
+      errorStatus: error.status,
+      tokenPrefix: token.slice(0, 20),
+      supabaseUrl: env.SUPABASE_URL,
+    });
     return null;
   }
 
