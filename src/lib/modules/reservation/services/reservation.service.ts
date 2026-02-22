@@ -250,7 +250,7 @@ export class ReservationService implements IReservationService {
     startTime: Date;
     durationMinutes: number;
     timeZone: string;
-    selectedAddonIds?: string[];
+    selectedAddons?: { addonId: string; quantity: number }[];
     ctx?: RequestContext;
   }): Promise<{
     endTime: Date;
@@ -263,7 +263,7 @@ export class ReservationService implements IReservationService {
       startTime,
       durationMinutes,
       timeZone,
-      selectedAddonIds,
+      selectedAddons,
       ctx,
     } = options;
     const endTime = addMinutes(startTime, durationMinutes);
@@ -298,7 +298,7 @@ export class ReservationService implements IReservationService {
         addon,
         rules: addonRules.filter((rule) => rule.addonId === addon.id),
       })),
-      selectedAddonIds,
+      selectedAddons,
       enableAddonPricing: env.ENABLE_ADDON_PRICING_V2 !== false,
     });
 
@@ -479,7 +479,7 @@ export class ReservationService implements IReservationService {
       startTime,
       durationMinutes: data.durationMinutes,
       timeZone: place.timeZone,
-      selectedAddonIds: data.selectedAddonIds,
+      selectedAddons: data.selectedAddons,
     });
 
     if (!pricing) {
@@ -724,7 +724,7 @@ export class ReservationService implements IReservationService {
         rateRules: courtRules,
         priceOverrides: courtOverrides,
         addons: courtAddons,
-        selectedAddonIds: data.selectedAddonIds,
+        selectedAddons: data.selectedAddons,
         enableAddonPricing: env.ENABLE_ADDON_PRICING_V2 !== false,
       });
 

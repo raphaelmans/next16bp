@@ -190,7 +190,7 @@ export class AvailabilityService implements IAvailabilityService {
       reservations,
       blocks,
       overrides,
-      selectedAddonIds: data.selectedAddonIds,
+      selectedAddons: data.selectedAddons,
       includeUnavailable: data.includeUnavailable ?? false,
     });
   }
@@ -320,7 +320,7 @@ export class AvailabilityService implements IAvailabilityService {
           reservations,
           blocks,
           overrides,
-          selectedAddonIds: data.selectedAddonIds,
+          selectedAddons: data.selectedAddons,
           includeUnavailable: data.includeUnavailable ?? false,
         });
         options.push(...result.options);
@@ -447,7 +447,7 @@ export class AvailabilityService implements IAvailabilityService {
         reservations,
         blocks,
         overrides,
-        selectedAddonIds: data.selectedAddonIds,
+        selectedAddons: data.selectedAddons,
         includeUnavailable,
       });
 
@@ -588,7 +588,7 @@ export class AvailabilityService implements IAvailabilityService {
       reservations,
       blocks,
       overrides,
-      selectedAddonIds: data.selectedAddonIds,
+      selectedAddons: data.selectedAddons,
       includeUnavailable: data.includeUnavailable ?? false,
     });
   }
@@ -691,7 +691,7 @@ export class AvailabilityService implements IAvailabilityService {
         reservations,
         blocks,
         overrides,
-        selectedAddonIds: data.selectedAddonIds,
+        selectedAddons: data.selectedAddons,
         includeUnavailable,
       });
 
@@ -784,7 +784,7 @@ export class AvailabilityService implements IAvailabilityService {
     reservations: ReservationRecord[];
     blocks: CourtBlockRecord[];
     overrides: CourtPriceOverrideRecord[];
-    selectedAddonIds?: string[];
+    selectedAddons?: { addonId: string; quantity: number }[];
     includeUnavailable?: boolean;
   }): { options: AvailabilityOption[]; diagnostics: AvailabilityDiagnostics } {
     const {
@@ -800,7 +800,7 @@ export class AvailabilityService implements IAvailabilityService {
       reservations,
       blocks,
       overrides,
-      selectedAddonIds,
+      selectedAddons,
       includeUnavailable,
     } = options;
 
@@ -891,7 +891,7 @@ export class AvailabilityService implements IAvailabilityService {
           rateRules,
           priceOverrides,
           addons: courtAddons,
-          selectedAddonIds,
+          selectedAddons,
           enableAddonPricing: env.ENABLE_ADDON_PRICING_V2 !== false,
         });
         const pricing = pricingDetailed.result;

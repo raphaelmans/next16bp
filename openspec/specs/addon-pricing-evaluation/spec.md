@@ -38,3 +38,18 @@ FLAT add-ons SHALL be charged exactly once per add-on when any booking segment f
 #### Scenario: Multiple overlaps with FLAT add-on
 - **WHEN** three booking segments overlap FLAT add-on windows
 - **THEN** the flat fee is added one time only
+
+### Requirement: OPTIONAL add-on pricing scales by player-selected quantity
+The pricing engine SHALL multiply an OPTIONAL add-on's contribution by its player-selected `quantity`. AUTO add-ons ignore quantity and always apply at quantity 1.
+
+#### Scenario: HOURLY OPTIONAL with quantity N
+- **WHEN** an OPTIONAL HOURLY add-on is selected with `quantity: N`
+- **THEN** each covered 60-minute segment contributes `hourly_rate_cents × N` (not `hourly_rate_cents × 1`)
+
+#### Scenario: FLAT OPTIONAL with quantity N
+- **WHEN** an OPTIONAL FLAT add-on is selected with `quantity: N`
+- **THEN** the total flat contribution is `flat_fee_cents × N`, still charged only once per add-on (not per segment)
+
+#### Scenario: AUTO add-on ignores quantity
+- **WHEN** an AUTO add-on is evaluated regardless of any quantity field
+- **THEN** it always contributes as if `quantity: 1`

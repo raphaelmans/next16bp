@@ -48,7 +48,7 @@ type PlaceDetailBookingDesktopSectionProps = {
   setSelectionMode: (mode: "any" | "court") => void;
   selectedCourtId?: string;
   setSelectedCourtId: (courtId: string | undefined) => void;
-  selectedAddonIds: string[];
+  selectedAddons: { addonId: string; quantity: number }[];
   selectedStartTime?: string;
   setSelectedStartTime: (startTime: string | undefined) => void;
   courtViewMode: "week" | "day";
@@ -80,7 +80,7 @@ export function PlaceDetailBookingDesktopSection({
   setSelectionMode,
   selectedCourtId,
   setSelectedCourtId,
-  selectedAddonIds,
+  selectedAddons,
   selectedStartTime,
   setSelectedStartTime,
   courtViewMode,
@@ -155,7 +155,7 @@ export function PlaceDetailBookingDesktopSection({
       date: courtDayDateIso,
       durationMinutes: TIMELINE_SLOT_DURATION,
       includeUnavailable: true,
-      selectedAddonIds,
+      selectedAddons,
     },
     isDesktop &&
       isCourtMode &&
@@ -171,7 +171,7 @@ export function PlaceDetailBookingDesktopSection({
       endDate: weekRangeEndIso,
       durationMinutes: TIMELINE_SLOT_DURATION,
       includeUnavailable: true,
-      selectedAddonIds,
+      selectedAddons,
     },
     isDesktop && isCourtMode && isCourtWeekView && !!selectedCourtId,
   );
@@ -186,8 +186,8 @@ export function PlaceDetailBookingDesktopSection({
         durationMinutes: TIMELINE_SLOT_DURATION,
         includeUnavailable: true,
         includeCourtOptions: false,
-        selectedAddonIds:
-          selectionMode === "court" ? selectedAddonIds : undefined,
+        selectedAddons:
+          selectionMode === "court" ? selectedAddons : undefined,
       },
       isDesktop &&
         selectionMode === "any" &&
@@ -212,8 +212,8 @@ export function PlaceDetailBookingDesktopSection({
         durationMinutes: TIMELINE_SLOT_DURATION,
         includeUnavailable: true,
         includeCourtOptions: false,
-        selectedAddonIds:
-          selectionMode === "court" ? selectedAddonIds : undefined,
+        selectedAddons:
+          selectionMode === "court" ? selectedAddons : undefined,
       },
       isDesktop &&
         selectionMode === "any" &&

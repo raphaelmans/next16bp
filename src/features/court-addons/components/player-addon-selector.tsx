@@ -1,5 +1,7 @@
 "use client";
 
+import { Minus, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import {
@@ -7,17 +9,18 @@ import {
   formatAddonPricingHint,
   getOptionalAddonConfigs,
 } from "../helpers";
+import type { SelectedAddon } from "../schemas";
 
 type PlayerAddonSelectorProps = {
   addons: CourtAddonConfig[];
-  selectedAddonIds: string[];
-  onSelectedAddonIdsChange: (next: string[]) => void;
+  selectedAddons: SelectedAddon[];
+  onSelectedAddonsChange: (next: SelectedAddon[]) => void;
 };
 
 export function PlayerAddonSelector({
   addons,
-  selectedAddonIds,
-  onSelectedAddonIdsChange,
+  selectedAddons,
+  onSelectedAddonsChange,
 }: PlayerAddonSelectorProps) {
   const optionalAddons = getOptionalAddonConfigs(addons);
 
@@ -29,10 +32,35 @@ export function PlayerAddonSelector({
     );
   }
 
+  const selectedMap = new Map(
+    selectedAddons.map((a) => [a.addonId, a.quantity]),
+  );
+
+  const handleToggle = (addonId: string, checked: boolean) => {
+    if (checked) {
+      onSelectedAddonsChange([...selectedAddons, { addonId, quantity: 1 }]);
+    } else {
+      onSelectedAddonsChange(
+        selectedAddons.filter((a) => a.addonId !== addonId),
+      );
+    }
+  };
+
+  const handleQuantityChange = (addonId: string, delta: number) => {
+    onSelectedAddonsChange(
+      selectedAddons.map((a) =>
+        a.addonId === addonId
+          ? { ...a, quantity: Math.max(1, a.quantity + delta) }
+          : a,
+      ),
+    );
+  };
+
   return (
     <div className="space-y-3">
       {optionalAddons.map((config) => {
-        const isSelected = selectedAddonIds.includes(config.addon.id);
+        const qty = selectedMap.get(config.addon.id);
+        const isSelected = qty !== undefined;
         return (
           <div
             key={config.addon.id}
@@ -43,16 +71,12 @@ export function PlayerAddonSelector({
                 id={`addon-${config.addon.id}`}
                 checked={isSelected}
                 onCheckedChange={(checked) => {
-                  const isChecked = checked === true;
-                  const next = isChecked
-                    ? [...selectedAddonIds, config.addon.id]
-                    : selectedAddonIds.filter((id) => id !== config.addon.id);
-                  onSelectedAddonIdsChange(next);
+                  handleToggle(config.addon.id, checked === true);
                 }}
               />
               <Label
                 htmlFor={`addon-${config.addon.id}`}
-                className="cursor-pointer space-y-1"
+                className="flex-1 cursor-pointer space-y-1"
               >
                 <span className="block text-sm font-medium">
                   {config.addon.label}
@@ -61,6 +85,32 @@ export function PlayerAddonSelector({
                   {formatAddonPricingHint(config)}
                 </span>
               </Label>
+              {isSelected && (
+                <div className="flex items-center gap-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="h-6 w-6"
+                    onClick={() => handleQuantityChange(config.addon.id, -1)}
+                    disabled={(qty ?? 1) <= 1}
+                  >
+                    <Minus className="h-3 w-3" />
+                  </Button>
+                  <span className="w-6 text-center text-sm tabular-nums">
+                    {qty ?? 1}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    className="h-6 w-6"
+                    onClick={() => handleQuantityChange(config.addon.id, 1)}
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         );

@@ -30,5 +30,12 @@ export const CourtAddonFormSchema = z.object({
 
 export const SelectedAddonIdsSchema = z.array(z.string().min(1)).max(20);
 
+export const SelectedAddonSchema = z.object({
+  addonId: z.string().min(1),
+  quantity: z.number().int().min(1).default(1),
+});
+export const SelectedAddonsSchema = z.array(SelectedAddonSchema).max(20);
+export type SelectedAddon = z.infer<typeof SelectedAddonSchema>;
+
 export type CourtAddonRuleForm = z.infer<typeof CourtAddonRuleFormSchema>;
 export type CourtAddonForm = z.infer<typeof CourtAddonFormSchema>;

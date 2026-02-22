@@ -34,9 +34,10 @@ import { Switch } from "@/components/ui/switch";
 import {
   getAutoAddonIds,
   PlayerAddonSelector,
-  sanitizeSelectedAddonIds,
+  sanitizeSelectedAddons,
   useQueryCourtAddons,
 } from "@/features/court-addons";
+import type { SelectedAddon } from "@/features/court-addons/schemas";
 import {
   useModPlaceAvailability,
   useModPlaceDetail,
@@ -81,7 +82,19 @@ export default function PlaceBookingPage({
   const modeParam = bookingParams.mode ?? undefined;
   const mode = modeParam ?? "any";
   const courtId = bookingParams.courtId ?? undefined;
-  const selectedAddonIds = bookingParams.addonIds ?? [];
+  const selectedAddons: SelectedAddon[] = React.useMemo(
+    () =>
+      (bookingParams.addonIds ?? []).map((item) => {
+        const colonIdx = item.lastIndexOf(":");
+        if (colonIdx === -1) return { addonId: item, quantity: 1 };
+        const qty = Number.parseInt(item.slice(colonIdx + 1), 10);
+        return {
+          addonId: item.slice(0, colonIdx),
+          quantity: Number.isFinite(qty) && qty >= 1 ? qty : 1,
+        };
+      }),
+    [bookingParams.addonIds],
+  );
 
   const durationMinutes = normalizeDurationMinutes(
     durationParam ?? DEFAULT_DURATION_MINUTES,
@@ -122,14 +135,19 @@ export default function PlaceBookingPage({
     if (courtId) {
       params.set("courtId", courtId);
     }
-    if (selectedAddonIds.length > 0) {
-      params.set("addonIds", selectedAddonIds.join(","));
+    if (selectedAddons.length > 0) {
+      params.set(
+        "addonIds",
+        selectedAddons
+          .map((a) => (a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`))
+          .join(","),
+      );
     }
 
     const query = params.toString();
     return query ? `${pathname}?${query}` : pathname;
   }, [
-    selectedAddonIds,
+    selectedAddons,
     courtId,
     durationParam,
     modeParam,
@@ -158,8 +176,13 @@ export default function PlaceBookingPage({
     if (courtId) {
       params.set("courtId", courtId);
     }
-    if (selectedAddonIds.length > 0) {
-      params.set("addonIds", selectedAddonIds.join(","));
+    if (selectedAddons.length > 0) {
+      params.set(
+        "addonIds",
+        selectedAddons
+          .map((a) => (a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`))
+          .join(","),
+      );
     }
 
     const query = params.toString();
@@ -174,7 +197,7 @@ export default function PlaceBookingPage({
     place?.slug,
     placeIdOrSlug,
     router,
-    selectedAddonIds,
+    selectedAddons,
     sportId,
     startTime,
   ]);
@@ -187,7 +210,7 @@ export default function PlaceBookingPage({
     place: place ?? undefined,
     sportId,
     courtId,
-    selectedAddonIds,
+    selectedAddons,
     date: bookingDate,
     durationMinutes,
     mode,
@@ -235,32 +258,39 @@ export default function PlaceBookingPage({
 
   React.useEffect(() => {
     if (!addonCourtId) return;
-    const sanitizedAddonIds = sanitizeSelectedAddonIds(
-      selectedAddonIds,
-      availableCourtAddons,
-    );
+    const sanitized = sanitizeSelectedAddons(selectedAddons, availableCourtAddons);
     const autoAddonIds = getAutoAddonIds(availableCourtAddons);
-    const nextAddonIds = Array.from(
-      new Set([...sanitizedAddonIds, ...autoAddonIds]),
-    );
+    const sanitizedIds = new Set(sanitized.map((a) => a.addonId));
+    const autoEntries: SelectedAddon[] = autoAddonIds
+      .filter((id) => !sanitizedIds.has(id))
+      .map((id) => ({ addonId: id, quantity: 1 }));
+    const next = [...sanitized, ...autoEntries];
 
     const hasChanged =
-      nextAddonIds.length !== selectedAddonIds.length ||
-      nextAddonIds.some(
-        (addonId, index) => addonId !== selectedAddonIds[index],
+      next.length !== selectedAddons.length ||
+      next.some(
+        (a, i) =>
+          a.addonId !== selectedAddons[i]?.addonId ||
+          a.quantity !== selectedAddons[i]?.quantity,
       );
 
     if (hasChanged) {
+      const encoded = next.map((a) =>
+        a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`,
+      );
       void setBookingParams({
-        addonIds: nextAddonIds.length > 0 ? nextAddonIds : null,
+        addonIds: encoded.length > 0 ? encoded : null,
       });
     }
-  }, [addonCourtId, availableCourtAddons, selectedAddonIds, setBookingParams]);
+  }, [addonCourtId, availableCourtAddons, selectedAddons, setBookingParams]);
 
-  const handleSelectedAddonIdsChange = React.useCallback(
-    (nextAddonIds: string[]) => {
+  const handleSelectedAddonsChange = React.useCallback(
+    (nextAddons: SelectedAddon[]) => {
+      const encoded = nextAddons.map((a) =>
+        a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`,
+      );
       void setBookingParams({
-        addonIds: nextAddonIds.length > 0 ? nextAddonIds : null,
+        addonIds: encoded.length > 0 ? encoded : null,
       });
     },
     [setBookingParams],
@@ -276,7 +306,7 @@ export default function PlaceBookingPage({
     (slot) => slot.startTime === startTime,
   );
   const basePriceCents =
-    selectedAddonIds.length > 0
+    selectedAddons.length > 0
       ? (baseSelectedSlot?.totalPriceCents ?? undefined)
       : totalPrice;
   const addonPriceCents =
@@ -356,8 +386,7 @@ export default function PlaceBookingPage({
       const payload = {
         startTime: selectedSlot.startTime,
         durationMinutes,
-        selectedAddonIds:
-          selectedAddonIds.length > 0 ? selectedAddonIds : undefined,
+        selectedAddons: selectedAddons.length > 0 ? selectedAddons : undefined,
       };
       let result: { status: string; id: string };
       if (mode === "court" && courtId) {
@@ -524,8 +553,8 @@ export default function PlaceBookingPage({
                 </p>
                 <PlayerAddonSelector
                   addons={availableCourtAddons}
-                  selectedAddonIds={selectedAddonIds}
-                  onSelectedAddonIdsChange={handleSelectedAddonIdsChange}
+                  selectedAddons={selectedAddons}
+                  onSelectedAddonsChange={handleSelectedAddonsChange}
                 />
               </CardContent>
             </Card>

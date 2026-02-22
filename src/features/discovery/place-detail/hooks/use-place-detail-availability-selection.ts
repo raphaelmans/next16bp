@@ -2,9 +2,26 @@
 
 import { useCallback, useEffect, useMemo } from "react";
 import { getZonedDayKey } from "@/common/time-zone";
+import type { SelectedAddon } from "@/features/court-addons/schemas";
 import { parseDayKeyToDate } from "@/features/discovery/helpers";
 import type { PlaceDetail } from "@/features/discovery/hooks";
 import { usePlaceDetailUrlState } from "../state/place-detail-url-state";
+
+function encodeAddonToUrlItem(addon: SelectedAddon): string {
+  return addon.quantity === 1
+    ? addon.addonId
+    : `${addon.addonId}:${addon.quantity}`;
+}
+
+function decodeAddonFromUrlItem(item: string): SelectedAddon {
+  const colonIdx = item.lastIndexOf(":");
+  if (colonIdx === -1) return { addonId: item, quantity: 1 };
+  const qty = Number.parseInt(item.slice(colonIdx + 1), 10);
+  return {
+    addonId: item.slice(0, colonIdx),
+    quantity: Number.isFinite(qty) && qty >= 1 ? qty : 1,
+  };
+}
 
 type UsePlaceDetailAvailabilitySelectionOptions = {
   place?: PlaceDetail;
@@ -35,7 +52,10 @@ export function useModPlaceDetailAvailabilitySelection({
   const selectedSportId = urlState.sportId ?? undefined;
   const selectionMode = urlState.mode ?? "court";
   const selectedCourtId = urlState.courtId ?? undefined;
-  const selectedAddonIds = urlState.addonIds ?? [];
+  const selectedAddons: SelectedAddon[] = useMemo(
+    () => (urlState.addonIds ?? []).map(decodeAddonFromUrlItem),
+    [urlState.addonIds],
+  );
   const selectedStartTime = urlState.startTime ?? undefined;
   const courtViewMode = urlState.courtView ?? "week";
   const anyViewMode = urlState.anyView ?? "week";
@@ -91,9 +111,10 @@ export function useModPlaceDetailAvailabilitySelection({
     [setUrlState],
   );
 
-  const setSelectedAddonIds = useCallback(
-    (addonIds: string[]) => {
-      void setUrlState({ addonIds: addonIds.length > 0 ? addonIds : null });
+  const setSelectedAddons = useCallback(
+    (addons: SelectedAddon[]) => {
+      const encoded = addons.map(encodeAddonToUrlItem);
+      void setUrlState({ addonIds: encoded.length > 0 ? encoded : null });
     },
     [setUrlState],
   );
@@ -149,8 +170,8 @@ export function useModPlaceDetailAvailabilitySelection({
     setSelectionMode,
     selectedCourtId,
     setSelectedCourtId,
-    selectedAddonIds,
-    setSelectedAddonIds,
+    selectedAddons,
+    setSelectedAddons,
     selectedStartTime,
     setSelectedStartTime,
     courtViewMode,

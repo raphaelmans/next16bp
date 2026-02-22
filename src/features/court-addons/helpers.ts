@@ -1,4 +1,63 @@
-import type { CourtAddonForm } from "./schemas";
+import type { CourtAddonForm, CourtAddonRuleForm, SelectedAddon } from "./schemas";
+
+// UI-layer only — never serialized to DB or API
+export type AddonRuleGroup = {
+  days: number[];
+  startMinute: number;
+  endMinute: number;
+  hourlyRateCents: number | null;
+  currency: string | null;
+};
+
+export function collapseRulesToGroups(
+  rules: CourtAddonRuleForm[],
+): AddonRuleGroup[] {
+  const groupMap = new Map<string, AddonRuleGroup>();
+
+  for (const rule of rules) {
+    const key = JSON.stringify([
+      rule.startMinute,
+      rule.endMinute,
+      rule.hourlyRateCents ?? "flat",
+      rule.currency ?? "flat",
+    ]);
+
+    const existing = groupMap.get(key);
+    if (existing) {
+      existing.days.push(rule.dayOfWeek);
+    } else {
+      groupMap.set(key, {
+        days: [rule.dayOfWeek],
+        startMinute: rule.startMinute,
+        endMinute: rule.endMinute,
+        hourlyRateCents: rule.hourlyRateCents ?? null,
+        currency: rule.currency ?? null,
+      });
+    }
+  }
+
+  return Array.from(groupMap.values());
+}
+
+export function expandGroupsToRules(
+  groups: AddonRuleGroup[],
+): CourtAddonRuleForm[] {
+  const rules: CourtAddonRuleForm[] = [];
+
+  for (const group of groups) {
+    for (const day of group.days) {
+      rules.push({
+        dayOfWeek: day,
+        startMinute: group.startMinute,
+        endMinute: group.endMinute,
+        hourlyRateCents: group.hourlyRateCents ?? undefined,
+        currency: group.currency ?? undefined,
+      });
+    }
+  }
+
+  return rules;
+}
 
 export type CourtAddonConfig = {
   addon: {
@@ -117,6 +176,24 @@ export function sanitizeSelectedAddonIds(
   return Array.from(
     new Set(selectedAddonIds.filter((addonId) => allowedIds.has(addonId))),
   );
+}
+
+export function sanitizeSelectedAddons(
+  selectedAddons: SelectedAddon[],
+  configs: CourtAddonConfig[],
+): SelectedAddon[] {
+  const allowedIds = new Set(
+    configs
+      .filter((config) => config.addon.isActive)
+      .map((config) => config.addon.id),
+  );
+  const seen = new Map<string, SelectedAddon>();
+  for (const entry of selectedAddons) {
+    if (allowedIds.has(entry.addonId)) {
+      seen.set(entry.addonId, entry);
+    }
+  }
+  return Array.from(seen.values());
 }
 
 export function formatAddonPricingHint(config: CourtAddonConfig) {

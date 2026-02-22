@@ -2,6 +2,11 @@ import { differenceInCalendarDays } from "date-fns";
 import { z } from "zod";
 import { S, V } from "@/common/schemas";
 
+const SelectedAddonSchema = z.object({
+  addonId: S.ids.generic,
+  quantity: z.number().int().min(1).default(1),
+});
+
 const BOOKING_WINDOW_DAYS = V.reservation.startTimeWithinWindow.value;
 
 const BookingWindowStartTimeSchema = S.common.isoDateTime.refine(
@@ -17,7 +22,7 @@ export const CreateReservationForCourtSchema = z.object({
   courtId: S.ids.courtId,
   startTime: BookingWindowStartTimeSchema,
   durationMinutes: S.availability.durationMinutes,
-  selectedAddonIds: z.array(S.ids.generic).max(20).optional(),
+  selectedAddons: z.array(SelectedAddonSchema).max(20).optional(),
 });
 
 export const CreateReservationForAnyCourtSchema = z.object({
@@ -25,7 +30,7 @@ export const CreateReservationForAnyCourtSchema = z.object({
   sportId: S.ids.sportId,
   startTime: BookingWindowStartTimeSchema,
   durationMinutes: S.availability.durationMinutes,
-  selectedAddonIds: z.array(S.ids.generic).max(20).optional(),
+  selectedAddons: z.array(SelectedAddonSchema).max(20).optional(),
 });
 
 export type CreateReservationForCourtDTO = z.infer<

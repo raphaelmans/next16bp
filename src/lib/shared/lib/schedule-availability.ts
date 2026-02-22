@@ -35,6 +35,11 @@ export type ScheduleAddon = {
   rules: CourtAddonRateRuleRecord[];
 };
 
+export type SelectedAddon = {
+  addonId: string;
+  quantity: number;
+};
+
 export type SchedulePricingDetailedResult = {
   result: SchedulePricingResult | null;
   failureReason: SchedulePricingFailureReason | null;
@@ -112,7 +117,7 @@ export function computeSchedulePriceDetailed(options: {
   rateRules: CourtRateRuleRecord[];
   priceOverrides?: CourtPriceOverrideRecord[];
   addons?: ScheduleAddon[];
-  selectedAddonIds?: string[];
+  selectedAddons?: SelectedAddon[];
   enableAddonPricing?: boolean;
 }): SchedulePricingDetailedResult {
   const {
@@ -123,7 +128,7 @@ export function computeSchedulePriceDetailed(options: {
     rateRules,
     priceOverrides,
     addons,
-    selectedAddonIds,
+    selectedAddons,
     enableAddonPricing,
   } = options;
 
@@ -137,13 +142,18 @@ export function computeSchedulePriceDetailed(options: {
   let currency: string | null = null;
 
   const includeAddonPricing = enableAddonPricing !== false;
-  const selectedAddonIdSet = new Set(selectedAddonIds ?? []);
+  const selectedAddonQuantityMap = new Map<string, number>(
+    (selectedAddons ?? []).map((s) => [
+      s.addonId,
+      Math.max(1, Math.trunc(s.quantity)),
+    ]),
+  );
   const appliedAddons = includeAddonPricing
     ? (addons ?? []).filter((item) => {
         if (!item.addon.isActive) return false;
         if (item.addon.mode === "AUTO") return true;
         if (item.addon.mode === "OPTIONAL") {
-          return selectedAddonIdSet.has(item.addon.id);
+          return selectedAddonQuantityMap.has(item.addon.id);
         }
         return false;
       })
@@ -210,6 +220,11 @@ export function computeSchedulePriceDetailed(options: {
         continue;
       }
 
+      const quantity =
+        addon.mode === "AUTO"
+          ? 1
+          : (selectedAddonQuantityMap.get(addon.id) ?? 1);
+
       if (addon.pricingType === "HOURLY") {
         if (
           matchingRule.hourlyRateCents === null ||
@@ -225,7 +240,7 @@ export function computeSchedulePriceDetailed(options: {
           return { result: null, failureReason: "ADDON_CURRENCY_MISMATCH" };
         }
 
-        totalPriceCents += matchingRule.hourlyRateCents;
+        totalPriceCents += matchingRule.hourlyRateCents * quantity;
         continue;
       }
 
@@ -245,7 +260,7 @@ export function computeSchedulePriceDetailed(options: {
           return { result: null, failureReason: "ADDON_CURRENCY_MISMATCH" };
         }
 
-        totalPriceCents += addon.flatFeeCents;
+        totalPriceCents += addon.flatFeeCents * quantity;
         chargedFlatAddons.add(addon.id);
       }
     }
@@ -272,7 +287,7 @@ export function computeSchedulePrice(options: {
   rateRules: CourtRateRuleRecord[];
   priceOverrides?: CourtPriceOverrideRecord[];
   addons?: ScheduleAddon[];
-  selectedAddonIds?: string[];
+  selectedAddons?: SelectedAddon[];
   enableAddonPricing?: boolean;
 }): SchedulePricingResult | null {
   return computeSchedulePriceDetailed(options).result;

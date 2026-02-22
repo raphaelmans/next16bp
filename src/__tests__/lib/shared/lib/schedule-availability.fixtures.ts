@@ -17,7 +17,7 @@ export type SchedulePricingFixtureInput = {
   hoursWindows: CourtHoursWindowRecord[];
   rateRules: CourtRateRuleRecord[];
   addons: ScheduleAddon[];
-  selectedAddonIds?: string[];
+  selectedAddons?: { addonId: string; quantity: number }[];
   enableAddonPricing: boolean;
 };
 
@@ -27,6 +27,12 @@ export type SchedulePricingFixtureSet = {
     autoPartialCoverage: SchedulePricingFixtureInput;
     hourlyAccumulation: SchedulePricingFixtureInput;
     flatChargeOnce: SchedulePricingFixtureInput;
+    flatNoWindows: SchedulePricingFixtureInput;
+    twoAutoHourly: SchedulePricingFixtureInput;
+    hourlyWiderWindow: SchedulePricingFixtureInput;
+    quantityOne: SchedulePricingFixtureInput;
+    quantityHourly: SchedulePricingFixtureInput;
+    quantityFlat: SchedulePricingFixtureInput;
   };
   minimal: {
     baseOnly: SchedulePricingFixtureInput;
@@ -182,9 +188,86 @@ export const createSchedulePricingFixtures = (): SchedulePricingFixtureSet => {
     }),
   ];
 
+  // 3.1 – FLAT addon with zero rule windows
+  const flatNoWindowsAddon = createAddon({
+    id: "20202020-2020-2020-2020-202020202020",
+    mode: "AUTO",
+    pricingType: "FLAT",
+    flatFeeCents: 500,
+    flatFeeCurrency: "PHP",
+  });
+  // intentionally no rules → zero windows
+
+  // 3.2 – Two AUTO HOURLY addons on the same segment
+  const twoAutoAddon1 = createAddon({
+    id: "30303030-3030-3030-3030-303030303030",
+    mode: "AUTO",
+    pricingType: "HOURLY",
+  });
+  const twoAutoAddon1Rules = [
+    createAddonRule({
+      id: "31313131-3131-3131-3131-313131313131",
+      addonId: twoAutoAddon1.id,
+      startMinute: 540,
+      endMinute: 660,
+      hourlyRateCents: 200,
+      currency: "PHP",
+    }),
+  ];
+  const twoAutoAddon2 = createAddon({
+    id: "40404040-4040-4040-4040-404040404040",
+    mode: "AUTO",
+    pricingType: "HOURLY",
+  });
+  const twoAutoAddon2Rules = [
+    createAddonRule({
+      id: "41414141-4141-4141-4141-414141414141",
+      addonId: twoAutoAddon2.id,
+      startMinute: 540,
+      endMinute: 660,
+      hourlyRateCents: 150,
+      currency: "PHP",
+    }),
+  ];
+
+  // 3.3 – HOURLY addon window wider than booking (09:00–22:00, booking 09:00–11:00)
+  const widerWindowAddon = createAddon({
+    id: "50505050-5050-5050-5050-505050505050",
+    mode: "AUTO",
+    pricingType: "HOURLY",
+  });
+  const widerWindowRules = [
+    createAddonRule({
+      id: "51515151-5151-5151-5151-515151515151",
+      addonId: widerWindowAddon.id,
+      startMinute: 540, // 09:00
+      endMinute: 1320, // 22:00
+      hourlyRateCents: 200,
+      currency: "PHP",
+    }),
+  ];
+
+  // quantity test addons
+  // Re-uses optionalAddon (OPTIONAL HOURLY, rate=200) for qty=1 and qty=2
+  const optionalFlatAddon = createAddon({
+    id: "60606060-6060-6060-6060-606060606060",
+    mode: "OPTIONAL",
+    pricingType: "FLAT",
+    flatFeeCents: 500,
+    flatFeeCurrency: "PHP",
+  });
+  const optionalFlatRules = [
+    createAddonRule({
+      id: "61616161-6161-6161-6161-616161616161",
+      addonId: optionalFlatAddon.id,
+      startMinute: 540,
+      endMinute: 660,
+    }),
+  ];
+
   const buildBaseFixture = (): Omit<
     SchedulePricingFixtureInput,
-    "addons" | "selectedAddonIds"
+    "addons" | "selectedAddons"
   > => ({
     startTime,
     durationMinutes: 120,
@@ -199,7 +282,7 @@ export const createSchedulePricingFixtures = (): SchedulePricingFixtureSet => {
       optionalUnselected: {
         ...buildBaseFixture(),
         addons: [{ addon: optionalAddon, rules: optionalAddonRules }],
-        selectedAddonIds: [],
+        selectedAddons: [],
       },
       autoPartialCoverage: {
         ...buildBaseFixture(),
@@ -214,6 +297,39 @@ export const createSchedulePricingFixtures = (): SchedulePricingFixtureSet => {
       flatChargeOnce: {
         ...buildBaseFixture(),
         addons: [{ addon: flatAddon, rules: flatRules }],
+      },
+      flatNoWindows: {
+        ...buildBaseFixture(),
+        addons: [{ addon: flatNoWindowsAddon, rules: [] }],
+      },
+      twoAutoHourly: {
+        ...buildBaseFixture(),
+        addons: [
+          { addon: twoAutoAddon1, rules: twoAutoAddon1Rules },
+          { addon: twoAutoAddon2, rules: twoAutoAddon2Rules },
+        ],
+      },
+      hourlyWiderWindow: {
+        ...buildBaseFixture(),
+        addons: [{ addon: widerWindowAddon, rules: widerWindowRules }],
+      },
+      // qty=1 explicit → same result as legacy binary selection
+      quantityOne: {
+        ...buildBaseFixture(),
+        addons: [{ addon: optionalAddon, rules: optionalAddonRules }],
+        selectedAddons: [{ addonId: optionalAddon.id, quantity: 1 }],
+      },
+      // qty=2 HOURLY → rate×2×segments
+      quantityHourly: {
+        ...buildBaseFixture(),
+        addons: [{ addon: optionalAddon, rules: optionalAddonRules }],
+        selectedAddons: [{ addonId: optionalAddon.id, quantity: 2 }],
+      },
+      // qty=3 FLAT → flatFee×3 (charged once, multiplied)
+      quantityFlat: {
+        ...buildBaseFixture(),
+        addons: [{ addon: optionalFlatAddon, rules: optionalFlatRules }],
+        selectedAddons: [{ addonId: optionalFlatAddon.id, quantity: 3 }],
       },
     },
     minimal: {

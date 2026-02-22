@@ -31,3 +31,14 @@ The system SHALL prevent overlapping windows for the same add-on on the same day
 #### Scenario: Reject overlapping windows
 - **WHEN** a second rule overlaps an existing window for the same add-on and day
 - **THEN** the system rejects the second rule with an overlap error
+
+### Requirement: OPTIONAL add-on selection carries a quantity field
+When a player selects an OPTIONAL add-on, the selection SHOULD carry an integer `quantity` ≥ 1. If `quantity` is omitted or invalid (< 1), the system SHALL default it to 1. AUTO add-ons always apply at quantity 1 and are not player-adjustable.
+
+#### Scenario: OPTIONAL selection with explicit quantity
+- **WHEN** a player selects an OPTIONAL add-on with `quantity: 2`
+- **THEN** the selection is stored as `{ addonId, quantity: 2 }` and pricing is multiplied accordingly
+
+#### Scenario: OPTIONAL selection with omitted quantity
+- **WHEN** a player selects an OPTIONAL add-on without specifying quantity
+- **THEN** the system treats it as `quantity: 1` and pricing is identical to legacy binary selection

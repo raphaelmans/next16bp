@@ -32,6 +32,21 @@ The test suite SHALL maintain deterministic fixtures for representative valid, m
 - **WHEN** developers add or update add-on pricing tests
 - **THEN** golden, minimal, and invalid fixture variants are available and used for coverage of success and failure paths
 
+### Requirement: Quantity-aware pricing behavior SHALL be covered by unit tests
+The test suite SHALL include fixtures and assertions covering OPTIONAL add-on quantity multiplication for both HOURLY and FLAT pricing types, and SHALL assert that `quantity: 1` produces identical results to legacy binary selection.
+
+#### Scenario: OPTIONAL HOURLY qty=2, 2 segments, rate=200
+- **WHEN** an OPTIONAL HOURLY add-on with rate 200 cents is selected with `quantity: 2` and covers 2 segments
+- **THEN** the add-on contribution is `200 × 2 × 2 = 800` cents (base 2000 → total 2800)
+
+#### Scenario: OPTIONAL FLAT qty=3, flat_fee=500
+- **WHEN** an OPTIONAL FLAT add-on with flat fee 500 cents is selected with `quantity: 3`
+- **THEN** the flat contribution is `500 × 3 = 1500` cents charged once (base 2000 → total 3500)
+
+#### Scenario: OPTIONAL qty=1 is equivalent to legacy binary selection
+- **WHEN** an OPTIONAL add-on is selected with `quantity: 1`
+- **THEN** the pricing result is identical to the legacy behavior where quantity was implicitly 1
+
 ### Requirement: Unit tests SHALL be runnable through a project command
 Add-on pricing unit tests SHALL execute through a documented project command suitable for local development and CI checks.
 

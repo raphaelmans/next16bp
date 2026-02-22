@@ -19,9 +19,10 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
   getAutoAddonIds,
   PlayerAddonSelector,
-  sanitizeSelectedAddonIds,
+  sanitizeSelectedAddons,
   useQueryCourtAddons,
 } from "@/features/court-addons";
+import type { SelectedAddon } from "@/features/court-addons/schemas";
 import type { PlaceDetail } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
 import { PlaceDetailAmenitiesCard } from "@/features/discovery/place-detail/components/place-detail-amenities-card";
@@ -55,6 +56,7 @@ type PlaceDetailBookingSectionProps = {
   verificationDescription: string;
   verificationStatusVariant: "warning" | "destructive" | "muted" | "success";
   availabilitySectionRef: React.RefObject<HTMLDivElement | null>;
+  showVenueDetailsCards?: boolean;
 };
 
 export function PlaceDetailBookingSection({
@@ -71,6 +73,7 @@ export function PlaceDetailBookingSection({
   verificationDescription,
   verificationStatusVariant,
   availabilitySectionRef,
+  showVenueDetailsCards = true,
 }: PlaceDetailBookingSectionProps) {
   const router = useRouter();
   const setMobileSheetExpanded = usePlaceDetailUiStore(
@@ -92,8 +95,8 @@ export function PlaceDetailBookingSection({
     setSelectionMode,
     selectedCourtId,
     setSelectedCourtId,
-    selectedAddonIds,
-    setSelectedAddonIds,
+    selectedAddons,
+    setSelectedAddons,
     selectedStartTime,
     setSelectedStartTime,
     courtViewMode,
@@ -195,24 +198,29 @@ export function PlaceDetailBookingSection({
   const availableCourtAddons = courtAddonsQuery.data ?? [];
 
   React.useEffect(() => {
-    if (availableCourtAddons.length === 0 && selectedAddonIds.length === 0) {
+    if (availableCourtAddons.length === 0 && selectedAddons.length === 0) {
       return;
     }
 
-    const sanitized = sanitizeSelectedAddonIds(
-      selectedAddonIds,
-      availableCourtAddons,
-    );
+    const sanitized = sanitizeSelectedAddons(selectedAddons, availableCourtAddons);
     const autoAddonIds = getAutoAddonIds(availableCourtAddons);
-    const nextIds = Array.from(new Set([...sanitized, ...autoAddonIds]));
+    const sanitizedIds = new Set(sanitized.map((a) => a.addonId));
+    const autoEntries: SelectedAddon[] = autoAddonIds
+      .filter((id) => !sanitizedIds.has(id))
+      .map((id) => ({ addonId: id, quantity: 1 }));
+    const next = [...sanitized, ...autoEntries];
 
-    if (
-      nextIds.length !== selectedAddonIds.length ||
-      nextIds.some((addonId, index) => addonId !== selectedAddonIds[index])
-    ) {
-      setSelectedAddonIds(nextIds);
+    const hasChanged =
+      next.length !== selectedAddons.length ||
+      next.some(
+        (a, i) =>
+          a.addonId !== selectedAddons[i]?.addonId ||
+          a.quantity !== selectedAddons[i]?.quantity,
+      );
+    if (hasChanged) {
+      setSelectedAddons(next);
     }
-  }, [availableCourtAddons, selectedAddonIds, setSelectedAddonIds]);
+  }, [availableCourtAddons, selectedAddons, setSelectedAddons]);
   const handleSelectionSummaryChange = React.useCallback(
     (next: SelectionSummary | null) => {
       setSelectionSummary((prev) => {
@@ -242,8 +250,11 @@ export function PlaceDetailBookingSection({
     if (selectionMode === "court" && selectedCourtId) {
       params.set("courtId", selectedCourtId);
     }
-    if (selectedAddonIds.length > 0) {
-      params.set("addonIds", selectedAddonIds.join(","));
+    if (selectedAddons.length > 0) {
+      const encoded = selectedAddons
+        .map((a) => (a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`))
+        .join(",");
+      params.set("addonIds", encoded);
     }
     params.set("startTime", selectedStartTime);
 
@@ -283,7 +294,7 @@ export function PlaceDetailBookingSection({
     router,
     selectedCourtId,
     selectedDate,
-    selectedAddonIds,
+    selectedAddons,
     selectedSportId,
     selectedStartTime,
     selectionMode,
@@ -397,7 +408,7 @@ export function PlaceDetailBookingSection({
               setSelectionMode={setSelectionMode}
               selectedCourtId={selectedCourtId}
               setSelectedCourtId={setSelectedCourtId}
-              selectedAddonIds={selectedAddonIds}
+              selectedAddons={selectedAddons}
               selectedStartTime={selectedStartTime}
               setSelectedStartTime={setSelectedStartTime}
               courtViewMode={courtViewMode}
@@ -430,8 +441,8 @@ export function PlaceDetailBookingSection({
                     </div>
                     <PlayerAddonSelector
                       addons={availableCourtAddons}
-                      selectedAddonIds={selectedAddonIds}
-                      onSelectedAddonIdsChange={setSelectedAddonIds}
+                      selectedAddons={selectedAddons}
+                      onSelectedAddonsChange={setSelectedAddons}
                     />
                   </CardContent>
                 </Card>
@@ -439,24 +450,28 @@ export function PlaceDetailBookingSection({
           </div>
         )}
 
-        <PlaceDetailContactCard
-          hasContactDetail={hasContactDetail}
-          contactDetail={contactDetail}
-          phoneNumber={phoneNumber}
-          dialablePhone={dialablePhone}
-          viberNumber={viberNumber}
-          viberLink={viberLink}
-          onCopyPhone={() => {
-            if (!phoneNumber) return;
-            copyToClipboard(phoneNumber, "Phone number");
-          }}
-          onCopyViber={() => {
-            if (!viberNumber) return;
-            copyToClipboard(viberNumber, "Viber number");
-          }}
-        />
+        {showVenueDetailsCards ? (
+          <>
+            <PlaceDetailContactCard
+              hasContactDetail={hasContactDetail}
+              contactDetail={contactDetail}
+              phoneNumber={phoneNumber}
+              dialablePhone={dialablePhone}
+              viberNumber={viberNumber}
+              viberLink={viberLink}
+              onCopyPhone={() => {
+                if (!phoneNumber) return;
+                copyToClipboard(phoneNumber, "Phone number");
+              }}
+              onCopyViber={() => {
+                if (!viberNumber) return;
+                copyToClipboard(viberNumber, "Viber number");
+              }}
+            />
 
-        <PlaceDetailAmenitiesCard amenities={place.amenities} />
+            <PlaceDetailAmenitiesCard amenities={place.amenities} />
+          </>
+        ) : null}
       </div>
 
       {primaryView === "book" ? (
@@ -477,7 +492,7 @@ export function PlaceDetailBookingSection({
           selectionMode={selectionMode}
           courtsForSport={courtsForSport}
           selectedCourtId={selectedCourtId}
-          selectedAddonCount={selectedAddonIds.length}
+          selectedAddonCount={selectedAddons.length}
           durationMinutes={durationMinutes}
           hasSelection={hasSelection}
           selectionSummary={selectionSummary}
@@ -509,7 +524,7 @@ export function PlaceDetailBookingSection({
           selectionMode={selectionMode}
           setSelectionMode={setSelectionMode}
           selectedCourtId={selectedCourtId}
-          selectedAddonIds={selectedAddonIds}
+          selectedAddons={selectedAddons}
           setSelectedCourtId={setSelectedCourtId}
           selectedStartTime={selectedStartTime}
           setSelectedStartTime={setSelectedStartTime}
