@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AlertCircle,
   ArrowRight,
   Building2,
   Calendar,
@@ -39,7 +40,6 @@ import { Separator } from "@/components/ui/separator";
 import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
 import {
-  useModOwnerInvalidation,
   useMutOwnerSubmitClaim,
   useQueryOwnerClaimablePlaces,
   useQueryOwnerClaimRequestById,
@@ -53,9 +53,13 @@ export default function OwnerGetStartedPage() {
   const [showClaimSearch, setShowClaimSearch] = useState(false);
   const [claimSearchQuery, setClaimSearchQuery] = useState("");
 
-  const { invalidateOwnerSetupStatus } = useModOwnerInvalidation();
-  const { data: setupStatus, isLoading: setupLoading } =
-    useQueryOwnerSetupStatus();
+  const {
+    data: setupStatus,
+    isLoading: setupLoading,
+    isFetching: setupFetching,
+    error: setupError,
+    refetch: refetchSetupStatus,
+  } = useQueryOwnerSetupStatus();
 
   const organization = setupStatus?.organization ?? null;
   const organizationId = organization?.id;
@@ -82,7 +86,6 @@ export default function OwnerGetStartedPage() {
   const handleOrgCreated = () => {
     setShowOrgForm(false);
     trackEvent({ event: "funnel.owner_org_created" });
-    void invalidateOwnerSetupStatus();
   };
 
   const handleAddVenue = () => {
@@ -109,6 +112,45 @@ export default function OwnerGetStartedPage() {
     router.push(`${appRoutes.owner.imports.bookings}?from=setup`);
   };
 
+  if (setupError && !setupStatus) {
+    return (
+      <div className="py-8">
+        <Container size="xl">
+          <Card className="border-destructive/20 bg-destructive/5">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
+                  <AlertCircle className="h-5 w-5" />
+                </div>
+                <div className="flex-1 space-y-2">
+                  <p className="font-heading font-semibold">
+                    Unable to load owner setup
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {getClientErrorMessage(
+                      setupError,
+                      "Please try again in a moment.",
+                    )}
+                  </p>
+                  <Button
+                    variant="outline"
+                    onClick={() => void refetchSetupStatus()}
+                    disabled={setupFetching}
+                  >
+                    {setupFetching && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Retry
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </Container>
+      </div>
+    );
+  }
+
   return (
     <div className="py-8">
       <Container size="xl">
@@ -121,6 +163,30 @@ export default function OwnerGetStartedPage() {
               Complete these steps to start accepting bookings on KudosCourts.
             </p>
           </div>
+
+          {setupError && setupStatus && (
+            <Card className="border-yellow-500/20 bg-yellow-50/50 dark:bg-yellow-950/20">
+              <CardContent className="p-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-sm text-muted-foreground">
+                    Showing last known setup status. Refresh to get latest
+                    updates.
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => void refetchSetupStatus()}
+                    disabled={setupFetching}
+                  >
+                    {setupFetching && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Refresh
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           <div className="flex flex-wrap gap-2">
             <Badge variant={hasOrganization ? "default" : "secondary"}>
@@ -921,28 +987,41 @@ function ClaimSearchDialog({
   searchQuery: string;
   onSearchQueryChange: (query: string) => void;
 }) {
-  const { invalidateClaimRequestMine, invalidateOwnerSetupStatus } =
-    useModOwnerInvalidation();
+  const normalizedSearchQuery = searchQuery.trim();
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(
+    normalizedSearchQuery,
+  );
+  const isReadyToSearch = normalizedSearchQuery.length >= 2;
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedSearchQuery(normalizedSearchQuery);
+    }, 300);
+
+    return () => window.clearTimeout(timer);
+  }, [normalizedSearchQuery]);
 
   const { data: searchResults, isLoading: searching } =
     useQueryOwnerClaimablePlaces(
       {
-        q: searchQuery,
+        q: debouncedSearchQuery,
         verificationTier: "curated",
         limit: 10,
       },
       {
-        enabled: open && searchQuery.length >= 2,
+        enabled: open && debouncedSearchQuery.length >= 2,
       },
     );
+
+  const isDebouncing =
+    isReadyToSearch && debouncedSearchQuery !== normalizedSearchQuery;
+  const isSearching = searching || isDebouncing;
 
   const submitClaimMutation = useMutOwnerSubmitClaim({
     onSuccess: () => {
       toast.success("Claim submitted", {
         description: "We will review your request and notify you.",
       });
-      void invalidateClaimRequestMine();
-      void invalidateOwnerSetupStatus();
       onOpenChange(false);
       trackEvent({ event: "funnel.owner_claim_submitted" });
     },
@@ -954,7 +1033,10 @@ function ClaimSearchDialog({
   });
 
   const handleSubmitClaim = (placeId: string) => {
-    if (!organizationId) return;
+    if (!organizationId) {
+      toast.error("Create an organization first");
+      return;
+    }
     submitClaimMutation.mutate({
       placeId,
       organizationId,
@@ -984,9 +1066,9 @@ function ClaimSearchDialog({
             />
           </div>
 
-          {searchQuery.length >= 2 && (
+          {isReadyToSearch && (
             <ScrollArea className="h-[min(50dvh,24rem)] w-full rounded-md border">
-              {searching ? (
+              {isSearching ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                 </div>
@@ -1029,7 +1111,7 @@ function ClaimSearchDialog({
             </ScrollArea>
           )}
 
-          {searchQuery.length < 2 && (
+          {!isReadyToSearch && (
             <p className="text-center text-sm text-muted-foreground py-4">
               Enter at least 2 characters to search.
             </p>
