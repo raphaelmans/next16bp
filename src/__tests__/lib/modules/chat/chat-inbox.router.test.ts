@@ -88,7 +88,7 @@ describe("chatInboxRouter", () => {
     // Assert
     expect(result).toEqual({ threadIds: ["cr-1", "vr-2"] });
     expect(mockService.listArchivedThreadIds).toHaveBeenCalledWith(
-      { userId: "user-1", role: "player" },
+      { userId: "user-1", role: "member" },
       { threadKind: "support" },
     );
   });

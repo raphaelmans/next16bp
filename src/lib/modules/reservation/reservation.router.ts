@@ -18,6 +18,7 @@ import {
   CancelReservationSchema,
   CreateReservationForAnyCourtSchema,
   CreateReservationForCourtSchema,
+  CreateReservationGroupSchema,
   GetMyReservationsSchema,
   GetPaymentInfoSchema,
   MarkPaymentSchema,
@@ -110,6 +111,24 @@ export const reservationRouter = router({
 
         const reservationService = makeReservationService();
         return await reservationService.createReservationForAnyCourt(
+          ctx.userId,
+          profile.id,
+          input,
+        );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
+  createGroup: protectedRateLimitedProcedure("sensitive")
+    .input(CreateReservationGroupSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const reservationService = makeReservationService();
+        return await reservationService.createReservationGroup(
           ctx.userId,
           profile.id,
           input,

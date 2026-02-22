@@ -45,3 +45,4 @@ next-env.d.ts
 .next-docs/
 # spec-gen analysis artifacts
 .spec-gen/
+.env*.local

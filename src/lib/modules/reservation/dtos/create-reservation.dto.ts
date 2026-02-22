@@ -18,6 +18,13 @@ const BookingWindowStartTimeSchema = S.common.isoDateTime.refine(
   },
 );
 
+const GroupReservationItemSchema = z.object({
+  courtId: S.ids.courtId,
+  startTime: BookingWindowStartTimeSchema,
+  durationMinutes: S.availability.durationMinutes,
+  selectedAddons: z.array(SelectedAddonSchema).max(20).optional(),
+});
+
 export const CreateReservationForCourtSchema = z.object({
   courtId: S.ids.courtId,
   startTime: BookingWindowStartTimeSchema,
@@ -33,9 +40,20 @@ export const CreateReservationForAnyCourtSchema = z.object({
   selectedAddons: z.array(SelectedAddonSchema).max(20).optional(),
 });
 
+export const CreateReservationGroupSchema = z.object({
+  placeId: S.ids.placeId,
+  items: z.array(GroupReservationItemSchema).min(2).max(12),
+});
+
 export type CreateReservationForCourtDTO = z.infer<
   typeof CreateReservationForCourtSchema
 >;
 export type CreateReservationForAnyCourtDTO = z.infer<
   typeof CreateReservationForAnyCourtSchema
+>;
+export type CreateReservationGroupDTO = z.infer<
+  typeof CreateReservationGroupSchema
+>;
+export type GroupReservationItemDTO = z.infer<
+  typeof GroupReservationItemSchema
 >;

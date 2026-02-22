@@ -44,6 +44,7 @@ import type {
   CancelReservationDTO,
   CreateReservationForAnyCourtDTO,
   CreateReservationForCourtDTO,
+  CreateReservationGroupDTO,
   GetMyReservationsDTO,
   MarkPaymentDTO,
   ReservationListItemRecord,
@@ -55,12 +56,17 @@ import {
   NotReservationOwnerError,
   ReservationCancellationWindowError,
   ReservationExpiredError,
+  ReservationGroupInvalidError,
   ReservationNotFoundError,
   ReservationStartTimeInPastError,
   TermsNotAcceptedError,
 } from "../errors/reservation.errors";
 import type { IReservationRepository } from "../repositories/reservation.repository";
 import type { IReservationEventRepository } from "../repositories/reservation-event.repository";
+import {
+  computeReservationGroupTotals,
+  findReservationGroupDuplicateItemKeys,
+} from "../shared/domain";
 
 const DEFAULT_OWNER_REVIEW_MINUTES = 45;
 const DEFAULT_CANCELLATION_CUTOFF_MINUTES = 0;
@@ -81,6 +87,13 @@ export interface ReservationCreationResult extends ReservationRecord {
   totalPriceCents: number;
   currency: string;
   pricingWarnings: string[];
+}
+
+export interface ReservationGroupCreationResult {
+  reservationGroupId: string;
+  totalPriceCents: number;
+  currency: string;
+  items: ReservationCreationResult[];
 }
 
 export interface ReservationPaymentMethod {
@@ -120,6 +133,11 @@ export interface IReservationService {
     profileId: string,
     data: CreateReservationForAnyCourtDTO,
   ): Promise<ReservationCreationResult>;
+  createReservationGroup(
+    userId: string,
+    profileId: string,
+    data: CreateReservationGroupDTO,
+  ): Promise<ReservationGroupCreationResult>;
   markPayment(
     userId: string,
     profileId: string,
@@ -216,6 +234,18 @@ export class ReservationService implements IReservationService {
     const maxStartTime = endOfDay(addDays(new Date(), MAX_BOOKING_WINDOW_DAYS));
     if (startTime > maxStartTime) {
       throw new BookingWindowExceededError(startTime, maxStartTime);
+    }
+  }
+
+  private assertNoDuplicateReservationGroupItems(
+    items: CreateReservationGroupDTO["items"],
+  ): void {
+    const duplicateKeys = findReservationGroupDuplicateItemKeys(items);
+    if (duplicateKeys.length > 0) {
+      throw new ReservationGroupInvalidError(
+        "Reservation group contains duplicate court/time selections",
+        { duplicateKeys },
+      );
     }
   }
 
@@ -885,6 +915,262 @@ export class ReservationService implements IReservationService {
       totalPriceCents: selected.totalPriceCents,
       currency: selected.currency,
       pricingWarnings: selected.pricingWarnings,
+    };
+  }
+
+  async createReservationGroup(
+    userId: string,
+    profileId: string,
+    data: CreateReservationGroupDTO,
+  ): Promise<ReservationGroupCreationResult> {
+    this.assertNoDuplicateReservationGroupItems(data.items);
+
+    const place = await this.placeRepository.findById(data.placeId);
+    if (!place) {
+      throw new PlaceNotFoundError(data.placeId);
+    }
+
+    if (!place.isActive || place.placeType !== "RESERVABLE") {
+      throw new NoAvailabilityError({
+        placeId: data.placeId,
+      });
+    }
+
+    await this.assertPlaceBookable(place.id);
+
+    const distinctCourtIds = Array.from(
+      new Set(data.items.map((i) => i.courtId)),
+    );
+    const courts = await this.courtRepository.findByIds(distinctCourtIds);
+    const courtById = new Map(courts.map((court) => [court.id, court]));
+
+    if (courts.length !== distinctCourtIds.length) {
+      const missingCourtId = distinctCourtIds.find((id) => !courtById.has(id));
+      throw new CourtNotFoundError(missingCourtId);
+    }
+
+    type PreparedItem = {
+      courtId: string;
+      courtLabel: string;
+      startTime: Date;
+      durationMinutes: number;
+      selectedAddons?: { addonId: string; quantity: number }[];
+      pricing: {
+        endTime: Date;
+        totalPriceCents: number;
+        currency: string;
+        pricingWarnings: string[];
+      };
+    };
+
+    const preparedItems: PreparedItem[] = [];
+    for (const item of data.items) {
+      const court = courtById.get(item.courtId);
+      if (!court || !court.isActive) {
+        throw new CourtNotFoundError(item.courtId);
+      }
+
+      if (court.placeId !== place.id) {
+        throw new ReservationGroupInvalidError(
+          "All reservation items must belong to the selected place",
+          {
+            placeId: place.id,
+            courtId: item.courtId,
+            courtPlaceId: court.placeId,
+          },
+        );
+      }
+
+      const startTime = new Date(item.startTime);
+      this.assertStartTimeNotInPast(startTime);
+      this.assertWithinBookingWindow(startTime);
+
+      const pricing = await this.computeCourtPricing({
+        courtId: court.id,
+        startTime,
+        durationMinutes: item.durationMinutes,
+        timeZone: place.timeZone,
+        selectedAddons: item.selectedAddons,
+      });
+
+      if (!pricing) {
+        throw new NoAvailabilityError({
+          courtId: item.courtId,
+          startTime: item.startTime,
+          durationMinutes: item.durationMinutes,
+        });
+      }
+
+      const isAvailable = await this.isCourtRangeAvailable({
+        courtIds: [court.id],
+        startTime,
+        endTime: pricing.endTime,
+      });
+      if (!isAvailable) {
+        throw new NoAvailabilityError({
+          courtId: item.courtId,
+          startTime: item.startTime,
+          durationMinutes: item.durationMinutes,
+        });
+      }
+
+      preparedItems.push({
+        courtId: court.id,
+        courtLabel: court.label,
+        startTime,
+        durationMinutes: item.durationMinutes,
+        selectedAddons: item.selectedAddons,
+        pricing,
+      });
+    }
+
+    const totals = computeReservationGroupTotals(
+      preparedItems.map((item) => ({
+        totalPriceCents: item.pricing.totalPriceCents,
+        currency: item.pricing.currency,
+      })),
+    );
+
+    if (!totals.currency || totals.hasMixedCurrencies) {
+      throw new ReservationGroupInvalidError(
+        "All reservation items in a group must use the same currency",
+      );
+    }
+
+    const { reservationGroupId, items } = await this.transactionManager.run(
+      async (tx) => {
+        const ctx: RequestContext = { tx };
+
+        const profile = await this.profileRepository.findById(profileId, ctx);
+        if (!profile) {
+          throw new ProfileNotFoundError(profileId);
+        }
+        if (!profile.displayName || (!profile.email && !profile.phoneNumber)) {
+          throw new IncompleteProfileError();
+        }
+
+        const group = await this.reservationRepository.createGroup(
+          {
+            placeId: place.id,
+            playerId: profileId,
+            playerNameSnapshot: profile.displayName,
+            playerEmailSnapshot: profile.email,
+            playerPhoneSnapshot: profile.phoneNumber,
+            totalPriceCents: totals.totalPriceCents,
+            currency: totals.currency,
+          },
+          ctx,
+        );
+
+        const createdItems: ReservationCreationResult[] = [];
+        for (const item of preparedItems) {
+          const stillAvailable = await this.isCourtRangeAvailable({
+            courtIds: [item.courtId],
+            startTime: item.startTime,
+            endTime: item.pricing.endTime,
+            ctx,
+          });
+
+          if (!stillAvailable) {
+            throw new NoAvailabilityError({
+              courtId: item.courtId,
+              startTime: item.startTime.toISOString(),
+              durationMinutes: item.durationMinutes,
+            });
+          }
+
+          const policy = await this.getOrganizationPolicyForCourt(
+            item.courtId,
+            ctx,
+          );
+          const expiresAt = this.getOwnerAcceptanceExpiresAt(policy);
+
+          const created = await this.reservationRepository.create(
+            {
+              groupId: group.id,
+              courtId: item.courtId,
+              startTime: item.startTime,
+              endTime: item.pricing.endTime,
+              totalPriceCents: item.pricing.totalPriceCents,
+              currency: item.pricing.currency,
+              playerId: profileId,
+              playerNameSnapshot: profile.displayName,
+              playerEmailSnapshot: profile.email,
+              playerPhoneSnapshot: profile.phoneNumber,
+              status: "CREATED",
+              expiresAt,
+            },
+            ctx,
+          );
+
+          await this.reservationEventRepository.create(
+            {
+              reservationId: created.id,
+              fromStatus: null,
+              toStatus: "CREATED",
+              triggeredByUserId: userId,
+              triggeredByRole: "PLAYER",
+              notes: "Reservation created as part of a multi-court request",
+            },
+            ctx,
+          );
+
+          if (place.organizationId) {
+            await this.notificationDeliveryService.enqueueOwnerReservationCreated(
+              {
+                reservationId: created.id,
+                organizationId: place.organizationId,
+                placeId: place.id,
+                placeName: place.name,
+                courtId: item.courtId,
+                courtLabel: item.courtLabel,
+                startTimeIso: created.startTime.toISOString(),
+                endTimeIso: created.endTime.toISOString(),
+                totalPriceCents: created.totalPriceCents,
+                currency: created.currency,
+                playerName: profile.displayName,
+                playerEmail: profile.email ?? null,
+                playerPhone: profile.phoneNumber ?? null,
+                expiresAtIso: created.expiresAt
+                  ? new Date(created.expiresAt).toISOString()
+                  : null,
+              },
+              ctx,
+            );
+          }
+
+          createdItems.push({
+            ...created,
+            courtId: item.courtId,
+            courtLabel: item.courtLabel,
+            totalPriceCents: item.pricing.totalPriceCents,
+            currency: item.pricing.currency,
+            pricingWarnings: item.pricing.pricingWarnings,
+          });
+        }
+
+        return {
+          reservationGroupId: group.id,
+          items: createdItems,
+        };
+      },
+    );
+
+    if (place.organizationId) {
+      for (const item of items) {
+        await this.postPlayerCreatedMessageBestEffort({
+          reservationId: item.id,
+          profileId,
+          organizationId: place.organizationId,
+        });
+      }
+    }
+
+    return {
+      reservationGroupId,
+      totalPriceCents: totals.totalPriceCents,
+      currency: totals.currency,
+      items,
     };
   }
 

@@ -27,6 +27,7 @@ import {
   useMutRejectReservation,
   useQueryOwnerOrganization,
   useQueryOwnerReservationHistory,
+  useQueryReservationGroupDetail,
 } from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
 
@@ -76,6 +77,16 @@ type OwnerReservationDetailPageProps = {
   reservationId: string;
 };
 
+type ReservationGroupDetailItem = {
+  id: string;
+  status: string;
+  courtName?: string | null;
+  slotStartTime?: string | null;
+  slotEndTime?: string | null;
+  amountCents?: number | null;
+  currency?: string | null;
+};
+
 export default function OwnerReservationDetailPage({
   reservationId,
 }: OwnerReservationDetailPageProps) {
@@ -92,6 +103,20 @@ export default function OwnerReservationDetailPage({
     useQueryOwnerReservationHistory({ reservationId });
 
   const reservation = reservations[0];
+  const reservationGroupQuery = useQueryReservationGroupDetail(
+    reservation?.reservationGroupId ?? undefined,
+  );
+  const reservationGroupItems = React.useMemo(
+    () =>
+      (
+        (
+          reservationGroupQuery.data as
+            | { reservations?: ReservationGroupDetailItem[] }
+            | undefined
+        )?.reservations ?? []
+      ).filter((item) => item.id !== reservation?.id),
+    [reservation?.id, reservationGroupQuery.data],
+  );
   const acceptMutation = useMutAcceptReservation();
   const confirmMutation = useMutConfirmReservation();
   const rejectMutation = useMutRejectReservation();
@@ -127,7 +152,10 @@ export default function OwnerReservationDetailPage({
       : "Failed to confirm payment";
 
     mutation.mutate(
-      { reservationId: reservation.id },
+      {
+        reservationId: reservation.id,
+        reservationGroupId: reservation.reservationGroupId,
+      },
       {
         onSuccess: () => {
           toast.success(successMessage);
@@ -143,7 +171,11 @@ export default function OwnerReservationDetailPage({
   const handleRejectSubmit = (reason: string) => {
     if (!reservation) return;
     rejectMutation.mutate(
-      { reservationId: reservation.id, reason },
+      {
+        reservationId: reservation.id,
+        reservationGroupId: reservation.reservationGroupId,
+        reason,
+      },
       {
         onSuccess: () => {
           toast.success(
@@ -225,15 +257,22 @@ export default function OwnerReservationDetailPage({
                   <CardTitle className="text-xl font-heading font-semibold">
                     {reservation.playerName}
                   </CardTitle>
-                  <Badge
-                    className={cn(
-                      "text-xs",
-                      stageConfig[reservation.reservationStatus]?.className,
-                    )}
-                  >
-                    {stageConfig[reservation.reservationStatus]?.label ??
-                      reservation.status}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    {reservation.reservationGroupId ? (
+                      <Badge variant="secondary" className="text-xs">
+                        Group booking
+                      </Badge>
+                    ) : null}
+                    <Badge
+                      className={cn(
+                        "text-xs",
+                        stageConfig[reservation.reservationStatus]?.className,
+                      )}
+                    >
+                      {stageConfig[reservation.reservationStatus]?.label ??
+                        reservation.status}
+                    </Badge>
+                  </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {reservation.courtName} · {reservation.startTime} -{" "}
@@ -322,6 +361,65 @@ export default function OwnerReservationDetailPage({
                 )}
               </CardContent>
             </Card>
+
+            {reservation.reservationGroupId ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Grouped Reservation Items</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {reservationGroupQuery.isLoading ? (
+                    <p className="text-sm text-muted-foreground">
+                      Loading grouped items...
+                    </p>
+                  ) : reservationGroupItems.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                      No additional grouped items found.
+                    </p>
+                  ) : (
+                    <div className="space-y-3">
+                      {reservationGroupItems.map((item) => (
+                        <div
+                          key={item.id}
+                          className="rounded-lg border p-3 flex flex-wrap items-start justify-between gap-3"
+                        >
+                          <div>
+                            <p className="font-medium">
+                              {item.courtName ?? "Court"}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {item.slotStartTime
+                                ? format(
+                                    new Date(item.slotStartTime),
+                                    "MMM d, h:mm a",
+                                  )
+                                : "--"}{" "}
+                              -{" "}
+                              {item.slotEndTime
+                                ? format(new Date(item.slotEndTime), "h:mm a")
+                                : "--"}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium">
+                              {formatCurrency(
+                                item.amountCents ?? 0,
+                                item.currency ?? "PHP",
+                              )}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {stageConfig[
+                                item.status as keyof typeof stageConfig
+                              ]?.label ?? item.status}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ) : null}
 
             <Card>
               <CardHeader>

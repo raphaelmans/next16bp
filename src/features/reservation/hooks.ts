@@ -85,6 +85,24 @@ export function useMutCreateReservationForAnyCourt() {
   });
 }
 
+export function useMutCreateReservationGroup() {
+  const utils = trpc.useUtils();
+
+  return useFeatureMutation(reservationApi.mutReservationCreateGroup, {
+    onSuccess: async () => {
+      toast.success("Multi-court reservation request sent!");
+      await Promise.all([
+        utils.reservation.getMy.invalidate(),
+        utils.reservation.getMyWithDetails.invalidate(),
+        utils.reservationChat.getThreadMetas.invalidate(),
+      ]);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to create multi-court reservation");
+    },
+  });
+}
+
 // ============================================================================
 // From use-create-reservation-for-court.ts
 // ============================================================================

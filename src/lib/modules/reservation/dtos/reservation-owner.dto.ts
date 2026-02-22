@@ -19,6 +19,14 @@ export const AcceptReservationSchema = z.object({
 
 export type AcceptReservationDTO = z.infer<typeof AcceptReservationSchema>;
 
+export const AcceptReservationGroupSchema = z.object({
+  reservationGroupId: S.ids.generic,
+});
+
+export type AcceptReservationGroupDTO = z.infer<
+  typeof AcceptReservationGroupSchema
+>;
+
 export const ConfirmPaidOfflineSchema = z.object({
   reservationId: S.ids.reservationId,
   paymentMethodId: S.ids.paymentMethodId,
@@ -34,12 +42,28 @@ export const ConfirmPaymentSchema = z.object({
 
 export type ConfirmPaymentDTO = z.infer<typeof ConfirmPaymentSchema>;
 
+export const ConfirmPaymentGroupSchema = z.object({
+  reservationGroupId: S.ids.generic,
+  notes: S.reservation.notes,
+});
+
+export type ConfirmPaymentGroupDTO = z.infer<typeof ConfirmPaymentGroupSchema>;
+
 export const RejectReservationSchema = z.object({
   reservationId: S.ids.reservationId,
   reason: S.reservation.rejectReason,
 });
 
 export type RejectReservationDTO = z.infer<typeof RejectReservationSchema>;
+
+export const RejectReservationGroupSchema = z.object({
+  reservationGroupId: S.ids.generic,
+  reason: S.reservation.rejectReason,
+});
+
+export type RejectReservationGroupDTO = z.infer<
+  typeof RejectReservationGroupSchema
+>;
 
 export const GetOrgReservationsSchema = z.object({
   organizationId: S.ids.organizationId,
@@ -52,6 +76,14 @@ export const GetOrgReservationsSchema = z.object({
 });
 
 export type GetOrgReservationsDTO = z.infer<typeof GetOrgReservationsSchema>;
+
+export const GetReservationGroupDetailSchema = z.object({
+  reservationGroupId: S.ids.generic,
+});
+
+export type GetReservationGroupDetailDTO = z.infer<
+  typeof GetReservationGroupDetailSchema
+>;
 
 export const GetPendingForCourtSchema = z.object({
   courtId: S.ids.courtId,
@@ -117,6 +149,7 @@ export const ReservationWithDetailsSchema = z.object({
   cancellationReason: z.string().nullable(),
   createdAt: z.string().nullable(),
   expiresAt: z.string().nullable(),
+  reservationGroupId: z.string().nullable().optional(),
 
   // Enriched fields from joins
   courtId: S.ids.courtId,

@@ -22,6 +22,7 @@ export type ReservationStatus =
 
 export interface Reservation {
   id: string;
+  reservationGroupId?: string | null;
   courtId: string;
   courtName: string;
   playerName: string;
@@ -65,6 +66,7 @@ type PaymentProofLike = {
 
 type OwnerReservationRecord = {
   id: string;
+  reservationGroupId?: string | null;
   courtId: string;
   courtName: string;
   playerNameSnapshot?: string | null;
@@ -189,6 +191,7 @@ function mapOwnerReservationRecord(
 ): Reservation {
   return {
     id: record.id,
+    reservationGroupId: record.reservationGroupId ?? null,
     courtId: record.courtId,
     courtName: record.courtName,
     playerName: record.playerNameSnapshot ?? "Unknown",
@@ -333,21 +336,60 @@ export function useModOwnerReservations(
   );
 }
 
+type ReservationActionInput = {
+  reservationId: string;
+  reservationGroupId?: string | null;
+};
+
+type ConfirmReservationActionInput = ReservationActionInput & {
+  notes?: string;
+};
+
+type RejectReservationActionInput = ReservationActionInput & {
+  reason: string;
+};
+
 export function useMutAcceptReservation() {
   const utils = trpc.useUtils();
 
-  return useFeatureMutation(ownerApi.mutReservationOwnerAccept, {
-    onSuccess: async (_data, variables) => {
-      const payload = variables as { reservationId?: string } | undefined;
+  return useFeatureMutation(
+    async (input: ReservationActionInput) => {
+      if (input.reservationGroupId) {
+        return ownerApi.mutReservationOwnerAcceptGroup({
+          reservationGroupId: input.reservationGroupId,
+        });
+      }
+
+      return ownerApi.mutReservationOwnerAccept({
+        reservationId: input.reservationId,
+      });
+    },
+    {
+      onSuccess: async (_data, variables) => {
+        const payload = variables as ReservationActionInput | undefined;
+        await Promise.all([
+          utils.reservationOwner.getForOrganization.invalidate(),
+          utils.reservationOwner.getPendingCount.invalidate(),
+          utils.reservationChat.getThreadMetas.invalidate(),
+          payload?.reservationId && !payload?.reservationGroupId
+            ? utils.reservationChat.getSession.invalidate({
+                reservationId: payload.reservationId,
+              })
+            : Promise.resolve(),
+        ]);
+      },
+    },
+  );
+}
+
+export function useMutAcceptReservationGroup() {
+  const utils = trpc.useUtils();
+
+  return useFeatureMutation(ownerApi.mutReservationOwnerAcceptGroup, {
+    onSuccess: async () => {
       await Promise.all([
         utils.reservationOwner.getForOrganization.invalidate(),
         utils.reservationOwner.getPendingCount.invalidate(),
-        utils.reservationChat.getThreadMetas.invalidate(),
-        payload?.reservationId
-          ? utils.reservationChat.getSession.invalidate({
-              reservationId: payload.reservationId,
-            })
-          : Promise.resolve(),
       ]);
     },
   });
@@ -356,18 +398,46 @@ export function useMutAcceptReservation() {
 export function useMutConfirmReservation() {
   const utils = trpc.useUtils();
 
-  return useFeatureMutation(ownerApi.mutReservationOwnerConfirmPayment, {
-    onSuccess: async (_data, variables) => {
-      const payload = variables as { reservationId?: string } | undefined;
+  return useFeatureMutation(
+    async (input: ConfirmReservationActionInput) => {
+      if (input.reservationGroupId) {
+        return ownerApi.mutReservationOwnerConfirmPaymentGroup({
+          reservationGroupId: input.reservationGroupId,
+          notes: input.notes,
+        });
+      }
+
+      return ownerApi.mutReservationOwnerConfirmPayment({
+        reservationId: input.reservationId,
+        notes: input.notes,
+      });
+    },
+    {
+      onSuccess: async (_data, variables) => {
+        const payload = variables as ConfirmReservationActionInput | undefined;
+        await Promise.all([
+          utils.reservationOwner.getForOrganization.invalidate(),
+          utils.reservationOwner.getPendingCount.invalidate(),
+          utils.reservationChat.getThreadMetas.invalidate(),
+          payload?.reservationId && !payload?.reservationGroupId
+            ? utils.reservationChat.getSession.invalidate({
+                reservationId: payload.reservationId,
+              })
+            : Promise.resolve(),
+        ]);
+      },
+    },
+  );
+}
+
+export function useMutConfirmReservationGroup() {
+  const utils = trpc.useUtils();
+
+  return useFeatureMutation(ownerApi.mutReservationOwnerConfirmPaymentGroup, {
+    onSuccess: async () => {
       await Promise.all([
         utils.reservationOwner.getForOrganization.invalidate(),
         utils.reservationOwner.getPendingCount.invalidate(),
-        utils.reservationChat.getThreadMetas.invalidate(),
-        payload?.reservationId
-          ? utils.reservationChat.getSession.invalidate({
-              reservationId: payload.reservationId,
-            })
-          : Promise.resolve(),
       ]);
     },
   });
@@ -376,21 +446,62 @@ export function useMutConfirmReservation() {
 export function useMutRejectReservation() {
   const utils = trpc.useUtils();
 
-  return useFeatureMutation(ownerApi.mutReservationOwnerReject, {
-    onSuccess: async (_data, variables) => {
-      const payload = variables as { reservationId?: string } | undefined;
+  return useFeatureMutation(
+    async (input: RejectReservationActionInput) => {
+      if (input.reservationGroupId) {
+        return ownerApi.mutReservationOwnerRejectGroup({
+          reservationGroupId: input.reservationGroupId,
+          reason: input.reason,
+        });
+      }
+
+      return ownerApi.mutReservationOwnerReject({
+        reservationId: input.reservationId,
+        reason: input.reason,
+      });
+    },
+    {
+      onSuccess: async (_data, variables) => {
+        const payload = variables as RejectReservationActionInput | undefined;
+        await Promise.all([
+          utils.reservationOwner.getForOrganization.invalidate(),
+          utils.reservationOwner.getPendingCount.invalidate(),
+          utils.reservationChat.getThreadMetas.invalidate(),
+          payload?.reservationId && !payload?.reservationGroupId
+            ? utils.reservationChat.getSession.invalidate({
+                reservationId: payload.reservationId,
+              })
+            : Promise.resolve(),
+        ]);
+      },
+    },
+  );
+}
+
+export function useMutRejectReservationGroup() {
+  const utils = trpc.useUtils();
+
+  return useFeatureMutation(ownerApi.mutReservationOwnerRejectGroup, {
+    onSuccess: async () => {
       await Promise.all([
         utils.reservationOwner.getForOrganization.invalidate(),
         utils.reservationOwner.getPendingCount.invalidate(),
-        utils.reservationChat.getThreadMetas.invalidate(),
-        payload?.reservationId
-          ? utils.reservationChat.getSession.invalidate({
-              reservationId: payload.reservationId,
-            })
-          : Promise.resolve(),
       ]);
     },
   });
+}
+
+export function useQueryReservationGroupDetail(reservationGroupId?: string) {
+  return useFeatureQuery(
+    ["reservationOwner", "getGroupDetail"],
+    ownerApi.queryReservationOwnerGetGroupDetail,
+    {
+      reservationGroupId: reservationGroupId ?? "",
+    },
+    {
+      enabled: !!reservationGroupId,
+    },
+  );
 }
 
 export function useQueryReservationCounts(organizationId: string | null) {

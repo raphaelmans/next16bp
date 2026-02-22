@@ -15,6 +15,17 @@ export class ReservationNotFoundError extends NotFoundError {
   }
 }
 
+export class ReservationGroupNotFoundError extends NotFoundError {
+  readonly code = "RESERVATION_GROUP_NOT_FOUND";
+
+  constructor(reservationGroupId?: string) {
+    super(
+      "Reservation group not found",
+      reservationGroupId ? { reservationGroupId } : undefined,
+    );
+  }
+}
+
 export class SlotNotAvailableError extends ValidationError {
   readonly code = "SLOT_NOT_AVAILABLE";
 
@@ -154,4 +165,8 @@ export class ReservationStartTimeInPastError extends ValidationError {
       now: now.toISOString(),
     });
   }
+}
+
+export class ReservationGroupInvalidError extends ValidationError {
+  readonly code = "RESERVATION_GROUP_INVALID";
 }

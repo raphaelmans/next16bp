@@ -14,12 +14,23 @@ import {
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
 import { normalizeDurationMinutes } from "@/common/duration";
-import { formatCurrency, formatDuration } from "@/common/format";
-import { getZonedDate } from "@/common/time-zone";
+import {
+  createFeatureQueryOptions,
+  useFeatureQueries,
+} from "@/common/feature-api-hooks";
+import {
+  formatCurrency,
+  formatDateShortInTimeZone,
+  formatDuration,
+  formatTimeRangeInTimeZone,
+} from "@/common/format";
+import { getZonedDate, getZonedStartOfDayIso } from "@/common/time-zone";
 import { toast } from "@/common/toast";
 import { Container } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -38,6 +49,7 @@ import {
   useQueryCourtAddons,
 } from "@/features/court-addons";
 import type { SelectedAddon } from "@/features/court-addons/schemas";
+import { getDiscoveryApi } from "@/features/discovery/api.runtime";
 import {
   useModPlaceAvailability,
   useModPlaceDetail,
@@ -49,11 +61,58 @@ import { ProfilePreviewCard } from "@/features/reservation/components/profile-pr
 import {
   useMutCreateReservationForAnyCourt,
   useMutCreateReservationForCourt,
+  useMutCreateReservationGroup,
   useQueryProfile,
 } from "@/features/reservation/hooks";
+import { computeReservationGroupTotals } from "@/lib/modules/reservation/shared/domain";
 
 const DEFAULT_DURATION_MINUTES = 60;
 const selectionModeSchema = ["any", "court"] as const;
+const discoveryApi = getDiscoveryApi();
+
+type MultiCourtBookingItem = {
+  courtId: string;
+  startTime: string;
+  durationMinutes: number;
+};
+
+type MultiCourtBookingSummaryItem = {
+  courtId: string;
+  courtLabel: string;
+  startTime: string;
+  endTime: string;
+  durationMinutes: number;
+  totalPriceCents: number | null;
+  currency: string | null;
+  isAvailable: boolean;
+};
+
+const encodeMultiCourtBookingItem = (item: MultiCourtBookingItem) =>
+  `${item.courtId}|${item.startTime}|${item.durationMinutes}`;
+
+const decodeMultiCourtBookingItem = (
+  raw: string,
+): MultiCourtBookingItem | null => {
+  const [courtId, startTime, durationRaw] = raw.split("|");
+  if (!courtId || !startTime || !durationRaw) {
+    return null;
+  }
+
+  const durationMinutes = Number.parseInt(durationRaw, 10);
+  if (!Number.isFinite(durationMinutes) || durationMinutes <= 0) {
+    return null;
+  }
+  const parsedStartTime = new Date(startTime);
+  if (Number.isNaN(parsedStartTime.getTime())) {
+    return null;
+  }
+
+  return {
+    courtId,
+    startTime: parsedStartTime.toISOString(),
+    durationMinutes,
+  };
+};
 
 type PlaceBookingPageProps = {
   placeIdOrSlug: string;
@@ -74,14 +133,31 @@ export default function PlaceBookingPage({
     mode: parseAsStringLiteral(selectionModeSchema),
     courtId: parseAsString,
     addonIds: parseAsArrayOf(parseAsString),
+    items: parseAsArrayOf(parseAsString),
   });
 
-  const startTime = bookingParams.startTime ?? undefined;
-  const durationParam = bookingParams.duration ?? undefined;
+  const rawMultiCourtItems = bookingParams.items ?? [];
   const sportId = bookingParams.sportId ?? undefined;
   const modeParam = bookingParams.mode ?? undefined;
-  const mode = modeParam ?? "any";
-  const courtId = bookingParams.courtId ?? undefined;
+  const multiCourtItems = React.useMemo(
+    () =>
+      rawMultiCourtItems
+        .map((raw) => decodeMultiCourtBookingItem(raw))
+        .filter((item): item is MultiCourtBookingItem => item !== null),
+    [rawMultiCourtItems],
+  );
+  const hasInvalidMultiCourtItems =
+    rawMultiCourtItems.length !== multiCourtItems.length;
+  const fallbackSingleItem =
+    multiCourtItems.length === 1 ? multiCourtItems[0] : null;
+  const startTime =
+    bookingParams.startTime ?? fallbackSingleItem?.startTime ?? undefined;
+  const durationParam =
+    bookingParams.duration ?? fallbackSingleItem?.durationMinutes ?? undefined;
+  const courtId =
+    bookingParams.courtId ?? fallbackSingleItem?.courtId ?? undefined;
+  const mode = modeParam ?? (courtId ? "court" : "any");
+  const isMultiCourtBooking = multiCourtItems.length > 1;
   const selectedAddons: SelectedAddon[] = React.useMemo(
     () =>
       (bookingParams.addonIds ?? []).map((item) => {
@@ -139,7 +215,17 @@ export default function PlaceBookingPage({
       params.set(
         "addonIds",
         selectedAddons
-          .map((a) => (a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`))
+          .map((a) =>
+            a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`,
+          )
+          .join(","),
+      );
+    }
+    if (multiCourtItems.length > 0) {
+      params.set(
+        "items",
+        multiCourtItems
+          .map((item) => encodeMultiCourtBookingItem(item))
           .join(","),
       );
     }
@@ -151,6 +237,7 @@ export default function PlaceBookingPage({
     courtId,
     durationParam,
     modeParam,
+    multiCourtItems,
     pathname,
     sportId,
     startTime,
@@ -180,7 +267,17 @@ export default function PlaceBookingPage({
       params.set(
         "addonIds",
         selectedAddons
-          .map((a) => (a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`))
+          .map((a) =>
+            a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`,
+          )
+          .join(","),
+      );
+    }
+    if (multiCourtItems.length > 0) {
+      params.set(
+        "items",
+        multiCourtItems
+          .map((item) => encodeMultiCourtBookingItem(item))
           .join(","),
       );
     }
@@ -197,6 +294,7 @@ export default function PlaceBookingPage({
     place?.slug,
     placeIdOrSlug,
     router,
+    multiCourtItems,
     selectedAddons,
     sportId,
     startTime,
@@ -204,6 +302,7 @@ export default function PlaceBookingPage({
   const { data: profile, isLoading: isLoadingProfile } = useQueryProfile();
   const createForCourt = useMutCreateReservationForCourt();
   const createForAnyCourt = useMutCreateReservationForAnyCourt();
+  const createGroup = useMutCreateReservationGroup();
   const createOpenPlay = useMutCreateOpenPlayFromReservation();
 
   const availabilityQuery = useModPlaceAvailability({
@@ -226,10 +325,116 @@ export default function PlaceBookingPage({
   });
 
   const availability = availabilityQuery.data ?? [];
+  const multiCourtAvailabilityQueries = useFeatureQueries(
+    multiCourtItems.map((item) =>
+      createFeatureQueryOptions(
+        ["availability", "getForCourt"],
+        discoveryApi.queryAvailabilityGetForCourt,
+        {
+          courtId: item.courtId,
+          date: getZonedStartOfDayIso(item.startTime, placeTimeZone),
+          durationMinutes: item.durationMinutes,
+          includeUnavailable: true,
+        },
+        {
+          enabled: isMultiCourtBooking,
+        },
+      ),
+    ),
+  );
+  const multiCourtSummaryItems = React.useMemo<
+    MultiCourtBookingSummaryItem[]
+  >(() => {
+    const courtLabelById = new Map(
+      (place?.courts ?? []).map((court) => [court.id, court.label]),
+    );
+
+    return multiCourtItems.map((item, index) => {
+      const query = multiCourtAvailabilityQueries[index];
+      const options =
+        (
+          query?.data as
+            | {
+                options?: Array<{
+                  courtId: string;
+                  courtLabel: string;
+                  startTime: string;
+                  endTime: string;
+                  totalPriceCents: number;
+                  currency?: string | null;
+                  status: string;
+                }>;
+              }
+            | undefined
+        )?.options ?? [];
+      const matchedOption = options.find(
+        (option) =>
+          option.courtId === item.courtId &&
+          option.startTime === item.startTime,
+      );
+      const isAvailable = matchedOption?.status === "AVAILABLE";
+
+      return {
+        courtId: item.courtId,
+        courtLabel:
+          matchedOption?.courtLabel ??
+          courtLabelById.get(item.courtId) ??
+          "Assigned court",
+        startTime: item.startTime,
+        endTime:
+          matchedOption?.endTime ??
+          addMinutes(
+            new Date(item.startTime),
+            item.durationMinutes,
+          ).toISOString(),
+        durationMinutes: item.durationMinutes,
+        totalPriceCents: isAvailable
+          ? (matchedOption?.totalPriceCents ?? null)
+          : null,
+        currency: isAvailable ? (matchedOption?.currency ?? "PHP") : null,
+        isAvailable,
+      };
+    });
+  }, [multiCourtAvailabilityQueries, multiCourtItems, place?.courts]);
+  const multiCourtTotals = React.useMemo(
+    () =>
+      computeReservationGroupTotals(
+        multiCourtSummaryItems.flatMap((item) =>
+          item.totalPriceCents !== null && item.currency
+            ? [
+                {
+                  totalPriceCents: item.totalPriceCents,
+                  currency: item.currency,
+                },
+              ]
+            : [],
+        ),
+      ),
+    [multiCourtSummaryItems],
+  );
+  const hasMixedMultiCourtCurrencies = multiCourtTotals.hasMixedCurrencies;
+  const hasUnavailableMultiCourtItems = multiCourtSummaryItems.some(
+    (item) => !item.isAvailable,
+  );
+  const hasIncompleteMultiCourtPricing = multiCourtSummaryItems.some(
+    (item) => item.totalPriceCents === null || !item.currency,
+  );
+  const isResolvingMultiCourtAvailability =
+    isMultiCourtBooking &&
+    multiCourtAvailabilityQueries.some(
+      (query) => query.isLoading || query.isFetching,
+    );
+  const multiCourtTotalPriceCents =
+    !hasMixedMultiCourtCurrencies && !hasIncompleteMultiCourtPricing
+      ? multiCourtTotals.totalPriceCents
+      : 0;
+  const multiCourtCurrency = multiCourtTotals.currency ?? "PHP";
+
   const selectedSlot = availability.find(
     (slot) => slot.startTime === startTime,
   );
   const hasResolvableInputs =
+    !isMultiCourtBooking &&
     !!resolvedPlaceId &&
     !!startTime &&
     !!bookingDate &&
@@ -241,24 +446,30 @@ export default function PlaceBookingPage({
     (availabilityQuery.isLoading || availabilityQuery.isFetching);
 
   const assignedCourt = React.useMemo(() => {
-    if (!place) return undefined;
+    if (!place || isMultiCourtBooking) return undefined;
     const targetCourtId =
       mode === "court" ? courtId : (selectedSlot?.courtId ?? undefined);
     return place.courts.find((court) => court.id === targetCourtId);
-  }, [courtId, mode, place, selectedSlot?.courtId]);
+  }, [courtId, isMultiCourtBooking, mode, place, selectedSlot?.courtId]);
 
   const assignedCourtLabel =
     assignedCourt?.label ?? selectedSlot?.courtLabel ?? "Assigned at checkout";
 
-  const addonCourtId = assignedCourt?.id ?? selectedSlot?.courtId;
+  const addonCourtId = isMultiCourtBooking
+    ? undefined
+    : (assignedCourt?.id ?? selectedSlot?.courtId);
   const courtAddonsQuery = useQueryCourtAddons(addonCourtId ?? "", {
     enabled: !!addonCourtId,
   });
   const availableCourtAddons = courtAddonsQuery.data ?? [];
 
   React.useEffect(() => {
+    if (isMultiCourtBooking) return;
     if (!addonCourtId) return;
-    const sanitized = sanitizeSelectedAddons(selectedAddons, availableCourtAddons);
+    const sanitized = sanitizeSelectedAddons(
+      selectedAddons,
+      availableCourtAddons,
+    );
     const autoAddonIds = getAutoAddonIds(availableCourtAddons);
     const sanitizedIds = new Set(sanitized.map((a) => a.addonId));
     const autoEntries: SelectedAddon[] = autoAddonIds
@@ -282,7 +493,13 @@ export default function PlaceBookingPage({
         addonIds: encoded.length > 0 ? encoded : null,
       });
     }
-  }, [addonCourtId, availableCourtAddons, selectedAddons, setBookingParams]);
+  }, [
+    addonCourtId,
+    availableCourtAddons,
+    isMultiCourtBooking,
+    selectedAddons,
+    setBookingParams,
+  ]);
 
   const handleSelectedAddonsChange = React.useCallback(
     (nextAddons: SelectedAddon[]) => {
@@ -300,13 +517,17 @@ export default function PlaceBookingPage({
     ? addMinutes(new Date(startTime), durationMinutes).toISOString()
     : undefined;
 
-  const totalPrice = selectedSlot?.totalPriceCents ?? 0;
-  const currency = selectedSlot?.currency ?? "PHP";
+  const totalPrice = isMultiCourtBooking
+    ? multiCourtTotalPriceCents
+    : (selectedSlot?.totalPriceCents ?? 0);
+  const currency = isMultiCourtBooking
+    ? multiCourtCurrency
+    : (selectedSlot?.currency ?? "PHP");
   const baseSelectedSlot = (availabilityWithoutAddonsQuery.data ?? []).find(
     (slot) => slot.startTime === startTime,
   );
   const basePriceCents =
-    selectedAddons.length > 0
+    !isMultiCourtBooking && selectedAddons.length > 0
       ? (baseSelectedSlot?.totalPriceCents ?? undefined)
       : totalPrice;
   const addonPriceCents =
@@ -330,7 +551,11 @@ export default function PlaceBookingPage({
   const [openPlayPaymentLinkUrl, setOpenPlayPaymentLinkUrl] =
     React.useState("");
   const detailsSectionRef = React.useRef<HTMLDivElement | null>(null);
-  const isSubmitting = createForCourt.isPending || createForAnyCourt.isPending;
+  const isSubmitting =
+    createForCourt.isPending ||
+    createForAnyCourt.isPending ||
+    createGroup.isPending ||
+    createOpenPlay.isPending;
 
   const suggestedSplitPerPlayerCents =
     totalPrice > 0
@@ -342,6 +567,12 @@ export default function PlaceBookingPage({
       setHostAsOpenPlay(true);
     }
   }, [initialOpenPlayEnabled]);
+
+  React.useEffect(() => {
+    if (isMultiCourtBooking && hostAsOpenPlay) {
+      setHostAsOpenPlay(false);
+    }
+  }, [hostAsOpenPlay, isMultiCourtBooking]);
 
   React.useEffect(() => {
     if (totalPrice > 0 && openPlayJoinPolicy !== "REQUEST") {
@@ -368,7 +599,53 @@ export default function PlaceBookingPage({
   );
 
   const handleConfirm = async () => {
-    if (!selectedSlot || isSubmitting) return;
+    if (isSubmitting) return;
+
+    if (isMultiCourtBooking) {
+      if (!resolvedPlaceId) {
+        toast.error("Venue details unavailable.");
+        return;
+      }
+      if (hasInvalidMultiCourtItems || multiCourtItems.length < 2) {
+        toast.error(
+          "Multi-court selection is incomplete. Please reselect slots.",
+        );
+        return;
+      }
+      if (isResolvingMultiCourtAvailability) {
+        toast.error(
+          "Checking latest availability. Please try again in a moment.",
+        );
+        return;
+      }
+      if (
+        hasUnavailableMultiCourtItems ||
+        hasIncompleteMultiCourtPricing ||
+        hasMixedMultiCourtCurrencies
+      ) {
+        toast.error(
+          "One or more selected slots are unavailable. Please adjust your selections.",
+        );
+        return;
+      }
+
+      try {
+        await createGroup.mutateAsync({
+          placeId: resolvedPlaceId,
+          items: multiCourtItems.map((item) => ({
+            courtId: item.courtId,
+            startTime: item.startTime,
+            durationMinutes: item.durationMinutes,
+          })),
+        });
+        router.push(appRoutes.reservations.base);
+      } catch (_error) {
+        // toast handled by mutation hooks
+      }
+      return;
+    }
+
+    if (!selectedSlot) return;
     if (mode === "court" && !courtId) {
       toast.error("Select a court to continue.");
       return;
@@ -467,11 +744,31 @@ export default function PlaceBookingPage({
     );
   }
 
-  if (isResolvingAvailability) {
+  if (isResolvingAvailability || isResolvingMultiCourtAvailability) {
     return <PlaceBookingSkeleton />;
   }
 
-  if (!selectedSlot || !endTime) {
+  if (isMultiCourtBooking) {
+    if (hasInvalidMultiCourtItems || multiCourtItems.length < 2) {
+      return (
+        <Container className="py-12">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold">Booking details missing</h1>
+            <p className="text-muted-foreground mt-2">
+              Please return to the venue page and reselect your multi-court
+              slots.
+            </p>
+            <Link
+              href={appRoutes.places.detail(placeSlugOrId)}
+              className="text-primary hover:underline mt-4 inline-block"
+            >
+              Back to venue
+            </Link>
+          </div>
+        </Container>
+      );
+    }
+  } else if (!selectedSlot || !endTime) {
     return (
       <Container className="py-12">
         <div className="text-center">
@@ -491,18 +788,32 @@ export default function PlaceBookingPage({
   }
 
   const courtSummaryName = assignedCourt?.label ?? selectedSlot?.courtLabel;
-  const courtSummary = {
-    name: courtSummaryName ? `${place.name} · ${courtSummaryName}` : place.name,
-    address: place.address,
-    coverImageUrl: place.coverImageUrl,
-  };
+  const courtSummary = isMultiCourtBooking
+    ? null
+    : {
+        name: courtSummaryName
+          ? `${place.name} · ${courtSummaryName}`
+          : place.name,
+        address: place.address,
+        coverImageUrl: place.coverImageUrl,
+      };
 
-  const timeSlot = {
-    startTime: selectedSlot.startTime,
-    endTime,
-    priceCents: totalPrice,
-    currency,
-  };
+  const timeSlot = isMultiCourtBooking
+    ? {
+        startTime:
+          multiCourtSummaryItems[0]?.startTime ?? new Date().toISOString(),
+        endTime:
+          multiCourtSummaryItems[multiCourtSummaryItems.length - 1]?.endTime ??
+          new Date().toISOString(),
+        priceCents: totalPrice,
+        currency,
+      }
+    : {
+        startTime: selectedSlot.startTime,
+        endTime: endTime ?? selectedSlot.endTime,
+        priceCents: totalPrice,
+        currency,
+      };
 
   return (
     <Container className="py-6">
@@ -518,31 +829,107 @@ export default function PlaceBookingPage({
       <div className="grid gap-6 lg:grid-cols-3 mt-8">
         <div className="lg:col-span-2 space-y-6">
           <div ref={detailsSectionRef} className="scroll-mt-24">
-            <BookingSummaryCard
-              court={courtSummary}
-              timeSlot={timeSlot}
-              timeZone={placeTimeZone}
-            />
+            {isMultiCourtBooking ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Booking Summary</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    You are booking {multiCourtSummaryItems.length} courts in
+                    one request.
+                  </p>
+                  <div className="space-y-3">
+                    {multiCourtSummaryItems.map((item) => (
+                      <div
+                        key={encodeMultiCourtBookingItem({
+                          courtId: item.courtId,
+                          startTime: item.startTime,
+                          durationMinutes: item.durationMinutes,
+                        })}
+                        className="rounded-lg border p-3"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="font-medium">
+                            {place.name} · {item.courtLabel}
+                          </p>
+                          <Badge
+                            variant={
+                              item.isAvailable ? "secondary" : "destructive"
+                            }
+                          >
+                            {item.isAvailable ? "Available" : "Unavailable"}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {formatDateShortInTimeZone(
+                            item.startTime,
+                            placeTimeZone,
+                          )}{" "}
+                          ·{" "}
+                          {formatTimeRangeInTimeZone(
+                            item.startTime,
+                            item.endTime,
+                            placeTimeZone,
+                          )}{" "}
+                          ({formatDuration(item.durationMinutes)})
+                        </p>
+                        <p className="text-sm mt-1">
+                          {item.totalPriceCents !== null && item.currency
+                            ? formatCurrency(
+                                item.totalPriceCents,
+                                item.currency,
+                              )
+                            : "Pricing unavailable"}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  {hasUnavailableMultiCourtItems ||
+                  hasIncompleteMultiCourtPricing ||
+                  hasMixedMultiCourtCurrencies ? (
+                    <p className="text-sm text-destructive">
+                      One or more selected slots are no longer available. Return
+                      to the venue page to adjust your selections.
+                    </p>
+                  ) : null}
+                </CardContent>
+              </Card>
+            ) : (
+              <BookingSummaryCard
+                court={
+                  courtSummary ?? {
+                    name: place.name,
+                    address: place.address,
+                    coverImageUrl: place.coverImageUrl,
+                  }
+                }
+                timeSlot={timeSlot}
+                timeZone={placeTimeZone}
+              />
+            )}
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Assigned court</CardTitle>
-            </CardHeader>
-            <CardContent className="flex items-center gap-2 text-sm">
-              {assignedCourt?.sportName && (
-                <Badge variant="outline">{assignedCourt.sportName}</Badge>
-              )}
-              <span className="font-medium">{assignedCourtLabel}</span>
-              {assignedCourt?.tierLabel && (
-                <Badge variant="secondary" className="ml-2">
-                  {assignedCourt.tierLabel}
-                </Badge>
-              )}
-            </CardContent>
-          </Card>
+          {!isMultiCourtBooking ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Assigned court</CardTitle>
+              </CardHeader>
+              <CardContent className="flex items-center gap-2 text-sm">
+                {assignedCourt?.sportName && (
+                  <Badge variant="outline">{assignedCourt.sportName}</Badge>
+                )}
+                <span className="font-medium">{assignedCourtLabel}</span>
+                {assignedCourt?.tierLabel && (
+                  <Badge variant="secondary" className="ml-2">
+                    {assignedCourt.tierLabel}
+                  </Badge>
+                )}
+              </CardContent>
+            </Card>
+          ) : null}
 
-          {addonCourtId ? (
+          {!isMultiCourtBooking && addonCourtId ? (
             <Card>
               <CardHeader>
                 <CardTitle>Optional extras</CardTitle>
@@ -586,181 +973,302 @@ export default function PlaceBookingPage({
               <div className="flex items-center gap-2">
                 <CalendarCheck className="h-4 w-4 text-accent" />
                 <span>
-                  Duration: {formatDuration(durationMinutes)} ·
-                  {formatCurrency(totalPrice, currency)}
+                  {isMultiCourtBooking
+                    ? `${multiCourtSummaryItems.length} courts · ${formatCurrency(
+                        totalPrice,
+                        currency,
+                      )}`
+                    : `Duration: ${formatDuration(durationMinutes)} ·${formatCurrency(
+                        totalPrice,
+                        currency,
+                      )}`}
                 </span>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Open Play</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between gap-3">
-                <div className="space-y-0.5">
-                  <div className="text-sm font-medium">Host as Open Play</div>
-                  <div className="text-xs text-muted-foreground">
-                    Create a joinable session for other players after your
-                    reservation is confirmed.
-                  </div>
-                </div>
-                <Switch
-                  checked={hostAsOpenPlay}
-                  onCheckedChange={setHostAsOpenPlay}
-                />
-              </div>
-
-              {hostAsOpenPlay ? (
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="openPlayMaxPlayers">Max players</Label>
-                    <Input
-                      id="openPlayMaxPlayers"
-                      type="number"
-                      min={2}
-                      max={32}
-                      value={openPlayMaxPlayers}
-                      onChange={(e) => {
-                        const next = Number.parseInt(e.target.value, 10);
-                        setOpenPlayMaxPlayers(Number.isFinite(next) ? next : 4);
-                      }}
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      Includes you as the host.
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Join policy</Label>
-                    <Select
-                      value={openPlayJoinPolicy}
-                      onValueChange={(value) =>
-                        setOpenPlayJoinPolicy(value as "REQUEST" | "AUTO")
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="REQUEST">
-                          Request (Host approves)
-                        </SelectItem>
-                        <SelectItem value="AUTO" disabled={totalPrice > 0}>
-                          Auto-join (If spots)
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {totalPrice > 0 ? (
-                      <p className="text-xs text-muted-foreground">
-                        Paid sessions require host approval.
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div className="space-y-2 sm:col-span-2">
-                    <Label>Visibility</Label>
-                    <Select
-                      value={openPlayVisibility}
-                      onValueChange={(value) =>
-                        setOpenPlayVisibility(value as "PUBLIC" | "UNLISTED")
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="PUBLIC">Public</SelectItem>
-                        <SelectItem value="UNLISTED">
-                          Unlisted (Link only)
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2 sm:col-span-2">
-                    <Label htmlFor="openPlayNote">Note (optional)</Label>
-                    <Input
-                      id="openPlayNote"
-                      value={openPlayNote}
-                      onChange={(e) => setOpenPlayNote(e.target.value)}
-                      placeholder="e.g. Beginner-friendly, bring extra balls"
-                    />
-                  </div>
-
-                  <div className="space-y-2 sm:col-span-2">
-                    <Label>Reservation total</Label>
-                    <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
-                      {formatCurrency(totalPrice, currency)}
+          {!isMultiCourtBooking ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Open Play</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="space-y-0.5">
+                    <div className="text-sm font-medium">Host as Open Play</div>
+                    <div className="text-xs text-muted-foreground">
+                      Create a joinable session for other players after your
+                      reservation is confirmed.
                     </div>
                   </div>
-
-                  <div className="space-y-2 sm:col-span-2">
-                    <Label>Suggested split</Label>
-                    <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
-                      Est.{" "}
-                      {formatCurrency(suggestedSplitPerPlayerCents, currency)}
-                      /player (based on {openPlayMaxPlayers} players)
-                    </div>
-                    {totalPrice > 0 ? (
-                      <p className="text-xs text-muted-foreground">
-                        For paid sessions, use Request so you can confirm
-                        players after payment.
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div className="space-y-2 sm:col-span-2">
-                    <Label htmlFor="openPlayPaymentInstructions">
-                      Payment instructions (optional)
-                    </Label>
-                    <Input
-                      id="openPlayPaymentInstructions"
-                      value={openPlayPaymentInstructions}
-                      onChange={(e) =>
-                        setOpenPlayPaymentInstructions(e.target.value)
-                      }
-                      placeholder="e.g. GCash 09xx..., send screenshot in chat"
-                    />
-                  </div>
-
-                  <div className="space-y-2 sm:col-span-2">
-                    <Label htmlFor="openPlayPaymentLinkUrl">
-                      Payment link (optional)
-                    </Label>
-                    <Input
-                      id="openPlayPaymentLinkUrl"
-                      type="url"
-                      value={openPlayPaymentLinkUrl}
-                      onChange={(e) =>
-                        setOpenPlayPaymentLinkUrl(e.target.value)
-                      }
-                      placeholder="https://..."
-                    />
-                  </div>
+                  <Switch
+                    checked={hostAsOpenPlay}
+                    onCheckedChange={setHostAsOpenPlay}
+                  />
                 </div>
-              ) : null}
-            </CardContent>
-          </Card>
+
+                {hostAsOpenPlay ? (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="openPlayMaxPlayers">Max players</Label>
+                      <Input
+                        id="openPlayMaxPlayers"
+                        type="number"
+                        min={2}
+                        max={32}
+                        value={openPlayMaxPlayers}
+                        onChange={(e) => {
+                          const next = Number.parseInt(e.target.value, 10);
+                          setOpenPlayMaxPlayers(
+                            Number.isFinite(next) ? next : 4,
+                          );
+                        }}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Includes you as the host.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Join policy</Label>
+                      <Select
+                        value={openPlayJoinPolicy}
+                        onValueChange={(value) =>
+                          setOpenPlayJoinPolicy(value as "REQUEST" | "AUTO")
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="REQUEST">
+                            Request (Host approves)
+                          </SelectItem>
+                          <SelectItem value="AUTO" disabled={totalPrice > 0}>
+                            Auto-join (If spots)
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {totalPrice > 0 ? (
+                        <p className="text-xs text-muted-foreground">
+                          Paid sessions require host approval.
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label>Visibility</Label>
+                      <Select
+                        value={openPlayVisibility}
+                        onValueChange={(value) =>
+                          setOpenPlayVisibility(value as "PUBLIC" | "UNLISTED")
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="PUBLIC">Public</SelectItem>
+                          <SelectItem value="UNLISTED">
+                            Unlisted (Link only)
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label htmlFor="openPlayNote">Note (optional)</Label>
+                      <Input
+                        id="openPlayNote"
+                        value={openPlayNote}
+                        onChange={(e) => setOpenPlayNote(e.target.value)}
+                        placeholder="e.g. Beginner-friendly, bring extra balls"
+                      />
+                    </div>
+
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label>Reservation total</Label>
+                      <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
+                        {formatCurrency(totalPrice, currency)}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label>Suggested split</Label>
+                      <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
+                        Est.{" "}
+                        {formatCurrency(suggestedSplitPerPlayerCents, currency)}
+                        /player (based on {openPlayMaxPlayers} players)
+                      </div>
+                      {totalPrice > 0 ? (
+                        <p className="text-xs text-muted-foreground">
+                          For paid sessions, use Request so you can confirm
+                          players after payment.
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label htmlFor="openPlayPaymentInstructions">
+                        Payment instructions (optional)
+                      </Label>
+                      <Input
+                        id="openPlayPaymentInstructions"
+                        value={openPlayPaymentInstructions}
+                        onChange={(e) =>
+                          setOpenPlayPaymentInstructions(e.target.value)
+                        }
+                        placeholder="e.g. GCash 09xx..., send screenshot in chat"
+                      />
+                    </div>
+
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label htmlFor="openPlayPaymentLinkUrl">
+                        Payment link (optional)
+                      </Label>
+                      <Input
+                        id="openPlayPaymentLinkUrl"
+                        type="url"
+                        value={openPlayPaymentLinkUrl}
+                        onChange={(e) =>
+                          setOpenPlayPaymentLinkUrl(e.target.value)
+                        }
+                        placeholder="https://..."
+                      />
+                    </div>
+                  </div>
+                ) : null}
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle>Open Play</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  Open Play creation is currently available for single-court
+                  reservations only.
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         <div>
-          <OrderSummary
-            timeSlot={timeSlot}
-            basePriceCents={basePriceCents}
-            addonPriceCents={addonPriceCents}
-            pricingWarnings={pricingWarnings}
-            timeZone={placeTimeZone}
-            termsAccepted={termsAccepted}
-            onTermsChange={setTermsAccepted}
-            onConfirm={handleConfirm}
-            onReviewDetails={() => scrollToSection(detailsSectionRef)}
-            reviewLabel="Review booking details"
-            isSubmitting={isSubmitting}
-            disabled={!isProfileComplete}
-            className="sticky top-24"
-          />
+          {isMultiCourtBooking ? (
+            <Card className="sticky top-24">
+              <CardHeader>
+                <CardTitle>Order Summary</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start text-accent hover:text-accent"
+                  onClick={() => scrollToSection(detailsSectionRef)}
+                >
+                  Review booking details
+                </Button>
+
+                <div className="space-y-2">
+                  {multiCourtSummaryItems.map((item) => (
+                    <div
+                      key={`summary-${encodeMultiCourtBookingItem({
+                        courtId: item.courtId,
+                        startTime: item.startTime,
+                        durationMinutes: item.durationMinutes,
+                      })}`}
+                      className="flex items-start justify-between gap-3 text-sm"
+                    >
+                      <span className="text-muted-foreground">
+                        {item.courtLabel} ·{" "}
+                        {formatTimeRangeInTimeZone(
+                          item.startTime,
+                          item.endTime,
+                          placeTimeZone,
+                        )}
+                      </span>
+                      <span>
+                        {item.totalPriceCents !== null && item.currency
+                          ? formatCurrency(item.totalPriceCents, item.currency)
+                          : "N/A"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex justify-between font-medium text-lg pt-4 border-t">
+                  <span>Total</span>
+                  <span>{formatCurrency(totalPrice, currency)}</span>
+                </div>
+
+                <div className="flex items-start gap-2 pt-4">
+                  <Checkbox
+                    id="terms"
+                    checked={termsAccepted}
+                    onCheckedChange={(checked) =>
+                      setTermsAccepted(checked === true)
+                    }
+                  />
+                  <Label
+                    htmlFor="terms"
+                    className="text-sm leading-snug cursor-pointer"
+                  >
+                    I agree to the{" "}
+                    <a
+                      href={appRoutes.terms.base}
+                      className="text-primary hover:underline"
+                    >
+                      Terms and Conditions
+                    </a>{" "}
+                    and{" "}
+                    <a
+                      href={appRoutes.privacy.base}
+                      className="text-primary hover:underline"
+                    >
+                      Privacy Policy
+                    </a>
+                  </Label>
+                </div>
+
+                <Button
+                  size="lg"
+                  className="w-full"
+                  onClick={handleConfirm}
+                  disabled={
+                    !isProfileComplete ||
+                    !termsAccepted ||
+                    isSubmitting ||
+                    hasInvalidMultiCourtItems ||
+                    hasUnavailableMultiCourtItems ||
+                    hasIncompleteMultiCourtPricing ||
+                    hasMixedMultiCourtCurrencies ||
+                    isResolvingMultiCourtAvailability
+                  }
+                >
+                  {isSubmitting ? "Confirming..." : "Confirm Booking"}
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <OrderSummary
+              timeSlot={timeSlot}
+              basePriceCents={basePriceCents}
+              addonPriceCents={addonPriceCents}
+              pricingWarnings={pricingWarnings}
+              timeZone={placeTimeZone}
+              termsAccepted={termsAccepted}
+              onTermsChange={setTermsAccepted}
+              onConfirm={handleConfirm}
+              onReviewDetails={() => scrollToSection(detailsSectionRef)}
+              reviewLabel="Review booking details"
+              isSubmitting={isSubmitting}
+              disabled={!isProfileComplete}
+              className="sticky top-24"
+            />
+          )}
         </div>
       </div>
     </Container>

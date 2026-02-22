@@ -173,7 +173,10 @@ export default function OwnerActiveReservationsPage() {
       : "Failed to confirm payment";
 
     mutation.mutate(
-      { reservationId: selectedReservation.id },
+      {
+        reservationId: selectedReservation.id,
+        reservationGroupId: selectedReservation.reservationGroupId,
+      },
       {
         onSuccess: () => {
           toast.success(successMessage);
@@ -189,7 +192,11 @@ export default function OwnerActiveReservationsPage() {
   const handleRejectSubmit = (reason: string) => {
     if (!selectedReservation) return;
     rejectMutation.mutate(
-      { reservationId: selectedReservation.id, reason },
+      {
+        reservationId: selectedReservation.id,
+        reservationGroupId: selectedReservation.reservationGroupId,
+        reason,
+      },
       {
         onSuccess: () => {
           toast.success(

@@ -29,6 +29,9 @@ export interface IReservationApi {
   mutReservationCreateForAnyCourt: ProcedureFn<
     TrpcClientApi["reservation"]["createForAnyCourt"]["mutate"]
   >;
+  mutReservationCreateGroup: ProcedureFn<
+    TrpcClientApi["reservation"]["createGroup"]["mutate"]
+  >;
   mutReservationCreateForCourt: ProcedureFn<
     TrpcClientApi["reservation"]["createForCourt"]["mutate"]
   >;
@@ -125,6 +128,17 @@ export class ReservationApi {
       this.clientApi,
       ["reservation", "createForAnyCourt"],
       (clientApi) => clientApi.reservation.createForAnyCourt.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutReservationCreateGroup: ProcedureFn<
+    TrpcClientApi["reservation"]["createGroup"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservation", "createGroup"],
+      (clientApi) => clientApi.reservation.createGroup.mutate,
       input,
       this.toAppError,
     );
