@@ -29,6 +29,7 @@ import {
   isReservationMetaArchived,
   parseTimestampMs,
   sortReservationInboxIds,
+  sumReservationUnreadCounts,
 } from "../../domain";
 import {
   useModChatInvalidation,
@@ -464,7 +465,7 @@ export function ReservationInboxWidget({
   const metasQuery = useQueryReservationChatThreadMetas(
     { reservationIds, includeArchived: false },
     {
-      enabled: open && reservationIds.length > 0,
+      enabled: reservationIds.length > 0,
       placeholderData: (prev) => prev,
     },
   );
@@ -642,11 +643,11 @@ export function ReservationInboxWidget({
   }, [activeChannelId, reservationChannels]);
 
   const unreadCount = useMemo(() => {
-    return reservationChannels.reduce(
-      (sum, c) => sum + (c.state.unreadCount ?? 0),
-      0,
-    );
-  }, [reservationChannels]);
+    return sumReservationUnreadCounts({
+      reservationIds: visibleReservationIds,
+      unreadByReservationId,
+    });
+  }, [unreadByReservationId, visibleReservationIds]);
 
   const myUserId = auth?.user.id ?? null;
   const now = new Date();

@@ -11,6 +11,7 @@ import {
   parseTimestampMs,
   type ReservationThreadMetaDomainInput,
   sortReservationInboxIds,
+  sumReservationUnreadCounts,
 } from "@/features/chat/domain";
 
 describe("chat domain", () => {
@@ -161,6 +162,45 @@ describe("chat domain", () => {
 
       // Assert
       expect(sorted).toEqual(["r-3", "r-2", "r-1"]);
+    });
+  });
+
+  describe("sumReservationUnreadCounts", () => {
+    it("sums unread for selected reservation ids only", () => {
+      // Arrange
+      const reservationIds = ["r-2", "r-3"];
+      const unreadByReservationId = new Map<string, number>([
+        ["r-1", 2],
+        ["r-2", 4],
+        ["r-3", 1],
+      ]);
+
+      // Act
+      const unread = sumReservationUnreadCounts({
+        reservationIds,
+        unreadByReservationId,
+      });
+
+      // Assert
+      expect(unread).toBe(5);
+    });
+
+    it("treats missing and negative values as zero", () => {
+      // Arrange
+      const reservationIds = ["r-1", "r-2", "r-3"];
+      const unreadByReservationId = new Map<string, number>([
+        ["r-1", -2],
+        ["r-2", 3],
+      ]);
+
+      // Act
+      const unread = sumReservationUnreadCounts({
+        reservationIds,
+        unreadByReservationId,
+      });
+
+      // Assert
+      expect(unread).toBe(3);
     });
   });
 
