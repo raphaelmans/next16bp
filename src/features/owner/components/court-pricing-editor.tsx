@@ -35,8 +35,6 @@ const DAY_OPTIONS = [
 const getDayLabel = (dayOfWeek: number) =>
   DAY_OPTIONS.find((option) => option.value === dayOfWeek)?.label ?? "Day";
 
-const CURRENCY_OPTIONS = ["PHP", "USD"];
-
 const toTimeString = (minutes: number) => {
   const hours = Math.floor(minutes / 60);
   const mins = minutes % 60;
@@ -52,7 +50,6 @@ type RateRuleRow = {
   dayOfWeek: number;
   startTime: string;
   endTime: string;
-  currency: string;
   hourlyRate: number | "";
 };
 
@@ -87,7 +84,6 @@ export function CourtPricingEditor({
         dayOfWeek: rule.dayOfWeek,
         startTime: toTimeString(rule.startMinute),
         endTime: toTimeString(rule.endMinute),
-        currency: rule.currency,
         hourlyRate: rule.hourlyRateCents / 100,
       })),
     );
@@ -138,7 +134,6 @@ export function CourtPricingEditor({
         dayOfWeek: 1,
         startTime: "08:00",
         endTime: "20:00",
-        currency: "PHP",
         hourlyRate: "",
       },
     ]);
@@ -173,7 +168,6 @@ export function CourtPricingEditor({
           dayOfWeek: row.dayOfWeek,
           startMinute: toMinutes(row.startTime),
           endMinute: toMinutes(row.endTime),
-          currency: row.currency,
           hourlyRateCents:
             row.hourlyRate === "" ? 0 : Math.round(row.hourlyRate * 100),
         })),
@@ -200,7 +194,6 @@ export function CourtPricingEditor({
               dayOfWeek: rule.dayOfWeek,
               startTime: toTimeString(rule.startMinute),
               endTime: toTimeString(rule.endMinute),
-              currency: rule.currency,
               hourlyRate: rule.hourlyRateCents / 100,
             })),
           );
@@ -249,7 +242,7 @@ export function CourtPricingEditor({
                   key={`rule-${row.dayOfWeek}-${index}`}
                   className="space-y-2"
                 >
-                  <div className="grid gap-3 md:grid-cols-[160px_140px_140px_120px_140px_auto] items-end">
+                  <div className="grid gap-3 md:grid-cols-[160px_140px_140px_140px_auto] items-end">
                     <div className="space-y-2">
                       <Label>Day</Label>
                       <Select
@@ -304,26 +297,6 @@ export function CourtPricingEditor({
                           )
                         }
                       />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Currency</Label>
-                      <Select
-                        value={row.currency}
-                        onValueChange={(value) =>
-                          handleRowChange(index, "currency", value)
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Currency" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {CURRENCY_OPTIONS.map((currency) => (
-                            <SelectItem key={currency} value={currency}>
-                              {currency}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
                     </div>
                     <div className="space-y-2">
                       <Label>Hourly Rate</Label>

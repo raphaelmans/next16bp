@@ -26,6 +26,24 @@ import {
 } from "./errors/place.errors";
 import { makePlaceManagementService } from "./factories/place.factory";
 
+function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
+  place: T,
+): Omit<T, "country" | "timeZone"> {
+  const { country: _country, timeZone: _timeZone, ...rest } = place;
+  return rest;
+}
+
+function redactPlaceDetailsLocale<
+  T extends { place: { country?: string; timeZone?: string } },
+>(
+  details: T,
+): Omit<T, "place"> & { place: Omit<T["place"], "country" | "timeZone"> } {
+  return {
+    ...details,
+    place: redactPlaceLocale(details.place),
+  };
+}
+
 function handlePlaceManagementError(error: unknown): never {
   if (
     error instanceof PlaceNotFoundError ||
@@ -71,7 +89,8 @@ export const placeManagementRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makePlaceManagementService();
-        return await service.createPlace(ctx.userId, input);
+        const place = await service.createPlace(ctx.userId, input);
+        return redactPlaceLocale(place);
       } catch (error) {
         handlePlaceManagementError(error);
       }
@@ -81,7 +100,8 @@ export const placeManagementRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makePlaceManagementService();
-        return await service.updatePlace(ctx.userId, input);
+        const place = await service.updatePlace(ctx.userId, input);
+        return redactPlaceLocale(place);
       } catch (error) {
         handlePlaceManagementError(error);
       }
@@ -102,7 +122,8 @@ export const placeManagementRouter = router({
     .query(async ({ input, ctx }) => {
       try {
         const service = makePlaceManagementService();
-        return await service.listMyPlaces(ctx.userId, input);
+        const places = await service.listMyPlaces(ctx.userId, input);
+        return places.map((place) => redactPlaceLocale(place));
       } catch (error) {
         handlePlaceManagementError(error);
       }
@@ -112,7 +133,8 @@ export const placeManagementRouter = router({
     .query(async ({ input, ctx }) => {
       try {
         const service = makePlaceManagementService();
-        return await service.getPlaceById(ctx.userId, input.placeId);
+        const place = await service.getPlaceById(ctx.userId, input.placeId);
+        return redactPlaceDetailsLocale(place);
       } catch (error) {
         handlePlaceManagementError(error);
       }

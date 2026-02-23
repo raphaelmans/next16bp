@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQueryAuthSession } from "@/features/auth/hooks";
+import { savePendingBooking } from "@/features/reservation/hooks/use-pending-booking";
 import { cn } from "@/lib/utils";
 
 interface BookingCardProps {
@@ -73,10 +74,13 @@ export function BookingCard({
     if (isAuthenticated) {
       router.push(`/courts/${courtId}/book/${selectedSlot.id}`);
     } else {
-      // Redirect to login with return URL
-      router.push(
-        `/login?redirect=${encodeURIComponent(`/courts/${courtId}`)}`,
-      );
+      const bookingUrl = `/courts/${courtId}/book/${selectedSlot.id}`;
+      savePendingBooking({
+        courtId,
+        slotId: selectedSlot.id,
+        startTime: selectedSlot.startTime,
+      });
+      router.push(`/login?redirect=${encodeURIComponent(bookingUrl)}`);
     }
   };
 
@@ -171,14 +175,14 @@ export function BookingCard({
           <p className="text-xs text-muted-foreground text-center">
             You need to{" "}
             <Link
-              href={`/login?redirect=${encodeURIComponent(`/courts/${courtId}`)}`}
+              href={`/login?redirect=${encodeURIComponent(`/courts/${courtId}/book/${selectedSlot.id}`)}`}
               className="text-primary hover:underline"
             >
               sign in
             </Link>{" "}
             or{" "}
             <Link
-              href={`/register?redirect=${encodeURIComponent(`/courts/${courtId}`)}`}
+              href={`/register?redirect=${encodeURIComponent(`/courts/${courtId}/book/${selectedSlot.id}`)}`}
               className="text-primary hover:underline"
             >
               create an account

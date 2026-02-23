@@ -15,15 +15,3 @@ export class CourtAddonOverlapError extends ValidationError {
 export class CourtAddonValidationError extends ValidationError {
   readonly code = "COURT_ADDON_VALIDATION_ERROR";
 }
-
-export class CourtAddonCurrencyMismatchError extends ValidationError {
-  readonly code = "COURT_ADDON_CURRENCY_MISMATCH";
-
-  constructor(courtId: string, addonLabel: string, currency: string) {
-    super("Addon currency must match base pricing currency", {
-      courtId,
-      addonLabel,
-      currency,
-    });
-  }
-}

@@ -9,6 +9,7 @@ import {
   useFeatureQueries,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
+import { DEFAULT_TIME_ZONE } from "@/common/location-defaults";
 import { toast } from "@/common/toast";
 import { trpc } from "@/trpc/client";
 import { getOwnerApi } from "../api.runtime";
@@ -97,7 +98,6 @@ export interface OwnerPlace {
   name: string;
   address: string;
   city: string;
-  timeZone: string;
   coverImageUrl?: string;
   courtCount: number;
   sports: OwnerPlaceSport[];
@@ -112,7 +112,6 @@ type OwnerPlaceBase = {
   name: string;
   address: string;
   city: string;
-  timeZone: string;
   isActive: boolean;
 };
 
@@ -207,7 +206,6 @@ const mapOwnerPlace = (
   name: place.name,
   address: place.address,
   city: place.city,
-  timeZone: place.timeZone,
   coverImageUrl: undefined,
   courtCount: courts.length,
   sports: mapSports(courts),
@@ -384,10 +382,8 @@ export function useModPlaceForm({
         address: data.address,
         city: data.city,
         province: data.province,
-        country: data.country,
         latitude: formatCoordinate(data.latitude),
         longitude: formatCoordinate(data.longitude),
-        timeZone: data.timeZone,
         isActive: data.isActive,
         websiteUrl: data.websiteUrl || undefined,
         facebookUrl: data.facebookUrl || undefined,
@@ -413,10 +409,8 @@ export function useModPlaceForm({
       address: data.address,
       city: data.city,
       province: data.province,
-      country: data.country ?? "PH",
       latitude,
       longitude,
-      timeZone: data.timeZone,
       websiteUrl: data.websiteUrl || undefined,
       facebookUrl: data.facebookUrl || undefined,
       instagramUrl: data.instagramUrl || undefined,
@@ -506,12 +500,28 @@ export function useQueryOwnerPlaceById(
   input: { placeId: string },
   options?: { enabled?: boolean },
 ) {
-  return useFeatureQuery(
+  const query = useFeatureQuery(
     ["placeManagement", "getById"],
     ownerApi.queryPlaceManagementGetById,
     input,
     options,
   );
+
+  const data = useMemo(() => {
+    if (!query.data) return undefined;
+    return {
+      ...query.data,
+      place: {
+        ...query.data.place,
+        timeZone: DEFAULT_TIME_ZONE,
+      },
+    };
+  }, [query.data]);
+
+  return {
+    ...query,
+    data,
+  };
 }
 
 export function useMutOwnerPlaceDelete(

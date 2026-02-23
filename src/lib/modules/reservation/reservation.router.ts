@@ -24,6 +24,7 @@ import {
   MarkPaymentSchema,
 } from "./dtos";
 import {
+  InvalidReservationAddonSelectionError,
   InvalidReservationStatusError,
   NoAvailabilityError,
   NotReservationOwnerError,
@@ -62,6 +63,7 @@ function handleReservationError(error: unknown): never {
     error instanceof ReservationExpiredError ||
     error instanceof ReservationCancellationWindowError ||
     error instanceof InvalidReservationStatusError ||
+    error instanceof InvalidReservationAddonSelectionError ||
     error instanceof TermsNotAcceptedError ||
     error instanceof SlotNotAvailableError ||
     error instanceof NoAvailabilityError ||

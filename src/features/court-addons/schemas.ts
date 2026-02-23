@@ -9,7 +9,6 @@ export const CourtAddonRuleFormSchema = z
     startMinute: z.number().int().min(0).max(1439),
     endMinute: z.number().int().min(1).max(1440),
     hourlyRateCents: z.number().int().min(0).optional(),
-    currency: z.string().min(1).max(3).optional(),
   })
   .refine((value) => value.startMinute < value.endMinute, {
     message: "Rule start minute must be before end minute",
@@ -23,7 +22,6 @@ export const CourtAddonFormSchema = z.object({
   mode: AddonModeSchema,
   pricingType: AddonPricingTypeSchema,
   flatFeeCents: z.number().int().min(0).nullable().optional(),
-  flatFeeCurrency: z.string().min(1).max(3).nullable().optional(),
   displayOrder: z.number().int().min(0).optional(),
   rules: z.array(CourtAddonRuleFormSchema).max(50),
 });

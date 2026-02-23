@@ -50,10 +50,8 @@ import {
   curatedCourtSchema,
 } from "@/features/admin/schemas";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
-import { PLACE_TIME_ZONES } from "@/features/owner/schemas";
 import { env } from "@/lib/env";
 
-const DEFAULT_COUNTRY = "PH";
 const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 const MAX_PHOTOS = 10;
 
@@ -84,7 +82,6 @@ export default function NewCuratedCourtPage() {
       address: "",
       city: "",
       province: "",
-      country: DEFAULT_COUNTRY,
       lat: undefined,
       lng: undefined,
       extGPlaceId: "",
@@ -95,7 +92,6 @@ export default function NewCuratedCourtPage() {
       websiteUrl: "",
       otherContactInfo: "",
       amenities: [],
-      timeZone: "Asia/Manila",
       courts: [{ label: "Court 1", sportId: "", tierLabel: "" }],
     },
   });
@@ -119,7 +115,6 @@ export default function NewCuratedCourtPage() {
   const nameValue = watch("name");
   const provinceValue = watch("province");
   const cityValue = watch("city");
-  const countryValue = watch("country");
   const latValue = watch("lat");
   const lngValue = watch("lng");
   const extGPlaceIdValue = watch("extGPlaceId");
@@ -167,16 +162,6 @@ export default function NewCuratedCourtPage() {
     ? getClientErrorMessage(previewError, "Request failed")
     : null;
 
-  React.useEffect(() => {
-    if (countryValue !== DEFAULT_COUNTRY) {
-      setValue("country", DEFAULT_COUNTRY, {
-        shouldDirty: false,
-        shouldTouch: false,
-        shouldValidate: true,
-      });
-    }
-  }, [countryValue, setValue]);
-
   const provincesCities = provincesCitiesQuery.data ?? null;
 
   const provinceOptions = React.useMemo(() => {
@@ -198,16 +183,6 @@ export default function NewCuratedCourtPage() {
 
     return buildCityOptions(selectedProvince, "name");
   }, [provincesCities, selectedProvince]);
-
-  const countryOptions = React.useMemo(
-    () => [{ label: "Philippines (PH)", value: DEFAULT_COUNTRY }],
-    [],
-  );
-
-  const timeZoneOptions = React.useMemo(
-    () => PLACE_TIME_ZONES.map((zone) => ({ label: zone, value: zone })),
-    [],
-  );
 
   const provincePlaceholder = provincesCitiesQuery.isLoading
     ? "Loading provinces..."
@@ -308,11 +283,9 @@ export default function NewCuratedCourtPage() {
         address: data.address,
         city: data.city,
         province: data.province,
-        country: data.country,
         latitude: data.lat,
         longitude: data.lng,
         extGPlaceId: data.extGPlaceId || undefined,
-        timeZone: data.timeZone || undefined,
         facebookUrl: data.facebookUrl || undefined,
         instagramUrl: data.instagramUrl || undefined,
         phoneNumber: data.phoneNumber || undefined,
@@ -450,22 +423,6 @@ export default function NewCuratedCourtPage() {
                   disabled={isCityDisabled}
                 />
               </div>
-
-              <StandardFormSelect<CuratedCourtFormData>
-                name="country"
-                label="Country"
-                options={countryOptions}
-                placeholder="Philippines (PH)"
-                required
-                disabled
-              />
-
-              <StandardFormSelect<CuratedCourtFormData>
-                name="timeZone"
-                label="Time Zone"
-                options={timeZoneOptions}
-                placeholder="Select a time zone"
-              />
             </CardContent>
           </Card>
 

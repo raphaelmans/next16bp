@@ -240,3 +240,23 @@ export const mobilePushTokenPlatformEnum = pgEnum(
   "mobile_push_token_platform",
   ["ios", "android"],
 );
+
+/**
+ * Place addon mode enum
+ * OPTIONAL: selected by player
+ * AUTO: applied unconditionally
+ */
+export const placeAddonModeEnum = pgEnum("place_addon_mode", [
+  "OPTIONAL",
+  "AUTO",
+]);
+
+/**
+ * Place addon pricing type enum
+ * HOURLY: charged per covered segment
+ * FLAT: charged once per booking unconditionally
+ */
+export const placeAddonPricingTypeEnum = pgEnum("place_addon_pricing_type", [
+  "HOURLY",
+  "FLAT",
+]);

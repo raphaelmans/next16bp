@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { DEFAULT_COUNTRY, DEFAULT_TIME_ZONE } from "@/common/location-defaults";
 import type { ICourtHoursRepository } from "@/lib/modules/court-hours/repositories/court-hours.repository";
 import type { ICourtRateRuleRepository } from "@/lib/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import { OrganizationNotFoundError } from "@/lib/modules/organization/errors/organization.errors";
@@ -160,11 +161,11 @@ export class AdminCourtService implements IAdminCourtService {
           address: data.address,
           city: data.city,
           province: data.province,
-          country: "PH",
+          country: DEFAULT_COUNTRY,
           latitude: data.latitude ?? null,
           longitude: data.longitude ?? null,
           extGPlaceId: data.extGPlaceId ?? null,
-          timeZone: data.timeZone ?? "Asia/Manila",
+          timeZone: DEFAULT_TIME_ZONE,
           placeType: "CURATED",
           claimStatus: "UNCLAIMED",
           isActive: true,
@@ -489,13 +490,13 @@ export class AdminCourtService implements IAdminCourtService {
       if (data.address !== undefined) updateData.address = data.address;
       if (data.city !== undefined) updateData.city = data.city;
       if (data.province !== undefined) updateData.province = data.province;
-      if (data.country !== undefined) updateData.country = data.country;
+      updateData.country = DEFAULT_COUNTRY;
       if (data.latitude !== undefined) updateData.latitude = data.latitude;
       if (data.longitude !== undefined) updateData.longitude = data.longitude;
       if (data.extGPlaceId !== undefined) {
         updateData.extGPlaceId = data.extGPlaceId;
       }
-      if (data.timeZone !== undefined) updateData.timeZone = data.timeZone;
+      updateData.timeZone = DEFAULT_TIME_ZONE;
       if (data.featuredRank !== undefined) {
         if (data.featuredRank > 0) {
           const existingFeatured =

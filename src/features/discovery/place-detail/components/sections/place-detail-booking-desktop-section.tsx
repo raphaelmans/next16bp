@@ -25,6 +25,7 @@ import {
   useQueryDiscoveryAvailabilityForPlaceSportRange,
 } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
+import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
 
 const TIMELINE_SLOT_DURATION = 60;
 
@@ -149,13 +150,25 @@ export function PlaceDetailBookingDesktopSection({
     return getZonedStartOfDayIso(selectedDate ?? today, placeTimeZone);
   }, [anyViewMode, placeTimeZone, selectedDate, selectionMode, today]);
 
+  const summaryDayDateIso = React.useMemo(() => {
+    if (!selectedStartTime) return "";
+    return getZonedStartOfDayIso(new Date(selectedStartTime), placeTimeZone);
+  }, [placeTimeZone, selectedStartTime]);
+
+  const summaryDayEndIso = React.useMemo(() => {
+    if (!summaryDayDateIso) return "";
+    return toUtcISOString(
+      getZonedDayRangeForInstant(new Date(summaryDayDateIso), placeTimeZone)
+        .end,
+    );
+  }, [placeTimeZone, summaryDayDateIso]);
+
   const courtDayAvailabilityQuery = useQueryDiscoveryAvailabilityForCourt(
     {
       courtId: selectedCourtId ?? "",
       date: courtDayDateIso,
       durationMinutes: TIMELINE_SLOT_DURATION,
       includeUnavailable: true,
-      selectedAddons,
     },
     isDesktop &&
       isCourtMode &&
@@ -171,7 +184,6 @@ export function PlaceDetailBookingDesktopSection({
       endDate: weekRangeEndIso,
       durationMinutes: TIMELINE_SLOT_DURATION,
       includeUnavailable: true,
-      selectedAddons,
     },
     isDesktop && isCourtMode && isCourtWeekView && !!selectedCourtId,
   );
@@ -186,8 +198,6 @@ export function PlaceDetailBookingDesktopSection({
         durationMinutes: TIMELINE_SLOT_DURATION,
         includeUnavailable: true,
         includeCourtOptions: false,
-        selectedAddons:
-          selectionMode === "court" ? selectedAddons : undefined,
       },
       isDesktop &&
         selectionMode === "any" &&
@@ -212,14 +222,48 @@ export function PlaceDetailBookingDesktopSection({
         durationMinutes: TIMELINE_SLOT_DURATION,
         includeUnavailable: true,
         includeCourtOptions: false,
-        selectedAddons:
-          selectionMode === "court" ? selectedAddons : undefined,
       },
       isDesktop &&
         selectionMode === "any" &&
         anyViewMode === "day" &&
         !!selectedSportId &&
         !!anyWeekDayDateIso,
+    );
+
+  const summaryCourtAvailabilityQuery = useQueryDiscoveryAvailabilityForCourt(
+    {
+      courtId: selectedCourtId ?? "",
+      date: summaryDayDateIso,
+      durationMinutes,
+      includeUnavailable: true,
+      selectedAddons,
+    },
+    isDesktop &&
+      isCourtMode &&
+      !!selectedStartTime &&
+      !!selectedCourtId &&
+      !!summaryDayDateIso &&
+      durationMinutes > 0,
+  );
+
+  const summaryAnyAvailabilityQuery =
+    useQueryDiscoveryAvailabilityForPlaceSportRange(
+      {
+        placeId: place.id,
+        sportId: selectedSportId ?? "",
+        startDate: summaryDayDateIso,
+        endDate: summaryDayEndIso,
+        durationMinutes,
+        includeUnavailable: true,
+        includeCourtOptions: false,
+      },
+      isDesktop &&
+        selectionMode === "any" &&
+        !!selectedStartTime &&
+        !!selectedSportId &&
+        !!summaryDayDateIso &&
+        !!summaryDayEndIso &&
+        durationMinutes > 0,
     );
 
   const anyWeekSlotsByDay = React.useMemo(() => {
@@ -329,41 +373,25 @@ export function PlaceDetailBookingDesktopSection({
         : isCourtWeekView
           ? (courtWeekSlotsByDay.get(dayKey) ?? [])
           : courtDaySlots;
-    const startIdx = slotsForDay.findIndex(
-      (slot) => slot.startTime === selectedStartTime,
-    );
-    if (startIdx === -1) return null;
-    const slotCount = durationMinutes / TIMELINE_SLOT_DURATION;
-    let totalCents = 0;
-    let allHavePrice = true;
-    let endTime = slotsForDay[startIdx]?.endTime ?? "";
-    for (
-      let i = startIdx;
-      i < startIdx + slotCount && i < slotsForDay.length;
-      i++
-    ) {
-      if (slotsForDay[i].priceCents !== undefined) {
-        totalCents += slotsForDay[i].priceCents as number;
-      } else {
-        allHavePrice = false;
-      }
-      endTime = slotsForDay[i].endTime;
-    }
-    return {
-      startTime: selectedStartTime,
-      endTime,
-      totalCents: allHavePrice ? totalCents : undefined,
-      currency: slotsForDay[startIdx]?.currency ?? "PHP",
-    };
+    const summaryOptions =
+      selectionMode === "court"
+        ? (summaryCourtAvailabilityQuery.data?.options ?? [])
+        : (summaryAnyAvailabilityQuery.data?.options ?? []);
+    return buildBookingSelectionSummary({
+      selectedStartTime,
+      pickerSlots: slotsForDay,
+      pricingOptions: summaryOptions,
+    });
   }, [
     anyDaySlots,
     anyViewMode,
     anyWeekSlotsByDay,
     courtDaySlots,
     courtWeekSlotsByDay,
-    durationMinutes,
     isCourtWeekView,
     placeTimeZone,
+    summaryAnyAvailabilityQuery.data?.options,
+    summaryCourtAvailabilityQuery.data?.options,
     selectedStartTime,
     selectionMode,
   ]);

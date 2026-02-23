@@ -17,6 +17,7 @@ interface ProfilePreviewCardProps {
   };
   isComplete: boolean;
   redirectTo?: string;
+  onEditClick?: () => void;
   className?: string;
 }
 
@@ -24,6 +25,7 @@ export function ProfilePreviewCard({
   profile,
   isComplete,
   redirectTo,
+  onEditClick,
   className,
 }: ProfilePreviewCardProps) {
   const initials = profile.displayName
@@ -41,12 +43,19 @@ export function ProfilePreviewCard({
     <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Your Information</CardTitle>
-        <Button variant="ghost" size="sm" asChild>
-          <Link href={editHref}>
+        {onEditClick ? (
+          <Button variant="ghost" size="sm" onClick={onEditClick}>
             <Edit className="h-4 w-4 mr-1" />
             Edit
-          </Link>
-        </Button>
+          </Button>
+        ) : (
+          <Button variant="ghost" size="sm" asChild>
+            <Link href={editHref}>
+              <Edit className="h-4 w-4 mr-1" />
+              Edit
+            </Link>
+          </Button>
+        )}
       </CardHeader>
       <CardContent className="space-y-4">
         {!isComplete && (

@@ -18,18 +18,11 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { CourtConfigCopyDialog } from "./court-config-copy-dialog";
 import type { BlockRow } from "./court-schedule-editor/helpers";
-import { CURRENCY_OPTIONS, DAY_OPTIONS } from "./court-schedule-editor/helpers";
+import { DAY_OPTIONS } from "./court-schedule-editor/helpers";
 import { useCourtScheduleEditor } from "./court-schedule-editor/hooks";
 
 /* ─── Local constants & helpers ─── */
@@ -44,10 +37,7 @@ const DAY_INITIALS: Record<number, string> = {
   6: "S",
 };
 
-const CURRENCY_SYMBOLS: Record<string, string> = {
-  PHP: "₱",
-  USD: "$",
-};
+const CURRENCY_SYMBOL = "₱";
 
 function formatMinutesAs12h(time: string): string {
   if (!time) return "";
@@ -68,8 +58,7 @@ function buildDaySummary(rows: BlockRow[]): string {
   const timeRange = `${formatMinutesAs12h(first.startTime)} – ${formatMinutesAs12h(last.endTime)}`;
   const priced = rows.find((r) => r.hourlyRate !== "");
   if (priced) {
-    const sym = CURRENCY_SYMBOLS[priced.currency] ?? priced.currency;
-    return `${timeRange} · ${sym}${priced.hourlyRate}`;
+    return `${timeRange} · ${CURRENCY_SYMBOL}${priced.hourlyRate}`;
   }
   return timeRange;
 }
@@ -151,33 +140,10 @@ function ScheduleSlotRow({
           </span>
         </div>
 
-        {/* Currency select (only when pricing enabled) */}
-        {row.allowPricing && (
-          <Select
-            value={row.currency}
-            onValueChange={(value) =>
-              onRowChange(dayValue, row.id, { currency: value })
-            }
-          >
-            <SelectTrigger className="w-[90px]">
-              <SelectValue placeholder="Currency" />
-            </SelectTrigger>
-            <SelectContent>
-              {CURRENCY_OPTIONS.map((currency) => (
-                <SelectItem key={currency} value={currency}>
-                  {currency}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
-
         {/* Hourly rate */}
         {row.allowPricing ? (
           <InputGroup className="w-[160px]">
-            <InputGroupAddon>
-              {CURRENCY_SYMBOLS[row.currency] ?? row.currency}
-            </InputGroupAddon>
+            <InputGroupAddon>{CURRENCY_SYMBOL}</InputGroupAddon>
             <InputGroupInput
               type="number"
               min={0}
@@ -258,7 +224,6 @@ interface CourtScheduleEditorProps {
   courtId: string;
   organizationId?: string | null;
   primaryActionLabel?: string;
-  timeZone?: string | null;
   onSaved?: () => void;
 }
 
@@ -266,7 +231,6 @@ export function CourtScheduleEditor({
   courtId,
   organizationId,
   primaryActionLabel = "Save schedule",
-  timeZone,
   onSaved,
 }: CourtScheduleEditorProps) {
   const [copyOpen, setCopyOpen] = React.useState(false);
@@ -313,14 +277,9 @@ export function CourtScheduleEditor({
               Schedule & Pricing
             </h3>
             <p className="text-sm text-muted-foreground">
-              Set opening hours and rates for each day.
+              Set opening hours and PHP rates for each day.
             </p>
           </div>
-          {timeZone && (
-            <span className="text-xs text-muted-foreground">
-              Times are in {timeZone}
-            </span>
-          )}
         </div>
 
         {validation.hasBlockingIssues && (

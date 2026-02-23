@@ -23,10 +23,10 @@ pnpm format     # biome format --write
 ### Database (Drizzle + dotenvx)
 
 ```bash
-pnpm db:pull         # Pull schema from DB
-pnpm db:generate     # Generate migrations
-pnpm db:migrate      # Run migrations
-pnpm db:push         # Push schema (dev only)
+pnpm db:pull         # Introspect DB schema (exception/recovery)
+pnpm db:generate     # Generate SQL migrations from Drizzle schema
+pnpm db:migrate      # Apply generated Drizzle migrations
+pnpm db:push         # Direct schema sync (dev-only)
 pnpm db:studio       # Open Drizzle Studio
 pnpm db:seed:sports  # Seed sports
 pnpm db:seed:buckets # Seed storage buckets
@@ -56,6 +56,21 @@ pnpm script:promote-tier3
 - Stream Chat (GetStream) via `stream-chat` (reservation chat)
 - Tailwind CSS + shadcn/ui
 - Biome for lint/format
+
+## Database Architecture Contract (Authoritative)
+
+- Drizzle is the mandatory interface for application PostgreSQL data.
+- Runtime app data access must use repository/service layers with `DbClient` (`src/lib/shared/infra/db/drizzle.ts`).
+- Do not use Supabase data APIs (`from`, `rpc`, REST) for business-table CRUD/query paths.
+- Drizzle schema files (`src/lib/shared/infra/db/schema/*`) and Drizzle migrations (`drizzle/*.sql`) are the schema source of truth.
+- Preferred migration flow: `pnpm db:generate` then `pnpm db:migrate`.
+- `pnpm db:push` is allowed only for local/dev prototyping; do not use as default shared/prod workflow.
+- `pnpm db:pull` is introspection/recovery only, not the default schema-authoring path.
+- Database scripts that touch app data should use Drizzle query builder or Drizzle-executed SQL; provider-specific scripts must be documented exceptions.
+- Supabase usage scope: Auth and Storage platform services.
+- For managed schemas (`auth`, `storage`), only reference stable PKs (for example `auth.users.id`); avoid new non-PK coupling.
+- When a provider-specific exception is required, document rationale and a portability migration path.
+- Detailed rationale and sources: `important/database/00-overview.md`, `important/database/99-official-sources.md`.
 
 ## Architecture Guides
 

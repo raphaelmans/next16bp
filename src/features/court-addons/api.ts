@@ -7,6 +7,7 @@ import { getClientApi, type TrpcClientApi } from "@/trpc/client-api";
 
 export interface ICourtAddonsApi {
   queryCourtAddonGet: (input?: unknown) => Promise<unknown>;
+  queryPlaceAddonGet: (input?: unknown) => Promise<unknown>;
   mutCourtAddonSet: (input?: unknown) => Promise<unknown>;
 }
 
@@ -29,6 +30,15 @@ export class CourtAddonsApi {
       this.clientApi,
       ["courtAddon", "get"],
       (clientApi) => clientApi.courtAddon.get.query,
+      input,
+      this.toAppError,
+    );
+
+  queryPlaceAddonGet = async (input?: unknown) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["placeAddon", "get"],
+      (clientApi) => clientApi.placeAddon.get.query,
       input,
       this.toAppError,
     );

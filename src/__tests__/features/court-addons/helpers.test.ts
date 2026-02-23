@@ -6,12 +6,12 @@ import {
   expandGroupsToRules,
   getAutoAddonIds,
   mapCourtAddonFormsToSetPayload,
+  mergeAddonConfigs,
+  partitionAddonsByScope,
   sanitizeSelectedAddonIds,
   sanitizeSelectedAddons,
 } from "@/features/court-addons/helpers";
 import type { CourtAddonRuleForm } from "@/features/court-addons/schemas";
-
-// ── Shared rule builders ─────────────────────────────────────────────────────
 
 function makeRule(
   overrides: Partial<CourtAddonRuleForm> = {},
@@ -21,7 +21,6 @@ function makeRule(
     startMinute: overrides.startMinute ?? 540,
     endMinute: overrides.endMinute ?? 1320,
     hourlyRateCents: overrides.hourlyRateCents,
-    currency: overrides.currency,
   };
 }
 
@@ -31,18 +30,15 @@ function makeGroup(overrides: Partial<AddonRuleGroup> = {}): AddonRuleGroup {
     startMinute: overrides.startMinute ?? 540,
     endMinute: overrides.endMinute ?? 1320,
     hourlyRateCents: overrides.hourlyRateCents ?? null,
-    currency: overrides.currency ?? null,
   };
 }
-
-// ── collapseRulesToGroups ────────────────────────────────────────────────────
 
 describe("collapseRulesToGroups", () => {
   it.each([
     {
       name: "(a) 5 identical HOURLY weekday rows collapse to 1 group with 5 days",
       rules: [1, 2, 3, 4, 5].map((day) =>
-        makeRule({ dayOfWeek: day, hourlyRateCents: 500, currency: "PHP" }),
+        makeRule({ dayOfWeek: day, hourlyRateCents: 500 }),
       ),
       expectGroups: 1,
       expectFirstDays: [1, 2, 3, 4, 5],
@@ -54,7 +50,6 @@ describe("collapseRulesToGroups", () => {
         makeRule({
           dayOfWeek: day,
           hourlyRateCents: undefined,
-          currency: undefined,
         }),
       ),
       expectGroups: 1,
@@ -64,8 +59,8 @@ describe("collapseRulesToGroups", () => {
     {
       name: "(c) Mon ₱500 + Sat ₱800 same times → 2 separate groups",
       rules: [
-        makeRule({ dayOfWeek: 1, hourlyRateCents: 500, currency: "PHP" }),
-        makeRule({ dayOfWeek: 6, hourlyRateCents: 800, currency: "PHP" }),
+        makeRule({ dayOfWeek: 1, hourlyRateCents: 500 }),
+        makeRule({ dayOfWeek: 6, hourlyRateCents: 800 }),
       ],
       expectGroups: 2,
       expectFirstDays: [1],
@@ -73,9 +68,7 @@ describe("collapseRulesToGroups", () => {
     },
     {
       name: "(d) single Mon row → 1 group with 1 day",
-      rules: [
-        makeRule({ dayOfWeek: 1, hourlyRateCents: 300, currency: "PHP" }),
-      ],
+      rules: [makeRule({ dayOfWeek: 1, hourlyRateCents: 300 })],
       expectGroups: 1,
       expectFirstDays: [1],
       expectFirstRate: 300,
@@ -93,8 +86,6 @@ describe("collapseRulesToGroups", () => {
   });
 });
 
-// ── expandGroupsToRules ──────────────────────────────────────────────────────
-
 describe("expandGroupsToRules", () => {
   it.each([
     {
@@ -102,7 +93,6 @@ describe("expandGroupsToRules", () => {
       group: makeGroup({
         days: [3, 4, 5],
         hourlyRateCents: 600,
-        currency: "PHP",
       }),
       expectRows: 3,
       expectRate: 600,
@@ -115,7 +105,7 @@ describe("expandGroupsToRules", () => {
     },
     {
       name: "(c) FLAT group → rows with hourlyRateCents: undefined",
-      group: makeGroup({ days: [5, 6], hourlyRateCents: null, currency: null }),
+      group: makeGroup({ days: [5, 6], hourlyRateCents: null }),
       expectRows: 2,
       expectRate: null,
     },
@@ -136,16 +126,14 @@ describe("expandGroupsToRules", () => {
   });
 });
 
-// ── round-trip fidelity ──────────────────────────────────────────────────────
-
 describe("expandGroupsToRules(collapseRulesToGroups(rows)) round-trip", () => {
   it("produces equivalent rows to the original set (sorted by dayOfWeek)", () => {
     const originalRules: CourtAddonRuleForm[] = [
-      makeRule({ dayOfWeek: 1, hourlyRateCents: 500, currency: "PHP" }),
-      makeRule({ dayOfWeek: 2, hourlyRateCents: 500, currency: "PHP" }),
-      makeRule({ dayOfWeek: 3, hourlyRateCents: 500, currency: "PHP" }),
-      makeRule({ dayOfWeek: 5, hourlyRateCents: 800, currency: "PHP" }),
-      makeRule({ dayOfWeek: 6, hourlyRateCents: 800, currency: "PHP" }),
+      makeRule({ dayOfWeek: 1, hourlyRateCents: 500 }),
+      makeRule({ dayOfWeek: 2, hourlyRateCents: 500 }),
+      makeRule({ dayOfWeek: 3, hourlyRateCents: 500 }),
+      makeRule({ dayOfWeek: 5, hourlyRateCents: 800 }),
+      makeRule({ dayOfWeek: 6, hourlyRateCents: 800 }),
     ];
 
     const roundTripped = expandGroupsToRules(
@@ -163,12 +151,10 @@ describe("expandGroupsToRules(collapseRulesToGroups(rows)) round-trip", () => {
       makeRule({
         dayOfWeek: 5,
         hourlyRateCents: undefined,
-        currency: undefined,
       }),
       makeRule({
         dayOfWeek: 6,
         hourlyRateCents: undefined,
-        currency: undefined,
       }),
     ];
 
@@ -178,12 +164,9 @@ describe("expandGroupsToRules(collapseRulesToGroups(rows)) round-trip", () => {
     expect(roundTripped).toHaveLength(2);
     for (const rule of roundTripped) {
       expect(rule.hourlyRateCents).toBeUndefined();
-      expect(rule.currency).toBeUndefined();
     }
   });
 });
-
-// ── existing helpers (retained) ──────────────────────────────────────────────
 
 const makeAddonConfig = (
   overrides: Partial<CourtAddonConfig["addon"]>,
@@ -195,7 +178,6 @@ const makeAddonConfig = (
     mode: overrides.mode ?? "OPTIONAL",
     pricingType: overrides.pricingType ?? "HOURLY",
     flatFeeCents: overrides.flatFeeCents ?? null,
-    flatFeeCurrency: overrides.flatFeeCurrency ?? null,
     displayOrder: overrides.displayOrder ?? 0,
   },
   rules: [],
@@ -234,14 +216,106 @@ describe("court-addon helpers", () => {
     const result = sanitizeSelectedAddons(
       [
         { addonId: "a1", quantity: 2 },
-        { addonId: "a2", quantity: 1 }, // inactive → removed
-        { addonId: "a1", quantity: 3 }, // duplicate → last wins
-        { addonId: "missing", quantity: 1 }, // unknown → removed
+        { addonId: "a2", quantity: 1 },
+        { addonId: "a1", quantity: 3 },
+        { addonId: "missing", quantity: 1 },
       ],
       configs,
     );
 
     expect(result).toEqual([{ addonId: "a1", quantity: 3 }]);
+  });
+
+  it("mergeAddonConfigs sorts by displayOrder within scope and keeps GLOBAL first", () => {
+    const globalA = makeAddonConfig({
+      id: "g-2",
+      label: "Global B",
+      displayOrder: 2,
+    });
+    const globalB = makeAddonConfig({
+      id: "g-1",
+      label: "Global A",
+      displayOrder: 1,
+    });
+    const courtA = makeAddonConfig({
+      id: "c-9",
+      label: "Court C",
+      displayOrder: 9,
+    });
+    const courtB = makeAddonConfig({
+      id: "c-1",
+      label: "Court A",
+      displayOrder: 1,
+    });
+
+    const merged = mergeAddonConfigs({
+      globalAddons: [globalA, globalB],
+      courtAddons: [courtA, courtB],
+    });
+
+    expect(merged.addons.map((config) => config.addon.id)).toEqual([
+      "g-1",
+      "g-2",
+      "c-1",
+      "c-9",
+    ]);
+  });
+
+  it("mergeAddonConfigs returns globalAddonIds only for GLOBAL entries", () => {
+    const merged = mergeAddonConfigs({
+      globalAddons: [makeAddonConfig({ id: "g-1" })],
+      courtAddons: [makeAddonConfig({ id: "c-1" })],
+    });
+
+    expect(merged.globalAddonIds.has("g-1")).toBe(true);
+    expect(merged.globalAddonIds.has("c-1")).toBe(false);
+  });
+
+  describe("partitionAddonsByScope", () => {
+    const cases = [
+      {
+        label: "partitions mixed scopes correctly",
+        input: [
+          { scope: "GLOBAL" as const, label: "A" },
+          { scope: "SPECIFIC" as const, label: "B" },
+          { scope: "GLOBAL" as const, label: "C" },
+        ],
+        expected: {
+          global: [
+            { scope: "GLOBAL", label: "A" },
+            { scope: "GLOBAL", label: "C" },
+          ],
+          specific: [{ scope: "SPECIFIC", label: "B" }],
+        },
+      },
+      {
+        label: "returns empty arrays for empty input",
+        input: [],
+        expected: { global: [], specific: [] },
+      },
+      {
+        label: "all GLOBAL returns empty specific",
+        input: [{ scope: "GLOBAL" as const, label: "X" }],
+        expected: {
+          global: [{ scope: "GLOBAL", label: "X" }],
+          specific: [],
+        },
+      },
+      {
+        label: "all SPECIFIC returns empty global",
+        input: [{ scope: "SPECIFIC" as const, label: "Y" }],
+        expected: {
+          global: [],
+          specific: [{ scope: "SPECIFIC", label: "Y" }],
+        },
+      },
+    ];
+
+    for (const { label, input, expected } of cases) {
+      it(label, () => {
+        expect(partitionAddonsByScope(input)).toEqual(expected);
+      });
+    }
   });
 
   it("builds set payload respecting FLAT and HOURLY fields", () => {
@@ -252,7 +326,6 @@ describe("court-addon helpers", () => {
         mode: "OPTIONAL",
         pricingType: "FLAT",
         flatFeeCents: 500,
-        flatFeeCurrency: "PHP",
         displayOrder: 0,
         rules: [
           {
@@ -260,7 +333,6 @@ describe("court-addon helpers", () => {
             startMinute: 480,
             endMinute: 600,
             hourlyRateCents: 200,
-            currency: "PHP",
           },
         ],
       },
@@ -270,7 +342,6 @@ describe("court-addon helpers", () => {
         mode: "AUTO",
         pricingType: "HOURLY",
         flatFeeCents: 100,
-        flatFeeCurrency: "PHP",
         displayOrder: 1,
         rules: [
           {
@@ -278,7 +349,6 @@ describe("court-addon helpers", () => {
             startMinute: 600,
             endMinute: 720,
             hourlyRateCents: 80,
-            currency: "PHP",
           },
         ],
       },
@@ -288,22 +358,18 @@ describe("court-addon helpers", () => {
     expect(payload.addons[0]).toMatchObject({
       pricingType: "FLAT",
       flatFeeCents: 500,
-      flatFeeCurrency: "PHP",
       rules: [
         {
           hourlyRateCents: undefined,
-          currency: undefined,
         },
       ],
     });
     expect(payload.addons[1]).toMatchObject({
       pricingType: "HOURLY",
       flatFeeCents: undefined,
-      flatFeeCurrency: undefined,
       rules: [
         {
           hourlyRateCents: 80,
-          currency: "PHP",
         },
       ],
     });

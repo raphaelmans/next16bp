@@ -43,6 +43,7 @@ import {
   useQueryOwnerPlaceById,
 } from "@/features/owner/hooks";
 import type { PlaceFormData } from "@/features/owner/schemas";
+import { PlaceAddonEditor } from "@/features/place-addon/components/place-addon-editor";
 
 type OwnerPlaceEditPageProps = {
   placeId: string;
@@ -149,10 +150,8 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
     address: place.address,
     city: place.city,
     province: place.province ?? "",
-    country: place.country ?? "PH",
     latitude: place.latitude ? Number.parseFloat(place.latitude) : undefined,
     longitude: place.longitude ? Number.parseFloat(place.longitude) : undefined,
-    timeZone: place.timeZone,
     isActive: place.isActive,
     websiteUrl: placeData.contactDetail?.websiteUrl ?? "",
     facebookUrl: placeData.contactDetail?.facebookUrl ?? "",
@@ -239,6 +238,8 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
             }))}
           />
         </div>
+
+        <PlaceAddonEditor placeId={resolvedPlaceId} />
 
         <Card className="border-destructive/60">
           <CardHeader>

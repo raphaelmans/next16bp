@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   computeSchedulePriceDetailed,
+  type ScheduleAddon,
   type SchedulePricingWarning,
 } from "@/lib/shared/lib/schedule-availability";
 import { createSchedulePricingFixtures } from "./schedule-availability.fixtures";
@@ -79,16 +80,16 @@ describe("computeSchedulePriceDetailed", () => {
     expect(output.failureReason).toBe("ADDON_CURRENCY_MISMATCH");
   });
 
-  it("FLAT addon with zero rule windows -> contributes zero, no hard error", () => {
+  it("FLAT addon with zero rule windows -> still charges once per booking", () => {
     // Arrange
     const fixtures = createSchedulePricingFixtures();
 
     // Act
     const output = computeSchedulePriceDetailed(fixtures.golden.flatNoWindows);
 
-    // Assert — pricing succeeds and the flat fee is not charged
+    // Assert — pricing succeeds and the flat fee is charged once
     expect(output.failureReason).toBeNull();
-    expect(output.result?.totalPriceCents).toBe(2000);
+    expect(output.result?.totalPriceCents).toBe(2500);
   });
 
   it("two AUTO HOURLY addons covering same segment -> both rates accumulated independently", () => {
@@ -151,6 +152,42 @@ describe("computeSchedulePriceDetailed", () => {
     // Assert
     expect(output.failureReason).toBeNull();
     expect(output.result?.totalPriceCents).toBe(3500);
+  });
+
+  it("venue and court OPTIONAL add-ons selected -> both scopes are priced", () => {
+    // Arrange
+    const fixtures = createSchedulePricingFixtures();
+    const venueAddon: ScheduleAddon = {
+      addon: {
+        id: "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+        isActive: true,
+        mode: "OPTIONAL",
+        pricingType: "FLAT",
+        flatFeeCents: 300,
+        flatFeeCurrency: "PHP",
+        label: "Venue paddle rental",
+      },
+      rules: [],
+    };
+    const courtAddon = fixtures.golden.quantityOne.addons[0];
+    if (!courtAddon) {
+      throw new Error("Missing court addon fixture");
+    }
+
+    // Act
+    const output = computeSchedulePriceDetailed({
+      ...fixtures.minimal.baseOnly,
+      addons: [courtAddon],
+      venueAddons: [venueAddon],
+      selectedAddons: [
+        { addonId: venueAddon.addon.id, quantity: 2 },
+        { addonId: courtAddon.addon.id, quantity: 1 },
+      ],
+    });
+
+    // Assert — base 2000 + court HOURLY (200×2=400) + venue FLAT (300×2=600)
+    expect(output.failureReason).toBeNull();
+    expect(output.result?.totalPriceCents).toBe(3000);
   });
 
   it("minimal fixture without addons -> returns base total", () => {

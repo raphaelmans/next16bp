@@ -22,6 +22,7 @@ import {
   useQueryDiscoveryAvailabilityForPlaceSportRange,
 } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
+import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
 import { useModMobileWeekPrefetch } from "@/features/discovery/place-detail/hooks/use-mobile-week-prefetch";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 
@@ -111,6 +112,19 @@ export function PlaceDetailBookingMobileSection({
     [placeTimeZone, selectedDate, today],
   );
 
+  const summaryDayDateIso = React.useMemo(() => {
+    if (!selectedStartTime) return "";
+    return getZonedStartOfDayIso(new Date(selectedStartTime), placeTimeZone);
+  }, [placeTimeZone, selectedStartTime]);
+
+  const summaryDayEndIso = React.useMemo(() => {
+    if (!summaryDayDateIso) return "";
+    return toUtcISOString(
+      getZonedDayRangeForInstant(new Date(summaryDayDateIso), placeTimeZone)
+        .end,
+    );
+  }, [placeTimeZone, summaryDayDateIso]);
+
   const mobileAnyDayQuery = useQueryDiscoveryAvailabilityForPlaceSportRange(
     {
       placeId: place.id,
@@ -127,8 +141,6 @@ export function PlaceDetailBookingMobileSection({
       durationMinutes: TIMELINE_SLOT_DURATION,
       includeUnavailable: true,
       includeCourtOptions: false,
-      selectedAddons:
-        selectionMode === "court" ? selectedAddons : undefined,
     },
     !isDesktop &&
       mobileSheetExpanded &&
@@ -143,7 +155,6 @@ export function PlaceDetailBookingMobileSection({
       date: mobileDayDateIso,
       durationMinutes: TIMELINE_SLOT_DURATION,
       includeUnavailable: true,
-      selectedAddons,
     },
     !isDesktop &&
       mobileSheetExpanded &&
@@ -151,6 +162,42 @@ export function PlaceDetailBookingMobileSection({
       !!selectedCourtId &&
       !!mobileDayDateIso,
   );
+
+  const summaryCourtAvailabilityQuery = useQueryDiscoveryAvailabilityForCourt(
+    {
+      courtId: selectedCourtId ?? "",
+      date: summaryDayDateIso,
+      durationMinutes,
+      includeUnavailable: true,
+      selectedAddons,
+    },
+    !isDesktop &&
+      selectionMode === "court" &&
+      !!selectedStartTime &&
+      !!selectedCourtId &&
+      !!summaryDayDateIso &&
+      durationMinutes > 0,
+  );
+
+  const summaryAnyAvailabilityQuery =
+    useQueryDiscoveryAvailabilityForPlaceSportRange(
+      {
+        placeId: place.id,
+        sportId: selectedSportId ?? "",
+        startDate: summaryDayDateIso,
+        endDate: summaryDayEndIso,
+        durationMinutes,
+        includeUnavailable: true,
+        includeCourtOptions: false,
+      },
+      !isDesktop &&
+        selectionMode === "any" &&
+        !!selectedStartTime &&
+        !!selectedSportId &&
+        !!summaryDayDateIso &&
+        !!summaryDayEndIso &&
+        durationMinutes > 0,
+    );
 
   const prefetchedMobileWeekRef = React.useRef<Set<string>>(new Set());
   const hasPrefetchedMobileWeek = React.useCallback(
@@ -173,7 +220,6 @@ export function PlaceDetailBookingMobileSection({
     selectionMode,
     selectedSportId,
     selectedCourtId,
-    selectedAddons,
     weekStartDayKey,
     weekDayKeys,
     durationMinutes: TIMELINE_SLOT_DURATION,
@@ -213,37 +259,22 @@ export function PlaceDetailBookingMobileSection({
   );
 
   const selectionSummary = React.useMemo(() => {
-    if (!selectedStartTime) return null;
-    const startIdx = mobileDaySlots.findIndex(
-      (slot) => slot.startTime === selectedStartTime,
-    );
-    if (startIdx === -1) return null;
-
-    const slotCount = durationMinutes / TIMELINE_SLOT_DURATION;
-    let totalCents = 0;
-    let allHavePrice = true;
-    let endTime = mobileDaySlots[startIdx]?.endTime ?? "";
-
-    for (
-      let i = startIdx;
-      i < startIdx + slotCount && i < mobileDaySlots.length;
-      i++
-    ) {
-      if (mobileDaySlots[i].priceCents !== undefined) {
-        totalCents += mobileDaySlots[i].priceCents as number;
-      } else {
-        allHavePrice = false;
-      }
-      endTime = mobileDaySlots[i].endTime;
-    }
-
-    return {
-      startTime: selectedStartTime,
-      endTime,
-      totalCents: allHavePrice ? totalCents : undefined,
-      currency: mobileDaySlots[startIdx]?.currency ?? "PHP",
-    };
-  }, [durationMinutes, mobileDaySlots, selectedStartTime]);
+    const summaryOptions =
+      selectionMode === "court"
+        ? (summaryCourtAvailabilityQuery.data?.options ?? [])
+        : (summaryAnyAvailabilityQuery.data?.options ?? []);
+    return buildBookingSelectionSummary({
+      selectedStartTime,
+      pickerSlots: mobileDaySlots,
+      pricingOptions: summaryOptions,
+    });
+  }, [
+    mobileDaySlots,
+    selectedStartTime,
+    selectionMode,
+    summaryAnyAvailabilityQuery.data?.options,
+    summaryCourtAvailabilityQuery.data?.options,
+  ]);
 
   React.useEffect(() => {
     if (isDesktop) return;

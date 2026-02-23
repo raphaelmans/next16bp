@@ -74,8 +74,6 @@ type AdminCourtEditFormProps = {
   onPreview: () => void;
   provinceOptions: { label: string; value: string }[];
   cityOptions: { label: string; value: string }[];
-  countryOptions: { label: string; value: string }[];
-  timeZoneOptions: { label: string; value: string }[];
   provincePlaceholder: string;
   cityPlaceholder: string;
   isProvinceDisabled: boolean;
@@ -117,8 +115,6 @@ export function AdminCourtEditForm({
   onPreview,
   provinceOptions,
   cityOptions,
-  countryOptions,
-  timeZoneOptions,
   provincePlaceholder,
   cityPlaceholder,
   isProvinceDisabled,
@@ -216,22 +212,6 @@ export function AdminCourtEditForm({
               disabled={isCityDisabled}
             />
           </div>
-
-          <StandardFormSelect<AdminCourtEditFormData>
-            name="country"
-            label="Country"
-            options={countryOptions}
-            placeholder="Philippines (PH)"
-            required
-            disabled
-          />
-
-          <StandardFormSelect<AdminCourtEditFormData>
-            name="timeZone"
-            label="Time Zone"
-            options={timeZoneOptions}
-            placeholder="Select a time zone"
-          />
         </CardContent>
       </Card>
 

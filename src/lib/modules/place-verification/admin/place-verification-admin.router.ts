@@ -18,6 +18,13 @@ import {
 } from "../errors/place-verification.errors";
 import { makePlaceVerificationAdminService } from "../factories/place-verification.factory";
 
+function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
+  place: T,
+): Omit<T, "country" | "timeZone"> {
+  const { country: _country, timeZone: _timeZone, ...rest } = place;
+  return rest;
+}
+
 function handleAdminPlaceVerificationError(error: unknown): never {
   if (error instanceof PlaceVerificationRequestNotFoundError) {
     throw new TRPCError({
@@ -73,7 +80,13 @@ export const placeVerificationAdminRouter = router({
     .query(async ({ input }) => {
       try {
         const service = makePlaceVerificationAdminService();
-        return await service.getById(input);
+        const details = await service.getById(input);
+        return {
+          ...details,
+          place: details.place
+            ? redactPlaceLocale(details.place)
+            : details.place,
+        };
       } catch (error) {
         handleAdminPlaceVerificationError(error);
       }

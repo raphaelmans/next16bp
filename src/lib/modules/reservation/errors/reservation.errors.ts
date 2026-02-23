@@ -59,6 +59,22 @@ export class NoAvailabilityError extends ValidationError {
   }
 }
 
+export class InvalidReservationAddonSelectionError extends ValidationError {
+  readonly code = "INVALID_RESERVATION_ADDON_SELECTION";
+
+  constructor(details: {
+    courtId?: string;
+    placeId?: string;
+    sportId?: string;
+    invalidAddonIds: string[];
+  }) {
+    super(
+      "One or more selected add-ons are not valid for this reservation context.",
+      details,
+    );
+  }
+}
+
 export class ReservationCancellationWindowError extends ValidationError {
   readonly code = "RESERVATION_CANCELLATION_WINDOW_PASSED";
 

@@ -308,7 +308,7 @@ export async function renderPlaceDetailPage(placeIdOrSlug: string) {
             callHref={callHref}
           />
 
-          {showBooking ? (
+          {showBooking && (
             <>
               <div id="availability-studio" className="sr-only">
                 Availability Studio
@@ -329,15 +329,6 @@ export async function renderPlaceDetailPage(placeIdOrSlug: string) {
                 />
               </div>
             </>
-          ) : (
-            <div className="mt-6">
-              <PlaceDetailListingHelpSection
-                placeId={place.id}
-                placeIdOrSlug={canonicalId}
-                isCurated={isCurated}
-                claimStatus={place.claimStatus}
-              />
-            </div>
           )}
 
           <div className="mt-6 grid gap-6 pb-8 lg:grid-cols-2 lg:pb-16">
@@ -357,6 +348,17 @@ export async function renderPlaceDetailPage(placeIdOrSlug: string) {
               />
             </Suspense>
           </div>
+
+          {!showBooking && (
+            <div className="mt-6 pb-8 lg:pb-16">
+              <PlaceDetailListingHelpSection
+                placeId={place.id}
+                placeIdOrSlug={canonicalId}
+                isCurated={isCurated}
+                claimStatus={place.claimStatus}
+              />
+            </div>
+          )}
         </Container>
       </>
     );

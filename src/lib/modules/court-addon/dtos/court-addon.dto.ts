@@ -7,7 +7,6 @@ const CourtAddonRuleSchema = z
     startMinute: S.courtRateRule.startMinute,
     endMinute: S.courtRateRule.endMinute,
     hourlyRateCents: S.courtRateRule.hourlyRateCents.optional(),
-    currency: S.common.currency.optional(),
   })
   .refine((window) => window.startMinute < window.endMinute, {
     error: S.courtRateRule.startBeforeEnd,
@@ -22,7 +21,6 @@ const CourtAddonSchema = z.object({
   mode: z.enum(["OPTIONAL", "AUTO"]),
   pricingType: z.enum(["HOURLY", "FLAT"]),
   flatFeeCents: S.pricing.priceCents.optional(),
-  flatFeeCurrency: S.common.currency.optional(),
   displayOrder: S.common.displayOrder.optional(),
   rules: z.array(CourtAddonRuleSchema).max(S.courtRateRule.rulesMax.value, {
     error: S.courtRateRule.rulesMax.message,

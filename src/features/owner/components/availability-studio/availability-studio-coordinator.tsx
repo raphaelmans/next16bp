@@ -21,6 +21,7 @@ import {
   formatInTimeZone,
   formatTimeRangeInTimeZone,
 } from "@/common/format";
+import { DEFAULT_TIME_ZONE } from "@/common/location-defaults";
 import {
   getZonedDate,
   getZonedDayRangeFromDayKey,
@@ -158,11 +159,7 @@ function OwnerAvailabilityStudioInner() {
   const { data: courts = [], isLoading: courtsLoading } =
     useQueryOwnerCourtsByPlace(placeId);
 
-  const selectedPlace = React.useMemo(
-    () => places.find((place) => place.id === placeId),
-    [placeId, places],
-  );
-  const placeTimeZone = selectedPlace?.timeZone ?? "Asia/Manila";
+  const placeTimeZone = DEFAULT_TIME_ZONE;
   const selectedCourt = React.useMemo(
     () => courts.find((court) => court.id === courtId),
     [courtId, courts],

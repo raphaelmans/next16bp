@@ -1,4 +1,8 @@
-import type { CourtAddonForm, CourtAddonRuleForm, SelectedAddon } from "./schemas";
+import type {
+  CourtAddonForm,
+  CourtAddonRuleForm,
+  SelectedAddon,
+} from "./schemas";
 
 // UI-layer only — never serialized to DB or API
 export type AddonRuleGroup = {
@@ -6,7 +10,6 @@ export type AddonRuleGroup = {
   startMinute: number;
   endMinute: number;
   hourlyRateCents: number | null;
-  currency: string | null;
 };
 
 export function collapseRulesToGroups(
@@ -19,7 +22,6 @@ export function collapseRulesToGroups(
       rule.startMinute,
       rule.endMinute,
       rule.hourlyRateCents ?? "flat",
-      rule.currency ?? "flat",
     ]);
 
     const existing = groupMap.get(key);
@@ -31,7 +33,6 @@ export function collapseRulesToGroups(
         startMinute: rule.startMinute,
         endMinute: rule.endMinute,
         hourlyRateCents: rule.hourlyRateCents ?? null,
-        currency: rule.currency ?? null,
       });
     }
   }
@@ -51,7 +52,6 @@ export function expandGroupsToRules(
         startMinute: group.startMinute,
         endMinute: group.endMinute,
         hourlyRateCents: group.hourlyRateCents ?? undefined,
-        currency: group.currency ?? undefined,
       });
     }
   }
@@ -67,7 +67,6 @@ export type CourtAddonConfig = {
     mode: "OPTIONAL" | "AUTO";
     pricingType: "HOURLY" | "FLAT";
     flatFeeCents: number | null;
-    flatFeeCurrency: string | null;
     displayOrder: number;
   };
   rules: {
@@ -75,7 +74,6 @@ export type CourtAddonConfig = {
     startMinute: number;
     endMinute: number;
     hourlyRateCents: number | null;
-    currency: string | null;
   }[];
 };
 
@@ -103,14 +101,12 @@ export function mapCourtAddonConfigsToForms(
       mode: config.addon.mode,
       pricingType: config.addon.pricingType,
       flatFeeCents: config.addon.flatFeeCents,
-      flatFeeCurrency: config.addon.flatFeeCurrency,
       displayOrder: config.addon.displayOrder ?? index,
       rules: sortCourtAddonRules(config.rules).map((rule) => ({
         dayOfWeek: rule.dayOfWeek,
         startMinute: rule.startMinute,
         endMinute: rule.endMinute,
         hourlyRateCents: rule.hourlyRateCents ?? undefined,
-        currency: rule.currency ?? undefined,
       })),
     }));
 }
@@ -130,10 +126,6 @@ export function mapCourtAddonFormsToSetPayload(
         form.pricingType === "FLAT"
           ? (form.flatFeeCents ?? undefined)
           : undefined,
-      flatFeeCurrency:
-        form.pricingType === "FLAT"
-          ? (form.flatFeeCurrency ?? undefined)
-          : undefined,
       displayOrder: form.displayOrder ?? index,
       rules: form.rules.map((rule) => ({
         dayOfWeek: rule.dayOfWeek,
@@ -142,10 +134,6 @@ export function mapCourtAddonFormsToSetPayload(
         hourlyRateCents:
           form.pricingType === "HOURLY"
             ? (rule.hourlyRateCents ?? undefined)
-            : undefined,
-        currency:
-          form.pricingType === "HOURLY"
-            ? (rule.currency ?? undefined)
             : undefined,
       })),
     })),
@@ -201,6 +189,49 @@ export function formatAddonPricingHint(config: CourtAddonConfig) {
     return "Charged once per booking";
   }
   return "Charged per booked hour";
+}
+
+function compareAddonConfigsByDisplayOrder(
+  left: CourtAddonConfig,
+  right: CourtAddonConfig,
+) {
+  if (left.addon.displayOrder !== right.addon.displayOrder) {
+    return left.addon.displayOrder - right.addon.displayOrder;
+  }
+  const labelCompare = left.addon.label.localeCompare(right.addon.label);
+  if (labelCompare !== 0) {
+    return labelCompare;
+  }
+  return left.addon.id.localeCompare(right.addon.id);
+}
+
+export function mergeAddonConfigs(options: {
+  globalAddons: CourtAddonConfig[];
+  courtAddons: CourtAddonConfig[];
+}) {
+  const sortedGlobal = [...options.globalAddons].sort(
+    compareAddonConfigsByDisplayOrder,
+  );
+  const sortedCourt = [...options.courtAddons].sort(
+    compareAddonConfigsByDisplayOrder,
+  );
+  const globalAddonIds = new Set(sortedGlobal.map((config) => config.addon.id));
+  return {
+    addons: [...sortedGlobal, ...sortedCourt],
+    globalAddonIds,
+  };
+}
+
+export function partitionAddonsByScope<
+  T extends { scope: "GLOBAL" | "SPECIFIC" },
+>(addons: T[]): { global: T[]; specific: T[] } {
+  const global: T[] = [];
+  const specific: T[] = [];
+  for (const addon of addons) {
+    if (addon.scope === "GLOBAL") global.push(addon);
+    else specific.push(addon);
+  }
+  return { global, specific };
 }
 
 export function formatPricingWarningMessage(message: string) {

@@ -6,7 +6,6 @@ const CourtRateRuleWindowSchema = z
     dayOfWeek: S.courtRateRule.dayOfWeek,
     startMinute: S.courtRateRule.startMinute,
     endMinute: S.courtRateRule.endMinute,
-    currency: S.common.currency,
     hourlyRateCents: S.courtRateRule.hourlyRateCents,
   })
   .refine((window) => window.startMinute < window.endMinute, {

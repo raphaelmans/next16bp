@@ -102,7 +102,7 @@ const main = () => {
     hoursWindows: makeHours(),
     rateRules: makeBaseRules(),
     addons: [{ addon: optionalAddon, rules: optionalAddonRules }],
-    selectedAddonIds: [],
+    selectedAddons: [],
     enableAddonPricing: true,
   });
 

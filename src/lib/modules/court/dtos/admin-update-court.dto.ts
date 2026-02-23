@@ -41,11 +41,9 @@ export const AdminUpdateCourtSchema = z.object({
   address: S.place.address.optional(),
   city: S.place.city.optional(),
   province: S.place.province.optional(),
-  country: S.common.country.optional(),
   latitude: coordinateSchema.latitude,
   longitude: coordinateSchema.longitude,
   extGPlaceId: S.place.googlePlaceId,
-  timeZone: S.place.timeZone.optional(),
   featuredRank: S.common.displayOrder.optional(),
   provinceRank: S.common.displayOrder.optional(),
   // Contact details

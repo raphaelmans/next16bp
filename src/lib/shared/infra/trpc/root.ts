@@ -29,6 +29,7 @@ import { ownerSetupRouter } from "@/lib/modules/owner-setup/owner-setup.router";
 import { paymentProofRouter } from "@/lib/modules/payment-proof/payment-proof.router";
 import { placeRouter } from "@/lib/modules/place/place.router";
 import { placeManagementRouter } from "@/lib/modules/place/place-management.router";
+import { placeAddonRouter } from "@/lib/modules/place-addon/place-addon.router";
 import { placeVerificationAdminRouter } from "@/lib/modules/place-verification/admin/place-verification-admin.router";
 import { placeVerificationRouter } from "@/lib/modules/place-verification/place-verification.router";
 import { profileRouter } from "@/lib/modules/profile/profile.router";
@@ -53,6 +54,7 @@ export const appRouter = router({
   courtHours: courtHoursRouter,
   courtRateRule: courtRateRuleRouter,
   place: placeRouter,
+  placeAddon: placeAddonRouter,
   placeManagement: placeManagementRouter,
   placeVerification: placeVerificationRouter,
   sport: sportRouter,

@@ -6,6 +6,7 @@ import {
   useFeatureQueries,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
+import type { PricingBreakdown } from "@/common/pricing-breakdown";
 import { getZonedStartOfDayIso, toUtcISOString } from "@/common/time-zone";
 import type { PlaceCardPlace, TimeSlot } from "@/components/kudos";
 import { getDiscoveryApi } from "../api.runtime";
@@ -277,6 +278,22 @@ export interface AvailabilityOption {
   currency: string | null;
   courtId: string;
   courtLabel: string;
+  status?: "AVAILABLE" | "BOOKED";
+  unavailableReason?: "RESERVATION" | "MAINTENANCE" | "WALK_IN";
+  pricingWarnings?: string[];
+  pricingBreakdown?: PricingBreakdown;
+  courtOptions?: AvailabilityCourtOption[];
+}
+
+export interface AvailabilityCourtOption {
+  courtId: string;
+  courtLabel: string;
+  status: "AVAILABLE" | "BOOKED";
+  totalPriceCents: number;
+  currency: string | null;
+  unavailableReason?: "RESERVATION" | "MAINTENANCE" | "WALK_IN" | null;
+  pricingWarnings?: string[];
+  pricingBreakdown?: PricingBreakdown;
 }
 
 export interface AvailabilityDiagnostics {
@@ -560,6 +577,8 @@ export function useModPlaceAvailability({
     courtLabel: option.courtLabel,
     status: option.status,
     unavailableReason: option.unavailableReason ?? undefined,
+    pricingWarnings: option.pricingWarnings ?? [],
+    pricingBreakdown: option.pricingBreakdown ?? undefined,
     courtOptions: option.courtOptions ?? undefined,
   }));
 

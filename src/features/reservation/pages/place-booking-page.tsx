@@ -46,7 +46,7 @@ import {
   getAutoAddonIds,
   PlayerAddonSelector,
   sanitizeSelectedAddons,
-  useQueryCourtAddons,
+  useCombinedAddons,
 } from "@/features/court-addons";
 import type { SelectedAddon } from "@/features/court-addons/schemas";
 import { getDiscoveryApi } from "@/features/discovery/api.runtime";
@@ -58,6 +58,7 @@ import { useMutCreateOpenPlayFromReservation } from "@/features/open-play/hooks"
 import { BookingSummaryCard } from "@/features/reservation/components/booking-summary-card";
 import { OrderSummary } from "@/features/reservation/components/order-summary";
 import { ProfilePreviewCard } from "@/features/reservation/components/profile-preview-card";
+import { ProfileSetupModal } from "@/features/reservation/components/profile-setup-modal";
 import {
   useMutCreateReservationForAnyCourt,
   useMutCreateReservationForCourt,
@@ -65,6 +66,10 @@ import {
   useQueryProfile,
 } from "@/features/reservation/hooks";
 import { computeReservationGroupTotals } from "@/lib/modules/reservation/shared/domain";
+import {
+  clearPendingBooking,
+  usePendingBooking,
+} from "@/features/reservation/hooks/use-pending-booking";
 
 const DEFAULT_DURATION_MINUTES = 60;
 const selectionModeSchema = ["any", "court"] as const;
@@ -300,6 +305,14 @@ export default function PlaceBookingPage({
     startTime,
   ]);
   const { data: profile, isLoading: isLoadingProfile } = useQueryProfile();
+  const pendingBooking = usePendingBooking(placeIdOrSlug);
+
+  React.useEffect(() => {
+    if (!startTime && pendingBooking.data?.startTime) {
+      void setBookingParams({ startTime: pendingBooking.data.startTime });
+    }
+  }, [startTime, pendingBooking.data, setBookingParams]);
+
   const createForCourt = useMutCreateReservationForCourt();
   const createForAnyCourt = useMutCreateReservationForAnyCourt();
   const createGroup = useMutCreateReservationGroup();
@@ -354,18 +367,18 @@ export default function PlaceBookingPage({
       const options =
         (
           query?.data as
-            | {
-                options?: Array<{
-                  courtId: string;
-                  courtLabel: string;
-                  startTime: string;
-                  endTime: string;
-                  totalPriceCents: number;
-                  currency?: string | null;
-                  status: string;
-                }>;
-              }
-            | undefined
+          | {
+            options?: Array<{
+              courtId: string;
+              courtLabel: string;
+              startTime: string;
+              endTime: string;
+              totalPriceCents: number;
+              currency?: string | null;
+              status: string;
+            }>;
+          }
+          | undefined
         )?.options ?? [];
       const matchedOption = options.find(
         (option) =>
@@ -402,11 +415,11 @@ export default function PlaceBookingPage({
         multiCourtSummaryItems.flatMap((item) =>
           item.totalPriceCents !== null && item.currency
             ? [
-                {
-                  totalPriceCents: item.totalPriceCents,
-                  currency: item.currency,
-                },
-              ]
+              {
+                totalPriceCents: item.totalPriceCents,
+                currency: item.currency,
+              },
+            ]
             : [],
         ),
       ),
@@ -458,10 +471,10 @@ export default function PlaceBookingPage({
   const addonCourtId = isMultiCourtBooking
     ? undefined
     : (assignedCourt?.id ?? selectedSlot?.courtId);
-  const courtAddonsQuery = useQueryCourtAddons(addonCourtId ?? "", {
-    enabled: !!addonCourtId,
-  });
-  const availableCourtAddons = courtAddonsQuery.data ?? [];
+  const { addons: availableCourtAddons, globalAddonIds } = useCombinedAddons(
+    resolvedPlaceId,
+    addonCourtId,
+  );
 
   React.useEffect(() => {
     if (isMultiCourtBooking) return;
@@ -526,16 +539,21 @@ export default function PlaceBookingPage({
   const baseSelectedSlot = (availabilityWithoutAddonsQuery.data ?? []).find(
     (slot) => slot.startTime === startTime,
   );
-  const basePriceCents =
-    !isMultiCourtBooking && selectedAddons.length > 0
-      ? (baseSelectedSlot?.totalPriceCents ?? undefined)
-      : totalPrice;
+  const pricingBreakdown = selectedSlot?.pricingBreakdown;
+  const basePriceCents = isMultiCourtBooking
+    ? totalPrice
+    : (pricingBreakdown?.basePriceCents ??
+      (selectedAddons.length > 0
+        ? (baseSelectedSlot?.totalPriceCents ?? undefined)
+        : totalPrice));
   const addonPriceCents =
-    basePriceCents !== undefined ? Math.max(0, totalPrice - basePriceCents) : 0;
-  const pricingWarnings =
-    (selectedSlot as { pricingWarnings?: string[] } | undefined)
-      ?.pricingWarnings ?? [];
+    pricingBreakdown?.addonPriceCents ??
+    (basePriceCents !== undefined
+      ? Math.max(0, totalPrice - basePriceCents)
+      : 0);
+  const pricingWarnings = selectedSlot?.pricingWarnings ?? [];
 
+  const [showProfileModal, setShowProfileModal] = React.useState(false);
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [hostAsOpenPlay, setHostAsOpenPlay] = React.useState(false);
   const [openPlayMaxPlayers, setOpenPlayMaxPlayers] = React.useState(4);
@@ -710,6 +728,7 @@ export default function PlaceBookingPage({
         }
       }
 
+      clearPendingBooking();
       const requiresPayment = result.status === "AWAITING_PAYMENT";
       router.push(
         requiresPayment
@@ -791,29 +810,29 @@ export default function PlaceBookingPage({
   const courtSummary = isMultiCourtBooking
     ? null
     : {
-        name: courtSummaryName
-          ? `${place.name} · ${courtSummaryName}`
-          : place.name,
-        address: place.address,
-        coverImageUrl: place.coverImageUrl,
-      };
+      name: courtSummaryName
+        ? `${place.name} · ${courtSummaryName}`
+        : place.name,
+      address: place.address,
+      coverImageUrl: place.coverImageUrl,
+    };
 
   const timeSlot = isMultiCourtBooking
     ? {
-        startTime:
-          multiCourtSummaryItems[0]?.startTime ?? new Date().toISOString(),
-        endTime:
-          multiCourtSummaryItems[multiCourtSummaryItems.length - 1]?.endTime ??
-          new Date().toISOString(),
-        priceCents: totalPrice,
-        currency,
-      }
+      startTime:
+        multiCourtSummaryItems[0]?.startTime ?? new Date().toISOString(),
+      endTime:
+        multiCourtSummaryItems[multiCourtSummaryItems.length - 1]?.endTime ??
+        new Date().toISOString(),
+      priceCents: totalPrice,
+      currency,
+    }
     : {
-        startTime: selectedSlot.startTime,
-        endTime: endTime ?? selectedSlot.endTime,
-        priceCents: totalPrice,
-        currency,
-      };
+      startTime: selectedSlot.startTime,
+      endTime: endTime ?? selectedSlot.endTime,
+      priceCents: totalPrice,
+      currency,
+    };
 
   return (
     <Container className="py-6">
@@ -825,6 +844,24 @@ export default function PlaceBookingPage({
           </p>
         </div>
       </div>
+
+      {!isProfileComplete && (
+        <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border border-warning/40 bg-warning/10 px-4 py-3 text-sm">
+          <div>
+            <p className="font-medium">Almost there!</p>
+            <p className="text-muted-foreground text-xs mt-0.5">
+              Add your name and contact so the court owner can reach you.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowProfileModal(true)}
+            className="shrink-0 text-xs font-medium text-primary hover:underline"
+          >
+            Complete Profile
+          </button>
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-3 mt-8">
         <div className="lg:col-span-2 space-y-6">
@@ -877,17 +914,17 @@ export default function PlaceBookingPage({
                         <p className="text-sm mt-1">
                           {item.totalPriceCents !== null && item.currency
                             ? formatCurrency(
-                                item.totalPriceCents,
-                                item.currency,
-                              )
+                              item.totalPriceCents,
+                              item.currency,
+                            )
                             : "Pricing unavailable"}
                         </p>
                       </div>
                     ))}
                   </div>
                   {hasUnavailableMultiCourtItems ||
-                  hasIncompleteMultiCourtPricing ||
-                  hasMixedMultiCourtCurrencies ? (
+                    hasIncompleteMultiCourtPricing ||
+                    hasMixedMultiCourtCurrencies ? (
                     <p className="text-sm text-destructive">
                       One or more selected slots are no longer available. Return
                       to the venue page to adjust your selections.
@@ -942,6 +979,7 @@ export default function PlaceBookingPage({
                   addons={availableCourtAddons}
                   selectedAddons={selectedAddons}
                   onSelectedAddonsChange={handleSelectedAddonsChange}
+                  globalAddonIds={globalAddonIds}
                 />
               </CardContent>
             </Card>
@@ -956,6 +994,7 @@ export default function PlaceBookingPage({
             }}
             isComplete={isProfileComplete}
             redirectTo={bookingRedirect}
+            onEditClick={() => setShowProfileModal(true)}
           />
 
           <Card>
@@ -975,13 +1014,13 @@ export default function PlaceBookingPage({
                 <span>
                   {isMultiCourtBooking
                     ? `${multiCourtSummaryItems.length} courts · ${formatCurrency(
-                        totalPrice,
-                        currency,
-                      )}`
+                      totalPrice,
+                      currency,
+                    )}`
                     : `Duration: ${formatDuration(durationMinutes)} ·${formatCurrency(
-                        totalPrice,
-                        currency,
-                      )}`}
+                      totalPrice,
+                      currency,
+                    )}`}
                 </span>
               </div>
             </CardContent>
@@ -1253,24 +1292,45 @@ export default function PlaceBookingPage({
               </CardContent>
             </Card>
           ) : (
-            <OrderSummary
-              timeSlot={timeSlot}
-              basePriceCents={basePriceCents}
-              addonPriceCents={addonPriceCents}
-              pricingWarnings={pricingWarnings}
-              timeZone={placeTimeZone}
-              termsAccepted={termsAccepted}
-              onTermsChange={setTermsAccepted}
-              onConfirm={handleConfirm}
-              onReviewDetails={() => scrollToSection(detailsSectionRef)}
-              reviewLabel="Review booking details"
-              isSubmitting={isSubmitting}
-              disabled={!isProfileComplete}
-              className="sticky top-24"
-            />
+            <div className="relative">
+              <OrderSummary
+                timeSlot={timeSlot}
+                basePriceCents={basePriceCents}
+                addonPriceCents={addonPriceCents}
+                pricingWarnings={pricingWarnings}
+                timeZone={placeTimeZone}
+                termsAccepted={termsAccepted}
+                onTermsChange={setTermsAccepted}
+                onConfirm={handleConfirm}
+                onReviewDetails={() => scrollToSection(detailsSectionRef)}
+                reviewLabel="Review booking details"
+                isSubmitting={isSubmitting}
+                disabled={!isProfileComplete}
+                className="sticky top-24"
+              />
+              {!isProfileComplete && (
+                <div className="absolute inset-0 top-32 flex flex-col items-center justify-start rounded-xl bg-background/80 backdrop-blur-sm pt-8 px-4 text-center">
+                  <p className="text-sm font-medium text-foreground">
+                    Set up your profile to confirm
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setShowProfileModal(true)}
+                    className="mt-3 text-sm font-semibold text-primary hover:underline"
+                  >
+                    Complete Profile →
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
+
+      <ProfileSetupModal
+        open={showProfileModal}
+        onOpenChange={setShowProfileModal}
+      />
     </Container>
   );
 }

@@ -1,8 +1,10 @@
 import { addMinutes } from "date-fns";
+import type {
+  PricingBreakdown,
+  PricingBreakdownAddonLine,
+} from "@/common/pricing-breakdown";
 import { getZonedWeekdayMinuteOfDay } from "@/common/time-zone";
 import type {
-  CourtAddonRateRuleRecord,
-  CourtAddonRecord,
   CourtHoursWindowRecord,
   CourtPriceOverrideRecord,
   CourtRateRuleRecord,
@@ -12,6 +14,7 @@ export type SchedulePricingResult = {
   endTime: Date;
   totalPriceCents: number;
   currency: string;
+  pricingBreakdown: PricingBreakdown;
   warnings: SchedulePricingWarning[];
 };
 
@@ -30,9 +33,35 @@ export type SchedulePricingFailureReason =
   | "ADDON_CURRENCY_MISMATCH"
   | "ADDON_CONFIGURATION_INVALID";
 
+/**
+ * Minimal addon shape required by the pricing engine.
+ * Satisfied structurally by both CourtAddonRecord and PlaceAddonRecord.
+ */
+export type PricingAddon = {
+  id: string;
+  isActive: boolean;
+  mode: "OPTIONAL" | "AUTO";
+  pricingType: "HOURLY" | "FLAT";
+  flatFeeCents: number | null;
+  flatFeeCurrency: string | null;
+  label: string;
+};
+
+/**
+ * Minimal rate-rule shape required by the pricing engine.
+ * Satisfied structurally by both CourtAddonRateRuleRecord and PlaceAddonRateRuleRecord.
+ */
+export type PricingAddonRule = {
+  dayOfWeek: number;
+  startMinute: number;
+  endMinute: number;
+  hourlyRateCents: number | null;
+  currency: string | null;
+};
+
 export type ScheduleAddon = {
-  addon: CourtAddonRecord;
-  rules: CourtAddonRateRuleRecord[];
+  addon: PricingAddon;
+  rules: PricingAddonRule[];
 };
 
 export type SelectedAddon = {
@@ -97,8 +126,8 @@ function findHourlyRateFromOverrides(options: {
 function findMatchingAddonRule(options: {
   dayOfWeek: number;
   minuteOfDay: number;
-  rules: CourtAddonRateRuleRecord[];
-}): CourtAddonRateRuleRecord | null {
+  rules: PricingAddonRule[];
+}): PricingAddonRule | null {
   const { dayOfWeek, minuteOfDay, rules } = options;
   const match = rules.find(
     (rule) =>
@@ -117,6 +146,7 @@ export function computeSchedulePriceDetailed(options: {
   rateRules: CourtRateRuleRecord[];
   priceOverrides?: CourtPriceOverrideRecord[];
   addons?: ScheduleAddon[];
+  venueAddons?: ScheduleAddon[];
   selectedAddons?: SelectedAddon[];
   enableAddonPricing?: boolean;
 }): SchedulePricingDetailedResult {
@@ -128,6 +158,7 @@ export function computeSchedulePriceDetailed(options: {
     rateRules,
     priceOverrides,
     addons,
+    venueAddons,
     selectedAddons,
     enableAddonPricing,
   } = options;
@@ -139,7 +170,30 @@ export function computeSchedulePriceDetailed(options: {
   const endTime = addMinutes(startTime, durationMinutes);
   let cursor = new Date(startTime);
   let totalPriceCents = 0;
+  let basePriceCents = 0;
   let currency: string | null = null;
+  const addonLineById = new Map<string, PricingBreakdownAddonLine>();
+
+  const appendAddonSubtotal = (
+    addon: PricingAddon,
+    quantity: number,
+    subtotalCents: number,
+  ) => {
+    const existing = addonLineById.get(addon.id);
+    if (existing) {
+      existing.subtotalCents += subtotalCents;
+      existing.quantity = Math.max(existing.quantity, quantity);
+      return;
+    }
+
+    addonLineById.set(addon.id, {
+      addonId: addon.id,
+      addonLabel: addon.label,
+      pricingType: addon.pricingType,
+      quantity,
+      subtotalCents,
+    });
+  };
 
   const includeAddonPricing = enableAddonPricing !== false;
   const selectedAddonQuantityMap = new Map<string, number>(
@@ -148,8 +202,10 @@ export function computeSchedulePriceDetailed(options: {
       Math.max(1, Math.trunc(s.quantity)),
     ]),
   );
+  // GLOBAL (venue) add-ons first, then SPECIFIC (court) add-ons
+  const allAddons = [...(venueAddons ?? []), ...(addons ?? [])];
   const appliedAddons = includeAddonPricing
-    ? (addons ?? []).filter((item) => {
+    ? allAddons.filter((item) => {
         if (!item.addon.isActive) return false;
         if (item.addon.mode === "AUTO") return true;
         if (item.addon.mode === "OPTIONAL") {
@@ -159,7 +215,6 @@ export function computeSchedulePriceDetailed(options: {
       })
     : [];
 
-  const chargedFlatAddons = new Set<string>();
   const warnedPartialCoverage = new Set<string>();
   const warnings: SchedulePricingWarning[] = [];
 
@@ -192,6 +247,7 @@ export function computeSchedulePriceDetailed(options: {
     }
 
     totalPriceCents += effective.hourlyRateCents;
+    basePriceCents += effective.hourlyRateCents;
 
     if (!currency) {
       currency = effective.currency;
@@ -200,6 +256,9 @@ export function computeSchedulePriceDetailed(options: {
     }
 
     for (const { addon, rules } of appliedAddons) {
+      // FLAT add-ons are processed unconditionally after the loop
+      if (addon.pricingType === "FLAT") continue;
+
       const matchingRule = findMatchingAddonRule({
         dayOfWeek,
         minuteOfDay,
@@ -225,54 +284,64 @@ export function computeSchedulePriceDetailed(options: {
           ? 1
           : (selectedAddonQuantityMap.get(addon.id) ?? 1);
 
-      if (addon.pricingType === "HOURLY") {
-        if (
-          matchingRule.hourlyRateCents === null ||
-          matchingRule.currency === null
-        ) {
-          return {
-            result: null,
-            failureReason: "ADDON_CONFIGURATION_INVALID",
-          };
-        }
-
-        if (currency && matchingRule.currency !== currency) {
-          return { result: null, failureReason: "ADDON_CURRENCY_MISMATCH" };
-        }
-
-        totalPriceCents += matchingRule.hourlyRateCents * quantity;
-        continue;
+      if (
+        matchingRule.hourlyRateCents === null ||
+        matchingRule.currency === null
+      ) {
+        return {
+          result: null,
+          failureReason: "ADDON_CONFIGURATION_INVALID",
+        };
       }
 
-      if (addon.pricingType === "FLAT") {
-        if (chargedFlatAddons.has(addon.id)) {
-          continue;
-        }
-
-        if (addon.flatFeeCents === null || addon.flatFeeCurrency === null) {
-          return {
-            result: null,
-            failureReason: "ADDON_CONFIGURATION_INVALID",
-          };
-        }
-
-        if (currency && addon.flatFeeCurrency !== currency) {
-          return { result: null, failureReason: "ADDON_CURRENCY_MISMATCH" };
-        }
-
-        totalPriceCents += addon.flatFeeCents * quantity;
-        chargedFlatAddons.add(addon.id);
+      if (currency && matchingRule.currency !== currency) {
+        return { result: null, failureReason: "ADDON_CURRENCY_MISMATCH" };
       }
+
+      const addonSubtotal = matchingRule.hourlyRateCents * quantity;
+      totalPriceCents += addonSubtotal;
+      appendAddonSubtotal(addon, quantity, addonSubtotal);
     }
 
     cursor = segmentEnd;
   }
+
+  // Process FLAT add-ons unconditionally — charged once per booking regardless of windows
+  for (const { addon } of appliedAddons) {
+    if (addon.pricingType !== "FLAT") continue;
+
+    if (addon.flatFeeCents === null || addon.flatFeeCurrency === null) {
+      return { result: null, failureReason: "ADDON_CONFIGURATION_INVALID" };
+    }
+
+    if (currency && addon.flatFeeCurrency !== currency) {
+      return { result: null, failureReason: "ADDON_CURRENCY_MISMATCH" };
+    }
+
+    const quantity =
+      addon.mode === "AUTO" ? 1 : (selectedAddonQuantityMap.get(addon.id) ?? 1);
+    const addonSubtotal = addon.flatFeeCents * quantity;
+    totalPriceCents += addonSubtotal;
+    appendAddonSubtotal(addon, quantity, addonSubtotal);
+  }
+
+  const addonLines = Array.from(addonLineById.values());
+  const addonPriceCents = addonLines.reduce(
+    (sum, line) => sum + line.subtotalCents,
+    0,
+  );
 
   return {
     result: {
       endTime,
       totalPriceCents,
       currency: currency ?? "PHP",
+      pricingBreakdown: {
+        basePriceCents,
+        addonPriceCents,
+        totalPriceCents,
+        addons: addonLines,
+      },
       warnings,
     },
     failureReason: null,
@@ -287,6 +356,7 @@ export function computeSchedulePrice(options: {
   rateRules: CourtRateRuleRecord[];
   priceOverrides?: CourtPriceOverrideRecord[];
   addons?: ScheduleAddon[];
+  venueAddons?: ScheduleAddon[];
   selectedAddons?: SelectedAddon[];
   enableAddonPricing?: boolean;
 }): SchedulePricingResult | null {

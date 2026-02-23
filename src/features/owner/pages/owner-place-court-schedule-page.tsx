@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
+  CourtAddonEditor,
   CourtScheduleEditor,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
@@ -116,13 +117,18 @@ export default function CourtSchedulePage({
         <CourtScheduleEditor
           courtId={courtId}
           organizationId={organization?.id ?? null}
-          timeZone={placeData.place.timeZone}
           primaryActionLabel="Save schedule"
           onSaved={() => {
             if (isFromSetup) {
               router.push(appRoutes.owner.getStarted);
             }
           }}
+        />
+
+        <CourtAddonEditor
+          courtId={courtId}
+          placeId={placeId}
+          organizationId={organization?.id}
         />
       </div>
     </AppShell>

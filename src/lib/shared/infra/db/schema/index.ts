@@ -37,6 +37,8 @@ export * from "./organization";
 export * from "./organization-payment";
 // Place-related tables
 export * from "./place";
+export * from "./place-addon";
+export * from "./place-addon-rate-rule";
 export * from "./place-amenity";
 export * from "./place-photo";
 export * from "./place-verification";

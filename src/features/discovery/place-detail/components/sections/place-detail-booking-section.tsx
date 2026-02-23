@@ -20,7 +20,7 @@ import {
   getAutoAddonIds,
   PlayerAddonSelector,
   sanitizeSelectedAddons,
-  useQueryCourtAddons,
+  useCombinedAddons,
 } from "@/features/court-addons";
 import type { SelectedAddon } from "@/features/court-addons/schemas";
 import type { PlaceDetail } from "@/features/discovery/hooks";
@@ -191,18 +191,20 @@ export function PlaceDetailBookingSection({
   const [selectionSummary, setSelectionSummary] =
     React.useState<SelectionSummary | null>(null);
 
-  const courtAddonsQuery = useQueryCourtAddons(selectedCourtId ?? "", {
-    enabled: isAuthenticated && selectionMode === "court" && !!selectedCourtId,
-  });
-
-  const availableCourtAddons = courtAddonsQuery.data ?? [];
+  const { addons: availableCourtAddons, globalAddonIds } = useCombinedAddons(
+    isAuthenticated && selectionMode === "court" ? place.id : undefined,
+    isAuthenticated && selectionMode === "court" ? selectedCourtId : undefined,
+  );
 
   React.useEffect(() => {
     if (availableCourtAddons.length === 0 && selectedAddons.length === 0) {
       return;
     }
 
-    const sanitized = sanitizeSelectedAddons(selectedAddons, availableCourtAddons);
+    const sanitized = sanitizeSelectedAddons(
+      selectedAddons,
+      availableCourtAddons,
+    );
     const autoAddonIds = getAutoAddonIds(availableCourtAddons);
     const sanitizedIds = new Set(sanitized.map((a) => a.addonId));
     const autoEntries: SelectedAddon[] = autoAddonIds
@@ -252,7 +254,9 @@ export function PlaceDetailBookingSection({
     }
     if (selectedAddons.length > 0) {
       const encoded = selectedAddons
-        .map((a) => (a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`))
+        .map((a) =>
+          a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`,
+        )
         .join(",");
       params.set("addonIds", encoded);
     }
@@ -443,6 +447,7 @@ export function PlaceDetailBookingSection({
                       addons={availableCourtAddons}
                       selectedAddons={selectedAddons}
                       onSelectedAddonsChange={setSelectedAddons}
+                      globalAddonIds={globalAddonIds}
                     />
                   </CardContent>
                 </Card>

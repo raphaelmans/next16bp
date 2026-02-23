@@ -13,6 +13,13 @@ import {
 import { CourtRateRuleOverlapError } from "./errors/court-rate-rule.errors";
 import { makeCourtRateRuleService } from "./factories/court-rate-rule.factory";
 
+function redactRuleCurrency<T extends { currency?: string }>(
+  rule: T,
+): Omit<T, "currency"> {
+  const { currency: _currency, ...rest } = rule;
+  return rest;
+}
+
 function handleCourtRateRuleError(error: unknown): never {
   if (error instanceof CourtNotFoundError) {
     throw new TRPCError({
@@ -50,14 +57,16 @@ export const courtRateRuleRouter = router({
     .input(GetCourtRateRulesSchema)
     .query(async ({ input }) => {
       const service = makeCourtRateRuleService();
-      return service.getRules(input.courtId);
+      const rules = await service.getRules(input.courtId);
+      return rules.map((rule) => redactRuleCurrency(rule));
     }),
   set: protectedProcedure
     .input(SetCourtRateRulesSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makeCourtRateRuleService();
-        return await service.setRules(ctx.userId, input);
+        const rules = await service.setRules(ctx.userId, input);
+        return rules.map((rule) => redactRuleCurrency(rule));
       } catch (error) {
         handleCourtRateRuleError(error);
       }
@@ -67,11 +76,12 @@ export const courtRateRuleRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makeCourtRateRuleService();
-        return await service.copyFromCourt(
+        const rules = await service.copyFromCourt(
           ctx.userId,
           input.sourceCourtId,
           input.targetCourtId,
         );
+        return rules.map((rule) => redactRuleCurrency(rule));
       } catch (error) {
         handleCourtRateRuleError(error);
       }

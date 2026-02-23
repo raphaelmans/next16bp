@@ -1,9 +1,19 @@
 "use client";
 
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Copy, Loader2, Plus, Trash2 } from "lucide-react";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,19 +33,31 @@ import {
   expandGroupsToRules,
   mapCourtAddonConfigsToForms,
   mapCourtAddonFormsToSetPayload,
+  partitionAddonsByScope,
 } from "@/features/court-addons/helpers";
 import type { CourtAddonForm } from "@/features/court-addons/schemas";
 import {
   useMutOwnerSaveCourtAddons,
+  useMutOwnerSavePlaceAddons,
   useQueryOwnerCourtAddons,
+  useQueryOwnerCourts,
+  useQueryOwnerPlaceAddons,
 } from "@/features/owner/hooks";
+import {
+  mapPlaceAddonConfigsToForms,
+  mapPlaceAddonFormsToSetPayload,
+} from "@/features/place-addon/helpers";
 import { cn } from "@/lib/utils";
+import { AddonCopyFromCourtDialog } from "./addon-copy-from-court-dialog";
 
 // ── Types ────────────────────────────────────────────────────────────────────
+
+type AddonScope = "GLOBAL" | "SPECIFIC";
 
 // Editor-local form type: rules stored as groups (day pills), not flat per-day rows
 type AddonEditorForm = Omit<CourtAddonForm, "rules"> & {
   groups: AddonRuleGroup[];
+  scope: AddonScope;
 };
 
 // ── Constants ────────────────────────────────────────────────────────────────
@@ -74,7 +96,6 @@ function createDefaultGroup(): AddonRuleGroup {
     startMinute: 540,
     endMinute: 600,
     hourlyRateCents: 0,
-    currency: "PHP",
   };
 }
 
@@ -86,6 +107,7 @@ function createDefaultAddon(displayOrder: number): AddonEditorForm {
     pricingType: "HOURLY",
     displayOrder,
     groups: [createDefaultGroup()],
+    scope: "SPECIFIC",
   };
 }
 
@@ -150,21 +172,82 @@ function DayPills({
   );
 }
 
+// ── Scope change confirmation dialog ─────────────────────────────────────────
+
+function ScopeChangeDialog({
+  open,
+  direction,
+  onConfirm,
+  onCancel,
+}: {
+  open: boolean;
+  direction: "TO_GLOBAL" | "TO_SPECIFIC" | null;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <AlertDialog open={open} onOpenChange={(v) => !v && onCancel()}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            {direction === "TO_GLOBAL"
+              ? "Make venue-wide?"
+              : "Make court-specific?"}
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            {direction === "TO_GLOBAL"
+              ? "This add-on will apply to all courts at this venue."
+              : "This add-on will be removed from other courts. Only this court will have it."}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={onConfirm}>Confirm</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
 // ── Component ────────────────────────────────────────────────────────────────
 
 type CourtAddonEditorProps = {
   courtId: string;
+  placeId?: string;
+  organizationId?: string | null;
 };
 
-export function CourtAddonEditor({ courtId }: CourtAddonEditorProps) {
+export function CourtAddonEditor({
+  courtId,
+  placeId,
+  organizationId,
+}: CourtAddonEditorProps) {
   const { data, isLoading } = useQueryOwnerCourtAddons(courtId, {
     enabled: !!courtId,
   });
   const saveMutation = useMutOwnerSaveCourtAddons(courtId);
+  const { data: placeAddons } = useQueryOwnerPlaceAddons(placeId ?? "", {
+    enabled: !!placeId,
+  });
+  const savePlaceMutation = useMutOwnerSavePlaceAddons(placeId ?? "");
+
+  const { data: allCourts = [], isLoading: courtsLoading } =
+    useQueryOwnerCourts(organizationId);
+  const siblingCourts = React.useMemo(
+    () => allCourts.filter((c) => c.placeId === placeId),
+    [allCourts, placeId],
+  );
 
   const [addons, setAddons] = React.useState<AddonEditorForm[]>([]);
-  const [isDirty, setIsDirty] = React.useState(false);
+  const [_isDirty, setIsDirty] = React.useState(false);
   const [saveAttempted, setSaveAttempted] = React.useState(false);
+  const [copyDialogOpen, setCopyDialogOpen] = React.useState(false);
+
+  // Scope change confirmation state
+  const [scopeChange, setScopeChange] = React.useState<{
+    addonIndex: number;
+    direction: "TO_GLOBAL" | "TO_SPECIFIC";
+  } | null>(null);
 
   // Wraps setAddons for user interactions — marks form dirty
   const updateAddons = React.useCallback(
@@ -175,34 +258,46 @@ export function CourtAddonEditor({ courtId }: CourtAddonEditorProps) {
     [],
   );
 
+  // Merge GLOBAL (place addons) + SPECIFIC (court addons) on load
   React.useEffect(() => {
     if (!data) return;
-    const forms = mapCourtAddonConfigsToForms(data);
-    setAddons(
-      forms.map((form) => ({
-        ...form,
-        groups: collapseRulesToGroups(form.rules),
-      })),
-    );
+
+    // Map court addons → SPECIFIC
+    const courtForms = mapCourtAddonConfigsToForms(data);
+    const specificForms: AddonEditorForm[] = courtForms.map((form) => ({
+      ...form,
+      groups: collapseRulesToGroups(form.rules),
+      scope: "SPECIFIC" as const,
+    }));
+
+    // Map place addons → GLOBAL (include ALL, not just active)
+    const globalForms: AddonEditorForm[] = placeAddons
+      ? mapPlaceAddonConfigsToForms(placeAddons).map((form) => ({
+          ...form,
+          groups: collapseRulesToGroups(form.rules),
+          scope: "GLOBAL" as const,
+        }))
+      : [];
+
+    setAddons([...globalForms, ...specificForms]);
     setIsDirty(false);
     setSaveAttempted(false);
-  }, [data]);
+  }, [data, placeAddons]);
 
   const hasBlockingIssues = React.useMemo(
     () =>
       addons.some(
         (addon) =>
           addon.label.trim().length === 0 ||
-          addon.groups.some((g) => g.days.length === 0) ||
-          addon.groups.some((g) => g.startMinute >= g.endMinute) ||
-          hasOverlappingGroups(addon.groups),
+          (addon.pricingType !== "FLAT" &&
+            (addon.groups.some((g) => g.days.length === 0) ||
+              addon.groups.some((g) => g.startMinute >= g.endMinute) ||
+              hasOverlappingGroups(addon.groups))),
       ),
     [addons],
   );
 
   const handleAddAddon = React.useCallback(() => {
-    // Adding a blank addon is scaffolding, not a user edit — don't mark dirty
-    // so the validation banner doesn't fire before the user types anything.
     setAddons((prev) => [...prev, createDefaultAddon(prev.length)]);
   }, []);
 
@@ -213,25 +308,106 @@ export function CourtAddonEditor({ courtId }: CourtAddonEditorProps) {
       return;
     }
 
-    const addonForms: CourtAddonForm[] = addons.map((addon) => ({
+    const toCourtAddonForm = (addon: AddonEditorForm): CourtAddonForm => ({
       id: addon.id,
       label: addon.label,
       isActive: addon.isActive,
       mode: addon.mode,
       pricingType: addon.pricingType,
       flatFeeCents: addon.flatFeeCents,
-      flatFeeCurrency: addon.flatFeeCurrency,
       displayOrder: addon.displayOrder,
       rules: expandGroupsToRules(addon.groups),
-    }));
+    });
 
-    await saveMutation.mutateAsync(
-      mapCourtAddonFormsToSetPayload(courtId, addonForms),
-    );
+    const { global: globalAddons, specific: specificAddons } =
+      partitionAddonsByScope(addons);
+
+    const specificForms = specificAddons.map(toCourtAddonForm);
+    const globalForms = globalAddons.map(toCourtAddonForm);
+
+    const mutations: Promise<unknown>[] = [
+      saveMutation.mutateAsync(
+        mapCourtAddonFormsToSetPayload(courtId, specificForms),
+      ),
+    ];
+
+    if (placeId) {
+      mutations.push(
+        savePlaceMutation.mutateAsync(
+          mapPlaceAddonFormsToSetPayload(placeId, globalForms),
+        ),
+      );
+    }
+
+    await Promise.all(mutations);
     setIsDirty(false);
     setSaveAttempted(false);
     toast.success("Add-ons saved");
-  }, [addons, courtId, hasBlockingIssues, saveMutation]);
+  }, [
+    addons,
+    courtId,
+    placeId,
+    hasBlockingIssues,
+    saveMutation,
+    savePlaceMutation,
+  ]);
+
+  const handleScopeToggleRequest = (
+    addonIndex: number,
+    currentScope: AddonScope,
+  ) => {
+    setScopeChange({
+      addonIndex,
+      direction: currentScope === "GLOBAL" ? "TO_SPECIFIC" : "TO_GLOBAL",
+    });
+  };
+
+  const handleScopeChangeConfirm = () => {
+    if (!scopeChange) return;
+    const { addonIndex, direction } = scopeChange;
+    updateAddons((prev) =>
+      prev.map((item, i) => {
+        if (i !== addonIndex) return item;
+        return {
+          ...item,
+          scope: direction === "TO_GLOBAL" ? "GLOBAL" : "SPECIFIC",
+          // Clear id — it will be deleted from one table and recreated in the other
+          id: undefined,
+        };
+      }),
+    );
+    setScopeChange(null);
+  };
+
+  const handleCopyAddons = React.useCallback(
+    (
+      copied: {
+        label: string;
+        isActive: boolean;
+        mode: "OPTIONAL" | "AUTO";
+        pricingType: "HOURLY" | "FLAT";
+        flatFeeCents?: number | null;
+        displayOrder: number;
+        groups: AddonRuleGroup[];
+        scope: AddonScope;
+      }[],
+    ) => {
+      updateAddons((prev) => {
+        const maxOrder = prev.reduce(
+          (max, a) => Math.max(max, a.displayOrder ?? 0),
+          -1,
+        );
+        return [
+          ...prev,
+          ...copied.map((addon, i) => ({
+            ...addon,
+            displayOrder: maxOrder + 1 + i,
+          })),
+        ];
+      });
+    },
+    [updateAddons],
+  );
 
   if (isLoading) {
     return (
@@ -241,417 +417,465 @@ export function CourtAddonEditor({ courtId }: CourtAddonEditorProps) {
     );
   }
 
+  const isSaving = saveMutation.isPending || savePlaceMutation.isPending;
+  const showCopyButton =
+    !!organizationId && !courtsLoading && siblingCourts.length > 1;
+
   return (
-    <Card>
-      <CardHeader className="pb-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-1">
-            <CardTitle>Add-ons</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Configure optional or auto-applied extras for this court.
-            </p>
-          </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleAddAddon}
-            className="shrink-0"
-          >
-            <Plus className="mr-1.5 h-3.5 w-3.5" />
-            Add add-on
-            {addons.length > 0 && (
-              <Badge variant="secondary" className="ml-2">
-                {addons.length}
-              </Badge>
-            )}
-          </Button>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-5">
-        {saveAttempted && hasBlockingIssues && (
-          <Alert variant="destructive">
-            <AlertTitle>Validation issues found</AlertTitle>
-            <AlertDescription>
-              Check empty labels, no days selected, invalid time ranges, and
-              overlapping rule windows.
-            </AlertDescription>
-          </Alert>
-        )}
+    <>
+      <ScopeChangeDialog
+        open={!!scopeChange}
+        direction={scopeChange?.direction ?? null}
+        onConfirm={handleScopeChangeConfirm}
+        onCancel={() => setScopeChange(null)}
+      />
 
-        {addons.length === 0 ? (
-          <div className="rounded-lg border border-dashed py-10 text-center">
-            <p className="text-sm text-muted-foreground">
-              No add-ons configured yet.
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Add extras like equipment rental or court lighting.
-            </p>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="mt-4"
-              onClick={handleAddAddon}
-            >
-              <Plus className="mr-1.5 h-3.5 w-3.5" />
-              Add your first add-on
-            </Button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {addons.map((addon, addonIndex) => {
-              const updateAddon = (patch: Partial<AddonEditorForm>) =>
-                updateAddons((prev) =>
-                  prev.map((item, i) =>
-                    i === addonIndex ? { ...item, ...patch } : item,
-                  ),
-                );
+      {showCopyButton && (
+        <AddonCopyFromCourtDialog
+          open={copyDialogOpen}
+          onOpenChange={setCopyDialogOpen}
+          courts={allCourts}
+          currentCourtId={courtId}
+          placeId={placeId ?? ""}
+          onCopy={handleCopyAddons}
+        />
+      )}
 
-              const updateGroup = (
-                groupIndex: number,
-                patch: Partial<AddonRuleGroup>,
-              ) =>
-                updateAddons((prev) =>
-                  prev.map((item, i) =>
-                    i === addonIndex
-                      ? {
-                          ...item,
-                          groups: item.groups.map((g, gi) =>
-                            gi === groupIndex ? { ...g, ...patch } : g,
-                          ),
-                        }
-                      : item,
-                  ),
-                );
-
-              const hasFlatNoWindows =
-                addon.pricingType === "FLAT" && addon.groups.length === 0;
-
-              return (
-                <div
-                  key={`${addon.id ?? "new"}-${addonIndex}`}
-                  className="overflow-hidden rounded-xl border shadow-sm"
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-1">
+              <CardTitle>Add-ons</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Configure optional or auto-applied extras for this court.
+              </p>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              {showCopyButton && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCopyDialogOpen(true)}
                 >
-                  {/* ── Identity: label + mode + active + remove ─── */}
-                  <div className="flex flex-wrap items-center gap-2.5 p-4 sm:flex-nowrap sm:p-5">
-                    <Input
-                      placeholder="Add-on label…"
-                      value={addon.label}
-                      onChange={(e) => updateAddon({ label: e.target.value })}
-                      className="min-w-0 flex-1 font-medium"
-                    />
-                    <Select
-                      value={addon.mode}
-                      onValueChange={(value: "OPTIONAL" | "AUTO") =>
-                        updateAddon({ mode: value })
-                      }
-                    >
-                      <SelectTrigger className="w-36 shrink-0">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="OPTIONAL">Optional</SelectItem>
-                        <SelectItem value="AUTO">Auto-applied</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <div className="flex shrink-0 items-center gap-1.5">
-                      <Switch
-                        checked={addon.isActive}
-                        onCheckedChange={(checked) =>
-                          updateAddon({ isActive: checked })
-                        }
-                      />
-                      <span className="text-xs text-muted-foreground">
-                        Active
-                      </span>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="shrink-0 text-muted-foreground hover:text-destructive"
-                      onClick={() =>
-                        updateAddons((prev) =>
-                          prev.filter((_, i) => i !== addonIndex),
-                        )
-                      }
-                      aria-label="Remove add-on"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  <Copy className="mr-1.5 h-3.5 w-3.5" />
+                  Copy from court
+                </Button>
+              )}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleAddAddon}
+                className="shrink-0"
+              >
+                <Plus className="mr-1.5 h-3.5 w-3.5" />
+                Add add-on
+                {addons.length > 0 && (
+                  <Badge variant="secondary" className="ml-2">
+                    {addons.length}
+                  </Badge>
+                )}
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          {saveAttempted && hasBlockingIssues && (
+            <Alert variant="destructive">
+              <AlertTitle>Validation issues found</AlertTitle>
+              <AlertDescription>
+                Check empty labels, no days selected, invalid time ranges, and
+                overlapping rule windows.
+              </AlertDescription>
+            </Alert>
+          )}
 
-                  {/* ── Pricing ───────────────────────────────────── */}
-                  <div className="border-t bg-muted/30 px-4 py-3 sm:px-5">
-                    <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      Pricing
-                    </p>
-                    <div className="flex flex-wrap items-end gap-3">
-                      <div className="space-y-1">
-                        <Label className="text-xs">Type</Label>
-                        <Select
-                          value={addon.pricingType}
-                          onValueChange={(value: "HOURLY" | "FLAT") =>
-                            updateAddons((prev) =>
-                              prev.map((item, i) =>
-                                i === addonIndex
-                                  ? {
-                                      ...item,
-                                      pricingType: value,
-                                      flatFeeCents:
-                                        value === "FLAT"
-                                          ? (item.flatFeeCents ?? 0)
-                                          : null,
-                                      flatFeeCurrency:
-                                        value === "FLAT"
-                                          ? (item.flatFeeCurrency ?? "PHP")
-                                          : null,
-                                    }
-                                  : item,
-                              ),
-                            )
+          {addons.length === 0 ? (
+            <div className="rounded-lg border border-dashed py-10 text-center">
+              <p className="text-sm text-muted-foreground">
+                No add-ons configured yet.
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Add extras like equipment rental or court lighting.
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="mt-4"
+                onClick={handleAddAddon}
+              >
+                <Plus className="mr-1.5 h-3.5 w-3.5" />
+                Add your first add-on
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {addons.map((addon, addonIndex) => {
+                const updateAddon = (patch: Partial<AddonEditorForm>) =>
+                  updateAddons((prev) =>
+                    prev.map((item, i) =>
+                      i === addonIndex ? { ...item, ...patch } : item,
+                    ),
+                  );
+
+                const updateGroup = (
+                  groupIndex: number,
+                  patch: Partial<AddonRuleGroup>,
+                ) =>
+                  updateAddons((prev) =>
+                    prev.map((item, i) =>
+                      i === addonIndex
+                        ? {
+                            ...item,
+                            groups: item.groups.map((g, gi) =>
+                              gi === groupIndex ? { ...g, ...patch } : g,
+                            ),
                           }
-                        >
-                          <SelectTrigger className="w-40">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="HOURLY">
-                              Hourly add-on
-                            </SelectItem>
-                            <SelectItem value="FLAT">Flat add-on</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        : item,
+                    ),
+                  );
+
+                return (
+                  <div
+                    key={`${addon.id ?? "new"}-${addonIndex}`}
+                    className="overflow-hidden rounded-xl border shadow-sm"
+                  >
+                    {/* ── Identity: label + mode + active + scope + remove ─── */}
+                    <div className="flex flex-wrap items-center gap-2.5 p-4 sm:flex-nowrap sm:p-5">
+                      <Input
+                        placeholder="Add-on label…"
+                        value={addon.label}
+                        onChange={(e) => updateAddon({ label: e.target.value })}
+                        className="min-w-0 flex-1 font-medium"
+                      />
+                      <Select
+                        value={addon.mode}
+                        onValueChange={(value: "OPTIONAL" | "AUTO") =>
+                          updateAddon({ mode: value })
+                        }
+                      >
+                        <SelectTrigger className="w-36 shrink-0">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="OPTIONAL">Optional</SelectItem>
+                          <SelectItem value="AUTO">Auto-applied</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <div className="flex shrink-0 items-center gap-1.5">
+                        <Switch
+                          checked={addon.isActive}
+                          onCheckedChange={(checked) =>
+                            updateAddon({ isActive: checked })
+                          }
+                        />
+                        <span className="text-xs text-muted-foreground">
+                          Active
+                        </span>
                       </div>
-                      {addon.pricingType === "FLAT" && (
-                        <>
+                      {placeId && (
+                        <div className="flex shrink-0 items-center gap-1.5">
+                          <Switch
+                            checked={addon.scope === "GLOBAL"}
+                            onCheckedChange={() =>
+                              handleScopeToggleRequest(addonIndex, addon.scope)
+                            }
+                          />
+                          <span className="text-xs text-muted-foreground">
+                            {addon.scope === "GLOBAL"
+                              ? "Venue-wide"
+                              : "This court"}
+                          </span>
+                          {addon.scope === "GLOBAL" && (
+                            <Badge variant="outline" className="text-xs">
+                              All courts
+                            </Badge>
+                          )}
+                        </div>
+                      )}
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="shrink-0 text-muted-foreground hover:text-destructive"
+                        onClick={() =>
+                          updateAddons((prev) =>
+                            prev.filter((_, i) => i !== addonIndex),
+                          )
+                        }
+                        aria-label="Remove add-on"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+
+                    {/* ── Pricing ───────────────────────────────────── */}
+                    <div className="border-t bg-muted/30 px-4 py-3 sm:px-5">
+                      <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Pricing
+                      </p>
+                      <div className="flex flex-wrap items-end gap-3">
+                        <div className="space-y-1">
+                          <Label className="text-xs">Type</Label>
+                          <Select
+                            value={addon.pricingType}
+                            onValueChange={(value: "HOURLY" | "FLAT") =>
+                              updateAddons((prev) =>
+                                prev.map((item, i) =>
+                                  i === addonIndex
+                                    ? {
+                                        ...item,
+                                        pricingType: value,
+                                        flatFeeCents:
+                                          value === "FLAT"
+                                            ? (item.flatFeeCents ?? 0)
+                                            : null,
+                                        groups:
+                                          value === "FLAT"
+                                            ? []
+                                            : item.groups.length > 0
+                                              ? item.groups
+                                              : [createDefaultGroup()],
+                                      }
+                                    : item,
+                                ),
+                              )
+                            }
+                          >
+                            <SelectTrigger className="w-40">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="HOURLY">
+                                Hourly add-on
+                              </SelectItem>
+                              <SelectItem value="FLAT">Flat add-on</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        {addon.pricingType === "FLAT" && (
                           <div className="space-y-1">
                             <Label className="text-xs">Flat fee</Label>
                             <Input
                               type="number"
                               min={0}
+                              step={0.01}
                               className="w-28"
-                              value={addon.flatFeeCents ?? 0}
+                              value={
+                                addon.flatFeeCents != null
+                                  ? addon.flatFeeCents / 100
+                                  : ""
+                              }
                               onChange={(e) => {
                                 const value = Number(e.target.value);
                                 updateAddon({
                                   flatFeeCents: Number.isFinite(value)
-                                    ? value
+                                    ? Math.round(value * 100)
                                     : 0,
                                 });
                               }}
                             />
                           </div>
-                          <div className="space-y-1">
-                            <Label className="text-xs">Currency</Label>
-                            <Input
-                              className="w-20"
-                              value={addon.flatFeeCurrency ?? "PHP"}
-                              onChange={(e) =>
-                                updateAddon({
-                                  flatFeeCurrency: e.target.value.toUpperCase(),
-                                })
-                              }
-                            />
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* ── Schedule rules ────────────────────────────── */}
-                  <div className="border-t px-4 pb-4 pt-3 sm:px-5">
-                    <div className="mb-2.5 flex items-center justify-between">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Schedule rules
-                      </p>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 text-xs"
-                        onClick={() =>
-                          updateAddons((prev) =>
-                            prev.map((item, i) =>
-                              i === addonIndex
-                                ? {
-                                    ...item,
-                                    groups: [
-                                      ...item.groups,
-                                      createDefaultGroup(),
-                                    ],
-                                  }
-                                : item,
-                            ),
-                          )
-                        }
-                      >
-                        <Plus className="mr-1 h-3 w-3" />
-                        Add rule
-                      </Button>
-                    </div>
-
-                    {hasFlatNoWindows && (
-                      <p className="mb-2 rounded-md border border-yellow-200 bg-yellow-50 px-3 py-2 text-xs text-yellow-800 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-200">
-                        No windows configured — this add-on will never be
-                        charged.
-                      </p>
-                    )}
-
-                    {addon.groups.length === 0 && !hasFlatNoWindows ? (
-                      <p className="py-3 text-center text-xs text-muted-foreground">
-                        No rules yet — add one to define when this add-on
-                        applies.
-                      </p>
-                    ) : addon.groups.length > 0 ? (
-                      <div className="space-y-2">
-                        {/* Column headers (desktop only) */}
-                        <div className="hidden grid-cols-[auto_1fr_1fr_1fr_36px] gap-2 px-1 md:grid">
-                          <span className="text-xs text-muted-foreground">
-                            Days
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            From
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            To
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            {addon.pricingType === "HOURLY"
-                              ? "Rate (cents/hr)"
-                              : ""}
-                          </span>
-                          <span />
-                        </div>
-                        {addon.groups.map((group, groupIndex) => {
-                          const hasEmptyDays = group.days.length === 0;
-                          return (
-                            <div
-                              key={`${group.startMinute}-${group.endMinute}-${group.hourlyRateCents ?? "flat"}`}
-                              className="space-y-1"
-                            >
-                              <div className="grid gap-2 rounded-lg border bg-card p-2 md:grid-cols-[auto_1fr_1fr_1fr_36px] md:rounded-none md:border-0 md:bg-transparent md:p-0">
-                                <div className="flex flex-col gap-1">
-                                  <DayPills
-                                    selected={group.days}
-                                    onChange={(days) =>
-                                      updateGroup(groupIndex, { days })
-                                    }
-                                  />
-                                </div>
-                                <Input
-                                  type="time"
-                                  className="h-8 text-sm"
-                                  aria-label="Start time"
-                                  value={minuteToTime(group.startMinute)}
-                                  onChange={(e) =>
-                                    updateGroup(groupIndex, {
-                                      startMinute: timeToMinute(e.target.value),
-                                    })
-                                  }
-                                />
-                                <Input
-                                  type="time"
-                                  className="h-8 text-sm"
-                                  aria-label="End time"
-                                  value={minuteToTime(
-                                    Math.min(1439, group.endMinute - 1),
-                                  )}
-                                  onChange={(e) =>
-                                    updateGroup(groupIndex, {
-                                      endMinute: Math.max(
-                                        1,
-                                        Math.min(
-                                          1440,
-                                          timeToMinute(e.target.value) + 1,
-                                        ),
-                                      ),
-                                    })
-                                  }
-                                />
-                                {addon.pricingType === "HOURLY" ? (
-                                  <Input
-                                    type="number"
-                                    min={0}
-                                    className="h-8 text-sm"
-                                    aria-label="Hourly rate in cents"
-                                    placeholder="0"
-                                    value={group.hourlyRateCents ?? 0}
-                                    onChange={(e) => {
-                                      const value = Number(e.target.value);
-                                      updateGroup(groupIndex, {
-                                        hourlyRateCents: Number.isFinite(value)
-                                          ? value
-                                          : 0,
-                                      });
-                                    }}
-                                  />
-                                ) : (
-                                  <div className="hidden items-center md:flex">
-                                    <span className="text-xs text-muted-foreground">
-                                      Flat fee
-                                    </span>
-                                  </div>
-                                )}
-                                <Button
-                                  type="button"
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
-                                  onClick={() =>
-                                    updateAddons((prev) =>
-                                      prev.map((item, i) =>
-                                        i === addonIndex
-                                          ? {
-                                              ...item,
-                                              groups: item.groups.filter(
-                                                (_, gi) => gi !== groupIndex,
-                                              ),
-                                            }
-                                          : item,
-                                      ),
-                                    )
-                                  }
-                                  aria-label="Remove rule"
-                                >
-                                  <Trash2 className="h-3.5 w-3.5" />
-                                </Button>
-                              </div>
-                              {hasEmptyDays && (
-                                <p className="px-1 text-xs text-destructive">
-                                  Select at least one day
-                                </p>
-                              )}
-                            </div>
-                          );
-                        })}
+                        )}
                       </div>
-                    ) : null}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                    </div>
 
-        <div className="flex justify-end pt-1">
-          <Button
-            type="button"
-            onClick={handleSave}
-            disabled={saveMutation.isPending}
-          >
-            {saveMutation.isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving…
-              </>
-            ) : (
-              "Save add-ons"
-            )}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+                    {/* ── Schedule rules (HOURLY only) ──────────────── */}
+                    {addon.pricingType !== "FLAT" && (
+                      <div className="border-t px-4 pb-4 pt-3 sm:px-5">
+                        <div className="mb-2.5 flex items-center justify-between">
+                          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                            Schedule rules
+                          </p>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 text-xs"
+                            onClick={() =>
+                              updateAddons((prev) =>
+                                prev.map((item, i) =>
+                                  i === addonIndex
+                                    ? {
+                                        ...item,
+                                        groups: [
+                                          ...item.groups,
+                                          createDefaultGroup(),
+                                        ],
+                                      }
+                                    : item,
+                                ),
+                              )
+                            }
+                          >
+                            <Plus className="mr-1 h-3 w-3" />
+                            Add rule
+                          </Button>
+                        </div>
+
+                        {addon.groups.length === 0 ? (
+                          <p className="py-3 text-center text-xs text-muted-foreground">
+                            No rules yet — add one to define when this add-on
+                            applies.
+                          </p>
+                        ) : addon.groups.length > 0 ? (
+                          <div className="space-y-2">
+                            {/* Column headers (desktop only) */}
+                            <div className="hidden grid-cols-[auto_1fr_1fr_1fr_36px] gap-2 px-1 md:grid">
+                              <span className="text-xs text-muted-foreground">
+                                Days
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                From
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                To
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {addon.pricingType === "HOURLY"
+                                  ? "Rate (₱/hr)"
+                                  : ""}
+                              </span>
+                              <span />
+                            </div>
+                            {addon.groups.map((group, groupIndex) => {
+                              const hasEmptyDays = group.days.length === 0;
+                              return (
+                                <div
+                                  key={`${group.startMinute}-${group.endMinute}-${group.hourlyRateCents ?? "flat"}`}
+                                  className="space-y-1"
+                                >
+                                  <div className="grid gap-2 rounded-lg border bg-card p-2 md:grid-cols-[auto_1fr_1fr_1fr_36px] md:rounded-none md:border-0 md:bg-transparent md:p-0">
+                                    <div className="flex flex-col gap-1">
+                                      <DayPills
+                                        selected={group.days}
+                                        onChange={(days) =>
+                                          updateGroup(groupIndex, { days })
+                                        }
+                                      />
+                                    </div>
+                                    <Input
+                                      type="time"
+                                      className="h-8 text-sm"
+                                      aria-label="Start time"
+                                      value={minuteToTime(group.startMinute)}
+                                      onChange={(e) =>
+                                        updateGroup(groupIndex, {
+                                          startMinute: timeToMinute(
+                                            e.target.value,
+                                          ),
+                                        })
+                                      }
+                                    />
+                                    <Input
+                                      type="time"
+                                      className="h-8 text-sm"
+                                      aria-label="End time"
+                                      value={minuteToTime(
+                                        Math.min(1439, group.endMinute - 1),
+                                      )}
+                                      onChange={(e) =>
+                                        updateGroup(groupIndex, {
+                                          endMinute: Math.max(
+                                            1,
+                                            Math.min(
+                                              1440,
+                                              timeToMinute(e.target.value) + 1,
+                                            ),
+                                          ),
+                                        })
+                                      }
+                                    />
+                                    {addon.pricingType === "HOURLY" ? (
+                                      <Input
+                                        type="number"
+                                        min={0}
+                                        step={0.01}
+                                        className="h-8 text-sm"
+                                        aria-label="Hourly rate (₱/hr)"
+                                        placeholder="0"
+                                        value={
+                                          group.hourlyRateCents != null
+                                            ? group.hourlyRateCents / 100
+                                            : 0
+                                        }
+                                        onChange={(e) => {
+                                          const value = Number(e.target.value);
+                                          updateGroup(groupIndex, {
+                                            hourlyRateCents: Number.isFinite(
+                                              value,
+                                            )
+                                              ? Math.round(value * 100)
+                                              : 0,
+                                          });
+                                        }}
+                                      />
+                                    ) : (
+                                      <div className="hidden items-center md:flex">
+                                        <span className="text-xs text-muted-foreground">
+                                          Flat fee
+                                        </span>
+                                      </div>
+                                    )}
+                                    <Button
+                                      type="button"
+                                      size="icon"
+                                      variant="ghost"
+                                      className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                                      onClick={() =>
+                                        updateAddons((prev) =>
+                                          prev.map((item, i) =>
+                                            i === addonIndex
+                                              ? {
+                                                  ...item,
+                                                  groups: item.groups.filter(
+                                                    (_, gi) =>
+                                                      gi !== groupIndex,
+                                                  ),
+                                                }
+                                              : item,
+                                          ),
+                                        )
+                                      }
+                                      aria-label="Remove rule"
+                                    >
+                                      <Trash2 className="h-3.5 w-3.5" />
+                                    </Button>
+                                  </div>
+                                  {hasEmptyDays && (
+                                    <p className="px-1 text-xs text-destructive">
+                                      Select at least one day
+                                    </p>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : null}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="flex justify-end pt-1">
+            <Button type="button" onClick={handleSave} disabled={isSaving}>
+              {isSaving ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving…
+                </>
+              ) : (
+                "Save add-ons"
+              )}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </>
   );
 }

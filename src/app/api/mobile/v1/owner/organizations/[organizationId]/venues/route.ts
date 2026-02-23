@@ -4,29 +4,26 @@ import {
   ListMyPlacesSchema,
 } from "@/lib/modules/place/dtos";
 import { makePlaceManagementService } from "@/lib/modules/place/factories/place.factory";
-import type { IPlaceManagementService } from "@/lib/modules/place/services/place-management.service";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { parseJson } from "@/lib/shared/infra/http/parse";
 import { getRequestId } from "@/lib/shared/infra/http/request-id";
 import { validate } from "@/lib/shared/infra/http/validate";
-import type {
-  ApiErrorResponse,
-  ApiResponse,
-} from "@/lib/shared/kernel/response";
+import type { ApiErrorResponse } from "@/lib/shared/kernel/response";
 import { wrapResponse } from "@/lib/shared/utils/response";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ organizationId: string }>;
-type ListMyPlacesMobileResponse = Awaited<
-  ReturnType<IPlaceManagementService["listMyPlaces"]>
->;
-type CreatePlaceMobileResponse = Awaited<
-  ReturnType<IPlaceManagementService["createPlace"]>
->;
+
+function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
+  place: T,
+): Omit<T, "country" | "timeZone"> {
+  const { country: _country, timeZone: _timeZone, ...rest } = place;
+  return rest;
+}
 
 const normalizeMobilePlaceInput = (
   raw: Record<string, unknown>,
@@ -46,10 +43,6 @@ const normalizeMobilePlaceInput = (
 
   if (normalized.province === undefined && normalized.state !== undefined) {
     normalized.province = normalized.state;
-  }
-
-  if (normalized.timeZone === undefined && normalized.timezone !== undefined) {
-    normalized.timeZone = normalized.timezone;
   }
 
   return normalized;
@@ -73,10 +66,9 @@ export async function GET(req: Request, context: { params: Params }) {
     const input = validate(ListMyPlacesSchema, { organizationId });
     const service = makePlaceManagementService();
     const places = await service.listMyPlaces(session.userId, input);
+    const redactedPlaces = places.map((place) => redactPlaceLocale(place));
 
-    return NextResponse.json<ApiResponse<ListMyPlacesMobileResponse>>(
-      wrapResponse(places),
-    );
+    return NextResponse.json(wrapResponse(redactedPlaces));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
@@ -109,10 +101,9 @@ export async function POST(req: Request, context: { params: Params }) {
 
     const service = makePlaceManagementService();
     const place = await service.createPlace(session.userId, input);
+    const redactedPlace = redactPlaceLocale(place);
 
-    return NextResponse.json<ApiResponse<CreatePlaceMobileResponse>>(
-      wrapResponse(place),
-    );
+    return NextResponse.json(wrapResponse(redactedPlace));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

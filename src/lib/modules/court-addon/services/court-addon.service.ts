@@ -1,9 +1,9 @@
+import { DEFAULT_CURRENCY } from "@/common/location-defaults";
 import {
   CourtNotFoundError,
   NotCourtOwnerError,
 } from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
-import type { ICourtRateRuleRepository } from "@/lib/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import type {
@@ -15,7 +15,6 @@ import type { RequestContext } from "@/lib/shared/kernel/context";
 import type { TransactionManager } from "@/lib/shared/kernel/transaction";
 import type { SetCourtAddonsDTO } from "../dtos";
 import {
-  CourtAddonCurrencyMismatchError,
   CourtAddonOverlapError,
   CourtAddonValidationError,
 } from "../errors/court-addon.errors";
@@ -37,7 +36,6 @@ export interface ICourtAddonService {
 export class CourtAddonService implements ICourtAddonService {
   constructor(
     private courtAddonRepository: ICourtAddonRepository,
-    private courtRateRuleRepository: ICourtRateRuleRepository,
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
     private organizationRepository: IOrganizationRepository,
@@ -67,7 +65,6 @@ export class CourtAddonService implements ICourtAddonService {
 
       await this.verifyCourtOwnership(userId, data.courtId, ctx);
       this.assertAddonPayloadValidity(data);
-      await this.assertCurrencyCompatibility(data, ctx);
 
       await this.courtAddonRepository.deleteByCourtId(data.courtId, ctx);
 
@@ -83,7 +80,8 @@ export class CourtAddonService implements ICourtAddonService {
             mode: addonInput.mode,
             pricingType: addonInput.pricingType,
             flatFeeCents: addonInput.flatFeeCents ?? null,
-            flatFeeCurrency: addonInput.flatFeeCurrency ?? null,
+            flatFeeCurrency:
+              addonInput.pricingType === "FLAT" ? DEFAULT_CURRENCY : null,
             displayOrder: addonInput.displayOrder ?? index,
           },
           ctx,
@@ -97,7 +95,8 @@ export class CourtAddonService implements ICourtAddonService {
               startMinute: rule.startMinute,
               endMinute: rule.endMinute,
               hourlyRateCents: rule.hourlyRateCents ?? null,
-              currency: rule.currency ?? null,
+              currency:
+                addonInput.pricingType === "HOURLY" ? DEFAULT_CURRENCY : null,
             })),
             ctx,
           );
@@ -164,9 +163,9 @@ export class CourtAddonService implements ICourtAddonService {
         }
 
         for (const rule of addon.rules) {
-          if (rule.hourlyRateCents === undefined || !rule.currency) {
+          if (rule.hourlyRateCents === undefined) {
             throw new CourtAddonValidationError(
-              "Hourly addon rules require hourlyRateCents and currency",
+              "Hourly addon rules require hourlyRateCents",
               {
                 courtId: data.courtId,
                 addonLabel: addon.label,
@@ -178,15 +177,15 @@ export class CourtAddonService implements ICourtAddonService {
       }
 
       if (addon.pricingType === "FLAT") {
-        if (addon.flatFeeCents === undefined || !addon.flatFeeCurrency) {
+        if (addon.flatFeeCents === undefined) {
           throw new CourtAddonValidationError(
-            "Flat addons require flatFeeCents and flatFeeCurrency",
+            "Flat addons require flatFeeCents",
             { courtId: data.courtId, addonLabel: addon.label },
           );
         }
 
         for (const rule of addon.rules) {
-          if (rule.hourlyRateCents !== undefined || rule.currency) {
+          if (rule.hourlyRateCents !== undefined) {
             throw new CourtAddonValidationError(
               "Flat addon rules cannot include hourly pricing fields",
               {
@@ -196,47 +195,6 @@ export class CourtAddonService implements ICourtAddonService {
               },
             );
           }
-        }
-      }
-    }
-  }
-
-  private async assertCurrencyCompatibility(
-    data: SetCourtAddonsDTO,
-    ctx?: RequestContext,
-  ): Promise<void> {
-    const baseRules = await this.courtRateRuleRepository.findByCourtId(
-      data.courtId,
-      ctx,
-    );
-
-    if (baseRules.length === 0) {
-      return;
-    }
-
-    const baseCurrencies = new Set(baseRules.map((rule) => rule.currency));
-    for (const addon of data.addons) {
-      const addonCurrencies = new Set<string>();
-
-      if (addon.pricingType === "FLAT" && addon.flatFeeCurrency) {
-        addonCurrencies.add(addon.flatFeeCurrency);
-      }
-
-      if (addon.pricingType === "HOURLY") {
-        for (const rule of addon.rules) {
-          if (rule.currency) {
-            addonCurrencies.add(rule.currency);
-          }
-        }
-      }
-
-      for (const currency of addonCurrencies) {
-        if (!baseCurrencies.has(currency)) {
-          throw new CourtAddonCurrencyMismatchError(
-            data.courtId,
-            addon.label,
-            currency,
-          );
         }
       }
     }

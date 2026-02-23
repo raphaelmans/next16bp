@@ -320,7 +320,7 @@ export default function OwnerPlacesPage() {
                         {place.address}
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        {place.city} · {place.timeZone}
+                        {place.city}
                       </p>
                     </div>
                     <div className="flex flex-col items-end gap-2">

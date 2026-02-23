@@ -26,11 +26,9 @@ export const CreateCuratedCourtSchema = z.object({
   address: S.place.address,
   city: S.place.city,
   province: S.place.province,
-  country: S.common.country.optional(),
   latitude: S.common.coordinateInput.latitude,
   longitude: S.common.coordinateInput.longitude,
   extGPlaceId: S.place.googlePlaceId,
-  timeZone: S.place.timeZone.optional(),
   // Curated detail fields
   facebookUrl: S.common.url().optional(),
   phoneNumber: S.place.phoneNumber,

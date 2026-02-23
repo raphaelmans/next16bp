@@ -18,6 +18,7 @@ import type { IOrganizationReservationPolicyRepository } from "@/lib/modules/org
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import type { IPlacePhotoRepository } from "@/lib/modules/place/repositories/place-photo.repository";
+import type { IPlaceAddonRepository } from "@/lib/modules/place-addon/repositories/place-addon.repository";
 import { PlaceNotBookableError } from "@/lib/modules/place-verification/errors/place-verification.errors";
 import type { IPlaceVerificationRepository } from "@/lib/modules/place-verification/repositories/place-verification.repository";
 import {
@@ -39,7 +40,11 @@ import type {
 import { logger } from "@/lib/shared/infra/logger";
 import type { RequestContext } from "@/lib/shared/kernel/context";
 import type { TransactionManager } from "@/lib/shared/kernel/transaction";
-import { computeSchedulePriceDetailed } from "@/lib/shared/lib/schedule-availability";
+import {
+  computeSchedulePriceDetailed,
+  type ScheduleAddon,
+} from "@/lib/shared/lib/schedule-availability";
+import { getInvalidSelectedAddonIds } from "@/lib/shared/lib/selected-addon-validation";
 import type {
   CancelReservationDTO,
   CreateReservationForAnyCourtDTO,
@@ -51,6 +56,7 @@ import type {
 } from "../dtos";
 import {
   BookingWindowExceededError,
+  InvalidReservationAddonSelectionError,
   InvalidReservationStatusError,
   NoAvailabilityError,
   NotReservationOwnerError,
@@ -184,11 +190,50 @@ export class ReservationService implements IReservationService {
     private courtHoursRepository: ICourtHoursRepository,
     private courtRateRuleRepository: ICourtRateRuleRepository,
     private courtAddonRepository: ICourtAddonRepository,
+    private placeAddonRepository: IPlaceAddonRepository,
     private courtBlockRepository: ICourtBlockRepository,
     private courtPriceOverrideRepository: ICourtPriceOverrideRepository,
     private transactionManager: TransactionManager,
     private notificationDeliveryService: NotificationDeliveryService,
   ) {}
+
+  private async fetchVenueAddons(
+    placeId: string,
+    ctx?: RequestContext,
+  ): Promise<ScheduleAddon[]> {
+    const addons = await this.placeAddonRepository.findActiveByPlaceId(
+      placeId,
+      ctx,
+    );
+    if (addons.length === 0) return [];
+    const rules = await this.placeAddonRepository.findRateRulesByAddonIds(
+      addons.map((a) => a.id),
+      ctx,
+    );
+    return addons.map((addon) => ({
+      addon,
+      rules: rules.filter((r) => r.addonId === addon.id),
+    }));
+  }
+
+  private getInvalidSelectedAddonIdsForCourt(options: {
+    selectedAddons?: { addonId: string; quantity: number }[];
+    courtAddonIds: string[];
+    venueAddons?: ScheduleAddon[];
+  }): string[] {
+    const { selectedAddons, courtAddonIds, venueAddons } = options;
+    const allowedAddonIds = new Set<string>(courtAddonIds);
+    for (const config of venueAddons ?? []) {
+      if (config.addon.isActive) {
+        allowedAddonIds.add(config.addon.id);
+      }
+    }
+
+    return getInvalidSelectedAddonIds({
+      selectedAddons,
+      allowedAddonIds,
+    });
+  }
 
   private requireCourtPlaceId(placeId: string | null): string {
     if (!placeId) {
@@ -277,6 +322,7 @@ export class ReservationService implements IReservationService {
 
   private async computeCourtPricing(options: {
     courtId: string;
+    placeId?: string;
     startTime: Date;
     durationMinutes: number;
     timeZone: string;
@@ -290,6 +336,7 @@ export class ReservationService implements IReservationService {
   } | null> {
     const {
       courtId,
+      placeId,
       startTime,
       durationMinutes,
       timeZone,
@@ -312,10 +359,26 @@ export class ReservationService implements IReservationService {
       ],
     );
 
-    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
-      addons.map((addon) => addon.id),
-      ctx,
-    );
+    const [addonRules, venueAddons] = await Promise.all([
+      this.courtAddonRepository.findRateRulesByAddonIds(
+        addons.map((addon) => addon.id),
+        ctx,
+      ),
+      placeId ? this.fetchVenueAddons(placeId, ctx) : Promise.resolve([]),
+    ]);
+
+    const invalidAddonIds = this.getInvalidSelectedAddonIdsForCourt({
+      selectedAddons,
+      courtAddonIds: addons.map((addon) => addon.id),
+      venueAddons,
+    });
+    if (invalidAddonIds.length > 0) {
+      throw new InvalidReservationAddonSelectionError({
+        courtId,
+        placeId,
+        invalidAddonIds,
+      });
+    }
 
     const computed = computeSchedulePriceDetailed({
       startTime,
@@ -328,6 +391,7 @@ export class ReservationService implements IReservationService {
         addon,
         rules: addonRules.filter((rule) => rule.addonId === addon.id),
       })),
+      venueAddons,
       selectedAddons,
       enableAddonPricing: env.ENABLE_ADDON_PRICING_V2 !== false,
     });
@@ -506,6 +570,7 @@ export class ReservationService implements IReservationService {
 
     const pricing = await this.computeCourtPricing({
       courtId: court.id,
+      placeId: place.id,
       startTime,
       durationMinutes: data.durationMinutes,
       timeZone: place.timeZone,
@@ -716,14 +781,20 @@ export class ReservationService implements IReservationService {
         this.courtAddonRepository.findActiveByCourtIds(courtIds),
       ]);
 
-    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
-      addons.map((addon) => addon.id),
-    );
+    const [addonRules, venueAddons] = await Promise.all([
+      this.courtAddonRepository.findRateRulesByAddonIds(
+        addons.map((addon) => addon.id),
+      ),
+      this.fetchVenueAddons(place.id),
+    ]);
 
     const hasBlockingReservation = new Set(
       reservations.map((reservation) => reservation.courtId),
     );
     const hasBlockingBlock = new Set(blocks.map((block) => block.courtId));
+    const hasSelectedAddons = (data.selectedAddons?.length ?? 0) > 0;
+    const invalidSelectedAddonIds = new Set<string>();
+    let hasAddonCompatibleCourt = !hasSelectedAddons;
 
     let selected: CourtAvailabilitySelection | null = null;
 
@@ -746,6 +817,19 @@ export class ReservationService implements IReservationService {
           rules: addonRules.filter((rule) => rule.addonId === addon.id),
         }));
 
+      const invalidAddonIds = this.getInvalidSelectedAddonIdsForCourt({
+        selectedAddons: data.selectedAddons,
+        courtAddonIds: courtAddons.map((config) => config.addon.id),
+        venueAddons,
+      });
+      if (invalidAddonIds.length > 0) {
+        for (const addonId of invalidAddonIds) {
+          invalidSelectedAddonIds.add(addonId);
+        }
+        continue;
+      }
+      hasAddonCompatibleCourt = true;
+
       const pricingDetailed = computeSchedulePriceDetailed({
         startTime,
         durationMinutes: data.durationMinutes,
@@ -754,6 +838,7 @@ export class ReservationService implements IReservationService {
         rateRules: courtRules,
         priceOverrides: courtOverrides,
         addons: courtAddons,
+        venueAddons,
         selectedAddons: data.selectedAddons,
         enableAddonPricing: env.ENABLE_ADDON_PRICING_V2 !== false,
       });
@@ -790,6 +875,13 @@ export class ReservationService implements IReservationService {
     }
 
     if (!selected) {
+      if (!hasAddonCompatibleCourt && invalidSelectedAddonIds.size > 0) {
+        throw new InvalidReservationAddonSelectionError({
+          placeId: data.placeId,
+          sportId: data.sportId,
+          invalidAddonIds: Array.from(invalidSelectedAddonIds),
+        });
+      }
       throw new NoAvailabilityError({
         placeId: data.placeId,
         sportId: data.sportId,

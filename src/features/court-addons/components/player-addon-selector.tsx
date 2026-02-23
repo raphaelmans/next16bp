@@ -1,6 +1,7 @@
 "use client";
 
 import { Minus, Plus } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -15,12 +16,14 @@ type PlayerAddonSelectorProps = {
   addons: CourtAddonConfig[];
   selectedAddons: SelectedAddon[];
   onSelectedAddonsChange: (next: SelectedAddon[]) => void;
+  globalAddonIds?: Set<string>;
 };
 
 export function PlayerAddonSelector({
   addons,
   selectedAddons,
   onSelectedAddonsChange,
+  globalAddonIds,
 }: PlayerAddonSelectorProps) {
   const optionalAddons = getOptionalAddonConfigs(addons);
 
@@ -80,6 +83,14 @@ export function PlayerAddonSelector({
               >
                 <span className="block text-sm font-medium">
                   {config.addon.label}
+                  {globalAddonIds?.has(config.addon.id) && (
+                    <Badge
+                      variant="outline"
+                      className="ml-1.5 text-[10px] px-1.5 py-0"
+                    >
+                      Venue-wide
+                    </Badge>
+                  )}
                 </span>
                 <span className="block text-xs text-muted-foreground">
                   {formatAddonPricingHint(config)}

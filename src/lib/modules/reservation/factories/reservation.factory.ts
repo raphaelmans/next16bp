@@ -19,6 +19,7 @@ import {
   makePlacePhotoRepository,
   makePlaceRepository,
 } from "@/lib/modules/place/factories/place.factory";
+import { makePlaceAddonRepository } from "@/lib/modules/place-addon/factories/place-addon.factory";
 import { makePlaceVerificationRepository } from "@/lib/modules/place-verification/factories/place-verification.factory";
 import { makeProfileRepository } from "@/lib/modules/profile/factories/profile.factory";
 import { makeObjectStorageService } from "@/lib/modules/storage/factories/storage.factory";
@@ -80,6 +81,7 @@ export function makeReservationService(): ReservationService {
       makeCourtHoursRepository(),
       makeCourtRateRuleRepository(),
       makeCourtAddonRepository(),
+      makePlaceAddonRepository(),
       makeCourtBlockRepository(),
       makeCourtPriceOverrideRepository(),
       getContainer().transactionManager,

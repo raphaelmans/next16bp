@@ -22,6 +22,7 @@ import {
   formatInTimeZone,
   formatTimeRangeInTimeZone,
 } from "@/common/format";
+import { DEFAULT_TIME_ZONE } from "@/common/location-defaults";
 import {
   getReservationEnablement,
   type ReservationEnablementIssueCode,
@@ -176,7 +177,7 @@ function OwnerCourtAvailabilityInner({
     { enabled: !!courtId },
   );
 
-  const placeTimeZone = placeData?.place.timeZone ?? "Asia/Manila";
+  const placeTimeZone = placeData?.place.timeZone ?? DEFAULT_TIME_ZONE;
   const is2xlUp = useIs2xlUp();
   const {
     dayKey,

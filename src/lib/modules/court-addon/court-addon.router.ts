@@ -6,11 +6,42 @@ import {
 } from "../court/errors/court.errors";
 import { GetCourtAddonsSchema, SetCourtAddonsSchema } from "./dtos";
 import {
-  CourtAddonCurrencyMismatchError,
   CourtAddonOverlapError,
   CourtAddonValidationError,
 } from "./errors/court-addon.errors";
 import { makeCourtAddonService } from "./factories/court-addon.factory";
+
+function redactAddonLocale<T extends { flatFeeCurrency?: string | null }>(
+  addon: T,
+): Omit<T, "flatFeeCurrency"> {
+  const { flatFeeCurrency: _flatFeeCurrency, ...rest } = addon;
+  return rest;
+}
+
+function redactRuleCurrency<T extends { currency?: string | null }>(
+  rule: T,
+): Omit<T, "currency"> {
+  const { currency: _currency, ...rest } = rule;
+  return rest;
+}
+
+function redactCourtAddonLocale<
+  T extends {
+    addon: { flatFeeCurrency?: string | null };
+    rules: { currency?: string | null }[];
+  },
+>(
+  config: T,
+): Omit<T, "addon" | "rules"> & {
+  addon: Omit<T["addon"], "flatFeeCurrency">;
+  rules: Array<Omit<T["rules"][number], "currency">>;
+} {
+  return {
+    ...config,
+    addon: redactAddonLocale(config.addon),
+    rules: config.rules.map((rule) => redactRuleCurrency(rule)),
+  };
+}
 
 function handleCourtAddonError(error: unknown): never {
   if (error instanceof CourtNotFoundError) {
@@ -37,10 +68,7 @@ function handleCourtAddonError(error: unknown): never {
     });
   }
 
-  if (
-    error instanceof CourtAddonValidationError ||
-    error instanceof CourtAddonCurrencyMismatchError
-  ) {
+  if (error instanceof CourtAddonValidationError) {
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: error.message,
@@ -56,14 +84,16 @@ export const courtAddonRouter = router({
     .input(GetCourtAddonsSchema)
     .query(async ({ input }) => {
       const service = makeCourtAddonService();
-      return service.getByCourt(input.courtId);
+      const configs = await service.getByCourt(input.courtId);
+      return configs.map((config) => redactCourtAddonLocale(config));
     }),
   set: protectedProcedure
     .input(SetCourtAddonsSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makeCourtAddonService();
-        return await service.setForCourt(ctx.userId, input);
+        const configs = await service.setForCourt(ctx.userId, input);
+        return configs.map((config) => redactCourtAddonLocale(config));
       } catch (error) {
         handleCourtAddonError(error);
       }

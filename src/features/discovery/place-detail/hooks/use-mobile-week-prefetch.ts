@@ -37,7 +37,6 @@ type UseMobileWeekPrefetchOptions = {
   selectionMode: "any" | "court";
   selectedSportId?: string;
   selectedCourtId?: string;
-  selectedAddons: { addonId: string; quantity: number }[];
   weekStartDayKey: string;
   weekDayKeys: string[];
   durationMinutes: number;
@@ -56,7 +55,6 @@ export function useModMobileWeekPrefetch({
   selectionMode,
   selectedSportId,
   selectedCourtId,
-  selectedAddons,
   weekStartDayKey,
   weekDayKeys,
   durationMinutes,
@@ -82,13 +80,10 @@ export function useModMobileWeekPrefetch({
       return;
     }
 
-    const addonCacheKey = selectedAddons
-      .map((a) => `${a.addonId}:${a.quantity}`)
-      .join(",");
     const weekCacheKey =
       selectionMode === "any"
         ? `any:${placeId}:${selectedSportId ?? ""}:${weekStartDayKey}`
-        : `court:${selectedCourtId ?? ""}:${weekStartDayKey}:${addonCacheKey}`;
+        : `court:${selectedCourtId ?? ""}:${weekStartDayKey}`;
 
     if (hasPrefetchedMobileWeek(weekCacheKey)) {
       return;
@@ -127,7 +122,6 @@ export function useModMobileWeekPrefetch({
           date: dayStartIso,
           durationMinutes,
           includeUnavailable: true,
-          selectedAddons,
         };
 
         if (utils.availability.getForCourt.getData(input)) {
@@ -154,7 +148,6 @@ export function useModMobileWeekPrefetch({
     placeId,
     placeTimeZone,
     selectedCourtId,
-    selectedAddons,
     selectedSportId,
     selectionMode,
     showBooking,

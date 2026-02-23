@@ -8,7 +8,6 @@ import {
   StandardFormField,
   StandardFormInput,
   StandardFormProvider,
-  StandardFormSelect,
 } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,8 +52,6 @@ export function PlaceForm({
     handlePreview,
     provinceOptions,
     cityOptions,
-    countryOptions,
-    timeZoneOptions,
     provincePlaceholder,
     cityPlaceholder,
     isProvinceDisabled,
@@ -125,23 +122,6 @@ export function PlaceForm({
               disabled={isCityDisabled}
             />
           </div>
-
-          <StandardFormSelect<PlaceFormValues>
-            name="country"
-            label="Country"
-            options={countryOptions}
-            placeholder="Philippines (PH)"
-            required
-            disabled
-          />
-
-          <StandardFormSelect<PlaceFormValues>
-            name="timeZone"
-            label="Time Zone"
-            options={timeZoneOptions}
-            placeholder="Select a time zone"
-            required
-          />
 
           {isEditing && (
             <StandardFormCheckbox<PlaceFormValues>

@@ -1,20 +1,22 @@
 import { describe, expect, it, vi } from "vitest";
+import { DEFAULT_CURRENCY } from "@/common/location-defaults";
+import {
+  CourtNotFoundError,
+  NotCourtOwnerError,
+} from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
 import type { SetCourtAddonsDTO } from "@/lib/modules/court-addon/dtos";
 import {
-  CourtAddonCurrencyMismatchError,
   CourtAddonOverlapError,
   CourtAddonValidationError,
 } from "@/lib/modules/court-addon/errors/court-addon.errors";
 import type { ICourtAddonRepository } from "@/lib/modules/court-addon/repositories/court-addon.repository";
 import { CourtAddonService } from "@/lib/modules/court-addon/services/court-addon.service";
-import type { ICourtRateRuleRepository } from "@/lib/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import type {
   CourtAddonRateRuleRecord,
   CourtAddonRecord,
-  CourtRateRuleRecord,
 } from "@/lib/shared/infra/db/schema";
 import type { TransactionManager } from "@/lib/shared/kernel/transaction";
 
@@ -39,7 +41,6 @@ const createHourlyAddon = (
       startMinute: 540,
       endMinute: 600,
       hourlyRateCents: 200,
-      currency: "PHP",
     },
   ],
   ...overrides,
@@ -53,14 +54,7 @@ const createFlatAddon = (
   mode: "AUTO",
   pricingType: "FLAT",
   flatFeeCents: 500,
-  flatFeeCurrency: "PHP",
-  rules: rules ?? [
-    {
-      dayOfWeek: 1,
-      startMinute: 540,
-      endMinute: 600,
-    },
-  ],
+  rules: rules ?? [],
   ...overrides,
 });
 
@@ -68,22 +62,6 @@ const createPayload = (addons: AddonInput[]): SetCourtAddonsDTO => ({
   courtId: COURT_ID,
   addons,
 });
-
-const createRateRuleRecord = (
-  overrides?: Partial<CourtRateRuleRecord>,
-): CourtRateRuleRecord =>
-  ({
-    id: "55555555-5555-5555-5555-555555555555",
-    courtId: COURT_ID,
-    dayOfWeek: 1,
-    startMinute: 540,
-    endMinute: 660,
-    hourlyRateCents: 1000,
-    currency: "PHP",
-    createdAt: now,
-    updatedAt: now,
-    ...overrides,
-  }) as CourtRateRuleRecord;
 
 const createCourtAddonRecord = (
   id: string,
@@ -133,12 +111,18 @@ const createCourtAddonRateRuleRecord = (
   updatedAt: now,
 });
 
-const createHarness = (
-  baseRules: CourtRateRuleRecord[] = [createRateRuleRecord()],
-) => {
-  const txMarker = { id: "tx-unit-test" };
+const createHarness = (options?: {
+  courtExists?: boolean;
+  ownerUserId?: string;
+  placeHasOrganization?: boolean;
+}) => {
+  const txMarker = { id: "tx-court-addon-test" };
   let addonCount = 0;
   let ruleCount = 0;
+
+  const courtExists = options?.courtExists ?? true;
+  const ownerUserId = options?.ownerUserId ?? OWNER_USER_ID;
+  const placeHasOrganization = options?.placeHasOrganization ?? true;
 
   const courtAddonRepositoryFns = {
     findByCourtId: vi.fn(async () => []),
@@ -175,19 +159,20 @@ const createHarness = (
   };
 
   const courtRepositoryFns = {
-    findById: vi.fn(async () => ({ id: COURT_ID, placeId: PLACE_ID })),
+    findById: vi.fn(async () =>
+      courtExists ? { id: COURT_ID, placeId: PLACE_ID } : null,
+    ),
   };
 
   const placeRepositoryFns = {
-    findById: vi.fn(async () => ({ id: PLACE_ID, organizationId: ORG_ID })),
+    findById: vi.fn(async () => ({
+      id: PLACE_ID,
+      organizationId: placeHasOrganization ? ORG_ID : null,
+    })),
   };
 
   const organizationRepositoryFns = {
-    findById: vi.fn(async () => ({ id: ORG_ID, ownerUserId: OWNER_USER_ID })),
-  };
-
-  const courtRateRuleRepositoryFns = {
-    findByCourtId: vi.fn(async () => baseRules),
+    findById: vi.fn(async () => ({ id: ORG_ID, ownerUserId })),
   };
 
   const run = vi.fn(async (fn: (tx: unknown) => Promise<unknown>) =>
@@ -196,7 +181,6 @@ const createHarness = (
 
   const service = new CourtAddonService(
     courtAddonRepositoryFns as unknown as ICourtAddonRepository,
-    courtRateRuleRepositoryFns as unknown as ICourtRateRuleRepository,
     courtRepositoryFns as unknown as ICourtRepository,
     placeRepositoryFns as unknown as IPlaceRepository,
     organizationRepositoryFns as unknown as IOrganizationRepository,
@@ -208,7 +192,6 @@ const createHarness = (
     txMarker,
     run,
     courtAddonRepositoryFns,
-    courtRateRuleRepositoryFns,
     courtRepositoryFns,
     placeRepositoryFns,
     organizationRepositoryFns,
@@ -218,14 +201,14 @@ const createHarness = (
 describe("CourtAddonService", () => {
   describe("setForCourt", () => {
     it("valid payload -> persists addons using shared transaction context", async () => {
-      // Arrange
       const harness = createHarness();
-      const payload = createPayload([createHourlyAddon()]);
+      const payload = createPayload([
+        createHourlyAddon(),
+        createFlatAddon({ mode: "OPTIONAL" }),
+      ]);
 
-      // Act
       const result = await harness.service.setForCourt(OWNER_USER_ID, payload);
 
-      // Assert
       expect(harness.run).toHaveBeenCalledTimes(1);
       expect(harness.courtRepositoryFns.findById).toHaveBeenCalledWith(
         COURT_ID,
@@ -240,18 +223,10 @@ describe("CourtAddonService", () => {
         { tx: harness.txMarker },
       );
       expect(
-        harness.courtRateRuleRepositoryFns.findByCourtId,
-      ).toHaveBeenCalledWith(COURT_ID, { tx: harness.txMarker });
-      expect(
         harness.courtAddonRepositoryFns.deleteByCourtId,
       ).toHaveBeenCalledWith(COURT_ID, { tx: harness.txMarker });
-      expect(harness.courtAddonRepositoryFns.createOne).toHaveBeenCalledWith(
-        expect.objectContaining({
-          courtId: COURT_ID,
-          label: "Lights",
-          pricingType: "HOURLY",
-        }),
-        { tx: harness.txMarker },
+      expect(harness.courtAddonRepositoryFns.createOne).toHaveBeenCalledTimes(
+        2,
       );
       expect(
         harness.courtAddonRepositoryFns.createManyRateRules,
@@ -262,44 +237,54 @@ describe("CourtAddonService", () => {
             startMinute: 540,
             endMinute: 600,
             hourlyRateCents: 200,
-            currency: "PHP",
+            currency: DEFAULT_CURRENCY,
           }),
         ]),
         { tx: harness.txMarker },
       );
-      expect(result).toHaveLength(1);
-      expect(result[0]?.rules).toHaveLength(1);
+      expect(result).toHaveLength(2);
+      expect(result[1]?.addon.flatFeeCurrency).toBe(DEFAULT_CURRENCY);
     });
 
     it("HOURLY addon without rules -> throws validation error", async () => {
-      // Arrange
       const harness = createHarness();
       const payload = createPayload([createHourlyAddon({}, [])]);
 
-      // Act / Assert
       await expect(
         harness.service.setForCourt(OWNER_USER_ID, payload),
       ).rejects.toBeInstanceOf(CourtAddonValidationError);
     });
 
     it("FLAT addon missing fee fields -> throws validation error", async () => {
-      // Arrange
       const harness = createHarness();
       const payload = createPayload([
-        createFlatAddon({
-          flatFeeCents: undefined,
-          flatFeeCurrency: undefined,
-        }),
+        createFlatAddon({ flatFeeCents: undefined }),
       ]);
 
-      // Act / Assert
+      await expect(
+        harness.service.setForCourt(OWNER_USER_ID, payload),
+      ).rejects.toBeInstanceOf(CourtAddonValidationError);
+    });
+
+    it("FLAT addon rule with hourly pricing fields -> throws validation error", async () => {
+      const harness = createHarness();
+      const payload = createPayload([
+        createFlatAddon({}, [
+          {
+            dayOfWeek: 1,
+            startMinute: 540,
+            endMinute: 600,
+            hourlyRateCents: 100,
+          },
+        ]),
+      ]);
+
       await expect(
         harness.service.setForCourt(OWNER_USER_ID, payload),
       ).rejects.toBeInstanceOf(CourtAddonValidationError);
     });
 
     it("overlapping addon rules on same day -> throws overlap error", async () => {
-      // Arrange
       const harness = createHarness();
       const payload = createPayload([
         createHourlyAddon({}, [
@@ -308,45 +293,37 @@ describe("CourtAddonService", () => {
             startMinute: 540,
             endMinute: 600,
             hourlyRateCents: 200,
-            currency: "PHP",
           },
           {
             dayOfWeek: 1,
             startMinute: 570,
             endMinute: 630,
             hourlyRateCents: 200,
-            currency: "PHP",
           },
         ]),
       ]);
 
-      // Act / Assert
       await expect(
         harness.service.setForCourt(OWNER_USER_ID, payload),
       ).rejects.toBeInstanceOf(CourtAddonOverlapError);
     });
 
-    it("addon currency that differs from base rules -> throws currency mismatch", async () => {
-      // Arrange
-      const harness = createHarness([
-        createRateRuleRecord({ currency: "PHP" }),
-      ]);
-      const payload = createPayload([
-        createHourlyAddon({}, [
-          {
-            dayOfWeek: 1,
-            startMinute: 540,
-            endMinute: 600,
-            hourlyRateCents: 200,
-            currency: "USD",
-          },
-        ]),
-      ]);
+    it("non-owner user -> throws NotCourtOwnerError", async () => {
+      const harness = createHarness({ ownerUserId: "someone-else" });
+      const payload = createPayload([createHourlyAddon()]);
 
-      // Act / Assert
       await expect(
         harness.service.setForCourt(OWNER_USER_ID, payload),
-      ).rejects.toBeInstanceOf(CourtAddonCurrencyMismatchError);
+      ).rejects.toBeInstanceOf(NotCourtOwnerError);
+    });
+
+    it("missing court -> throws CourtNotFoundError", async () => {
+      const harness = createHarness({ courtExists: false });
+      const payload = createPayload([createHourlyAddon()]);
+
+      await expect(
+        harness.service.setForCourt(OWNER_USER_ID, payload),
+      ).rejects.toBeInstanceOf(CourtNotFoundError);
     });
   });
 });

@@ -46,11 +46,9 @@ export interface AdminCourtDetail {
     address: string;
     city: string;
     province: string;
-    country: string;
     latitude: string | null;
     longitude: string | null;
     extGPlaceId: string | null;
-    timeZone: string;
     placeType: "CURATED" | "RESERVABLE";
     claimStatus:
       | "UNCLAIMED"
@@ -360,7 +358,6 @@ export interface CuratedCourtData {
   latitude?: string | number;
   longitude?: string | number;
   extGPlaceId?: string;
-  timeZone?: string;
   facebookUrl?: string;
   instagramUrl?: string;
   phoneNumber?: string;

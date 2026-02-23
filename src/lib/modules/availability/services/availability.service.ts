@@ -1,3 +1,4 @@
+import type { PricingBreakdown } from "@/common/pricing-breakdown";
 import {
   getZonedDate,
   getZonedDayRangeForInstant,
@@ -13,6 +14,7 @@ import type { ICourtPriceOverrideRepository } from "@/lib/modules/court-price-ov
 import type { ICourtRateRuleRepository } from "@/lib/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
+import type { IPlaceAddonRepository } from "@/lib/modules/place-addon/repositories/place-addon.repository";
 import type { IPlaceVerificationRepository } from "@/lib/modules/place-verification/repositories/place-verification.repository";
 import type { IReservationRepository } from "@/lib/modules/reservation/repositories/reservation.repository";
 import type {
@@ -30,7 +32,9 @@ import { logger } from "@/lib/shared/infra/logger";
 import {
   computeSchedulePriceDetailed,
   rangesOverlap,
+  type ScheduleAddon,
 } from "@/lib/shared/lib/schedule-availability";
+import { getInvalidSelectedAddonIds } from "@/lib/shared/lib/selected-addon-validation";
 import type {
   GetAvailabilityForCourtDTO,
   GetAvailabilityForCourtRangeDTO,
@@ -38,6 +42,7 @@ import type {
   GetAvailabilityForPlaceSportDTO,
   GetAvailabilityForPlaceSportRangeDTO,
 } from "../dtos";
+import { InvalidAvailabilityAddonSelectionError } from "../errors/availability.errors";
 
 export interface AvailabilityOption {
   startTime: string;
@@ -48,6 +53,8 @@ export interface AvailabilityOption {
   courtLabel: string;
   status: "AVAILABLE" | "BOOKED";
   unavailableReason?: "RESERVATION" | "MAINTENANCE" | "WALK_IN" | null;
+  pricingWarnings?: string[];
+  pricingBreakdown?: PricingBreakdown;
   courtOptions?: AvailabilityCourtOption[];
 }
 
@@ -58,6 +65,8 @@ export interface AvailabilityCourtOption {
   totalPriceCents: number;
   currency: string | null;
   unavailableReason?: "RESERVATION" | "MAINTENANCE" | "WALK_IN" | null;
+  pricingWarnings?: string[];
+  pricingBreakdown?: PricingBreakdown;
 }
 
 export interface AvailabilityDiagnostics {
@@ -97,6 +106,7 @@ export class AvailabilityService implements IAvailabilityService {
     private courtHoursRepository: ICourtHoursRepository,
     private courtRateRuleRepository: ICourtRateRuleRepository,
     private courtAddonRepository: ICourtAddonRepository,
+    private placeAddonRepository: IPlaceAddonRepository,
     private reservationRepository: IReservationRepository,
     private courtBlockRepository: ICourtBlockRepository,
     private courtPriceOverrideRepository: ICourtPriceOverrideRepository,
@@ -173,9 +183,25 @@ export class AvailabilityService implements IAvailabilityService {
         this.courtAddonRepository.findActiveByCourtIds(courtIds),
       ]);
 
-    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
-      addons.map((addon) => addon.id),
-    );
+    const [addonRules, venueAddons] = await Promise.all([
+      this.courtAddonRepository.findRateRulesByAddonIds(
+        addons.map((addon) => addon.id),
+      ),
+      this.fetchVenueAddons(place.id),
+    ]);
+
+    const invalidAddonIds = this.getInvalidSelectedAddonIdsForCourt({
+      selectedAddons: data.selectedAddons,
+      courtAddons: addons,
+      venueAddons,
+    });
+    if (invalidAddonIds.length > 0) {
+      throw new InvalidAvailabilityAddonSelectionError({
+        courtId: court.id,
+        placeId: place.id,
+        invalidAddonIds,
+      });
+    }
 
     return this.buildAvailabilityForCourtRange({
       court,
@@ -187,6 +213,7 @@ export class AvailabilityService implements IAvailabilityService {
       rules,
       addons,
       addonRules,
+      venueAddons,
       reservations,
       blocks,
       overrides,
@@ -277,6 +304,9 @@ export class AvailabilityService implements IAvailabilityService {
       reservationsDisabled: false,
     };
     let hasAnySlots = false;
+    const hasSelectedAddons = (data.selectedAddons?.length ?? 0) > 0;
+    const invalidSelectedAddonIds = new Set<string>();
+    let hasAddonCompatibleCourt = !hasSelectedAddons;
 
     for (const [placeId, placeCourts] of courtsByPlace.entries()) {
       const place = placeById.get(placeId);
@@ -288,7 +318,7 @@ export class AvailabilityService implements IAvailabilityService {
       );
       const placeCourtIds = placeCourts.map((court) => court.id);
 
-      const [reservations, blocks, overrides] = await Promise.all([
+      const [reservations, blocks, overrides, venueAddons] = await Promise.all([
         this.reservationRepository.findOverlappingActiveByCourtIds(
           placeCourtIds,
           start,
@@ -304,9 +334,26 @@ export class AvailabilityService implements IAvailabilityService {
           start,
           end,
         ),
+        this.fetchVenueAddons(placeId),
       ]);
 
       for (const court of placeCourts) {
+        const courtAddons = addons.filter(
+          (addon) => addon.courtId === court.id,
+        );
+        const invalidAddonIds = this.getInvalidSelectedAddonIdsForCourt({
+          selectedAddons: data.selectedAddons,
+          courtAddons,
+          venueAddons,
+        });
+        if (invalidAddonIds.length > 0) {
+          for (const addonId of invalidAddonIds) {
+            invalidSelectedAddonIds.add(addonId);
+          }
+          continue;
+        }
+        hasAddonCompatibleCourt = true;
+
         const result = this.buildAvailabilityForCourtRange({
           court,
           rangeStart: start,
@@ -317,6 +364,7 @@ export class AvailabilityService implements IAvailabilityService {
           rules,
           addons,
           addonRules,
+          venueAddons,
           reservations,
           blocks,
           overrides,
@@ -335,6 +383,12 @@ export class AvailabilityService implements IAvailabilityService {
             result.diagnostics.allSlotsBooked;
         }
       }
+    }
+
+    if (!hasAddonCompatibleCourt && invalidSelectedAddonIds.size > 0) {
+      throw new InvalidAvailabilityAddonSelectionError({
+        invalidAddonIds: Array.from(invalidSelectedAddonIds),
+      });
     }
 
     if (!hasAnySlots) {
@@ -415,9 +469,12 @@ export class AvailabilityService implements IAvailabilityService {
         this.courtAddonRepository.findActiveByCourtIds(courtIds),
       ]);
 
-    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
-      addons.map((addon) => addon.id),
-    );
+    const [addonRules, venueAddons] = await Promise.all([
+      this.courtAddonRepository.findRateRulesByAddonIds(
+        addons.map((addon) => addon.id),
+      ),
+      this.fetchVenueAddons(place.id),
+    ]);
 
     const optionsByStart = new Map<number, AvailabilityOption>();
     const courtOptionsByStart = new Map<number, AvailabilityCourtOption[]>();
@@ -432,8 +489,25 @@ export class AvailabilityService implements IAvailabilityService {
       reservationsDisabled: false,
     };
     let hasAnySlots = false;
+    const hasSelectedAddons = (data.selectedAddons?.length ?? 0) > 0;
+    const invalidSelectedAddonIds = new Set<string>();
+    let hasAddonCompatibleCourt = !hasSelectedAddons;
 
     for (const court of activeCourts) {
+      const courtAddons = addons.filter((addon) => addon.courtId === court.id);
+      const invalidAddonIds = this.getInvalidSelectedAddonIdsForCourt({
+        selectedAddons: data.selectedAddons,
+        courtAddons,
+        venueAddons,
+      });
+      if (invalidAddonIds.length > 0) {
+        for (const addonId of invalidAddonIds) {
+          invalidSelectedAddonIds.add(addonId);
+        }
+        continue;
+      }
+      hasAddonCompatibleCourt = true;
+
       const result = this.buildAvailabilityForCourtRange({
         court,
         rangeStart: start,
@@ -444,6 +518,7 @@ export class AvailabilityService implements IAvailabilityService {
         rules,
         addons,
         addonRules,
+        venueAddons,
         reservations,
         blocks,
         overrides,
@@ -472,6 +547,8 @@ export class AvailabilityService implements IAvailabilityService {
             totalPriceCents: option.totalPriceCents,
             currency: option.currency,
             unavailableReason: option.unavailableReason ?? null,
+            pricingWarnings: option.pricingWarnings ?? [],
+            pricingBreakdown: option.pricingBreakdown,
           });
           courtOptionsByStart.set(startMs, entry);
         }
@@ -484,6 +561,14 @@ export class AvailabilityService implements IAvailabilityService {
         const preferred = this.pickCheapestOption(existing, option);
         optionsByStart.set(startMs, preferred);
       }
+    }
+
+    if (!hasAddonCompatibleCourt && invalidSelectedAddonIds.size > 0) {
+      throw new InvalidAvailabilityAddonSelectionError({
+        placeId: place.id,
+        sportId: data.sportId,
+        invalidAddonIds: Array.from(invalidSelectedAddonIds),
+      });
     }
 
     if (!hasAnySlots) {
@@ -571,9 +656,25 @@ export class AvailabilityService implements IAvailabilityService {
         this.courtAddonRepository.findActiveByCourtIds(courtIds),
       ]);
 
-    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
-      addons.map((addon) => addon.id),
-    );
+    const [addonRules, venueAddons] = await Promise.all([
+      this.courtAddonRepository.findRateRulesByAddonIds(
+        addons.map((addon) => addon.id),
+      ),
+      this.fetchVenueAddons(place.id),
+    ]);
+
+    const invalidAddonIds = this.getInvalidSelectedAddonIdsForCourt({
+      selectedAddons: data.selectedAddons,
+      courtAddons: addons,
+      venueAddons,
+    });
+    if (invalidAddonIds.length > 0) {
+      throw new InvalidAvailabilityAddonSelectionError({
+        courtId: court.id,
+        placeId: place.id,
+        invalidAddonIds,
+      });
+    }
 
     return this.buildAvailabilityForCourtRange({
       court,
@@ -585,6 +686,7 @@ export class AvailabilityService implements IAvailabilityService {
       rules,
       addons,
       addonRules,
+      venueAddons,
       reservations,
       blocks,
       overrides,
@@ -659,9 +761,12 @@ export class AvailabilityService implements IAvailabilityService {
         this.courtAddonRepository.findActiveByCourtIds(courtIds),
       ]);
 
-    const addonRules = await this.courtAddonRepository.findRateRulesByAddonIds(
-      addons.map((addon) => addon.id),
-    );
+    const [addonRules, venueAddons] = await Promise.all([
+      this.courtAddonRepository.findRateRulesByAddonIds(
+        addons.map((addon) => addon.id),
+      ),
+      this.fetchVenueAddons(place.id),
+    ]);
 
     const optionsByStart = new Map<number, AvailabilityOption>();
     const courtOptionsByStart = new Map<number, AvailabilityCourtOption[]>();
@@ -676,8 +781,25 @@ export class AvailabilityService implements IAvailabilityService {
       reservationsDisabled: false,
     };
     let hasAnySlots = false;
+    const hasSelectedAddons = (data.selectedAddons?.length ?? 0) > 0;
+    const invalidSelectedAddonIds = new Set<string>();
+    let hasAddonCompatibleCourt = !hasSelectedAddons;
 
     for (const court of activeCourts) {
+      const courtAddons = addons.filter((addon) => addon.courtId === court.id);
+      const invalidAddonIds = this.getInvalidSelectedAddonIdsForCourt({
+        selectedAddons: data.selectedAddons,
+        courtAddons,
+        venueAddons,
+      });
+      if (invalidAddonIds.length > 0) {
+        for (const addonId of invalidAddonIds) {
+          invalidSelectedAddonIds.add(addonId);
+        }
+        continue;
+      }
+      hasAddonCompatibleCourt = true;
+
       const result = this.buildAvailabilityForCourtRange({
         court,
         rangeStart,
@@ -688,6 +810,7 @@ export class AvailabilityService implements IAvailabilityService {
         rules,
         addons,
         addonRules,
+        venueAddons,
         reservations,
         blocks,
         overrides,
@@ -716,6 +839,8 @@ export class AvailabilityService implements IAvailabilityService {
             totalPriceCents: option.totalPriceCents,
             currency: option.currency,
             unavailableReason: option.unavailableReason ?? null,
+            pricingWarnings: option.pricingWarnings ?? [],
+            pricingBreakdown: option.pricingBreakdown,
           });
           courtOptionsByStart.set(startMs, entry);
         }
@@ -728,6 +853,14 @@ export class AvailabilityService implements IAvailabilityService {
         const preferred = this.pickCheapestOption(existing, option);
         optionsByStart.set(startMs, preferred);
       }
+    }
+
+    if (!hasAddonCompatibleCourt && invalidSelectedAddonIds.size > 0) {
+      throw new InvalidAvailabilityAddonSelectionError({
+        placeId: place.id,
+        sportId: data.sportId,
+        invalidAddonIds: Array.from(invalidSelectedAddonIds),
+      });
     }
 
     if (!hasAnySlots) {
@@ -771,6 +904,43 @@ export class AvailabilityService implements IAvailabilityService {
     return new Date(reservation.expiresAt) > new Date();
   }
 
+  private async fetchVenueAddons(placeId: string): Promise<ScheduleAddon[]> {
+    const addons = await this.placeAddonRepository.findActiveByPlaceId(placeId);
+    if (addons.length === 0) return [];
+    const rules = await this.placeAddonRepository.findRateRulesByAddonIds(
+      addons.map((a) => a.id),
+    );
+    return addons.map((addon) => ({
+      addon,
+      rules: rules.filter((r) => r.addonId === addon.id),
+    }));
+  }
+
+  private getInvalidSelectedAddonIdsForCourt(options: {
+    selectedAddons?: { addonId: string; quantity: number }[];
+    courtAddons: CourtAddonRecord[];
+    venueAddons?: ScheduleAddon[];
+  }): string[] {
+    const { selectedAddons, courtAddons, venueAddons } = options;
+    const allowedAddonIds = new Set<string>();
+
+    for (const addon of courtAddons) {
+      if (addon.isActive) {
+        allowedAddonIds.add(addon.id);
+      }
+    }
+    for (const config of venueAddons ?? []) {
+      if (config.addon.isActive) {
+        allowedAddonIds.add(config.addon.id);
+      }
+    }
+
+    return getInvalidSelectedAddonIds({
+      selectedAddons,
+      allowedAddonIds,
+    });
+  }
+
   private buildAvailabilityForCourtRange(options: {
     court: CourtRecord;
     rangeStart: Date;
@@ -781,6 +951,7 @@ export class AvailabilityService implements IAvailabilityService {
     rules: CourtRateRuleRecord[];
     addons: CourtAddonRecord[];
     addonRules: CourtAddonRateRuleRecord[];
+    venueAddons?: ScheduleAddon[];
     reservations: ReservationRecord[];
     blocks: CourtBlockRecord[];
     overrides: CourtPriceOverrideRecord[];
@@ -797,6 +968,7 @@ export class AvailabilityService implements IAvailabilityService {
       rules,
       addons,
       addonRules,
+      venueAddons,
       reservations,
       blocks,
       overrides,
@@ -891,6 +1063,7 @@ export class AvailabilityService implements IAvailabilityService {
           rateRules,
           priceOverrides,
           addons: courtAddons,
+          venueAddons,
           selectedAddons,
           enableAddonPricing: env.ENABLE_ADDON_PRICING_V2 !== false,
         });
@@ -962,6 +1135,8 @@ export class AvailabilityService implements IAvailabilityService {
               : blockOverlap
                 ? "MAINTENANCE"
                 : null,
+          pricingWarnings: pricing.warnings.map((warning) => warning.message),
+          pricingBreakdown: pricing.pricingBreakdown,
         });
       }
 

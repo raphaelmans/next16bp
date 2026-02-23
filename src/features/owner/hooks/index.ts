@@ -9,6 +9,7 @@ export * from "./court-hours";
 export * from "./court-pricing";
 export * from "./courts";
 export * from "./organization";
+export * from "./place-addons";
 export * from "./place-verification";
 export * from "./places";
 export * from "./reservations";

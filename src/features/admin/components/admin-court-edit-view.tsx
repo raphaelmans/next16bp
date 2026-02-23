@@ -43,10 +43,8 @@ import {
   adminCourtEditSchema,
 } from "@/features/admin/schemas";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
-import { PLACE_TIME_ZONES } from "@/features/owner/schemas";
 import { env } from "@/lib/env";
 
-const DEFAULT_COUNTRY = "PH";
 const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 const DEFAULT_COURT_UNIT = { label: "Court 1", sportId: "", tierLabel: "" };
 
@@ -113,11 +111,9 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
       address: "",
       city: "",
       province: "",
-      country: DEFAULT_COUNTRY,
       latitude: "",
       longitude: "",
       extGPlaceId: "",
-      timeZone: "Asia/Manila",
       facebookUrl: "",
       instagramUrl: "",
       phoneNumber: "",
@@ -154,11 +150,9 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
       address: courtData.place.address,
       city: resolvedCity,
       province: resolvedProvince,
-      country: courtData.place.country ?? DEFAULT_COUNTRY,
       latitude: courtData.place.latitude ?? "",
       longitude: courtData.place.longitude ?? "",
       extGPlaceId: courtData.place.extGPlaceId ?? "",
-      timeZone: courtData.place.timeZone ?? "Asia/Manila",
       facebookUrl: courtData.contactDetail?.facebookUrl ?? "",
       instagramUrl: courtData.contactDetail?.instagramUrl ?? "",
       phoneNumber: courtData.contactDetail?.phoneNumber ?? "",
@@ -205,7 +199,6 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   const nameValue = watch("name");
   const provinceValue = watch("province");
   const cityValue = watch("city");
-  const countryValue = watch("country");
   const latitudeValue = watch("latitude");
   const longitudeValue = watch("longitude");
   const extGPlaceIdValue = watch("extGPlaceId");
@@ -273,16 +266,6 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
     }
   }, [isRecurateOpen]);
 
-  React.useEffect(() => {
-    if (countryValue !== DEFAULT_COUNTRY) {
-      setValue("country", DEFAULT_COUNTRY, {
-        shouldDirty: false,
-        shouldTouch: false,
-        shouldValidate: true,
-      });
-    }
-  }, [countryValue, setValue]);
-
   const provinceOptions = React.useMemo(() => {
     if (!provincesCities) return [];
 
@@ -308,16 +291,6 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
 
     return buildCityOptions(selectedProvince, "name");
   }, [provincesCities, selectedProvince]);
-
-  const countryOptions = React.useMemo(
-    () => [{ label: "Philippines (PH)", value: DEFAULT_COUNTRY }],
-    [],
-  );
-
-  const timeZoneOptions = React.useMemo(
-    () => PLACE_TIME_ZONES.map((zone) => ({ label: zone, value: zone })),
-    [],
-  );
 
   const provincePlaceholder = provincesCitiesQuery.isLoading
     ? "Loading provinces..."
@@ -495,11 +468,9 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
         address: data.address,
         city: data.city,
         province: data.province,
-        country: data.country,
         latitude: data.latitude?.trim() || undefined,
         longitude: data.longitude?.trim() || undefined,
         extGPlaceId: data.extGPlaceId?.trim() || undefined,
-        timeZone: data.timeZone || undefined,
         facebookUrl: data.facebookUrl || undefined,
         instagramUrl: data.instagramUrl || undefined,
         phoneNumber: data.phoneNumber || undefined,
@@ -731,8 +702,6 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
           onPreview={handlePreview}
           provinceOptions={provinceOptions}
           cityOptions={cityOptions}
-          countryOptions={countryOptions}
-          timeZoneOptions={timeZoneOptions}
           provincePlaceholder={provincePlaceholder}
           cityPlaceholder={cityPlaceholder}
           isProvinceDisabled={isProvinceDisabled}

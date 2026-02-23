@@ -15,10 +15,9 @@ import {
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { env } from "@/lib/env";
-import { PLACE_TIME_ZONES, placeFormSchema } from "../schemas";
+import { placeFormSchema } from "../schemas";
 import {
   buildFormDefaults,
-  DEFAULT_COUNTRY,
   normalizeFormValues,
   type PlaceFormValues,
 } from "./place-form-helpers";
@@ -82,7 +81,6 @@ export const usePlaceFormState = ({
   const shouldHydrateDefaults = Boolean(defaultValues);
   const [isFormReady, setIsFormReady] = useState(!shouldHydrateDefaults);
 
-  const countryValue = useWatch({ control, name: "country" });
   const provinceValue = useWatch({ control, name: "province" });
   const cityValue = useWatch({ control, name: "city" });
   const nameValue = useWatch({ control, name: "name" });
@@ -132,16 +130,6 @@ export const usePlaceFormState = ({
     setIsFormReady(true);
   }, [reset, resolvedDefaults, shouldHydrateDefaults]);
 
-  useEffect(() => {
-    if (countryValue !== DEFAULT_COUNTRY) {
-      setValue("country", DEFAULT_COUNTRY, {
-        shouldDirty: false,
-        shouldTouch: false,
-        shouldValidate: true,
-      });
-    }
-  }, [countryValue, setValue]);
-
   const provinceOptions = useMemo(() => {
     if (!provincesCities) return [];
     return buildProvinceOptions(provincesCities, "name");
@@ -159,11 +147,6 @@ export const usePlaceFormState = ({
     if (!provincesCities || !selectedProvince) return [];
     return buildCityOptions(selectedProvince, "name");
   }, [provincesCities, selectedProvince]);
-
-  const countryOptions = useMemo(
-    () => [{ label: "Philippines (PH)", value: DEFAULT_COUNTRY }],
-    [],
-  );
 
   const provincePlaceholder = provincesCitiesQuery.isLoading
     ? "Loading provinces..."
@@ -223,11 +206,6 @@ export const usePlaceFormState = ({
     return `${previewResult.lat.toFixed(6)}, ${previewResult.lng.toFixed(6)}`;
   }, [previewResult?.lat, previewResult?.lng]);
 
-  const timeZoneOptions = useMemo(
-    () => PLACE_TIME_ZONES.map((zone) => ({ label: zone, value: zone })),
-    [],
-  );
-
   const handleSubmit = async (values: PlaceFormValues) => {
     const normalized = normalizeFormValues(values);
 
@@ -265,8 +243,6 @@ export const usePlaceFormState = ({
     handlePreview,
     provinceOptions,
     cityOptions,
-    countryOptions,
-    timeZoneOptions,
     provincePlaceholder,
     cityPlaceholder,
     isProvinceDisabled,

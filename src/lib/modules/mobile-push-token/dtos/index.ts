@@ -1,6 +1,6 @@
 export {
-  type UpsertMobilePushTokenDTO,
-  UpsertMobilePushTokenSchema,
   type RevokeMobilePushTokenDTO,
   RevokeMobilePushTokenSchema,
+  type UpsertMobilePushTokenDTO,
+  UpsertMobilePushTokenSchema,
 } from "./mobile-push-token.dto";
