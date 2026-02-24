@@ -320,19 +320,77 @@ export function PlaceDetailBookingSection({
     selectionSummary,
   ]);
 
-  const handleReserve = React.useCallback(() => {
-    // Multi-court checkout: encode cart items into `items` param
-    if (cartItems.length > 0 && !selectedStartTime) {
+  const handleReserve = React.useCallback(
+    (options?: { preferCartCheckout?: boolean }) => {
+      const shouldCheckoutCart =
+        cartItems.length > 0 &&
+        (options?.preferCartCheckout === true || !selectedStartTime);
+
+      // Multi-court checkout: encode cart items into `items` param
+      if (shouldCheckoutCart) {
+        const params = new URLSearchParams();
+        if (selectedSportId) {
+          params.set("sportId", selectedSportId);
+        }
+        const itemsEncoded = cartItems
+          .map(
+            (item) =>
+              `${item.courtId}|${item.startTime}|${item.durationMinutes}`,
+          )
+          .join(",");
+        params.set("items", itemsEncoded);
+
+        const destination = `${appRoutes.places.book(placeSlugOrId)}?${params.toString()}`;
+
+        trackEvent({
+          event: "funnel.reserve_clicked",
+          properties: {
+            placeId: analyticsPlaceId,
+            mode: "court",
+            itemCount: cartItems.length,
+          },
+        });
+
+        if (isAuthenticated) {
+          router.push(destination);
+          return;
+        }
+
+        trackEvent({
+          event: "funnel.login_started",
+          properties: {
+            placeId: analyticsPlaceId,
+            redirect: destination,
+          },
+        });
+        router.push(appRoutes.login.from(destination));
+        return;
+      }
+
+      // Single-court flow (unchanged)
+      if (!selectedStartTime) return;
+
       const params = new URLSearchParams();
+      params.set("duration", String(durationMinutes));
+      params.set("mode", selectionMode);
       if (selectedSportId) {
         params.set("sportId", selectedSportId);
       }
-      const itemsEncoded = cartItems
-        .map(
-          (item) => `${item.courtId}|${item.startTime}|${item.durationMinutes}`,
-        )
-        .join(",");
-      params.set("items", itemsEncoded);
+      if (selectedDate) {
+        params.set("date", getZonedDayKey(selectedDate, placeTimeZone));
+      }
+      if (selectionMode === "court" && selectedCourtId) {
+        params.set("courtId", selectedCourtId);
+      }
+      if (selectedAddons.length > 0) {
+        const encoded = selectedAddons
+          .map((a) =>
+            a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`,
+          )
+          .join(",");
+        params.set("addonIds", encoded);
+      }
+      params.set("startTime", selectedStartTime);
 
       const destination = `${appRoutes.places.book(placeSlugOrId)}?${params.toString()}`;
 
@@ -340,8 +398,10 @@ export function PlaceDetailBookingSection({
         event: "funnel.reserve_clicked",
         properties: {
           placeId: analyticsPlaceId,
-          mode: "court",
-          itemCount: cartItems.length,
+          mode: selectionMode,
+          durationMinutes,
+          startTime: selectedStartTime,
+          courtId: selectionMode === "court" ? selectedCourtId : undefined,
         },
       });
 
@@ -350,84 +410,36 @@ export function PlaceDetailBookingSection({
         return;
       }
 
+      const returnTo = destination;
       trackEvent({
         event: "funnel.login_started",
         properties: {
           placeId: analyticsPlaceId,
-          redirect: destination,
+          redirect: returnTo,
         },
       });
-      router.push(appRoutes.login.from(destination));
-      return;
-    }
+      router.push(appRoutes.login.from(returnTo));
+    },
+    [
+      analyticsPlaceId,
+      cartItems,
+      durationMinutes,
+      isAuthenticated,
+      placeSlugOrId,
+      placeTimeZone,
+      router,
+      selectedCourtId,
+      selectedDate,
+      selectedAddons,
+      selectedSportId,
+      selectedStartTime,
+      selectionMode,
+    ],
+  );
 
-    // Single-court flow (unchanged)
-    if (!selectedStartTime) return;
-
-    const params = new URLSearchParams();
-    params.set("duration", String(durationMinutes));
-    params.set("mode", selectionMode);
-    if (selectedSportId) {
-      params.set("sportId", selectedSportId);
-    }
-    if (selectedDate) {
-      params.set("date", getZonedDayKey(selectedDate, placeTimeZone));
-    }
-    if (selectionMode === "court" && selectedCourtId) {
-      params.set("courtId", selectedCourtId);
-    }
-    if (selectedAddons.length > 0) {
-      const encoded = selectedAddons
-        .map((a) =>
-          a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`,
-        )
-        .join(",");
-      params.set("addonIds", encoded);
-    }
-    params.set("startTime", selectedStartTime);
-
-    const destination = `${appRoutes.places.book(placeSlugOrId)}?${params.toString()}`;
-
-    trackEvent({
-      event: "funnel.reserve_clicked",
-      properties: {
-        placeId: analyticsPlaceId,
-        mode: selectionMode,
-        durationMinutes,
-        startTime: selectedStartTime,
-        courtId: selectionMode === "court" ? selectedCourtId : undefined,
-      },
-    });
-
-    if (isAuthenticated) {
-      router.push(destination);
-      return;
-    }
-
-    const returnTo = destination;
-    trackEvent({
-      event: "funnel.login_started",
-      properties: {
-        placeId: analyticsPlaceId,
-        redirect: returnTo,
-      },
-    });
-    router.push(appRoutes.login.from(returnTo));
-  }, [
-    analyticsPlaceId,
-    cartItems,
-    durationMinutes,
-    isAuthenticated,
-    placeSlugOrId,
-    placeTimeZone,
-    router,
-    selectedCourtId,
-    selectedDate,
-    selectedAddons,
-    selectedSportId,
-    selectedStartTime,
-    selectionMode,
-  ]);
+  const handleContinueFromCart = React.useCallback(() => {
+    handleReserve({ preferCartCheckout: true });
+  }, [handleReserve]);
 
   const scrollToSection = React.useCallback(
     (ref: React.RefObject<HTMLElement | null>) => {
@@ -711,10 +723,12 @@ export function PlaceDetailBookingSection({
           todayRangeStart={todayRangeStart}
           maxBookingDate={maxBookingDate}
           onContinue={handleReserve}
+          onContinueFromCart={handleContinueFromCart}
           onSelectionSummaryChange={handleSelectionSummaryChange}
-          cartItemCount={cartItems.length}
+          cartItems={cartItems}
           canAddToCart={canAddToCart}
           onAddToCartAction={handleAddToCart}
+          onRemoveFromCartAction={removeCartItem}
         />
       ) : null}
     </>

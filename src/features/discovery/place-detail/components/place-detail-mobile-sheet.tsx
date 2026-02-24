@@ -1,7 +1,12 @@
 "use client";
 
-import { Calendar, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
-import { formatCurrency, formatInTimeZone } from "@/common/format";
+import { Calendar, ChevronDown, ChevronUp, Loader2, X } from "lucide-react";
+import * as React from "react";
+import {
+  formatCurrency,
+  formatDuration,
+  formatInTimeZone,
+} from "@/common/format";
 import {
   TimeRangePicker,
   TimeRangePickerSkeleton,
@@ -17,7 +22,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { MobileDateStrip } from "@/features/discovery/components";
-import { canCheckoutBookingCart } from "@/features/discovery/place-detail/helpers/booking-cart-cta";
+import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { cn } from "@/lib/utils";
 
 type PlaceSportOption = {
@@ -70,13 +75,15 @@ type PlaceDetailMobileSheetProps = {
   onCourtRangeChange: (range: TimeRangeSelection) => void;
   onClearSelection: () => void;
   onReserve: () => void;
+  onContinueFromCart: () => void;
   hasSelection: boolean;
   selectionSummary: SelectionSummary | null;
   selectionDateLabel: string;
   selectionTimeLabel: string;
-  cartItemCount: number;
+  cartItems: BookingCartItem[];
   canAddToCart: boolean;
   onAddToCartAction: () => void;
+  onRemoveFromCartAction: (key: string) => void;
 };
 
 export function PlaceDetailMobileSheet({
@@ -107,22 +114,59 @@ export function PlaceDetailMobileSheet({
   onCourtRangeChange,
   onClearSelection,
   onReserve,
+  onContinueFromCart,
   hasSelection,
   selectionSummary,
   selectionDateLabel,
   selectionTimeLabel,
-  cartItemCount,
+  cartItems,
   canAddToCart,
   onAddToCartAction,
+  onRemoveFromCartAction,
 }: PlaceDetailMobileSheetProps) {
+  const cartItemCount = cartItems.length;
+  const hasCartItems = cartItemCount > 0;
+  const [mobileFlowStep, setMobileFlowStep] = React.useState<
+    "select" | "review"
+  >("select");
+  const isReviewStep = mobileFlowStep === "review" && hasCartItems;
+
+  const hasEstimatedTotal = cartItems.some(
+    (item) => item.estimatedPriceCents !== null,
+  );
+  const estimatedTotalCents = cartItems.reduce(
+    (sum, item) => sum + (item.estimatedPriceCents ?? 0),
+    0,
+  );
+  const cartCurrency =
+    cartItems[0]?.currency ?? selectionSummary?.currency ?? "PHP";
+
+  React.useEffect(() => {
+    if (!mobileSheetExpanded) {
+      setMobileFlowStep("select");
+    }
+  }, [mobileSheetExpanded]);
+
+  React.useEffect(() => {
+    if (!hasCartItems && mobileFlowStep === "review") {
+      setMobileFlowStep("select");
+    }
+  }, [hasCartItems, mobileFlowStep]);
+
+  const handleAddToBooking = React.useCallback(() => {
+    onAddToCartAction();
+    onClearSelection();
+    setMobileFlowStep("review");
+  }, [onAddToCartAction, onClearSelection]);
+
+  const handleOpenReview = React.useCallback(() => {
+    if (!hasCartItems) return;
+    setMobileFlowStep("review");
+  }, [hasCartItems]);
+
   if (!showBooking) {
     return null;
   }
-
-  const canCheckoutFromCart = canCheckoutBookingCart({
-    cartItemCount,
-    hasSelection,
-  });
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 flex max-h-[85vh] flex-col rounded-t-3xl bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.15)] lg:hidden">
@@ -144,141 +188,207 @@ export function PlaceDetailMobileSheet({
 
       {mobileSheetExpanded && (
         <>
-          {sports.length > 1 && (
-            <div className="scrollbar-none flex gap-2 overflow-x-auto px-5 pb-3">
-              {sports.map((sport) => (
-                <button
-                  key={sport.id}
-                  type="button"
-                  onClick={() => onMobileSportChange(sport.id)}
-                  className={cn(
-                    "shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors",
-                    selectedSportId === sport.id
-                      ? "border-foreground bg-foreground text-background"
-                      : "border-border bg-background text-foreground hover:bg-muted/50",
-                  )}
-                >
-                  {sport.name}
-                </button>
-              ))}
-            </div>
-          )}
-
           <div className="px-5 pb-3">
-            <div className="scrollbar-none flex gap-2 overflow-x-auto">
-              <button
-                type="button"
-                onClick={() => onMobileCourtChange(undefined)}
-                className={cn(
-                  "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
-                  selectionMode === "any"
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-card text-foreground hover:border-accent/30 hover:bg-accent/10",
+            <p className="text-xs font-medium text-muted-foreground">
+              {isReviewStep
+                ? "Step 2 of 2 · Review booking"
+                : "Step 1 of 2 · Select slots"}
+            </p>
+          </div>
+
+          {isReviewStep ? (
+            <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-2">
+              <div className="space-y-2 rounded-lg border p-3">
+                <p className="text-sm font-medium">
+                  Courts in booking ({cartItemCount})
+                </p>
+                {cartItems.map((item) => (
+                  <div
+                    key={item.key}
+                    className="flex items-start justify-between gap-2 text-sm"
+                  >
+                    <div className="min-w-0">
+                      <p className="font-medium">{item.courtLabel}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {formatInTimeZone(
+                          new Date(item.startTime),
+                          placeTimeZone,
+                          "MMM d, h:mm a",
+                        )}{" "}
+                        · {formatDuration(item.durationMinutes)}
+                        {item.estimatedPriceCents !== null
+                          ? ` · ${formatCurrency(item.estimatedPriceCents, item.currency)}`
+                          : ""}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => onRemoveFromCartAction(item.key)}
+                      className="shrink-0 rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                      aria-label={`Remove ${item.courtLabel}`}
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ))}
+                {hasEstimatedTotal && (
+                  <div className="flex items-center justify-between border-t pt-2 text-sm">
+                    <p className="text-muted-foreground">Estimated total</p>
+                    <p className="font-semibold">
+                      {formatCurrency(estimatedTotalCents, cartCurrency)}
+                    </p>
+                  </div>
                 )}
-              >
-                Any court
-              </button>
-              {courtsForSport.map((court) => (
-                <button
-                  key={court.id}
-                  type="button"
-                  onClick={() => onMobileCourtChange(court.id)}
-                  className={cn(
-                    "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
-                    selectionMode === "court" && selectedCourtId === court.id
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border bg-card text-foreground hover:border-accent/30 hover:bg-accent/10",
-                  )}
-                >
-                  {court.label}
-                </button>
-              ))}
+              </div>
             </div>
-          </div>
+          ) : (
+            <>
+              {sports.length > 1 && (
+                <div className="scrollbar-none flex gap-2 overflow-x-auto px-5 pb-3">
+                  {sports.map((sport) => (
+                    <button
+                      key={sport.id}
+                      type="button"
+                      onClick={() => onMobileSportChange(sport.id)}
+                      className={cn(
+                        "shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+                        selectedSportId === sport.id
+                          ? "border-foreground bg-foreground text-background"
+                          : "border-border bg-background text-foreground hover:bg-muted/50",
+                      )}
+                    >
+                      {sport.name}
+                    </button>
+                  ))}
+                </div>
+              )}
 
-          <div className="space-y-2 px-5 pb-3">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="w-full justify-start"
-              onClick={() => setMobileCalendarOpen(true)}
-            >
-              <Calendar className="h-3.5 w-3.5" />
-              {selectedDate
-                ? formatInTimeZone(selectedDate, placeTimeZone, "EEEE, MMM d")
-                : "Pick a date"}
-            </Button>
-            <MobileDateStrip
-              selectedDate={selectedDate ?? today}
-              onDateSelect={onMobileDateSelect}
-              timeZone={placeTimeZone}
-              todayDate={today}
-            />
-          </div>
-
-          <Dialog
-            open={mobileCalendarOpen}
-            onOpenChange={setMobileCalendarOpen}
-          >
-            <DialogContent className="p-0 sm:max-w-fit">
-              <DialogHeader className="sr-only">
-                <DialogTitle>Select a date</DialogTitle>
-                <DialogDescription>
-                  Choose a date to view availability
-                </DialogDescription>
-              </DialogHeader>
-              <CalendarWidget
-                mode="single"
-                selected={selectedDate}
-                onSelect={onMobileCalendarJump}
-                disabled={(date) => {
-                  if (date < todayRangeStart) return true;
-                  if (date > maxBookingDate) return true;
-                  return false;
-                }}
-                timeZone={placeTimeZone}
-                initialFocus
-              />
-            </DialogContent>
-          </Dialog>
-
-          <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-2">
-            {isMobileRefreshing && (
-              <div className="mb-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                Updating availability...
+              <div className="px-5 pb-3">
+                <div className="scrollbar-none flex gap-2 overflow-x-auto">
+                  <button
+                    type="button"
+                    onClick={() => onMobileCourtChange(undefined)}
+                    className={cn(
+                      "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
+                      selectionMode === "any"
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-card text-foreground hover:border-accent/30 hover:bg-accent/10",
+                    )}
+                  >
+                    Any court
+                  </button>
+                  {courtsForSport.map((court) => (
+                    <button
+                      key={court.id}
+                      type="button"
+                      onClick={() => onMobileCourtChange(court.id)}
+                      className={cn(
+                        "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
+                        selectionMode === "court" &&
+                          selectedCourtId === court.id
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border bg-card text-foreground hover:border-accent/30 hover:bg-accent/10",
+                      )}
+                    >
+                      {court.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-            )}
-            {isMobileLoading ? (
-              <TimeRangePickerSkeleton count={5} />
-            ) : mobileDaySlots.length > 0 ? (
-              <TimeRangePicker
-                slots={mobileDaySlots}
-                timeZone={placeTimeZone}
-                selectedStartTime={selectedRange?.startTime}
-                selectedDurationMinutes={selectedRange?.durationMinutes}
-                showPrice
-                onChange={
-                  selectionMode === "any"
-                    ? onAnyRangeChange
-                    : onCourtRangeChange
-                }
-                onClear={onClearSelection}
-                onContinue={onReserve}
-              />
-            ) : (
-              <div className="py-6 text-center text-sm text-muted-foreground">
-                No available slots for this date.
+
+              <div className="space-y-2 px-5 pb-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-full justify-start"
+                  onClick={() => setMobileCalendarOpen(true)}
+                >
+                  <Calendar className="h-3.5 w-3.5" />
+                  {selectedDate
+                    ? formatInTimeZone(
+                        selectedDate,
+                        placeTimeZone,
+                        "EEEE, MMM d",
+                      )
+                    : "Pick a date"}
+                </Button>
+                <MobileDateStrip
+                  selectedDate={selectedDate ?? today}
+                  onDateSelect={onMobileDateSelect}
+                  timeZone={placeTimeZone}
+                  todayDate={today}
+                />
               </div>
-            )}
-          </div>
+
+              <Dialog
+                open={mobileCalendarOpen}
+                onOpenChange={setMobileCalendarOpen}
+              >
+                <DialogContent className="p-0 sm:max-w-fit">
+                  <DialogHeader className="sr-only">
+                    <DialogTitle>Select a date</DialogTitle>
+                    <DialogDescription>
+                      Choose a date to view availability
+                    </DialogDescription>
+                  </DialogHeader>
+                  <CalendarWidget
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={onMobileCalendarJump}
+                    disabled={(date) => {
+                      if (date < todayRangeStart) return true;
+                      if (date > maxBookingDate) return true;
+                      return false;
+                    }}
+                    timeZone={placeTimeZone}
+                    initialFocus
+                  />
+                </DialogContent>
+              </Dialog>
+
+              <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-2">
+                {isMobileRefreshing && (
+                  <div className="mb-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    Updating availability...
+                  </div>
+                )}
+                {isMobileLoading ? (
+                  <TimeRangePickerSkeleton count={5} />
+                ) : mobileDaySlots.length > 0 ? (
+                  <TimeRangePicker
+                    slots={mobileDaySlots}
+                    timeZone={placeTimeZone}
+                    selectedStartTime={selectedRange?.startTime}
+                    selectedDurationMinutes={selectedRange?.durationMinutes}
+                    showPrice
+                    onChange={
+                      selectionMode === "any"
+                        ? onAnyRangeChange
+                        : onCourtRangeChange
+                    }
+                    onClear={onClearSelection}
+                    onContinue={onReserve}
+                  />
+                ) : (
+                  <div className="py-6 text-center text-sm text-muted-foreground">
+                    No available slots for this date.
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </>
       )}
 
       <div className="flex items-center justify-between border-t border-border bg-background px-5 py-4">
         <div className="min-w-0">
-          {hasSelection && selectionSummary ? (
+          {isReviewStep ? (
+            <p className="text-sm text-muted-foreground">
+              {cartItemCount} court{cartItemCount !== 1 ? "s" : ""} in booking
+            </p>
+          ) : hasSelection && selectionSummary ? (
             <>
               <p className="text-sm text-muted-foreground">
                 {selectionDateLabel}
@@ -301,15 +411,34 @@ export function PlaceDetailMobileSheet({
             <p className="text-sm text-muted-foreground">Select a time slot</p>
           )}
         </div>
-        {canAddToCart ? (
-          <Button onClick={onAddToCartAction}>Add to booking</Button>
-        ) : canCheckoutFromCart ? (
-          <Button onClick={onReserve}>Checkout ({cartItemCount})</Button>
-        ) : (
-          <Button disabled={!hasSelection} onClick={onReserve}>
-            Reserve
-          </Button>
-        )}
+
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          {isReviewStep ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setMobileFlowStep("select")}
+            >
+              Back to slot selection
+            </Button>
+          ) : null}
+
+          {canAddToCart && !isReviewStep ? (
+            <Button onClick={handleAddToBooking}>Add to booking</Button>
+          ) : hasCartItems && !isReviewStep ? (
+            <Button onClick={handleOpenReview}>
+              Review booking ({cartItemCount})
+            </Button>
+          ) : isReviewStep ? (
+            <Button onClick={onContinueFromCart}>
+              Continue to review page
+            </Button>
+          ) : (
+            <Button disabled={!hasSelection} onClick={onReserve}>
+              Reserve
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

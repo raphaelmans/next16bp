@@ -25,6 +25,7 @@ import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-d
 import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
 import { buildCourtSelectionMemoryKey } from "@/features/discovery/place-detail/helpers/court-selection-memory";
 import { useModMobileWeekPrefetch } from "@/features/discovery/place-detail/hooks/use-mobile-week-prefetch";
+import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { useCourtSelectionMemoryStore } from "@/features/discovery/place-detail/stores/court-selection-memory-store";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 
@@ -59,10 +60,12 @@ type PlaceDetailBookingMobileSectionProps = {
   todayRangeStart: Date;
   maxBookingDate: Date;
   onContinue: () => void;
+  onContinueFromCart: () => void;
   onSelectionSummaryChange: (summary: SelectionSummary | null) => void;
-  cartItemCount: number;
+  cartItems: BookingCartItem[];
   canAddToCart: boolean;
   onAddToCartAction: () => void;
+  onRemoveFromCartAction: (key: string) => void;
 };
 
 export function PlaceDetailBookingMobileSection({
@@ -87,10 +90,12 @@ export function PlaceDetailBookingMobileSection({
   todayRangeStart,
   maxBookingDate,
   onContinue,
+  onContinueFromCart,
   onSelectionSummaryChange,
-  cartItemCount,
+  cartItems,
   canAddToCart,
   onAddToCartAction,
+  onRemoveFromCartAction,
 }: PlaceDetailBookingMobileSectionProps) {
   const utils = useModDiscoveryPrefetchPort();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
@@ -485,13 +490,15 @@ export function PlaceDetailBookingMobileSection({
       onCourtRangeChange={handleCourtRangeChange}
       onClearSelection={() => clearSelection(true)}
       onReserve={onContinue}
+      onContinueFromCart={onContinueFromCart}
       hasSelection={hasSelection}
       selectionSummary={selectionSummary}
       selectionDateLabel={selectionDateLabel}
       selectionTimeLabel={selectionTimeLabel}
-      cartItemCount={cartItemCount}
+      cartItems={cartItems}
       canAddToCart={canAddToCart}
       onAddToCartAction={onAddToCartAction}
+      onRemoveFromCartAction={onRemoveFromCartAction}
     />
   );
 }
