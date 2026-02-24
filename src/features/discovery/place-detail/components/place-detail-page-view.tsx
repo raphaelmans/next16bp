@@ -231,6 +231,10 @@ export default function PlaceDetailPageView({
               summaryCtaLabel="Select a time"
               onSummaryAction={() => {}}
               isAuthenticated={isAuthenticated}
+              cartItems={[]}
+              canAddToCart={false}
+              onAddToCartAction={() => {}}
+              onRemoveFromCartAction={() => {}}
               listingHelpContent={
                 <PlaceDetailListingHelpSection
                   placeId={place.id}
