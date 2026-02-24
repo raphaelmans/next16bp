@@ -40,6 +40,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  OWNER_GET_STARTED_FAQS,
+  OWNER_GET_STARTED_LAST_UPDATED_LABEL,
+} from "@/features/owner/constants/owner-get-started-faq";
 
 // ---------------------------------------------------------------------------
 // Data
@@ -375,63 +379,6 @@ const PERKS = [
   },
 ];
 
-const FAQS = [
-  {
-    id: "is-free",
-    question: "Is KudosCourts really free?",
-    answer:
-      "The essentials — reservation inbox, Availability Studio, court management, guest profiles, verified badge, and P2P payment coordination — are free. No subscription, no hidden fees. Business Plus adds premium tools like analytics, unlimited chat, and SEO visibility.",
-  },
-  {
-    id: "payments",
-    question: "Do you handle payments?",
-    answer:
-      "Players pay you directly — GCash, Maya, bank transfer, or cash. KudosCourts coordinates the booking, not the payment. You keep your existing payment methods.",
-  },
-  {
-    id: "how-long",
-    question: "How long does verification take?",
-    answer:
-      "After you submit documents, our team reviews your request and emails you when it is approved or if updates are needed.",
-  },
-  {
-    id: "what-docs",
-    question: "What documents should I prepare?",
-    answer:
-      "Upload any proof of ownership or authorization to operate the venue. Accepted formats include JPG, PNG, WebP, and PDF.",
-  },
-  {
-    id: "already-listed",
-    question: "My venue is already on KudosCourts. What should I do?",
-    answer:
-      "Use the claim option in the owner setup hub to find your venue and request ownership so you can manage courts and enable bookings.",
-  },
-  {
-    id: "when-bookings",
-    question: "When will players be able to book?",
-    answer:
-      "You control when bookings start. After verification, enable reservations in your venue settings when you are ready.",
-  },
-  {
-    id: "import-bookings",
-    question: "Can I import my existing bookings?",
-    answer:
-      "Yes. Import from ICS, CSV, XLSX, or even screenshots. Our AI-powered normalizer maps your data so you don't start from zero.",
-  },
-  {
-    id: "business-plus",
-    question: "What is Business Plus?",
-    answer:
-      "An upcoming premium tier with analytics dashboards, unlimited in-app chat, SEO & AI search visibility, integrations, and multi-user staff access. Early adopters get 6 months free.",
-  },
-  {
-    id: "availability-studio",
-    question: "What is the Availability Studio?",
-    answer:
-      "A visual timeline where you control your schedule by placing blocks — available slots, maintenance windows, walk-in periods, and guest bookings. Desktop shows a full week; mobile shows one day at a time.",
-  },
-];
-
 const colorMap = {
   primary: { bg: "bg-primary/10", text: "text-primary" },
   accent: { bg: "bg-accent/10", text: "text-accent" },
@@ -527,10 +474,11 @@ export default function OwnersGetStartedPage() {
             </h1>
 
             <p className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg">
-              Players are looking for courts like yours — right now. List your
-              venue, manage bookings, and get discovered. The entire system is{" "}
+              Players are already searching for available courts in your city.
+              List or claim your venue, manage booking requests, and keep your
+              schedule up to date with{" "}
               <strong className="text-foreground">
-                free — the essentials, no subscription.
+                free core reservation tools.
               </strong>
             </p>
 
@@ -540,7 +488,7 @@ export default function OwnersGetStartedPage() {
                   href={registerHref}
                   onClick={() => handleCtaClick("hero")}
                 >
-                  Create free account
+                  Create free owner account
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
@@ -1260,12 +1208,15 @@ export default function OwnersGetStartedPage() {
               <p className="text-muted-foreground">
                 Quick answers before you get started.
               </p>
+              <p className="text-xs text-muted-foreground">
+                Last updated: {OWNER_GET_STARTED_LAST_UPDATED_LABEL}
+              </p>
             </div>
 
             <Card className="border-border/60">
               <CardContent className="p-2">
                 <Accordion type="single" collapsible>
-                  {FAQS.map((faq) => (
+                  {OWNER_GET_STARTED_FAQS.map((faq) => (
                     <AccordionItem key={faq.id} value={faq.id}>
                       <AccordionTrigger>{faq.question}</AccordionTrigger>
                       <AccordionContent className="px-1 text-muted-foreground">
@@ -1291,8 +1242,8 @@ export default function OwnersGetStartedPage() {
                 Your courts deserve better. Your players deserve better.
               </h2>
               <p className="max-w-md text-muted-foreground">
-                Claim your venue today and start accepting bookings. Limited to
-                5 early adopter partners per city.
+                Claim your venue and start accepting online booking requests
+                when you are ready to go live.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Button asChild size="lg" className="rounded-xl">
@@ -1300,7 +1251,7 @@ export default function OwnersGetStartedPage() {
                     href={registerHref}
                     onClick={() => handleCtaClick("footer")}
                   >
-                    Create free account
+                    Create free owner account
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>

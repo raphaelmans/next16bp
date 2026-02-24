@@ -1,9 +1,14 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { MetadataRoute } from "next";
 import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
 import { db } from "@/lib/shared/infra/db/drizzle";
-import { organization, place } from "@/lib/shared/infra/db/schema";
+import {
+  court,
+  organization,
+  place,
+  sport,
+} from "@/lib/shared/infra/db/schema";
 import {
   getPHProvincesCities,
   resolveLocationSlugs,
@@ -15,25 +20,41 @@ const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const buildUrl = (path: string) => new URL(path, appUrl).toString();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [placeRows, orgRows, locationRows] = await Promise.all([
-    db
-      .select({ slug: place.slug, updatedAt: place.updatedAt })
-      .from(place)
-      .where(eq(place.isActive, true)),
-    db
-      .select({ slug: organization.slug, updatedAt: organization.updatedAt })
-      .from(organization)
-      .where(eq(organization.isActive, true)),
-    db
-      .select({ province: place.province, city: place.city })
-      .from(place)
-      .where(eq(place.isActive, true))
-      .groupBy(place.province, place.city),
-  ]);
+  const [placeRows, orgRows, locationRows, locationSportRows] =
+    await Promise.all([
+      db
+        .select({ slug: place.slug, updatedAt: place.updatedAt })
+        .from(place)
+        .where(eq(place.isActive, true)),
+      db
+        .select({ slug: organization.slug, updatedAt: organization.updatedAt })
+        .from(organization)
+        .where(eq(organization.isActive, true)),
+      db
+        .select({ province: place.province, city: place.city })
+        .from(place)
+        .where(eq(place.isActive, true))
+        .groupBy(place.province, place.city),
+      db
+        .select({
+          province: place.province,
+          city: place.city,
+          sportSlug: sport.slug,
+        })
+        .from(place)
+        .innerJoin(
+          court,
+          and(eq(court.placeId, place.id), eq(court.isActive, true)),
+        )
+        .innerJoin(sport, eq(sport.id, court.sportId))
+        .where(eq(place.isActive, true))
+        .groupBy(place.province, place.city, sport.slug),
+    ]);
 
   const provinces = await getPHProvincesCities();
   const provinceSet = new Set<string>();
   const citySet = new Set<string>();
+  const citySportSet = new Set<string>();
 
   locationRows.forEach((row) => {
     const resolved = resolveLocationSlugs(provinces, row.province, row.city);
@@ -42,6 +63,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
     if (resolved.provinceSlug && resolved.citySlug) {
       citySet.add(`${resolved.provinceSlug}/${resolved.citySlug}`);
+    }
+  });
+
+  locationSportRows.forEach((row) => {
+    const resolved = resolveLocationSlugs(provinces, row.province, row.city);
+    if (resolved.provinceSlug && resolved.citySlug) {
+      citySportSet.add(
+        `${resolved.provinceSlug}/${resolved.citySlug}/${row.sportSlug}`,
+      );
     }
   });
 
@@ -95,14 +125,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const locationEntries: MetadataRoute.Sitemap = [
     ...Array.from(provinceSet).map((provinceSlug) => ({
-      url: buildUrl(`/courts/locations/${provinceSlug}`),
+      url: buildUrl(appRoutes.courts.locations.province(provinceSlug)),
       changeFrequency: "weekly" as const,
       priority: 0.6,
     })),
     ...Array.from(citySet).map((cityPath) => ({
-      url: buildUrl(`/courts/locations/${cityPath}`),
+      url: buildUrl(`${appRoutes.courts.base}/locations/${cityPath}`),
       changeFrequency: "weekly" as const,
       priority: 0.7,
+    })),
+    ...Array.from(citySportSet).map((citySportPath) => ({
+      url: buildUrl(`${appRoutes.courts.base}/locations/${citySportPath}`),
+      changeFrequency: "weekly" as const,
+      priority: 0.65,
     })),
   ];
 

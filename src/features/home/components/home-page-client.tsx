@@ -10,11 +10,21 @@ import { trackEvent } from "@/common/clients/telemetry-client";
 import { URLQueryBuilder } from "@/common/url-query-builder";
 import { FeaturedPlaceholderCard, PlaceCard } from "@/components/kudos";
 import { Container } from "@/components/layout/container";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { DiscoveryPublicShell } from "@/features/discovery/components/public-shell";
 import type { PlaceSummary } from "@/features/discovery/helpers";
 import { HomeSearchForm } from "@/features/home/components/home-search-form";
 import { HomeTrackedLink } from "@/features/home/components/home-tracked-link";
+import {
+  HOME_FAQS,
+  HOME_LAST_UPDATED_LABEL,
+} from "@/features/home/constants/home-faq";
 import { useQueryHomePlaceStats } from "@/features/home/hooks";
 
 const POPULAR_LOCATIONS = [
@@ -256,19 +266,20 @@ export default function HomePageClient({
               </div>
 
               <h1 className="font-heading text-4xl sm:text-[56px] font-black leading-[1.06] tracking-[-0.04em] mb-5">
-                Stop chasing courts
-                <span className="block">on Facebook.</span>
+                Book sports courts
+                <span className="block">in the Philippines</span>
+                <span className="block">without waiting for replies.</span>
                 <span className="block">
                   <span className="relative text-primary inline">
-                    Search once. Book instantly.
+                    Search availability. Reserve your slot.
                     <span className="absolute left-[-2px] right-[-2px] bottom-[2px] h-[13px] bg-primary/10 rounded-[3px] -z-10" />
                   </span>
                 </span>
               </h1>
 
               <p className="text-lg leading-relaxed text-muted-foreground max-w-[430px] mb-8">
-                Every available court, every open slot, every city — one search
-                away. No more DMs, no more waiting.
+                Compare courts by city and sport, check open time slots, and
+                confirm your game online. No scattered DMs. No back-and-forth.
               </p>
 
               <HomeSearchForm
@@ -523,8 +534,8 @@ export default function HomePageClient({
                 Your court is already being searched for.
               </h2>
               <p className="text-base text-muted-foreground max-w-[460px] mx-auto mt-4 leading-relaxed">
-                Players are looking for courts like yours right now. Get listed
-                and let them find you.
+                Players already search by city, sport, and availability. List
+                your venue so they can find and reserve your slots online.
               </p>
             </div>
 
@@ -568,7 +579,57 @@ export default function HomePageClient({
         </Container>
       </section>
 
-      {/* § 7. Final CTA — teal band */}
+      {/* § 7. FAQ + Internal links */}
+      <section className="py-20 border-t border-border bg-card">
+        <Container>
+          <div className="grid gap-8 lg:grid-cols-2">
+            <div className="space-y-3">
+              <h2 className="font-heading text-3xl font-extrabold tracking-[-0.03em]">
+                Frequently asked questions
+              </h2>
+              <p className="text-muted-foreground max-w-[440px]">
+                Direct answers for players and venue owners evaluating
+                KudosCourts.
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Last updated: {HOME_LAST_UPDATED_LABEL}
+              </p>
+              <div className="pt-2 space-y-2">
+                <p className="text-sm font-semibold">Popular locations</p>
+                <div className="flex flex-wrap gap-2">
+                  {POPULAR_LOCATIONS.map((location) => (
+                    <Link
+                      key={location.label}
+                      href={appRoutes.courts.locations.city(
+                        location.provinceSlug,
+                        location.citySlug,
+                      )}
+                      className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-foreground/30"
+                    >
+                      {location.label} courts
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border bg-background p-2">
+              <Accordion type="single" collapsible>
+                {HOME_FAQS.map((faq) => (
+                  <AccordionItem key={faq.id} value={faq.id}>
+                    <AccordionTrigger>{faq.question}</AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* § 8. Final CTA — teal band */}
       <section className="relative py-20 bg-primary overflow-hidden">
         {/* Court-line pattern */}
         <div

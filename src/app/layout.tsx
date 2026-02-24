@@ -156,7 +156,7 @@ export default function RootLayout({
           type="application/ld+json"
           strategy="beforeInteractive"
         >
-          {JSON.stringify(structuredData)}
+          {JSON.stringify(structuredData).replace(/</g, "\\u003c")}
         </Script>
       </head>
       <body

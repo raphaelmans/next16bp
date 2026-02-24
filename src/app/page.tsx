@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Script from "next/script";
+import { HOME_FAQS } from "@/features/home/constants/home-faq";
 import { HomeLandingPage } from "@/features/home/pages/home-landing-page";
 import { env } from "@/lib/env";
 import {
@@ -9,9 +11,23 @@ import { HydrateClient } from "@/trpc/server";
 
 const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const canonicalUrl = new URL("/", appUrl);
-const title = "Find Pickleball & Sports Courts in the Philippines";
+const title =
+  "Book Pickleball, Badminton, Basketball, and Tennis Courts in the Philippines";
 const description =
-  "Discover pickleball, basketball, badminton, and tennis courts across the Philippines. Check availability, book your next game, and list your venue with a free reservation system.";
+  "Search available sports courts across the Philippines, compare venues by city, and reserve your slot online. Owners can list and manage courts with free core tools.";
+
+const homeStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: HOME_FAQS.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.answer,
+    },
+  })),
+} as const;
 
 export const metadata: Metadata = {
   title,
@@ -38,8 +54,13 @@ export default async function HomePage() {
   await prefetchHomeData();
 
   return (
-    <HydrateClient>
-      <HomeLandingPage featuredPlaces={featuredPlaces} />
-    </HydrateClient>
+    <>
+      <Script id="home-faq-structured-data" type="application/ld+json">
+        {JSON.stringify(homeStructuredData).replace(/</g, "\\u003c")}
+      </Script>
+      <HydrateClient>
+        <HomeLandingPage featuredPlaces={featuredPlaces} />
+      </HydrateClient>
+    </>
   );
 }

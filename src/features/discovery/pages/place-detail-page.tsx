@@ -49,17 +49,15 @@ const buildMetadataDescription = (
   sports: string[],
 ) => {
   const locationLabel = buildLocationLabel(place);
-  const sportLabel = sports.length > 0 ? `Sports: ${sports.join(", ")}` : "";
+  const courtLabel = formatCourtCount(courtCount);
+  const sportsLabel =
+    sports.length > 0 ? ` for ${sports.slice(0, 3).join(", ")}` : " for sports";
 
-  return [
-    place.name,
-    locationLabel,
-    "Philippines",
-    formatCourtCount(courtCount),
-    sportLabel,
-  ]
-    .filter(Boolean)
-    .join(" | ");
+  if (locationLabel) {
+    return `Book ${courtLabel}${sportsLabel} at ${place.name} in ${locationLabel}, Philippines.`;
+  }
+
+  return `Book ${courtLabel}${sportsLabel} at ${place.name} on KudosCourts Philippines.`;
 };
 
 const toAbsoluteUrl = (value?: string | null) => {
@@ -91,7 +89,10 @@ export async function generatePlaceDetailMetadata(
       .map((sport) => sport.name)
       .filter(Boolean);
 
-    title = place.name;
+    const locationLabel = buildLocationLabel(place);
+    title = locationLabel
+      ? `${place.name} (${locationLabel})`
+      : `${place.name} | Venue details`;
     description = buildMetadataDescription(
       place,
       placeDetails.courts.length,
@@ -191,6 +192,11 @@ export async function renderPlaceDetailPage(placeIdOrSlug: string) {
       ? `${placeDetails.place.name} in ${locationLabel} with ${courtCountLabel}. Book with KudosCourts.`
       : `${placeDetails.place.name} with ${courtCountLabel}. Book with KudosCourts.`;
 
+    const mapUrl =
+      typeof latitude === "number" && typeof longitude === "number"
+        ? `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`
+        : undefined;
+
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "SportsActivityLocation",
@@ -205,6 +211,7 @@ export async function renderPlaceDetailPage(placeIdOrSlug: string) {
         addressRegion: placeDetails.place.province,
         addressCountry: placeDetails.place.country,
       },
+      ...(mapUrl ? { hasMap: mapUrl } : {}),
       ...(geo ? { geo } : {}),
       ...(sports.length > 0 ? { sport: sports } : {}),
       ...(imageUrls.length > 0 ? { image: imageUrls } : {}),
@@ -291,10 +298,10 @@ export async function renderPlaceDetailPage(placeIdOrSlug: string) {
     return (
       <>
         <Script id="place-structured-data" type="application/ld+json">
-          {JSON.stringify(structuredData)}
+          {JSON.stringify(structuredData).replace(/</g, "\\u003c")}
         </Script>
         <Script id="place-breadcrumbs" type="application/ld+json">
-          {JSON.stringify(breadcrumbStructuredData)}
+          {JSON.stringify(breadcrumbStructuredData).replace(/</g, "\\u003c")}
         </Script>
 
         <Container className="pt-4 sm:pt-6">

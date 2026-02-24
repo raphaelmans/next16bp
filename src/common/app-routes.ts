@@ -34,6 +34,13 @@ export const appRoutes = {
     schedule: (courtId: string) => `/courts/${courtId}/schedule`,
     book: (courtId: string, slotId: string) =>
       `/courts/${courtId}/book/${slotId}`,
+    locations: {
+      province: (province: string) => `/courts/locations/${province}`,
+      city: (province: string, city: string) =>
+        `/courts/locations/${province}/${city}`,
+      sport: (province: string, city: string, sport: string) =>
+        `/courts/locations/${province}/${city}/${sport}`,
+    },
   },
   places: {
     base: "/venues",
