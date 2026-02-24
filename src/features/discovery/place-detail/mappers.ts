@@ -1,7 +1,7 @@
 import type { PlaceDetail } from "@/features/discovery/hooks/place-detail";
-import type { RouterOutputs } from "@/trpc/types";
+import type { PlaceDetails } from "@/lib/modules/place/services/place-discovery.service";
 
-type PlaceDetailsResponse = RouterOutputs["place"]["getByIdOrSlug"];
+type PlaceDetailsResponse = PlaceDetails;
 
 const toFiniteNumber = (value: string | number | null | undefined) => {
   if (value === null || value === undefined) return undefined;

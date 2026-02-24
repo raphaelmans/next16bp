@@ -2,10 +2,10 @@ import "server-only";
 
 import { cache } from "react";
 import { mapPlaceDetailsToPlaceDetail } from "@/features/discovery/place-detail/mappers";
+import type { PlaceDetails } from "@/lib/modules/place/services/place-discovery.service";
 import { publicCaller } from "@/trpc/server";
-import type { RouterOutputs } from "@/trpc/types";
 
-type PlaceDetailsResponse = RouterOutputs["place"]["getByIdOrSlug"];
+type PlaceDetailsResponse = PlaceDetails;
 
 const getPlaceDetailsByIdOrSlugUncached = async (placeIdOrSlug: string) =>
   publicCaller.place.getByIdOrSlug({ placeIdOrSlug });
