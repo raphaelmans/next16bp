@@ -1200,7 +1200,8 @@ export class ReservationService implements IReservationService {
       })),
     );
 
-    if (!totals.currency || totals.hasMixedCurrencies) {
+    const groupCurrency = totals.currency;
+    if (!groupCurrency || totals.hasMixedCurrencies) {
       throw new ReservationGroupInvalidError(
         "All reservation items in a group must use the same currency",
       );
@@ -1226,7 +1227,7 @@ export class ReservationService implements IReservationService {
             playerEmailSnapshot: profile.email,
             playerPhoneSnapshot: profile.phoneNumber,
             totalPriceCents: totals.totalPriceCents,
-            currency: totals.currency,
+            currency: groupCurrency,
           },
           ctx,
         );
@@ -1313,7 +1314,7 @@ export class ReservationService implements IReservationService {
               placeId: place.id,
               placeName: place.name,
               totalPriceCents: totals.totalPriceCents,
-              currency: totals.currency,
+              currency: groupCurrency,
               playerName: profile.displayName,
               playerEmail: profile.email ?? null,
               playerPhone: profile.phoneNumber ?? null,
@@ -1350,7 +1351,7 @@ export class ReservationService implements IReservationService {
     return {
       reservationGroupId,
       totalPriceCents: totals.totalPriceCents,
-      currency: totals.currency,
+      currency: groupCurrency,
       items,
     };
   }

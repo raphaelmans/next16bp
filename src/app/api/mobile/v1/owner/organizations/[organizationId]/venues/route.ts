@@ -10,13 +10,24 @@ import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { parseJson } from "@/lib/shared/infra/http/parse";
 import { getRequestId } from "@/lib/shared/infra/http/request-id";
 import { validate } from "@/lib/shared/infra/http/validate";
-import type { ApiErrorResponse } from "@/lib/shared/kernel/response";
+import type {
+  ApiErrorResponse,
+  ApiResponse,
+} from "@/lib/shared/kernel/response";
+import type {
+  PlaceRecord,
+  PlaceVerificationRecord,
+} from "@/lib/shared/infra/db/schema";
 import { wrapResponse } from "@/lib/shared/utils/response";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ organizationId: string }>;
+
+type ListMyPlacesMobileResponse = Array<
+  Omit<PlaceRecord & { verification: PlaceVerificationRecord | null }, "country" | "timeZone">
+>;
 
 function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
   place: T,
@@ -68,7 +79,7 @@ export async function GET(req: Request, context: { params: Params }) {
     const places = await service.listMyPlaces(session.userId, input);
     const redactedPlaces = places.map((place) => redactPlaceLocale(place));
 
-    return NextResponse.json(wrapResponse(redactedPlaces));
+    return NextResponse.json<ApiResponse<ListMyPlacesMobileResponse>>(wrapResponse(redactedPlaces));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

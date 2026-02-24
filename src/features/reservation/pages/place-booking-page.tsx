@@ -857,8 +857,8 @@ export default function PlaceBookingPage({
         currency,
       }
     : {
-        startTime: selectedSlot.startTime,
-        endTime: endTime ?? selectedSlot.endTime,
+        startTime: selectedSlot!.startTime,
+        endTime: endTime ?? selectedSlot!.endTime,
         priceCents: totalPrice,
         currency,
       };

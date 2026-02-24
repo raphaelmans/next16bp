@@ -283,17 +283,18 @@ export default function OwnerReservationGroupDetailPage({
             ? "This will accept all reservations in the group at once."
             : "This will confirm all payment-marked reservations in the group."
         }
-        confirmText={allCreated ? "Accept Group" : "Confirm Group"}
+        confirmLabel={allCreated ? "Accept Group" : "Confirm Group"}
         onConfirm={handleConfirmSubmit}
-        loading={acceptMutation.isPending || confirmMutation.isPending}
+        isLoading={acceptMutation.isPending || confirmMutation.isPending}
       />
 
       <RejectModal
         open={rejectOpen}
         onOpenChange={setRejectOpen}
-        mode={rejectMode}
-        onSubmit={handleRejectSubmit}
-        loading={rejectMutation.isPending}
+        title={rejectMode === "cancel" ? "Cancel Reservation Group" : "Reject Reservation Group"}
+        submitLabel={rejectMode === "cancel" ? "Cancel Group" : "Reject Group"}
+        onReject={handleRejectSubmit}
+        isLoading={rejectMutation.isPending}
       />
     </AppShell>
   );

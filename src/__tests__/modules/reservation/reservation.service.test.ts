@@ -435,10 +435,15 @@ describe("ReservationService.createReservationGroup", () => {
     mockedComputeSchedulePriceDetailed.mockImplementation(
       ({ startTime, durationMinutes }) => ({
         result: {
-          startTime,
           endTime: new Date(startTime.getTime() + durationMinutes * 60_000),
           totalPriceCents: 2000,
           currency: "PHP",
+          pricingBreakdown: {
+            basePriceCents: 2000,
+            addonPriceCents: 0,
+            totalPriceCents: 2000,
+            addons: [],
+          },
           warnings: [],
         },
         failureReason: null,
@@ -650,20 +655,30 @@ describe("ReservationService.createReservationGroup", () => {
     mockedComputeSchedulePriceDetailed
       .mockImplementationOnce(({ startTime, durationMinutes }) => ({
         result: {
-          startTime,
           endTime: new Date(startTime.getTime() + durationMinutes * 60_000),
           totalPriceCents: 2000,
           currency: "PHP",
+          pricingBreakdown: {
+            basePriceCents: 2000,
+            addonPriceCents: 0,
+            totalPriceCents: 2000,
+            addons: [],
+          },
           warnings: [],
         },
         failureReason: null,
       }))
       .mockImplementationOnce(({ startTime, durationMinutes }) => ({
         result: {
-          startTime,
           endTime: new Date(startTime.getTime() + durationMinutes * 60_000),
           totalPriceCents: 2500,
           currency: "USD",
+          pricingBreakdown: {
+            basePriceCents: 2500,
+            addonPriceCents: 0,
+            totalPriceCents: 2500,
+            addons: [],
+          },
           warnings: [],
         },
         failureReason: null,
@@ -697,10 +712,15 @@ describe("ReservationService.createReservationGroup", () => {
     mockedComputeSchedulePriceDetailed.mockImplementation(
       ({ startTime, durationMinutes }) => ({
         result: {
-          startTime,
           endTime: new Date(startTime.getTime() + durationMinutes * 60_000),
           totalPriceCents: 2000,
           currency: "PHP",
+          pricingBreakdown: {
+            basePriceCents: 2000,
+            addonPriceCents: 0,
+            totalPriceCents: 2000,
+            addons: [],
+          },
           warnings: [],
         },
         failureReason: null,
@@ -738,10 +758,15 @@ describe("ReservationService.createReservationGroup", () => {
     mockedComputeSchedulePriceDetailed.mockImplementation(
       ({ startTime, durationMinutes }) => ({
         result: {
-          startTime,
           endTime: new Date(startTime.getTime() + durationMinutes * 60_000),
           totalPriceCents: 2000,
           currency: "PHP",
+          pricingBreakdown: {
+            basePriceCents: 2000,
+            addonPriceCents: 0,
+            totalPriceCents: 2000,
+            addons: [],
+          },
           warnings: [],
         },
         failureReason: null,

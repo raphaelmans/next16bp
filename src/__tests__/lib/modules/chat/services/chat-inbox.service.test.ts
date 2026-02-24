@@ -78,7 +78,7 @@ describe("ChatInboxService", () => {
       // Arrange
       const archiveRepository = makeArchiveRepository();
       const service = new ChatInboxService({} as never, archiveRepository);
-      vi.spyOn(service as never, "assertViewerAccess").mockResolvedValue(
+      vi.spyOn(service as any, "assertViewerAccess").mockResolvedValue(
         undefined,
       );
 
