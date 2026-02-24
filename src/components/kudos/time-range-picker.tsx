@@ -1,6 +1,6 @@
 "use client";
 
-import { Info } from "lucide-react";
+import { Check, Info } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { useShallow } from "zustand/shallow";
@@ -42,6 +42,7 @@ export interface TimeRangePickerProps {
   onContinue?: () => void;
   continueLabel?: string;
   className?: string;
+  cartedStartTimes?: Set<string>;
 }
 
 function isSlotAvailable(slot: TimeSlot): boolean {
@@ -212,6 +213,7 @@ interface TimeSlotRowProps {
   timeZone: string;
   showPrice: boolean;
   isPast?: boolean;
+  isInCart: boolean;
 }
 
 const TimeSlotRow = React.memo(function TimeSlotRow({
@@ -220,6 +222,7 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
   timeZone,
   showPrice,
   isPast,
+  isInCart,
 }: TimeSlotRowProps) {
   const shouldReduceMotion = useReducedMotion();
   const motionTransition = shouldReduceMotion
@@ -276,7 +279,11 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
         available &&
           !inRange &&
           !inHoverPreview &&
+          !isInCart &&
           "bg-success-light/20 hover:bg-success-light/50 cursor-pointer",
+        isInCart &&
+          !inRange &&
+          "bg-success/10 ring-1 ring-inset ring-success/40 cursor-pointer",
         inHoverPreview && "bg-primary/5 cursor-pointer",
         inRange && "bg-primary/8 relative",
         isPassed && "bg-muted/40 cursor-not-allowed",
@@ -326,6 +333,10 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
           <div className="h-2 w-2 rounded-full bg-destructive/50" />
         ) : isPassed ? (
           <div className="h-2 w-2 rounded-full bg-muted-foreground/45" />
+        ) : isInCart ? (
+          <div className="flex h-4 w-4 items-center justify-center rounded-full bg-success/20">
+            <Check className="h-2.5 w-2.5 text-success" />
+          </div>
         ) : inRange ? (
           <motion.div
             initial={{ scale: 0.5 }}
@@ -373,6 +384,11 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
             Passed
           </span>
         )}
+        {isInCart && (
+          <span className="inline-flex items-center rounded-md bg-success/10 px-2 py-0.5 text-[11px] font-medium text-success">
+            In booking
+          </span>
+        )}
         {available && showPrice && slot.priceCents !== undefined && (
           <span
             className={cn(
@@ -410,6 +426,7 @@ export function TimeRangePicker({
   onContinue,
   continueLabel = "Continue to review",
   className,
+  cartedStartTimes,
 }: TimeRangePickerProps) {
   const nowMs = useNowMs({ intervalMs: 10_000 });
 
@@ -463,6 +480,7 @@ export function TimeRangePicker({
         continueLabel={continueLabel}
         className={className}
         nowMs={nowMs}
+        cartedStartTimes={cartedStartTimes}
       />
     </RangeSelectionProvider>
   );
@@ -478,6 +496,7 @@ function TimeRangePickerInner({
   continueLabel,
   className,
   nowMs,
+  cartedStartTimes,
 }: {
   slots: TimeSlot[];
   timeZone: string;
@@ -487,6 +506,7 @@ function TimeRangePickerInner({
   continueLabel: string;
   className?: string;
   nowMs: number;
+  cartedStartTimes?: Set<string>;
 }) {
   const { pointerUp, setHoveredIdx } = useRangeSelection(
     useShallow((s) => ({
@@ -533,6 +553,9 @@ function TimeRangePickerInner({
             timeZone={timeZone}
             showPrice={showPrice}
             isPast={Date.parse(slot.startTime) < nowMs}
+            isInCart={
+              cartedStartTimes?.has(String(Date.parse(slot.startTime))) ?? false
+            }
           />
         ))}
       </div>

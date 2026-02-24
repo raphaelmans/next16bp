@@ -1,5 +1,6 @@
 "use client";
 
+import { Check } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { useShallow } from "zustand/shallow";
@@ -98,6 +99,7 @@ export type AvailabilityWeekGridProps = {
   maxDayKey: string;
   sameDayAnchorDayKey?: string;
   sameDayCueMode?: AvailabilityWeekGridCueMode;
+  cartedStartTimes?: Set<string>;
 };
 
 // ---------------------------------------------------------------------------
@@ -260,6 +262,7 @@ interface WeekGridCellProps {
   hourIdx: number;
   isDisabled: boolean;
   timeZone: string;
+  isInCart: boolean;
 }
 
 const WeekGridCell = React.memo(function WeekGridCell({
@@ -269,6 +272,7 @@ const WeekGridCell = React.memo(function WeekGridCell({
   hourIdx,
   isDisabled,
   timeZone,
+  isInCart,
 }: WeekGridCellProps) {
   const shouldReduceMotion = useReducedMotion();
   const motionTransition = shouldReduceMotion
@@ -345,7 +349,11 @@ const WeekGridCell = React.memo(function WeekGridCell({
         canSelect &&
           !inRange &&
           !inHoverPreview &&
+          !isInCart &&
           "cursor-pointer bg-success-light/20 hover:bg-success-light/50",
+        isInCart &&
+          !inRange &&
+          "bg-success/10 ring-1 ring-inset ring-success/40 cursor-pointer",
         canSelect && inHoverPreview && "bg-primary/5 cursor-pointer",
         inRange && !isPendingStart && "bg-primary/8",
         isPendingStart && "bg-primary/15 ring-1 ring-inset ring-primary/25",
@@ -397,7 +405,19 @@ const WeekGridCell = React.memo(function WeekGridCell({
           )}
         </div>
       )}
-      {available && !inRange && slot && (
+      {isInCart && !inRange && slot && (
+        <div className="flex flex-col items-center gap-0.5">
+          <div className="flex h-4 w-4 items-center justify-center rounded-full bg-success/20">
+            <Check className="h-2.5 w-2.5 text-success" />
+          </div>
+          {slot.priceCents !== undefined && (
+            <span className="text-xs font-medium tabular-nums text-success/80">
+              {formatCurrency(slot.priceCents, slot.currency ?? "PHP")}
+            </span>
+          )}
+        </div>
+      )}
+      {available && !inRange && !isInCart && slot && (
         <div className="flex flex-col items-center gap-0.5">
           {slot.priceCents !== undefined ? (
             <span className="text-xs font-medium tabular-nums text-success/80 group-hover/cell:text-success">
@@ -429,6 +449,7 @@ export function AvailabilityWeekGrid({
   maxDayKey,
   sameDayAnchorDayKey,
   sameDayCueMode = "none",
+  cartedStartTimes,
 }: AvailabilityWeekGridProps) {
   const nowMs = useNowMs({ intervalMs: 10_000 });
 
@@ -595,6 +616,7 @@ export function AvailabilityWeekGrid({
         sameDayCueMode={sameDayCueMode}
         toLinear={toLinear}
         nowMs={nowMs}
+        cartedStartTimes={cartedStartTimes}
       />
     </RangeSelectionProvider>
   );
@@ -620,6 +642,7 @@ interface WeekGridInnerProps {
   sameDayCueMode: AvailabilityWeekGridCueMode;
   toLinear: (dayColIdx: number, hourIdx: number) => number;
   nowMs: number;
+  cartedStartTimes?: Set<string>;
 }
 
 function WeekGridInner({
@@ -638,6 +661,7 @@ function WeekGridInner({
   sameDayCueMode,
   toLinear,
   nowMs,
+  cartedStartTimes,
 }: WeekGridInnerProps) {
   const { pointerUp, setHoveredIdx } = useRangeSelection(
     useShallow((s) => ({
@@ -821,6 +845,13 @@ function WeekGridInner({
                         hourIdx={hourIdx}
                         isDisabled={isDayDisabled || isPastSlot}
                         timeZone={timeZone}
+                        isInCart={
+                          slot?.startTime
+                            ? (cartedStartTimes?.has(
+                                String(Date.parse(slot.startTime)),
+                              ) ?? false)
+                            : false
+                        }
                       />
                     );
                   })}

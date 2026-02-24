@@ -76,6 +76,7 @@ type PlaceDetailMobileSheetProps = {
   onClearSelection: () => void;
   onReserve: () => void;
   onContinueFromCart: () => void;
+  onBackToSelect: () => void;
   hasSelection: boolean;
   selectionSummary: SelectionSummary | null;
   selectionDateLabel: string;
@@ -84,6 +85,7 @@ type PlaceDetailMobileSheetProps = {
   canAddToCart: boolean;
   onAddToCartAction: () => void;
   onRemoveFromCartAction: (key: string) => void;
+  cartedStartTimes?: Set<string>;
 };
 
 export function PlaceDetailMobileSheet({
@@ -115,6 +117,7 @@ export function PlaceDetailMobileSheet({
   onClearSelection,
   onReserve,
   onContinueFromCart,
+  onBackToSelect,
   hasSelection,
   selectionSummary,
   selectionDateLabel,
@@ -123,6 +126,7 @@ export function PlaceDetailMobileSheet({
   canAddToCart,
   onAddToCartAction,
   onRemoveFromCartAction,
+  cartedStartTimes,
 }: PlaceDetailMobileSheetProps) {
   const cartItemCount = cartItems.length;
   const hasCartItems = cartItemCount > 0;
@@ -149,15 +153,15 @@ export function PlaceDetailMobileSheet({
 
   React.useEffect(() => {
     if (!hasCartItems && mobileFlowStep === "review") {
+      onBackToSelect();
       setMobileFlowStep("select");
     }
-  }, [hasCartItems, mobileFlowStep]);
+  }, [hasCartItems, mobileFlowStep, onBackToSelect]);
 
   const handleAddToBooking = React.useCallback(() => {
     onAddToCartAction();
-    onClearSelection();
     setMobileFlowStep("review");
-  }, [onAddToCartAction, onClearSelection]);
+  }, [onAddToCartAction]);
 
   const handleOpenReview = React.useCallback(() => {
     if (!hasCartItems) return;
@@ -370,6 +374,7 @@ export function PlaceDetailMobileSheet({
                     }
                     onClear={onClearSelection}
                     onContinue={onReserve}
+                    cartedStartTimes={cartedStartTimes}
                   />
                 ) : (
                   <div className="py-6 text-center text-sm text-muted-foreground">
@@ -417,7 +422,10 @@ export function PlaceDetailMobileSheet({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setMobileFlowStep("select")}
+              onClick={() => {
+                onBackToSelect();
+                setMobileFlowStep("select");
+              }}
             >
               Back to slot selection
             </Button>

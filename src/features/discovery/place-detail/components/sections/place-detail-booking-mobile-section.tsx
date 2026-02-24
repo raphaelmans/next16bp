@@ -25,7 +25,11 @@ import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-d
 import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
 import { buildCourtSelectionMemoryKey } from "@/features/discovery/place-detail/helpers/court-selection-memory";
 import { useModMobileWeekPrefetch } from "@/features/discovery/place-detail/hooks/use-mobile-week-prefetch";
-import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
+import {
+  type BookingCartItem,
+  useBookingCartStore,
+} from "@/features/discovery/place-detail/stores/booking-cart-store";
+import { useBookingSelectionStore } from "@/features/discovery/place-detail/stores/booking-selection-store";
 import { useCourtSelectionMemoryStore } from "@/features/discovery/place-detail/stores/court-selection-memory-store";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 
@@ -110,6 +114,21 @@ export function PlaceDetailBookingMobileSection({
     (s) => s.setMobileSheetExpanded,
   );
   const [mobileCalendarOpen, setMobileCalendarOpen] = React.useState(false);
+
+  const cartedStartTimes = React.useMemo(() => {
+    if (selectionMode !== "court" || !selectedCourtId) return undefined;
+    const set = new Set<string>();
+    for (const item of cartItems) {
+      if (item.courtId === selectedCourtId) {
+        const startMs = Date.parse(item.startTime);
+        const slotCount = item.durationMinutes / TIMELINE_SLOT_DURATION;
+        for (let i = 0; i < slotCount; i++) {
+          set.add(String(startMs + i * TIMELINE_SLOT_DURATION * 60_000));
+        }
+      }
+    }
+    return set.size > 0 ? set : undefined;
+  }, [cartItems, selectedCourtId, selectionMode]);
 
   const selectedDayKey = React.useMemo(
     () => getZonedDayKey(selectedDate ?? today, placeTimeZone),
@@ -402,6 +421,15 @@ export function PlaceDetailBookingMobileSection({
     [clearSelection, setSelectedCourtId, setSelectedSportId, setSelectionMode],
   );
 
+  const handleAddToCartWithSnapshot = React.useCallback(() => {
+    useBookingSelectionStore.getState().saveLastAdded();
+    onAddToCartAction();
+  }, [onAddToCartAction]);
+
+  const handleBackToSelect = React.useCallback(() => {
+    useBookingSelectionStore.getState().restoreLastAdded();
+  }, []);
+
   const handleMobileCourtChange = React.useCallback(
     (courtId: string | undefined) => {
       const previousCourtMemoryKey = buildCourtSelectionMemoryKey({
@@ -411,10 +439,19 @@ export function PlaceDetailBookingMobileSection({
         courtId: selectedCourtId,
       });
       if (previousCourtMemoryKey && selectedStartTime) {
-        rememberCourtSelection(previousCourtMemoryKey, {
-          startTime: selectedStartTime,
-          durationMinutes,
-        });
+        const isInCart = useBookingCartStore
+          .getState()
+          .items.some(
+            (item) =>
+              item.courtId === selectedCourtId &&
+              item.startTime === selectedStartTime,
+          );
+        if (!isInCart) {
+          rememberCourtSelection(previousCourtMemoryKey, {
+            startTime: selectedStartTime,
+            durationMinutes,
+          });
+        }
       }
 
       if (courtId) {
@@ -491,14 +528,16 @@ export function PlaceDetailBookingMobileSection({
       onClearSelection={() => clearSelection(true)}
       onReserve={onContinue}
       onContinueFromCart={onContinueFromCart}
+      onBackToSelect={handleBackToSelect}
       hasSelection={hasSelection}
       selectionSummary={selectionSummary}
       selectionDateLabel={selectionDateLabel}
       selectionTimeLabel={selectionTimeLabel}
       cartItems={cartItems}
       canAddToCart={canAddToCart}
-      onAddToCartAction={onAddToCartAction}
+      onAddToCartAction={handleAddToCartWithSnapshot}
       onRemoveFromCartAction={onRemoveFromCartAction}
+      cartedStartTimes={cartedStartTimes}
     />
   );
 }

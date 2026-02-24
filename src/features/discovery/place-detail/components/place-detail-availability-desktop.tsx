@@ -95,6 +95,7 @@ type PlaceDetailAvailabilityDesktopProps = {
   anyDayDiagnostics: AvailabilityDiagnostics | null;
   courtDayDiagnostics: AvailabilityDiagnostics | null;
   contactDetail?: PlaceContactDetail;
+  cartedStartTimes?: Set<string>;
 };
 
 export function PlaceDetailAvailabilityDesktop({
@@ -141,6 +142,7 @@ export function PlaceDetailAvailabilityDesktop({
   anyDayDiagnostics,
   courtDayDiagnostics,
   contactDetail,
+  cartedStartTimes,
 }: PlaceDetailAvailabilityDesktopProps) {
   const isCourtWeekView = courtViewMode === "week";
 
@@ -485,6 +487,7 @@ export function PlaceDetailAvailabilityDesktop({
                   onContinue={onContinue}
                   todayDayKey={todayDayKey}
                   maxDayKey={maxDayKey}
+                  cartedStartTimes={cartedStartTimes}
                 />
               )
             ) : !selectedDate ? (
@@ -503,6 +506,7 @@ export function PlaceDetailAvailabilityDesktop({
                 onChange={onAnyRangeChange}
                 onClear={onClearSelection}
                 onContinue={onContinue}
+                cartedStartTimes={cartedStartTimes}
               />
             ) : (
               <AvailabilityEmptyState
@@ -538,6 +542,7 @@ export function PlaceDetailAvailabilityDesktop({
                 maxDayKey={maxDayKey}
                 sameDayAnchorDayKey={sameDayAnchorDayKey}
                 sameDayCueMode="highlight-anchor"
+                cartedStartTimes={cartedStartTimes}
               />
             )
           ) : !selectedDate ? (
@@ -556,6 +561,7 @@ export function PlaceDetailAvailabilityDesktop({
               onChange={onCourtRangeChange}
               onClear={onClearSelection}
               onContinue={onContinue}
+              cartedStartTimes={cartedStartTimes}
             />
           ) : (
             <AvailabilityEmptyState

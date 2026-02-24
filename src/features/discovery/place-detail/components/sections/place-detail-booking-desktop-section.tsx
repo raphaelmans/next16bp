@@ -27,6 +27,7 @@ import {
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
 import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
 import { buildCourtSelectionMemoryKey } from "@/features/discovery/place-detail/helpers/court-selection-memory";
+import { useBookingCartStore } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { useCourtSelectionMemoryStore } from "@/features/discovery/place-detail/stores/court-selection-memory-store";
 
 const TIMELINE_SLOT_DURATION = 60;
@@ -127,6 +128,23 @@ export function PlaceDetailBookingDesktopSection({
 
   const isCourtMode = selectionMode === "court";
   const isCourtWeekView = courtViewMode === "week";
+
+  const cartItems = useBookingCartStore((s) => s.items);
+  const cartedStartTimes = React.useMemo(() => {
+    if (selectionMode !== "court" || !selectedCourtId) return undefined;
+    const set = new Set<string>();
+    for (const item of cartItems) {
+      if (item.courtId === selectedCourtId) {
+        const startMs = Date.parse(item.startTime);
+        const slotCount = item.durationMinutes / TIMELINE_SLOT_DURATION;
+        for (let i = 0; i < slotCount; i++) {
+          // Store as epoch ms string for format-agnostic matching
+          set.add(String(startMs + i * TIMELINE_SLOT_DURATION * 60_000));
+        }
+      }
+    }
+    return set.size > 0 ? set : undefined;
+  }, [cartItems, selectedCourtId, selectionMode]);
 
   const weekStartDayKey = React.useMemo(
     () => getWeekStartDayKey(selectedDayKey, placeTimeZone),
@@ -516,10 +534,19 @@ export function PlaceDetailBookingDesktopSection({
         courtId: selectedCourtId,
       });
       if (previousCourtMemoryKey && selectedStartTime) {
-        rememberCourtSelection(previousCourtMemoryKey, {
-          startTime: selectedStartTime,
-          durationMinutes,
-        });
+        const isInCart = useBookingCartStore
+          .getState()
+          .items.some(
+            (item) =>
+              item.courtId === selectedCourtId &&
+              item.startTime === selectedStartTime,
+          );
+        if (!isInCart) {
+          rememberCourtSelection(previousCourtMemoryKey, {
+            startTime: selectedStartTime,
+            durationMinutes,
+          });
+        }
       }
 
       setSelectedCourtId(courtId);
@@ -656,6 +683,7 @@ export function PlaceDetailBookingDesktopSection({
       anyDayDiagnostics={anyDayDiagnostics}
       courtDayDiagnostics={courtDayDiagnostics}
       contactDetail={place.contactDetail}
+      cartedStartTimes={cartedStartTimes}
     />
   );
 }
