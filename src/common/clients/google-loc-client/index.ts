@@ -99,7 +99,7 @@ export const googleLocClient = {
     url: string;
     signal?: AbortSignal;
   }): Promise<GoogleLocResult> {
-    const response = await googleLocKy.post("/api/poc/google-loc", {
+    const response = await googleLocKy.post("/api/v1/google-loc/preview", {
       json: { url: args.url },
       signal: args.signal,
     });
@@ -143,7 +143,7 @@ export const googleLocClient = {
     max?: number;
     signal?: AbortSignal;
   }): Promise<GoogleLocNearbyResult> {
-    const response = await googleLocKy.post("/api/poc/google-loc/nearby", {
+    const response = await googleLocKy.post("/api/v1/google-loc/nearby", {
       json: {
         lat: args.lat,
         lng: args.lng,

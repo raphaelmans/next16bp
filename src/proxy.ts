@@ -23,6 +23,10 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
 
+  if (path.startsWith("/api/v1/google-loc/")) {
+    return NextResponse.next({ request: { headers: requestHeaders } });
+  }
+
   if (path.startsWith("/api/v1/")) {
     const url = request.nextUrl.clone();
     url.pathname = path.replace(/^\/api\/v1\//, "/api/mobile/v1/");
