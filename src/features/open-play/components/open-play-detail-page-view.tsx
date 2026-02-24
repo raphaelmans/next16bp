@@ -209,7 +209,9 @@ export default function OpenPlayDetailPageView({
                     {data.openPlay.title || "Open Play"}
                   </CardTitle>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {data.sport.name} • {data.court.label} • {data.place.name}
+                    {data.sport.name} •{" "}
+                    {data.courts.map((c) => c.label).join(", ")} •{" "}
+                    {data.place.name}
                   </p>
                   <p className="mt-2 text-sm">
                     <span className="font-medium">{dateLabel}</span>

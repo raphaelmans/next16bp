@@ -73,6 +73,31 @@ describe("ChatInboxService", () => {
         undefined,
       );
     });
+
+    it("reservation group thread id -> accepted by reservation thread parser", async () => {
+      // Arrange
+      const archiveRepository = makeArchiveRepository();
+      const service = new ChatInboxService({} as never, archiveRepository);
+      vi.spyOn(service as never, "assertViewerAccess").mockResolvedValue(
+        undefined,
+      );
+
+      // Act
+      await service.archiveThread(viewer, {
+        threadKind: "reservation",
+        threadId: "grp-group-1",
+      });
+
+      // Assert
+      expect(archiveRepository.upsert).toHaveBeenCalledWith(
+        {
+          userId: "user-1",
+          threadKind: "reservation",
+          threadId: "grp-group-1",
+        },
+        undefined,
+      );
+    });
   });
 
   describe("unarchiveThread", () => {

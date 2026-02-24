@@ -21,7 +21,7 @@ export function OpenPlayList({
       suggestedSplitPerPlayerCents: number;
       requiresPayment: boolean;
     };
-    courtLabel: string;
+    courtLabels: string[];
     sportName: string;
     host: {
       displayName: string;

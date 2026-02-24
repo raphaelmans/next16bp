@@ -55,7 +55,7 @@ export function OpenPlayChatPanel({ openPlayId }: { openPlayId: string }) {
             headerTitle={session?.meta.place.name ?? "Open Play"}
             headerSubtitle={
               session?.meta
-                ? `${session.meta.sport.name} • ${session.meta.court.label}`
+                ? `${session.meta.sport.name} • ${session.meta.courts.map((c) => c.label).join(", ")}`
                 : undefined
             }
             minHeightClassName="min-h-[520px]"

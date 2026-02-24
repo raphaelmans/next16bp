@@ -123,8 +123,15 @@ function makeOwnerService(overrides?: {
     enqueuePlayerReservationAwaitingPayment: vi
       .fn()
       .mockResolvedValue(undefined),
+    enqueuePlayerReservationGroupAwaitingPayment: vi
+      .fn()
+      .mockResolvedValue(undefined),
     enqueuePlayerReservationConfirmed: vi.fn().mockResolvedValue(undefined),
+    enqueuePlayerReservationGroupConfirmed: vi
+      .fn()
+      .mockResolvedValue(undefined),
     enqueuePlayerReservationRejected: vi.fn().mockResolvedValue(undefined),
+    enqueuePlayerReservationGroupRejected: vi.fn().mockResolvedValue(undefined),
   };
 
   const service = new ReservationOwnerService(
@@ -185,7 +192,8 @@ function makeOwnerService(overrides?: {
 describe("ReservationOwnerService group actions", () => {
   it("acceptReservationGroup confirms all free reservations", async () => {
     // Arrange
-    const { service, reservationRepository } = makeOwnerService();
+    const { service, reservationRepository, notificationDeliveryService } =
+      makeOwnerService();
 
     // Act
     const updated = await service.acceptReservationGroup("owner-user-1", {
@@ -196,6 +204,14 @@ describe("ReservationOwnerService group actions", () => {
     expect(updated).toHaveLength(2);
     expect(updated.every((item) => item.status === "CONFIRMED")).toBe(true);
     expect(vi.mocked(reservationRepository.update)).toHaveBeenCalledTimes(2);
+    expect(
+      vi.mocked(
+        notificationDeliveryService.enqueuePlayerReservationGroupConfirmed,
+      ),
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      vi.mocked(notificationDeliveryService.enqueuePlayerReservationConfirmed),
+    ).not.toHaveBeenCalled();
   });
 
   it("acceptReservationGroup moves paid reservations to AWAITING_PAYMENT", async () => {
@@ -237,9 +253,14 @@ describe("ReservationOwnerService group actions", () => {
     ).toBe(true);
     expect(
       vi.mocked(
+        notificationDeliveryService.enqueuePlayerReservationGroupAwaitingPayment,
+      ),
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      vi.mocked(
         notificationDeliveryService.enqueuePlayerReservationAwaitingPayment,
       ),
-    ).toHaveBeenCalledTimes(2);
+    ).not.toHaveBeenCalled();
   });
 
   it("acceptReservationGroup fails when one reservation is expired", async () => {
@@ -329,8 +350,13 @@ describe("ReservationOwnerService group actions", () => {
     expect(updated.every((item) => item.status === "CONFIRMED")).toBe(true);
     expect(vi.mocked(reservationRepository.update)).toHaveBeenCalledTimes(2);
     expect(
+      vi.mocked(
+        notificationDeliveryService.enqueuePlayerReservationGroupConfirmed,
+      ),
+    ).toHaveBeenCalledTimes(1);
+    expect(
       vi.mocked(notificationDeliveryService.enqueuePlayerReservationConfirmed),
-    ).toHaveBeenCalledTimes(2);
+    ).not.toHaveBeenCalled();
   });
 
   it("confirmPaymentGroup fails when one reservation is not PAYMENT_MARKED_BY_USER", async () => {
@@ -394,8 +420,13 @@ describe("ReservationOwnerService group actions", () => {
     expect(updated.every((item) => item.status === "CANCELLED")).toBe(true);
     expect(vi.mocked(reservationRepository.update)).toHaveBeenCalledTimes(3);
     expect(
+      vi.mocked(
+        notificationDeliveryService.enqueuePlayerReservationGroupRejected,
+      ),
+    ).toHaveBeenCalledTimes(1);
+    expect(
       vi.mocked(notificationDeliveryService.enqueuePlayerReservationRejected),
-    ).toHaveBeenCalledTimes(3);
+    ).not.toHaveBeenCalled();
   });
 
   it("rejectReservationGroup fails for disallowed status", async () => {

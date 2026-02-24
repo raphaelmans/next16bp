@@ -25,6 +25,15 @@ import type { TimeSlot } from "./time-slot-picker";
 const TIMELINE_SLOT_DURATION = 60;
 const WEEK_ROW_HEIGHT = 56;
 
+const isSameInstant = (a: string, b: string): boolean => {
+  const aMs = Date.parse(a);
+  const bMs = Date.parse(b);
+  if (Number.isFinite(aMs) && Number.isFinite(bMs)) {
+    return aMs === bMs;
+  }
+  return a === b;
+};
+
 const parseDayKeyToDate = (dayKey: string, timeZone?: string) =>
   getZonedDayRangeFromDayKey(dayKey, timeZone).start;
 
@@ -56,6 +65,26 @@ export type AvailabilityWeekGridRange = {
   durationMinutes: number;
 };
 
+export type AvailabilityWeekGridCueMode = "none" | "highlight-anchor";
+
+export type WeekGridDayCueState = "none" | "anchor";
+
+type WeekGridDayCueInput = {
+  dayKey: string;
+  sameDayAnchorDayKey?: string;
+  cueMode: AvailabilityWeekGridCueMode;
+};
+
+export function getWeekGridDayCueState({
+  dayKey,
+  sameDayAnchorDayKey,
+  cueMode,
+}: WeekGridDayCueInput): WeekGridDayCueState {
+  if (cueMode !== "highlight-anchor") return "none";
+  if (!sameDayAnchorDayKey) return "none";
+  return dayKey === sameDayAnchorDayKey ? "anchor" : "none";
+}
+
 export type AvailabilityWeekGridProps = {
   dayKeys: string[];
   slotsByDay: Map<string, TimeSlot[]>;
@@ -67,6 +96,8 @@ export type AvailabilityWeekGridProps = {
   continueLabel?: string;
   todayDayKey: string;
   maxDayKey: string;
+  sameDayAnchorDayKey?: string;
+  sameDayCueMode?: AvailabilityWeekGridCueMode;
 };
 
 // ---------------------------------------------------------------------------
@@ -396,6 +427,8 @@ export function AvailabilityWeekGrid({
   continueLabel = "Continue to review",
   todayDayKey,
   maxDayKey,
+  sameDayAnchorDayKey,
+  sameDayCueMode = "none",
 }: AvailabilityWeekGridProps) {
   const nowMs = useNowMs({ intervalMs: 10_000 });
 
@@ -443,7 +476,7 @@ export function AvailabilityWeekGrid({
       if (!hourMap) continue;
       for (let hi = 0; hi < allHours.length; hi++) {
         const slot = hourMap.get(allHours[hi]);
-        if (slot && slot.startTime === selectedRange.startTime) {
+        if (slot && isSameInstant(slot.startTime, selectedRange.startTime)) {
           const count = selectedRange.durationMinutes / TIMELINE_SLOT_DURATION;
           return {
             startIdx: toLinear(di, hi),
@@ -558,6 +591,8 @@ export function AvailabilityWeekGrid({
         continueLabel={continueLabel}
         todayDayKey={todayDayKey}
         maxDayKey={maxDayKey}
+        sameDayAnchorDayKey={sameDayAnchorDayKey}
+        sameDayCueMode={sameDayCueMode}
         toLinear={toLinear}
         nowMs={nowMs}
       />
@@ -581,6 +616,8 @@ interface WeekGridInnerProps {
   continueLabel: string;
   todayDayKey: string;
   maxDayKey: string;
+  sameDayAnchorDayKey?: string;
+  sameDayCueMode: AvailabilityWeekGridCueMode;
   toLinear: (dayColIdx: number, hourIdx: number) => number;
   nowMs: number;
 }
@@ -597,6 +634,8 @@ function WeekGridInner({
   continueLabel,
   todayDayKey,
   maxDayKey,
+  sameDayAnchorDayKey,
+  sameDayCueMode,
   toLinear,
   nowMs,
 }: WeekGridInnerProps) {
@@ -609,6 +648,15 @@ function WeekGridInner({
   const isDragging = useRangeSelection((s) => s.anchorIdx !== null);
 
   const refDayKey = dayKeys[0];
+  const sameDayAnchorLabel = React.useMemo(() => {
+    if (sameDayCueMode !== "highlight-anchor" || !sameDayAnchorDayKey) {
+      return null;
+    }
+    const anchorDate = parseDayKeyToDate(sameDayAnchorDayKey, timeZone);
+    return formatInTimeZone(anchorDate, timeZone, "EEE, MMM d");
+  }, [sameDayAnchorDayKey, sameDayCueMode, timeZone]);
+  const hasAnchorCue =
+    sameDayCueMode === "highlight-anchor" && !!sameDayAnchorDayKey;
 
   return (
     <div
@@ -629,6 +677,14 @@ function WeekGridInner({
         continueLabel={continueLabel}
       />
 
+      {sameDayAnchorLabel ? (
+        <div className="rounded-lg border border-success/35 bg-success-light/30 px-3 py-2 text-xs text-muted-foreground">
+          <span className="font-medium text-foreground">Same-day booking:</span>{" "}
+          add more courts on{" "}
+          <span className="font-medium">{sameDayAnchorLabel}</span>.
+        </div>
+      ) : null}
+
       <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory">
         <div className="min-w-[700px]">
           {/* Day headers */}
@@ -644,6 +700,12 @@ function WeekGridInner({
               const isToday = dk === todayDayKey;
               const isPast = dk < todayDayKey;
               const isBeyondMax = dk > maxDayKey;
+              const dayCueState = getWeekGridDayCueState({
+                dayKey: dk,
+                sameDayAnchorDayKey,
+                cueMode: sameDayCueMode,
+              });
+              const isAnchorCue = dayCueState === "anchor";
               return (
                 <button
                   key={`hdr-${dk}`}
@@ -652,12 +714,25 @@ function WeekGridInner({
                   disabled={isPast || isBeyondMax}
                   className={cn(
                     "border-b border-border/70 px-1 py-2 text-center text-xs font-semibold transition-colors",
-                    isToday && "text-primary",
+                    isAnchorCue &&
+                      !isPast &&
+                      !isBeyondMax &&
+                      "bg-success-light/60 text-success shadow-[inset_0_0_0_1px_hsl(var(--success)/0.45)]",
+                    hasAnchorCue &&
+                      !isAnchorCue &&
+                      !isPast &&
+                      !isBeyondMax &&
+                      "bg-muted/20",
+                    isToday && !isAnchorCue && "text-primary",
                     isPast && "text-muted-foreground/40",
                     isBeyondMax && "text-muted-foreground/40",
                     !isPast &&
                       !isBeyondMax &&
-                      "hover:bg-accent/10 cursor-pointer",
+                      (isAnchorCue
+                        ? "hover:bg-success-light/70 cursor-pointer"
+                        : hasAnchorCue
+                          ? "hover:bg-muted/30 cursor-pointer"
+                          : "hover:bg-accent/10 cursor-pointer"),
                   )}
                 >
                   <div>{formatInTimeZone(date, timeZone, "EEE")}</div>
@@ -707,6 +782,12 @@ function WeekGridInner({
               const isBeyondMax = dk > maxDayKey;
               const isDayDisabled = isPast || isBeyondMax;
               const isToday = dk === todayDayKey;
+              const dayCueState = getWeekGridDayCueState({
+                dayKey: dk,
+                sameDayAnchorDayKey,
+                cueMode: sameDayCueMode,
+              });
+              const isAnchorCue = dayCueState === "anchor";
               const hourMap = slotLookup.get(dk);
 
               return (
@@ -715,7 +796,14 @@ function WeekGridInner({
                   className={cn(
                     "relative border-l border-border/70",
                     isDayDisabled && "opacity-40",
-                    isToday && "bg-primary/[0.02]",
+                    isAnchorCue &&
+                      !isDayDisabled &&
+                      "bg-success-light/40 shadow-[inset_0_0_0_1px_hsl(var(--success)/0.30)]",
+                    hasAnchorCue &&
+                      !isAnchorCue &&
+                      !isDayDisabled &&
+                      "bg-muted/[0.06]",
+                    isToday && !isAnchorCue && "bg-primary/[0.02]",
                   )}
                 >
                   {allHours.map((hour, hourIdx) => {

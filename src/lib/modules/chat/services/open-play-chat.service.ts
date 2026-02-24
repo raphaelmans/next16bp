@@ -30,10 +30,10 @@ export interface OpenPlayChatMeta {
     name: string;
     timeZone: string;
   };
-  court: {
+  courts: {
     id: string;
     label: string;
-  };
+  }[];
   sport: {
     id: string;
     name: string;
@@ -163,7 +163,7 @@ export class OpenPlayChatService {
           endsAtIso: new Date(context.openPlay.endsAt).toISOString(),
         },
         place: context.place,
-        court: context.court,
+        courts: context.courts,
         sport: context.sport,
         host: {
           profileId: context.host.profileId,

@@ -26,6 +26,8 @@ import {
 } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
 import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
+import { buildCourtSelectionMemoryKey } from "@/features/discovery/place-detail/helpers/court-selection-memory";
+import { useCourtSelectionMemoryStore } from "@/features/discovery/place-detail/stores/court-selection-memory-store";
 
 const TIMELINE_SLOT_DURATION = 60;
 
@@ -63,6 +65,7 @@ type PlaceDetailBookingDesktopSectionProps = {
   maxBookingDate: Date;
   todayDayKey: string;
   maxDayKey: string;
+  sameDayAnchorDayKey?: string;
   availabilitySectionRef: React.RefObject<HTMLDivElement | null>;
   onContinue: () => void;
   onSelectionSummaryChange: (summary: SelectionSummary | null) => void;
@@ -95,16 +98,31 @@ export function PlaceDetailBookingDesktopSection({
   maxBookingDate,
   todayDayKey,
   maxDayKey,
+  sameDayAnchorDayKey,
   availabilitySectionRef,
   onContinue,
   onSelectionSummaryChange,
 }: PlaceDetailBookingDesktopSectionProps) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [calendarPopoverOpen, setCalendarPopoverOpen] = React.useState(false);
+  const rememberCourtSelection = useCourtSelectionMemoryStore(
+    (s) => s.rememberSelection,
+  );
+  const getCourtSelection = useCourtSelectionMemoryStore((s) => s.getSelection);
 
   const selectedDayKey = React.useMemo(
     () => getZonedDayKey(selectedDate ?? today, placeTimeZone),
     [placeTimeZone, selectedDate, today],
+  );
+  const selectedCourtMemoryKey = React.useMemo(
+    () =>
+      buildCourtSelectionMemoryKey({
+        placeId: place.id,
+        sportId: selectedSportId,
+        dayKey: selectedDayKey,
+        courtId: selectedCourtId,
+      }),
+    [place.id, selectedCourtId, selectedDayKey, selectedSportId],
   );
 
   const isCourtMode = selectionMode === "court";
@@ -405,8 +423,19 @@ export function PlaceDetailBookingDesktopSection({
     (range: { startTime: string; durationMinutes: number }) => {
       setSelectedStartTime(range.startTime);
       setDurationMinutes(range.durationMinutes);
+      if (selectedCourtMemoryKey && range.startTime) {
+        rememberCourtSelection(selectedCourtMemoryKey, {
+          startTime: range.startTime,
+          durationMinutes: range.durationMinutes,
+        });
+      }
     },
-    [setDurationMinutes, setSelectedStartTime],
+    [
+      rememberCourtSelection,
+      selectedCourtMemoryKey,
+      setDurationMinutes,
+      setSelectedStartTime,
+    ],
   );
 
   const handleAnyRangeChange = React.useCallback(
@@ -479,10 +508,54 @@ export function PlaceDetailBookingDesktopSection({
   const handleDesktopCourtSelect = React.useCallback(
     (courtId: string) => {
       if (selectedCourtId === courtId) return;
+
+      const previousCourtMemoryKey = buildCourtSelectionMemoryKey({
+        placeId: place.id,
+        sportId: selectedSportId,
+        dayKey: selectedDayKey,
+        courtId: selectedCourtId,
+      });
+      if (previousCourtMemoryKey && selectedStartTime) {
+        rememberCourtSelection(previousCourtMemoryKey, {
+          startTime: selectedStartTime,
+          durationMinutes,
+        });
+      }
+
       setSelectedCourtId(courtId);
-      clearSelection(true);
+
+      const nextCourtMemoryKey = buildCourtSelectionMemoryKey({
+        placeId: place.id,
+        sportId: selectedSportId,
+        dayKey: selectedDayKey,
+        courtId,
+      });
+      const rememberedSelection = nextCourtMemoryKey
+        ? getCourtSelection(nextCourtMemoryKey)
+        : undefined;
+
+      if (!rememberedSelection) {
+        clearSelection(true);
+        return;
+      }
+
+      setSelectedStartTime(rememberedSelection.startTime);
+      setDurationMinutes(rememberedSelection.durationMinutes);
     },
-    [clearSelection, selectedCourtId, setSelectedCourtId],
+    [
+      clearSelection,
+      durationMinutes,
+      getCourtSelection,
+      place.id,
+      rememberCourtSelection,
+      selectedCourtId,
+      selectedDayKey,
+      selectedSportId,
+      selectedStartTime,
+      setDurationMinutes,
+      setSelectedCourtId,
+      setSelectedStartTime,
+    ],
   );
 
   const handleAnyViewModeChange = React.useCallback(
@@ -577,6 +650,7 @@ export function PlaceDetailBookingDesktopSection({
       onClearSelection={() => clearSelection(true)}
       todayDayKey={todayDayKey}
       maxDayKey={maxDayKey}
+      sameDayAnchorDayKey={sameDayAnchorDayKey}
       anyDaySlots={anyDaySlots}
       courtDaySlots={courtDaySlots}
       anyDayDiagnostics={anyDayDiagnostics}

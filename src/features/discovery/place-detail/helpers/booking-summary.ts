@@ -14,6 +14,15 @@ export type BookingSelectionSummary = {
   currency: string;
 };
 
+const isSameInstant = (a: string, b: string): boolean => {
+  const aMs = Date.parse(a);
+  const bMs = Date.parse(b);
+  if (Number.isFinite(aMs) && Number.isFinite(bMs)) {
+    return aMs === bMs;
+  }
+  return a === b;
+};
+
 export function buildBookingSelectionSummary(options: {
   selectedStartTime?: string;
   pickerSlots: TimeSlot[];
@@ -22,13 +31,13 @@ export function buildBookingSelectionSummary(options: {
   const { selectedStartTime, pickerSlots, pricingOptions } = options;
   if (!selectedStartTime) return null;
 
-  const pickerSlot = pickerSlots.find(
-    (slot) => slot.startTime === selectedStartTime,
+  const pickerSlot = pickerSlots.find((slot) =>
+    isSameInstant(slot.startTime, selectedStartTime),
   );
   if (!pickerSlot) return null;
 
-  const pricingOption = pricingOptions.find(
-    (option) => option.startTime === selectedStartTime,
+  const pricingOption = pricingOptions.find((option) =>
+    isSameInstant(option.startTime, selectedStartTime),
   );
 
   return {

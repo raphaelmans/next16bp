@@ -26,7 +26,7 @@ export interface OpenPlayCardProps {
       suggestedSplitPerPlayerCents: number;
       requiresPayment: boolean;
     };
-    courtLabel: string;
+    courtLabels: string[];
     sportName: string;
     host: {
       displayName: string;
@@ -51,7 +51,7 @@ export function OpenPlayCard({
   href,
   className,
 }: OpenPlayCardProps) {
-  const subtitle = `${openPlay.sportName} • ${openPlay.courtLabel}`;
+  const subtitle = `${openPlay.sportName} • ${openPlay.courtLabels.join(", ")}`;
   const dateLabel = formatInTimeZone(
     openPlay.startsAtIso,
     timeZone,

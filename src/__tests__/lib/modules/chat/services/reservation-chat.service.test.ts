@@ -6,7 +6,22 @@ vi.mock("@/lib/shared/infra/container", () => ({
 
 import { ReservationChatService } from "@/lib/modules/chat/services/reservation-chat.service";
 
-type MetaRow = {
+type ReservationMetaRow = {
+  reservationId: string;
+  reservationGroupId: string | null;
+  status: string;
+  updatedAt: Date;
+  startTime: Date;
+  endTime: Date;
+  courtLabel: string;
+  placeName: string;
+  timeZone: string;
+  playerDisplayName: string | null;
+  ownerDisplayName: string;
+};
+
+type ReservationGroupMetaRow = {
+  reservationGroupId: string;
   reservationId: string;
   status: string;
   updatedAt: Date;
@@ -15,20 +30,15 @@ type MetaRow = {
   courtLabel: string;
   placeName: string;
   timeZone: string;
-  playerUserId: string;
   playerDisplayName: string | null;
-  ownerUserId: string;
   ownerDisplayName: string;
 };
 
-function createFakeTx(rows: MetaRow[], archivedThreadIds: string[]) {
-  let selectCount = 0;
+function createFakeTx(queryResults: unknown[]) {
+  let cursor = 0;
 
   return {
     select() {
-      selectCount += 1;
-      const isArchiveQuery = selectCount > 1;
-
       const chain = {
         from() {
           return chain;
@@ -37,10 +47,9 @@ function createFakeTx(rows: MetaRow[], archivedThreadIds: string[]) {
           return chain;
         },
         where: async () => {
-          if (isArchiveQuery) {
-            return archivedThreadIds.map((threadId) => ({ threadId }));
-          }
-          return rows;
+          const result = queryResults[cursor];
+          cursor += 1;
+          return (result ?? []) as unknown[];
         },
       };
 
@@ -71,12 +80,13 @@ describe("ReservationChatService.getThreadMetas", () => {
     vi.useRealTimers();
   });
 
-  it("default options -> excludes archived and inactive/past rows", async () => {
+  it("default options with reservation ids -> excludes archived and inactive rows", async () => {
     // Arrange
     const baseDate = new Date("2026-02-21T10:00:00.000Z");
-    const rows: MetaRow[] = [
+    const reservationRows: ReservationMetaRow[] = [
       {
         reservationId: "r-1",
+        reservationGroupId: null,
         status: "CREATED",
         updatedAt: baseDate,
         startTime: baseDate,
@@ -84,13 +94,12 @@ describe("ReservationChatService.getThreadMetas", () => {
         courtLabel: "Court A",
         placeName: "Place A",
         timeZone: "Asia/Manila",
-        playerUserId: "player-1",
         playerDisplayName: "Player A",
-        ownerUserId: "owner-1",
         ownerDisplayName: "Owner A",
       },
       {
         reservationId: "r-2",
+        reservationGroupId: null,
         status: "CONFIRMED",
         updatedAt: baseDate,
         startTime: baseDate,
@@ -98,13 +107,12 @@ describe("ReservationChatService.getThreadMetas", () => {
         courtLabel: "Court B",
         placeName: "Place B",
         timeZone: "Asia/Manila",
-        playerUserId: "player-1",
         playerDisplayName: "Player B",
-        ownerUserId: "owner-1",
         ownerDisplayName: "Owner B",
       },
       {
         reservationId: "r-3",
+        reservationGroupId: null,
         status: "CONFIRMED",
         updatedAt: baseDate,
         startTime: baseDate,
@@ -112,47 +120,35 @@ describe("ReservationChatService.getThreadMetas", () => {
         courtLabel: "Court C",
         placeName: "Place C",
         timeZone: "Asia/Manila",
-        playerUserId: "player-1",
         playerDisplayName: "Player C",
-        ownerUserId: "owner-1",
         ownerDisplayName: "Owner C",
       },
-      {
-        reservationId: "r-4",
-        status: "CANCELLED",
-        updatedAt: baseDate,
-        startTime: baseDate,
-        endTime: new Date("2026-02-22T11:00:00.000Z"),
-        courtLabel: "Court D",
-        placeName: "Place D",
-        timeZone: "Asia/Manila",
-        playerUserId: "player-1",
-        playerDisplayName: "Player D",
-        ownerUserId: "owner-1",
-        ownerDisplayName: "Owner D",
-      },
     ];
-    const tx = createFakeTx(rows, ["res-r-1"]);
+    const archivedRows = [{ threadId: "res-r-1" }];
+    const tx = createFakeTx([reservationRows, archivedRows]);
     const service = makeService();
 
     // Act
     const result = await service.getThreadMetas(
       "player-1",
-      ["r-1", "r-2", "r-3", "r-4"],
-      undefined,
+      {
+        reservationIds: ["r-1", "r-2", "r-3"],
+        reservationGroupIds: [],
+      },
       { tx },
     );
 
     // Assert
-    expect(result.map((item) => item.reservationId)).toEqual(["r-3"]);
+    expect(result.map((item) => item.threadId)).toEqual(["res-r-3"]);
   });
 
-  it("includeArchived true -> returns rows regardless active/default filters", async () => {
+  it("includeArchived true -> returns rows without active/archived filtering", async () => {
     // Arrange
     const baseDate = new Date("2026-02-21T10:00:00.000Z");
-    const rows: MetaRow[] = [
+    const reservationRows: ReservationMetaRow[] = [
       {
         reservationId: "r-1",
+        reservationGroupId: null,
         status: "CREATED",
         updatedAt: baseDate,
         startTime: baseDate,
@@ -160,13 +156,12 @@ describe("ReservationChatService.getThreadMetas", () => {
         courtLabel: "Court A",
         placeName: "Place A",
         timeZone: "Asia/Manila",
-        playerUserId: "player-1",
         playerDisplayName: "Player A",
-        ownerUserId: "owner-1",
         ownerDisplayName: "Owner A",
       },
       {
         reservationId: "r-2",
+        reservationGroupId: null,
         status: "CANCELLED",
         updatedAt: baseDate,
         startTime: baseDate,
@@ -174,24 +169,82 @@ describe("ReservationChatService.getThreadMetas", () => {
         courtLabel: "Court B",
         placeName: "Place B",
         timeZone: "Asia/Manila",
-        playerUserId: "player-1",
         playerDisplayName: "Player B",
-        ownerUserId: "owner-1",
         ownerDisplayName: "Owner B",
       },
     ];
-    const tx = createFakeTx(rows, ["res-r-1"]);
+    const tx = createFakeTx([reservationRows]);
     const service = makeService();
 
     // Act
     const result = await service.getThreadMetas(
       "player-1",
-      ["r-1", "r-2"],
-      { includeArchived: true },
+      {
+        reservationIds: ["r-1", "r-2"],
+        reservationGroupIds: [],
+        includeArchived: true,
+      },
       { tx },
     );
 
     // Assert
-    expect(result.map((item) => item.reservationId)).toEqual(["r-1", "r-2"]);
+    expect(result.map((item) => item.threadId)).toEqual(["res-r-1", "res-r-2"]);
+  });
+
+  it("reservation group ids -> returns consolidated grp-* thread metadata", async () => {
+    // Arrange
+    const groupRows: ReservationGroupMetaRow[] = [
+      {
+        reservationGroupId: "group-1",
+        reservationId: "r-1",
+        status: "CREATED",
+        updatedAt: new Date("2026-02-21T10:05:00.000Z"),
+        startTime: new Date("2026-02-22T09:00:00.000Z"),
+        endTime: new Date("2026-02-22T10:00:00.000Z"),
+        courtLabel: "Court A",
+        placeName: "Place A",
+        timeZone: "Asia/Manila",
+        playerDisplayName: "Player A",
+        ownerDisplayName: "Owner A",
+      },
+      {
+        reservationGroupId: "group-1",
+        reservationId: "r-2",
+        status: "AWAITING_PAYMENT",
+        updatedAt: new Date("2026-02-21T10:06:00.000Z"),
+        startTime: new Date("2026-02-22T11:00:00.000Z"),
+        endTime: new Date("2026-02-22T12:00:00.000Z"),
+        courtLabel: "Court B",
+        placeName: "Place A",
+        timeZone: "Asia/Manila",
+        playerDisplayName: "Player A",
+        ownerDisplayName: "Owner A",
+      },
+    ];
+    const archivedRows: Array<{ threadId: string }> = [];
+    const tx = createFakeTx([groupRows, archivedRows]);
+    const service = makeService();
+
+    // Act
+    const result = await service.getThreadMetas(
+      "player-1",
+      {
+        reservationIds: [],
+        reservationGroupIds: ["group-1"],
+      },
+      { tx },
+    );
+
+    // Assert
+    expect(result).toHaveLength(1);
+    expect(result[0]).toMatchObject({
+      threadId: "grp-group-1",
+      reservationGroupId: "group-1",
+      reservationId: "r-1",
+      status: "CREATED",
+      courtLabel: "2 courts",
+      placeName: "Place A",
+    });
+    expect(result[0].endTimeIso).toBe("2026-02-22T12:00:00.000Z");
   });
 });

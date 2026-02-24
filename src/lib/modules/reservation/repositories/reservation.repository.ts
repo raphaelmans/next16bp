@@ -12,10 +12,12 @@ import {
   sql,
 } from "drizzle-orm";
 import {
+  type CourtRecord,
   court,
   type InsertReservation,
   type InsertReservationGroup,
   openPlay,
+  type PlaceRecord,
   paymentProof,
   place,
   placePhoto,
@@ -28,6 +30,12 @@ import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";
 import type { RequestContext } from "@/lib/shared/kernel/context";
 import type { ReservationListItemRecord } from "../dtos/reservation-list.dto";
 import type { ReservationWithDetails } from "../dtos/reservation-owner.dto";
+
+export type ReservationGroupItemVenueRecord = {
+  reservation: ReservationRecord;
+  court: CourtRecord;
+  place: PlaceRecord;
+};
 
 export interface IReservationRepository {
   findById(id: string, ctx?: RequestContext): Promise<ReservationRecord | null>;
@@ -47,6 +55,10 @@ export interface IReservationRepository {
     groupId: string,
     ctx: RequestContext,
   ): Promise<ReservationRecord[]>;
+  findGroupItemsWithCourtAndPlace(
+    groupId: string,
+    ctx?: RequestContext,
+  ): Promise<ReservationGroupItemVenueRecord[]>;
   findGroupById(
     groupId: string,
     ctx?: RequestContext,
@@ -234,6 +246,24 @@ export class ReservationRepository implements IReservationRepository {
       .where(eq(reservation.groupId, groupId))
       .orderBy(asc(reservation.startTime), asc(reservation.id))
       .for("update");
+  }
+
+  async findGroupItemsWithCourtAndPlace(
+    groupId: string,
+    ctx?: RequestContext,
+  ): Promise<ReservationGroupItemVenueRecord[]> {
+    const client = this.getClient(ctx);
+    return client
+      .select({
+        reservation,
+        court,
+        place,
+      })
+      .from(reservation)
+      .innerJoin(court, eq(reservation.courtId, court.id))
+      .innerJoin(place, eq(court.placeId, place.id))
+      .where(eq(reservation.groupId, groupId))
+      .orderBy(asc(reservation.startTime), asc(reservation.id));
   }
 
   async findGroupById(

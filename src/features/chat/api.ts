@@ -23,8 +23,14 @@ export interface IChatApi {
   queryReservationChatGetSession: ProcedureFn<
     TrpcClientApi["reservationChat"]["getSession"]["query"]
   >;
+  queryReservationChatGetGroupSession: ProcedureFn<
+    TrpcClientApi["reservationChat"]["getGroupSession"]["query"]
+  >;
   mutReservationChatSendMessage: ProcedureFn<
     TrpcClientApi["reservationChat"]["sendMessage"]["mutate"]
+  >;
+  mutReservationChatSendGroupMessage: ProcedureFn<
+    TrpcClientApi["reservationChat"]["sendGroupMessage"]["mutate"]
   >;
   queryReservationChatGetThreadMetas: ProcedureFn<
     TrpcClientApi["reservationChat"]["getThreadMetas"]["query"]
@@ -112,6 +118,17 @@ export class ChatApi {
       this.toAppError,
     );
 
+  queryReservationChatGetGroupSession: ProcedureFn<
+    TrpcClientApi["reservationChat"]["getGroupSession"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["reservationChat", "getGroupSession"],
+      (clientApi) => clientApi.reservationChat.getGroupSession.query,
+      input,
+      this.toAppError,
+    );
+
   mutReservationChatSendMessage: ProcedureFn<
     TrpcClientApi["reservationChat"]["sendMessage"]["mutate"]
   > = async (input) =>
@@ -119,6 +136,17 @@ export class ChatApi {
       this.clientApi,
       ["reservationChat", "sendMessage"],
       (clientApi) => clientApi.reservationChat.sendMessage.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutReservationChatSendGroupMessage: ProcedureFn<
+    TrpcClientApi["reservationChat"]["sendGroupMessage"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservationChat", "sendGroupMessage"],
+      (clientApi) => clientApi.reservationChat.sendGroupMessage.mutate,
       input,
       this.toAppError,
     );

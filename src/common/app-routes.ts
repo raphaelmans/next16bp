@@ -102,6 +102,10 @@ export const appRoutes = {
     detail: (reservationId: string) => `/reservations/${reservationId}`,
     payment: (reservationId: string) =>
       `/reservations/${reservationId}/payment`,
+    groupDetail: (reservationGroupId: string) =>
+      `/reservations/group/${reservationGroupId}`,
+    groupPayment: (reservationGroupId: string) =>
+      `/reservations/group/${reservationGroupId}/payment`,
   },
   openPlay: {
     base: "/open-play",
@@ -169,6 +173,8 @@ export const appRoutes = {
     reservationsActive: "/owner/reservations/active",
     reservationDetail: (reservationId: string) =>
       `/owner/reservations/${reservationId}`,
+    reservationGroupDetail: (reservationGroupId: string) =>
+      `/owner/reservations/group/${reservationGroupId}`,
     settings: "/owner/settings",
   },
   admin: {

@@ -607,22 +607,6 @@ export class ReservationOwnerService implements IReservationOwnerService {
               ctx,
             );
 
-            await this.notificationDeliveryService.enqueuePlayerReservationAwaitingPayment(
-              {
-                reservationId: reservation.id,
-                placeName: place.name,
-                courtLabel: court.label,
-                startTimeIso: itemUpdated.startTime.toISOString(),
-                endTimeIso: itemUpdated.endTime.toISOString(),
-                expiresAtIso: itemUpdated.expiresAt
-                  ? new Date(itemUpdated.expiresAt).toISOString()
-                  : null,
-                totalPriceCents: itemUpdated.totalPriceCents,
-                currency: itemUpdated.currency,
-              },
-              ctx,
-            );
-
             updated.push(itemUpdated);
             continue;
           }
@@ -649,29 +633,95 @@ export class ReservationOwnerService implements IReservationOwnerService {
             ctx,
           );
 
-          await this.notificationDeliveryService.enqueuePlayerReservationConfirmed(
-            {
-              reservationId: reservation.id,
-              placeName: place.name,
-              courtLabel: court.label,
-              startTimeIso: itemUpdated.startTime.toISOString(),
-              endTimeIso: itemUpdated.endTime.toISOString(),
-            },
-            ctx,
+          updated.push(itemUpdated);
+        }
+
+        if (updated.length > 0) {
+          const sorted = updated
+            .slice()
+            .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+          const representative = sorted[0];
+          const latest = sorted[sorted.length - 1] ?? representative;
+          const representativeCourt = courtById.get(representative.courtId);
+          if (!representativeCourt) {
+            throw new CourtNotFoundError(representative.courtId);
+          }
+          const representativePlaceId = this.requireCourtPlaceId(
+            representativeCourt.placeId,
+          );
+          const representativePlace = placeById.get(representativePlaceId);
+          if (!representativePlace) {
+            throw new PlaceNotFoundError(representativePlaceId);
+          }
+
+          const itemSummaries = sorted.map((item) => ({
+            reservationId: item.id,
+            courtId: item.courtId,
+            courtLabel: courtById.get(item.courtId)?.label ?? "Court",
+            startTimeIso: item.startTime.toISOString(),
+            endTimeIso: item.endTime.toISOString(),
+            totalPriceCents: item.totalPriceCents,
+            currency: item.currency,
+            expiresAtIso: item.expiresAt
+              ? new Date(item.expiresAt).toISOString()
+              : null,
+          }));
+          const soonestExpiry = sorted
+            .map((item) => item.expiresAt?.getTime() ?? null)
+            .filter((value): value is number => value !== null)
+            .sort((a, b) => a - b)[0];
+          const hasAwaitingPayment = sorted.some(
+            (item) => item.status === "AWAITING_PAYMENT",
           );
 
-          updated.push(itemUpdated);
+          if (hasAwaitingPayment) {
+            await this.notificationDeliveryService.enqueuePlayerReservationGroupAwaitingPayment(
+              {
+                reservationGroupId: data.reservationGroupId,
+                representativeReservationId: representative.id,
+                placeName: representativePlace.name,
+                courtLabel:
+                  itemSummaries.length > 1
+                    ? `${itemSummaries.length} courts`
+                    : (itemSummaries[0]?.courtLabel ?? "Court"),
+                startTimeIso: representative.startTime.toISOString(),
+                endTimeIso: latest.endTime.toISOString(),
+                expiresAtIso: soonestExpiry
+                  ? new Date(soonestExpiry).toISOString()
+                  : null,
+                totalPriceCents: sorted.reduce(
+                  (sum, item) => sum + item.totalPriceCents,
+                  0,
+                ),
+                currency: representative.currency,
+                itemCount: itemSummaries.length,
+                items: itemSummaries,
+              },
+              ctx,
+            );
+          } else {
+            await this.notificationDeliveryService.enqueuePlayerReservationGroupConfirmed(
+              {
+                reservationGroupId: data.reservationGroupId,
+                representativeReservationId: representative.id,
+                placeName: representativePlace.name,
+                courtLabel:
+                  itemSummaries.length > 1
+                    ? `${itemSummaries.length} courts`
+                    : (itemSummaries[0]?.courtLabel ?? "Court"),
+                startTimeIso: representative.startTime.toISOString(),
+                endTimeIso: latest.endTime.toISOString(),
+                itemCount: itemSummaries.length,
+                items: itemSummaries,
+              },
+              ctx,
+            );
+          }
         }
 
         return updated;
       },
     );
-
-    for (const reservation of updatedReservations) {
-      if (reservation.status === "CONFIRMED") {
-        await this.postOwnerConfirmedMessageBestEffort(reservation, userId);
-      }
-    }
 
     return updatedReservations;
   }
@@ -838,27 +888,61 @@ export class ReservationOwnerService implements IReservationOwnerService {
             ctx,
           );
 
-          await this.notificationDeliveryService.enqueuePlayerReservationConfirmed(
+          updated.push(itemUpdated);
+        }
+
+        if (updated.length > 0) {
+          const sorted = updated
+            .slice()
+            .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+          const representative = sorted[0];
+          const latest = sorted[sorted.length - 1] ?? representative;
+          const representativeCourt = courtById.get(representative.courtId);
+          if (!representativeCourt) {
+            throw new CourtNotFoundError(representative.courtId);
+          }
+          const representativePlaceId = this.requireCourtPlaceId(
+            representativeCourt.placeId,
+          );
+          const representativePlace = placeById.get(representativePlaceId);
+          if (!representativePlace) {
+            throw new PlaceNotFoundError(representativePlaceId);
+          }
+
+          const itemSummaries = sorted.map((item) => ({
+            reservationId: item.id,
+            courtId: item.courtId,
+            courtLabel: courtById.get(item.courtId)?.label ?? "Court",
+            startTimeIso: item.startTime.toISOString(),
+            endTimeIso: item.endTime.toISOString(),
+            totalPriceCents: item.totalPriceCents,
+            currency: item.currency,
+            expiresAtIso: item.expiresAt
+              ? new Date(item.expiresAt).toISOString()
+              : null,
+          }));
+
+          await this.notificationDeliveryService.enqueuePlayerReservationGroupConfirmed(
             {
-              reservationId: reservation.id,
-              placeName: place.name,
-              courtLabel: court.label,
-              startTimeIso: itemUpdated.startTime.toISOString(),
-              endTimeIso: itemUpdated.endTime.toISOString(),
+              reservationGroupId: data.reservationGroupId,
+              representativeReservationId: representative.id,
+              placeName: representativePlace.name,
+              courtLabel:
+                itemSummaries.length > 1
+                  ? `${itemSummaries.length} courts`
+                  : (itemSummaries[0]?.courtLabel ?? "Court"),
+              startTimeIso: representative.startTime.toISOString(),
+              endTimeIso: latest.endTime.toISOString(),
+              itemCount: itemSummaries.length,
+              items: itemSummaries,
             },
             ctx,
           );
-
-          updated.push(itemUpdated);
         }
 
         return updated;
       },
     );
-
-    for (const reservation of updatedReservations) {
-      await this.postOwnerConfirmedMessageBestEffort(reservation, userId);
-    }
 
     return updatedReservations;
   }
@@ -1163,19 +1247,57 @@ export class ReservationOwnerService implements IReservationOwnerService {
           ctx,
         );
 
-        await this.notificationDeliveryService.enqueuePlayerReservationRejected(
+        updated.push(itemUpdated);
+      }
+
+      if (updated.length > 0) {
+        const sorted = updated
+          .slice()
+          .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+        const representative = sorted[0];
+        const latest = sorted[sorted.length - 1] ?? representative;
+        const representativeCourt = courtById.get(representative.courtId);
+        if (!representativeCourt) {
+          throw new CourtNotFoundError(representative.courtId);
+        }
+        const representativePlaceId = this.requireCourtPlaceId(
+          representativeCourt.placeId,
+        );
+        const representativePlace = placeById.get(representativePlaceId);
+        if (!representativePlace) {
+          throw new PlaceNotFoundError(representativePlaceId);
+        }
+
+        const itemSummaries = sorted.map((item) => ({
+          reservationId: item.id,
+          courtId: item.courtId,
+          courtLabel: courtById.get(item.courtId)?.label ?? "Court",
+          startTimeIso: item.startTime.toISOString(),
+          endTimeIso: item.endTime.toISOString(),
+          totalPriceCents: item.totalPriceCents,
+          currency: item.currency,
+          expiresAtIso: item.expiresAt
+            ? new Date(item.expiresAt).toISOString()
+            : null,
+        }));
+
+        await this.notificationDeliveryService.enqueuePlayerReservationGroupRejected(
           {
-            reservationId: reservation.id,
-            placeName: place.name,
-            courtLabel: court.label,
-            startTimeIso: itemUpdated.startTime.toISOString(),
-            endTimeIso: itemUpdated.endTime.toISOString(),
+            reservationGroupId: data.reservationGroupId,
+            representativeReservationId: representative.id,
+            placeName: representativePlace.name,
+            courtLabel:
+              itemSummaries.length > 1
+                ? `${itemSummaries.length} courts`
+                : (itemSummaries[0]?.courtLabel ?? "Court"),
+            startTimeIso: representative.startTime.toISOString(),
+            endTimeIso: latest.endTime.toISOString(),
+            itemCount: itemSummaries.length,
+            items: itemSummaries,
             reason: data.reason,
           },
           ctx,
         );
-
-        updated.push(itemUpdated);
       }
 
       return updated;

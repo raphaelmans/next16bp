@@ -8,6 +8,7 @@ import {
   place,
   profile,
   reservation,
+  reservationGroup,
   sport,
 } from "@/lib/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";
@@ -28,7 +29,7 @@ export interface OpenPlayListItemRecord {
   paymentLinkUrl: string | null;
   reservationTotalPriceCents: number;
   currency: string;
-  courtLabel: string;
+  courtLabels: string[];
   sportName: string;
   host: {
     profileId: string;
@@ -49,10 +50,10 @@ export interface OpenPlayDetailContextRecord {
     name: string;
     timeZone: string;
   };
-  court: {
+  courts: {
     id: string;
     label: string;
-  };
+  }[];
   sport: {
     id: string;
     name: string;
@@ -76,10 +77,15 @@ export interface IOpenPlayRepository {
     reservationId: string,
     ctx?: RequestContext,
   ): Promise<OpenPlayRecord | null>;
+  findByReservationGroupId(
+    reservationGroupId: string,
+    ctx?: RequestContext,
+  ): Promise<OpenPlayRecord | null>;
   upsertByReservationId(
     data: InsertOpenPlay,
     ctx?: RequestContext,
   ): Promise<OpenPlayRecord>;
+  insert(data: InsertOpenPlay, ctx?: RequestContext): Promise<OpenPlayRecord>;
   listPublicUpcomingByPlace(
     placeId: string,
     now: Date,
@@ -95,6 +101,8 @@ export interface IOpenPlayRepository {
 
 const toIso = (value: Date | string) =>
   value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+
+const COURT_LABEL_DELIMITER = "|||";
 
 export class OpenPlayRepository implements IOpenPlayRepository {
   constructor(private db: DbClient) {}
@@ -125,6 +133,19 @@ export class OpenPlayRepository implements IOpenPlayRepository {
       .select()
       .from(openPlay)
       .where(eq(openPlay.reservationId, reservationId))
+      .limit(1);
+    return result[0] ?? null;
+  }
+
+  async findByReservationGroupId(
+    reservationGroupId: string,
+    ctx?: RequestContext,
+  ): Promise<OpenPlayRecord | null> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select()
+      .from(openPlay)
+      .where(eq(openPlay.reservationGroupId, reservationGroupId))
       .limit(1);
     return result[0] ?? null;
   }
@@ -163,6 +184,15 @@ export class OpenPlayRepository implements IOpenPlayRepository {
     return result[0];
   }
 
+  async insert(
+    data: InsertOpenPlay,
+    ctx?: RequestContext,
+  ): Promise<OpenPlayRecord> {
+    const client = this.getClient(ctx);
+    const result = await client.insert(openPlay).values(data).returning();
+    return result[0];
+  }
+
   async listPublicUpcomingByPlace(
     placeId: string,
     now: Date,
@@ -176,8 +206,13 @@ export class OpenPlayRepository implements IOpenPlayRepository {
       eq(openPlay.status, "ACTIVE"),
       eq(openPlay.visibility, "PUBLIC"),
       gt(openPlay.startsAt, now),
-      eq(reservation.status, "CONFIRMED"),
-      gt(reservation.endTime, now),
+      // For single-court: require confirmed reservation still in the future.
+      // For group: rely on openPlay.status being ACTIVE (service manages lifecycle).
+      sql`(
+        (${openPlay.reservationId} IS NOT NULL AND ${reservation.status} = 'CONFIRMED' AND ${reservation.endTime} > ${now})
+        OR
+        (${openPlay.reservationGroupId} IS NOT NULL)
+      )`,
     ];
 
     if (options.from) {
@@ -187,7 +222,27 @@ export class OpenPlayRepository implements IOpenPlayRepository {
       conditions.push(lt(openPlay.startsAt, options.to));
     }
 
-    const confirmedCountSql = sql<number>`count(${openPlayParticipant.id}) filter (where ${openPlayParticipant.status} = 'CONFIRMED')`;
+    // Correlated subquery for confirmed count — avoids GROUP BY complexity.
+    const confirmedCountSql = sql<number>`(
+      SELECT count(*)
+      FROM open_play_participant opp
+      WHERE opp.open_play_id = ${openPlay.id}
+        AND opp.status = 'CONFIRMED'
+    )`;
+
+    // Court labels: single-court uses court.label; group aggregates from the group's reservations.
+    const courtLabelsSql = sql<string>`CASE
+      WHEN ${openPlay.courtId} IS NOT NULL THEN ${court.label}
+      ELSE (
+        SELECT string_agg(sub_c.label, ${COURT_LABEL_DELIMITER} ORDER BY sub_c.label)
+        FROM court sub_c
+        JOIN reservation sub_r ON sub_r.court_id = sub_c.id
+        WHERE sub_r.group_id = ${openPlay.reservationGroupId}
+      )
+    END`;
+
+    const priceCentsSql = sql<number>`COALESCE(${reservation.totalPriceCents}, ${reservationGroup.totalPriceCents}, 0)`;
+    const currencySql = sql<string>`COALESCE(${reservation.currency}, ${reservationGroup.currency}, 'PHP')`;
 
     const rows = await client
       .select({
@@ -203,44 +258,24 @@ export class OpenPlayRepository implements IOpenPlayRepository {
         note: openPlay.note,
         paymentInstructions: openPlay.paymentInstructions,
         paymentLinkUrl: openPlay.paymentLinkUrl,
-        reservationTotalPriceCents: reservation.totalPriceCents,
-        currency: reservation.currency,
-        courtLabel: court.label,
+        reservationTotalPriceCents: priceCentsSql,
+        currency: currencySql,
+        courtLabelsRaw: courtLabelsSql,
         sportName: sport.name,
         hostProfileId: profile.id,
         hostDisplayName: profile.displayName,
         hostAvatarUrl: profile.avatarUrl,
       })
       .from(openPlay)
-      .innerJoin(reservation, eq(openPlay.reservationId, reservation.id))
-      .innerJoin(court, eq(openPlay.courtId, court.id))
+      .leftJoin(reservation, eq(openPlay.reservationId, reservation.id))
+      .leftJoin(
+        reservationGroup,
+        eq(openPlay.reservationGroupId, reservationGroup.id),
+      )
+      .leftJoin(court, eq(openPlay.courtId, court.id))
       .innerJoin(sport, eq(openPlay.sportId, sport.id))
       .innerJoin(profile, eq(openPlay.hostProfileId, profile.id))
-      .leftJoin(
-        openPlayParticipant,
-        eq(openPlayParticipant.openPlayId, openPlay.id),
-      )
       .where(and(...conditions))
-      .groupBy(
-        openPlay.id,
-        openPlay.startsAt,
-        openPlay.endsAt,
-        openPlay.status,
-        openPlay.visibility,
-        openPlay.joinPolicy,
-        openPlay.maxPlayers,
-        openPlay.title,
-        openPlay.note,
-        openPlay.paymentInstructions,
-        openPlay.paymentLinkUrl,
-        reservation.totalPriceCents,
-        reservation.currency,
-        court.label,
-        sport.name,
-        profile.id,
-        profile.displayName,
-        profile.avatarUrl,
-      )
       .orderBy(asc(openPlay.startsAt))
       .limit(options.limit);
 
@@ -257,9 +292,11 @@ export class OpenPlayRepository implements IOpenPlayRepository {
       note: r.note ?? null,
       paymentInstructions: r.paymentInstructions ?? null,
       paymentLinkUrl: r.paymentLinkUrl ?? null,
-      reservationTotalPriceCents: r.reservationTotalPriceCents,
-      currency: r.currency,
-      courtLabel: r.courtLabel,
+      reservationTotalPriceCents: Number(r.reservationTotalPriceCents ?? 0),
+      currency: String(r.currency ?? "PHP"),
+      courtLabels: String(r.courtLabelsRaw ?? "Court").split(
+        COURT_LABEL_DELIMITER,
+      ),
       sportName: r.sportName,
       host: {
         profileId: r.hostProfileId,
@@ -276,6 +313,7 @@ export class OpenPlayRepository implements IOpenPlayRepository {
   ): Promise<OpenPlayDetailContextRecord | null> {
     const client = this.getClient(ctx);
 
+    // Participant counts
     const counts = await client
       .select({
         openPlayId: openPlayParticipant.openPlayId,
@@ -291,19 +329,13 @@ export class OpenPlayRepository implements IOpenPlayRepository {
       countsByStatus.set(row.status, Number(row.count ?? 0));
     }
 
-    const [row] = await client
+    // Base open play data with place, sport, host (works for both types)
+    const [baseRow] = await client
       .select({
         openPlay,
-        reservationStatus: reservation.status,
-        reservationStartTime: reservation.startTime,
-        reservationEndTime: reservation.endTime,
-        reservationTotalPriceCents: reservation.totalPriceCents,
-        reservationCurrency: reservation.currency,
         placeId: place.id,
         placeName: place.name,
         placeTimeZone: place.timeZone,
-        courtId: court.id,
-        courtLabel: court.label,
         sportId: sport.id,
         sportName: sport.name,
         hostProfileId: profile.id,
@@ -312,43 +344,106 @@ export class OpenPlayRepository implements IOpenPlayRepository {
         hostAvatarUrl: profile.avatarUrl,
       })
       .from(openPlay)
-      .innerJoin(reservation, eq(openPlay.reservationId, reservation.id))
       .innerJoin(place, eq(openPlay.placeId, place.id))
-      .innerJoin(court, eq(openPlay.courtId, court.id))
       .innerJoin(sport, eq(openPlay.sportId, sport.id))
       .innerJoin(profile, eq(openPlay.hostProfileId, profile.id))
-      .where(and(eq(openPlay.id, openPlayId), gt(reservation.endTime, now)))
+      .where(and(eq(openPlay.id, openPlayId), gt(openPlay.endsAt, now)))
       .limit(1);
 
-    if (!row) {
+    if (!baseRow) {
+      return null;
+    }
+
+    const op = baseRow.openPlay;
+
+    let courts: { id: string; label: string }[];
+    let reservationStatus: string;
+    let reservationTotalPriceCents: number;
+    let currency: string;
+
+    if (op.reservationId) {
+      // ── Single-court path ──
+      const [resRow] = await client
+        .select({
+          status: reservation.status,
+          startTime: reservation.startTime,
+          endTime: reservation.endTime,
+          totalPriceCents: reservation.totalPriceCents,
+          currency: reservation.currency,
+          courtId: court.id,
+          courtLabel: court.label,
+        })
+        .from(reservation)
+        .innerJoin(court, eq(reservation.courtId, court.id))
+        .where(eq(reservation.id, op.reservationId))
+        .limit(1);
+
+      if (!resRow || resRow.endTime <= now) {
+        return null;
+      }
+
+      courts = [{ id: resRow.courtId, label: resRow.courtLabel }];
+      reservationStatus = resRow.status;
+      reservationTotalPriceCents = resRow.totalPriceCents;
+      currency = resRow.currency;
+    } else if (op.reservationGroupId) {
+      // ── Group path ──
+      const groupRows = await client
+        .select({
+          status: reservation.status,
+          courtId: court.id,
+          courtLabel: court.label,
+        })
+        .from(reservation)
+        .innerJoin(court, eq(reservation.courtId, court.id))
+        .where(eq(reservation.groupId, op.reservationGroupId))
+        .orderBy(asc(court.label));
+
+      courts = groupRows.map((r) => ({ id: r.courtId, label: r.courtLabel }));
+
+      const allConfirmed = groupRows.every((r) => r.status === "CONFIRMED");
+      reservationStatus = allConfirmed
+        ? "CONFIRMED"
+        : (groupRows[0]?.status ?? "CREATED");
+
+      // Group-level pricing
+      const [groupRow] = await client
+        .select({
+          totalPriceCents: reservationGroup.totalPriceCents,
+          currency: reservationGroup.currency,
+        })
+        .from(reservationGroup)
+        .where(eq(reservationGroup.id, op.reservationGroupId))
+        .limit(1);
+
+      reservationTotalPriceCents = groupRow?.totalPriceCents ?? 0;
+      currency = groupRow?.currency ?? "PHP";
+    } else {
       return null;
     }
 
     return {
-      openPlay: row.openPlay,
-      reservationStatus: row.reservationStatus,
-      reservationStartTimeIso: toIso(row.reservationStartTime),
-      reservationEndTimeIso: toIso(row.reservationEndTime),
-      reservationTotalPriceCents: row.reservationTotalPriceCents,
-      currency: row.reservationCurrency,
+      openPlay: op,
+      reservationStatus,
+      reservationStartTimeIso: toIso(op.startsAt),
+      reservationEndTimeIso: toIso(op.endsAt),
+      reservationTotalPriceCents,
+      currency,
       place: {
-        id: row.placeId,
-        name: row.placeName,
-        timeZone: row.placeTimeZone,
+        id: baseRow.placeId,
+        name: baseRow.placeName,
+        timeZone: baseRow.placeTimeZone,
       },
-      court: {
-        id: row.courtId,
-        label: row.courtLabel,
-      },
+      courts,
       sport: {
-        id: row.sportId,
-        name: row.sportName,
+        id: baseRow.sportId,
+        name: baseRow.sportName,
       },
       host: {
-        profileId: row.hostProfileId,
-        userId: row.hostUserId,
-        displayName: row.hostDisplayName,
-        avatarUrl: row.hostAvatarUrl,
+        profileId: baseRow.hostProfileId,
+        userId: baseRow.hostUserId,
+        displayName: baseRow.hostDisplayName,
+        avatarUrl: baseRow.hostAvatarUrl,
       },
       counts: {
         confirmed: countsByStatus.get("CONFIRMED") ?? 0,

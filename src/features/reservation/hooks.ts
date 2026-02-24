@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { appRoutes } from "@/common/app-routes";
@@ -10,6 +11,7 @@ import {
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
 import { toast } from "@/common/toast";
+import { buildTrpcQueryKey } from "@/common/trpc-client-call";
 import { trpc } from "@/trpc/client";
 import { getReservationApi } from "./api.runtime";
 
@@ -180,6 +182,35 @@ export function useMutMarkPayment() {
   });
 }
 
+export function useMutMarkPaymentGroup() {
+  const utils = trpc.useUtils();
+
+  return useFeatureMutation(reservationApi.mutReservationMarkPaymentGroup, {
+    onSuccess: async (_data, variables) => {
+      const reservationGroupId = (variables as { reservationGroupId: string })
+        .reservationGroupId;
+      toast.success("Payment submitted successfully!", {
+        description: "The court owner will verify your payment shortly.",
+      });
+
+      await Promise.all([
+        utils.reservation.getGroupDetail.invalidate({
+          reservationGroupId,
+        }),
+        utils.reservation.getMy.invalidate(),
+        utils.reservation.getMyWithDetails.invalidate(),
+        utils.reservationChat.getThreadMetas.invalidate(),
+        utils.reservationChat.getGroupSession.invalidate({
+          reservationGroupId,
+        }),
+      ]);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to submit group payment");
+    },
+  });
+}
+
 // ============================================================================
 // From use-my-reservations.ts
 // ============================================================================
@@ -194,6 +225,7 @@ type ReservationStatus =
 
 type ReservationListItemData = {
   id: string;
+  reservationGroupId?: string | null;
   status: ReservationStatus;
   playerNameSnapshot: string | null;
   playerPhoneSnapshot: string | null;
@@ -336,6 +368,7 @@ export function useModMyReservations(options: UseMyReservationsOptions = {}) {
 
           return {
             id: item.id,
+            reservationGroupId: item.reservationGroupId ?? null,
             status: item.status,
             createdAt: item.createdAt ?? startTime,
             expiresAt: item.expiresAt ?? undefined,
@@ -446,6 +479,7 @@ export function useQueryReservationCounts() {
 // Type definitions for reservation list items with court and slot info
 export interface ReservationListItem {
   id: string;
+  reservationGroupId?: string | null;
   status:
     | "CREATED"
     | "AWAITING_PAYMENT"
@@ -496,12 +530,14 @@ export function useQueryProfile() {
  * Hook to update current user's profile
  */
 export function useMutUpdateProfile() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(reservationApi.mutProfileUpdate, {
     onSuccess: async () => {
       toast.success("Profile updated successfully");
-      await utils.profile.me.invalidate();
+      await queryClient.invalidateQueries({
+        queryKey: buildTrpcQueryKey(["profile", "me"]),
+      });
     },
     onError: (error) => {
       toast.error(error.message || "Failed to update profile");
@@ -513,12 +549,14 @@ export function useMutUpdateProfile() {
  * Hook to upload user avatar
  */
 export function useMutUploadAvatar() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(reservationApi.mutProfileUploadAvatar, {
     onSuccess: async () => {
       toast.success("Avatar uploaded successfully");
-      await utils.profile.me.invalidate();
+      await queryClient.invalidateQueries({
+        queryKey: buildTrpcQueryKey(["profile", "me"]),
+      });
     },
     onError: (error) => {
       toast.error(error.message || "Failed to upload avatar");
@@ -553,6 +591,21 @@ export function useQueryReservationDetail(
     { reservationId },
     {
       enabled: Boolean(reservationId),
+      refetchInterval,
+    },
+  );
+}
+
+export function useQueryReservationGroupDetail(
+  reservationGroupId: string,
+  refetchInterval?: number,
+) {
+  return useFeatureQuery(
+    ["reservation", "getGroupDetail"],
+    reservationApi.queryReservationGetGroupDetail,
+    { reservationGroupId },
+    {
+      enabled: Boolean(reservationGroupId),
       refetchInterval,
     },
   );

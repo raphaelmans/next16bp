@@ -47,6 +47,35 @@ const reservationCreatedSchema = z.object({
   expiresAtIso: z.string().nullable().optional(),
 });
 
+const reservationGroupItemSchema = z.object({
+  reservationId: z.string(),
+  courtId: z.string(),
+  courtLabel: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  totalPriceCents: z.number(),
+  currency: z.string(),
+  expiresAtIso: z.string().nullable().optional(),
+});
+
+const reservationGroupCreatedSchema = z.object({
+  reservationGroupId: z.string(),
+  representativeReservationId: z.string(),
+  organizationId: z.string(),
+  placeId: z.string(),
+  placeName: z.string(),
+  totalPriceCents: z.number(),
+  currency: z.string(),
+  playerName: z.string(),
+  playerEmail: z.string().nullable().optional(),
+  playerPhone: z.string().nullable().optional(),
+  itemCount: z.number(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  expiresAtIso: z.string().nullable().optional(),
+  items: z.array(reservationGroupItemSchema),
+});
+
 const verificationReviewedSchema = z.object({
   requestId: z.string(),
   organizationId: z.string(),
@@ -76,6 +105,20 @@ const reservationAwaitingPaymentSchema = z.object({
   currency: z.string(),
 });
 
+const reservationGroupAwaitingPaymentSchema = z.object({
+  reservationGroupId: z.string(),
+  representativeReservationId: z.string(),
+  placeName: z.string(),
+  courtLabel: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  expiresAtIso: z.string().nullable().optional(),
+  totalPriceCents: z.number(),
+  currency: z.string(),
+  itemCount: z.number(),
+  items: z.array(reservationGroupItemSchema),
+});
+
 const reservationPaymentMarkedSchema = z.object({
   reservationId: z.string(),
   placeName: z.string(),
@@ -85,12 +128,36 @@ const reservationPaymentMarkedSchema = z.object({
   playerName: z.string(),
 });
 
+const reservationGroupPaymentMarkedSchema = z.object({
+  reservationGroupId: z.string(),
+  representativeReservationId: z.string(),
+  organizationId: z.string(),
+  placeName: z.string(),
+  courtLabel: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  playerName: z.string(),
+  itemCount: z.number(),
+  items: z.array(reservationGroupItemSchema),
+});
+
 const reservationConfirmedSchema = z.object({
   reservationId: z.string(),
   placeName: z.string(),
   courtLabel: z.string(),
   startTimeIso: z.string(),
   endTimeIso: z.string(),
+});
+
+const reservationGroupConfirmedSchema = z.object({
+  reservationGroupId: z.string(),
+  representativeReservationId: z.string(),
+  placeName: z.string(),
+  courtLabel: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  itemCount: z.number(),
+  items: z.array(reservationGroupItemSchema),
 });
 
 const reservationRejectedSchema = z.object({
@@ -102,6 +169,18 @@ const reservationRejectedSchema = z.object({
   reason: z.string().nullable().optional(),
 });
 
+const reservationGroupRejectedSchema = z.object({
+  reservationGroupId: z.string(),
+  representativeReservationId: z.string(),
+  placeName: z.string(),
+  courtLabel: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  itemCount: z.number(),
+  items: z.array(reservationGroupItemSchema),
+  reason: z.string().nullable().optional(),
+});
+
 const reservationCancelledSchema = z.object({
   reservationId: z.string(),
   placeName: z.string(),
@@ -109,6 +188,20 @@ const reservationCancelledSchema = z.object({
   startTimeIso: z.string(),
   endTimeIso: z.string(),
   playerName: z.string(),
+  reason: z.string().nullable().optional(),
+});
+
+const reservationGroupCancelledSchema = z.object({
+  reservationGroupId: z.string(),
+  representativeReservationId: z.string(),
+  organizationId: z.string(),
+  placeName: z.string(),
+  courtLabel: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  playerName: z.string(),
+  itemCount: z.number(),
+  items: z.array(reservationGroupItemSchema),
   reason: z.string().nullable().optional(),
 });
 
@@ -132,6 +225,10 @@ const parseReservationPayload = (
   payload: Record<string, unknown> | null | undefined,
 ) => reservationCreatedSchema.safeParse(payload ?? {});
 
+const parseReservationGroupPayload = (
+  payload: Record<string, unknown> | null | undefined,
+) => reservationGroupCreatedSchema.safeParse(payload ?? {});
+
 const parseVerificationReviewedPayload = (
   payload: Record<string, unknown> | null | undefined,
 ) => verificationReviewedSchema.safeParse(payload ?? {});
@@ -144,21 +241,41 @@ const parseReservationAwaitingPaymentPayload = (
   payload: Record<string, unknown> | null | undefined,
 ) => reservationAwaitingPaymentSchema.safeParse(payload ?? {});
 
+const parseReservationGroupAwaitingPaymentPayload = (
+  payload: Record<string, unknown> | null | undefined,
+) => reservationGroupAwaitingPaymentSchema.safeParse(payload ?? {});
+
 const parseReservationPaymentMarkedPayload = (
   payload: Record<string, unknown> | null | undefined,
 ) => reservationPaymentMarkedSchema.safeParse(payload ?? {});
+
+const parseReservationGroupPaymentMarkedPayload = (
+  payload: Record<string, unknown> | null | undefined,
+) => reservationGroupPaymentMarkedSchema.safeParse(payload ?? {});
 
 const parseReservationConfirmedPayload = (
   payload: Record<string, unknown> | null | undefined,
 ) => reservationConfirmedSchema.safeParse(payload ?? {});
 
+const parseReservationGroupConfirmedPayload = (
+  payload: Record<string, unknown> | null | undefined,
+) => reservationGroupConfirmedSchema.safeParse(payload ?? {});
+
 const parseReservationRejectedPayload = (
   payload: Record<string, unknown> | null | undefined,
 ) => reservationRejectedSchema.safeParse(payload ?? {});
 
+const parseReservationGroupRejectedPayload = (
+  payload: Record<string, unknown> | null | undefined,
+) => reservationGroupRejectedSchema.safeParse(payload ?? {});
+
 const parseReservationCancelledPayload = (
   payload: Record<string, unknown> | null | undefined,
 ) => reservationCancelledSchema.safeParse(payload ?? {});
+
+const parseReservationGroupCancelledPayload = (
+  payload: Record<string, unknown> | null | undefined,
+) => reservationGroupCancelledSchema.safeParse(payload ?? {});
 
 const parseTestWebPushPayload = (
   payload: Record<string, unknown> | null | undefined,
@@ -237,6 +354,47 @@ const buildReservationCreatedMessages = (
 
   const emailText = lines.join("\n");
   const smsText = `KudosCourts: New reservation at ${payload.placeName} (${payload.courtLabel}) on ${payload.startTimeIso}. Reservation ID: ${payload.reservationId}. Log in to review.`;
+
+  return { subject, emailText, smsText };
+};
+
+const buildReservationGroupCreatedMessages = (
+  payload: z.infer<typeof reservationGroupCreatedSchema>,
+  appUrl: string,
+) => {
+  const reservationPath = appRoutes.owner.reservationGroupDetail(
+    payload.reservationGroupId,
+  );
+  const reservationUrl = appUrl
+    ? `${appUrl}${reservationPath}`
+    : reservationPath;
+
+  const subject = `New booking group: ${payload.placeName} (${payload.itemCount} items)`;
+
+  const lines = [
+    "New reservation group created",
+    "",
+    `Place: ${payload.placeName}`,
+    `Items: ${payload.itemCount}`,
+    `Start: ${payload.startTimeIso}`,
+    `End: ${payload.endTimeIso}`,
+    `Player: ${payload.playerName}`,
+    payload.playerEmail
+      ? `Player Email: ${payload.playerEmail}`
+      : "Player Email: (none)",
+    payload.playerPhone
+      ? `Player Phone: ${payload.playerPhone}`
+      : "Player Phone: (none)",
+    `Total: ${toLocalCurrency(payload.totalPriceCents, payload.currency)}`,
+    payload.expiresAtIso
+      ? `Owner response due: ${payload.expiresAtIso}`
+      : "Owner response due: (not set)",
+    "",
+    `Review: ${reservationUrl}`,
+  ];
+
+  const emailText = lines.join("\n");
+  const smsText = `KudosCourts: New booking group at ${payload.placeName} (${payload.itemCount} items). Group ID: ${payload.reservationGroupId}. Log in to review.`;
 
   return { subject, emailText, smsText };
 };
@@ -543,6 +701,34 @@ export async function GET(request: NextRequest) {
         pushBody = `${parsed.data.placeName} (${parsed.data.courtLabel})`;
         pushUrl = appRoutes.owner.reservationDetail(parsed.data.reservationId);
         pushTag = `reservation.created:${parsed.data.reservationId}`;
+      } else if (job.eventType === "reservation_group.created") {
+        const parsed = parseReservationGroupPayload(
+          job.payload as Record<string, unknown> | null,
+        );
+
+        if (!parsed.success) {
+          skippedCount += 1;
+          await jobRepository.update(job.id, {
+            status: "SKIPPED",
+            lastError: "INVALID_PAYLOAD",
+            nextAttemptAt: null,
+          });
+          continue;
+        }
+
+        const messages = buildReservationGroupCreatedMessages(
+          parsed.data,
+          appUrl,
+        );
+        subject = messages.subject;
+        emailText = messages.emailText;
+        smsText = messages.smsText;
+        pushTitle = "New booking group";
+        pushBody = `${parsed.data.placeName} (${parsed.data.itemCount} items)`;
+        pushUrl = appRoutes.owner.reservationGroupDetail(
+          parsed.data.reservationGroupId,
+        );
+        pushTag = `reservation_group.created:${parsed.data.reservationGroupId}`;
       } else if (
         job.eventType === "place_verification.approved" ||
         job.eventType === "place_verification.rejected"
@@ -616,6 +802,25 @@ export async function GET(request: NextRequest) {
         pushBody = `${parsed.data.placeName} (${parsed.data.courtLabel})`;
         pushUrl = appRoutes.reservations.detail(parsed.data.reservationId);
         pushTag = `reservation.awaiting_payment:${parsed.data.reservationId}`;
+      } else if (job.eventType === "reservation_group.awaiting_payment") {
+        const parsed = parseReservationGroupAwaitingPaymentPayload(
+          job.payload as Record<string, unknown> | null,
+        );
+        if (!parsed.success) {
+          skippedCount += 1;
+          await jobRepository.update(job.id, {
+            status: "SKIPPED",
+            lastError: "INVALID_PAYLOAD",
+            nextAttemptAt: null,
+          });
+          continue;
+        }
+        pushTitle = "Payment needed";
+        pushBody = `${parsed.data.placeName} (${parsed.data.itemCount} items)`;
+        pushUrl = appRoutes.reservations.groupPayment(
+          parsed.data.reservationGroupId,
+        );
+        pushTag = `reservation_group.awaiting_payment:${parsed.data.reservationGroupId}`;
       } else if (job.eventType === "reservation.payment_marked") {
         const parsed = parseReservationPaymentMarkedPayload(
           job.payload as Record<string, unknown> | null,
@@ -633,6 +838,25 @@ export async function GET(request: NextRequest) {
         pushBody = `${parsed.data.playerName} marked payment for ${parsed.data.placeName}`;
         pushUrl = appRoutes.owner.reservationDetail(parsed.data.reservationId);
         pushTag = `reservation.payment_marked:${parsed.data.reservationId}`;
+      } else if (job.eventType === "reservation_group.payment_marked") {
+        const parsed = parseReservationGroupPaymentMarkedPayload(
+          job.payload as Record<string, unknown> | null,
+        );
+        if (!parsed.success) {
+          skippedCount += 1;
+          await jobRepository.update(job.id, {
+            status: "SKIPPED",
+            lastError: "INVALID_PAYLOAD",
+            nextAttemptAt: null,
+          });
+          continue;
+        }
+        pushTitle = "Payment marked";
+        pushBody = `${parsed.data.playerName} marked payment for ${parsed.data.placeName}`;
+        pushUrl = appRoutes.owner.reservationGroupDetail(
+          parsed.data.reservationGroupId,
+        );
+        pushTag = `reservation_group.payment_marked:${parsed.data.reservationGroupId}`;
       } else if (job.eventType === "reservation.confirmed") {
         const parsed = parseReservationConfirmedPayload(
           job.payload as Record<string, unknown> | null,
@@ -650,6 +874,25 @@ export async function GET(request: NextRequest) {
         pushBody = `${parsed.data.placeName} (${parsed.data.courtLabel})`;
         pushUrl = appRoutes.reservations.detail(parsed.data.reservationId);
         pushTag = `reservation.confirmed:${parsed.data.reservationId}`;
+      } else if (job.eventType === "reservation_group.confirmed") {
+        const parsed = parseReservationGroupConfirmedPayload(
+          job.payload as Record<string, unknown> | null,
+        );
+        if (!parsed.success) {
+          skippedCount += 1;
+          await jobRepository.update(job.id, {
+            status: "SKIPPED",
+            lastError: "INVALID_PAYLOAD",
+            nextAttemptAt: null,
+          });
+          continue;
+        }
+        pushTitle = "Reservation group confirmed";
+        pushBody = `${parsed.data.placeName} (${parsed.data.itemCount} items)`;
+        pushUrl = appRoutes.reservations.groupDetail(
+          parsed.data.reservationGroupId,
+        );
+        pushTag = `reservation_group.confirmed:${parsed.data.reservationGroupId}`;
       } else if (job.eventType === "reservation.rejected") {
         const parsed = parseReservationRejectedPayload(
           job.payload as Record<string, unknown> | null,
@@ -667,6 +910,25 @@ export async function GET(request: NextRequest) {
         pushBody = parsed.data.placeName;
         pushUrl = appRoutes.reservations.detail(parsed.data.reservationId);
         pushTag = `reservation.rejected:${parsed.data.reservationId}`;
+      } else if (job.eventType === "reservation_group.rejected") {
+        const parsed = parseReservationGroupRejectedPayload(
+          job.payload as Record<string, unknown> | null,
+        );
+        if (!parsed.success) {
+          skippedCount += 1;
+          await jobRepository.update(job.id, {
+            status: "SKIPPED",
+            lastError: "INVALID_PAYLOAD",
+            nextAttemptAt: null,
+          });
+          continue;
+        }
+        pushTitle = "Reservation group rejected";
+        pushBody = parsed.data.placeName;
+        pushUrl = appRoutes.reservations.groupDetail(
+          parsed.data.reservationGroupId,
+        );
+        pushTag = `reservation_group.rejected:${parsed.data.reservationGroupId}`;
       } else if (job.eventType === "reservation.cancelled") {
         const parsed = parseReservationCancelledPayload(
           job.payload as Record<string, unknown> | null,
@@ -684,6 +946,25 @@ export async function GET(request: NextRequest) {
         pushBody = `${parsed.data.playerName} cancelled ${parsed.data.placeName}`;
         pushUrl = appRoutes.owner.reservationDetail(parsed.data.reservationId);
         pushTag = `reservation.cancelled:${parsed.data.reservationId}`;
+      } else if (job.eventType === "reservation_group.cancelled") {
+        const parsed = parseReservationGroupCancelledPayload(
+          job.payload as Record<string, unknown> | null,
+        );
+        if (!parsed.success) {
+          skippedCount += 1;
+          await jobRepository.update(job.id, {
+            status: "SKIPPED",
+            lastError: "INVALID_PAYLOAD",
+            nextAttemptAt: null,
+          });
+          continue;
+        }
+        pushTitle = "Reservation group cancelled";
+        pushBody = `${parsed.data.playerName} cancelled ${parsed.data.placeName}`;
+        pushUrl = appRoutes.owner.reservationGroupDetail(
+          parsed.data.reservationGroupId,
+        );
+        pushTag = `reservation_group.cancelled:${parsed.data.reservationGroupId}`;
       } else if (job.eventType === "test.web_push") {
         const parsed = parseTestWebPushPayload(
           job.payload as Record<string, unknown> | null,

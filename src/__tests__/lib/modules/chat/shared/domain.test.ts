@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
   isSystemReservationMessageId,
+  makeReservationGroupThreadId,
   makeReservationThreadId,
   makeSupportClaimThreadId,
   makeSupportVerificationThreadId,
   parseInboxThreadRef,
+  parseReservationGroupThreadId,
   parseReservationThreadId,
   parseSupportThreadId,
 } from "@/lib/modules/chat/shared/domain";
@@ -99,6 +101,21 @@ describe("chat shared domain", () => {
       });
     });
 
+    it("reservation scope with reservation group thread id -> parses", () => {
+      // Arrange
+      const threadId = makeReservationGroupThreadId("group-1");
+
+      // Act
+      const parsed = parseInboxThreadRef("reservation", threadId);
+
+      // Assert
+      expect(parsed).toEqual({
+        threadKind: "reservation",
+        threadId,
+        reservationGroupId: "group-1",
+      });
+    });
+
     it("support scope with reservation thread id -> returns null", () => {
       // Arrange
       const threadId = "res-r-1";
@@ -108,6 +125,21 @@ describe("chat shared domain", () => {
 
       // Assert
       expect(parsed).toBeNull();
+    });
+  });
+
+  describe("reservation group thread ids", () => {
+    it("make + parse reservation group id -> returns canonical ref", () => {
+      // Arrange
+      const reservationGroupId = "group-1";
+
+      // Act
+      const threadId = makeReservationGroupThreadId(reservationGroupId);
+      const parsed = parseReservationGroupThreadId(threadId);
+
+      // Assert
+      expect(threadId).toBe("grp-group-1");
+      expect(parsed).toEqual({ threadId, reservationGroupId });
     });
   });
 

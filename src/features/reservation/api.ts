@@ -38,9 +38,15 @@ export interface IReservationApi {
   mutReservationMarkPayment: ProcedureFn<
     TrpcClientApi["reservation"]["markPayment"]["mutate"]
   >;
+  mutReservationMarkPaymentGroup: ProcedureFn<
+    TrpcClientApi["reservation"]["markPaymentGroup"]["mutate"]
+  >;
   queryProfileMe: ProcedureFn<TrpcClientApi["profile"]["me"]["query"]>;
   queryReservationGetById: ProcedureFn<
     TrpcClientApi["reservation"]["getById"]["query"]
+  >;
+  queryReservationGetGroupDetail: ProcedureFn<
+    TrpcClientApi["reservation"]["getGroupDetail"]["query"]
   >;
   queryReservationGetDetail: ProcedureFn<
     TrpcClientApi["reservation"]["getDetail"]["query"]
@@ -165,6 +171,17 @@ export class ReservationApi {
       this.toAppError,
     );
 
+  mutReservationMarkPaymentGroup: ProcedureFn<
+    TrpcClientApi["reservation"]["markPaymentGroup"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservation", "markPaymentGroup"],
+      (clientApi) => clientApi.reservation.markPaymentGroup.mutate,
+      input,
+      this.toAppError,
+    );
+
   queryProfileMe: ProcedureFn<TrpcClientApi["profile"]["me"]["query"]> = async (
     input,
   ) =>
@@ -183,6 +200,17 @@ export class ReservationApi {
       this.clientApi,
       ["reservation", "getById"],
       (clientApi) => clientApi.reservation.getById.query,
+      input,
+      this.toAppError,
+    );
+
+  queryReservationGetGroupDetail: ProcedureFn<
+    TrpcClientApi["reservation"]["getGroupDetail"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["reservation", "getGroupDetail"],
+      (clientApi) => clientApi.reservation.getGroupDetail.query,
       input,
       this.toAppError,
     );

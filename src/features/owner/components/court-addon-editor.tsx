@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, Loader2, Plus, Trash2 } from "lucide-react";
+import { Copy, Globe, Loader2, Plus, Target, Trash2 } from "lucide-react";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -17,6 +17,17 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -27,6 +38,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   type AddonRuleGroup,
   collapseRulesToGroups,
@@ -48,7 +64,6 @@ import {
   mapPlaceAddonFormsToSetPayload,
 } from "@/features/place-addon/helpers";
 import { cn } from "@/lib/utils";
-import { AddonCopyFromCourtDialog } from "./addon-copy-from-court-dialog";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -99,7 +114,10 @@ function createDefaultGroup(): AddonRuleGroup {
   };
 }
 
-function createDefaultAddon(displayOrder: number): AddonEditorForm {
+function createDefaultAddon(
+  displayOrder: number,
+  scope: AddonScope = "SPECIFIC",
+): AddonEditorForm {
   return {
     label: "",
     isActive: true,
@@ -107,7 +125,7 @@ function createDefaultAddon(displayOrder: number): AddonEditorForm {
     pricingType: "HOURLY",
     displayOrder,
     groups: [createDefaultGroup()],
-    scope: "SPECIFIC",
+    scope,
   };
 }
 
@@ -231,23 +249,34 @@ export function CourtAddonEditor({
   });
   const savePlaceMutation = useMutOwnerSavePlaceAddons(placeId ?? "");
 
+  // Sibling courts for copy
   const { data: allCourts = [], isLoading: courtsLoading } =
     useQueryOwnerCourts(organizationId);
   const siblingCourts = React.useMemo(
-    () => allCourts.filter((c) => c.placeId === placeId),
-    [allCourts, placeId],
+    () => allCourts.filter((c) => c.placeId === placeId && c.id !== courtId),
+    [allCourts, placeId, courtId],
   );
+  const hasSiblingCourts = !courtsLoading && siblingCourts.length > 0;
 
   const [addons, setAddons] = React.useState<AddonEditorForm[]>([]);
   const [_isDirty, setIsDirty] = React.useState(false);
   const [saveAttempted, setSaveAttempted] = React.useState(false);
-  const [copyDialogOpen, setCopyDialogOpen] = React.useState(false);
 
   // Scope change confirmation state
   const [scopeChange, setScopeChange] = React.useState<{
     addonIndex: number;
     direction: "TO_GLOBAL" | "TO_SPECIFIC";
   } | null>(null);
+
+  // Copy from court state
+  const [copySource, setCopySource] = React.useState<{
+    courtId: string;
+    label: string;
+  } | null>(null);
+  const { data: sourceCopyAddons } = useQueryOwnerCourtAddons(
+    copySource?.courtId ?? "",
+    { enabled: !!copySource },
+  );
 
   // Wraps setAddons for user interactions — marks form dirty
   const updateAddons = React.useCallback(
@@ -297,9 +326,20 @@ export function CourtAddonEditor({
     [addons],
   );
 
-  const handleAddAddon = React.useCallback(() => {
-    setAddons((prev) => [...prev, createDefaultAddon(prev.length)]);
-  }, []);
+  const handleAddAddon = React.useCallback(
+    (scope: AddonScope = "SPECIFIC") => {
+      updateAddons((prev) => {
+        const newAddon = createDefaultAddon(prev.length, scope);
+        // Re-sort so globals always come first
+        const updated = [...prev, newAddon];
+        return [
+          ...updated.filter((a) => a.scope === "GLOBAL"),
+          ...updated.filter((a) => a.scope === "SPECIFIC"),
+        ];
+      });
+    },
+    [updateAddons],
+  );
 
   const handleSave = React.useCallback(async () => {
     setSaveAttempted(true);
@@ -365,49 +405,54 @@ export function CourtAddonEditor({
   const handleScopeChangeConfirm = () => {
     if (!scopeChange) return;
     const { addonIndex, direction } = scopeChange;
-    updateAddons((prev) =>
-      prev.map((item, i) => {
+    updateAddons((prev) => {
+      const updated = prev.map((item, i) => {
         if (i !== addonIndex) return item;
         return {
           ...item,
-          scope: direction === "TO_GLOBAL" ? "GLOBAL" : "SPECIFIC",
+          scope:
+            direction === "TO_GLOBAL"
+              ? ("GLOBAL" as const)
+              : ("SPECIFIC" as const),
           // Clear id — it will be deleted from one table and recreated in the other
           id: undefined,
         };
-      }),
-    );
+      });
+      // Re-sort so globals always come first
+      return [
+        ...updated.filter((a) => a.scope === "GLOBAL"),
+        ...updated.filter((a) => a.scope === "SPECIFIC"),
+      ];
+    });
     setScopeChange(null);
   };
 
-  const handleCopyAddons = React.useCallback(
-    (
-      copied: {
-        label: string;
-        isActive: boolean;
-        mode: "OPTIONAL" | "AUTO";
-        pricingType: "HOURLY" | "FLAT";
-        flatFeeCents?: number | null;
-        displayOrder: number;
-        groups: AddonRuleGroup[];
-        scope: AddonScope;
-      }[],
-    ) => {
-      updateAddons((prev) => {
-        const maxOrder = prev.reduce(
-          (max, a) => Math.max(max, a.displayOrder ?? 0),
-          -1,
-        );
-        return [
-          ...prev,
-          ...copied.map((addon, i) => ({
-            ...addon,
-            displayOrder: maxOrder + 1 + i,
-          })),
-        ];
-      });
-    },
-    [updateAddons],
-  );
+  // Copy from court: when source addons arrive, append them
+  // biome-ignore lint/correctness/useExhaustiveDependencies: addons.length used for displayOrder calc
+  React.useEffect(() => {
+    if (!copySource || !sourceCopyAddons) return;
+    const forms = mapCourtAddonConfigsToForms(sourceCopyAddons);
+    const newAddons: AddonEditorForm[] = forms.map((form, i) => ({
+      ...form,
+      id: undefined,
+      groups: collapseRulesToGroups(form.rules),
+      scope: "SPECIFIC" as const,
+      displayOrder: addons.length + i,
+    }));
+    if (newAddons.length > 0) {
+      updateAddons((prev) => [...prev, ...newAddons]);
+      toast.success(
+        `Copied ${newAddons.length} add-on(s) from ${copySource.label}`,
+      );
+    } else {
+      toast.info(`${copySource.label} has no add-ons to copy.`);
+    }
+    setCopySource(null);
+  }, [sourceCopyAddons, copySource]);
+
+  const handleCopyFromCourt = (court: { id: string; label: string }) => {
+    setCopySource({ courtId: court.id, label: court.label });
+  };
 
   if (isLoading) {
     return (
@@ -418,8 +463,6 @@ export function CourtAddonEditor({
   }
 
   const isSaving = saveMutation.isPending || savePlaceMutation.isPending;
-  const showCopyButton =
-    !!organizationId && !courtsLoading && siblingCourts.length > 1;
 
   return (
     <>
@@ -429,17 +472,6 @@ export function CourtAddonEditor({
         onConfirm={handleScopeChangeConfirm}
         onCancel={() => setScopeChange(null)}
       />
-
-      {showCopyButton && (
-        <AddonCopyFromCourtDialog
-          open={copyDialogOpen}
-          onOpenChange={setCopyDialogOpen}
-          courts={allCourts}
-          currentCourtId={courtId}
-          placeId={placeId ?? ""}
-          onCopy={handleCopyAddons}
-        />
-      )}
 
       <Card>
         <CardHeader className="pb-4">
@@ -451,32 +483,68 @@ export function CourtAddonEditor({
               </p>
             </div>
             <div className="flex shrink-0 gap-2">
-              {showCopyButton && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCopyDialogOpen(true)}
-                >
-                  <Copy className="mr-1.5 h-3.5 w-3.5" />
-                  Copy from court
-                </Button>
-              )}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleAddAddon}
-                className="shrink-0"
-              >
-                <Plus className="mr-1.5 h-3.5 w-3.5" />
-                Add add-on
-                {addons.length > 0 && (
-                  <Badge variant="secondary" className="ml-2">
-                    {addons.length}
-                  </Badge>
-                )}
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="shrink-0"
+                  >
+                    <Plus className="mr-1.5 h-3.5 w-3.5" />
+                    Add add-on
+                    {addons.length > 0 && (
+                      <Badge variant="secondary" className="ml-2">
+                        {addons.length}
+                      </Badge>
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>New add-on</DropdownMenuLabel>
+                  <DropdownMenuItem onClick={() => handleAddAddon("SPECIFIC")}>
+                    <Target className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <div>
+                      <p>Court add-on</p>
+                      <p className="text-xs text-muted-foreground">
+                        Only this court
+                      </p>
+                    </div>
+                  </DropdownMenuItem>
+                  {placeId && (
+                    <DropdownMenuItem onClick={() => handleAddAddon("GLOBAL")}>
+                      <Globe className="mr-2 h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <p>Venue-wide add-on</p>
+                        <p className="text-xs text-muted-foreground">
+                          All courts at this venue
+                        </p>
+                      </div>
+                    </DropdownMenuItem>
+                  )}
+                  {hasSiblingCourts && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                          <Copy className="mr-2 h-4 w-4 text-muted-foreground" />
+                          Copy from court
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          {siblingCourts.map((court) => (
+                            <DropdownMenuItem
+                              key={court.id}
+                              onClick={() => handleCopyFromCourt(court)}
+                            >
+                              {court.label}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </CardHeader>
@@ -504,7 +572,7 @@ export function CourtAddonEditor({
                 variant="outline"
                 size="sm"
                 className="mt-4"
-                onClick={handleAddAddon}
+                onClick={() => handleAddAddon("SPECIFIC")}
               >
                 <Plus className="mr-1.5 h-3.5 w-3.5" />
                 Add your first add-on
@@ -512,353 +580,410 @@ export function CourtAddonEditor({
             </div>
           ) : (
             <div className="space-y-4">
-              {addons.map((addon, addonIndex) => {
-                const updateAddon = (patch: Partial<AddonEditorForm>) =>
-                  updateAddons((prev) =>
-                    prev.map((item, i) =>
-                      i === addonIndex ? { ...item, ...patch } : item,
-                    ),
-                  );
+              {(() => {
+                const indexed = addons.map((a, i) => ({ ...a, _idx: i }));
+                const globalGroup = indexed.filter((a) => a.scope === "GLOBAL");
+                const specificGroup = indexed.filter(
+                  (a) => a.scope === "SPECIFIC",
+                );
 
-                const updateGroup = (
-                  groupIndex: number,
-                  patch: Partial<AddonRuleGroup>,
-                ) =>
-                  updateAddons((prev) =>
-                    prev.map((item, i) =>
-                      i === addonIndex
-                        ? {
-                            ...item,
-                            groups: item.groups.map((g, gi) =>
-                              gi === groupIndex ? { ...g, ...patch } : g,
-                            ),
-                          }
-                        : item,
-                    ),
-                  );
+                const renderAddonCard = (
+                  addon: AddonEditorForm & { _idx: number },
+                ) => {
+                  const addonIndex = addon._idx;
 
-                return (
-                  <div
-                    key={`${addon.id ?? "new"}-${addonIndex}`}
-                    className="overflow-hidden rounded-xl border shadow-sm"
-                  >
-                    {/* ── Identity: label + mode + active + scope + remove ─── */}
-                    <div className="flex flex-wrap items-center gap-2.5 p-4 sm:flex-nowrap sm:p-5">
-                      <Input
-                        placeholder="Add-on label…"
-                        value={addon.label}
-                        onChange={(e) => updateAddon({ label: e.target.value })}
-                        className="min-w-0 flex-1 font-medium"
-                      />
-                      <Select
-                        value={addon.mode}
-                        onValueChange={(value: "OPTIONAL" | "AUTO") =>
-                          updateAddon({ mode: value })
-                        }
-                      >
-                        <SelectTrigger className="w-36 shrink-0">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="OPTIONAL">Optional</SelectItem>
-                          <SelectItem value="AUTO">Auto-applied</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <div className="flex shrink-0 items-center gap-1.5">
-                        <Switch
-                          checked={addon.isActive}
-                          onCheckedChange={(checked) =>
-                            updateAddon({ isActive: checked })
+                  const updateAddon = (patch: Partial<AddonEditorForm>) =>
+                    updateAddons((prev) =>
+                      prev.map((item, i) =>
+                        i === addonIndex ? { ...item, ...patch } : item,
+                      ),
+                    );
+
+                  const updateGroup = (
+                    groupIndex: number,
+                    patch: Partial<AddonRuleGroup>,
+                  ) =>
+                    updateAddons((prev) =>
+                      prev.map((item, i) =>
+                        i === addonIndex
+                          ? {
+                              ...item,
+                              groups: item.groups.map((g, gi) =>
+                                gi === groupIndex ? { ...g, ...patch } : g,
+                              ),
+                            }
+                          : item,
+                      ),
+                    );
+
+                  return (
+                    <div
+                      key={`${addon.id ?? "new"}-${addonIndex}`}
+                      className="overflow-hidden rounded-xl border shadow-sm"
+                    >
+                      {/* ── Identity: label + mode + active + scope + remove ─── */}
+                      <div className="flex flex-wrap items-center gap-2.5 p-4 sm:flex-nowrap sm:p-5">
+                        <Input
+                          placeholder="Add-on label…"
+                          value={addon.label}
+                          onChange={(e) =>
+                            updateAddon({ label: e.target.value })
                           }
+                          className="min-w-0 flex-1 font-medium"
                         />
-                        <span className="text-xs text-muted-foreground">
-                          Active
-                        </span>
-                      </div>
-                      {placeId && (
+                        <Select
+                          value={addon.mode}
+                          onValueChange={(value: "OPTIONAL" | "AUTO") =>
+                            updateAddon({ mode: value })
+                          }
+                        >
+                          <SelectTrigger className="w-36 shrink-0">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="OPTIONAL">Optional</SelectItem>
+                            <SelectItem value="AUTO">Auto-applied</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <div className="flex shrink-0 items-center gap-1.5">
                           <Switch
-                            checked={addon.scope === "GLOBAL"}
-                            onCheckedChange={() =>
-                              handleScopeToggleRequest(addonIndex, addon.scope)
+                            checked={addon.isActive}
+                            onCheckedChange={(checked) =>
+                              updateAddon({ isActive: checked })
                             }
                           />
                           <span className="text-xs text-muted-foreground">
-                            {addon.scope === "GLOBAL"
-                              ? "Venue-wide"
-                              : "This court"}
+                            Active
                           </span>
-                          {addon.scope === "GLOBAL" && (
-                            <Badge variant="outline" className="text-xs">
-                              All courts
-                            </Badge>
+                        </div>
+                        {placeId && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Badge
+                                variant={
+                                  addon.scope === "GLOBAL"
+                                    ? "secondary"
+                                    : "outline"
+                                }
+                                className="cursor-pointer select-none"
+                                onClick={() =>
+                                  handleScopeToggleRequest(
+                                    addonIndex,
+                                    addon.scope,
+                                  )
+                                }
+                              >
+                                {addon.scope === "GLOBAL"
+                                  ? "Venue-wide"
+                                  : "Court"}
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent side="top">
+                              {addon.scope === "GLOBAL"
+                                ? "Applies to all courts. Click to make court-specific."
+                                : "Only this court. Click to make venue-wide."}
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="shrink-0 text-muted-foreground hover:text-destructive"
+                          onClick={() =>
+                            updateAddons((prev) =>
+                              prev.filter((_, i) => i !== addonIndex),
+                            )
+                          }
+                          aria-label="Remove add-on"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+
+                      {/* ── Pricing ───────────────────────────────────── */}
+                      <div className="border-t bg-muted/30 px-4 py-3 sm:px-5">
+                        <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                          Pricing
+                        </p>
+                        <div className="flex flex-wrap items-end gap-3">
+                          <div className="space-y-1">
+                            <Label className="text-xs">Type</Label>
+                            <Select
+                              value={addon.pricingType}
+                              onValueChange={(value: "HOURLY" | "FLAT") =>
+                                updateAddons((prev) =>
+                                  prev.map((item, i) =>
+                                    i === addonIndex
+                                      ? {
+                                          ...item,
+                                          pricingType: value,
+                                          flatFeeCents:
+                                            value === "FLAT"
+                                              ? (item.flatFeeCents ?? 0)
+                                              : null,
+                                          groups:
+                                            value === "FLAT"
+                                              ? []
+                                              : item.groups.length > 0
+                                                ? item.groups
+                                                : [createDefaultGroup()],
+                                        }
+                                      : item,
+                                  ),
+                                )
+                              }
+                            >
+                              <SelectTrigger className="w-40">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="HOURLY">
+                                  Hourly add-on
+                                </SelectItem>
+                                <SelectItem value="FLAT">
+                                  Flat add-on
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          {addon.pricingType === "FLAT" && (
+                            <div className="space-y-1">
+                              <Label className="text-xs">Flat fee</Label>
+                              <Input
+                                type="number"
+                                min={0}
+                                step={0.01}
+                                className="w-28"
+                                value={
+                                  addon.flatFeeCents != null
+                                    ? addon.flatFeeCents / 100
+                                    : ""
+                                }
+                                onChange={(e) => {
+                                  const value = Number(e.target.value);
+                                  updateAddon({
+                                    flatFeeCents: Number.isFinite(value)
+                                      ? Math.round(value * 100)
+                                      : 0,
+                                  });
+                                }}
+                              />
+                            </div>
                           )}
                         </div>
-                      )}
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="shrink-0 text-muted-foreground hover:text-destructive"
-                        onClick={() =>
-                          updateAddons((prev) =>
-                            prev.filter((_, i) => i !== addonIndex),
-                          )
-                        }
-                        aria-label="Remove add-on"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
+                      </div>
 
-                    {/* ── Pricing ───────────────────────────────────── */}
-                    <div className="border-t bg-muted/30 px-4 py-3 sm:px-5">
-                      <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                        Pricing
-                      </p>
-                      <div className="flex flex-wrap items-end gap-3">
-                        <div className="space-y-1">
-                          <Label className="text-xs">Type</Label>
-                          <Select
-                            value={addon.pricingType}
-                            onValueChange={(value: "HOURLY" | "FLAT") =>
-                              updateAddons((prev) =>
-                                prev.map((item, i) =>
-                                  i === addonIndex
-                                    ? {
-                                        ...item,
-                                        pricingType: value,
-                                        flatFeeCents:
-                                          value === "FLAT"
-                                            ? (item.flatFeeCents ?? 0)
-                                            : null,
-                                        groups:
-                                          value === "FLAT"
-                                            ? []
-                                            : item.groups.length > 0
-                                              ? item.groups
-                                              : [createDefaultGroup()],
-                                      }
-                                    : item,
-                                ),
-                              )
-                            }
-                          >
-                            <SelectTrigger className="w-40">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="HOURLY">
-                                Hourly add-on
-                              </SelectItem>
-                              <SelectItem value="FLAT">Flat add-on</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        {addon.pricingType === "FLAT" && (
-                          <div className="space-y-1">
-                            <Label className="text-xs">Flat fee</Label>
-                            <Input
-                              type="number"
-                              min={0}
-                              step={0.01}
-                              className="w-28"
-                              value={
-                                addon.flatFeeCents != null
-                                  ? addon.flatFeeCents / 100
-                                  : ""
+                      {/* ── Schedule rules (HOURLY only) ──────────────── */}
+                      {addon.pricingType !== "FLAT" && (
+                        <div className="border-t px-4 pb-4 pt-3 sm:px-5">
+                          <div className="mb-2.5 flex items-center justify-between">
+                            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                              Schedule rules
+                            </p>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 text-xs"
+                              onClick={() =>
+                                updateAddons((prev) =>
+                                  prev.map((item, i) =>
+                                    i === addonIndex
+                                      ? {
+                                          ...item,
+                                          groups: [
+                                            ...item.groups,
+                                            createDefaultGroup(),
+                                          ],
+                                        }
+                                      : item,
+                                  ),
+                                )
                               }
-                              onChange={(e) => {
-                                const value = Number(e.target.value);
-                                updateAddon({
-                                  flatFeeCents: Number.isFinite(value)
-                                    ? Math.round(value * 100)
-                                    : 0,
-                                });
-                              }}
-                            />
+                            >
+                              <Plus className="mr-1 h-3 w-3" />
+                              Add rule
+                            </Button>
                           </div>
-                        )}
-                      </div>
-                    </div>
 
-                    {/* ── Schedule rules (HOURLY only) ──────────────── */}
-                    {addon.pricingType !== "FLAT" && (
-                      <div className="border-t px-4 pb-4 pt-3 sm:px-5">
-                        <div className="mb-2.5 flex items-center justify-between">
-                          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                            Schedule rules
-                          </p>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 text-xs"
-                            onClick={() =>
-                              updateAddons((prev) =>
-                                prev.map((item, i) =>
-                                  i === addonIndex
-                                    ? {
-                                        ...item,
-                                        groups: [
-                                          ...item.groups,
-                                          createDefaultGroup(),
-                                        ],
-                                      }
-                                    : item,
-                                ),
-                              )
-                            }
-                          >
-                            <Plus className="mr-1 h-3 w-3" />
-                            Add rule
-                          </Button>
-                        </div>
-
-                        {addon.groups.length === 0 ? (
-                          <p className="py-3 text-center text-xs text-muted-foreground">
-                            No rules yet — add one to define when this add-on
-                            applies.
-                          </p>
-                        ) : addon.groups.length > 0 ? (
-                          <div className="space-y-2">
-                            {/* Column headers (desktop only) */}
-                            <div className="hidden grid-cols-[auto_1fr_1fr_1fr_36px] gap-2 px-1 md:grid">
-                              <span className="text-xs text-muted-foreground">
-                                Days
-                              </span>
-                              <span className="text-xs text-muted-foreground">
-                                From
-                              </span>
-                              <span className="text-xs text-muted-foreground">
-                                To
-                              </span>
-                              <span className="text-xs text-muted-foreground">
-                                {addon.pricingType === "HOURLY"
-                                  ? "Rate (₱/hr)"
-                                  : ""}
-                              </span>
-                              <span />
-                            </div>
-                            {addon.groups.map((group, groupIndex) => {
-                              const hasEmptyDays = group.days.length === 0;
-                              return (
-                                <div
-                                  key={`${group.startMinute}-${group.endMinute}-${group.hourlyRateCents ?? "flat"}`}
-                                  className="space-y-1"
-                                >
-                                  <div className="grid gap-2 rounded-lg border bg-card p-2 md:grid-cols-[auto_1fr_1fr_1fr_36px] md:rounded-none md:border-0 md:bg-transparent md:p-0">
-                                    <div className="flex flex-col gap-1">
-                                      <DayPills
-                                        selected={group.days}
-                                        onChange={(days) =>
-                                          updateGroup(groupIndex, { days })
-                                        }
-                                      />
-                                    </div>
-                                    <Input
-                                      type="time"
-                                      className="h-8 text-sm"
-                                      aria-label="Start time"
-                                      value={minuteToTime(group.startMinute)}
-                                      onChange={(e) =>
-                                        updateGroup(groupIndex, {
-                                          startMinute: timeToMinute(
-                                            e.target.value,
-                                          ),
-                                        })
-                                      }
-                                    />
-                                    <Input
-                                      type="time"
-                                      className="h-8 text-sm"
-                                      aria-label="End time"
-                                      value={minuteToTime(
-                                        Math.min(1439, group.endMinute - 1),
-                                      )}
-                                      onChange={(e) =>
-                                        updateGroup(groupIndex, {
-                                          endMinute: Math.max(
-                                            1,
-                                            Math.min(
-                                              1440,
-                                              timeToMinute(e.target.value) + 1,
-                                            ),
-                                          ),
-                                        })
-                                      }
-                                    />
-                                    {addon.pricingType === "HOURLY" ? (
-                                      <Input
-                                        type="number"
-                                        min={0}
-                                        step={0.01}
-                                        className="h-8 text-sm"
-                                        aria-label="Hourly rate (₱/hr)"
-                                        placeholder="0"
-                                        value={
-                                          group.hourlyRateCents != null
-                                            ? group.hourlyRateCents / 100
-                                            : 0
-                                        }
-                                        onChange={(e) => {
-                                          const value = Number(e.target.value);
-                                          updateGroup(groupIndex, {
-                                            hourlyRateCents: Number.isFinite(
-                                              value,
-                                            )
-                                              ? Math.round(value * 100)
-                                              : 0,
-                                          });
-                                        }}
-                                      />
-                                    ) : (
-                                      <div className="hidden items-center md:flex">
-                                        <span className="text-xs text-muted-foreground">
-                                          Flat fee
-                                        </span>
+                          {addon.groups.length === 0 ? (
+                            <p className="py-3 text-center text-xs text-muted-foreground">
+                              No rules yet — add one to define when this add-on
+                              applies.
+                            </p>
+                          ) : addon.groups.length > 0 ? (
+                            <div className="space-y-2">
+                              {/* Column headers (desktop only) */}
+                              <div className="hidden grid-cols-[auto_1fr_1fr_1fr_36px] gap-2 px-1 md:grid">
+                                <span className="text-xs text-muted-foreground">
+                                  Days
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  From
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  To
+                                </span>
+                                <span className="text-xs text-muted-foreground">
+                                  {addon.pricingType === "HOURLY"
+                                    ? "Rate (₱/hr)"
+                                    : ""}
+                                </span>
+                                <span />
+                              </div>
+                              {addon.groups.map((group, groupIndex) => {
+                                const hasEmptyDays = group.days.length === 0;
+                                return (
+                                  <div
+                                    key={`${group.startMinute}-${group.endMinute}-${group.hourlyRateCents ?? "flat"}`}
+                                    className="space-y-1"
+                                  >
+                                    <div className="grid gap-2 rounded-lg border bg-card p-2 md:grid-cols-[auto_1fr_1fr_1fr_36px] md:rounded-none md:border-0 md:bg-transparent md:p-0">
+                                      <div className="flex flex-col gap-1">
+                                        <DayPills
+                                          selected={group.days}
+                                          onChange={(days) =>
+                                            updateGroup(groupIndex, { days })
+                                          }
+                                        />
                                       </div>
+                                      <Input
+                                        type="time"
+                                        className="h-8 text-sm"
+                                        aria-label="Start time"
+                                        value={minuteToTime(group.startMinute)}
+                                        onChange={(e) =>
+                                          updateGroup(groupIndex, {
+                                            startMinute: timeToMinute(
+                                              e.target.value,
+                                            ),
+                                          })
+                                        }
+                                      />
+                                      <Input
+                                        type="time"
+                                        className="h-8 text-sm"
+                                        aria-label="End time"
+                                        value={minuteToTime(
+                                          Math.min(1439, group.endMinute - 1),
+                                        )}
+                                        onChange={(e) =>
+                                          updateGroup(groupIndex, {
+                                            endMinute: Math.max(
+                                              1,
+                                              Math.min(
+                                                1440,
+                                                timeToMinute(e.target.value) +
+                                                  1,
+                                              ),
+                                            ),
+                                          })
+                                        }
+                                      />
+                                      {addon.pricingType === "HOURLY" ? (
+                                        <Input
+                                          type="number"
+                                          min={0}
+                                          step={0.01}
+                                          className="h-8 text-sm"
+                                          aria-label="Hourly rate (₱/hr)"
+                                          placeholder="0"
+                                          value={
+                                            group.hourlyRateCents != null
+                                              ? group.hourlyRateCents / 100
+                                              : 0
+                                          }
+                                          onChange={(e) => {
+                                            const value = Number(
+                                              e.target.value,
+                                            );
+                                            updateGroup(groupIndex, {
+                                              hourlyRateCents: Number.isFinite(
+                                                value,
+                                              )
+                                                ? Math.round(value * 100)
+                                                : 0,
+                                            });
+                                          }}
+                                        />
+                                      ) : (
+                                        <div className="hidden items-center md:flex">
+                                          <span className="text-xs text-muted-foreground">
+                                            Flat fee
+                                          </span>
+                                        </div>
+                                      )}
+                                      <Button
+                                        type="button"
+                                        size="icon"
+                                        variant="ghost"
+                                        className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
+                                        onClick={() =>
+                                          updateAddons((prev) =>
+                                            prev.map((item, i) =>
+                                              i === addonIndex
+                                                ? {
+                                                    ...item,
+                                                    groups: item.groups.filter(
+                                                      (_, gi) =>
+                                                        gi !== groupIndex,
+                                                    ),
+                                                  }
+                                                : item,
+                                            ),
+                                          )
+                                        }
+                                        aria-label="Remove rule"
+                                      >
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                      </Button>
+                                    </div>
+                                    {hasEmptyDays && (
+                                      <p className="px-1 text-xs text-destructive">
+                                        Select at least one day
+                                      </p>
                                     )}
-                                    <Button
-                                      type="button"
-                                      size="icon"
-                                      variant="ghost"
-                                      className="h-8 w-8 shrink-0 text-muted-foreground hover:text-destructive"
-                                      onClick={() =>
-                                        updateAddons((prev) =>
-                                          prev.map((item, i) =>
-                                            i === addonIndex
-                                              ? {
-                                                  ...item,
-                                                  groups: item.groups.filter(
-                                                    (_, gi) =>
-                                                      gi !== groupIndex,
-                                                  ),
-                                                }
-                                              : item,
-                                          ),
-                                        )
-                                      }
-                                      aria-label="Remove rule"
-                                    >
-                                      <Trash2 className="h-3.5 w-3.5" />
-                                    </Button>
                                   </div>
-                                  {hasEmptyDays && (
-                                    <p className="px-1 text-xs text-destructive">
-                                      Select at least one day
-                                    </p>
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        ) : null}
-                      </div>
+                                );
+                              })}
+                            </div>
+                          ) : null}
+                        </div>
+                      )}
+                    </div>
+                  );
+                };
+
+                return (
+                  <>
+                    {globalGroup.length > 0 && (
+                      <>
+                        <div className="flex items-center gap-2 pt-1">
+                          <Globe className="h-3.5 w-3.5 text-muted-foreground" />
+                          <span className="text-xs font-medium text-muted-foreground">
+                            Venue-wide
+                          </span>
+                          <div className="h-px flex-1 bg-border" />
+                        </div>
+                        {globalGroup.map(renderAddonCard)}
+                      </>
                     )}
-                  </div>
+                    {specificGroup.length > 0 && (
+                      <>
+                        <div className="flex items-center gap-2 pt-1">
+                          <Target className="h-3.5 w-3.5 text-muted-foreground" />
+                          <span className="text-xs font-medium text-muted-foreground">
+                            This court
+                          </span>
+                          <div className="h-px flex-1 bg-border" />
+                        </div>
+                        {specificGroup.map(renderAddonCard)}
+                      </>
+                    )}
+                  </>
                 );
-              })}
+              })()}
             </div>
           )}
 

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   NotReservationOwnerError,
+  ReservationGroupNotFoundError,
   ReservationNotFoundError,
 } from "@/lib/modules/reservation/errors/reservation.errors";
 
@@ -24,9 +25,11 @@ const mockReservationService = {
   createReservationForAnyCourt: vi.fn(),
   createReservationGroup: vi.fn(),
   markPayment: vi.fn(),
+  markPaymentGroup: vi.fn(),
   cancelReservation: vi.fn(),
   getReservationById: vi.fn(),
   getReservationDetail: vi.fn(),
+  getReservationGroupDetail: vi.fn(),
   getPaymentInfo: vi.fn(),
   getMyReservations: vi.fn(),
   getMyReservationsWithDetails: vi.fn(),
@@ -223,6 +226,49 @@ describe("reservationRouter", () => {
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
+  it("markPaymentGroup valid payload -> calls markPaymentGroup", async () => {
+    // Arrange
+    const caller = createCaller();
+    const input = {
+      reservationGroupId: TEST_IDS.reservationGroupId,
+      termsAccepted: true as const,
+    };
+    mockReservationService.markPaymentGroup.mockResolvedValue({
+      reservationGroupId: TEST_IDS.reservationGroupId,
+      reservations: [],
+    });
+
+    // Act
+    const result = await caller.markPaymentGroup(input);
+
+    // Assert
+    expect(result).toEqual({
+      reservationGroupId: TEST_IDS.reservationGroupId,
+      reservations: [],
+    });
+    expect(mockReservationService.markPaymentGroup).toHaveBeenCalledWith(
+      "user-1",
+      TEST_IDS.profileId,
+      input,
+    );
+  });
+
+  it("markPaymentGroup group not found -> maps to NOT_FOUND", async () => {
+    // Arrange
+    const caller = createCaller();
+    mockReservationService.markPaymentGroup.mockRejectedValue(
+      new ReservationGroupNotFoundError(TEST_IDS.reservationGroupId),
+    );
+
+    // Act + Assert
+    await expect(
+      caller.markPaymentGroup({
+        reservationGroupId: TEST_IDS.reservationGroupId,
+        termsAccepted: true,
+      }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+
   it("cancel valid payload -> calls cancelReservation", async () => {
     // Arrange
     const caller = createCaller();
@@ -307,6 +353,42 @@ describe("reservationRouter", () => {
     expect(mockReservationService.getReservationDetail).toHaveBeenCalledWith(
       TEST_IDS.reservationId1,
     );
+  });
+
+  it("getGroupDetail valid payload -> calls getReservationGroupDetail", async () => {
+    // Arrange
+    const caller = createCaller();
+    mockReservationService.getReservationGroupDetail.mockResolvedValue({
+      reservationGroup: { id: TEST_IDS.reservationGroupId },
+      statusSummary: {
+        totalItems: 2,
+        payableItems: 2,
+        countsByStatus: {
+          CREATED: 0,
+          AWAITING_PAYMENT: 2,
+          PAYMENT_MARKED_BY_USER: 0,
+          CONFIRMED: 0,
+          EXPIRED: 0,
+          CANCELLED: 0,
+        },
+      },
+      items: [],
+    });
+
+    // Act
+    const result = await caller.getGroupDetail({
+      reservationGroupId: TEST_IDS.reservationGroupId,
+    });
+
+    // Assert
+    expect(result).toMatchObject({
+      reservationGroup: { id: TEST_IDS.reservationGroupId },
+    });
+    expect(
+      mockReservationService.getReservationGroupDetail,
+    ).toHaveBeenCalledWith("user-1", TEST_IDS.profileId, {
+      reservationGroupId: TEST_IDS.reservationGroupId,
+    });
   });
 
   it("getPaymentInfo valid payload -> calls getPaymentInfo", async () => {

@@ -14,3 +14,11 @@ export const GetOpenPlayForReservationSchema = z.object({
 export type GetOpenPlayForReservationDTO = z.infer<
   typeof GetOpenPlayForReservationSchema
 >;
+
+export const GetOpenPlayForReservationGroupSchema = z.object({
+  reservationGroupId: S.ids.generic,
+});
+
+export type GetOpenPlayForReservationGroupDTO = z.infer<
+  typeof GetOpenPlayForReservationGroupSchema
+>;

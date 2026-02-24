@@ -23,6 +23,9 @@ export type ReservationStatus =
 export interface Reservation {
   id: string;
   reservationGroupId?: string | null;
+  isGroupPrimary?: boolean;
+  groupItemCount?: number;
+  groupItems?: Reservation[];
   courtId: string;
   courtName: string;
   playerName: string;
@@ -219,6 +222,90 @@ function mapOwnerReservationRecord(
   };
 }
 
+function deriveGroupReservationStatus(
+  reservations: Reservation[],
+): Reservation["reservationStatus"] {
+  const statuses = new Set(reservations.map((item) => item.reservationStatus));
+
+  if (statuses.has("PAYMENT_MARKED_BY_USER")) {
+    return "PAYMENT_MARKED_BY_USER";
+  }
+  if (statuses.has("CREATED")) {
+    return "CREATED";
+  }
+  if (statuses.has("AWAITING_PAYMENT")) {
+    return "AWAITING_PAYMENT";
+  }
+  if (statuses.has("CONFIRMED")) {
+    return "CONFIRMED";
+  }
+  if (statuses.has("EXPIRED")) {
+    return "EXPIRED";
+  }
+  return "CANCELLED";
+}
+
+function aggregateGroupedReservations(
+  reservations: Reservation[],
+): Reservation[] {
+  const grouped = new Map<string, Reservation[]>();
+  const singles: Reservation[] = [];
+
+  for (const reservation of reservations) {
+    if (!reservation.reservationGroupId) {
+      singles.push(reservation);
+      continue;
+    }
+
+    const existing = grouped.get(reservation.reservationGroupId) ?? [];
+    existing.push(reservation);
+    grouped.set(reservation.reservationGroupId, existing);
+  }
+
+  const groupRows: Reservation[] = [];
+
+  for (const [reservationGroupId, items] of grouped.entries()) {
+    const sortedItems = [...items].sort((a, b) => {
+      const aStart = a.slotStartTime ? new Date(a.slotStartTime).getTime() : 0;
+      const bStart = b.slotStartTime ? new Date(b.slotStartTime).getTime() : 0;
+      return aStart - bStart;
+    });
+    const primary = sortedItems[0];
+    const endItem = sortedItems[sortedItems.length - 1] ?? primary;
+    const derivedStatus = deriveGroupReservationStatus(sortedItems);
+    const totalAmountCents = sortedItems.reduce(
+      (sum, item) => sum + item.amountCents,
+      0,
+    );
+    const expiresAtCandidates = sortedItems
+      .map((item) => item.expiresAt)
+      .filter((value): value is string => Boolean(value))
+      .sort();
+
+    groupRows.push({
+      ...primary,
+      reservationGroupId,
+      isGroupPrimary: true,
+      groupItemCount: sortedItems.length,
+      groupItems: sortedItems,
+      courtName:
+        sortedItems.length > 1
+          ? `${primary.courtName.split(" - ")[0]} - ${sortedItems.length} courts`
+          : primary.courtName,
+      reservationStatus: derivedStatus,
+      status: mapStatusFromBackend(derivedStatus),
+      amountCents: totalAmountCents,
+      slotStartTime: primary.slotStartTime,
+      slotEndTime: endItem.slotEndTime,
+      startTime: primary.startTime,
+      endTime: endItem.endTime,
+      expiresAt: expiresAtCandidates[0] ?? null,
+    });
+  }
+
+  return [...singles, ...groupRows];
+}
+
 export function useQueryOwnerStats(organizationId: string | null) {
   const { data: courts = [], isLoading: courtsLoading } =
     useQueryOwnerCourts(organizationId);
@@ -293,6 +380,8 @@ export function useModOwnerReservations(
         let reservations = ((data as OwnerReservationRecord[]) ?? []).map(
           mapOwnerReservationRecord,
         );
+
+        reservations = aggregateGroupedReservations(reservations);
 
         if (status === "pending") {
           const pendingStatuses = new Set([
@@ -376,6 +465,11 @@ export function useMutAcceptReservation() {
                 reservationId: payload.reservationId,
               })
             : Promise.resolve(),
+          payload?.reservationGroupId
+            ? utils.reservationChat.getGroupSession.invalidate({
+                reservationGroupId: payload.reservationGroupId,
+              })
+            : Promise.resolve(),
         ]);
       },
     },
@@ -424,6 +518,11 @@ export function useMutConfirmReservation() {
                 reservationId: payload.reservationId,
               })
             : Promise.resolve(),
+          payload?.reservationGroupId
+            ? utils.reservationChat.getGroupSession.invalidate({
+                reservationGroupId: payload.reservationGroupId,
+              })
+            : Promise.resolve(),
         ]);
       },
     },
@@ -470,6 +569,11 @@ export function useMutRejectReservation() {
           payload?.reservationId && !payload?.reservationGroupId
             ? utils.reservationChat.getSession.invalidate({
                 reservationId: payload.reservationId,
+              })
+            : Promise.resolve(),
+          payload?.reservationGroupId
+            ? utils.reservationChat.getGroupSession.invalidate({
+                reservationGroupId: payload.reservationGroupId,
               })
             : Promise.resolve(),
         ]);

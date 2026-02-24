@@ -22,6 +22,15 @@ import type { TimeSlot } from "./time-slot-picker";
 const MAX_DURATION_MINUTES = 1440;
 const SLOT_STEP_MINUTES = 60;
 
+const isSameInstant = (a: string, b: string): boolean => {
+  const aMs = Date.parse(a);
+  const bMs = Date.parse(b);
+  if (Number.isFinite(aMs) && Number.isFinite(bMs)) {
+    return aMs === bMs;
+  }
+  return a === b;
+};
+
 export interface TimeRangePickerProps {
   slots: TimeSlot[];
   timeZone: string;
@@ -407,8 +416,11 @@ export function TimeRangePicker({
   // Compute committed range from props
   const committedRange = React.useMemo(() => {
     if (!selectedStartTime || !selectedDurationMinutes) return null;
-    if (Date.parse(selectedStartTime) < nowMs) return null;
-    const startIdx = slots.findIndex((s) => s.startTime === selectedStartTime);
+    const selectedStartMs = Date.parse(selectedStartTime);
+    if (selectedStartMs < nowMs) return null;
+    const startIdx = slots.findIndex((s) =>
+      isSameInstant(s.startTime, selectedStartTime),
+    );
     if (startIdx === -1) return null;
     const slotCount = selectedDurationMinutes / SLOT_STEP_MINUTES;
     const endIdx = startIdx + slotCount - 1;

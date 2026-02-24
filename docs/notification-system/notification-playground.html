@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification System Visualizer</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg-card: #181a24;
+    --bg-card-hover: #1e2130;
+    --border: #2a2d3e;
+    --text: #e1e4ed;
+    --text-dim: #8b8fa3;
+    --text-bright: #ffffff;
+    --accent: #6c7ee1;
+    --accent-glow: rgba(108,126,225,0.25);
+    --email: #4a9eff;
+    --email-bg: rgba(74,158,255,0.12);
+    --sms: #34d399;
+    --sms-bg: rgba(52,211,153,0.12);
+    --webpush: #a78bfa;
+    --webpush-bg: rgba(167,139,250,0.12);
+    --mobilepush: #fb923c;
+    --mobilepush-bg: rgba(251,146,60,0.12);
+    --pending: #fbbf24;
+    --sending: #60a5fa;
+    --sent: #34d399;
+    --failed: #f87171;
+    --skipped: #6b7280;
+    --radius: 10px;
+    --transition: 0.2s ease;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  header {
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  header h1 { font-size: 20px; font-weight: 600; color: var(--text-bright); }
+  header .subtitle { color: var(--text-dim); font-size: 14px; }
+  nav {
+    display: flex;
+    gap: 4px;
+    padding: 8px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+  }
+  nav button {
+    padding: 10px 18px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: var(--transition);
+    white-space: nowrap;
+  }
+  nav button:hover { color: var(--text); background: var(--bg-card); }
+  nav button.active { color: var(--accent); background: var(--accent-glow); }
+  main { padding: 32px; max-width: 1400px; margin: 0 auto; }
+  section { display: none; }
+  section.active { display: block; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    transition: var(--transition);
+  }
+  .card:hover { border-color: #3a3d52; }
+  .card h2 { font-size: 18px; font-weight: 600; color: var(--text-bright); margin-bottom: 12px; }
+  .card h3 { font-size: 15px; font-weight: 600; color: var(--text-bright); margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--text-dim); margin-bottom: 8px; }
+
+  /* -- Architecture Overview -- */
+  .arch-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 32px 16px;
+    overflow-x: auto;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .arch-node {
+    padding: 16px 24px;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    text-align: center;
+    min-width: 160px;
+    position: relative;
+    transition: var(--transition);
+    cursor: default;
+  }
+  .arch-node:hover { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+  .arch-node .label { font-weight: 600; font-size: 14px; color: var(--text-bright); }
+  .arch-node .sublabel { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+  .arch-arrow {
+    font-size: 24px;
+    color: var(--accent);
+    padding: 0 8px;
+    animation: pulse-arrow 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse-arrow { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+  .vendors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .vendor-card {
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    transition: var(--transition);
+  }
+  .vendor-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+  .vendor-card .icon { font-size: 28px; margin-bottom: 8px; }
+  .vendor-card .name { font-weight: 600; font-size: 15px; color: var(--text-bright); }
+  .vendor-card .provider { font-size: 13px; color: var(--text-dim); }
+  .vendor-card.email { border-left: 3px solid var(--email); }
+  .vendor-card.sms { border-left: 3px solid var(--sms); }
+  .vendor-card.webpush { border-left: 3px solid var(--webpush); }
+  .vendor-card.mobilepush { border-left: 3px solid var(--mobilepush); }
+
+  /* -- State Machine -- */
+  .state-machine-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .state-diagram {
+    position: relative;
+    padding: 40px 20px;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+  .state-row {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .state-node {
+    width: 130px;
+    height: 60px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 2px solid transparent;
+  }
+  .state-node.pending { background: rgba(251,191,36,0.15); color: var(--pending); border-color: rgba(251,191,36,0.3); }
+  .state-node.sending { background: rgba(96,165,250,0.15); color: var(--sending); border-color: rgba(96,165,250,0.3); }
+  .state-node.sent { background: rgba(52,211,153,0.15); color: var(--sent); border-color: rgba(52,211,153,0.3); }
+  .state-node.failed { background: rgba(248,113,113,0.15); color: var(--failed); border-color: rgba(248,113,113,0.3); }
+  .state-node.skipped { background: rgba(107,114,128,0.15); color: var(--skipped); border-color: rgba(107,114,128,0.3); }
+  .state-node.active-state {
+    transform: scale(1.15);
+    box-shadow: 0 0 30px currentColor;
+    z-index: 10;
+  }
+  .state-node:hover { transform: scale(1.05); }
+  .state-node.active-state:hover { transform: scale(1.15); }
+
+  .state-transition-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+    padding: 0 8px;
+  }
+  .state-arrow-down {
+    font-size: 24px;
+    color: var(--accent);
+  }
+
+  .state-detail-panel {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    min-height: 80px;
+  }
+  .state-detail-panel h3 { color: var(--text-bright); margin-bottom: 8px; }
+  .state-detail-panel .trigger { font-size: 13px; color: var(--text-dim); }
+
+  .sm-controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .sm-controls button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .sm-controls button:hover { background: var(--bg-card-hover); border-color: var(--accent); }
+  .sm-controls button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .sm-controls button.primary:hover { opacity: 0.9; }
+  .sm-controls button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .attempt-timeline {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .attempt-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    color: var(--text-dim);
+    transition: all 0.3s ease;
+  }
+  .attempt-dot.current { border-color: var(--sending); color: var(--sending); box-shadow: 0 0 10px rgba(96,165,250,0.3); }
+  .attempt-dot.success { border-color: var(--sent); color: var(--sent); background: rgba(52,211,153,0.1); }
+  .attempt-dot.fail { border-color: var(--failed); color: var(--failed); background: rgba(248,113,113,0.1); }
+  .attempt-connector {
+    width: 24px;
+    height: 2px;
+    background: var(--border);
+    position: relative;
+  }
+  .attempt-connector .backoff-label {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  /* -- Event Catalog -- */
+  .catalog-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 800px) { .catalog-layout { grid-template-columns: 1fr; } }
+  .catalog-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+  .filter-btn.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
+  .event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  .event-item {
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid transparent;
+  }
+  .event-item:hover { background: var(--bg-card-hover); }
+  .event-item.selected { background: var(--accent-glow); border-color: var(--accent); }
+  .event-item .event-name { font-weight: 600; font-size: 14px; color: var(--text-bright); }
+  .event-item .event-desc { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .event-item .channel-dots {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .channel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .channel-dot.email { background: var(--email); }
+  .channel-dot.sms { background: var(--sms); }
+  .channel-dot.webpush { background: var(--webpush); }
+  .channel-dot.mobilepush { background: var(--mobilepush); }
+
+  .event-detail {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+  .event-detail h2 { margin-bottom: 16px; }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 600px) { .detail-grid { grid-template-columns: 1fr; } }
+  .detail-block { margin-bottom: 16px; }
+  .detail-block .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); margin-bottom: 4px; }
+  .detail-block .value { font-size: 14px; color: var(--text-bright); }
+  .channel-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .channel-badge {
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .channel-badge.email { background: var(--email-bg); color: var(--email); }
+  .channel-badge.sms { background: var(--sms-bg); color: var(--sms); }
+  .channel-badge.webpush { background: var(--webpush-bg); color: var(--webpush); }
+  .channel-badge.mobilepush { background: var(--mobilepush-bg); color: var(--mobilepush); }
+  .payload-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .payload-field {
+    padding: 3px 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: 'SF Mono', Consolas, monospace;
+    color: var(--text);
+  }
+  .coupling-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .coupling-badge.transaction { background: rgba(52,211,153,0.15); color: var(--sent); }
+  .coupling-badge.best-effort { background: rgba(251,191,36,0.15); color: var(--pending); }
+  .idempotency-key {
+    font-family: 'SF Mono', Consolas, monospace;
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--bg-card);
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    word-break: break-all;
+  }
+
+  /* -- Flow Simulator -- */
+  .sim-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .sim-header select {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 14px;
+    appearance: none;
+    cursor: pointer;
+    min-width: 260px;
+  }
+  .sim-header select:focus { outline: none; border-color: var(--accent); }
+  .sim-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  .sim-step {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 16px 0;
+    opacity: 0.25;
+    transition: all 0.5s ease;
+    position: relative;
+  }
+  .sim-step.active { opacity: 1; }
+  .sim-step.completed { opacity: 0.6; }
+  .sim-step-indicator {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    background: var(--bg);
+    color: var(--text-dim);
+  }
+  .sim-step.active .sim-step-indicator {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
+    animation: step-pulse 1.5s ease-in-out infinite;
+  }
+  .sim-step.completed .sim-step-indicator {
+    border-color: var(--sent);
+    color: var(--sent);
+    background: rgba(52,211,153,0.1);
+  }
+  @keyframes step-pulse { 0%, 100% { box-shadow: 0 0 10px var(--accent-glow); } 50% { box-shadow: 0 0 25px var(--accent-glow); } }
+  .sim-step-connector {
+    position: absolute;
+    left: 19px;
+    top: 56px;
+    width: 2px;
+    height: calc(100% - 56px);
+    background: var(--border);
+  }
+  .sim-step:last-child .sim-step-connector { display: none; }
+  .sim-step-content { flex: 1; }
+  .sim-step-content h4 { font-size: 15px; color: var(--text-bright); margin-bottom: 4px; }
+  .sim-step-content p { font-size: 13px; color: var(--text-dim); }
+  .sim-step-content .code-block {
+    margin-top: 8px;
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'SF Mono', Consolas, monospace;
+    font-size: 12px;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .sim-retry-section {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .retry-timeline {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .retry-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 60px;
+  }
+  .retry-node .dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    color: var(--text-dim);
+    transition: all 0.3s ease;
+  }
+  .retry-node .time { font-size: 10px; color: var(--text-dim); }
+  .retry-node.active .dot { border-color: var(--sending); color: var(--sending); box-shadow: 0 0 10px rgba(96,165,250,0.3); }
+  .retry-node.failed .dot { border-color: var(--failed); color: var(--failed); }
+  .retry-node.success .dot { border-color: var(--sent); color: var(--sent); background: rgba(52,211,153,0.1); }
+  .retry-connector {
+    width: 28px;
+    height: 2px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  /* -- Channel Matrix -- */
+  .matrix-table-wrapper {
+    overflow-x: auto;
+  }
+  .matrix-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+  }
+  .matrix-table th, .matrix-table td {
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .matrix-table th {
+    font-weight: 600;
+    color: var(--text-dim);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    background: var(--bg-card);
+  }
+  .matrix-table th:first-child, .matrix-table td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-bright);
+    position: sticky;
+    left: 0;
+    background: var(--bg-card);
+    z-index: 1;
+    min-width: 200px;
+  }
+  .matrix-table tr:hover td { background: var(--bg-card-hover); }
+  .matrix-table tr:hover td:first-child { background: var(--bg-card-hover); }
+  .matrix-cell {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+  .matrix-cell:hover { transform: scale(1.3); }
+  .matrix-cell.email { background: var(--email); }
+  .matrix-cell.sms { background: var(--sms); }
+  .matrix-cell.webpush { background: var(--webpush); }
+  .matrix-cell.mobilepush { background: var(--mobilepush); }
+  .matrix-cell.empty { background: var(--bg); border: 1px dashed var(--border); }
+  .matrix-legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .matrix-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .matrix-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+  }
+  .matrix-legend-dot.email { background: var(--email); }
+  .matrix-legend-dot.sms { background: var(--sms); }
+  .matrix-legend-dot.webpush { background: var(--webpush); }
+  .matrix-legend-dot.mobilepush { background: var(--mobilepush); }
+
+  .coupling-row {
+    font-size: 12px;
+  }
+
+  /* -- Scrollbar -- */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #444; }
+
+  /* -- Responsive -- */
+  @media (max-width: 600px) {
+    header { padding: 16px; }
+    nav { padding: 8px 16px; }
+    main { padding: 16px; }
+    .arch-flow { flex-direction: column; gap: 0; }
+    .arch-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Notification System Visualizer</h1>
+  <span class="subtitle">Interactive architecture playground &mdash; outbox pattern, multi-channel delivery</span>
+</header>
+
+<nav id="nav">
+  <button class="active" data-tab="architecture">Architecture</button>
+  <button data-tab="statemachine">State Machine</button>
+  <button data-tab="catalog">Event Catalog</button>
+  <button data-tab="simulator">Flow Simulator</button>
+  <button data-tab="matrix">Channel Matrix</button>
+</nav>
+
+<main>
+
+<!-- ARCHITECTURE -->
+<section id="architecture" class="active">
+  <div class="card">
+    <h2>Delivery Pipeline</h2>
+    <p>The transactional outbox pattern ensures at-least-once delivery by persisting notification jobs in the same DB transaction as the business event.</p>
+    <div class="arch-flow" id="archFlow">
+      <div class="arch-node"><div class="label">Business Event</div><div class="sublabel">e.g. reservation.created</div></div>
+      <div class="arch-arrow">&rarr;</div>
+      <div class="arch-node"><div class="label">Enqueue Jobs</div><div class="sublabel">Service layer (same TX)</div></div>
+      <div class="arch-arrow">&rarr;</div>
+      <div class="arch-node"><div class="label">notification_delivery_job</div><div class="sublabel">Postgres outbox table</div></div>
+      <div class="arch-arrow">&rarr;</div>
+      <div class="arch-node"><div class="label">Cron Dispatcher</div><div class="sublabel">Claims batch of 25</div></div>
+      <div class="arch-arrow">&rarr;</div>
+      <div class="arch-node"><div class="label">Channel Vendor</div><div class="sublabel">Email / SMS / Push</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Channel Vendors</h2>
+    <div class="vendors-grid">
+      <div class="vendor-card email">
+        <div class="icon">&#9993;</div>
+        <div class="name">Email</div>
+        <div class="provider">Resend API</div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:8px">Full-body notifications with subject, text/HTML. Idempotency-Key header for provider-level dedup.</p>
+      </div>
+      <div class="vendor-card sms">
+        <div class="icon">&#128172;</div>
+        <div class="name">SMS</div>
+        <div class="provider">Semaphore (PH)</div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:8px">Compact single-message format. Priority queue support. Auto phone normalization.</p>
+      </div>
+      <div class="vendor-card webpush">
+        <div class="icon">&#128276;</div>
+        <div class="name">Web Push</div>
+        <div class="provider">VAPID / web-push</div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:8px">Browser notifications via VAPID protocol. Auto-revokes on 404/410 (expired subscriptions).</p>
+      </div>
+      <div class="vendor-card mobilepush">
+        <div class="icon">&#128241;</div>
+        <div class="name">Mobile Push</div>
+        <div class="provider">Expo Push</div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:8px">iOS + Android via Expo. Auto-revokes on DeviceNotRegistered errors.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Key Design Patterns</h2>
+    <div class="detail-grid">
+      <div class="detail-block">
+        <div class="label">Outbox Pattern</div>
+        <div class="value">Jobs written in the same DB transaction as the business entity &mdash; guarantees delivery if commit succeeds.</div>
+      </div>
+      <div class="detail-block">
+        <div class="label">Idempotency</div>
+        <div class="value">Unique key per event+recipient+channel. Database constraint prevents duplicate jobs; Resend header prevents duplicate emails.</div>
+      </div>
+      <div class="detail-block">
+        <div class="label">Batch Claiming</div>
+        <div class="value">Cron claims 25 jobs per run with SELECT ... FOR UPDATE to prevent double-processing across concurrent runs.</div>
+      </div>
+      <div class="detail-block">
+        <div class="label">Graceful Degradation</div>
+        <div class="value">Disabled channels are logged and skipped. Invalid subscriptions/tokens auto-revoked and marked SKIPPED.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATE MACHINE -->
+<section id="statemachine">
+  <div class="card state-machine-container">
+    <h2>Delivery Job State Machine</h2>
+    <p>Click any state to see transition details. Use buttons to animate the lifecycle.</p>
+
+    <div class="sm-controls">
+      <button class="primary" id="smPlaySuccess">&#9654; Play Success</button>
+      <button id="smPlayFailRetry">Simulate Failure + Retry</button>
+      <button id="smPlaySkip">Simulate Skip</button>
+      <button id="smReset">Reset</button>
+    </div>
+
+    <div class="state-diagram">
+      <div class="state-row">
+        <div class="state-node pending" data-state="pending">PENDING</div>
+      </div>
+      <div class="state-arrow-down">&darr;</div>
+      <div class="state-transition-label">Cron claims batch (SELECT ... FOR UPDATE)</div>
+      <div class="state-row">
+        <div class="state-node sending" data-state="sending">SENDING</div>
+      </div>
+      <div class="state-arrow-down">&darr;</div>
+      <div class="state-transition-label">Delivery attempt completes</div>
+      <div class="state-row">
+        <div class="state-node sent" data-state="sent">SENT</div>
+        <div class="state-node failed" data-state="failed">FAILED</div>
+        <div class="state-node skipped" data-state="skipped">SKIPPED</div>
+      </div>
+    </div>
+
+    <div class="state-detail-panel" id="stateDetailPanel">
+      <h3 id="stateDetailTitle">Select a state</h3>
+      <div class="trigger" id="stateDetailBody">Click any state node above to see what triggers each transition and what data changes occur.</div>
+    </div>
+
+    <div id="attemptTimelineSection" style="display:none;">
+      <h3 style="margin-bottom:8px;">Retry Attempt Timeline</h3>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:8px;">Backoff schedule: 1 min, 5 min, 15 min, 1 hour, 6 hours (max 5 attempts)</p>
+      <div class="attempt-timeline" id="attemptTimeline"></div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENT CATALOG -->
+<section id="catalog">
+  <div class="card">
+    <h2>Event Catalog</h2>
+    <p>All notification event types. Filter by recipient role or delivery channel.</p>
+    <div class="catalog-filters" id="catalogFilters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="role:admin">Admin</button>
+      <button class="filter-btn" data-filter="role:owner">Owner</button>
+      <button class="filter-btn" data-filter="role:player">Player</button>
+      <button class="filter-btn" data-filter="ch:email">Email</button>
+      <button class="filter-btn" data-filter="ch:sms">SMS</button>
+      <button class="filter-btn" data-filter="ch:webpush">Web Push</button>
+      <button class="filter-btn" data-filter="ch:mobilepush">Mobile Push</button>
+    </div>
+    <div class="catalog-layout">
+      <div class="event-list" id="eventList"></div>
+      <div class="event-detail" id="eventDetail">
+        <h2 id="edTitle">Select an event</h2>
+        <p id="edPlaceholder">Choose an event from the list to see its full details.</p>
+        <div id="edContent" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW SIMULATOR -->
+<section id="simulator">
+  <div class="card">
+    <h2>Flow Simulator</h2>
+    <p>Step through the full lifecycle of a notification &mdash; from business action to final delivery.</p>
+    <div class="sim-header">
+      <select id="simEventSelect"></select>
+      <button class="primary" id="simStart" style="padding:10px 20px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:14px;cursor:pointer;">&#9654; Start</button>
+      <button id="simStep" style="padding:10px 20px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:14px;cursor:pointer;" disabled>Next Step</button>
+      <button id="simReset" style="padding:10px 20px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:14px;cursor:pointer;">Reset</button>
+    </div>
+    <div class="sim-steps" id="simSteps"></div>
+
+    <div class="sim-retry-section" id="simRetrySection" style="display:none;">
+      <h3>Retry Backoff Timeline</h3>
+      <p style="font-size:13px;color:var(--text-dim);">If delivery fails, the job retries with increasing backoff intervals.</p>
+      <div class="retry-timeline" id="simRetryTimeline"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CHANNEL MATRIX -->
+<section id="matrix">
+  <div class="card">
+    <h2>Channel Matrix</h2>
+    <p>Which events deliver to which channels. Color-coded by channel type.</p>
+    <div class="matrix-table-wrapper">
+      <table class="matrix-table" id="matrixTable"></table>
+    </div>
+    <div class="matrix-legend">
+      <div class="matrix-legend-item"><div class="matrix-legend-dot email"></div> Email (Resend)</div>
+      <div class="matrix-legend-item"><div class="matrix-legend-dot sms"></div> SMS (Semaphore)</div>
+      <div class="matrix-legend-item"><div class="matrix-legend-dot webpush"></div> Web Push (VAPID)</div>
+      <div class="matrix-legend-item"><div class="matrix-legend-dot mobilepush"></div> Mobile Push (Expo)</div>
+      <div class="matrix-legend-item">
+        <span class="coupling-badge transaction" style="font-size:11px;">TX-Coupled</span> Enqueued in same transaction
+      </div>
+      <div class="matrix-legend-item">
+        <span class="coupling-badge best-effort" style="font-size:11px;">Best-Effort</span> Enqueued outside transaction
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ================================================================
+// DATA - All static, no user input
+// ================================================================
+var EVENTS = [
+  {
+    id: "place_verification.requested",
+    name: "place_verification.requested",
+    description: "Venue owner submits verification request",
+    trigger: "Owner submits venue verification form",
+    recipient: "Admin",
+    role: "admin",
+    channels: ["email", "sms", "webpush", "mobilepush"],
+    coupling: "transaction",
+    couplingDetail: "Written in same TX as place_verification_request insert",
+    payload: ["requestId", "placeId", "placeName", "organizationId", "organizationName", "requestedByUserId", "requestNotes"],
+    idempotencyFormat: "place_verification.requested:{requestId}:admin:{userId}:{channel}"
+  },
+  {
+    id: "reservation.created",
+    name: "reservation.created",
+    description: "Player creates a reservation",
+    trigger: "Player books a court time slot",
+    recipient: "Owner",
+    role: "owner",
+    channels: ["email", "sms", "webpush", "mobilepush"],
+    coupling: "transaction",
+    couplingDetail: "Written in same TX as reservation insert",
+    payload: ["reservationId", "organizationId", "placeId", "placeName", "courtId", "courtLabel", "startTimeIso", "endTimeIso", "totalPriceCents", "currency", "playerName", "playerEmail", "playerPhone", "expiresAtIso"],
+    idempotencyFormat: "reservation.created:{reservationId}:org:{organizationId}:{channel}"
+  },
+  {
+    id: "place_verification.approved",
+    name: "place_verification.approved",
+    description: "Admin approves venue verification",
+    trigger: "Admin reviews and approves verification request",
+    recipient: "Owner",
+    role: "owner",
+    channels: ["email", "sms", "webpush", "mobilepush"],
+    coupling: "transaction",
+    couplingDetail: "Written in same TX as verification status update",
+    payload: ["requestId", "organizationId", "placeId", "placeName", "status", "reviewNotes"],
+    idempotencyFormat: "place_verification.approved:{requestId}:org:{organizationId}:{channel}"
+  },
+  {
+    id: "place_verification.rejected",
+    name: "place_verification.rejected",
+    description: "Admin rejects venue verification",
+    trigger: "Admin reviews and rejects verification request",
+    recipient: "Owner",
+    role: "owner",
+    channels: ["email", "sms", "webpush", "mobilepush"],
+    coupling: "transaction",
+    couplingDetail: "Written in same TX as verification status update",
+    payload: ["requestId", "organizationId", "placeId", "placeName", "status", "reviewNotes"],
+    idempotencyFormat: "place_verification.rejected:{requestId}:org:{organizationId}:{channel}"
+  },
+  {
+    id: "claim_request.approved",
+    name: "claim_request.approved",
+    description: "Admin approves ownership claim",
+    trigger: "Admin reviews and approves claim request",
+    recipient: "Owner",
+    role: "owner",
+    channels: ["email", "sms", "webpush", "mobilepush"],
+    coupling: "transaction",
+    couplingDetail: "Written in same TX as claim status update",
+    payload: ["requestId", "organizationId", "placeId", "placeName", "status", "reviewNotes"],
+    idempotencyFormat: "claim_request.approved:{requestId}:org:{organizationId}:{channel}"
+  },
+  {
+    id: "claim_request.rejected",
+    name: "claim_request.rejected",
+    description: "Admin rejects ownership claim",
+    trigger: "Admin reviews and rejects claim request",
+    recipient: "Owner",
+    role: "owner",
+    channels: ["email", "sms", "webpush", "mobilepush"],
+    coupling: "transaction",
+    couplingDetail: "Written in same TX as claim status update",
+    payload: ["requestId", "organizationId", "placeId", "placeName", "status", "reviewNotes"],
+    idempotencyFormat: "claim_request.rejected:{requestId}:org:{organizationId}:{channel}"
+  },
+  {
+    id: "reservation.awaiting_payment",
+    name: "reservation.awaiting_payment",
+    description: "Reservation awaiting player payment",
+    trigger: "Reservation moves to awaiting payment state",
+    recipient: "Player",
+    role: "player",
+    channels: ["webpush", "mobilepush"],
+    coupling: "best-effort",
+    couplingDetail: "Enqueued outside main transaction; push notifications only",
+    payload: ["reservationId", "placeName", "courtLabel", "startTimeIso", "endTimeIso", "expiresAtIso", "totalPriceCents", "currency"],
+    idempotencyFormat: "reservation.awaiting_payment:{reservationId}:player:{userId}:{channel}"
+  },
+  {
+    id: "reservation.payment_marked",
+    name: "reservation.payment_marked",
+    description: "Player marks payment as sent",
+    trigger: "Player submits payment proof / marks payment",
+    recipient: "Owner",
+    role: "owner",
+    channels: ["webpush", "mobilepush"],
+    coupling: "best-effort",
+    couplingDetail: "Enqueued outside main transaction; push notifications only",
+    payload: ["reservationId", "placeName", "courtLabel", "startTimeIso", "endTimeIso", "playerName"],
+    idempotencyFormat: "reservation.payment_marked:{reservationId}:org:{organizationId}:{channel}"
+  },
+  {
+    id: "reservation.confirmed",
+    name: "reservation.confirmed",
+    description: "Owner confirms reservation",
+    trigger: "Owner confirms/approves the reservation",
+    recipient: "Player",
+    role: "player",
+    channels: ["webpush", "mobilepush"],
+    coupling: "best-effort",
+    couplingDetail: "Enqueued outside main transaction; push notifications only",
+    payload: ["reservationId", "placeName", "courtLabel", "startTimeIso", "endTimeIso"],
+    idempotencyFormat: "reservation.confirmed:{reservationId}:player:{userId}:{channel}"
+  },
+  {
+    id: "reservation.rejected",
+    name: "reservation.rejected",
+    description: "Owner rejects reservation",
+    trigger: "Owner rejects the reservation request",
+    recipient: "Player",
+    role: "player",
+    channels: ["webpush", "mobilepush"],
+    coupling: "best-effort",
+    couplingDetail: "Enqueued outside main transaction; push notifications only",
+    payload: ["reservationId", "placeName", "courtLabel", "startTimeIso", "endTimeIso", "reason"],
+    idempotencyFormat: "reservation.rejected:{reservationId}:player:{userId}:{channel}"
+  },
+  {
+    id: "reservation.cancelled",
+    name: "reservation.cancelled",
+    description: "Player cancels reservation",
+    trigger: "Player cancels their reservation",
+    recipient: "Owner",
+    role: "owner",
+    channels: ["webpush", "mobilepush"],
+    coupling: "best-effort",
+    couplingDetail: "Enqueued outside main transaction; push notifications only",
+    payload: ["reservationId", "placeName", "courtLabel", "startTimeIso", "endTimeIso", "playerName", "reason"],
+    idempotencyFormat: "reservation.cancelled:{reservationId}:org:{organizationId}:{channel}"
+  }
+];
+
+var STATE_DETAILS = {
+  pending: {
+    title: "PENDING",
+    lines: [
+      "Entry: Job is created when a business event fires (enqueue method).",
+      "Data: status=PENDING, attemptCount=0, nextAttemptAt=NULL.",
+      "Exit: Cron dispatcher claims a batch via SELECT ... FOR UPDATE, atomically transitions to SENDING."
+    ]
+  },
+  sending: {
+    title: "SENDING",
+    lines: [
+      "Entry: Cron batch claim sets status=SENDING atomically.",
+      "Data: attemptCount is incremented. Row is locked for the duration of the cron request.",
+      "Exit: After delivery attempt completes \u2014 transitions to SENT, FAILED, or SKIPPED."
+    ]
+  },
+  sent: {
+    title: "SENT",
+    lines: [
+      "Entry: Channel vendor returns success response.",
+      "Data: status=SENT, sentAt=now(), providerMessageId set (e.g. Resend email ID, Expo ticket ID).",
+      "Terminal state \u2014 job is complete."
+    ]
+  },
+  failed: {
+    title: "FAILED",
+    lines: [
+      "Entry: Retryable error during delivery (network timeout, rate limit, 5xx).",
+      "Data: status=FAILED, lastError set, nextAttemptAt=now()+backoff[attemptCount].",
+      "Retry: Next cron run picks it up again after nextAttemptAt. Backoff: 1m, 5m, 15m, 1h, 6h.",
+      "Terminal: After max 5 attempts, nextAttemptAt=NULL (no more retries)."
+    ]
+  },
+  skipped: {
+    title: "SKIPPED",
+    lines: [
+      "Entry: Permanent/unrecoverable error.",
+      "Causes: Web Push 404/410 (subscription expired, auto-revoked), Expo DeviceNotRegistered (token invalid, auto-revoked), Channel disabled in env config, Missing target (no email/phone/token), Invalid/unparseable event payload.",
+      "Terminal state \u2014 no retry."
+    ]
+  }
+};
+
+var BACKOFF_LABELS = ["1 min", "5 min", "15 min", "1 hour", "6 hours"];
+var CHANNEL_LABEL = { email: "Email", sms: "SMS", webpush: "Web Push", mobilepush: "Mobile Push" };
+
+// ================================================================
+// DOM HELPERS (safe - no innerHTML with untrusted content)
+// ================================================================
+function el(tag, attrs, children) {
+  var node = document.createElement(tag);
+  if (attrs) {
+    Object.keys(attrs).forEach(function(k) {
+      if (k === "className") node.className = attrs[k];
+      else if (k === "textContent") node.textContent = attrs[k];
+      else if (k.indexOf("on") === 0) node.addEventListener(k.slice(2).toLowerCase(), attrs[k]);
+      else if (k === "style" && typeof attrs[k] === "object") {
+        Object.keys(attrs[k]).forEach(function(s) { node.style[s] = attrs[k][s]; });
+      }
+      else node.setAttribute(k, attrs[k]);
+    });
+  }
+  if (children) {
+    (Array.isArray(children) ? children : [children]).forEach(function(c) {
+      if (typeof c === "string") node.appendChild(document.createTextNode(c));
+      else if (c) node.appendChild(c);
+    });
+  }
+  return node;
+}
+
+function clearEl(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+// ================================================================
+// TAB NAVIGATION
+// ================================================================
+document.querySelectorAll("nav button").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll("nav button").forEach(function(b) { b.classList.remove("active"); });
+    document.querySelectorAll("main section").forEach(function(s) { s.classList.remove("active"); });
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.tab).classList.add("active");
+  });
+});
+
+// ================================================================
+// STATE MACHINE
+// ================================================================
+var smAnimating = false;
+
+document.querySelectorAll(".state-node").forEach(function(node) {
+  node.addEventListener("click", function() {
+    if (smAnimating) return;
+    showStateDetail(node.dataset.state);
+  });
+});
+
+function showStateDetail(state) {
+  var d = STATE_DETAILS[state];
+  document.getElementById("stateDetailTitle").textContent = d.title;
+  var body = document.getElementById("stateDetailBody");
+  clearEl(body);
+  d.lines.forEach(function(line, i) {
+    if (i > 0) body.appendChild(document.createElement("br"));
+    body.appendChild(document.createTextNode(line));
+  });
+  document.querySelectorAll(".state-node").forEach(function(n) { n.classList.remove("active-state"); });
+  document.querySelector(".state-node." + state).classList.add("active-state");
+}
+
+function clearStateMachine() {
+  document.querySelectorAll(".state-node").forEach(function(n) { n.classList.remove("active-state"); });
+  document.getElementById("stateDetailTitle").textContent = "Select a state";
+  document.getElementById("stateDetailBody").textContent = "Click any state node above to see what triggers each transition and what data changes occur.";
+  document.getElementById("attemptTimelineSection").style.display = "none";
+}
+
+function animateStates(sequence, onDone) {
+  smAnimating = true;
+  var i = 0;
+  function next() {
+    if (i >= sequence.length) { smAnimating = false; if (onDone) onDone(); return; }
+    var item = sequence[i];
+    showStateDetail(item.state);
+    i++;
+    setTimeout(next, item.delay || 800);
+  }
+  next();
+}
+
+document.getElementById("smPlaySuccess").addEventListener("click", function() {
+  if (smAnimating) return;
+  document.getElementById("attemptTimelineSection").style.display = "none";
+  animateStates([
+    { state: "pending", delay: 1000 },
+    { state: "sending", delay: 1200 },
+    { state: "sent", delay: 0 }
+  ]);
+});
+
+document.getElementById("smPlaySkip").addEventListener("click", function() {
+  if (smAnimating) return;
+  document.getElementById("attemptTimelineSection").style.display = "none";
+  animateStates([
+    { state: "pending", delay: 1000 },
+    { state: "sending", delay: 1200 },
+    { state: "skipped", delay: 0 }
+  ]);
+});
+
+document.getElementById("smPlayFailRetry").addEventListener("click", function() {
+  if (smAnimating) return;
+  document.getElementById("attemptTimelineSection").style.display = "block";
+  var timeline = document.getElementById("attemptTimeline");
+  clearEl(timeline);
+
+  for (var a = 1; a <= 5; a++) {
+    var dot = el("div", { className: "attempt-dot", id: "att-" + a, textContent: String(a) });
+    timeline.appendChild(dot);
+    if (a < 5) {
+      var conn = el("div", { className: "attempt-connector" }, [
+        el("span", { className: "backoff-label", textContent: BACKOFF_LABELS[a - 1] })
+      ]);
+      timeline.appendChild(conn);
+    }
+  }
+
+  var attempt = 0;
+  smAnimating = true;
+
+  function runAttempt() {
+    attempt++;
+    if (attempt > 5) {
+      showStateDetail("failed");
+      smAnimating = false;
+      return;
+    }
+    var dot = document.getElementById("att-" + attempt);
+    dot.classList.add("current");
+
+    showStateDetail("sending");
+    setTimeout(function() {
+      dot.classList.remove("current");
+      if (attempt === 3) {
+        dot.classList.add("success");
+        showStateDetail("sent");
+        smAnimating = false;
+      } else {
+        dot.classList.add("fail");
+        showStateDetail("failed");
+        setTimeout(runAttempt, 600);
+      }
+    }, 800);
+  }
+
+  showStateDetail("pending");
+  setTimeout(runAttempt, 800);
+});
+
+document.getElementById("smReset").addEventListener("click", function() {
+  if (smAnimating) return;
+  clearStateMachine();
+});
+
+// ================================================================
+// EVENT CATALOG
+// ================================================================
+var selectedEvent = null;
+var activeFilter = "all";
+
+function renderEventList() {
+  var list = document.getElementById("eventList");
+  clearEl(list);
+  var filtered = EVENTS.filter(function(e) {
+    if (activeFilter === "all") return true;
+    if (activeFilter.indexOf("role:") === 0) return e.role === activeFilter.split(":")[1];
+    if (activeFilter.indexOf("ch:") === 0) return e.channels.indexOf(activeFilter.split(":")[1]) >= 0;
+    return true;
+  });
+
+  filtered.forEach(function(e) {
+    var dots = el("div", { className: "channel-dots" },
+      e.channels.map(function(c) { return el("div", { className: "channel-dot " + c, title: CHANNEL_LABEL[c] }); })
+    );
+    var item = el("div", {
+      className: "event-item" + (selectedEvent === e.id ? " selected" : ""),
+      onClick: function() { selectedEvent = e.id; renderEventList(); renderEventDetail(e); }
+    }, [
+      el("div", { className: "event-name", textContent: e.name }),
+      el("div", { className: "event-desc", textContent: e.description }),
+      dots
+    ]);
+    list.appendChild(item);
+  });
+}
+
+function renderEventDetail(e) {
+  document.getElementById("edTitle").textContent = e.name;
+  document.getElementById("edPlaceholder").style.display = "none";
+  var c = document.getElementById("edContent");
+  c.style.display = "block";
+  clearEl(c);
+
+  var grid = el("div", { className: "detail-grid" }, [
+    el("div", { className: "detail-block" }, [
+      el("div", { className: "label", textContent: "TRIGGER" }),
+      el("div", { className: "value", textContent: e.trigger })
+    ]),
+    el("div", { className: "detail-block" }, [
+      el("div", { className: "label", textContent: "RECIPIENT" }),
+      el("div", { className: "value", textContent: e.recipient })
+    ]),
+    el("div", { className: "detail-block" }, [
+      el("div", { className: "label", textContent: "CHANNELS" }),
+      el("div", { className: "channel-badges" },
+        e.channels.map(function(ch) { return el("span", { className: "channel-badge " + ch, textContent: CHANNEL_LABEL[ch] }); })
+      )
+    ]),
+    el("div", { className: "detail-block" }, [
+      el("div", { className: "label", textContent: "DELIVERY COUPLING" }),
+      el("div", { className: "value" }, [
+        el("span", { className: "coupling-badge " + e.coupling, textContent: e.coupling === "transaction" ? "TX-Coupled" : "Best-Effort" }),
+        el("span", { style: { fontSize: "12px", color: "var(--text-dim)", marginLeft: "8px" }, textContent: e.couplingDetail })
+      ])
+    ])
+  ]);
+  c.appendChild(grid);
+
+  var payloadBlock = el("div", { className: "detail-block", style: { marginTop: "16px" } }, [
+    el("div", { className: "label", textContent: "PAYLOAD FIELDS" }),
+    el("div", { className: "payload-fields" },
+      e.payload.map(function(f) { return el("span", { className: "payload-field", textContent: f }); })
+    )
+  ]);
+  c.appendChild(payloadBlock);
+
+  var idemBlock = el("div", { className: "detail-block", style: { marginTop: "16px" } }, [
+    el("div", { className: "label", textContent: "IDEMPOTENCY KEY FORMAT" }),
+    el("div", { className: "idempotency-key", textContent: e.idempotencyFormat })
+  ]);
+  c.appendChild(idemBlock);
+}
+
+document.querySelectorAll("#catalogFilters .filter-btn").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll("#catalogFilters .filter-btn").forEach(function(b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    activeFilter = btn.dataset.filter;
+    renderEventList();
+  });
+});
+
+renderEventList();
+
+// ================================================================
+// FLOW SIMULATOR
+// ================================================================
+var simSelect = document.getElementById("simEventSelect");
+EVENTS.forEach(function(e) {
+  var opt = el("option", { value: e.id, textContent: e.name + " \u2014 " + e.description });
+  simSelect.appendChild(opt);
+});
+
+var simCurrentStep = -1;
+var simSteps = [];
+
+function genId() {
+  return Math.random().toString(36).slice(2, 10);
+}
+
+function buildSimSteps(event) {
+  var fakeId = genId();
+  var fakeUserId = genId();
+  var idemKey = event.idempotencyFormat
+    .replace("{requestId}", fakeId).replace("{reservationId}", fakeId)
+    .replace("{userId}", fakeUserId).replace("{organizationId}", fakeId)
+    .replace("{channel}", event.channels[0]);
+
+  var providerName = event.channels[0] === "email" ? "Resend" :
+    event.channels[0] === "sms" ? "Semaphore" :
+    event.channels[0] === "webpush" ? "web-push (VAPID)" : "Expo Push";
+
+  return [
+    {
+      title: "Business Action",
+      desc: event.trigger,
+      code: "// Trigger: " + event.name + "\n// " + event.description
+    },
+    {
+      title: "Enqueue Jobs",
+      desc: "Service creates " + event.channels.length + " notification job(s) \u2014 one per channel" +
+        (event.coupling === "transaction" ? " (inside same DB transaction)" : " (best-effort, outside TX)"),
+      code: "channels: [" + event.channels.map(function(c) { return '"' + c.toUpperCase() + '"'; }).join(", ") + "]\n" +
+        "recipient: " + event.recipient + "\n" +
+        "coupling: " + (event.coupling === "transaction" ? "TRANSACTION-COUPLED" : "BEST-EFFORT")
+    },
+    {
+      title: "Jobs Persisted",
+      desc: "Jobs written to notification_delivery_job table with PENDING status",
+      code: "INSERT INTO notification_delivery_job (\n" +
+        "  event_type, channel, target, status,\n" +
+        "  payload, idempotency_key\n" +
+        ") VALUES (\n" +
+        "  '" + event.name + "',\n" +
+        "  '" + event.channels[0].toUpperCase() + "',\n" +
+        "  '<recipient_target>',\n" +
+        "  'PENDING',\n" +
+        "  '{...}',\n" +
+        "  '" + idemKey + "'\n)"
+    },
+    {
+      title: "Cron Dispatcher Claims Batch",
+      desc: "Cron route claims up to 25 PENDING/FAILED jobs with SELECT ... FOR UPDATE",
+      code: "SELECT * FROM notification_delivery_job\n" +
+        "WHERE status IN ('PENDING', 'FAILED')\n" +
+        "  AND attempt_count < 5\n" +
+        "  AND (next_attempt_at IS NULL\n       OR next_attempt_at <= NOW())\n" +
+        "ORDER BY created_at ASC\nLIMIT 25\nFOR UPDATE"
+    },
+    {
+      title: "Channel Delivery",
+      desc: "Dispatcher renders message content and calls " + CHANNEL_LABEL[event.channels[0]] + " vendor",
+      code: "// Channel: " + event.channels[0].toUpperCase() + "\n" +
+        "// Provider: " + providerName + "\n" +
+        "// Status: SENDING \u2192 ..."
+    },
+    {
+      title: "Delivery Complete",
+      desc: "Vendor returns success \u2014 job updated to SENT with provider message ID",
+      code: "UPDATE notification_delivery_job\n" +
+        "SET status = 'SENT',\n" +
+        "    sent_at = NOW(),\n" +
+        "    provider_message_id = '<vendor_id>'\n" +
+        "WHERE id = '<job_id>'"
+    }
+  ];
+}
+
+function renderSimSteps() {
+  var container = document.getElementById("simSteps");
+  clearEl(container);
+  simSteps.forEach(function(step, i) {
+    var isActive = i === simCurrentStep;
+    var isCompleted = i < simCurrentStep;
+    var cls = "sim-step" + (isActive ? " active" : "") + (isCompleted ? " completed" : "");
+
+    var content = el("div", { className: "sim-step-content" }, [
+      el("h4", { textContent: step.title }),
+      el("p", { textContent: step.desc })
+    ]);
+
+    if (i <= simCurrentStep && step.code) {
+      content.appendChild(el("div", { className: "code-block", textContent: step.code }));
+    }
+
+    var children = [
+      el("div", { className: "sim-step-indicator", textContent: String(i + 1) }),
+      content
+    ];
+    if (i < simSteps.length - 1) {
+      children.push(el("div", { className: "sim-step-connector" }));
+    }
+
+    container.appendChild(el("div", { className: cls }, children));
+  });
+}
+
+function renderRetryTimeline() {
+  var section = document.getElementById("simRetrySection");
+  section.style.display = "block";
+  var tl = document.getElementById("simRetryTimeline");
+  clearEl(tl);
+  var attempts = ["0m", "1m", "5m", "15m", "1h", "6h"];
+  attempts.forEach(function(t, i) {
+    var node = el("div", { className: "retry-node" }, [
+      el("div", { className: "dot", textContent: String(i + 1) }),
+      el("div", { className: "time", textContent: "+" + t })
+    ]);
+    tl.appendChild(node);
+    if (i < attempts.length - 1) {
+      tl.appendChild(el("div", { className: "retry-connector" }));
+    }
+  });
+}
+
+document.getElementById("simStart").addEventListener("click", function() {
+  var event = EVENTS.filter(function(e) { return e.id === simSelect.value; })[0];
+  simSteps = buildSimSteps(event);
+  simCurrentStep = 0;
+  document.getElementById("simStep").disabled = false;
+  document.getElementById("simRetrySection").style.display = "none";
+  renderSimSteps();
+  renderRetryTimeline();
+});
+
+document.getElementById("simStep").addEventListener("click", function() {
+  if (simCurrentStep < simSteps.length - 1) {
+    simCurrentStep++;
+    renderSimSteps();
+    if (simCurrentStep === simSteps.length - 1) {
+      document.getElementById("simStep").disabled = true;
+    }
+  }
+});
+
+document.getElementById("simReset").addEventListener("click", function() {
+  simCurrentStep = -1;
+  simSteps = [];
+  document.getElementById("simStep").disabled = true;
+  clearEl(document.getElementById("simSteps"));
+  document.getElementById("simRetrySection").style.display = "none";
+});
+
+// ================================================================
+// CHANNEL MATRIX (built with safe DOM methods)
+// ================================================================
+function renderMatrix() {
+  var table = document.getElementById("matrixTable");
+  clearEl(table);
+  var channels = ["email", "sms", "webpush", "mobilepush"];
+
+  var thead = el("thead");
+  var headRow = el("tr", null, [
+    el("th", { textContent: "Event" }),
+    el("th", { textContent: "Recipient" })
+  ].concat(channels.map(function(c) {
+    return el("th", { style: { color: "var(--" + c + ")" }, textContent: CHANNEL_LABEL[c] });
+  })).concat([el("th", { textContent: "Coupling" })]));
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+
+  var tbody = el("tbody");
+  EVENTS.forEach(function(e) {
+    var row = el("tr", null, [
+      el("td", { textContent: e.name }),
+      el("td", { style: { color: "var(--text-dim)", fontWeight: "400", fontSize: "13px" }, textContent: e.recipient })
+    ].concat(channels.map(function(c) {
+      var cellClass = e.channels.indexOf(c) >= 0 ? "matrix-cell " + c : "matrix-cell empty";
+      var title = e.channels.indexOf(c) >= 0 ? CHANNEL_LABEL[c] : "";
+      return el("td", null, [el("span", { className: cellClass, title: title })]);
+    })).concat([
+      el("td", { className: "coupling-row" }, [
+        el("span", {
+          className: "coupling-badge " + e.coupling,
+          style: { fontSize: "11px" },
+          textContent: e.coupling === "transaction" ? "TX-Coupled" : "Best-Effort"
+        })
+      ])
+    ]));
+    tbody.appendChild(row);
+  });
+  table.appendChild(tbody);
+}
+renderMatrix();
+</script>
+</body>
+</html>

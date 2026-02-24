@@ -108,6 +108,30 @@ export function useMutCreateOpenPlayFromReservation() {
   });
 }
 
+export function useMutCreateOpenPlayFromReservationGroup() {
+  const utils = trpc.useUtils();
+
+  return useFeatureMutation(openPlayApi.mutOpenPlayCreateFromReservationGroup, {
+    onSuccess: async (data, variables) => {
+      const reservationGroupId = (variables as { reservationGroupId: string })
+        .reservationGroupId;
+      toast.success("Open Play created");
+      await Promise.all([
+        utils.openPlay.getPublicDetail.invalidate({
+          openPlayId: data.openPlayId,
+        }),
+        utils.openPlay.getDetail.invalidate({ openPlayId: data.openPlayId }),
+        utils.openPlay.getForReservationGroup.invalidate({
+          reservationGroupId,
+        }),
+      ]);
+    },
+    onError: (error) => {
+      toast.error(error?.message || "Failed to create Open Play");
+    },
+  });
+}
+
 export function useMutRequestJoinOpenPlay() {
   const utils = trpc.useUtils();
 

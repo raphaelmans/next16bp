@@ -28,6 +28,7 @@ interface ReservationListItemProps {
 
 export function ReservationListItem({ reservation }: ReservationListItemProps) {
   const { court, timeSlot, status, id } = reservation;
+  const reservationGroupId = reservation.reservationGroupId ?? null;
   const imageUrl = court.coverImageUrl?.trim();
   const canPay = status === "AWAITING_PAYMENT";
   const hasOpenPlay = Boolean(reservation.openPlayId);
@@ -36,6 +37,12 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
     "AWAITING_PAYMENT",
     "PAYMENT_MARKED_BY_USER",
   ].includes(status);
+  const detailHref = reservationGroupId
+    ? appRoutes.reservations.groupDetail(reservationGroupId)
+    : appRoutes.reservations.detail(id);
+  const paymentHref = reservationGroupId
+    ? appRoutes.reservations.groupPayment(reservationGroupId)
+    : appRoutes.reservations.payment(id);
 
   return (
     <Card className={cn("p-4", status === "EXPIRED" && "opacity-60")}>
@@ -93,7 +100,7 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
         {/* Desktop actions */}
         <div className="hidden sm:flex items-center gap-2 shrink-0">
           <Button variant="outline" size="sm" asChild>
-            <Link href={`/reservations/${id}`}>View</Link>
+            <Link href={detailHref}>View</Link>
           </Button>
           {hasOpenPlay ? (
             <Button
@@ -117,7 +124,7 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
           )}
           {canPay && (
             <Button size="sm" asChild>
-              <Link href={`/reservations/${id}/payment`}>Pay Now</Link>
+              <Link href={paymentHref}>Pay Now</Link>
             </Button>
           )}
           <DropdownMenu>
@@ -129,14 +136,14 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem asChild>
-                <Link href={`/reservations/${id}`}>
+                <Link href={detailHref}>
                   <Eye className="mr-2 h-4 w-4" />
                   View Details
                 </Link>
               </DropdownMenuItem>
               {canPay && (
                 <DropdownMenuItem asChild>
-                  <Link href={`/reservations/${id}/payment`}>
+                  <Link href={paymentHref}>
                     <CreditCard className="mr-2 h-4 w-4" />
                     Pay Now
                   </Link>
@@ -155,7 +162,7 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
         {/* Mobile actions */}
         <div className="flex sm:hidden gap-2">
           <Button variant="outline" size="sm" className="flex-1" asChild>
-            <Link href={`/reservations/${id}`}>View Details</Link>
+            <Link href={detailHref}>View Details</Link>
           </Button>
           {hasOpenPlay ? (
             <Button
@@ -178,7 +185,7 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
           )}
           {canPay && (
             <Button size="sm" className="flex-1" asChild>
-              <Link href={`/reservations/${id}/payment`}>Pay Now</Link>
+              <Link href={paymentHref}>Pay Now</Link>
             </Button>
           )}
         </div>

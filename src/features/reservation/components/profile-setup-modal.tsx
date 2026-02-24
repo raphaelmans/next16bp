@@ -17,11 +17,16 @@ import {
 } from "@/components/ui/dialog";
 import { useMutUpdateProfile } from "@/features/reservation/hooks";
 
-const profileSetupSchema = z.object({
-  displayName: S.profile.displayName,
-  phoneNumber: allowEmptyString(S.profile.phoneNumber),
-  email: allowEmptyString(S.common.email.optional()),
-});
+const profileSetupSchema = z
+  .object({
+    displayName: S.profile.displayName,
+    phoneNumber: allowEmptyString(S.profile.phoneNumber),
+    email: allowEmptyString(S.common.email.optional()),
+  })
+  .refine((data) => data.email !== "" || data.phoneNumber !== "", {
+    message: "Please provide either an email or phone number",
+    path: ["phoneNumber"],
+  });
 
 type ProfileSetupValues = z.infer<typeof profileSetupSchema>;
 

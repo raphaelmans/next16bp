@@ -46,6 +46,7 @@ vi.mock("@/features/chat/hooks/use-chat-trpc", () => ({
     mutateAsync: vi.fn(),
     isPending: false,
   }),
+  useMutReservationGroupChatSendMessage: () => ({ mutateAsync: vi.fn() }),
   useQueryChatAuth: () => ({
     data: {
       apiKey: "key",
@@ -93,7 +94,7 @@ const config: ReservationInboxWidgetConfig = {
   kind: "owner",
   storageKeys: {
     open: "test-chat-open",
-    activeReservationId: "test-chat-active",
+    activeReservationThreadId: "test-chat-active-thread",
   },
   ui: {
     sheetTitle: "Inbox",

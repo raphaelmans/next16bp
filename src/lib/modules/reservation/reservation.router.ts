@@ -21,6 +21,8 @@ import {
   CreateReservationGroupSchema,
   GetMyReservationsSchema,
   GetPaymentInfoSchema,
+  GetPlayerReservationGroupDetailSchema,
+  MarkPaymentGroupSchema,
   MarkPaymentSchema,
 } from "./dtos";
 import {
@@ -30,6 +32,7 @@ import {
   NotReservationOwnerError,
   ReservationCancellationWindowError,
   ReservationExpiredError,
+  ReservationGroupNotFoundError,
   ReservationNotFoundError,
   SlotNotAvailableError,
   TermsNotAcceptedError,
@@ -42,6 +45,7 @@ import { makeReservationService } from "./factories/reservation.factory";
 function handleReservationError(error: unknown): never {
   if (
     error instanceof ReservationNotFoundError ||
+    error instanceof ReservationGroupNotFoundError ||
     error instanceof ProfileNotFoundError ||
     error instanceof CourtNotFoundError ||
     error instanceof PlaceNotFoundError
@@ -163,6 +167,27 @@ export const reservationRouter = router({
     }),
 
   /**
+   * Mark payment as complete for all payable reservations in a reservation group
+   */
+  markPaymentGroup: protectedProcedure
+    .input(MarkPaymentGroupSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const reservationService = makeReservationService();
+        return await reservationService.markPaymentGroup(
+          ctx.userId,
+          profile.id,
+          input,
+        );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
+  /**
    * Cancel a reservation
    */
   cancel: protectedProcedure
@@ -208,6 +233,26 @@ export const reservationRouter = router({
         const reservationService = makeReservationService();
         return await reservationService.getReservationDetail(
           input.reservationId,
+        );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
+  /**
+   * Get grouped reservation detail for the current player
+   */
+  getGroupDetail: protectedProcedure
+    .input(GetPlayerReservationGroupDetailSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+        const reservationService = makeReservationService();
+        return await reservationService.getReservationGroupDetail(
+          ctx.userId,
+          profile.id,
+          input,
         );
       } catch (error) {
         handleReservationError(error);

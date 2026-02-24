@@ -12,6 +12,7 @@ import {
   getZonedDayRangeForInstant,
   getZonedToday,
 } from "@/common/time-zone";
+import { toast } from "@/common/toast";
 import { copyToClipboard } from "@/common/utils/clipboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -29,7 +30,16 @@ import { PlaceDetailAmenitiesCard } from "@/features/discovery/place-detail/comp
 import { PlaceDetailContactCard } from "@/features/discovery/place-detail/components/place-detail-contact-card";
 import { PlaceDetailBookingDesktopSection } from "@/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section";
 import { PlaceDetailBookingMobileSection } from "@/features/discovery/place-detail/components/sections/place-detail-booking-mobile-section";
+import {
+  buildBookingSummaryCtaState,
+  canCheckoutBookingCart,
+} from "@/features/discovery/place-detail/helpers/booking-cart-cta";
+import {
+  isBookingCartKeyDuplicate,
+  validateBookingCartAdd,
+} from "@/features/discovery/place-detail/helpers/booking-cart-rules";
 import { useModPlaceDetailAvailabilitySelection } from "@/features/discovery/place-detail/hooks/use-place-detail-availability-selection";
+import { useBookingCartStore } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 import { OpenPlayVenuePanel } from "@/features/open-play/components/open-play-venue-panel";
 
@@ -80,6 +90,14 @@ export function PlaceDetailBookingSection({
     (s) => s.setMobileSheetExpanded,
   );
 
+  const cartItems = useBookingCartStore((s) => s.items);
+  const addCartItem = useBookingCartStore((s) => s.addItem);
+  const removeCartItem = useBookingCartStore((s) => s.removeItem);
+  const clearCart = useBookingCartStore((s) => s.clearCart);
+  const clearCartForSportChange = useBookingCartStore(
+    (s) => s.clearForSportChange,
+  );
+
   const [primaryView, setPrimaryView] = React.useState<"book" | "openPlay">(
     "book",
   );
@@ -112,6 +130,11 @@ export function PlaceDetailBookingSection({
   });
 
   const placeTimeZone = place.timeZone ?? "Asia/Manila";
+  const sameDayAnchorDayKey = React.useMemo(() => {
+    const anchorStartTime = cartItems[0]?.startTime;
+    if (!anchorStartTime) return undefined;
+    return getZonedDayKey(new Date(anchorStartTime), placeTimeZone);
+  }, [cartItems, placeTimeZone]);
   const today = React.useMemo(
     () => getZonedToday(placeTimeZone),
     [placeTimeZone],
@@ -237,7 +260,108 @@ export function PlaceDetailBookingSection({
     [],
   );
 
+  const handleAddToCart = React.useCallback(() => {
+    if (
+      selectionMode !== "court" ||
+      !selectedCourtId ||
+      !selectedStartTime ||
+      !selectedSportId
+    )
+      return;
+
+    const courtLabel =
+      courtsForSport.find((c) => c.id === selectedCourtId)?.label ??
+      selectedCourtId;
+    const key = `${selectedCourtId}|${selectedStartTime}|${durationMinutes}`;
+    const candidate = {
+      courtId: selectedCourtId,
+      startTime: selectedStartTime,
+    };
+    if (isBookingCartKeyDuplicate({ cartItems, key })) {
+      toast.info("This slot is already in your booking.");
+      return;
+    }
+
+    const validation = validateBookingCartAdd({
+      cartItems,
+      candidate,
+      placeTimeZone,
+    });
+    if (!validation.ok) {
+      if (validation.reason === "DIFFERENT_DAY") {
+        toast.error("All courts in one booking must be on the same day.");
+        return;
+      }
+
+      toast.error("You can only add one time span per court in this booking.");
+      return;
+    }
+
+    addCartItem({
+      key,
+      courtId: candidate.courtId,
+      courtLabel,
+      sportId: selectedSportId,
+      startTime: candidate.startTime,
+      durationMinutes,
+      estimatedPriceCents: selectionSummary?.totalCents ?? null,
+      currency: selectionSummary?.currency ?? "PHP",
+    });
+  }, [
+    addCartItem,
+    cartItems,
+    courtsForSport,
+    durationMinutes,
+    placeTimeZone,
+    selectedCourtId,
+    selectedSportId,
+    selectedStartTime,
+    selectionMode,
+    selectionSummary,
+  ]);
+
   const handleReserve = React.useCallback(() => {
+    // Multi-court checkout: encode cart items into `items` param
+    if (cartItems.length > 0 && !selectedStartTime) {
+      const params = new URLSearchParams();
+      if (selectedSportId) {
+        params.set("sportId", selectedSportId);
+      }
+      const itemsEncoded = cartItems
+        .map(
+          (item) => `${item.courtId}|${item.startTime}|${item.durationMinutes}`,
+        )
+        .join(",");
+      params.set("items", itemsEncoded);
+
+      const destination = `${appRoutes.places.book(placeSlugOrId)}?${params.toString()}`;
+
+      trackEvent({
+        event: "funnel.reserve_clicked",
+        properties: {
+          placeId: analyticsPlaceId,
+          mode: "court",
+          itemCount: cartItems.length,
+        },
+      });
+
+      if (isAuthenticated) {
+        router.push(destination);
+        return;
+      }
+
+      trackEvent({
+        event: "funnel.login_started",
+        properties: {
+          placeId: analyticsPlaceId,
+          redirect: destination,
+        },
+      });
+      router.push(appRoutes.login.from(destination));
+      return;
+    }
+
+    // Single-court flow (unchanged)
     if (!selectedStartTime) return;
 
     const params = new URLSearchParams();
@@ -280,7 +404,7 @@ export function PlaceDetailBookingSection({
       return;
     }
 
-    const returnTo = appRoutes.places.detail(placeSlugOrId);
+    const returnTo = destination;
     trackEvent({
       event: "funnel.login_started",
       properties: {
@@ -291,6 +415,7 @@ export function PlaceDetailBookingSection({
     router.push(appRoutes.login.from(returnTo));
   }, [
     analyticsPlaceId,
+    cartItems,
     durationMinutes,
     isAuthenticated,
     placeSlugOrId,
@@ -319,12 +444,52 @@ export function PlaceDetailBookingSection({
     [],
   );
 
+  // Clear cart on sport change
+  const prevSportIdRef = React.useRef(selectedSportId);
+  React.useEffect(() => {
+    if (selectedSportId && selectedSportId !== prevSportIdRef.current) {
+      clearCartForSportChange(selectedSportId);
+    }
+    prevSportIdRef.current = selectedSportId;
+  }, [clearCartForSportChange, selectedSportId]);
+
+  // Clear cart on unmount
+  React.useEffect(() => {
+    return () => {
+      clearCart();
+    };
+  }, [clearCart]);
+
   const hasSelection = !!selectedStartTime;
-  const summaryCtaVariant = hasSelection ? "default" : "outline";
-  const summaryCtaLabel = hasSelection ? "Continue to review" : "Select a time";
+  const canAddToCart =
+    selectionMode === "court" &&
+    hasSelection &&
+    !!selectedCourtId &&
+    !!selectedSportId;
+
+  // CTA logic:
+  // - Cart empty + no selection -> "Select a time" (outline)
+  // - Cart empty + has selection -> "Continue to review" (default) — single-court
+  // - Cart has items + has selection -> "Add to booking" button shown separately; CTA stays "Select a time"
+  // - Cart has items + no selection -> "Continue to checkout (N)" if >=1
+  const summaryCta = buildBookingSummaryCtaState({
+    cartItemCount: cartItems.length,
+    hasSelection,
+  });
 
   const handleSummaryAction = React.useCallback(() => {
-    if (hasSelection) {
+    // Cart checkout: 1+ items and no current selection
+    if (
+      canCheckoutBookingCart({
+        cartItemCount: cartItems.length,
+        hasSelection,
+      })
+    ) {
+      handleReserve();
+      return;
+    }
+
+    if (summaryCta.shouldProceed) {
       handleReserve();
       return;
     }
@@ -337,8 +502,10 @@ export function PlaceDetailBookingSection({
     scrollToSection(availabilitySectionRef);
   }, [
     availabilitySectionRef,
+    cartItems.length,
     handleReserve,
     hasSelection,
+    summaryCta.shouldProceed,
     scrollToSection,
     setMobileSheetExpanded,
   ]);
@@ -426,6 +593,7 @@ export function PlaceDetailBookingSection({
               maxBookingDate={maxBookingDate}
               todayDayKey={todayDayKey}
               maxDayKey={maxDayKey}
+              sameDayAnchorDayKey={sameDayAnchorDayKey}
               availabilitySectionRef={availabilitySectionRef}
               onContinue={handleReserve}
               onSelectionSummaryChange={handleSelectionSummaryChange}
@@ -502,10 +670,14 @@ export function PlaceDetailBookingSection({
           hasSelection={hasSelection}
           selectionSummary={selectionSummary}
           placeTimeZone={placeTimeZone}
-          summaryCtaVariant={summaryCtaVariant}
-          summaryCtaLabel={summaryCtaLabel}
+          summaryCtaVariant={summaryCta.variant}
+          summaryCtaLabel={summaryCta.label}
           onSummaryAction={handleSummaryAction}
           isAuthenticated={isAuthenticated}
+          cartItems={cartItems}
+          canAddToCart={canAddToCart}
+          onAddToCartAction={handleAddToCart}
+          onRemoveFromCartAction={removeCartItem}
         />
       ) : (
         <Card className="h-fit">
@@ -540,6 +712,9 @@ export function PlaceDetailBookingSection({
           maxBookingDate={maxBookingDate}
           onContinue={handleReserve}
           onSelectionSummaryChange={handleSelectionSummaryChange}
+          cartItemCount={cartItems.length}
+          canAddToCart={canAddToCart}
+          onAddToCartAction={handleAddToCart}
         />
       ) : null}
     </>

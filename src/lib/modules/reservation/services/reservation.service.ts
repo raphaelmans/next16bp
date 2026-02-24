@@ -35,6 +35,7 @@ import type {
   PlacePhotoRecord,
   PlaceRecord,
   ReservationEventRecord,
+  ReservationGroupRecord,
   ReservationRecord,
 } from "@/lib/shared/infra/db/schema";
 import { logger } from "@/lib/shared/infra/logger";
@@ -51,7 +52,9 @@ import type {
   CreateReservationForCourtDTO,
   CreateReservationGroupDTO,
   GetMyReservationsDTO,
+  GetPlayerReservationGroupDetailDTO,
   MarkPaymentDTO,
+  MarkPaymentGroupDTO,
   ReservationListItemRecord,
 } from "../dtos";
 import {
@@ -63,7 +66,9 @@ import {
   ReservationCancellationWindowError,
   ReservationExpiredError,
   ReservationGroupInvalidError,
+  ReservationGroupNotFoundError,
   ReservationNotFoundError,
+  ReservationPaymentNotRequiredError,
   ReservationStartTimeInPastError,
   TermsNotAcceptedError,
 } from "../errors/reservation.errors";
@@ -100,6 +105,44 @@ export interface ReservationGroupCreationResult {
   totalPriceCents: number;
   currency: string;
   items: ReservationCreationResult[];
+}
+
+export interface ReservationGroupStatusSummary {
+  totalItems: number;
+  payableItems: number;
+  countsByStatus: Record<ReservationRecord["status"], number>;
+}
+
+export interface ReservationGroupDetailItem {
+  reservationId: string;
+  status: ReservationRecord["status"];
+  startTimeIso: string;
+  endTimeIso: string;
+  totalPriceCents: number;
+  currency: string;
+  expiresAtIso: string | null;
+  court: {
+    id: string;
+    label: string;
+  };
+  place: {
+    id: string;
+    name: string;
+    address: string;
+    city: string;
+    timeZone: string;
+  };
+}
+
+export interface ReservationGroupDetail {
+  reservationGroup: ReservationGroupRecord;
+  statusSummary: ReservationGroupStatusSummary;
+  items: ReservationGroupDetailItem[];
+}
+
+export interface ReservationGroupPaymentResult {
+  reservationGroupId: string;
+  reservations: ReservationRecord[];
 }
 
 export interface ReservationPaymentMethod {
@@ -149,6 +192,11 @@ export interface IReservationService {
     profileId: string,
     data: MarkPaymentDTO,
   ): Promise<ReservationRecord>;
+  markPaymentGroup(
+    userId: string,
+    profileId: string,
+    data: MarkPaymentGroupDTO,
+  ): Promise<ReservationGroupPaymentResult>;
   cancelReservation(
     userId: string,
     profileId: string,
@@ -160,6 +208,11 @@ export interface IReservationService {
     reservationId: string,
   ): Promise<ReservationPaymentInfo>;
   getReservationDetail(reservationId: string): Promise<ReservationDetail>;
+  getReservationGroupDetail(
+    userId: string,
+    profileId: string,
+    data: GetPlayerReservationGroupDetailDTO,
+  ): Promise<ReservationGroupDetail>;
   getReservationById(reservationId: string): Promise<{
     reservation: ReservationRecord;
     events: ReservationEventRecord[];
@@ -536,6 +589,30 @@ export class ReservationService implements IReservationService {
         "Failed to post player payment marked chat message",
       );
     }
+  }
+
+  private buildReservationGroupStatusSummary(
+    reservations: ReservationRecord[],
+  ): ReservationGroupStatusSummary {
+    const countsByStatus: Record<ReservationRecord["status"], number> = {
+      CREATED: 0,
+      AWAITING_PAYMENT: 0,
+      PAYMENT_MARKED_BY_USER: 0,
+      CONFIRMED: 0,
+      EXPIRED: 0,
+      CANCELLED: 0,
+    };
+
+    for (const reservation of reservations) {
+      countsByStatus[reservation.status] += 1;
+    }
+
+    return {
+      totalItems: reservations.length,
+      payableItems: reservations.filter((item) => item.totalPriceCents > 0)
+        .length,
+      countsByStatus,
+    };
   }
 
   async createReservationForCourt(
@@ -1207,30 +1284,6 @@ export class ReservationService implements IReservationService {
             ctx,
           );
 
-          if (place.organizationId) {
-            await this.notificationDeliveryService.enqueueOwnerReservationCreated(
-              {
-                reservationId: created.id,
-                organizationId: place.organizationId,
-                placeId: place.id,
-                placeName: place.name,
-                courtId: item.courtId,
-                courtLabel: item.courtLabel,
-                startTimeIso: created.startTime.toISOString(),
-                endTimeIso: created.endTime.toISOString(),
-                totalPriceCents: created.totalPriceCents,
-                currency: created.currency,
-                playerName: profile.displayName,
-                playerEmail: profile.email ?? null,
-                playerPhone: profile.phoneNumber ?? null,
-                expiresAtIso: created.expiresAt
-                  ? new Date(created.expiresAt).toISOString()
-                  : null,
-              },
-              ctx,
-            );
-          }
-
           createdItems.push({
             ...created,
             courtId: item.courtId,
@@ -1241,6 +1294,52 @@ export class ReservationService implements IReservationService {
           });
         }
 
+        if (place.organizationId && createdItems.length > 0) {
+          const sortedItems = createdItems
+            .slice()
+            .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+          const representative = sortedItems[0];
+          const latest = sortedItems[sortedItems.length - 1] ?? representative;
+          const soonestExpiry = sortedItems
+            .map((item) => item.expiresAt?.getTime() ?? null)
+            .filter((value): value is number => value !== null)
+            .sort((a, b) => a - b)[0];
+
+          await this.notificationDeliveryService.enqueueOwnerReservationGroupCreated(
+            {
+              reservationGroupId: group.id,
+              representativeReservationId: representative.id,
+              organizationId: place.organizationId,
+              placeId: place.id,
+              placeName: place.name,
+              totalPriceCents: totals.totalPriceCents,
+              currency: totals.currency,
+              playerName: profile.displayName,
+              playerEmail: profile.email ?? null,
+              playerPhone: profile.phoneNumber ?? null,
+              itemCount: createdItems.length,
+              startTimeIso: representative.startTime.toISOString(),
+              endTimeIso: latest.endTime.toISOString(),
+              expiresAtIso: soonestExpiry
+                ? new Date(soonestExpiry).toISOString()
+                : null,
+              items: sortedItems.map((item) => ({
+                reservationId: item.id,
+                courtId: item.courtId,
+                courtLabel: item.courtLabel,
+                startTimeIso: item.startTime.toISOString(),
+                endTimeIso: item.endTime.toISOString(),
+                totalPriceCents: item.totalPriceCents,
+                currency: item.currency,
+                expiresAtIso: item.expiresAt
+                  ? new Date(item.expiresAt).toISOString()
+                  : null,
+              })),
+            },
+            ctx,
+          );
+        }
+
         return {
           reservationGroupId: group.id,
           items: createdItems,
@@ -1248,21 +1347,235 @@ export class ReservationService implements IReservationService {
       },
     );
 
-    if (place.organizationId) {
-      for (const item of items) {
-        await this.postPlayerCreatedMessageBestEffort({
-          reservationId: item.id,
-          profileId,
-          organizationId: place.organizationId,
-        });
-      }
-    }
-
     return {
       reservationGroupId,
       totalPriceCents: totals.totalPriceCents,
       currency: totals.currency,
       items,
+    };
+  }
+
+  async getReservationGroupDetail(
+    _userId: string,
+    profileId: string,
+    data: GetPlayerReservationGroupDetailDTO,
+  ): Promise<ReservationGroupDetail> {
+    const group = await this.reservationRepository.findGroupById(
+      data.reservationGroupId,
+    );
+    if (!group) {
+      throw new ReservationGroupNotFoundError(data.reservationGroupId);
+    }
+
+    if (group.playerId !== profileId) {
+      throw new NotReservationOwnerError();
+    }
+
+    const rows =
+      await this.reservationRepository.findGroupItemsWithCourtAndPlace(
+        data.reservationGroupId,
+      );
+    if (rows.length === 0) {
+      throw new ReservationGroupNotFoundError(data.reservationGroupId);
+    }
+
+    const reservations = rows.map((row) => row.reservation);
+    const statusSummary = this.buildReservationGroupStatusSummary(reservations);
+
+    return {
+      reservationGroup: group,
+      statusSummary,
+      items: rows.map((row) => ({
+        reservationId: row.reservation.id,
+        status: row.reservation.status,
+        startTimeIso: row.reservation.startTime.toISOString(),
+        endTimeIso: row.reservation.endTime.toISOString(),
+        totalPriceCents: row.reservation.totalPriceCents,
+        currency: row.reservation.currency,
+        expiresAtIso: row.reservation.expiresAt
+          ? new Date(row.reservation.expiresAt).toISOString()
+          : null,
+        court: {
+          id: row.court.id,
+          label: row.court.label,
+        },
+        place: {
+          id: row.place.id,
+          name: row.place.name,
+          address: row.place.address,
+          city: row.place.city,
+          timeZone: row.place.timeZone,
+        },
+      })),
+    };
+  }
+
+  async markPaymentGroup(
+    userId: string,
+    profileId: string,
+    data: MarkPaymentGroupDTO,
+  ): Promise<ReservationGroupPaymentResult> {
+    if (!data.termsAccepted) {
+      throw new TermsNotAcceptedError();
+    }
+
+    const { updatedReservations } = await this.transactionManager.run(
+      async (tx) => {
+        const ctx: RequestContext = { tx };
+
+        const group = await this.reservationRepository.findGroupByIdForUpdate(
+          data.reservationGroupId,
+          ctx,
+        );
+        if (!group) {
+          throw new ReservationGroupNotFoundError(data.reservationGroupId);
+        }
+
+        if (group.playerId !== profileId) {
+          throw new NotReservationOwnerError();
+        }
+
+        const reservations =
+          await this.reservationRepository.findByGroupIdForUpdate(
+            data.reservationGroupId,
+            ctx,
+          );
+        if (reservations.length === 0) {
+          throw new ReservationGroupNotFoundError(data.reservationGroupId);
+        }
+
+        const payableReservations = reservations.filter(
+          (item) => item.totalPriceCents > 0,
+        );
+        if (payableReservations.length === 0) {
+          throw new ReservationPaymentNotRequiredError({
+            reservationGroupId: data.reservationGroupId,
+          });
+        }
+
+        for (const reservation of payableReservations) {
+          if (reservation.playerId !== profileId) {
+            throw new NotReservationOwnerError();
+          }
+
+          if (reservation.status !== "AWAITING_PAYMENT") {
+            throw new InvalidReservationStatusError(
+              reservation.id,
+              reservation.status,
+              ["AWAITING_PAYMENT"],
+            );
+          }
+
+          if (
+            reservation.expiresAt &&
+            new Date(reservation.expiresAt) < new Date()
+          ) {
+            throw new ReservationExpiredError(reservation.id);
+          }
+        }
+
+        const now = new Date();
+        const updatedReservations: ReservationRecord[] = [];
+
+        for (const reservation of payableReservations) {
+          const updated = await this.reservationRepository.update(
+            reservation.id,
+            {
+              status: "PAYMENT_MARKED_BY_USER",
+              termsAcceptedAt: now,
+            },
+            ctx,
+          );
+
+          await this.reservationEventRepository.create(
+            {
+              reservationId: reservation.id,
+              fromStatus: "AWAITING_PAYMENT",
+              toStatus: "PAYMENT_MARKED_BY_USER",
+              triggeredByUserId: userId,
+              triggeredByRole: "PLAYER",
+              notes: "Player marked payment for reservation group",
+            },
+            ctx,
+          );
+
+          logger.info(
+            {
+              event: "reservation.group_payment_marked",
+              reservationGroupId: data.reservationGroupId,
+              reservationId: reservation.id,
+              playerId: profileId,
+            },
+            "Player marked payment for reservation in group",
+          );
+
+          updatedReservations.push(updated);
+        }
+
+        try {
+          const rows =
+            await this.reservationRepository.findGroupItemsWithCourtAndPlace(
+              data.reservationGroupId,
+              ctx,
+            );
+          const place = rows[0]?.place ?? null;
+
+          if (place?.organizationId && updatedReservations.length > 0) {
+            const courtLabelById = new Map(
+              rows.map((row) => [row.court.id, row.court.label]),
+            );
+            const sortedItems = updatedReservations
+              .slice()
+              .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+            const representative = sortedItems[0];
+            const latest =
+              sortedItems[sortedItems.length - 1] ?? representative;
+            const itemSummaries = sortedItems.map((item) => ({
+              reservationId: item.id,
+              courtId: item.courtId,
+              courtLabel: courtLabelById.get(item.courtId) ?? "Court",
+              startTimeIso: item.startTime.toISOString(),
+              endTimeIso: item.endTime.toISOString(),
+              totalPriceCents: item.totalPriceCents,
+              currency: item.currency,
+              expiresAtIso: item.expiresAt
+                ? new Date(item.expiresAt).toISOString()
+                : null,
+            }));
+
+            await this.notificationDeliveryService.enqueueOwnerReservationGroupPaymentMarked(
+              {
+                reservationGroupId: data.reservationGroupId,
+                representativeReservationId: representative.id,
+                organizationId: place.organizationId,
+                placeName: place.name,
+                courtLabel:
+                  itemSummaries.length > 1
+                    ? `${itemSummaries.length} courts`
+                    : (itemSummaries[0]?.courtLabel ?? "Court"),
+                startTimeIso: representative.startTime.toISOString(),
+                endTimeIso: latest.endTime.toISOString(),
+                playerName: representative.playerNameSnapshot ?? "Player",
+                itemCount: itemSummaries.length,
+                items: itemSummaries,
+              },
+              ctx,
+            );
+          }
+        } catch (error) {
+          logger.warn(
+            { err: error, reservationGroupId: data.reservationGroupId },
+            "Failed to enqueue reservation_group.payment_marked notification",
+          );
+        }
+
+        return { updatedReservations };
+      },
+    );
+
+    return {
+      reservationGroupId: data.reservationGroupId,
+      reservations: updatedReservations,
     };
   }
 

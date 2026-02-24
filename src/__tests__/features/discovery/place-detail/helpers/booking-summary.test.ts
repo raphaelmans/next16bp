@@ -96,4 +96,32 @@ describe("buildBookingSelectionSummary", () => {
       currency: "USD",
     });
   });
+
+  it("matches equivalent instants when ISO formatting differs", () => {
+    const summary = buildBookingSelectionSummary({
+      selectedStartTime: "2026-02-26T03:00:00.000Z",
+      pickerSlots: [
+        makeSlot({
+          startTime: "2026-02-26T11:00:00+08:00",
+          endTime: "2026-02-26T12:00:00+08:00",
+          currency: "PHP",
+        }),
+      ],
+      pricingOptions: [
+        {
+          startTime: "2026-02-26T11:00:00+08:00",
+          endTime: "2026-02-26T12:00:00+08:00",
+          totalPriceCents: 100000,
+          currency: "PHP",
+        },
+      ],
+    });
+
+    expect(summary).toEqual({
+      startTime: "2026-02-26T03:00:00.000Z",
+      endTime: "2026-02-26T12:00:00+08:00",
+      totalCents: 100000,
+      currency: "PHP",
+    });
+  });
 });

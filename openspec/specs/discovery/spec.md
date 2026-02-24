@@ -38,7 +38,7 @@ Based on `src/lib/modules/place/place.router.ts` and `src/features/discovery/api
 ## Requirements
 
 ### Requirement: Player booking flow supports multi-court cart submission
-The discovery-to-booking flow SHALL allow users to proceed with multiple selected reservation items and submit them through a grouped booking checkout.
+The discovery-to-booking flow SHALL allow users to proceed with multiple selected reservation items, submit them through grouped booking checkout, and continue into group-first post-checkout handling.
 
 #### Scenario: Multiple items in booking checkout
 - **WHEN** a player reaches booking checkout with two or more selected items
@@ -47,6 +47,11 @@ The discovery-to-booking flow SHALL allow users to proceed with multiple selecte
 #### Scenario: Different-time item summary
 - **WHEN** selected items have different time ranges
 - **THEN** the checkout renders itemized schedule and pricing summary before confirmation
+
+#### Scenario: Grouped checkout routes to grouped post-checkout surface
+- **WHEN** grouped booking creation succeeds
+- **THEN** the player is routed to a reservation-group handling surface
+- **AND** the next primary actions are presented at group level rather than as separate per-item booking flows
 
 ### Requirement: Booking flow remains backward compatible for single selection
 The system SHALL keep single-selection booking behavior functional for existing users and deep links.

@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import {
   formatCurrency,
   formatDuration,
@@ -7,6 +8,7 @@ import {
 } from "@/common/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 
 type CourtOption = {
   id: string;
@@ -33,6 +35,10 @@ type PlaceDetailBookingSummaryCardProps = {
   summaryCtaLabel: string;
   onSummaryAction: () => void;
   isAuthenticated: boolean;
+  cartItems: BookingCartItem[];
+  canAddToCart: boolean;
+  onAddToCartAction: () => void;
+  onRemoveFromCartAction: (key: string) => void;
 };
 
 export function PlaceDetailBookingSummaryCard({
@@ -48,7 +54,18 @@ export function PlaceDetailBookingSummaryCard({
   summaryCtaLabel,
   onSummaryAction,
   isAuthenticated,
+  cartItems,
+  canAddToCart,
+  onAddToCartAction,
+  onRemoveFromCartAction,
 }: PlaceDetailBookingSummaryCardProps) {
+  const estimatedTotalCents = cartItems.reduce(
+    (sum, item) => sum + (item.estimatedPriceCents ?? 0),
+    0,
+  );
+  const cartCurrency = cartItems[0]?.currency ?? "PHP";
+  const hasEstimate = cartItems.some((i) => i.estimatedPriceCents !== null);
+
   return (
     <Card>
       <CardHeader>
@@ -100,9 +117,71 @@ export function PlaceDetailBookingSummaryCard({
                 : ""}
             </p>
           </div>
+        ) : cartItems.length > 0 ? (
+          <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+            You have {cartItems.length} court
+            {cartItems.length !== 1 ? "s" : ""} in booking. Continue to checkout
+            when ready.
+          </div>
         ) : (
           <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
             Select a time to see the price and continue.
+          </div>
+        )}
+
+        {canAddToCart && (
+          <Button
+            size="lg"
+            className="w-full"
+            variant="secondary"
+            onClick={onAddToCartAction}
+          >
+            Add to booking
+          </Button>
+        )}
+
+        {cartItems.length > 0 && (
+          <div className="space-y-2 rounded-lg border p-3">
+            <p className="text-sm font-medium">
+              Courts in booking ({cartItems.length})
+            </p>
+            {cartItems.map((item) => (
+              <div
+                key={item.key}
+                className="flex items-start justify-between gap-2 text-sm"
+              >
+                <div className="min-w-0">
+                  <p className="font-medium">{item.courtLabel}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {formatInTimeZone(
+                      new Date(item.startTime),
+                      placeTimeZone,
+                      "MMM d, h:mm a",
+                    )}{" "}
+                    · {formatDuration(item.durationMinutes)}
+                    {item.estimatedPriceCents !== null
+                      ? ` · ${formatCurrency(item.estimatedPriceCents, item.currency)}`
+                      : ""}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onRemoveFromCartAction(item.key)}
+                  className="shrink-0 rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  aria-label={`Remove ${item.courtLabel}`}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ))}
+            {hasEstimate && (
+              <div className="flex items-center justify-between border-t pt-2 text-sm">
+                <p className="text-muted-foreground">Estimated total</p>
+                <p className="font-semibold">
+                  {formatCurrency(estimatedTotalCents, cartCurrency)}
+                </p>
+              </div>
+            )}
           </div>
         )}
 

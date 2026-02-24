@@ -99,17 +99,56 @@ export const reservationChatRouter = router({
       }
     }),
 
+  getGroupSession: protectedRateLimitedProcedure("chatSession")
+    .input(
+      z.object({
+        reservationGroupId: S.ids.generic,
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationChatService();
+        const session = await service.getGroupSession(
+          ctx.userId,
+          input.reservationGroupId,
+          {
+            id: ctx.userId,
+            name: ctx.session.email || ctx.userId,
+          },
+        );
+
+        ctx.log.info(
+          {
+            event: "reservation_chat.group_session_issued",
+            reservationGroupId: input.reservationGroupId,
+          },
+          "Reservation group chat session issued",
+        );
+
+        return session;
+      } catch (error) {
+        handleReservationChatError(error);
+      }
+    }),
+
   getThreadMetas: protectedProcedure
     .input(
       z.object({
-        reservationIds: z.array(S.ids.generic).max(30),
+        reservationIds: z.array(S.ids.generic).max(30).optional().default([]),
+        reservationGroupIds: z
+          .array(S.ids.generic)
+          .max(30)
+          .optional()
+          .default([]),
         includeArchived: z.boolean().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
       try {
         const service = makeReservationChatService();
-        return await service.getThreadMetas(ctx.userId, input.reservationIds, {
+        return await service.getThreadMetas(ctx.userId, {
+          reservationIds: input.reservationIds,
+          reservationGroupIds: input.reservationGroupIds,
           includeArchived: input.includeArchived,
         });
       } catch (error) {
@@ -167,6 +206,28 @@ export const reservationChatRouter = router({
           ctx.userId,
           input.reservationId,
         );
+      } catch (error) {
+        handleReservationChatError(error);
+      }
+    }),
+
+  sendGroupMessage: protectedRateLimitedProcedure("chatSend")
+    .input(
+      z
+        .object({
+          reservationGroupId: S.ids.generic,
+        })
+        .merge(SendChatMessageSchema),
+    )
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationChatService();
+        await service.sendGroupMessage(ctx.userId, input.reservationGroupId, {
+          text: input.text,
+          attachments: input.attachments,
+        });
+
+        return { ok: true };
       } catch (error) {
         handleReservationChatError(error);
       }

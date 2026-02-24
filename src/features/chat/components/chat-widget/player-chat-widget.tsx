@@ -11,7 +11,7 @@ export function PlayerChatWidget() {
         kind: "player",
         storageKeys: {
           open: "player:chat:open",
-          activeReservationId: "player:chat:activeReservationId",
+          activeReservationThreadId: "player:chat:activeReservationThreadId",
         },
         ui: {
           sheetTitle: "Messages",

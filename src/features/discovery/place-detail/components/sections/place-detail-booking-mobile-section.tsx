@@ -23,7 +23,9 @@ import {
 } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
 import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
+import { buildCourtSelectionMemoryKey } from "@/features/discovery/place-detail/helpers/court-selection-memory";
 import { useModMobileWeekPrefetch } from "@/features/discovery/place-detail/hooks/use-mobile-week-prefetch";
+import { useCourtSelectionMemoryStore } from "@/features/discovery/place-detail/stores/court-selection-memory-store";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 
 const TIMELINE_SLOT_DURATION = 60;
@@ -58,6 +60,9 @@ type PlaceDetailBookingMobileSectionProps = {
   maxBookingDate: Date;
   onContinue: () => void;
   onSelectionSummaryChange: (summary: SelectionSummary | null) => void;
+  cartItemCount: number;
+  canAddToCart: boolean;
+  onAddToCartAction: () => void;
 };
 
 export function PlaceDetailBookingMobileSection({
@@ -83,9 +88,16 @@ export function PlaceDetailBookingMobileSection({
   maxBookingDate,
   onContinue,
   onSelectionSummaryChange,
+  cartItemCount,
+  canAddToCart,
+  onAddToCartAction,
 }: PlaceDetailBookingMobileSectionProps) {
   const utils = useModDiscoveryPrefetchPort();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const rememberCourtSelection = useCourtSelectionMemoryStore(
+    (s) => s.rememberSelection,
+  );
+  const getCourtSelection = useCourtSelectionMemoryStore((s) => s.getSelection);
   const mobileSheetExpanded = usePlaceDetailUiStore(
     (s) => s.mobileSheetExpanded,
   );
@@ -97,6 +109,16 @@ export function PlaceDetailBookingMobileSection({
   const selectedDayKey = React.useMemo(
     () => getZonedDayKey(selectedDate ?? today, placeTimeZone),
     [placeTimeZone, selectedDate, today],
+  );
+  const selectedCourtMemoryKey = React.useMemo(
+    () =>
+      buildCourtSelectionMemoryKey({
+        placeId: place.id,
+        sportId: selectedSportId,
+        dayKey: selectedDayKey,
+        courtId: selectedCourtId,
+      }),
+    [place.id, selectedCourtId, selectedDayKey, selectedSportId],
   );
   const weekStartDayKey = React.useMemo(
     () => getWeekStartDayKey(selectedDayKey, placeTimeZone),
@@ -318,8 +340,19 @@ export function PlaceDetailBookingMobileSection({
     (range: { startTime: string; durationMinutes: number }) => {
       setSelectedStartTime(range.startTime);
       setDurationMinutes(range.durationMinutes);
+      if (selectedCourtMemoryKey && range.startTime) {
+        rememberCourtSelection(selectedCourtMemoryKey, {
+          startTime: range.startTime,
+          durationMinutes: range.durationMinutes,
+        });
+      }
     },
-    [setDurationMinutes, setSelectedStartTime],
+    [
+      rememberCourtSelection,
+      selectedCourtMemoryKey,
+      setDurationMinutes,
+      setSelectedStartTime,
+    ],
   );
 
   const handleAnyRangeChange = React.useCallback(
@@ -366,16 +399,61 @@ export function PlaceDetailBookingMobileSection({
 
   const handleMobileCourtChange = React.useCallback(
     (courtId: string | undefined) => {
+      const previousCourtMemoryKey = buildCourtSelectionMemoryKey({
+        placeId: place.id,
+        sportId: selectedSportId,
+        dayKey: selectedDayKey,
+        courtId: selectedCourtId,
+      });
+      if (previousCourtMemoryKey && selectedStartTime) {
+        rememberCourtSelection(previousCourtMemoryKey, {
+          startTime: selectedStartTime,
+          durationMinutes,
+        });
+      }
+
       if (courtId) {
         setSelectionMode("court");
         setSelectedCourtId(courtId);
+
+        const nextCourtMemoryKey = buildCourtSelectionMemoryKey({
+          placeId: place.id,
+          sportId: selectedSportId,
+          dayKey: selectedDayKey,
+          courtId,
+        });
+        const rememberedSelection = nextCourtMemoryKey
+          ? getCourtSelection(nextCourtMemoryKey)
+          : undefined;
+
+        if (!rememberedSelection) {
+          clearSelection(true);
+          return;
+        }
+
+        setSelectedStartTime(rememberedSelection.startTime);
+        setDurationMinutes(rememberedSelection.durationMinutes);
       } else {
         setSelectionMode("any");
         setSelectedCourtId(undefined);
+        clearSelection(true);
       }
-      clearSelection(true);
     },
-    [clearSelection, setSelectedCourtId, setSelectionMode],
+    [
+      clearSelection,
+      durationMinutes,
+      getCourtSelection,
+      place.id,
+      rememberCourtSelection,
+      selectedCourtId,
+      selectedDayKey,
+      selectedSportId,
+      selectedStartTime,
+      setDurationMinutes,
+      setSelectedCourtId,
+      setSelectedStartTime,
+      setSelectionMode,
+    ],
   );
 
   return (
@@ -411,6 +489,9 @@ export function PlaceDetailBookingMobileSection({
       selectionSummary={selectionSummary}
       selectionDateLabel={selectionDateLabel}
       selectionTimeLabel={selectionTimeLabel}
+      cartItemCount={cartItemCount}
+      canAddToCart={canAddToCart}
+      onAddToCartAction={onAddToCartAction}
     />
   );
 }

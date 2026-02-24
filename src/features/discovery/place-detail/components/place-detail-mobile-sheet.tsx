@@ -17,6 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { MobileDateStrip } from "@/features/discovery/components";
+import { canCheckoutBookingCart } from "@/features/discovery/place-detail/helpers/booking-cart-cta";
 import { cn } from "@/lib/utils";
 
 type PlaceSportOption = {
@@ -73,6 +74,9 @@ type PlaceDetailMobileSheetProps = {
   selectionSummary: SelectionSummary | null;
   selectionDateLabel: string;
   selectionTimeLabel: string;
+  cartItemCount: number;
+  canAddToCart: boolean;
+  onAddToCartAction: () => void;
 };
 
 export function PlaceDetailMobileSheet({
@@ -107,10 +111,18 @@ export function PlaceDetailMobileSheet({
   selectionSummary,
   selectionDateLabel,
   selectionTimeLabel,
+  cartItemCount,
+  canAddToCart,
+  onAddToCartAction,
 }: PlaceDetailMobileSheetProps) {
   if (!showBooking) {
     return null;
   }
+
+  const canCheckoutFromCart = canCheckoutBookingCart({
+    cartItemCount,
+    hasSelection,
+  });
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 flex max-h-[85vh] flex-col rounded-t-3xl bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.15)] lg:hidden">
@@ -281,13 +293,23 @@ export function PlaceDetailMobileSheet({
                 </p>
               )}
             </>
+          ) : cartItemCount > 0 ? (
+            <p className="text-sm text-muted-foreground">
+              {cartItemCount} court{cartItemCount !== 1 ? "s" : ""} in booking
+            </p>
           ) : (
             <p className="text-sm text-muted-foreground">Select a time slot</p>
           )}
         </div>
-        <Button disabled={!hasSelection} onClick={onReserve}>
-          Reserve
-        </Button>
+        {canAddToCart ? (
+          <Button onClick={onAddToCartAction}>Add to booking</Button>
+        ) : canCheckoutFromCart ? (
+          <Button onClick={onReserve}>Checkout ({cartItemCount})</Button>
+        ) : (
+          <Button disabled={!hasSelection} onClick={onReserve}>
+            Reserve
+          </Button>
+        )}
       </div>
     </div>
   );

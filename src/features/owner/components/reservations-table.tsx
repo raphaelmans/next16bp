@@ -109,6 +109,43 @@ export function ReservationsTable({
     setExpandedRow(expandedRow === id ? null : id);
   };
 
+  const GroupItems = ({ reservation }: { reservation: Reservation }) => {
+    if (!reservation.isGroupPrimary || !reservation.groupItems?.length) {
+      return null;
+    }
+
+    return (
+      <div className="space-y-2">
+        <h4 className="text-sm font-medium">Grouped Items</h4>
+        <div className="space-y-2">
+          {reservation.groupItems.map((item) => (
+            <div
+              key={item.id}
+              className="rounded-md border bg-background p-2 flex items-start justify-between gap-3"
+            >
+              <div>
+                <p className="text-sm font-medium">{item.courtName}</p>
+                <p className="text-xs text-muted-foreground">
+                  {format(new Date(item.date), "MMM d, yyyy")} ·{" "}
+                  {item.startTime} - {item.endTime}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-medium">
+                  {formatPrice(item.amountCents, item.currency)}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {stageConfig[item.reservationStatus]?.label ??
+                    item.reservationStatus}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   // Mobile card view
   const MobileCard = ({ reservation }: { reservation: Reservation }) => {
     const config = stageConfig[reservation.reservationStatus];
@@ -138,6 +175,11 @@ export function ReservationsTable({
                 {format(new Date(reservation.date), "MMM d, yyyy")} &middot;{" "}
                 {reservation.startTime} - {reservation.endTime}
               </p>
+              {reservation.isGroupPrimary && reservation.groupItemCount ? (
+                <p className="text-xs text-muted-foreground">
+                  Group booking · {reservation.groupItemCount} items
+                </p>
+              ) : null}
               <p className="text-xs text-muted-foreground">
                 Created{" "}
                 {createdAtDate ? format(createdAtDate, "MMM d, h:mm a") : "--"}
@@ -202,6 +244,8 @@ export function ReservationsTable({
                   </div>
                 </div>
               </div>
+
+              <GroupItems reservation={reservation} />
 
               <PaymentProofCard proof={reservation.paymentProof ?? null} />
 
@@ -313,7 +357,15 @@ export function ReservationsTable({
                       )}
                     </TableCell>
                     <TableCell className="font-medium">
-                      {reservation.courtName}
+                      <div>
+                        <p>{reservation.courtName}</p>
+                        {reservation.isGroupPrimary &&
+                        reservation.groupItemCount ? (
+                          <p className="text-xs text-muted-foreground">
+                            Group booking · {reservation.groupItemCount} items
+                          </p>
+                        ) : null}
+                      </div>
                     </TableCell>
                     <TableCell>
                       <div>
@@ -436,6 +488,8 @@ export function ReservationsTable({
                           <PaymentProofCard
                             proof={reservation.paymentProof ?? null}
                           />
+
+                          <GroupItems reservation={reservation} />
 
                           {/* Notes */}
                           {reservation.notes && (

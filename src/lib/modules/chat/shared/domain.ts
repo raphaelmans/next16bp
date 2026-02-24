@@ -1,4 +1,5 @@
 export const RESERVATION_THREAD_PREFIX = "res-";
+export const RESERVATION_GROUP_THREAD_PREFIX = "grp-";
 export const SUPPORT_CLAIM_THREAD_PREFIX = "cr-";
 export const SUPPORT_VERIFICATION_THREAD_PREFIX = "vr-";
 
@@ -16,6 +17,15 @@ export type ParsedReservationThreadId = {
   reservationId: string;
 };
 
+export type ParsedReservationGroupThreadId = {
+  threadId: string;
+  reservationGroupId: string;
+};
+
+export type ParsedReservationThreadRef =
+  | ParsedReservationThreadId
+  | ParsedReservationGroupThreadId;
+
 export type ParsedSupportThreadId = {
   threadId: string;
   supportKind: SupportThreadKind;
@@ -23,7 +33,7 @@ export type ParsedSupportThreadId = {
 };
 
 export type ParsedInboxThreadRef =
-  | ({ threadKind: "reservation" } & ParsedReservationThreadId)
+  | ({ threadKind: "reservation" } & ParsedReservationThreadRef)
   | ({ threadKind: "support" } & ParsedSupportThreadId);
 
 function parseWithPrefix(
@@ -49,6 +59,12 @@ function parseWithPrefix(
 
 export function makeReservationThreadId(reservationId: string): string {
   return `${RESERVATION_THREAD_PREFIX}${reservationId}`;
+}
+
+export function makeReservationGroupThreadId(
+  reservationGroupId: string,
+): string {
+  return `${RESERVATION_GROUP_THREAD_PREFIX}${reservationGroupId}`;
 }
 
 export function makeSupportClaimThreadId(claimRequestId: string): string {
@@ -112,16 +128,41 @@ export function parseSupportThreadId(
   return null;
 }
 
+export function parseReservationGroupThreadId(
+  threadId: string,
+): ParsedReservationGroupThreadId | null {
+  const parsed = parseWithPrefix(
+    threadId,
+    RESERVATION_GROUP_THREAD_PREFIX,
+    "requestId",
+  );
+
+  if (!parsed?.requestId) {
+    return null;
+  }
+
+  return {
+    threadId: parsed.threadId,
+    reservationGroupId: parsed.requestId,
+  };
+}
+
 export function parseInboxThreadRef(
   threadKind: InboxThreadKind,
   threadId: string,
 ): ParsedInboxThreadRef | null {
   if (threadKind === "reservation") {
     const parsedReservation = parseReservationThreadId(threadId);
-    if (!parsedReservation) {
-      return null;
+    if (parsedReservation) {
+      return { threadKind, ...parsedReservation };
     }
-    return { threadKind, ...parsedReservation };
+
+    const parsedReservationGroup = parseReservationGroupThreadId(threadId);
+    if (parsedReservationGroup) {
+      return { threadKind, ...parsedReservationGroup };
+    }
+
+    return null;
   }
 
   const parsedSupport = parseSupportThreadId(threadId);

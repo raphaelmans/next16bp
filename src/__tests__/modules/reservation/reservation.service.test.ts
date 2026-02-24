@@ -3,7 +3,9 @@ import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import { PlaceNotBookableError } from "@/lib/modules/place-verification/errors/place-verification.errors";
 import { IncompleteProfileError } from "@/lib/modules/profile/errors/profile.errors";
 import {
+  InvalidReservationStatusError,
   NoAvailabilityError,
+  NotReservationOwnerError,
   ReservationGroupInvalidError,
 } from "@/lib/modules/reservation/errors/reservation.errors";
 import { ReservationService } from "@/lib/modules/reservation/services/reservation.service";
@@ -75,6 +77,9 @@ function makeReservationService(overrides?: {
     status: "VERIFIED" | "PENDING";
     reservationsEnabled: boolean;
   } | null;
+  groupExists?: boolean;
+  groupReservations?: ReservationRecord[];
+  groupPlayerId?: string | null;
 }) {
   const courts = overrides?.courts ?? [
     {
@@ -117,8 +122,63 @@ function makeReservationService(overrides?: {
     reservationsEnabled: true,
   };
 
+  const groupExists = overrides?.groupExists ?? true;
+  const groupPlayerId = overrides?.groupPlayerId ?? TEST_IDS.profileId;
+
   let reservationSeq = 0;
   const now = new Date();
+  const defaultGroupReservations: ReservationRecord[] = [
+    {
+      id: "group-res-1",
+      courtId: TEST_IDS.courtId1,
+      startTime: new Date(now.getTime() + 2 * 60 * 60 * 1000),
+      endTime: new Date(now.getTime() + 3 * 60 * 60 * 1000),
+      totalPriceCents: 1500,
+      currency: "PHP",
+      playerId: TEST_IDS.profileId,
+      groupId: "group-1",
+      guestProfileId: null,
+      playerNameSnapshot: "Player",
+      playerEmailSnapshot: "player@example.com",
+      playerPhoneSnapshot: "0917",
+      status: "AWAITING_PAYMENT",
+      expiresAt: new Date(now.getTime() + 60 * 60 * 1000),
+      termsAcceptedAt: null,
+      confirmedAt: null,
+      cancelledAt: null,
+      cancellationReason: null,
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: "group-res-2",
+      courtId: TEST_IDS.courtId2,
+      startTime: new Date(now.getTime() + 4 * 60 * 60 * 1000),
+      endTime: new Date(now.getTime() + 5 * 60 * 60 * 1000),
+      totalPriceCents: 2500,
+      currency: "PHP",
+      playerId: TEST_IDS.profileId,
+      groupId: "group-1",
+      guestProfileId: null,
+      playerNameSnapshot: "Player",
+      playerEmailSnapshot: "player@example.com",
+      playerPhoneSnapshot: "0917",
+      status: "AWAITING_PAYMENT",
+      expiresAt: new Date(now.getTime() + 60 * 60 * 1000),
+      termsAcceptedAt: null,
+      confirmedAt: null,
+      cancelledAt: null,
+      cancellationReason: null,
+      createdAt: now,
+      updatedAt: now,
+    },
+  ];
+  const groupReservations =
+    overrides?.groupReservations ?? defaultGroupReservations;
+  const groupReservationById = new Map(
+    groupReservations.map((item) => [item.id, item]),
+  );
+  const courtById = new Map(courts.map((court) => [court.id, court]));
 
   const reservationRepository = {
     findOverlappingActiveByCourtIds: vi.fn().mockResolvedValue([]),
@@ -161,7 +221,80 @@ function makeReservationService(overrides?: {
     }),
     findByIdForUpdate: vi.fn(),
     findById: vi.fn(),
-    update: vi.fn(),
+    update: vi
+      .fn()
+      .mockImplementation((id: string, payload: Record<string, unknown>) => {
+        const existing = groupReservationById.get(id);
+        const updated = {
+          ...(existing ?? defaultGroupReservations[0]),
+          ...payload,
+          id,
+          updatedAt: new Date(),
+        } satisfies ReservationRecord;
+        groupReservationById.set(id, updated);
+        return Promise.resolve(updated);
+      }),
+    findGroupById: vi.fn().mockResolvedValue(
+      groupExists
+        ? {
+            id: "group-1",
+            placeId: TEST_IDS.placeId,
+            playerId: groupPlayerId,
+            playerNameSnapshot: "Player",
+            playerEmailSnapshot: "player@example.com",
+            playerPhoneSnapshot: "0917",
+            totalPriceCents: 4000,
+            currency: "PHP",
+            createdAt: now,
+            updatedAt: now,
+          }
+        : null,
+    ),
+    findGroupByIdForUpdate: vi.fn().mockResolvedValue(
+      groupExists
+        ? {
+            id: "group-1",
+            placeId: TEST_IDS.placeId,
+            playerId: groupPlayerId,
+            playerNameSnapshot: "Player",
+            playerEmailSnapshot: "player@example.com",
+            playerPhoneSnapshot: "0917",
+            totalPriceCents: 4000,
+            currency: "PHP",
+            createdAt: now,
+            updatedAt: now,
+          }
+        : null,
+    ),
+    findByGroupId: vi.fn().mockResolvedValue(groupReservations),
+    findByGroupIdForUpdate: vi.fn().mockResolvedValue(groupReservations),
+    findGroupItemsWithCourtAndPlace: vi.fn().mockResolvedValue(
+      groupReservations
+        .map((reservation) => {
+          const court = courtById.get(reservation.courtId);
+          if (!court || !place) return null;
+          return {
+            reservation,
+            court: {
+              id: court.id,
+              label: court.label,
+              placeId: court.placeId,
+              isActive: court.isActive,
+            },
+            place: {
+              id: place.id,
+              name: place.name,
+              address: "Address",
+              city: "City",
+              timeZone: place.timeZone,
+              placeType: place.placeType,
+              isActive: place.isActive,
+              organizationId: place.organizationId,
+            },
+          };
+        })
+        .filter((item) => item !== null),
+    ),
     findByPlayerId: vi.fn(),
     findWithDetailsByPlayerId: vi.fn(),
     findWithDetailsByOrganization: vi.fn(),
@@ -235,6 +368,11 @@ function makeReservationService(overrides?: {
     findRateRulesByAddonIds: vi.fn().mockResolvedValue([]),
   };
 
+  const placeAddonRepository = {
+    findActiveByPlaceId: vi.fn().mockResolvedValue([]),
+    findRateRulesByAddonIds: vi.fn().mockResolvedValue([]),
+  };
+
   const courtBlockRepository = {
     findOverlappingByCourtIds: vi.fn().mockResolvedValue([]),
   };
@@ -251,7 +389,11 @@ function makeReservationService(overrides?: {
 
   const notificationDeliveryService = {
     enqueueOwnerReservationCreated: vi.fn().mockResolvedValue(undefined),
+    enqueueOwnerReservationGroupCreated: vi.fn().mockResolvedValue(undefined),
     enqueueOwnerReservationPaymentMarked: vi.fn().mockResolvedValue(undefined),
+    enqueueOwnerReservationGroupPaymentMarked: vi
+      .fn()
+      .mockResolvedValue(undefined),
     enqueueOwnerReservationCancelled: vi.fn().mockResolvedValue(undefined),
   };
 
@@ -270,6 +412,7 @@ function makeReservationService(overrides?: {
     courtHoursRepository as never,
     courtRateRuleRepository as never,
     courtAddonRepository as never,
+    placeAddonRepository as never,
     courtBlockRepository as never,
     courtPriceOverrideRepository as never,
     transactionManager as never,
@@ -279,8 +422,10 @@ function makeReservationService(overrides?: {
   return {
     service,
     reservationRepository,
+    reservationEventRepository,
     profileRepository,
     placeRepository,
+    notificationDeliveryService,
   };
 }
 
@@ -303,7 +448,17 @@ describe("ReservationService.createReservationGroup", () => {
 
   it("creates grouped reservations in one request", async () => {
     // Arrange
-    const { service, reservationRepository } = makeReservationService();
+    const { service, reservationRepository, notificationDeliveryService } =
+      makeReservationService({
+        place: {
+          id: TEST_IDS.placeId,
+          name: "Test Place",
+          placeType: "RESERVABLE",
+          isActive: true,
+          timeZone: "Asia/Manila",
+          organizationId: "org-1",
+        },
+      });
 
     // Act
     const result = await service.createReservationGroup("user-1", "profile-1", {
@@ -331,6 +486,14 @@ describe("ReservationService.createReservationGroup", () => {
         .mocked(reservationRepository.create)
         .mock.calls.map(([input]) => input.groupId),
     ).toEqual(["group-1", "group-1"]);
+    expect(
+      vi.mocked(
+        notificationDeliveryService.enqueueOwnerReservationGroupCreated,
+      ),
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      vi.mocked(notificationDeliveryService.enqueueOwnerReservationCreated),
+    ).not.toHaveBeenCalled();
   });
 
   it("rejects duplicate court-time-duration items", async () => {
@@ -616,5 +779,158 @@ describe("ReservationService.createReservationGroup", () => {
 
     expect(vi.mocked(profileRepository.findById)).toHaveBeenCalled();
     expect(reservationRepository.createGroup).not.toHaveBeenCalled();
+  });
+});
+
+describe("ReservationService.markPaymentGroup", () => {
+  it("marks all payable group reservations atomically", async () => {
+    // Arrange
+    const {
+      service,
+      reservationRepository,
+      reservationEventRepository,
+      notificationDeliveryService,
+    } = makeReservationService({
+      place: {
+        id: TEST_IDS.placeId,
+        name: "Test Place",
+        placeType: "RESERVABLE",
+        isActive: true,
+        timeZone: "Asia/Manila",
+        organizationId: "org-1",
+      },
+    });
+
+    // Act
+    const result = await service.markPaymentGroup(
+      "user-1",
+      TEST_IDS.profileId,
+      {
+        reservationGroupId: "group-1",
+        termsAccepted: true,
+      },
+    );
+
+    // Assert
+    expect(result.reservationGroupId).toBe("group-1");
+    expect(result.reservations).toHaveLength(2);
+    expect(
+      result.reservations.every(
+        (reservation) => reservation.status === "PAYMENT_MARKED_BY_USER",
+      ),
+    ).toBe(true);
+    expect(vi.mocked(reservationRepository.update)).toHaveBeenCalledTimes(2);
+    expect(vi.mocked(reservationEventRepository.create)).toHaveBeenCalledTimes(
+      2,
+    );
+    expect(
+      vi.mocked(
+        notificationDeliveryService.enqueueOwnerReservationGroupPaymentMarked,
+      ),
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      vi.mocked(
+        notificationDeliveryService.enqueueOwnerReservationPaymentMarked,
+      ),
+    ).not.toHaveBeenCalled();
+  });
+
+  it("fails without partial updates when one group item is not payable-ready", async () => {
+    // Arrange
+    const now = new Date();
+    const { service, reservationRepository } = makeReservationService({
+      groupReservations: [
+        {
+          id: "group-res-1",
+          courtId: TEST_IDS.courtId1,
+          startTime: now,
+          endTime: new Date(now.getTime() + 60 * 60 * 1000),
+          totalPriceCents: 1500,
+          currency: "PHP",
+          playerId: TEST_IDS.profileId,
+          groupId: "group-1",
+          guestProfileId: null,
+          playerNameSnapshot: "Player",
+          playerEmailSnapshot: "player@example.com",
+          playerPhoneSnapshot: "0917",
+          status: "AWAITING_PAYMENT",
+          expiresAt: new Date(now.getTime() + 60 * 60 * 1000),
+          termsAcceptedAt: null,
+          confirmedAt: null,
+          cancelledAt: null,
+          cancellationReason: null,
+          createdAt: now,
+          updatedAt: now,
+        },
+        {
+          id: "group-res-2",
+          courtId: TEST_IDS.courtId2,
+          startTime: now,
+          endTime: new Date(now.getTime() + 60 * 60 * 1000),
+          totalPriceCents: 2500,
+          currency: "PHP",
+          playerId: TEST_IDS.profileId,
+          groupId: "group-1",
+          guestProfileId: null,
+          playerNameSnapshot: "Player",
+          playerEmailSnapshot: "player@example.com",
+          playerPhoneSnapshot: "0917",
+          status: "CREATED",
+          expiresAt: new Date(now.getTime() + 60 * 60 * 1000),
+          termsAcceptedAt: null,
+          confirmedAt: null,
+          cancelledAt: null,
+          cancellationReason: null,
+          createdAt: now,
+          updatedAt: now,
+        },
+      ],
+    });
+
+    // Act + Assert
+    await expect(
+      service.markPaymentGroup("user-1", TEST_IDS.profileId, {
+        reservationGroupId: "group-1",
+        termsAccepted: true,
+      }),
+    ).rejects.toBeInstanceOf(InvalidReservationStatusError);
+    expect(vi.mocked(reservationRepository.update)).not.toHaveBeenCalled();
+  });
+});
+
+describe("ReservationService.getReservationGroupDetail", () => {
+  it("returns grouped reservation detail with status summary", async () => {
+    // Arrange
+    const { service } = makeReservationService();
+
+    // Act
+    const result = await service.getReservationGroupDetail(
+      "user-1",
+      TEST_IDS.profileId,
+      {
+        reservationGroupId: "group-1",
+      },
+    );
+
+    // Assert
+    expect(result.reservationGroup.id).toBe("group-1");
+    expect(result.items).toHaveLength(2);
+    expect(result.statusSummary.totalItems).toBe(2);
+    expect(result.statusSummary.payableItems).toBe(2);
+    expect(result.statusSummary.countsByStatus.AWAITING_PAYMENT).toBe(2);
+  });
+
+  it("rejects when requesting player does not own the reservation group", async () => {
+    // Arrange
+    const { service } = makeReservationService({
+      groupPlayerId: "different-profile",
+    });
+
+    // Act + Assert
+    await expect(
+      service.getReservationGroupDetail("user-1", TEST_IDS.profileId, {
+        reservationGroupId: "group-1",
+      }),
+    ).rejects.toBeInstanceOf(NotReservationOwnerError);
   });
 });

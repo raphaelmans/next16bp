@@ -54,7 +54,10 @@ import {
   useModPlaceAvailability,
   useModPlaceDetail,
 } from "@/features/discovery/hooks";
-import { useMutCreateOpenPlayFromReservation } from "@/features/open-play/hooks";
+import {
+  useMutCreateOpenPlayFromReservation,
+  useMutCreateOpenPlayFromReservationGroup,
+} from "@/features/open-play/hooks";
 import { BookingSummaryCard } from "@/features/reservation/components/booking-summary-card";
 import { OrderSummary } from "@/features/reservation/components/order-summary";
 import { ProfilePreviewCard } from "@/features/reservation/components/profile-preview-card";
@@ -65,11 +68,12 @@ import {
   useMutCreateReservationGroup,
   useQueryProfile,
 } from "@/features/reservation/hooks";
-import { computeReservationGroupTotals } from "@/lib/modules/reservation/shared/domain";
 import {
   clearPendingBooking,
   usePendingBooking,
 } from "@/features/reservation/hooks/use-pending-booking";
+import { isProfileComplete } from "@/lib/modules/profile/shared/domain";
+import { computeReservationGroupTotals } from "@/lib/modules/reservation/shared/domain";
 
 const DEFAULT_DURATION_MINUTES = 60;
 const selectionModeSchema = ["any", "court"] as const;
@@ -317,6 +321,7 @@ export default function PlaceBookingPage({
   const createForAnyCourt = useMutCreateReservationForAnyCourt();
   const createGroup = useMutCreateReservationGroup();
   const createOpenPlay = useMutCreateOpenPlayFromReservation();
+  const createOpenPlayFromGroup = useMutCreateOpenPlayFromReservationGroup();
 
   const availabilityQuery = useModPlaceAvailability({
     place: place ?? undefined,
@@ -367,18 +372,18 @@ export default function PlaceBookingPage({
       const options =
         (
           query?.data as
-          | {
-            options?: Array<{
-              courtId: string;
-              courtLabel: string;
-              startTime: string;
-              endTime: string;
-              totalPriceCents: number;
-              currency?: string | null;
-              status: string;
-            }>;
-          }
-          | undefined
+            | {
+                options?: Array<{
+                  courtId: string;
+                  courtLabel: string;
+                  startTime: string;
+                  endTime: string;
+                  totalPriceCents: number;
+                  currency?: string | null;
+                  status: string;
+                }>;
+              }
+            | undefined
         )?.options ?? [];
       const matchedOption = options.find(
         (option) =>
@@ -415,11 +420,11 @@ export default function PlaceBookingPage({
         multiCourtSummaryItems.flatMap((item) =>
           item.totalPriceCents !== null && item.currency
             ? [
-              {
-                totalPriceCents: item.totalPriceCents,
-                currency: item.currency,
-              },
-            ]
+                {
+                  totalPriceCents: item.totalPriceCents,
+                  currency: item.currency,
+                },
+              ]
             : [],
         ),
       ),
@@ -573,7 +578,8 @@ export default function PlaceBookingPage({
     createForCourt.isPending ||
     createForAnyCourt.isPending ||
     createGroup.isPending ||
-    createOpenPlay.isPending;
+    createOpenPlay.isPending ||
+    createOpenPlayFromGroup.isPending;
 
   const suggestedSplitPerPlayerCents =
     totalPrice > 0
@@ -587,19 +593,12 @@ export default function PlaceBookingPage({
   }, [initialOpenPlayEnabled]);
 
   React.useEffect(() => {
-    if (isMultiCourtBooking && hostAsOpenPlay) {
-      setHostAsOpenPlay(false);
-    }
-  }, [hostAsOpenPlay, isMultiCourtBooking]);
-
-  React.useEffect(() => {
     if (totalPrice > 0 && openPlayJoinPolicy !== "REQUEST") {
       setOpenPlayJoinPolicy("REQUEST");
     }
   }, [openPlayJoinPolicy, totalPrice]);
 
-  const isProfileComplete =
-    !!profile?.displayName && (!!profile?.email || !!profile?.phoneNumber);
+  const profileComplete = isProfileComplete(profile);
 
   const scrollToSection = React.useCallback(
     (ref: React.RefObject<HTMLElement | null>) => {
@@ -648,7 +647,7 @@ export default function PlaceBookingPage({
       }
 
       try {
-        await createGroup.mutateAsync({
+        const groupResult = await createGroup.mutateAsync({
           placeId: resolvedPlaceId,
           items: multiCourtItems.map((item) => ({
             courtId: item.courtId,
@@ -656,7 +655,37 @@ export default function PlaceBookingPage({
             durationMinutes: item.durationMinutes,
           })),
         });
-        router.push(appRoutes.reservations.base);
+
+        if (hostAsOpenPlay && groupResult.reservationGroupId) {
+          try {
+            await createOpenPlayFromGroup.mutateAsync({
+              reservationGroupId: groupResult.reservationGroupId,
+              maxPlayers: Math.max(2, Math.min(32, openPlayMaxPlayers)),
+              joinPolicy: openPlayJoinPolicy,
+              visibility: openPlayVisibility,
+              note:
+                openPlayNote.trim().length > 0
+                  ? openPlayNote.trim()
+                  : undefined,
+              paymentInstructions:
+                openPlayPaymentInstructions.trim().length > 0
+                  ? openPlayPaymentInstructions.trim()
+                  : undefined,
+              paymentLinkUrl:
+                openPlayPaymentLinkUrl.trim().length > 0
+                  ? openPlayPaymentLinkUrl.trim()
+                  : undefined,
+            });
+          } catch (_openPlayError) {
+            toast.error(
+              "Reservation group created. Open Play wasn't created — you can create it later.",
+            );
+          }
+        }
+
+        router.push(
+          appRoutes.reservations.groupDetail(groupResult.reservationGroupId),
+        );
       } catch (_error) {
         // toast handled by mutation hooks
       }
@@ -810,29 +839,29 @@ export default function PlaceBookingPage({
   const courtSummary = isMultiCourtBooking
     ? null
     : {
-      name: courtSummaryName
-        ? `${place.name} · ${courtSummaryName}`
-        : place.name,
-      address: place.address,
-      coverImageUrl: place.coverImageUrl,
-    };
+        name: courtSummaryName
+          ? `${place.name} · ${courtSummaryName}`
+          : place.name,
+        address: place.address,
+        coverImageUrl: place.coverImageUrl,
+      };
 
   const timeSlot = isMultiCourtBooking
     ? {
-      startTime:
-        multiCourtSummaryItems[0]?.startTime ?? new Date().toISOString(),
-      endTime:
-        multiCourtSummaryItems[multiCourtSummaryItems.length - 1]?.endTime ??
-        new Date().toISOString(),
-      priceCents: totalPrice,
-      currency,
-    }
+        startTime:
+          multiCourtSummaryItems[0]?.startTime ?? new Date().toISOString(),
+        endTime:
+          multiCourtSummaryItems[multiCourtSummaryItems.length - 1]?.endTime ??
+          new Date().toISOString(),
+        priceCents: totalPrice,
+        currency,
+      }
     : {
-      startTime: selectedSlot.startTime,
-      endTime: endTime ?? selectedSlot.endTime,
-      priceCents: totalPrice,
-      currency,
-    };
+        startTime: selectedSlot.startTime,
+        endTime: endTime ?? selectedSlot.endTime,
+        priceCents: totalPrice,
+        currency,
+      };
 
   return (
     <Container className="py-6">
@@ -845,7 +874,7 @@ export default function PlaceBookingPage({
         </div>
       </div>
 
-      {!isProfileComplete && (
+      {!profileComplete && (
         <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border border-warning/40 bg-warning/10 px-4 py-3 text-sm">
           <div>
             <p className="font-medium">Almost there!</p>
@@ -914,17 +943,17 @@ export default function PlaceBookingPage({
                         <p className="text-sm mt-1">
                           {item.totalPriceCents !== null && item.currency
                             ? formatCurrency(
-                              item.totalPriceCents,
-                              item.currency,
-                            )
+                                item.totalPriceCents,
+                                item.currency,
+                              )
                             : "Pricing unavailable"}
                         </p>
                       </div>
                     ))}
                   </div>
                   {hasUnavailableMultiCourtItems ||
-                    hasIncompleteMultiCourtPricing ||
-                    hasMixedMultiCourtCurrencies ? (
+                  hasIncompleteMultiCourtPricing ||
+                  hasMixedMultiCourtCurrencies ? (
                     <p className="text-sm text-destructive">
                       One or more selected slots are no longer available. Return
                       to the venue page to adjust your selections.
@@ -992,7 +1021,7 @@ export default function PlaceBookingPage({
               phone: profile?.phoneNumber ?? undefined,
               avatarUrl: profile?.avatarUrl ?? undefined,
             }}
-            isComplete={isProfileComplete}
+            isComplete={profileComplete}
             redirectTo={bookingRedirect}
             onEditClick={() => setShowProfileModal(true)}
           />
@@ -1014,184 +1043,174 @@ export default function PlaceBookingPage({
                 <span>
                   {isMultiCourtBooking
                     ? `${multiCourtSummaryItems.length} courts · ${formatCurrency(
-                      totalPrice,
-                      currency,
-                    )}`
+                        totalPrice,
+                        currency,
+                      )}`
                     : `Duration: ${formatDuration(durationMinutes)} ·${formatCurrency(
-                      totalPrice,
-                      currency,
-                    )}`}
+                        totalPrice,
+                        currency,
+                      )}`}
                 </span>
               </div>
             </CardContent>
           </Card>
 
-          {!isMultiCourtBooking ? (
-            <Card>
-              <CardHeader>
-                <CardTitle>Open Play</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="space-y-0.5">
-                    <div className="text-sm font-medium">Host as Open Play</div>
-                    <div className="text-xs text-muted-foreground">
-                      Create a joinable session for other players after your
-                      reservation is confirmed.
-                    </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Open Play</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="space-y-0.5">
+                  <div className="text-sm font-medium">Host as Open Play</div>
+                  <div className="text-xs text-muted-foreground">
+                    Create a joinable session for other players after your
+                    reservation is confirmed.
                   </div>
-                  <Switch
-                    checked={hostAsOpenPlay}
-                    onCheckedChange={setHostAsOpenPlay}
-                  />
                 </div>
+                <Switch
+                  checked={hostAsOpenPlay}
+                  onCheckedChange={setHostAsOpenPlay}
+                />
+              </div>
 
-                {hostAsOpenPlay ? (
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="openPlayMaxPlayers">Max players</Label>
-                      <Input
-                        id="openPlayMaxPlayers"
-                        type="number"
-                        min={2}
-                        max={32}
-                        value={openPlayMaxPlayers}
-                        onChange={(e) => {
-                          const next = Number.parseInt(e.target.value, 10);
-                          setOpenPlayMaxPlayers(
-                            Number.isFinite(next) ? next : 4,
-                          );
-                        }}
-                      />
+              {isMultiCourtBooking && hostAsOpenPlay ? (
+                <p className="text-xs text-muted-foreground">
+                  Open Play will be created across all courts in your booking.
+                </p>
+              ) : null}
+
+              {hostAsOpenPlay ? (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="openPlayMaxPlayers">Max players</Label>
+                    <Input
+                      id="openPlayMaxPlayers"
+                      type="number"
+                      min={2}
+                      max={32}
+                      value={openPlayMaxPlayers}
+                      onChange={(e) => {
+                        const next = Number.parseInt(e.target.value, 10);
+                        setOpenPlayMaxPlayers(Number.isFinite(next) ? next : 4);
+                      }}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Includes you as the host.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Join policy</Label>
+                    <Select
+                      value={openPlayJoinPolicy}
+                      onValueChange={(value) =>
+                        setOpenPlayJoinPolicy(value as "REQUEST" | "AUTO")
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="REQUEST">
+                          Request (Host approves)
+                        </SelectItem>
+                        <SelectItem value="AUTO" disabled={totalPrice > 0}>
+                          Auto-join (If spots)
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {totalPrice > 0 ? (
                       <p className="text-xs text-muted-foreground">
-                        Includes you as the host.
+                        Paid sessions require host approval.
                       </p>
-                    </div>
+                    ) : null}
+                  </div>
 
-                    <div className="space-y-2">
-                      <Label>Join policy</Label>
-                      <Select
-                        value={openPlayJoinPolicy}
-                        onValueChange={(value) =>
-                          setOpenPlayJoinPolicy(value as "REQUEST" | "AUTO")
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="REQUEST">
-                            Request (Host approves)
-                          </SelectItem>
-                          <SelectItem value="AUTO" disabled={totalPrice > 0}>
-                            Auto-join (If spots)
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                      {totalPrice > 0 ? (
-                        <p className="text-xs text-muted-foreground">
-                          Paid sessions require host approval.
-                        </p>
-                      ) : null}
-                    </div>
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label>Visibility</Label>
+                    <Select
+                      value={openPlayVisibility}
+                      onValueChange={(value) =>
+                        setOpenPlayVisibility(value as "PUBLIC" | "UNLISTED")
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="PUBLIC">Public</SelectItem>
+                        <SelectItem value="UNLISTED">
+                          Unlisted (Link only)
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                    <div className="space-y-2 sm:col-span-2">
-                      <Label>Visibility</Label>
-                      <Select
-                        value={openPlayVisibility}
-                        onValueChange={(value) =>
-                          setOpenPlayVisibility(value as "PUBLIC" | "UNLISTED")
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="PUBLIC">Public</SelectItem>
-                          <SelectItem value="UNLISTED">
-                            Unlisted (Link only)
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label htmlFor="openPlayNote">Note (optional)</Label>
+                    <Input
+                      id="openPlayNote"
+                      value={openPlayNote}
+                      onChange={(e) => setOpenPlayNote(e.target.value)}
+                      placeholder="e.g. Beginner-friendly, bring extra balls"
+                    />
+                  </div>
 
-                    <div className="space-y-2 sm:col-span-2">
-                      <Label htmlFor="openPlayNote">Note (optional)</Label>
-                      <Input
-                        id="openPlayNote"
-                        value={openPlayNote}
-                        onChange={(e) => setOpenPlayNote(e.target.value)}
-                        placeholder="e.g. Beginner-friendly, bring extra balls"
-                      />
-                    </div>
-
-                    <div className="space-y-2 sm:col-span-2">
-                      <Label>Reservation total</Label>
-                      <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
-                        {formatCurrency(totalPrice, currency)}
-                      </div>
-                    </div>
-
-                    <div className="space-y-2 sm:col-span-2">
-                      <Label>Suggested split</Label>
-                      <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
-                        Est.{" "}
-                        {formatCurrency(suggestedSplitPerPlayerCents, currency)}
-                        /player (based on {openPlayMaxPlayers} players)
-                      </div>
-                      {totalPrice > 0 ? (
-                        <p className="text-xs text-muted-foreground">
-                          For paid sessions, use Request so you can confirm
-                          players after payment.
-                        </p>
-                      ) : null}
-                    </div>
-
-                    <div className="space-y-2 sm:col-span-2">
-                      <Label htmlFor="openPlayPaymentInstructions">
-                        Payment instructions (optional)
-                      </Label>
-                      <Input
-                        id="openPlayPaymentInstructions"
-                        value={openPlayPaymentInstructions}
-                        onChange={(e) =>
-                          setOpenPlayPaymentInstructions(e.target.value)
-                        }
-                        placeholder="e.g. GCash 09xx..., send screenshot in chat"
-                      />
-                    </div>
-
-                    <div className="space-y-2 sm:col-span-2">
-                      <Label htmlFor="openPlayPaymentLinkUrl">
-                        Payment link (optional)
-                      </Label>
-                      <Input
-                        id="openPlayPaymentLinkUrl"
-                        type="url"
-                        value={openPlayPaymentLinkUrl}
-                        onChange={(e) =>
-                          setOpenPlayPaymentLinkUrl(e.target.value)
-                        }
-                        placeholder="https://..."
-                      />
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label>Reservation total</Label>
+                    <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
+                      {formatCurrency(totalPrice, currency)}
                     </div>
                   </div>
-                ) : null}
-              </CardContent>
-            </Card>
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>Open Play</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground">
-                  Open Play creation is currently available for single-court
-                  reservations only.
-                </p>
-              </CardContent>
-            </Card>
-          )}
+
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label>Suggested split</Label>
+                    <div className="rounded-md border bg-muted/20 px-3 py-2 text-sm">
+                      Est.{" "}
+                      {formatCurrency(suggestedSplitPerPlayerCents, currency)}
+                      /player (based on {openPlayMaxPlayers} players)
+                    </div>
+                    {totalPrice > 0 ? (
+                      <p className="text-xs text-muted-foreground">
+                        For paid sessions, use Request so you can confirm
+                        players after payment.
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label htmlFor="openPlayPaymentInstructions">
+                      Payment instructions (optional)
+                    </Label>
+                    <Input
+                      id="openPlayPaymentInstructions"
+                      value={openPlayPaymentInstructions}
+                      onChange={(e) =>
+                        setOpenPlayPaymentInstructions(e.target.value)
+                      }
+                      placeholder="e.g. GCash 09xx..., send screenshot in chat"
+                    />
+                  </div>
+
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label htmlFor="openPlayPaymentLinkUrl">
+                      Payment link (optional)
+                    </Label>
+                    <Input
+                      id="openPlayPaymentLinkUrl"
+                      type="url"
+                      value={openPlayPaymentLinkUrl}
+                      onChange={(e) =>
+                        setOpenPlayPaymentLinkUrl(e.target.value)
+                      }
+                      placeholder="https://..."
+                    />
+                  </div>
+                </div>
+              ) : null}
+            </CardContent>
+          </Card>
         </div>
 
         <div>
@@ -1277,7 +1296,7 @@ export default function PlaceBookingPage({
                   className="w-full"
                   onClick={handleConfirm}
                   disabled={
-                    !isProfileComplete ||
+                    !profileComplete ||
                     !termsAccepted ||
                     isSubmitting ||
                     hasInvalidMultiCourtItems ||
@@ -1305,10 +1324,10 @@ export default function PlaceBookingPage({
                 onReviewDetails={() => scrollToSection(detailsSectionRef)}
                 reviewLabel="Review booking details"
                 isSubmitting={isSubmitting}
-                disabled={!isProfileComplete}
+                disabled={!profileComplete}
                 className="sticky top-24"
               />
-              {!isProfileComplete && (
+              {!profileComplete && (
                 <div className="absolute inset-0 top-32 flex flex-col items-center justify-start rounded-xl bg-background/80 backdrop-blur-sm pt-8 px-4 text-center">
                   <p className="text-sm font-medium text-foreground">
                     Set up your profile to confirm

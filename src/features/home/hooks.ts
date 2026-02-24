@@ -1,6 +1,7 @@
 "use client";
 
 import { useFeatureQuery } from "@/common/feature-api-hooks";
+import { isProfileComplete } from "@/lib/modules/profile/shared/domain";
 import { getHomeApi } from "./api.runtime";
 
 const homeApi = getHomeApi();
@@ -31,16 +32,13 @@ export function useQueryHomeData() {
 
   const organization = orgsQuery.data?.[0] ?? null;
 
-  const isProfileComplete = !!(
-    profileQuery.data?.displayName &&
-    (profileQuery.data?.email || profileQuery.data?.phoneNumber)
-  );
+  const profileComplete = isProfileComplete(profileQuery.data);
 
   return {
     profile: profileQuery.data,
     reservations: reservationsQuery.data ?? [],
     organization,
-    isProfileComplete,
+    isProfileComplete: profileComplete,
     isLoading:
       profileQuery.isLoading ||
       reservationsQuery.isLoading ||
