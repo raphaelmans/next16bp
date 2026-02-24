@@ -157,6 +157,11 @@ const OwnerReservationHistoryResponseSchema = z.object({
 
 const UuidSchema = z.string().uuid();
 const StringSchema = z.string();
+const OwnerReservationChatThreadMetasQuerySchema = z.object({
+  reservationIds: z.array(UuidSchema).max(30).optional(),
+  reservationGroupIds: z.array(UuidSchema).max(30).optional(),
+  includeArchived: z.boolean().optional(),
+});
 
 const security = [{ bearerAuth: [] }];
 
@@ -867,6 +872,7 @@ export function createMobileV1OpenApiDocument(args: {
       "/owner/chat/reservations/thread-metas": {
         get: protectedGet({
           operationId: "ownerReservationChatThreadMetas",
+          query: OwnerReservationChatThreadMetasQuerySchema,
         }),
       },
 
