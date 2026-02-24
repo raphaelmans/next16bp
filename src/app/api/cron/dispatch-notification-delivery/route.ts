@@ -817,8 +817,8 @@ export async function GET(request: NextRequest) {
         }
         pushTitle = "Payment needed";
         pushBody = `${parsed.data.placeName} (${parsed.data.itemCount} items)`;
-        pushUrl = appRoutes.reservations.groupPayment(
-          parsed.data.reservationGroupId,
+        pushUrl = appRoutes.reservations.payment(
+          parsed.data.representativeReservationId,
         );
         pushTag = `reservation_group.awaiting_payment:${parsed.data.reservationGroupId}`;
       } else if (job.eventType === "reservation.payment_marked") {
@@ -889,8 +889,8 @@ export async function GET(request: NextRequest) {
         }
         pushTitle = "Reservation group confirmed";
         pushBody = `${parsed.data.placeName} (${parsed.data.itemCount} items)`;
-        pushUrl = appRoutes.reservations.groupDetail(
-          parsed.data.reservationGroupId,
+        pushUrl = appRoutes.reservations.detail(
+          parsed.data.representativeReservationId,
         );
         pushTag = `reservation_group.confirmed:${parsed.data.reservationGroupId}`;
       } else if (job.eventType === "reservation.rejected") {
@@ -925,8 +925,8 @@ export async function GET(request: NextRequest) {
         }
         pushTitle = "Reservation group rejected";
         pushBody = parsed.data.placeName;
-        pushUrl = appRoutes.reservations.groupDetail(
-          parsed.data.reservationGroupId,
+        pushUrl = appRoutes.reservations.detail(
+          parsed.data.representativeReservationId,
         );
         pushTag = `reservation_group.rejected:${parsed.data.reservationGroupId}`;
       } else if (job.eventType === "reservation.cancelled") {

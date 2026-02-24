@@ -21,6 +21,17 @@ export {
   type RemovalFormData,
   removalFormSchema,
 } from "./forms/schemas";
+export { useBookingMachines } from "./hooks/use-booking-machines";
 export { useModMobileWeekPrefetch } from "./hooks/use-mobile-week-prefetch";
 export { useModPlaceDetailAvailabilitySelection } from "./hooks/use-place-detail-availability-selection";
+export type {
+  BookingCartContext,
+  BookingCartEvent,
+  TimeSlotContext,
+  TimeSlotEvent,
+} from "./machines";
+export {
+  bookingCartMachine,
+  timeSlotMachine,
+} from "./machines";
 export { usePlaceDetailUiStore } from "./stores/place-detail-ui-store";

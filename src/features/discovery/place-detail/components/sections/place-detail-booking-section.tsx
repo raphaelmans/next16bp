@@ -38,8 +38,8 @@ import {
   isBookingCartKeyDuplicate,
   validateBookingCartAdd,
 } from "@/features/discovery/place-detail/helpers/booking-cart-rules";
-import { useModPlaceDetailAvailabilitySelection } from "@/features/discovery/place-detail/hooks/use-place-detail-availability-selection";
-import { useBookingCartStore } from "@/features/discovery/place-detail/stores/booking-cart-store";
+import { useBookingMachines } from "@/features/discovery/place-detail/hooks/use-booking-machines";
+import { buildMemoryKey } from "@/features/discovery/place-detail/machines";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 import { OpenPlayVenuePanel } from "@/features/open-play/components/open-play-venue-panel";
 
@@ -90,18 +90,11 @@ export function PlaceDetailBookingSection({
     (s) => s.setMobileSheetExpanded,
   );
 
-  const cartItems = useBookingCartStore((s) => s.items);
-  const addCartItem = useBookingCartStore((s) => s.addItem);
-  const removeCartItem = useBookingCartStore((s) => s.removeItem);
-  const clearCart = useBookingCartStore((s) => s.clearCart);
-  const clearCartForSportChange = useBookingCartStore(
-    (s) => s.clearForSportChange,
-  );
-
   const [primaryView, setPrimaryView] = React.useState<"book" | "openPlay">(
     "book",
   );
 
+  // --- XState machines via unified hook ---
   const {
     selectedDate,
     setSelectedDate,
@@ -123,7 +116,16 @@ export function PlaceDetailBookingSection({
     setAnyViewMode,
     courtsForSport,
     clearSelection,
-  } = useModPlaceDetailAvailabilitySelection({
+    cartItems,
+    addCartItem,
+    removeCartItem,
+    clearCart,
+    clearCartForSportChange,
+    saveSnapshot,
+    restoreSnapshot,
+    notifyCartItemAdded,
+    sendTimeSlot,
+  } = useBookingMachines({
     place,
     isBookable,
     defaultDurationMinutes: DEFAULT_DURATION_MINUTES,
@@ -175,13 +177,13 @@ export function PlaceDetailBookingSection({
     const selectedStartMs = Date.parse(selectedStartTime);
     const nowMs = Date.now();
     if (selectedStartMs <= nowMs) {
-      clearSelection(true);
+      sendTimeSlot({ type: "SLOT_EXPIRED" });
       return;
     }
 
     const timeoutId = window.setTimeout(
       () => {
-        clearSelection(true);
+        sendTimeSlot({ type: "SLOT_EXPIRED" });
       },
       selectedStartMs - nowMs + 250,
     );
@@ -189,7 +191,7 @@ export function PlaceDetailBookingSection({
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [clearSelection, selectedStartTime]);
+  }, [selectedStartTime, sendTimeSlot]);
 
   React.useEffect(() => {
     if (!selectedStartTime) return;
@@ -307,13 +309,28 @@ export function PlaceDetailBookingSection({
       estimatedPriceCents: selectionSummary?.totalCents ?? null,
       currency: selectionSummary?.currency ?? "PHP",
     });
+
+    // Build the memory key and notify the time slot machine
+    const memoryKey = buildMemoryKey(
+      place.id,
+      selectedSportId,
+      getZonedDayKey(
+        selectedDate ?? getZonedToday(placeTimeZone),
+        placeTimeZone,
+      ),
+      selectedCourtId,
+    );
+    notifyCartItemAdded(memoryKey);
   }, [
     addCartItem,
     cartItems,
     courtsForSport,
     durationMinutes,
+    notifyCartItemAdded,
+    place.id,
     placeTimeZone,
     selectedCourtId,
+    selectedDate,
     selectedSportId,
     selectedStartTime,
     selectionMode,
@@ -479,18 +496,12 @@ export function PlaceDetailBookingSection({
     !!selectedCourtId &&
     !!selectedSportId;
 
-  // CTA logic:
-  // - Cart empty + no selection -> "Select a time" (outline)
-  // - Cart empty + has selection -> "Continue to review" (default) — single-court
-  // - Cart has items + has selection -> "Add to booking" button shown separately; CTA stays "Select a time"
-  // - Cart has items + no selection -> "Continue to checkout (N)" if >=1
   const summaryCta = buildBookingSummaryCtaState({
     cartItemCount: cartItems.length,
     hasSelection,
   });
 
   const handleSummaryAction = React.useCallback(() => {
-    // Cart checkout: 1+ items and no current selection
     if (
       canCheckoutBookingCart({
         cartItemCount: cartItems.length,
@@ -609,6 +620,7 @@ export function PlaceDetailBookingSection({
               availabilitySectionRef={availabilitySectionRef}
               onContinue={handleReserve}
               onSelectionSummaryChange={handleSelectionSummaryChange}
+              cartItems={cartItems}
             />
 
             {isAuthenticated &&
@@ -729,6 +741,8 @@ export function PlaceDetailBookingSection({
           canAddToCart={canAddToCart}
           onAddToCartAction={handleAddToCart}
           onRemoveFromCartAction={removeCartItem}
+          onSaveSnapshot={saveSnapshot}
+          onRestoreSnapshot={restoreSnapshot}
         />
       ) : null}
     </>

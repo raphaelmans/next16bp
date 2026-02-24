@@ -109,10 +109,6 @@ export const appRoutes = {
     detail: (reservationId: string) => `/reservations/${reservationId}`,
     payment: (reservationId: string) =>
       `/reservations/${reservationId}/payment`,
-    groupDetail: (reservationGroupId: string) =>
-      `/reservations/group/${reservationGroupId}`,
-    groupPayment: (reservationGroupId: string) =>
-      `/reservations/group/${reservationGroupId}/payment`,
   },
   openPlay: {
     base: "/open-play",

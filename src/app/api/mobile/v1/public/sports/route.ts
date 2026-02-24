@@ -3,9 +3,7 @@ import { makeSportService } from "@/lib/modules/sport/factories/sport.factory";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { getRequestId } from "@/lib/shared/infra/http/request-id";
-import type {
-  SportRecord,
-} from "@/lib/shared/infra/db/schema";
+import type { SportRecord } from "@/lib/shared/infra/db/schema";
 import type {
   ApiErrorResponse,
   ApiResponse,

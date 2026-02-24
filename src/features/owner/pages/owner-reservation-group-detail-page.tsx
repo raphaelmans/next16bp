@@ -291,7 +291,11 @@ export default function OwnerReservationGroupDetailPage({
       <RejectModal
         open={rejectOpen}
         onOpenChange={setRejectOpen}
-        title={rejectMode === "cancel" ? "Cancel Reservation Group" : "Reject Reservation Group"}
+        title={
+          rejectMode === "cancel"
+            ? "Cancel Reservation Group"
+            : "Reject Reservation Group"
+        }
         submitLabel={rejectMode === "cancel" ? "Cancel Group" : "Reject Group"}
         onReject={handleRejectSubmit}
         isLoading={rejectMutation.isPending}

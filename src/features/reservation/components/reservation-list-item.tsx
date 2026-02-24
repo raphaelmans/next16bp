@@ -28,21 +28,16 @@ interface ReservationListItemProps {
 
 export function ReservationListItem({ reservation }: ReservationListItemProps) {
   const { court, timeSlot, status, id } = reservation;
-  const reservationGroupId = reservation.reservationGroupId ?? null;
   const imageUrl = court.coverImageUrl?.trim();
   const canPay = status === "AWAITING_PAYMENT";
-  const hasOpenPlay = Boolean(reservation.openPlayId);
-  const canCancel = [
-    "CREATED",
-    "AWAITING_PAYMENT",
-    "PAYMENT_MARKED_BY_USER",
-  ].includes(status);
-  const detailHref = reservationGroupId
-    ? appRoutes.reservations.groupDetail(reservationGroupId)
-    : appRoutes.reservations.detail(id);
-  const paymentHref = reservationGroupId
-    ? appRoutes.reservations.groupPayment(reservationGroupId)
-    : appRoutes.reservations.payment(id);
+  const isGroup =
+    reservation.isGroupPrimary && (reservation.groupItemCount ?? 0) > 1;
+  const hasOpenPlay = !isGroup && Boolean(reservation.openPlayId);
+  const canCancel =
+    !isGroup &&
+    ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"].includes(status);
+  const detailHref = appRoutes.reservations.detail(id);
+  const paymentHref = appRoutes.reservations.payment(id);
 
   return (
     <Card className={cn("p-4", status === "EXPIRED" && "opacity-60")}>
@@ -75,6 +70,11 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
+              {isGroup ? (
+                <Badge variant="secondary" className="text-[11px]">
+                  {reservation.groupItemCount} courts
+                </Badge>
+              ) : null}
               {hasOpenPlay ? (
                 <Badge variant="secondary" className="text-[11px]">
                   Open Play
@@ -102,26 +102,27 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
           <Button variant="outline" size="sm" asChild>
             <Link href={detailHref}>View</Link>
           </Button>
-          {hasOpenPlay ? (
-            <Button
-              variant="outline"
-              size="sm"
-              asChild
-              disabled={!reservation.openPlayId}
-            >
-              <Link
-                href={appRoutes.openPlay.detail(reservation.openPlayId ?? "")}
+          {!isGroup &&
+            (hasOpenPlay ? (
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                disabled={!reservation.openPlayId}
               >
-                Open Play
-              </Link>
-            </Button>
-          ) : (
-            <Button variant="outline" size="sm" asChild>
-              <Link href={`/reservations/${id}?openPlay=1`}>
-                Set up Open Play
-              </Link>
-            </Button>
-          )}
+                <Link
+                  href={appRoutes.openPlay.detail(reservation.openPlayId ?? "")}
+                >
+                  Open Play
+                </Link>
+              </Button>
+            ) : (
+              <Button variant="outline" size="sm" asChild>
+                <Link href={`/reservations/${id}?openPlay=1`}>
+                  Set up Open Play
+                </Link>
+              </Button>
+            ))}
           {canPay && (
             <Button size="sm" asChild>
               <Link href={paymentHref}>Pay Now</Link>
@@ -164,25 +165,26 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
           <Button variant="outline" size="sm" className="flex-1" asChild>
             <Link href={detailHref}>View Details</Link>
           </Button>
-          {hasOpenPlay ? (
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex-1"
-              asChild
-              disabled={!reservation.openPlayId}
-            >
-              <Link
-                href={appRoutes.openPlay.detail(reservation.openPlayId ?? "")}
+          {!isGroup &&
+            (hasOpenPlay ? (
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1"
+                asChild
+                disabled={!reservation.openPlayId}
               >
-                Open Play
-              </Link>
-            </Button>
-          ) : (
-            <Button variant="outline" size="sm" className="flex-1" asChild>
-              <Link href={`/reservations/${id}?openPlay=1`}>Open Play</Link>
-            </Button>
-          )}
+                <Link
+                  href={appRoutes.openPlay.detail(reservation.openPlayId ?? "")}
+                >
+                  Open Play
+                </Link>
+              </Button>
+            ) : (
+              <Button variant="outline" size="sm" className="flex-1" asChild>
+                <Link href={`/reservations/${id}?openPlay=1`}>Open Play</Link>
+              </Button>
+            ))}
           {canPay && (
             <Button size="sm" className="flex-1" asChild>
               <Link href={paymentHref}>Pay Now</Link>

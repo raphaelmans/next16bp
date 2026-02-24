@@ -6,9 +6,7 @@ import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { getCsvParam, parseSearchParams } from "@/lib/shared/infra/http/parse";
 import { getRequestId } from "@/lib/shared/infra/http/request-id";
 import { validate } from "@/lib/shared/infra/http/validate";
-import type {
-  PlaceCardMediaItem,
-} from "@/lib/modules/place/repositories/place.repository";
+import type { PlaceCardMediaItem } from "@/lib/modules/place/repositories/place.repository";
 import type {
   ApiErrorResponse,
   ApiResponse,
@@ -36,7 +34,9 @@ export async function GET(req: Request) {
     const service = makePlaceDiscoveryService();
     const result = await service.listPlaceCardMediaByIds(input.placeIds);
 
-    return NextResponse.json<ApiResponse<PlaceCardMediaItem[]>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<PlaceCardMediaItem[]>>(
+      wrapResponse(result),
+    );
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

@@ -10,9 +10,7 @@ import {
 } from "@/lib/shared/infra/http/parse";
 import { getRequestId } from "@/lib/shared/infra/http/request-id";
 import { validate } from "@/lib/shared/infra/http/validate";
-import type {
-  PlaceCardMetaItem,
-} from "@/lib/modules/place/repositories/place.repository";
+import type { PlaceCardMetaItem } from "@/lib/modules/place/repositories/place.repository";
 import type {
   ApiErrorResponse,
   ApiResponse,
@@ -44,7 +42,9 @@ export async function GET(req: Request) {
       input.sportId,
     );
 
-    return NextResponse.json<ApiResponse<PlaceCardMetaItem[]>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<PlaceCardMetaItem[]>>(
+      wrapResponse(result),
+    );
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

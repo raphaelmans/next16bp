@@ -28,6 +28,14 @@ export function buildBookingSummaryCtaState({
     };
   }
 
+  if (hasSelection && cartItemCount > 0) {
+    return {
+      variant: "default",
+      label: `Continue to checkout (${cartItemCount})`,
+      shouldProceed: true,
+    };
+  }
+
   if (hasSelection && cartItemCount === 0) {
     return {
       variant: "default",

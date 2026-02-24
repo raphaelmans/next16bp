@@ -240,6 +240,8 @@ type ReservationListItemData = {
   amountCents: number | null;
   currency: string | null;
   openPlayId: string | null;
+  isGroupPrimary?: boolean;
+  groupItemCount?: number;
 };
 
 interface UseMyReservationsOptions {
@@ -307,6 +309,75 @@ const sortByStartTimeDesc = (
   return bTime - aTime;
 };
 
+function deriveGroupStatus(
+  items: ReservationListItemData[],
+): ReservationStatus {
+  const statuses = new Set(items.map((item) => item.status));
+  if (statuses.has("PAYMENT_MARKED_BY_USER")) return "PAYMENT_MARKED_BY_USER";
+  if (statuses.has("CREATED")) return "CREATED";
+  if (statuses.has("AWAITING_PAYMENT")) return "AWAITING_PAYMENT";
+  if (statuses.has("CONFIRMED")) return "CONFIRMED";
+  if (statuses.has("EXPIRED")) return "EXPIRED";
+  return "CANCELLED";
+}
+
+function aggregateGroupedItems(
+  items: ReservationListItemData[],
+): ReservationListItemData[] {
+  const grouped = new Map<string, ReservationListItemData[]>();
+  const singles: ReservationListItemData[] = [];
+
+  for (const item of items) {
+    if (!item.reservationGroupId) {
+      singles.push(item);
+      continue;
+    }
+    const existing = grouped.get(item.reservationGroupId) ?? [];
+    existing.push(item);
+    grouped.set(item.reservationGroupId, existing);
+  }
+
+  const groupRows: ReservationListItemData[] = [];
+
+  for (const [reservationGroupId, groupItems] of grouped.entries()) {
+    const sortedItems = [...groupItems].sort((a, b) => {
+      const aStart = a.slotStartTime ? new Date(a.slotStartTime).getTime() : 0;
+      const bStart = b.slotStartTime ? new Date(b.slotStartTime).getTime() : 0;
+      return aStart - bStart;
+    });
+    const primary = sortedItems[0];
+    const endItem = sortedItems[sortedItems.length - 1] ?? primary;
+    const totalAmountCents = sortedItems.reduce(
+      (sum, item) => sum + (item.amountCents ?? 0),
+      0,
+    );
+    const expiresAtCandidates = sortedItems
+      .map((item) => item.expiresAt)
+      .filter((value): value is string => Boolean(value))
+      .sort();
+
+    const placeName = primary.courtName.split(" - ")[0];
+
+    groupRows.push({
+      ...primary,
+      reservationGroupId,
+      isGroupPrimary: true,
+      groupItemCount: sortedItems.length,
+      courtName:
+        sortedItems.length > 1
+          ? `${placeName} - ${sortedItems.length} courts`
+          : primary.courtName,
+      status: deriveGroupStatus(sortedItems),
+      amountCents: totalAmountCents,
+      slotStartTime: primary.slotStartTime,
+      slotEndTime: endItem.slotEndTime,
+      expiresAt: expiresAtCandidates[0] ?? null,
+    });
+  }
+
+  return [...singles, ...groupRows];
+}
+
 const getStatusFilter = (tab: ReservationListView) => {
   if (tab === "upcoming") return "CONFIRMED";
   if (tab === "past") return "CONFIRMED";
@@ -351,8 +422,12 @@ export function useModMyReservations(options: UseMyReservationsOptions = {}) {
       })
     : null;
 
-  const sortedData = filteredData
-    ? [...filteredData].sort(
+  const aggregatedData = filteredData
+    ? aggregateGroupedItems(filteredData)
+    : null;
+
+  const sortedData = aggregatedData
+    ? [...aggregatedData].sort(
         tab === "upcoming" ? sortByStartTimeAsc : sortByStartTimeDesc,
       )
     : null;
@@ -388,6 +463,8 @@ export function useModMyReservations(options: UseMyReservationsOptions = {}) {
               currency,
             },
             openPlayId: item.openPlayId,
+            isGroupPrimary: item.isGroupPrimary,
+            groupItemCount: item.groupItemCount,
           };
         }),
         total: sortedData.length,
@@ -449,17 +526,21 @@ export function useQueryReservationCounts() {
 
   const now = new Date();
 
-  const pendingCount = (allQuery.data ?? []).filter((item) =>
+  const allAggregated = aggregateGroupedItems(allQuery.data ?? []);
+  const confirmedAggregated = aggregateGroupedItems(confirmedQuery.data ?? []);
+  const cancelledAggregated = aggregateGroupedItems(cancelledQuery.data ?? []);
+  const expiredAggregated = aggregateGroupedItems(expiredQuery.data ?? []);
+
+  const pendingCount = allAggregated.filter((item) =>
     isPendingReservation(item),
   ).length;
-  const upcomingCount = (confirmedQuery.data ?? []).filter((item) =>
+  const upcomingCount = confirmedAggregated.filter((item) =>
     isUpcomingReservation(item, now),
   ).length;
-  const pastCount = (confirmedQuery.data ?? []).filter((item) =>
+  const pastCount = confirmedAggregated.filter((item) =>
     isPastReservation(item, now),
   ).length;
-  const cancelledCount =
-    (cancelledQuery.data?.length ?? 0) + (expiredQuery.data?.length ?? 0);
+  const cancelledCount = cancelledAggregated.length + expiredAggregated.length;
 
   return {
     data: {
@@ -505,6 +586,8 @@ export interface ReservationListItem {
     currency: string;
   };
   openPlayId?: string | null;
+  isGroupPrimary?: boolean;
+  groupItemCount?: number;
 }
 
 // ============================================================================

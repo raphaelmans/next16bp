@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { getZonedDayKey } from "@/common/time-zone";
 import type { SelectedAddon } from "@/features/court-addons/schemas";
 import { parseDayKeyToDate } from "@/features/discovery/helpers";
 import type { PlaceDetail } from "@/features/discovery/hooks";
-import { usePlaceDetailUrlState } from "../state/place-detail-url-state";
+import { useBookingSelectionStore } from "../stores/booking-selection-store";
 
 function encodeAddonToUrlItem(addon: SelectedAddon): string {
   return addon.quantity === 1
@@ -34,31 +34,63 @@ export function useModPlaceDetailAvailabilitySelection({
   isBookable,
   defaultDurationMinutes = 60,
 }: UsePlaceDetailAvailabilitySelectionOptions) {
-  const [urlState, setUrlState] = usePlaceDetailUrlState();
+  const store = useBookingSelectionStore;
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";
 
+  // --- Rehydrate persisted store once on mount ---
+  const hydratedRef = useRef(false);
+  useEffect(() => {
+    if (hydratedRef.current) return;
+    hydratedRef.current = true;
+    store.persist.rehydrate();
+  }, [store]);
+
+  // --- Reset store if persisted placeId doesn't match current place ---
+  useEffect(() => {
+    if (!place) return;
+    const persisted = store.getState();
+    if (persisted.placeId && persisted.placeId !== place.id) {
+      store.getState().reset();
+    }
+    if (store.getState().placeId !== place.id) {
+      store.getState().setPlaceId(place.id);
+    }
+  }, [place, store]);
+
+  // --- Read state via selectors ---
+  const storeDate = useBookingSelectionStore((s) => s.date);
+  const storeDuration = useBookingSelectionStore((s) => s.duration);
+  const storeSportId = useBookingSelectionStore((s) => s.sportId);
+  const storeMode = useBookingSelectionStore((s) => s.mode);
+  const storeCourtId = useBookingSelectionStore((s) => s.courtId);
+  const storeAddonIds = useBookingSelectionStore((s) => s.addonIds);
+  const storeStartTime = useBookingSelectionStore((s) => s.startTime);
+  const storeCourtView = useBookingSelectionStore((s) => s.courtView);
+  const storeAnyView = useBookingSelectionStore((s) => s.anyView);
+
+  // --- Derived values (same API as before) ---
   const selectedDate = useMemo(() => {
-    if (!urlState.date) return undefined;
-    return parseDayKeyToDate(urlState.date, placeTimeZone);
-  }, [placeTimeZone, urlState.date]);
+    if (!storeDate) return undefined;
+    return parseDayKeyToDate(storeDate, placeTimeZone);
+  }, [placeTimeZone, storeDate]);
 
   const durationMinutes =
-    typeof urlState.duration === "number" &&
-    urlState.duration > 0 &&
-    urlState.duration % 60 === 0
-      ? urlState.duration
+    typeof storeDuration === "number" &&
+    storeDuration > 0 &&
+    storeDuration % 60 === 0
+      ? storeDuration
       : defaultDurationMinutes;
 
-  const selectedSportId = urlState.sportId ?? undefined;
-  const selectionMode = urlState.mode ?? "court";
-  const selectedCourtId = urlState.courtId ?? undefined;
+  const selectedSportId = storeSportId ?? undefined;
+  const selectionMode = storeMode ?? "court";
+  const selectedCourtId = storeCourtId ?? undefined;
   const selectedAddons: SelectedAddon[] = useMemo(
-    () => (urlState.addonIds ?? []).map(decodeAddonFromUrlItem),
-    [urlState.addonIds],
+    () => (storeAddonIds ?? []).map(decodeAddonFromUrlItem),
+    [storeAddonIds],
   );
-  const selectedStartTime = urlState.startTime ?? undefined;
-  const courtViewMode = urlState.courtView ?? "week";
-  const anyViewMode = urlState.anyView ?? "week";
+  const selectedStartTime = storeStartTime ?? undefined;
+  const courtViewMode = storeCourtView ?? "week";
+  const anyViewMode = storeAnyView ?? "week";
 
   const courtsForSport = useMemo(() => {
     if (!place || !selectedSportId) return [];
@@ -67,97 +99,97 @@ export function useModPlaceDetailAvailabilitySelection({
       .filter((court) => court.isActive);
   }, [place, selectedSportId]);
 
+  // --- Setters (same callback API as before) ---
   const setSelectedDate = useCallback(
     (date: Date | undefined) => {
-      void setUrlState({
-        date: date ? getZonedDayKey(date, placeTimeZone) : null,
-      });
+      store
+        .getState()
+        .setDate(date ? getZonedDayKey(date, placeTimeZone) : null);
     },
-    [placeTimeZone, setUrlState],
+    [placeTimeZone, store],
   );
 
   const setDurationMinutes = useCallback(
     (minutes: number) => {
-      void setUrlState({ duration: minutes });
+      store.getState().setDuration(minutes);
     },
-    [setUrlState],
+    [store],
   );
 
   const setSelectedSportId = useCallback(
     (sportId: string | undefined) => {
-      void setUrlState({ sportId: sportId ?? null });
+      store.getState().setSportId(sportId ?? null);
     },
-    [setUrlState],
+    [store],
   );
 
   const setSelectionMode = useCallback(
     (mode: "any" | "court") => {
-      void setUrlState({ mode });
+      store.getState().setMode(mode);
     },
-    [setUrlState],
+    [store],
   );
 
   const setSelectedCourtId = useCallback(
     (courtId: string | undefined) => {
-      void setUrlState({ courtId: courtId ?? null });
+      store.getState().setCourtId(courtId ?? null);
     },
-    [setUrlState],
+    [store],
   );
 
   const setSelectedStartTime = useCallback(
     (startTime: string | undefined) => {
-      void setUrlState({ startTime: startTime ?? null });
+      store.getState().setStartTime(startTime ?? null);
     },
-    [setUrlState],
+    [store],
   );
 
   const setSelectedAddons = useCallback(
     (addons: SelectedAddon[]) => {
       const encoded = addons.map(encodeAddonToUrlItem);
-      void setUrlState({ addonIds: encoded.length > 0 ? encoded : null });
+      store.getState().setAddonIds(encoded.length > 0 ? encoded : []);
     },
-    [setUrlState],
+    [store],
   );
 
   const setCourtViewMode = useCallback(
     (mode: "week" | "day") => {
-      void setUrlState({ courtView: mode });
+      store.getState().setCourtView(mode);
     },
-    [setUrlState],
+    [store],
   );
 
   const setAnyViewMode = useCallback(
     (mode: "week" | "day") => {
-      void setUrlState({ anyView: mode });
+      store.getState().setAnyView(mode);
     },
-    [setUrlState],
+    [store],
   );
 
   const clearSelection = useCallback(
     (resetDuration = false) => {
-      void setUrlState({
-        startTime: null,
-        duration: resetDuration ? defaultDurationMinutes : durationMinutes,
-      });
+      store.getState().clearSelection(resetDuration, defaultDurationMinutes);
     },
-    [defaultDurationMinutes, durationMinutes, setUrlState],
+    [defaultDurationMinutes, store],
   );
 
+  // --- Auto-select first sport ---
   useEffect(() => {
     if (!place || !isBookable) return;
     if (!selectedSportId) {
-      void setUrlState({ sportId: place.sports[0]?.id ?? null });
+      store.getState().setSportId(place.sports[0]?.id ?? null);
     }
-  }, [isBookable, place, selectedSportId, setUrlState]);
+  }, [isBookable, place, selectedSportId, store]);
 
+  // --- Auto-select first court ---
   useEffect(() => {
     if (!isBookable) return;
     if (selectionMode !== "court") return;
     if (selectedCourtId) return;
     if (courtsForSport[0]?.id) {
-      void setUrlState({ courtId: courtsForSport[0].id });
+      store.getState().setCourtId(courtsForSport[0].id);
     }
-  }, [courtsForSport, isBookable, selectedCourtId, selectionMode, setUrlState]);
+  }, [courtsForSport, isBookable, selectedCourtId, selectionMode, store]);
 
   return {
     selectedDate,

@@ -26,7 +26,10 @@ export const dynamic = "force-dynamic";
 type Params = Promise<{ organizationId: string }>;
 
 type ListMyPlacesMobileResponse = Array<
-  Omit<PlaceRecord & { verification: PlaceVerificationRecord | null }, "country" | "timeZone">
+  Omit<
+    PlaceRecord & { verification: PlaceVerificationRecord | null },
+    "country" | "timeZone"
+  >
 >;
 
 function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
@@ -79,7 +82,9 @@ export async function GET(req: Request, context: { params: Params }) {
     const places = await service.listMyPlaces(session.userId, input);
     const redactedPlaces = places.map((place) => redactPlaceLocale(place));
 
-    return NextResponse.json<ApiResponse<ListMyPlacesMobileResponse>>(wrapResponse(redactedPlaces));
+    return NextResponse.json<ApiResponse<ListMyPlacesMobileResponse>>(
+      wrapResponse(redactedPlaces),
+    );
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

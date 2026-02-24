@@ -41,9 +41,9 @@ describe("buildBookingSummaryCtaState", () => {
     {
       input: { cartItemCount: 2, hasSelection: true },
       expected: {
-        variant: "outline",
-        label: "Select a time",
-        shouldProceed: false,
+        variant: "default",
+        label: "Continue to checkout (2)",
+        shouldProceed: true,
       },
     },
   ])("returns expected CTA for $input", ({ input, expected }) => {

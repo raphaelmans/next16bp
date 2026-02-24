@@ -12,9 +12,7 @@ import {
 } from "@/lib/shared/infra/http/parse";
 import { getRequestId } from "@/lib/shared/infra/http/request-id";
 import { validate } from "@/lib/shared/infra/http/validate";
-import type {
-  PlaceSummaryItem,
-} from "@/lib/modules/place/repositories/place.repository";
+import type { PlaceSummaryItem } from "@/lib/modules/place/repositories/place.repository";
 import type {
   ApiErrorResponse,
   ApiResponse,
@@ -52,7 +50,9 @@ export async function GET(req: Request) {
     const service = makePlaceDiscoveryService();
     const result = await service.listPlaceSummaries(input);
 
-    return NextResponse.json<ApiResponse<{ items: PlaceSummaryItem[]; total: number }>>(wrapResponse(result));
+    return NextResponse.json<
+      ApiResponse<{ items: PlaceSummaryItem[]; total: number }>
+    >(wrapResponse(result));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

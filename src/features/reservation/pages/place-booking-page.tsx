@@ -683,9 +683,7 @@ export default function PlaceBookingPage({
           }
         }
 
-        router.push(
-          appRoutes.reservations.groupDetail(groupResult.reservationGroupId),
-        );
+        router.push(appRoutes.reservations.detail(groupResult.items[0].id));
       } catch (_error) {
         // toast handled by mutation hooks
       }

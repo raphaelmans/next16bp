@@ -23,14 +23,8 @@ import {
 } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
 import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
-import { buildCourtSelectionMemoryKey } from "@/features/discovery/place-detail/helpers/court-selection-memory";
 import { useModMobileWeekPrefetch } from "@/features/discovery/place-detail/hooks/use-mobile-week-prefetch";
-import {
-  type BookingCartItem,
-  useBookingCartStore,
-} from "@/features/discovery/place-detail/stores/booking-cart-store";
-import { useBookingSelectionStore } from "@/features/discovery/place-detail/stores/booking-selection-store";
-import { useCourtSelectionMemoryStore } from "@/features/discovery/place-detail/stores/court-selection-memory-store";
+import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 
 const TIMELINE_SLOT_DURATION = 60;
@@ -70,6 +64,8 @@ type PlaceDetailBookingMobileSectionProps = {
   canAddToCart: boolean;
   onAddToCartAction: () => void;
   onRemoveFromCartAction: (key: string) => void;
+  onSaveSnapshot: () => void;
+  onRestoreSnapshot: () => void;
 };
 
 export function PlaceDetailBookingMobileSection({
@@ -100,13 +96,11 @@ export function PlaceDetailBookingMobileSection({
   canAddToCart,
   onAddToCartAction,
   onRemoveFromCartAction,
+  onSaveSnapshot,
+  onRestoreSnapshot,
 }: PlaceDetailBookingMobileSectionProps) {
   const utils = useModDiscoveryPrefetchPort();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const rememberCourtSelection = useCourtSelectionMemoryStore(
-    (s) => s.rememberSelection,
-  );
-  const getCourtSelection = useCourtSelectionMemoryStore((s) => s.getSelection);
   const mobileSheetExpanded = usePlaceDetailUiStore(
     (s) => s.mobileSheetExpanded,
   );
@@ -133,16 +127,6 @@ export function PlaceDetailBookingMobileSection({
   const selectedDayKey = React.useMemo(
     () => getZonedDayKey(selectedDate ?? today, placeTimeZone),
     [placeTimeZone, selectedDate, today],
-  );
-  const selectedCourtMemoryKey = React.useMemo(
-    () =>
-      buildCourtSelectionMemoryKey({
-        placeId: place.id,
-        sportId: selectedSportId,
-        dayKey: selectedDayKey,
-        courtId: selectedCourtId,
-      }),
-    [place.id, selectedCourtId, selectedDayKey, selectedSportId],
   );
   const weekStartDayKey = React.useMemo(
     () => getWeekStartDayKey(selectedDayKey, placeTimeZone),
@@ -364,19 +348,8 @@ export function PlaceDetailBookingMobileSection({
     (range: { startTime: string; durationMinutes: number }) => {
       setSelectedStartTime(range.startTime);
       setDurationMinutes(range.durationMinutes);
-      if (selectedCourtMemoryKey && range.startTime) {
-        rememberCourtSelection(selectedCourtMemoryKey, {
-          startTime: range.startTime,
-          durationMinutes: range.durationMinutes,
-        });
-      }
     },
-    [
-      rememberCourtSelection,
-      selectedCourtMemoryKey,
-      setDurationMinutes,
-      setSelectedStartTime,
-    ],
+    [setDurationMinutes, setSelectedStartTime],
   );
 
   const handleAnyRangeChange = React.useCallback(
@@ -414,88 +387,33 @@ export function PlaceDetailBookingMobileSection({
   const handleMobileSportChange = React.useCallback(
     (sportId: string) => {
       setSelectedSportId(sportId);
-      setSelectionMode("any");
-      setSelectedCourtId(undefined);
-      clearSelection(true);
     },
-    [clearSelection, setSelectedCourtId, setSelectedSportId, setSelectionMode],
+    [setSelectedSportId],
   );
 
+  // Snapshot save/restore uses the machine bridge from props
   const handleAddToCartWithSnapshot = React.useCallback(() => {
-    useBookingSelectionStore.getState().saveLastAdded();
+    onSaveSnapshot();
     onAddToCartAction();
-  }, [onAddToCartAction]);
+  }, [onAddToCartAction, onSaveSnapshot]);
 
   const handleBackToSelect = React.useCallback(() => {
-    useBookingSelectionStore.getState().restoreLastAdded();
-  }, []);
+    onRestoreSnapshot();
+  }, [onRestoreSnapshot]);
 
+  // Court change: machine handles memory save/restore automatically
   const handleMobileCourtChange = React.useCallback(
     (courtId: string | undefined) => {
-      const previousCourtMemoryKey = buildCourtSelectionMemoryKey({
-        placeId: place.id,
-        sportId: selectedSportId,
-        dayKey: selectedDayKey,
-        courtId: selectedCourtId,
-      });
-      if (previousCourtMemoryKey && selectedStartTime) {
-        const isInCart = useBookingCartStore
-          .getState()
-          .items.some(
-            (item) =>
-              item.courtId === selectedCourtId &&
-              item.startTime === selectedStartTime,
-          );
-        if (!isInCart) {
-          rememberCourtSelection(previousCourtMemoryKey, {
-            startTime: selectedStartTime,
-            durationMinutes,
-          });
-        }
-      }
-
       if (courtId) {
         setSelectionMode("court");
         setSelectedCourtId(courtId);
-
-        const nextCourtMemoryKey = buildCourtSelectionMemoryKey({
-          placeId: place.id,
-          sportId: selectedSportId,
-          dayKey: selectedDayKey,
-          courtId,
-        });
-        const rememberedSelection = nextCourtMemoryKey
-          ? getCourtSelection(nextCourtMemoryKey)
-          : undefined;
-
-        if (!rememberedSelection) {
-          clearSelection(true);
-          return;
-        }
-
-        setSelectedStartTime(rememberedSelection.startTime);
-        setDurationMinutes(rememberedSelection.durationMinutes);
       } else {
         setSelectionMode("any");
         setSelectedCourtId(undefined);
         clearSelection(true);
       }
     },
-    [
-      clearSelection,
-      durationMinutes,
-      getCourtSelection,
-      place.id,
-      rememberCourtSelection,
-      selectedCourtId,
-      selectedDayKey,
-      selectedSportId,
-      selectedStartTime,
-      setDurationMinutes,
-      setSelectedCourtId,
-      setSelectedStartTime,
-      setSelectionMode,
-    ],
+    [clearSelection, setSelectedCourtId, setSelectionMode],
   );
 
   return (
