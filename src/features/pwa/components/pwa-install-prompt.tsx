@@ -95,7 +95,7 @@ export function PwaInstallPrompt() {
                     onDismiss={handleDismiss}
                   />
                 ) : (
-                  <div className="mt-2.5 flex items-center gap-2">
+                  <div className="mt-2.5 flex items-center justify-end gap-2">
                     <Button
                       size="sm"
                       onClick={handleInstall}
@@ -133,7 +133,7 @@ function IOSContent({
 }) {
   if (!showSteps) {
     return (
-      <div className="mt-2.5 flex items-center gap-2">
+      <div className="mt-2.5 flex items-center justify-end gap-2">
         <Button
           size="sm"
           onClick={onShowSteps}
