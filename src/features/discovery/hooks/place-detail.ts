@@ -541,6 +541,7 @@ export function useModPlaceAvailability({
         safeDuration > 0 &&
         mode === "court" &&
         !!place?.id,
+      placeholderData: (prev) => prev,
     },
   );
 
@@ -563,6 +564,7 @@ export function useModPlaceAvailability({
         !!date &&
         safeDuration > 0 &&
         mode === "any",
+      placeholderData: (prev) => prev,
     },
   );
 

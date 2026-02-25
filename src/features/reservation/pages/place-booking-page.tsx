@@ -1314,6 +1314,7 @@ export default function PlaceBookingPage({
                 timeSlot={timeSlot}
                 basePriceCents={basePriceCents}
                 addonPriceCents={addonPriceCents}
+                addons={pricingBreakdown?.addons}
                 pricingWarnings={pricingWarnings}
                 timeZone={placeTimeZone}
                 termsAccepted={termsAccepted}
