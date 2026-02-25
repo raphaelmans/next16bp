@@ -217,10 +217,11 @@ export class NotificationDeliveryService {
   ) {}
 
   private publishDispatchKickAsync(jobCount: number) {
-    if (!this.dispatchTriggerQueue || jobCount <= 0) return;
+    const dispatchTriggerQueue = this.dispatchTriggerQueue;
+    if (!dispatchTriggerQueue || jobCount <= 0) return;
 
     setTimeout(() => {
-      void this.dispatchTriggerQueue
+      void dispatchTriggerQueue
         .publishDispatchKick({
           reason: "jobs_enqueued",
           triggeredAtIso: new Date().toISOString(),

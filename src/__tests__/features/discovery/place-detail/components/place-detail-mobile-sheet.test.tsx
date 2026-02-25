@@ -53,6 +53,7 @@ function makeProps(overrides?: Partial<MobileSheetProps>): MobileSheetProps {
     onClearSelection: vi.fn(),
     onReserve: vi.fn(),
     onContinueFromCart: vi.fn(),
+    onBackToSelect: vi.fn(),
     hasSelection: true,
     selectionSummary: {
       startTime: "2026-02-25T01:00:00.000Z",

@@ -148,6 +148,7 @@ function makeReservationService(overrides?: {
       cancelledAt: null,
       cancellationReason: null,
       createdAt: now,
+      pingOwnerCount: 0,
       updatedAt: now,
     },
     {
@@ -170,6 +171,7 @@ function makeReservationService(overrides?: {
       cancelledAt: null,
       cancellationReason: null,
       createdAt: now,
+      pingOwnerCount: 0,
       updatedAt: now,
     },
   ];
@@ -216,6 +218,7 @@ function makeReservationService(overrides?: {
         cancelledAt: null,
         cancellationReason: null,
         createdAt: now,
+        pingOwnerCount: 0,
         updatedAt: now,
       } satisfies ReservationRecord);
     }),
@@ -885,6 +888,7 @@ describe("ReservationService.markPaymentGroup", () => {
           cancelledAt: null,
           cancellationReason: null,
           createdAt: now,
+          pingOwnerCount: 0,
           updatedAt: now,
         },
         {
@@ -907,6 +911,7 @@ describe("ReservationService.markPaymentGroup", () => {
           cancelledAt: null,
           cancellationReason: null,
           createdAt: now,
+          pingOwnerCount: 0,
           updatedAt: now,
         },
       ],

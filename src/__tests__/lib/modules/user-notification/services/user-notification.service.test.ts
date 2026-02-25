@@ -6,7 +6,7 @@ const createService = () => {
     createMany: vi.fn(async (rows) => rows),
     listByUserId: vi.fn(async () => []),
     countUnreadByUserId: vi.fn(async () => 0),
-    markAsRead: vi.fn(async () => null),
+    markAsRead: vi.fn(async () => null as { id: string } | null),
     markAllAsRead: vi.fn(async () => ({ count: 0 })),
   };
 
