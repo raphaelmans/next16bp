@@ -4,10 +4,12 @@ import * as React from "react";
 import { trpc } from "@/trpc/client";
 
 export * from "./bookings-import";
+export * from "./court-addons";
 export * from "./court-hours";
 export * from "./court-pricing";
 export * from "./courts";
 export * from "./organization";
+export * from "./place-addons";
 export * from "./place-verification";
 export * from "./places";
 export * from "./reservations";

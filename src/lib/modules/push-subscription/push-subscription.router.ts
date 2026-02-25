@@ -1,7 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { env } from "@/lib/env";
+import { logger } from "@/lib/shared/infra/logger";
 import { protectedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
+import { makeWebPushService } from "@/lib/shared/infra/web-push/web-push.factory";
+import type { WebPushNotificationPayload } from "@/lib/shared/infra/web-push/web-push-service";
 import { makePushSubscriptionService } from "./factories/push-subscription.factory";
 
 const subscriptionSchema = z.object({
@@ -56,4 +59,65 @@ export const pushSubscriptionRouter = router({
       }
       return result;
     }),
+
+  sendTestPush: protectedProcedure.mutation(async ({ ctx }) => {
+    const service = makePushSubscriptionService();
+    const subscriptions = await service.listMyActiveSubscriptions(ctx.userId);
+
+    if (subscriptions.length === 0) {
+      throw new TRPCError({
+        code: "PRECONDITION_FAILED",
+        message: "No active push subscriptions found",
+      });
+    }
+
+    const webPush = makeWebPushService();
+    const payload: WebPushNotificationPayload = {
+      title: "KudosCourts test",
+      body: "Push notifications are working!",
+      icon: "/logo.png",
+      tag: "test.web_push.server",
+      url: "/owner/settings",
+    };
+
+    let sent = 0;
+    let failed = 0;
+
+    for (const sub of subscriptions) {
+      try {
+        await webPush.sendNotification({
+          subscription: {
+            endpoint: sub.endpoint,
+            keys: { p256dh: sub.p256dh, auth: sub.auth },
+          },
+          payload,
+        });
+        sent++;
+      } catch (error) {
+        failed++;
+        logger.warn(
+          {
+            event: "push_subscription.test_push_failed",
+            userId: ctx.userId,
+            subscriptionId: sub.id,
+            error,
+          },
+          "Test push notification failed for subscription",
+        );
+      }
+    }
+
+    logger.info(
+      {
+        event: "push_subscription.test_push_sent",
+        userId: ctx.userId,
+        sent,
+        failed,
+        total: subscriptions.length,
+      },
+      "Test push notification sent",
+    );
+
+    return { sent, failed };
+  }),
 });

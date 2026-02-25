@@ -15,6 +15,17 @@ export class ReservationNotFoundError extends NotFoundError {
   }
 }
 
+export class ReservationGroupNotFoundError extends NotFoundError {
+  readonly code = "RESERVATION_GROUP_NOT_FOUND";
+
+  constructor(reservationGroupId?: string) {
+    super(
+      "Reservation group not found",
+      reservationGroupId ? { reservationGroupId } : undefined,
+    );
+  }
+}
+
 export class SlotNotAvailableError extends ValidationError {
   readonly code = "SLOT_NOT_AVAILABLE";
 
@@ -45,6 +56,22 @@ export class NoAvailabilityError extends ValidationError {
     durationMinutes?: number;
   }) {
     super("No availability for the selected time", details);
+  }
+}
+
+export class InvalidReservationAddonSelectionError extends ValidationError {
+  readonly code = "INVALID_RESERVATION_ADDON_SELECTION";
+
+  constructor(details: {
+    courtId?: string;
+    placeId?: string;
+    sportId?: string;
+    invalidAddonIds: string[];
+  }) {
+    super(
+      "One or more selected add-ons are not valid for this reservation context.",
+      details,
+    );
   }
 }
 
@@ -154,4 +181,8 @@ export class ReservationStartTimeInPastError extends ValidationError {
       now: now.toISOString(),
     });
   }
+}
+
+export class ReservationGroupInvalidError extends ValidationError {
+  readonly code = "RESERVATION_GROUP_INVALID";
 }

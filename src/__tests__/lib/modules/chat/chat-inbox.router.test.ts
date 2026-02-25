@@ -26,7 +26,7 @@ const createCaller = () =>
     requestId: "req-1",
     clientIdentifier: "client-1",
     clientIdentifierSource: "fallback",
-    session: { userId: "user-1", email: "a@b.com", role: "player" },
+    session: { userId: "user-1", email: "a@b.com", role: "member" },
     userId: "user-1",
     cookies: { getAll: () => [], setAll: () => undefined },
     origin: "http://localhost:3000",
@@ -35,8 +35,13 @@ const createCaller = () =>
       warn: vi.fn(),
       error: vi.fn(),
       debug: vi.fn(),
-    },
-  });
+      fatal: vi.fn(),
+      trace: vi.fn(),
+      silent: vi.fn(),
+      level: "info",
+      msgPrefix: "",
+    } as any,
+  } as any);
 
 describe("chatInboxRouter", () => {
   beforeEach(() => {
@@ -83,7 +88,7 @@ describe("chatInboxRouter", () => {
     // Assert
     expect(result).toEqual({ threadIds: ["cr-1", "vr-2"] });
     expect(mockService.listArchivedThreadIds).toHaveBeenCalledWith(
-      { userId: "user-1", role: "player" },
+      { userId: "user-1", role: "member" },
       { threadKind: "support" },
     );
   });

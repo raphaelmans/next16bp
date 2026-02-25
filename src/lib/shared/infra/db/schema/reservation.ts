@@ -16,7 +16,50 @@ import { court } from "./court";
 import { reservationStatusEnum, triggeredByRoleEnum } from "./enums";
 import { guestProfile } from "./guest-profile";
 import { organizationPaymentMethod } from "./organization-payment";
+import { place } from "./place";
 import { profile } from "./profile";
+
+/**
+ * Reservation Group table
+ * Groups multiple reservation rows created in a single checkout flow.
+ */
+export const reservationGroup = pgTable(
+  "reservation_group",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    placeId: uuid("place_id")
+      .notNull()
+      .references(() => place.id, { onDelete: "cascade" }),
+    playerId: uuid("player_id").references(() => profile.id, {
+      onDelete: "cascade",
+    }),
+    playerNameSnapshot: varchar("player_name_snapshot", { length: 100 }),
+    playerEmailSnapshot: varchar("player_email_snapshot", { length: 255 }),
+    playerPhoneSnapshot: varchar("player_phone_snapshot", { length: 20 }),
+    totalPriceCents: integer("total_price_cents").notNull().default(0),
+    currency: varchar("currency", { length: 3 }).notNull().default("PHP"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_reservation_group_place").on(table.placeId),
+    index("idx_reservation_group_player").on(table.playerId),
+    index("idx_reservation_group_created").on(table.createdAt),
+  ],
+);
+
+export const ReservationGroupSchema = createSelectSchema(reservationGroup);
+export const InsertReservationGroupSchema =
+  createInsertSchema(reservationGroup);
+
+export type ReservationGroupRecord = z.infer<typeof ReservationGroupSchema>;
+export type InsertReservationGroup = z.infer<
+  typeof InsertReservationGroupSchema
+>;
 
 /**
  * Reservation table
@@ -35,6 +78,9 @@ export const reservation = pgTable(
     currency: varchar("currency", { length: 3 }).notNull().default("PHP"),
     playerId: uuid("player_id").references(() => profile.id, {
       onDelete: "cascade",
+    }),
+    groupId: uuid("group_id").references(() => reservationGroup.id, {
+      onDelete: "set null",
     }),
     guestProfileId: uuid("guest_profile_id").references(() => guestProfile.id, {
       onDelete: "restrict",
@@ -66,6 +112,7 @@ export const reservation = pgTable(
     ),
     index("idx_reservation_time_range").on(table.startTime, table.endTime),
     index("idx_reservation_guest_profile").on(table.guestProfileId),
+    index("idx_reservation_group").on(table.groupId),
     index("idx_reservation_expires")
       .on(table.expiresAt)
       .where(

@@ -87,10 +87,8 @@ export const placeFormSchema = z.object({
   address: S.place.address,
   city: S.place.city,
   province: S.place.province,
-  country: S.common.country.default("PH"),
   latitude: z.number().min(-90).max(90).optional(),
   longitude: z.number().min(-180).max(180).optional(),
-  timeZone: S.place.timeZone.default("Asia/Manila"),
   isActive: z.boolean().default(true),
   websiteUrl: optionalUrl,
   facebookUrl: optionalUrl,
@@ -104,15 +102,6 @@ export const placeFormSchema = z.object({
 export type PlaceFormData = z.infer<typeof placeFormSchema>;
 
 export const defaultPlaceFormValues: Partial<PlaceFormData> = {
-  timeZone: "Asia/Manila",
-  country: "PH",
   isActive: true,
   amenities: [],
 };
-
-export const PLACE_TIME_ZONES = [
-  "Asia/Manila",
-  "Asia/Singapore",
-  "Asia/Tokyo",
-  "Asia/Seoul",
-];

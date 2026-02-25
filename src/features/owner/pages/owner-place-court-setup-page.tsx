@@ -7,6 +7,7 @@ import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
 import { formatCurrency } from "@/common/format";
+import { DEFAULT_CURRENCY } from "@/common/location-defaults";
 import { toast } from "@/common/toast";
 import { AppShell } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -17,6 +18,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
+  CourtAddonEditor,
   CourtForm,
   CourtScheduleEditor,
   ReservationAlertsPanel,
@@ -260,7 +262,7 @@ export default function CourtSetupWizardPage({
         (rule) =>
           `${formatMinutesRange(rule.startMinute, rule.endMinute)} · ${formatCurrency(
             rule.hourlyRateCents,
-            rule.currency,
+            DEFAULT_CURRENCY,
           )}/hr`,
       );
 
@@ -455,7 +457,6 @@ export default function CourtSetupWizardPage({
                 <CourtScheduleEditor
                   courtId={courtId}
                   organizationId={organization?.id ?? null}
-                  timeZone={placeData.place.timeZone}
                   primaryActionLabel="Save & Continue"
                   onSaved={() => {
                     if (isFromSetup) {
@@ -464,6 +465,11 @@ export default function CourtSetupWizardPage({
                     }
                     goToStep("publish");
                   }}
+                />
+                <CourtAddonEditor
+                  courtId={courtId}
+                  placeId={placeId}
+                  organizationId={organization?.id}
                 />
                 <div className="flex justify-between">
                   <Button variant="outline" onClick={() => goToStep("details")}>
@@ -508,9 +514,6 @@ export default function CourtSetupWizardPage({
                             <p className="text-sm font-semibold">
                               Schedule & pricing
                             </p>
-                            <span className="text-xs text-muted-foreground">
-                              {placeData.place.timeZone}
-                            </span>
                           </div>
                           <div className="space-y-3">
                             {scheduleSummary.map((day) => (
@@ -620,14 +623,6 @@ export default function CourtSetupWizardPage({
                               </span>
                               <p className="font-medium">
                                 {placeData.place.name}
-                              </p>
-                            </div>
-                            <div className="space-y-1">
-                              <span className="text-xs uppercase text-muted-foreground">
-                                Time zone
-                              </span>
-                              <p className="font-medium">
-                                {placeData.place.timeZone}
                               </p>
                             </div>
                           </div>

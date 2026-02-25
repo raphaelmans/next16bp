@@ -33,13 +33,14 @@ export type UseWebPushResult = {
   enabledOnThisDevice: boolean;
   diagnosticsCode: WebPushDiagnosticsCode;
   diagnosticsMessage: string;
-  localTestEnabled: boolean;
   canSendLocalTest: boolean;
+  canSendServerTest: boolean;
   busy: boolean;
   refresh: () => Promise<void>;
   enable: () => Promise<void>;
   disable: () => Promise<void>;
   sendLocalTestNotification: () => Promise<void>;
+  sendServerTestNotification: () => Promise<void>;
 };
 
 export function useModWebPush(): UseWebPushResult {
@@ -50,7 +51,6 @@ export function useModWebPush(): UseWebPushResult {
     "PushManager" in window;
   const isSecureContext =
     typeof window !== "undefined" ? window.isSecureContext : false;
-  const localTestEnabled = process.env.NODE_ENV !== "production";
 
   const vapidQuery = useFeatureQuery(
     ["pushSubscription", "getVapidPublicKey"],
@@ -66,6 +66,13 @@ export function useModWebPush(): UseWebPushResult {
   const revokeMutation = useFeatureMutation(
     notificationsApi.mutPushSubscriptionRevokeMySubscription,
   );
+  const sendTestPushMutation = useFeatureMutation(
+    notificationsApi.mutPushSubscriptionSendTestPush,
+  );
+
+  // Ref so refresh can call upsert without being re-created on each render.
+  const upsertRef = React.useRef(upsertMutation);
+  upsertRef.current = upsertMutation;
 
   const [permission, setPermission] =
     React.useState<NotificationPermission | null>(
@@ -95,6 +102,35 @@ export function useModWebPush(): UseWebPushResult {
 
       const subscription = await reg.pushManager.getSubscription();
       setHasSubscription(Boolean(subscription));
+
+      // Auto-sync: if the browser has a subscription, ensure the server knows
+      // about it. The upsert is idempotent (onConflictDoUpdate on endpoint),
+      // so this is safe to call even when already in sync.
+      if (subscription && Notification.permission === "granted") {
+        const json = subscription.toJSON();
+        if (json.endpoint && json.keys?.p256dh && json.keys?.auth) {
+          try {
+            await upsertRef.current.mutateAsync({
+              subscription: {
+                endpoint: json.endpoint,
+                expirationTime:
+                  typeof json.expirationTime === "number"
+                    ? String(json.expirationTime)
+                    : json.expirationTime
+                      ? String(json.expirationTime)
+                      : null,
+                keys: {
+                  p256dh: json.keys.p256dh,
+                  auth: json.keys.auth,
+                },
+              },
+              userAgent: navigator.userAgent,
+            });
+          } catch {
+            // Sync is best-effort — don't block UI if it fails.
+          }
+        }
+      }
     } catch {
       setHasSubscription(false);
     }
@@ -183,7 +219,12 @@ export function useModWebPush(): UseWebPushResult {
       }
 
       if (endpoint) {
-        await revokeMutation.mutateAsync({ endpoint });
+        try {
+          await revokeMutation.mutateAsync({ endpoint });
+        } catch {
+          // Server may not have this subscription (state desync) — that's OK,
+          // the browser subscription is already unsubscribed above.
+        }
       }
 
       setHasSubscription(false);
@@ -194,11 +235,6 @@ export function useModWebPush(): UseWebPushResult {
   }, [revokeMutation, supported]);
 
   const sendLocalTestNotification = React.useCallback(async () => {
-    if (!localTestEnabled) {
-      throw new Error(
-        "Test notifications are only available in non-production environments",
-      );
-    }
     if (!supported) {
       throw new Error("Browser notifications are not supported on this device");
     }
@@ -239,20 +275,29 @@ export function useModWebPush(): UseWebPushResult {
     } finally {
       setBusy(false);
     }
-  }, [isSecureContext, localTestEnabled, refresh, supported]);
+  }, [isSecureContext, refresh, supported]);
+
+  const sendServerTestNotification = React.useCallback(async () => {
+    setBusy(true);
+    try {
+      await sendTestPushMutation.mutateAsync(undefined);
+    } finally {
+      setBusy(false);
+    }
+  }, [sendTestPushMutation]);
 
   const {
     enabledOnThisDevice,
     diagnosticsCode,
     diagnosticsMessage,
     canSendLocalTest,
+    canSendServerTest,
   } = deriveWebPushState({
     supported,
     isSecureContext,
     configured,
     permission,
     hasSubscription,
-    localTestEnabled,
     busy,
   });
 
@@ -264,12 +309,13 @@ export function useModWebPush(): UseWebPushResult {
     enabledOnThisDevice,
     diagnosticsCode,
     diagnosticsMessage,
-    localTestEnabled,
     canSendLocalTest,
+    canSendServerTest,
     busy,
     refresh,
     enable,
     disable,
     sendLocalTestNotification,
+    sendServerTestNotification,
   };
 }

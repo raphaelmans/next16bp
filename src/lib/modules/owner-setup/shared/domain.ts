@@ -77,5 +77,6 @@ export function computeNextStep(input: NextStepInput): OwnerSetupNextStep {
   if (!input.hasVerification) return "verify_venue";
   if (!input.hasReadyCourt) return "configure_courts";
   if (!input.isVerificationConfirmed) return "verify_venue";
+  if (!input.hasPaymentMethod) return "add_payment_method";
   return "complete";
 }

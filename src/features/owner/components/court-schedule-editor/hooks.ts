@@ -21,7 +21,6 @@ import {
   createEmptyRow,
   createRowId,
   DAY_KEYS,
-  DEFAULT_CURRENCY,
   getErrorMessage,
   type HoursWindow,
   isRowsByDayEmpty,
@@ -206,7 +205,6 @@ export const useCourtScheduleEditor = ({
               row.endTime === sourceRow.endTime &&
               row.isOpen === sourceRow.isOpen &&
               row.hourlyRate === sourceRow.hourlyRate &&
-              row.currency === sourceRow.currency &&
               row.allowPricing === true,
           );
           if (alreadyExists) {
@@ -227,7 +225,6 @@ export const useCourtScheduleEditor = ({
                 endTime: sourceRow.endTime,
                 isOpen: sourceRow.isOpen,
                 hourlyRate: sourceRow.hourlyRate,
-                currency: sourceRow.currency,
                 allowPricing: true,
               }
             : {
@@ -347,7 +344,6 @@ export const useCourtScheduleEditor = ({
               dayOfWeek: interval.dayOfWeek,
               startMinute: interval.startMinute,
               endMinute: interval.endMinute,
-              currency: row.currency || DEFAULT_CURRENCY,
               hourlyRateCents: Math.round(Number(row.hourlyRate) * 100),
             });
           });

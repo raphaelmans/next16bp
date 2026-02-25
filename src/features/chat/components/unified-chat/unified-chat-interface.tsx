@@ -275,11 +275,11 @@ function UnifiedSupportInbox() {
   }, [activeChannelId, supportChannels]);
 
   const unreadCount = useMemo(() => {
-    return supportChannels.reduce(
+    return visibleChannels.reduce(
       (sum, c) => sum + (c.state.unreadCount ?? 0),
       0,
     );
-  }, [supportChannels]);
+  }, [visibleChannels]);
 
   const myUserId = auth?.user.id ?? null;
   const activeChannelIsArchived =

@@ -16,6 +16,9 @@ export interface INotificationsApi {
   mutPushSubscriptionRevokeMySubscription: ProcedureFn<
     TrpcClientApi["pushSubscription"]["revokeMySubscription"]["mutate"]
   >;
+  mutPushSubscriptionSendTestPush: ProcedureFn<
+    TrpcClientApi["pushSubscription"]["sendTestPush"]["mutate"]
+  >;
   mutPushSubscriptionUpsertMySubscription: ProcedureFn<
     TrpcClientApi["pushSubscription"]["upsertMySubscription"]["mutate"]
   >;
@@ -45,6 +48,17 @@ export class NotificationsApi {
       this.clientApi,
       ["pushSubscription", "revokeMySubscription"],
       (clientApi) => clientApi.pushSubscription.revokeMySubscription.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutPushSubscriptionSendTestPush: ProcedureFn<
+    TrpcClientApi["pushSubscription"]["sendTestPush"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["pushSubscription", "sendTestPush"],
+      (clientApi) => clientApi.pushSubscription.sendTestPush.mutate,
       input,
       this.toAppError,
     );

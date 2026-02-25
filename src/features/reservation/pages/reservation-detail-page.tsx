@@ -10,6 +10,7 @@ import {
   formatTime,
   formatTimeRange,
 } from "@/common/format";
+import { KudosStatusBadge, type ReservationStatus } from "@/components/kudos";
 import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,6 +23,7 @@ import { StatusBanner } from "@/features/reservation/components/status-banner";
 import {
   useModReservationInvalidation,
   useQueryReservationDetail,
+  useQueryReservationGroupDetail,
 } from "@/features/reservation/hooks";
 
 interface ReservationEvent {
@@ -52,6 +54,12 @@ export default function ReservationDetailPage({
     isLoading: isLoadingReservation,
     isFetching: isFetchingReservation,
   } = useQueryReservationDetail(id, RESERVATION_DETAIL_REFETCH_INTERVAL_MS);
+
+  const reservationGroupId = reservationDetail?.reservation?.groupId ?? null;
+  const { data: groupData } = useQueryReservationGroupDetail(
+    reservationGroupId ?? "",
+    reservationGroupId ? RESERVATION_DETAIL_REFETCH_INTERVAL_MS : undefined,
+  );
 
   const reservation = reservationDetail?.reservation;
   const events: ReservationEvent[] = reservationDetail?.events ?? [];
@@ -320,9 +328,86 @@ export default function ReservationDetailPage({
               )}
             </CardContent>
           </Card>
+
+          {groupData && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Group Items</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {groupData.items.map((item) => (
+                  <div
+                    key={item.reservationId}
+                    className="rounded-lg border p-3 flex flex-wrap items-start justify-between gap-3"
+                  >
+                    <div>
+                      <p className="font-medium">
+                        {item.place.name} - {item.court.label}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {formatDateShort(item.startTimeIso)} ·{" "}
+                        {formatTimeRange(item.startTimeIso, item.endTimeIso)}
+                      </p>
+                    </div>
+                    <div className="text-right space-y-1">
+                      <KudosStatusBadge
+                        status={item.status as ReservationStatus}
+                        size="sm"
+                      />
+                      <p className="font-medium">
+                        {formatCurrency(item.totalPriceCents, item.currency)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          )}
         </div>
 
-        <div>
+        <div className="space-y-4">
+          {groupData && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Summary</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Total Items</span>
+                  <span>{groupData.statusSummary.totalItems}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Payable Items</span>
+                  <span>{groupData.statusSummary.payableItems}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Total Amount</span>
+                  <span className="font-medium">
+                    {formatCurrency(
+                      groupData.reservationGroup.totalPriceCents,
+                      groupData.reservationGroup.currency,
+                    )}
+                  </span>
+                </div>
+                {groupData.items.some(
+                  (item) =>
+                    item.totalPriceCents > 0 &&
+                    item.status === "AWAITING_PAYMENT",
+                ) && (
+                  <div className="pt-2">
+                    <Button asChild className="w-full">
+                      <Link
+                        href={appRoutes.reservations.payment(reservation.id)}
+                      >
+                        Complete Payment
+                      </Link>
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           <ReservationActionsCard
             reservationId={reservation.id}
             status={reservation.status}

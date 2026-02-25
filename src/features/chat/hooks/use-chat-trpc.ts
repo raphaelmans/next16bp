@@ -49,10 +49,31 @@ export function useQueryReservationChatSession(
   );
 }
 
+export function useQueryReservationGroupChatSession(
+  input?: Parameters<typeof chatApi.queryReservationChatGetGroupSession>[0],
+  options?: Record<string, unknown>,
+) {
+  return useFeatureQuery(
+    ["reservationChat", "getGroupSession"],
+    chatApi.queryReservationChatGetGroupSession,
+    input,
+    options,
+  );
+}
+
 export function useMutReservationChatSendMessage(
   options?: Record<string, unknown>,
 ) {
   return useFeatureMutation(chatApi.mutReservationChatSendMessage, options);
+}
+
+export function useMutReservationGroupChatSendMessage(
+  options?: Record<string, unknown>,
+) {
+  return useFeatureMutation(
+    chatApi.mutReservationChatSendGroupMessage,
+    options,
+  );
 }
 
 export function useQueryReservationChatThreadMetas(

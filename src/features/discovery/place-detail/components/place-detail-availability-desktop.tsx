@@ -89,11 +89,13 @@ type PlaceDetailAvailabilityDesktopProps = {
   onClearSelection: () => void;
   todayDayKey: string;
   maxDayKey: string;
+  sameDayAnchorDayKey?: string;
   anyDaySlots: TimeSlot[];
   courtDaySlots: TimeSlot[];
   anyDayDiagnostics: AvailabilityDiagnostics | null;
   courtDayDiagnostics: AvailabilityDiagnostics | null;
   contactDetail?: PlaceContactDetail;
+  cartedStartTimes?: Set<string>;
 };
 
 export function PlaceDetailAvailabilityDesktop({
@@ -134,11 +136,13 @@ export function PlaceDetailAvailabilityDesktop({
   onClearSelection,
   todayDayKey,
   maxDayKey,
+  sameDayAnchorDayKey,
   anyDaySlots,
   courtDaySlots,
   anyDayDiagnostics,
   courtDayDiagnostics,
   contactDetail,
+  cartedStartTimes,
 }: PlaceDetailAvailabilityDesktopProps) {
   const isCourtWeekView = courtViewMode === "week";
 
@@ -483,6 +487,7 @@ export function PlaceDetailAvailabilityDesktop({
                   onContinue={onContinue}
                   todayDayKey={todayDayKey}
                   maxDayKey={maxDayKey}
+                  cartedStartTimes={cartedStartTimes}
                 />
               )
             ) : !selectedDate ? (
@@ -501,6 +506,7 @@ export function PlaceDetailAvailabilityDesktop({
                 onChange={onAnyRangeChange}
                 onClear={onClearSelection}
                 onContinue={onContinue}
+                cartedStartTimes={cartedStartTimes}
               />
             ) : (
               <AvailabilityEmptyState
@@ -534,6 +540,9 @@ export function PlaceDetailAvailabilityDesktop({
                 onContinue={onContinue}
                 todayDayKey={todayDayKey}
                 maxDayKey={maxDayKey}
+                sameDayAnchorDayKey={sameDayAnchorDayKey}
+                sameDayCueMode="highlight-anchor"
+                cartedStartTimes={cartedStartTimes}
               />
             )
           ) : !selectedDate ? (
@@ -552,6 +561,7 @@ export function PlaceDetailAvailabilityDesktop({
               onChange={onCourtRangeChange}
               onClear={onClearSelection}
               onContinue={onContinue}
+              cartedStartTimes={cartedStartTimes}
             />
           ) : (
             <AvailabilityEmptyState

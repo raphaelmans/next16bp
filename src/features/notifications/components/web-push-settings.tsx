@@ -45,11 +45,24 @@ export function WebPushSettingsCard({ id }: { id?: string }) {
   const sendLocalTest = async () => {
     try {
       await webPush.sendLocalTestNotification();
-      toast.success("Test notification sent", {
+      toast.success("Local test sent", {
         description: "Check your browser or OS notification center",
       });
     } catch (error) {
-      toast.error("Failed to send test notification", {
+      toast.error("Failed to send local test", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
+
+  const sendServerTest = async () => {
+    try {
+      await webPush.sendServerTestNotification();
+      toast.success("Server test push sent", {
+        description: "A push was sent through the server pipeline",
+      });
+    } catch (error) {
+      toast.error("Failed to send server test push", {
         description: getClientErrorMessage(error, "Please try again"),
       });
     }
@@ -100,20 +113,30 @@ export function WebPushSettingsCard({ id }: { id?: string }) {
           >
             Disable
           </Button>
-          {webPush.localTestEnabled ? (
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={sendLocalTest}
-              disabled={!webPush.canSendLocalTest}
-            >
-              Send test notification
-            </Button>
-          ) : null}
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={sendLocalTest}
+            disabled={!webPush.canSendLocalTest}
+          >
+            Test local notification
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={sendServerTest}
+            disabled={!webPush.canSendServerTest}
+          >
+            Test server push
+          </Button>
         </div>
 
         <p className="text-xs text-muted-foreground">
           {webPush.diagnosticsMessage}
+        </p>
+        <p className="text-xs text-muted-foreground">
+          Local test checks that your browser can show notifications. Server
+          test verifies the full push pipeline from the server to this device.
         </p>
 
         {webPush.diagnosticsCode === "permission_denied" ? (

@@ -93,6 +93,7 @@ const OwnerSetupStatusResponseSchema = z.object({
     hasReadyCourt: z.boolean(),
     hasCourtSchedule: z.boolean(),
     hasCourtPricing: z.boolean(),
+    hasPaymentMethod: z.boolean(),
     primaryCourtId: z.string().nullable(),
     readyCourtId: z.string().nullable(),
     isSetupComplete: z.boolean(),
@@ -102,6 +103,7 @@ const OwnerSetupStatusResponseSchema = z.object({
       "claim_pending",
       "verify_venue",
       "configure_courts",
+      "add_payment_method",
       "complete",
     ]),
   }),
@@ -157,6 +159,11 @@ const OwnerReservationHistoryResponseSchema = z.object({
 
 const UuidSchema = z.string().uuid();
 const StringSchema = z.string();
+const OwnerReservationChatThreadMetasQuerySchema = z.object({
+  reservationIds: z.array(UuidSchema).max(30).optional(),
+  reservationGroupIds: z.array(UuidSchema).max(30).optional(),
+  includeArchived: z.boolean().optional(),
+});
 
 const security = [{ bearerAuth: [] }];
 
@@ -867,6 +874,7 @@ export function createMobileV1OpenApiDocument(args: {
       "/owner/chat/reservations/thread-metas": {
         get: protectedGet({
           operationId: "ownerReservationChatThreadMetas",
+          query: OwnerReservationChatThreadMetasQuerySchema,
         }),
       },
 

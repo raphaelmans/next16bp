@@ -1,5 +1,6 @@
 export { ComingSoonCard } from "./coming-soon-card";
 export { ConfirmDialog } from "./confirm-dialog";
+export { CourtAddonEditor } from "./court-addon-editor";
 export { CourtForm } from "./court-form";
 export { CourtHoursEditor } from "./court-hours-editor";
 export { CourtPricingEditor } from "./court-pricing-editor";

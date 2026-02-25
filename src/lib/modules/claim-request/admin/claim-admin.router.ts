@@ -11,6 +11,13 @@ import {
 } from "../dtos";
 import { makeClaimAdminService } from "../factories/claim-request.factory";
 
+function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
+  place: T,
+): Omit<T, "country" | "timeZone"> {
+  const { country: _country, timeZone: _timeZone, ...rest } = place;
+  return rest;
+}
+
 export const claimAdminRouter = router({
   /**
    * Get all pending claim requests (paginated)
@@ -43,7 +50,11 @@ export const claimAdminRouter = router({
     .input(GetClaimRequestByIdSchema)
     .query(async ({ input }) => {
       const service = makeClaimAdminService();
-      return service.getClaimRequestById(input.id);
+      const details = await service.getClaimRequestById(input.id);
+      return {
+        ...details,
+        place: redactPlaceLocale(details.place),
+      };
     }),
 
   /**

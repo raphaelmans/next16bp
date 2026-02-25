@@ -15,6 +15,7 @@ const ReservationStatusSchema = z.enum(
 
 export const ReservationListItemSchema = z.object({
   id: S.ids.reservationId,
+  reservationGroupId: z.string().nullable().optional(),
   status: ReservationStatusSchema,
   playerNameSnapshot: z.string().nullable(),
   playerPhoneSnapshot: z.string().nullable(),

@@ -11,11 +11,13 @@ import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import {
   ComingSoonCard,
   OwnerNavbar,
+  OwnerPaymentMethodReminder,
   OwnerSidebar,
   PendingActions,
   ReservationAlertsPanel,
   StatsCard,
 } from "@/features/owner";
+import { isOwnerSetupIncomplete } from "@/features/owner/helpers";
 import {
   useQueryOwnerOrganization,
   useQueryOwnerSetupStatus,
@@ -28,6 +30,7 @@ const OWNER_SETUP_NEXT_STEP_LABELS = {
   claim_pending: "Claim pending review",
   verify_venue: "Submit verification",
   configure_courts: "Set up courts",
+  add_payment_method: "Add a payment method",
   complete: "Setup complete",
 } as const;
 
@@ -44,9 +47,16 @@ export default function OwnerDashboardPage() {
   const { data: setupStatus, isLoading: setupLoading } =
     useQueryOwnerSetupStatus();
   const logoutMutation = useMutAuthLogout();
+  const normalizedSetupStatus = setupStatus
+    ? {
+        isSetupComplete: setupStatus.isSetupComplete,
+        hasPaymentMethod: setupStatus.hasPaymentMethod,
+        nextStep: setupStatus.nextStep,
+      }
+    : null;
 
   const showSetupCta =
-    !setupLoading && setupStatus ? !setupStatus.hasAnyConfiguredVenue : false;
+    !setupLoading && isOwnerSetupIncomplete(normalizedSetupStatus);
   const nextStepLabel = setupStatus
     ? setupStatus.nextStep === "verify_venue" &&
       setupStatus.verificationStatus === "PENDING"
@@ -159,6 +169,8 @@ export default function OwnerDashboardPage() {
             </CardContent>
           </Card>
         )}
+
+        <OwnerPaymentMethodReminder />
 
         {/* Pending actions alert */}
         <PendingActions pendingCount={stats?.pendingReservations ?? 0} />

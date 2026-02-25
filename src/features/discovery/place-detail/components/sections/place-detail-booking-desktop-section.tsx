@@ -25,6 +25,8 @@ import {
   useQueryDiscoveryAvailabilityForPlaceSportRange,
 } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
+import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
+import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 
 const TIMELINE_SLOT_DURATION = 60;
 
@@ -48,6 +50,7 @@ type PlaceDetailBookingDesktopSectionProps = {
   setSelectionMode: (mode: "any" | "court") => void;
   selectedCourtId?: string;
   setSelectedCourtId: (courtId: string | undefined) => void;
+  selectedAddons: { addonId: string; quantity: number }[];
   selectedStartTime?: string;
   setSelectedStartTime: (startTime: string | undefined) => void;
   courtViewMode: "week" | "day";
@@ -61,9 +64,11 @@ type PlaceDetailBookingDesktopSectionProps = {
   maxBookingDate: Date;
   todayDayKey: string;
   maxDayKey: string;
+  sameDayAnchorDayKey?: string;
   availabilitySectionRef: React.RefObject<HTMLDivElement | null>;
   onContinue: () => void;
   onSelectionSummaryChange: (summary: SelectionSummary | null) => void;
+  cartItems: BookingCartItem[];
 };
 
 export function PlaceDetailBookingDesktopSection({
@@ -79,6 +84,7 @@ export function PlaceDetailBookingDesktopSection({
   setSelectionMode,
   selectedCourtId,
   setSelectedCourtId,
+  selectedAddons,
   selectedStartTime,
   setSelectedStartTime,
   courtViewMode,
@@ -92,9 +98,11 @@ export function PlaceDetailBookingDesktopSection({
   maxBookingDate,
   todayDayKey,
   maxDayKey,
+  sameDayAnchorDayKey,
   availabilitySectionRef,
   onContinue,
   onSelectionSummaryChange,
+  cartItems,
 }: PlaceDetailBookingDesktopSectionProps) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [calendarPopoverOpen, setCalendarPopoverOpen] = React.useState(false);
@@ -106,6 +114,21 @@ export function PlaceDetailBookingDesktopSection({
 
   const isCourtMode = selectionMode === "court";
   const isCourtWeekView = courtViewMode === "week";
+
+  const cartedStartTimes = React.useMemo(() => {
+    if (selectionMode !== "court" || !selectedCourtId) return undefined;
+    const set = new Set<string>();
+    for (const item of cartItems) {
+      if (item.courtId === selectedCourtId) {
+        const startMs = Date.parse(item.startTime);
+        const slotCount = item.durationMinutes / TIMELINE_SLOT_DURATION;
+        for (let i = 0; i < slotCount; i++) {
+          set.add(String(startMs + i * TIMELINE_SLOT_DURATION * 60_000));
+        }
+      }
+    }
+    return set.size > 0 ? set : undefined;
+  }, [cartItems, selectedCourtId, selectionMode]);
 
   const weekStartDayKey = React.useMemo(
     () => getWeekStartDayKey(selectedDayKey, placeTimeZone),
@@ -146,6 +169,19 @@ export function PlaceDetailBookingDesktopSection({
     if (selectionMode !== "any" || anyViewMode !== "day") return "";
     return getZonedStartOfDayIso(selectedDate ?? today, placeTimeZone);
   }, [anyViewMode, placeTimeZone, selectedDate, selectionMode, today]);
+
+  const summaryDayDateIso = React.useMemo(() => {
+    if (!selectedStartTime) return "";
+    return getZonedStartOfDayIso(new Date(selectedStartTime), placeTimeZone);
+  }, [placeTimeZone, selectedStartTime]);
+
+  const summaryDayEndIso = React.useMemo(() => {
+    if (!summaryDayDateIso) return "";
+    return toUtcISOString(
+      getZonedDayRangeForInstant(new Date(summaryDayDateIso), placeTimeZone)
+        .end,
+    );
+  }, [placeTimeZone, summaryDayDateIso]);
 
   const courtDayAvailabilityQuery = useQueryDiscoveryAvailabilityForCourt(
     {
@@ -212,6 +248,42 @@ export function PlaceDetailBookingDesktopSection({
         anyViewMode === "day" &&
         !!selectedSportId &&
         !!anyWeekDayDateIso,
+    );
+
+  const summaryCourtAvailabilityQuery = useQueryDiscoveryAvailabilityForCourt(
+    {
+      courtId: selectedCourtId ?? "",
+      date: summaryDayDateIso,
+      durationMinutes,
+      includeUnavailable: true,
+      selectedAddons,
+    },
+    isDesktop &&
+      isCourtMode &&
+      !!selectedStartTime &&
+      !!selectedCourtId &&
+      !!summaryDayDateIso &&
+      durationMinutes > 0,
+  );
+
+  const summaryAnyAvailabilityQuery =
+    useQueryDiscoveryAvailabilityForPlaceSportRange(
+      {
+        placeId: place.id,
+        sportId: selectedSportId ?? "",
+        startDate: summaryDayDateIso,
+        endDate: summaryDayEndIso,
+        durationMinutes,
+        includeUnavailable: true,
+        includeCourtOptions: false,
+      },
+      isDesktop &&
+        selectionMode === "any" &&
+        !!selectedStartTime &&
+        !!selectedSportId &&
+        !!summaryDayDateIso &&
+        !!summaryDayEndIso &&
+        durationMinutes > 0,
     );
 
   const anyWeekSlotsByDay = React.useMemo(() => {
@@ -321,41 +393,25 @@ export function PlaceDetailBookingDesktopSection({
         : isCourtWeekView
           ? (courtWeekSlotsByDay.get(dayKey) ?? [])
           : courtDaySlots;
-    const startIdx = slotsForDay.findIndex(
-      (slot) => slot.startTime === selectedStartTime,
-    );
-    if (startIdx === -1) return null;
-    const slotCount = durationMinutes / TIMELINE_SLOT_DURATION;
-    let totalCents = 0;
-    let allHavePrice = true;
-    let endTime = slotsForDay[startIdx]?.endTime ?? "";
-    for (
-      let i = startIdx;
-      i < startIdx + slotCount && i < slotsForDay.length;
-      i++
-    ) {
-      if (slotsForDay[i].priceCents !== undefined) {
-        totalCents += slotsForDay[i].priceCents as number;
-      } else {
-        allHavePrice = false;
-      }
-      endTime = slotsForDay[i].endTime;
-    }
-    return {
-      startTime: selectedStartTime,
-      endTime,
-      totalCents: allHavePrice ? totalCents : undefined,
-      currency: slotsForDay[startIdx]?.currency ?? "PHP",
-    };
+    const summaryOptions =
+      selectionMode === "court"
+        ? (summaryCourtAvailabilityQuery.data?.options ?? [])
+        : (summaryAnyAvailabilityQuery.data?.options ?? []);
+    return buildBookingSelectionSummary({
+      selectedStartTime,
+      pickerSlots: slotsForDay,
+      pricingOptions: summaryOptions,
+    });
   }, [
     anyDaySlots,
     anyViewMode,
     anyWeekSlotsByDay,
     courtDaySlots,
     courtWeekSlotsByDay,
-    durationMinutes,
     isCourtWeekView,
     placeTimeZone,
+    summaryAnyAvailabilityQuery.data?.options,
+    summaryCourtAvailabilityQuery.data?.options,
     selectedStartTime,
     selectionMode,
   ]);
@@ -365,6 +421,7 @@ export function PlaceDetailBookingDesktopSection({
     onSelectionSummaryChange(selectionSummary);
   }, [isDesktop, onSelectionSummaryChange, selectionSummary]);
 
+  // Court range change: uses COMMIT_RANGE event through the machine
   const handleCourtRangeChange = React.useCallback(
     (range: { startTime: string; durationMinutes: number }) => {
       setSelectedStartTime(range.startTime);
@@ -413,40 +470,24 @@ export function PlaceDetailBookingDesktopSection({
   const handleDesktopSportChange = React.useCallback(
     (value: string) => {
       setSelectedSportId(value);
-      setSelectionMode("any");
-      setSelectedCourtId(undefined);
-      setCourtViewMode("week");
-      clearSelection();
     },
-    [
-      clearSelection,
-      setCourtViewMode,
-      setSelectedCourtId,
-      setSelectedSportId,
-      setSelectionMode,
-    ],
+    [setSelectedSportId],
   );
 
   const handleDesktopSelectionModeChange = React.useCallback(
     (value: "any" | "court") => {
       setSelectionMode(value);
-      if (value === "court") {
-        clearSelection(true);
-        setCourtViewMode("week");
-      } else {
-        clearSelection();
-      }
     },
-    [clearSelection, setCourtViewMode, setSelectionMode],
+    [setSelectionMode],
   );
 
+  // Court selection: machine handles memory save/restore automatically
   const handleDesktopCourtSelect = React.useCallback(
     (courtId: string) => {
       if (selectedCourtId === courtId) return;
       setSelectedCourtId(courtId);
-      clearSelection(true);
     },
-    [clearSelection, selectedCourtId, setSelectedCourtId],
+    [selectedCourtId, setSelectedCourtId],
   );
 
   const handleAnyViewModeChange = React.useCallback(
@@ -541,11 +582,13 @@ export function PlaceDetailBookingDesktopSection({
       onClearSelection={() => clearSelection(true)}
       todayDayKey={todayDayKey}
       maxDayKey={maxDayKey}
+      sameDayAnchorDayKey={sameDayAnchorDayKey}
       anyDaySlots={anyDaySlots}
       courtDaySlots={courtDaySlots}
       anyDayDiagnostics={anyDayDiagnostics}
       courtDayDiagnostics={courtDayDiagnostics}
       contactDetail={place.contactDetail}
+      cartedStartTimes={cartedStartTimes}
     />
   );
 }

@@ -19,6 +19,13 @@ import {
 } from "../dtos";
 import { makeAdminCourtService } from "../factories/court.factory";
 
+function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
+  place: T,
+): Omit<T, "country" | "timeZone"> {
+  const { country: _country, timeZone: _timeZone, ...rest } = place;
+  return rest;
+}
+
 export const adminCourtRouter = router({
   /**
    * Create a new curated place
@@ -50,7 +57,11 @@ export const adminCourtRouter = router({
     .input(AdminCourtDetailSchema)
     .query(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
-      return service.getPlaceById(ctx.userId, input);
+      const result = await service.getPlaceById(ctx.userId, input);
+      return {
+        ...result,
+        place: redactPlaceLocale(result.place),
+      };
     }),
 
   /**
@@ -149,7 +160,14 @@ export const adminCourtRouter = router({
     .input(AdminCourtFiltersSchema)
     .query(async ({ input }) => {
       const service = makeAdminCourtService();
-      return service.listAllPlaces(input);
+      const result = await service.listAllPlaces(input);
+      return {
+        ...result,
+        items: result.items.map((item) => ({
+          ...item,
+          place: redactPlaceLocale(item.place),
+        })),
+      };
     }),
 
   /**

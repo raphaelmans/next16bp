@@ -126,7 +126,7 @@ export function ReservationAlertsPanel({
   };
 
   const handleConfirmSubmit = () => {
-    if (!selectedReservationId) return;
+    if (!selectedReservation) return;
     const isCreated = selectedReservation?.reservationStatus === "CREATED";
     const mutation = isCreated ? acceptMutation : confirmMutation;
     const successMessage = isCreated
@@ -137,7 +137,10 @@ export function ReservationAlertsPanel({
       : "Failed to confirm payment";
 
     mutation.mutate(
-      { reservationId: selectedReservationId },
+      {
+        reservationId: selectedReservation.id,
+        reservationGroupId: selectedReservation.reservationGroupId,
+      },
       {
         onSuccess: () => {
           toast.success(successMessage);
@@ -151,9 +154,13 @@ export function ReservationAlertsPanel({
   };
 
   const handleRejectSubmit = (reason: string) => {
-    if (!selectedReservationId) return;
+    if (!selectedReservation) return;
     rejectMutation.mutate(
-      { reservationId: selectedReservationId, reason },
+      {
+        reservationId: selectedReservation.id,
+        reservationGroupId: selectedReservation.reservationGroupId,
+        reason,
+      },
       {
         onSuccess: () => {
           toast.success(

@@ -1,28 +1,49 @@
-import { parseReservationThreadId } from "./domain";
+import {
+  parseReservationGroupThreadId,
+  parseReservationThreadId,
+} from "./domain";
 
-export function toReservationIdsFromThreadIds(
+export function toReservationThreadTargetsFromThreadIds(
   threadIds: readonly (string | null | undefined)[],
-): string[] {
-  const seen = new Set<string>();
+): {
+  reservationIds: string[];
+  reservationGroupIds: string[];
+} {
+  const reservationSeen = new Set<string>();
+  const reservationGroupSeen = new Set<string>();
   const reservationIds: string[] = [];
+  const reservationGroupIds: string[] = [];
 
   for (const threadId of threadIds) {
     if (typeof threadId !== "string") {
       continue;
     }
 
-    const parsed = parseReservationThreadId(threadId);
-    if (!parsed) {
+    const parsedReservation = parseReservationThreadId(threadId);
+    if (parsedReservation) {
+      if (!reservationSeen.has(parsedReservation.reservationId)) {
+        reservationSeen.add(parsedReservation.reservationId);
+        reservationIds.push(parsedReservation.reservationId);
+      }
       continue;
     }
 
-    if (seen.has(parsed.reservationId)) {
-      continue;
+    const parsedReservationGroup = parseReservationGroupThreadId(threadId);
+    if (parsedReservationGroup) {
+      if (
+        !reservationGroupSeen.has(parsedReservationGroup.reservationGroupId)
+      ) {
+        reservationGroupSeen.add(parsedReservationGroup.reservationGroupId);
+        reservationGroupIds.push(parsedReservationGroup.reservationGroupId);
+      }
     }
-
-    seen.add(parsed.reservationId);
-    reservationIds.push(parsed.reservationId);
   }
 
-  return reservationIds;
+  return { reservationIds, reservationGroupIds };
+}
+
+export function toReservationIdsFromThreadIds(
+  threadIds: readonly (string | null | undefined)[],
+): string[] {
+  return toReservationThreadTargetsFromThreadIds(threadIds).reservationIds;
 }

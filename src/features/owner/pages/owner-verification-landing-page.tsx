@@ -119,7 +119,7 @@ export default function OwnerVerificationLandingPage() {
                     <div className="space-y-1">
                       <CardTitle className="text-lg">{place.name}</CardTitle>
                       <p className="text-sm text-muted-foreground">
-                        {place.city} · {place.timeZone}
+                        {place.city}
                       </p>
                     </div>
                     <Badge

@@ -18,7 +18,7 @@ export function OwnerChatWidget() {
         kind: "owner",
         storageKeys: {
           open: "owner:chat:open",
-          activeReservationId: "owner:chat:activeReservationId",
+          activeReservationThreadId: "owner:chat:activeReservationThreadId",
         },
         ui: {
           sheetTitle: "Inbox",

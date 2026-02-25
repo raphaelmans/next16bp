@@ -22,10 +22,12 @@ import {
   formatInTimeZone,
   formatTimeRangeInTimeZone,
 } from "@/common/format";
+import { DEFAULT_TIME_ZONE } from "@/common/location-defaults";
 import {
   getReservationEnablement,
   type ReservationEnablementIssueCode,
 } from "@/common/reservation-enablement";
+import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
 import {
   getZonedDate,
   getZonedDayKey,
@@ -113,6 +115,7 @@ import {
   useMutOwnerCourtBlockUpdateRange,
   useMutOwnerCreateGuestBooking,
   useMutOwnerGuestProfileCreate,
+  useQueryOrganizationPaymentMethods,
   useQueryOwnerActiveReservationsForCourtRange,
   useQueryOwnerCourtBlocksForRange,
   useQueryOwnerCourtById,
@@ -165,6 +168,9 @@ function OwnerCourtAvailabilityInner({
     organizations,
     isLoading: orgLoading,
   } = useQueryOwnerOrganization();
+  const paymentMethodsQuery = useQueryOrganizationPaymentMethods(
+    organization?.id ?? undefined,
+  );
 
   const { data: placeData, isLoading: placeLoading } = useQueryOwnerPlaceById(
     { placeId },
@@ -176,7 +182,7 @@ function OwnerCourtAvailabilityInner({
     { enabled: !!courtId },
   );
 
-  const placeTimeZone = placeData?.place.timeZone ?? "Asia/Manila";
+  const placeTimeZone = placeData?.place.timeZone ?? DEFAULT_TIME_ZONE;
   const is2xlUp = useIs2xlUp();
   const {
     dayKey,
@@ -1268,6 +1274,7 @@ function OwnerCourtAvailabilityInner({
     ? `${scheduleHrefBase}?from=setup`
     : scheduleHrefBase;
   const reservationsHref = `${appRoutes.owner.reservations}?placeId=${placeId}&courtId=${courtId}`;
+  const paymentMethodsHref = `${appRoutes.owner.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`;
 
   if (orgLoading || courtLoading || placeLoading) {
     return <OwnerCourtAvailabilityLoadingState />;
@@ -1288,10 +1295,14 @@ function OwnerCourtAvailabilityInner({
   const hasRateRules = courtRateRulesQuery.data
     ? courtRateRulesQuery.data.length > 0
     : null;
+  const hasPaymentMethods = paymentMethodsQuery.data
+    ? paymentMethodsQuery.data.methods.some((method) => method.isActive)
+    : null;
   const enablement = getReservationEnablement({
     placeType: placeData.place.placeType,
     verificationStatus,
     reservationsEnabled,
+    hasPaymentMethods,
     hasHoursWindows,
     hasRateRules,
   });
@@ -1302,6 +1313,7 @@ function OwnerCourtAvailabilityInner({
     hasIssue("VERIFICATION_PENDING") ||
     hasIssue("VERIFICATION_REJECTED");
   const showReservationsDisabledBanner = hasIssue("RESERVATIONS_DISABLED");
+  const showPaymentMethodBanner = hasIssue("NO_PAYMENT_METHOD");
   const showScheduleBanner = hasIssue("NO_SCHEDULE");
   const showPricingBanner = hasIssue("NO_PRICING");
 
@@ -1378,11 +1390,13 @@ function OwnerCourtAvailabilityInner({
         <AvailabilityEnablementAlerts
           showVerificationBanner={showVerificationBanner}
           showReservationsDisabledBanner={showReservationsDisabledBanner}
+          showPaymentMethodBanner={showPaymentMethodBanner}
           showScheduleBanner={showScheduleBanner}
           showPricingBanner={showPricingBanner}
           verificationStatus={verificationStatus}
           verificationHref={verificationHref}
           scheduleHref={scheduleHref}
+          paymentMethodsHref={paymentMethodsHref}
         />
 
         <AnimatePresence mode="wait" initial={false}>

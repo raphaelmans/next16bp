@@ -80,6 +80,7 @@ export default function PlaceDetailPageView({
     placeType: place.placeType,
     verificationStatus: place.verification?.status,
     reservationsEnabled: place.verification?.reservationsEnabled,
+    hasPaymentMethods: place.hasPaymentMethods,
   });
 
   const hasCoordinates =
@@ -210,6 +211,7 @@ export default function PlaceDetailPageView({
               placeName={place.name}
               placePhotos={place.photos}
               showBooking={false}
+              selectedAddonCount={0}
               showBookingVerificationUi={showBookingVerificationUi}
               verificationMessage={verificationMessage}
               verificationDescription={verificationDescription}
@@ -230,6 +232,10 @@ export default function PlaceDetailPageView({
               summaryCtaLabel="Select a time"
               onSummaryAction={() => {}}
               isAuthenticated={isAuthenticated}
+              cartItems={[]}
+              canAddToCart={false}
+              onAddToCartAction={() => {}}
+              onRemoveFromCartAction={() => {}}
               listingHelpContent={
                 <PlaceDetailListingHelpSection
                   placeId={place.id}

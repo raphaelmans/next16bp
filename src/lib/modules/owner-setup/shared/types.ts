@@ -15,6 +15,7 @@ export type OwnerSetupNextStep =
   | "claim_pending"
   | "verify_venue"
   | "configure_courts"
+  | "add_payment_method"
   | "complete";
 
 export type CourtConfigInput = {
@@ -56,4 +57,5 @@ export type NextStepInput = {
   hasVerification: boolean;
   isVerificationConfirmed: boolean;
   hasReadyCourt: boolean;
+  hasPaymentMethod: boolean;
 };

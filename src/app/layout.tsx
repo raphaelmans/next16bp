@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, Outfit, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
 import { Providers } from "@/common/providers";
+import { SwRegister } from "@/features/pwa/components/sw-register";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -64,6 +65,7 @@ const structuredData = {
 };
 
 export const metadata: Metadata = {
+  manifest: "/manifest.webmanifest",
   title: {
     default: "KudosCourts - Discover. Reserve. Play.",
     template: "%s | KudosCourts",
@@ -122,6 +124,11 @@ export const metadata: Metadata = {
         index: false,
         follow: false,
       },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "KudosCourts",
+  },
 };
 
 export default function RootLayout({
@@ -132,6 +139,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         {process.env.NODE_ENV === "development" && (
           <>
             <Script
@@ -156,13 +164,14 @@ export default function RootLayout({
           type="application/ld+json"
           strategy="beforeInteractive"
         >
-          {JSON.stringify(structuredData)}
+          {JSON.stringify(structuredData).replace(/</g, "\\u003c")}
         </Script>
       </head>
       <body
         className={`${outfit.variable} ${sourceSans.variable} ${ibmPlexMono.variable} antialiased`}
       >
         <Providers>{children}</Providers>
+        <SwRegister />
         <Analytics />
       </body>
     </html>

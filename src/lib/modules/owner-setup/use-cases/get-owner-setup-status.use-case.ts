@@ -3,6 +3,7 @@ import type { ICourtRepository } from "@/lib/modules/court/repositories/court.re
 import type { ICourtHoursRepository } from "@/lib/modules/court-hours/repositories/court-hours.repository";
 import type { ICourtRateRuleRepository } from "@/lib/modules/court-rate-rule/repositories/court-rate-rule.repository";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
+import type { IOrganizationPaymentMethodRepository } from "@/lib/modules/organization-payment/repositories/organization-payment-method.repository";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import type { OwnerSetupStatus } from "../dtos";
 import {
@@ -37,6 +38,7 @@ export class GetOwnerSetupStatusUseCase {
     private courtRepository: ICourtRepository,
     private courtHoursRepository: ICourtHoursRepository,
     private courtRateRuleRepository: ICourtRateRuleRepository,
+    private organizationPaymentMethodRepository: IOrganizationPaymentMethodRepository,
   ) {}
 
   async execute(userId: string): Promise<OwnerSetupStatus> {
@@ -65,6 +67,7 @@ export class GetOwnerSetupStatusUseCase {
         hasReadyCourt: false,
         hasCourtSchedule: false,
         hasCourtPricing: false,
+        hasPaymentMethod: false,
         primaryCourtId: null,
         readyCourtId: null,
         isSetupComplete: false,
@@ -72,11 +75,18 @@ export class GetOwnerSetupStatusUseCase {
       };
     }
 
-    const places =
-      await this.placeRepository.findByOrganizationIdWithVerification(
+    const [places, paymentMethods] = await Promise.all([
+      this.placeRepository.findByOrganizationIdWithVerification(
         organization.id,
-      );
+      ),
+      this.organizationPaymentMethodRepository.findByOrganizationId(
+        organization.id,
+      ),
+    ]);
     const hasVenue = places.length > 0;
+    const hasPaymentMethod = paymentMethods.some(
+      (paymentMethod) => paymentMethod.isActive,
+    );
 
     const placeCourtEntries: Array<
       [string, Awaited<ReturnType<ICourtRepository["findByPlaceId"]>>]
@@ -162,7 +172,8 @@ export class GetOwnerSetupStatusUseCase {
       hasOrganization &&
       hasVenue &&
       primaryOnboarding.isVerified &&
-      primaryOnboarding.hasReadyCourt;
+      primaryOnboarding.hasReadyCourt &&
+      hasPaymentMethod;
 
     const nextStep = computeNextStep({
       hasOrganization,
@@ -171,6 +182,7 @@ export class GetOwnerSetupStatusUseCase {
       hasVerification: primaryOnboarding.hasVerification,
       isVerificationConfirmed: primaryOnboarding.isVerified,
       hasReadyCourt: primaryOnboarding.hasReadyCourt,
+      hasPaymentMethod,
     });
 
     return {
@@ -188,6 +200,7 @@ export class GetOwnerSetupStatusUseCase {
       hasReadyCourt: primaryOnboarding.hasReadyCourt,
       hasCourtSchedule: primaryOnboarding.hasAnyCourtSchedule,
       hasCourtPricing: primaryOnboarding.hasAnyCourtPricing,
+      hasPaymentMethod,
       primaryCourtId: activeCourt?.id ?? null,
       readyCourtId: readyCourt?.id ?? null,
       isSetupComplete,

@@ -10,6 +10,34 @@ vi.mock("@/common/trpc-client-call", () => ({
 }));
 
 describe("ChatApi", () => {
+  it("queryReservationChatGetGroupSession success -> uses getGroupSession transport path", async () => {
+    // Arrange
+    const clientApi = {
+      reservationChat: {
+        getGroupSession: { query: vi.fn() },
+      },
+    } as never;
+    const toAppError = vi.fn((error: unknown) => error as never);
+    const api = new ChatApi({ clientApi, toAppError });
+    const expected = { channel: { channelId: "grp-1" } };
+    callTrpcQueryMock.mockResolvedValue(expected);
+
+    // Act
+    const result = await api.queryReservationChatGetGroupSession({
+      reservationGroupId: "group-1",
+    });
+
+    // Assert
+    expect(result).toEqual(expected);
+    expect(callTrpcQueryMock).toHaveBeenCalledWith(
+      clientApi,
+      ["reservationChat", "getGroupSession"],
+      expect.any(Function),
+      { reservationGroupId: "group-1" },
+      toAppError,
+    );
+  });
+
   it("mutChatInboxArchiveThread success -> uses archiveThread transport path", async () => {
     // Arrange
     const clientApi = {

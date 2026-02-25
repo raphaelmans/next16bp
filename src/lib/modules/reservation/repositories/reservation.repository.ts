@@ -4,27 +4,38 @@ import {
   count,
   desc,
   eq,
-  gte,
   gt,
+  gte,
   inArray,
   lt,
   lte,
   sql,
 } from "drizzle-orm";
 import {
+  type CourtRecord,
   court,
   type InsertReservation,
+  type InsertReservationGroup,
   openPlay,
+  type PlaceRecord,
   paymentProof,
   place,
   placePhoto,
+  type ReservationGroupRecord,
   type ReservationRecord,
   reservation,
+  reservationGroup,
 } from "@/lib/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";
 import type { RequestContext } from "@/lib/shared/kernel/context";
 import type { ReservationListItemRecord } from "../dtos/reservation-list.dto";
 import type { ReservationWithDetails } from "../dtos/reservation-owner.dto";
+
+export type ReservationGroupItemVenueRecord = {
+  reservation: ReservationRecord;
+  court: CourtRecord;
+  place: PlaceRecord;
+};
 
 export interface IReservationRepository {
   findById(id: string, ctx?: RequestContext): Promise<ReservationRecord | null>;
@@ -32,6 +43,34 @@ export interface IReservationRepository {
     id: string,
     ctx: RequestContext,
   ): Promise<ReservationRecord | null>;
+  findByIdsForUpdate(
+    ids: string[],
+    ctx: RequestContext,
+  ): Promise<ReservationRecord[]>;
+  findByGroupId(
+    groupId: string,
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord[]>;
+  findByGroupIdForUpdate(
+    groupId: string,
+    ctx: RequestContext,
+  ): Promise<ReservationRecord[]>;
+  findGroupItemsWithCourtAndPlace(
+    groupId: string,
+    ctx?: RequestContext,
+  ): Promise<ReservationGroupItemVenueRecord[]>;
+  findGroupById(
+    groupId: string,
+    ctx?: RequestContext,
+  ): Promise<ReservationGroupRecord | null>;
+  findGroupByIdForUpdate(
+    groupId: string,
+    ctx: RequestContext,
+  ): Promise<ReservationGroupRecord | null>;
+  createGroup(
+    data: InsertReservationGroup,
+    ctx?: RequestContext,
+  ): Promise<ReservationGroupRecord>;
   findByPlayerId(
     playerId: string,
     pagination: { limit: number; offset: number },
@@ -117,6 +156,10 @@ export interface IReservationRepository {
     data: InsertReservation,
     ctx?: RequestContext,
   ): Promise<ReservationRecord>;
+  createMany(
+    data: InsertReservation[],
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord[]>;
   update(
     id: string,
     data: Partial<InsertReservation>,
@@ -165,6 +208,101 @@ export class ReservationRepository implements IReservationRepository {
       .for("update")
       .limit(1);
     return result[0] ?? null;
+  }
+
+  async findByIdsForUpdate(
+    ids: string[],
+    ctx: RequestContext,
+  ): Promise<ReservationRecord[]> {
+    if (ids.length === 0) return [];
+    const client = this.getClient(ctx) as DrizzleTransaction;
+    return client
+      .select()
+      .from(reservation)
+      .where(inArray(reservation.id, ids))
+      .for("update");
+  }
+
+  async findByGroupId(
+    groupId: string,
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord[]> {
+    const client = this.getClient(ctx);
+    return client
+      .select()
+      .from(reservation)
+      .where(eq(reservation.groupId, groupId))
+      .orderBy(asc(reservation.startTime), asc(reservation.id));
+  }
+
+  async findByGroupIdForUpdate(
+    groupId: string,
+    ctx: RequestContext,
+  ): Promise<ReservationRecord[]> {
+    const client = this.getClient(ctx) as DrizzleTransaction;
+    return client
+      .select()
+      .from(reservation)
+      .where(eq(reservation.groupId, groupId))
+      .orderBy(asc(reservation.startTime), asc(reservation.id))
+      .for("update");
+  }
+
+  async findGroupItemsWithCourtAndPlace(
+    groupId: string,
+    ctx?: RequestContext,
+  ): Promise<ReservationGroupItemVenueRecord[]> {
+    const client = this.getClient(ctx);
+    return client
+      .select({
+        reservation,
+        court,
+        place,
+      })
+      .from(reservation)
+      .innerJoin(court, eq(reservation.courtId, court.id))
+      .innerJoin(place, eq(court.placeId, place.id))
+      .where(eq(reservation.groupId, groupId))
+      .orderBy(asc(reservation.startTime), asc(reservation.id));
+  }
+
+  async findGroupById(
+    groupId: string,
+    ctx?: RequestContext,
+  ): Promise<ReservationGroupRecord | null> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select()
+      .from(reservationGroup)
+      .where(eq(reservationGroup.id, groupId))
+      .limit(1);
+    return result[0] ?? null;
+  }
+
+  async findGroupByIdForUpdate(
+    groupId: string,
+    ctx: RequestContext,
+  ): Promise<ReservationGroupRecord | null> {
+    const client = this.getClient(ctx) as DrizzleTransaction;
+    const result = await client
+      .select()
+      .from(reservationGroup)
+      .where(eq(reservationGroup.id, groupId))
+      .for("update")
+      .limit(1);
+    return result[0] ?? null;
+  }
+
+  async createGroup(
+    data: InsertReservationGroup,
+    ctx?: RequestContext,
+  ): Promise<ReservationGroupRecord> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .insert(reservationGroup)
+      .values(data)
+      .returning();
+    return result[0];
   }
 
   async findByPlayerId(
@@ -257,6 +395,7 @@ export class ReservationRepository implements IReservationRepository {
     const query = client
       .select({
         id: reservation.id,
+        reservationGroupId: reservation.groupId,
         status: reservation.status,
         playerNameSnapshot: reservation.playerNameSnapshot,
         playerPhoneSnapshot: reservation.playerPhoneSnapshot,
@@ -285,6 +424,7 @@ export class ReservationRepository implements IReservationRepository {
       .where(and(...conditions))
       .groupBy(
         reservation.id,
+        reservation.groupId,
         reservation.status,
         reservation.playerNameSnapshot,
         reservation.playerPhoneSnapshot,
@@ -314,6 +454,7 @@ export class ReservationRepository implements IReservationRepository {
 
     return results.map((row) => ({
       ...row,
+      reservationGroupId: row.reservationGroupId ?? null,
       coverImageUrl: row.coverImageUrl ?? null,
       createdAt: toIsoString(row.createdAt),
       expiresAt: toIsoString(row.expiresAt),
@@ -453,6 +594,7 @@ export class ReservationRepository implements IReservationRepository {
     const results = await client
       .select({
         id: reservation.id,
+        reservationGroupId: reservation.groupId,
         status: reservation.status,
         playerNameSnapshot: reservation.playerNameSnapshot,
         playerEmailSnapshot: reservation.playerEmailSnapshot,
@@ -498,6 +640,7 @@ export class ReservationRepository implements IReservationRepository {
 
       return {
         ...r,
+        reservationGroupId: r.reservationGroupId ?? null,
         slotStartTime: toIsoString(r.slotStartTime) ?? "",
         slotEndTime: toIsoString(r.slotEndTime) ?? "",
         createdAt: toIsoString(r.createdAt),
@@ -576,6 +719,15 @@ export class ReservationRepository implements IReservationRepository {
     const client = this.getClient(ctx);
     const result = await client.insert(reservation).values(data).returning();
     return result[0];
+  }
+
+  async createMany(
+    data: InsertReservation[],
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord[]> {
+    if (data.length === 0) return [];
+    const client = this.getClient(ctx);
+    return client.insert(reservation).values(data).returning();
   }
 
   async update(

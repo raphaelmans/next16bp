@@ -9,7 +9,6 @@ export const DAY_OPTIONS = [
 ] as const;
 
 export const DAY_KEYS = DAY_OPTIONS.map((day) => day.value);
-export const CURRENCY_OPTIONS = ["PHP", "USD"] as const;
 export const DEFAULT_CURRENCY = "PHP";
 
 export type HoursWindow = {
@@ -22,7 +21,6 @@ export type RateRule = {
   dayOfWeek: number;
   startMinute: number;
   endMinute: number;
-  currency: string;
   hourlyRateCents: number;
 };
 
@@ -32,7 +30,6 @@ export type BlockRow = {
   startTime: string;
   endTime: string;
   isOpen: boolean;
-  currency: string;
   hourlyRate: number | "";
   allowPricing: boolean;
 };
@@ -70,7 +67,6 @@ export const createEmptyRow = (dayOfWeek: number): BlockRow => ({
   startTime: "08:00",
   endTime: "20:00",
   isOpen: true,
-  currency: DEFAULT_CURRENCY,
   hourlyRate: "",
   allowPricing: true,
 });
@@ -118,7 +114,6 @@ export const mergeSegments = (segments: BlockSegment[]) => {
     const isSameBlock =
       previous.endTime === current.startTime &&
       previous.isOpen === current.isOpen &&
-      previous.currency === current.currency &&
       previous.hourlyRate === current.hourlyRate &&
       previous.allowPricing === current.allowPricing;
     if (isSameBlock) {
@@ -185,7 +180,6 @@ export const buildRowsByDay = (hours: HoursWindow[], rules: RateRule[]) => {
         startTime: toTimeString(startMinute),
         endTime: toTimeString(endMinute),
         isOpen,
-        currency: pricingRule?.currency ?? DEFAULT_CURRENCY,
         hourlyRate,
         allowPricing,
       });

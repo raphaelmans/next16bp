@@ -569,19 +569,10 @@ export function AdminPlacesList({
                                           </div>
                                           <div className="text-muted-foreground">
                                             {details.place.city},{" "}
-                                            {details.place.province},{" "}
-                                            {details.place.country}
+                                            {details.place.province}
                                           </div>
                                         </div>
                                         <div className="grid gap-2 sm:grid-cols-2">
-                                          <div>
-                                            <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
-                                              Time zone
-                                            </div>
-                                            <div className="font-medium">
-                                              {details.place.timeZone}
-                                            </div>
-                                          </div>
                                           <div>
                                             <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
                                               extGPlaceId

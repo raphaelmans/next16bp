@@ -35,19 +35,24 @@ import type { RequestContext } from "@/lib/shared/kernel/context";
 import type { TransactionManager } from "@/lib/shared/kernel/transaction";
 import { computeSchedulePrice } from "@/lib/shared/lib/schedule-availability";
 import type {
+  AcceptReservationGroupDTO,
   ConfirmPaidOfflineDTO,
   ConfirmPaymentDTO,
+  ConfirmPaymentGroupDTO,
   ConvertWalkInBlockDTO,
   CreateGuestBookingDTO,
   GetActiveForCourtRangeDTO,
   GetOrgReservationsDTO,
+  GetReservationGroupDetailDTO,
   RejectReservationDTO,
+  RejectReservationGroupDTO,
   ReservationWithDetails,
 } from "../dtos";
 import {
   InvalidReservationStatusError,
   ReservationDurationInvalidError,
   ReservationExpiredError,
+  ReservationGroupNotFoundError,
   ReservationNotFoundError,
   ReservationPaymentMethodInvalidError,
   ReservationPaymentNotRequiredError,
@@ -65,10 +70,18 @@ export interface IReservationOwnerService {
     userId: string,
     reservationId: string,
   ): Promise<ReservationRecord>;
+  acceptReservationGroup(
+    userId: string,
+    data: AcceptReservationGroupDTO,
+  ): Promise<ReservationRecord[]>;
   confirmPayment(
     userId: string,
     data: ConfirmPaymentDTO,
   ): Promise<ReservationRecord>;
+  confirmPaymentGroup(
+    userId: string,
+    data: ConfirmPaymentGroupDTO,
+  ): Promise<ReservationRecord[]>;
   confirmPaidOffline(
     userId: string,
     data: ConfirmPaidOfflineDTO,
@@ -77,6 +90,10 @@ export interface IReservationOwnerService {
     userId: string,
     data: RejectReservationDTO,
   ): Promise<ReservationRecord>;
+  rejectReservationGroup(
+    userId: string,
+    data: RejectReservationGroupDTO,
+  ): Promise<ReservationRecord[]>;
   createGuestBooking(
     userId: string,
     data: CreateGuestBookingDTO,
@@ -97,6 +114,13 @@ export interface IReservationOwnerService {
     userId: string,
     filters: GetOrgReservationsDTO,
   ): Promise<ReservationWithDetails[]>;
+  getReservationGroupDetail(
+    userId: string,
+    data: GetReservationGroupDetailDTO,
+  ): Promise<{
+    reservationGroupId: string;
+    reservations: ReservationWithDetails[];
+  }>;
   getPendingCount(userId: string, organizationId: string): Promise<number>;
 }
 
@@ -274,6 +298,89 @@ export class ReservationOwnerService implements IReservationOwnerService {
     }
   }
 
+  private async loadReservationGroupForOwnerAction(
+    userId: string,
+    reservationGroupId: string,
+    ctx: RequestContext,
+  ): Promise<{
+    reservations: ReservationRecord[];
+    courtById: Map<
+      string,
+      NonNullable<Awaited<ReturnType<ICourtRepository["findById"]>>>
+    >;
+    placeById: Map<
+      string,
+      NonNullable<Awaited<ReturnType<IPlaceRepository["findById"]>>>
+    >;
+  }> {
+    const group = await this.reservationRepository.findGroupByIdForUpdate(
+      reservationGroupId,
+      ctx,
+    );
+    if (!group) {
+      throw new ReservationGroupNotFoundError(reservationGroupId);
+    }
+
+    const reservations =
+      await this.reservationRepository.findByGroupIdForUpdate(
+        reservationGroupId,
+        ctx,
+      );
+    if (reservations.length === 0) {
+      throw new ReservationGroupNotFoundError(reservationGroupId);
+    }
+
+    const courtIds = Array.from(
+      new Set(reservations.map((item) => item.courtId)),
+    );
+    const courts = await Promise.all(
+      courtIds.map((courtId) => this.courtRepository.findById(courtId, ctx)),
+    );
+
+    const courtById = new Map<
+      string,
+      NonNullable<Awaited<ReturnType<ICourtRepository["findById"]>>>
+    >();
+    for (const [index, court] of courts.entries()) {
+      const courtId = courtIds[index];
+      if (!court) {
+        throw new CourtNotFoundError(courtId);
+      }
+      courtById.set(court.id, court);
+      await this.verifyCourtOwnership(userId, court.id, ctx);
+    }
+
+    const placeIds = Array.from(
+      new Set(
+        Array.from(courtById.values()).map((court) =>
+          this.requireCourtPlaceId(court.placeId),
+        ),
+      ),
+    );
+
+    const placeRecords = await Promise.all(
+      placeIds.map((placeId) => this.placeRepository.findById(placeId, ctx)),
+    );
+
+    const placeById = new Map<
+      string,
+      NonNullable<Awaited<ReturnType<IPlaceRepository["findById"]>>>
+    >();
+    for (const [index, place] of placeRecords.entries()) {
+      const placeId = placeIds[index];
+      if (!place) {
+        throw new PlaceNotFoundError(placeId);
+      }
+      placeById.set(place.id, place);
+    }
+
+    return {
+      reservations,
+      courtById,
+      placeById,
+    };
+  }
+
   async acceptReservation(
     userId: string,
     reservationId: string,
@@ -430,6 +537,195 @@ export class ReservationOwnerService implements IReservationOwnerService {
     return updated;
   }
 
+  async acceptReservationGroup(
+    userId: string,
+    data: AcceptReservationGroupDTO,
+  ): Promise<ReservationRecord[]> {
+    const updatedReservations = await this.transactionManager.run(
+      async (tx) => {
+        const ctx: RequestContext = { tx };
+
+        const { reservations, courtById, placeById } =
+          await this.loadReservationGroupForOwnerAction(
+            userId,
+            data.reservationGroupId,
+            ctx,
+          );
+
+        const now = new Date();
+        const updated: ReservationRecord[] = [];
+        for (const reservation of reservations) {
+          if (reservation.status !== "CREATED") {
+            throw new InvalidReservationStatusError(
+              reservation.id,
+              reservation.status,
+              ["CREATED"],
+            );
+          }
+
+          if (
+            reservation.expiresAt &&
+            new Date(reservation.expiresAt) < new Date()
+          ) {
+            throw new ReservationExpiredError(reservation.id);
+          }
+
+          const court = courtById.get(reservation.courtId);
+          if (!court) {
+            throw new CourtNotFoundError(reservation.courtId);
+          }
+          const placeId = this.requireCourtPlaceId(court.placeId);
+          const place = placeById.get(placeId);
+          if (!place) {
+            throw new PlaceNotFoundError(placeId);
+          }
+
+          if (reservation.totalPriceCents > 0) {
+            const paymentHoldMinutes = await this.getPaymentHoldMinutes(
+              reservation.courtId,
+              ctx,
+            );
+            const expiresAt = addMinutes(now, paymentHoldMinutes);
+            const itemUpdated = await this.reservationRepository.update(
+              reservation.id,
+              {
+                status: "AWAITING_PAYMENT",
+                expiresAt,
+              },
+              ctx,
+            );
+
+            await this.reservationEventRepository.create(
+              {
+                reservationId: reservation.id,
+                fromStatus: "CREATED",
+                toStatus: "AWAITING_PAYMENT",
+                triggeredByUserId: userId,
+                triggeredByRole: "OWNER",
+                notes: "Owner accepted reservation group - awaiting payment",
+              },
+              ctx,
+            );
+
+            updated.push(itemUpdated);
+            continue;
+          }
+
+          const itemUpdated = await this.reservationRepository.update(
+            reservation.id,
+            {
+              status: "CONFIRMED",
+              confirmedAt: now,
+              expiresAt: null,
+            },
+            ctx,
+          );
+
+          await this.reservationEventRepository.create(
+            {
+              reservationId: reservation.id,
+              fromStatus: "CREATED",
+              toStatus: "CONFIRMED",
+              triggeredByUserId: userId,
+              triggeredByRole: "OWNER",
+              notes: "Owner accepted reservation group - free booking",
+            },
+            ctx,
+          );
+
+          updated.push(itemUpdated);
+        }
+
+        if (updated.length > 0) {
+          const sorted = updated
+            .slice()
+            .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+          const representative = sorted[0];
+          const latest = sorted[sorted.length - 1] ?? representative;
+          const representativeCourt = courtById.get(representative.courtId);
+          if (!representativeCourt) {
+            throw new CourtNotFoundError(representative.courtId);
+          }
+          const representativePlaceId = this.requireCourtPlaceId(
+            representativeCourt.placeId,
+          );
+          const representativePlace = placeById.get(representativePlaceId);
+          if (!representativePlace) {
+            throw new PlaceNotFoundError(representativePlaceId);
+          }
+
+          const itemSummaries = sorted.map((item) => ({
+            reservationId: item.id,
+            courtId: item.courtId,
+            courtLabel: courtById.get(item.courtId)?.label ?? "Court",
+            startTimeIso: item.startTime.toISOString(),
+            endTimeIso: item.endTime.toISOString(),
+            totalPriceCents: item.totalPriceCents,
+            currency: item.currency,
+            expiresAtIso: item.expiresAt
+              ? new Date(item.expiresAt).toISOString()
+              : null,
+          }));
+          const soonestExpiry = sorted
+            .map((item) => item.expiresAt?.getTime() ?? null)
+            .filter((value): value is number => value !== null)
+            .sort((a, b) => a - b)[0];
+          const hasAwaitingPayment = sorted.some(
+            (item) => item.status === "AWAITING_PAYMENT",
+          );
+
+          if (hasAwaitingPayment) {
+            await this.notificationDeliveryService.enqueuePlayerReservationGroupAwaitingPayment(
+              {
+                reservationGroupId: data.reservationGroupId,
+                representativeReservationId: representative.id,
+                placeName: representativePlace.name,
+                courtLabel:
+                  itemSummaries.length > 1
+                    ? `${itemSummaries.length} courts`
+                    : (itemSummaries[0]?.courtLabel ?? "Court"),
+                startTimeIso: representative.startTime.toISOString(),
+                endTimeIso: latest.endTime.toISOString(),
+                expiresAtIso: soonestExpiry
+                  ? new Date(soonestExpiry).toISOString()
+                  : null,
+                totalPriceCents: sorted.reduce(
+                  (sum, item) => sum + item.totalPriceCents,
+                  0,
+                ),
+                currency: representative.currency,
+                itemCount: itemSummaries.length,
+                items: itemSummaries,
+              },
+              ctx,
+            );
+          } else {
+            await this.notificationDeliveryService.enqueuePlayerReservationGroupConfirmed(
+              {
+                reservationGroupId: data.reservationGroupId,
+                representativeReservationId: representative.id,
+                placeName: representativePlace.name,
+                courtLabel:
+                  itemSummaries.length > 1
+                    ? `${itemSummaries.length} courts`
+                    : (itemSummaries[0]?.courtLabel ?? "Court"),
+                startTimeIso: representative.startTime.toISOString(),
+                endTimeIso: latest.endTime.toISOString(),
+                itemCount: itemSummaries.length,
+                items: itemSummaries,
+              },
+              ctx,
+            );
+          }
+        }
+
+        return updated;
+      },
+    );
+
+    return updatedReservations;
+  }
+
   async confirmPayment(
     userId: string,
     data: ConfirmPaymentDTO,
@@ -525,6 +821,130 @@ export class ReservationOwnerService implements IReservationOwnerService {
     await this.postOwnerConfirmedMessageBestEffort(updated, userId);
 
     return updated;
+  }
+
+  async confirmPaymentGroup(
+    userId: string,
+    data: ConfirmPaymentGroupDTO,
+  ): Promise<ReservationRecord[]> {
+    const updatedReservations = await this.transactionManager.run(
+      async (tx) => {
+        const ctx: RequestContext = { tx };
+        const { reservations, courtById, placeById } =
+          await this.loadReservationGroupForOwnerAction(
+            userId,
+            data.reservationGroupId,
+            ctx,
+          );
+
+        const now = new Date();
+        const updated: ReservationRecord[] = [];
+        for (const reservation of reservations) {
+          if (reservation.status !== "PAYMENT_MARKED_BY_USER") {
+            throw new InvalidReservationStatusError(
+              reservation.id,
+              reservation.status,
+              ["PAYMENT_MARKED_BY_USER"],
+            );
+          }
+
+          if (
+            reservation.expiresAt &&
+            new Date(reservation.expiresAt) < new Date()
+          ) {
+            throw new ReservationExpiredError(reservation.id);
+          }
+
+          const court = courtById.get(reservation.courtId);
+          if (!court) {
+            throw new CourtNotFoundError(reservation.courtId);
+          }
+          const placeId = this.requireCourtPlaceId(court.placeId);
+          const place = placeById.get(placeId);
+          if (!place) {
+            throw new PlaceNotFoundError(placeId);
+          }
+
+          const itemUpdated = await this.reservationRepository.update(
+            reservation.id,
+            {
+              status: "CONFIRMED",
+              confirmedAt: now,
+              expiresAt: null,
+            },
+            ctx,
+          );
+
+          await this.reservationEventRepository.create(
+            {
+              reservationId: reservation.id,
+              fromStatus: "PAYMENT_MARKED_BY_USER",
+              toStatus: "CONFIRMED",
+              triggeredByUserId: userId,
+              triggeredByRole: "OWNER",
+              notes:
+                data.notes ?? "Owner confirmed payment for reservation group",
+            },
+            ctx,
+          );
+
+          updated.push(itemUpdated);
+        }
+
+        if (updated.length > 0) {
+          const sorted = updated
+            .slice()
+            .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+          const representative = sorted[0];
+          const latest = sorted[sorted.length - 1] ?? representative;
+          const representativeCourt = courtById.get(representative.courtId);
+          if (!representativeCourt) {
+            throw new CourtNotFoundError(representative.courtId);
+          }
+          const representativePlaceId = this.requireCourtPlaceId(
+            representativeCourt.placeId,
+          );
+          const representativePlace = placeById.get(representativePlaceId);
+          if (!representativePlace) {
+            throw new PlaceNotFoundError(representativePlaceId);
+          }
+
+          const itemSummaries = sorted.map((item) => ({
+            reservationId: item.id,
+            courtId: item.courtId,
+            courtLabel: courtById.get(item.courtId)?.label ?? "Court",
+            startTimeIso: item.startTime.toISOString(),
+            endTimeIso: item.endTime.toISOString(),
+            totalPriceCents: item.totalPriceCents,
+            currency: item.currency,
+            expiresAtIso: item.expiresAt
+              ? new Date(item.expiresAt).toISOString()
+              : null,
+          }));
+
+          await this.notificationDeliveryService.enqueuePlayerReservationGroupConfirmed(
+            {
+              reservationGroupId: data.reservationGroupId,
+              representativeReservationId: representative.id,
+              placeName: representativePlace.name,
+              courtLabel:
+                itemSummaries.length > 1
+                  ? `${itemSummaries.length} courts`
+                  : (itemSummaries[0]?.courtLabel ?? "Court"),
+              startTimeIso: representative.startTime.toISOString(),
+              endTimeIso: latest.endTime.toISOString(),
+              itemCount: itemSummaries.length,
+              items: itemSummaries,
+            },
+            ctx,
+          );
+        }
+
+        return updated;
+      },
+    );
+
+    return updatedReservations;
   }
 
   async confirmPaidOffline(
@@ -761,6 +1181,124 @@ export class ReservationOwnerService implements IReservationOwnerService {
         },
         ctx,
       );
+
+      return updated;
+    });
+  }
+
+  async rejectReservationGroup(
+    userId: string,
+    data: RejectReservationGroupDTO,
+  ): Promise<ReservationRecord[]> {
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+      const { reservations, courtById, placeById } =
+        await this.loadReservationGroupForOwnerAction(
+          userId,
+          data.reservationGroupId,
+          ctx,
+        );
+
+      const updated: ReservationRecord[] = [];
+      for (const reservation of reservations) {
+        if (
+          reservation.status !== "CREATED" &&
+          reservation.status !== "AWAITING_PAYMENT" &&
+          reservation.status !== "PAYMENT_MARKED_BY_USER"
+        ) {
+          throw new InvalidReservationStatusError(
+            reservation.id,
+            reservation.status,
+            ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"],
+          );
+        }
+
+        const court = courtById.get(reservation.courtId);
+        if (!court) {
+          throw new CourtNotFoundError(reservation.courtId);
+        }
+        const placeId = this.requireCourtPlaceId(court.placeId);
+        const place = placeById.get(placeId);
+        if (!place) {
+          throw new PlaceNotFoundError(placeId);
+        }
+
+        const previousStatus = reservation.status;
+        const itemUpdated = await this.reservationRepository.update(
+          reservation.id,
+          {
+            status: "CANCELLED",
+            cancelledAt: new Date(),
+            cancellationReason: data.reason,
+            expiresAt: null,
+          },
+          ctx,
+        );
+
+        await this.reservationEventRepository.create(
+          {
+            reservationId: reservation.id,
+            fromStatus: previousStatus,
+            toStatus: "CANCELLED",
+            triggeredByUserId: userId,
+            triggeredByRole: "OWNER",
+            notes: `Rejected by owner (group): ${data.reason}`,
+          },
+          ctx,
+        );
+
+        updated.push(itemUpdated);
+      }
+
+      if (updated.length > 0) {
+        const sorted = updated
+          .slice()
+          .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+        const representative = sorted[0];
+        const latest = sorted[sorted.length - 1] ?? representative;
+        const representativeCourt = courtById.get(representative.courtId);
+        if (!representativeCourt) {
+          throw new CourtNotFoundError(representative.courtId);
+        }
+        const representativePlaceId = this.requireCourtPlaceId(
+          representativeCourt.placeId,
+        );
+        const representativePlace = placeById.get(representativePlaceId);
+        if (!representativePlace) {
+          throw new PlaceNotFoundError(representativePlaceId);
+        }
+
+        const itemSummaries = sorted.map((item) => ({
+          reservationId: item.id,
+          courtId: item.courtId,
+          courtLabel: courtById.get(item.courtId)?.label ?? "Court",
+          startTimeIso: item.startTime.toISOString(),
+          endTimeIso: item.endTime.toISOString(),
+          totalPriceCents: item.totalPriceCents,
+          currency: item.currency,
+          expiresAtIso: item.expiresAt
+            ? new Date(item.expiresAt).toISOString()
+            : null,
+        }));
+
+        await this.notificationDeliveryService.enqueuePlayerReservationGroupRejected(
+          {
+            reservationGroupId: data.reservationGroupId,
+            representativeReservationId: representative.id,
+            placeName: representativePlace.name,
+            courtLabel:
+              itemSummaries.length > 1
+                ? `${itemSummaries.length} courts`
+                : (itemSummaries[0]?.courtLabel ?? "Court"),
+            startTimeIso: representative.startTime.toISOString(),
+            endTimeIso: latest.endTime.toISOString(),
+            itemCount: itemSummaries.length,
+            items: itemSummaries,
+            reason: data.reason,
+          },
+          ctx,
+        );
+      }
 
       return updated;
     });
@@ -1187,6 +1725,59 @@ export class ReservationOwnerService implements IReservationOwnerService {
     return Promise.all(
       results.map((record) => this.attachSignedPaymentProofUrl(record)),
     );
+  }
+
+  async getReservationGroupDetail(
+    userId: string,
+    data: GetReservationGroupDetailDTO,
+  ): Promise<{
+    reservationGroupId: string;
+    reservations: ReservationWithDetails[];
+  }> {
+    const group = await this.reservationRepository.findGroupById(
+      data.reservationGroupId,
+    );
+    if (!group) {
+      throw new ReservationGroupNotFoundError(data.reservationGroupId);
+    }
+
+    const reservations = await this.reservationRepository.findByGroupId(
+      data.reservationGroupId,
+    );
+    if (reservations.length === 0) {
+      throw new ReservationGroupNotFoundError(data.reservationGroupId);
+    }
+
+    const organizationId = await this.verifyCourtOwnership(
+      userId,
+      reservations[0].courtId,
+    );
+
+    const details = await Promise.all(
+      reservations.map(async (reservation) => {
+        const [record] =
+          await this.reservationRepository.findWithDetailsByOrganization(
+            organizationId,
+            {
+              reservationId: reservation.id,
+              placeId: undefined,
+              courtId: undefined,
+              status: undefined,
+              limit: 1,
+              offset: 0,
+            },
+          );
+        if (!record) {
+          throw new ReservationNotFoundError(reservation.id);
+        }
+        return this.attachSignedPaymentProofUrl(record);
+      }),
+    );
+
+    return {
+      reservationGroupId: group.id,
+      reservations: details,
+    };
   }
 
   async getPendingCount(

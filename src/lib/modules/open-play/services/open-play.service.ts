@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import { ReservationNotFoundError } from "@/lib/modules/reservation/errors/reservation.errors";
@@ -12,6 +12,7 @@ import {
   place,
   profile,
   reservation,
+  reservationGroup,
 } from "@/lib/shared/infra/db/schema";
 import type { DrizzleTransaction } from "@/lib/shared/infra/db/types";
 import { logger } from "@/lib/shared/infra/logger";
@@ -21,9 +22,11 @@ import type {
   CancelOpenPlayDTO,
   CloseOpenPlayDTO,
   CreateOpenPlayFromReservationDTO,
+  CreateOpenPlayFromReservationGroupDTO,
   DecideOpenPlayParticipantDTO,
   GetOpenPlayDTO,
   GetOpenPlayForReservationDTO,
+  GetOpenPlayForReservationGroupDTO,
   LeaveOpenPlayDTO,
   ListOpenPlaysByPlaceDTO,
   RequestJoinOpenPlayDTO,
@@ -72,7 +75,7 @@ export interface OpenPlayCard {
   maxPlayers: number;
   confirmedCount: number;
   availableSpots: number;
-  courtLabel: string;
+  courtLabels: string[];
   sportName: string;
   costSharing: Pick<
     OpenPlayCostSharing,
@@ -104,10 +107,10 @@ export interface OpenPlayPublicDetail {
     name: string;
     timeZone: string;
   };
-  court: {
+  courts: {
     id: string;
     label: string;
-  };
+  }[];
   sport: {
     id: string;
     name: string;
@@ -175,10 +178,21 @@ export interface IOpenPlayService {
     input: GetOpenPlayForReservationDTO,
     ctx?: RequestContext,
   ): Promise<OpenPlayRecord | null>;
+  getForReservationGroup(
+    userId: string,
+    viewerProfileId: string,
+    input: GetOpenPlayForReservationGroupDTO,
+    ctx?: RequestContext,
+  ): Promise<OpenPlayRecord | null>;
   createFromReservation(
     userId: string,
     hostProfileId: string,
     input: CreateOpenPlayFromReservationDTO,
+  ): Promise<OpenPlayRecord>;
+  createFromReservationGroup(
+    userId: string,
+    hostProfileId: string,
+    input: CreateOpenPlayFromReservationGroupDTO,
   ): Promise<OpenPlayRecord>;
   requestToJoin(
     userId: string,
@@ -302,7 +316,7 @@ export class OpenPlayService implements IOpenPlayService {
         maxPlayers: item.maxPlayers,
         confirmedCount,
         availableSpots,
-        courtLabel: item.courtLabel,
+        courtLabels: item.courtLabels,
         sportName: item.sportName,
         costSharing: {
           currency: costSharing.currency,
@@ -359,7 +373,7 @@ export class OpenPlayService implements IOpenPlayService {
         availableSpots,
       },
       place: context.place,
-      court: context.court,
+      courts: context.courts,
       sport: context.sport,
       host: {
         profileId: context.host.profileId,
@@ -527,6 +541,25 @@ export class OpenPlayService implements IOpenPlayService {
     return existing;
   }
 
+  async getForReservationGroup(
+    _userId: string,
+    viewerProfileId: string,
+    input: GetOpenPlayForReservationGroupDTO,
+    ctx?: RequestContext,
+  ): Promise<OpenPlayRecord | null> {
+    const existing = await this.openPlayRepository.findByReservationGroupId(
+      input.reservationGroupId,
+      ctx,
+    );
+    if (!existing) {
+      return null;
+    }
+    if (existing.hostProfileId !== viewerProfileId) {
+      return null;
+    }
+    return existing;
+  }
+
   async createFromReservation(
     userId: string,
     hostProfileId: string,
@@ -655,6 +688,138 @@ export class OpenPlayService implements IOpenPlayService {
           hostProfileId,
         },
         "Open Play created",
+      );
+
+      return created;
+    });
+  }
+
+  async createFromReservationGroup(
+    userId: string,
+    hostProfileId: string,
+    input: CreateOpenPlayFromReservationGroupDTO,
+  ): Promise<OpenPlayRecord> {
+    const now = new Date();
+
+    return this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+      const client = tx as DrizzleTransaction;
+
+      // Load the reservation group
+      const [groupRow] = await client
+        .select({
+          id: reservationGroup.id,
+          placeId: reservationGroup.placeId,
+          playerId: reservationGroup.playerId,
+          totalPriceCents: reservationGroup.totalPriceCents,
+          currency: reservationGroup.currency,
+        })
+        .from(reservationGroup)
+        .where(eq(reservationGroup.id, input.reservationGroupId))
+        .limit(1);
+
+      if (!groupRow) {
+        throw new ReservationNotFoundError(input.reservationGroupId);
+      }
+
+      if (groupRow.playerId !== hostProfileId) {
+        throw new OpenPlayNotHostError();
+      }
+
+      // Load all reservations in the group
+      const groupReservations = await client
+        .select({
+          id: reservation.id,
+          status: reservation.status,
+          startTime: reservation.startTime,
+          endTime: reservation.endTime,
+          courtId: reservation.courtId,
+        })
+        .from(reservation)
+        .where(eq(reservation.groupId, input.reservationGroupId))
+        .orderBy(asc(reservation.startTime));
+
+      if (groupReservations.length === 0) {
+        throw new ReservationNotFoundError(input.reservationGroupId);
+      }
+
+      // Validate: none are CANCELLED/EXPIRED, and start times are in the future
+      for (const res of groupReservations) {
+        if (res.status === "CANCELLED" || res.status === "EXPIRED") {
+          throw new OpenPlayNotActiveError(res.status);
+        }
+      }
+
+      const earliestStart = groupReservations.reduce(
+        (min, r) => (r.startTime < min ? r.startTime : min),
+        groupReservations[0].startTime,
+      );
+
+      if (earliestStart.getTime() <= now.getTime()) {
+        throw new OpenPlayStartsInPastError();
+      }
+
+      const latestEnd = groupReservations.reduce(
+        (max, r) => (r.endTime > max ? r.endTime : max),
+        groupReservations[0].endTime,
+      );
+
+      // Derive sportId from the first court
+      const firstCourtId = groupReservations[0].courtId;
+      const [courtRow] = await client
+        .select({ sportId: court.sportId })
+        .from(court)
+        .where(eq(court.id, firstCourtId))
+        .limit(1);
+
+      if (!courtRow) {
+        throw new CourtNotFoundError(firstCourtId);
+      }
+
+      const payload: InsertOpenPlay = {
+        reservationGroupId: groupRow.id,
+        reservationId: null,
+        courtId: null,
+        hostProfileId,
+        placeId: groupRow.placeId,
+        sportId: courtRow.sportId,
+        startsAt: earliestStart,
+        endsAt: latestEnd,
+        status: "ACTIVE",
+        visibility: input.visibility,
+        joinPolicy: groupRow.totalPriceCents > 0 ? "REQUEST" : input.joinPolicy,
+        maxPlayers: input.maxPlayers,
+        title: input.title,
+        note: input.note,
+        paymentInstructions: input.paymentInstructions,
+        paymentLinkUrl: input.paymentLinkUrl,
+      };
+
+      const created = await this.openPlayRepository.insert(payload, ctx);
+
+      // Create HOST participant
+      await this.openPlayParticipantRepository.create(
+        {
+          openPlayId: created.id,
+          profileId: hostProfileId,
+          role: "HOST",
+          status: "CONFIRMED",
+          message: null,
+          decidedAt: new Date(),
+          decidedByProfileId: hostProfileId,
+        },
+        ctx,
+      );
+
+      logger.info(
+        {
+          event: "open_play.created",
+          openPlayId: created.id,
+          reservationGroupId: input.reservationGroupId,
+          userId,
+          hostProfileId,
+        },
+        "Open Play created from reservation group",
       );
 
       return created;

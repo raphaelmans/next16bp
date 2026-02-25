@@ -18,16 +18,22 @@ import {
   CancelReservationSchema,
   CreateReservationForAnyCourtSchema,
   CreateReservationForCourtSchema,
+  CreateReservationGroupSchema,
   GetMyReservationsSchema,
   GetPaymentInfoSchema,
+  GetPlayerReservationGroupDetailSchema,
+  MarkPaymentGroupSchema,
   MarkPaymentSchema,
+  PingOwnerSchema,
 } from "./dtos";
 import {
+  InvalidReservationAddonSelectionError,
   InvalidReservationStatusError,
   NoAvailabilityError,
   NotReservationOwnerError,
   ReservationCancellationWindowError,
   ReservationExpiredError,
+  ReservationGroupNotFoundError,
   ReservationNotFoundError,
   SlotNotAvailableError,
   TermsNotAcceptedError,
@@ -40,6 +46,7 @@ import { makeReservationService } from "./factories/reservation.factory";
 function handleReservationError(error: unknown): never {
   if (
     error instanceof ReservationNotFoundError ||
+    error instanceof ReservationGroupNotFoundError ||
     error instanceof ProfileNotFoundError ||
     error instanceof CourtNotFoundError ||
     error instanceof PlaceNotFoundError
@@ -61,6 +68,7 @@ function handleReservationError(error: unknown): never {
     error instanceof ReservationExpiredError ||
     error instanceof ReservationCancellationWindowError ||
     error instanceof InvalidReservationStatusError ||
+    error instanceof InvalidReservationAddonSelectionError ||
     error instanceof TermsNotAcceptedError ||
     error instanceof SlotNotAvailableError ||
     error instanceof NoAvailabilityError ||
@@ -119,6 +127,24 @@ export const reservationRouter = router({
       }
     }),
 
+  createGroup: protectedRateLimitedProcedure("sensitive")
+    .input(CreateReservationGroupSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const reservationService = makeReservationService();
+        return await reservationService.createReservationGroup(
+          ctx.userId,
+          profile.id,
+          input,
+        );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
   /**
    * Mark payment as complete
    */
@@ -142,6 +168,27 @@ export const reservationRouter = router({
     }),
 
   /**
+   * Mark payment as complete for all payable reservations in a reservation group
+   */
+  markPaymentGroup: protectedProcedure
+    .input(MarkPaymentGroupSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const reservationService = makeReservationService();
+        return await reservationService.markPaymentGroup(
+          ctx.userId,
+          profile.id,
+          input,
+        );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
+  /**
    * Cancel a reservation
    */
   cancel: protectedProcedure
@@ -154,6 +201,27 @@ export const reservationRouter = router({
 
         const reservationService = makeReservationService();
         return await reservationService.cancelReservation(
+          ctx.userId,
+          profile.id,
+          input,
+        );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
+  /**
+   * Ping court owner with a push notification
+   */
+  pingOwner: protectedRateLimitedProcedure("sensitive")
+    .input(PingOwnerSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const reservationService = makeReservationService();
+        return await reservationService.pingOwner(
           ctx.userId,
           profile.id,
           input,
@@ -187,6 +255,26 @@ export const reservationRouter = router({
         const reservationService = makeReservationService();
         return await reservationService.getReservationDetail(
           input.reservationId,
+        );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
+  /**
+   * Get grouped reservation detail for the current player
+   */
+  getGroupDetail: protectedProcedure
+    .input(GetPlayerReservationGroupDetailSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+        const reservationService = makeReservationService();
+        return await reservationService.getReservationGroupDetail(
+          ctx.userId,
+          profile.id,
+          input,
         );
       } catch (error) {
         handleReservationError(error);

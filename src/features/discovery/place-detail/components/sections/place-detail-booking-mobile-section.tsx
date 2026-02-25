@@ -22,7 +22,9 @@ import {
   useQueryDiscoveryAvailabilityForPlaceSportRange,
 } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
+import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
 import { useModMobileWeekPrefetch } from "@/features/discovery/place-detail/hooks/use-mobile-week-prefetch";
+import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 
 const TIMELINE_SLOT_DURATION = 60;
@@ -47,6 +49,7 @@ type PlaceDetailBookingMobileSectionProps = {
   setSelectionMode: (mode: "any" | "court") => void;
   selectedCourtId?: string;
   setSelectedCourtId: (courtId: string | undefined) => void;
+  selectedAddons: { addonId: string; quantity: number }[];
   selectedStartTime?: string;
   setSelectedStartTime: (startTime: string | undefined) => void;
   courtsForSport: { id: string; label: string }[];
@@ -55,7 +58,14 @@ type PlaceDetailBookingMobileSectionProps = {
   todayRangeStart: Date;
   maxBookingDate: Date;
   onContinue: () => void;
+  onContinueFromCart: () => void;
   onSelectionSummaryChange: (summary: SelectionSummary | null) => void;
+  cartItems: BookingCartItem[];
+  canAddToCart: boolean;
+  onAddToCartAction: () => void;
+  onRemoveFromCartAction: (key: string) => void;
+  onSaveSnapshot: () => void;
+  onRestoreSnapshot: () => void;
 };
 
 export function PlaceDetailBookingMobileSection({
@@ -71,6 +81,7 @@ export function PlaceDetailBookingMobileSection({
   setSelectionMode,
   selectedCourtId,
   setSelectedCourtId,
+  selectedAddons,
   selectedStartTime,
   setSelectedStartTime,
   courtsForSport,
@@ -79,7 +90,14 @@ export function PlaceDetailBookingMobileSection({
   todayRangeStart,
   maxBookingDate,
   onContinue,
+  onContinueFromCart,
   onSelectionSummaryChange,
+  cartItems,
+  canAddToCart,
+  onAddToCartAction,
+  onRemoveFromCartAction,
+  onSaveSnapshot,
+  onRestoreSnapshot,
 }: PlaceDetailBookingMobileSectionProps) {
   const utils = useModDiscoveryPrefetchPort();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
@@ -90,6 +108,21 @@ export function PlaceDetailBookingMobileSection({
     (s) => s.setMobileSheetExpanded,
   );
   const [mobileCalendarOpen, setMobileCalendarOpen] = React.useState(false);
+
+  const cartedStartTimes = React.useMemo(() => {
+    if (selectionMode !== "court" || !selectedCourtId) return undefined;
+    const set = new Set<string>();
+    for (const item of cartItems) {
+      if (item.courtId === selectedCourtId) {
+        const startMs = Date.parse(item.startTime);
+        const slotCount = item.durationMinutes / TIMELINE_SLOT_DURATION;
+        for (let i = 0; i < slotCount; i++) {
+          set.add(String(startMs + i * TIMELINE_SLOT_DURATION * 60_000));
+        }
+      }
+    }
+    return set.size > 0 ? set : undefined;
+  }, [cartItems, selectedCourtId, selectionMode]);
 
   const selectedDayKey = React.useMemo(
     () => getZonedDayKey(selectedDate ?? today, placeTimeZone),
@@ -108,6 +141,19 @@ export function PlaceDetailBookingMobileSection({
     () => getZonedStartOfDayIso(selectedDate ?? today, placeTimeZone),
     [placeTimeZone, selectedDate, today],
   );
+
+  const summaryDayDateIso = React.useMemo(() => {
+    if (!selectedStartTime) return "";
+    return getZonedStartOfDayIso(new Date(selectedStartTime), placeTimeZone);
+  }, [placeTimeZone, selectedStartTime]);
+
+  const summaryDayEndIso = React.useMemo(() => {
+    if (!summaryDayDateIso) return "";
+    return toUtcISOString(
+      getZonedDayRangeForInstant(new Date(summaryDayDateIso), placeTimeZone)
+        .end,
+    );
+  }, [placeTimeZone, summaryDayDateIso]);
 
   const mobileAnyDayQuery = useQueryDiscoveryAvailabilityForPlaceSportRange(
     {
@@ -146,6 +192,42 @@ export function PlaceDetailBookingMobileSection({
       !!selectedCourtId &&
       !!mobileDayDateIso,
   );
+
+  const summaryCourtAvailabilityQuery = useQueryDiscoveryAvailabilityForCourt(
+    {
+      courtId: selectedCourtId ?? "",
+      date: summaryDayDateIso,
+      durationMinutes,
+      includeUnavailable: true,
+      selectedAddons,
+    },
+    !isDesktop &&
+      selectionMode === "court" &&
+      !!selectedStartTime &&
+      !!selectedCourtId &&
+      !!summaryDayDateIso &&
+      durationMinutes > 0,
+  );
+
+  const summaryAnyAvailabilityQuery =
+    useQueryDiscoveryAvailabilityForPlaceSportRange(
+      {
+        placeId: place.id,
+        sportId: selectedSportId ?? "",
+        startDate: summaryDayDateIso,
+        endDate: summaryDayEndIso,
+        durationMinutes,
+        includeUnavailable: true,
+        includeCourtOptions: false,
+      },
+      !isDesktop &&
+        selectionMode === "any" &&
+        !!selectedStartTime &&
+        !!selectedSportId &&
+        !!summaryDayDateIso &&
+        !!summaryDayEndIso &&
+        durationMinutes > 0,
+    );
 
   const prefetchedMobileWeekRef = React.useRef<Set<string>>(new Set());
   const hasPrefetchedMobileWeek = React.useCallback(
@@ -207,37 +289,22 @@ export function PlaceDetailBookingMobileSection({
   );
 
   const selectionSummary = React.useMemo(() => {
-    if (!selectedStartTime) return null;
-    const startIdx = mobileDaySlots.findIndex(
-      (slot) => slot.startTime === selectedStartTime,
-    );
-    if (startIdx === -1) return null;
-
-    const slotCount = durationMinutes / TIMELINE_SLOT_DURATION;
-    let totalCents = 0;
-    let allHavePrice = true;
-    let endTime = mobileDaySlots[startIdx]?.endTime ?? "";
-
-    for (
-      let i = startIdx;
-      i < startIdx + slotCount && i < mobileDaySlots.length;
-      i++
-    ) {
-      if (mobileDaySlots[i].priceCents !== undefined) {
-        totalCents += mobileDaySlots[i].priceCents as number;
-      } else {
-        allHavePrice = false;
-      }
-      endTime = mobileDaySlots[i].endTime;
-    }
-
-    return {
-      startTime: selectedStartTime,
-      endTime,
-      totalCents: allHavePrice ? totalCents : undefined,
-      currency: mobileDaySlots[startIdx]?.currency ?? "PHP",
-    };
-  }, [durationMinutes, mobileDaySlots, selectedStartTime]);
+    const summaryOptions =
+      selectionMode === "court"
+        ? (summaryCourtAvailabilityQuery.data?.options ?? [])
+        : (summaryAnyAvailabilityQuery.data?.options ?? []);
+    return buildBookingSelectionSummary({
+      selectedStartTime,
+      pickerSlots: mobileDaySlots,
+      pricingOptions: summaryOptions,
+    });
+  }, [
+    mobileDaySlots,
+    selectedStartTime,
+    selectionMode,
+    summaryAnyAvailabilityQuery.data?.options,
+    summaryCourtAvailabilityQuery.data?.options,
+  ]);
 
   React.useEffect(() => {
     if (isDesktop) return;
@@ -320,13 +387,21 @@ export function PlaceDetailBookingMobileSection({
   const handleMobileSportChange = React.useCallback(
     (sportId: string) => {
       setSelectedSportId(sportId);
-      setSelectionMode("any");
-      setSelectedCourtId(undefined);
-      clearSelection(true);
     },
-    [clearSelection, setSelectedCourtId, setSelectedSportId, setSelectionMode],
+    [setSelectedSportId],
   );
 
+  // Snapshot save/restore uses the machine bridge from props
+  const handleAddToCartWithSnapshot = React.useCallback(() => {
+    onSaveSnapshot();
+    onAddToCartAction();
+  }, [onAddToCartAction, onSaveSnapshot]);
+
+  const handleBackToSelect = React.useCallback(() => {
+    onRestoreSnapshot();
+  }, [onRestoreSnapshot]);
+
+  // Court change: machine handles memory save/restore automatically
   const handleMobileCourtChange = React.useCallback(
     (courtId: string | undefined) => {
       if (courtId) {
@@ -335,8 +410,8 @@ export function PlaceDetailBookingMobileSection({
       } else {
         setSelectionMode("any");
         setSelectedCourtId(undefined);
+        clearSelection(true);
       }
-      clearSelection(true);
     },
     [clearSelection, setSelectedCourtId, setSelectionMode],
   );
@@ -370,10 +445,17 @@ export function PlaceDetailBookingMobileSection({
       onCourtRangeChange={handleCourtRangeChange}
       onClearSelection={() => clearSelection(true)}
       onReserve={onContinue}
+      onContinueFromCart={onContinueFromCart}
+      onBackToSelect={handleBackToSelect}
       hasSelection={hasSelection}
       selectionSummary={selectionSummary}
       selectionDateLabel={selectionDateLabel}
       selectionTimeLabel={selectionTimeLabel}
+      cartItems={cartItems}
+      canAddToCart={canAddToCart}
+      onAddToCartAction={handleAddToCartWithSnapshot}
+      onRemoveFromCartAction={onRemoveFromCartAction}
+      cartedStartTimes={cartedStartTimes}
     />
   );
 }

@@ -23,10 +23,10 @@ pnpm format     # biome format --write
 ### Database (Drizzle + dotenvx)
 
 ```bash
-pnpm db:pull         # Pull schema from DB
-pnpm db:generate     # Generate migrations
-pnpm db:migrate      # Run migrations
-pnpm db:push         # Push schema (dev only)
+pnpm db:pull         # Introspect DB schema (exception/recovery)
+pnpm db:generate     # Generate SQL migrations from Drizzle schema
+pnpm db:migrate      # Apply generated Drizzle migrations
+pnpm db:push         # Direct schema sync (dev-only)
 pnpm db:studio       # Open Drizzle Studio
 pnpm db:seed:sports  # Seed sports
 pnpm db:seed:buckets # Seed storage buckets
@@ -57,6 +57,117 @@ pnpm script:promote-tier3
 - Tailwind CSS + shadcn/ui
 - Biome for lint/format
 
+## Database Architecture Contract (Authoritative)
+
+- Drizzle is the mandatory interface for application PostgreSQL data.
+- Runtime app data access must use repository/service layers with `DbClient` (`src/lib/shared/infra/db/drizzle.ts`).
+- Do not use Supabase data APIs (`from`, `rpc`, REST) for business-table CRUD/query paths.
+- Drizzle schema files (`src/lib/shared/infra/db/schema/*`) and Drizzle migrations (`drizzle/*.sql`) are the schema source of truth.
+- Preferred migration flow: `pnpm db:generate` then `pnpm db:migrate`.
+- `pnpm db:push` is allowed only for local/dev prototyping; do not use as default shared/prod workflow.
+- `pnpm db:pull` is introspection/recovery only, not the default schema-authoring path.
+- Database scripts that touch app data should use Drizzle query builder or Drizzle-executed SQL; provider-specific scripts must be documented exceptions.
+- Supabase usage scope: Auth and Storage platform services.
+- For managed schemas (`auth`, `storage`), only reference stable PKs (for example `auth.users.id`); avoid new non-PK coupling.
+- When a provider-specific exception is required, document rationale and a portability migration path.
+- Detailed rationale and sources: `important/database/00-overview.md`, `important/database/99-official-sources.md`.
+
+## Architecture Guides
+
+This project uses architecture guides from `guides/`. They are maintained externally and copied via `copy-guides.sh`. Do not edit files inside `guides/` directly.
+
+### Behavior Rules
+
+- **No automatic refactoring.** If existing code does not follow a guide, note the deviation and continue. Do NOT refactor code outside the current task scope unless explicitly asked.
+- **Core is mandatory for new and modified files.** Any file you create or modify must comply with the core standards listed below.
+- **Framework guides are additive.** They layer on top of core; they do not replace it.
+- **Ignore guides that do not apply to this project.** Do not import new libraries or suggest patterns from irrelevant guides.
+
+### Mandatory - Client Core
+
+Read and follow all of these for any client-side work:
+
+- `guides/client/core/overview.md`
+- `guides/client/core/architecture.md`
+- `guides/client/core/conventions.md`
+- `guides/client/core/folder-structure.md`
+- `guides/client/core/client-api-architecture.md`
+- `guides/client/core/domain-logic.md`
+- `guides/client/core/error-handling.md`
+- `guides/client/core/validation-zod.md`
+- `guides/client/core/server-state-tanstack-query.md`
+- `guides/client/core/query-keys.md`
+- `guides/client/core/state-management.md`
+- `guides/client/core/logging.md`
+- `guides/client/core/testing.md`
+
+### Mandatory - Server Core
+
+Read and follow all of these for any server-side work:
+
+- `guides/server/core/overview.md`
+- `guides/server/core/conventions.md`
+- `guides/server/core/api-contracts-zod-first.md`
+- `guides/server/core/api-response.md`
+- `guides/server/core/error-handling.md`
+- `guides/server/core/endpoint-naming.md`
+- `guides/server/core/id-generation.md`
+- `guides/server/core/transaction.md`
+- `guides/server/core/logging.md`
+- `guides/server/core/rate-limiting.md`
+- `guides/server/core/testing-service-layer.md`
+
+### Framework Guides - React
+
+- `guides/client/frameworks/reactjs/overview.md`
+- `guides/client/frameworks/reactjs/conventions.md`
+- `guides/client/frameworks/reactjs/composition-react.md`
+- `guides/client/frameworks/reactjs/error-handling.md`
+- `guides/client/frameworks/reactjs/server-state-patterns-react.md`
+- `guides/client/frameworks/reactjs/forms-react-hook-form.md`
+- `guides/client/frameworks/reactjs/state-zustand.md`
+- `guides/client/frameworks/reactjs/ui-shadcn-radix.md`
+
+### Framework Guides - Next.js Client
+
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/overview.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/folder-structure.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/routing-ssr-params.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/environment.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/url-state-nuqs.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/trpc.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/ky-fetch.md`
+- `guides/client/frameworks/reactjs/metaframeworks/nextjs/query-keys.md`
+
+### Framework Guides - Next.js Server
+
+- `guides/server/runtime/nodejs/metaframeworks/nextjs/route-handlers.md`
+- `guides/server/runtime/nodejs/metaframeworks/nextjs/caching-revalidation.md`
+- `guides/server/runtime/nodejs/metaframeworks/nextjs/next-config-security.md`
+- `guides/server/runtime/nodejs/metaframeworks/nextjs/formdata-transport.md`
+- `guides/server/runtime/nodejs/metaframeworks/nextjs/cron-routes.md`
+- `guides/server/runtime/nodejs/metaframeworks/nextjs/metadata-seo.md`
+
+### Framework Guides - tRPC
+
+- `guides/server/runtime/nodejs/libraries/trpc/integration.md`
+- `guides/server/runtime/nodejs/libraries/trpc/authentication.md`
+- `guides/server/runtime/nodejs/libraries/trpc/rate-limiting.md`
+
+### Framework Guides - Supabase
+
+- `guides/server/runtime/nodejs/libraries/supabase/integration.md`
+- `guides/server/runtime/nodejs/libraries/supabase/auth.md`
+
+### Framework Guides - OpenAPI
+
+- `guides/server/core/zod-openapi-generation.md`
+- `guides/server/runtime/nodejs/libraries/openapi/parity-testing.md`
+
+### Feature Guides - Async Jobs
+
+- `guides/server/core/async-jobs-outbox.md`
+
 ## Architecture (current + target)
 
 - Routes: `src/app`
@@ -64,14 +175,15 @@ pnpm script:promote-tier3
 - Shared UI: `src/components`
 - Server (current): `src/lib/shared` and `src/lib/modules`
 - Shared helpers: `src/common`
-- Target: all server-only code under `src/lib` (no client/browser imports)
+- Target: server-only infra under `src/lib` (no client/browser imports), except runtime-safe pure shared files under `src/lib/modules/*/shared`
 - tRPC client: `src/trpc`
 
 ## Conventions
 
 - Formatting: Biome, 2-space indent, double quotes, semicolons; keep changes minimal.
 - Imports: use `@/` alias; group external → internal alias → relative.
-- Frontend: add "use client" to client components; StandardForm in `src/components/form`; URL state via `nuqs`; `trpc` from `@/trpc/client`; invalidate via `trpc.useUtils()`; helpers in `src/features/<feature>/helpers.ts`.
+- Frontend: add "use client" to client components; StandardForm in `src/components/form`; URL state via `nuqs`; `trpc` from `@/trpc/client`; invalidate via `trpc.useUtils()`; pure feature logic in `src/features/<feature>/(domain.ts|helpers.ts)`.
+- Domain/helper convention: keep deterministic, side-effect-free transforms in `domain.ts`/`helpers.ts`; for cross-runtime reuse use `src/lib/modules/<module>/shared/(domain.ts|transform.ts|helpers.ts)`; avoid React components/hooks, DB/auth/network calls, and `process.env` in these files.
 - IMPORTANT: Component placement: `src/app/**` is routes only (e.g. `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, `route.ts`). Do not add new component modules under `src/app/**` (existing route-local components are legacy); put feature UI in `src/features/<feature>/components`, shared UI in `src/components`, shared helpers in `src/common` (see `@guides/client/core/folder-structure.md`).
 - Backend: repository/service/use-case/router layering; repositories return `null`; services own transactions; routers validate input; log business events as `<entity>.<past_tense_action>`.
 - Time zones: treat `place.timeZone` as canonical; use `src/common/time-zone.ts` and `src/common/format.ts`.
@@ -81,100 +193,6 @@ pnpm script:promote-tier3
 - Copy `.env.example` to `.env.local`; DB scripts expect `dotenvx`.
 - Required: `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 
-## Architecture Guides
-
-This project uses architecture guides from `guides/`. They are maintained externally and
-copied via `copy-guides.sh`. Do not edit files inside `guides/` directly.
-
-### Behavior Rules
-
-- **No automatic refactoring.** If existing code does not follow a guide, note the deviation
-  and continue. Do NOT refactor code outside the current task scope unless explicitly asked.
-- **Core is mandatory for new and modified files.** Any file you create or modify must comply
-  with the core standards listed below.
-- **Framework guides are additive.** They layer on top of core; they do not replace it.
-- **Ignore guides that do not apply to this project.** Do not import new libraries or suggest
-  patterns from irrelevant guides.
-
-### Mandatory — Client Core
-
-Read and follow all of these for any client-side work:
-
-- guides/client/core/overview.md
-- guides/client/core/architecture.md
-- guides/client/core/conventions.md
-- guides/client/core/folder-structure.md
-- guides/client/core/client-api-architecture.md
-- guides/client/core/domain-logic.md
-- guides/client/core/error-handling.md
-- guides/client/core/validation-zod.md
-- guides/client/core/server-state-tanstack-query.md
-- guides/client/core/query-keys.md
-- guides/client/core/state-management.md
-- guides/client/core/logging.md
-- guides/client/core/testing.md
-
-### Mandatory — Server Core
-
-Read and follow all of these for any server-side work:
-
-- guides/server/core/overview.md
-- guides/server/core/conventions.md
-- guides/server/core/api-contracts-zod-first.md
-- guides/server/core/api-response.md
-- guides/server/core/error-handling.md
-- guides/server/core/endpoint-naming.md
-- guides/server/core/id-generation.md
-- guides/server/core/transaction.md
-- guides/server/core/logging.md
-- guides/server/core/rate-limiting.md
-- guides/server/core/testing-service-layer.md
-
-### Framework Guides — React
-
-- guides/client/frameworks/reactjs/overview.md
-- guides/client/frameworks/reactjs/conventions.md
-- guides/client/frameworks/reactjs/composition-react.md
-- guides/client/frameworks/reactjs/error-handling.md
-- guides/client/frameworks/reactjs/server-state-patterns-react.md
-- guides/client/frameworks/reactjs/forms-react-hook-form.md
-- guides/client/frameworks/reactjs/state-zustand.md
-- guides/client/frameworks/reactjs/ui-shadcn-radix.md
-
-### Framework Guides — Next.js Client
-
-- guides/client/frameworks/reactjs/metaframeworks/nextjs/overview.md
-- guides/client/frameworks/reactjs/metaframeworks/nextjs/folder-structure.md
-- guides/client/frameworks/reactjs/metaframeworks/nextjs/routing-ssr-params.md
-- guides/client/frameworks/reactjs/metaframeworks/nextjs/environment.md
-- guides/client/frameworks/reactjs/metaframeworks/nextjs/url-state-nuqs.md
-- guides/client/frameworks/reactjs/metaframeworks/nextjs/query-keys.md
-- guides/client/frameworks/reactjs/metaframeworks/nextjs/trpc.md
-
-### Framework Guides — Next.js Server
-
-- guides/server/runtime/nodejs/metaframeworks/nextjs/route-handlers.md
-- guides/server/runtime/nodejs/metaframeworks/nextjs/caching-revalidation.md
-- guides/server/runtime/nodejs/metaframeworks/nextjs/next-config-security.md
-- guides/server/runtime/nodejs/metaframeworks/nextjs/cron-routes.md
-
-### Framework Guides — tRPC
-
-- guides/server/runtime/nodejs/libraries/trpc/integration.md
-- guides/server/runtime/nodejs/libraries/trpc/authentication.md
-- guides/server/runtime/nodejs/libraries/trpc/rate-limiting.md
-
-### Framework Guides — Supabase
-
-- guides/server/runtime/nodejs/libraries/supabase/integration.md
-- guides/server/runtime/nodejs/libraries/supabase/auth.md
-
-## Documentation References
-
-- `@guides/context.md`
-- `@guides/README.md`
-- `@guides/client/README.md`
-- `@guides/server/README.md`
 
 ## Agent Rules
 

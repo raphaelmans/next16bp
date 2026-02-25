@@ -3,6 +3,7 @@ import { makeSportService } from "@/lib/modules/sport/factories/sport.factory";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { getRequestId } from "@/lib/shared/infra/http/request-id";
+import type { SportRecord } from "@/lib/shared/infra/db/schema";
 import type {
   ApiErrorResponse,
   ApiResponse,
@@ -25,7 +26,7 @@ export async function GET(req: Request) {
     const service = makeSportService();
     const result = await service.listSports();
 
-    return NextResponse.json<ApiResponse<typeof result>>(wrapResponse(result));
+    return NextResponse.json<ApiResponse<SportRecord[]>>(wrapResponse(result));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

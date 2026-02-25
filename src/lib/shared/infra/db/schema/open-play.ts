@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  check,
   index,
   integer,
   pgTable,
@@ -21,30 +22,34 @@ import {
 } from "./enums";
 import { place } from "./place";
 import { profile } from "./profile";
-import { reservation } from "./reservation";
+import { reservation, reservationGroup } from "./reservation";
 import { sport } from "./sport";
 
 /**
  * Open Play
- * A player-hosted session attached to a single host reservation.
+ * A player-hosted session attached to a single reservation OR a reservation group.
+ * Exactly one of `reservationId` / `reservationGroupId` must be set.
  */
 export const openPlay = pgTable(
   "open_play",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     reservationId: uuid("reservation_id")
-      .notNull()
       .unique()
       .references(() => reservation.id, { onDelete: "cascade" }),
+    reservationGroupId: uuid("reservation_group_id").references(
+      () => reservationGroup.id,
+      { onDelete: "cascade" },
+    ),
     hostProfileId: uuid("host_profile_id")
       .notNull()
       .references(() => profile.id, { onDelete: "cascade" }),
     placeId: uuid("place_id")
       .notNull()
       .references(() => place.id, { onDelete: "restrict" }),
-    courtId: uuid("court_id")
-      .notNull()
-      .references(() => court.id, { onDelete: "restrict" }),
+    courtId: uuid("court_id").references(() => court.id, {
+      onDelete: "restrict",
+    }),
     sportId: uuid("sport_id")
       .notNull()
       .references(() => sport.id, { onDelete: "restrict" }),
@@ -74,6 +79,14 @@ export const openPlay = pgTable(
     index("idx_open_play_status_starts").on(table.status, table.startsAt),
     index("idx_open_play_reservation").on(table.reservationId),
     index("idx_open_play_host").on(table.hostProfileId),
+    index("idx_open_play_reservation_group").on(table.reservationGroupId),
+    uniqueIndex("uq_open_play_reservation_group")
+      .on(table.reservationGroupId)
+      .where(sql`${table.reservationGroupId} IS NOT NULL`),
+    check(
+      "chk_open_play_reservation_xor_group",
+      sql`((${table.reservationId} IS NOT NULL)::int + (${table.reservationGroupId} IS NOT NULL)::int) = 1`,
+    ),
   ],
 );
 

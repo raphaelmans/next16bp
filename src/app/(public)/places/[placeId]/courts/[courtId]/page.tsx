@@ -142,6 +142,7 @@ export default async function CourtDetailPage({
         reservationsEnabled={
           placeDetails.verification?.reservationsEnabled ?? false
         }
+        hasPaymentMethods={placeDetails.hasPaymentMethods}
         contactDetail={
           placeDetails.contactDetail
             ? {

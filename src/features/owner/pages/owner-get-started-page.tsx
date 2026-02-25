@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { appRoutes } from "@/common/app-routes";
 import { trackEvent } from "@/common/clients/telemetry-client";
+import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { Container } from "@/components/layout";
@@ -39,6 +40,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
+import { PaymentMethodReminderCard } from "@/features/owner/components/payment-method-reminder-card";
 import {
   useMutOwnerSubmitClaim,
   useQueryOwnerClaimablePlaces,
@@ -75,6 +77,7 @@ export default function OwnerGetStartedPage() {
   const hasReadyCourt = setupStatus?.hasReadyCourt ?? false;
   const hasCourtSchedule = setupStatus?.hasCourtSchedule ?? false;
   const hasCourtPricing = setupStatus?.hasCourtPricing ?? false;
+  const hasPaymentMethod = setupStatus?.hasPaymentMethod ?? false;
   const primaryCourtId = setupStatus?.primaryCourtId ?? undefined;
   const readyCourtId = setupStatus?.readyCourtId ?? undefined;
   const isSetupComplete = setupStatus?.isSetupComplete ?? false;
@@ -223,6 +226,14 @@ export default function OwnerGetStartedPage() {
               )}
               Go Live
             </Badge>
+            <Badge variant={hasPaymentMethod ? "default" : "secondary"}>
+              {hasPaymentMethod ? (
+                <Check className="mr-1 h-3 w-3" />
+              ) : (
+                <span className="mr-1">5.</span>
+              )}
+              Payment method
+            </Badge>
           </div>
 
           {isSetupComplete && isVenueVerified && (
@@ -283,6 +294,15 @@ export default function OwnerGetStartedPage() {
                 courtId={readyCourtId ?? primaryCourtId}
                 onConfigureClick={handleConfigureCourts}
               />
+
+              {hasVenue && !hasPaymentMethod ? (
+                <PaymentMethodReminderCard
+                  title="Add a payment method"
+                  description="Add at least one payment method so reservations can be enabled for public booking."
+                  actionLabel="Manage payment methods"
+                  actionHref={`${appRoutes.owner.settings}?from=setup${SETTINGS_SECTION_HASHES.paymentMethods}`}
+                />
+              ) : null}
 
               <VerifyVenueCard
                 hasVenue={hasVenue}

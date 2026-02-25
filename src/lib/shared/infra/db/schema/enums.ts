@@ -40,6 +40,26 @@ export const courtBlockTypeEnum = pgEnum("court_block_type", [
 ]);
 
 /**
+ * Court addon mode enum
+ * OPTIONAL: selected by player
+ * AUTO: applied when a rule window matches
+ */
+export const courtAddonModeEnum = pgEnum("court_addon_mode", [
+  "OPTIONAL",
+  "AUTO",
+]);
+
+/**
+ * Court addon pricing type enum
+ * HOURLY: charged per covered segment
+ * FLAT: charged once per booking when overlapping
+ */
+export const courtAddonPricingTypeEnum = pgEnum("court_addon_pricing_type", [
+  "HOURLY",
+  "FLAT",
+]);
+
+/**
  * Triggered by role enum
  * Identifies who triggered a status transition in audit logs
  */
@@ -220,3 +240,23 @@ export const mobilePushTokenPlatformEnum = pgEnum(
   "mobile_push_token_platform",
   ["ios", "android"],
 );
+
+/**
+ * Place addon mode enum
+ * OPTIONAL: selected by player
+ * AUTO: applied unconditionally
+ */
+export const placeAddonModeEnum = pgEnum("place_addon_mode", [
+  "OPTIONAL",
+  "AUTO",
+]);
+
+/**
+ * Place addon pricing type enum
+ * HOURLY: charged per covered segment
+ * FLAT: charged once per booking unconditionally
+ */
+export const placeAddonPricingTypeEnum = pgEnum("place_addon_pricing_type", [
+  "HOURLY",
+  "FLAT",
+]);

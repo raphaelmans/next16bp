@@ -11,14 +11,19 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
-import { formatCurrency } from "@/common/format";
+import { appRoutes } from "@/common/app-routes";
+import {
+  formatCurrency,
+  formatDateShort,
+  formatTimeRange,
+} from "@/common/format";
 import { toast } from "@/common/toast";
 import { StandardFormProvider } from "@/components/form";
 import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CountdownTimer } from "@/features/reservation/components/countdown-timer";
 import { PaymentInfoCard } from "@/features/reservation/components/payment-info-card";
 import {
@@ -32,8 +37,10 @@ import {
   useModReservationPostPaymentWarmup,
   useMutAddPaymentProof,
   useMutMarkPayment,
+  useMutMarkPaymentGroup,
   useMutUploadPaymentProof,
   useQueryReservationDetail,
+  useQueryReservationGroupDetail,
   useQueryReservationPaymentInfo,
 } from "@/features/reservation/hooks";
 
@@ -69,14 +76,45 @@ export default function PaymentPage({
     useQueryReservationDetail(reservationId);
 
   const reservation = reservationDetail?.reservation;
+  const reservationGroupId = reservation?.groupId ?? null;
+
+  // Group payment support
+  const { data: groupData } = useQueryReservationGroupDetail(
+    reservationGroupId ?? "",
+  );
+  const isGroupPayment = Boolean(reservationGroupId && groupData);
+  const markPaymentGroup = useMutMarkPaymentGroup();
+
+  const payableAwaitingItems = useMemo(() => {
+    if (!groupData) return [];
+    return groupData.items.filter(
+      (item) => item.totalPriceCents > 0 && item.status === "AWAITING_PAYMENT",
+    );
+  }, [groupData]);
+
+  const groupExpiresInMinutes = useMemo(() => {
+    const expiries = payableAwaitingItems
+      .map((item) =>
+        item.expiresAtIso ? new Date(item.expiresAtIso).getTime() : null,
+      )
+      .filter((value): value is number => value !== null && value > Date.now());
+    if (expiries.length === 0) return 15;
+    const nextExpiry = Math.min(...expiries);
+    return Math.max(1, Math.round((nextExpiry - Date.now()) / 60_000));
+  }, [payableAwaitingItems]);
+
   const isChatEnabledForReservationStatus =
     reservation?.status === "CREATED" ||
     reservation?.status === "AWAITING_PAYMENT" ||
     reservation?.status === "PAYMENT_MARKED_BY_USER" ||
     reservation?.status === "CONFIRMED";
 
+  // For individual payment, derive paymentInfo from the first payable item (or the reservation itself)
+  const paymentInfoReservationId = isGroupPayment
+    ? (payableAwaitingItems[0]?.reservationId ?? reservationId)
+    : reservationId;
   const { data: paymentInfo } = useQueryReservationPaymentInfo(
-    reservationId,
+    paymentInfoReservationId,
     reservation?.status === "AWAITING_PAYMENT" ||
       reservation?.status === "PAYMENT_MARKED_BY_USER",
   );
@@ -140,6 +178,31 @@ export default function PaymentPage({
       router.push(`/reservations/${reservationId}`);
     } catch (_error) {
       toast.error("Failed to submit payment");
+    }
+  };
+
+  const handleGroupPaymentSubmit = async () => {
+    if (!termsAccepted) {
+      toast.error("Please accept the terms to continue");
+      return;
+    }
+    if (!reservationGroupId) return;
+
+    try {
+      await markPaymentGroup.mutateAsync({
+        reservationGroupId,
+        termsAccepted: true,
+      });
+
+      try {
+        await warmupAfterPayment(reservationId);
+      } catch {
+        // Best-effort warmup; navigation should continue.
+      }
+
+      router.push(appRoutes.reservations.detail(reservationId));
+    } catch {
+      // handled in mutation hook
     }
   };
 
@@ -253,6 +316,132 @@ export default function PaymentPage({
     );
   }
 
+  // --- Group Payment Flow ---
+  if (isGroupPayment && groupData) {
+    const totalPayableCents = payableAwaitingItems.reduce(
+      (sum, item) => sum + item.totalPriceCents,
+      0,
+    );
+    const groupCurrency = payableAwaitingItems[0]?.currency ?? "PHP";
+
+    if (payableAwaitingItems.length === 0) {
+      return (
+        <Container className="py-6">
+          <div className="max-w-lg mx-auto">
+            <Card>
+              <CardContent className="p-6 space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  This reservation group does not have payable items awaiting
+                  payment.
+                </p>
+                <Button asChild className="w-full">
+                  <Link href={appRoutes.reservations.detail(reservationId)}>
+                    View Reservation
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </Container>
+      );
+    }
+
+    return (
+      <Container className="py-6">
+        <div className="max-w-2xl mx-auto space-y-6">
+          <div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() =>
+                router.push(appRoutes.reservations.detail(reservationId))
+              }
+              className="-ml-2 mb-3"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Reservation
+            </Button>
+            <h1 className="text-2xl font-heading font-bold">
+              Complete Group Payment
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Submit payment once for all payable items in this reservation
+              group.
+            </p>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Payable Items</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {payableAwaitingItems.map((item) => (
+                <div
+                  key={item.reservationId}
+                  className="rounded-lg border p-3 flex flex-wrap items-start justify-between gap-3"
+                >
+                  <div>
+                    <p className="font-medium">
+                      {item.place.name} - {item.court.label}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {formatDateShort(item.startTimeIso)} ·{" "}
+                      {formatTimeRange(item.startTimeIso, item.endTimeIso)}
+                    </p>
+                  </div>
+                  <p className="font-medium">
+                    {formatCurrency(item.totalPriceCents, item.currency)}
+                  </p>
+                </div>
+              ))}
+
+              <div className="pt-2 border-t flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Total Due</span>
+                <span className="text-lg font-semibold">
+                  {formatCurrency(totalPayableCents, groupCurrency)}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <PaymentInfoCard
+            paymentMethods={paymentInfo?.methods}
+            expiresInMinutes={groupExpiresInMinutes}
+          />
+
+          {isChatEnabledForReservationStatus ? (
+            <Button variant="outline" onClick={handleOpenChat}>
+              <MessageSquare className="mr-2 h-4 w-4" />
+              Message Owner
+            </Button>
+          ) : null}
+
+          <TermsCheckbox
+            checked={termsAccepted}
+            onCheckedChange={setTermsAccepted}
+          />
+
+          <Button
+            className="w-full"
+            size="lg"
+            disabled={!termsAccepted || markPaymentGroup.isPending}
+            onClick={handleGroupPaymentSubmit}
+          >
+            {markPaymentGroup.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              "Submit Group Payment"
+            )}
+          </Button>
+        </div>
+      </Container>
+    );
+  }
+
+  // --- Individual Payment Flow ---
   return (
     <Container className="py-6">
       <div className="max-w-lg mx-auto">

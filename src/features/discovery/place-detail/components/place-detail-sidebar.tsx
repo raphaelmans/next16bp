@@ -4,6 +4,7 @@ import type * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PhotoCarousel } from "@/features/discovery/components";
 import { VerificationStatusBanner } from "@/features/discovery/components/verification-status-banner";
+import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { PlaceDetailBookingSummaryCard } from "./place-detail-booking-summary-card";
 import { PlaceDetailLocationCard } from "./place-detail-location-card";
 import { PlaceDetailNextStepsCard } from "./place-detail-next-steps-card";
@@ -37,6 +38,7 @@ type PlaceDetailSidebarProps = {
   selectionMode: "any" | "court";
   courtsForSport: CourtOption[];
   selectedCourtId?: string;
+  selectedAddonCount: number;
   durationMinutes: number;
   hasSelection: boolean;
   selectionSummary: SelectionSummary | null;
@@ -45,6 +47,10 @@ type PlaceDetailSidebarProps = {
   summaryCtaLabel: string;
   onSummaryAction: () => void;
   isAuthenticated: boolean;
+  cartItems: BookingCartItem[];
+  canAddToCart: boolean;
+  onAddToCartAction: () => void;
+  onRemoveFromCartAction: (key: string) => void;
   listingHelpContent?: React.ReactNode;
 };
 
@@ -65,6 +71,7 @@ export function PlaceDetailSidebar({
   selectionMode,
   courtsForSport,
   selectedCourtId,
+  selectedAddonCount,
   durationMinutes,
   hasSelection,
   selectionSummary,
@@ -73,6 +80,10 @@ export function PlaceDetailSidebar({
   summaryCtaLabel,
   onSummaryAction,
   isAuthenticated,
+  cartItems,
+  canAddToCart,
+  onAddToCartAction,
+  onRemoveFromCartAction,
   listingHelpContent,
 }: PlaceDetailSidebarProps) {
   return (
@@ -89,6 +100,7 @@ export function PlaceDetailSidebar({
             selectionMode={selectionMode}
             courtsForSport={courtsForSport}
             selectedCourtId={selectedCourtId}
+            selectedAddonCount={selectedAddonCount}
             durationMinutes={durationMinutes}
             hasSelection={hasSelection}
             selectionSummary={selectionSummary}
@@ -97,6 +109,10 @@ export function PlaceDetailSidebar({
             summaryCtaLabel={summaryCtaLabel}
             onSummaryAction={onSummaryAction}
             isAuthenticated={isAuthenticated}
+            cartItems={cartItems}
+            canAddToCart={canAddToCart}
+            onAddToCartAction={onAddToCartAction}
+            onRemoveFromCartAction={onRemoveFromCartAction}
           />
 
           <PlaceDetailLocationCard

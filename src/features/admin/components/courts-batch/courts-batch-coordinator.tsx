@@ -61,7 +61,6 @@ import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { env } from "@/lib/env";
 import { BatchResultsPanel } from "./batch-results-panel";
 
-const DEFAULT_COUNTRY = "PH";
 const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 const MAX_PHOTOS = 10;
 
@@ -76,7 +75,6 @@ const DEFAULT_COURT = {
   address: "",
   city: "",
   province: "",
-  country: DEFAULT_COUNTRY,
   latitude: "",
   longitude: "",
   extGPlaceId: "",
@@ -249,11 +247,6 @@ export default function AdminCourtsBatchView() {
     return buildProvinceOptions(provincesCities, "name");
   }, [provincesCities]);
 
-  const countryOptions = React.useMemo(
-    () => [{ label: "Philippines (PH)", value: DEFAULT_COUNTRY }],
-    [],
-  );
-
   const provincePlaceholder = provincesCitiesQuery.isLoading
     ? "Loading provinces..."
     : "Select province";
@@ -412,20 +405,6 @@ export default function AdminCourtsBatchView() {
   };
 
   React.useEffect(() => {
-    if (!courts) return;
-
-    courts.forEach((court, index) => {
-      if (court.country !== DEFAULT_COUNTRY) {
-        setValue(`courts.${index}.country`, DEFAULT_COUNTRY, {
-          shouldDirty: false,
-          shouldTouch: false,
-          shouldValidate: true,
-        });
-      }
-    });
-  }, [courts, setValue]);
-
-  React.useEffect(() => {
     if (!courts || !provincesCities) return;
 
     courts.forEach((court, index) => {
@@ -480,7 +459,6 @@ export default function AdminCourtsBatchView() {
           address: court.address,
           city: court.city,
           province: court.province,
-          country: court.country,
           latitude: court.latitude || undefined,
           longitude: court.longitude || undefined,
           extGPlaceId: court.extGPlaceId || undefined,
@@ -709,13 +687,6 @@ export default function AdminCourtsBatchView() {
                               disabled={cityDisabled}
                             />
                           </div>
-                          <StandardFormSelect<CuratedCourtBatchFormData>
-                            name={`courts.${index}.country`}
-                            label="Country"
-                            options={countryOptions}
-                            required
-                            disabled
-                          />
                         </CardContent>
                       </Card>
 

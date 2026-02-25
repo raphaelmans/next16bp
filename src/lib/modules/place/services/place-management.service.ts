@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { DEFAULT_COUNTRY, DEFAULT_TIME_ZONE } from "@/common/location-defaults";
 import {
   NotOrganizationOwnerError,
   OrganizationNotFoundError,
@@ -109,10 +110,10 @@ export class PlaceManagementService implements IPlaceManagementService {
           address: data.address,
           city: data.city,
           province: data.province,
-          country: "PH",
+          country: DEFAULT_COUNTRY,
           latitude: data.latitude,
           longitude: data.longitude,
-          timeZone: data.timeZone ?? "Asia/Manila",
+          timeZone: DEFAULT_TIME_ZONE,
           placeType: "RESERVABLE",
           claimStatus: "CLAIMED",
           isActive: true,
@@ -186,7 +187,6 @@ export class PlaceManagementService implements IPlaceManagementService {
         phoneNumber,
         viberInfo,
         otherContactInfo,
-        country: _country,
         ...updateData
       } = data;
 
@@ -206,7 +206,8 @@ export class PlaceManagementService implements IPlaceManagementService {
         country: string;
       } = {
         ...updateData,
-        country: "PH",
+        country: DEFAULT_COUNTRY,
+        timeZone: DEFAULT_TIME_ZONE,
         ...(resolvedSlug !== undefined ? { slug: resolvedSlug } : {}),
       };
       const updated = await this.placeRepository.update(

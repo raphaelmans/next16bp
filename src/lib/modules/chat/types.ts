@@ -50,6 +50,10 @@ export interface ReservationChatMeta {
     startTimeIso: string;
     endTimeIso: string;
   };
+  reservationGroup?: {
+    id: string;
+    itemCount: number;
+  };
   place: {
     id: string;
     name: string;

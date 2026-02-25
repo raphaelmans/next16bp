@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY } from "@/common/location-defaults";
 import {
   CourtNotFoundError,
   CourtOrganizationMismatchError,
@@ -65,7 +66,7 @@ export class CourtRateRuleService implements ICourtRateRuleService {
           dayOfWeek: rule.dayOfWeek,
           startMinute: rule.startMinute,
           endMinute: rule.endMinute,
-          currency: rule.currency,
+          currency: DEFAULT_CURRENCY,
           hourlyRateCents: rule.hourlyRateCents,
         })),
         ctx,
@@ -144,7 +145,7 @@ export class CourtRateRuleService implements ICourtRateRuleService {
           dayOfWeek: rule.dayOfWeek,
           startMinute: rule.startMinute,
           endMinute: rule.endMinute,
-          currency: rule.currency,
+          currency: DEFAULT_CURRENCY,
           hourlyRateCents: rule.hourlyRateCents,
         })),
         ctx,

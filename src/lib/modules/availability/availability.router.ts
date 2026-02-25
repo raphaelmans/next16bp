@@ -9,6 +9,7 @@ import {
   GetAvailabilityForPlaceSportRangeSchema,
   GetAvailabilityForPlaceSportSchema,
 } from "./dtos";
+import { InvalidAvailabilityAddonSelectionError } from "./errors/availability.errors";
 import { makeAvailabilityService } from "./factories/availability.factory";
 
 function handleAvailabilityError(error: unknown): never {
@@ -18,6 +19,14 @@ function handleAvailabilityError(error: unknown): never {
   ) {
     throw new TRPCError({
       code: "NOT_FOUND",
+      message: error.message,
+      cause: error,
+    });
+  }
+
+  if (error instanceof InvalidAvailabilityAddonSelectionError) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
       message: error.message,
       cause: error,
     });

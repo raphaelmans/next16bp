@@ -113,6 +113,16 @@ export function sortReservationInboxIds(input: {
   });
 }
 
+export function sumReservationUnreadCounts(input: {
+  reservationIds: readonly string[];
+  unreadByReservationId: ReadonlyMap<string, number>;
+}): number {
+  return input.reservationIds.reduce((sum, reservationId) => {
+    const unread = input.unreadByReservationId.get(reservationId) ?? 0;
+    return sum + Math.max(0, unread);
+  }, 0);
+}
+
 export function getSupportThreadKind(
   channelId: string | null | undefined,
 ): SupportThreadKind | null {

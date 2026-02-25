@@ -3,6 +3,7 @@ import CourtsPageClient from "@/features/discovery/components/courts-page-client
 type LocationDefaults = {
   province?: string;
   city?: string;
+  sportId?: string;
 };
 
 interface DiscoveryCourtsPageProps {

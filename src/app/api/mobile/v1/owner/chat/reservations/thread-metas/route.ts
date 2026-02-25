@@ -5,7 +5,11 @@ import { makeReservationChatService } from "@/lib/modules/chat/factories/reserva
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
-import { getCsvParam, parseSearchParams } from "@/lib/shared/infra/http/parse";
+import {
+  getBooleanParam,
+  getCsvParam,
+  parseSearchParams,
+} from "@/lib/shared/infra/http/parse";
 import { getRequestId } from "@/lib/shared/infra/http/request-id";
 import { validate } from "@/lib/shared/infra/http/validate";
 import type {
@@ -15,7 +19,9 @@ import type {
 import { wrapResponse } from "@/lib/shared/utils/response";
 
 const ThreadMetasSchema = z.object({
-  reservationIds: z.array(S.ids.generic).max(30),
+  reservationIds: z.array(S.ids.generic).max(30).optional().default([]),
+  reservationGroupIds: z.array(S.ids.generic).max(30).optional().default([]),
+  includeArchived: z.boolean().optional(),
 });
 
 export const runtime = "nodejs";
@@ -37,16 +43,23 @@ export async function GET(req: Request) {
 
     const reservationIds =
       getCsvParam(query, "reservationIds") ?? query.getAll("reservationIds");
+    const reservationGroupIds =
+      getCsvParam(query, "reservationGroupIds") ??
+      query.getAll("reservationGroupIds");
+    const includeArchived = getBooleanParam(query, "includeArchived");
 
     const input = validate(ThreadMetasSchema, {
       reservationIds,
+      reservationGroupIds,
+      includeArchived,
     });
 
     const service = makeReservationChatService();
-    const result = await service.getThreadMetas(
-      session.userId,
-      input.reservationIds,
-    );
+    const result = await service.getThreadMetas(session.userId, {
+      reservationIds: input.reservationIds,
+      reservationGroupIds: input.reservationGroupIds,
+      includeArchived: input.includeArchived,
+    });
 
     return NextResponse.json<ApiResponse<typeof result>>(wrapResponse(result));
   } catch (error) {

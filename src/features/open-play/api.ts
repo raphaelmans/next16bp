@@ -21,6 +21,9 @@ export interface IOpenPlayApi {
   mutOpenPlayCreateFromReservation: ProcedureFn<
     TrpcClientApi["openPlay"]["createFromReservation"]["mutate"]
   >;
+  mutOpenPlayCreateFromReservationGroup: ProcedureFn<
+    TrpcClientApi["openPlay"]["createFromReservationGroup"]["mutate"]
+  >;
   mutOpenPlayDecideParticipant: ProcedureFn<
     TrpcClientApi["openPlay"]["decideParticipant"]["mutate"]
   >;
@@ -36,6 +39,9 @@ export interface IOpenPlayApi {
   >;
   queryOpenPlayGetForReservation: ProcedureFn<
     TrpcClientApi["openPlay"]["getForReservation"]["query"]
+  >;
+  queryOpenPlayGetForReservationGroup: ProcedureFn<
+    TrpcClientApi["openPlay"]["getForReservationGroup"]["query"]
   >;
   queryOpenPlayGetPublicDetail: ProcedureFn<
     TrpcClientApi["openPlay"]["getPublicDetail"]["query"]
@@ -102,6 +108,17 @@ export class OpenPlayApi {
       this.toAppError,
     );
 
+  mutOpenPlayCreateFromReservationGroup: ProcedureFn<
+    TrpcClientApi["openPlay"]["createFromReservationGroup"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["openPlay", "createFromReservationGroup"],
+      (clientApi) => clientApi.openPlay.createFromReservationGroup.mutate,
+      input,
+      this.toAppError,
+    );
+
   mutOpenPlayDecideParticipant: ProcedureFn<
     TrpcClientApi["openPlay"]["decideParticipant"]["mutate"]
   > = async (input) =>
@@ -163,6 +180,17 @@ export class OpenPlayApi {
       this.clientApi,
       ["openPlay", "getForReservation"],
       (clientApi) => clientApi.openPlay.getForReservation.query,
+      input,
+      this.toAppError,
+    );
+
+  queryOpenPlayGetForReservationGroup: ProcedureFn<
+    TrpcClientApi["openPlay"]["getForReservationGroup"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["openPlay", "getForReservationGroup"],
+      (clientApi) => clientApi.openPlay.getForReservationGroup.query,
       input,
       this.toAppError,
     );

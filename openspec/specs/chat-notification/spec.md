@@ -24,6 +24,19 @@ The chat inbox SHALL show only actionable threads by default and SHALL not expos
 - **THEN** channels archived by that user are hidden
 - **AND** no Archive collapsible bucket is shown in the main list
 
+#### Scenario: Reservation unread badge mirrors active list visibility
+
+- **GIVEN** unread messages exist on reservation channels
+- **WHEN** some channels are hidden by reservation status/time rules or user archive rules
+- **THEN** unread badge count includes only threads eligible for the default active inbox list
+- **AND** hidden threads do not inflate the visible inbox unread badge
+
+#### Scenario: Support unread badge mirrors active list visibility
+
+- **GIVEN** unread messages exist on support channels
+- **WHEN** some channels are archived by the current user
+- **THEN** unread badge count includes only unarchived support threads shown in the active list
+
 ### Requirement: Per-User Force Archive
 
 Users SHALL be able to force-archive threads for inbox cleanup without deleting messages or channels.
@@ -152,6 +165,13 @@ Deterministic chat and notification rules SHALL be verifiable through pure unit 
 - **GIVEN** extracted shared and feature domain functions
 - **WHEN** table-driven unit tests execute
 - **THEN** invariants are validated without browser/network dependencies
+
+#### Scenario: Unread aggregation verification
+
+- **GIVEN** active inbox thread ids and unread-count mappings
+- **WHEN** unread aggregation rules execute
+- **THEN** only active thread ids contribute to badge totals
+- **AND** missing/invalid unread values are handled deterministically
 
 #### Scenario: Component test scope
 

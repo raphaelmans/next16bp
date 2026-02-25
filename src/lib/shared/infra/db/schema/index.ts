@@ -15,6 +15,8 @@ export * from "./claim-request";
 export * from "./contact-message";
 // Court-related tables
 export * from "./court";
+export * from "./court-addon";
+export * from "./court-addon-rate-rule";
 export * from "./court-block";
 export * from "./court-hours-window";
 export * from "./court-price-override";
@@ -35,6 +37,8 @@ export * from "./organization";
 export * from "./organization-payment";
 // Place-related tables
 export * from "./place";
+export * from "./place-addon";
+export * from "./place-addon-rate-rule";
 export * from "./place-amenity";
 export * from "./place-photo";
 export * from "./place-verification";

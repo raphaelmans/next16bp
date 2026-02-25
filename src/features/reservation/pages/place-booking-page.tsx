@@ -5,6 +5,7 @@ import { CalendarCheck, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  parseAsArrayOf,
   parseAsInteger,
   parseAsString,
   parseAsStringLiteral,
@@ -13,12 +14,23 @@ import {
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
 import { normalizeDurationMinutes } from "@/common/duration";
-import { formatCurrency, formatDuration } from "@/common/format";
-import { getZonedDate } from "@/common/time-zone";
+import {
+  createFeatureQueryOptions,
+  useFeatureQueries,
+} from "@/common/feature-api-hooks";
+import {
+  formatCurrency,
+  formatDateShortInTimeZone,
+  formatDuration,
+  formatTimeRangeInTimeZone,
+} from "@/common/format";
+import { getZonedDate, getZonedStartOfDayIso } from "@/common/time-zone";
 import { toast } from "@/common/toast";
 import { Container } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -31,21 +43,85 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import {
+  getAutoAddonIds,
+  PlayerAddonSelector,
+  sanitizeSelectedAddons,
+  useCombinedAddons,
+} from "@/features/court-addons";
+import type { SelectedAddon } from "@/features/court-addons/schemas";
+import { getDiscoveryApi } from "@/features/discovery/api.runtime";
+import {
   useModPlaceAvailability,
   useModPlaceDetail,
 } from "@/features/discovery/hooks";
-import { useMutCreateOpenPlayFromReservation } from "@/features/open-play/hooks";
+import {
+  useMutCreateOpenPlayFromReservation,
+  useMutCreateOpenPlayFromReservationGroup,
+} from "@/features/open-play/hooks";
 import { BookingSummaryCard } from "@/features/reservation/components/booking-summary-card";
 import { OrderSummary } from "@/features/reservation/components/order-summary";
 import { ProfilePreviewCard } from "@/features/reservation/components/profile-preview-card";
+import { ProfileSetupModal } from "@/features/reservation/components/profile-setup-modal";
 import {
   useMutCreateReservationForAnyCourt,
   useMutCreateReservationForCourt,
+  useMutCreateReservationGroup,
   useQueryProfile,
 } from "@/features/reservation/hooks";
+import {
+  clearPendingBooking,
+  usePendingBooking,
+} from "@/features/reservation/hooks/use-pending-booking";
+import { isProfileComplete } from "@/lib/modules/profile/shared/domain";
+import { computeReservationGroupTotals } from "@/lib/modules/reservation/shared/domain";
 
 const DEFAULT_DURATION_MINUTES = 60;
 const selectionModeSchema = ["any", "court"] as const;
+const discoveryApi = getDiscoveryApi();
+
+type MultiCourtBookingItem = {
+  courtId: string;
+  startTime: string;
+  durationMinutes: number;
+};
+
+type MultiCourtBookingSummaryItem = {
+  courtId: string;
+  courtLabel: string;
+  startTime: string;
+  endTime: string;
+  durationMinutes: number;
+  totalPriceCents: number | null;
+  currency: string | null;
+  isAvailable: boolean;
+};
+
+const encodeMultiCourtBookingItem = (item: MultiCourtBookingItem) =>
+  `${item.courtId}|${item.startTime}|${item.durationMinutes}`;
+
+const decodeMultiCourtBookingItem = (
+  raw: string,
+): MultiCourtBookingItem | null => {
+  const [courtId, startTime, durationRaw] = raw.split("|");
+  if (!courtId || !startTime || !durationRaw) {
+    return null;
+  }
+
+  const durationMinutes = Number.parseInt(durationRaw, 10);
+  if (!Number.isFinite(durationMinutes) || durationMinutes <= 0) {
+    return null;
+  }
+  const parsedStartTime = new Date(startTime);
+  if (Number.isNaN(parsedStartTime.getTime())) {
+    return null;
+  }
+
+  return {
+    courtId,
+    startTime: parsedStartTime.toISOString(),
+    durationMinutes,
+  };
+};
 
 type PlaceBookingPageProps = {
   placeIdOrSlug: string;
@@ -59,20 +135,51 @@ export default function PlaceBookingPage({
   const pathname = usePathname();
   const router = useRouter();
 
-  const [bookingParams] = useQueryStates({
+  const [bookingParams, setBookingParams] = useQueryStates({
     startTime: parseAsString,
     duration: parseAsInteger,
     sportId: parseAsString,
     mode: parseAsStringLiteral(selectionModeSchema),
     courtId: parseAsString,
+    addonIds: parseAsArrayOf(parseAsString),
+    items: parseAsArrayOf(parseAsString),
   });
 
-  const startTime = bookingParams.startTime ?? undefined;
-  const durationParam = bookingParams.duration ?? undefined;
+  const rawMultiCourtItems = bookingParams.items ?? [];
   const sportId = bookingParams.sportId ?? undefined;
   const modeParam = bookingParams.mode ?? undefined;
-  const mode = modeParam ?? "any";
-  const courtId = bookingParams.courtId ?? undefined;
+  const multiCourtItems = React.useMemo(
+    () =>
+      rawMultiCourtItems
+        .map((raw) => decodeMultiCourtBookingItem(raw))
+        .filter((item): item is MultiCourtBookingItem => item !== null),
+    [rawMultiCourtItems],
+  );
+  const hasInvalidMultiCourtItems =
+    rawMultiCourtItems.length !== multiCourtItems.length;
+  const fallbackSingleItem =
+    multiCourtItems.length === 1 ? multiCourtItems[0] : null;
+  const startTime =
+    bookingParams.startTime ?? fallbackSingleItem?.startTime ?? undefined;
+  const durationParam =
+    bookingParams.duration ?? fallbackSingleItem?.durationMinutes ?? undefined;
+  const courtId =
+    bookingParams.courtId ?? fallbackSingleItem?.courtId ?? undefined;
+  const mode = modeParam ?? (courtId ? "court" : "any");
+  const isMultiCourtBooking = multiCourtItems.length > 1;
+  const selectedAddons: SelectedAddon[] = React.useMemo(
+    () =>
+      (bookingParams.addonIds ?? []).map((item) => {
+        const colonIdx = item.lastIndexOf(":");
+        if (colonIdx === -1) return { addonId: item, quantity: 1 };
+        const qty = Number.parseInt(item.slice(colonIdx + 1), 10);
+        return {
+          addonId: item.slice(0, colonIdx),
+          quantity: Number.isFinite(qty) && qty >= 1 ? qty : 1,
+        };
+      }),
+    [bookingParams.addonIds],
+  );
 
   const durationMinutes = normalizeDurationMinutes(
     durationParam ?? DEFAULT_DURATION_MINUTES,
@@ -113,10 +220,37 @@ export default function PlaceBookingPage({
     if (courtId) {
       params.set("courtId", courtId);
     }
+    if (selectedAddons.length > 0) {
+      params.set(
+        "addonIds",
+        selectedAddons
+          .map((a) =>
+            a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`,
+          )
+          .join(","),
+      );
+    }
+    if (multiCourtItems.length > 0) {
+      params.set(
+        "items",
+        multiCourtItems
+          .map((item) => encodeMultiCourtBookingItem(item))
+          .join(","),
+      );
+    }
 
     const query = params.toString();
     return query ? `${pathname}?${query}` : pathname;
-  }, [courtId, durationParam, modeParam, pathname, sportId, startTime]);
+  }, [
+    selectedAddons,
+    courtId,
+    durationParam,
+    modeParam,
+    multiCourtItems,
+    pathname,
+    sportId,
+    startTime,
+  ]);
 
   React.useEffect(() => {
     if (!place?.slug) return;
@@ -138,6 +272,24 @@ export default function PlaceBookingPage({
     if (courtId) {
       params.set("courtId", courtId);
     }
+    if (selectedAddons.length > 0) {
+      params.set(
+        "addonIds",
+        selectedAddons
+          .map((a) =>
+            a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`,
+          )
+          .join(","),
+      );
+    }
+    if (multiCourtItems.length > 0) {
+      params.set(
+        "items",
+        multiCourtItems
+          .map((item) => encodeMultiCourtBookingItem(item))
+          .join(","),
+      );
+    }
 
     const query = params.toString();
     const nextPath = query
@@ -151,15 +303,37 @@ export default function PlaceBookingPage({
     place?.slug,
     placeIdOrSlug,
     router,
+    multiCourtItems,
+    selectedAddons,
     sportId,
     startTime,
   ]);
   const { data: profile, isLoading: isLoadingProfile } = useQueryProfile();
+  const pendingBooking = usePendingBooking(placeIdOrSlug);
+
+  React.useEffect(() => {
+    if (!startTime && pendingBooking.data?.startTime) {
+      void setBookingParams({ startTime: pendingBooking.data.startTime });
+    }
+  }, [startTime, pendingBooking.data, setBookingParams]);
+
   const createForCourt = useMutCreateReservationForCourt();
   const createForAnyCourt = useMutCreateReservationForAnyCourt();
+  const createGroup = useMutCreateReservationGroup();
   const createOpenPlay = useMutCreateOpenPlayFromReservation();
+  const createOpenPlayFromGroup = useMutCreateOpenPlayFromReservationGroup();
 
   const availabilityQuery = useModPlaceAvailability({
+    place: place ?? undefined,
+    sportId,
+    courtId,
+    selectedAddons,
+    date: bookingDate,
+    durationMinutes,
+    mode,
+  });
+
+  const availabilityWithoutAddonsQuery = useModPlaceAvailability({
     place: place ?? undefined,
     sportId,
     courtId,
@@ -169,10 +343,116 @@ export default function PlaceBookingPage({
   });
 
   const availability = availabilityQuery.data ?? [];
+  const multiCourtAvailabilityQueries = useFeatureQueries(
+    multiCourtItems.map((item) =>
+      createFeatureQueryOptions(
+        ["availability", "getForCourt"],
+        discoveryApi.queryAvailabilityGetForCourt,
+        {
+          courtId: item.courtId,
+          date: getZonedStartOfDayIso(item.startTime, placeTimeZone),
+          durationMinutes: item.durationMinutes,
+          includeUnavailable: true,
+        },
+        {
+          enabled: isMultiCourtBooking,
+        },
+      ),
+    ),
+  );
+  const multiCourtSummaryItems = React.useMemo<
+    MultiCourtBookingSummaryItem[]
+  >(() => {
+    const courtLabelById = new Map(
+      (place?.courts ?? []).map((court) => [court.id, court.label]),
+    );
+
+    return multiCourtItems.map((item, index) => {
+      const query = multiCourtAvailabilityQueries[index];
+      const options =
+        (
+          query?.data as
+            | {
+                options?: Array<{
+                  courtId: string;
+                  courtLabel: string;
+                  startTime: string;
+                  endTime: string;
+                  totalPriceCents: number;
+                  currency?: string | null;
+                  status: string;
+                }>;
+              }
+            | undefined
+        )?.options ?? [];
+      const matchedOption = options.find(
+        (option) =>
+          option.courtId === item.courtId &&
+          option.startTime === item.startTime,
+      );
+      const isAvailable = matchedOption?.status === "AVAILABLE";
+
+      return {
+        courtId: item.courtId,
+        courtLabel:
+          matchedOption?.courtLabel ??
+          courtLabelById.get(item.courtId) ??
+          "Assigned court",
+        startTime: item.startTime,
+        endTime:
+          matchedOption?.endTime ??
+          addMinutes(
+            new Date(item.startTime),
+            item.durationMinutes,
+          ).toISOString(),
+        durationMinutes: item.durationMinutes,
+        totalPriceCents: isAvailable
+          ? (matchedOption?.totalPriceCents ?? null)
+          : null,
+        currency: isAvailable ? (matchedOption?.currency ?? "PHP") : null,
+        isAvailable,
+      };
+    });
+  }, [multiCourtAvailabilityQueries, multiCourtItems, place?.courts]);
+  const multiCourtTotals = React.useMemo(
+    () =>
+      computeReservationGroupTotals(
+        multiCourtSummaryItems.flatMap((item) =>
+          item.totalPriceCents !== null && item.currency
+            ? [
+                {
+                  totalPriceCents: item.totalPriceCents,
+                  currency: item.currency,
+                },
+              ]
+            : [],
+        ),
+      ),
+    [multiCourtSummaryItems],
+  );
+  const hasMixedMultiCourtCurrencies = multiCourtTotals.hasMixedCurrencies;
+  const hasUnavailableMultiCourtItems = multiCourtSummaryItems.some(
+    (item) => !item.isAvailable,
+  );
+  const hasIncompleteMultiCourtPricing = multiCourtSummaryItems.some(
+    (item) => item.totalPriceCents === null || !item.currency,
+  );
+  const isResolvingMultiCourtAvailability =
+    isMultiCourtBooking &&
+    multiCourtAvailabilityQueries.some(
+      (query) => query.isLoading || query.isFetching,
+    );
+  const multiCourtTotalPriceCents =
+    !hasMixedMultiCourtCurrencies && !hasIncompleteMultiCourtPricing
+      ? multiCourtTotals.totalPriceCents
+      : 0;
+  const multiCourtCurrency = multiCourtTotals.currency ?? "PHP";
+
   const selectedSlot = availability.find(
     (slot) => slot.startTime === startTime,
   );
   const hasResolvableInputs =
+    !isMultiCourtBooking &&
     !!resolvedPlaceId &&
     !!startTime &&
     !!bookingDate &&
@@ -184,22 +464,101 @@ export default function PlaceBookingPage({
     (availabilityQuery.isLoading || availabilityQuery.isFetching);
 
   const assignedCourt = React.useMemo(() => {
-    if (!place) return undefined;
+    if (!place || isMultiCourtBooking) return undefined;
     const targetCourtId =
       mode === "court" ? courtId : (selectedSlot?.courtId ?? undefined);
     return place.courts.find((court) => court.id === targetCourtId);
-  }, [courtId, mode, place, selectedSlot?.courtId]);
+  }, [courtId, isMultiCourtBooking, mode, place, selectedSlot?.courtId]);
 
   const assignedCourtLabel =
     assignedCourt?.label ?? selectedSlot?.courtLabel ?? "Assigned at checkout";
+
+  const addonCourtId = isMultiCourtBooking
+    ? undefined
+    : (assignedCourt?.id ?? selectedSlot?.courtId);
+  const { addons: availableCourtAddons, globalAddonIds } = useCombinedAddons(
+    resolvedPlaceId,
+    addonCourtId,
+  );
+
+  React.useEffect(() => {
+    if (isMultiCourtBooking) return;
+    if (!addonCourtId) return;
+    const sanitized = sanitizeSelectedAddons(
+      selectedAddons,
+      availableCourtAddons,
+    );
+    const autoAddonIds = getAutoAddonIds(availableCourtAddons);
+    const sanitizedIds = new Set(sanitized.map((a) => a.addonId));
+    const autoEntries: SelectedAddon[] = autoAddonIds
+      .filter((id) => !sanitizedIds.has(id))
+      .map((id) => ({ addonId: id, quantity: 1 }));
+    const next = [...sanitized, ...autoEntries];
+
+    const hasChanged =
+      next.length !== selectedAddons.length ||
+      next.some(
+        (a, i) =>
+          a.addonId !== selectedAddons[i]?.addonId ||
+          a.quantity !== selectedAddons[i]?.quantity,
+      );
+
+    if (hasChanged) {
+      const encoded = next.map((a) =>
+        a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`,
+      );
+      void setBookingParams({
+        addonIds: encoded.length > 0 ? encoded : null,
+      });
+    }
+  }, [
+    addonCourtId,
+    availableCourtAddons,
+    isMultiCourtBooking,
+    selectedAddons,
+    setBookingParams,
+  ]);
+
+  const handleSelectedAddonsChange = React.useCallback(
+    (nextAddons: SelectedAddon[]) => {
+      const encoded = nextAddons.map((a) =>
+        a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`,
+      );
+      void setBookingParams({
+        addonIds: encoded.length > 0 ? encoded : null,
+      });
+    },
+    [setBookingParams],
+  );
 
   const endTime = startTime
     ? addMinutes(new Date(startTime), durationMinutes).toISOString()
     : undefined;
 
-  const totalPrice = selectedSlot?.totalPriceCents ?? 0;
-  const currency = selectedSlot?.currency ?? "PHP";
+  const totalPrice = isMultiCourtBooking
+    ? multiCourtTotalPriceCents
+    : (selectedSlot?.totalPriceCents ?? 0);
+  const currency = isMultiCourtBooking
+    ? multiCourtCurrency
+    : (selectedSlot?.currency ?? "PHP");
+  const baseSelectedSlot = (availabilityWithoutAddonsQuery.data ?? []).find(
+    (slot) => slot.startTime === startTime,
+  );
+  const pricingBreakdown = selectedSlot?.pricingBreakdown;
+  const basePriceCents = isMultiCourtBooking
+    ? totalPrice
+    : (pricingBreakdown?.basePriceCents ??
+      (selectedAddons.length > 0
+        ? (baseSelectedSlot?.totalPriceCents ?? undefined)
+        : totalPrice));
+  const addonPriceCents =
+    pricingBreakdown?.addonPriceCents ??
+    (basePriceCents !== undefined
+      ? Math.max(0, totalPrice - basePriceCents)
+      : 0);
+  const pricingWarnings = selectedSlot?.pricingWarnings ?? [];
 
+  const [showProfileModal, setShowProfileModal] = React.useState(false);
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [hostAsOpenPlay, setHostAsOpenPlay] = React.useState(false);
   const [openPlayMaxPlayers, setOpenPlayMaxPlayers] = React.useState(4);
@@ -215,7 +574,12 @@ export default function PlaceBookingPage({
   const [openPlayPaymentLinkUrl, setOpenPlayPaymentLinkUrl] =
     React.useState("");
   const detailsSectionRef = React.useRef<HTMLDivElement | null>(null);
-  const isSubmitting = createForCourt.isPending || createForAnyCourt.isPending;
+  const isSubmitting =
+    createForCourt.isPending ||
+    createForAnyCourt.isPending ||
+    createGroup.isPending ||
+    createOpenPlay.isPending ||
+    createOpenPlayFromGroup.isPending;
 
   const suggestedSplitPerPlayerCents =
     totalPrice > 0
@@ -234,8 +598,7 @@ export default function PlaceBookingPage({
     }
   }, [openPlayJoinPolicy, totalPrice]);
 
-  const isProfileComplete =
-    !!profile?.displayName && (!!profile?.email || !!profile?.phoneNumber);
+  const profileComplete = isProfileComplete(profile);
 
   const scrollToSection = React.useCallback(
     (ref: React.RefObject<HTMLElement | null>) => {
@@ -253,7 +616,81 @@ export default function PlaceBookingPage({
   );
 
   const handleConfirm = async () => {
-    if (!selectedSlot || isSubmitting) return;
+    if (isSubmitting) return;
+
+    if (isMultiCourtBooking) {
+      if (!resolvedPlaceId) {
+        toast.error("Venue details unavailable.");
+        return;
+      }
+      if (hasInvalidMultiCourtItems || multiCourtItems.length < 2) {
+        toast.error(
+          "Multi-court selection is incomplete. Please reselect slots.",
+        );
+        return;
+      }
+      if (isResolvingMultiCourtAvailability) {
+        toast.error(
+          "Checking latest availability. Please try again in a moment.",
+        );
+        return;
+      }
+      if (
+        hasUnavailableMultiCourtItems ||
+        hasIncompleteMultiCourtPricing ||
+        hasMixedMultiCourtCurrencies
+      ) {
+        toast.error(
+          "One or more selected slots are unavailable. Please adjust your selections.",
+        );
+        return;
+      }
+
+      try {
+        const groupResult = await createGroup.mutateAsync({
+          placeId: resolvedPlaceId,
+          items: multiCourtItems.map((item) => ({
+            courtId: item.courtId,
+            startTime: item.startTime,
+            durationMinutes: item.durationMinutes,
+          })),
+        });
+
+        if (hostAsOpenPlay && groupResult.reservationGroupId) {
+          try {
+            await createOpenPlayFromGroup.mutateAsync({
+              reservationGroupId: groupResult.reservationGroupId,
+              maxPlayers: Math.max(2, Math.min(32, openPlayMaxPlayers)),
+              joinPolicy: openPlayJoinPolicy,
+              visibility: openPlayVisibility,
+              note:
+                openPlayNote.trim().length > 0
+                  ? openPlayNote.trim()
+                  : undefined,
+              paymentInstructions:
+                openPlayPaymentInstructions.trim().length > 0
+                  ? openPlayPaymentInstructions.trim()
+                  : undefined,
+              paymentLinkUrl:
+                openPlayPaymentLinkUrl.trim().length > 0
+                  ? openPlayPaymentLinkUrl.trim()
+                  : undefined,
+            });
+          } catch (_openPlayError) {
+            toast.error(
+              "Reservation group created. Open Play wasn't created — you can create it later.",
+            );
+          }
+        }
+
+        router.push(appRoutes.reservations.detail(groupResult.items[0].id));
+      } catch (_error) {
+        // toast handled by mutation hooks
+      }
+      return;
+    }
+
+    if (!selectedSlot) return;
     if (mode === "court" && !courtId) {
       toast.error("Select a court to continue.");
       return;
@@ -271,6 +708,7 @@ export default function PlaceBookingPage({
       const payload = {
         startTime: selectedSlot.startTime,
         durationMinutes,
+        selectedAddons: selectedAddons.length > 0 ? selectedAddons : undefined,
       };
       let result: { status: string; id: string };
       if (mode === "court" && courtId) {
@@ -317,6 +755,7 @@ export default function PlaceBookingPage({
         }
       }
 
+      clearPendingBooking();
       const requiresPayment = result.status === "AWAITING_PAYMENT";
       router.push(
         requiresPayment
@@ -351,11 +790,31 @@ export default function PlaceBookingPage({
     );
   }
 
-  if (isResolvingAvailability) {
+  if (isResolvingAvailability || isResolvingMultiCourtAvailability) {
     return <PlaceBookingSkeleton />;
   }
 
-  if (!selectedSlot || !endTime) {
+  if (isMultiCourtBooking) {
+    if (hasInvalidMultiCourtItems || multiCourtItems.length < 2) {
+      return (
+        <Container className="py-12">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold">Booking details missing</h1>
+            <p className="text-muted-foreground mt-2">
+              Please return to the venue page and reselect your multi-court
+              slots.
+            </p>
+            <Link
+              href={appRoutes.places.detail(placeSlugOrId)}
+              className="text-primary hover:underline mt-4 inline-block"
+            >
+              Back to venue
+            </Link>
+          </div>
+        </Container>
+      );
+    }
+  } else if (!selectedSlot || !endTime) {
     return (
       <Container className="py-12">
         <div className="text-center">
@@ -375,18 +834,32 @@ export default function PlaceBookingPage({
   }
 
   const courtSummaryName = assignedCourt?.label ?? selectedSlot?.courtLabel;
-  const courtSummary = {
-    name: courtSummaryName ? `${place.name} · ${courtSummaryName}` : place.name,
-    address: place.address,
-    coverImageUrl: place.coverImageUrl,
-  };
+  const courtSummary = isMultiCourtBooking
+    ? null
+    : {
+        name: courtSummaryName
+          ? `${place.name} · ${courtSummaryName}`
+          : place.name,
+        address: place.address,
+        coverImageUrl: place.coverImageUrl,
+      };
 
-  const timeSlot = {
-    startTime: selectedSlot.startTime,
-    endTime,
-    priceCents: totalPrice,
-    currency,
-  };
+  const timeSlot = isMultiCourtBooking
+    ? {
+        startTime:
+          multiCourtSummaryItems[0]?.startTime ?? new Date().toISOString(),
+        endTime:
+          multiCourtSummaryItems[multiCourtSummaryItems.length - 1]?.endTime ??
+          new Date().toISOString(),
+        priceCents: totalPrice,
+        currency,
+      }
+    : {
+        startTime: selectedSlot!.startTime,
+        endTime: endTime ?? selectedSlot!.endTime,
+        priceCents: totalPrice,
+        currency,
+      };
 
   return (
     <Container className="py-6">
@@ -399,32 +872,145 @@ export default function PlaceBookingPage({
         </div>
       </div>
 
+      {!profileComplete && (
+        <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border border-warning/40 bg-warning/10 px-4 py-3 text-sm">
+          <div>
+            <p className="font-medium">Almost there!</p>
+            <p className="text-muted-foreground text-xs mt-0.5">
+              Add your name and contact so the court owner can reach you.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowProfileModal(true)}
+            className="shrink-0 text-xs font-medium text-primary hover:underline"
+          >
+            Complete Profile
+          </button>
+        </div>
+      )}
+
       <div className="grid gap-6 lg:grid-cols-3 mt-8">
         <div className="lg:col-span-2 space-y-6">
           <div ref={detailsSectionRef} className="scroll-mt-24">
-            <BookingSummaryCard
-              court={courtSummary}
-              timeSlot={timeSlot}
-              timeZone={placeTimeZone}
-            />
+            {isMultiCourtBooking ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Booking Summary</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    You are booking {multiCourtSummaryItems.length} courts in
+                    one request.
+                  </p>
+                  <div className="space-y-3">
+                    {multiCourtSummaryItems.map((item) => (
+                      <div
+                        key={encodeMultiCourtBookingItem({
+                          courtId: item.courtId,
+                          startTime: item.startTime,
+                          durationMinutes: item.durationMinutes,
+                        })}
+                        className="rounded-lg border p-3"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="font-medium">
+                            {place.name} · {item.courtLabel}
+                          </p>
+                          <Badge
+                            variant={
+                              item.isAvailable ? "secondary" : "destructive"
+                            }
+                          >
+                            {item.isAvailable ? "Available" : "Unavailable"}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {formatDateShortInTimeZone(
+                            item.startTime,
+                            placeTimeZone,
+                          )}{" "}
+                          ·{" "}
+                          {formatTimeRangeInTimeZone(
+                            item.startTime,
+                            item.endTime,
+                            placeTimeZone,
+                          )}{" "}
+                          ({formatDuration(item.durationMinutes)})
+                        </p>
+                        <p className="text-sm mt-1">
+                          {item.totalPriceCents !== null && item.currency
+                            ? formatCurrency(
+                                item.totalPriceCents,
+                                item.currency,
+                              )
+                            : "Pricing unavailable"}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  {hasUnavailableMultiCourtItems ||
+                  hasIncompleteMultiCourtPricing ||
+                  hasMixedMultiCourtCurrencies ? (
+                    <p className="text-sm text-destructive">
+                      One or more selected slots are no longer available. Return
+                      to the venue page to adjust your selections.
+                    </p>
+                  ) : null}
+                </CardContent>
+              </Card>
+            ) : (
+              <BookingSummaryCard
+                court={
+                  courtSummary ?? {
+                    name: place.name,
+                    address: place.address,
+                    coverImageUrl: place.coverImageUrl,
+                  }
+                }
+                timeSlot={timeSlot}
+                timeZone={placeTimeZone}
+              />
+            )}
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Assigned court</CardTitle>
-            </CardHeader>
-            <CardContent className="flex items-center gap-2 text-sm">
-              {assignedCourt?.sportName && (
-                <Badge variant="outline">{assignedCourt.sportName}</Badge>
-              )}
-              <span className="font-medium">{assignedCourtLabel}</span>
-              {assignedCourt?.tierLabel && (
-                <Badge variant="secondary" className="ml-2">
-                  {assignedCourt.tierLabel}
-                </Badge>
-              )}
-            </CardContent>
-          </Card>
+          {!isMultiCourtBooking ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Assigned court</CardTitle>
+              </CardHeader>
+              <CardContent className="flex items-center gap-2 text-sm">
+                {assignedCourt?.sportName && (
+                  <Badge variant="outline">{assignedCourt.sportName}</Badge>
+                )}
+                <span className="font-medium">{assignedCourtLabel}</span>
+                {assignedCourt?.tierLabel && (
+                  <Badge variant="secondary" className="ml-2">
+                    {assignedCourt.tierLabel}
+                  </Badge>
+                )}
+              </CardContent>
+            </Card>
+          ) : null}
+
+          {!isMultiCourtBooking && addonCourtId ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Optional extras</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Extras adjust your final booking total instantly.
+                </p>
+                <PlayerAddonSelector
+                  addons={availableCourtAddons}
+                  selectedAddons={selectedAddons}
+                  onSelectedAddonsChange={handleSelectedAddonsChange}
+                  globalAddonIds={globalAddonIds}
+                />
+              </CardContent>
+            </Card>
+          ) : null}
 
           <ProfilePreviewCard
             profile={{
@@ -433,8 +1019,9 @@ export default function PlaceBookingPage({
               phone: profile?.phoneNumber ?? undefined,
               avatarUrl: profile?.avatarUrl ?? undefined,
             }}
-            isComplete={isProfileComplete}
+            isComplete={profileComplete}
             redirectTo={bookingRedirect}
+            onEditClick={() => setShowProfileModal(true)}
           />
 
           <Card>
@@ -452,8 +1039,15 @@ export default function PlaceBookingPage({
               <div className="flex items-center gap-2">
                 <CalendarCheck className="h-4 w-4 text-accent" />
                 <span>
-                  Duration: {formatDuration(durationMinutes)} ·
-                  {formatCurrency(totalPrice, currency)}
+                  {isMultiCourtBooking
+                    ? `${multiCourtSummaryItems.length} courts · ${formatCurrency(
+                        totalPrice,
+                        currency,
+                      )}`
+                    : `Duration: ${formatDuration(durationMinutes)} ·${formatCurrency(
+                        totalPrice,
+                        currency,
+                      )}`}
                 </span>
               </div>
             </CardContent>
@@ -477,6 +1071,12 @@ export default function PlaceBookingPage({
                   onCheckedChange={setHostAsOpenPlay}
                 />
               </div>
+
+              {isMultiCourtBooking && hostAsOpenPlay ? (
+                <p className="text-xs text-muted-foreground">
+                  Open Play will be created across all courts in your booking.
+                </p>
+              ) : null}
 
               {hostAsOpenPlay ? (
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -612,20 +1212,143 @@ export default function PlaceBookingPage({
         </div>
 
         <div>
-          <OrderSummary
-            timeSlot={timeSlot}
-            timeZone={placeTimeZone}
-            termsAccepted={termsAccepted}
-            onTermsChange={setTermsAccepted}
-            onConfirm={handleConfirm}
-            onReviewDetails={() => scrollToSection(detailsSectionRef)}
-            reviewLabel="Review booking details"
-            isSubmitting={isSubmitting}
-            disabled={!isProfileComplete}
-            className="sticky top-24"
-          />
+          {isMultiCourtBooking ? (
+            <Card className="sticky top-24">
+              <CardHeader>
+                <CardTitle>Order Summary</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start text-accent hover:text-accent"
+                  onClick={() => scrollToSection(detailsSectionRef)}
+                >
+                  Review booking details
+                </Button>
+
+                <div className="space-y-2">
+                  {multiCourtSummaryItems.map((item) => (
+                    <div
+                      key={`summary-${encodeMultiCourtBookingItem({
+                        courtId: item.courtId,
+                        startTime: item.startTime,
+                        durationMinutes: item.durationMinutes,
+                      })}`}
+                      className="flex items-start justify-between gap-3 text-sm"
+                    >
+                      <span className="text-muted-foreground">
+                        {item.courtLabel} ·{" "}
+                        {formatTimeRangeInTimeZone(
+                          item.startTime,
+                          item.endTime,
+                          placeTimeZone,
+                        )}
+                      </span>
+                      <span>
+                        {item.totalPriceCents !== null && item.currency
+                          ? formatCurrency(item.totalPriceCents, item.currency)
+                          : "N/A"}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex justify-between font-medium text-lg pt-4 border-t">
+                  <span>Total</span>
+                  <span>{formatCurrency(totalPrice, currency)}</span>
+                </div>
+
+                <div className="flex items-start gap-2 pt-4">
+                  <Checkbox
+                    id="terms"
+                    checked={termsAccepted}
+                    onCheckedChange={(checked) =>
+                      setTermsAccepted(checked === true)
+                    }
+                  />
+                  <Label
+                    htmlFor="terms"
+                    className="text-sm leading-snug cursor-pointer"
+                  >
+                    I agree to the{" "}
+                    <a
+                      href={appRoutes.terms.base}
+                      className="text-primary hover:underline"
+                    >
+                      Terms and Conditions
+                    </a>{" "}
+                    and{" "}
+                    <a
+                      href={appRoutes.privacy.base}
+                      className="text-primary hover:underline"
+                    >
+                      Privacy Policy
+                    </a>
+                  </Label>
+                </div>
+
+                <Button
+                  size="lg"
+                  className="w-full"
+                  onClick={handleConfirm}
+                  disabled={
+                    !profileComplete ||
+                    !termsAccepted ||
+                    isSubmitting ||
+                    hasInvalidMultiCourtItems ||
+                    hasUnavailableMultiCourtItems ||
+                    hasIncompleteMultiCourtPricing ||
+                    hasMixedMultiCourtCurrencies ||
+                    isResolvingMultiCourtAvailability
+                  }
+                >
+                  {isSubmitting ? "Confirming..." : "Confirm Booking"}
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="relative">
+              <OrderSummary
+                timeSlot={timeSlot}
+                basePriceCents={basePriceCents}
+                addonPriceCents={addonPriceCents}
+                addons={pricingBreakdown?.addons}
+                pricingWarnings={pricingWarnings}
+                timeZone={placeTimeZone}
+                termsAccepted={termsAccepted}
+                onTermsChange={setTermsAccepted}
+                onConfirm={handleConfirm}
+                onReviewDetails={() => scrollToSection(detailsSectionRef)}
+                reviewLabel="Review booking details"
+                isSubmitting={isSubmitting}
+                disabled={!profileComplete}
+                className="sticky top-24"
+              />
+              {!profileComplete && (
+                <div className="absolute inset-0 top-32 flex flex-col items-center justify-start rounded-xl bg-background/80 backdrop-blur-sm pt-8 px-4 text-center">
+                  <p className="text-sm font-medium text-foreground">
+                    Set up your profile to confirm
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setShowProfileModal(true)}
+                    className="mt-3 text-sm font-semibold text-primary hover:underline"
+                  >
+                    Complete Profile →
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
+
+      <ProfileSetupModal
+        open={showProfileModal}
+        onOpenChange={setShowProfileModal}
+      />
     </Container>
   );
 }

@@ -8,10 +8,12 @@ import {
   formatTimeRange,
   formatTimeRangeInTimeZone,
 } from "@/common/format";
+import type { PricingBreakdownAddonLine } from "@/common/pricing-breakdown";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { PricingWarningsAlert } from "@/features/court-addons";
 
 interface OrderSummaryProps {
   timeSlot: {
@@ -20,6 +22,10 @@ interface OrderSummaryProps {
     priceCents: number;
     currency: string;
   };
+  basePriceCents?: number;
+  addonPriceCents?: number;
+  addons?: PricingBreakdownAddonLine[];
+  pricingWarnings?: string[];
   timeZone?: string;
   termsAccepted: boolean;
   onTermsChange: (accepted: boolean) => void;
@@ -33,6 +39,10 @@ interface OrderSummaryProps {
 
 export function OrderSummary({
   timeSlot,
+  basePriceCents,
+  addonPriceCents,
+  addons,
+  pricingWarnings = [],
   timeZone,
   termsAccepted,
   onTermsChange,
@@ -84,10 +94,38 @@ export function OrderSummary({
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Court fee</span>
             <span>
-              {formatCurrency(timeSlot.priceCents, timeSlot.currency)}
+              {formatCurrency(
+                basePriceCents ?? timeSlot.priceCents,
+                timeSlot.currency,
+              )}
             </span>
           </div>
+          {addons && addons.length > 0
+            ? addons.map((addon) => (
+                <div
+                  key={addon.addonId}
+                  className="flex justify-between text-sm"
+                >
+                  <span className="text-muted-foreground">
+                    {addon.addonLabel}
+                    {addon.quantity > 1 ? ` x${addon.quantity}` : ""}
+                  </span>
+                  <span>
+                    {formatCurrency(addon.subtotalCents, timeSlot.currency)}
+                  </span>
+                </div>
+              ))
+            : (addonPriceCents ?? 0) > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Add-ons</span>
+                  <span>
+                    {formatCurrency(addonPriceCents ?? 0, timeSlot.currency)}
+                  </span>
+                </div>
+              )}
         </div>
+
+        <PricingWarningsAlert warnings={pricingWarnings} />
 
         {/* Total */}
         <div className="flex justify-between font-medium text-lg pt-4 border-t">

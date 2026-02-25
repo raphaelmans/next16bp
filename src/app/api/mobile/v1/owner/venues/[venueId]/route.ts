@@ -22,6 +22,24 @@ export const dynamic = "force-dynamic";
 
 type Params = Promise<{ venueId: string }>;
 
+function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
+  place: T,
+): Omit<T, "country" | "timeZone"> {
+  const { country: _country, timeZone: _timeZone, ...rest } = place;
+  return rest;
+}
+
+function redactPlaceDetailsLocale<
+  T extends { place: { country?: string; timeZone?: string } },
+>(
+  details: T,
+): Omit<T, "place"> & { place: Omit<T["place"], "country" | "timeZone"> } {
+  return {
+    ...details,
+    place: redactPlaceLocale(details.place),
+  };
+}
+
 const normalizeMobilePlaceInput = (
   raw: Record<string, unknown>,
 ): Record<string, unknown> => {
@@ -40,10 +58,6 @@ const normalizeMobilePlaceInput = (
 
   if (normalized.province === undefined && normalized.state !== undefined) {
     normalized.province = normalized.state;
-  }
-
-  if (normalized.timeZone === undefined && normalized.timezone !== undefined) {
-    normalized.timeZone = normalized.timezone;
   }
 
   return normalized;
@@ -66,8 +80,9 @@ export async function GET(req: Request, context: { params: Params }) {
     const input = validate(GetPlaceByIdSchema, { placeId: venueId });
     const service = makePlaceManagementService();
     const place = await service.getPlaceById(session.userId, input.placeId);
+    const redactedPlace = redactPlaceDetailsLocale(place);
 
-    return NextResponse.json<ApiResponse<typeof place>>(wrapResponse(place));
+    return NextResponse.json(wrapResponse(redactedPlace));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });
@@ -99,8 +114,9 @@ export async function PATCH(req: Request, context: { params: Params }) {
 
     const service = makePlaceManagementService();
     const place = await service.updatePlace(session.userId, input);
+    const redactedPlace = redactPlaceLocale(place);
 
-    return NextResponse.json<ApiResponse<typeof place>>(wrapResponse(place));
+    return NextResponse.json(wrapResponse(redactedPlace));
   } catch (error) {
     const { status, body } = handleError(error, requestId);
     return NextResponse.json<ApiErrorResponse>(body, { status });

@@ -7,6 +7,7 @@ import {
   placeVerificationRequest,
   profile,
   reservation,
+  reservationGroup,
 } from "@/lib/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";
 import type { AuthenticatedContext } from "@/lib/shared/infra/trpc/context";
@@ -119,12 +120,43 @@ export class ChatInboxService {
     }
   }
 
+  private async assertReservationGroupAccess(
+    viewer: Viewer,
+    reservationGroupId: string,
+    ctx?: RequestContext,
+  ): Promise<void> {
+    const client = this.getClient(ctx);
+
+    const rows = await client
+      .select({ reservationGroupId: reservationGroup.id })
+      .from(reservationGroup)
+      .innerJoin(profile, eq(reservationGroup.playerId, profile.id))
+      .innerJoin(place, eq(reservationGroup.placeId, place.id))
+      .innerJoin(organization, eq(place.organizationId, organization.id))
+      .where(
+        and(
+          eq(reservationGroup.id, reservationGroupId),
+          or(
+            eq(profile.userId, viewer.userId),
+            eq(organization.ownerUserId, viewer.userId),
+          ),
+        ),
+      )
+      .limit(1);
+
+    if (rows.length === 0) {
+      throw new AuthorizationError(
+        "You cannot archive this reservation thread",
+      );
+    }
+  }
+
   private parseThreadRef(threadKind: ChatInboxThreadKind, threadId: string) {
     const parsed = parseInboxThreadRef(threadKind, threadId);
     if (!parsed) {
       if (threadKind === "reservation") {
         throw new ValidationError(
-          "Reservation thread ids must start with 'res-'",
+          "Reservation thread ids must start with 'res-' or 'grp-'",
         );
       }
 
@@ -145,7 +177,16 @@ export class ChatInboxService {
     const parsed = this.parseThreadRef(threadKind, threadId);
 
     if (parsed.threadKind === "reservation") {
-      await this.assertReservationAccess(viewer, parsed.reservationId, ctx);
+      if ("reservationId" in parsed) {
+        await this.assertReservationAccess(viewer, parsed.reservationId, ctx);
+        return;
+      }
+
+      await this.assertReservationGroupAccess(
+        viewer,
+        parsed.reservationGroupId,
+        ctx,
+      );
       return;
     }
 

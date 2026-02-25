@@ -6,6 +6,7 @@ import {
   useFeatureQueries,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
+import type { PricingBreakdown } from "@/common/pricing-breakdown";
 import { getZonedStartOfDayIso, toUtcISOString } from "@/common/time-zone";
 import type { PlaceCardPlace, TimeSlot } from "@/components/kudos";
 import { getDiscoveryApi } from "../api.runtime";
@@ -125,6 +126,7 @@ export interface PlaceCardMeta {
   currency?: string;
   verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
   reservationsEnabled?: boolean;
+  hasPaymentMethods?: boolean;
 }
 
 export const buildDiscoveryPlaceCard = (
@@ -193,6 +195,7 @@ export function useModDiscoveryPlaceCardDetails(
         currency: item.currency ?? undefined,
         verificationStatus: item.verificationStatus ?? undefined,
         reservationsEnabled: item.reservationsEnabled ?? undefined,
+        hasPaymentMethods: item.hasPaymentMethods ?? undefined,
       };
     }
     return record;
@@ -265,6 +268,7 @@ export interface PlaceDetail {
     status: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
     reservationsEnabled: boolean;
   } | null;
+  hasPaymentMethods?: boolean;
   contactDetail?: PlaceContactDetail;
   amenities: string[];
 }
@@ -277,6 +281,22 @@ export interface AvailabilityOption {
   currency: string | null;
   courtId: string;
   courtLabel: string;
+  status?: "AVAILABLE" | "BOOKED";
+  unavailableReason?: "RESERVATION" | "MAINTENANCE" | "WALK_IN";
+  pricingWarnings?: string[];
+  pricingBreakdown?: PricingBreakdown;
+  courtOptions?: AvailabilityCourtOption[];
+}
+
+export interface AvailabilityCourtOption {
+  courtId: string;
+  courtLabel: string;
+  status: "AVAILABLE" | "BOOKED";
+  totalPriceCents: number;
+  currency: string | null;
+  unavailableReason?: "RESERVATION" | "MAINTENANCE" | "WALK_IN" | null;
+  pricingWarnings?: string[];
+  pricingBreakdown?: PricingBreakdown;
 }
 
 export interface AvailabilityDiagnostics {
@@ -373,6 +393,7 @@ export function useModPlaceDetail({ placeIdOrSlug }: UsePlaceDetailOptions) {
                 reservationsEnabled: response.verification.reservationsEnabled,
               }
             : null,
+          hasPaymentMethods: response.hasPaymentMethods ?? undefined,
           contactDetail,
           amenities: response.amenities
             .map((a) => a.name)
@@ -468,6 +489,7 @@ interface UsePlaceAvailabilityOptions {
   place?: PlaceDetail;
   sportId?: string;
   courtId?: string;
+  selectedAddons?: { addonId: string; quantity: number }[];
   date?: Date;
   durationMinutes: number;
   mode: "any" | "court";
@@ -492,6 +514,7 @@ export function useModPlaceAvailability({
   place,
   sportId,
   courtId,
+  selectedAddons,
   date,
   durationMinutes,
   mode,
@@ -509,6 +532,7 @@ export function useModPlaceAvailability({
       date: dateIso,
       durationMinutes: safeDuration,
       includeUnavailable,
+      selectedAddons,
     },
     {
       enabled:
@@ -517,6 +541,7 @@ export function useModPlaceAvailability({
         safeDuration > 0 &&
         mode === "court" &&
         !!place?.id,
+      placeholderData: (prev) => prev,
     },
   );
 
@@ -530,6 +555,7 @@ export function useModPlaceAvailability({
       durationMinutes: safeDuration,
       includeUnavailable,
       includeCourtOptions,
+      selectedAddons,
     },
     {
       enabled:
@@ -538,6 +564,7 @@ export function useModPlaceAvailability({
         !!date &&
         safeDuration > 0 &&
         mode === "any",
+      placeholderData: (prev) => prev,
     },
   );
 
@@ -556,6 +583,8 @@ export function useModPlaceAvailability({
     courtLabel: option.courtLabel,
     status: option.status,
     unavailableReason: option.unavailableReason ?? undefined,
+    pricingWarnings: option.pricingWarnings ?? [],
+    pricingBreakdown: option.pricingBreakdown ?? undefined,
     courtOptions: option.courtOptions ?? undefined,
   }));
 

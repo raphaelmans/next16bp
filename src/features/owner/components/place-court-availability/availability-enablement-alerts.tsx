@@ -8,25 +8,30 @@ import { Button } from "@/components/ui/button";
 type AvailabilityEnablementAlertsProps = {
   showVerificationBanner: boolean;
   showReservationsDisabledBanner: boolean;
+  showPaymentMethodBanner: boolean;
   showScheduleBanner: boolean;
   showPricingBanner: boolean;
   verificationStatus: string;
   verificationHref: string;
   scheduleHref: string;
+  paymentMethodsHref: string;
 };
 
 export function AvailabilityEnablementAlerts({
   showVerificationBanner,
   showReservationsDisabledBanner,
+  showPaymentMethodBanner,
   showScheduleBanner,
   showPricingBanner,
   verificationStatus,
   verificationHref,
   scheduleHref,
+  paymentMethodsHref,
 }: AvailabilityEnablementAlertsProps) {
   if (
     !showVerificationBanner &&
     !showReservationsDisabledBanner &&
+    !showPaymentMethodBanner &&
     !showScheduleBanner &&
     !showPricingBanner
   ) {
@@ -59,6 +64,22 @@ export function AvailabilityEnablementAlerts({
             <p>Players cannot book online until reservations are enabled.</p>
             <Button asChild size="sm" className="mt-2">
               <Link href={verificationHref}>Enable reservations</Link>
+            </Button>
+          </AlertDescription>
+        </Alert>
+      ) : null}
+
+      {showPaymentMethodBanner ? (
+        <Alert className="border-warning/20 bg-warning/10">
+          <AlertCircle className="text-warning" />
+          <AlertTitle>No payment method configured</AlertTitle>
+          <AlertDescription>
+            <p>
+              Add at least one payment method so reservations can be opened for
+              public booking.
+            </p>
+            <Button asChild size="sm" className="mt-2">
+              <Link href={paymentMethodsHref}>Manage payment methods</Link>
             </Button>
           </AlertDescription>
         </Alert>

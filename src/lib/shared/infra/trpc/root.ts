@@ -14,6 +14,7 @@ import { contactRouter } from "@/lib/modules/contact/contact.router";
 import { adminCourtRouter } from "@/lib/modules/court/admin/admin-court.router";
 import { courtRouter } from "@/lib/modules/court/court.router";
 import { courtManagementRouter } from "@/lib/modules/court/court-management.router";
+import { courtAddonRouter } from "@/lib/modules/court-addon/court-addon.router";
 import { courtBlockRouter } from "@/lib/modules/court-block/court-block.router";
 import { courtHoursRouter } from "@/lib/modules/court-hours/court-hours.router";
 import { courtRateRuleRouter } from "@/lib/modules/court-rate-rule/court-rate-rule.router";
@@ -28,6 +29,7 @@ import { ownerSetupRouter } from "@/lib/modules/owner-setup/owner-setup.router";
 import { paymentProofRouter } from "@/lib/modules/payment-proof/payment-proof.router";
 import { placeRouter } from "@/lib/modules/place/place.router";
 import { placeManagementRouter } from "@/lib/modules/place/place-management.router";
+import { placeAddonRouter } from "@/lib/modules/place-addon/place-addon.router";
 import { placeVerificationAdminRouter } from "@/lib/modules/place-verification/admin/place-verification-admin.router";
 import { placeVerificationRouter } from "@/lib/modules/place-verification/place-verification.router";
 import { profileRouter } from "@/lib/modules/profile/profile.router";
@@ -46,11 +48,13 @@ export const appRouter = router({
   auth: authRouter,
   court: courtRouter,
   courtManagement: courtManagementRouter,
+  courtAddon: courtAddonRouter,
   courtBlock: courtBlockRouter,
   guestProfile: guestProfileRouter,
   courtHours: courtHoursRouter,
   courtRateRule: courtRateRuleRouter,
   place: placeRouter,
+  placeAddon: placeAddonRouter,
   placeManagement: placeManagementRouter,
   placeVerification: placeVerificationRouter,
   sport: sportRouter,

@@ -18,7 +18,6 @@ describe("notifications domain", () => {
         configured: true,
         permission: "default" as const,
         hasSubscription: false,
-        localTestEnabled: true,
         busy: false,
       };
 
@@ -40,7 +39,6 @@ describe("notifications domain", () => {
         configured: true,
         permission: "granted" as const,
         hasSubscription: true,
-        localTestEnabled: true,
         busy: false,
       };
 
@@ -51,6 +49,7 @@ describe("notifications domain", () => {
       expect(result.enabledOnThisDevice).toBe(true);
       expect(result.diagnosticsCode).toBe("enabled");
       expect(result.canSendLocalTest).toBe(true);
+      expect(result.canSendServerTest).toBe(true);
     });
 
     it("granted without subscription -> returns granted_not_registered", () => {
@@ -61,7 +60,6 @@ describe("notifications domain", () => {
         configured: true,
         permission: "granted" as const,
         hasSubscription: false,
-        localTestEnabled: false,
         busy: false,
       };
 
@@ -71,7 +69,8 @@ describe("notifications domain", () => {
       // Assert
       expect(result.enabledOnThisDevice).toBe(false);
       expect(result.diagnosticsCode).toBe("granted_not_registered");
-      expect(result.canSendLocalTest).toBe(false);
+      expect(result.canSendLocalTest).toBe(true);
+      expect(result.canSendServerTest).toBe(false);
     });
   });
 

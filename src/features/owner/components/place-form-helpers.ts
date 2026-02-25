@@ -7,7 +7,6 @@ import {
 
 export type PlaceFormValues = z.input<typeof placeFormSchema>;
 
-export const DEFAULT_COUNTRY = "PH";
 export const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 
 export const buildFormDefaults = (
@@ -17,11 +16,8 @@ export const buildFormDefaults = (
   address: values?.address ?? "",
   city: values?.city ?? "",
   province: values?.province ?? "",
-  country: values?.country ?? defaultPlaceFormValues.country ?? DEFAULT_COUNTRY,
   latitude: values?.latitude,
   longitude: values?.longitude,
-  timeZone:
-    values?.timeZone ?? defaultPlaceFormValues.timeZone ?? "Asia/Manila",
   isActive: values?.isActive ?? defaultPlaceFormValues.isActive ?? true,
   websiteUrl: values?.websiteUrl ?? "",
   facebookUrl: values?.facebookUrl ?? "",
@@ -39,7 +35,6 @@ export const normalizeFormValues = (
   address: values.address.trim(),
   city: values.city.trim(),
   province: values.province.trim(),
-  country: DEFAULT_COUNTRY,
   latitude:
     values.latitude === undefined || Number.isNaN(values.latitude)
       ? undefined
@@ -48,7 +43,6 @@ export const normalizeFormValues = (
     values.longitude === undefined || Number.isNaN(values.longitude)
       ? undefined
       : values.longitude,
-  timeZone: values.timeZone ?? defaultPlaceFormValues.timeZone ?? "Asia/Manila",
   isActive: values.isActive ?? defaultPlaceFormValues.isActive ?? true,
   websiteUrl: values.websiteUrl?.trim() ? values.websiteUrl.trim() : undefined,
   facebookUrl: values.facebookUrl?.trim()

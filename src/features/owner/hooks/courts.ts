@@ -197,7 +197,6 @@ type OwnerPlaceBase = {
   name: string;
   address: string;
   city: string;
-  timeZone: string;
   isActive: boolean;
 };
 

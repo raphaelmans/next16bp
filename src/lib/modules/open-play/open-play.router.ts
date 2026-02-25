@@ -17,8 +17,10 @@ import {
 import {
   CancelOpenPlaySchema,
   CloseOpenPlaySchema,
+  CreateOpenPlayFromReservationGroupSchema,
   CreateOpenPlayFromReservationSchema,
   DecideOpenPlayParticipantSchema,
+  GetOpenPlayForReservationGroupSchema,
   GetOpenPlayForReservationSchema,
   GetOpenPlaySchema,
   LeaveOpenPlaySchema,
@@ -130,6 +132,43 @@ export const openPlayRouter = router({
           input,
         );
         return { openPlayId: created.id };
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
+  createFromReservationGroup: protectedRateLimitedProcedure("sensitive")
+    .input(CreateOpenPlayFromReservationGroupSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const service = makeOpenPlayService();
+        const created = await service.createFromReservationGroup(
+          ctx.userId,
+          profile.id,
+          input,
+        );
+        return { openPlayId: created.id };
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
+  getForReservationGroup: protectedProcedure
+    .input(GetOpenPlayForReservationGroupSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const service = makeOpenPlayService();
+        return await service.getForReservationGroup(
+          ctx.userId,
+          profile.id,
+          input,
+        );
       } catch (error) {
         handleOpenPlayError(error);
       }

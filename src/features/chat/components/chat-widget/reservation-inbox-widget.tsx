@@ -18,10 +18,12 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  makeReservationGroupThreadId,
   makeReservationThreadId,
+  parseReservationGroupThreadId,
   parseReservationThreadId,
 } from "@/lib/modules/chat/shared/domain";
-import { toReservationIdsFromThreadIds } from "@/lib/modules/chat/shared/transform";
+import { toReservationThreadTargetsFromThreadIds } from "@/lib/modules/chat/shared/transform";
 import { cn } from "@/lib/utils";
 import {
   getChatStatusBadgeClassName,
@@ -29,12 +31,14 @@ import {
   isReservationMetaArchived,
   parseTimestampMs,
   sortReservationInboxIds,
+  sumReservationUnreadCounts,
 } from "../../domain";
 import {
   useModChatInvalidation,
   useMutChatInboxArchiveThread,
   useMutChatInboxUnarchiveThread,
   useMutReservationChatSendMessage,
+  useMutReservationGroupChatSendMessage,
   useQueryChatAuth,
   useQueryChatInboxListArchivedThreadIds,
   useQueryReservationChatThreadMetas,
@@ -44,7 +48,9 @@ import { StreamChatThread } from "../chat-thread/stream-chat-thread";
 import { InboxFloatingSheet } from "../inbox-shell/inbox-floating-sheet";
 
 export type ReservationThreadMeta = {
-  reservationId: string;
+  threadId: string;
+  reservationId: string | null;
+  reservationGroupId: string | null;
   status: string;
   placeName: string;
   timeZone: string;
@@ -66,7 +72,8 @@ type ChannelRefreshResult = {
 };
 
 type ReservationChatOpenDetail = {
-  reservationId: string;
+  reservationId?: string;
+  reservationGroupId?: string;
   kind?: InboxKind;
   source?: string;
 };
@@ -77,7 +84,7 @@ export interface ReservationInboxWidgetConfig {
   kind: InboxKind;
   storageKeys: {
     open: string;
-    activeReservationId: string;
+    activeReservationThreadId: string;
   };
   ui: {
     sheetTitle: string;
@@ -86,7 +93,7 @@ export interface ReservationInboxWidgetConfig {
   labels: {
     listPrimary: (
       meta: ReservationThreadMeta | null,
-      reservationId: string,
+      threadId: string,
     ) => string | null;
     listSecondary: (meta: ReservationThreadMeta | null) => string | null;
     threadTitle: (meta: ReservationThreadMeta | null) => string;
@@ -136,9 +143,7 @@ export function ReservationInboxWidget({
 
   const [open, setOpen] = useState(false);
   const [channels, setChannels] = useState<Channel[]>([]);
-  const [activeReservationId, setActiveReservationId] = useState<string | null>(
-    null,
-  );
+  const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
   const [_isLoadingChannels, setIsLoadingChannels] = useState(false);
   const [channelsError, setChannelsError] = useState<unknown>(null);
   const [hasLoadedChannelsOnce, setHasLoadedChannelsOnce] = useState(false);
@@ -148,7 +153,7 @@ export function ReservationInboxWidget({
   const [syncPhase, setSyncPhase] = useState<SyncPhase>("idle");
   const [syncErrorMessage, setSyncErrorMessage] = useState<string | null>(null);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
-  const previousReservationIdsKeyRef = useRef<string>("");
+  const previousThreadTargetsKeyRef = useRef<string>("");
   const syncRequestIdRef = useRef(0);
   const openRef = useRef(open);
   const channelsRef = useRef<Channel[]>([]);
@@ -163,6 +168,7 @@ export function ReservationInboxWidget({
     invalidateChatInboxListArchivedThreadIds,
   } = useModChatInvalidation();
   const sendMessageMutation = useMutReservationChatSendMessage();
+  const sendGroupMessageMutation = useMutReservationGroupChatSendMessage();
   const archiveThreadMutation = useMutChatInboxArchiveThread();
   const unarchiveThreadMutation = useMutChatInboxUnarchiveThread();
 
@@ -185,30 +191,36 @@ export function ReservationInboxWidget({
   useEffect(() => {
     const storedOpen = readLocalStorage(config.storageKeys.open) === "1";
     const storedActive = readLocalStorage(
-      config.storageKeys.activeReservationId,
+      config.storageKeys.activeReservationThreadId,
     );
     setOpen(storedOpen);
-    setActiveReservationId(storedActive);
-  }, [config.storageKeys.activeReservationId, config.storageKeys.open]);
+    if (storedActive?.startsWith("res-") || storedActive?.startsWith("grp-")) {
+      setActiveThreadId(storedActive);
+    } else if (storedActive) {
+      setActiveThreadId(makeReservationThreadId(storedActive));
+    } else {
+      setActiveThreadId(null);
+    }
+  }, [config.storageKeys.activeReservationThreadId, config.storageKeys.open]);
 
   useEffect(() => {
     writeLocalStorage(config.storageKeys.open, open ? "1" : "0");
   }, [config.storageKeys.open, open]);
 
   useEffect(() => {
-    if (activeReservationId) {
+    if (activeThreadId) {
       writeLocalStorage(
-        config.storageKeys.activeReservationId,
-        activeReservationId,
+        config.storageKeys.activeReservationThreadId,
+        activeThreadId,
       );
     }
-  }, [activeReservationId, config.storageKeys.activeReservationId]);
+  }, [activeThreadId, config.storageKeys.activeReservationThreadId]);
 
   useEffect(() => {
     const handleOpenEvent = (event: Event) => {
       const customEvent = event as CustomEvent<ReservationChatOpenDetail>;
       const detail = customEvent.detail;
-      if (!detail || !detail.reservationId) {
+      if (!detail) {
         return;
       }
 
@@ -216,7 +228,16 @@ export function ReservationInboxWidget({
         return;
       }
 
-      setActiveReservationId(detail.reservationId);
+      if (detail.reservationGroupId) {
+        setActiveThreadId(
+          makeReservationGroupThreadId(detail.reservationGroupId),
+        );
+      } else if (detail.reservationId) {
+        setActiveThreadId(makeReservationThreadId(detail.reservationId));
+      } else {
+        return;
+      }
+
       setOpen(true);
       if (!isDesktop) {
         setMobilePane("thread");
@@ -292,20 +313,27 @@ export function ReservationInboxWidget({
           error: new Error("Unable to refresh conversations"),
         };
 
-    const reservationIds = toReservationIdsFromThreadIds(
+    const threadTargets = toReservationThreadTargetsFromThreadIds(
       (streamResult.ok ? streamResult.channels : channelsRef.current).map(
         (channel) => channel.id,
       ),
     );
 
-    const shouldRefreshMetas = open && reservationIds.length > 0;
+    const shouldRefreshMetas =
+      open &&
+      (threadTargets.reservationIds.length > 0 ||
+        threadTargets.reservationGroupIds.length > 0);
     let metaError: unknown = null;
     if (shouldRefreshMetas) {
       try {
         await invalidateReservationThreadMetas({
-          reservationIds,
+          reservationIds: threadTargets.reservationIds,
+          reservationGroupIds: threadTargets.reservationGroupIds,
         });
-        await fetchReservationThreadMetas({ reservationIds });
+        await fetchReservationThreadMetas({
+          reservationIds: threadTargets.reservationIds,
+          reservationGroupIds: threadTargets.reservationGroupIds,
+        });
       } catch (error) {
         metaError = error;
       }
@@ -399,13 +427,15 @@ export function ReservationInboxWidget({
       channels.filter((channel) => {
         const channelId = channel.id;
         return (
-          typeof channelId === "string" && !!parseReservationThreadId(channelId)
+          typeof channelId === "string" &&
+          (!!parseReservationThreadId(channelId) ||
+            !!parseReservationGroupThreadId(channelId))
         );
       }),
     [channels],
   );
 
-  const unreadByReservationId = useMemo(() => {
+  const unreadByThreadId = useMemo(() => {
     const map = new Map<string, number>();
     for (const channel of reservationChannels) {
       const channelId = channel.id;
@@ -413,17 +443,19 @@ export function ReservationInboxWidget({
         continue;
       }
 
-      const parsed = parseReservationThreadId(channelId);
-      if (!parsed) {
+      if (
+        !parseReservationThreadId(channelId) &&
+        !parseReservationGroupThreadId(channelId)
+      ) {
         continue;
       }
 
-      map.set(parsed.reservationId, channel.state.unreadCount ?? 0);
+      map.set(channelId, channel.state.unreadCount ?? 0);
     }
     return map;
   }, [reservationChannels]);
 
-  const channelActivityMsByReservationId = useMemo(() => {
+  const channelActivityMsByThreadId = useMemo(() => {
     const map = new Map<string, number>();
     for (const channel of reservationChannels) {
       const channelId = channel.id;
@@ -431,8 +463,10 @@ export function ReservationInboxWidget({
         continue;
       }
 
-      const parsed = parseReservationThreadId(channelId);
-      if (!parsed) {
+      if (
+        !parseReservationThreadId(channelId) &&
+        !parseReservationGroupThreadId(channelId)
+      ) {
         continue;
       }
 
@@ -446,25 +480,40 @@ export function ReservationInboxWidget({
         parseTimestampMs(dataRecord.last_message_at),
       );
 
-      map.set(parsed.reservationId, ms);
+      map.set(channelId, ms);
     }
     return map;
   }, [reservationChannels]);
 
-  const reservationIds = useMemo(
-    () => toReservationIdsFromThreadIds(reservationChannels.map((c) => c.id)),
+  const threadIds = useMemo(
+    () =>
+      reservationChannels
+        .map((channel) => channel.id)
+        .filter((id): id is string => typeof id === "string"),
     [reservationChannels],
   );
 
-  const reservationIdsKey = useMemo(
-    () => reservationIds.join(","),
-    [reservationIds],
+  const threadTargets = useMemo(
+    () => toReservationThreadTargetsFromThreadIds(threadIds),
+    [threadIds],
+  );
+
+  const threadTargetsKey = useMemo(
+    () =>
+      `res:${threadTargets.reservationIds.join(",")}|grp:${threadTargets.reservationGroupIds.join(",")}`,
+    [threadTargets.reservationGroupIds, threadTargets.reservationIds],
   );
 
   const metasQuery = useQueryReservationChatThreadMetas(
-    { reservationIds, includeArchived: false },
     {
-      enabled: open && reservationIds.length > 0,
+      reservationIds: threadTargets.reservationIds,
+      reservationGroupIds: threadTargets.reservationGroupIds,
+      includeArchived: false,
+    },
+    {
+      enabled:
+        threadTargets.reservationIds.length > 0 ||
+        threadTargets.reservationGroupIds.length > 0,
       placeholderData: (prev) => prev,
     },
   );
@@ -476,57 +525,71 @@ export function ReservationInboxWidget({
     },
   );
 
-  const archivedReservationIdsFromStore = useMemo(() => {
-    return toReservationIdsFromThreadIds(
+  const archivedThreadTargetsFromStore = useMemo(() => {
+    return toReservationThreadTargetsFromThreadIds(
       archivedThreadIdsQuery.data?.threadIds ?? [],
     );
   }, [archivedThreadIdsQuery.data?.threadIds]);
 
   const archivedMetasQuery = useQueryReservationChatThreadMetas(
-    { reservationIds: archivedReservationIdsFromStore, includeArchived: true },
     {
-      enabled: open && archivedReservationIdsFromStore.length > 0,
+      reservationIds: archivedThreadTargetsFromStore.reservationIds,
+      reservationGroupIds: archivedThreadTargetsFromStore.reservationGroupIds,
+      includeArchived: true,
+    },
+    {
+      enabled:
+        open &&
+        (archivedThreadTargetsFromStore.reservationIds.length > 0 ||
+          archivedThreadTargetsFromStore.reservationGroupIds.length > 0),
       placeholderData: (prev) => prev,
     },
   );
 
-  const activeReservationFallbackMetasQuery =
-    useQueryReservationChatThreadMetas(
-      {
-        reservationIds: activeReservationId ? [activeReservationId] : [],
-        includeArchived: true,
-      },
-      {
-        enabled:
-          open &&
-          Boolean(activeReservationId) &&
-          !metasQuery.data?.some(
-            (meta) => meta.reservationId === activeReservationId,
-          ),
-        placeholderData: (prev) => prev,
-      },
-    );
+  const activeThreadFallbackMetasQuery = useQueryReservationChatThreadMetas(
+    {
+      reservationIds:
+        activeThreadId && parseReservationThreadId(activeThreadId)
+          ? [parseReservationThreadId(activeThreadId)?.reservationId ?? ""]
+          : [],
+      reservationGroupIds:
+        activeThreadId && parseReservationGroupThreadId(activeThreadId)
+          ? [
+              parseReservationGroupThreadId(activeThreadId)
+                ?.reservationGroupId ?? "",
+            ]
+          : [],
+      includeArchived: true,
+    },
+    {
+      enabled:
+        open &&
+        Boolean(activeThreadId) &&
+        !metasQuery.data?.some((meta) => meta.threadId === activeThreadId),
+      placeholderData: (prev) => prev,
+    },
+  );
 
   useEffect(() => {
     if (!open) {
       return;
     }
 
-    if (previousReservationIdsKeyRef.current !== reservationIdsKey) {
+    if (previousThreadTargetsKeyRef.current !== threadTargetsKey) {
       setHasLoadedMetasOnce(false);
-      previousReservationIdsKeyRef.current = reservationIdsKey;
+      previousThreadTargetsKeyRef.current = threadTargetsKey;
     }
-  }, [open, reservationIdsKey]);
+  }, [open, threadTargetsKey]);
 
   useEffect(() => {
-    if (!open || reservationIds.length === 0) {
+    if (!open || threadIds.length === 0) {
       return;
     }
 
     if (metasQuery.isSuccess || metasQuery.isError) {
       setHasLoadedMetasOnce(true);
     }
-  }, [metasQuery.isError, metasQuery.isSuccess, open, reservationIds.length]);
+  }, [metasQuery.isError, metasQuery.isSuccess, open, threadIds.length]);
 
   useEffect(() => {
     if (!open) {
@@ -539,33 +602,33 @@ export function ReservationInboxWidget({
     }
   }, [open]);
 
-  const metasByReservationId = useMemo(() => {
+  const metasByThreadId = useMemo(() => {
     const map = new Map<string, ReservationThreadMeta>();
     for (const meta of metasQuery.data ?? []) {
-      map.set(meta.reservationId, meta as ReservationThreadMeta);
+      map.set(meta.threadId, meta as ReservationThreadMeta);
     }
     return map;
   }, [metasQuery.data]);
 
-  const archivedMetasByReservationId = useMemo(() => {
+  const archivedMetasByThreadId = useMemo(() => {
     const map = new Map<string, ReservationThreadMeta>();
     for (const meta of archivedMetasQuery.data ?? []) {
-      map.set(meta.reservationId, meta as ReservationThreadMeta);
+      map.set(meta.threadId, meta as ReservationThreadMeta);
     }
     return map;
   }, [archivedMetasQuery.data]);
 
-  const activeFallbackMetaByReservationId = useMemo(() => {
+  const activeFallbackMetaByThreadId = useMemo(() => {
     const map = new Map<string, ReservationThreadMeta>();
-    for (const meta of activeReservationFallbackMetasQuery.data ?? []) {
-      map.set(meta.reservationId, meta as ReservationThreadMeta);
+    for (const meta of activeThreadFallbackMetasQuery.data ?? []) {
+      map.set(meta.threadId, meta as ReservationThreadMeta);
     }
     return map;
-  }, [activeReservationFallbackMetasQuery.data]);
+  }, [activeThreadFallbackMetasQuery.data]);
 
   const showSyncWarning = syncPhase === "partial" || syncPhase === "error";
   const isRefreshBusy = isManualRefreshing;
-  const showMetaSkeletons = reservationIds.length > 0 && !hasLoadedMetasOnce;
+  const showMetaSkeletons = threadIds.length > 0 && !hasLoadedMetasOnce;
 
   const isStreamConnecting =
     open && authQuery.isSuccess && !clientError && !isReady;
@@ -574,30 +637,22 @@ export function ReservationInboxWidget({
     (authQuery.isLoading ||
       isStreamConnecting ||
       (!hasLoadedChannelsOnce && !channelsError) ||
-      (reservationIds.length > 0 && !hasLoadedMetasOnce));
+      (threadIds.length > 0 && !hasLoadedMetasOnce));
 
-  const sortedReservationIds = useMemo(
+  const sortedThreadIds = useMemo(
     () =>
       sortReservationInboxIds({
-        reservationIds,
-        metasByReservationId,
-        unreadByReservationId,
-        channelActivityMsByReservationId,
+        reservationIds: threadIds,
+        metasByReservationId: metasByThreadId,
+        unreadByReservationId: unreadByThreadId,
+        channelActivityMsByReservationId: channelActivityMsByThreadId,
       }),
-    [
-      channelActivityMsByReservationId,
-      metasByReservationId,
-      reservationIds,
-      unreadByReservationId,
-    ],
+    [channelActivityMsByThreadId, metasByThreadId, threadIds, unreadByThreadId],
   );
 
-  const visibleReservationIds = useMemo(
-    () =>
-      sortedReservationIds.filter((reservationId) =>
-        metasByReservationId.has(reservationId),
-      ),
-    [metasByReservationId, sortedReservationIds],
+  const visibleThreadIds = useMemo(
+    () => sortedThreadIds.filter((threadId) => metasByThreadId.has(threadId)),
+    [metasByThreadId, sortedThreadIds],
   );
 
   useEffect(() => {
@@ -605,34 +660,28 @@ export function ReservationInboxWidget({
       return;
     }
 
-    if (activeReservationId) {
+    if (activeThreadId) {
       return;
     }
 
-    const first = visibleReservationIds[0] ?? null;
+    const first = visibleThreadIds[0] ?? null;
     if (first) {
-      setActiveReservationId(first);
+      setActiveThreadId(first);
     }
-  }, [activeReservationId, open, visibleReservationIds]);
+  }, [activeThreadId, open, visibleThreadIds]);
 
   const activeMeta = useMemo(() => {
-    if (!activeReservationId) {
+    if (!activeThreadId) {
       return null;
     }
     return (
-      metasByReservationId.get(activeReservationId) ??
-      activeFallbackMetaByReservationId.get(activeReservationId) ??
+      metasByThreadId.get(activeThreadId) ??
+      activeFallbackMetaByThreadId.get(activeThreadId) ??
       null
     );
-  }, [
-    activeFallbackMetaByReservationId,
-    activeReservationId,
-    metasByReservationId,
-  ]);
+  }, [activeFallbackMetaByThreadId, activeThreadId, metasByThreadId]);
 
-  const activeChannelId = activeReservationId
-    ? makeReservationThreadId(activeReservationId)
-    : null;
+  const activeChannelId = activeThreadId;
 
   const activeChannel = useMemo(() => {
     if (!activeChannelId) {
@@ -642,45 +691,50 @@ export function ReservationInboxWidget({
   }, [activeChannelId, reservationChannels]);
 
   const unreadCount = useMemo(() => {
-    return reservationChannels.reduce(
-      (sum, c) => sum + (c.state.unreadCount ?? 0),
-      0,
-    );
-  }, [reservationChannels]);
+    return sumReservationUnreadCounts({
+      reservationIds: visibleThreadIds,
+      unreadByReservationId: unreadByThreadId,
+    });
+  }, [unreadByThreadId, visibleThreadIds]);
 
   const myUserId = auth?.user.id ?? null;
   const now = new Date();
   const readOnly = isReservationMetaArchived(activeMeta, now);
   const readOnlyReason = getReservationReadOnlyReason(activeMeta, now);
-  const activeThreadId = activeChannel?.id ?? null;
+  const activeChannelThreadId = activeChannel?.id ?? null;
   const archivedThreadIds = archivedThreadIdsQuery.data?.threadIds ?? [];
   const activeThreadIsArchived =
-    !!activeThreadId && archivedThreadIds.includes(activeThreadId);
+    !!activeChannelThreadId &&
+    archivedThreadIds.includes(activeChannelThreadId);
 
   const handleArchiveThread = useCallback(async () => {
-    if (!activeThreadId) {
+    if (!activeChannelThreadId) {
       return;
     }
 
     await archiveThreadMutation.mutateAsync({
       threadKind: "reservation",
-      threadId: activeThreadId,
+      threadId: activeChannelThreadId,
     });
     await Promise.all([
       invalidateChatInboxListArchivedThreadIds({ threadKind: "reservation" }),
-      invalidateReservationThreadMetas({ reservationIds }),
+      invalidateReservationThreadMetas({
+        reservationIds: threadTargets.reservationIds,
+        reservationGroupIds: threadTargets.reservationGroupIds,
+      }),
     ]);
   }, [
-    activeThreadId,
+    activeChannelThreadId,
     archiveThreadMutation,
     invalidateChatInboxListArchivedThreadIds,
     invalidateReservationThreadMetas,
-    reservationIds,
+    threadTargets.reservationGroupIds,
+    threadTargets.reservationIds,
   ]);
 
   const handleUnarchiveThread = useCallback(
     async (threadId?: string) => {
-      const targetThreadId = threadId ?? activeThreadId;
+      const targetThreadId = threadId ?? activeChannelThreadId;
       if (!targetThreadId) {
         return;
       }
@@ -691,31 +745,34 @@ export function ReservationInboxWidget({
       });
       await Promise.all([
         invalidateChatInboxListArchivedThreadIds({ threadKind: "reservation" }),
-        invalidateReservationThreadMetas({ reservationIds }),
+        invalidateReservationThreadMetas({
+          reservationIds: threadTargets.reservationIds,
+          reservationGroupIds: threadTargets.reservationGroupIds,
+        }),
       ]);
     },
     [
-      activeThreadId,
+      activeChannelThreadId,
       invalidateChatInboxListArchivedThreadIds,
       invalidateReservationThreadMetas,
-      reservationIds,
+      threadTargets.reservationGroupIds,
+      threadTargets.reservationIds,
       unarchiveThreadMutation,
     ],
   );
 
   const archivedReservationItems = useMemo(() => {
-    return archivedReservationIdsFromStore.map((reservationId) => ({
-      reservationId,
-      meta: archivedMetasByReservationId.get(reservationId) ?? null,
-      threadId: makeReservationThreadId(reservationId),
+    return (archivedThreadIdsQuery.data?.threadIds ?? []).map((threadId) => ({
+      threadId,
+      meta: archivedMetasByThreadId.get(threadId) ?? null,
     }));
-  }, [archivedMetasByReservationId, archivedReservationIdsFromStore]);
+  }, [archivedMetasByThreadId, archivedThreadIdsQuery.data?.threadIds]);
 
-  const renderListRow = (reservationId: string) => {
-    const meta = metasByReservationId.get(reservationId) ?? null;
-    const channel = reservationChannels.find(
-      (c) => c.id === makeReservationThreadId(reservationId),
-    );
+  const renderListRow = (threadId: string) => {
+    const meta = metasByThreadId.get(threadId) ?? null;
+    const channel =
+      reservationChannels.find((channelItem) => channelItem.id === threadId) ??
+      null;
     const unread = channel?.state.unreadCount ?? 0;
     const lastMessage = channel?.state.latestMessages?.[0]?.text ?? "";
 
@@ -724,19 +781,21 @@ export function ReservationInboxWidget({
     const ongoing = start && end ? now >= start && now <= end : false;
     const action = meta?.status === "AWAITING_PAYMENT";
 
-    const isActive = reservationId === activeReservationId;
+    const isActive = threadId === activeThreadId;
+    const fallbackId =
+      meta?.reservationGroupId ?? meta?.reservationId ?? threadId;
 
     const primary = meta
-      ? (config.labels.listPrimary(meta, reservationId) ??
-        `Reservation ${reservationId.slice(0, 8).toUpperCase()}`)
+      ? (config.labels.listPrimary(meta, threadId) ??
+        `Reservation ${fallbackId.slice(0, 8).toUpperCase()}`)
       : showMetaSkeletons
         ? null
-        : `Reservation ${reservationId.slice(0, 8).toUpperCase()}`;
+        : `Reservation ${fallbackId.slice(0, 8).toUpperCase()}`;
     const secondary = config.labels.listSecondary(meta);
 
     return (
       <button
-        key={reservationId}
+        key={threadId}
         type="button"
         className={cn(
           "w-full text-left px-4 py-3 transition-colors",
@@ -744,7 +803,7 @@ export function ReservationInboxWidget({
           ongoing && !isActive && "bg-primary/5",
         )}
         onClick={() => {
-          setActiveReservationId(reservationId);
+          setActiveThreadId(threadId);
           if (!isDesktop) {
             setMobilePane("thread");
           }
@@ -839,17 +898,21 @@ export function ReservationInboxWidget({
                     </div>
                   ) : (
                     archivedReservationItems.map((item) => {
+                      const fallbackId =
+                        item.meta?.reservationGroupId ??
+                        item.meta?.reservationId ??
+                        item.threadId;
                       const primary = item.meta
                         ? (config.labels.listPrimary(
                             item.meta,
-                            item.reservationId,
+                            item.threadId,
                           ) ??
-                          `Reservation ${item.reservationId.slice(0, 8).toUpperCase()}`)
-                        : `Reservation ${item.reservationId.slice(0, 8).toUpperCase()}`;
+                          `Reservation ${fallbackId.slice(0, 8).toUpperCase()}`)
+                        : `Reservation ${fallbackId.slice(0, 8).toUpperCase()}`;
 
                       return (
                         <div
-                          key={item.reservationId}
+                          key={item.threadId}
                           className="flex items-center justify-between rounded-md border px-3 py-2"
                         >
                           <div className="min-w-0">
@@ -934,12 +997,12 @@ export function ReservationInboxWidget({
             <div className="p-4 text-sm text-destructive">
               Failed to load conversations. Try refreshing.
             </div>
-          ) : hasLoadedChannelsOnce && visibleReservationIds.length === 0 ? (
+          ) : hasLoadedChannelsOnce && visibleThreadIds.length === 0 ? (
             <div className="p-4 text-sm text-muted-foreground">
               No reservation chats yet.
             </div>
           ) : (
-            visibleReservationIds.map(renderListRow)
+            visibleThreadIds.map(renderListRow)
           )}
         </div>
       </ScrollArea>
@@ -958,7 +1021,13 @@ export function ReservationInboxWidget({
         headerTitle={config.labels.threadTitle(activeMeta)}
         headerSubtitle={
           activeMeta
-            ? `RES-${activeMeta.reservationId.slice(0, 8).toUpperCase()} • ${formatInTimeZone(
+            ? `${activeMeta.reservationGroupId ? "GRP" : "RES"}-${(
+                activeMeta.reservationGroupId ??
+                activeMeta.reservationId ??
+                "thread"
+              )
+                .slice(0, 8)
+                .toUpperCase()} • ${formatInTimeZone(
                 activeMeta.startTimeIso,
                 activeMeta.timeZone,
                 "EEE MMM d",
@@ -982,14 +1051,14 @@ export function ReservationInboxWidget({
         }}
         isContextRefreshing={isManualRefreshing}
         archiveActionLabel={
-          activeThreadId
+          activeChannelThreadId
             ? activeThreadIsArchived
               ? "Unarchive"
               : "Archive"
             : undefined
         }
         onArchiveAction={
-          activeThreadId
+          activeChannelThreadId
             ? activeThreadIsArchived
               ? () => handleUnarchiveThread()
               : () => handleArchiveThread()
@@ -1001,12 +1070,27 @@ export function ReservationInboxWidget({
         onBack={!isDesktop ? () => setMobilePane("list") : undefined}
         backButtonLabel="Back to inbox"
         onSendMessage={async (payload) => {
-          if (!activeReservationId) {
+          if (!activeThreadId) {
             throw new Error("Conversation not selected");
           }
 
+          const parsedGroup = parseReservationGroupThreadId(activeThreadId);
+          if (parsedGroup) {
+            await sendGroupMessageMutation.mutateAsync({
+              reservationGroupId: parsedGroup.reservationGroupId,
+              text: payload.text,
+              attachments: payload.attachments,
+            });
+            return;
+          }
+
+          const parsedReservation = parseReservationThreadId(activeThreadId);
+          if (!parsedReservation) {
+            throw new Error("Unsupported thread type");
+          }
+
           await sendMessageMutation.mutateAsync({
-            reservationId: activeReservationId,
+            reservationId: parsedReservation.reservationId,
             text: payload.text,
             attachments: payload.attachments,
           });

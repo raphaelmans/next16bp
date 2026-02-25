@@ -29,15 +29,27 @@ export interface IReservationApi {
   mutReservationCreateForAnyCourt: ProcedureFn<
     TrpcClientApi["reservation"]["createForAnyCourt"]["mutate"]
   >;
+  mutReservationCreateGroup: ProcedureFn<
+    TrpcClientApi["reservation"]["createGroup"]["mutate"]
+  >;
   mutReservationCreateForCourt: ProcedureFn<
     TrpcClientApi["reservation"]["createForCourt"]["mutate"]
   >;
   mutReservationMarkPayment: ProcedureFn<
     TrpcClientApi["reservation"]["markPayment"]["mutate"]
   >;
+  mutReservationMarkPaymentGroup: ProcedureFn<
+    TrpcClientApi["reservation"]["markPaymentGroup"]["mutate"]
+  >;
+  mutReservationPingOwner: ProcedureFn<
+    TrpcClientApi["reservation"]["pingOwner"]["mutate"]
+  >;
   queryProfileMe: ProcedureFn<TrpcClientApi["profile"]["me"]["query"]>;
   queryReservationGetById: ProcedureFn<
     TrpcClientApi["reservation"]["getById"]["query"]
+  >;
+  queryReservationGetGroupDetail: ProcedureFn<
+    TrpcClientApi["reservation"]["getGroupDetail"]["query"]
   >;
   queryReservationGetDetail: ProcedureFn<
     TrpcClientApi["reservation"]["getDetail"]["query"]
@@ -129,6 +141,17 @@ export class ReservationApi {
       this.toAppError,
     );
 
+  mutReservationCreateGroup: ProcedureFn<
+    TrpcClientApi["reservation"]["createGroup"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservation", "createGroup"],
+      (clientApi) => clientApi.reservation.createGroup.mutate,
+      input,
+      this.toAppError,
+    );
+
   mutReservationCreateForCourt: ProcedureFn<
     TrpcClientApi["reservation"]["createForCourt"]["mutate"]
   > = async (input) =>
@@ -151,6 +174,28 @@ export class ReservationApi {
       this.toAppError,
     );
 
+  mutReservationMarkPaymentGroup: ProcedureFn<
+    TrpcClientApi["reservation"]["markPaymentGroup"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservation", "markPaymentGroup"],
+      (clientApi) => clientApi.reservation.markPaymentGroup.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutReservationPingOwner: ProcedureFn<
+    TrpcClientApi["reservation"]["pingOwner"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservation", "pingOwner"],
+      (clientApi) => clientApi.reservation.pingOwner.mutate,
+      input,
+      this.toAppError,
+    );
+
   queryProfileMe: ProcedureFn<TrpcClientApi["profile"]["me"]["query"]> = async (
     input,
   ) =>
@@ -169,6 +214,17 @@ export class ReservationApi {
       this.clientApi,
       ["reservation", "getById"],
       (clientApi) => clientApi.reservation.getById.query,
+      input,
+      this.toAppError,
+    );
+
+  queryReservationGetGroupDetail: ProcedureFn<
+    TrpcClientApi["reservation"]["getGroupDetail"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["reservation", "getGroupDetail"],
+      (clientApi) => clientApi.reservation.getGroupDetail.query,
       input,
       this.toAppError,
     );

@@ -12,17 +12,34 @@ import {
   getZonedDayRangeForInstant,
   getZonedToday,
 } from "@/common/time-zone";
+import { toast } from "@/common/toast";
 import { copyToClipboard } from "@/common/utils/clipboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import {
+  getAutoAddonIds,
+  PlayerAddonSelector,
+  sanitizeSelectedAddons,
+  useCombinedAddons,
+} from "@/features/court-addons";
+import type { SelectedAddon } from "@/features/court-addons/schemas";
 import type { PlaceDetail } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
 import { PlaceDetailAmenitiesCard } from "@/features/discovery/place-detail/components/place-detail-amenities-card";
 import { PlaceDetailContactCard } from "@/features/discovery/place-detail/components/place-detail-contact-card";
 import { PlaceDetailBookingDesktopSection } from "@/features/discovery/place-detail/components/sections/place-detail-booking-desktop-section";
 import { PlaceDetailBookingMobileSection } from "@/features/discovery/place-detail/components/sections/place-detail-booking-mobile-section";
-import { useModPlaceDetailAvailabilitySelection } from "@/features/discovery/place-detail/hooks/use-place-detail-availability-selection";
+import {
+  buildBookingSummaryCtaState,
+  canCheckoutBookingCart,
+} from "@/features/discovery/place-detail/helpers/booking-cart-cta";
+import {
+  isBookingCartKeyDuplicate,
+  validateBookingCartAdd,
+} from "@/features/discovery/place-detail/helpers/booking-cart-rules";
+import { useBookingMachines } from "@/features/discovery/place-detail/hooks/use-booking-machines";
+import { buildMemoryKey } from "@/features/discovery/place-detail/machines";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 import { OpenPlayVenuePanel } from "@/features/open-play/components/open-play-venue-panel";
 
@@ -49,6 +66,7 @@ type PlaceDetailBookingSectionProps = {
   verificationDescription: string;
   verificationStatusVariant: "warning" | "destructive" | "muted" | "success";
   availabilitySectionRef: React.RefObject<HTMLDivElement | null>;
+  showVenueDetailsCards?: boolean;
 };
 
 export function PlaceDetailBookingSection({
@@ -65,6 +83,7 @@ export function PlaceDetailBookingSection({
   verificationDescription,
   verificationStatusVariant,
   availabilitySectionRef,
+  showVenueDetailsCards = true,
 }: PlaceDetailBookingSectionProps) {
   const router = useRouter();
   const setMobileSheetExpanded = usePlaceDetailUiStore(
@@ -75,6 +94,7 @@ export function PlaceDetailBookingSection({
     "book",
   );
 
+  // --- XState machines via unified hook ---
   const {
     selectedDate,
     setSelectedDate,
@@ -86,6 +106,8 @@ export function PlaceDetailBookingSection({
     setSelectionMode,
     selectedCourtId,
     setSelectedCourtId,
+    selectedAddons,
+    setSelectedAddons,
     selectedStartTime,
     setSelectedStartTime,
     courtViewMode,
@@ -94,13 +116,27 @@ export function PlaceDetailBookingSection({
     setAnyViewMode,
     courtsForSport,
     clearSelection,
-  } = useModPlaceDetailAvailabilitySelection({
+    cartItems,
+    addCartItem,
+    removeCartItem,
+    clearCart,
+    clearCartForSportChange,
+    saveSnapshot,
+    restoreSnapshot,
+    notifyCartItemAdded,
+    sendTimeSlot,
+  } = useBookingMachines({
     place,
     isBookable,
     defaultDurationMinutes: DEFAULT_DURATION_MINUTES,
   });
 
   const placeTimeZone = place.timeZone ?? "Asia/Manila";
+  const sameDayAnchorDayKey = React.useMemo(() => {
+    const anchorStartTime = cartItems[0]?.startTime;
+    if (!anchorStartTime) return undefined;
+    return getZonedDayKey(new Date(anchorStartTime), placeTimeZone);
+  }, [cartItems, placeTimeZone]);
   const today = React.useMemo(
     () => getZonedToday(placeTimeZone),
     [placeTimeZone],
@@ -141,13 +177,13 @@ export function PlaceDetailBookingSection({
     const selectedStartMs = Date.parse(selectedStartTime);
     const nowMs = Date.now();
     if (selectedStartMs <= nowMs) {
-      clearSelection(true);
+      sendTimeSlot({ type: "SLOT_EXPIRED" });
       return;
     }
 
     const timeoutId = window.setTimeout(
       () => {
-        clearSelection(true);
+        sendTimeSlot({ type: "SLOT_EXPIRED" });
       },
       selectedStartMs - nowMs + 250,
     );
@@ -155,7 +191,7 @@ export function PlaceDetailBookingSection({
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [clearSelection, selectedStartTime]);
+  }, [selectedStartTime, sendTimeSlot]);
 
   React.useEffect(() => {
     if (!selectedStartTime) return;
@@ -179,6 +215,39 @@ export function PlaceDetailBookingSection({
 
   const [selectionSummary, setSelectionSummary] =
     React.useState<SelectionSummary | null>(null);
+
+  const { addons: availableCourtAddons, globalAddonIds } = useCombinedAddons(
+    isAuthenticated && selectionMode === "court" ? place.id : undefined,
+    isAuthenticated && selectionMode === "court" ? selectedCourtId : undefined,
+  );
+
+  React.useEffect(() => {
+    if (availableCourtAddons.length === 0 && selectedAddons.length === 0) {
+      return;
+    }
+
+    const sanitized = sanitizeSelectedAddons(
+      selectedAddons,
+      availableCourtAddons,
+    );
+    const autoAddonIds = getAutoAddonIds(availableCourtAddons);
+    const sanitizedIds = new Set(sanitized.map((a) => a.addonId));
+    const autoEntries: SelectedAddon[] = autoAddonIds
+      .filter((id) => !sanitizedIds.has(id))
+      .map((id) => ({ addonId: id, quantity: 1 }));
+    const next = [...sanitized, ...autoEntries];
+
+    const hasChanged =
+      next.length !== selectedAddons.length ||
+      next.some(
+        (a, i) =>
+          a.addonId !== selectedAddons[i]?.addonId ||
+          a.quantity !== selectedAddons[i]?.quantity,
+      );
+    if (hasChanged) {
+      setSelectedAddons(next);
+    }
+  }, [availableCourtAddons, selectedAddons, setSelectedAddons]);
   const handleSelectionSummaryChange = React.useCallback(
     (next: SelectionSummary | null) => {
       setSelectionSummary((prev) => {
@@ -193,63 +262,201 @@ export function PlaceDetailBookingSection({
     [],
   );
 
-  const handleReserve = React.useCallback(() => {
-    if (!selectedStartTime) return;
+  const handleAddToCart = React.useCallback(() => {
+    if (
+      selectionMode !== "court" ||
+      !selectedCourtId ||
+      !selectedStartTime ||
+      !selectedSportId
+    )
+      return;
 
-    const params = new URLSearchParams();
-    params.set("duration", String(durationMinutes));
-    params.set("mode", selectionMode);
-    if (selectedSportId) {
-      params.set("sportId", selectedSportId);
-    }
-    if (selectedDate) {
-      params.set("date", getZonedDayKey(selectedDate, placeTimeZone));
-    }
-    if (selectionMode === "court" && selectedCourtId) {
-      params.set("courtId", selectedCourtId);
-    }
-    params.set("startTime", selectedStartTime);
-
-    const destination = `${appRoutes.places.book(placeSlugOrId)}?${params.toString()}`;
-
-    trackEvent({
-      event: "funnel.reserve_clicked",
-      properties: {
-        placeId: analyticsPlaceId,
-        mode: selectionMode,
-        durationMinutes,
-        startTime: selectedStartTime,
-        courtId: selectionMode === "court" ? selectedCourtId : undefined,
-      },
-    });
-
-    if (isAuthenticated) {
-      router.push(destination);
+    const courtLabel =
+      courtsForSport.find((c) => c.id === selectedCourtId)?.label ??
+      selectedCourtId;
+    const key = `${selectedCourtId}|${selectedStartTime}|${durationMinutes}`;
+    const candidate = {
+      courtId: selectedCourtId,
+      startTime: selectedStartTime,
+    };
+    if (isBookingCartKeyDuplicate({ cartItems, key })) {
+      toast.info("This slot is already in your booking.");
       return;
     }
 
-    const returnTo = appRoutes.places.detail(placeSlugOrId);
-    trackEvent({
-      event: "funnel.login_started",
-      properties: {
-        placeId: analyticsPlaceId,
-        redirect: returnTo,
-      },
+    const validation = validateBookingCartAdd({
+      cartItems,
+      candidate,
+      placeTimeZone,
     });
-    router.push(appRoutes.login.from(returnTo));
+    if (!validation.ok) {
+      if (validation.reason === "DIFFERENT_DAY") {
+        toast.error("All courts in one booking must be on the same day.");
+        return;
+      }
+
+      toast.error("You can only add one time span per court in this booking.");
+      return;
+    }
+
+    addCartItem({
+      key,
+      courtId: candidate.courtId,
+      courtLabel,
+      sportId: selectedSportId,
+      startTime: candidate.startTime,
+      durationMinutes,
+      estimatedPriceCents: selectionSummary?.totalCents ?? null,
+      currency: selectionSummary?.currency ?? "PHP",
+    });
+
+    // Build the memory key and notify the time slot machine
+    const memoryKey = buildMemoryKey(
+      place.id,
+      selectedSportId,
+      getZonedDayKey(
+        selectedDate ?? getZonedToday(placeTimeZone),
+        placeTimeZone,
+      ),
+      selectedCourtId,
+    );
+    notifyCartItemAdded(memoryKey);
   }, [
-    analyticsPlaceId,
+    addCartItem,
+    cartItems,
+    courtsForSport,
     durationMinutes,
-    isAuthenticated,
-    placeSlugOrId,
+    notifyCartItemAdded,
+    place.id,
     placeTimeZone,
-    router,
     selectedCourtId,
     selectedDate,
     selectedSportId,
     selectedStartTime,
     selectionMode,
+    selectionSummary,
   ]);
+
+  const handleReserve = React.useCallback(
+    (options?: { preferCartCheckout?: boolean }) => {
+      const shouldCheckoutCart =
+        cartItems.length > 0 &&
+        (options?.preferCartCheckout === true || !selectedStartTime);
+
+      // Multi-court checkout: encode cart items into `items` param
+      if (shouldCheckoutCart) {
+        const params = new URLSearchParams();
+        if (selectedSportId) {
+          params.set("sportId", selectedSportId);
+        }
+        const itemsEncoded = cartItems
+          .map(
+            (item) =>
+              `${item.courtId}|${item.startTime}|${item.durationMinutes}`,
+          )
+          .join(",");
+        params.set("items", itemsEncoded);
+
+        const destination = `${appRoutes.places.book(placeSlugOrId)}?${params.toString()}`;
+
+        trackEvent({
+          event: "funnel.reserve_clicked",
+          properties: {
+            placeId: analyticsPlaceId,
+            mode: "court",
+            itemCount: cartItems.length,
+          },
+        });
+
+        if (isAuthenticated) {
+          router.push(destination);
+          return;
+        }
+
+        trackEvent({
+          event: "funnel.login_started",
+          properties: {
+            placeId: analyticsPlaceId,
+            redirect: destination,
+          },
+        });
+        router.push(appRoutes.login.from(destination));
+        return;
+      }
+
+      // Single-court flow (unchanged)
+      if (!selectedStartTime) return;
+
+      const params = new URLSearchParams();
+      params.set("duration", String(durationMinutes));
+      params.set("mode", selectionMode);
+      if (selectedSportId) {
+        params.set("sportId", selectedSportId);
+      }
+      if (selectedDate) {
+        params.set("date", getZonedDayKey(selectedDate, placeTimeZone));
+      }
+      if (selectionMode === "court" && selectedCourtId) {
+        params.set("courtId", selectedCourtId);
+      }
+      if (selectedAddons.length > 0) {
+        const encoded = selectedAddons
+          .map((a) =>
+            a.quantity === 1 ? a.addonId : `${a.addonId}:${a.quantity}`,
+          )
+          .join(",");
+        params.set("addonIds", encoded);
+      }
+      params.set("startTime", selectedStartTime);
+
+      const destination = `${appRoutes.places.book(placeSlugOrId)}?${params.toString()}`;
+
+      trackEvent({
+        event: "funnel.reserve_clicked",
+        properties: {
+          placeId: analyticsPlaceId,
+          mode: selectionMode,
+          durationMinutes,
+          startTime: selectedStartTime,
+          courtId: selectionMode === "court" ? selectedCourtId : undefined,
+        },
+      });
+
+      if (isAuthenticated) {
+        router.push(destination);
+        return;
+      }
+
+      const returnTo = destination;
+      trackEvent({
+        event: "funnel.login_started",
+        properties: {
+          placeId: analyticsPlaceId,
+          redirect: returnTo,
+        },
+      });
+      router.push(appRoutes.login.from(returnTo));
+    },
+    [
+      analyticsPlaceId,
+      cartItems,
+      durationMinutes,
+      isAuthenticated,
+      placeSlugOrId,
+      placeTimeZone,
+      router,
+      selectedCourtId,
+      selectedDate,
+      selectedAddons,
+      selectedSportId,
+      selectedStartTime,
+      selectionMode,
+    ],
+  );
+
+  const handleContinueFromCart = React.useCallback(() => {
+    handleReserve({ preferCartCheckout: true });
+  }, [handleReserve]);
 
   const scrollToSection = React.useCallback(
     (ref: React.RefObject<HTMLElement | null>) => {
@@ -266,12 +473,46 @@ export function PlaceDetailBookingSection({
     [],
   );
 
+  // Clear cart on sport change
+  const prevSportIdRef = React.useRef(selectedSportId);
+  React.useEffect(() => {
+    if (selectedSportId && selectedSportId !== prevSportIdRef.current) {
+      clearCartForSportChange(selectedSportId);
+    }
+    prevSportIdRef.current = selectedSportId;
+  }, [clearCartForSportChange, selectedSportId]);
+
+  // Clear cart on unmount
+  React.useEffect(() => {
+    return () => {
+      clearCart();
+    };
+  }, [clearCart]);
+
   const hasSelection = !!selectedStartTime;
-  const summaryCtaVariant = hasSelection ? "default" : "outline";
-  const summaryCtaLabel = hasSelection ? "Continue to review" : "Select a time";
+  const canAddToCart =
+    selectionMode === "court" &&
+    hasSelection &&
+    !!selectedCourtId &&
+    !!selectedSportId;
+
+  const summaryCta = buildBookingSummaryCtaState({
+    cartItemCount: cartItems.length,
+    hasSelection,
+  });
 
   const handleSummaryAction = React.useCallback(() => {
-    if (hasSelection) {
+    if (
+      canCheckoutBookingCart({
+        cartItemCount: cartItems.length,
+        hasSelection,
+      })
+    ) {
+      handleReserve();
+      return;
+    }
+
+    if (summaryCta.shouldProceed) {
       handleReserve();
       return;
     }
@@ -284,8 +525,10 @@ export function PlaceDetailBookingSection({
     scrollToSection(availabilitySectionRef);
   }, [
     availabilitySectionRef,
+    cartItems.length,
     handleReserve,
     hasSelection,
+    summaryCta.shouldProceed,
     scrollToSection,
     setMobileSheetExpanded,
   ]);
@@ -345,56 +588,87 @@ export function PlaceDetailBookingSection({
             }
           />
         ) : (
-          <PlaceDetailBookingDesktopSection
-            place={place}
-            placeTimeZone={placeTimeZone}
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            durationMinutes={durationMinutes}
-            setDurationMinutes={setDurationMinutes}
-            selectedSportId={selectedSportId}
-            setSelectedSportId={setSelectedSportId}
-            selectionMode={selectionMode}
-            setSelectionMode={setSelectionMode}
-            selectedCourtId={selectedCourtId}
-            setSelectedCourtId={setSelectedCourtId}
-            selectedStartTime={selectedStartTime}
-            setSelectedStartTime={setSelectedStartTime}
-            courtViewMode={courtViewMode}
-            setCourtViewMode={setCourtViewMode}
-            anyViewMode={anyViewMode}
-            setAnyViewMode={setAnyViewMode}
-            courtsForSport={courtsForSport}
-            clearSelection={clearSelection}
-            today={today}
-            todayRangeStart={todayRangeStart}
-            maxBookingDate={maxBookingDate}
-            todayDayKey={todayDayKey}
-            maxDayKey={maxDayKey}
-            availabilitySectionRef={availabilitySectionRef}
-            onContinue={handleReserve}
-            onSelectionSummaryChange={handleSelectionSummaryChange}
-          />
+          <div className="space-y-4">
+            <PlaceDetailBookingDesktopSection
+              place={place}
+              placeTimeZone={placeTimeZone}
+              selectedDate={selectedDate}
+              setSelectedDate={setSelectedDate}
+              durationMinutes={durationMinutes}
+              setDurationMinutes={setDurationMinutes}
+              selectedSportId={selectedSportId}
+              setSelectedSportId={setSelectedSportId}
+              selectionMode={selectionMode}
+              setSelectionMode={setSelectionMode}
+              selectedCourtId={selectedCourtId}
+              setSelectedCourtId={setSelectedCourtId}
+              selectedAddons={selectedAddons}
+              selectedStartTime={selectedStartTime}
+              setSelectedStartTime={setSelectedStartTime}
+              courtViewMode={courtViewMode}
+              setCourtViewMode={setCourtViewMode}
+              anyViewMode={anyViewMode}
+              setAnyViewMode={setAnyViewMode}
+              courtsForSport={courtsForSport}
+              clearSelection={clearSelection}
+              today={today}
+              todayRangeStart={todayRangeStart}
+              maxBookingDate={maxBookingDate}
+              todayDayKey={todayDayKey}
+              maxDayKey={maxDayKey}
+              sameDayAnchorDayKey={sameDayAnchorDayKey}
+              availabilitySectionRef={availabilitySectionRef}
+              onContinue={handleReserve}
+              onSelectionSummaryChange={handleSelectionSummaryChange}
+              cartItems={cartItems}
+            />
+
+            {isAuthenticated &&
+              selectionMode === "court" &&
+              !!selectedCourtId && (
+                <Card>
+                  <CardContent className="space-y-3 p-4">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium">Optional extras</p>
+                      <p className="text-xs text-muted-foreground">
+                        Select extras now to preview add-on-aware totals before
+                        checkout.
+                      </p>
+                    </div>
+                    <PlayerAddonSelector
+                      addons={availableCourtAddons}
+                      selectedAddons={selectedAddons}
+                      onSelectedAddonsChange={setSelectedAddons}
+                      globalAddonIds={globalAddonIds}
+                    />
+                  </CardContent>
+                </Card>
+              )}
+          </div>
         )}
 
-        <PlaceDetailContactCard
-          hasContactDetail={hasContactDetail}
-          contactDetail={contactDetail}
-          phoneNumber={phoneNumber}
-          dialablePhone={dialablePhone}
-          viberNumber={viberNumber}
-          viberLink={viberLink}
-          onCopyPhone={() => {
-            if (!phoneNumber) return;
-            copyToClipboard(phoneNumber, "Phone number");
-          }}
-          onCopyViber={() => {
-            if (!viberNumber) return;
-            copyToClipboard(viberNumber, "Viber number");
-          }}
-        />
+        {showVenueDetailsCards ? (
+          <>
+            <PlaceDetailContactCard
+              hasContactDetail={hasContactDetail}
+              contactDetail={contactDetail}
+              phoneNumber={phoneNumber}
+              dialablePhone={dialablePhone}
+              viberNumber={viberNumber}
+              viberLink={viberLink}
+              onCopyPhone={() => {
+                if (!phoneNumber) return;
+                copyToClipboard(phoneNumber, "Phone number");
+              }}
+              onCopyViber={() => {
+                if (!viberNumber) return;
+                copyToClipboard(viberNumber, "Viber number");
+              }}
+            />
 
-        <PlaceDetailAmenitiesCard amenities={place.amenities} />
+            <PlaceDetailAmenitiesCard amenities={place.amenities} />
+          </>
+        ) : null}
       </div>
 
       {primaryView === "book" ? (
@@ -415,14 +689,19 @@ export function PlaceDetailBookingSection({
           selectionMode={selectionMode}
           courtsForSport={courtsForSport}
           selectedCourtId={selectedCourtId}
+          selectedAddonCount={selectedAddons.length}
           durationMinutes={durationMinutes}
           hasSelection={hasSelection}
           selectionSummary={selectionSummary}
           placeTimeZone={placeTimeZone}
-          summaryCtaVariant={summaryCtaVariant}
-          summaryCtaLabel={summaryCtaLabel}
+          summaryCtaVariant={summaryCta.variant}
+          summaryCtaLabel={summaryCta.label}
           onSummaryAction={handleSummaryAction}
           isAuthenticated={isAuthenticated}
+          cartItems={cartItems}
+          canAddToCart={canAddToCart}
+          onAddToCartAction={handleAddToCart}
+          onRemoveFromCartAction={removeCartItem}
         />
       ) : (
         <Card className="h-fit">
@@ -446,6 +725,7 @@ export function PlaceDetailBookingSection({
           selectionMode={selectionMode}
           setSelectionMode={setSelectionMode}
           selectedCourtId={selectedCourtId}
+          selectedAddons={selectedAddons}
           setSelectedCourtId={setSelectedCourtId}
           selectedStartTime={selectedStartTime}
           setSelectedStartTime={setSelectedStartTime}
@@ -455,7 +735,14 @@ export function PlaceDetailBookingSection({
           todayRangeStart={todayRangeStart}
           maxBookingDate={maxBookingDate}
           onContinue={handleReserve}
+          onContinueFromCart={handleContinueFromCart}
           onSelectionSummaryChange={handleSelectionSummaryChange}
+          cartItems={cartItems}
+          canAddToCart={canAddToCart}
+          onAddToCartAction={handleAddToCart}
+          onRemoveFromCartAction={removeCartItem}
+          onSaveSnapshot={saveSnapshot}
+          onRestoreSnapshot={restoreSnapshot}
         />
       ) : null}
     </>

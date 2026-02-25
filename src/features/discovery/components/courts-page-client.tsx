@@ -40,6 +40,7 @@ type PaginationItemModel =
 type LocationDefaults = {
   province?: string;
   city?: string;
+  sportId?: string;
 };
 
 interface CourtsPageClientProps {
@@ -106,7 +107,7 @@ function CourtsPageContent({
 }: CourtsPageContentProps) {
   const filters = useModDiscoveryFilters();
   const hasLocationDefaults = Boolean(
-    initialFilters?.province || initialFilters?.city,
+    initialFilters?.province || initialFilters?.city || initialFilters?.sportId,
   );
   const hasClearableFilters = Boolean(
     filters.q ||
@@ -122,11 +123,13 @@ function CourtsPageContent({
   const effectiveProvince =
     filters.province ?? initialFilters?.province ?? undefined;
   const effectiveCity = filters.city ?? initialFilters?.city ?? undefined;
+  const effectiveSportId =
+    filters.sportId ?? initialFilters?.sportId ?? undefined;
   const { data, isLoading } = useModDiscoveryPlaceSummaries({
     q: filters.q ?? undefined,
     province: effectiveProvince ?? undefined,
     city: effectiveCity ?? undefined,
-    sportId: filters.sportId ?? undefined,
+    sportId: effectiveSportId ?? undefined,
     amenities: filters.amenities ?? undefined,
     verificationTier: filters.verification ?? undefined,
     page: filters.page,
@@ -139,7 +142,7 @@ function CourtsPageContent({
     [placeSummaries],
   );
   const { mediaById, metaById, isMediaLoading, isMetaLoading } =
-    useModDiscoveryPlaceCardDetails(placeIds, filters.sportId ?? undefined);
+    useModDiscoveryPlaceCardDetails(placeIds, effectiveSportId ?? undefined);
   const places = useMemo(
     () =>
       placeSummaries.map((summary) =>
@@ -213,7 +216,7 @@ function CourtsPageContent({
               amenities={filters.amenities ?? undefined}
               province={effectiveProvince ?? undefined}
               city={effectiveCity ?? undefined}
-              sportId={filters.sportId ?? undefined}
+              sportId={effectiveSportId ?? undefined}
               verification={filters.verification ?? undefined}
               hasClearableFilters={hasClearableFilters}
               resetLocationHref={resetLocationHref}
@@ -233,7 +236,7 @@ function CourtsPageContent({
           amenities={filters.amenities ?? undefined}
           province={effectiveProvince ?? undefined}
           city={effectiveCity ?? undefined}
-          sportId={filters.sportId ?? undefined}
+          sportId={effectiveSportId ?? undefined}
           verification={filters.verification ?? undefined}
           hasClearableFilters={hasClearableFilters}
           resetLocationHref={resetLocationHref}

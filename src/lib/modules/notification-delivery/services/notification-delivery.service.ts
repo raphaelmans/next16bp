@@ -35,6 +35,35 @@ export type OwnerReservationCreatedPayload = {
   expiresAtIso?: string | null;
 };
 
+export type ReservationGroupItemSummary = {
+  reservationId: string;
+  courtId: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  totalPriceCents: number;
+  currency: string;
+  expiresAtIso?: string | null;
+};
+
+export type OwnerReservationGroupCreatedPayload = {
+  reservationGroupId: string;
+  representativeReservationId: string;
+  organizationId: string;
+  placeId: string;
+  placeName: string;
+  totalPriceCents: number;
+  currency: string;
+  playerName: string;
+  playerEmail?: string | null;
+  playerPhone?: string | null;
+  itemCount: number;
+  startTimeIso: string;
+  endTimeIso: string;
+  expiresAtIso?: string | null;
+  items: ReservationGroupItemSummary[];
+};
+
 export type OwnerPlaceVerificationReviewedPayload = {
   requestId: string;
   organizationId: string;
@@ -64,6 +93,20 @@ export type PlayerReservationAwaitingPaymentPayload = {
   currency: string;
 };
 
+export type PlayerReservationGroupAwaitingPaymentPayload = {
+  reservationGroupId: string;
+  representativeReservationId: string;
+  placeName: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  expiresAtIso: string | null;
+  totalPriceCents: number;
+  currency: string;
+  itemCount: number;
+  items: ReservationGroupItemSummary[];
+};
+
 export type OwnerReservationPaymentMarkedPayload = {
   reservationId: string;
   placeName: string;
@@ -73,12 +116,36 @@ export type OwnerReservationPaymentMarkedPayload = {
   playerName: string;
 };
 
+export type OwnerReservationGroupPaymentMarkedPayload = {
+  reservationGroupId: string;
+  representativeReservationId: string;
+  organizationId: string;
+  placeName: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  playerName: string;
+  itemCount: number;
+  items: ReservationGroupItemSummary[];
+};
+
 export type PlayerReservationConfirmedPayload = {
   reservationId: string;
   placeName: string;
   courtLabel: string;
   startTimeIso: string;
   endTimeIso: string;
+};
+
+export type PlayerReservationGroupConfirmedPayload = {
+  reservationGroupId: string;
+  representativeReservationId: string;
+  placeName: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  itemCount: number;
+  items: ReservationGroupItemSummary[];
 };
 
 export type PlayerReservationRejectedPayload = {
@@ -90,6 +157,28 @@ export type PlayerReservationRejectedPayload = {
   reason?: string | null;
 };
 
+export type PlayerReservationGroupRejectedPayload = {
+  reservationGroupId: string;
+  representativeReservationId: string;
+  placeName: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  itemCount: number;
+  items: ReservationGroupItemSummary[];
+  reason?: string | null;
+};
+
+export type OwnerReservationPingPayload = {
+  reservationId: string;
+  organizationId: string;
+  placeName: string;
+  courtLabel: string;
+  playerName: string;
+  startTimeIso: string;
+  endTimeIso: string;
+};
+
 export type OwnerReservationCancelledPayload = {
   reservationId: string;
   placeName: string;
@@ -97,6 +186,20 @@ export type OwnerReservationCancelledPayload = {
   startTimeIso: string;
   endTimeIso: string;
   playerName: string;
+  reason?: string | null;
+};
+
+export type OwnerReservationGroupCancelledPayload = {
+  reservationGroupId: string;
+  representativeReservationId: string;
+  organizationId: string;
+  placeName: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  playerName: string;
+  itemCount: number;
+  items: ReservationGroupItemSummary[];
   reason?: string | null;
 };
 
@@ -391,6 +494,127 @@ export class NotificationDeliveryService {
     return { jobCount: jobs.length };
   }
 
+  async enqueueOwnerReservationGroupCreated(
+    payload: OwnerReservationGroupCreatedPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    const recipient =
+      await this.recipientRepository.findOwnerRecipientByOrganizationId(
+        payload.organizationId,
+        ctx,
+      );
+
+    if (!recipient) {
+      logger.warn(
+        {
+          event: "notification_delivery.no_owner_recipient",
+          eventType: "reservation_group.created",
+          reservationGroupId: payload.reservationGroupId,
+          organizationId: payload.organizationId,
+        },
+        "No owner recipient found for reservation_group.created",
+      );
+      return { jobCount: 0 };
+    }
+
+    const jobs: InsertNotificationDeliveryJob[] = [];
+    const basePayload = {
+      reservationGroupId: payload.reservationGroupId,
+      representativeReservationId: payload.representativeReservationId,
+      organizationId: payload.organizationId,
+      placeId: payload.placeId,
+      placeName: payload.placeName,
+      totalPriceCents: payload.totalPriceCents,
+      currency: payload.currency,
+      playerName: payload.playerName,
+      playerEmail: payload.playerEmail ?? null,
+      playerPhone: payload.playerPhone ?? null,
+      itemCount: payload.itemCount,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      expiresAtIso: payload.expiresAtIso ?? null,
+      items: payload.items,
+    };
+
+    const email = recipient.email?.trim();
+    if (env.NOTIFICATION_EMAIL_ENABLED !== false && email) {
+      jobs.push({
+        eventType: "reservation_group.created",
+        channel: "EMAIL",
+        target: email,
+        organizationId: payload.organizationId,
+        reservationId: payload.representativeReservationId,
+        payload: basePayload,
+        idempotencyKey: `reservation_group.created:${payload.reservationGroupId}:org:${payload.organizationId}:email`,
+      });
+    }
+
+    const normalizedPhone = recipient.phoneNumber
+      ? normalizePhMobile(recipient.phoneNumber)
+      : "";
+    if (env.NOTIFICATION_SMS_ENABLED !== false && normalizedPhone) {
+      jobs.push({
+        eventType: "reservation_group.created",
+        channel: "SMS",
+        target: normalizedPhone,
+        organizationId: payload.organizationId,
+        reservationId: payload.representativeReservationId,
+        payload: basePayload,
+        idempotencyKey: `reservation_group.created:${payload.reservationGroupId}:org:${payload.organizationId}:sms`,
+      });
+    }
+
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: recipient.ownerUserId,
+      eventType: "reservation_group.created",
+      organizationId: payload.organizationId,
+      reservationId: payload.representativeReservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation_group.created:${payload.reservationGroupId}:org:${payload.organizationId}`,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.ownerUserId,
+      eventType: "reservation_group.created",
+      organizationId: payload.organizationId,
+      reservationId: payload.representativeReservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation_group.created:${payload.reservationGroupId}:org:${payload.organizationId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
+    if (!jobs.length) {
+      logger.warn(
+        {
+          event: "notification_delivery.no_owner_contact",
+          eventType: "reservation_group.created",
+          reservationGroupId: payload.reservationGroupId,
+          organizationId: payload.organizationId,
+        },
+        "Owner has no email/phone for reservation_group.created",
+      );
+      return { jobCount: 0 };
+    }
+
+    await this.jobRepository.createMany(jobs, ctx);
+
+    logger.info(
+      {
+        event: "notification_delivery.jobs_enqueued",
+        eventType: "reservation_group.created",
+        reservationGroupId: payload.reservationGroupId,
+        organizationId: payload.organizationId,
+        jobCount: jobs.length,
+      },
+      "Enqueued owner reservation_group.created notification jobs",
+    );
+
+    return { jobCount: jobs.length };
+  }
+
   async enqueueOwnerPlaceVerificationReviewed(
     payload: OwnerPlaceVerificationReviewedPayload,
     ctx?: RequestContext,
@@ -678,6 +902,66 @@ export class NotificationDeliveryService {
     return { jobCount: jobs.length };
   }
 
+  async enqueuePlayerReservationGroupAwaitingPayment(
+    payload: PlayerReservationGroupAwaitingPaymentPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    if (
+      env.NOTIFICATION_WEB_PUSH_ENABLED === false &&
+      env.NOTIFICATION_MOBILE_PUSH_ENABLED === false
+    ) {
+      return { jobCount: 0 };
+    }
+
+    const recipient =
+      await this.recipientRepository.findPlayerRecipientByReservationId(
+        payload.representativeReservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationGroupId: payload.reservationGroupId,
+      representativeReservationId: payload.representativeReservationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      expiresAtIso: payload.expiresAtIso,
+      totalPriceCents: payload.totalPriceCents,
+      currency: payload.currency,
+      itemCount: payload.itemCount,
+      items: payload.items,
+    };
+
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: recipient.userId,
+      eventType: "reservation_group.awaiting_payment",
+      reservationId: payload.representativeReservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation_group.awaiting_payment:${payload.reservationGroupId}:user:${recipient.userId}`,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.userId,
+      eventType: "reservation_group.awaiting_payment",
+      reservationId: payload.representativeReservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation_group.awaiting_payment:${payload.reservationGroupId}:user:${recipient.userId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
+    await this.jobRepository.createMany(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
   async enqueueOwnerReservationPaymentMarked(
     payload: OwnerReservationPaymentMarkedPayload,
     ctx?: RequestContext,
@@ -735,6 +1019,67 @@ export class NotificationDeliveryService {
     return { jobCount: jobs.length };
   }
 
+  async enqueueOwnerReservationGroupPaymentMarked(
+    payload: OwnerReservationGroupPaymentMarkedPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    if (
+      env.NOTIFICATION_WEB_PUSH_ENABLED === false &&
+      env.NOTIFICATION_MOBILE_PUSH_ENABLED === false
+    ) {
+      return { jobCount: 0 };
+    }
+
+    const owner =
+      await this.recipientRepository.findOwnerRecipientByOrganizationId(
+        payload.organizationId,
+        ctx,
+      );
+    if (!owner) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationGroupId: payload.reservationGroupId,
+      representativeReservationId: payload.representativeReservationId,
+      organizationId: payload.organizationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      playerName: payload.playerName,
+      itemCount: payload.itemCount,
+      items: payload.items,
+    };
+
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: owner.ownerUserId,
+      eventType: "reservation_group.payment_marked",
+      reservationId: payload.representativeReservationId,
+      organizationId: owner.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation_group.payment_marked:${payload.reservationGroupId}:org:${owner.organizationId}`,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: owner.ownerUserId,
+      eventType: "reservation_group.payment_marked",
+      reservationId: payload.representativeReservationId,
+      organizationId: owner.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation_group.payment_marked:${payload.reservationGroupId}:org:${owner.organizationId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
+    await this.jobRepository.createMany(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
   async enqueuePlayerReservationConfirmed(
     payload: PlayerReservationConfirmedPayload,
     ctx?: RequestContext,
@@ -781,6 +1126,63 @@ export class NotificationDeliveryService {
       reservationId: payload.reservationId,
       payload: basePayload,
       idempotencyKeyBase: `reservation.confirmed:${payload.reservationId}:user:${recipient.userId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
+    await this.jobRepository.createMany(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueuePlayerReservationGroupConfirmed(
+    payload: PlayerReservationGroupConfirmedPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    if (
+      env.NOTIFICATION_WEB_PUSH_ENABLED === false &&
+      env.NOTIFICATION_MOBILE_PUSH_ENABLED === false
+    ) {
+      return { jobCount: 0 };
+    }
+
+    const recipient =
+      await this.recipientRepository.findPlayerRecipientByReservationId(
+        payload.representativeReservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationGroupId: payload.reservationGroupId,
+      representativeReservationId: payload.representativeReservationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      itemCount: payload.itemCount,
+      items: payload.items,
+    };
+
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: recipient.userId,
+      eventType: "reservation_group.confirmed",
+      reservationId: payload.representativeReservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation_group.confirmed:${payload.reservationGroupId}:user:${recipient.userId}`,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.userId,
+      eventType: "reservation_group.confirmed",
+      reservationId: payload.representativeReservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation_group.confirmed:${payload.reservationGroupId}:user:${recipient.userId}`,
       ctx,
     });
     jobs.push(...mobilePushJobs);
@@ -844,6 +1246,141 @@ export class NotificationDeliveryService {
     return { jobCount: jobs.length };
   }
 
+  async enqueuePlayerReservationGroupRejected(
+    payload: PlayerReservationGroupRejectedPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    if (
+      env.NOTIFICATION_WEB_PUSH_ENABLED === false &&
+      env.NOTIFICATION_MOBILE_PUSH_ENABLED === false
+    ) {
+      return { jobCount: 0 };
+    }
+
+    const recipient =
+      await this.recipientRepository.findPlayerRecipientByReservationId(
+        payload.representativeReservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationGroupId: payload.reservationGroupId,
+      representativeReservationId: payload.representativeReservationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      itemCount: payload.itemCount,
+      items: payload.items,
+      reason: payload.reason ?? null,
+    };
+
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: recipient.userId,
+      eventType: "reservation_group.rejected",
+      reservationId: payload.representativeReservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation_group.rejected:${payload.reservationGroupId}:user:${recipient.userId}`,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.userId,
+      eventType: "reservation_group.rejected",
+      reservationId: payload.representativeReservationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation_group.rejected:${payload.reservationGroupId}:user:${recipient.userId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
+    await this.jobRepository.createMany(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueueOwnerReservationPing(
+    payload: OwnerReservationPingPayload,
+    ctx?: RequestContext,
+  ): Promise<{ pinged: boolean }> {
+    if (
+      env.NOTIFICATION_WEB_PUSH_ENABLED === false &&
+      env.NOTIFICATION_MOBILE_PUSH_ENABLED === false
+    ) {
+      return { pinged: false };
+    }
+
+    const recipient =
+      await this.recipientRepository.findOwnerRecipientByOrganizationId(
+        payload.organizationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { pinged: false };
+    }
+
+    const windowBucket = Math.floor(Date.now() / (15 * 60 * 1000));
+    const idempotencyKeyBase = `reservation.ping_owner:${payload.reservationId}:org:${payload.organizationId}:w${windowBucket}`;
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      organizationId: payload.organizationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      playerName: payload.playerName,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+    };
+
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: recipient.ownerUserId,
+      eventType: "reservation.ping_owner",
+      reservationId: payload.reservationId,
+      organizationId: payload.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.ownerUserId,
+      eventType: "reservation.ping_owner",
+      reservationId: payload.reservationId,
+      organizationId: payload.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
+    if (!jobs.length) {
+      return { pinged: false };
+    }
+
+    await this.jobRepository.createMany(jobs, ctx);
+
+    logger.info(
+      {
+        event: "notification_delivery.jobs_enqueued",
+        eventType: "reservation.ping_owner",
+        reservationId: payload.reservationId,
+        organizationId: payload.organizationId,
+        jobCount: jobs.length,
+      },
+      "Enqueued owner reservation.ping_owner notification jobs",
+    );
+
+    return { pinged: true };
+  }
+
   async enqueueOwnerReservationCancelled(
     payload: OwnerReservationCancelledPayload,
     ctx?: RequestContext,
@@ -894,6 +1431,68 @@ export class NotificationDeliveryService {
       organizationId: owner.organizationId,
       payload: basePayload,
       idempotencyKeyBase: `reservation.cancelled:${payload.reservationId}:org:${owner.organizationId}`,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
+    await this.jobRepository.createMany(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueueOwnerReservationGroupCancelled(
+    payload: OwnerReservationGroupCancelledPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    if (
+      env.NOTIFICATION_WEB_PUSH_ENABLED === false &&
+      env.NOTIFICATION_MOBILE_PUSH_ENABLED === false
+    ) {
+      return { jobCount: 0 };
+    }
+
+    const owner =
+      await this.recipientRepository.findOwnerRecipientByOrganizationId(
+        payload.organizationId,
+        ctx,
+      );
+    if (!owner) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationGroupId: payload.reservationGroupId,
+      representativeReservationId: payload.representativeReservationId,
+      organizationId: payload.organizationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      playerName: payload.playerName,
+      itemCount: payload.itemCount,
+      items: payload.items,
+      reason: payload.reason ?? null,
+    };
+
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: owner.ownerUserId,
+      eventType: "reservation_group.cancelled",
+      reservationId: payload.representativeReservationId,
+      organizationId: owner.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation_group.cancelled:${payload.reservationGroupId}:org:${owner.organizationId}`,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: owner.ownerUserId,
+      eventType: "reservation_group.cancelled",
+      reservationId: payload.representativeReservationId,
+      organizationId: owner.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase: `reservation_group.cancelled:${payload.reservationGroupId}:org:${owner.organizationId}`,
       ctx,
     });
     jobs.push(...mobilePushJobs);
