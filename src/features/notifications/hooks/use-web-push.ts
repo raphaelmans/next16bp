@@ -70,6 +70,10 @@ export function useModWebPush(): UseWebPushResult {
     notificationsApi.mutPushSubscriptionSendTestPush,
   );
 
+  // Ref so refresh can call upsert without being re-created on each render.
+  const upsertRef = React.useRef(upsertMutation);
+  upsertRef.current = upsertMutation;
+
   const [permission, setPermission] =
     React.useState<NotificationPermission | null>(
       supported ? Notification.permission : null,
@@ -98,6 +102,35 @@ export function useModWebPush(): UseWebPushResult {
 
       const subscription = await reg.pushManager.getSubscription();
       setHasSubscription(Boolean(subscription));
+
+      // Auto-sync: if the browser has a subscription, ensure the server knows
+      // about it. The upsert is idempotent (onConflictDoUpdate on endpoint),
+      // so this is safe to call even when already in sync.
+      if (subscription && Notification.permission === "granted") {
+        const json = subscription.toJSON();
+        if (json.endpoint && json.keys?.p256dh && json.keys?.auth) {
+          try {
+            await upsertRef.current.mutateAsync({
+              subscription: {
+                endpoint: json.endpoint,
+                expirationTime:
+                  typeof json.expirationTime === "number"
+                    ? String(json.expirationTime)
+                    : json.expirationTime
+                      ? String(json.expirationTime)
+                      : null,
+                keys: {
+                  p256dh: json.keys.p256dh,
+                  auth: json.keys.auth,
+                },
+              },
+              userAgent: navigator.userAgent,
+            });
+          } catch {
+            // Sync is best-effort — don't block UI if it fails.
+          }
+        }
+      }
     } catch {
       setHasSubscription(false);
     }
@@ -186,7 +219,12 @@ export function useModWebPush(): UseWebPushResult {
       }
 
       if (endpoint) {
-        await revokeMutation.mutateAsync({ endpoint });
+        try {
+          await revokeMutation.mutateAsync({ endpoint });
+        } catch {
+          // Server may not have this subscription (state desync) — that's OK,
+          // the browser subscription is already unsubscribed above.
+        }
       }
 
       setHasSubscription(false);
