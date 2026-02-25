@@ -91,6 +91,7 @@ interface PlaceVerificationPanelProps {
   placeName: string;
   reservationCapable: boolean;
   returnTo?: string;
+  onSuccess?: () => void;
 }
 
 interface DocumentPreview {
@@ -106,6 +107,7 @@ export function PlaceVerificationPanel({
   placeName,
   reservationCapable,
   returnTo,
+  onSuccess,
 }: PlaceVerificationPanelProps) {
   const router = useRouter();
   const { fetchCourtsByPlace } = useModOwnerPlaceVerificationPostSubmit();
@@ -183,6 +185,11 @@ export function PlaceVerificationPanel({
     );
     setDocuments([]);
     reset({ requestNotes: "" });
+
+    if (onSuccess) {
+      onSuccess();
+      return;
+    }
 
     if (returnTo) {
       router.push(returnTo);
