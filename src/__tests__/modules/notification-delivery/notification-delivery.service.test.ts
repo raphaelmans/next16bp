@@ -35,12 +35,17 @@ function makeService() {
     createMany: vi.fn(async (rows: unknown[]) => rows),
   };
 
+  const dispatchTriggerQueue = {
+    publishDispatchKick: vi.fn(async () => undefined),
+  };
+
   const service = new NotificationDeliveryService(
     jobRepository as never,
     recipientRepository as never,
     pushSubscriptionRepository as never,
     mobilePushTokenRepository as never,
     userNotificationRepository as never,
+    dispatchTriggerQueue as never,
   );
 
   return {
@@ -49,6 +54,7 @@ function makeService() {
     recipientRepository,
     pushSubscriptionRepository,
     mobilePushTokenRepository,
+    dispatchTriggerQueue,
     userNotificationRepository,
   };
 }
@@ -242,5 +248,50 @@ describe("NotificationDeliveryService reservation group events", () => {
       ),
     ).toBe(true);
     expect(userNotificationRepository.createMany).toHaveBeenCalledTimes(1);
+  });
+
+  it("enqueueOwnerReservationGroupCreated -> does not fail when dispatch kick publish fails", async () => {
+    const { service, dispatchTriggerQueue, recipientRepository } =
+      makeService();
+    vi.mocked(
+      recipientRepository.findOwnerRecipientByOrganizationId,
+    ).mockResolvedValue({
+      organizationId: "org-1",
+      ownerUserId: "owner-1",
+      email: "owner@example.com",
+      phoneNumber: "09171234567",
+    });
+    vi.mocked(dispatchTriggerQueue.publishDispatchKick).mockRejectedValue(
+      new Error("QStash publish failed"),
+    );
+
+    await expect(
+      service.enqueueOwnerReservationGroupCreated({
+        reservationGroupId: "group-1",
+        representativeReservationId: "res-1",
+        organizationId: "org-1",
+        placeId: "place-1",
+        placeName: "Place A",
+        totalPriceCents: 3000,
+        currency: "PHP",
+        playerName: "Player A",
+        playerEmail: "player@example.com",
+        playerPhone: "09170000000",
+        itemCount: 2,
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T11:00:00.000Z",
+        expiresAtIso: "2026-02-28T10:00:00.000Z",
+        items: groupItems,
+      }),
+    ).resolves.toEqual({ jobCount: 4 });
+
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(dispatchTriggerQueue.publishDispatchKick).toHaveBeenCalledWith(
+      expect.objectContaining({
+        reason: "jobs_enqueued",
+        jobCount: 4,
+      }),
+    );
   });
 });

@@ -41,6 +41,26 @@ export const env = createEnv({
     ),
     CONTACT_US_FROM_EMAIL: z.string().min(1),
     CONTACT_US_TO_EMAIL: z.string().min(1),
+    QSTASH_URL: z.preprocess(
+      (v) => (v === "" ? undefined : v),
+      z.string().url().optional(),
+    ),
+    QSTASH_TOKEN: z.preprocess(
+      (v) => (v === "" ? undefined : v),
+      z.string().min(1).optional(),
+    ),
+    QSTASH_CURRENT_SIGNING_KEY: z.preprocess(
+      (v) => (v === "" ? undefined : v),
+      z.string().min(1).optional(),
+    ),
+    QSTASH_NEXT_SIGNING_KEY: z.preprocess(
+      (v) => (v === "" ? undefined : v),
+      z.string().min(1).optional(),
+    ),
+    NOTIFICATION_DISPATCH_TRIGGER_URL: z.preprocess(
+      (v) => (v === "" ? undefined : v),
+      z.string().url().optional(),
+    ),
     NOTIFICATION_EMAIL_ENABLED: z
       .string()
       .transform((v) => v !== "false")

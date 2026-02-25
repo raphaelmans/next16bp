@@ -6,6 +6,7 @@ import type { InsertNotificationDeliveryJob } from "@/lib/shared/infra/db/schema
 import { logger } from "@/lib/shared/infra/logger";
 import type { RequestContext } from "@/lib/shared/kernel/context";
 import type { IUserNotificationRepository } from "../../user-notification/repositories/user-notification.repository";
+import type { INotificationDispatchTriggerQueue } from "../queues/notification-dispatch-trigger.queue";
 import type { INotificationDeliveryJobRepository } from "../repositories/notification-delivery-job.repository";
 import type { INotificationRecipientRepository } from "../repositories/notification-recipient.repository";
 import { buildNotificationContent } from "../shared/domain";
@@ -212,7 +213,50 @@ export class NotificationDeliveryService {
     private pushSubscriptionRepository: IPushSubscriptionRepository,
     private mobilePushTokenRepository: IMobilePushTokenRepository,
     private userNotificationRepository: IUserNotificationRepository,
+    private dispatchTriggerQueue: INotificationDispatchTriggerQueue | null = null,
   ) {}
+
+  private publishDispatchKickAsync(jobCount: number) {
+    if (!this.dispatchTriggerQueue || jobCount <= 0) return;
+
+    setTimeout(() => {
+      void this.dispatchTriggerQueue
+        .publishDispatchKick({
+          reason: "jobs_enqueued",
+          triggeredAtIso: new Date().toISOString(),
+          jobCount,
+        })
+        .then(() => {
+          logger.info(
+            {
+              event: "notification_delivery.dispatch_kick_published",
+              jobCount,
+            },
+            "Published notification delivery dispatch kick",
+          );
+        })
+        .catch((error) => {
+          const message =
+            error instanceof Error ? error.message : "Unknown error";
+          logger.error(
+            {
+              event: "notification_delivery.dispatch_kick_failed",
+              jobCount,
+              error: message,
+            },
+            "Failed to publish notification delivery dispatch kick",
+          );
+        });
+    }, 0);
+  }
+
+  private async createJobsAndTriggerDispatch(
+    jobs: InsertNotificationDeliveryJob[],
+    ctx?: RequestContext,
+  ) {
+    await this.jobRepository.createMany(jobs, ctx);
+    this.publishDispatchKickAsync(jobs.length);
+  }
 
   private async enqueueWebPushForUser(options: {
     userId: string;
@@ -411,7 +455,7 @@ export class NotificationDeliveryService {
       return { jobCount: 0, recipientCount: recipients.length };
     }
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
 
     logger.info(
       {
@@ -541,7 +585,7 @@ export class NotificationDeliveryService {
       return { jobCount: 0 };
     }
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
 
     logger.info(
       {
@@ -671,7 +715,7 @@ export class NotificationDeliveryService {
       return { jobCount: 0 };
     }
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
 
     logger.info(
       {
@@ -797,7 +841,7 @@ export class NotificationDeliveryService {
       return { jobCount: 0 };
     }
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
 
     logger.info(
       {
@@ -919,7 +963,7 @@ export class NotificationDeliveryService {
       return { jobCount: 0 };
     }
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
 
     logger.info(
       {
@@ -990,7 +1034,7 @@ export class NotificationDeliveryService {
     });
     jobs.push(...mobilePushJobs);
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };
   }
 
@@ -1052,7 +1096,7 @@ export class NotificationDeliveryService {
     });
     jobs.push(...mobilePushJobs);
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };
   }
 
@@ -1111,7 +1155,7 @@ export class NotificationDeliveryService {
     });
     jobs.push(...mobilePushJobs);
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };
   }
 
@@ -1174,7 +1218,7 @@ export class NotificationDeliveryService {
     });
     jobs.push(...mobilePushJobs);
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };
   }
 
@@ -1230,7 +1274,7 @@ export class NotificationDeliveryService {
     });
     jobs.push(...mobilePushJobs);
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };
   }
 
@@ -1289,7 +1333,7 @@ export class NotificationDeliveryService {
     });
     jobs.push(...mobilePushJobs);
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };
   }
 
@@ -1346,7 +1390,7 @@ export class NotificationDeliveryService {
     });
     jobs.push(...mobilePushJobs);
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };
   }
 
@@ -1406,7 +1450,7 @@ export class NotificationDeliveryService {
     });
     jobs.push(...mobilePushJobs);
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };
   }
 
@@ -1469,9 +1513,8 @@ export class NotificationDeliveryService {
     jobs.push(...mobilePushJobs);
 
     if (jobs.length) {
-      await this.jobRepository.createMany(jobs, ctx);
+      await this.createJobsAndTriggerDispatch(jobs, ctx);
     }
-
     logger.info(
       {
         event: "notification_delivery.jobs_enqueued",
@@ -1542,7 +1585,7 @@ export class NotificationDeliveryService {
     });
     jobs.push(...mobilePushJobs);
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };
   }
 
@@ -1606,7 +1649,7 @@ export class NotificationDeliveryService {
     });
     jobs.push(...mobilePushJobs);
 
-    await this.jobRepository.createMany(jobs, ctx);
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };
   }
 }
