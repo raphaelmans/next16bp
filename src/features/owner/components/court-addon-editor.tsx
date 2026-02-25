@@ -761,11 +761,12 @@ export function CourtAddonEditor({
                                     : ""
                                 }
                                 onChange={(e) => {
-                                  const value = Number(e.target.value);
+                                  const raw = e.target.value;
                                   updateAddon({
-                                    flatFeeCents: Number.isFinite(value)
-                                      ? Math.round(value * 100)
-                                      : 0,
+                                    flatFeeCents:
+                                      raw === ""
+                                        ? null
+                                        : Math.round(Number(raw) * 100),
                                   });
                                 }}
                               />
@@ -892,18 +893,17 @@ export function CourtAddonEditor({
                                           value={
                                             group.hourlyRateCents != null
                                               ? group.hourlyRateCents / 100
-                                              : 0
+                                              : ""
                                           }
                                           onChange={(e) => {
-                                            const value = Number(
-                                              e.target.value,
-                                            );
+                                            const raw = e.target.value;
                                             updateGroup(groupIndex, {
-                                              hourlyRateCents: Number.isFinite(
-                                                value,
-                                              )
-                                                ? Math.round(value * 100)
-                                                : 0,
+                                              hourlyRateCents:
+                                                raw === ""
+                                                  ? null
+                                                  : Math.round(
+                                                      Number(raw) * 100,
+                                                    ),
                                             });
                                           }}
                                         />
