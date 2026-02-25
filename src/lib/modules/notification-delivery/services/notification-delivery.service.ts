@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import { normalizePhMobile } from "@/common/phone";
 import { env } from "@/lib/env";
 import type { IMobilePushTokenRepository } from "@/lib/modules/mobile-push-token/repositories/mobile-push-token.repository";
@@ -220,35 +221,26 @@ export class NotificationDeliveryService {
     const dispatchTriggerQueue = this.dispatchTriggerQueue;
     if (!dispatchTriggerQueue || jobCount <= 0) return;
 
-    setTimeout(() => {
-      void dispatchTriggerQueue
-        .publishDispatchKick({
+    after(async () => {
+      try {
+        await dispatchTriggerQueue.publishDispatchKick({
           reason: "jobs_enqueued",
           triggeredAtIso: new Date().toISOString(),
           jobCount,
-        })
-        .then(() => {
-          logger.info(
-            {
-              event: "notification_delivery.dispatch_kick_published",
-              jobCount,
-            },
-            "Published notification delivery dispatch kick",
-          );
-        })
-        .catch((error) => {
-          const message =
-            error instanceof Error ? error.message : "Unknown error";
-          logger.error(
-            {
-              event: "notification_delivery.dispatch_kick_failed",
-              jobCount,
-              error: message,
-            },
-            "Failed to publish notification delivery dispatch kick",
-          );
         });
-    }, 0);
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Unknown error";
+        logger.error(
+          {
+            event: "notification_delivery.dispatch_kick_failed",
+            jobCount,
+            error: message,
+          },
+          "Failed to publish notification delivery dispatch kick",
+        );
+      }
+    });
   }
 
   private async createJobsAndTriggerDispatch(

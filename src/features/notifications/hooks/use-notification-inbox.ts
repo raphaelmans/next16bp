@@ -20,7 +20,7 @@ export function useQueryNotificationUnreadCount(options?: {
     undefined,
     {
       enabled,
-      refetchInterval: 30_000,
+      refetchInterval: 15_000,
       refetchOnWindowFocus: true,
     },
   ) as ReturnType<typeof useFeatureQuery> & {

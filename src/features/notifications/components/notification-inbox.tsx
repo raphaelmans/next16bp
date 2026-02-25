@@ -1,6 +1,6 @@
 "use client";
 
-import { BellDot } from "lucide-react";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -14,7 +14,6 @@ import {
   ItemDescription,
   ItemGroup,
   ItemHeader,
-  ItemSeparator,
   ItemTitle,
 } from "@/components/ui/item";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -61,6 +60,7 @@ export function NotificationInbox(props: {
   showMarkAll: boolean;
   markAllBusy: boolean;
   onItemClick: (item: NotificationInboxItem) => void;
+  onMarkAsRead: (item: NotificationInboxItem) => void;
   onMarkAllAsRead: () => void;
 }) {
   const {
@@ -69,6 +69,7 @@ export function NotificationInbox(props: {
     showMarkAll,
     markAllBusy,
     onItemClick,
+    onMarkAsRead,
     onMarkAllAsRead,
   } = props;
 
@@ -109,46 +110,66 @@ export function NotificationInbox(props: {
         ) : null}
 
         {!isLoading && items.length > 0 ? (
-          <ItemGroup className="gap-1 py-1">
-            {items.map((item, index) => {
+          <ItemGroup className="gap-1.5 py-1">
+            {items.map((item) => {
               const isRead = Boolean(item.readAt);
               return (
-                <div key={item.id}>
-                  <button
-                    type="button"
-                    className="w-full text-left"
-                    onClick={() => onItemClick(item)}
+                <button
+                  key={item.id}
+                  type="button"
+                  className="w-full text-left rounded-lg hover:bg-muted/50 transition-colors duration-150"
+                  onClick={() => onItemClick(item)}
+                >
+                  <Item
+                    size="sm"
+                    variant="default"
+                    className={cn(
+                      "w-full cursor-pointer border-l-2",
+                      isRead
+                        ? "border-l-transparent"
+                        : "border-l-primary bg-primary/[0.04]",
+                    )}
                   >
-                    <Item
-                      size="sm"
-                      variant="outline"
-                      className={cn(
-                        "w-full cursor-pointer",
-                        !isRead && "bg-accent/30",
-                      )}
-                    >
-                      <ItemContent>
-                        <ItemHeader className="w-full">
-                          <ItemTitle className="line-clamp-1">
-                            {item.title}
-                          </ItemTitle>
+                    <ItemContent>
+                      <ItemHeader className="w-full">
+                        <ItemTitle
+                          className={cn(
+                            "line-clamp-1",
+                            !isRead && "font-semibold",
+                          )}
+                        >
+                          {item.title}
+                        </ItemTitle>
+                        <div className="flex items-center gap-1 shrink-0">
                           <span className="text-xs text-muted-foreground">
                             {formatRelativeTime(item.createdAt)}
                           </span>
-                        </ItemHeader>
-                        <div className="flex items-start gap-2">
                           {!isRead ? (
-                            <BellDot className="mt-0.5 h-3.5 w-3.5 text-red-500" />
+                            <button
+                              type="button"
+                              className="inline-flex h-6 w-6 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onMarkAsRead(item);
+                              }}
+                              aria-label="Mark as read"
+                            >
+                              <Check className="h-3 w-3" />
+                            </button>
                           ) : null}
-                          <ItemDescription className="line-clamp-2">
-                            {item.body ?? "Open notification"}
-                          </ItemDescription>
                         </div>
-                      </ItemContent>
-                    </Item>
-                  </button>
-                  {index < items.length - 1 ? <ItemSeparator /> : null}
-                </div>
+                      </ItemHeader>
+                      <div className="flex items-start gap-2">
+                        {!isRead ? (
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                        ) : null}
+                        <ItemDescription className="line-clamp-2">
+                          {item.body ?? "Open notification"}
+                        </ItemDescription>
+                      </div>
+                    </ItemContent>
+                  </Item>
+                </button>
               );
             })}
           </ItemGroup>

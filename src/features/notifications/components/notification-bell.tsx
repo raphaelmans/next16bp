@@ -15,6 +15,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
+import { trpc } from "@/trpc/client";
 import {
   getNotificationBellBadgeCount,
   getNotificationBellIconVariant,
@@ -60,6 +61,8 @@ export function NotificationBell({ portal }: { portal: Portal }) {
   );
   const markAsReadMutation = useMutNotificationMarkAsRead();
   const markAllAsReadMutation = useMutNotificationMarkAllAsRead();
+  const utils = trpc.useUtils();
+  const prevServerUnreadCountRef = React.useRef<number | null>(null);
 
   const settingsHref =
     portal === "owner"
@@ -111,6 +114,14 @@ export function NotificationBell({ portal }: { portal: Portal }) {
   }, [serverUnreadCount]);
 
   React.useEffect(() => {
+    const prev = prevServerUnreadCountRef.current;
+    prevServerUnreadCountRef.current = serverUnreadCount;
+    if (prev !== null && serverUnreadCount > prev && open) {
+      utils.userNotification.listMy.invalidate();
+    }
+  }, [serverUnreadCount, open, utils]);
+
+  React.useEffect(() => {
     if (!open) {
       setOptimisticReadIds(new Set());
       setOptimisticMarkAll(false);
@@ -131,17 +142,28 @@ export function NotificationBell({ portal }: { portal: Portal }) {
 
   const hasUnreadInInbox = inboxItems.some((item) => !item.readAt);
 
+  const markItemAsReadOptimistic = (itemId: string) => {
+    setOptimisticReadIds((prev) => {
+      const next = new Set(prev);
+      next.add(itemId);
+      return next;
+    });
+    setOptimisticUnreadCount((prev) => Math.max(0, (prev ?? unreadCount) - 1));
+  };
+
+  const revertMarkItemAsRead = (itemId: string) => {
+    setOptimisticReadIds((prev) => {
+      const next = new Set(prev);
+      next.delete(itemId);
+      return next;
+    });
+    setOptimisticUnreadCount((prev) => (prev ?? unreadCount) + 1);
+  };
+
   const onNotificationClick = async (item: NotificationInboxItem) => {
     const wasRead = Boolean(item.readAt);
     if (!wasRead) {
-      setOptimisticReadIds((prev) => {
-        const next = new Set(prev);
-        next.add(item.id);
-        return next;
-      });
-      setOptimisticUnreadCount((prev) =>
-        Math.max(0, (prev ?? unreadCount) - 1),
-      );
+      markItemAsReadOptimistic(item.id);
     }
 
     try {
@@ -155,15 +177,25 @@ export function NotificationBell({ portal }: { portal: Portal }) {
       }
     } catch (error) {
       if (!wasRead) {
-        setOptimisticReadIds((prev) => {
-          const next = new Set(prev);
-          next.delete(item.id);
-          return next;
-        });
-        setOptimisticUnreadCount((prev) => (prev ?? unreadCount) + 1);
+        revertMarkItemAsRead(item.id);
       }
 
       toast.error("Could not open notification", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
+
+  const onMarkItemAsRead = async (item: NotificationInboxItem) => {
+    if (item.readAt) return;
+
+    markItemAsReadOptimistic(item.id);
+
+    try {
+      await markAsReadMutation.mutateAsync({ id: item.id });
+    } catch (error) {
+      revertMarkItemAsRead(item.id);
+      toast.error("Could not mark notification as read", {
         description: getClientErrorMessage(error, "Please try again"),
       });
     }
@@ -205,6 +237,7 @@ export function NotificationBell({ portal }: { portal: Portal }) {
           showMarkAll={hasUnreadInInbox}
           markAllBusy={markAllAsReadMutation.isPending}
           onItemClick={onNotificationClick}
+          onMarkAsRead={onMarkItemAsRead}
           onMarkAllAsRead={onMarkAllAsRead}
         />
 

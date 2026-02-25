@@ -189,6 +189,15 @@ export async function POST(request: NextRequest) {
           triggeredAtIso: new Date().toISOString(),
           jobCount: lastProcessed,
         })
+        .then(() => {
+          logger.info(
+            {
+              event: "notification_delivery.queue_backlog_kick_published",
+              jobCount: lastProcessed,
+            },
+            "Published notification backlog dispatch kick",
+          );
+        })
         .catch((error) => {
           const message =
             error instanceof Error ? error.message : "Unknown error";

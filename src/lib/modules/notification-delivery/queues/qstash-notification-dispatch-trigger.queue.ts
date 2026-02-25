@@ -1,4 +1,5 @@
 import { env } from "@/lib/env";
+import { logger } from "@/lib/shared/infra/logger";
 import type {
   INotificationDispatchTriggerQueue,
   NotificationDispatchKickPayload,
@@ -55,6 +56,17 @@ export class QstashNotificationDispatchTriggerQueue
     payload: NotificationDispatchKickPayload,
   ): Promise<void> {
     const url = `${this.options.qstashUrl}/v2/publish/${encodeURIComponent(this.options.destinationUrl)}`;
+
+    logger.info(
+      {
+        event: "notification_delivery.qstash_publish_started",
+        destinationUrl: this.options.destinationUrl,
+        reason: payload.reason,
+        jobCount: payload.jobCount,
+      },
+      "Publishing dispatch kick to QStash",
+    );
+
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -72,5 +84,19 @@ export class QstashNotificationDispatchTriggerQueue
         `QSTASH_PUBLISH_FAILED:${response.status}:${body.slice(0, 500)}`,
       );
     }
+
+    const responseBody = (await response.json()) as {
+      messageId?: string;
+    };
+
+    logger.info(
+      {
+        event: "notification_delivery.qstash_publish_success",
+        messageId: responseBody.messageId ?? null,
+        reason: payload.reason,
+        jobCount: payload.jobCount,
+      },
+      "QStash dispatch kick published successfully",
+    );
   }
 }
