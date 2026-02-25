@@ -186,3 +186,11 @@ export class ReservationStartTimeInPastError extends ValidationError {
 export class ReservationGroupInvalidError extends ValidationError {
   readonly code = "RESERVATION_GROUP_INVALID";
 }
+
+export class PingLimitExceededError extends ValidationError {
+  readonly code = "PING_LIMIT_EXCEEDED";
+
+  constructor(reservationId: string, limit: number) {
+    super(`Ping limit of ${limit} reached`, { reservationId, limit });
+  }
+}

@@ -39,6 +39,8 @@ import {
 } from "@/features/open-play/hooks";
 import { useMutPingOwner } from "@/features/reservation/hooks";
 
+const MAX_PING_OWNER_COUNT = 5;
+
 interface ReservationActionsCardProps {
   reservationId: string;
   status: ReservationStatus;
@@ -58,6 +60,7 @@ interface ReservationActionsCardProps {
   onCancel?: () => void;
   canCancel?: boolean;
   cancelDisabledReason?: string;
+  pingOwnerCount?: number;
 }
 
 export function ReservationActionsCard({
@@ -70,6 +73,7 @@ export function ReservationActionsCard({
   onCancel,
   canCancel,
   cancelDisabledReason,
+  pingOwnerCount = 0,
 }: ReservationActionsCardProps) {
   const activeChatStatuses: ReservationStatus[] = [
     "CREATED",
@@ -79,10 +83,12 @@ export function ReservationActionsCard({
   ];
   const canMessageOwner = activeChatStatuses.includes(status);
 
-  const canPingOwner =
+  const pingStatusAllowed =
     status === "CREATED" ||
     status === "AWAITING_PAYMENT" ||
     status === "PAYMENT_MARKED_BY_USER";
+  const remainingPings = Math.max(0, MAX_PING_OWNER_COUNT - pingOwnerCount);
+  const canPingOwner = pingStatusAllowed && remainingPings > 0;
   const pingOwnerMutation = useMutPingOwner();
 
   const canCreateOpenPlay =
@@ -272,16 +278,23 @@ export function ReservationActionsCard({
             </>
           ) : null}
 
-          {canPingOwner ? (
-            <Button
-              variant="outline"
-              className="w-full justify-start"
-              disabled={pingOwnerMutation.isPending}
-              onClick={() => pingOwnerMutation.mutate({ reservationId })}
-            >
-              <Bell className="mr-2 h-4 w-4" />
-              {pingOwnerMutation.isPending ? "Pinging..." : "Ping Owner"}
-            </Button>
+          {pingStatusAllowed ? (
+            <>
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                disabled={!canPingOwner || pingOwnerMutation.isPending}
+                onClick={() => pingOwnerMutation.mutate({ reservationId })}
+              >
+                <Bell className="mr-2 h-4 w-4" />
+                {pingOwnerMutation.isPending ? "Pinging..." : "Ping Owner"}
+              </Button>
+              <p className="px-1 text-xs text-muted-foreground">
+                {remainingPings > 0
+                  ? `${remainingPings} ping${remainingPings === 1 ? "" : "s"} remaining`
+                  : "No pings remaining"}
+              </p>
+            </>
           ) : null}
 
           <Button variant="outline" className="w-full justify-start" asChild>

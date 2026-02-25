@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, Outfit, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
 import { Providers } from "@/common/providers";
+import { PwaInstallPrompt } from "@/features/pwa/components/pwa-install-prompt";
 import { SwRegister } from "@/features/pwa/components/sw-register";
 import "./globals.css";
 
@@ -172,6 +173,7 @@ export default function RootLayout({
       >
         <Providers>{children}</Providers>
         <SwRegister />
+        <PwaInstallPrompt />
         <Analytics />
       </body>
     </html>

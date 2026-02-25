@@ -64,6 +64,7 @@ import {
   InvalidReservationStatusError,
   NoAvailabilityError,
   NotReservationOwnerError,
+  PingLimitExceededError,
   ReservationCancellationWindowError,
   ReservationExpiredError,
   ReservationGroupInvalidError,
@@ -230,7 +231,7 @@ export interface IReservationService {
     userId: string,
     profileId: string,
     data: PingOwnerDTO,
-  ): Promise<{ pinged: boolean }>;
+  ): Promise<{ pinged: boolean; remainingPings: number }>;
 }
 
 export class ReservationService implements IReservationService {
@@ -1991,7 +1992,9 @@ export class ReservationService implements IReservationService {
     _userId: string,
     profileId: string,
     data: PingOwnerDTO,
-  ): Promise<{ pinged: boolean }> {
+  ): Promise<{ pinged: boolean; remainingPings: number }> {
+    const MAX_PINGS = 5;
+
     const reservation = await this.reservationRepository.findById(
       data.reservationId,
     );
@@ -2015,6 +2018,11 @@ export class ReservationService implements IReservationService {
       );
     }
 
+    const currentCount = reservation.pingOwnerCount ?? 0;
+    if (currentCount >= MAX_PINGS) {
+      throw new PingLimitExceededError(data.reservationId, MAX_PINGS);
+    }
+
     const court = await this.courtRepository.findById(reservation.courtId);
     if (!court) {
       throw new CourtNotFoundError(reservation.courtId);
@@ -2027,7 +2035,7 @@ export class ReservationService implements IReservationService {
     }
 
     if (!place.organizationId) {
-      return { pinged: false };
+      return { pinged: false, remainingPings: MAX_PINGS - currentCount };
     }
 
     const result =
@@ -2041,6 +2049,14 @@ export class ReservationService implements IReservationService {
         endTimeIso: reservation.endTime.toISOString(),
       });
 
+    if (result.pinged) {
+      await this.reservationRepository.update(data.reservationId, {
+        pingOwnerCount: currentCount + 1,
+      });
+    }
+
+    const newCount = result.pinged ? currentCount + 1 : currentCount;
+
     logger.info(
       {
         event: "reservation.owner_pinged",
@@ -2048,11 +2064,15 @@ export class ReservationService implements IReservationService {
         playerId: profileId,
         organizationId: place.organizationId,
         pinged: result.pinged,
+        pingOwnerCount: newCount,
       },
       "Player pinged court owner",
     );
 
-    return result;
+    return {
+      pinged: result.pinged,
+      remainingPings: Math.max(0, MAX_PINGS - newCount),
+    };
   }
 
   private pickCheapestCourtOption(

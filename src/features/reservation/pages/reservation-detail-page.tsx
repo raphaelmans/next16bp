@@ -418,6 +418,7 @@ export default function ReservationDetailPage({
             onCancel={() => setShowCancelDialog(true)}
             canCancel={canCancel}
             cancelDisabledReason={cancelDisabledReason}
+            pingOwnerCount={reservation.pingOwnerCount ?? 0}
           />
         </div>
       </div>

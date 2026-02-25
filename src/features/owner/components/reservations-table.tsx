@@ -5,12 +5,15 @@ import {
   Check,
   ChevronDown,
   ChevronUp,
+  Eye,
   Mail,
   Phone,
   User,
   X,
 } from "lucide-react";
+import Link from "next/link";
 import * as React from "react";
+import { appRoutes } from "@/common/app-routes";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -210,24 +213,32 @@ export function ReservationsTable({
             </span>
           </div>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full mt-3"
-            onClick={() => toggleRow(reservation.id)}
-          >
-            {isExpanded ? (
-              <>
-                <ChevronUp className="h-4 w-4 mr-2" />
-                Hide Details
-              </>
-            ) : (
-              <>
-                <ChevronDown className="h-4 w-4 mr-2" />
-                View Details
-              </>
-            )}
-          </Button>
+          <div className="flex gap-2 mt-3">
+            <Button variant="outline" size="sm" className="flex-1" asChild>
+              <Link href={appRoutes.owner.reservationDetail(reservation.id)}>
+                <Eye className="h-4 w-4 mr-2" />
+                View
+              </Link>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex-1"
+              onClick={() => toggleRow(reservation.id)}
+            >
+              {isExpanded ? (
+                <>
+                  <ChevronUp className="h-4 w-4 mr-2" />
+                  Hide Details
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="h-4 w-4 mr-2" />
+                  Expand
+                </>
+              )}
+            </Button>
+          </div>
 
           {isExpanded && (
             <div className="mt-4 pt-4 border-t space-y-4">
@@ -413,45 +424,61 @@ export function ReservationsTable({
                       </div>
                     </TableCell>
                     <TableCell className="text-right">
-                      {canReject && (
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            size="sm"
-                            className="bg-green-600 hover:bg-green-700"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onConfirm?.(reservation.id);
-                            }}
-                            disabled={isLoading}
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          asChild
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Link
+                            href={appRoutes.owner.reservationDetail(
+                              reservation.id,
+                            )}
                           >
-                            <Check className="h-4 w-4" />
-                          </Button>
-                          {canAccept && reservation.amountCents > 0 && (
+                            <Eye className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                        {canReject && (
+                          <>
                             <Button
                               size="sm"
-                              variant="outline"
+                              className="bg-green-600 hover:bg-green-700"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                onConfirmPaidOffline?.(reservation.id);
+                                onConfirm?.(reservation.id);
                               }}
                               disabled={isLoading}
                             >
-                              Paid & Confirmed
+                              <Check className="h-4 w-4" />
                             </Button>
-                          )}
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onReject?.(reservation.id);
-                            }}
-                            disabled={isLoading}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
+                            {canAccept && reservation.amountCents > 0 && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onConfirmPaidOffline?.(reservation.id);
+                                }}
+                                disabled={isLoading}
+                              >
+                                Paid & Confirmed
+                              </Button>
+                            )}
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onReject?.(reservation.id);
+                              }}
+                              disabled={isLoading}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
 
