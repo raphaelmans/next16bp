@@ -60,13 +60,22 @@ export function makeNotificationDispatchTriggerQueue() {
       QstashNotificationDispatchTriggerQueue.fromEnv();
 
     if (!notificationDispatchTriggerQueue) {
-      logger.info(
+      const hasQstashToken = Boolean(process.env.QSTASH_TOKEN);
+      const triggerUrl = resolveNotificationDispatchTriggerUrl();
+      const missingParts = [
+        !hasQstashToken && "QSTASH_TOKEN",
+        !triggerUrl &&
+          "NOTIFICATION_DISPATCH_TRIGGER_URL or NEXT_PUBLIC_APP_URL",
+      ].filter(Boolean);
+
+      logger.warn(
         {
           event: "notification_delivery.dispatch_kick_queue_disabled",
-          hasQstashToken: Boolean(process.env.QSTASH_TOKEN),
-          triggerUrl: resolveNotificationDispatchTriggerUrl(),
+          hasQstashToken,
+          triggerUrl: triggerUrl ?? null,
+          missing: missingParts,
         },
-        "Notification dispatch trigger queue is disabled",
+        `Notification dispatch trigger queue is disabled — missing: ${missingParts.join(", ")}`,
       );
     }
   }

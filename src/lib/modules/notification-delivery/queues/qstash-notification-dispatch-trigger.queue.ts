@@ -55,7 +55,7 @@ export class QstashNotificationDispatchTriggerQueue
   async publishDispatchKick(
     payload: NotificationDispatchKickPayload,
   ): Promise<void> {
-    const url = `${this.options.qstashUrl}/v2/publish/${encodeURIComponent(this.options.destinationUrl)}`;
+    const url = `${this.options.qstashUrl}/v2/publish/${this.options.destinationUrl}`;
 
     logger.info(
       {

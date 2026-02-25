@@ -219,7 +219,18 @@ export class NotificationDeliveryService {
 
   private publishDispatchKickAsync(jobCount: number) {
     const dispatchTriggerQueue = this.dispatchTriggerQueue;
-    if (!dispatchTriggerQueue || jobCount <= 0) return;
+    if (jobCount <= 0) return;
+    if (!dispatchTriggerQueue) {
+      logger.warn(
+        {
+          event: "notification_delivery.dispatch_kick_skipped",
+          reason: "queue_not_configured",
+          jobCount,
+        },
+        "Skipped dispatch kick — QStash queue not configured",
+      );
+      return;
+    }
 
     after(async () => {
       try {
