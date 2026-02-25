@@ -13,6 +13,7 @@ import { requireSession } from "@/lib/shared/infra/auth/server-session";
  * Provides auth protection and organization check.
  */
 export const metadata: Metadata = {
+  manifest: "/owner-manifest.webmanifest",
   robots: {
     index: false,
     follow: false,
