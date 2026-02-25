@@ -4,6 +4,7 @@ import { AlertTriangle, CheckCircle, Clock, Info, XCircle } from "lucide-react";
 import Link from "next/link";
 import { formatRelativeFrom } from "@/common/format";
 import { useNowMs } from "@/common/hooks/use-now";
+import { getPlayerReservationPath } from "@/common/reservation-links";
 import type { ReservationStatus } from "@/components/kudos";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -45,6 +46,7 @@ export function StatusBanner({
   const showCountdown = status === "AWAITING_PAYMENT" && expiresAt;
   const countdownLabel =
     showCountdown && expiresAt ? formatRelativeFrom(expiresAt, nowMs) : null;
+  const playerActionPath = getPlayerReservationPath({ reservationId, status });
 
   return (
     <Alert
@@ -81,9 +83,7 @@ export function StatusBanner({
             ) : null}
             {showPayButton ? (
               <Button size="sm" asChild className="w-full sm:w-auto">
-                <Link href={`/reservations/${reservationId}/payment`}>
-                  Pay Now
-                </Link>
+                <Link href={playerActionPath}>Pay now to hold slot</Link>
               </Button>
             ) : null}
           </div>
@@ -106,7 +106,7 @@ const statusBannerConfig: Record<
   CREATED: {
     icon: Info,
     title: "Processing",
-    description: "Your reservation is being processed.",
+    description: "Owner review is in progress. Message the owner if needed.",
     className:
       "border-primary/20 bg-primary/5 text-primary [&>svg]:text-primary",
     variant: "default",
@@ -114,7 +114,8 @@ const statusBannerConfig: Record<
   AWAITING_PAYMENT: {
     icon: AlertTriangle,
     title: "Payment Required",
-    description: "Please complete your payment to confirm this reservation.",
+    description:
+      "Pay now to keep this slot. Then mark payment for owner confirmation.",
     className:
       "border-amber-500/20 bg-amber-500/5 text-amber-600 dark:text-amber-500 [&>svg]:text-amber-600 dark:[&>svg]:text-amber-500",
     variant: "default",
@@ -122,7 +123,7 @@ const statusBannerConfig: Record<
   PAYMENT_MARKED_BY_USER: {
     icon: Clock,
     title: "Payment Pending Confirmation",
-    description: "Your payment is being verified by the court owner.",
+    description: "Payment marked. The owner will verify and confirm shortly.",
     className:
       "border-primary/20 bg-primary/5 text-primary [&>svg]:text-primary",
     variant: "default",

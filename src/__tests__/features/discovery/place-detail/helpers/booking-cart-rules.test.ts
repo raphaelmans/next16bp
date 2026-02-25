@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  getBookingCartViolationMessage,
   isBookingCartKeyDuplicate,
   validateBookingCartAdd,
 } from "@/features/discovery/place-detail/helpers/booking-cart-rules";
@@ -72,6 +73,20 @@ describe("validateBookingCartAdd", () => {
     });
 
     expect(result).toEqual({ ok: false, reason: "DUPLICATE_COURT" });
+  });
+});
+
+describe("getBookingCartViolationMessage", () => {
+  it("returns clear-cart message for DIFFERENT_DAY", () => {
+    expect(getBookingCartViolationMessage("DIFFERENT_DAY")).toBe(
+      "Your booking already has courts for another day. Clear your cart to start a new booking.",
+    );
+  });
+
+  it("returns duplicate court message for DUPLICATE_COURT", () => {
+    expect(getBookingCartViolationMessage("DUPLICATE_COURT")).toBe(
+      "You can only add one time span per court in this booking.",
+    );
   });
 });
 

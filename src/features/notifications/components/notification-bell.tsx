@@ -1,7 +1,9 @@
 "use client";
 
-import { Bell } from "lucide-react";
+import { Bell, BellOff, BellRing } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
 import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
 import { toast } from "@/common/toast";
@@ -14,15 +16,50 @@ import {
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import {
+  getNotificationBellBadgeCount,
+  getNotificationBellIconVariant,
   getNotificationBellPermissionLabel,
   getNotificationBellToggleDisabled,
+  type NotificationBellIconVariant,
 } from "../domain";
-import { useModWebPush } from "../hooks";
+import {
+  useModWebPush,
+  useMutNotificationMarkAllAsRead,
+  useMutNotificationMarkAsRead,
+  useQueryNotificationInbox,
+  useQueryNotificationUnreadCount,
+} from "../hooks";
+import {
+  NotificationInbox,
+  type NotificationInboxItem,
+} from "./notification-inbox";
+
+const bellIcons: Record<NotificationBellIconVariant, typeof Bell> = {
+  bell: Bell,
+  "bell-ring": BellRing,
+  "bell-off": BellOff,
+};
 
 type Portal = "owner" | "player" | "admin";
 
 export function NotificationBell({ portal }: { portal: Portal }) {
+  const router = useRouter();
   const webPush = useModWebPush();
+  const [open, setOpen] = React.useState(false);
+  const [optimisticUnreadCount, setOptimisticUnreadCount] = React.useState<
+    number | null
+  >(null);
+  const [optimisticReadIds, setOptimisticReadIds] = React.useState<Set<string>>(
+    new Set(),
+  );
+  const [optimisticMarkAll, setOptimisticMarkAll] = React.useState(false);
+  const unreadCountQuery = useQueryNotificationUnreadCount();
+  const notificationInboxQuery = useQueryNotificationInbox(
+    { limit: 20, offset: 0 },
+    { enabled: open },
+  );
+  const markAsReadMutation = useMutNotificationMarkAsRead();
+  const markAllAsReadMutation = useMutNotificationMarkAllAsRead();
 
   const settingsHref =
     portal === "owner"
@@ -59,28 +96,119 @@ export function NotificationBell({ portal }: { portal: Portal }) {
     enabledOnThisDevice: checked,
   });
 
+  const iconVariant = getNotificationBellIconVariant({
+    enabledOnThisDevice: checked,
+  });
+  const BellIcon = bellIcons[iconVariant];
+  const serverUnreadCount = unreadCountQuery.data?.count ?? 0;
+  const unreadCount = optimisticUnreadCount ?? serverUnreadCount;
+  const badgeCount = getNotificationBellBadgeCount(unreadCount);
+
+  React.useEffect(() => {
+    setOptimisticUnreadCount((prev) =>
+      prev === null ? prev : serverUnreadCount,
+    );
+  }, [serverUnreadCount]);
+
+  React.useEffect(() => {
+    if (!open) {
+      setOptimisticReadIds(new Set());
+      setOptimisticMarkAll(false);
+      setOptimisticUnreadCount(null);
+    }
+  }, [open]);
+
+  const inboxItems = (notificationInboxQuery.data?.items ?? []).map((item) => {
+    const isRead =
+      optimisticMarkAll ||
+      item.readAt !== null ||
+      optimisticReadIds.has(item.id);
+    return {
+      ...item,
+      readAt: isRead ? (item.readAt ?? new Date().toISOString()) : null,
+    } satisfies NotificationInboxItem;
+  });
+
+  const hasUnreadInInbox = inboxItems.some((item) => !item.readAt);
+
+  const onNotificationClick = async (item: NotificationInboxItem) => {
+    const wasRead = Boolean(item.readAt);
+    if (!wasRead) {
+      setOptimisticReadIds((prev) => {
+        const next = new Set(prev);
+        next.add(item.id);
+        return next;
+      });
+      setOptimisticUnreadCount((prev) =>
+        Math.max(0, (prev ?? unreadCount) - 1),
+      );
+    }
+
+    try {
+      if (!wasRead) {
+        await markAsReadMutation.mutateAsync({ id: item.id });
+      }
+
+      if (item.href) {
+        setOpen(false);
+        router.push(item.href);
+      }
+    } catch (error) {
+      if (!wasRead) {
+        setOptimisticReadIds((prev) => {
+          const next = new Set(prev);
+          next.delete(item.id);
+          return next;
+        });
+        setOptimisticUnreadCount((prev) => (prev ?? unreadCount) + 1);
+      }
+
+      toast.error("Could not open notification", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
+
+  const onMarkAllAsRead = async () => {
+    const previous = unreadCount;
+    setOptimisticMarkAll(true);
+    setOptimisticUnreadCount(0);
+
+    try {
+      await markAllAsReadMutation.mutateAsync();
+    } catch (error) {
+      setOptimisticMarkAll(false);
+      setOptimisticUnreadCount(previous);
+      toast.error("Could not mark notifications as read", {
+        description: getClientErrorMessage(error, "Please try again"),
+      });
+    }
+  };
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button type="button" variant="ghost" size="icon" className="relative">
-          <Bell className="h-4 w-4" />
+          <BellIcon className="h-4 w-4" />
+          {badgeCount ? (
+            <span className="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] leading-4 font-semibold text-white">
+              {badgeCount}
+            </span>
+          ) : null}
           <span className="sr-only">Notifications</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-80">
-        <div className="space-y-3">
-          <div className="space-y-1">
-            <p className="text-sm font-heading font-semibold">
-              Notification settings
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Manage browser alerts for reservation updates.
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Chat unread counts are shown in the chat inbox/widget.
-            </p>
-          </div>
+      <PopoverContent align="end" className="w-80 p-0">
+        <NotificationInbox
+          items={inboxItems}
+          isLoading={notificationInboxQuery.isLoading}
+          showMarkAll={hasUnreadInInbox}
+          markAllBusy={markAllAsReadMutation.isPending}
+          onItemClick={onNotificationClick}
+          onMarkAllAsRead={onMarkAllAsRead}
+        />
 
+        <div className="space-y-3 border-t px-3 pb-3 pt-2">
           <div className="flex items-center justify-between gap-3 rounded-md border bg-muted/30 px-3 py-2">
             <div className="min-w-0">
               <p className="text-sm font-medium">Browser notifications</p>
@@ -94,29 +222,11 @@ export function NotificationBell({ portal }: { portal: Portal }) {
             />
           </div>
 
-          {!webPush.supported ? (
-            <p className="text-xs text-muted-foreground">
-              Your browser does not support push notifications.
-            </p>
-          ) : null}
-          {webPush.supported && !webPush.isSecureContext ? (
-            <p className="text-xs text-muted-foreground">
-              Notifications require HTTPS (localhost also works in dev).
-            </p>
-          ) : null}
-          {webPush.supported && !webPush.configured ? (
-            <p className="text-xs text-muted-foreground">
-              Notifications are not configured on the server.
-            </p>
-          ) : null}
           {webPush.permission === "denied" ? (
             <p className="text-xs text-muted-foreground">
               To enable, allow notifications for this site in your browser.
             </p>
           ) : null}
-          <p className="text-xs text-muted-foreground">
-            {webPush.diagnosticsMessage}
-          </p>
 
           <div className="flex items-center justify-end">
             <Button asChild type="button" variant="link" className="px-0">

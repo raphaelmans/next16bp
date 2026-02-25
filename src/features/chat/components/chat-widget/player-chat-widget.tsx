@@ -15,11 +15,13 @@ export function PlayerChatWidget() {
         },
         ui: {
           sheetTitle: "Messages",
-          sheetDescription: "Reservation conversations",
+          sheetDescription:
+            "Chat with owners about payment details and booking confirmation",
         },
         labels: {
           listPrimary: (meta) => (meta ? meta.placeName : null),
-          listSecondary: () => null,
+          listSecondary: (meta) =>
+            meta ? `Owner: ${meta.ownerDisplayName}` : null,
           threadTitle: (meta) => meta?.placeName ?? "Messages",
         },
       }}

@@ -31,12 +31,16 @@ function makeService() {
   const mobilePushTokenRepository = {
     listActiveByUserId: vi.fn(async () => [{ id: "mob-1" }]),
   };
+  const userNotificationRepository = {
+    createMany: vi.fn(async (rows: unknown[]) => rows),
+  };
 
   const service = new NotificationDeliveryService(
     jobRepository as never,
     recipientRepository as never,
     pushSubscriptionRepository as never,
     mobilePushTokenRepository as never,
+    userNotificationRepository as never,
   );
 
   return {
@@ -45,6 +49,7 @@ function makeService() {
     recipientRepository,
     pushSubscriptionRepository,
     mobilePushTokenRepository,
+    userNotificationRepository,
   };
 }
 
@@ -78,7 +83,12 @@ describe("NotificationDeliveryService reservation group events", () => {
 
   it("enqueueOwnerReservationGroupCreated -> enqueues group-scoped idempotent jobs", async () => {
     // Arrange
-    const { service, jobRepository, recipientRepository } = makeService();
+    const {
+      service,
+      jobRepository,
+      recipientRepository,
+      userNotificationRepository,
+    } = makeService();
     vi.mocked(
       recipientRepository.findOwnerRecipientByOrganizationId,
     ).mockResolvedValue({
@@ -129,11 +139,17 @@ describe("NotificationDeliveryService reservation group events", () => {
     expect(
       jobs.every((job) => job.payload.reservationGroupId === "group-1"),
     ).toBe(true);
+    expect(userNotificationRepository.createMany).toHaveBeenCalledTimes(1);
   });
 
   it("enqueuePlayerReservationGroupAwaitingPayment -> uses group id for idempotency key", async () => {
     // Arrange
-    const { service, jobRepository, recipientRepository } = makeService();
+    const {
+      service,
+      jobRepository,
+      recipientRepository,
+      userNotificationRepository,
+    } = makeService();
     vi.mocked(
       recipientRepository.findPlayerRecipientByReservationId,
     ).mockResolvedValue({
@@ -174,11 +190,17 @@ describe("NotificationDeliveryService reservation group events", () => {
           ),
       ),
     ).toBe(true);
+    expect(userNotificationRepository.createMany).toHaveBeenCalledTimes(1);
   });
 
   it("enqueueOwnerReservationGroupPaymentMarked -> routes through owner organization recipient", async () => {
     // Arrange
-    const { service, jobRepository, recipientRepository } = makeService();
+    const {
+      service,
+      jobRepository,
+      recipientRepository,
+      userNotificationRepository,
+    } = makeService();
     vi.mocked(
       recipientRepository.findOwnerRecipientByOrganizationId,
     ).mockResolvedValue({
@@ -219,5 +241,6 @@ describe("NotificationDeliveryService reservation group events", () => {
           ),
       ),
     ).toBe(true);
+    expect(userNotificationRepository.createMany).toHaveBeenCalledTimes(1);
   });
 });

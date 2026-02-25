@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const webPushState = {
   enable: vi.fn(async () => undefined),
@@ -14,8 +14,42 @@ const webPushState = {
   diagnosticsMessage: "All good",
 };
 
+const unreadCountState = { count: 0 };
+const inboxState = {
+  isLoading: false,
+  items: [] as Array<{
+    id: string;
+    title: string;
+    body: string | null;
+    href: string | null;
+    readAt: string | null;
+    createdAt: string;
+  }>,
+};
+const markAsReadMutation = {
+  mutateAsync: vi.fn(async () => undefined),
+  isPending: false,
+};
+const markAllAsReadMutation = {
+  mutateAsync: vi.fn(async () => ({ count: 0 })),
+  isPending: false,
+};
+
 vi.mock("@/features/notifications/hooks", () => ({
   useModWebPush: () => webPushState,
+  useQueryNotificationUnreadCount: () => ({
+    data: { count: unreadCountState.count },
+  }),
+  useQueryNotificationInbox: () => ({
+    data: { items: inboxState.items },
+    isLoading: inboxState.isLoading,
+  }),
+  useMutNotificationMarkAsRead: () => markAsReadMutation,
+  useMutNotificationMarkAllAsRead: () => markAllAsReadMutation,
+}));
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
 }));
 
 vi.mock("@/components/ui/popover", () => ({
@@ -52,16 +86,60 @@ vi.mock("@/components/ui/switch", () => ({
 import { NotificationBell } from "@/features/notifications/components/notification-bell";
 
 describe("NotificationBell", () => {
-  it("renders boundary copy for chat unread location", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    unreadCountState.count = 0;
+    inboxState.isLoading = false;
+    inboxState.items = [];
+    (webPushState as { permission: NotificationPermission }).permission =
+      "granted";
+  });
+
+  it("does not render verbose explanatory copy", () => {
     // Arrange + Act
     render(<NotificationBell portal="owner" />);
 
     // Assert
     expect(
-      screen.getByText(
+      screen.queryByText("Manage browser alerts for reservation updates."),
+    ).toBeNull();
+    expect(
+      screen.queryByText(
         "Chat unread counts are shown in the chat inbox/widget.",
       ),
+    ).toBeNull();
+  });
+
+  it("shows unread badge count on bell", () => {
+    // Arrange
+    unreadCountState.count = 3;
+
+    // Act
+    render(<NotificationBell portal="owner" />);
+
+    // Assert
+    expect(screen.getByText("3")).toBeTruthy();
+  });
+
+  it("shows browser-settings hint when permission is denied", () => {
+    // Arrange
+    const original = webPushState.permission;
+    (webPushState as { permission: NotificationPermission }).permission =
+      "denied";
+
+    // Act
+    render(<NotificationBell portal="owner" />);
+
+    // Assert
+    expect(
+      screen.getByText(
+        "To enable, allow notifications for this site in your browser.",
+      ),
     ).toBeTruthy();
+
+    // Cleanup
+    (webPushState as { permission: NotificationPermission }).permission =
+      original;
   });
 
   it("toggle on -> calls web push enable", async () => {

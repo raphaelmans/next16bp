@@ -35,6 +35,7 @@ import {
   canCheckoutBookingCart,
 } from "@/features/discovery/place-detail/helpers/booking-cart-cta";
 import {
+  getBookingCartViolationMessage,
   isBookingCartKeyDuplicate,
   validateBookingCartAdd,
 } from "@/features/discovery/place-detail/helpers/booking-cart-rules";
@@ -290,12 +291,7 @@ export function PlaceDetailBookingSection({
       placeTimeZone,
     });
     if (!validation.ok) {
-      if (validation.reason === "DIFFERENT_DAY") {
-        toast.error("All courts in one booking must be on the same day.");
-        return;
-      }
-
-      toast.error("You can only add one time span per court in this booking.");
+      toast.error(getBookingCartViolationMessage(validation.reason));
       return;
     }
 

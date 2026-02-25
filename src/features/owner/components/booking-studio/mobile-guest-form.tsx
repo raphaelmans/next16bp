@@ -48,7 +48,7 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
   React.useEffect(() => {
     const timer = setTimeout(
       () => setDebouncedMobileGuestSearch(mobileGuestSearch),
-      300,
+      2000,
     );
     return () => clearTimeout(timer);
   }, [mobileGuestSearch]);

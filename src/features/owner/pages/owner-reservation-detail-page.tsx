@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import {
   OwnerNavbar,
@@ -21,6 +22,7 @@ import {
 import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
 import { RejectModal } from "@/features/owner/components/reject-modal";
 import {
+  useModOwnerReservationRealtimeStream,
   useModOwnerReservations,
   useMutAcceptReservation,
   useMutConfirmReservation,
@@ -92,7 +94,11 @@ export default function OwnerReservationDetailPage({
 }: OwnerReservationDetailPageProps) {
   const { data: user } = useQueryAuthSession();
   const logoutMutation = useMutAuthLogout();
-  const { organization, organizations } = useQueryOwnerOrganization();
+  const {
+    organization,
+    organizations,
+    isLoading: orgLoading,
+  } = useQueryOwnerOrganization();
 
   const { data: reservations = [], isLoading } = useModOwnerReservations(
     organization?.id ?? null,
@@ -103,6 +109,11 @@ export default function OwnerReservationDetailPage({
     useQueryOwnerReservationHistory({ reservationId });
 
   const reservation = reservations[0];
+  useModOwnerReservationRealtimeStream({
+    enabled: Boolean(organization?.id && reservationId),
+    reservationIds: [reservationId],
+  });
+
   const reservationGroupQuery = useQueryReservationGroupDetail(
     reservation?.reservationGroupId ?? undefined,
   );
@@ -192,6 +203,82 @@ export default function OwnerReservationDetailPage({
     );
   };
 
+  if (orgLoading) {
+    return (
+      <AppShell
+        sidebar={
+          <OwnerSidebar
+            currentOrganization={{ id: "", name: "Loading..." }}
+            organizations={[]}
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+          />
+        }
+        navbar={
+          <OwnerNavbar
+            organizationName="Loading..."
+            user={{
+              name: user?.email?.split("@")[0],
+              email: user?.email,
+            }}
+            onLogout={handleLogout}
+          />
+        }
+        floatingPanel={<ReservationAlertsPanel organizationId={null} />}
+      >
+        <div className="space-y-6">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-4 w-64" />
+          <Skeleton className="h-9 w-48" />
+          <Card>
+            <CardHeader className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-6 w-48" />
+                <Skeleton className="h-5 w-24" />
+              </div>
+              <Skeleton className="h-4 w-64" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <div className="flex gap-2">
+                <Skeleton className="h-9 w-36" />
+                <Skeleton className="h-9 w-36" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-5 w-24" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex gap-3">
+                <Skeleton className="h-2 w-2 rounded-full" />
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <Skeleton className="h-2 w-2 rounded-full" />
+                <div className="space-y-1">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </AppShell>
+    );
+  }
+
   return (
     <AppShell
       sidebar={
@@ -236,9 +323,27 @@ export default function OwnerReservationDetailPage({
         </Button>
 
         {isLoading && (
-          <div className="text-sm text-muted-foreground">
-            Loading reservation...
-          </div>
+          <Card>
+            <CardHeader className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-6 w-48" />
+                <Skeleton className="h-5 w-24" />
+              </div>
+              <Skeleton className="h-4 w-64" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <div className="flex gap-2">
+                <Skeleton className="h-9 w-36" />
+                <Skeleton className="h-9 w-36" />
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {!isLoading && !reservation && (
@@ -381,9 +486,10 @@ export default function OwnerReservationDetailPage({
                 </CardHeader>
                 <CardContent>
                   {reservationGroupQuery.isLoading ? (
-                    <p className="text-sm text-muted-foreground">
-                      Loading grouped items...
-                    </p>
+                    <div className="space-y-3">
+                      <Skeleton className="h-16 w-full rounded-lg" />
+                      <Skeleton className="h-16 w-full rounded-lg" />
+                    </div>
                   ) : reservationGroupItems.length === 0 ? (
                     <p className="text-sm text-muted-foreground">
                       No additional grouped items found.
@@ -439,9 +545,17 @@ export default function OwnerReservationDetailPage({
               </CardHeader>
               <CardContent>
                 {historyLoading ? (
-                  <p className="text-sm text-muted-foreground">
-                    Loading activity...
-                  </p>
+                  <div className="space-y-4">
+                    {[0, 1].map((i) => (
+                      <div key={i} className="flex gap-3">
+                        <Skeleton className="h-2 w-2 rounded-full mt-1.5" />
+                        <div className="space-y-1">
+                          <Skeleton className="h-4 w-32" />
+                          <Skeleton className="h-3 w-24" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 ) : history.length === 0 ? (
                   <p className="text-sm text-muted-foreground">
                     No activity recorded yet.

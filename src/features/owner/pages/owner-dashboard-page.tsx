@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, CalendarDays, MapPin } from "lucide-react";
+import { ArrowRight, CalendarCheck, CalendarDays, MapPin } from "lucide-react";
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { AppShell } from "@/components/layout";
@@ -14,11 +14,14 @@ import {
   OwnerPaymentMethodReminder,
   OwnerSidebar,
   PendingActions,
+  RecentActivity,
   ReservationAlertsPanel,
   StatsCard,
+  TodaysBookings,
 } from "@/features/owner";
 import { isOwnerSetupIncomplete } from "@/features/owner/helpers";
 import {
+  useQueryDashboardData,
   useQueryOwnerOrganization,
   useQueryOwnerSetupStatus,
   useQueryOwnerStats,
@@ -44,6 +47,8 @@ export default function OwnerDashboardPage() {
   const { data: stats, isLoading: statsLoading } = useQueryOwnerStats(
     organization?.id ?? null,
   );
+  const { data: dashboardData, isLoading: dashboardLoading } =
+    useQueryDashboardData(organization?.id ?? null);
   const { data: setupStatus, isLoading: setupLoading } =
     useQueryOwnerSetupStatus();
   const logoutMutation = useMutAuthLogout();
@@ -198,22 +203,30 @@ export default function OwnerDashboardPage() {
                 icon={CalendarDays}
                 href={`${appRoutes.owner.reservations}?status=pending`}
               />
-              <ComingSoonCard title="Today's Bookings" />
+              <StatsCard
+                title="Today's Bookings"
+                value={dashboardData?.todayBookingsCount ?? 0}
+                icon={CalendarCheck}
+              />
               <ComingSoonCard title="Monthly Revenue" />
             </>
           )}
         </div>
 
-        {/* Activity and bookings grid - Coming Soon */}
         <div className="grid gap-6 lg:grid-cols-2">
-          <ComingSoonCard
-            title="Recent Activity"
-            description="Track recent bookings, payments, and cancellations"
-          />
-          <ComingSoonCard
-            title="Today's Schedule"
-            description="View today's bookings timeline"
-          />
+          {dashboardLoading ? (
+            <>
+              <Skeleton className="h-64" />
+              <Skeleton className="h-64" />
+            </>
+          ) : (
+            <>
+              <RecentActivity
+                activities={dashboardData?.recentActivity ?? []}
+              />
+              <TodaysBookings bookings={dashboardData?.todaySchedule ?? []} />
+            </>
+          )}
         </div>
       </div>
     </AppShell>

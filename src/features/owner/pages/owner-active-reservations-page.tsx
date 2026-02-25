@@ -35,6 +35,7 @@ import {
   useModOwnerCourtFilter,
   useModOwnerInvalidation,
   useModOwnerPlaceFilter,
+  useModOwnerReservationRealtimeStream,
   useModOwnerReservations,
   useMutAcceptReservation,
   useMutConfirmReservation,
@@ -110,6 +111,10 @@ export default function OwnerActiveReservationsPage() {
     courtId: courtId || undefined,
     status: "all",
     refetchIntervalMs: OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
+  });
+
+  useModOwnerReservationRealtimeStream({
+    enabled: Boolean(organization?.id),
   });
 
   const acceptMutation = useMutAcceptReservation();

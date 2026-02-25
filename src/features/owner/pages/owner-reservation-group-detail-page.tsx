@@ -20,6 +20,7 @@ import {
 import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
 import { RejectModal } from "@/features/owner/components/reject-modal";
 import {
+  useModOwnerReservationRealtimeStream,
   useMutAcceptReservation,
   useMutConfirmReservation,
   useMutRejectReservation,
@@ -58,6 +59,11 @@ export default function OwnerReservationGroupDetailPage({
   );
 
   const reservations = groupQuery.data?.reservations ?? [];
+  useModOwnerReservationRealtimeStream({
+    enabled: Boolean(organization?.id) && reservations.length > 0,
+    reservationIds: reservations.map((item) => item.id),
+  });
+
   const firstReservation = reservations[0];
   const statuses = new Set(reservations.map((item) => item.status));
   const allCreated =

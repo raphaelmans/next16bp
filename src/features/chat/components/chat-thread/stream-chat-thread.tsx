@@ -2,7 +2,13 @@
 
 import type { ChatStatus, FileUIPart, UIMessage } from "ai";
 import { ChevronLeft, MessageSquare, RefreshCw } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import type { Attachment, LocalMessage, StreamChat } from "stream-chat";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import {
@@ -103,6 +109,7 @@ export interface StreamChatThreadProps {
   headerTitle?: string;
   headerSubtitle?: string;
   headerStatus?: string;
+  contextContent?: ReactNode;
   readOnly?: boolean;
   readOnlyReason?: string;
   emptyTitle?: string;
@@ -140,6 +147,7 @@ export function StreamChatThread({
   headerTitle = "Messages",
   headerSubtitle,
   headerStatus,
+  contextContent = null,
   readOnly = false,
   readOnlyReason,
   emptyTitle = "No messages yet",
@@ -355,6 +363,9 @@ export function StreamChatThread({
                 <div className="mb-3 rounded-md border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
                   {readOnlyReason}
                 </div>
+              ) : null}
+              {contextContent ? (
+                <div className="mb-3">{contextContent}</div>
               ) : null}
               {channelWatchError ? (
                 <div className="text-sm text-destructive">

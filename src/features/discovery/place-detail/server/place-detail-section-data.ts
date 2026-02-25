@@ -36,9 +36,9 @@ export type PlaceCourtsSectionData = {
 export async function getPlaceCourtsSectionData(
   placeIdOrSlug: string,
 ): Promise<PlaceCourtsSectionData> {
-  const placeDetails = await getPlaceDetailsByIdOrSlugUncached(placeIdOrSlug);
+  const coreData = await getPlaceCoreSectionData(placeIdOrSlug);
   return {
-    courts: mapPlaceDetailsToPlaceDetail(placeDetails).courts,
+    courts: coreData.place.courts,
   };
 }
 
@@ -52,8 +52,8 @@ export type PlaceVenueSectionData = {
 export async function getPlaceVenueSectionData(
   placeIdOrSlug: string,
 ): Promise<PlaceVenueSectionData> {
-  const placeDetails = await getPlaceDetailsByIdOrSlugUncached(placeIdOrSlug);
-  const place = mapPlaceDetailsToPlaceDetail(placeDetails);
+  const coreData = await getPlaceCoreSectionData(placeIdOrSlug);
+  const place = coreData.place;
   return {
     contactDetail: place.contactDetail,
     amenities: place.amenities,

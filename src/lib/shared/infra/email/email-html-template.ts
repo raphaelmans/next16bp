@@ -3,7 +3,7 @@
  * Design tokens match the auth templates (supabase/templates/magic_link.html).
  */
 
-interface EmailTemplateParams {
+export interface EmailTemplateParams {
   preheader: string;
   headerSubtitle: string;
   title: string;
@@ -14,6 +14,10 @@ interface EmailTemplateParams {
     label: string;
     color: "success" | "destructive" | "warning";
   };
+  greeting?: string;
+  detailRows?: { label: string; value: string }[];
+  footerNote?: string;
+  secondaryText?: string;
 }
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
@@ -43,6 +47,10 @@ export function renderBrandedEmailHtml(params: EmailTemplateParams): string {
     ctaText,
     ctaUrl,
     statusBadge,
+    greeting,
+    detailRows,
+    footerNote,
+    secondaryText,
   } = params;
 
   const badgeHtml = statusBadge
@@ -94,6 +102,34 @@ export function renderBrandedEmailHtml(params: EmailTemplateParams): string {
             </p>`
       : "";
 
+  const greetingHtml = greeting
+    ? `<p style="margin:0 0 4px 0; font-size:15px; line-height:1.6; color:#57534E;">${escapeHtml(greeting)}</p>`
+    : "";
+
+  const detailRowsHtml =
+    detailRows && detailRows.length > 0
+      ? `
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:16px 0 0 0; border:1px solid #E7E5E4; border-radius:8px; border-collapse:separate; overflow:hidden;">
+              ${detailRows
+                .map(
+                  (row, i) =>
+                    `<tr>
+                  <td style="padding:10px 14px; font-family:${FONT_BODY}; font-size:13px; font-weight:600; color:#78716C; white-space:nowrap; width:1%;${i > 0 ? " border-top:1px solid #E7E5E4;" : ""}">${escapeHtml(row.label)}</td>
+                  <td style="padding:10px 14px; font-family:${FONT_BODY}; font-size:14px; color:#1A1917;${i > 0 ? " border-top:1px solid #E7E5E4;" : ""}">${escapeHtml(row.value)}</td>
+                </tr>`,
+                )
+                .join("\n              ")}
+            </table>`
+      : "";
+
+  const footerNoteHtml = footerNote
+    ? `<p style="margin:16px 0 0 0; font-size:13px; line-height:1.5; color:#57534E;">${escapeHtml(footerNote)}</p>`
+    : "";
+
+  const secondaryTextHtml = secondaryText
+    ? `<p style="margin:8px 0 0 0; font-size:12px; line-height:1.5; color:#A8A29E;">${escapeHtml(secondaryText)}</p>`
+    : "";
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -136,12 +172,16 @@ export function renderBrandedEmailHtml(params: EmailTemplateParams): string {
           <!-- Body -->
           <tr>
             <td style="padding:24px; font-family:${FONT_BODY}; color:#1A1917;">
+              ${greetingHtml}
               <h1 style="margin:0 0 16px 0; font-family:${FONT_HEADING}; font-size:20px; font-weight:700; line-height:1.25; letter-spacing:-0.02em; color:#1A1917;">
                 ${escapeHtml(title)}
               </h1>
               ${badgeHtml}
               ${bodyHtml}
+              ${detailRowsHtml}
               ${ctaHtml}
+              ${footerNoteHtml}
+              ${secondaryTextHtml}
             </td>
           </tr>
         </table>

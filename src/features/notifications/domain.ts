@@ -116,6 +116,22 @@ export function getNotificationBellPermissionLabel(input: {
   return "Off";
 }
 
+export type NotificationBellIconVariant = "bell" | "bell-ring" | "bell-off";
+
+export function getNotificationBellIconVariant(input: {
+  enabledOnThisDevice: boolean;
+}): NotificationBellIconVariant {
+  return input.enabledOnThisDevice ? "bell-ring" : "bell-off";
+}
+
+export function getNotificationBellBadgeCount(
+  unreadCount: number | null | undefined,
+): string | null {
+  if (!unreadCount || unreadCount <= 0) return null;
+  if (unreadCount > 99) return "99+";
+  return String(unreadCount);
+}
+
 export function getWebPushSettingsStatusLabel(input: {
   supported: boolean;
   configured: boolean;

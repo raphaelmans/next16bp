@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { appRoutes } from "@/common/app-routes";
 import { trackEvent } from "@/common/clients/telemetry-client";
+import { useDebouncedValue } from "@/common/hooks/use-debounced-value";
 import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
@@ -1008,33 +1009,21 @@ function ClaimSearchDialog({
   onSearchQueryChange: (query: string) => void;
 }) {
   const normalizedSearchQuery = searchQuery.trim();
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(
-    normalizedSearchQuery,
-  );
-  const isReadyToSearch = normalizedSearchQuery.length >= 2;
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setDebouncedSearchQuery(normalizedSearchQuery);
-    }, 300);
-
-    return () => window.clearTimeout(timer);
-  }, [normalizedSearchQuery]);
+  const debouncedSearchQuery = useDebouncedValue(normalizedSearchQuery, 2000);
 
   const { data: searchResults, isLoading: searching } =
     useQueryOwnerClaimablePlaces(
       {
-        q: debouncedSearchQuery,
+        q: debouncedSearchQuery || undefined,
         verificationTier: "curated",
         limit: 10,
       },
       {
-        enabled: open && debouncedSearchQuery.length >= 2,
+        enabled: open,
       },
     );
 
-  const isDebouncing =
-    isReadyToSearch && debouncedSearchQuery !== normalizedSearchQuery;
+  const isDebouncing = debouncedSearchQuery !== normalizedSearchQuery;
   const isSearching = searching || isDebouncing;
 
   const submitClaimMutation = useMutOwnerSubmitClaim({
@@ -1086,56 +1075,48 @@ function ClaimSearchDialog({
             />
           </div>
 
-          {isReadyToSearch && (
-            <ScrollArea className="h-[min(50dvh,24rem)] w-full rounded-md border">
-              {isSearching ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                </div>
-              ) : unclaimedResults.length === 0 ? (
-                <p className="text-center text-sm text-muted-foreground py-8">
-                  No unclaimed venues found. Try a different search or add a new
-                  venue instead.
-                </p>
-              ) : (
-                <div className="space-y-2 p-2">
-                  {unclaimedResults.map((item) => (
-                    <div
-                      key={item.place.id}
-                      className="flex items-start justify-between gap-3 rounded-lg border p-3"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium break-words">
-                          {item.place.name}
-                        </p>
-                        <p className="text-sm text-muted-foreground break-words">
-                          {item.place.city}, {item.place.province}
-                        </p>
-                      </div>
-                      <Button
-                        size="sm"
-                        className="shrink-0"
-                        onClick={() => handleSubmitClaim(item.place.id)}
-                        disabled={submitClaimMutation.isPending}
-                      >
-                        {submitClaimMutation.isPending ? (
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                        ) : (
-                          "Claim"
-                        )}
-                      </Button>
+          <ScrollArea className="h-[min(50dvh,24rem)] w-full rounded-md border">
+            {isSearching ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : unclaimedResults.length === 0 ? (
+              <p className="text-center text-sm text-muted-foreground py-8">
+                No unclaimed venues found. Try a different search or add a new
+                venue instead.
+              </p>
+            ) : (
+              <div className="space-y-2 p-2">
+                {unclaimedResults.map((item) => (
+                  <div
+                    key={item.place.id}
+                    className="flex items-start justify-between gap-3 rounded-lg border p-3"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium break-words">
+                        {item.place.name}
+                      </p>
+                      <p className="text-sm text-muted-foreground break-words">
+                        {item.place.city}, {item.place.province}
+                      </p>
                     </div>
-                  ))}
-                </div>
-              )}
-            </ScrollArea>
-          )}
-
-          {!isReadyToSearch && (
-            <p className="text-center text-sm text-muted-foreground py-4">
-              Enter at least 2 characters to search.
-            </p>
-          )}
+                    <Button
+                      size="sm"
+                      className="shrink-0"
+                      onClick={() => handleSubmitClaim(item.place.id)}
+                      disabled={submitClaimMutation.isPending}
+                    >
+                      {submitClaimMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        "Claim"
+                      )}
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </ScrollArea>
         </div>
       </DialogContent>
     </Dialog>

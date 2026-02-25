@@ -310,7 +310,7 @@ function OwnerAvailabilityStudioInner() {
 
   // Guest search debounce
   React.useEffect(() => {
-    const timer = setTimeout(() => setDebouncedGuestSearch(guestSearch), 300);
+    const timer = setTimeout(() => setDebouncedGuestSearch(guestSearch), 2000);
     return () => clearTimeout(timer);
   }, [guestSearch, setDebouncedGuestSearch]);
 

@@ -35,6 +35,7 @@ import { ReservationExpired } from "@/features/reservation/components/reservatio
 import { TermsCheckbox } from "@/features/reservation/components/terms-checkbox";
 import {
   useModReservationPostPaymentWarmup,
+  useModReservationRealtimePlayerStream,
   useMutAddPaymentProof,
   useMutMarkPayment,
   useMutMarkPaymentGroup,
@@ -83,6 +84,16 @@ export default function PaymentPage({
     reservationGroupId ?? "",
   );
   const isGroupPayment = Boolean(reservationGroupId && groupData);
+  const realtimeReservationIds = [
+    reservationId,
+    ...(groupData?.items.map((item) => item.reservationId) ?? []),
+  ];
+
+  useModReservationRealtimePlayerStream({
+    enabled: realtimeReservationIds.length > 0,
+    reservationIds: realtimeReservationIds,
+  });
+
   const markPaymentGroup = useMutMarkPaymentGroup();
 
   const payableAwaitingItems = useMemo(() => {

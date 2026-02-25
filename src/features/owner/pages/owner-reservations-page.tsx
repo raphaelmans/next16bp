@@ -57,6 +57,7 @@ import {
   useModOwnerCourtFilter,
   useModOwnerInvalidation,
   useModOwnerPlaceFilter,
+  useModOwnerReservationRealtimeStream,
   useModOwnerReservations,
   useMutAcceptReservation,
   useMutConfirmReservation,
@@ -193,6 +194,11 @@ export default function OwnerReservationsPage() {
       refetchIntervalMs: OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
     },
   );
+
+  useModOwnerReservationRealtimeStream({
+    enabled: Boolean(organization?.id),
+  });
+
   const acceptMutation = useMutAcceptReservation();
   const confirmMutation = useMutConfirmReservation();
   const rejectMutation = useMutRejectReservation();

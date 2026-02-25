@@ -37,6 +37,7 @@ import { pushSubscriptionRouter } from "@/lib/modules/push-subscription/push-sub
 import { reservationRouter } from "@/lib/modules/reservation/reservation.router";
 import { reservationOwnerRouter } from "@/lib/modules/reservation/reservation-owner.router";
 import { sportRouter } from "@/lib/modules/sport/sport.router";
+import { userNotificationRouter } from "@/lib/modules/user-notification/user-notification.router";
 import { userPreferenceRouter } from "@/lib/modules/user-preference/user-preference.router";
 import { router } from "./trpc";
 
@@ -78,6 +79,7 @@ export const appRouter = router({
   reservationOwner: reservationOwnerRouter,
   openPlay: openPlayRouter,
   pushSubscription: pushSubscriptionRouter,
+  userNotification: userNotificationRouter,
   userPreference: userPreferenceRouter,
   admin: router({
     claim: claimAdminRouter,

@@ -1,0 +1,129 @@
+import { describe, expect, it } from "vitest";
+import { buildNotificationContent } from "@/lib/modules/notification-delivery/shared/domain";
+
+describe("notification content reservation links", () => {
+  it("uses the payment route for awaiting payment events", () => {
+    const content = buildNotificationContent(
+      "reservation.awaiting_payment",
+      {
+        reservationId: "res-1",
+        placeName: "Place A",
+        courtLabel: "Court 1",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T09:00:00.000Z",
+        totalPriceCents: 1200,
+        currency: "PHP",
+      },
+      "",
+    );
+
+    if ("error" in content) {
+      throw new Error(content.error);
+    }
+
+    expect(content.push.url).toBe("/reservations/res-1/payment");
+  });
+
+  it("uses the detail route for confirmed events", () => {
+    const content = buildNotificationContent(
+      "reservation.confirmed",
+      {
+        reservationId: "res-1",
+        placeName: "Place A",
+        courtLabel: "Court 1",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T09:00:00.000Z",
+      },
+      "",
+    );
+
+    if ("error" in content) {
+      throw new Error(content.error);
+    }
+
+    expect(content.push.url).toBe("/reservations/res-1");
+  });
+
+  it("uses status-aware routes for reservation group events", () => {
+    const awaitingContent = buildNotificationContent(
+      "reservation_group.awaiting_payment",
+      {
+        reservationGroupId: "grp-1",
+        representativeReservationId: "res-1",
+        placeName: "Place A",
+        courtLabel: "2 courts",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T11:00:00.000Z",
+        totalPriceCents: 3000,
+        currency: "PHP",
+        itemCount: 2,
+        items: [
+          {
+            reservationId: "res-1",
+            courtId: "court-1",
+            courtLabel: "Court 1",
+            startTimeIso: "2026-03-01T08:00:00.000Z",
+            endTimeIso: "2026-03-01T09:00:00.000Z",
+            totalPriceCents: 1200,
+            currency: "PHP",
+          },
+          {
+            reservationId: "res-2",
+            courtId: "court-2",
+            courtLabel: "Court 2",
+            startTimeIso: "2026-03-01T10:00:00.000Z",
+            endTimeIso: "2026-03-01T11:00:00.000Z",
+            totalPriceCents: 1800,
+            currency: "PHP",
+          },
+        ],
+      },
+      "",
+    );
+
+    if ("error" in awaitingContent) {
+      throw new Error(awaitingContent.error);
+    }
+
+    const confirmedContent = buildNotificationContent(
+      "reservation_group.confirmed",
+      {
+        reservationGroupId: "grp-1",
+        representativeReservationId: "res-1",
+        placeName: "Place A",
+        courtLabel: "2 courts",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T11:00:00.000Z",
+        itemCount: 2,
+        items: [
+          {
+            reservationId: "res-1",
+            courtId: "court-1",
+            courtLabel: "Court 1",
+            startTimeIso: "2026-03-01T08:00:00.000Z",
+            endTimeIso: "2026-03-01T09:00:00.000Z",
+            totalPriceCents: 1200,
+            currency: "PHP",
+          },
+          {
+            reservationId: "res-2",
+            courtId: "court-2",
+            courtLabel: "Court 2",
+            startTimeIso: "2026-03-01T10:00:00.000Z",
+            endTimeIso: "2026-03-01T11:00:00.000Z",
+            totalPriceCents: 1800,
+            currency: "PHP",
+          },
+        ],
+      },
+      "",
+    );
+
+    if ("error" in confirmedContent) {
+      throw new Error(confirmedContent.error);
+    }
+
+    expect(awaitingContent.push.url).toBe("/reservations/res-1/payment");
+    expect(confirmedContent.push.url).toBe("/reservations/res-1");
+  });
+});
