@@ -40,6 +40,16 @@ function verifyQueueTriggerAuth(request: NextRequest, body: string) {
     return { ok: true as const };
   }
 
+  logger.warn(
+    {
+      event: "notification_delivery.queue_trigger_auth_debug",
+      reason: verification.reason,
+      expectedUrl,
+      hasSignature: Boolean(signature),
+    },
+    "QStash auth verification failed — URL mismatch debug",
+  );
+
   const isDevelopmentLike =
     process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test";
   const cronSecret = process.env.CRON_SECRET;
