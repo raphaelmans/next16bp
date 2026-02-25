@@ -102,6 +102,7 @@ import {
 import { useIs2xlUp } from "@/features/owner/components/booking-studio/use-is-2xl-up";
 import { useManageBlock } from "@/features/owner/components/booking-studio/use-manage-block";
 import { WeekDayColumn } from "@/features/owner/components/booking-studio/week-day-column";
+import { CourtPageNav } from "@/features/owner/components/court-page-nav";
 import { AvailabilityEnablementAlerts } from "@/features/owner/components/place-court-availability/availability-enablement-alerts";
 import { OwnerCourtAvailabilityLoadingState } from "@/features/owner/components/place-court-availability/owner-court-availability-loading-state";
 import {
@@ -1347,15 +1348,14 @@ function OwnerCourtAvailabilityInner({
     >
       <div className="space-y-6 pb-24 lg:pb-0">
         <PageHeader
-          title="Availability"
-          description={courtData.court.label}
+          title={courtData.court.label}
           breadcrumbs={[
             { label: "My Venues", href: appRoutes.owner.places.base },
             {
               label: placeData.place.name,
               href: appRoutes.owner.places.courts.base(placeId),
             },
-            { label: "Availability" },
+            { label: courtData.court.label },
           ]}
           breadcrumbClassName="hidden sm:block"
           backHref={appRoutes.owner.places.courts.base(placeId)}
@@ -1386,6 +1386,8 @@ function OwnerCourtAvailabilityInner({
           }
           actionsClassName="flex-col sm:flex-row w-full sm:w-auto"
         />
+
+        <CourtPageNav placeId={placeId} courtId={courtId} />
 
         <AvailabilityEnablementAlerts
           showVerificationBanner={showVerificationBanner}

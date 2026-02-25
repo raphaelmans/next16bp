@@ -5,7 +5,11 @@ import type { IOrganizationRepository } from "@/lib/modules/organization/reposit
 import type { IOrganizationPaymentMethodRepository } from "@/lib/modules/organization-payment/repositories/organization-payment-method.repository";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
-import { STORAGE_BUCKETS } from "@/lib/modules/storage/dtos";
+import {
+  ALLOWED_VERIFICATION_DOCUMENT_TYPES,
+  MAX_VERIFICATION_DOCUMENT_SIZE,
+  STORAGE_BUCKETS,
+} from "@/lib/modules/storage/dtos";
 import type { IObjectStorageService } from "@/lib/modules/storage/services/object-storage.service";
 import type { PlaceRecord } from "@/lib/shared/infra/db/schema";
 import { logger } from "@/lib/shared/infra/logger";
@@ -161,6 +165,8 @@ export class PlaceVerificationService implements IPlaceVerificationService {
             path,
             file,
             upsert: false,
+            allowedTypes: ALLOWED_VERIFICATION_DOCUMENT_TYPES,
+            maxSize: MAX_VERIFICATION_DOCUMENT_SIZE,
           });
 
           return {

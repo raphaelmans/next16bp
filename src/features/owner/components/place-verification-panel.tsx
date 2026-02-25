@@ -346,10 +346,10 @@ export function PlaceVerificationPanel({
                     key={doc.id}
                     className="flex items-center justify-between gap-3 rounded-lg border px-3 py-2"
                   >
-                    <div className="flex items-center gap-2 text-sm">
-                      <FileText className="h-4 w-4 text-muted-foreground" />
-                      <div>
-                        <div className="font-medium text-foreground">
+                    <div className="flex min-w-0 items-center gap-2 text-sm">
+                      <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+                      <div className="min-w-0">
+                        <div className="truncate font-medium text-foreground">
                           {doc.file.name}
                         </div>
                         <div className="text-xs text-muted-foreground">

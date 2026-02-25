@@ -239,7 +239,7 @@ export default function OwnerGetStartedPage() {
           {isSetupComplete && isVenueVerified && (
             <Card className="border-primary/20 bg-primary/5">
               <CardContent className="p-6">
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <PartyPopper className="h-6 w-6" />
                   </div>
@@ -252,7 +252,7 @@ export default function OwnerGetStartedPage() {
                       KudosCourts.
                     </p>
                   </div>
-                  <Button asChild>
+                  <Button asChild className="w-full sm:w-auto">
                     <Link href={appRoutes.owner.bookings}>
                       Manage reservations
                       <ArrowRight className="ml-2 h-4 w-4" />

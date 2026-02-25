@@ -107,6 +107,7 @@ function timeToMinute(value: string) {
 
 function createDefaultGroup(): AddonRuleGroup {
   return {
+    _id: crypto.randomUUID(),
     days: [1],
     startMinute: 540,
     endMinute: 600,
@@ -836,10 +837,7 @@ export function CourtAddonEditor({
                               {addon.groups.map((group, groupIndex) => {
                                 const hasEmptyDays = group.days.length === 0;
                                 return (
-                                  <div
-                                    key={`${group.startMinute}-${group.endMinute}-${group.hourlyRateCents ?? "flat"}`}
-                                    className="space-y-1"
-                                  >
+                                  <div key={group._id} className="space-y-1">
                                     <div className="grid gap-2 rounded-lg border bg-card p-2 md:grid-cols-[auto_1fr_1fr_1fr_36px] md:rounded-none md:border-0 md:bg-transparent md:p-0">
                                       <div className="flex flex-col gap-1">
                                         <DayPills

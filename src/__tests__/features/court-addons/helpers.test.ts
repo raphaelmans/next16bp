@@ -26,6 +26,7 @@ function makeRule(
 
 function makeGroup(overrides: Partial<AddonRuleGroup> = {}): AddonRuleGroup {
   return {
+    _id: overrides._id ?? crypto.randomUUID(),
     days: overrides.days ?? [1],
     startMinute: overrides.startMinute ?? 540,
     endMinute: overrides.endMinute ?? 1320,

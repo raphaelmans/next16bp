@@ -127,8 +127,6 @@ interface OwnerCourt {
   tierLabel?: string | null;
   coverImageUrl?: string;
   status: "active" | "inactive";
-  openSlots: number;
-  totalSlots: number;
   createdAt: Date | string;
   isActive: boolean;
 }
@@ -179,8 +177,6 @@ const mapOwnerCourt = (
   tierLabel: court.court.tierLabel,
   coverImageUrl: undefined,
   status: court.court.isActive ? "active" : "inactive",
-  openSlots: 0,
-  totalSlots: 0,
   createdAt: court.court.createdAt,
   isActive: court.court.isActive,
 });

@@ -48,7 +48,7 @@ export function computeSportSelection(): Partial<TimeSlotContext> {
   return {
     courtId: null,
     startTime: null,
-    mode: "any" as SelectionMode,
+    mode: "court" as SelectionMode,
     viewMode: "week" as ViewMode,
     lastAddedSnapshot: null,
   };

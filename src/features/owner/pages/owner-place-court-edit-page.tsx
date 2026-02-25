@@ -11,7 +11,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
-import { CourtForm, ReservationAlertsPanel } from "@/features/owner/components";
+import {
+  CourtForm,
+  CourtPageNav,
+  ReservationAlertsPanel,
+} from "@/features/owner/components";
 import {
   useModCourtForm,
   useQueryOwnerCourtById,
@@ -136,8 +140,7 @@ export default function EditPlaceCourtPage({
     >
       <div className="space-y-6">
         <PageHeader
-          title={`Edit Court · ${courtData.court.label}`}
-          description="Update court details and pricing tier"
+          title={courtData.court.label}
           breadcrumbs={[
             { label: "My Venues", href: appRoutes.owner.places.base },
             {
@@ -145,10 +148,11 @@ export default function EditPlaceCourtPage({
               href: appRoutes.owner.places.courts.base(placeId),
             },
             { label: courtData.court.label },
-            { label: "Edit" },
           ]}
           backHref={appRoutes.owner.places.courts.base(placeId)}
         />
+
+        <CourtPageNav placeId={placeId} courtId={courtId} />
 
         <CourtForm
           defaultValues={defaultValues}

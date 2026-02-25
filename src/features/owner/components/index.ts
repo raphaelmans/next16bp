@@ -3,6 +3,7 @@ export { ConfirmDialog } from "./confirm-dialog";
 export { CourtAddonEditor } from "./court-addon-editor";
 export { CourtForm } from "./court-form";
 export { CourtHoursEditor } from "./court-hours-editor";
+export { CourtPageNav } from "./court-page-nav";
 export { CourtPricingEditor } from "./court-pricing-editor";
 export { CourtScheduleEditor } from "./court-schedule-editor";
 export { CourtsEmptyState } from "./courts-empty-state";

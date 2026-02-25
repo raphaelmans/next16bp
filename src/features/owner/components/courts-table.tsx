@@ -53,11 +53,6 @@ export function CourtsTable({
 }: CourtsTableProps) {
   const router = useRouter();
 
-  const formatSlots = (court: OwnerCourt) => {
-    if (court.totalSlots <= 0) return "—";
-    return `${court.openSlots}/${court.totalSlots}`;
-  };
-
   const handleRowClick = (courtId: string, placeId: string) => {
     router.push(appRoutes.owner.places.courts.edit(placeId, courtId));
   };
@@ -73,7 +68,6 @@ export function CourtsTable({
               <TableHead>Name</TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="text-right">Open Slots</TableHead>
               <TableHead className="w-[50px]" />
             </TableRow>
           </TableHeader>
@@ -119,9 +113,6 @@ export function CourtsTable({
                   >
                     {court.status}
                   </Badge>
-                </TableCell>
-                <TableCell className="text-right">
-                  {formatSlots(court)}
                 </TableCell>
                 <TableCell
                   onClick={(event) => event.stopPropagation()}
@@ -191,9 +182,6 @@ export function CourtsTable({
                     >
                       {court.status}
                     </Badge>
-                    <span className="text-sm text-muted-foreground">
-                      {formatSlots(court)} slots
-                    </span>
                   </div>
                 </div>
               </div>

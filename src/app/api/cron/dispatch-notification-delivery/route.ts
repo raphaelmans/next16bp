@@ -10,6 +10,7 @@ import { PushSubscriptionRepository } from "@/lib/modules/push-subscription/repo
 import { getContainer } from "@/lib/shared/infra/container";
 import { verifyCronAuth } from "@/lib/shared/infra/cron/cron-auth";
 import { makeEmailService } from "@/lib/shared/infra/email/email.factory";
+import { renderBrandedEmailHtml } from "@/lib/shared/infra/email/email-html-template";
 import { makeExpoPushService } from "@/lib/shared/infra/expo-push/expo-push.factory";
 import { ExpoPushError } from "@/lib/shared/infra/expo-push/expo-push-service";
 import { logger } from "@/lib/shared/infra/logger";
@@ -330,7 +331,23 @@ const buildVerificationMessages = (
   const emailText = lines.join("\n");
   const smsText = `KudosCourts: New verification request for ${payload.placeName}. Request ID: ${payload.requestId}. Log in to review.`;
 
-  return { subject, emailText, smsText };
+  const emailHtml = renderBrandedEmailHtml({
+    preheader: `New verification request for ${payload.placeName}`,
+    headerSubtitle: "Verification Request",
+    title: "New venue verification request",
+    bodyLines: [
+      `Place: ${payload.placeName}`,
+      payload.organizationName
+        ? `Organization: ${payload.organizationName}`
+        : `Organization ID: ${payload.organizationId}`,
+      `Requested by: ${payload.requestedByUserId}`,
+      payload.requestNotes ? `Notes: ${payload.requestNotes}` : "Notes: (none)",
+    ],
+    ctaText: "Review Request",
+    ctaUrl: reviewUrl,
+  });
+
+  return { subject, emailText, smsText, emailHtml };
 };
 
 const buildReservationCreatedMessages = (
@@ -371,7 +388,31 @@ const buildReservationCreatedMessages = (
   const emailText = lines.join("\n");
   const smsText = `KudosCourts: New reservation at ${payload.placeName} (${payload.courtLabel}) on ${payload.startTimeIso}. Reservation ID: ${payload.reservationId}. Log in to review.`;
 
-  return { subject, emailText, smsText };
+  const emailHtml = renderBrandedEmailHtml({
+    preheader: `New reservation at ${payload.placeName}`,
+    headerSubtitle: "New Reservation",
+    title: `New reservation at ${payload.placeName}`,
+    bodyLines: [
+      `Court: ${payload.courtLabel}`,
+      `Start: ${payload.startTimeIso}`,
+      `End: ${payload.endTimeIso}`,
+      `Player: ${payload.playerName}`,
+      payload.playerEmail
+        ? `Player Email: ${payload.playerEmail}`
+        : "Player Email: (none)",
+      payload.playerPhone
+        ? `Player Phone: ${payload.playerPhone}`
+        : "Player Phone: (none)",
+      `Total: ${toLocalCurrency(payload.totalPriceCents, payload.currency)}`,
+      payload.expiresAtIso
+        ? `Owner response due: ${payload.expiresAtIso}`
+        : "Owner response due: (not set)",
+    ],
+    ctaText: "Review Reservation",
+    ctaUrl: reservationUrl,
+  });
+
+  return { subject, emailText, smsText, emailHtml };
 };
 
 const buildReservationGroupCreatedMessages = (
@@ -412,7 +453,31 @@ const buildReservationGroupCreatedMessages = (
   const emailText = lines.join("\n");
   const smsText = `KudosCourts: New booking group at ${payload.placeName} (${payload.itemCount} items). Group ID: ${payload.reservationGroupId}. Log in to review.`;
 
-  return { subject, emailText, smsText };
+  const emailHtml = renderBrandedEmailHtml({
+    preheader: `New booking group at ${payload.placeName} (${payload.itemCount} items)`,
+    headerSubtitle: "New Booking Group",
+    title: `New booking group at ${payload.placeName}`,
+    bodyLines: [
+      `Items: ${payload.itemCount}`,
+      `Start: ${payload.startTimeIso}`,
+      `End: ${payload.endTimeIso}`,
+      `Player: ${payload.playerName}`,
+      payload.playerEmail
+        ? `Player Email: ${payload.playerEmail}`
+        : "Player Email: (none)",
+      payload.playerPhone
+        ? `Player Phone: ${payload.playerPhone}`
+        : "Player Phone: (none)",
+      `Total: ${toLocalCurrency(payload.totalPriceCents, payload.currency)}`,
+      payload.expiresAtIso
+        ? `Owner response due: ${payload.expiresAtIso}`
+        : "Owner response due: (not set)",
+    ],
+    ctaText: "Review Booking Group",
+    ctaUrl: reservationUrl,
+  });
+
+  return { subject, emailText, smsText, emailHtml };
 };
 
 const buildVerificationReviewedMessages = (
@@ -438,7 +503,26 @@ const buildVerificationReviewedMessages = (
   const emailText = lines.join("\n");
   const smsText = `KudosCourts: Verification ${statusLabel} for ${payload.placeName}. Request ID: ${payload.requestId}. Log in for details.`;
 
-  return { subject, emailText, smsText };
+  const isApproved = payload.status === "APPROVED";
+  const emailHtml = renderBrandedEmailHtml({
+    preheader: `Venue verification ${statusLabel} for ${payload.placeName}`,
+    headerSubtitle: "Venue Verification",
+    title: isApproved
+      ? "Your venue has been verified!"
+      : "Your venue needs updates",
+    statusBadge: {
+      label: isApproved ? "Approved" : "Needs Updates",
+      color: isApproved ? "success" : "destructive",
+    },
+    bodyLines: [
+      `Place: ${payload.placeName}`,
+      payload.reviewNotes ? `Notes: ${payload.reviewNotes}` : "Notes: (none)",
+    ],
+    ctaText: "View Details",
+    ctaUrl: verifyUrl,
+  });
+
+  return { subject, emailText, smsText, emailHtml };
 };
 
 const buildClaimReviewedMessages = (
@@ -466,7 +550,24 @@ const buildClaimReviewedMessages = (
   const emailText = lines.join("\n");
   const smsText = `KudosCourts: Ownership claim ${statusLabel} for ${payload.placeName}. Request ID: ${payload.requestId}. Log in for details.`;
 
-  return { subject, emailText, smsText };
+  const isApproved = payload.status === "APPROVED";
+  const emailHtml = renderBrandedEmailHtml({
+    preheader: `Ownership claim ${statusLabel} for ${payload.placeName}`,
+    headerSubtitle: "Ownership Claim",
+    title: `Your claim has been ${statusLabel}`,
+    statusBadge: {
+      label: isApproved ? "Approved" : "Rejected",
+      color: isApproved ? "success" : "destructive",
+    },
+    bodyLines: [
+      `Place: ${payload.placeName}`,
+      payload.reviewNotes ? `Notes: ${payload.reviewNotes}` : "Notes: (none)",
+    ],
+    ctaText: "Manage Venues",
+    ctaUrl: ownerPlacesUrl,
+  });
+
+  return { subject, emailText, smsText, emailHtml };
 };
 
 export async function GET(request: NextRequest) {
@@ -661,6 +762,7 @@ export async function GET(request: NextRequest) {
 
       let subject: string | null = null;
       let emailText: string | null = null;
+      let emailHtml: string | null = null;
       let smsText: string | null = null;
       let pushTitle: string | null = null;
       let pushBody: string | null = null;
@@ -685,6 +787,7 @@ export async function GET(request: NextRequest) {
         const messages = buildVerificationMessages(parsed.data, appUrl);
         subject = messages.subject;
         emailText = messages.emailText;
+        emailHtml = messages.emailHtml;
         smsText = messages.smsText;
         pushTitle = "New venue verification request";
         pushBody = `${parsed.data.placeName} needs review`;
@@ -710,6 +813,7 @@ export async function GET(request: NextRequest) {
         const messages = buildReservationCreatedMessages(parsed.data, appUrl);
         subject = messages.subject;
         emailText = messages.emailText;
+        emailHtml = messages.emailHtml;
         smsText = messages.smsText;
         pushTitle = "New reservation";
         pushBody = `${parsed.data.placeName} (${parsed.data.courtLabel})`;
@@ -736,6 +840,7 @@ export async function GET(request: NextRequest) {
         );
         subject = messages.subject;
         emailText = messages.emailText;
+        emailHtml = messages.emailHtml;
         smsText = messages.smsText;
         pushTitle = "New booking group";
         pushBody = `${parsed.data.placeName} (${parsed.data.itemCount} items)`;
@@ -764,6 +869,7 @@ export async function GET(request: NextRequest) {
         const messages = buildVerificationReviewedMessages(parsed.data, appUrl);
         subject = messages.subject;
         emailText = messages.emailText;
+        emailHtml = messages.emailHtml;
         smsText = messages.smsText;
         const statusLabel =
           parsed.data.status === "APPROVED" ? "approved" : "rejected";
@@ -792,6 +898,7 @@ export async function GET(request: NextRequest) {
         const messages = buildClaimReviewedMessages(parsed.data, appUrl);
         subject = messages.subject;
         emailText = messages.emailText;
+        emailHtml = messages.emailHtml;
         smsText = messages.smsText;
         const statusLabel =
           parsed.data.status === "APPROVED" ? "approved" : "rejected";
@@ -1044,6 +1151,7 @@ export async function GET(request: NextRequest) {
             to: job.target,
             subject,
             text: emailText,
+            ...(emailHtml ? { html: emailHtml } : {}),
             headers: {
               "Idempotency-Key": job.idempotencyKey,
             },

@@ -9,6 +9,7 @@ import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
   CourtAddonEditor,
+  CourtPageNav,
   CourtScheduleEditor,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
@@ -101,18 +102,19 @@ export default function CourtSchedulePage({
     >
       <div className="space-y-6">
         <PageHeader
-          title={`Schedule & Pricing · ${courtData.court.label}`}
-          description="Define open hours and pricing blocks for each day"
+          title={courtData.court.label}
           breadcrumbs={[
             { label: "My Venues", href: appRoutes.owner.places.base },
             {
               label: placeData.place.name,
               href: appRoutes.owner.places.courts.base(placeId),
             },
-            { label: "Schedule" },
+            { label: courtData.court.label },
           ]}
           backHref={appRoutes.owner.places.courts.base(placeId)}
         />
+
+        <CourtPageNav placeId={placeId} courtId={courtId} />
 
         <CourtScheduleEditor
           courtId={courtId}

@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/common/format";
 import type {
   CourtAddonForm,
   CourtAddonRuleForm,
@@ -6,6 +7,7 @@ import type {
 
 // UI-layer only — never serialized to DB or API
 export type AddonRuleGroup = {
+  _id: string;
   days: number[];
   startMinute: number;
   endMinute: number;
@@ -29,6 +31,7 @@ export function collapseRulesToGroups(
       existing.days.push(rule.dayOfWeek);
     } else {
       groupMap.set(key, {
+        _id: crypto.randomUUID(),
         days: [rule.dayOfWeek],
         startMinute: rule.startMinute,
         endMinute: rule.endMinute,
@@ -186,9 +189,27 @@ export function sanitizeSelectedAddons(
 
 export function formatAddonPricingHint(config: CourtAddonConfig) {
   if (config.addon.pricingType === "FLAT") {
+    if (config.addon.flatFeeCents != null && config.addon.flatFeeCents > 0) {
+      return `${formatCurrency(config.addon.flatFeeCents)} per booking`;
+    }
     return "Charged once per booking";
   }
-  return "Charged per booked hour";
+
+  const rates = config.rules
+    .map((r) => r.hourlyRateCents)
+    .filter((c): c is number => c != null && c > 0);
+
+  if (rates.length === 0) {
+    return "Charged per booked hour";
+  }
+
+  const min = Math.min(...rates);
+  const max = Math.max(...rates);
+
+  if (min === max) {
+    return `${formatCurrency(min)}/hr`;
+  }
+  return `From ${formatCurrency(min)}/hr`;
 }
 
 function compareAddonConfigsByDisplayOrder(
