@@ -300,7 +300,7 @@ export default function OwnerGetStartedPage() {
                   title="Add a payment method"
                   description="Add at least one payment method so reservations can be enabled for public booking."
                   actionLabel="Manage payment methods"
-                  actionHref={`${appRoutes.owner.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`}
+                  actionHref={`${appRoutes.owner.settings}?from=setup${SETTINGS_SECTION_HASHES.paymentMethods}`}
                 />
               ) : null}
 

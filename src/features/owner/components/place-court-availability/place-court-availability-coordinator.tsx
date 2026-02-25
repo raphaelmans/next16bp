@@ -1296,7 +1296,7 @@ function OwnerCourtAvailabilityInner({
     ? courtRateRulesQuery.data.length > 0
     : null;
   const hasPaymentMethods = paymentMethodsQuery.data
-    ? paymentMethodsQuery.data.methods.length > 0
+    ? paymentMethodsQuery.data.methods.some((method) => method.isActive)
     : null;
   const enablement = getReservationEnablement({
     placeType: placeData.place.placeType,

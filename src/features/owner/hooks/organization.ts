@@ -27,9 +27,12 @@ export function useMutCreateOrganizationPaymentMethod(organizationId: string) {
   const utils = trpc.useUtils();
   return useFeatureMutation(ownerApi.mutOrganizationPaymentCreateMethod, {
     onSuccess: async () => {
-      await utils.organizationPayment.listMethods.invalidate({
-        organizationId,
-      });
+      await Promise.all([
+        utils.organizationPayment.listMethods.invalidate({
+          organizationId,
+        }),
+        utils.ownerSetup.getStatus.invalidate(),
+      ]);
     },
   });
 }
@@ -38,9 +41,12 @@ export function useMutUpdateOrganizationPaymentMethod(organizationId: string) {
   const utils = trpc.useUtils();
   return useFeatureMutation(ownerApi.mutOrganizationPaymentUpdateMethod, {
     onSuccess: async () => {
-      await utils.organizationPayment.listMethods.invalidate({
-        organizationId,
-      });
+      await Promise.all([
+        utils.organizationPayment.listMethods.invalidate({
+          organizationId,
+        }),
+        utils.ownerSetup.getStatus.invalidate(),
+      ]);
     },
   });
 }
@@ -49,9 +55,12 @@ export function useMutDeleteOrganizationPaymentMethod(organizationId: string) {
   const utils = trpc.useUtils();
   return useFeatureMutation(ownerApi.mutOrganizationPaymentDeleteMethod, {
     onSuccess: async () => {
-      await utils.organizationPayment.listMethods.invalidate({
-        organizationId,
-      });
+      await Promise.all([
+        utils.organizationPayment.listMethods.invalidate({
+          organizationId,
+        }),
+        utils.ownerSetup.getStatus.invalidate(),
+      ]);
     },
   });
 }
@@ -62,9 +71,12 @@ export function useMutSetDefaultOrganizationPaymentMethod(
   const utils = trpc.useUtils();
   return useFeatureMutation(ownerApi.mutOrganizationPaymentSetDefault, {
     onSuccess: async () => {
-      await utils.organizationPayment.listMethods.invalidate({
-        organizationId,
-      });
+      await Promise.all([
+        utils.organizationPayment.listMethods.invalidate({
+          organizationId,
+        }),
+        utils.ownerSetup.getStatus.invalidate(),
+      ]);
     },
   });
 }

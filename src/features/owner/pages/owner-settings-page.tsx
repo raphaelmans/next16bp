@@ -9,6 +9,7 @@ import {
   Star,
   Trash2,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
@@ -98,7 +99,14 @@ interface OrganizationPaymentMethodItem {
   displayOrder: number;
 }
 
-export default function OwnerSettingsPage() {
+type OwnerSettingsPageProps = {
+  fromSetup?: boolean;
+};
+
+export default function OwnerSettingsPage({
+  fromSetup = false,
+}: OwnerSettingsPageProps) {
+  const router = useRouter();
   const { data: user } = useQueryAuthSession();
   const logoutMutation = useMutAuthLogout();
   const [removalModalOpen, setRemovalModalOpen] = React.useState(false);
@@ -304,6 +312,9 @@ export default function OwnerSettingsPage() {
       }
       resetPaymentMethodForm();
       setPaymentMethodDialogOpen(false);
+      if (fromSetup) {
+        router.push(appRoutes.owner.getStarted);
+      }
     } catch (error) {
       toast.error("Failed to save payment method", {
         description: getClientErrorMessage(error, "Please try again"),

@@ -279,7 +279,10 @@ export class PlaceVerificationService implements IPlaceVerificationService {
         await this.organizationPaymentMethodRepository.findByOrganizationId(
           place.organizationId,
         );
-      if (paymentMethods.length === 0) {
+      const hasActivePaymentMethod = paymentMethods.some(
+        (paymentMethod) => paymentMethod.isActive,
+      );
+      if (!hasActivePaymentMethod) {
         throw new NoPaymentMethodError(data.placeId);
       }
     }

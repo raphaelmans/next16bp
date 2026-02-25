@@ -103,6 +103,7 @@ describe("PlaceVerificationService.toggleReservations", () => {
         toPaymentMethodRecord({
           id: "pm-1",
           organizationId: ORGANIZATION_ID,
+          isActive: true,
         }),
       ],
     });

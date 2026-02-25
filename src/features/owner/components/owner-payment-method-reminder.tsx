@@ -15,7 +15,7 @@ export function OwnerPaymentMethodReminder() {
     organizationId ?? undefined,
   );
   const paymentMethods = paymentMethodsQuery.data?.methods ?? [];
-  const hasPaymentMethods = paymentMethods.length > 0;
+  const hasPaymentMethods = paymentMethods.some((method) => method.isActive);
   const hasMissingPaymentMethodIssue = getReservationEnablement({
     placeType: "RESERVABLE",
     verificationStatus: "VERIFIED",

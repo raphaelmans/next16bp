@@ -322,9 +322,12 @@ export class PlaceRepository implements IPlaceRepository {
           .select({ id: organizationPaymentMethod.id })
           .from(organizationPaymentMethod)
           .where(
-            eq(
-              organizationPaymentMethod.organizationId,
-              placeRecord.organizationId,
+            and(
+              eq(
+                organizationPaymentMethod.organizationId,
+                placeRecord.organizationId,
+              ),
+              eq(organizationPaymentMethod.isActive, true),
             ),
           )
           .limit(1),
@@ -954,7 +957,13 @@ export class PlaceRepository implements IPlaceRepository {
           .select({ organizationId: organizationPaymentMethod.organizationId })
           .from(organizationPaymentMethod)
           .where(
-            inArray(organizationPaymentMethod.organizationId, organizationIds),
+            and(
+              inArray(
+                organizationPaymentMethod.organizationId,
+                organizationIds,
+              ),
+              eq(organizationPaymentMethod.isActive, true),
+            ),
           )
           .groupBy(organizationPaymentMethod.organizationId)
       : [];

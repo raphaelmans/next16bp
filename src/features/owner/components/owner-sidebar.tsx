@@ -47,6 +47,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { PortalSwitcher } from "@/features/auth/components/portal-switcher";
+import { shouldShowOwnerGetStartedNav } from "@/features/owner/helpers";
 import {
   useQueryOwnerSetupStatus,
   useQueryOwnerSidebarQuickLinks,
@@ -115,10 +116,17 @@ export function OwnerSidebar({
   const reservationsBadgeCount = noOrgMode
     ? undefined
     : reservationCounts.pending;
-  const shouldShowGetStarted =
-    noOrgMode ||
-    (!setupStatusLoading &&
-      (setupStatus ? !setupStatus.hasAnyConfiguredVenue : false));
+  const shouldShowGetStarted = shouldShowOwnerGetStartedNav({
+    noOrgMode,
+    setupStatusLoading,
+    setupStatus: setupStatus
+      ? {
+          isSetupComplete: setupStatus.isSetupComplete,
+          hasPaymentMethod: setupStatus.hasPaymentMethod,
+          nextStep: setupStatus.nextStep,
+        }
+      : null,
+  });
 
   const isActive = (href: string) => {
     if (href === appRoutes.owner.base) {

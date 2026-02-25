@@ -84,7 +84,9 @@ export class GetOwnerSetupStatusUseCase {
       ),
     ]);
     const hasVenue = places.length > 0;
-    const hasPaymentMethod = paymentMethods.length > 0;
+    const hasPaymentMethod = paymentMethods.some(
+      (paymentMethod) => paymentMethod.isActive,
+    );
 
     const placeCourtEntries: Array<
       [string, Awaited<ReturnType<ICourtRepository["findByPlaceId"]>>]
