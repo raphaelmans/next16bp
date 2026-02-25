@@ -65,6 +65,7 @@ const structuredData = {
 };
 
 export const metadata: Metadata = {
+  manifest: "/manifest.webmanifest",
   title: {
     default: "KudosCourts - Discover. Reserve. Play.",
     template: "%s | KudosCourts",

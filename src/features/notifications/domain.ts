@@ -13,7 +13,6 @@ export type WebPushDerivedStateInput = {
   configured: boolean;
   permission: NotificationPermission | null;
   hasSubscription: boolean;
-  localTestEnabled: boolean;
   busy: boolean;
 };
 
@@ -22,6 +21,7 @@ export type WebPushDerivedState = {
   diagnosticsCode: WebPushDiagnosticsCode;
   diagnosticsMessage: string;
   canSendLocalTest: boolean;
+  canSendServerTest: boolean;
 };
 
 export function deriveWebPushState(
@@ -33,7 +33,6 @@ export function deriveWebPushState(
     configured,
     permission,
     hasSubscription,
-    localTestEnabled,
     busy,
   } = input;
 
@@ -66,22 +65,19 @@ export function deriveWebPushState(
               ? "Server Web Push is not configured yet."
               : diagnosticsCode === "granted_not_registered"
                 ? "Permission is granted but this device is not subscribed yet."
-                : localTestEnabled
-                  ? "Ready to request permission and run a test notification."
-                  : "Ready to request permission and enable notifications.";
+                : "Ready to request permission and enable notifications.";
 
   const canSendLocalTest =
-    localTestEnabled &&
-    supported &&
-    isSecureContext &&
-    permission !== "denied" &&
-    !busy;
+    supported && isSecureContext && permission !== "denied" && !busy;
+
+  const canSendServerTest = enabledOnThisDevice && !busy;
 
   return {
     enabledOnThisDevice,
     diagnosticsCode,
     diagnosticsMessage,
     canSendLocalTest,
+    canSendServerTest,
   };
 }
 
