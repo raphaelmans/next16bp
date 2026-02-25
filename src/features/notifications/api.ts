@@ -13,6 +13,12 @@ type ProcedureFn<TProcedure> = TProcedure extends (
   : never;
 
 export interface INotificationsApi {
+  mutUserNotificationMarkAllAsRead: ProcedureFn<
+    TrpcClientApi["userNotification"]["markAllAsRead"]["mutate"]
+  >;
+  mutUserNotificationMarkAsRead: ProcedureFn<
+    TrpcClientApi["userNotification"]["markAsRead"]["mutate"]
+  >;
   mutPushSubscriptionRevokeMySubscription: ProcedureFn<
     TrpcClientApi["pushSubscription"]["revokeMySubscription"]["mutate"]
   >;
@@ -24,6 +30,12 @@ export interface INotificationsApi {
   >;
   queryPushSubscriptionGetVapidPublicKey: ProcedureFn<
     TrpcClientApi["pushSubscription"]["getVapidPublicKey"]["query"]
+  >;
+  queryUserNotificationListMy: ProcedureFn<
+    TrpcClientApi["userNotification"]["listMy"]["query"]
+  >;
+  queryUserNotificationUnreadCount: ProcedureFn<
+    TrpcClientApi["userNotification"]["unreadCount"]["query"]
   >;
 }
 
@@ -63,6 +75,28 @@ export class NotificationsApi {
       this.toAppError,
     );
 
+  mutUserNotificationMarkAllAsRead: ProcedureFn<
+    TrpcClientApi["userNotification"]["markAllAsRead"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["userNotification", "markAllAsRead"],
+      (clientApi) => clientApi.userNotification.markAllAsRead.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutUserNotificationMarkAsRead: ProcedureFn<
+    TrpcClientApi["userNotification"]["markAsRead"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["userNotification", "markAsRead"],
+      (clientApi) => clientApi.userNotification.markAsRead.mutate,
+      input,
+      this.toAppError,
+    );
+
   mutPushSubscriptionUpsertMySubscription: ProcedureFn<
     TrpcClientApi["pushSubscription"]["upsertMySubscription"]["mutate"]
   > = async (input) =>
@@ -81,6 +115,28 @@ export class NotificationsApi {
       this.clientApi,
       ["pushSubscription", "getVapidPublicKey"],
       (clientApi) => clientApi.pushSubscription.getVapidPublicKey.query,
+      input,
+      this.toAppError,
+    );
+
+  queryUserNotificationListMy: ProcedureFn<
+    TrpcClientApi["userNotification"]["listMy"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["userNotification", "listMy"],
+      (clientApi) => clientApi.userNotification.listMy.query,
+      input,
+      this.toAppError,
+    );
+
+  queryUserNotificationUnreadCount: ProcedureFn<
+    TrpcClientApi["userNotification"]["unreadCount"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["userNotification", "unreadCount"],
+      (clientApi) => clientApi.userNotification.unreadCount.query,
       input,
       this.toAppError,
     );

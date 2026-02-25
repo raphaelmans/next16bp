@@ -18,6 +18,7 @@ import Link from "next/link";
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
+import { useDebouncedValue } from "@/common/hooks/use-debounced-value";
 import {
   buildCityOptions,
   buildProvinceOptions,
@@ -106,6 +107,7 @@ export function AdminPlacesList({
   const [featuredFilter, setFeaturedFilter] =
     React.useState<FeaturedFilter>("all");
   const [search, setSearch] = React.useState("");
+  const debouncedSearch = useDebouncedValue(search, 2000);
   const [page, setPage] = React.useState(1);
   const [expandedPlaceId, setExpandedPlaceId] = React.useState<string | null>(
     null,
@@ -168,7 +170,7 @@ export function AdminPlacesList({
     city: cityFilter,
     claimStatus: claimStatusFilter,
     featured: featuredFilter,
-    search: search || undefined,
+    search: debouncedSearch || undefined,
     page,
     limit: 10,
   });
@@ -227,7 +229,7 @@ export function AdminPlacesList({
     }
   };
 
-  const filterKey = `${typeFilter}-${statusFilter}-${provinceFilter}-${cityFilter}-${claimStatusFilter}-${featuredFilter}-${search}`;
+  const filterKey = `${typeFilter}-${statusFilter}-${provinceFilter}-${cityFilter}-${claimStatusFilter}-${featuredFilter}-${debouncedSearch}`;
 
   React.useEffect(() => {
     if (!filterKey) {

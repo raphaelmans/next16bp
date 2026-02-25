@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   deriveWebPushState,
+  getNotificationBellBadgeCount,
+  getNotificationBellIconVariant,
   getNotificationBellPermissionLabel,
   getNotificationBellToggleDisabled,
   getWebPushSettingsStatusLabel,
@@ -104,6 +106,36 @@ describe("notifications domain", () => {
 
       // Assert
       expect(result).toBe("Enabled on this device");
+    });
+  });
+
+  describe("getNotificationBellIconVariant", () => {
+    it("enabled -> bell-ring", () => {
+      const result = getNotificationBellIconVariant({
+        enabledOnThisDevice: true,
+      });
+      expect(result).toBe("bell-ring");
+    });
+
+    it("not enabled -> bell-off", () => {
+      const result = getNotificationBellIconVariant({
+        enabledOnThisDevice: false,
+      });
+      expect(result).toBe("bell-off");
+    });
+  });
+
+  describe("getNotificationBellBadgeCount", () => {
+    it("zero unread -> null badge", () => {
+      expect(getNotificationBellBadgeCount(0)).toBeNull();
+    });
+
+    it("normal unread -> string count", () => {
+      expect(getNotificationBellBadgeCount(7)).toBe("7");
+    });
+
+    it("large unread -> capped badge", () => {
+      expect(getNotificationBellBadgeCount(120)).toBe("99+");
     });
   });
 

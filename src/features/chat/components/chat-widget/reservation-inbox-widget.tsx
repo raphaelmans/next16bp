@@ -5,6 +5,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Channel } from "stream-chat";
 import { formatInTimeZone, formatTimeRangeInTimeZone } from "@/common/format";
 import { useMediaQuery } from "@/common/hooks/use-media-query";
+import { getPlayerReservationAbsoluteUrl } from "@/common/reservation-links";
+import { copyToClipboard } from "@/common/utils/clipboard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -95,7 +97,10 @@ export interface ReservationInboxWidgetConfig {
       meta: ReservationThreadMeta | null,
       threadId: string,
     ) => string | null;
-    listSecondary: (meta: ReservationThreadMeta | null) => string | null;
+    listSecondary: (
+      meta: ReservationThreadMeta | null,
+      threadId: string,
+    ) => string | null;
     threadTitle: (meta: ReservationThreadMeta | null) => string;
   };
 }
@@ -131,6 +136,22 @@ function StatusPill({ status }: { status: string | null }) {
       {status}
     </Badge>
   );
+}
+
+const STATUS_MICROCOPY: Record<string, string> = {
+  CREATED: "Awaiting acceptance",
+  AWAITING_PAYMENT: "Payment needed",
+  PAYMENT_MARKED_BY_USER: "Payment under review",
+  CONFIRMED: "Confirmed",
+  EXPIRED: "Expired",
+  CANCELLED: "Cancelled",
+};
+
+function getReservationReference(meta: ReservationThreadMeta): string {
+  const prefix = meta.reservationGroupId ? "GRP" : "RES";
+  const id =
+    meta.reservationGroupId ?? meta.reservationId ?? meta.threadId ?? "thread";
+  return `${prefix}-${id.slice(0, 8).toUpperCase()}`;
 }
 
 export function ReservationInboxWidget({
@@ -706,6 +727,12 @@ export function ReservationInboxWidget({
   const activeThreadIsArchived =
     !!activeChannelThreadId &&
     archivedThreadIds.includes(activeChannelThreadId);
+  const activeReservationReference = activeMeta
+    ? getReservationReference(activeMeta)
+    : null;
+  const activeStatusMicrocopy = activeMeta
+    ? (STATUS_MICROCOPY[activeMeta.status] ?? activeMeta.status)
+    : null;
 
   const handleArchiveThread = useCallback(async () => {
     if (!activeChannelThreadId) {
@@ -768,6 +795,73 @@ export function ReservationInboxWidget({
     }));
   }, [archivedMetasByThreadId, archivedThreadIdsQuery.data?.threadIds]);
 
+  const handleCopyPlayerLink = useCallback(async () => {
+    if (!activeMeta?.reservationId) {
+      return;
+    }
+
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const playerUrl = getPlayerReservationAbsoluteUrl({
+      reservationId: activeMeta.reservationId,
+      status: activeMeta.status,
+      origin: window.location.origin,
+    });
+
+    await copyToClipboard(
+      playerUrl,
+      config.kind === "owner" ? "Player booking link" : "Booking link",
+    );
+  }, [activeMeta, config.kind]);
+
+  const threadContextContent = activeMeta ? (
+    <section className="rounded-md border bg-muted/30 px-3 py-2 text-xs">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="font-medium text-foreground">Booking context</p>
+        {activeMeta.reservationId ? (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="h-7 px-2 text-[11px]"
+            onClick={() => {
+              handleCopyPlayerLink().catch(() => undefined);
+            }}
+          >
+            {config.kind === "owner" ? "Copy player link" : "Copy booking link"}
+          </Button>
+        ) : null}
+      </div>
+      <p className="mt-1 text-muted-foreground">
+        {activeMeta.placeName} • {activeMeta.courtLabel}
+      </p>
+      <p className="mt-1 text-muted-foreground">
+        {formatInTimeZone(
+          activeMeta.startTimeIso,
+          activeMeta.timeZone,
+          "EEE MMM d",
+        )}{" "}
+        •{" "}
+        {formatTimeRangeInTimeZone(
+          activeMeta.startTimeIso,
+          activeMeta.endTimeIso,
+          activeMeta.timeZone,
+        )}
+      </p>
+      <p className="mt-1 text-muted-foreground">
+        {config.kind === "owner" ? "Booked by" : "Owner"}:{" "}
+        {config.kind === "owner"
+          ? activeMeta.playerDisplayName
+          : activeMeta.ownerDisplayName}
+      </p>
+      <p className="mt-1 text-muted-foreground">
+        Status: {activeStatusMicrocopy} • Ref: {activeReservationReference}
+      </p>
+    </section>
+  ) : null;
+
   const renderListRow = (threadId: string) => {
     const meta = metasByThreadId.get(threadId) ?? null;
     const channel =
@@ -791,7 +885,25 @@ export function ReservationInboxWidget({
       : showMetaSkeletons
         ? null
         : `Reservation ${fallbackId.slice(0, 8).toUpperCase()}`;
-    const secondary = config.labels.listSecondary(meta);
+    const configuredSecondary = config.labels.listSecondary(meta, threadId);
+    const secondary = meta
+      ? [
+          configuredSecondary,
+          `${meta.courtLabel} • ${formatInTimeZone(
+            meta.startTimeIso,
+            meta.timeZone,
+            "EEE MMM d",
+          )} • ${formatTimeRangeInTimeZone(
+            meta.startTimeIso,
+            meta.endTimeIso,
+            meta.timeZone,
+          )}`,
+          STATUS_MICROCOPY[meta.status] ?? meta.status,
+          getReservationReference(meta),
+        ]
+          .filter((item): item is string => Boolean(item))
+          .join(" • ")
+      : configuredSecondary;
 
     return (
       <button
@@ -833,17 +945,7 @@ export function ReservationInboxWidget({
 
             {meta ? (
               <div className="truncate text-xs text-muted-foreground mt-0.5">
-                {secondary
-                  ? secondary
-                  : `${meta.courtLabel} • ${formatInTimeZone(
-                      meta.startTimeIso,
-                      meta.timeZone,
-                      "EEE MMM d",
-                    )} • ${formatTimeRangeInTimeZone(
-                      meta.startTimeIso,
-                      meta.endTimeIso,
-                      meta.timeZone,
-                    )}`}
+                {secondary}
               </div>
             ) : showMetaSkeletons ? (
               <Skeleton className="mt-1 h-3 w-56" />
@@ -1021,13 +1123,7 @@ export function ReservationInboxWidget({
         headerTitle={config.labels.threadTitle(activeMeta)}
         headerSubtitle={
           activeMeta
-            ? `${activeMeta.reservationGroupId ? "GRP" : "RES"}-${(
-                activeMeta.reservationGroupId ??
-                activeMeta.reservationId ??
-                "thread"
-              )
-                .slice(0, 8)
-                .toUpperCase()} • ${formatInTimeZone(
+            ? `${activeMeta.placeName} • ${activeMeta.courtLabel} • ${formatInTimeZone(
                 activeMeta.startTimeIso,
                 activeMeta.timeZone,
                 "EEE MMM d",
@@ -1035,9 +1131,10 @@ export function ReservationInboxWidget({
                 activeMeta.startTimeIso,
                 activeMeta.endTimeIso,
                 activeMeta.timeZone,
-              )}`
+              )} • ${activeReservationReference ?? "RES-THREAD"}`
             : undefined
         }
+        contextContent={threadContextContent}
         readOnly={readOnly}
         readOnlyReason={readOnlyReason ?? undefined}
         minHeightClassName="min-h-0 flex-1"
@@ -1104,7 +1201,9 @@ export function ReservationInboxWidget({
       open={open}
       onOpenChange={setOpen}
       unreadCount={unreadCount}
-      triggerLabel="Open messages"
+      triggerLabel={
+        config.kind === "owner" ? "Open booking inbox" : "Open booking messages"
+      }
       triggerVariant={config.kind === "owner" ? "secondary" : "default"}
       triggerClassName={cn(config.kind === "owner" && "border")}
       sheetTitle={config.ui.sheetTitle}

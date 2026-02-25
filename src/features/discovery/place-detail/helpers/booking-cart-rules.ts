@@ -38,6 +38,17 @@ export function isBookingCartKeyDuplicate({
   return cartItems.some((item) => item.key === key);
 }
 
+export function getBookingCartViolationMessage(
+  reason: BookingCartRuleViolation,
+): string {
+  switch (reason) {
+    case "DIFFERENT_DAY":
+      return "Your booking already has courts for another day. Clear your cart to start a new booking.";
+    case "DUPLICATE_COURT":
+      return "You can only add one time span per court in this booking.";
+  }
+}
+
 export function validateBookingCartAdd({
   cartItems,
   candidate,

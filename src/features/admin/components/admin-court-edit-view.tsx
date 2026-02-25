@@ -8,6 +8,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
 import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
+import { useDebouncedValue } from "@/common/hooks/use-debounced-value";
 import {
   buildCityOptions,
   buildProvinceOptions,
@@ -88,10 +89,10 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   const { data: rawSports, isLoading: sportsLoading } = useQueryAdminSports({});
   const sports = (rawSports ?? []) as Array<{ id: string; name: string }>;
 
-  const deferredOrgSearch = React.useDeferredValue(orgSearch);
+  const debouncedOrgSearch = useDebouncedValue(orgSearch, 2000);
   const orgSearchQuery = useQueryAdminOrganizationSearch(
     {
-      query: deferredOrgSearch.trim() || undefined,
+      query: debouncedOrgSearch.trim() || undefined,
       limit: 20,
       offset: 0,
     },

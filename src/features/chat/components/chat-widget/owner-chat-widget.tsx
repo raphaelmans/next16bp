@@ -22,11 +22,12 @@ export function OwnerChatWidget() {
         },
         ui: {
           sheetTitle: "Inbox",
-          sheetDescription: "Reservation messages across your venues",
+          sheetDescription:
+            "New bookings, payment updates, and player follow-ups across your venues",
         },
         labels: {
           listPrimary: (meta) => (meta ? meta.playerDisplayName : null),
-          listSecondary: () => null,
+          listSecondary: (meta) => (meta ? meta.placeName : null),
           threadTitle: (meta) => meta?.playerDisplayName ?? "Messages",
         },
       }}

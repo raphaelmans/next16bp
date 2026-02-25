@@ -3,6 +3,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
+import { useEffect, useMemo, useRef } from "react";
 import { appRoutes } from "@/common/app-routes";
 import {
   createFeatureQueryOptions,
@@ -14,8 +15,10 @@ import { toast } from "@/common/toast";
 import { buildTrpcQueryKey } from "@/common/trpc-client-call";
 import { trpc } from "@/trpc/client";
 import { getReservationApi } from "./api.runtime";
+import { getReservationRealtimeApi } from "./realtime-api.runtime";
 
 const reservationApi = getReservationApi();
+const reservationRealtimeApi = getReservationRealtimeApi();
 
 // ============================================================================
 // From use-cancel-reservation.ts
@@ -752,6 +755,82 @@ export function useQueryReservationPaymentInfo(
     { reservationId },
     { enabled },
   );
+}
+
+interface UseReservationRealtimePlayerStreamOptions {
+  reservationIds?: string[];
+  enabled?: boolean;
+}
+
+const MAX_PROCESSED_REALTIME_EVENTS = 200;
+
+const normalizeReservationIds = (reservationIds?: string[]) =>
+  Array.from(
+    new Set(
+      (reservationIds ?? [])
+        .map((id) => id.trim())
+        .filter((id) => id.length > 0),
+    ),
+  );
+
+export function useModReservationRealtimePlayerStream(
+  options: UseReservationRealtimePlayerStreamOptions = {},
+) {
+  const { reservationIds, enabled = true } = options;
+  const utils = trpc.useUtils();
+  const processedEventIdsRef = useRef<string[]>([]);
+
+  const reservationIdsKey = useMemo(
+    () => normalizeReservationIds(reservationIds).join(","),
+    [reservationIds],
+  );
+
+  useEffect(() => {
+    const scopedReservationIds = reservationIdsKey
+      ? reservationIdsKey.split(",")
+      : [];
+    if (!enabled || scopedReservationIds.length === 0) return;
+
+    const subscription = reservationRealtimeApi.subscribePlayer({
+      reservationIds: scopedReservationIds,
+      onEvent: (event) => {
+        if (processedEventIdsRef.current.includes(event.eventId)) {
+          return;
+        }
+
+        processedEventIdsRef.current.push(event.eventId);
+        if (
+          processedEventIdsRef.current.length > MAX_PROCESSED_REALTIME_EVENTS
+        ) {
+          processedEventIdsRef.current.splice(
+            0,
+            processedEventIdsRef.current.length - MAX_PROCESSED_REALTIME_EVENTS,
+          );
+        }
+
+        void Promise.all([
+          utils.reservation.getById.invalidate({
+            reservationId: event.reservationId,
+          }),
+          utils.reservation.getDetail.invalidate({
+            reservationId: event.reservationId,
+          }),
+          utils.reservation.getGroupDetail.invalidate(),
+          utils.reservation.getMy.invalidate(),
+          utils.reservation.getMyWithDetails.invalidate(),
+          utils.reservationChat.getThreadMetas.invalidate(),
+          utils.reservationChat.getSession.invalidate({
+            reservationId: event.reservationId,
+          }),
+          utils.reservationChat.getGroupSession.invalidate(),
+        ]);
+      },
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [enabled, reservationIdsKey, utils]);
 }
 
 export function useMutAddPaymentProof() {

@@ -1,5 +1,6 @@
 import { makeMobilePushTokenRepository } from "@/lib/modules/mobile-push-token/factories/mobile-push-token.factory";
 import { makePushSubscriptionRepository } from "@/lib/modules/push-subscription/factories/push-subscription.factory";
+import { makeUserNotificationRepository } from "@/lib/modules/user-notification/factories/user-notification.factory";
 import { getContainer } from "@/lib/shared/infra/container";
 import { NotificationDeliveryJobRepository } from "../repositories/notification-delivery-job.repository";
 import { NotificationRecipientRepository } from "../repositories/notification-recipient.repository";
@@ -36,6 +37,7 @@ export function makeNotificationDeliveryService() {
       makeNotificationRecipientRepository(),
       makePushSubscriptionRepository(),
       makeMobilePushTokenRepository(),
+      makeUserNotificationRepository(),
     );
   }
   return notificationDeliveryService;

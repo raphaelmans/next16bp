@@ -243,7 +243,7 @@ export default function HomePageClient({
   return (
     <DiscoveryPublicShell>
       {/* § 1. Hero — editorial split */}
-      <section className="relative overflow-hidden pt-[140px] pb-20 sm:pt-[140px] sm:pb-20">
+      <section className="relative overflow-hidden pt-10 pb-20 sm:pt-[140px] sm:pb-20">
         {/* Warm gradient mesh */}
         <div
           className="absolute inset-0 pointer-events-none"

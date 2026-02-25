@@ -22,6 +22,7 @@ import { ReservationExpired } from "@/features/reservation/components/reservatio
 import { StatusBanner } from "@/features/reservation/components/status-banner";
 import {
   useModReservationInvalidation,
+  useModReservationRealtimePlayerStream,
   useQueryReservationDetail,
   useQueryReservationGroupDetail,
 } from "@/features/reservation/hooks";
@@ -60,6 +61,15 @@ export default function ReservationDetailPage({
     reservationGroupId ?? "",
     reservationGroupId ? RESERVATION_DETAIL_REFETCH_INTERVAL_MS : undefined,
   );
+  const realtimeReservationIds = [
+    id,
+    ...(groupData?.items.map((item) => item.reservationId) ?? []),
+  ];
+
+  useModReservationRealtimePlayerStream({
+    enabled: realtimeReservationIds.length > 0,
+    reservationIds: realtimeReservationIds,
+  });
 
   const reservation = reservationDetail?.reservation;
   const events: ReservationEvent[] = reservationDetail?.events ?? [];

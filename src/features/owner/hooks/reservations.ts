@@ -1,14 +1,18 @@
 "use client";
 
+import { useEffect, useMemo, useRef } from "react";
 import {
   useFeatureMutation,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
+import { getZonedDayKey } from "@/common/time-zone";
+import { getReservationRealtimeApi } from "@/features/reservation/realtime-api.runtime";
 import { trpc } from "@/trpc/client";
 import { getOwnerApi } from "../api.runtime";
 import { useQueryOwnerCourts } from "./courts";
 
 const ownerApi = getOwnerApi();
+const reservationRealtimeApi = getReservationRealtimeApi();
 
 export const OWNER_UNRESOLVED_REFRESH_INTERVAL_MS = 15_000;
 export const OWNER_UNRESOLVED_REFRESH_INTERVAL_SECONDS =
@@ -102,6 +106,22 @@ interface UseOwnerReservationsOptions {
   dateTo?: Date;
   refetchIntervalMs?: number;
 }
+
+interface UseOwnerReservationRealtimeStreamOptions {
+  enabled?: boolean;
+  reservationIds?: string[];
+}
+
+const MAX_PROCESSED_REALTIME_EVENTS = 200;
+
+const normalizeReservationIds = (reservationIds?: string[]) =>
+  Array.from(
+    new Set(
+      (reservationIds ?? [])
+        .map((id) => id.trim())
+        .filter((id) => id.length > 0),
+    ),
+  );
 
 function mapStatusToBackend(
   status?: ReservationStatus,
@@ -331,18 +351,155 @@ export function useQueryOwnerStats(organizationId: string | null) {
   };
 }
 
-export function useModRecentActivity() {
-  return {
-    data: [],
-    isLoading: false,
-  };
+export type DashboardActivityType =
+  | "booking"
+  | "payment"
+  | "blocked"
+  | "confirmed";
+
+export interface DashboardActivity {
+  id: string;
+  type: DashboardActivityType;
+  title: string;
+  description: string;
+  timestamp: string;
 }
 
-export function useModTodaysBookings() {
-  return {
-    data: [],
-    isLoading: false,
-  };
+export type DashboardBookingStatus = "booked" | "pending";
+
+export interface DashboardTimeSlot {
+  id: string;
+  startTime: string;
+  endTime: string;
+  status: DashboardBookingStatus;
+  playerName: string;
+  courtName: string;
+}
+
+interface DashboardData {
+  todayBookingsCount: number;
+  todaySchedule: DashboardTimeSlot[];
+  recentActivity: DashboardActivity[];
+}
+
+const DASHBOARD_REFRESH_INTERVAL_MS = 15_000;
+
+function mapReservationToActivityType(
+  status: Reservation["reservationStatus"],
+): DashboardActivityType {
+  switch (status) {
+    case "CONFIRMED":
+      return "confirmed";
+    case "PAYMENT_MARKED_BY_USER":
+      return "payment";
+    case "CREATED":
+    case "AWAITING_PAYMENT":
+      return "booking";
+    case "CANCELLED":
+    case "EXPIRED":
+      return "blocked";
+  }
+}
+
+function mapReservationToActivityTitle(
+  status: Reservation["reservationStatus"],
+): string {
+  switch (status) {
+    case "CONFIRMED":
+      return "Booking confirmed";
+    case "PAYMENT_MARKED_BY_USER":
+      return "Payment marked";
+    case "CREATED":
+    case "AWAITING_PAYMENT":
+      return "New booking request";
+    case "CANCELLED":
+      return "Booking cancelled";
+    case "EXPIRED":
+      return "Booking expired";
+  }
+}
+
+function deriveDashboardData(
+  rawRecords: OwnerReservationRecord[],
+): DashboardData {
+  const reservations = aggregateGroupedReservations(
+    rawRecords.map(mapOwnerReservationRecord),
+  );
+
+  const todayKey = getZonedDayKey(new Date());
+
+  // Today's confirmed bookings count
+  const todayBookingsCount = reservations.filter(
+    (r) => r.date === todayKey && r.reservationStatus === "CONFIRMED",
+  ).length;
+
+  // Today's schedule: confirmed + pending, sorted by start time
+  const pendingStatuses = new Set([
+    "CREATED",
+    "AWAITING_PAYMENT",
+    "PAYMENT_MARKED_BY_USER",
+  ]);
+  const todaySchedule = reservations
+    .filter(
+      (r) =>
+        r.date === todayKey &&
+        (r.reservationStatus === "CONFIRMED" ||
+          pendingStatuses.has(r.reservationStatus)),
+    )
+    .sort((a, b) => {
+      const aTime = a.slotStartTime ? new Date(a.slotStartTime).getTime() : 0;
+      const bTime = b.slotStartTime ? new Date(b.slotStartTime).getTime() : 0;
+      return aTime - bTime;
+    })
+    .map(
+      (r): DashboardTimeSlot => ({
+        id: r.id,
+        startTime: r.slotStartTime ?? r.createdAt,
+        endTime: r.slotEndTime ?? r.createdAt,
+        status: r.reservationStatus === "CONFIRMED" ? "booked" : "pending",
+        playerName: r.playerName,
+        courtName: r.courtName,
+      }),
+    );
+
+  // Recent activity: last 5 reservations by createdAt
+  const recentActivity = [...reservations]
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )
+    .slice(0, 5)
+    .map(
+      (r): DashboardActivity => ({
+        id: r.id,
+        type: mapReservationToActivityType(r.reservationStatus),
+        title: mapReservationToActivityTitle(r.reservationStatus),
+        description: `${r.courtName} · ${r.playerName}`,
+        timestamp: r.createdAt,
+      }),
+    );
+
+  return { todayBookingsCount, todaySchedule, recentActivity };
+}
+
+export function useQueryDashboardData(organizationId: string | null) {
+  return useFeatureQuery(
+    ["reservationOwner", "getForOrganization"],
+    ownerApi.queryReservationOwnerGetForOrganization,
+    {
+      organizationId: organizationId ?? "",
+      limit: 100,
+      offset: 0,
+    },
+    {
+      enabled: !!organizationId,
+      refetchInterval: DASHBOARD_REFRESH_INTERVAL_MS,
+      select: (data: unknown) => {
+        const records = (data as OwnerReservationRecord[]) ?? [];
+        return deriveDashboardData(records);
+      },
+    },
+  );
 }
 
 export function useModOwnerReservations(
@@ -423,6 +580,65 @@ export function useModOwnerReservations(
       },
     },
   );
+}
+
+export function useModOwnerReservationRealtimeStream(
+  options: UseOwnerReservationRealtimeStreamOptions = {},
+) {
+  const { enabled = true, reservationIds } = options;
+  const utils = trpc.useUtils();
+  const processedEventIdsRef = useRef<string[]>([]);
+
+  const reservationIdsKey = useMemo(
+    () => normalizeReservationIds(reservationIds).join(","),
+    [reservationIds],
+  );
+
+  useEffect(() => {
+    if (!enabled) return;
+    const scopedReservationIds = reservationIdsKey
+      ? reservationIdsKey.split(",")
+      : [];
+
+    const subscription = reservationRealtimeApi.subscribeOwner({
+      // Unscoped owner subscriptions rely on DB-side RLS policies.
+      reservationIds:
+        scopedReservationIds.length > 0 ? scopedReservationIds : undefined,
+      onEvent: (event) => {
+        if (processedEventIdsRef.current.includes(event.eventId)) {
+          return;
+        }
+
+        processedEventIdsRef.current.push(event.eventId);
+        if (
+          processedEventIdsRef.current.length > MAX_PROCESSED_REALTIME_EVENTS
+        ) {
+          processedEventIdsRef.current.splice(
+            0,
+            processedEventIdsRef.current.length - MAX_PROCESSED_REALTIME_EVENTS,
+          );
+        }
+
+        void Promise.all([
+          utils.reservationOwner.getForOrganization.invalidate(),
+          utils.reservationOwner.getPendingCount.invalidate(),
+          utils.reservationOwner.getGroupDetail.invalidate(),
+          utils.reservationChat.getThreadMetas.invalidate(),
+          utils.reservationChat.getSession.invalidate({
+            reservationId: event.reservationId,
+          }),
+          utils.reservationChat.getGroupSession.invalidate(),
+          utils.audit.reservationHistory.invalidate({
+            reservationId: event.reservationId,
+          }),
+        ]);
+      },
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [enabled, reservationIdsKey, utils]);
 }
 
 type ReservationActionInput = {
