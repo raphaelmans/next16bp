@@ -1,5 +1,6 @@
 import { makeNotificationDeliveryService } from "@/lib/modules/notification-delivery/factories/notification-delivery.factory";
 import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
+import { makeOrganizationPaymentMethodRepository } from "@/lib/modules/organization-payment/factories/organization-payment.factory";
 import { makePlaceRepository } from "@/lib/modules/place/factories/place.factory";
 import {
   PlaceVerificationRepository,
@@ -68,6 +69,7 @@ export function makePlaceVerificationService() {
       makePlaceRepository(),
       makeOrganizationRepository(),
       makeNotificationDeliveryService(),
+      makeOrganizationPaymentMethodRepository(),
     );
   }
   return placeVerificationService;

@@ -126,6 +126,7 @@ export interface PlaceCardMeta {
   currency?: string;
   verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
   reservationsEnabled?: boolean;
+  hasPaymentMethods?: boolean;
 }
 
 export const buildDiscoveryPlaceCard = (
@@ -194,6 +195,7 @@ export function useModDiscoveryPlaceCardDetails(
         currency: item.currency ?? undefined,
         verificationStatus: item.verificationStatus ?? undefined,
         reservationsEnabled: item.reservationsEnabled ?? undefined,
+        hasPaymentMethods: item.hasPaymentMethods ?? undefined,
       };
     }
     return record;
@@ -266,6 +268,7 @@ export interface PlaceDetail {
     status: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
     reservationsEnabled: boolean;
   } | null;
+  hasPaymentMethods?: boolean;
   contactDetail?: PlaceContactDetail;
   amenities: string[];
 }
@@ -390,6 +393,7 @@ export function useModPlaceDetail({ placeIdOrSlug }: UsePlaceDetailOptions) {
                 reservationsEnabled: response.verification.reservationsEnabled,
               }
             : null,
+          hasPaymentMethods: response.hasPaymentMethods ?? undefined,
           contactDetail,
           amenities: response.amenities
             .map((a) => a.name)

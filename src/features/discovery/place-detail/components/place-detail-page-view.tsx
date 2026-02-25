@@ -80,6 +80,7 @@ export default function PlaceDetailPageView({
     placeType: place.placeType,
     verificationStatus: place.verification?.status,
     reservationsEnabled: place.verification?.reservationsEnabled,
+    hasPaymentMethods: place.hasPaymentMethods,
   });
 
   const hasCoordinates =

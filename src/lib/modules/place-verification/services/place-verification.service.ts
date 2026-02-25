@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { NotificationDeliveryService } from "@/lib/modules/notification-delivery/services/notification-delivery.service";
 import { OrganizationNotFoundError } from "@/lib/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
+import type { IOrganizationPaymentMethodRepository } from "@/lib/modules/organization-payment/repositories/organization-payment-method.repository";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import { STORAGE_BUCKETS } from "@/lib/modules/storage/dtos";
@@ -16,6 +17,7 @@ import type {
   TogglePlaceReservationsDTO,
 } from "../dtos";
 import {
+  NoPaymentMethodError,
   NotPlaceOwnerError,
   PlaceNotBookableError,
   PlaceVerificationAlreadyPendingError,
@@ -72,6 +74,7 @@ export class PlaceVerificationService implements IPlaceVerificationService {
     private placeRepository: IPlaceRepository,
     private organizationRepository: IOrganizationRepository,
     private notificationDeliveryService: NotificationDeliveryService,
+    private organizationPaymentMethodRepository: IOrganizationPaymentMethodRepository,
   ) {}
 
   async submitRequest(
@@ -269,6 +272,16 @@ export class PlaceVerificationService implements IPlaceVerificationService {
 
     if (data.enabled && verification.status !== "VERIFIED") {
       throw new PlaceNotBookableError(data.placeId);
+    }
+
+    if (data.enabled) {
+      const paymentMethods =
+        await this.organizationPaymentMethodRepository.findByOrganizationId(
+          place.organizationId,
+        );
+      if (paymentMethods.length === 0) {
+        throw new NoPaymentMethodError(data.placeId);
+      }
     }
 
     await this.placeVerificationRepository.update(data.placeId, {

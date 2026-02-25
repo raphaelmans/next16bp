@@ -39,6 +39,7 @@ const OwnerSetupStatusSchema = z.object({
   hasReadyCourt: z.boolean(),
   hasCourtSchedule: z.boolean(),
   hasCourtPricing: z.boolean(),
+  hasPaymentMethod: z.boolean(),
   primaryCourtId: z.string().nullable(),
   readyCourtId: z.string().nullable(),
   isSetupComplete: z.boolean(),
@@ -48,6 +49,7 @@ const OwnerSetupStatusSchema = z.object({
     "claim_pending",
     "verify_venue",
     "configure_courts",
+    "add_payment_method",
     "complete",
   ]),
 });

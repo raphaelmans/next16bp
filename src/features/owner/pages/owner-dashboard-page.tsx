@@ -28,6 +28,7 @@ const OWNER_SETUP_NEXT_STEP_LABELS = {
   claim_pending: "Claim pending review",
   verify_venue: "Submit verification",
   configure_courts: "Set up courts",
+  add_payment_method: "Add a payment method",
   complete: "Setup complete",
 } as const;
 
@@ -46,7 +47,7 @@ export default function OwnerDashboardPage() {
   const logoutMutation = useMutAuthLogout();
 
   const showSetupCta =
-    !setupLoading && setupStatus ? !setupStatus.hasAnyConfiguredVenue : false;
+    !setupLoading && setupStatus ? !setupStatus.isSetupComplete : false;
   const nextStepLabel = setupStatus
     ? setupStatus.nextStep === "verify_venue" &&
       setupStatus.verificationStatus === "PENDING"

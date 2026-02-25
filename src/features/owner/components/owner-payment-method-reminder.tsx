@@ -1,6 +1,7 @@
 "use client";
 
 import { appRoutes } from "@/common/app-routes";
+import { getReservationEnablement } from "@/common/reservation-enablement";
 import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
 import {
   useQueryOrganizationPaymentMethods,
@@ -14,13 +15,20 @@ export function OwnerPaymentMethodReminder() {
     organizationId ?? undefined,
   );
   const paymentMethods = paymentMethodsQuery.data?.methods ?? [];
+  const hasPaymentMethods = paymentMethods.length > 0;
+  const hasMissingPaymentMethodIssue = getReservationEnablement({
+    placeType: "RESERVABLE",
+    verificationStatus: "VERIFIED",
+    reservationsEnabled: true,
+    hasPaymentMethods,
+  }).issues.some((issue) => issue.code === "NO_PAYMENT_METHOD");
 
   if (
     !organizationId ||
     isLoading ||
     paymentMethodsQuery.isLoading ||
     paymentMethodsQuery.isError ||
-    paymentMethods.length > 0
+    !hasMissingPaymentMethodIssue
   ) {
     return null;
   }

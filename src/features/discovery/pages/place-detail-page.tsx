@@ -262,6 +262,7 @@ export async function renderPlaceDetailPage(placeIdOrSlug: string) {
       placeType: place.placeType,
       verificationStatus: place.verification?.status,
       reservationsEnabled: place.verification?.reservationsEnabled,
+      hasPaymentMethods: placeDetails.hasPaymentMethods,
     });
 
     const hasCoordinates =

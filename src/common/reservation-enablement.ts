@@ -4,6 +4,7 @@ export type ReservationEnablementIssueCode =
   | "VERIFICATION_PENDING"
   | "VERIFICATION_REJECTED"
   | "RESERVATIONS_DISABLED"
+  | "NO_PAYMENT_METHOD"
   | "NO_SCHEDULE"
   | "NO_PRICING";
 
@@ -26,6 +27,7 @@ export type ReservationEnablementInput = {
     | "REJECTED"
     | null;
   reservationsEnabled?: boolean | null;
+  hasPaymentMethods?: boolean | null;
   hasHoursWindows?: boolean | null;
   hasRateRules?: boolean | null;
 };
@@ -66,13 +68,20 @@ export function getReservationEnablement(
     issues.push({ code: "NO_SCHEDULE", tone: "warning" });
   }
 
+  if (input.hasPaymentMethods === false) {
+    issues.push({ code: "NO_PAYMENT_METHOD", tone: "warning" });
+  }
+
   if (input.hasRateRules === false) {
     issues.push({ code: "NO_PRICING", tone: "warning" });
   }
 
   return {
     canShowPublicBooking:
-      isReservable && verificationStatus === "VERIFIED" && reservationsEnabled,
+      isReservable &&
+      verificationStatus === "VERIFIED" &&
+      reservationsEnabled &&
+      input.hasPaymentMethods !== false,
     issues,
   };
 }

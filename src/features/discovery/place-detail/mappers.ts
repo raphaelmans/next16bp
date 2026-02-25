@@ -70,6 +70,7 @@ export function mapPlaceDetailsToPlaceDetail(
           reservationsEnabled: response.verification.reservationsEnabled,
         }
       : null,
+    hasPaymentMethods: response.hasPaymentMethods ?? undefined,
     contactDetail,
     amenities: response.amenities
       .map((amenity) => amenity.name)

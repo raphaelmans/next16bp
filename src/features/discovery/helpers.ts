@@ -48,6 +48,7 @@ export interface PlaceVerificationDisplayInput {
   placeType?: PlaceType | null;
   verificationStatus?: PlaceVerificationStatus | null;
   reservationsEnabled?: boolean | null;
+  hasPaymentMethods?: boolean | null;
 }
 
 export type PlaceVerificationStatusVariant =
@@ -74,12 +75,16 @@ export function getPlaceVerificationDisplay(
   const placeType = input.placeType ?? null;
   const verificationStatus = input.verificationStatus ?? "UNVERIFIED";
   const reservationsEnabled = input.reservationsEnabled ?? false;
+  const hasPaymentMethods = input.hasPaymentMethods ?? null;
 
   const enablement = getReservationEnablement({
     placeType,
     verificationStatus,
     reservationsEnabled,
+    hasPaymentMethods,
   });
+  const hasIssue = (code: (typeof enablement.issues)[number]["code"]) =>
+    enablement.issues.some((issue) => issue.code === code);
 
   const isBookable = placeType === "RESERVABLE";
   const isCurated = placeType === "CURATED";
@@ -88,28 +93,48 @@ export function getPlaceVerificationDisplay(
   const showVerificationBadge = showBooking;
   const showBookingVerificationUi = !showBooking && !isCurated;
 
+  const hasVerificationRequiredIssue = hasIssue("VERIFICATION_REQUIRED");
+  const hasVerificationPendingIssue = hasIssue("VERIFICATION_PENDING");
+  const hasVerificationRejectedIssue = hasIssue("VERIFICATION_REJECTED");
+  const hasReservationsDisabledIssue = hasIssue("RESERVATIONS_DISABLED");
+  const hasNoPaymentMethodIssue = hasIssue("NO_PAYMENT_METHOD");
+
   const verificationMessage = showBooking
     ? "Verified for reservations"
-    : isVerified && !reservationsEnabled
-      ? "Reservations not yet enabled"
-      : verificationStatus === "PENDING"
-        ? "Verification pending"
-        : verificationStatus === "REJECTED"
-          ? "Verification needs updates"
-          : "Verification required to book";
+    : hasVerificationPendingIssue
+      ? "Verification pending"
+      : hasVerificationRejectedIssue
+        ? "Verification needs updates"
+        : hasVerificationRequiredIssue
+          ? "Verification required to book"
+          : hasReservationsDisabledIssue
+            ? "Reservations not yet enabled"
+            : hasNoPaymentMethodIssue
+              ? "Payment method required"
+              : "Booking not available yet";
 
   const verificationDescription = showBooking
     ? ""
-    : isVerified && !reservationsEnabled
-      ? "The owner has not yet enabled online reservations for this venue."
-      : "This venue must be verified and reservations enabled by the owner before online bookings become available.";
+    : hasVerificationPendingIssue
+      ? "This venue is awaiting review. Online bookings become available after approval."
+      : hasVerificationRejectedIssue
+        ? "Verification needs updates from the owner before bookings can open."
+        : hasVerificationRequiredIssue
+          ? "This venue must be verified and reservations enabled by the owner before online bookings become available."
+          : hasReservationsDisabledIssue
+            ? "The owner has not yet enabled online reservations for this venue."
+            : hasNoPaymentMethodIssue
+              ? "The owner needs to add at least one payment method before online bookings can go live."
+              : "Online booking is not available for this venue yet.";
 
   const verificationStatusVariant: PlaceVerificationStatusVariant = showBooking
     ? "success"
-    : verificationStatus === "PENDING"
-      ? "warning"
-      : verificationStatus === "REJECTED"
-        ? "destructive"
+    : hasVerificationRejectedIssue
+      ? "destructive"
+      : hasVerificationPendingIssue ||
+          hasReservationsDisabledIssue ||
+          hasNoPaymentMethodIssue
+        ? "warning"
         : "muted";
 
   return {

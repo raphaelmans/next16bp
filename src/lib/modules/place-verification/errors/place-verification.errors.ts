@@ -63,3 +63,13 @@ export class PlaceNotBookableError extends ValidationError {
     super("Reservations are not enabled for this venue", { placeId });
   }
 }
+
+export class NoPaymentMethodError extends ValidationError {
+  readonly code = "NO_PAYMENT_METHOD";
+
+  constructor(placeId: string) {
+    super("Add at least one payment method before enabling reservations", {
+      placeId,
+    });
+  }
+}

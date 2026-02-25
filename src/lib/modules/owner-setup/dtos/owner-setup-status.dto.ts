@@ -4,6 +4,7 @@ export type OwnerSetupNextStep =
   | "claim_pending"
   | "verify_venue"
   | "configure_courts"
+  | "add_payment_method"
   | "complete";
 
 export type OwnerSetupVerificationStatus =
@@ -25,6 +26,7 @@ export type OwnerSetupStatus = {
   hasReadyCourt: boolean;
   hasCourtSchedule: boolean;
   hasCourtPricing: boolean;
+  hasPaymentMethod: boolean;
   primaryCourtId: string | null;
   readyCourtId: string | null;
   isSetupComplete: boolean;

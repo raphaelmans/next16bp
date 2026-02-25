@@ -15,6 +15,7 @@ import {
   courtRateRule,
   type InsertPlace,
   type InsertPlaceContactDetail,
+  organizationPaymentMethod,
   organizationProfile,
   organizationReservationPolicy,
   type PlaceContactDetailRecord,
@@ -36,6 +37,7 @@ export interface PlaceWithDetails {
   verification: typeof placeVerification.$inferSelect | null;
   photos: (typeof placePhoto.$inferSelect)[];
   amenities: (typeof placeAmenity.$inferSelect)[];
+  hasPaymentMethods: boolean;
   organizationLogoUrl?: string | null;
 }
 
@@ -81,6 +83,7 @@ export interface PlaceCardMetaItem {
   currency: string | null;
   verificationStatus?: typeof placeVerification.$inferSelect.status | null;
   reservationsEnabled?: boolean | null;
+  hasPaymentMethods?: boolean;
 }
 
 type PlaceVerificationProjection = {
@@ -305,15 +308,30 @@ export class PlaceRepository implements IPlaceRepository {
     const verification = verificationResult[0] ?? null;
 
     let organizationLogoUrl: string | null = null;
+    let hasPaymentMethods = false;
     if (placeRecord.organizationId) {
-      const profileResult = await client
-        .select({ logoUrl: organizationProfile.logoUrl })
-        .from(organizationProfile)
-        .where(
-          eq(organizationProfile.organizationId, placeRecord.organizationId),
-        )
-        .limit(1);
+      const [profileResult, paymentMethodResult] = await Promise.all([
+        client
+          .select({ logoUrl: organizationProfile.logoUrl })
+          .from(organizationProfile)
+          .where(
+            eq(organizationProfile.organizationId, placeRecord.organizationId),
+          )
+          .limit(1),
+        client
+          .select({ id: organizationPaymentMethod.id })
+          .from(organizationPaymentMethod)
+          .where(
+            eq(
+              organizationPaymentMethod.organizationId,
+              placeRecord.organizationId,
+            ),
+          )
+          .limit(1),
+      ]);
+
       organizationLogoUrl = profileResult[0]?.logoUrl ?? null;
+      hasPaymentMethods = paymentMethodResult.length > 0;
     }
 
     const photos = await client
@@ -334,6 +352,7 @@ export class PlaceRepository implements IPlaceRepository {
       verification,
       photos,
       amenities,
+      hasPaymentMethods,
       organizationLogoUrl,
     };
   }
@@ -888,28 +907,65 @@ export class PlaceRepository implements IPlaceRepository {
   ): Promise<PlaceCardMetaItem[]> {
     if (placeIds.length === 0) return [];
     const client = this.getClient(ctx);
-    const [sportsByPlace, courtCounts, lowestPrices, verificationRows] =
-      await Promise.all([
-        this.getSportsByPlaceIds(placeIds, client),
-        this.getCourtCountsByPlaceIds(placeIds, sportId, client),
-        this.getLowestPriceByPlaceIds(placeIds, sportId, client),
-        client
-          .select({
-            placeId: placeVerification.placeId,
-            status: placeVerification.status,
-            reservationsEnabled: placeVerification.reservationsEnabled,
-          })
-          .from(placeVerification)
-          .where(inArray(placeVerification.placeId, placeIds)),
-      ]);
+    const [
+      sportsByPlace,
+      courtCounts,
+      lowestPrices,
+      verificationRows,
+      placeOrganizationRows,
+    ] = await Promise.all([
+      this.getSportsByPlaceIds(placeIds, client),
+      this.getCourtCountsByPlaceIds(placeIds, sportId, client),
+      this.getLowestPriceByPlaceIds(placeIds, sportId, client),
+      client
+        .select({
+          placeId: placeVerification.placeId,
+          status: placeVerification.status,
+          reservationsEnabled: placeVerification.reservationsEnabled,
+        })
+        .from(placeVerification)
+        .where(inArray(placeVerification.placeId, placeIds)),
+      client
+        .select({
+          placeId: place.id,
+          organizationId: place.organizationId,
+        })
+        .from(place)
+        .where(inArray(place.id, placeIds)),
+    ]);
 
     const verificationByPlaceId = new Map(
       verificationRows.map((row) => [row.placeId, row]),
+    );
+    const organizationIdByPlaceId = new Map(
+      placeOrganizationRows.map((row) => [row.placeId, row.organizationId]),
+    );
+    const organizationIds = Array.from(
+      new Set(
+        placeOrganizationRows
+          .map((row) => row.organizationId)
+          .filter((organizationId): organizationId is string =>
+            Boolean(organizationId),
+          ),
+      ),
+    );
+    const paymentMethodRows = organizationIds.length
+      ? await client
+          .select({ organizationId: organizationPaymentMethod.organizationId })
+          .from(organizationPaymentMethod)
+          .where(
+            inArray(organizationPaymentMethod.organizationId, organizationIds),
+          )
+          .groupBy(organizationPaymentMethod.organizationId)
+      : [];
+    const organizationsWithPaymentMethods = new Set(
+      paymentMethodRows.map((row) => row.organizationId),
     );
 
     return placeIds.map((placeId) => {
       const lowestPrice = lowestPrices.get(placeId);
       const verification = verificationByPlaceId.get(placeId);
+      const organizationId = organizationIdByPlaceId.get(placeId);
       return {
         placeId,
         sports: sportsByPlace.get(placeId) ?? [],
@@ -918,6 +974,9 @@ export class PlaceRepository implements IPlaceRepository {
         currency: lowestPrice?.currency ?? null,
         verificationStatus: verification?.status ?? null,
         reservationsEnabled: verification?.reservationsEnabled ?? null,
+        hasPaymentMethods: Boolean(
+          organizationId && organizationsWithPaymentMethods.has(organizationId),
+        ),
       };
     });
   }

@@ -11,6 +11,7 @@ import {
   TogglePlaceReservationsSchema,
 } from "./dtos";
 import {
+  NoPaymentMethodError,
   NotPlaceOwnerError,
   PlaceNotBookableError,
   PlaceVerificationAlreadyPendingError,
@@ -43,7 +44,8 @@ function handlePlaceVerificationError(error: unknown): never {
   }
   if (
     error instanceof PlaceVerificationDocumentsRequiredError ||
-    error instanceof PlaceNotBookableError
+    error instanceof PlaceNotBookableError ||
+    error instanceof NoPaymentMethodError
   ) {
     throw new TRPCError({
       code: "BAD_REQUEST",

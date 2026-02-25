@@ -113,6 +113,7 @@ interface CourtDetailClientProps {
   placeType: string;
   verificationStatus: string;
   reservationsEnabled: boolean;
+  hasPaymentMethods?: boolean | null;
   contactDetail?: {
     phoneNumber?: string;
     viberInfo?: string;
@@ -135,6 +136,7 @@ export default function CourtDetailClient({
   placeType,
   verificationStatus,
   reservationsEnabled,
+  hasPaymentMethods,
   contactDetail,
 }: CourtDetailClientProps) {
   const router = useRouter();
@@ -148,6 +150,7 @@ export default function CourtDetailClient({
     verificationStatus:
       verificationStatus as PlaceVerificationDisplayInput["verificationStatus"],
     reservationsEnabled,
+    hasPaymentMethods,
   });
   const { showBooking } = verificationDisplay;
 
