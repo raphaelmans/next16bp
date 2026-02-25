@@ -277,7 +277,7 @@ export default function PaymentPage({
     return (
       <Container className="py-6">
         <ReservationExpired
-          courtId={reservation?.courtId ?? undefined}
+          placeId={reservationDetail?.place?.id ?? undefined}
           slotDate={slotDate}
           slotTime={slotTime}
           amount={price}

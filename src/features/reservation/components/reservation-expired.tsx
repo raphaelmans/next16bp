@@ -2,11 +2,12 @@
 
 import { Clock } from "lucide-react";
 import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface ReservationExpiredProps {
-  courtId?: string;
+  placeId?: string;
   courtName?: string;
   slotDate?: string;
   slotTime?: string;
@@ -14,7 +15,7 @@ interface ReservationExpiredProps {
 }
 
 export function ReservationExpired({
-  courtId,
+  placeId,
   courtName,
   slotDate,
   slotTime,
@@ -67,9 +68,9 @@ export function ReservationExpired({
             The slot is now available for others to book.
           </p>
 
-          {courtId && (
+          {placeId && (
             <Button asChild>
-              <Link href={`/courts/${courtId}`}>Book Again</Link>
+              <Link href={appRoutes.places.detail(placeId)}>Book Again</Link>
             </Button>
           )}
         </CardContent>

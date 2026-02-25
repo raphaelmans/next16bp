@@ -223,7 +223,7 @@ export default function ReservationDetailPage({
     return (
       <Container className="py-6">
         <ReservationExpired
-          courtId={court.id}
+          placeId={placeRecord.id}
           courtName={court.name}
           slotDate={slotDate}
           slotTime={slotTime}
