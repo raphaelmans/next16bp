@@ -1,5 +1,6 @@
 import { addMinutes } from "date-fns";
 import { type NextRequest, NextResponse } from "next/server";
+import pLimit from "p-limit";
 import { z } from "zod";
 import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
@@ -19,6 +20,7 @@ import { WebPushError } from "@/lib/shared/infra/web-push/web-push-service";
 const MAX_ATTEMPTS = 5;
 const BACKOFF_MINUTES = [1, 5, 15, 60, 360];
 const BATCH_LIMIT = 25;
+const DISPATCH_CONCURRENCY = 5;
 
 const verificationRequestedSchema = z.object({
   requestId: z.string(),
@@ -604,59 +606,57 @@ export async function GET(request: NextRequest) {
 
     const appUrl = getAppUrl();
 
-    let sentCount = 0;
-    let failedCount = 0;
-    let skippedCount = 0;
+    const counters = { sent: 0, failed: 0, skipped: 0 };
 
-    for (const job of jobs) {
+    const dispatchJob = async (job: (typeof jobs)[number]) => {
       if (job.channel === "EMAIL" && !emailEnabled) {
-        skippedCount += 1;
+        counters.skipped += 1;
         await jobRepository.update(job.id, {
           status: "SKIPPED",
           lastError: "DISABLED_CHANNEL:EMAIL",
           nextAttemptAt: null,
         });
-        continue;
+        return;
       }
 
       if (job.channel === "SMS" && !smsEnabled) {
-        skippedCount += 1;
+        counters.skipped += 1;
         await jobRepository.update(job.id, {
           status: "SKIPPED",
           lastError: "DISABLED_CHANNEL:SMS",
           nextAttemptAt: null,
         });
-        continue;
+        return;
       }
 
       if (job.channel === "WEB_PUSH" && !webPushEnabled) {
-        skippedCount += 1;
+        counters.skipped += 1;
         await jobRepository.update(job.id, {
           status: "SKIPPED",
           lastError: "DISABLED_CHANNEL:WEB_PUSH",
           nextAttemptAt: null,
         });
-        continue;
+        return;
       }
 
       if (job.channel === "MOBILE_PUSH" && !mobilePushEnabled) {
-        skippedCount += 1;
+        counters.skipped += 1;
         await jobRepository.update(job.id, {
           status: "SKIPPED",
           lastError: "DISABLED_CHANNEL:MOBILE_PUSH",
           nextAttemptAt: null,
         });
-        continue;
+        return;
       }
 
       if (!job.target) {
-        skippedCount += 1;
+        counters.skipped += 1;
         await jobRepository.update(job.id, {
           status: "SKIPPED",
           lastError: "MISSING_TARGET",
           nextAttemptAt: null,
         });
-        continue;
+        return;
       }
 
       let subject: string | null = null;
@@ -673,13 +673,13 @@ export async function GET(request: NextRequest) {
         );
 
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
 
         const messages = buildVerificationMessages(parsed.data, appUrl);
@@ -698,13 +698,13 @@ export async function GET(request: NextRequest) {
         );
 
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
 
         const messages = buildReservationCreatedMessages(parsed.data, appUrl);
@@ -721,13 +721,13 @@ export async function GET(request: NextRequest) {
         );
 
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
 
         const messages = buildReservationGroupCreatedMessages(
@@ -752,13 +752,13 @@ export async function GET(request: NextRequest) {
         );
 
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
 
         const messages = buildVerificationReviewedMessages(parsed.data, appUrl);
@@ -780,13 +780,13 @@ export async function GET(request: NextRequest) {
         );
 
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
 
         const messages = buildClaimReviewedMessages(parsed.data, appUrl);
@@ -804,13 +804,13 @@ export async function GET(request: NextRequest) {
           job.payload as Record<string, unknown> | null,
         );
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
         pushTitle = "Payment needed";
         pushBody = `${parsed.data.placeName} (${parsed.data.courtLabel})`;
@@ -821,13 +821,13 @@ export async function GET(request: NextRequest) {
           job.payload as Record<string, unknown> | null,
         );
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
         pushTitle = "Payment needed";
         pushBody = `${parsed.data.placeName} (${parsed.data.itemCount} items)`;
@@ -840,13 +840,13 @@ export async function GET(request: NextRequest) {
           job.payload as Record<string, unknown> | null,
         );
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
         pushTitle = "Payment marked";
         pushBody = `${parsed.data.playerName} marked payment for ${parsed.data.placeName}`;
@@ -857,13 +857,13 @@ export async function GET(request: NextRequest) {
           job.payload as Record<string, unknown> | null,
         );
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
         pushTitle = "Payment marked";
         pushBody = `${parsed.data.playerName} marked payment for ${parsed.data.placeName}`;
@@ -876,13 +876,13 @@ export async function GET(request: NextRequest) {
           job.payload as Record<string, unknown> | null,
         );
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
         pushTitle = "Reservation confirmed";
         pushBody = `${parsed.data.placeName} (${parsed.data.courtLabel})`;
@@ -893,13 +893,13 @@ export async function GET(request: NextRequest) {
           job.payload as Record<string, unknown> | null,
         );
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
         pushTitle = "Reservation group confirmed";
         pushBody = `${parsed.data.placeName} (${parsed.data.itemCount} items)`;
@@ -912,13 +912,13 @@ export async function GET(request: NextRequest) {
           job.payload as Record<string, unknown> | null,
         );
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
         pushTitle = "Reservation rejected";
         pushBody = parsed.data.placeName;
@@ -929,13 +929,13 @@ export async function GET(request: NextRequest) {
           job.payload as Record<string, unknown> | null,
         );
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
         pushTitle = "Reservation group rejected";
         pushBody = parsed.data.placeName;
@@ -948,13 +948,13 @@ export async function GET(request: NextRequest) {
           job.payload as Record<string, unknown> | null,
         );
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
         pushTitle = "Reservation cancelled";
         pushBody = `${parsed.data.playerName} cancelled ${parsed.data.placeName}`;
@@ -965,13 +965,13 @@ export async function GET(request: NextRequest) {
           job.payload as Record<string, unknown> | null,
         );
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
         pushTitle = "Reservation group cancelled";
         pushBody = `${parsed.data.playerName} cancelled ${parsed.data.placeName}`;
@@ -984,13 +984,13 @@ export async function GET(request: NextRequest) {
           job.payload as Record<string, unknown> | null,
         );
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
         pushTitle = "Player needs your attention";
         pushBody = `${parsed.data.playerName} is trying to reach you for a reservation at ${parsed.data.placeName} (${parsed.data.courtLabel})`;
@@ -1001,26 +1001,26 @@ export async function GET(request: NextRequest) {
           job.payload as Record<string, unknown> | null,
         );
         if (!parsed.success) {
-          skippedCount += 1;
+          counters.skipped += 1;
           await jobRepository.update(job.id, {
             status: "SKIPPED",
             lastError: "INVALID_PAYLOAD",
             nextAttemptAt: null,
           });
-          continue;
+          return;
         }
         pushTitle = parsed.data.title;
         pushBody = parsed.data.body ?? null;
         pushUrl = parsed.data.url ?? null;
         pushTag = parsed.data.tag ?? null;
       } else {
-        skippedCount += 1;
+        counters.skipped += 1;
         await jobRepository.update(job.id, {
           status: "SKIPPED",
           lastError: `UNSUPPORTED_EVENT_TYPE:${job.eventType}`,
           nextAttemptAt: null,
         });
-        continue;
+        return;
       }
 
       try {
@@ -1078,7 +1078,7 @@ export async function GET(request: NextRequest) {
             job.target,
           );
           if (!subscription || subscription.revokedAt) {
-            skippedCount += 1;
+            counters.skipped += 1;
             await jobRepository.update(job.id, {
               status: "SKIPPED",
               attemptCount,
@@ -1087,7 +1087,7 @@ export async function GET(request: NextRequest) {
                 : "MISSING_SUBSCRIPTION",
               nextAttemptAt: null,
             });
-            continue;
+            return;
           }
 
           if (!pushTitle) {
@@ -1135,7 +1135,7 @@ export async function GET(request: NextRequest) {
             job.target,
           );
           if (!mobilePushToken || mobilePushToken.revokedAt) {
-            skippedCount += 1;
+            counters.skipped += 1;
             await jobRepository.update(job.id, {
               status: "SKIPPED",
               attemptCount,
@@ -1144,7 +1144,7 @@ export async function GET(request: NextRequest) {
                 : "MISSING_MOBILE_PUSH_TOKEN",
               nextAttemptAt: null,
             });
-            continue;
+            return;
           }
 
           if (!pushTitle) {
@@ -1167,7 +1167,7 @@ export async function GET(request: NextRequest) {
           throw new Error(`Unsupported channel: ${job.channel}`);
         }
 
-        sentCount += 1;
+        counters.sent += 1;
         await jobRepository.update(job.id, {
           status: "SENT",
           attemptCount,
@@ -1177,7 +1177,7 @@ export async function GET(request: NextRequest) {
           nextAttemptAt: null,
         });
       } catch (error) {
-        failedCount += 1;
+        counters.failed += 1;
         const attemptCount = job.attemptCount + 1;
         const message =
           error instanceof Error ? error.message : "Unknown error";
@@ -1197,8 +1197,8 @@ export async function GET(request: NextRequest) {
         if (error instanceof WebPushError) {
           const status = error.statusCode;
           if (status === 404 || status === 410) {
-            skippedCount += 1;
-            failedCount -= 1;
+            counters.skipped += 1;
+            counters.failed -= 1;
 
             try {
               await pushSubscriptionRepository.revokeById(job.target);
@@ -1224,17 +1224,17 @@ export async function GET(request: NextRequest) {
                 "Failed to persist web push revocation result",
               );
 
-              throw persistenceError;
+              return;
             }
 
-            continue;
+            return;
           }
         }
 
         if (error instanceof ExpoPushError) {
           if (error.code === "DeviceNotRegistered") {
-            skippedCount += 1;
-            failedCount -= 1;
+            counters.skipped += 1;
+            counters.failed -= 1;
 
             try {
               await mobilePushTokenRepository.revokeById(job.target);
@@ -1260,10 +1260,10 @@ export async function GET(request: NextRequest) {
                 "Failed to persist mobile push revocation result",
               );
 
-              throw persistenceError;
+              return;
             }
 
-            continue;
+            return;
           }
         }
 
@@ -1298,10 +1298,19 @@ export async function GET(request: NextRequest) {
             "Failed to persist notification failure state",
           );
 
-          throw persistenceError;
+          return;
         }
       }
-    }
+    };
+
+    const limit = pLimit(DISPATCH_CONCURRENCY);
+    await Promise.allSettled(jobs.map((job) => limit(() => dispatchJob(job))));
+
+    const {
+      sent: sentCount,
+      failed: failedCount,
+      skipped: skippedCount,
+    } = counters;
 
     const response = {
       success: failedCount === 0,

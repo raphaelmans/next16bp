@@ -31,6 +31,7 @@ import {
   InvalidReservationStatusError,
   NoAvailabilityError,
   NotReservationOwnerError,
+  PingLimitExceededError,
   ReservationCancellationWindowError,
   ReservationExpiredError,
   ReservationGroupNotFoundError,
@@ -72,7 +73,8 @@ function handleReservationError(error: unknown): never {
     error instanceof TermsNotAcceptedError ||
     error instanceof SlotNotAvailableError ||
     error instanceof NoAvailabilityError ||
-    error instanceof IncompleteProfileError
+    error instanceof IncompleteProfileError ||
+    error instanceof PingLimitExceededError
   ) {
     throw new TRPCError({
       code: "BAD_REQUEST",

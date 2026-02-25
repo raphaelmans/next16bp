@@ -1324,7 +1324,7 @@ export class NotificationDeliveryService {
       return { pinged: false };
     }
 
-    const windowBucket = Math.floor(Date.now() / (15 * 60 * 1000));
+    const windowBucket = Math.floor(Date.now() / (60 * 1000));
     const idempotencyKeyBase = `reservation.ping_owner:${payload.reservationId}:org:${payload.organizationId}:w${windowBucket}`;
 
     const basePayload = {

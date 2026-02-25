@@ -224,21 +224,37 @@ export function useMutMarkPaymentGroup() {
 // ============================================================================
 
 export function useMutPingOwner() {
+  const utils = trpc.useUtils();
+
   return useFeatureMutation(reservationApi.mutReservationPingOwner, {
-    onSuccess: (data) => {
+    onSuccess: async (data, variables) => {
+      const reservationId = (variables as { reservationId: string })
+        .reservationId;
+
       if (data.pinged) {
-        toast.success("Owner notified");
+        const remaining = (data as { remainingPings?: number }).remainingPings;
+        const desc =
+          remaining != null ? `${remaining} pings remaining` : undefined;
+        toast.success("Owner notified", { description: desc });
       } else {
         toast.info("Could not reach owner", {
           description: "The owner has no push notifications enabled.",
         });
       }
+
+      await utils.reservation.getDetail.invalidate({ reservationId });
     },
     onError: (error) => {
-      toast.error("Failed to ping owner", {
-        description:
-          error instanceof Error ? error.message : "Please try again",
-      });
+      const message =
+        error instanceof Error ? error.message : "Please try again";
+      if (message.includes("Ping limit")) {
+        toast.error("Ping limit reached", {
+          description:
+            "You have used all available pings for this reservation.",
+        });
+      } else {
+        toast.error("Failed to ping owner", { description: message });
+      }
     },
   });
 }
