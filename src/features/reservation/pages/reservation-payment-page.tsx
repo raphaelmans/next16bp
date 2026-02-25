@@ -193,6 +193,13 @@ export default function PaymentPage({
         reservationGroupId,
         termsAccepted: true,
       });
+
+      try {
+        await warmupAfterPayment(reservationId);
+      } catch {
+        // Best-effort warmup; navigation should continue.
+      }
+
       router.push(appRoutes.reservations.detail(reservationId));
     } catch {
       // handled in mutation hook

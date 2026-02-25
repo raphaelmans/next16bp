@@ -186,12 +186,16 @@ export function useMutMarkPaymentGroup() {
   const utils = trpc.useUtils();
 
   return useFeatureMutation(reservationApi.mutReservationMarkPaymentGroup, {
-    onSuccess: async (_data, variables) => {
+    onSuccess: async (data, variables) => {
       const reservationGroupId = (variables as { reservationGroupId: string })
         .reservationGroupId;
       toast.success("Payment submitted successfully!", {
         description: "The court owner will verify your payment shortly.",
       });
+
+      const reservationIds = (
+        data as { reservations: { id: string }[] }
+      ).reservations.map((r) => r.id);
 
       await Promise.all([
         utils.reservation.getGroupDetail.invalidate({
@@ -203,6 +207,10 @@ export function useMutMarkPaymentGroup() {
         utils.reservationChat.getGroupSession.invalidate({
           reservationGroupId,
         }),
+        ...reservationIds.flatMap((reservationId) => [
+          utils.reservation.getDetail.invalidate({ reservationId }),
+          utils.reservation.getById.invalidate({ reservationId }),
+        ]),
       ]);
     },
     onError: (error) => {
@@ -707,7 +715,19 @@ export function useQueryReservationPaymentInfo(
 }
 
 export function useMutAddPaymentProof() {
+  const utils = trpc.useUtils();
+
   return useFeatureMutation(reservationApi.mutPaymentProofAdd, {
+    onSuccess: async (_data, variables) => {
+      const reservationId = (variables as { reservationId: string })
+        .reservationId;
+
+      await Promise.all([
+        utils.reservation.getDetail.invalidate({ reservationId }),
+        utils.reservation.getMy.invalidate(),
+        utils.reservation.getMyWithDetails.invalidate(),
+      ]);
+    },
     onError: (error) => {
       toast.error(error.message || "Failed to submit payment proof");
     },
