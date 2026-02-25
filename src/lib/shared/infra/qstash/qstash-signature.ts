@@ -104,7 +104,8 @@ function verifyJwtClaims(payload: QstashJwtPayload, body: string, url: string) {
   const expectedBodyHash = createHash("sha256")
     .update(body)
     .digest("base64url");
-  if (payload.body !== expectedBodyHash) {
+  const normalizedClaim = payload.body?.replace(/=+$/, "") ?? "";
+  if (normalizedClaim !== expectedBodyHash) {
     return { ok: false as const, reason: "INVALID_BODY_HASH" };
   }
 
