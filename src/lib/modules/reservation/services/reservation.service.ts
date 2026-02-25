@@ -55,6 +55,7 @@ import type {
   GetPlayerReservationGroupDetailDTO,
   MarkPaymentDTO,
   MarkPaymentGroupDTO,
+  PingOwnerDTO,
   ReservationListItemRecord,
 } from "../dtos";
 import {
@@ -225,6 +226,11 @@ export interface IReservationService {
     profileId: string,
     filters: GetMyReservationsDTO,
   ): Promise<ReservationListItemRecord[]>;
+  pingOwner(
+    userId: string,
+    profileId: string,
+    data: PingOwnerDTO,
+  ): Promise<{ pinged: boolean }>;
 }
 
 export class ReservationService implements IReservationService {
@@ -1979,6 +1985,74 @@ export class ReservationService implements IReservationService {
       limit: filters.limit,
       offset: filters.offset,
     });
+  }
+
+  async pingOwner(
+    _userId: string,
+    profileId: string,
+    data: PingOwnerDTO,
+  ): Promise<{ pinged: boolean }> {
+    const reservation = await this.reservationRepository.findById(
+      data.reservationId,
+    );
+    if (!reservation) {
+      throw new ReservationNotFoundError(data.reservationId);
+    }
+
+    if (reservation.playerId !== profileId) {
+      throw new NotReservationOwnerError();
+    }
+
+    if (
+      reservation.status !== "CREATED" &&
+      reservation.status !== "AWAITING_PAYMENT" &&
+      reservation.status !== "PAYMENT_MARKED_BY_USER"
+    ) {
+      throw new InvalidReservationStatusError(
+        data.reservationId,
+        reservation.status,
+        ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"],
+      );
+    }
+
+    const court = await this.courtRepository.findById(reservation.courtId);
+    if (!court) {
+      throw new CourtNotFoundError(reservation.courtId);
+    }
+
+    const placeId = this.requireCourtPlaceId(court.placeId);
+    const place = await this.placeRepository.findById(placeId);
+    if (!place) {
+      throw new PlaceNotFoundError(placeId);
+    }
+
+    if (!place.organizationId) {
+      return { pinged: false };
+    }
+
+    const result =
+      await this.notificationDeliveryService.enqueueOwnerReservationPing({
+        reservationId: data.reservationId,
+        organizationId: place.organizationId,
+        placeName: place.name,
+        courtLabel: court.label,
+        playerName: reservation.playerNameSnapshot ?? "Player",
+        startTimeIso: reservation.startTime.toISOString(),
+        endTimeIso: reservation.endTime.toISOString(),
+      });
+
+    logger.info(
+      {
+        event: "reservation.owner_pinged",
+        reservationId: data.reservationId,
+        playerId: profileId,
+        organizationId: place.organizationId,
+        pinged: result.pinged,
+      },
+      "Player pinged court owner",
+    );
+
+    return result;
   }
 
   private pickCheapestCourtOption(

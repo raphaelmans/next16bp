@@ -169,6 +169,16 @@ export type PlayerReservationGroupRejectedPayload = {
   reason?: string | null;
 };
 
+export type OwnerReservationPingPayload = {
+  reservationId: string;
+  organizationId: string;
+  placeName: string;
+  courtLabel: string;
+  playerName: string;
+  startTimeIso: string;
+  endTimeIso: string;
+};
+
 export type OwnerReservationCancelledPayload = {
   reservationId: string;
   placeName: string;
@@ -1292,6 +1302,83 @@ export class NotificationDeliveryService {
 
     await this.jobRepository.createMany(jobs, ctx);
     return { jobCount: jobs.length };
+  }
+
+  async enqueueOwnerReservationPing(
+    payload: OwnerReservationPingPayload,
+    ctx?: RequestContext,
+  ): Promise<{ pinged: boolean }> {
+    if (
+      env.NOTIFICATION_WEB_PUSH_ENABLED === false &&
+      env.NOTIFICATION_MOBILE_PUSH_ENABLED === false
+    ) {
+      return { pinged: false };
+    }
+
+    const recipient =
+      await this.recipientRepository.findOwnerRecipientByOrganizationId(
+        payload.organizationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { pinged: false };
+    }
+
+    const windowBucket = Math.floor(Date.now() / (15 * 60 * 1000));
+    const idempotencyKeyBase = `reservation.ping_owner:${payload.reservationId}:org:${payload.organizationId}:w${windowBucket}`;
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      organizationId: payload.organizationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      playerName: payload.playerName,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+    };
+
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: recipient.ownerUserId,
+      eventType: "reservation.ping_owner",
+      reservationId: payload.reservationId,
+      organizationId: payload.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.ownerUserId,
+      eventType: "reservation.ping_owner",
+      reservationId: payload.reservationId,
+      organizationId: payload.organizationId,
+      payload: basePayload,
+      idempotencyKeyBase,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
+    if (!jobs.length) {
+      return { pinged: false };
+    }
+
+    await this.jobRepository.createMany(jobs, ctx);
+
+    logger.info(
+      {
+        event: "notification_delivery.jobs_enqueued",
+        eventType: "reservation.ping_owner",
+        reservationId: payload.reservationId,
+        organizationId: payload.organizationId,
+        jobCount: jobs.length,
+      },
+      "Enqueued owner reservation.ping_owner notification jobs",
+    );
+
+    return { pinged: true };
   }
 
   async enqueueOwnerReservationCancelled(

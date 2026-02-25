@@ -220,6 +220,30 @@ export function useMutMarkPaymentGroup() {
 }
 
 // ============================================================================
+// From use-ping-owner.ts
+// ============================================================================
+
+export function useMutPingOwner() {
+  return useFeatureMutation(reservationApi.mutReservationPingOwner, {
+    onSuccess: (data) => {
+      if (data.pinged) {
+        toast.success("Owner notified");
+      } else {
+        toast.info("Could not reach owner", {
+          description: "The owner has no push notifications enabled.",
+        });
+      }
+    },
+    onError: (error) => {
+      toast.error("Failed to ping owner", {
+        description:
+          error instanceof Error ? error.message : "Please try again",
+      });
+    },
+  });
+}
+
+// ============================================================================
 // From use-my-reservations.ts
 // ============================================================================
 

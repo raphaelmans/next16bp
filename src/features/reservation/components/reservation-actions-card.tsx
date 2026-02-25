@@ -1,6 +1,14 @@
 "use client";
 
-import { Copy, Mail, MapPin, MessageSquare, Phone, X } from "lucide-react";
+import {
+  Bell,
+  Copy,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Phone,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
@@ -29,6 +37,7 @@ import {
   useMutCreateOpenPlayFromReservation,
   useQueryOpenPlayForReservation,
 } from "@/features/open-play/hooks";
+import { useMutPingOwner } from "@/features/reservation/hooks";
 
 interface ReservationActionsCardProps {
   reservationId: string;
@@ -69,6 +78,12 @@ export function ReservationActionsCard({
     "CONFIRMED",
   ];
   const canMessageOwner = activeChatStatuses.includes(status);
+
+  const canPingOwner =
+    status === "CREATED" ||
+    status === "AWAITING_PAYMENT" ||
+    status === "PAYMENT_MARKED_BY_USER";
+  const pingOwnerMutation = useMutPingOwner();
 
   const canCreateOpenPlay =
     status === "CREATED" ||
@@ -255,6 +270,18 @@ export function ReservationActionsCard({
                 </p>
               )}
             </>
+          ) : null}
+
+          {canPingOwner ? (
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              disabled={pingOwnerMutation.isPending}
+              onClick={() => pingOwnerMutation.mutate({ reservationId })}
+            >
+              <Bell className="mr-2 h-4 w-4" />
+              {pingOwnerMutation.isPending ? "Pinging..." : "Ping Owner"}
+            </Button>
           ) : null}
 
           <Button variant="outline" className="w-full justify-start" asChild>

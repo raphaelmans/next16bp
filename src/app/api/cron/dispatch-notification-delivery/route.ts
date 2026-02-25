@@ -205,6 +205,16 @@ const reservationGroupCancelledSchema = z.object({
   reason: z.string().nullable().optional(),
 });
 
+const reservationPingOwnerSchema = z.object({
+  reservationId: z.string(),
+  organizationId: z.string(),
+  placeName: z.string(),
+  courtLabel: z.string(),
+  playerName: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+});
+
 const testWebPushSchema = z.object({
   title: z.string(),
   body: z.string().nullable().optional(),
@@ -276,6 +286,10 @@ const parseReservationCancelledPayload = (
 const parseReservationGroupCancelledPayload = (
   payload: Record<string, unknown> | null | undefined,
 ) => reservationGroupCancelledSchema.safeParse(payload ?? {});
+
+const parseReservationPingOwnerPayload = (
+  payload: Record<string, unknown> | null | undefined,
+) => reservationPingOwnerSchema.safeParse(payload ?? {});
 
 const parseTestWebPushPayload = (
   payload: Record<string, unknown> | null | undefined,
@@ -965,6 +979,23 @@ export async function GET(request: NextRequest) {
           parsed.data.reservationGroupId,
         );
         pushTag = `reservation_group.cancelled:${parsed.data.reservationGroupId}`;
+      } else if (job.eventType === "reservation.ping_owner") {
+        const parsed = parseReservationPingOwnerPayload(
+          job.payload as Record<string, unknown> | null,
+        );
+        if (!parsed.success) {
+          skippedCount += 1;
+          await jobRepository.update(job.id, {
+            status: "SKIPPED",
+            lastError: "INVALID_PAYLOAD",
+            nextAttemptAt: null,
+          });
+          continue;
+        }
+        pushTitle = "Player needs your attention";
+        pushBody = `${parsed.data.playerName} is trying to reach you for a reservation at ${parsed.data.placeName} (${parsed.data.courtLabel})`;
+        pushUrl = appRoutes.owner.reservationDetail(parsed.data.reservationId);
+        pushTag = `reservation.ping_owner:${parsed.data.reservationId}`;
       } else if (job.eventType === "test.web_push") {
         const parsed = parseTestWebPushPayload(
           job.payload as Record<string, unknown> | null,

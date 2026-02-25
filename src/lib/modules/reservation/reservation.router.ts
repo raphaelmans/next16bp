@@ -24,6 +24,7 @@ import {
   GetPlayerReservationGroupDetailSchema,
   MarkPaymentGroupSchema,
   MarkPaymentSchema,
+  PingOwnerSchema,
 } from "./dtos";
 import {
   InvalidReservationAddonSelectionError,
@@ -200,6 +201,27 @@ export const reservationRouter = router({
 
         const reservationService = makeReservationService();
         return await reservationService.cancelReservation(
+          ctx.userId,
+          profile.id,
+          input,
+        );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
+  /**
+   * Ping court owner with a push notification
+   */
+  pingOwner: protectedRateLimitedProcedure("sensitive")
+    .input(PingOwnerSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const reservationService = makeReservationService();
+        return await reservationService.pingOwner(
           ctx.userId,
           profile.id,
           input,

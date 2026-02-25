@@ -41,6 +41,9 @@ export interface IReservationApi {
   mutReservationMarkPaymentGroup: ProcedureFn<
     TrpcClientApi["reservation"]["markPaymentGroup"]["mutate"]
   >;
+  mutReservationPingOwner: ProcedureFn<
+    TrpcClientApi["reservation"]["pingOwner"]["mutate"]
+  >;
   queryProfileMe: ProcedureFn<TrpcClientApi["profile"]["me"]["query"]>;
   queryReservationGetById: ProcedureFn<
     TrpcClientApi["reservation"]["getById"]["query"]
@@ -178,6 +181,17 @@ export class ReservationApi {
       this.clientApi,
       ["reservation", "markPaymentGroup"],
       (clientApi) => clientApi.reservation.markPaymentGroup.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutReservationPingOwner: ProcedureFn<
+    TrpcClientApi["reservation"]["pingOwner"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservation", "pingOwner"],
+      (clientApi) => clientApi.reservation.pingOwner.mutate,
       input,
       this.toAppError,
     );
