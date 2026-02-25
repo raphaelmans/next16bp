@@ -59,7 +59,7 @@ export function ClaimSearchDialog({
       onOpenChange(false);
       trackEvent({ event: "funnel.owner_claim_submitted" });
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       toast.error("Unable to submit claim", {
         description: getClientErrorMessage(error, "Please try again"),
       });

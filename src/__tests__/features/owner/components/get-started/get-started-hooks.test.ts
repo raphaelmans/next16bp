@@ -49,7 +49,14 @@ describe("useModGetStartedOverlays", () => {
 
   it("supports all overlay step types", () => {
     const { result } = renderHook(() => useModGetStartedOverlays());
-    const steps = ["org", "venue", "claim", "courts", "verify", "import"] as const;
+    const steps = [
+      "org",
+      "venue",
+      "claim",
+      "courts",
+      "verify",
+      "import",
+    ] as const;
 
     for (const step of steps) {
       act(() => {
