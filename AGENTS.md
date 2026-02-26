@@ -20,6 +20,14 @@ pnpm lint       # biome check
 pnpm format     # biome format --write
 ```
 
+### E2E (Playwright)
+
+```bash
+pnpm test:e2e                                      # Run full Playwright suite
+pnpm test:e2e -- tests/e2e/owner-get-started.happy-path.spec.ts  # Run a single e2e spec
+pnpm test:e2e -- tests/e2e/player-reserve-single-slot.awaiting-owner-confirmation.spec.ts  # Run player booking awaiting-owner-confirmation e2e
+```
+
 ### Database (Drizzle + dotenvx)
 
 ```bash
@@ -45,7 +53,8 @@ pnpm script:promote-tier3
 
 - Default gate for this frontend migration: `pnpm lint` + manual smoke matrix.
 - Do not run `pnpm build` unless explicitly requested by the user.
-- If a test runner is introduced later, update this file with the exact single-test command.
+- E2E single-test command: `pnpm test:e2e -- tests/e2e/owner-get-started.happy-path.spec.ts`.
+- E2E single-test command (player booking): `pnpm test:e2e -- tests/e2e/player-reserve-single-slot.awaiting-owner-confirmation.spec.ts`.
 
 ## Stack
 

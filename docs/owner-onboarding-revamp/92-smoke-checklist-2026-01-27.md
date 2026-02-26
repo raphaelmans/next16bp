@@ -12,14 +12,14 @@
   - Completing org creation updates the hub state (no hard reload required)
 
 - Step 2: Venue
-  - Add venue CTA routes to `/owner/venues/new?from=setup`
-  - Submitting venue creation returns to `/owner/get-started`
+  - Add venue CTA opens in-hub `AddVenueSheet` with `PlaceForm`
+  - Submitting venue creation closes the sheet and refreshes setup status on `/owner/get-started`
   - Claim listing flow remains in-hub and shows pending state
 
 - Step 3: Verify venue
-  - Verify CTA routes to `/owner/verify/:placeId?from=setup`
-  - Submitting verification returns to `/owner/get-started` and shows PENDING state
+  - Verify CTA opens in-hub `VerifyVenueSheet`
+  - Submitting verification closes sheet and updates state to PENDING on the hub
 
 - Step 4: Go live
-  - Configure courts CTA routes to `/owner/venues/:placeId/courts/setup?from=setup`
-  - Import bookings CTA routes to `/owner/import/bookings?from=setup`
+  - Configure courts CTA opens in-hub `ConfigureCourtsSheet`
+  - Import bookings CTA opens in-hub `ImportBookingsSheet` (review is in-sheet)
