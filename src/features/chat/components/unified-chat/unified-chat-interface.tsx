@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { trpc } from "@/trpc/client";
 import {
   formatSupportThreadTitle,
   getSupportThreadKind,
@@ -37,13 +38,11 @@ import {
   useMutSupportChatBackfillClaimThreads,
   useMutSupportChatSendClaimMessage,
   useMutSupportChatSendVerificationMessage,
-  useQueryChatAuth,
   useQueryChatInboxListArchivedThreadIds,
   useQuerySupportChatClaimSession,
   useQuerySupportChatVerificationSession,
 } from "../../hooks/use-chat-trpc";
-import { useModStreamClient } from "../../hooks/useModStreamClient";
-import { StreamChatThread } from "../chat-thread/stream-chat-thread";
+import { ChatThread } from "../chat-thread/chat-thread";
 import {
   ReservationInboxWidget,
   type ReservationInboxWidgetConfig,
@@ -52,14 +51,10 @@ import { InboxFloatingSheet } from "../inbox-shell/inbox-floating-sheet";
 
 type SupportChatKind = SupportThreadKind;
 
-type SupportChannel = {
-  id?: string;
-  type?: string;
-  state: {
-    unreadCount?: number;
-    latestMessages?: Array<{ text?: string }>;
-    last_message_at?: Date | string | null;
-  };
+type ThreadSummary = {
+  threadId: string;
+  lastMessageText: string | null;
+  lastMessageAt: string;
 };
 
 type UnifiedChatInterfaceProps =
@@ -108,14 +103,12 @@ function UnifiedSupportInbox() {
   } as const;
 
   const [open, setOpen] = useState(false);
-  const [channels, setChannels] = useState<SupportChannel[]>([]);
-  const [activeChannelId, setActiveChannelId] = useState<string | null>(null);
-  const [isLoadingChannels, setIsLoadingChannels] = useState(false);
+  const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
   const [archivedDialogOpen, setArchivedDialogOpen] = useState(false);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
 
-  const authQuery = useQueryChatAuth();
+  const meQuery = trpc.auth.me.useQuery();
   const backfillClaimThreadsMutation = useMutSupportChatBackfillClaimThreads();
   const sendClaimMessageMutation = useMutSupportChatSendClaimMessage();
   const sendVerificationMessageMutation =
@@ -126,24 +119,56 @@ function UnifiedSupportInbox() {
     { threadKind: "support" },
     { enabled: open },
   );
-  const auth = authQuery.data;
+
+  const myUserId = meQuery.data?.id ?? null;
   const backfillTriggeredForOpen = useRef(false);
 
-  const {
-    client,
-    isReady,
-    error: clientError,
-  } = useModStreamClient(
-    auth
-      ? { apiKey: auth.apiKey, user: auth.user, tokenOrProvider: auth.token }
-      : { apiKey: null, user: null, tokenOrProvider: null },
+  const claimThreadSummariesQuery =
+    trpc.chatMessage.listThreadSummaries.useQuery(
+      { threadIdPrefix: "cr-", limit: 30 },
+      { enabled: open, refetchInterval: 15_000 },
+    );
+  const verificationThreadSummariesQuery =
+    trpc.chatMessage.listThreadSummaries.useQuery(
+      { threadIdPrefix: "vr-", limit: 30 },
+      { enabled: open, refetchInterval: 15_000 },
+    );
+
+  const threads = useMemo(() => {
+    const merged = [
+      ...(claimThreadSummariesQuery.data?.threads ?? []),
+      ...(verificationThreadSummariesQuery.data?.threads ?? []),
+    ];
+    const deduped = new Map<string, ThreadSummary>();
+
+    for (const thread of merged) {
+      deduped.set(thread.threadId, thread);
+    }
+
+    return Array.from(deduped.values())
+      .sort(
+        (a, b) =>
+          new Date(b.lastMessageAt).getTime() -
+          new Date(a.lastMessageAt).getTime(),
+      )
+      .slice(0, 30);
+  }, [
+    claimThreadSummariesQuery.data?.threads,
+    verificationThreadSummariesQuery.data?.threads,
+  ]);
+
+  const threadIds = useMemo(() => threads.map((t) => t.threadId), [threads]);
+  const unreadCountsQuery = trpc.chatMessage.getUnreadCounts.useQuery(
+    { threadIds },
+    { enabled: open && threadIds.length > 0, refetchInterval: 15_000 },
   );
+  const unreadCounts = unreadCountsQuery.data?.unreadCounts ?? {};
 
   useEffect(() => {
     const storedOpen = readLocalStorage(storageKeys.open) === "1";
     const storedActive = readLocalStorage(storageKeys.activeChannelId);
     setOpen(storedOpen);
-    setActiveChannelId(storedActive);
+    setActiveThreadId(storedActive);
   }, [storageKeys.activeChannelId, storageKeys.open]);
 
   useEffect(() => {
@@ -154,44 +179,10 @@ function UnifiedSupportInbox() {
   }, [open, storageKeys.open]);
 
   useEffect(() => {
-    if (activeChannelId) {
-      writeLocalStorage(storageKeys.activeChannelId, activeChannelId);
+    if (activeThreadId) {
+      writeLocalStorage(storageKeys.activeChannelId, activeThreadId);
     }
-  }, [activeChannelId, storageKeys.activeChannelId]);
-
-  const fetchChannels = useRef<(() => Promise<void>) | null>(null);
-  fetchChannels.current = async () => {
-    if (!isReady || !client || !auth?.user.id) {
-      return;
-    }
-
-    setIsLoadingChannels(true);
-    try {
-      const results = await client.queryChannels(
-        {
-          type: "messaging",
-          members: { $in: [auth.user.id] },
-        } as unknown as Record<string, unknown>,
-        { last_message_at: -1 },
-        { limit: 30, message_limit: 1 },
-      );
-      setChannels(results as SupportChannel[]);
-    } finally {
-      setIsLoadingChannels(false);
-    }
-  };
-
-  const refreshInbox = async () => {
-    await Promise.all([
-      fetchChannels.current?.() ?? Promise.resolve(),
-      archivedThreadIdsQuery.refetch(),
-    ]);
-  };
-
-  useEffect(() => {
-    if (!open) return;
-    fetchChannels.current?.().catch(() => undefined);
-  }, [open]);
+  }, [activeThreadId, storageKeys.activeChannelId]);
 
   useEffect(() => {
     if (!open) {
@@ -205,36 +196,31 @@ function UnifiedSupportInbox() {
 
     backfillClaimThreadsMutation.mutate(undefined, {
       onSettled: () => {
-        fetchChannels.current?.().catch(() => undefined);
+        Promise.all([
+          claimThreadSummariesQuery.refetch(),
+          verificationThreadSummariesQuery.refetch(),
+        ]).catch(() => undefined);
       },
     });
-  }, [open, backfillClaimThreadsMutation]);
+  }, [
+    open,
+    backfillClaimThreadsMutation,
+    claimThreadSummariesQuery,
+    verificationThreadSummariesQuery,
+  ]);
 
-  useEffect(() => {
-    if (!open) return;
-    if (!isReady || !client || !auth?.user.id) return;
-    fetchChannels.current?.().catch(() => undefined);
-  }, [auth?.user.id, client, isReady, open]);
+  const refreshInbox = async () => {
+    await Promise.all([
+      claimThreadSummariesQuery.refetch(),
+      verificationThreadSummariesQuery.refetch(),
+      unreadCountsQuery.refetch(),
+      archivedThreadIdsQuery.refetch(),
+    ]);
+  };
 
-  useEffect(() => {
-    if (!isReady || !client) return;
-    const subscription = client.on((event: { type?: string }) => {
-      if (event.type === "message.new") {
-        fetchChannels.current?.().catch(() => undefined);
-      }
-    });
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [client, isReady]);
-
-  const supportChannels = useMemo(
-    () =>
-      channels.filter((c) => {
-        const id = c.id ?? "";
-        return getSupportThreadKind(id) !== null;
-      }),
-    [channels],
+  const supportThreads = useMemo(
+    () => threads.filter((t) => getSupportThreadKind(t.threadId) !== null),
+    [threads],
   );
 
   const archivedThreadIdsSet = useMemo(
@@ -242,67 +228,52 @@ function UnifiedSupportInbox() {
     [archivedThreadIdsQuery.data?.threadIds],
   );
 
-  const visibleChannels = useMemo(
-    () =>
-      supportChannels.filter((channel) => {
-        const id = channel.id ?? "";
-        return !archivedThreadIdsSet.has(id);
-      }),
-    [archivedThreadIdsSet, supportChannels],
+  const visibleThreads = useMemo(
+    () => supportThreads.filter((t) => !archivedThreadIdsSet.has(t.threadId)),
+    [archivedThreadIdsSet, supportThreads],
   );
 
-  const archivedChannels = useMemo(
-    () =>
-      supportChannels.filter((channel) => {
-        const id = channel.id ?? "";
-        return archivedThreadIdsSet.has(id);
-      }),
-    [archivedThreadIdsSet, supportChannels],
+  const archivedThreads = useMemo(
+    () => supportThreads.filter((t) => archivedThreadIdsSet.has(t.threadId)),
+    [archivedThreadIdsSet, supportThreads],
   );
 
   useEffect(() => {
     if (!open) return;
-    if (activeChannelId) return;
-    const first = visibleChannels[0] ?? null;
-    if (first?.id) {
-      setActiveChannelId(first.id);
+    if (activeThreadId) return;
+    const first = visibleThreads[0] ?? null;
+    if (first?.threadId) {
+      setActiveThreadId(first.threadId);
     }
-  }, [activeChannelId, open, visibleChannels]);
+  }, [activeThreadId, open, visibleThreads]);
 
-  const activeChannel = useMemo(() => {
-    if (!activeChannelId) return null;
-    return supportChannels.find((c) => c.id === activeChannelId) ?? null;
-  }, [activeChannelId, supportChannels]);
+  const activeThread = useMemo(() => {
+    if (!activeThreadId) return null;
+    return supportThreads.find((t) => t.threadId === activeThreadId) ?? null;
+  }, [activeThreadId, supportThreads]);
 
   const unreadCount = useMemo(() => {
-    return visibleChannels.reduce(
-      (sum, c) => sum + (c.state.unreadCount ?? 0),
+    return visibleThreads.reduce(
+      (sum, t) => sum + (unreadCounts[t.threadId] ?? 0),
       0,
     );
-  }, [visibleChannels]);
+  }, [visibleThreads, unreadCounts]);
 
-  const myUserId = auth?.user.id ?? null;
-  const activeChannelIsArchived =
-    !!activeChannelId && archivedThreadIdsSet.has(activeChannelId);
+  const activeThreadIsArchived =
+    !!activeThreadId && archivedThreadIdsSet.has(activeThreadId);
 
   const handleArchiveThread = async () => {
-    if (!activeChannelId) {
-      return;
-    }
-
+    if (!activeThreadId) return;
     await archiveThreadMutation.mutateAsync({
       threadKind: "support",
-      threadId: activeChannelId,
+      threadId: activeThreadId,
     });
     await refreshInbox();
   };
 
   const handleUnarchiveThread = async (threadId?: string) => {
-    const targetThreadId = threadId ?? activeChannelId;
-    if (!targetThreadId) {
-      return;
-    }
-
+    const targetThreadId = threadId ?? activeThreadId;
+    if (!targetThreadId) return;
     await unarchiveThreadMutation.mutateAsync({
       threadKind: "support",
       threadId: targetThreadId,
@@ -310,12 +281,12 @@ function UnifiedSupportInbox() {
     await refreshInbox();
   };
 
-  const renderRow = (channel: SupportChannel) => {
-    const id = channel.id ?? "";
-    const unread = channel.state.unreadCount ?? 0;
-    const lastMessage = channel.state.latestMessages?.[0]?.text ?? "";
+  const renderRow = (thread: ThreadSummary) => {
+    const id = thread.threadId;
+    const unread = unreadCounts[id] ?? 0;
+    const lastMessage = thread.lastMessageText ?? "";
     const kind = getSupportThreadKind(id);
-    const isActive = id === activeChannelId;
+    const isActive = id === activeThreadId;
 
     return (
       <button
@@ -326,7 +297,7 @@ function UnifiedSupportInbox() {
           isActive ? "bg-muted" : "hover:bg-muted/60",
         )}
         onClick={() => {
-          setActiveChannelId(id);
+          setActiveThreadId(id);
           if (!isDesktop) {
             setMobilePane("thread");
           }
@@ -362,6 +333,11 @@ function UnifiedSupportInbox() {
     );
   };
 
+  const isLoadingThreads =
+    (claimThreadSummariesQuery.isLoading ||
+      verificationThreadSummariesQuery.isLoading) &&
+    supportThreads.length === 0;
+
   const listPane = (
     <div
       className={cn(
@@ -377,7 +353,7 @@ function UnifiedSupportInbox() {
           >
             <DialogTrigger asChild>
               <Button type="button" variant="outline" size="sm" className="h-8">
-                Archived ({archivedChannels.length})
+                Archived ({archivedThreads.length})
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -389,15 +365,14 @@ function UnifiedSupportInbox() {
               </DialogHeader>
               <ScrollArea className="max-h-[420px] pr-2">
                 <div className="space-y-2">
-                  {archivedChannels.length === 0 ? (
+                  {archivedThreads.length === 0 ? (
                     <div className="text-sm text-muted-foreground">
                       No archived support threads.
                     </div>
                   ) : (
-                    archivedChannels.map((channel) => {
-                      const id = channel.id ?? "";
-                      const lastMessage =
-                        channel.state.latestMessages?.[0]?.text ?? "";
+                    archivedThreads.map((thread) => {
+                      const id = thread.threadId;
+                      const lastMessage = thread.lastMessageText ?? "";
                       return (
                         <div
                           key={id}
@@ -454,18 +429,18 @@ function UnifiedSupportInbox() {
 
       <ScrollArea className="min-h-0 flex-1">
         <div className="divide-y">
-          {isLoadingChannels && supportChannels.length === 0 ? (
+          {isLoadingThreads ? (
             <div className="space-y-3 p-4">
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
             </div>
-          ) : visibleChannels.length === 0 ? (
+          ) : visibleThreads.length === 0 ? (
             <div className="p-6 text-sm text-muted-foreground">
               No support threads yet.
             </div>
           ) : (
-            visibleChannels.map(renderRow)
+            visibleThreads.map(renderRow)
           )}
         </div>
       </ScrollArea>
@@ -474,26 +449,23 @@ function UnifiedSupportInbox() {
 
   const threadPane = (
     <div className="min-h-0 min-w-0 flex-1 overflow-hidden">
-      <StreamChatThread
-        client={isReady ? client : null}
-        channelId={activeChannel?.id ?? null}
-        channelType={activeChannel?.type ?? "messaging"}
-        members={null}
+      <ChatThread
+        threadId={activeThread?.threadId ?? null}
         myUserId={myUserId}
         headerTitle={
-          activeChannel?.id
-            ? formatSupportThreadTitle(activeChannel.id)
+          activeThread?.threadId
+            ? formatSupportThreadTitle(activeThread.threadId)
             : "Support chat"
         }
         headerSubtitle={
-          activeChannel?.id
-            ? getSupportThreadKind(activeChannel.id) === "claim"
+          activeThread?.threadId
+            ? getSupportThreadKind(activeThread.threadId) === "claim"
               ? "Claim support"
               : "Verification support"
             : undefined
         }
-        readOnly={!isReady}
-        readOnlyReason={!isReady ? "Connecting..." : undefined}
+        readOnly={!myUserId}
+        readOnlyReason={!myUserId ? "Connecting..." : undefined}
         minHeightClassName="min-h-0 flex-1"
         onRefreshContext={async () => {
           setIsManualRefreshing(true);
@@ -505,15 +477,15 @@ function UnifiedSupportInbox() {
         }}
         isContextRefreshing={isManualRefreshing}
         archiveActionLabel={
-          activeChannelId
-            ? activeChannelIsArchived
+          activeThreadId
+            ? activeThreadIsArchived
               ? "Unarchive"
               : "Archive"
             : undefined
         }
         onArchiveAction={
-          activeChannelId
-            ? activeChannelIsArchived
+          activeThreadId
+            ? activeThreadIsArchived
               ? () => handleUnarchiveThread()
               : () => handleArchiveThread()
             : null
@@ -524,9 +496,9 @@ function UnifiedSupportInbox() {
         onBack={!isDesktop ? () => setMobilePane("list") : undefined}
         backButtonLabel="Back to inbox"
         onSendMessage={async (payload) => {
-          const channelId = activeChannel?.id ?? null;
-          const kind = getSupportThreadKind(channelId);
-          const requestId = getSupportThreadRequestId(channelId);
+          const threadId = activeThread?.threadId ?? null;
+          const kind = getSupportThreadKind(threadId);
+          const requestId = getSupportThreadRequestId(threadId);
           if (!kind || !requestId) {
             throw new Error("Conversation not selected");
           }
@@ -535,7 +507,13 @@ function UnifiedSupportInbox() {
             await sendClaimMessageMutation.mutateAsync({
               claimRequestId: requestId,
               text: payload.text,
-              attachments: payload.attachments,
+              attachments: payload.attachments?.map((a) => ({
+                type: a.type,
+                asset_url: a.url,
+                title: a.filename,
+                file_size: a.fileSize,
+                mime_type: a.mimeType,
+              })),
             });
             return;
           }
@@ -543,7 +521,13 @@ function UnifiedSupportInbox() {
           await sendVerificationMessageMutation.mutateAsync({
             placeVerificationRequestId: requestId,
             text: payload.text,
-            attachments: payload.attachments,
+            attachments: payload.attachments?.map((a) => ({
+              type: a.type,
+              asset_url: a.url,
+              title: a.filename,
+              file_size: a.fileSize,
+              mime_type: a.mimeType,
+            })),
           });
         }}
       />
@@ -562,15 +546,9 @@ function UnifiedSupportInbox() {
       sheetDescription="Conversations with owners about claims and verification."
       isSmall={isSmall}
       isDesktop={isDesktop}
-      authLoading={authQuery.isLoading}
-      authErrorMessage={authQuery.isError ? authQuery.error.message : null}
-      clientErrorMessage={
-        clientError
-          ? clientError instanceof Error
-            ? clientError.message
-            : "Unable to connect to chat."
-          : null
-      }
+      authLoading={meQuery.isLoading}
+      authErrorMessage={meQuery.isError ? meQuery.error.message : null}
+      clientErrorMessage={null}
       mobilePane={mobilePane}
       listPane={listPane}
       threadPane={threadPane}
@@ -610,14 +588,8 @@ function UnifiedSupportThreadSheet({
     kind === "claim" ? claimQuery.isLoading : verificationQuery.isLoading;
   const error = kind === "claim" ? claimQuery.error : verificationQuery.error;
 
-  const streamAuth = session?.auth ?? null;
-  const myUserId = streamAuth?.user.id ?? null;
-
-  const { client, isReady } = useModStreamClient({
-    apiKey: streamAuth?.apiKey ?? null,
-    user: streamAuth?.user ?? null,
-    tokenOrProvider: streamAuth?.token ?? null,
-  });
+  const myUserId = session?.auth.user.id ?? null;
+  const threadId = session?.channel.channelId ?? null;
 
   const headerTitle = useMemo(() => {
     if (!session) return "Support chat";
@@ -643,9 +615,7 @@ function UnifiedSupportThreadSheet({
         <SheetHeader className="border-b px-5 py-4 text-left">
           <SheetTitle className="font-heading">{headerTitle}</SheetTitle>
           <SheetDescription>
-            {headerSubtitle
-              ? headerSubtitle
-              : "Message an admin about this request."}
+            {headerSubtitle ?? "Message an admin about this request."}
           </SheetDescription>
         </SheetHeader>
 
@@ -655,23 +625,26 @@ function UnifiedSupportThreadSheet({
           ) : error ? (
             <div className="text-sm text-destructive">{error.message}</div>
           ) : (
-            <StreamChatThread
-              client={isReady ? client : null}
-              channelType={session?.channel.channelType}
-              channelId={session?.channel.channelId ?? null}
-              members={session?.channel.memberIds ?? null}
+            <ChatThread
+              threadId={threadId}
               myUserId={myUserId}
               headerTitle={headerTitle}
               headerSubtitle={headerSubtitle}
-              readOnly={!isReady}
-              readOnlyReason={!isReady ? "Connecting..." : undefined}
+              readOnly={!myUserId}
+              readOnlyReason={!myUserId ? "Connecting..." : undefined}
               minHeightClassName="min-h-0 flex-1"
               onSendMessage={async (payload) => {
                 if (kind === "claim") {
                   await sendClaimMessageMutation.mutateAsync({
                     claimRequestId: requestId,
                     text: payload.text,
-                    attachments: payload.attachments,
+                    attachments: payload.attachments?.map((a) => ({
+                      type: a.type,
+                      asset_url: a.url,
+                      title: a.filename,
+                      file_size: a.fileSize,
+                      mime_type: a.mimeType,
+                    })),
                   });
                   return;
                 }
@@ -679,7 +652,13 @@ function UnifiedSupportThreadSheet({
                 await sendVerificationMessageMutation.mutateAsync({
                   placeVerificationRequestId: requestId,
                   text: payload.text,
-                  attachments: payload.attachments,
+                  attachments: payload.attachments?.map((a) => ({
+                    type: a.type,
+                    asset_url: a.url,
+                    title: a.filename,
+                    file_size: a.fileSize,
+                    mime_type: a.mimeType,
+                  })),
                 });
               }}
             />

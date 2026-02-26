@@ -3,33 +3,41 @@ import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import type { ReservationInboxWidgetConfig } from "@/features/chat/components/chat-widget/reservation-inbox-widget";
 
-function createDeferred<T>() {
-  let resolve: (value: T | PromiseLike<T>) => void = () => undefined;
-  const promise = new Promise<T>((res) => {
-    resolve = res;
-  });
-  return { promise, resolve };
-}
-
-const deferredChannels =
-  createDeferred<Array<{ id: string; state: { unreadCount: number } }>>();
-
-const mockClient = {
-  queryChannels: vi.fn(async () => deferredChannels.promise),
-  on: vi.fn(() => ({ unsubscribe: vi.fn() })),
-};
-
 vi.mock("@/common/hooks/use-media-query", () => ({
   useMediaQuery: () => true,
 }));
 
-vi.mock("@/features/chat/hooks/useModStreamClient", () => ({
-  useModStreamClient: () => ({
-    client: mockClient,
-    isReady: true,
+vi.mock("@/trpc/client", () => {
+  const useQuery = (_input?: unknown, _opts?: unknown) => ({
+    data: undefined,
+    isLoading: false,
+    isError: false,
     error: null,
-  }),
-}));
+    refetch: vi.fn(async () => ({ data: undefined })),
+  });
+
+  const useUtils = () => ({
+    chatMessage: {
+      getUnreadCounts: { invalidate: vi.fn(async () => undefined) },
+    },
+  });
+
+  const useMutation = () => ({
+    mutateAsync: vi.fn(),
+    isPending: false,
+  });
+
+  return {
+    trpc: {
+      auth: { me: { useQuery } },
+      chatMessage: {
+        getUnreadCounts: { useQuery },
+        sendMessage: { useMutation },
+      },
+      useUtils,
+    },
+  };
+});
 
 vi.mock("@/features/chat/hooks/use-chat-trpc", () => ({
   useModChatInvalidation: () => ({
@@ -66,6 +74,7 @@ vi.mock("@/features/chat/hooks/use-chat-trpc", () => ({
     isPending: false,
     isSuccess: true,
     isError: false,
+    isLoading: false,
   }),
 }));
 
@@ -84,8 +93,21 @@ vi.mock("@/features/chat/components/inbox-shell/inbox-floating-sheet", () => ({
   ),
 }));
 
-vi.mock("@/features/chat/components/chat-thread/stream-chat-thread", () => ({
-  StreamChatThread: () => <div>thread</div>,
+vi.mock("@/features/chat/components/chat-thread/chat-thread", () => ({
+  ChatThread: () => <div>thread</div>,
+}));
+
+vi.mock("@/features/chat/hooks/useSupabaseChatChannel", () => ({
+  useSupabaseChatChannel: () => ({
+    messages: [],
+    isWatching: false,
+    isRefreshing: false,
+    error: null,
+    sendMessage: vi.fn(),
+    loadMore: vi.fn(),
+    refresh: vi.fn(),
+    markRead: vi.fn(),
+  }),
 }));
 
 import { ReservationInboxWidget } from "@/features/chat/components/chat-widget/reservation-inbox-widget";
@@ -124,8 +146,6 @@ describe("ReservationInboxWidget", () => {
         "animate-spin",
       );
     });
-
-    deferredChannels.resolve([]);
 
     await waitFor(() => {
       const icon = refreshButton.querySelector("svg");

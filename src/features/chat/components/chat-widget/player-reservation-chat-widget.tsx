@@ -12,6 +12,7 @@ import {
   SheetDescription,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { makeReservationThreadId } from "@/lib/modules/chat/shared/domain";
 import {
   getPlayerReservationStatusLabel,
   isReservationStatusChatEnabled,
@@ -20,8 +21,7 @@ import {
   useMutReservationChatSendMessage,
   useQueryReservationChatSession,
 } from "../../hooks/use-chat-trpc";
-import { useModStreamClient } from "../../hooks/useModStreamClient";
-import { StreamChatThread } from "../chat-thread/stream-chat-thread";
+import { ChatThread } from "../chat-thread/chat-thread";
 
 const AUTO_OPEN_PREFIX = "chat:autoOpen:reservation:";
 
@@ -45,19 +45,7 @@ export function PlayerReservationChatWidget({
   const sendMessageMutation = useMutReservationChatSendMessage();
 
   const session = sessionQuery.data;
-  const {
-    client,
-    isReady,
-    error: clientError,
-  } = useModStreamClient(
-    session
-      ? {
-          apiKey: session.auth.apiKey,
-          user: session.auth.user,
-          tokenOrProvider: session.auth.token,
-        }
-      : { apiKey: null, user: null, tokenOrProvider: null },
-  );
+  const threadId = session ? makeReservationThreadId(reservationId) : null;
 
   useEffect(() => {
     if (!isConfirmed) return;
@@ -71,7 +59,6 @@ export function PlayerReservationChatWidget({
   }, [isConfirmed, reservationId]);
 
   const unreadLabel = useMemo(() => {
-    // v1: no unread indicator for player without watching global channels.
     return null;
   }, []);
 
@@ -129,17 +116,11 @@ export function PlayerReservationChatWidget({
 
           {sessionQuery.isLoading ? (
             <div className="p-6 text-sm text-muted-foreground">
-              Loading chat…
+              Loading chat...
             </div>
           ) : sessionQuery.isError ? (
             <div className="p-6 text-sm text-destructive">
               {sessionQuery.error.message}
-            </div>
-          ) : clientError ? (
-            <div className="p-6 text-sm text-destructive">
-              {clientError instanceof Error
-                ? clientError.message
-                : "Unable to connect to chat."}
             </div>
           ) : (
             <>
@@ -150,11 +131,8 @@ export function PlayerReservationChatWidget({
                 </div>
               ) : null}
 
-              <StreamChatThread
-                client={isReady ? client : null}
-                channelId={session?.channel.channelId ?? null}
-                channelType={session?.channel.channelType ?? "messaging"}
-                members={session?.channel.memberIds ?? null}
+              <ChatThread
+                threadId={threadId}
                 myUserId={session?.auth.user.id ?? null}
                 headerStatus={
                   session?.meta.reservation.status ?? reservationStatus
@@ -182,7 +160,13 @@ export function PlayerReservationChatWidget({
                   await sendMessageMutation.mutateAsync({
                     reservationId,
                     text: payload.text,
-                    attachments: payload.attachments,
+                    attachments: payload.attachments?.map((a) => ({
+                      type: a.type,
+                      asset_url: a.url,
+                      title: a.filename,
+                      file_size: a.fileSize,
+                      mime_type: a.mimeType,
+                    })),
                   });
                 }}
               />

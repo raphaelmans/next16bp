@@ -4,6 +4,8 @@ const ALLOWED_ATTACHMENT_HOST_SUFFIXES = [
   "stream-io-api.com",
   "stream-io-cdn.com",
   "getstream.io",
+  "supabase.co",
+  "supabase.com",
 ] as const;
 
 const hasAllowedAttachmentHost = (url: string): boolean => {

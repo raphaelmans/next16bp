@@ -168,6 +168,18 @@ export class ChatInboxService {
     return parsed;
   }
 
+  private resolveThreadKind(threadId: string): ChatInboxThreadKind | null {
+    if (parseInboxThreadRef("reservation", threadId)) {
+      return "reservation";
+    }
+
+    if (parseInboxThreadRef("support", threadId)) {
+      return "support";
+    }
+
+    return null;
+  }
+
   private async assertViewerAccess(
     viewer: Viewer,
     threadKind: ChatInboxThreadKind,
@@ -196,6 +208,36 @@ export class ChatInboxService {
       parsed.requestId,
       ctx,
     );
+  }
+
+  async hasThreadAccess(
+    viewer: Viewer,
+    threadId: string,
+    ctx?: RequestContext,
+  ): Promise<boolean> {
+    if (viewer.role === "admin") {
+      return true;
+    }
+
+    const threadKind = this.resolveThreadKind(threadId);
+    if (!threadKind) {
+      return true;
+    }
+
+    try {
+      await this.assertViewerAccess(viewer, threadKind, threadId, ctx);
+      return true;
+    } catch (error) {
+      if (
+        error instanceof AuthorizationError ||
+        error instanceof NotFoundError ||
+        error instanceof ValidationError
+      ) {
+        return false;
+      }
+
+      throw error;
+    }
   }
 
   async archiveThread(

@@ -4,6 +4,7 @@ import { makePlaceRepository } from "@/lib/modules/place/factories/place.factory
 import { makeProfileRepository } from "@/lib/modules/profile/factories/profile.factory";
 import { makeReservationRepository } from "@/lib/modules/reservation/factories/reservation.factory";
 import { getContainer } from "@/lib/shared/infra/container";
+import { ChatMessageRepository } from "../repositories/chat-message.repository";
 import { ReservationChatThreadRepository } from "../repositories/reservation-chat-thread.repository";
 import { ReservationChatTranscriptRepository } from "../repositories/reservation-chat-transcript.repository";
 import { ReservationChatService } from "../services/reservation-chat.service";
@@ -13,6 +14,7 @@ let reservationChatThreadRepository: ReservationChatThreadRepository | null =
   null;
 let reservationChatTranscriptRepository: ReservationChatTranscriptRepository | null =
   null;
+let chatMessageRepository: ChatMessageRepository | null = null;
 let reservationChatService: ReservationChatService | null = null;
 
 export function makeReservationChatThreadRepository(): ReservationChatThreadRepository {
@@ -30,6 +32,13 @@ export function makeReservationChatTranscriptRepository(): ReservationChatTransc
       new ReservationChatTranscriptRepository(getContainer().db);
   }
   return reservationChatTranscriptRepository;
+}
+
+export function makeChatMessageRepository(): ChatMessageRepository {
+  if (!chatMessageRepository) {
+    chatMessageRepository = new ChatMessageRepository(getContainer().db);
+  }
+  return chatMessageRepository;
 }
 
 export function makeReservationChatService(): ReservationChatService {

@@ -1,8 +1,7 @@
 "use client";
 
 import { ArchiveRestore, RefreshCw } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Channel } from "stream-chat";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { formatInTimeZone, formatTimeRangeInTimeZone } from "@/common/format";
 import { useMediaQuery } from "@/common/hooks/use-media-query";
 import { getPlayerReservationAbsoluteUrl } from "@/common/reservation-links";
@@ -27,11 +26,11 @@ import {
 } from "@/lib/modules/chat/shared/domain";
 import { toReservationThreadTargetsFromThreadIds } from "@/lib/modules/chat/shared/transform";
 import { cn } from "@/lib/utils";
+import { trpc } from "@/trpc/client";
 import {
   getChatStatusBadgeClassName,
   getReservationReadOnlyReason,
   isReservationMetaArchived,
-  parseTimestampMs,
   sortReservationInboxIds,
   sumReservationUnreadCounts,
 } from "../../domain";
@@ -41,12 +40,10 @@ import {
   useMutChatInboxUnarchiveThread,
   useMutReservationChatSendMessage,
   useMutReservationGroupChatSendMessage,
-  useQueryChatAuth,
   useQueryChatInboxListArchivedThreadIds,
   useQueryReservationChatThreadMetas,
 } from "../../hooks/use-chat-trpc";
-import { useModStreamClient } from "../../hooks/useModStreamClient";
-import { StreamChatThread } from "../chat-thread/stream-chat-thread";
+import { ChatThread } from "../chat-thread/chat-thread";
 import { InboxFloatingSheet } from "../inbox-shell/inbox-floating-sheet";
 
 export type ReservationThreadMeta = {
@@ -66,12 +63,6 @@ export type ReservationThreadMeta = {
 
 type InboxKind = "player" | "owner";
 type SyncPhase = "idle" | "syncing" | "partial" | "error";
-
-type ChannelRefreshResult = {
-  ok: boolean;
-  channels: Channel[];
-  error?: unknown;
-};
 
 type ReservationChatOpenDetail = {
   reservationId?: string;
@@ -163,28 +154,14 @@ export function ReservationInboxWidget({
   const isSmall = useMediaQuery("(min-width: 640px)");
 
   const [open, setOpen] = useState(false);
-  const [channels, setChannels] = useState<Channel[]>([]);
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
-  const [_isLoadingChannels, setIsLoadingChannels] = useState(false);
-  const [channelsError, setChannelsError] = useState<unknown>(null);
-  const [hasLoadedChannelsOnce, setHasLoadedChannelsOnce] = useState(false);
-  const [hasLoadedMetasOnce, setHasLoadedMetasOnce] = useState(false);
   const [archivedDialogOpen, setArchivedDialogOpen] = useState(false);
   const [mobilePane, setMobilePane] = useState<"list" | "thread">("list");
   const [syncPhase, setSyncPhase] = useState<SyncPhase>("idle");
   const [syncErrorMessage, setSyncErrorMessage] = useState<string | null>(null);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
-  const previousThreadTargetsKeyRef = useRef<string>("");
-  const syncRequestIdRef = useRef(0);
-  const openRef = useRef(open);
-  const channelsRef = useRef<Channel[]>([]);
-  const syncInboxRef = useRef<(() => Promise<void>) | null>(null);
-  const didBackgroundHydrateUserIdRef = useRef<string | null>(null);
-  const fetchChannelsInFlightRef = useRef<Promise<ChannelRefreshResult> | null>(
-    null,
-  );
+
   const {
-    fetchReservationThreadMetas,
     invalidateReservationThreadMetas,
     invalidateChatInboxListArchivedThreadIds,
   } = useModChatInvalidation();
@@ -192,22 +169,13 @@ export function ReservationInboxWidget({
   const sendGroupMessageMutation = useMutReservationGroupChatSendMessage();
   const archiveThreadMutation = useMutChatInboxArchiveThread();
   const unarchiveThreadMutation = useMutChatInboxUnarchiveThread();
+  const utils = trpc.useUtils();
 
-  openRef.current = open;
-  channelsRef.current = channels;
-
-  const authQuery = useQueryChatAuth();
-  const auth = authQuery.data;
-
-  const {
-    client,
-    isReady,
-    error: clientError,
-  } = useModStreamClient(
-    auth
-      ? { apiKey: auth.apiKey, user: auth.user, tokenOrProvider: auth.token }
-      : { apiKey: null, user: null, tokenOrProvider: null },
-  );
+  // Supabase Auth session provides identity - no separate Stream auth needed
+  const authQuery = trpc.auth.me.useQuery(undefined, {
+    retry: false,
+  });
+  const myUserId = authQuery.data?.id ?? null;
 
   useEffect(() => {
     const storedOpen = readLocalStorage(config.storageKeys.open) === "1";
@@ -271,273 +239,91 @@ export function ReservationInboxWidget({
     };
   }, [config.kind, isDesktop]);
 
-  const fetchChannels = useRef<(() => Promise<ChannelRefreshResult>) | null>(
-    null,
-  );
-  fetchChannels.current = async () => {
-    if (!isReady || !client || !auth?.user.id) {
-      return {
-        ok: false,
-        channels: [],
-        error: new Error("Chat client is not ready"),
-      };
-    }
-
-    if (fetchChannelsInFlightRef.current) {
-      return fetchChannelsInFlightRef.current;
-    }
-
-    const request = (async (): Promise<ChannelRefreshResult> => {
-      setIsLoadingChannels(true);
-      setChannelsError(null);
-      try {
-        const results = await client.queryChannels(
-          {
-            type: "messaging",
-            members: { $in: [auth.user.id] },
-          } as unknown as Record<string, unknown>,
-          { last_message_at: -1 },
-          { limit: 30, message_limit: 1 },
-        );
-        setChannels(results);
-        return { ok: true, channels: results };
-      } catch (error) {
-        setChannelsError(error);
-        return { ok: false, channels: [], error };
-      } finally {
-        setIsLoadingChannels(false);
-        setHasLoadedChannelsOnce(true);
-      }
-    })();
-
-    fetchChannelsInFlightRef.current = request;
-    try {
-      return await request;
-    } finally {
-      if (fetchChannelsInFlightRef.current === request) {
-        fetchChannelsInFlightRef.current = null;
-      }
-    }
-  };
-
-  const syncInbox = useCallback(async () => {
-    const requestId = ++syncRequestIdRef.current;
-    setSyncPhase("syncing");
-    setSyncErrorMessage(null);
-
-    const refreshChannels = fetchChannels.current;
-    const streamResult = refreshChannels
-      ? await refreshChannels()
-      : {
-          ok: false,
-          channels: [],
-          error: new Error("Unable to refresh conversations"),
-        };
-
-    const threadTargets = toReservationThreadTargetsFromThreadIds(
-      (streamResult.ok ? streamResult.channels : channelsRef.current).map(
-        (channel) => channel.id,
-      ),
+  const reservationThreadSummariesQuery =
+    trpc.chatMessage.listThreadSummaries.useQuery(
+      { threadIdPrefix: "res-", limit: 30 },
+      {
+        enabled: open,
+        refetchInterval: 15_000,
+        refetchOnWindowFocus: true,
+      },
+    );
+  const reservationGroupThreadSummariesQuery =
+    trpc.chatMessage.listThreadSummaries.useQuery(
+      { threadIdPrefix: "grp-", limit: 30 },
+      {
+        enabled: open,
+        refetchInterval: 15_000,
+        refetchOnWindowFocus: true,
+      },
     );
 
-    const shouldRefreshMetas =
-      open &&
-      (threadTargets.reservationIds.length > 0 ||
-        threadTargets.reservationGroupIds.length > 0);
-    let metaError: unknown = null;
-    if (shouldRefreshMetas) {
-      try {
-        await invalidateReservationThreadMetas({
-          reservationIds: threadTargets.reservationIds,
-          reservationGroupIds: threadTargets.reservationGroupIds,
-        });
-        await fetchReservationThreadMetas({
-          reservationIds: threadTargets.reservationIds,
-          reservationGroupIds: threadTargets.reservationGroupIds,
-        });
-      } catch (error) {
-        metaError = error;
-      }
+  const summaryThreadIds = useMemo(() => {
+    const merged = [
+      ...(reservationThreadSummariesQuery.data?.threads ?? []),
+      ...(reservationGroupThreadSummariesQuery.data?.threads ?? []),
+    ];
+    const deduped = new Map<string, number>();
+
+    for (const thread of merged) {
+      deduped.set(thread.threadId, new Date(thread.lastMessageAt).getTime());
     }
 
-    if (requestId !== syncRequestIdRef.current) {
-      return;
-    }
+    return Array.from(deduped.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([threadId]) => threadId)
+      .slice(0, 30);
+  }, [
+    reservationGroupThreadSummariesQuery.data?.threads,
+    reservationThreadSummariesQuery.data?.threads,
+  ]);
 
-    const metaOk = !shouldRefreshMetas || metaError === null;
-    if (streamResult.ok && metaOk) {
-      setSyncPhase("idle");
-      setSyncErrorMessage(null);
-      return;
-    }
-
-    if (!streamResult.ok && (!metaOk || !shouldRefreshMetas)) {
-      setSyncPhase("error");
-      setSyncErrorMessage(
-        shouldRefreshMetas
-          ? "Failed to refresh conversations and reservation state."
-          : "Failed to refresh conversations.",
-      );
-      return;
-    }
-
-    setSyncPhase("partial");
-    setSyncErrorMessage(
-      streamResult.ok
-        ? "Messages refreshed, but reservation state may still be stale."
-        : "Reservation state refreshed, but messages may still be stale.",
-    );
-  }, [fetchReservationThreadMetas, invalidateReservationThreadMetas, open]);
-  syncInboxRef.current = syncInbox;
-
-  useEffect(() => {
-    if (!auth?.user.id) {
-      didBackgroundHydrateUserIdRef.current = null;
-      return;
-    }
-
-    if (!isReady || !client) {
-      return;
-    }
-
-    if (didBackgroundHydrateUserIdRef.current === auth.user.id) {
-      return;
-    }
-
-    didBackgroundHydrateUserIdRef.current = auth.user.id;
-    fetchChannels.current?.().catch(() => undefined);
-  }, [auth?.user.id, client, isReady]);
-
-  useEffect(() => {
-    if (!open || !isReady || !client || !auth?.user.id) {
-      return;
-    }
-    syncInbox().catch(() => undefined);
-  }, [auth?.user.id, client, isReady, open, syncInbox]);
-
-  useEffect(() => {
-    if (!isReady || !client) {
-      return;
-    }
-
-    const subscription = client.on((event: { type?: string }) => {
-      const shouldRefresh =
-        event.type === "message.new" ||
-        event.type === "notification.message_new" ||
-        event.type === "notification.added_to_channel";
-
-      if (!shouldRefresh) {
-        return;
-      }
-
-      if (openRef.current) {
-        syncInboxRef.current?.().catch(() => undefined);
-        return;
-      }
-
-      fetchChannels.current?.().catch(() => undefined);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [client, isReady]);
-
-  const reservationChannels = useMemo(
-    () =>
-      channels.filter((channel) => {
-        const channelId = channel.id;
-        return (
-          typeof channelId === "string" &&
-          (!!parseReservationThreadId(channelId) ||
-            !!parseReservationGroupThreadId(channelId))
-        );
-      }),
-    [channels],
+  const visibleThreadTargets = useMemo(
+    () => toReservationThreadTargetsFromThreadIds(summaryThreadIds),
+    [summaryThreadIds],
   );
 
-  const unreadByThreadId = useMemo(() => {
-    const map = new Map<string, number>();
-    for (const channel of reservationChannels) {
-      const channelId = channel.id;
-      if (!channelId) {
-        continue;
-      }
-
-      if (
-        !parseReservationThreadId(channelId) &&
-        !parseReservationGroupThreadId(channelId)
-      ) {
-        continue;
-      }
-
-      map.set(channelId, channel.state.unreadCount ?? 0);
-    }
-    return map;
-  }, [reservationChannels]);
-
-  const channelActivityMsByThreadId = useMemo(() => {
-    const map = new Map<string, number>();
-    for (const channel of reservationChannels) {
-      const channelId = channel.id;
-      if (!channelId) {
-        continue;
-      }
-
-      if (
-        !parseReservationThreadId(channelId) &&
-        !parseReservationGroupThreadId(channelId)
-      ) {
-        continue;
-      }
-
-      const latestMessage = channel.state.latestMessages?.[0];
-      const stateRecord = channel.state as unknown as Record<string, unknown>;
-      const dataRecord = (channel.data ?? {}) as Record<string, unknown>;
-      const ms = Math.max(
-        parseTimestampMs(latestMessage?.updated_at),
-        parseTimestampMs(latestMessage?.created_at),
-        parseTimestampMs(stateRecord.last_message_at),
-        parseTimestampMs(dataRecord.last_message_at),
-      );
-
-      map.set(channelId, ms);
-    }
-    return map;
-  }, [reservationChannels]);
-
-  const threadIds = useMemo(
-    () =>
-      reservationChannels
-        .map((channel) => channel.id)
-        .filter((id): id is string => typeof id === "string"),
-    [reservationChannels],
-  );
-
-  const threadTargets = useMemo(
-    () => toReservationThreadTargetsFromThreadIds(threadIds),
-    [threadIds],
-  );
-
-  const threadTargetsKey = useMemo(
-    () =>
-      `res:${threadTargets.reservationIds.join(",")}|grp:${threadTargets.reservationGroupIds.join(",")}`,
-    [threadTargets.reservationGroupIds, threadTargets.reservationIds],
-  );
-
+  // Use reservation thread metas as the source of thread list
   const metasQuery = useQueryReservationChatThreadMetas(
     {
-      reservationIds: threadTargets.reservationIds,
-      reservationGroupIds: threadTargets.reservationGroupIds,
+      reservationIds: visibleThreadTargets.reservationIds,
+      reservationGroupIds: visibleThreadTargets.reservationGroupIds,
       includeArchived: false,
     },
     {
       enabled:
-        threadTargets.reservationIds.length > 0 ||
-        threadTargets.reservationGroupIds.length > 0,
+        open &&
+        summaryThreadIds.length > 0 &&
+        (visibleThreadTargets.reservationIds.length > 0 ||
+          visibleThreadTargets.reservationGroupIds.length > 0),
       placeholderData: (prev) => prev,
     },
   );
+
+  const threadIds = useMemo(
+    () => (metasQuery.data ?? []).map((meta) => meta.threadId),
+    [metasQuery.data],
+  );
+
+  // Unread counts via tRPC
+  const unreadCountsQuery = trpc.chatMessage.getUnreadCounts.useQuery(
+    { threadIds },
+    {
+      enabled: open && threadIds.length > 0,
+      refetchInterval: 15_000,
+      refetchOnWindowFocus: true,
+      placeholderData: (prev) => prev,
+    },
+  );
+
+  const unreadByThreadId = useMemo(() => {
+    const map = new Map<string, number>();
+    const counts = unreadCountsQuery.data?.unreadCounts ?? {};
+    for (const [threadId, count] of Object.entries(counts)) {
+      map.set(threadId, count);
+    }
+    return map;
+  }, [unreadCountsQuery.data]);
 
   const archivedThreadIdsQuery = useQueryChatInboxListArchivedThreadIds(
     { threadKind: "reservation" },
@@ -546,23 +332,25 @@ export function ReservationInboxWidget({
     },
   );
 
-  const archivedThreadTargetsFromStore = useMemo(() => {
-    return toReservationThreadTargetsFromThreadIds(
-      archivedThreadIdsQuery.data?.threadIds ?? [],
-    );
-  }, [archivedThreadIdsQuery.data?.threadIds]);
+  const archivedThreadTargets = useMemo(
+    () =>
+      toReservationThreadTargetsFromThreadIds(
+        archivedThreadIdsQuery.data?.threadIds ?? [],
+      ),
+    [archivedThreadIdsQuery.data?.threadIds],
+  );
 
   const archivedMetasQuery = useQueryReservationChatThreadMetas(
     {
-      reservationIds: archivedThreadTargetsFromStore.reservationIds,
-      reservationGroupIds: archivedThreadTargetsFromStore.reservationGroupIds,
+      reservationIds: archivedThreadTargets.reservationIds,
+      reservationGroupIds: archivedThreadTargets.reservationGroupIds,
       includeArchived: true,
     },
     {
       enabled:
         open &&
-        (archivedThreadTargetsFromStore.reservationIds.length > 0 ||
-          archivedThreadTargetsFromStore.reservationGroupIds.length > 0),
+        (archivedThreadTargets.reservationIds.length > 0 ||
+          archivedThreadTargets.reservationGroupIds.length > 0),
       placeholderData: (prev) => prev,
     },
   );
@@ -593,30 +381,6 @@ export function ReservationInboxWidget({
 
   useEffect(() => {
     if (!open) {
-      return;
-    }
-
-    if (previousThreadTargetsKeyRef.current !== threadTargetsKey) {
-      setHasLoadedMetasOnce(false);
-      previousThreadTargetsKeyRef.current = threadTargetsKey;
-    }
-  }, [open, threadTargetsKey]);
-
-  useEffect(() => {
-    if (!open || threadIds.length === 0) {
-      return;
-    }
-
-    if (metasQuery.isSuccess || metasQuery.isError) {
-      setHasLoadedMetasOnce(true);
-    }
-  }, [metasQuery.isError, metasQuery.isSuccess, open, threadIds.length]);
-
-  useEffect(() => {
-    if (!open) {
-      setHasLoadedChannelsOnce(false);
-      setHasLoadedMetasOnce(false);
-      setChannelsError(null);
       setSyncPhase("idle");
       setSyncErrorMessage(null);
       setMobilePane("list");
@@ -649,16 +413,15 @@ export function ReservationInboxWidget({
 
   const showSyncWarning = syncPhase === "partial" || syncPhase === "error";
   const isRefreshBusy = isManualRefreshing;
-  const showMetaSkeletons = threadIds.length > 0 && !hasLoadedMetasOnce;
 
-  const isStreamConnecting =
-    open && authQuery.isSuccess && !clientError && !isReady;
+  const isSummaryLoading =
+    reservationThreadSummariesQuery.isLoading ||
+    reservationGroupThreadSummariesQuery.isLoading;
   const isInitialLoading =
     open &&
-    (authQuery.isLoading ||
-      isStreamConnecting ||
-      (!hasLoadedChannelsOnce && !channelsError) ||
-      (threadIds.length > 0 && !hasLoadedMetasOnce));
+    (isSummaryLoading ||
+      (summaryThreadIds.length > 0 &&
+        (metasQuery.isLoading || (!metasQuery.data && !metasQuery.isError))));
 
   const sortedThreadIds = useMemo(
     () =>
@@ -666,9 +429,9 @@ export function ReservationInboxWidget({
         reservationIds: threadIds,
         metasByReservationId: metasByThreadId,
         unreadByReservationId: unreadByThreadId,
-        channelActivityMsByReservationId: channelActivityMsByThreadId,
+        channelActivityMsByReservationId: new Map(),
       }),
-    [channelActivityMsByThreadId, metasByThreadId, threadIds, unreadByThreadId],
+    [metasByThreadId, threadIds, unreadByThreadId],
   );
 
   const visibleThreadIds = useMemo(
@@ -702,15 +465,6 @@ export function ReservationInboxWidget({
     );
   }, [activeFallbackMetaByThreadId, activeThreadId, metasByThreadId]);
 
-  const activeChannelId = activeThreadId;
-
-  const activeChannel = useMemo(() => {
-    if (!activeChannelId) {
-      return null;
-    }
-    return reservationChannels.find((c) => c.id === activeChannelId) ?? null;
-  }, [activeChannelId, reservationChannels]);
-
   const unreadCount = useMemo(() => {
     return sumReservationUnreadCounts({
       reservationIds: visibleThreadIds,
@@ -718,11 +472,10 @@ export function ReservationInboxWidget({
     });
   }, [unreadByThreadId, visibleThreadIds]);
 
-  const myUserId = auth?.user.id ?? null;
   const now = new Date();
   const readOnly = isReservationMetaArchived(activeMeta, now);
   const readOnlyReason = getReservationReadOnlyReason(activeMeta, now);
-  const activeChannelThreadId = activeChannel?.id ?? null;
+  const activeChannelThreadId = activeThreadId;
   const archivedThreadIds = archivedThreadIdsQuery.data?.threadIds ?? [];
   const activeThreadIsArchived =
     !!activeChannelThreadId &&
@@ -733,6 +486,32 @@ export function ReservationInboxWidget({
   const activeStatusMicrocopy = activeMeta
     ? (STATUS_MICROCOPY[activeMeta.status] ?? activeMeta.status)
     : null;
+
+  const syncInbox = useCallback(async () => {
+    setSyncPhase("syncing");
+    setSyncErrorMessage(null);
+    try {
+      await Promise.all([
+        utils.chatMessage.listThreadSummaries.invalidate({
+          threadIdPrefix: "res-",
+          limit: 30,
+        }),
+        utils.chatMessage.listThreadSummaries.invalidate({
+          threadIdPrefix: "grp-",
+          limit: 30,
+        }),
+        utils.chatMessage.getUnreadCounts.invalidate(),
+        invalidateReservationThreadMetas({
+          reservationIds: visibleThreadTargets.reservationIds,
+          reservationGroupIds: visibleThreadTargets.reservationGroupIds,
+        }),
+      ]);
+      setSyncPhase("idle");
+    } catch {
+      setSyncPhase("error");
+      setSyncErrorMessage("Failed to refresh conversations.");
+    }
+  }, [invalidateReservationThreadMetas, utils, visibleThreadTargets]);
 
   const handleArchiveThread = useCallback(async () => {
     if (!activeChannelThreadId) {
@@ -746,8 +525,8 @@ export function ReservationInboxWidget({
     await Promise.all([
       invalidateChatInboxListArchivedThreadIds({ threadKind: "reservation" }),
       invalidateReservationThreadMetas({
-        reservationIds: threadTargets.reservationIds,
-        reservationGroupIds: threadTargets.reservationGroupIds,
+        reservationIds: visibleThreadTargets.reservationIds,
+        reservationGroupIds: visibleThreadTargets.reservationGroupIds,
       }),
     ]);
   }, [
@@ -755,8 +534,7 @@ export function ReservationInboxWidget({
     archiveThreadMutation,
     invalidateChatInboxListArchivedThreadIds,
     invalidateReservationThreadMetas,
-    threadTargets.reservationGroupIds,
-    threadTargets.reservationIds,
+    visibleThreadTargets,
   ]);
 
   const handleUnarchiveThread = useCallback(
@@ -773,8 +551,8 @@ export function ReservationInboxWidget({
       await Promise.all([
         invalidateChatInboxListArchivedThreadIds({ threadKind: "reservation" }),
         invalidateReservationThreadMetas({
-          reservationIds: threadTargets.reservationIds,
-          reservationGroupIds: threadTargets.reservationGroupIds,
+          reservationIds: visibleThreadTargets.reservationIds,
+          reservationGroupIds: visibleThreadTargets.reservationGroupIds,
         }),
       ]);
     },
@@ -782,9 +560,8 @@ export function ReservationInboxWidget({
       activeChannelThreadId,
       invalidateChatInboxListArchivedThreadIds,
       invalidateReservationThreadMetas,
-      threadTargets.reservationGroupIds,
-      threadTargets.reservationIds,
       unarchiveThreadMutation,
+      visibleThreadTargets,
     ],
   );
 
@@ -864,11 +641,7 @@ export function ReservationInboxWidget({
 
   const renderListRow = (threadId: string) => {
     const meta = metasByThreadId.get(threadId) ?? null;
-    const channel =
-      reservationChannels.find((channelItem) => channelItem.id === threadId) ??
-      null;
-    const unread = channel?.state.unreadCount ?? 0;
-    const lastMessage = channel?.state.latestMessages?.[0]?.text ?? "";
+    const unread = unreadByThreadId.get(threadId) ?? 0;
 
     const start = meta ? new Date(meta.startTimeIso) : null;
     const end = meta ? new Date(meta.endTimeIso) : null;
@@ -882,9 +655,7 @@ export function ReservationInboxWidget({
     const primary = meta
       ? (config.labels.listPrimary(meta, threadId) ??
         `Reservation ${fallbackId.slice(0, 8).toUpperCase()}`)
-      : showMetaSkeletons
-        ? null
-        : `Reservation ${fallbackId.slice(0, 8).toUpperCase()}`;
+      : `Reservation ${fallbackId.slice(0, 8).toUpperCase()}`;
     const configuredSecondary = config.labels.listSecondary(meta, threadId);
     const secondary = meta
       ? [
@@ -930,30 +701,16 @@ export function ReservationInboxWidget({
                 <span className="inline-flex h-2 w-2 rounded-full bg-warning" />
               ) : null}
 
-              {meta ? (
-                <StatusPill status={meta.status} />
-              ) : showMetaSkeletons ? (
-                <Skeleton className="h-5 w-16 rounded-full" />
-              ) : null}
+              {meta ? <StatusPill status={meta.status} /> : null}
 
-              {primary ? (
-                <div className="truncate text-sm font-medium">{primary}</div>
-              ) : (
-                <Skeleton className="h-4 w-40" />
-              )}
+              <div className="truncate text-sm font-medium">{primary}</div>
             </div>
 
-            {meta ? (
+            {secondary ? (
               <div className="truncate text-xs text-muted-foreground mt-0.5">
                 {secondary}
               </div>
-            ) : showMetaSkeletons ? (
-              <Skeleton className="mt-1 h-3 w-56" />
-            ) : (
-              <div className="truncate text-xs text-muted-foreground mt-0.5">
-                {lastMessage || "No messages yet"}
-              </div>
-            )}
+            ) : null}
           </div>
 
           {unread > 0 ? (
@@ -1095,11 +852,7 @@ export function ReservationInboxWidget({
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
             </div>
-          ) : channelsError && reservationChannels.length === 0 ? (
-            <div className="p-4 text-sm text-destructive">
-              Failed to load conversations. Try refreshing.
-            </div>
-          ) : hasLoadedChannelsOnce && visibleThreadIds.length === 0 ? (
+          ) : visibleThreadIds.length === 0 ? (
             <div className="p-4 text-sm text-muted-foreground">
               No reservation chats yet.
             </div>
@@ -1113,11 +866,8 @@ export function ReservationInboxWidget({
 
   const threadPane = (
     <div className="min-h-0 min-w-0 flex-1 overflow-hidden">
-      <StreamChatThread
-        client={isReady ? client : null}
-        channelId={activeChannel?.id ?? null}
-        channelType={activeChannel?.type ?? "messaging"}
-        members={null}
+      <ChatThread
+        threadId={activeThreadId}
         myUserId={myUserId}
         headerStatus={activeMeta?.status}
         headerTitle={config.labels.threadTitle(activeMeta)}
@@ -1176,7 +926,13 @@ export function ReservationInboxWidget({
             await sendGroupMessageMutation.mutateAsync({
               reservationGroupId: parsedGroup.reservationGroupId,
               text: payload.text,
-              attachments: payload.attachments,
+              attachments: payload.attachments?.map((a) => ({
+                type: a.type,
+                asset_url: a.url,
+                title: a.filename,
+                file_size: a.fileSize,
+                mime_type: a.mimeType,
+              })),
             });
             return;
           }
@@ -1189,7 +945,13 @@ export function ReservationInboxWidget({
           await sendMessageMutation.mutateAsync({
             reservationId: parsedReservation.reservationId,
             text: payload.text,
-            attachments: payload.attachments,
+            attachments: payload.attachments?.map((a) => ({
+              type: a.type,
+              asset_url: a.url,
+              title: a.filename,
+              file_size: a.fileSize,
+              mime_type: a.mimeType,
+            })),
           });
         }}
       />
@@ -1212,13 +974,7 @@ export function ReservationInboxWidget({
       isDesktop={isDesktop}
       authLoading={authQuery.isLoading}
       authErrorMessage={authQuery.isError ? authQuery.error.message : null}
-      clientErrorMessage={
-        clientError
-          ? clientError instanceof Error
-            ? clientError.message
-            : "Unable to connect to chat."
-          : null
-      }
+      clientErrorMessage={null}
       mobilePane={mobilePane}
       listPane={listPane}
       threadPane={threadPane}

@@ -13,10 +13,7 @@ export {
   useQuerySupportChatVerificationSession,
 } from "./hooks/use-chat-trpc";
 export {
-  type UseStreamChannelInput,
-  useModStreamChannel,
-} from "./hooks/useModStreamChannel";
-export {
-  type UseStreamClientInput,
-  useModStreamClient,
-} from "./hooks/useModStreamClient";
+  type ChatMessageItem,
+  type UseSupabaseChatChannelInput,
+  useModChatChannel,
+} from "./hooks/useModChatChannel";

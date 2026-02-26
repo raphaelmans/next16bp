@@ -1,4 +1,4 @@
-export type ChatProviderId = "stream";
+export type ChatProviderId = "stream" | "supabase";
 
 export interface ChatUser {
   id: string;

@@ -18,7 +18,7 @@ const runtimeAppUrl =
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string(),
-    CHAT_PROVIDER: z.enum(["stream"]).optional(),
+    CHAT_PROVIDER: z.enum(["stream", "supabase"]).optional(),
     CHAT_POC_ENABLED: z
       .string()
       .transform((value) => value === "true")

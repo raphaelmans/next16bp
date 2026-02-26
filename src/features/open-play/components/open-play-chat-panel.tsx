@@ -1,8 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { StreamChatThread } from "@/features/chat/components/chat-thread/stream-chat-thread";
-import { useModStreamClient } from "@/features/chat/hooks";
+import { ChatThread } from "@/features/chat/components/chat-thread/chat-thread";
 import {
   useMutOpenPlayChatSendMessage,
   useQueryOpenPlayChatSession,
@@ -13,19 +12,8 @@ export function OpenPlayChatPanel({ openPlayId }: { openPlayId: string }) {
   const sendMessageMutation = useMutOpenPlayChatSendMessage();
 
   const session = sessionQuery.data;
-  const {
-    client,
-    isReady,
-    error: clientError,
-  } = useModStreamClient(
-    session
-      ? {
-          apiKey: session.auth.apiKey,
-          user: session.auth.user,
-          tokenOrProvider: session.auth.token,
-        }
-      : { apiKey: null, user: null, tokenOrProvider: null },
-  );
+  const threadId = session?.channel.channelId ?? null;
+  const myUserId = session?.auth.user.id ?? null;
 
   return (
     <Card>
@@ -39,19 +27,10 @@ export function OpenPlayChatPanel({ openPlayId }: { openPlayId: string }) {
           <div className="p-6 text-sm text-destructive">
             {sessionQuery.error.message}
           </div>
-        ) : clientError ? (
-          <div className="p-6 text-sm text-destructive">
-            {clientError instanceof Error
-              ? clientError.message
-              : "Unable to connect to chat."}
-          </div>
         ) : (
-          <StreamChatThread
-            client={isReady ? client : null}
-            channelId={session?.channel.channelId ?? null}
-            channelType={session?.channel.channelType ?? "messaging"}
-            members={session?.channel.memberIds ?? null}
-            myUserId={session?.auth.user.id ?? null}
+          <ChatThread
+            threadId={threadId}
+            myUserId={myUserId}
             headerTitle={session?.meta.place.name ?? "Open Play"}
             headerSubtitle={
               session?.meta
@@ -67,7 +46,13 @@ export function OpenPlayChatPanel({ openPlayId }: { openPlayId: string }) {
               await sendMessageMutation.mutateAsync({
                 openPlayId,
                 text: payload.text,
-                attachments: payload.attachments,
+                attachments: payload.attachments?.map((a) => ({
+                  type: a.type,
+                  asset_url: a.url,
+                  title: a.filename,
+                  file_size: a.fileSize,
+                  mime_type: a.mimeType,
+                })),
               });
             }}
           />

@@ -9,6 +9,8 @@ export * from "./bookings-import-row";
 export * from "./bookings-import-source";
 // Chat inbox archive
 export * from "./chat-inbox-archive";
+// Chat messages
+export * from "./chat-message";
 // Claim request tables
 export * from "./claim-request";
 // Contact messages
