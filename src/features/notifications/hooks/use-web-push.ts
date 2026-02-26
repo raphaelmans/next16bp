@@ -151,6 +151,7 @@ export function useModWebPush(): UseWebPushResult {
       throw new Error("Web Push is not configured");
     }
 
+    const previousHasSubscription = hasSubscription;
     setBusy(true);
     try {
       const reg = await navigator.serviceWorker.register("/sw.js");
@@ -182,32 +183,38 @@ export function useModWebPush(): UseWebPushResult {
         throw new Error("Browser returned an invalid subscription");
       }
 
-      await upsertMutation.mutateAsync({
-        subscription: {
-          endpoint: json.endpoint,
-          expirationTime:
-            typeof json.expirationTime === "number"
-              ? String(json.expirationTime)
-              : json.expirationTime
-                ? String(json.expirationTime)
-                : null,
-          keys: {
-            p256dh: json.keys.p256dh,
-            auth: json.keys.auth,
-          },
-        },
-        userAgent: navigator.userAgent,
-      });
-
       setHasSubscription(true);
+      try {
+        await upsertMutation.mutateAsync({
+          subscription: {
+            endpoint: json.endpoint,
+            expirationTime:
+              typeof json.expirationTime === "number"
+                ? String(json.expirationTime)
+                : json.expirationTime
+                  ? String(json.expirationTime)
+                  : null,
+            keys: {
+              p256dh: json.keys.p256dh,
+              auth: json.keys.auth,
+            },
+          },
+          userAgent: navigator.userAgent,
+        });
+      } catch (error) {
+        setHasSubscription(previousHasSubscription);
+        throw error;
+      }
     } finally {
       setBusy(false);
     }
-  }, [isSecureContext, publicKey, supported, upsertMutation]);
+  }, [hasSubscription, isSecureContext, publicKey, supported, upsertMutation]);
 
   const disable = React.useCallback(async () => {
     if (!supported) return;
 
+    const previousHasSubscription = hasSubscription;
+    setHasSubscription(false);
     setBusy(true);
     try {
       const reg = await navigator.serviceWorker.getRegistration("/");
@@ -215,7 +222,10 @@ export function useModWebPush(): UseWebPushResult {
       const endpoint = subscription?.endpoint ?? null;
 
       if (subscription) {
-        await subscription.unsubscribe();
+        const unsubscribed = await subscription.unsubscribe();
+        if (!unsubscribed) {
+          throw new Error("Failed to disable browser notifications");
+        }
       }
 
       if (endpoint) {
@@ -227,12 +237,14 @@ export function useModWebPush(): UseWebPushResult {
         }
       }
 
-      setHasSubscription(false);
       setPermission(Notification.permission);
+    } catch (error) {
+      setHasSubscription(previousHasSubscription);
+      throw error;
     } finally {
       setBusy(false);
     }
-  }, [revokeMutation, supported]);
+  }, [hasSubscription, revokeMutation, supported]);
 
   const sendLocalTestNotification = React.useCallback(async () => {
     if (!supported) {
