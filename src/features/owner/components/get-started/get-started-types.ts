@@ -5,6 +5,10 @@ export type OverlayStep =
   | "courts"
   | "verify"
   | "import"
+  | "payment"
+  | "manageCourts"
+  | "schedule"
+  | "availability"
   | null;
 
 export interface SetupStatus {

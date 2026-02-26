@@ -1,7 +1,21 @@
 "use client";
 
-import { GetStartedView } from "@/features/owner/components/get-started/get-started-view";
+import { Loader2 } from "lucide-react";
+import { Suspense } from "react";
+import { SetupWizard } from "@/features/owner/components/get-started/wizard/setup-wizard";
+
+function WizardFallback() {
+  return (
+    <div className="flex min-h-[50vh] items-center justify-center">
+      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+    </div>
+  );
+}
 
 export default function OwnerGetStartedPage() {
-  return <GetStartedView />;
+  return (
+    <Suspense fallback={<WizardFallback />}>
+      <SetupWizard />
+    </Suspense>
+  );
 }

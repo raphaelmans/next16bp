@@ -115,10 +115,16 @@ async function selectOneAvailableSlot(
       `No selectable slot found for venue "${currentVenueSlug}". Ensure tester data has at least one available slot.`,
     );
   }
-  if ((await addToBookingButton.count()) > 0 && (await addToBookingButton.isVisible())) {
+  if (
+    (await addToBookingButton.count()) > 0 &&
+    (await addToBookingButton.isVisible())
+  ) {
     await addToBookingButton.click();
   }
-  if ((await continueButton.count()) > 0 && (await continueButton.isVisible())) {
+  if (
+    (await continueButton.count()) > 0 &&
+    (await continueButton.isVisible())
+  ) {
     await expect(continueButton).toBeEnabled({ timeout: 15_000 });
   }
 }

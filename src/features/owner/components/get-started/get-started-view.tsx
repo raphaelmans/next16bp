@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useCallback, useEffect } from "react";
 import { appRoutes } from "@/common/app-routes";
 import { trackEvent } from "@/common/clients/telemetry-client";
-import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
 import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { PaymentMethodReminderCard } from "@/features/owner/components/payment-method-reminder-card";
@@ -18,7 +17,11 @@ import { AddVenueSheet } from "./overlays/add-venue-sheet";
 import { ClaimSearchDialog } from "./overlays/claim-search-dialog";
 import { ConfigureCourtsSheet } from "./overlays/configure-courts-sheet";
 import { CreateOrgDialog } from "./overlays/create-org-dialog";
+import { EditSchedulePricingSheet } from "./overlays/edit-schedule-pricing-sheet";
 import { ImportBookingsSheet } from "./overlays/import-bookings-sheet";
+import { ManageAvailabilitySheet } from "./overlays/manage-availability-sheet";
+import { ManageCourtsSheet } from "./overlays/manage-courts-sheet";
+import { ManagePaymentMethodsSheet } from "./overlays/manage-payment-methods-sheet";
 import { VerifyVenueSheet } from "./overlays/verify-venue-sheet";
 import { AddVenueCard } from "./sections/add-venue-card";
 import { ClaimListingCard } from "./sections/claim-listing-card";
@@ -136,6 +139,11 @@ export function GetStartedView() {
                 placeId={status.primaryPlaceId}
                 courtId={status.readyCourtId ?? status.primaryCourtId}
                 onConfigureClick={() => overlays.openOverlay("courts")}
+                onManageCourtsClick={() => overlays.openOverlay("manageCourts")}
+                onEditScheduleClick={() => overlays.openOverlay("schedule")}
+                onManageAvailabilityClick={() =>
+                  overlays.openOverlay("availability")
+                }
               />
 
               {status.hasVenue && !status.hasPaymentMethod ? (
@@ -143,7 +151,7 @@ export function GetStartedView() {
                   title="Add a payment method"
                   description="Add at least one payment method so reservations can be enabled for public booking."
                   actionLabel="Manage payment methods"
-                  actionHref={`${appRoutes.owner.settings}?from=setup${SETTINGS_SECTION_HASHES.paymentMethods}`}
+                  onActionClick={() => overlays.openOverlay("payment")}
                 />
               ) : null}
 
@@ -216,6 +224,31 @@ export function GetStartedView() {
         onOpenChange={handleOverlayOpenChange}
         organizationId={status.organizationId}
         onSuccess={handleOverlaySuccess}
+      />
+      <ManagePaymentMethodsSheet
+        open={overlays.activeOverlay === "payment"}
+        onOpenChange={handleOverlayOpenChange}
+        organizationId={status.organizationId}
+        onSuccess={handleOverlaySuccess}
+      />
+      <ManageCourtsSheet
+        open={overlays.activeOverlay === "manageCourts"}
+        onOpenChange={handleOverlayOpenChange}
+        placeId={status.primaryPlaceId}
+      />
+      <EditSchedulePricingSheet
+        open={overlays.activeOverlay === "schedule"}
+        onOpenChange={handleOverlayOpenChange}
+        courtId={status.readyCourtId ?? status.primaryCourtId}
+        placeId={status.primaryPlaceId}
+        organizationId={status.organizationId}
+        onSuccess={handleOverlaySuccess}
+      />
+      <ManageAvailabilitySheet
+        open={overlays.activeOverlay === "availability"}
+        onOpenChange={handleOverlayOpenChange}
+        placeId={status.primaryPlaceId}
+        courtId={status.readyCourtId ?? status.primaryCourtId}
       />
     </div>
   );

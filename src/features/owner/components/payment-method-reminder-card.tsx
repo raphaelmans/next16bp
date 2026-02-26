@@ -12,19 +12,22 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-interface PaymentMethodReminderCardProps {
+type PaymentMethodReminderCardProps = {
   title: string;
   description: string;
   actionLabel: string;
-  actionHref: string;
   className?: string;
-}
+} & (
+  | { actionHref: string; onActionClick?: never }
+  | { onActionClick: () => void; actionHref?: never }
+);
 
 export function PaymentMethodReminderCard({
   title,
   description,
   actionLabel,
   actionHref,
+  onActionClick,
   className,
 }: PaymentMethodReminderCardProps) {
   return (
@@ -41,9 +44,13 @@ export function PaymentMethodReminderCard({
         </div>
       </CardHeader>
       <CardContent className="flex flex-wrap gap-3">
-        <Button asChild>
-          <Link href={actionHref}>{actionLabel}</Link>
-        </Button>
+        {actionHref ? (
+          <Button asChild>
+            <Link href={actionHref}>{actionLabel}</Link>
+          </Button>
+        ) : (
+          <Button onClick={onActionClick}>{actionLabel}</Button>
+        )}
       </CardContent>
     </Card>
   );

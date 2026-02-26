@@ -236,7 +236,7 @@ export class ChatMessageRepository implements IChatMessageRepository {
         return {
           threadId: t.threadId,
           lastMessageText: latestMsg[0]?.content ?? null,
-          lastMessageAt: t.lastMessageAt,
+          lastMessageAt: new Date(t.lastMessageAt as unknown as string),
         };
       }),
     );

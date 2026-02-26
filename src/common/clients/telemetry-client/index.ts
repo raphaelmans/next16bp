@@ -24,7 +24,8 @@ export type TelemetryEventName =
   | "funnel.owner_org_created"
   | "funnel.owner_add_venue_clicked"
   | "funnel.owner_claim_submitted"
-  | "funnel.owner_import_started";
+  | "funnel.owner_import_started"
+  | "funnel.owner_wizard_step_viewed";
 
 export type TelemetryPayload = {
   event: TelemetryEventName;

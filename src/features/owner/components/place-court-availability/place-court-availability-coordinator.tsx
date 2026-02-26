@@ -148,16 +148,39 @@ export default function OwnerCourtAvailabilityPage({
   );
 }
 
+/**
+ * Embeddable availability coordinator content.
+ * Wraps OwnerCourtAvailabilityInner with BookingStudioProvider so it can
+ * render inside a Sheet or any container without AppShell.
+ */
+export function AvailabilityCoordinatorContent(props: {
+  placeId: string;
+  courtId: string;
+}) {
+  return (
+    <BookingStudioProvider initialDate={new Date()}>
+      <OwnerCourtAvailabilityInner
+        placeId={props.placeId}
+        courtId={props.courtId}
+        fromSetup={false}
+        embedded
+      />
+    </BookingStudioProvider>
+  );
+}
+
 type OwnerCourtAvailabilityInnerProps = {
   placeId: string;
   courtId: string;
   fromSetup: boolean;
+  embedded?: boolean;
 };
 
 function OwnerCourtAvailabilityInner({
   placeId,
   courtId,
   fromSetup,
+  embedded = false,
 }: OwnerCourtAvailabilityInnerProps) {
   const router = useRouter();
   const isFromSetup = fromSetup;
@@ -1282,7 +1305,9 @@ function OwnerCourtAvailabilityInner({
   }
 
   if (!courtData || !placeData) {
-    router.push(appRoutes.owner.places.courts.base(placeId));
+    if (!embedded) {
+      router.push(appRoutes.owner.places.courts.base(placeId));
+    }
     return null;
   }
 
@@ -1318,6 +1343,900 @@ function OwnerCourtAvailabilityInner({
   const showScheduleBanner = hasIssue("NO_SCHEDULE");
   const showPricingBanner = hasIssue("NO_PRICING");
 
+  const content = (
+    <div className="space-y-6 pb-24 lg:pb-0">
+      <PageHeader
+        title={courtData.court.label}
+        breadcrumbs={[
+          { label: "My Venues", href: appRoutes.owner.places.base },
+          {
+            label: placeData.place.name,
+            href: appRoutes.owner.places.courts.base(placeId),
+          },
+          { label: courtData.court.label },
+        ]}
+        breadcrumbClassName="hidden sm:block"
+        backHref={appRoutes.owner.places.courts.base(placeId)}
+        actions={
+          <>
+            <ToggleGroup
+              type="single"
+              value={view}
+              onValueChange={(value) => {
+                if (value) setViewParam(value as StudioView);
+              }}
+              className="hidden 2xl:flex"
+            >
+              <ToggleGroupItem value="day" aria-label="Day view">
+                Day
+              </ToggleGroupItem>
+              <ToggleGroupItem value="week" aria-label="Week view">
+                Week
+              </ToggleGroupItem>
+            </ToggleGroup>
+            <Button asChild variant="outline" className="w-full sm:w-auto">
+              <Link href={scheduleHref}>Edit schedule</Link>
+            </Button>
+            <Button asChild variant="outline" className="w-full sm:w-auto">
+              <Link href={reservationsHref}>View bookings</Link>
+            </Button>
+          </>
+        }
+        actionsClassName="flex-col sm:flex-row w-full sm:w-auto"
+      />
+
+      <CourtPageNav placeId={placeId} courtId={courtId} />
+
+      <AvailabilityEnablementAlerts
+        showVerificationBanner={showVerificationBanner}
+        showReservationsDisabledBanner={showReservationsDisabledBanner}
+        showPaymentMethodBanner={showPaymentMethodBanner}
+        showScheduleBanner={showScheduleBanner}
+        showPricingBanner={showPricingBanner}
+        verificationStatus={verificationStatus}
+        verificationHref={verificationHref}
+        scheduleHref={scheduleHref}
+        paymentMethodsHref={paymentMethodsHref}
+      />
+
+      <AnimatePresence mode="wait" initial={false}>
+        {is2xlUp && isWeekView ? (
+          <motion.div
+            key="week"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={viewTransition}
+          >
+            <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+              {/* Left sidebar — calendar + create block panel */}
+              <div className="hidden 2xl:block space-y-6">
+                <Card>
+                  <CardContent className="space-y-3 p-6">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-sm font-heading font-semibold">
+                        Week Selector
+                      </h2>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleMobileToday}
+                      >
+                        Today
+                      </Button>
+                    </div>
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={(date) => {
+                        if (date) {
+                          setDayKeyParam(getZonedDayKey(date, placeTimeZone));
+                        }
+                      }}
+                      month={calendarMonth}
+                      onMonthChange={setCalendarMonth}
+                      timeZone={placeTimeZone}
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="space-y-4 p-6">
+                    <AnimatePresence mode="wait" initial={false}>
+                      {committedRange ? (
+                        <motion.div
+                          key="week-form"
+                          initial={
+                            shouldReduceMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, y: 8 }
+                          }
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={
+                            shouldReduceMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, y: -8 }
+                          }
+                          transition={{
+                            duration: 0.2,
+                            ease: [0.25, 0.46, 0.45, 0.94],
+                          }}
+                          className="space-y-4"
+                        >
+                          <div className="space-y-1">
+                            <h3 className="text-sm font-heading font-semibold">
+                              Create Block
+                            </h3>
+                            <p className="text-xs text-muted-foreground">
+                              {selectedTimeLabel} · {placeTimeZone}
+                            </p>
+                          </div>
+                          <SelectionPanelForm
+                            blockType={selectionBlockType}
+                            onBlockTypeChange={setSelectionBlockType}
+                            guestModeState={guestModeState}
+                            organizationId={organization?.id ?? ""}
+                            onGuestModeChange={(mode) => {
+                              setGuestMode(mode);
+                              setGuestModeState(mode);
+                            }}
+                            onGuestNameChange={setGuestName}
+                            onGuestPhoneChange={setGuestPhone}
+                            onGuestEmailChange={setGuestEmail}
+                            onGuestProfileIdChange={setGuestProfileId}
+                            onNotesChange={setNotes}
+                          />
+                          <div className="flex gap-2">
+                            <Button
+                              onClick={handleSelectionSubmit}
+                              className="flex-1"
+                              disabled={isCreatingBlock}
+                            >
+                              {isCreatingBlock
+                                ? "Saving..."
+                                : selectionBlockType === "WALK_IN"
+                                  ? "Save walk-in"
+                                  : selectionBlockType === "MAINTENANCE"
+                                    ? "Save maintenance"
+                                    : "Save guest booking"}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => {
+                                resetSelectionPanel();
+                                setWeekCommittedDayKey(null);
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="week-empty"
+                          initial={
+                            shouldReduceMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, y: 8 }
+                          }
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={
+                            shouldReduceMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, y: -8 }
+                          }
+                          transition={{
+                            duration: 0.2,
+                            ease: [0.25, 0.46, 0.45, 0.94],
+                          }}
+                          className="space-y-4"
+                        >
+                          <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
+                            <div className="flex items-center gap-2">
+                              <MousePointerClick className="size-4 text-primary/60" />
+                              <h3 className="text-sm font-heading font-semibold">
+                                Create Block
+                              </h3>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              Click a start time, then an end time on any day
+                              column to select a range.
+                            </p>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={openCustomDialog}
+                            className="w-full justify-start"
+                          >
+                            Custom block...
+                          </Button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Week timeline */}
+              <Card>
+                <CardContent className="space-y-4 p-6">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => navigateWeek(-1)}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <h2 className="text-lg font-heading font-semibold">
+                        {weekLabel}
+                      </h2>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => navigateWeek(1)}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <Badge variant="outline">Snap: 60m</Badge>
+                  </div>
+
+                  {blocksQuery.error ? (
+                    <Alert variant="destructive">
+                      <AlertTitle>Failed to load blocks</AlertTitle>
+                      <AlertDescription>
+                        {getClientErrorMessage(
+                          blocksQuery.error,
+                          "Please try again.",
+                        )}
+                      </AlertDescription>
+                    </Alert>
+                  ) : (
+                    <div className="relative overflow-x-auto">
+                      <div
+                        className="grid gap-x-0"
+                        style={{
+                          gridTemplateColumns:
+                            "72px repeat(7, minmax(100px, 1fr))",
+                        }}
+                      >
+                        <div />
+                        {weekDayKeys.map((wdk) => {
+                          const wdStart = getZonedDayRangeFromDayKey(
+                            wdk,
+                            placeTimeZone,
+                          ).start;
+                          const isToday = wdk === todayDayKey;
+                          const isPastDay = wdk < todayDayKey;
+                          const isSelectedDay = wdk === dayKey;
+                          return (
+                            <button
+                              key={`header-${wdk}`}
+                              type="button"
+                              className={cn(
+                                "border-b px-1 py-2 text-center text-xs font-semibold transition-colors",
+                                isToday && "text-primary",
+                                isSelectedDay && "bg-primary/5",
+                                isPastDay && "text-muted-foreground/60",
+                              )}
+                              onClick={() => {
+                                setDayKeyParam(wdk);
+                                setViewParam("day");
+                              }}
+                            >
+                              <div>
+                                {formatInTimeZone(
+                                  wdStart,
+                                  placeTimeZone,
+                                  "EEE",
+                                )}
+                              </div>
+                              <div
+                                className={cn(
+                                  "mt-0.5 text-lg",
+                                  isToday &&
+                                    "inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground",
+                                )}
+                              >
+                                {formatInTimeZone(wdStart, placeTimeZone, "d")}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      <div
+                        className="grid gap-x-0"
+                        style={{
+                          gridTemplateColumns:
+                            "72px repeat(7, minmax(100px, 1fr))",
+                        }}
+                      >
+                        <div>
+                          {hours.map((hour) => (
+                            <div
+                              key={`week-label-${hour}`}
+                              className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
+                            >
+                              {formatInTimeZone(
+                                buildDateFromDayKey(
+                                  dayKey,
+                                  hour * 60,
+                                  placeTimeZone,
+                                ),
+                                placeTimeZone,
+                                "h a",
+                              )}
+                            </div>
+                          ))}
+                        </div>
+
+                        {weekDayKeys.map((wdk) => (
+                          <WeekDayColumn
+                            key={`week-col-${wdk}`}
+                            dayKey={wdk}
+                            hours={hours}
+                            blocks={weekTimelineBlocksByDayKey.get(wdk) ?? []}
+                            draftBlocks={[]}
+                            reservations={
+                              weekTimelineReservationsByDayKey.get(wdk) ?? []
+                            }
+                            timeZone={placeTimeZone}
+                            disabled={false}
+                            isPastDay={wdk < todayDayKey}
+                            courtHoursWindows={courtHoursQuery.data ?? []}
+                            pendingBlockIds={pendingBlockIds}
+                            onSelectBlock={manageBlock.select}
+                            onResizePreview={(args) => {
+                              if (pendingBlockIds.has(args.blockId)) return;
+                              if (isOptimisticBlockId(args.blockId)) return;
+                              handleResizePreview(args);
+                            }}
+                            onResizeCommit={(args) => {
+                              if (pendingBlockIds.has(args.blockId)) return;
+                              if (isOptimisticBlockId(args.blockId)) return;
+                              handleResizeCommit(args);
+                            }}
+                            committedRange={
+                              weekCommittedDayKey === wdk
+                                ? committedRange
+                                : null
+                            }
+                            onCommitRange={handleWeekCommitRange}
+                          />
+                        ))}
+                      </div>
+                      {blocksQuery.isLoading ? (
+                        <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
+                      ) : null}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="day"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={viewTransition}
+          >
+            <div className="grid gap-6 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
+              {/* Left sidebar — calendar + create block panel */}
+              <div className="hidden 2xl:block space-y-6">
+                <Card>
+                  <CardContent className="space-y-3 p-6">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-sm font-heading font-semibold">
+                        Day Selector
+                      </h2>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleMobileToday}
+                      >
+                        Today
+                      </Button>
+                    </div>
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={(date) => {
+                        if (date) {
+                          setDayKeyParam(getZonedDayKey(date, placeTimeZone));
+                        }
+                      }}
+                      month={calendarMonth}
+                      onMonthChange={setCalendarMonth}
+                      timeZone={placeTimeZone}
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="space-y-4 p-6">
+                    <AnimatePresence mode="wait" initial={false}>
+                      {committedRange ? (
+                        <motion.div
+                          key="day-form"
+                          initial={
+                            shouldReduceMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, y: 8 }
+                          }
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={
+                            shouldReduceMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, y: -8 }
+                          }
+                          transition={{
+                            duration: 0.2,
+                            ease: [0.25, 0.46, 0.45, 0.94],
+                          }}
+                          className="space-y-4"
+                        >
+                          <div className="space-y-1">
+                            <h3 className="text-sm font-heading font-semibold">
+                              Create Block
+                            </h3>
+                            <p className="text-xs text-muted-foreground">
+                              {selectedTimeLabel} · {placeTimeZone}
+                            </p>
+                          </div>
+                          <SelectionPanelForm
+                            blockType={selectionBlockType}
+                            onBlockTypeChange={setSelectionBlockType}
+                            guestModeState={guestModeState}
+                            organizationId={organization?.id ?? ""}
+                            onGuestModeChange={(mode) => {
+                              setGuestMode(mode);
+                              setGuestModeState(mode);
+                            }}
+                            onGuestNameChange={setGuestName}
+                            onGuestPhoneChange={setGuestPhone}
+                            onGuestEmailChange={setGuestEmail}
+                            onGuestProfileIdChange={setGuestProfileId}
+                            onNotesChange={setNotes}
+                          />
+                          <div className="flex gap-2">
+                            <Button
+                              onClick={handleSelectionSubmit}
+                              className="flex-1"
+                              disabled={isCreatingBlock}
+                            >
+                              {isCreatingBlock
+                                ? "Saving..."
+                                : selectionBlockType === "WALK_IN"
+                                  ? "Save walk-in"
+                                  : selectionBlockType === "MAINTENANCE"
+                                    ? "Save maintenance"
+                                    : "Save guest booking"}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => resetSelectionPanel()}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="day-empty"
+                          initial={
+                            shouldReduceMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, y: 8 }
+                          }
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={
+                            shouldReduceMotion
+                              ? { opacity: 0 }
+                              : { opacity: 0, y: -8 }
+                          }
+                          transition={{
+                            duration: 0.2,
+                            ease: [0.25, 0.46, 0.45, 0.94],
+                          }}
+                          className="space-y-4"
+                        >
+                          <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
+                            <div className="flex items-center gap-2">
+                              <MousePointerClick className="size-4 text-primary/60" />
+                              <h3 className="text-sm font-heading font-semibold">
+                                Create Block
+                              </h3>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              Click a start time, then an end time on the
+                              timeline to select a range.
+                            </p>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={openCustomDialog}
+                            className="w-full justify-start"
+                          >
+                            Custom block...
+                          </Button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Center — timeline */}
+              <Card>
+                <CardContent className="space-y-4 p-6 pr-8 pb-6 lg:pr-6 lg:pb-6">
+                  {/* Mobile header */}
+                  <div className="space-y-3 2xl:hidden">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => navigateMonth(-1)}
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <Popover
+                          open={mobileCalendarOpen}
+                          onOpenChange={setMobileCalendarOpen}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              className="gap-1.5 text-sm font-medium min-w-0"
+                            >
+                              <CalendarIcon className="h-3.5 w-3.5" />
+                              <span className="truncate">{weekLabel}</span>
+                              <ChevronDown
+                                className={cn(
+                                  "h-3.5 w-3.5 transition-transform",
+                                  mobileCalendarOpen && "rotate-180",
+                                )}
+                              />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={selectedDate}
+                              onSelect={(date) => {
+                                if (date) {
+                                  setDayKeyParam(
+                                    getZonedDayKey(date, placeTimeZone),
+                                  );
+                                  setMobileCalendarOpen(false);
+                                }
+                              }}
+                              month={calendarMonth}
+                              onMonthChange={setCalendarMonth}
+                              timeZone={placeTimeZone}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => navigateMonth(1)}
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleMobileToday}
+                        className="shrink-0"
+                      >
+                        Today
+                      </Button>
+                    </div>
+                    <MobileDateStrip
+                      selectedDate={selectedDate}
+                      onDateSelect={handleMobileDateSelect}
+                      timeZone={placeTimeZone}
+                      todayDate={todayDate}
+                    />
+                  </div>
+
+                  {/* Desktop header */}
+                  <div className="hidden 2xl:flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <h2 className="text-lg font-heading font-semibold">
+                        Day Timeline
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        {selectedDayLabel}
+                      </p>
+                    </div>
+                    <Badge variant="outline">Snap: 60m</Badge>
+                  </div>
+
+                  {blocksQuery.error ? (
+                    <Alert variant="destructive">
+                      <AlertTitle>Failed to load blocks</AlertTitle>
+                      <AlertDescription>
+                        {getClientErrorMessage(
+                          blocksQuery.error,
+                          "Please try again.",
+                        )}
+                      </AlertDescription>
+                    </Alert>
+                  ) : (
+                    <RangeSelectionProvider
+                      config={daySelectionConfig}
+                      committedRange={committedRange}
+                    >
+                      <div className="relative">
+                        <div className="grid grid-cols-1 gap-x-3 md:grid-cols-[72px_minmax(0,1fr)]">
+                          <div className="hidden space-y-0 md:block">
+                            {dayHourLabels.map((hourLabel, index) => (
+                              <div
+                                key={`label-${hours[index] ?? index}`}
+                                className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
+                              >
+                                {hourLabel}
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="relative">
+                            <div className="space-y-0">
+                              {hours.map((hour, hourIndex) => (
+                                <SelectableTimelineRow
+                                  key={`row-${hour}`}
+                                  dayKey={dayKey}
+                                  startMinute={hour * 60}
+                                  disabled={false}
+                                  cellIndex={hourIndex}
+                                />
+                              ))}
+                            </div>
+                            <div className="pointer-events-none absolute inset-0">
+                              {timelineBlocks.map(
+                                ({ block, topOffset, height }) => (
+                                  <TimelineBlockItem
+                                    key={block.id}
+                                    block={block}
+                                    topOffset={topOffset}
+                                    height={height}
+                                    timeZone={placeTimeZone}
+                                    disabled={false}
+                                    isPending={pendingBlockIds.has(block.id)}
+                                    onSelect={manageBlock.select}
+                                    onResizePreview={
+                                      (block.type === "WALK_IN" ||
+                                        block.type === "MAINTENANCE") &&
+                                      !pendingBlockIds.has(block.id) &&
+                                      !isOptimisticBlockId(block.id)
+                                        ? handleResizePreview
+                                        : undefined
+                                    }
+                                    onResizeCommit={
+                                      (block.type === "WALK_IN" ||
+                                        block.type === "MAINTENANCE") &&
+                                      !pendingBlockIds.has(block.id) &&
+                                      !isOptimisticBlockId(block.id)
+                                        ? handleResizeCommit
+                                        : undefined
+                                    }
+                                  />
+                                ),
+                              )}
+                              {timelineReservations.map(
+                                ({ reservation, topOffset, height }) => (
+                                  <TimelineReservationItem
+                                    key={`res-${reservation.id}`}
+                                    reservation={reservation}
+                                    topOffset={topOffset}
+                                    height={height}
+                                    timeZone={placeTimeZone}
+                                    compact={height <= TIMELINE_ROW_HEIGHT + 8}
+                                    onClick={() => {
+                                      router.push(
+                                        appRoutes.owner.reservationDetail(
+                                          reservation.id,
+                                        ),
+                                      );
+                                    }}
+                                  />
+                                ),
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        {blocksQuery.isLoading ? (
+                          <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
+                        ) : null}
+                      </div>
+                    </RangeSelectionProvider>
+                  )}
+
+                  {/* Mobile blocks list */}
+                  <div className="2xl:hidden">
+                    <MobileDayBlocksList
+                      blocks={dayBlocks}
+                      isLoading={blocksQuery.isLoading}
+                      timeZone={placeTimeZone}
+                      selectedDayLabel={selectedDayLabel}
+                      onRemoveBlock={handleCancelBlock}
+                      isCancelPending={cancelBlock.isPending}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Right sidebar — blocks list */}
+              <Card className="hidden 2xl:block">
+                <CardContent className="space-y-4 p-6">
+                  <div className="space-y-1">
+                    <h3 className="text-lg font-heading font-semibold">
+                      Blocks · {selectedDayLabel}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      Review and remove blocks for this day.
+                    </p>
+                  </div>
+
+                  <Separator />
+
+                  {blocksQuery.isLoading ? (
+                    <div className="space-y-3">
+                      <Skeleton className="h-16 w-full" />
+                      <Skeleton className="h-16 w-full" />
+                    </div>
+                  ) : dayBlocks.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                      No blocks on this day yet.
+                    </p>
+                  ) : (
+                    <div className="space-y-3">
+                      {dayBlocks.map((block) => (
+                        <div key={block.id} className="rounded-lg border p-3">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="space-y-1">
+                              <Badge
+                                variant={
+                                  block.type === "WALK_IN" ? "paid" : "warning"
+                                }
+                              >
+                                {block.type === "WALK_IN"
+                                  ? "Walk-in"
+                                  : "Maintenance"}
+                              </Badge>
+                              <p className="text-sm font-medium">
+                                {formatTimeRangeInTimeZone(
+                                  block.startTime,
+                                  block.endTime,
+                                  placeTimeZone,
+                                )}
+                              </p>
+                              {block.reason ? (
+                                <p className="text-xs text-muted-foreground">
+                                  {block.reason}
+                                </p>
+                              ) : null}
+                            </div>
+                            <div className="flex flex-col items-end gap-2">
+                              {block.type === "WALK_IN" ? (
+                                <span className="text-sm font-semibold">
+                                  {formatCurrency(
+                                    block.totalPriceCents,
+                                    block.currency,
+                                  )}
+                                </span>
+                              ) : null}
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => handleCancelBlock(block.id)}
+                                disabled={cancelBlock.isPending}
+                              >
+                                Remove
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <RemoveBlockDialog confirmRemoveBlock={confirmRemoveBlock} />
+
+      <CustomBlockDialog
+        customForm={customForm}
+        handleCustomSubmit={handleCustomSubmit}
+        isCreatingBlock={isCreatingBlock}
+        placeTimeZone={placeTimeZone}
+      />
+
+      <GuestBookingDialog
+        guestBookingForm={guestBookingForm}
+        handleGuestBookingSubmit={handleGuestBookingSubmit}
+        isSubmitting={
+          createGuestBooking.isPending || createGuestProfile.isPending
+        }
+        guestProfilesData={
+          (guestProfilesQuery.data ?? []) as Array<{
+            id: string;
+            displayName: string;
+            phoneNumber: string | null;
+          }>
+        }
+        guestProfilesLoading={guestProfilesQuery.isLoading}
+        placeTimeZone={placeTimeZone}
+      />
+
+      {!is2xlUp ? (
+        <MobileCreateBlockDrawer
+          handleMobileSubmit={handleSelectionSubmit}
+          isCreatingBlock={isCreatingBlock}
+          mobileSelectedTimeLabel={selectedTimeLabel}
+          placeTimeZone={placeTimeZone}
+          organizationId={organization?.id ?? ""}
+          onDrawerClose={handleMobileDrawerClose}
+        />
+      ) : null}
+
+      {!is2xlUp && (
+        <MobileSelectionPeekBar
+          selectedTimeLabel={selectedTimeLabel}
+          onOpen={() => setMobileDrawerOpen(true)}
+        />
+      )}
+
+      {is2xlUp && (
+        <ManageBlockDialog
+          block={manageBlock.selectedBlock}
+          timeZone={placeTimeZone}
+          onClose={manageBlock.close}
+          onRemove={manageBlock.remove}
+        />
+      )}
+
+      {!is2xlUp && (
+        <MobileManageBlockPeekBar
+          block={manageBlock.selectedBlock}
+          timeZone={placeTimeZone}
+          onDismiss={manageBlock.close}
+          onRemove={manageBlock.remove}
+          isCancelPending={cancelBlock.isPending}
+        />
+      )}
+    </div>
+  );
+
+  if (embedded) {
+    return content;
+  }
+
   return (
     <AppShell
       sidebar={
@@ -1346,904 +2265,7 @@ function OwnerCourtAvailabilityInner({
         <ReservationAlertsPanel organizationId={organization?.id ?? null} />
       }
     >
-      <div className="space-y-6 pb-24 lg:pb-0">
-        <PageHeader
-          title={courtData.court.label}
-          breadcrumbs={[
-            { label: "My Venues", href: appRoutes.owner.places.base },
-            {
-              label: placeData.place.name,
-              href: appRoutes.owner.places.courts.base(placeId),
-            },
-            { label: courtData.court.label },
-          ]}
-          breadcrumbClassName="hidden sm:block"
-          backHref={appRoutes.owner.places.courts.base(placeId)}
-          actions={
-            <>
-              <ToggleGroup
-                type="single"
-                value={view}
-                onValueChange={(value) => {
-                  if (value) setViewParam(value as StudioView);
-                }}
-                className="hidden 2xl:flex"
-              >
-                <ToggleGroupItem value="day" aria-label="Day view">
-                  Day
-                </ToggleGroupItem>
-                <ToggleGroupItem value="week" aria-label="Week view">
-                  Week
-                </ToggleGroupItem>
-              </ToggleGroup>
-              <Button asChild variant="outline" className="w-full sm:w-auto">
-                <Link href={scheduleHref}>Edit schedule</Link>
-              </Button>
-              <Button asChild variant="outline" className="w-full sm:w-auto">
-                <Link href={reservationsHref}>View bookings</Link>
-              </Button>
-            </>
-          }
-          actionsClassName="flex-col sm:flex-row w-full sm:w-auto"
-        />
-
-        <CourtPageNav placeId={placeId} courtId={courtId} />
-
-        <AvailabilityEnablementAlerts
-          showVerificationBanner={showVerificationBanner}
-          showReservationsDisabledBanner={showReservationsDisabledBanner}
-          showPaymentMethodBanner={showPaymentMethodBanner}
-          showScheduleBanner={showScheduleBanner}
-          showPricingBanner={showPricingBanner}
-          verificationStatus={verificationStatus}
-          verificationHref={verificationHref}
-          scheduleHref={scheduleHref}
-          paymentMethodsHref={paymentMethodsHref}
-        />
-
-        <AnimatePresence mode="wait" initial={false}>
-          {is2xlUp && isWeekView ? (
-            <motion.div
-              key="week"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.02 }}
-              transition={viewTransition}
-            >
-              <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
-                {/* Left sidebar — calendar + create block panel */}
-                <div className="hidden 2xl:block space-y-6">
-                  <Card>
-                    <CardContent className="space-y-3 p-6">
-                      <div className="flex items-center justify-between">
-                        <h2 className="text-sm font-heading font-semibold">
-                          Week Selector
-                        </h2>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={handleMobileToday}
-                        >
-                          Today
-                        </Button>
-                      </div>
-                      <Calendar
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={(date) => {
-                          if (date) {
-                            setDayKeyParam(getZonedDayKey(date, placeTimeZone));
-                          }
-                        }}
-                        month={calendarMonth}
-                        onMonthChange={setCalendarMonth}
-                        timeZone={placeTimeZone}
-                      />
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardContent className="space-y-4 p-6">
-                      <AnimatePresence mode="wait" initial={false}>
-                        {committedRange ? (
-                          <motion.div
-                            key="week-form"
-                            initial={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: 8 }
-                            }
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: -8 }
-                            }
-                            transition={{
-                              duration: 0.2,
-                              ease: [0.25, 0.46, 0.45, 0.94],
-                            }}
-                            className="space-y-4"
-                          >
-                            <div className="space-y-1">
-                              <h3 className="text-sm font-heading font-semibold">
-                                Create Block
-                              </h3>
-                              <p className="text-xs text-muted-foreground">
-                                {selectedTimeLabel} · {placeTimeZone}
-                              </p>
-                            </div>
-                            <SelectionPanelForm
-                              blockType={selectionBlockType}
-                              onBlockTypeChange={setSelectionBlockType}
-                              guestModeState={guestModeState}
-                              organizationId={organization?.id ?? ""}
-                              onGuestModeChange={(mode) => {
-                                setGuestMode(mode);
-                                setGuestModeState(mode);
-                              }}
-                              onGuestNameChange={setGuestName}
-                              onGuestPhoneChange={setGuestPhone}
-                              onGuestEmailChange={setGuestEmail}
-                              onGuestProfileIdChange={setGuestProfileId}
-                              onNotesChange={setNotes}
-                            />
-                            <div className="flex gap-2">
-                              <Button
-                                onClick={handleSelectionSubmit}
-                                className="flex-1"
-                                disabled={isCreatingBlock}
-                              >
-                                {isCreatingBlock
-                                  ? "Saving..."
-                                  : selectionBlockType === "WALK_IN"
-                                    ? "Save walk-in"
-                                    : selectionBlockType === "MAINTENANCE"
-                                      ? "Save maintenance"
-                                      : "Save guest booking"}
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => {
-                                  resetSelectionPanel();
-                                  setWeekCommittedDayKey(null);
-                                }}
-                              >
-                                Cancel
-                              </Button>
-                            </div>
-                          </motion.div>
-                        ) : (
-                          <motion.div
-                            key="week-empty"
-                            initial={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: 8 }
-                            }
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: -8 }
-                            }
-                            transition={{
-                              duration: 0.2,
-                              ease: [0.25, 0.46, 0.45, 0.94],
-                            }}
-                            className="space-y-4"
-                          >
-                            <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
-                              <div className="flex items-center gap-2">
-                                <MousePointerClick className="size-4 text-primary/60" />
-                                <h3 className="text-sm font-heading font-semibold">
-                                  Create Block
-                                </h3>
-                              </div>
-                              <p className="text-xs text-muted-foreground">
-                                Click a start time, then an end time on any day
-                                column to select a range.
-                              </p>
-                            </div>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={openCustomDialog}
-                              className="w-full justify-start"
-                            >
-                              Custom block...
-                            </Button>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Week timeline */}
-                <Card>
-                  <CardContent className="space-y-4 p-6">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="flex items-center gap-2">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => navigateWeek(-1)}
-                        >
-                          <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        <h2 className="text-lg font-heading font-semibold">
-                          {weekLabel}
-                        </h2>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => navigateWeek(1)}
-                        >
-                          <ChevronRight className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <Badge variant="outline">Snap: 60m</Badge>
-                    </div>
-
-                    {blocksQuery.error ? (
-                      <Alert variant="destructive">
-                        <AlertTitle>Failed to load blocks</AlertTitle>
-                        <AlertDescription>
-                          {getClientErrorMessage(
-                            blocksQuery.error,
-                            "Please try again.",
-                          )}
-                        </AlertDescription>
-                      </Alert>
-                    ) : (
-                      <div className="relative overflow-x-auto">
-                        <div
-                          className="grid gap-x-0"
-                          style={{
-                            gridTemplateColumns:
-                              "72px repeat(7, minmax(100px, 1fr))",
-                          }}
-                        >
-                          <div />
-                          {weekDayKeys.map((wdk) => {
-                            const wdStart = getZonedDayRangeFromDayKey(
-                              wdk,
-                              placeTimeZone,
-                            ).start;
-                            const isToday = wdk === todayDayKey;
-                            const isPastDay = wdk < todayDayKey;
-                            const isSelectedDay = wdk === dayKey;
-                            return (
-                              <button
-                                key={`header-${wdk}`}
-                                type="button"
-                                className={cn(
-                                  "border-b px-1 py-2 text-center text-xs font-semibold transition-colors",
-                                  isToday && "text-primary",
-                                  isSelectedDay && "bg-primary/5",
-                                  isPastDay && "text-muted-foreground/60",
-                                )}
-                                onClick={() => {
-                                  setDayKeyParam(wdk);
-                                  setViewParam("day");
-                                }}
-                              >
-                                <div>
-                                  {formatInTimeZone(
-                                    wdStart,
-                                    placeTimeZone,
-                                    "EEE",
-                                  )}
-                                </div>
-                                <div
-                                  className={cn(
-                                    "mt-0.5 text-lg",
-                                    isToday &&
-                                      "inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground",
-                                  )}
-                                >
-                                  {formatInTimeZone(
-                                    wdStart,
-                                    placeTimeZone,
-                                    "d",
-                                  )}
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-
-                        <div
-                          className="grid gap-x-0"
-                          style={{
-                            gridTemplateColumns:
-                              "72px repeat(7, minmax(100px, 1fr))",
-                          }}
-                        >
-                          <div>
-                            {hours.map((hour) => (
-                              <div
-                                key={`week-label-${hour}`}
-                                className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
-                              >
-                                {formatInTimeZone(
-                                  buildDateFromDayKey(
-                                    dayKey,
-                                    hour * 60,
-                                    placeTimeZone,
-                                  ),
-                                  placeTimeZone,
-                                  "h a",
-                                )}
-                              </div>
-                            ))}
-                          </div>
-
-                          {weekDayKeys.map((wdk) => (
-                            <WeekDayColumn
-                              key={`week-col-${wdk}`}
-                              dayKey={wdk}
-                              hours={hours}
-                              blocks={weekTimelineBlocksByDayKey.get(wdk) ?? []}
-                              draftBlocks={[]}
-                              reservations={
-                                weekTimelineReservationsByDayKey.get(wdk) ?? []
-                              }
-                              timeZone={placeTimeZone}
-                              disabled={false}
-                              isPastDay={wdk < todayDayKey}
-                              courtHoursWindows={courtHoursQuery.data ?? []}
-                              pendingBlockIds={pendingBlockIds}
-                              onSelectBlock={manageBlock.select}
-                              onResizePreview={(args) => {
-                                if (pendingBlockIds.has(args.blockId)) return;
-                                if (isOptimisticBlockId(args.blockId)) return;
-                                handleResizePreview(args);
-                              }}
-                              onResizeCommit={(args) => {
-                                if (pendingBlockIds.has(args.blockId)) return;
-                                if (isOptimisticBlockId(args.blockId)) return;
-                                handleResizeCommit(args);
-                              }}
-                              committedRange={
-                                weekCommittedDayKey === wdk
-                                  ? committedRange
-                                  : null
-                              }
-                              onCommitRange={handleWeekCommitRange}
-                            />
-                          ))}
-                        </div>
-                        {blocksQuery.isLoading ? (
-                          <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
-                        ) : null}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="day"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.02 }}
-              transition={viewTransition}
-            >
-              <div className="grid gap-6 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
-                {/* Left sidebar — calendar + create block panel */}
-                <div className="hidden 2xl:block space-y-6">
-                  <Card>
-                    <CardContent className="space-y-3 p-6">
-                      <div className="flex items-center justify-between">
-                        <h2 className="text-sm font-heading font-semibold">
-                          Day Selector
-                        </h2>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={handleMobileToday}
-                        >
-                          Today
-                        </Button>
-                      </div>
-                      <Calendar
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={(date) => {
-                          if (date) {
-                            setDayKeyParam(getZonedDayKey(date, placeTimeZone));
-                          }
-                        }}
-                        month={calendarMonth}
-                        onMonthChange={setCalendarMonth}
-                        timeZone={placeTimeZone}
-                      />
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardContent className="space-y-4 p-6">
-                      <AnimatePresence mode="wait" initial={false}>
-                        {committedRange ? (
-                          <motion.div
-                            key="day-form"
-                            initial={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: 8 }
-                            }
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: -8 }
-                            }
-                            transition={{
-                              duration: 0.2,
-                              ease: [0.25, 0.46, 0.45, 0.94],
-                            }}
-                            className="space-y-4"
-                          >
-                            <div className="space-y-1">
-                              <h3 className="text-sm font-heading font-semibold">
-                                Create Block
-                              </h3>
-                              <p className="text-xs text-muted-foreground">
-                                {selectedTimeLabel} · {placeTimeZone}
-                              </p>
-                            </div>
-                            <SelectionPanelForm
-                              blockType={selectionBlockType}
-                              onBlockTypeChange={setSelectionBlockType}
-                              guestModeState={guestModeState}
-                              organizationId={organization?.id ?? ""}
-                              onGuestModeChange={(mode) => {
-                                setGuestMode(mode);
-                                setGuestModeState(mode);
-                              }}
-                              onGuestNameChange={setGuestName}
-                              onGuestPhoneChange={setGuestPhone}
-                              onGuestEmailChange={setGuestEmail}
-                              onGuestProfileIdChange={setGuestProfileId}
-                              onNotesChange={setNotes}
-                            />
-                            <div className="flex gap-2">
-                              <Button
-                                onClick={handleSelectionSubmit}
-                                className="flex-1"
-                                disabled={isCreatingBlock}
-                              >
-                                {isCreatingBlock
-                                  ? "Saving..."
-                                  : selectionBlockType === "WALK_IN"
-                                    ? "Save walk-in"
-                                    : selectionBlockType === "MAINTENANCE"
-                                      ? "Save maintenance"
-                                      : "Save guest booking"}
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => resetSelectionPanel()}
-                              >
-                                Cancel
-                              </Button>
-                            </div>
-                          </motion.div>
-                        ) : (
-                          <motion.div
-                            key="day-empty"
-                            initial={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: 8 }
-                            }
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: -8 }
-                            }
-                            transition={{
-                              duration: 0.2,
-                              ease: [0.25, 0.46, 0.45, 0.94],
-                            }}
-                            className="space-y-4"
-                          >
-                            <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
-                              <div className="flex items-center gap-2">
-                                <MousePointerClick className="size-4 text-primary/60" />
-                                <h3 className="text-sm font-heading font-semibold">
-                                  Create Block
-                                </h3>
-                              </div>
-                              <p className="text-xs text-muted-foreground">
-                                Click a start time, then an end time on the
-                                timeline to select a range.
-                              </p>
-                            </div>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={openCustomDialog}
-                              className="w-full justify-start"
-                            >
-                              Custom block...
-                            </Button>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Center — timeline */}
-                <Card>
-                  <CardContent className="space-y-4 p-6 pr-8 pb-6 lg:pr-6 lg:pb-6">
-                    {/* Mobile header */}
-                    <div className="space-y-3 2xl:hidden">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => navigateMonth(-1)}
-                          >
-                            <ChevronLeft className="h-4 w-4" />
-                          </Button>
-                          <Popover
-                            open={mobileCalendarOpen}
-                            onOpenChange={setMobileCalendarOpen}
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                className="gap-1.5 text-sm font-medium min-w-0"
-                              >
-                                <CalendarIcon className="h-3.5 w-3.5" />
-                                <span className="truncate">{weekLabel}</span>
-                                <ChevronDown
-                                  className={cn(
-                                    "h-3.5 w-3.5 transition-transform",
-                                    mobileCalendarOpen && "rotate-180",
-                                  )}
-                                />
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={selectedDate}
-                                onSelect={(date) => {
-                                  if (date) {
-                                    setDayKeyParam(
-                                      getZonedDayKey(date, placeTimeZone),
-                                    );
-                                    setMobileCalendarOpen(false);
-                                  }
-                                }}
-                                month={calendarMonth}
-                                onMonthChange={setCalendarMonth}
-                                timeZone={placeTimeZone}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => navigateMonth(1)}
-                          >
-                            <ChevronRight className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={handleMobileToday}
-                          className="shrink-0"
-                        >
-                          Today
-                        </Button>
-                      </div>
-                      <MobileDateStrip
-                        selectedDate={selectedDate}
-                        onDateSelect={handleMobileDateSelect}
-                        timeZone={placeTimeZone}
-                        todayDate={todayDate}
-                      />
-                    </div>
-
-                    {/* Desktop header */}
-                    <div className="hidden 2xl:flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <h2 className="text-lg font-heading font-semibold">
-                          Day Timeline
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                          {selectedDayLabel}
-                        </p>
-                      </div>
-                      <Badge variant="outline">Snap: 60m</Badge>
-                    </div>
-
-                    {blocksQuery.error ? (
-                      <Alert variant="destructive">
-                        <AlertTitle>Failed to load blocks</AlertTitle>
-                        <AlertDescription>
-                          {getClientErrorMessage(
-                            blocksQuery.error,
-                            "Please try again.",
-                          )}
-                        </AlertDescription>
-                      </Alert>
-                    ) : (
-                      <RangeSelectionProvider
-                        config={daySelectionConfig}
-                        committedRange={committedRange}
-                      >
-                        <div className="relative">
-                          <div className="grid grid-cols-1 gap-x-3 md:grid-cols-[72px_minmax(0,1fr)]">
-                            <div className="hidden space-y-0 md:block">
-                              {dayHourLabels.map((hourLabel, index) => (
-                                <div
-                                  key={`label-${hours[index] ?? index}`}
-                                  className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
-                                >
-                                  {hourLabel}
-                                </div>
-                              ))}
-                            </div>
-
-                            <div className="relative">
-                              <div className="space-y-0">
-                                {hours.map((hour, hourIndex) => (
-                                  <SelectableTimelineRow
-                                    key={`row-${hour}`}
-                                    dayKey={dayKey}
-                                    startMinute={hour * 60}
-                                    disabled={false}
-                                    cellIndex={hourIndex}
-                                  />
-                                ))}
-                              </div>
-                              <div className="pointer-events-none absolute inset-0">
-                                {timelineBlocks.map(
-                                  ({ block, topOffset, height }) => (
-                                    <TimelineBlockItem
-                                      key={block.id}
-                                      block={block}
-                                      topOffset={topOffset}
-                                      height={height}
-                                      timeZone={placeTimeZone}
-                                      disabled={false}
-                                      isPending={pendingBlockIds.has(block.id)}
-                                      onSelect={manageBlock.select}
-                                      onResizePreview={
-                                        (block.type === "WALK_IN" ||
-                                          block.type === "MAINTENANCE") &&
-                                        !pendingBlockIds.has(block.id) &&
-                                        !isOptimisticBlockId(block.id)
-                                          ? handleResizePreview
-                                          : undefined
-                                      }
-                                      onResizeCommit={
-                                        (block.type === "WALK_IN" ||
-                                          block.type === "MAINTENANCE") &&
-                                        !pendingBlockIds.has(block.id) &&
-                                        !isOptimisticBlockId(block.id)
-                                          ? handleResizeCommit
-                                          : undefined
-                                      }
-                                    />
-                                  ),
-                                )}
-                                {timelineReservations.map(
-                                  ({ reservation, topOffset, height }) => (
-                                    <TimelineReservationItem
-                                      key={`res-${reservation.id}`}
-                                      reservation={reservation}
-                                      topOffset={topOffset}
-                                      height={height}
-                                      timeZone={placeTimeZone}
-                                      compact={
-                                        height <= TIMELINE_ROW_HEIGHT + 8
-                                      }
-                                      onClick={() => {
-                                        router.push(
-                                          appRoutes.owner.reservationDetail(
-                                            reservation.id,
-                                          ),
-                                        );
-                                      }}
-                                    />
-                                  ),
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                          {blocksQuery.isLoading ? (
-                            <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
-                          ) : null}
-                        </div>
-                      </RangeSelectionProvider>
-                    )}
-
-                    {/* Mobile blocks list */}
-                    <div className="2xl:hidden">
-                      <MobileDayBlocksList
-                        blocks={dayBlocks}
-                        isLoading={blocksQuery.isLoading}
-                        timeZone={placeTimeZone}
-                        selectedDayLabel={selectedDayLabel}
-                        onRemoveBlock={handleCancelBlock}
-                        isCancelPending={cancelBlock.isPending}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Right sidebar — blocks list */}
-                <Card className="hidden 2xl:block">
-                  <CardContent className="space-y-4 p-6">
-                    <div className="space-y-1">
-                      <h3 className="text-lg font-heading font-semibold">
-                        Blocks · {selectedDayLabel}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Review and remove blocks for this day.
-                      </p>
-                    </div>
-
-                    <Separator />
-
-                    {blocksQuery.isLoading ? (
-                      <div className="space-y-3">
-                        <Skeleton className="h-16 w-full" />
-                        <Skeleton className="h-16 w-full" />
-                      </div>
-                    ) : dayBlocks.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">
-                        No blocks on this day yet.
-                      </p>
-                    ) : (
-                      <div className="space-y-3">
-                        {dayBlocks.map((block) => (
-                          <div key={block.id} className="rounded-lg border p-3">
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="space-y-1">
-                                <Badge
-                                  variant={
-                                    block.type === "WALK_IN"
-                                      ? "paid"
-                                      : "warning"
-                                  }
-                                >
-                                  {block.type === "WALK_IN"
-                                    ? "Walk-in"
-                                    : "Maintenance"}
-                                </Badge>
-                                <p className="text-sm font-medium">
-                                  {formatTimeRangeInTimeZone(
-                                    block.startTime,
-                                    block.endTime,
-                                    placeTimeZone,
-                                  )}
-                                </p>
-                                {block.reason ? (
-                                  <p className="text-xs text-muted-foreground">
-                                    {block.reason}
-                                  </p>
-                                ) : null}
-                              </div>
-                              <div className="flex flex-col items-end gap-2">
-                                {block.type === "WALK_IN" ? (
-                                  <span className="text-sm font-semibold">
-                                    {formatCurrency(
-                                      block.totalPriceCents,
-                                      block.currency,
-                                    )}
-                                  </span>
-                                ) : null}
-                                <Button
-                                  type="button"
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => handleCancelBlock(block.id)}
-                                  disabled={cancelBlock.isPending}
-                                >
-                                  Remove
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <RemoveBlockDialog confirmRemoveBlock={confirmRemoveBlock} />
-
-        <CustomBlockDialog
-          customForm={customForm}
-          handleCustomSubmit={handleCustomSubmit}
-          isCreatingBlock={isCreatingBlock}
-          placeTimeZone={placeTimeZone}
-        />
-
-        <GuestBookingDialog
-          guestBookingForm={guestBookingForm}
-          handleGuestBookingSubmit={handleGuestBookingSubmit}
-          isSubmitting={
-            createGuestBooking.isPending || createGuestProfile.isPending
-          }
-          guestProfilesData={
-            (guestProfilesQuery.data ?? []) as Array<{
-              id: string;
-              displayName: string;
-              phoneNumber: string | null;
-            }>
-          }
-          guestProfilesLoading={guestProfilesQuery.isLoading}
-          placeTimeZone={placeTimeZone}
-        />
-
-        {!is2xlUp ? (
-          <MobileCreateBlockDrawer
-            handleMobileSubmit={handleSelectionSubmit}
-            isCreatingBlock={isCreatingBlock}
-            mobileSelectedTimeLabel={selectedTimeLabel}
-            placeTimeZone={placeTimeZone}
-            organizationId={organization?.id ?? ""}
-            onDrawerClose={handleMobileDrawerClose}
-          />
-        ) : null}
-
-        {!is2xlUp && (
-          <MobileSelectionPeekBar
-            selectedTimeLabel={selectedTimeLabel}
-            onOpen={() => setMobileDrawerOpen(true)}
-          />
-        )}
-
-        {is2xlUp && (
-          <ManageBlockDialog
-            block={manageBlock.selectedBlock}
-            timeZone={placeTimeZone}
-            onClose={manageBlock.close}
-            onRemove={manageBlock.remove}
-          />
-        )}
-
-        {!is2xlUp && (
-          <MobileManageBlockPeekBar
-            block={manageBlock.selectedBlock}
-            timeZone={placeTimeZone}
-            onDismiss={manageBlock.close}
-            onRemove={manageBlock.remove}
-            isCancelPending={cancelBlock.isPending}
-          />
-        )}
-      </div>
+      {content}
     </AppShell>
   );
 }

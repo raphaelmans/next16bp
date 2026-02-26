@@ -1,6 +1,4 @@
 import { ArrowRight, CheckCircle, ClipboardList } from "lucide-react";
-import Link from "next/link";
-import { appRoutes } from "@/common/app-routes";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +12,9 @@ interface ConfigureCourtsCardProps {
   placeId?: string;
   courtId?: string;
   onConfigureClick: () => void;
+  onManageCourtsClick?: () => void;
+  onEditScheduleClick?: () => void;
+  onManageAvailabilityClick?: () => void;
 }
 
 export function ConfigureCourtsCard({
@@ -25,6 +26,9 @@ export function ConfigureCourtsCard({
   placeId,
   courtId,
   onConfigureClick,
+  onManageCourtsClick,
+  onEditScheduleClick,
+  onManageAvailabilityClick,
 }: ConfigureCourtsCardProps) {
   if (hasReadyCourt) {
     return (
@@ -47,22 +51,20 @@ export function ConfigureCourtsCard({
               <div className="flex flex-wrap gap-2 pt-2">
                 {placeId ? (
                   <>
-                    <Button variant="outline" asChild>
-                      <Link
-                        href={`${appRoutes.owner.places.courts.base(placeId)}?from=setup`}
-                        prefetch={false}
-                      >
-                        Manage courts
-                      </Link>
+                    <Button
+                      variant="outline"
+                      onClick={onManageCourtsClick}
+                      disabled={!onManageCourtsClick}
+                    >
+                      Manage courts
                     </Button>
                     {courtId && (
-                      <Button variant="outline" asChild>
-                        <Link
-                          href={`${appRoutes.owner.places.courts.availability(placeId, courtId)}?from=setup`}
-                          prefetch={false}
-                        >
-                          Manage availability
-                        </Link>
+                      <Button
+                        variant="outline"
+                        onClick={onManageAvailabilityClick}
+                        disabled={!onManageAvailabilityClick}
+                      >
+                        Manage availability
                       </Button>
                     )}
                   </>
@@ -108,20 +110,20 @@ export function ConfigureCourtsCard({
               <div className="flex flex-wrap gap-2 pt-2">
                 {placeId ? (
                   <>
-                    <Button variant="outline" asChild>
-                      <Link
-                        href={`${appRoutes.owner.places.courts.base(placeId)}?from=setup`}
-                      >
-                        Manage courts
-                      </Link>
+                    <Button
+                      variant="outline"
+                      onClick={onManageCourtsClick}
+                      disabled={!onManageCourtsClick}
+                    >
+                      Manage courts
                     </Button>
                     {courtId && (
-                      <Button variant="outline" asChild>
-                        <Link
-                          href={`${appRoutes.owner.places.courts.setup(placeId, courtId, "schedule")}&from=setup`}
-                        >
-                          Edit schedule & pricing
-                        </Link>
+                      <Button
+                        variant="outline"
+                        onClick={onEditScheduleClick}
+                        disabled={!onEditScheduleClick}
+                      >
+                        Edit schedule & pricing
                       </Button>
                     )}
                   </>
