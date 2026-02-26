@@ -118,10 +118,14 @@ const formatBytes = (bytes?: number | null) => {
 
 type OwnerBookingsImportReviewViewProps = {
   jobId: string;
+  onComplete?: () => void;
+  onBack?: () => void;
 };
 
 export default function OwnerBookingsImportReviewView({
   jobId,
+  onComplete,
+  onBack,
 }: OwnerBookingsImportReviewViewProps) {
   const router = useRouter();
   const [fromParam] = useQueryState("from", parseAsString);
@@ -244,6 +248,10 @@ export default function OwnerBookingsImportReviewView({
   const discardMutation = useMutOwnerImportDiscardJob({
     onSuccess: () => {
       toast.success("Import discarded");
+      if (onComplete) {
+        onComplete();
+        return;
+      }
       router.push(
         isFromSetup
           ? appRoutes.owner.getStarted
@@ -268,7 +276,9 @@ export default function OwnerBookingsImportReviewView({
         toast.success(`Successfully committed ${result.committedRows} rows`);
       }
 
-      if (isFromSetup) {
+      if (onComplete) {
+        onComplete();
+      } else if (isFromSetup) {
         router.push(appRoutes.owner.getStarted);
       }
     },
@@ -970,13 +980,17 @@ export default function OwnerBookingsImportReviewView({
                   <Button
                     variant="outline"
                     className="w-full"
-                    onClick={() =>
+                    onClick={() => {
+                      if (onBack) {
+                        onBack();
+                        return;
+                      }
                       router.push(
                         isFromSetup
                           ? appRoutes.owner.getStarted
                           : appRoutes.owner.imports.bookings,
-                      )
-                    }
+                      );
+                    }}
                   >
                     <ChevronLeft className="mr-2 h-4 w-4" />
                     Back to imports
