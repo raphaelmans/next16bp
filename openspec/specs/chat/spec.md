@@ -70,3 +70,15 @@ The chat domain SHALL keep existing reservation-level session and messaging cont
 #### Scenario: Historical reservation thread remains accessible
 - **WHEN** a user accesses existing reservation-level chat history created before group-thread handling
 - **THEN** the thread remains accessible under existing authorization and read-only rules
+
+### Requirement: Reservation chat owner-side access SHALL include authorized organization members
+The reservation chat boundary SHALL allow owner-side participation by active organization members with chat permission.
+
+#### Scenario: Manager joins reservation chat
+- **WHEN** an active organization member with `reservation.chat` requests reservation chat session
+- **THEN** chat session creation succeeds
+- **AND** the member is included in reservation chat participants
+
+#### Scenario: Member without chat permission blocked
+- **WHEN** an active organization member lacks `reservation.chat`
+- **THEN** reservation chat session/message operations return forbidden

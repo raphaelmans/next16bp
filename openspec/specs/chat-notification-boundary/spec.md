@@ -1,12 +1,10 @@
 ## Purpose
 
 Defines the boundary contract between chat unread/inbox domain logic and notification delivery-channel logic, and the testability requirements for each.
-
 ## Requirements
-
 ### Requirement: Chat vs Notification Domain Separation
 
-Chat unread/inbox domain logic SHALL remain in chat feature surfaces, while delivery-channel status/settings logic SHALL remain in notification feature surfaces.
+Chat unread/inbox domain logic SHALL remain in chat feature surfaces, while notification delivery settings and notification inbox logic SHALL remain in notification feature surfaces.
 
 #### Scenario: Chat unread updates
 
@@ -18,9 +16,9 @@ Chat unread/inbox domain logic SHALL remain in chat feature surfaces, while deli
 #### Scenario: NotificationBell scope
 
 - **GIVEN** user opens NotificationBell
-- **WHEN** delivery capability and permissions are evaluated
-- **THEN** bell displays delivery settings/status diagnostics only
-- **AND** bell does not represent inbox thread state
+- **WHEN** delivery capability, permissions, and notification inbox rows are evaluated
+- **THEN** bell displays notification delivery settings/status and notification inbox items
+- **AND** bell does not represent chat thread inbox state
 
 ### Requirement: Testability Boundary Contract
 
@@ -38,3 +36,4 @@ Deterministic chat and notification rules SHALL be verifiable by pure unit tests
 - **WHEN** components are tested
 - **THEN** assertions focus on rendering and user interaction behavior
 - **AND** deterministic rule branches are not redundantly re-tested in UI suites
+

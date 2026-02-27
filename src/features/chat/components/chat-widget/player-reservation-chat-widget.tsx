@@ -126,7 +126,7 @@ export function PlayerReservationChatWidget({
             <>
               {reservationStatus === "CREATED" ? (
                 <div className="border-b bg-muted/40 px-5 py-3 text-xs text-muted-foreground">
-                  Waiting for owner confirmation. You can still message the
+                  Waiting for venue confirmation. You can still message the
                   venue.
                 </div>
               ) : null}

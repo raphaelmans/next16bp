@@ -1,3 +1,4 @@
+import { makeOrganizationMemberService } from "@/lib/modules/organization-member/factories/organization-member.factory";
 import { getContainer } from "@/lib/shared/infra/container";
 import { ChatInboxArchiveRepository } from "../repositories/chat-inbox-archive.repository";
 import { ChatInboxService } from "../services/chat-inbox.service";
@@ -20,6 +21,7 @@ export function makeChatInboxService() {
     chatInboxService = new ChatInboxService(
       getContainer().db,
       makeChatInboxArchiveRepository(),
+      makeOrganizationMemberService(),
     );
   }
 

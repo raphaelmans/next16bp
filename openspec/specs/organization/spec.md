@@ -52,3 +52,16 @@ Based on `src/lib/modules/organization/organization.router.ts`:
 - **Single Owner**: Currently models a 1:1 relationship between a User and an Organization (via `ownerUserId`), though the schema could support many-to-many in the future.
 - **Policy Configuration**: Each organization configures its own reservation TTLs (`paymentHoldMinutes`, `ownerReviewMinutes`), which the Reservation domain consumes.
 - **Payment Methods**: Stores "instructions" for P2P payments (e.g., "Send screenshot to Viber"), not actual payment gateway credentials.
+
+## Requirements
+
+### Requirement: `organization.my` SHALL return organizations accessible to current user
+The system SHALL return organizations where the current user is either canonical owner or active invited member.
+
+#### Scenario: Manager sees assigned organization
+- **WHEN** a user is not `organization.ownerUserId` but has active `organization_member` row for that organization
+- **THEN** `organization.my` includes that organization in response
+
+#### Scenario: Revoked member not included
+- **WHEN** a membership status is `REVOKED`
+- **THEN** `organization.my` excludes that organization for the revoked user

@@ -107,6 +107,32 @@ export class StreamChatProvider implements IChatProvider {
     );
 
     if (channels.length > 0) {
+      const channel = channels[0];
+      const existingMemberIds = new Set(
+        Object.keys(channel.state.members ?? {}),
+      );
+      const missing = [
+        ...new Set(memberIds.filter((id) => !existingMemberIds.has(id))),
+      ];
+      if (missing.length > 0) {
+        try {
+          await channel.addMembers(missing);
+        } catch (error) {
+          if (isDuplicateMessageError(error)) {
+            return;
+          }
+          if (error && typeof error === "object") {
+            const status =
+              "status" in error && typeof error.status === "number"
+                ? error.status
+                : null;
+            if (status === 404 || status === 409) {
+              return;
+            }
+          }
+          throw error;
+        }
+      }
       return;
     }
 

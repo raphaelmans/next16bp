@@ -166,15 +166,15 @@ export function isReservationStatusChatEnabled(status: string): boolean {
 
 export function getPlayerReservationStatusLabel(status: string): string {
   if (status === "CREATED") {
-    return "Waiting for owner confirmation";
+    return "Waiting for venue confirmation";
   }
 
   if (status === "AWAITING_PAYMENT") {
-    return "Owner accepted - awaiting payment";
+    return "Venue accepted - awaiting payment";
   }
 
   if (status === "PAYMENT_MARKED_BY_USER") {
-    return "Payment marked - awaiting owner review";
+    return "Payment marked - awaiting venue review";
   }
 
   return "Confirmed";

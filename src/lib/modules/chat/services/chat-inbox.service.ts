@@ -1,4 +1,5 @@
-import { and, eq, or } from "drizzle-orm";
+import { eq } from "drizzle-orm";
+import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
 import {
   claimRequest,
   court,
@@ -32,6 +33,10 @@ export class ChatInboxService {
   constructor(
     private db: DbClient,
     private archiveRepository: IChatInboxArchiveRepository,
+    private organizationMemberService?: Pick<
+      IOrganizationMemberService,
+      "hasOrganizationPermission"
+    >,
   ) {}
 
   private getClient(ctx?: RequestContext): DbClient | DrizzleTransaction {
@@ -46,28 +51,47 @@ export class ChatInboxService {
     const client = this.getClient(ctx);
 
     const rows = await client
-      .select({ reservationId: reservation.id })
+      .select({
+        reservationId: reservation.id,
+        organizationId: organization.id,
+        ownerUserId: organization.ownerUserId,
+        playerUserId: profile.userId,
+      })
       .from(reservation)
       .innerJoin(profile, eq(reservation.playerId, profile.id))
       .innerJoin(court, eq(reservation.courtId, court.id))
       .innerJoin(place, eq(court.placeId, place.id))
       .innerJoin(organization, eq(place.organizationId, organization.id))
-      .where(
-        and(
-          eq(reservation.id, reservationId),
-          or(
-            eq(profile.userId, viewer.userId),
-            eq(organization.ownerUserId, viewer.userId),
-          ),
-        ),
-      )
+      .where(eq(reservation.id, reservationId))
       .limit(1);
 
-    if (rows.length === 0) {
+    const target = rows[0];
+    if (!target) {
       throw new AuthorizationError(
         "You cannot archive this reservation thread",
       );
     }
+
+    if (
+      target.playerUserId === viewer.userId ||
+      target.ownerUserId === viewer.userId
+    ) {
+      return;
+    }
+
+    const canAccessAsVenueMember =
+      (await this.organizationMemberService?.hasOrganizationPermission(
+        viewer.userId,
+        target.organizationId,
+        "reservation.chat",
+        ctx,
+      )) ?? false;
+
+    if (canAccessAsVenueMember) {
+      return;
+    }
+
+    throw new AuthorizationError("You cannot archive this reservation thread");
   }
 
   private async assertSupportAccess(
@@ -128,27 +152,46 @@ export class ChatInboxService {
     const client = this.getClient(ctx);
 
     const rows = await client
-      .select({ reservationGroupId: reservationGroup.id })
+      .select({
+        reservationGroupId: reservationGroup.id,
+        organizationId: organization.id,
+        ownerUserId: organization.ownerUserId,
+        playerUserId: profile.userId,
+      })
       .from(reservationGroup)
       .innerJoin(profile, eq(reservationGroup.playerId, profile.id))
       .innerJoin(place, eq(reservationGroup.placeId, place.id))
       .innerJoin(organization, eq(place.organizationId, organization.id))
-      .where(
-        and(
-          eq(reservationGroup.id, reservationGroupId),
-          or(
-            eq(profile.userId, viewer.userId),
-            eq(organization.ownerUserId, viewer.userId),
-          ),
-        ),
-      )
+      .where(eq(reservationGroup.id, reservationGroupId))
       .limit(1);
 
-    if (rows.length === 0) {
+    const target = rows[0];
+    if (!target) {
       throw new AuthorizationError(
         "You cannot archive this reservation thread",
       );
     }
+
+    if (
+      target.playerUserId === viewer.userId ||
+      target.ownerUserId === viewer.userId
+    ) {
+      return;
+    }
+
+    const canAccessAsVenueMember =
+      (await this.organizationMemberService?.hasOrganizationPermission(
+        viewer.userId,
+        target.organizationId,
+        "reservation.chat",
+        ctx,
+      )) ?? false;
+
+    if (canAccessAsVenueMember) {
+      return;
+    }
+
+    throw new AuthorizationError("You cannot archive this reservation thread");
   }
 
   private parseThreadRef(threadKind: ChatInboxThreadKind, threadId: string) {

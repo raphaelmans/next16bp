@@ -16,12 +16,12 @@ export function PlayerChatWidget() {
         ui: {
           sheetTitle: "Messages",
           sheetDescription:
-            "Chat with owners about payment details and booking confirmation",
+            "Chat with venue staff about payment details and booking confirmation",
         },
         labels: {
           listPrimary: (meta) => (meta ? meta.placeName : null),
           listSecondary: (meta) =>
-            meta ? `Owner: ${meta.ownerDisplayName}` : null,
+            meta ? `Venue: ${meta.ownerDisplayName}` : null,
           threadTitle: (meta) => meta?.placeName ?? "Messages",
         },
       }}

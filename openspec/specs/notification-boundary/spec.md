@@ -1,12 +1,10 @@
 ## Purpose
 
 Defines the separation of concerns between chat unread state (chat surfaces) and notification delivery channel settings/status (notification surfaces), including NotificationBell role clarity.
-
 ## Requirements
-
 ### Requirement: Separation of Concerns
 
-Chat unread state SHALL be presented in chat surfaces, while delivery channel settings/status SHALL be presented in notification surfaces.
+Chat unread state SHALL be presented in chat surfaces, while notification delivery settings and notification inbox state SHALL be presented in notification surfaces.
 
 #### Scenario: Chat unread indicators
 
@@ -18,14 +16,14 @@ Chat unread state SHALL be presented in chat surfaces, while delivery channel se
 #### Scenario: NotificationBell role
 
 - **GIVEN** user opens NotificationBell
-- **WHEN** browser push is configured/toggled
-- **THEN** bell reflects delivery settings/status and diagnostics
-- **AND** does not represent chat thread inbox state
-- **AND** includes copy that chat unread is tracked in chat inbox/widget
+- **WHEN** browser push is configured/toggled and notification inbox data is available
+- **THEN** bell reflects notification delivery settings/status and recent notification inbox items
+- **AND** bell does not represent chat thread inbox state
 
-#### Scenario: NotificationBell remains delivery-only while chat unread changes
+#### Scenario: NotificationBell behavior while chat unread changes
 
 - **GIVEN** chat unread counts change due to new messages
 - **WHEN** user opens NotificationBell
-- **THEN** bell content remains delivery settings/diagnostics only
+- **THEN** bell content remains scoped to notification delivery settings and notification inbox rows
 - **AND** chat unread indicators remain in chat widget/inbox surfaces
+

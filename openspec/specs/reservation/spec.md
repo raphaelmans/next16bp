@@ -72,9 +72,7 @@ Based on `src/lib/modules/reservation/reservation.router.ts`:
 - **State Machine**: Strict state transitions managed by the service layer.
 - **Snapshots**: Player details are snapshotted at booking time to preserve historical records even if the profile changes.
 - **Dual Identity**: Reservations can be linked to a registered `playerId` OR a `guestProfileId` (for walk-ins/admin bookings), enforced by a database check constraint.
-
 ## Requirements
-
 ### Requirement: Reservation may belong to a reservation group
 The system SHALL support optional reservation grouping while preserving all existing single-reservation behavior.
 
@@ -112,3 +110,33 @@ The reservation domain SHALL provide a player-accessible reservation-group detai
 #### Scenario: Unauthorized group access is rejected
 - **WHEN** a player requests reservation-group detail for a group they do not own
 - **THEN** the system rejects the request with an authorization error
+
+### Requirement: Reservation owner operations SHALL be authorized by organization permissions
+The system SHALL authorize owner-portal reservation operations for users who are either canonical owners or active members with required reservation permissions.
+
+#### Scenario: Manager accepts reservation
+- **WHEN** a user is an active member of the reservation's organization with `reservation.update_status`
+- **THEN** owner reservation accept/reject/confirm-payment operations succeed
+
+#### Scenario: Viewer blocked from mutating reservation operations
+- **WHEN** a user has organization membership but lacks `reservation.update_status`
+- **THEN** mutating owner reservation operations return forbidden
+
+### Requirement: Guest booking and pending reads SHALL be permission-gated
+The system SHALL gate owner guest-booking actions and owner reservation read views by explicit permissions.
+
+#### Scenario: Manager creates guest booking
+- **WHEN** an active member has `reservation.guest_booking`
+- **THEN** guest booking creation and walk-in conversion operations are authorized
+
+#### Scenario: Member without reservation.read cannot access owner reservation list
+- **WHEN** an active member lacks `reservation.read`
+- **THEN** owner reservation list/detail reads return forbidden
+
+### Requirement: Reservation awaiting-owner-confirmation acceptance is validated by e2e contract
+Reservation behavior for player-created bookings SHALL be covered by an e2e acceptance contract that verifies post-submit awaiting-owner-confirmation signals in UI.
+
+#### Scenario: E2e validates CREATED-state booking confirmation
+- **WHEN** a player completes a single-slot booking through the public venue booking flow
+- **THEN** the acceptance test verifies reservation detail renders CREATED-state signals required for owner confirmation workflow
+

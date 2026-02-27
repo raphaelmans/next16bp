@@ -628,7 +628,7 @@ export function ReservationInboxWidget({
         )}
       </p>
       <p className="mt-1 text-muted-foreground">
-        {config.kind === "owner" ? "Booked by" : "Owner"}:{" "}
+        {config.kind === "owner" ? "Booked by" : "Venue"}:{" "}
         {config.kind === "owner"
           ? activeMeta.playerDisplayName
           : activeMeta.ownerDisplayName}

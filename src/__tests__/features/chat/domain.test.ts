@@ -253,7 +253,7 @@ describe("chat domain", () => {
         getPlayerReservationStatusLabel("AWAITING_PAYMENT");
 
       // Assert
-      expect(awaitingPayment).toBe("Owner accepted - awaiting payment");
+      expect(awaitingPayment).toBe("Venue accepted - awaiting payment");
     });
   });
 

@@ -3,9 +3,7 @@
 ## Purpose
 
 Define unified behavior and architecture boundaries for chat inbox workflows and notification delivery surfaces, including domain-logic separation for testability.
-
 ## Requirements
-
 ### Requirement: Active Inbox List Only
 
 The chat inbox SHALL show only actionable threads by default and SHALL not expose an inline archived bucket in the main list.
@@ -140,7 +138,7 @@ Notification diagnostics and toggle eligibility logic SHALL be implemented as pu
 
 ### Requirement: Chat vs Notification Boundary
 
-Chat unread/inbox domain logic SHALL remain in chat surfaces, while delivery-channel settings/status SHALL remain in notification surfaces.
+Chat unread/inbox domain logic SHALL remain in chat surfaces, while notification delivery settings and notification inbox state SHALL remain in notification surfaces.
 
 #### Scenario: Chat unread indicators
 
@@ -152,8 +150,8 @@ Chat unread/inbox domain logic SHALL remain in chat surfaces, while delivery-cha
 #### Scenario: NotificationBell role
 
 - **GIVEN** user opens NotificationBell
-- **WHEN** browser push is configured or toggled
-- **THEN** bell reflects delivery settings/status/diagnostics only
+- **WHEN** browser push is configured or toggled and notification inbox data is loaded
+- **THEN** bell reflects notification delivery settings/status and recent notification inbox items
 - **AND** does not represent chat thread inbox state
 
 ### Requirement: Testability Boundary Contract
@@ -179,3 +177,17 @@ Deterministic chat and notification rules SHALL be verifiable through pure unit 
 - **WHEN** components are tested
 - **THEN** assertions focus on rendering and interaction behavior
 - **AND** deterministic branch rules are not redundantly re-tested in UI suites
+
+### Requirement: Owner reservation lifecycle notifications SHALL route through organization opt-in recipients
+Owner-side reservation lifecycle notifications in this capability SHALL resolve recipients from organization member notification routing instead of implicitly targeting a single owner user.
+
+#### Scenario: Reservation created owner notification fans out
+- **WHEN** a reservation-created lifecycle event triggers owner-side notification delivery
+- **THEN** the system sends owner-side delivery to each organization recipient currently eligible and opted in for reservation notifications
+- **AND** no non-opted-in member receives that owner-side event
+
+#### Scenario: Owner-side reservation lifecycle event with no enabled recipients
+- **WHEN** owner-side reservation lifecycle delivery runs and no organization recipients are opted in
+- **THEN** owner-side notification jobs are not enqueued
+- **AND** processing completes without falling back to implicit owner delivery
+

@@ -30,7 +30,145 @@ const makeArchiveRepository = (): IChatInboxArchiveRepository => ({
   listThreadIdsByKind: vi.fn(async () => ["res-1"]),
 });
 
+const makeDbWithQueryResults = (queryResults: unknown[][]) => {
+  let cursor = 0;
+
+  const chain = {
+    from: vi.fn(() => chain),
+    innerJoin: vi.fn(() => chain),
+    where: vi.fn(() => chain),
+    limit: vi.fn(async () => {
+      const result = queryResults[cursor];
+      cursor += 1;
+      return (result ?? []) as unknown[];
+    }),
+  };
+
+  return {
+    select: vi.fn(() => chain),
+  };
+};
+
 describe("ChatInboxService", () => {
+  describe("hasThreadAccess", () => {
+    it("reservation thread + manager with reservation.chat -> allows access", async () => {
+      // Arrange
+      const db = makeDbWithQueryResults([
+        [
+          {
+            reservationId: "r-1",
+            organizationId: "org-1",
+            ownerUserId: "owner-1",
+            playerUserId: "player-1",
+          },
+        ],
+      ]);
+      const organizationMemberService = {
+        hasOrganizationPermission: vi.fn(async () => true),
+      };
+      const service = new ChatInboxService(
+        db as never,
+        makeArchiveRepository(),
+        organizationMemberService,
+      );
+
+      // Act
+      const result = await service.hasThreadAccess(
+        { userId: "manager-1", role: "member" },
+        "res-r-1",
+      );
+
+      // Assert
+      expect(result).toBe(true);
+      expect(
+        organizationMemberService.hasOrganizationPermission,
+      ).toHaveBeenCalledWith(
+        "manager-1",
+        "org-1",
+        "reservation.chat",
+        undefined,
+      );
+    });
+
+    it("reservation thread + member without reservation.chat -> denies access", async () => {
+      // Arrange
+      const db = makeDbWithQueryResults([
+        [
+          {
+            reservationId: "r-1",
+            organizationId: "org-1",
+            ownerUserId: "owner-1",
+            playerUserId: "player-1",
+          },
+        ],
+      ]);
+      const organizationMemberService = {
+        hasOrganizationPermission: vi.fn(async () => false),
+      };
+      const service = new ChatInboxService(
+        db as never,
+        makeArchiveRepository(),
+        organizationMemberService,
+      );
+
+      // Act
+      const result = await service.hasThreadAccess(
+        { userId: "viewer-1", role: "member" },
+        "res-r-1",
+      );
+
+      // Assert
+      expect(result).toBe(false);
+      expect(
+        organizationMemberService.hasOrganizationPermission,
+      ).toHaveBeenCalledWith(
+        "viewer-1",
+        "org-1",
+        "reservation.chat",
+        undefined,
+      );
+    });
+
+    it("reservation group thread + manager with reservation.chat -> allows access", async () => {
+      // Arrange
+      const db = makeDbWithQueryResults([
+        [
+          {
+            reservationGroupId: "group-1",
+            organizationId: "org-1",
+            ownerUserId: "owner-1",
+            playerUserId: "player-1",
+          },
+        ],
+      ]);
+      const organizationMemberService = {
+        hasOrganizationPermission: vi.fn(async () => true),
+      };
+      const service = new ChatInboxService(
+        db as never,
+        makeArchiveRepository(),
+        organizationMemberService,
+      );
+
+      // Act
+      const result = await service.hasThreadAccess(
+        { userId: "manager-1", role: "member" },
+        "grp-group-1",
+      );
+
+      // Assert
+      expect(result).toBe(true);
+      expect(
+        organizationMemberService.hasOrganizationPermission,
+      ).toHaveBeenCalledWith(
+        "manager-1",
+        "org-1",
+        "reservation.chat",
+        undefined,
+      );
+    });
+  });
+
   describe("archiveThread", () => {
     it("invalid reservation prefix -> throws validation error", async () => {
       // Arrange
@@ -52,9 +190,12 @@ describe("ChatInboxService", () => {
       // Arrange
       const archiveRepository = makeArchiveRepository();
       const service = new ChatInboxService({} as never, archiveRepository);
-      vi.spyOn(service as any, "assertViewerAccess").mockResolvedValue(
-        undefined,
-      );
+      vi.spyOn(
+        service as unknown as {
+          assertViewerAccess: (...args: unknown[]) => Promise<void>;
+        },
+        "assertViewerAccess",
+      ).mockResolvedValue(undefined);
 
       // Act
       const result = await service.archiveThread(viewer, {
@@ -78,9 +219,12 @@ describe("ChatInboxService", () => {
       // Arrange
       const archiveRepository = makeArchiveRepository();
       const service = new ChatInboxService({} as never, archiveRepository);
-      vi.spyOn(service as any, "assertViewerAccess").mockResolvedValue(
-        undefined,
-      );
+      vi.spyOn(
+        service as unknown as {
+          assertViewerAccess: (...args: unknown[]) => Promise<void>;
+        },
+        "assertViewerAccess",
+      ).mockResolvedValue(undefined);
 
       // Act
       await service.archiveThread(viewer, {
@@ -98,6 +242,57 @@ describe("ChatInboxService", () => {
         undefined,
       );
     });
+
+    it("reservation thread + manager with reservation.chat -> archives successfully", async () => {
+      // Arrange
+      const archiveRepository = makeArchiveRepository();
+      const db = makeDbWithQueryResults([
+        [
+          {
+            reservationId: "r-1",
+            organizationId: "org-1",
+            ownerUserId: "owner-1",
+            playerUserId: "player-1",
+          },
+        ],
+      ]);
+      const organizationMemberService = {
+        hasOrganizationPermission: vi.fn(async () => true),
+      };
+      const service = new ChatInboxService(
+        db as never,
+        archiveRepository,
+        organizationMemberService,
+      );
+
+      // Act
+      const result = await service.archiveThread(
+        { userId: "manager-1", role: "member" },
+        {
+          threadKind: "reservation",
+          threadId: "res-r-1",
+        },
+      );
+
+      // Assert
+      expect(result).toEqual({ ok: true });
+      expect(archiveRepository.upsert).toHaveBeenCalledWith(
+        {
+          userId: "manager-1",
+          threadKind: "reservation",
+          threadId: "res-r-1",
+        },
+        undefined,
+      );
+      expect(
+        organizationMemberService.hasOrganizationPermission,
+      ).toHaveBeenCalledWith(
+        "manager-1",
+        "org-1",
+        "reservation.chat",
+        undefined,
+      );
+    });
   });
 
   describe("unarchiveThread", () => {
@@ -105,9 +300,12 @@ describe("ChatInboxService", () => {
       // Arrange
       const archiveRepository = makeArchiveRepository();
       const service = new ChatInboxService({} as never, archiveRepository);
-      vi.spyOn(service as any, "assertViewerAccess").mockResolvedValue(
-        undefined,
-      );
+      vi.spyOn(
+        service as unknown as {
+          assertViewerAccess: (...args: unknown[]) => Promise<void>;
+        },
+        "assertViewerAccess",
+      ).mockResolvedValue(undefined);
 
       // Act
       const result = await service.unarchiveThread(viewer, {

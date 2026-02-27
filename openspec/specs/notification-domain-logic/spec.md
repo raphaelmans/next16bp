@@ -1,9 +1,7 @@
 ## Purpose
 
 Defines requirements for notification domain logic separation: diagnostics and toggle eligibility as pure functions, and UI components consuming domain outputs rather than embedding inline conditional chains.
-
 ## Requirements
-
 ### Requirement: Notification Derived State Is Pure
 
 Notification diagnostics and toggle eligibility logic SHALL be implemented as pure functions in feature-local domain files.
@@ -28,5 +26,6 @@ Notification components and hooks SHALL consume domain-derived outputs rather th
 
 - **GIVEN** domain-derived notification state
 - **WHEN** NotificationBell renders
-- **THEN** displayed status text and toggle state are sourced from domain outputs
+- **THEN** displayed status text, toggle state, unread badge text, and bell icon state are sourced from domain outputs
 - **AND** component code remains focused on presentation and user actions
+
