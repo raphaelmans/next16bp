@@ -6,7 +6,11 @@ import {
 
 describe("organization-member/shared/domain", () => {
   describe("deriveEnabledReservationNotificationUserIds", () => {
-    const cases = [
+    const cases: Array<{
+      label: string;
+      input: { eligibleUserIds: string[]; optedInUserIds: string[] };
+      expected: string[];
+    }> = [
       {
         label: "returns unique intersection preserving eligible-user ordering",
         input: {
@@ -41,7 +45,7 @@ describe("organization-member/shared/domain", () => {
         },
         expected: [],
       },
-    ] as const;
+    ];
 
     for (const { label, input, expected } of cases) {
       it(label, () => {

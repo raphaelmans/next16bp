@@ -75,7 +75,7 @@ describe("organizationMemberRouter", () => {
       organizationId: TEST_IDS.organizationId,
       email: "staff@example.com",
       role: "MANAGER" as const,
-      permissions: ["reservation.read"] as const,
+      permissions: ["reservation.read" as const],
     };
 
     mockOrganizationMemberService.inviteMember.mockResolvedValue({

@@ -15,6 +15,7 @@ const makeOrganization = (ownerUserId: string): OrganizationRecord => ({
   ownerUserId,
   name: "Test Organization",
   slug: "test-organization",
+  isActive: true,
   createdAt: now,
   updatedAt: now,
 });
