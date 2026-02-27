@@ -35,6 +35,7 @@ import {
   PlacePhotoUpload,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
+import { PermissionGate } from "@/features/owner/components/permission-gate";
 import {
   useModOwnerInvalidation,
   useModPlaceForm,
@@ -191,136 +192,140 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
         <ReservationAlertsPanel organizationId={organization?.id ?? null} />
       }
     >
-      <div className="space-y-6">
-        <PageHeader
-          title={`Edit Venue: ${place.name}`}
-          description="Update venue details and verification status"
-          breadcrumbs={[
-            { label: "My Venues", href: appRoutes.owner.places.base },
-            { label: place.name },
-            { label: "Edit" },
-          ]}
-          backHref={appRoutes.owner.places.base}
-        />
-
-        <PlaceForm
-          defaultValues={defaultValues}
-          onSubmit={submitAsync}
-          onCancel={handleCancel}
-          isSubmitting={isSubmitting}
-          isEditing
-        />
-
-        <Card className="border-dashed">
-          <CardHeader>
-            <CardTitle>Venue verification</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-            <p>
-              Verify {place.name} to unlock reservations and build trust with
-              players.
-            </p>
-            <Button asChild>
-              <Link href={appRoutes.owner.verification.place(resolvedPlaceId)}>
-                Go to verification
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <div id="venue-photos" className="scroll-mt-24">
-          <PlacePhotoUpload
-            placeId={resolvedPlaceId}
-            photos={(placeData.photos ?? []).map((photo) => ({
-              id: photo.id,
-              url: photo.url,
-              displayOrder: photo.displayOrder,
-            }))}
+      <PermissionGate accessRule={{ type: "owner-only" }}>
+        <div className="space-y-6">
+          <PageHeader
+            title={`Edit Venue: ${place.name}`}
+            description="Update venue details and verification status"
+            breadcrumbs={[
+              { label: "My Venues", href: appRoutes.owner.places.base },
+              { label: place.name },
+              { label: "Edit" },
+            ]}
+            backHref={appRoutes.owner.places.base}
           />
-        </div>
 
-        <PlaceAddonEditor placeId={resolvedPlaceId} />
+          <PlaceForm
+            defaultValues={defaultValues}
+            onSubmit={submitAsync}
+            onCancel={handleCancel}
+            isSubmitting={isSubmitting}
+            isEditing
+          />
 
-        <Card className="border-destructive/60">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-destructive">
-              <AlertTriangle className="h-5 w-5" />
-              Danger Zone
-            </CardTitle>
-            <CardDescription>
-              Deleting a venue removes its listing and detaches courts. Existing
-              reservations remain for audit purposes.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h4 className="font-medium">Delete venue</h4>
-              <p className="text-sm text-muted-foreground">
-                This action cannot be undone.
+          <Card className="border-dashed">
+            <CardHeader>
+              <CardTitle>Venue verification</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+              <p>
+                Verify {place.name} to unlock reservations and build trust with
+                players.
               </p>
-            </div>
-            <AlertDialog
-              open={deleteDialogOpen}
-              onOpenChange={(open) => {
-                setDeleteDialogOpen(open);
-                if (!open) {
-                  setDeleteConfirmValue("");
-                }
-              }}
-            >
-              <AlertDialogTrigger asChild>
-                <Button variant="destructive">Delete venue</Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete {place.name}?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will delete the venue listing and detach courts. Stored
-                    reservation history remains available for audit.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <div className="space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    Type{" "}
-                    <span className="font-semibold text-foreground">
-                      {place.name}
-                    </span>{" "}
-                    to confirm.
-                  </p>
-                  <Input
-                    value={deleteConfirmValue}
-                    onChange={(event) =>
-                      setDeleteConfirmValue(event.target.value)
-                    }
-                    placeholder={place.name}
-                  />
-                </div>
-                <AlertDialogFooter>
-                  <AlertDialogCancel disabled={deletePlaceMutation.isPending}>
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={(event) => {
-                      event.preventDefault();
-                      void handleDeletePlace();
-                    }}
-                    disabled={
-                      deletePlaceMutation.isPending ||
-                      !deleteConfirmationMatches
-                    }
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  >
-                    {deletePlaceMutation.isPending && (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    )}
-                    Delete venue
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </CardContent>
-        </Card>
-      </div>
+              <Button asChild>
+                <Link
+                  href={appRoutes.owner.verification.place(resolvedPlaceId)}
+                >
+                  Go to verification
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <div id="venue-photos" className="scroll-mt-24">
+            <PlacePhotoUpload
+              placeId={resolvedPlaceId}
+              photos={(placeData.photos ?? []).map((photo) => ({
+                id: photo.id,
+                url: photo.url,
+                displayOrder: photo.displayOrder,
+              }))}
+            />
+          </div>
+
+          <PlaceAddonEditor placeId={resolvedPlaceId} />
+
+          <Card className="border-destructive/60">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-destructive">
+                <AlertTriangle className="h-5 w-5" />
+                Danger Zone
+              </CardTitle>
+              <CardDescription>
+                Deleting a venue removes its listing and detaches courts.
+                Existing reservations remain for audit purposes.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h4 className="font-medium">Delete venue</h4>
+                <p className="text-sm text-muted-foreground">
+                  This action cannot be undone.
+                </p>
+              </div>
+              <AlertDialog
+                open={deleteDialogOpen}
+                onOpenChange={(open) => {
+                  setDeleteDialogOpen(open);
+                  if (!open) {
+                    setDeleteConfirmValue("");
+                  }
+                }}
+              >
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive">Delete venue</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete {place.name}?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will delete the venue listing and detach courts.
+                      Stored reservation history remains available for audit.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <div className="space-y-2">
+                    <p className="text-sm text-muted-foreground">
+                      Type{" "}
+                      <span className="font-semibold text-foreground">
+                        {place.name}
+                      </span>{" "}
+                      to confirm.
+                    </p>
+                    <Input
+                      value={deleteConfirmValue}
+                      onChange={(event) =>
+                        setDeleteConfirmValue(event.target.value)
+                      }
+                      placeholder={place.name}
+                    />
+                  </div>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel disabled={deletePlaceMutation.isPending}>
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={(event) => {
+                        event.preventDefault();
+                        void handleDeletePlace();
+                      }}
+                      disabled={
+                        deletePlaceMutation.isPending ||
+                        !deleteConfirmationMatches
+                      }
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      {deletePlaceMutation.isPending && (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      )}
+                      Delete venue
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </CardContent>
+          </Card>
+        </div>
+      </PermissionGate>
     </AppShell>
   );
 }

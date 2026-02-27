@@ -1,10 +1,16 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import { appRoutes } from "@/common/app-routes";
 import { AppShell } from "@/components/layout";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
+import {
+  PORTAL_STORAGE_KEY,
+  useQueryAuthUserPreference,
+} from "@/features/auth/hooks";
 import { useQueryOwnerOrganization } from "@/features/owner/hooks";
+import { OwnerBottomTabs } from "./owner-bottom-tabs";
 import { OwnerNavbar } from "./owner-navbar";
 import { OwnerSidebar } from "./owner-sidebar";
 import { ReservationAlertsPanel } from "./reservation-alerts-panel";
@@ -17,6 +23,25 @@ interface OwnerShellProps {
 export function OwnerShell({ children, hasOrganizations }: OwnerShellProps) {
   const pathname = usePathname();
   const { data: user } = useQueryAuthSession();
+  const { data: userPreference } = useQueryAuthUserPreference(!!user);
+
+  // Immediate seed while DB preference loads (fallback for first visit)
+  useEffect(() => {
+    try {
+      if (!localStorage.getItem(PORTAL_STORAGE_KEY)) {
+        localStorage.setItem(PORTAL_STORAGE_KEY, "owner");
+      }
+    } catch {}
+  }, []);
+
+  // Sync from DB preference (authoritative — overrides stale localStorage)
+  useEffect(() => {
+    if (userPreference?.defaultPortal) {
+      try {
+        localStorage.setItem(PORTAL_STORAGE_KEY, userPreference.defaultPortal);
+      } catch {}
+    }
+  }, [userPreference?.defaultPortal]);
   const logoutMutation = useMutAuthLogout();
   const { organization, organizations, isLoading } =
     useQueryOwnerOrganization();
@@ -46,8 +71,7 @@ export function OwnerShell({ children, hasOrganizations }: OwnerShellProps) {
       navbar={
         <OwnerNavbar
           organizationName={
-            organization?.name ??
-            (noOrgMode ? "Owner Setup" : "Owner Dashboard")
+            organization?.name ?? (noOrgMode ? "Venue Setup" : "Dashboard")
           }
           noOrgMode={noOrgMode}
           user={{
@@ -57,6 +81,7 @@ export function OwnerShell({ children, hasOrganizations }: OwnerShellProps) {
           onLogout={handleLogout}
         />
       }
+      bottomNav={<OwnerBottomTabs />}
       floatingPanel={
         <ReservationAlertsPanel organizationId={organization?.id ?? null} />
       }

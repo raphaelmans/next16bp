@@ -21,7 +21,7 @@ export function WizardProgress({
   const currentStepIndex = displaySteps.findIndex((c) => c.key === currentStep);
 
   return (
-    <div className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <div className="shrink-0 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="mx-auto max-w-2xl px-4 py-3">
         <div className="text-center text-xs font-medium text-muted-foreground">
           Step {currentStepIndex + 1} of {displaySteps.length}

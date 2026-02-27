@@ -79,7 +79,7 @@ export function GetStartedView() {
         <div className="space-y-8">
           <div className="space-y-2">
             <h1 className="text-2xl font-heading font-bold tracking-tight sm:text-3xl">
-              Owner Setup
+              Venue Setup
             </h1>
             <p className="text-muted-foreground">
               Complete these steps to start accepting bookings on KudosCourts.

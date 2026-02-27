@@ -35,6 +35,8 @@ import {
   useQueryOwnerStats,
   useQueryReservationNotificationRoutingStatus,
 } from "@/features/owner/hooks";
+import { useModOwnerPermissionContext } from "@/features/owner/hooks/organization";
+import { isOwnerRole } from "@/lib/modules/organization-member/shared/permissions";
 
 const OWNER_SETUP_NEXT_STEP_LABELS = {
   create_organization: "Create your organization",
@@ -63,6 +65,7 @@ export default function OwnerDashboardPage() {
   );
   const { data: setupStatus, isLoading: setupLoading } =
     useQueryOwnerSetupStatus();
+  const { permissionContext } = useModOwnerPermissionContext();
   const logoutMutation = useMutAuthLogout();
   const normalizedSetupStatus = setupStatus
     ? {
@@ -73,7 +76,9 @@ export default function OwnerDashboardPage() {
     : null;
 
   const showSetupCta =
-    !setupLoading && isOwnerSetupIncomplete(normalizedSetupStatus);
+    !setupLoading &&
+    isOwnerSetupIncomplete(normalizedSetupStatus) &&
+    (permissionContext ? isOwnerRole(permissionContext) : true);
   const nextStepLabel = setupStatus
     ? setupStatus.nextStep === "verify_venue" &&
       setupStatus.verificationStatus === "PENDING"
@@ -177,7 +182,7 @@ export default function OwnerDashboardPage() {
             <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1">
                 <p className="font-heading font-semibold">
-                  Finish your owner setup
+                  Finish setting up your venue
                 </p>
                 <p className="text-sm text-muted-foreground">
                   Complete the remaining steps to start accepting bookings.

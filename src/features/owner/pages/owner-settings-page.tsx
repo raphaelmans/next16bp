@@ -26,9 +26,9 @@ import {
   RemovalRequestModal,
   ReservationAlertsPanel,
   ReservationNotificationRoutingSettings,
-  TeamAccessManager,
 } from "@/features/owner/components";
 import { PaymentMethodsManager } from "@/features/owner/components/payment-methods-manager";
+import { PermissionGate } from "@/features/owner/components/permission-gate";
 import {
   useMutRequestRemoval,
   useMutUpdateOrganization,
@@ -197,127 +197,122 @@ export default function OwnerSettingsPage() {
         <ReservationAlertsPanel organizationId={navOrg?.id ?? null} />
       }
     >
-      <div className="space-y-6">
-        {/* Page header */}
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight font-heading">
-            Organization Settings
-          </h1>
-          <p className="text-muted-foreground">
-            Manage your organization profile and preferences
-          </p>
-        </div>
-
-        <StandardFormProvider
-          form={form}
-          onSubmit={handleSubmit}
-          className="space-y-6"
-        >
-          {/* Contact Information Card */}
-          <Card id={SETTINGS_SECTION_IDS.contactInformation}>
-            <CardHeader>
-              <CardTitle>Contact Information</CardTitle>
-              <CardDescription>
-                How players can reach your organization
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-6 sm:grid-cols-2">
-                <StandardFormInput<OrganizationFormData>
-                  name="email"
-                  label="Email"
-                  type="email"
-                  placeholder="contact@example.com"
-                />
-
-                <StandardFormInput<OrganizationFormData>
-                  name="phone"
-                  label="Phone"
-                  placeholder="0917 123 4567"
-                />
-              </div>
-
-              <StandardFormInput<OrganizationFormData>
-                name="address"
-                label="Address"
-                placeholder="123 Sports Ave, Makati City"
-              />
-            </CardContent>
-          </Card>
-
-          {/* Save Button */}
-          <div className="flex justify-end">
-            <Button type="submit" disabled={isOrgSubmitDisabled}>
-              {orgSubmitting && (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              )}
-              Save Changes
-            </Button>
+      <PermissionGate accessRule={{ type: "owner-only" }}>
+        <div className="space-y-6">
+          {/* Page header */}
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight font-heading">
+              Organization Settings
+            </h1>
+            <p className="text-muted-foreground">
+              Manage your organization profile and preferences
+            </p>
           </div>
-        </StandardFormProvider>
 
-        <WebPushSettingsCard id={SETTINGS_SECTION_IDS.browserNotifications} />
+          <StandardFormProvider
+            form={form}
+            onSubmit={handleSubmit}
+            className="space-y-6"
+          >
+            {/* Contact Information Card */}
+            <Card id={SETTINGS_SECTION_IDS.contactInformation}>
+              <CardHeader>
+                <CardTitle>Contact Information</CardTitle>
+                <CardDescription>
+                  How players can reach your organization
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <StandardFormInput<OrganizationFormData>
+                    name="email"
+                    label="Email"
+                    type="email"
+                    placeholder="contact@example.com"
+                  />
 
-        {organization?.id && (
-          <ReservationNotificationRoutingSettings
-            organizationId={organization.id}
-            sectionId={SETTINGS_SECTION_IDS.reservationNotificationRouting}
-          />
-        )}
+                  <StandardFormInput<OrganizationFormData>
+                    name="phone"
+                    label="Phone"
+                    placeholder="0917 123 4567"
+                  />
+                </div>
 
-        {organization?.id && (
-          <PaymentMethodsManager
-            organizationId={organization.id}
-            sectionId={SETTINGS_SECTION_IDS.paymentMethods}
-          />
-        )}
+                <StandardFormInput<OrganizationFormData>
+                  name="address"
+                  label="Address"
+                  placeholder="123 Sports Ave, Makati City"
+                />
+              </CardContent>
+            </Card>
 
-        {organization?.id && (
-          <TeamAccessManager
-            organizationId={organization.id}
-            sectionId={SETTINGS_SECTION_IDS.teamAccess}
-          />
-        )}
-
-        {/* Danger Zone */}
-        <Card
-          id={SETTINGS_SECTION_IDS.dangerZone}
-          className="border-destructive"
-        >
-          <CardHeader>
-            <CardTitle className="text-destructive flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5" />
-              Danger Zone
-            </CardTitle>
-            <CardDescription>
-              Irreversible actions that affect your organization
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h4 className="font-medium">Request Listing Removal</h4>
-                <p className="text-sm text-muted-foreground">
-                  Remove your courts from public search and cancel all pending
-                  reservations
-                </p>
-              </div>
-              <Button
-                variant="destructive"
-                onClick={() => setRemovalModalOpen(true)}
-              >
-                Request Removal
+            {/* Save Button */}
+            <div className="flex justify-end">
+              <Button type="submit" disabled={isOrgSubmitDisabled}>
+                {orgSubmitting && (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                )}
+                Save Changes
               </Button>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-      <RemovalRequestModal
-        open={removalModalOpen}
-        onOpenChange={setRemovalModalOpen}
-        onSubmit={handleRemovalRequest}
-        isLoading={requestRemoval.isPending}
-      />
+          </StandardFormProvider>
+
+          <WebPushSettingsCard id={SETTINGS_SECTION_IDS.browserNotifications} />
+
+          {organization?.id && (
+            <ReservationNotificationRoutingSettings
+              organizationId={organization.id}
+              sectionId={SETTINGS_SECTION_IDS.reservationNotificationRouting}
+            />
+          )}
+
+          {organization?.id && (
+            <PaymentMethodsManager
+              organizationId={organization.id}
+              sectionId={SETTINGS_SECTION_IDS.paymentMethods}
+            />
+          )}
+
+          {/* Danger Zone */}
+          <Card
+            id={SETTINGS_SECTION_IDS.dangerZone}
+            className="border-destructive"
+          >
+            <CardHeader>
+              <CardTitle className="text-destructive flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5" />
+                Danger Zone
+              </CardTitle>
+              <CardDescription>
+                Irreversible actions that affect your organization
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h4 className="font-medium">Request Listing Removal</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Remove your courts from public search and cancel all pending
+                    reservations
+                  </p>
+                </div>
+                <Button
+                  variant="destructive"
+                  onClick={() => setRemovalModalOpen(true)}
+                >
+                  Request Removal
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <RemovalRequestModal
+          open={removalModalOpen}
+          onOpenChange={setRemovalModalOpen}
+          onSubmit={handleRemovalRequest}
+          isLoading={requestRemoval.isPending}
+        />
+      </PermissionGate>
     </AppShell>
   );
 }

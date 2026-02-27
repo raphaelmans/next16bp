@@ -8,6 +8,7 @@ interface AppShellProps {
   children: React.ReactNode;
   sidebar: React.ReactNode;
   navbar: React.ReactNode;
+  bottomNav?: React.ReactNode;
   floatingPanel?: React.ReactNode;
   className?: string;
 }
@@ -18,6 +19,7 @@ export function AppShell({
   children,
   sidebar,
   navbar,
+  bottomNav,
   floatingPanel,
   className,
 }: AppShellProps) {
@@ -39,6 +41,7 @@ export function AppShell({
         <DashboardLayout
           sidebar={sidebar}
           navbar={navbar}
+          bottomNav={bottomNav}
           className={cn("w-full", className)}
         >
           <div id="main-content" className="min-w-0 w-full">

@@ -1127,7 +1127,7 @@ export default function OwnersGetStartedPage() {
                   1. Find your venue
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Search for your venue in the owner setup hub.
+                  Search for your venue in the setup hub.
                 </p>
               </div>
               <div className="rounded-xl border border-border/60 bg-muted/30 p-4">

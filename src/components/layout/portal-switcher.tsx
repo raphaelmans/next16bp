@@ -87,7 +87,7 @@ export function PortalSwitcher({
           <div className="flex-1 min-w-0">
             <p className="text-sm font-heading font-semibold truncate">
               {currentPortal === "owner" && ownerSetupRequired
-                ? "Owner Setup"
+                ? "Venue Setup"
                 : portalConfig[currentPortal].label}
             </p>
             <p className="text-xs text-muted-foreground">KudosCourts</p>

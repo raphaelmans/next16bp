@@ -182,7 +182,7 @@ export function ReservationAlertsPanel({
       <Button
         size="icon"
         variant="secondary"
-        className="fixed bottom-6 right-20 z-50 shadow-lg"
+        className="fixed bottom-20 right-20 z-50 shadow-lg md:bottom-6"
         onClick={() => setIsOpen(true)}
       >
         <Bell className="h-4 w-4" />

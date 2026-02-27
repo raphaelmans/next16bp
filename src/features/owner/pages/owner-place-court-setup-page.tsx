@@ -23,6 +23,7 @@ import {
   CourtScheduleEditor,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
+import { PermissionGate } from "@/features/owner/components/permission-gate";
 import {
   useModCourtForm,
   useModCourtHours,
@@ -375,296 +376,304 @@ export default function CourtSetupWizardPage({
         />
       }
     >
-      <div className="space-y-6">
-        <PageHeader
-          title={headerTitle}
-          description="Configure details, schedule, and publishing in one flow"
-          breadcrumbs={[
-            { label: "My Venues", href: appRoutes.owner.places.base },
-            {
-              label: placeData.place.name,
-              href: appRoutes.owner.places.courts.base(placeId),
-            },
-            { label: "Setup" },
-          ]}
-          backHref={appRoutes.owner.places.courts.base(placeId)}
-        />
-
-        <div className="flex flex-wrap items-center gap-3 rounded-lg border bg-muted/40 p-4">
-          <Button asChild variant="ghost" className="gap-2">
-            <Link href={backHref}>
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </Link>
-          </Button>
-          <div className="flex flex-wrap items-center gap-2 text-sm">
-            {steps.map((stepItem, index) => {
-              const state =
-                index === stepIndex
-                  ? "bg-primary text-primary-foreground"
-                  : index < stepIndex
-                    ? "bg-foreground text-background"
-                    : "bg-muted text-muted-foreground";
-              return (
-                <div key={stepItem.key} className="flex items-center gap-2">
-                  <div
-                    className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${state}`}
-                  >
-                    {index + 1}
-                  </div>
-                  <span className="font-medium text-muted-foreground">
-                    {stepItem.label}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-          <span className="ml-auto text-sm text-muted-foreground">
-            Step {stepIndex + 1} of {steps.length} · {steps[stepIndex].label}
-          </span>
-        </div>
-
-        {!courtIdParam ? (
-          <CourtForm
-            defaultValues={{ placeId }}
-            placeOptions={placeOptions}
-            sportOptions={sportOptions}
-            onSubmit={handleCreateSubmit}
-            onCancel={handleCancel}
-            isSubmitting={isSubmitting}
-            disablePlaceSelect
-            primaryActionLabel="Create & Continue"
+      <PermissionGate accessRule={{ type: "owner-only" }}>
+        <div className="space-y-6">
+          <PageHeader
+            title={headerTitle}
+            description="Configure details, schedule, and publishing in one flow"
+            breadcrumbs={[
+              { label: "My Venues", href: appRoutes.owner.places.base },
+              {
+                label: placeData.place.name,
+                href: appRoutes.owner.places.courts.base(placeId),
+              },
+              { label: "Setup" },
+            ]}
+            backHref={appRoutes.owner.places.courts.base(placeId)}
           />
-        ) : (
-          <>
-            {currentStep === "details" && (
-              <CourtForm
-                defaultValues={defaultValues}
-                placeOptions={placeOptions}
-                sportOptions={sportOptions}
-                onSubmit={handleDetailsSubmit}
-                onCancel={handleCancel}
-                isSubmitting={isSubmitting}
-                isEditing
-                allowPristineSubmit
-                onStateChange={setDetailsDraft}
-              />
-            )}
 
-            {currentStep === "schedule" && (
-              <div className="space-y-4">
-                <CourtScheduleEditor
-                  courtId={courtId}
-                  organizationId={organization?.id ?? null}
-                  primaryActionLabel="Save & Continue"
-                  onSaved={() => {
-                    if (isFromSetup) {
-                      router.push(appRoutes.owner.getStarted);
-                      return;
-                    }
-                    goToStep("publish");
-                  }}
-                />
-                <CourtAddonEditor
-                  courtId={courtId}
-                  placeId={placeId}
-                  organizationId={organization?.id}
-                />
-                <div className="flex justify-between">
-                  <Button variant="outline" onClick={() => goToStep("details")}>
-                    Back to Details
-                  </Button>
-                  <Button variant="ghost" onClick={() => goToStep("publish")}>
-                    Skip for now
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {currentStep === "publish" && (
-              <div className="space-y-6">
-                {isPrereqsLoading ? (
-                  <div className="flex min-h-[120px] items-center justify-center">
-                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {(!hasHours || !hasPricingRules) && (
-                      <Alert variant="destructive">
-                        <AlertTitle>Complete schedule</AlertTitle>
-                        <AlertDescription>
-                          <div className="flex flex-wrap items-center gap-2">
-                            Add {missingScheduleLabel} to publish slots.
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => goToStep("schedule")}
-                            >
-                              Configure schedule
-                            </Button>
-                          </div>
-                        </AlertDescription>
-                      </Alert>
-                    )}
-                    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
-                      <Card>
-                        <CardContent className="p-4 space-y-3">
-                          <div className="flex items-center justify-between gap-2">
-                            <p className="text-sm font-semibold">
-                              Schedule & pricing
-                            </p>
-                          </div>
-                          <div className="space-y-3">
-                            {scheduleSummary.map((day) => (
-                              <div
-                                key={day.value}
-                                className="rounded-md border px-3 py-2"
-                              >
-                                <div className="flex flex-wrap items-center justify-between gap-2">
-                                  <span className="text-sm font-medium">
-                                    {day.label}
-                                  </span>
-                                  <span className="text-xs text-muted-foreground">
-                                    {day.hoursRanges.length} hour blocks ·{" "}
-                                    {day.pricingRanges.length} pricing blocks
-                                  </span>
-                                </div>
-                                <div className="mt-2 space-y-2">
-                                  <div>
-                                    <p className="text-xs uppercase text-muted-foreground">
-                                      Hours
-                                    </p>
-                                    {day.hoursRanges.length > 0 ? (
-                                      <p className="text-sm">
-                                        {day.hoursRanges.join(", ")}
-                                      </p>
-                                    ) : (
-                                      <p className="text-xs text-muted-foreground">
-                                        No hours set
-                                      </p>
-                                    )}
-                                  </div>
-                                  <div>
-                                    <p className="text-xs uppercase text-muted-foreground">
-                                      Pricing
-                                    </p>
-                                    {day.pricingRanges.length > 0 ? (
-                                      <ul className="space-y-1 text-sm">
-                                        {day.pricingRanges.map(
-                                          (range, index) => (
-                                            <li
-                                              key={`${day.value}-${index}`}
-                                              className="text-muted-foreground"
-                                            >
-                                              {range}
-                                            </li>
-                                          ),
-                                        )}
-                                      </ul>
-                                    ) : (
-                                      <p className="text-xs text-muted-foreground">
-                                        No pricing rules
-                                      </p>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
-                      <Card>
-                        <CardContent className="p-4 space-y-3">
-                          <div className="flex items-center justify-between gap-2">
-                            <p className="text-sm font-semibold">
-                              Court details
-                            </p>
-                            <Badge
-                              variant={
-                                courtData?.court.isActive
-                                  ? "success"
-                                  : "secondary"
-                              }
-                            >
-                              {courtData?.court.isActive
-                                ? "Active"
-                                : "Inactive"}
-                            </Badge>
-                          </div>
-                          <div className="space-y-3 text-sm">
-                            <div className="space-y-1">
-                              <span className="text-xs uppercase text-muted-foreground">
-                                Court
-                              </span>
-                              <p className="font-medium">
-                                {courtData?.court.label ?? "—"}
-                              </p>
-                            </div>
-                            <div className="space-y-1">
-                              <span className="text-xs uppercase text-muted-foreground">
-                                Sport
-                              </span>
-                              <p className="font-medium">
-                                {courtData?.sport.name ?? "—"}
-                              </p>
-                            </div>
-                            <div className="space-y-1">
-                              <span className="text-xs uppercase text-muted-foreground">
-                                Tier
-                              </span>
-                              <p className="font-medium">
-                                {courtData?.court.tierLabel?.trim() || "—"}
-                              </p>
-                            </div>
-                            <div className="space-y-1">
-                              <span className="text-xs uppercase text-muted-foreground">
-                                Venue
-                              </span>
-                              <p className="font-medium">
-                                {placeData.place.name}
-                              </p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
+          <div className="flex flex-wrap items-center gap-3 rounded-lg border bg-muted/40 p-4">
+            <Button asChild variant="ghost" className="gap-2">
+              <Link href={backHref}>
+                <ArrowLeft className="h-4 w-4" />
+                Back
+              </Link>
+            </Button>
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              {steps.map((stepItem, index) => {
+                const state =
+                  index === stepIndex
+                    ? "bg-primary text-primary-foreground"
+                    : index < stepIndex
+                      ? "bg-foreground text-background"
+                      : "bg-muted text-muted-foreground";
+                return (
+                  <div key={stepItem.key} className="flex items-center gap-2">
+                    <div
+                      className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${state}`}
+                    >
+                      {index + 1}
                     </div>
+                    <span className="font-medium text-muted-foreground">
+                      {stepItem.label}
+                    </span>
                   </div>
-                )}
+                );
+              })}
+            </div>
+            <span className="ml-auto text-sm text-muted-foreground">
+              Step {stepIndex + 1} of {steps.length} · {steps[stepIndex].label}
+            </span>
+          </div>
 
-                <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <Button variant="ghost" onClick={() => goToStep("schedule")}>
-                    Back to Schedule
-                  </Button>
-                  <Button
-                    asChild={canLeaveSetup}
-                    className="w-full sm:w-auto"
-                    disabled={
-                      isPrereqsLoading ||
-                      (!isFromSetup && (!hasHours || !hasPricingRules))
-                    }
-                  >
-                    {canLeaveSetup ? (
-                      <Link
-                        href={
-                          isFromSetup
-                            ? appRoutes.owner.getStarted
-                            : appRoutes.owner.courts.availability(courtId)
-                        }
-                      >
-                        {isFromSetup
-                          ? "Back to setup hub"
-                          : "Go to Availability"}
-                      </Link>
-                    ) : (
-                      "Go to Availability"
-                    )}
-                  </Button>
+          {!courtIdParam ? (
+            <CourtForm
+              defaultValues={{ placeId }}
+              placeOptions={placeOptions}
+              sportOptions={sportOptions}
+              onSubmit={handleCreateSubmit}
+              onCancel={handleCancel}
+              isSubmitting={isSubmitting}
+              disablePlaceSelect
+              primaryActionLabel="Create & Continue"
+            />
+          ) : (
+            <>
+              {currentStep === "details" && (
+                <CourtForm
+                  defaultValues={defaultValues}
+                  placeOptions={placeOptions}
+                  sportOptions={sportOptions}
+                  onSubmit={handleDetailsSubmit}
+                  onCancel={handleCancel}
+                  isSubmitting={isSubmitting}
+                  isEditing
+                  allowPristineSubmit
+                  onStateChange={setDetailsDraft}
+                />
+              )}
+
+              {currentStep === "schedule" && (
+                <div className="space-y-4">
+                  <CourtScheduleEditor
+                    courtId={courtId}
+                    organizationId={organization?.id ?? null}
+                    primaryActionLabel="Save & Continue"
+                    onSaved={() => {
+                      if (isFromSetup) {
+                        router.push(appRoutes.owner.getStarted);
+                        return;
+                      }
+                      goToStep("publish");
+                    }}
+                  />
+                  <CourtAddonEditor
+                    courtId={courtId}
+                    placeId={placeId}
+                    organizationId={organization?.id}
+                  />
+                  <div className="flex justify-between">
+                    <Button
+                      variant="outline"
+                      onClick={() => goToStep("details")}
+                    >
+                      Back to Details
+                    </Button>
+                    <Button variant="ghost" onClick={() => goToStep("publish")}>
+                      Skip for now
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </>
-        )}
-      </div>
+              )}
+
+              {currentStep === "publish" && (
+                <div className="space-y-6">
+                  {isPrereqsLoading ? (
+                    <div className="flex min-h-[120px] items-center justify-center">
+                      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {(!hasHours || !hasPricingRules) && (
+                        <Alert variant="destructive">
+                          <AlertTitle>Complete schedule</AlertTitle>
+                          <AlertDescription>
+                            <div className="flex flex-wrap items-center gap-2">
+                              Add {missingScheduleLabel} to publish slots.
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => goToStep("schedule")}
+                              >
+                                Configure schedule
+                              </Button>
+                            </div>
+                          </AlertDescription>
+                        </Alert>
+                      )}
+                      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+                        <Card>
+                          <CardContent className="p-4 space-y-3">
+                            <div className="flex items-center justify-between gap-2">
+                              <p className="text-sm font-semibold">
+                                Schedule & pricing
+                              </p>
+                            </div>
+                            <div className="space-y-3">
+                              {scheduleSummary.map((day) => (
+                                <div
+                                  key={day.value}
+                                  className="rounded-md border px-3 py-2"
+                                >
+                                  <div className="flex flex-wrap items-center justify-between gap-2">
+                                    <span className="text-sm font-medium">
+                                      {day.label}
+                                    </span>
+                                    <span className="text-xs text-muted-foreground">
+                                      {day.hoursRanges.length} hour blocks ·{" "}
+                                      {day.pricingRanges.length} pricing blocks
+                                    </span>
+                                  </div>
+                                  <div className="mt-2 space-y-2">
+                                    <div>
+                                      <p className="text-xs uppercase text-muted-foreground">
+                                        Hours
+                                      </p>
+                                      {day.hoursRanges.length > 0 ? (
+                                        <p className="text-sm">
+                                          {day.hoursRanges.join(", ")}
+                                        </p>
+                                      ) : (
+                                        <p className="text-xs text-muted-foreground">
+                                          No hours set
+                                        </p>
+                                      )}
+                                    </div>
+                                    <div>
+                                      <p className="text-xs uppercase text-muted-foreground">
+                                        Pricing
+                                      </p>
+                                      {day.pricingRanges.length > 0 ? (
+                                        <ul className="space-y-1 text-sm">
+                                          {day.pricingRanges.map(
+                                            (range, index) => (
+                                              <li
+                                                key={`${day.value}-${index}`}
+                                                className="text-muted-foreground"
+                                              >
+                                                {range}
+                                              </li>
+                                            ),
+                                          )}
+                                        </ul>
+                                      ) : (
+                                        <p className="text-xs text-muted-foreground">
+                                          No pricing rules
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardContent className="p-4 space-y-3">
+                            <div className="flex items-center justify-between gap-2">
+                              <p className="text-sm font-semibold">
+                                Court details
+                              </p>
+                              <Badge
+                                variant={
+                                  courtData?.court.isActive
+                                    ? "success"
+                                    : "secondary"
+                                }
+                              >
+                                {courtData?.court.isActive
+                                  ? "Active"
+                                  : "Inactive"}
+                              </Badge>
+                            </div>
+                            <div className="space-y-3 text-sm">
+                              <div className="space-y-1">
+                                <span className="text-xs uppercase text-muted-foreground">
+                                  Court
+                                </span>
+                                <p className="font-medium">
+                                  {courtData?.court.label ?? "—"}
+                                </p>
+                              </div>
+                              <div className="space-y-1">
+                                <span className="text-xs uppercase text-muted-foreground">
+                                  Sport
+                                </span>
+                                <p className="font-medium">
+                                  {courtData?.sport.name ?? "—"}
+                                </p>
+                              </div>
+                              <div className="space-y-1">
+                                <span className="text-xs uppercase text-muted-foreground">
+                                  Tier
+                                </span>
+                                <p className="font-medium">
+                                  {courtData?.court.tierLabel?.trim() || "—"}
+                                </p>
+                              </div>
+                              <div className="space-y-1">
+                                <span className="text-xs uppercase text-muted-foreground">
+                                  Venue
+                                </span>
+                                <p className="font-medium">
+                                  {placeData.place.name}
+                                </p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <Button
+                      variant="ghost"
+                      onClick={() => goToStep("schedule")}
+                    >
+                      Back to Schedule
+                    </Button>
+                    <Button
+                      asChild={canLeaveSetup}
+                      className="w-full sm:w-auto"
+                      disabled={
+                        isPrereqsLoading ||
+                        (!isFromSetup && (!hasHours || !hasPricingRules))
+                      }
+                    >
+                      {canLeaveSetup ? (
+                        <Link
+                          href={
+                            isFromSetup
+                              ? appRoutes.owner.getStarted
+                              : appRoutes.owner.courts.availability(courtId)
+                          }
+                        >
+                          {isFromSetup
+                            ? "Back to setup hub"
+                            : "Go to Availability"}
+                        </Link>
+                      ) : (
+                        "Go to Availability"
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </PermissionGate>
     </AppShell>
   );
 }

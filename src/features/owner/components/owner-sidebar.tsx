@@ -11,6 +11,7 @@ import {
   MapPin,
   Settings,
   UploadCloud,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -47,12 +48,19 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { PortalSwitcher } from "@/features/auth/components/portal-switcher";
-import { shouldShowOwnerGetStartedNav } from "@/features/owner/helpers";
+import {
+  filterVisibleNavItems,
+  type PageAccessRule,
+  ROLE_DISPLAY_LABELS,
+  shouldShowOwnerGetStartedNav,
+} from "@/features/owner/helpers";
 import {
   useQueryOwnerSetupStatus,
   useQueryOwnerSidebarQuickLinks,
   useQueryReservationCounts,
 } from "@/features/owner/hooks";
+import { useModOwnerPermissionContext } from "@/features/owner/hooks/organization";
+import { isOwnerRole } from "@/lib/modules/organization-member/shared/permissions";
 
 interface Organization {
   id: string;
@@ -76,21 +84,37 @@ const navItems = [
     title: "Availability Studio",
     href: appRoutes.owner.bookings,
     icon: CalendarRange,
+    accessRule: { type: "any-member" } as PageAccessRule,
   },
   {
     title: "Reservations",
     href: appRoutes.owner.reservations,
     icon: CalendarDays,
+    accessRule: {
+      type: "permission",
+      permission: "reservation.read",
+    } as PageAccessRule,
   },
   {
     title: "Imports",
     href: appRoutes.owner.imports.bookings,
     icon: UploadCloud,
+    accessRule: {
+      type: "permission",
+      permission: "reservation.guest_booking",
+    } as PageAccessRule,
+  },
+  {
+    title: "Team",
+    href: appRoutes.owner.team,
+    icon: Users,
+    accessRule: { type: "any-member" } as PageAccessRule,
   },
   {
     title: "Settings",
     href: appRoutes.owner.settings,
     icon: Settings,
+    accessRule: { type: "owner-only" } as PageAccessRule,
   },
 ];
 
@@ -110,23 +134,39 @@ export function OwnerSidebar({
   const { data: reservationCounts } = useQueryReservationCounts(
     currentOrganization?.id ?? null,
   );
+  const { permissionContext } = useModOwnerPermissionContext();
+
   const hasOrganization = !noOrgMode && Boolean(currentOrganization?.id);
   const showVenuesLoading =
     !noOrgMode && (quickLinksLoading || !hasOrganization);
   const reservationsBadgeCount = noOrgMode
     ? undefined
     : reservationCounts.pending;
-  const shouldShowGetStarted = shouldShowOwnerGetStartedNav({
-    noOrgMode,
-    setupStatusLoading,
-    setupStatus: setupStatus
-      ? {
-          isSetupComplete: setupStatus.isSetupComplete,
-          hasPaymentMethod: setupStatus.hasPaymentMethod,
-          nextStep: setupStatus.nextStep,
-        }
-      : null,
-  });
+
+  // Get Started is only shown when setup is incomplete AND user is the owner
+  const shouldShowGetStarted =
+    shouldShowOwnerGetStartedNav({
+      noOrgMode,
+      setupStatusLoading,
+      setupStatus: setupStatus
+        ? {
+            isSetupComplete: setupStatus.isSetupComplete,
+            hasPaymentMethod: setupStatus.hasPaymentMethod,
+            nextStep: setupStatus.nextStep,
+          }
+        : null,
+    }) &&
+    (noOrgMode || !permissionContext || isOwnerRole(permissionContext));
+
+  // Filter nav items based on the user's permissions
+  const visibleNavItems = permissionContext
+    ? filterVisibleNavItems(navItems, permissionContext)
+    : navItems;
+
+  // Role label for the org header (e.g. "Owner", "Manager", "Viewer")
+  const roleLabel = permissionContext
+    ? ROLE_DISPLAY_LABELS[permissionContext.role]
+    : "Owner";
 
   const isActive = (href: string) => {
     if (href === appRoutes.owner.base) {
@@ -157,7 +197,7 @@ export function OwnerSidebar({
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-heading font-medium">
-                    Owner Setup
+                    Venue Setup
                   </p>
                   <p className="text-xs text-muted-foreground">
                     Complete onboarding
@@ -197,7 +237,7 @@ export function OwnerSidebar({
                   <p className="text-sm font-heading font-medium truncate">
                     {currentOrganization.name}
                   </p>
-                  <p className="text-xs text-muted-foreground">Owner</p>
+                  <p className="text-xs text-muted-foreground">{roleLabel}</p>
                 </div>
                 <ChevronDown className="h-4 w-4 text-muted-foreground" />
               </button>
@@ -231,7 +271,7 @@ export function OwnerSidebar({
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-heading font-medium">
-                {noOrgMode ? "Owner Setup" : "Owner Dashboard"}
+                {noOrgMode ? "Venue Setup" : "Dashboard"}
               </p>
             </div>
           </div>
@@ -263,6 +303,15 @@ export function OwnerSidebar({
 
               {!noOrgMode && (
                 <>
+                  {/* Courts discovery (cross-portal link to /courts) */}
+                  <SidebarNavItem
+                    href={appRoutes.courts.base}
+                    title="Courts"
+                    icon={MapPin}
+                    isActive={isActive(appRoutes.courts.base)}
+                    activeClassName="bg-primary text-primary-foreground"
+                  />
+
                   {/* Venues - collapsible with nested venues > courts */}
                   <Collapsible
                     defaultOpen={
@@ -368,8 +417,8 @@ export function OwnerSidebar({
                     </SidebarMenuItem>
                   </Collapsible>
 
-                  {/* Remaining nav items */}
-                  {navItems.map((item) => (
+                  {/* Remaining nav items (filtered by permissions) */}
+                  {visibleNavItems.map((item) => (
                     <SidebarNavItem
                       key={item.href}
                       href={item.href}

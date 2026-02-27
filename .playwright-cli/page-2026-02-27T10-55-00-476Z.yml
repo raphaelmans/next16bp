@@ -1,0 +1,166 @@
+- generic [active] [ref=e1]:
+  - progressbar "Loading"
+  - button "Open booking inbox" [ref=e130] [cursor=pointer]:
+    - img
+    - generic [ref=e131]: Open booking inbox
+  - generic [ref=e132]:
+    - link "Skip to content" [ref=e133] [cursor=pointer]:
+      - /url: "#main-content"
+    - generic [ref=e134]:
+      - generic [ref=e137]:
+        - button "Test5 Owner" [ref=e139]:
+          - img [ref=e141]
+          - generic [ref=e145]:
+            - paragraph [ref=e146]: Test5
+            - paragraph [ref=e147]: Owner
+          - img [ref=e148]
+        - list [ref=e153]:
+          - listitem [ref=e154]:
+            - link "Dashboard" [ref=e155] [cursor=pointer]:
+              - /url: /owner
+              - img [ref=e156]
+              - generic [ref=e161]: Dashboard
+          - listitem [ref=e162]:
+            - link "Get started" [ref=e163] [cursor=pointer]:
+              - /url: /owner/get-started
+              - img [ref=e164]
+              - generic [ref=e167]: Get started
+          - listitem [ref=e169]:
+            - link "Venues" [ref=e170] [cursor=pointer]:
+              - /url: /owner/venues
+              - img [ref=e171]
+              - generic [ref=e174]: Venues
+            - button [ref=e175]:
+              - img [ref=e176]
+          - listitem [ref=e178]:
+            - link "Availability Studio" [ref=e179] [cursor=pointer]:
+              - /url: /owner/bookings
+              - img [ref=e180]
+              - generic [ref=e182]: Availability Studio
+          - listitem [ref=e183]:
+            - link "Reservations" [ref=e184] [cursor=pointer]:
+              - /url: /owner/reservations
+              - img [ref=e185]
+              - generic [ref=e187]: Reservations
+          - listitem [ref=e188]:
+            - link "Imports" [ref=e189] [cursor=pointer]:
+              - /url: /owner/import/bookings
+              - img [ref=e190]
+              - generic [ref=e193]: Imports
+          - listitem [ref=e194]:
+            - link "Settings" [ref=e195] [cursor=pointer]:
+              - /url: /owner/settings
+              - img [ref=e196]
+              - generic [ref=e199]: Settings
+        - generic [ref=e201]:
+          - generic [ref=e203]: R
+          - generic [ref=e204]:
+            - paragraph [ref=e205]: raphael+5
+            - paragraph [ref=e206]: raphael+5@kudoscourts.com
+      - main [ref=e207]:
+        - generic [ref=e208]:
+          - button "Toggle Sidebar" [ref=e209] [cursor=pointer]:
+            - img
+            - generic [ref=e210]: Toggle Sidebar
+          - generic [ref=e211]:
+            - generic [ref=e212]:
+              - link "KudosCourts" [ref=e213] [cursor=pointer]:
+                - /url: /post-login
+                - img "KudosCourts" [ref=e214]
+              - generic [ref=e215]: Test5
+            - generic [ref=e216]:
+              - button "Notifications" [ref=e217] [cursor=pointer]:
+                - img
+                - generic [ref=e218]: Notifications
+              - button "R raphael+5" [ref=e219] [cursor=pointer]:
+                - generic [ref=e221]: R
+                - generic [ref=e222]: raphael+5
+                - img
+        - main [ref=e223]:
+          - generic [ref=e225]:
+            - generic [ref=e260]:
+              - generic [ref=e261]: Step 2 of 6
+              - generic [ref=e262]:
+                - button [ref=e263] [cursor=pointer]:
+                  - img [ref=e265]
+                - button [ref=e267] [cursor=pointer]
+                - button [ref=e269] [cursor=pointer]
+                - button [ref=e271] [cursor=pointer]
+                - button [ref=e273] [cursor=pointer]
+                - button [ref=e275] [cursor=pointer]
+            - generic [ref=e278]:
+              - generic [ref=e279]:
+                - heading "Venue" [level=2] [ref=e280]
+                - paragraph [ref=e281]: Add a new venue or claim an existing listing.
+              - generic [ref=e283]:
+                - button "Add new venue Create a brand new venue listing from scratch." [ref=e284]:
+                  - img [ref=e286]
+                  - paragraph [ref=e287]: Add new venue
+                  - paragraph [ref=e288]: Create a brand new venue listing from scratch.
+                - button "Claim existing listing Find and claim a venue that's already listed on KudosCourts." [ref=e289]:
+                  - img [ref=e291]
+                  - paragraph [ref=e294]: Claim existing listing
+                  - paragraph [ref=e295]: Find and claim a venue that's already listed on KudosCourts.
+            - button "Back" [ref=e299] [cursor=pointer]:
+              - img
+              - generic [ref=e300]: Back
+    - generic [ref=e228]:
+      - generic [ref=e230]:
+        - generic [ref=e231]:
+          - img [ref=e232]
+          - generic [ref=e235]: Active Reservations
+        - button [ref=e236] [cursor=pointer]:
+          - img
+      - generic [ref=e237]:
+        - generic [ref=e238]:
+          - generic [ref=e239]:
+            - generic [ref=e240]: "Last updated: 18:54:48"
+            - link "View all" [ref=e241] [cursor=pointer]:
+              - /url: /owner/reservations/active
+              - text: View all
+              - img [ref=e242]
+          - generic [ref=e246]:
+            - combobox [ref=e247]:
+              - generic: All Venues
+              - img
+            - combobox [ref=e248]:
+              - generic: All Courts
+              - img
+        - generic [ref=e249]:
+          - text: No active reservations right now.
+          - link "Go to active reservations" [ref=e250] [cursor=pointer]:
+            - /url: /owner/reservations/active
+  - region "Notifications alt+T"
+  - generic [ref=e122] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e123]:
+      - img [ref=e124]
+    - generic [ref=e301]:
+      - button "Open issues overlay" [ref=e302]:
+        - generic [ref=e303]:
+          - generic [ref=e304]: "1"
+          - generic [ref=e305]: "2"
+        - generic [ref=e306]:
+          - text: Issue
+          - generic [ref=e307]: s
+      - button "Collapse issues badge" [ref=e308]:
+        - img [ref=e309]
+  - alert [ref=e127]: KudosCourts - Discover. Reserve. Play.
+  - generic [ref=e94]:
+    - generic [ref=e96]:
+      - generic [ref=e97]:
+        - button [ref=e100] [cursor=pointer]:
+          - img [ref=e101]
+        - generic:
+          - generic:
+            - button:
+              - generic:
+                - img
+        - generic:
+          - generic:
+            - button:
+              - img
+        - button [ref=e106] [cursor=pointer]:
+          - img [ref=e107]
+      - button [ref=e112] [cursor=pointer]
+    - button [ref=e115] [cursor=pointer]:
+      - img [ref=e116]

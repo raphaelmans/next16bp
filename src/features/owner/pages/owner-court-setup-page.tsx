@@ -13,6 +13,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import { CourtForm, ReservationAlertsPanel } from "@/features/owner/components";
+import { PermissionGate } from "@/features/owner/components/permission-gate";
 import {
   useModCourtForm,
   useQueryOwnerOrganizations,
@@ -161,32 +162,34 @@ export default function CreateCourtSetupPage() {
         <ReservationAlertsPanel organizationId={organization.id} />
       }
     >
-      <div className="space-y-6">
-        <PageHeader
-          title="Create Court"
-          description="Add court details before setting hours and pricing"
-          breadcrumbs={[
-            { label: "My Courts", href: appRoutes.owner.courts.base },
-            { label: "Create Court" },
-          ]}
-          backHref={appRoutes.owner.courts.base}
-        />
+      <PermissionGate accessRule={{ type: "owner-only" }}>
+        <div className="space-y-6">
+          <PageHeader
+            title="Create Court"
+            description="Add court details before setting hours and pricing"
+            breadcrumbs={[
+              { label: "My Courts", href: appRoutes.owner.courts.base },
+              { label: "Create Court" },
+            ]}
+            backHref={appRoutes.owner.courts.base}
+          />
 
-        <CourtForm
-          placeOptions={placeOptions}
-          sportOptions={sportOptions}
-          onSubmit={submitAsync}
-          onCancel={handleCancel}
-          isSubmitting={isSubmitting}
-          primaryActionLabel="Create & Continue"
-          onStateChange={(data) => {
-            setDraft(data);
-            if (data.placeId) {
-              selectedPlaceIdRef.current = data.placeId;
-            }
-          }}
-        />
-      </div>
+          <CourtForm
+            placeOptions={placeOptions}
+            sportOptions={sportOptions}
+            onSubmit={submitAsync}
+            onCancel={handleCancel}
+            isSubmitting={isSubmitting}
+            primaryActionLabel="Create & Continue"
+            onStateChange={(data) => {
+              setDraft(data);
+              if (data.placeId) {
+                selectedPlaceIdRef.current = data.placeId;
+              }
+            }}
+          />
+        </div>
+      </PermissionGate>
     </AppShell>
   );
 }

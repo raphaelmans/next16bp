@@ -16,6 +16,7 @@ import {
   CourtPageNav,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
+import { PermissionGate } from "@/features/owner/components/permission-gate";
 import {
   useModCourtForm,
   useQueryOwnerCourtById,
@@ -136,52 +137,54 @@ export default function EditPlaceCourtPage({
         <ReservationAlertsPanel organizationId={organization?.id ?? null} />
       }
     >
-      <div className="space-y-6">
-        <PageHeader
-          title={courtData.court.label}
-          breadcrumbs={[
-            { label: "My Venues", href: appRoutes.owner.places.base },
-            {
-              label: placeData.place.name,
-              href: appRoutes.owner.places.courts.base(placeId),
-            },
-            { label: courtData.court.label },
-          ]}
-          backHref={appRoutes.owner.places.courts.base(placeId)}
-        />
+      <PermissionGate accessRule={{ type: "owner-only" }}>
+        <div className="space-y-6">
+          <PageHeader
+            title={courtData.court.label}
+            breadcrumbs={[
+              { label: "My Venues", href: appRoutes.owner.places.base },
+              {
+                label: placeData.place.name,
+                href: appRoutes.owner.places.courts.base(placeId),
+              },
+              { label: courtData.court.label },
+            ]}
+            backHref={appRoutes.owner.places.courts.base(placeId)}
+          />
 
-        <CourtPageNav placeId={placeId} courtId={courtId} />
+          <CourtPageNav placeId={placeId} courtId={courtId} />
 
-        <CourtForm
-          defaultValues={defaultValues}
-          placeOptions={placeOptions}
-          sportOptions={sportOptions}
-          onSubmit={submitAsync}
-          onCancel={handleCancel}
-          isSubmitting={isSubmitting}
-          isEditing
-          disablePlaceSelect
-        />
+          <CourtForm
+            defaultValues={defaultValues}
+            placeOptions={placeOptions}
+            sportOptions={sportOptions}
+            onSubmit={submitAsync}
+            onCancel={handleCancel}
+            isSubmitting={isSubmitting}
+            isEditing
+            disablePlaceSelect
+          />
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Photos</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-muted-foreground">
-              Court photos are not configurable yet. You can manage venue photos
-              in the venue settings.
-            </p>
-            <Button asChild variant="outline">
-              <Link
-                href={`${appRoutes.owner.places.edit(placeId)}#venue-photos`}
-              >
-                Manage venue photos
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Photos</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-muted-foreground">
+                Court photos are not configurable yet. You can manage venue
+                photos in the venue settings.
+              </p>
+              <Button asChild variant="outline">
+                <Link
+                  href={`${appRoutes.owner.places.edit(placeId)}#venue-photos`}
+                >
+                  Manage venue photos
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </PermissionGate>
     </AppShell>
   );
 }

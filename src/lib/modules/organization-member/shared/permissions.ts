@@ -60,6 +60,31 @@ export const DEFAULT_PERMISSIONS_BY_ROLE: Record<
   VIEWER: DEFAULT_VIEWER_PERMISSIONS,
 };
 
+// ---------------------------------------------------------------------------
+// Permission context helpers (pure, cross-runtime safe)
+// ---------------------------------------------------------------------------
+
+/** Minimal shape needed for client-side permission checks. */
+export type PermissionContext = {
+  isOwner: boolean;
+  role: OrganizationMemberRole;
+  permissions: OrganizationMemberPermission[];
+};
+
+/** Returns true when the context includes a specific permission (owners implicitly have all). */
+export function hasPermission(
+  context: PermissionContext,
+  permission: OrganizationMemberPermission,
+): boolean {
+  if (context.isOwner) return true;
+  return context.permissions.includes(permission);
+}
+
+/** Returns true when the context represents an organization owner. */
+export function isOwnerRole(context: PermissionContext): boolean {
+  return context.isOwner || context.role === "OWNER";
+}
+
 export function normalizeOrganizationPermissions(
   role: OrganizationMemberRole,
   permissions?: string[] | null,

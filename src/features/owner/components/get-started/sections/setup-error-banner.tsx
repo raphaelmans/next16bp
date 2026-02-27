@@ -26,7 +26,7 @@ export function SetupErrorBanner({
               </div>
               <div className="flex-1 space-y-2">
                 <p className="font-heading font-semibold">
-                  Unable to load owner setup
+                  Unable to load setup
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {getClientErrorMessage(

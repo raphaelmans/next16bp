@@ -1,6 +1,10 @@
 import { expect, type Page, test } from "@playwright/test";
 import { hasOwnerCredentials, loginAsOwner } from "./helpers/auth-login";
 
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
 async function selectFirstOptionInField(
   page: Page,
   label: string,
@@ -17,40 +21,38 @@ async function selectFirstOptionInField(
   return true;
 }
 
-async function expectAnyTextVisible(page: Page, texts: string[]) {
-  for (const text of texts) {
-    if ((await page.getByText(text).count()) > 0) {
-      await expect(page.getByText(text).first()).toBeVisible();
-      return;
-    }
-  }
-  throw new Error(
-    `None of the expected texts were visible: ${texts.join(", ")}`,
-  );
-}
-
 async function isTextVisible(page: Page, text: string): Promise<boolean> {
   const locator = page.getByText(text).first();
   return (await locator.count()) > 0 && (await locator.isVisible());
 }
 
-async function clickFirstVisibleEnabledButton(
-  page: Page,
-  name: string,
-): Promise<boolean> {
-  const buttons = page.getByRole("button", { name });
-  const count = await buttons.count();
-
-  for (let i = 0; i < count; i += 1) {
-    const button = buttons.nth(i);
-    if ((await button.isVisible()) && (await button.isEnabled())) {
-      await button.click();
-      return true;
-    }
-  }
-
-  return false;
+/**
+ * Navigate to a wizard step via URL.
+ *
+ * IMPORTANT: The wizard has an auto-skip hook that fires once per page load
+ * when landing on `?step=org`. If org is already complete, navigating to
+ * `?step=org` will auto-redirect to the first incomplete step. For the org
+ * step specifically, navigate in-page via Back buttons instead.
+ */
+async function goToStep(page: Page, step: string) {
+  await page.goto(`/owner/get-started?step=${step}`);
+  await expect(page.getByText(/Step \d+ of 6/)).toBeVisible();
 }
+
+/** Click Back n times, waiting for step indicator to update each time. */
+async function clickBackTimes(page: Page, times: number) {
+  for (let i = 0; i < times; i++) {
+    const currentStep = await page.getByText(/Step \d+ of 6/).textContent();
+    await page.getByRole("button", { name: "Back" }).click();
+    await expect(page.getByText(/Step \d+ of 6/)).not.toHaveText(
+      currentStep ?? "",
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
 
 test.describe("Owner get-started happy path", () => {
   test.skip(
@@ -62,87 +64,150 @@ test.describe("Owner get-started happy path", () => {
     await loginAsOwner(page);
   });
 
-  test("owner setup cards and overlays are actionable", async ({ page }) => {
+  test("wizard loads and auto-skips to first incomplete step", async ({
+    page,
+  }) => {
+    await expect(page.getByText(/Step \d+ of 6/)).toBeVisible();
+    await expect(page.getByRole("heading", { level: 2 })).toBeVisible();
+  });
+
+  test("org step shows complete state or creation form", async ({ page }) => {
+    // loginAsOwner triggers auto-skip (org → first incomplete). hasFired is
+    // now true, so navigating back to org via Back won't re-trigger auto-skip.
+    const stepText = await page.getByText(/Step \d+ of 6/).textContent();
+    const currentStepNum = Number(stepText?.match(/\d+/)?.[0]);
+    const backsNeeded = currentStepNum - 1;
+
+    if (backsNeeded > 0) {
+      await clickBackTimes(page, backsNeeded);
+    }
+
+    await expect(page.getByText("Step 1 of 6")).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Owner Setup" }),
+      page.getByRole("heading", { level: 2, name: "Organization" }),
     ).toBeVisible();
 
-    const attemptedOrgCreate = await clickFirstVisibleEnabledButton(
-      page,
-      "Create organization",
-    );
+    const orgComplete = await isTextVisible(page, "Organization created");
 
-    if (attemptedOrgCreate) {
+    if (orgComplete) {
+      await expect(
+        page.getByRole("button", { name: "Continue" }),
+      ).toBeVisible();
+    } else {
+      await expect(page.getByLabel("Organization Name")).toBeVisible();
       await page.getByLabel("Organization Name").fill(`E2E Org ${Date.now()}`);
       await page.getByRole("button", { name: "Create Organization" }).click();
       await expect(page.getByText("Organization created")).toBeVisible();
-    } else {
-      await expect(
-        page.getByRole("button", { name: "Create organization" }).first(),
-      ).toBeVisible();
     }
+  });
 
-    const hasOrganization = await isTextVisible(page, "Organization created");
-    let hasVenue = false;
+  test("venue step shows choice screen or completed state", async ({
+    page,
+  }) => {
+    await goToStep(page, "venue");
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Venue" }),
+    ).toBeVisible();
 
-    const attemptedVenueCreate = hasOrganization
-      ? await clickFirstVisibleEnabledButton(page, "Add venue")
-      : false;
+    const venueComplete = await isTextVisible(page, "Venue added");
 
-    if (attemptedVenueCreate) {
+    if (venueComplete) {
       await expect(
-        page.getByRole("heading", { name: "Add new venue" }),
+        page.getByRole("button", { name: "Continue" }),
       ).toBeVisible();
+    } else {
+      await expect(page.getByText("Add new venue")).toBeVisible();
+      await expect(page.getByText("Claim existing listing")).toBeVisible();
 
-      await page.getByLabel("Venue Name").fill(`E2E Venue ${Date.now()}`);
-      await page.getByLabel("Street Address").fill("123 E2E St");
+      await page.getByText("Add new venue").click();
+      await expect(page.getByLabel(/Venue Name/)).toBeVisible();
+
+      await page.getByLabel(/Venue Name/).fill(`E2E Venue ${Date.now()}`);
+      await page.getByLabel(/Street Address/).fill("123 E2E St");
+
       const provinceSelected = await selectFirstOptionInField(page, "Province");
-      const citySelected = await selectFirstOptionInField(page, "City");
 
-      if (provinceSelected && citySelected) {
-        await page.getByRole("button", { name: "Create Venue" }).click();
-        await expect(page.getByText("Venue added")).toBeVisible();
+      if (provinceSelected) {
+        await expect(
+          page.getByRole("combobox", { name: /City/ }),
+        ).toBeEnabled();
+        const citySelected = await selectFirstOptionInField(page, "City");
+
+        if (citySelected) {
+          await page.getByRole("button", { name: "Create Venue" }).click();
+          await expect(
+            page.getByText("Venue created successfully"),
+          ).toBeVisible();
+        } else {
+          await page.getByRole("button", { name: "Cancel" }).click();
+        }
       } else {
         await page.getByRole("button", { name: "Cancel" }).click();
       }
     }
+  });
 
-    hasVenue = await isTextVisible(page, "Venue added");
+  test("courts step shows form or completed state", async ({ page }) => {
+    await goToStep(page, "courts");
+    await expect(
+      page.getByRole("heading", { level: 2, name: "Courts" }),
+    ).toBeVisible();
 
-    const attemptedCourtSetup = hasVenue
-      ? await clickFirstVisibleEnabledButton(page, "Set up courts")
-      : false;
+    const courtsComplete = await isTextVisible(page, "Court added");
 
-    if (attemptedCourtSetup) {
+    if (courtsComplete) {
       await expect(
-        page.getByRole("heading", { name: "Configure courts" }),
+        page.getByRole("button", { name: "Continue" }),
       ).toBeVisible();
+    } else {
+      const claimPending = await isTextVisible(
+        page,
+        "Waiting for claim approval",
+      );
+      if (claimPending) return;
 
       const sportSelected = await selectFirstOptionInField(page, "Sport");
       if (sportSelected) {
         await page.getByLabel("Court Label").fill(`E2E Court ${Date.now()}`);
         await page.getByRole("button", { name: "Create Court" }).click();
-        await expectAnyTextVisible(page, [
-          "Courts configured",
-          "Courts need updates",
-        ]);
-      } else {
-        await page.getByRole("button", { name: "Cancel" }).click();
+        await expect(
+          page.getByText("Court created successfully"),
+        ).toBeVisible();
       }
     }
+  });
 
-    const verifyAction = page
-      .getByRole("button", {
-        name: /Submit verification|View submission|Resubmit docs|View verification/,
-      })
-      .first();
+  test("skippable steps render with Skip or Continue", async ({ page }) => {
+    for (const { step, heading } of [
+      { step: "config", heading: "Schedule & Pricing" },
+      { step: "payment", heading: "Payment" },
+      { step: "verify", heading: "Verification" },
+    ]) {
+      await goToStep(page, step);
+      await expect(
+        page.getByRole("heading", { level: 2, name: heading }),
+      ).toBeVisible();
 
-    if (hasVenue) {
-      await expect(verifyAction).toBeEnabled();
-      await verifyAction.click();
-      await expect(page.getByText("Venue verification")).toBeVisible();
-    } else {
-      await expect(verifyAction).toBeDisabled();
+      const skipBtn = page.getByRole("button", { name: "Skip" });
+      const continueBtn = page.getByRole("button", { name: "Continue" });
+      const hasSkip =
+        (await skipBtn.count()) > 0 && (await skipBtn.isVisible());
+      const hasContinue =
+        (await continueBtn.count()) > 0 && (await continueBtn.isVisible());
+      expect(hasSkip || hasContinue).toBe(true);
+    }
+  });
+
+  test("back navigation works through wizard steps", async ({ page }) => {
+    // loginAsOwner auto-skips to the first incomplete step and sets
+    // hasFired=true, so subsequent Back clicks won't trigger auto-skip.
+    const stepText = await page.getByText(/Step \d+ of 6/).textContent();
+    const startStep = Number(stepText?.match(/\d+/)?.[0]);
+
+    // Navigate back through all previous steps.
+    for (let expected = startStep - 1; expected >= 1; expected--) {
+      await page.getByRole("button", { name: "Back" }).click();
+      await expect(page.getByText(`Step ${expected} of 6`)).toBeVisible();
     }
   });
 });

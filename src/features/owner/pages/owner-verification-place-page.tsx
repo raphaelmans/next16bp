@@ -14,6 +14,7 @@ import {
   PlaceVerificationPanel,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
+import { PermissionGate } from "@/features/owner/components/permission-gate";
 import {
   useQueryOwnerOrganization,
   useQueryOwnerPlaceById,
@@ -94,51 +95,56 @@ export default function OwnerVerificationPlacePage({
         <ReservationAlertsPanel organizationId={organization?.id ?? null} />
       }
     >
-      <div className="space-y-6">
-        <PageHeader
-          title={`Verify ${place.name}`}
-          description="Submit documents and enable reservations when approved."
-          breadcrumbs={[
-            { label: "My Venues", href: appRoutes.owner.places.base },
-            { label: place.name, href: appRoutes.owner.places.edit(place.id) },
-            { label: "Verification" },
-          ]}
-          backHref={appRoutes.owner.places.edit(place.id)}
-          backLabel="Back to edit"
-          actions={
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" asChild>
-                <Link href={appRoutes.owner.places.edit(place.id)}>
-                  Edit venue
-                </Link>
-              </Button>
-              <Button variant="ghost" size="sm" asChild>
-                <Link href={appRoutes.places.detail(place.slug ?? place.id)}>
-                  View public page
-                </Link>
-              </Button>
-            </div>
-          }
-        />
+      <PermissionGate accessRule={{ type: "owner-only" }}>
+        <div className="space-y-6">
+          <PageHeader
+            title={`Verify ${place.name}`}
+            description="Submit documents and enable reservations when approved."
+            breadcrumbs={[
+              { label: "My Venues", href: appRoutes.owner.places.base },
+              {
+                label: place.name,
+                href: appRoutes.owner.places.edit(place.id),
+              },
+              { label: "Verification" },
+            ]}
+            backHref={appRoutes.owner.places.edit(place.id)}
+            backLabel="Back to edit"
+            actions={
+              <div className="flex flex-wrap gap-2">
+                <Button variant="outline" size="sm" asChild>
+                  <Link href={appRoutes.owner.places.edit(place.id)}>
+                    Edit venue
+                  </Link>
+                </Button>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href={appRoutes.places.detail(place.slug ?? place.id)}>
+                    View public page
+                  </Link>
+                </Button>
+              </div>
+            }
+          />
 
-        <Card className="border-dashed">
-          <CardHeader className="flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5 text-primary" />
-            <CardTitle>Verification overview</CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm text-muted-foreground">
-            Verify {place.name} to unlock reservations and show players this
-            venue is trusted.
-          </CardContent>
-        </Card>
+          <Card className="border-dashed">
+            <CardHeader className="flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-primary" />
+              <CardTitle>Verification overview</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              Verify {place.name} to unlock reservations and show players this
+              venue is trusted.
+            </CardContent>
+          </Card>
 
-        <PlaceVerificationPanel
-          placeId={placeId}
-          placeName={place.name}
-          reservationCapable={place.placeType === "RESERVABLE"}
-          returnTo={returnToHub ?? undefined}
-        />
-      </div>
+          <PlaceVerificationPanel
+            placeId={placeId}
+            placeName={place.name}
+            reservationCapable={place.placeType === "RESERVABLE"}
+            returnTo={returnToHub ?? undefined}
+          />
+        </div>
+      </PermissionGate>
     </AppShell>
   );
 }

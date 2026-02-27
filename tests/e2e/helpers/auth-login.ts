@@ -23,7 +23,5 @@ export async function loginAsOwner(page: Page): Promise<void> {
   }
 
   await page.waitForURL(/\/owner\/get-started/);
-  await expect(
-    page.getByRole("heading", { name: "Owner Setup" }),
-  ).toBeVisible();
+  await expect(page.getByText(/Step \d+ of 6/)).toBeVisible();
 }

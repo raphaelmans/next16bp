@@ -1,0 +1,12 @@
+[      74ms] [ERROR] WebSocket connection to 'ws://localhost:4722/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://unpkg.com/@react-grab/opencode/dist/client.global.js:0
+[    2618ms] [ERROR] WebSocket connection to 'ws://localhost:4722/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://unpkg.com/@react-grab/opencode/dist/client.global.js:0
+[    5652ms] [ERROR] WebSocket connection to 'ws://localhost:4722/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://unpkg.com/@react-grab/opencode/dist/client.global.js:0
+[    8720ms] [ERROR] WebSocket connection to 'ws://localhost:4722/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://unpkg.com/@react-grab/opencode/dist/client.global.js:0
+[   11772ms] [ERROR] WebSocket connection to 'ws://localhost:4722/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://unpkg.com/@react-grab/opencode/dist/client.global.js:0
+[   14845ms] [ERROR] WebSocket connection to 'ws://localhost:4722/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://unpkg.com/@react-grab/opencode/dist/client.global.js:0
+[   17916ms] [ERROR] WebSocket connection to 'ws://localhost:4722/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://unpkg.com/@react-grab/opencode/dist/client.global.js:0
+[   21054ms] [ERROR] WebSocket connection to 'ws://localhost:4722/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://unpkg.com/@react-grab/opencode/dist/client.global.js:0
+[   24325ms] [ERROR] WebSocket connection to 'ws://localhost:4722/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://unpkg.com/@react-grab/opencode/dist/client.global.js:0
+[   27409ms] [ERROR] WebSocket connection to 'ws://localhost:4722/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://unpkg.com/@react-grab/opencode/dist/client.global.js:0
+[   30623ms] [ERROR] WebSocket connection to 'ws://localhost:4722/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://unpkg.com/@react-grab/opencode/dist/client.global.js:0
+[   33943ms] [ERROR] WebSocket connection to 'ws://localhost:4722/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://unpkg.com/@react-grab/opencode/dist/client.global.js:0

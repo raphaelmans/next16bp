@@ -12,6 +12,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import { CourtForm, ReservationAlertsPanel } from "@/features/owner/components";
+import { PermissionGate } from "@/features/owner/components/permission-gate";
 import {
   useModCourtForm,
   useQueryOwnerOrganization,
@@ -161,30 +162,35 @@ export default function NewPlaceCourtPage({
         <ReservationAlertsPanel organizationId={organization.id} />
       }
     >
-      <div className="space-y-6">
-        <PageHeader
-          title="Step 2 of 3 · Add a Court"
-          description="Create at least one court for this venue. Next: verification."
-          breadcrumbs={[
-            { label: "My Venues", href: appRoutes.owner.places.base },
-            { label: place.name, href: appRoutes.owner.places.edit(place.id) },
-            { label: "Add court" },
-          ]}
-          backHref={appRoutes.owner.places.courts.base(placeId)}
-          backLabel="Back to courts"
-        />
+      <PermissionGate accessRule={{ type: "owner-only" }}>
+        <div className="space-y-6">
+          <PageHeader
+            title="Step 2 of 3 · Add a Court"
+            description="Create at least one court for this venue. Next: verification."
+            breadcrumbs={[
+              { label: "My Venues", href: appRoutes.owner.places.base },
+              {
+                label: place.name,
+                href: appRoutes.owner.places.edit(place.id),
+              },
+              { label: "Add court" },
+            ]}
+            backHref={appRoutes.owner.places.courts.base(placeId)}
+            backLabel="Back to courts"
+          />
 
-        <CourtForm
-          defaultValues={{ placeId }}
-          placeOptions={placeOptions}
-          sportOptions={sportOptions}
-          onSubmit={submitAsync}
-          onCancel={handleCancel}
-          isSubmitting={isSubmitting}
-          disablePlaceSelect
-          primaryActionLabel="Create Court & Continue"
-        />
-      </div>
+          <CourtForm
+            defaultValues={{ placeId }}
+            placeOptions={placeOptions}
+            sportOptions={sportOptions}
+            onSubmit={submitAsync}
+            onCancel={handleCancel}
+            isSubmitting={isSubmitting}
+            disablePlaceSelect
+            primaryActionLabel="Create Court & Continue"
+          />
+        </div>
+      </PermissionGate>
     </AppShell>
   );
 }

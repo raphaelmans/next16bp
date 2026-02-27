@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import { CourtForm, ReservationAlertsPanel } from "@/features/owner/components";
+import { PermissionGate } from "@/features/owner/components/permission-gate";
 import {
   useModCourtForm,
   useQueryOwnerCourtById,
@@ -124,28 +125,30 @@ export default function EditCourtPage({ courtId }: OwnerCourtEditPageProps) {
         <ReservationAlertsPanel organizationId={organization?.id ?? null} />
       }
     >
-      <div className="space-y-6">
-        <PageHeader
-          title={`Edit Court: ${courtData.court.label}`}
-          description="Update court details and sport assignments"
-          breadcrumbs={[
-            { label: "My Courts", href: appRoutes.owner.courts.base },
-            { label: courtData.court.label },
-            { label: "Edit" },
-          ]}
-          backHref={appRoutes.owner.courts.base}
-        />
+      <PermissionGate accessRule={{ type: "owner-only" }}>
+        <div className="space-y-6">
+          <PageHeader
+            title={`Edit Court: ${courtData.court.label}`}
+            description="Update court details and sport assignments"
+            breadcrumbs={[
+              { label: "My Courts", href: appRoutes.owner.courts.base },
+              { label: courtData.court.label },
+              { label: "Edit" },
+            ]}
+            backHref={appRoutes.owner.courts.base}
+          />
 
-        <CourtForm
-          defaultValues={defaultValues}
-          placeOptions={placeOptions}
-          sportOptions={sportOptions}
-          onSubmit={submitAsync}
-          onCancel={handleCancel}
-          isSubmitting={isSubmitting}
-          isEditing
-        />
-      </div>
+          <CourtForm
+            defaultValues={defaultValues}
+            placeOptions={placeOptions}
+            sportOptions={sportOptions}
+            onSubmit={submitAsync}
+            onCancel={handleCancel}
+            isSubmitting={isSubmitting}
+            isEditing
+          />
+        </div>
+      </PermissionGate>
     </AppShell>
   );
 }

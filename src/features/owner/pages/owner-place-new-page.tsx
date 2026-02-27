@@ -17,6 +17,7 @@ import {
   PlaceForm,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
+import { PermissionGate } from "@/features/owner/components/permission-gate";
 import {
   useModPlaceForm,
   useQueryOrganizationPaymentMethods,
@@ -149,32 +150,34 @@ export default function OwnerPlaceNewPage({
         <ReservationAlertsPanel organizationId={organization.id} />
       }
     >
-      <div className="space-y-6">
-        <PageHeader
-          title="Create New Venue"
-          description="Add a new venue for players to discover"
-          breadcrumbs={[
-            { label: "My Venues", href: appRoutes.owner.places.base },
-            { label: "Create" },
-          ]}
-          backHref={appRoutes.owner.places.base}
-        />
-
-        {showPaymentMethodReminder && (
-          <PaymentMethodReminderCard
-            title="Payment methods missing"
-            description="Add at least one payment method so players can complete payments once reservations are accepted."
-            actionLabel="Add payment method"
-            actionHref={paymentMethodsHref}
+      <PermissionGate accessRule={{ type: "owner-only" }}>
+        <div className="space-y-6">
+          <PageHeader
+            title="Create New Venue"
+            description="Add a new venue for players to discover"
+            breadcrumbs={[
+              { label: "My Venues", href: appRoutes.owner.places.base },
+              { label: "Create" },
+            ]}
+            backHref={appRoutes.owner.places.base}
           />
-        )}
 
-        <PlaceForm
-          onSubmit={submitAsync}
-          onCancel={handleCancel}
-          isSubmitting={isSubmitting}
-        />
-      </div>
+          {showPaymentMethodReminder && (
+            <PaymentMethodReminderCard
+              title="Payment methods missing"
+              description="Add at least one payment method so players can complete payments once reservations are accepted."
+              actionLabel="Add payment method"
+              actionHref={paymentMethodsHref}
+            />
+          )}
+
+          <PlaceForm
+            onSubmit={submitAsync}
+            onCancel={handleCancel}
+            isSubmitting={isSubmitting}
+          />
+        </div>
+      </PermissionGate>
     </AppShell>
   );
 }

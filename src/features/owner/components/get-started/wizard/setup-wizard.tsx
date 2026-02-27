@@ -13,7 +13,13 @@ import { OrgStep } from "./steps/org-step";
 import { PaymentStep } from "./steps/payment-step";
 import { VenueStep } from "./steps/venue-step";
 import { VerifyStep } from "./steps/verify-step";
-import { getNextStep, getPreviousStep, getStepConfig } from "./wizard-helpers";
+import {
+  canCompleteWizard,
+  deriveFirstIncompleteStep,
+  getNextStep,
+  getPreviousStep,
+  getStepConfig,
+} from "./wizard-helpers";
 import { useWizardAutoSkip, useWizardStep } from "./wizard-hooks";
 import { WizardNavigation } from "./wizard-navigation";
 import { WizardProgress } from "./wizard-progress";
@@ -38,11 +44,30 @@ export function SetupWizard() {
     }
   }, [step]);
 
+  // Guard direct URL access to "complete" when not all steps are done
+  useEffect(() => {
+    if (step === "complete" && status && !canCompleteWizard(status)) {
+      setStep(deriveFirstIncompleteStep(status));
+    }
+  }, [step, status, setStep]);
+
+  const navigateNext = useCallback(
+    (nextStep: WizardStep | null) => {
+      if (!nextStep) return;
+      if (nextStep === "complete" && status && !canCompleteWizard(status)) {
+        setStep(deriveFirstIncompleteStep(status));
+        return;
+      }
+      setStep(nextStep);
+    },
+    [status, setStep],
+  );
+
   const handleStepComplete = useCallback(async () => {
     await invalidateOwnerSetupStatus();
     const next = getNextStep(step);
-    if (next) setStep(next);
-  }, [invalidateOwnerSetupStatus, step, setStep]);
+    navigateNext(next);
+  }, [invalidateOwnerSetupStatus, step, navigateNext]);
 
   const handleBack = useCallback(() => {
     const prev = getPreviousStep(step);
@@ -50,14 +75,12 @@ export function SetupWizard() {
   }, [step, setStep]);
 
   const handleSkip = useCallback(() => {
-    const next = getNextStep(step);
-    if (next) setStep(next);
-  }, [step, setStep]);
+    navigateNext(getNextStep(step));
+  }, [step, navigateNext]);
 
   const handleContinue = useCallback(() => {
-    const next = getNextStep(step);
-    if (next) setStep(next);
-  }, [step, setStep]);
+    navigateNext(getNextStep(step));
+  }, [step, navigateNext]);
 
   const handleProgressClick = useCallback(
     (targetStep: WizardStep) => {
@@ -87,14 +110,14 @@ export function SetupWizard() {
   const config = getStepConfig(step);
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex h-[calc(100svh-4rem)] flex-col -my-6 -mx-4 sm:-mx-6 lg:-mx-8">
       <WizardProgress
         currentStep={step}
         status={status}
         onStepClick={handleProgressClick}
       />
 
-      <div className="flex-1">
+      <div className="flex-1 min-h-0 overflow-y-auto">
         <WizardStepLayout title={config.label} description={config.description}>
           <ActiveStep
             step={step}

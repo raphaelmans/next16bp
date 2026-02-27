@@ -182,6 +182,7 @@ export const appRoutes = {
     reservationGroupDetail: (reservationGroupId: string) =>
       `/owner/reservations/group/${reservationGroupId}`,
     settings: "/owner/settings",
+    team: "/owner/team",
   },
   admin: {
     base: "/admin",

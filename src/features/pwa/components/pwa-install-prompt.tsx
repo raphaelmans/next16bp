@@ -54,7 +54,7 @@ export function PwaInstallPrompt() {
           animate={prefersReducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
           exit={prefersReducedMotion ? { opacity: 0 } : { y: 80, opacity: 0 }}
           transition={{ type: "spring", damping: 28, stiffness: 260 }}
-          className="fixed bottom-0 left-0 right-0 z-40 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+          className="fixed bottom-14 left-0 right-0 z-40 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:bottom-0"
         >
           <div className="mx-auto max-w-md rounded-xl border border-border/60 bg-background/80 shadow-lg shadow-black/5 backdrop-blur-xl">
             <div className="relative flex items-start gap-3 p-3">

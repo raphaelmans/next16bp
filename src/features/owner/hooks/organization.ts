@@ -537,6 +537,43 @@ export function useQueryOwnerSidebarQuickLinks(organizationId?: string | null) {
   };
 }
 
+// ---------------------------------------------------------------------------
+// Composition hook: permission context for the current owner org
+// ---------------------------------------------------------------------------
+
+import type { PermissionContext } from "@/lib/modules/organization-member/shared/permissions";
+
+/**
+ * `useMod*` composition hook that merges the owner organization query with
+ * the current user's permission context, giving components a single call to
+ * determine both org identity and access rights.
+ */
+export function useModOwnerPermissionContext() {
+  const {
+    organization,
+    organizationId,
+    isLoading: orgLoading,
+  } = useQueryOwnerOrganization();
+
+  const { data: permissionData, isLoading: permLoading } =
+    useQueryMyOrganizationPermissions(organizationId ?? undefined);
+
+  const permissionContext: PermissionContext | null = permissionData
+    ? {
+        isOwner: permissionData.isOwner,
+        role: permissionData.role,
+        permissions: permissionData.permissions,
+      }
+    : null;
+
+  return {
+    organization,
+    organizationId,
+    permissionContext,
+    isLoading: orgLoading || permLoading,
+  };
+}
+
 export function useQueryOwnerOrganizations(
   input?: Parameters<typeof ownerApi.queryOrganizationMy>[0],
   options?: Record<string, unknown>,

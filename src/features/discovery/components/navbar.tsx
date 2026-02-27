@@ -302,7 +302,7 @@ export function Navbar({ className }: NavbarProps) {
                     onClick={() => setIsOpen(false)}
                   >
                     <Building className="h-5 w-5" />
-                    {ownerSetupRequired ? "Owner Setup" : "Owner Dashboard"}
+                    {ownerSetupRequired ? "Venue Setup" : "Venue Dashboard"}
                   </Link>
                 )}
                 {isAdmin && (

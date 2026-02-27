@@ -78,7 +78,7 @@ export function QuickActions({ isAdmin, isOwner }: QuickActionsProps) {
 
       {isOwner && (
         <QuickActionCard
-          title="Owner Dashboard"
+          title="Venue Dashboard"
           icon={Building2}
           href={appRoutes.owner.base}
           description="Manage your organization and courts"

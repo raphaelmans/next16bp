@@ -29,7 +29,7 @@ export const OWNER_GET_STARTED_FAQS = [
     id: "already-listed",
     question: "My venue is already on KudosCourts. What should I do?",
     answer:
-      "Use the claim flow in the owner setup hub, find your listing, and submit ownership verification so you can manage the venue.",
+      "Use the claim flow in the setup hub, find your listing, and submit ownership verification so you can manage the venue.",
   },
   {
     id: "when-bookings",

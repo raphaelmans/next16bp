@@ -24,6 +24,13 @@ export function deriveFirstIncompleteStep(status: SetupStatus): WizardStep {
   return "complete";
 }
 
+/** All actionable steps satisfied — gates the "complete" transition. */
+export function canCompleteWizard(status: SetupStatus): boolean {
+  return STEP_CONFIGS.filter((c) => c.key !== "complete").every((c) =>
+    c.isComplete(status),
+  );
+}
+
 export function getStepIndex(step: WizardStep): number {
   return WIZARD_STEPS.indexOf(step);
 }

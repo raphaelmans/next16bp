@@ -53,8 +53,21 @@ export default async function HomePage() {
 
   await prefetchHomeData();
 
+  const portalRedirectScript = [
+    "try{",
+    'var p=localStorage.getItem("kudos.default-portal");',
+    'if(p==="owner")location.replace("/owner");',
+    'else if(p==="player")location.replace("/home")',
+    "}catch(e){}",
+  ].join("");
+
   return (
     <>
+      <script
+        id="portal-redirect"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: hardcoded string literal, no user input
+        dangerouslySetInnerHTML={{ __html: portalRedirectScript }}
+      />
       <Script id="home-faq-structured-data" type="application/ld+json">
         {JSON.stringify(homeStructuredData).replace(/</g, "\\u003c")}
       </Script>

@@ -1,13 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { appRoutes } from "@/common/app-routes";
+import { PlayerBottomTabs } from "@/components/layout/player-bottom-tabs";
 import { PlayerShell as SharedPlayerShell } from "@/components/layout/player-shell";
 import { PlayerSidebar } from "@/components/layout/player-sidebar";
 import {
+  PORTAL_STORAGE_KEY,
   useMutAuthLogout,
   useQueryAuthMyOrganizations,
   useQueryAuthSession,
+  useQueryAuthUserPreference,
 } from "@/features/auth/hooks";
 import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { AuthPlayerNavbar } from "./player-navbar";
@@ -20,6 +24,25 @@ interface AuthPlayerShellProps {
 export function AuthPlayerShell({ children }: AuthPlayerShellProps) {
   const router = useRouter();
   const { data: sessionUser } = useQueryAuthSession();
+  const { data: userPreference } = useQueryAuthUserPreference(!!sessionUser);
+
+  // Immediate seed while DB preference loads (fallback for first visit)
+  useEffect(() => {
+    try {
+      if (!localStorage.getItem(PORTAL_STORAGE_KEY)) {
+        localStorage.setItem(PORTAL_STORAGE_KEY, "player");
+      }
+    } catch {}
+  }, []);
+
+  // Sync from DB preference (authoritative — overrides stale localStorage)
+  useEffect(() => {
+    if (userPreference?.defaultPortal) {
+      try {
+        localStorage.setItem(PORTAL_STORAGE_KEY, userPreference.defaultPortal);
+      } catch {}
+    }
+  }, [userPreference?.defaultPortal]);
   const logoutMutation = useMutAuthLogout();
 
   const { data: orgs } = useQueryAuthMyOrganizations(!!sessionUser);
@@ -67,6 +90,7 @@ export function AuthPlayerShell({ children }: AuthPlayerShellProps) {
           onLogout={handleLogout}
         />
       }
+      bottomNav={<PlayerBottomTabs />}
       floatingPanel={
         <UnifiedChatInterface
           surface="floating"

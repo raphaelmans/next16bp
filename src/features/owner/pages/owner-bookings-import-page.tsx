@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import { BookingsImportUploadForm } from "@/features/owner/components/bookings-import/bookings-import-upload-form";
+import { PermissionGate } from "@/features/owner/components/permission-gate";
 import { useQueryOwnerOrganization } from "@/features/owner/hooks";
 
 export default function OwnerBookingsImportPage() {
@@ -100,25 +101,32 @@ export default function OwnerBookingsImportPage() {
         />
       }
     >
-      <div className="space-y-6">
-        <PageHeader
-          title="Import Existing Bookings"
-          description="Bring in external reservations to prevent double-booking."
-          breadcrumbs={[
-            { label: "Owner", href: appRoutes.owner.base },
-            { label: "Imports", href: appRoutes.owner.imports.bookings },
-            { label: "Bookings" },
-          ]}
-        />
-
-        {organization ? (
-          <BookingsImportUploadForm
-            organizationId={organization.id}
-            onDraftCreated={handleDraftCreated}
-            onCancel={handleCancel}
+      <PermissionGate
+        accessRule={{
+          type: "permission",
+          permission: "reservation.guest_booking",
+        }}
+      >
+        <div className="space-y-6">
+          <PageHeader
+            title="Import Existing Bookings"
+            description="Bring in external reservations to prevent double-booking."
+            breadcrumbs={[
+              { label: "Owner", href: appRoutes.owner.base },
+              { label: "Imports", href: appRoutes.owner.imports.bookings },
+              { label: "Bookings" },
+            ]}
           />
-        ) : null}
-      </div>
+
+          {organization ? (
+            <BookingsImportUploadForm
+              organizationId={organization.id}
+              onDraftCreated={handleDraftCreated}
+              onCancel={handleCancel}
+            />
+          ) : null}
+        </div>
+      </PermissionGate>
     </AppShell>
   );
 }
