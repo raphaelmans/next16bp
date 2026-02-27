@@ -186,7 +186,7 @@ describe("NotificationBell", () => {
 
   it("toggle on -> calls web push enable", async () => {
     // Arrange
-    const deferred = createDeferred<void>();
+    const deferred = createDeferred<undefined>();
     webPushState.enable.mockImplementation(async () => deferred.promise);
     render(<NotificationBell portal="player" />);
 
@@ -197,7 +197,7 @@ describe("NotificationBell", () => {
     expect(webPushState.enable).toHaveBeenCalledTimes(1);
     expect(toastSuccessSpy).not.toHaveBeenCalled();
 
-    deferred.resolve();
+    deferred.resolve(undefined);
 
     await waitFor(() => {
       expect(toastSuccessSpy).toHaveBeenCalledWith(
@@ -208,7 +208,7 @@ describe("NotificationBell", () => {
 
   it("toggle on failure -> shows error toast after rejection", async () => {
     // Arrange
-    const deferred = createDeferred<void>();
+    const deferred = createDeferred<undefined>();
     webPushState.enable.mockImplementation(async () => deferred.promise);
     render(<NotificationBell portal="player" />);
 

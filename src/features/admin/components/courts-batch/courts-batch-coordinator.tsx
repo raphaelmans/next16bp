@@ -177,9 +177,7 @@ export default function AdminCourtsBatchView() {
   const createBatchMutation = useMutCreateCuratedCourtsBatch();
   const uploadPhotoMutation = useMutAdminCourtUploadPhoto();
   const previewMutation = useGoogleLocPreviewMutation();
-  const { data: sports = [], isLoading: sportsLoading } = useQueryAdminSports(
-    {},
-  );
+  const { data: sports = [], isLoading: sportsLoading } = useQueryAdminSports();
   const [batchResult, setBatchResult] =
     React.useState<CuratedCourtBatchResult | null>(null);
   const [googleUrls, setGoogleUrls] = React.useState<Record<string, string>>(

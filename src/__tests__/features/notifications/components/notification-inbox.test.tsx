@@ -20,6 +20,7 @@ describe("NotificationInbox", () => {
         showMarkAll={false}
         markAllBusy={false}
         onItemClick={vi.fn()}
+        onMarkAsRead={vi.fn()}
         onMarkAllAsRead={vi.fn()}
       />,
     );
@@ -48,6 +49,7 @@ describe("NotificationInbox", () => {
         showMarkAll={false}
         markAllBusy={false}
         onItemClick={onItemClick}
+        onMarkAsRead={vi.fn()}
         onMarkAllAsRead={vi.fn()}
       />,
     );
@@ -69,6 +71,7 @@ describe("NotificationInbox", () => {
         showMarkAll
         markAllBusy={false}
         onItemClick={vi.fn()}
+        onMarkAsRead={vi.fn()}
         onMarkAllAsRead={onMarkAllAsRead}
       />,
     );

@@ -37,9 +37,7 @@ export default function CreateCourtSetupPage() {
       { enabled: !!organization?.id },
     );
 
-  const { data: sports = [], isLoading: sportsLoading } = useQueryOwnerSports(
-    {},
-  );
+  const { data: sports = [], isLoading: sportsLoading } = useQueryOwnerSports();
 
   const selectedPlaceIdRef = React.useRef<string>("");
   const [draft, setDraft] = React.useState<Partial<CourtFormData>>({});

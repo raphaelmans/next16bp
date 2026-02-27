@@ -63,9 +63,7 @@ export default function NewCuratedCourtPage() {
   const { data: stats } = useQueryAdminSidebarStats();
   const createMutation = useMutCreateCuratedCourt();
   const uploadPhotoMutation = useMutAdminCourtUploadPhoto();
-  const { data: sports = [], isLoading: sportsLoading } = useQueryAdminSports(
-    {},
-  );
+  const { data: sports = [], isLoading: sportsLoading } = useQueryAdminSports();
 
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
   const [googleUrl, setGoogleUrl] = React.useState("");

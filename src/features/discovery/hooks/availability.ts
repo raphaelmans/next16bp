@@ -39,7 +39,11 @@ type DiscoveryAvailabilityForPlaceSportRangeInput = {
 };
 
 export function useQueryDiscoverySports() {
-  return useFeatureQuery(["sport", "list"], discoveryApi.querySportList, {});
+  return useFeatureQuery(
+    ["sport", "list"],
+    discoveryApi.querySportList,
+    undefined,
+  );
 }
 
 export function useQueryDiscoveryOrganizations(enabled: boolean) {

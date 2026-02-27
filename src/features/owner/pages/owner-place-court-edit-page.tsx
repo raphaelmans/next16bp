@@ -54,9 +54,7 @@ export default function EditPlaceCourtPage({
     { enabled: !!placeId },
   );
 
-  const { data: sports = [], isLoading: sportsLoading } = useQueryOwnerSports(
-    {},
-  );
+  const { data: sports = [], isLoading: sportsLoading } = useQueryOwnerSports();
 
   const { submitAsync, isSubmitting } = useModCourtForm({
     courtId,

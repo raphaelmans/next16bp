@@ -68,7 +68,7 @@ describe("WebPushSettingsCard", () => {
 
   it("enable success toast fires only after enable settles", async () => {
     // Arrange
-    const deferred = createDeferred<void>();
+    const deferred = createDeferred<undefined>();
     webPushState.enable.mockImplementation(async () => deferred.promise);
     render(<WebPushSettingsCard />);
 
@@ -79,7 +79,7 @@ describe("WebPushSettingsCard", () => {
     expect(webPushState.enable).toHaveBeenCalledTimes(1);
     expect(toastSuccessSpy).not.toHaveBeenCalled();
 
-    deferred.resolve();
+    deferred.resolve(undefined);
 
     await waitFor(() => {
       expect(toastSuccessSpy).toHaveBeenCalledWith(
@@ -90,7 +90,7 @@ describe("WebPushSettingsCard", () => {
 
   it("disable success toast fires only after disable settles", async () => {
     // Arrange
-    const deferred = createDeferred<void>();
+    const deferred = createDeferred<undefined>();
     webPushState.enabledOnThisDevice = true;
     webPushState.permission = "granted";
     webPushState.disable.mockImplementation(async () => deferred.promise);
@@ -103,7 +103,7 @@ describe("WebPushSettingsCard", () => {
     expect(webPushState.disable).toHaveBeenCalledTimes(1);
     expect(toastSuccessSpy).not.toHaveBeenCalled();
 
-    deferred.resolve();
+    deferred.resolve(undefined);
 
     await waitFor(() => {
       expect(toastSuccessSpy).toHaveBeenCalledWith(
@@ -114,7 +114,7 @@ describe("WebPushSettingsCard", () => {
 
   it("enable failure shows error toast after rejection", async () => {
     // Arrange
-    const deferred = createDeferred<void>();
+    const deferred = createDeferred<undefined>();
     webPushState.enable.mockImplementation(async () => deferred.promise);
     render(<WebPushSettingsCard />);
 

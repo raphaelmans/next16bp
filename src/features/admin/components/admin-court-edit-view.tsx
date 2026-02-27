@@ -86,7 +86,7 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   const [isSavingFeaturedRank, setIsSavingFeaturedRank] = React.useState(false);
   const [isSavingProvinceRank, setIsSavingProvinceRank] = React.useState(false);
 
-  const { data: rawSports, isLoading: sportsLoading } = useQueryAdminSports({});
+  const { data: rawSports, isLoading: sportsLoading } = useQueryAdminSports();
   const sports = (rawSports ?? []) as Array<{ id: string; name: string }>;
 
   const debouncedOrgSearch = useDebouncedValue(orgSearch, 2000);

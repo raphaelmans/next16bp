@@ -44,9 +44,7 @@ export default function EditCourtPage({ courtId }: OwnerCourtEditPageProps) {
       { enabled: !!organization?.id },
     );
 
-  const { data: sports = [], isLoading: sportsLoading } = useQueryOwnerSports(
-    {},
-  );
+  const { data: sports = [], isLoading: sportsLoading } = useQueryOwnerSports();
 
   const { submitAsync, isSubmitting } = useModCourtForm({
     courtId,

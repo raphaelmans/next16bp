@@ -145,10 +145,9 @@ export default function CourtSetupWizardPage({
   const shouldLoadSports = !courtIdParam || isDetailsStep;
   const shouldLoadPublishPrereqs = !!courtIdParam && isPublishStep;
 
-  const { data: sports = [] } = useQueryOwnerSports(
-    {},
-    { enabled: shouldLoadSports },
-  );
+  const { data: sports = [] } = useQueryOwnerSports(undefined, {
+    enabled: shouldLoadSports,
+  });
   const { data: hours = [], isLoading: hoursLoading } = useModCourtHours(
     courtId,
     {

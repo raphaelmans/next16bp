@@ -41,9 +41,7 @@ export default function NewPlaceCourtPage({
     { enabled: !!placeId },
   );
 
-  const { data: sports = [], isLoading: sportsLoading } = useQueryOwnerSports(
-    {},
-  );
+  const { data: sports = [], isLoading: sportsLoading } = useQueryOwnerSports();
 
   const { submitAsync, isSubmitting } = useModCourtForm({
     onSuccess: () => {
