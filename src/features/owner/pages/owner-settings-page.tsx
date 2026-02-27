@@ -25,6 +25,8 @@ import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
   RemovalRequestModal,
   ReservationAlertsPanel,
+  ReservationNotificationRoutingSettings,
+  TeamAccessManager,
 } from "@/features/owner/components";
 import { PaymentMethodsManager } from "@/features/owner/components/payment-methods-manager";
 import {
@@ -257,9 +259,23 @@ export default function OwnerSettingsPage() {
         <WebPushSettingsCard id={SETTINGS_SECTION_IDS.browserNotifications} />
 
         {organization?.id && (
+          <ReservationNotificationRoutingSettings
+            organizationId={organization.id}
+            sectionId={SETTINGS_SECTION_IDS.reservationNotificationRouting}
+          />
+        )}
+
+        {organization?.id && (
           <PaymentMethodsManager
             organizationId={organization.id}
             sectionId={SETTINGS_SECTION_IDS.paymentMethods}
+          />
+        )}
+
+        {organization?.id && (
+          <TeamAccessManager
+            organizationId={organization.id}
+            sectionId={SETTINGS_SECTION_IDS.teamAccess}
           />
         )}
 

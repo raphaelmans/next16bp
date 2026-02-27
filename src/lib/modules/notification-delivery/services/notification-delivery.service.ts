@@ -2,6 +2,7 @@ import { after } from "next/server";
 import { normalizePhMobile } from "@/common/phone";
 import { env } from "@/lib/env";
 import type { IMobilePushTokenRepository } from "@/lib/modules/mobile-push-token/repositories/mobile-push-token.repository";
+import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
 import type { IPushSubscriptionRepository } from "@/lib/modules/push-subscription/repositories/push-subscription.repository";
 import type { InsertNotificationDeliveryJob } from "@/lib/shared/infra/db/schema";
 import { logger } from "@/lib/shared/infra/logger";
@@ -9,7 +10,10 @@ import type { RequestContext } from "@/lib/shared/kernel/context";
 import type { IUserNotificationRepository } from "../../user-notification/repositories/user-notification.repository";
 import type { INotificationDispatchTriggerQueue } from "../queues/notification-dispatch-trigger.queue";
 import type { INotificationDeliveryJobRepository } from "../repositories/notification-delivery-job.repository";
-import type { INotificationRecipientRepository } from "../repositories/notification-recipient.repository";
+import type {
+  INotificationRecipientRepository,
+  OrganizationRecipient,
+} from "../repositories/notification-recipient.repository";
 import { buildNotificationContent } from "../shared/domain";
 
 export type AdminVerificationRequestedPayload = {
@@ -215,6 +219,10 @@ export class NotificationDeliveryService {
     private mobilePushTokenRepository: IMobilePushTokenRepository,
     private userNotificationRepository: IUserNotificationRepository,
     private dispatchTriggerQueue: INotificationDispatchTriggerQueue | null = null,
+    private organizationMemberService: Pick<
+      IOrganizationMemberService,
+      "listOrganizationUserIdsForReservationNotifications"
+    > | null = null,
   ) {}
 
   private publishDispatchKickAsync(jobCount: number) {
@@ -367,6 +375,144 @@ export class NotificationDeliveryService {
     );
   }
 
+  private async listOwnerReservationRecipients(options: {
+    organizationId: string;
+    ctx?: RequestContext;
+  }): Promise<OrganizationRecipient[]> {
+    if (!this.organizationMemberService) {
+      const owner =
+        await this.recipientRepository.findOwnerRecipientByOrganizationId(
+          options.organizationId,
+          options.ctx,
+        );
+      if (!owner) {
+        return [];
+      }
+
+      return [
+        {
+          organizationId: options.organizationId,
+          userId: owner.ownerUserId,
+          email: owner.email,
+          phoneNumber: owner.phoneNumber,
+        },
+      ];
+    }
+
+    const userIds =
+      await this.organizationMemberService.listOrganizationUserIdsForReservationNotifications(
+        options.organizationId,
+        options.ctx,
+      );
+
+    if (userIds.length === 0) {
+      return [];
+    }
+
+    return this.recipientRepository.listOrganizationRecipientsByUserIds(
+      options.organizationId,
+      userIds,
+      options.ctx,
+    );
+  }
+
+  private async enqueueOwnerReservationFanout(options: {
+    recipients: OrganizationRecipient[];
+    eventType: string;
+    payload: Record<string, unknown>;
+    idempotencyKeyBase: string;
+    organizationId: string;
+    reservationId?: string;
+    includeEmailSms?: boolean;
+    ctx?: RequestContext;
+  }): Promise<InsertNotificationDeliveryJob[]> {
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    for (const recipient of options.recipients) {
+      const userScopedIdempotencyBase = `${options.idempotencyKeyBase}:user:${recipient.userId}`;
+
+      await this.createInboxNotification({
+        userId: recipient.userId,
+        eventType: options.eventType,
+        payload: options.payload,
+        idempotencyKeyBase: userScopedIdempotencyBase,
+        ctx: options.ctx,
+      });
+
+      if (options.includeEmailSms) {
+        const email = recipient.email?.trim();
+        if (env.NOTIFICATION_EMAIL_ENABLED !== false && email) {
+          jobs.push({
+            eventType: options.eventType,
+            channel: "EMAIL",
+            target: email,
+            organizationId: options.organizationId,
+            reservationId: options.reservationId,
+            payload: options.payload,
+            idempotencyKey: `${userScopedIdempotencyBase}:email`,
+          });
+        }
+
+        const normalizedPhone = recipient.phoneNumber
+          ? normalizePhMobile(recipient.phoneNumber)
+          : "";
+        if (env.NOTIFICATION_SMS_ENABLED !== false && normalizedPhone) {
+          jobs.push({
+            eventType: options.eventType,
+            channel: "SMS",
+            target: normalizedPhone,
+            organizationId: options.organizationId,
+            reservationId: options.reservationId,
+            payload: options.payload,
+            idempotencyKey: `${userScopedIdempotencyBase}:sms`,
+          });
+        }
+      }
+
+      const webPushJobs = await this.enqueueWebPushForUser({
+        userId: recipient.userId,
+        eventType: options.eventType,
+        organizationId: options.organizationId,
+        reservationId: options.reservationId,
+        payload: options.payload,
+        idempotencyKeyBase: userScopedIdempotencyBase,
+        ctx: options.ctx,
+      });
+      jobs.push(...webPushJobs);
+
+      const mobilePushJobs = await this.enqueueMobilePushForUser({
+        userId: recipient.userId,
+        eventType: options.eventType,
+        organizationId: options.organizationId,
+        reservationId: options.reservationId,
+        payload: options.payload,
+        idempotencyKeyBase: userScopedIdempotencyBase,
+        ctx: options.ctx,
+      });
+      jobs.push(...mobilePushJobs);
+    }
+
+    return jobs;
+  }
+
+  private logNoOptedInOwnerRecipients(details: {
+    eventType: string;
+    organizationId: string;
+    reservationId?: string;
+    reservationGroupId?: string;
+  }) {
+    logger.warn(
+      {
+        event: "notification_delivery.no_opted_in_owner_recipients",
+        eventType: details.eventType,
+        organizationId: details.organizationId,
+        reservationId: details.reservationId,
+        reservationGroupId: details.reservationGroupId,
+      },
+      "No opted-in owner recipients for reservation lifecycle notification",
+    );
+  }
+
   async enqueueAdminVerificationRequested(
     payload: AdminVerificationRequestedPayload,
     ctx?: RequestContext,
@@ -480,26 +626,20 @@ export class NotificationDeliveryService {
     payload: OwnerReservationCreatedPayload,
     ctx?: RequestContext,
   ): Promise<{ jobCount: number }> {
-    const recipient =
-      await this.recipientRepository.findOwnerRecipientByOrganizationId(
-        payload.organizationId,
-        ctx,
-      );
+    const recipients = await this.listOwnerReservationRecipients({
+      organizationId: payload.organizationId,
+      ctx,
+    });
 
-    if (!recipient) {
-      logger.warn(
-        {
-          event: "notification_delivery.no_owner_recipient",
-          eventType: "reservation.created",
-          reservationId: payload.reservationId,
-          organizationId: payload.organizationId,
-        },
-        "No owner recipient found for reservation.created",
-      );
+    if (recipients.length === 0) {
+      this.logNoOptedInOwnerRecipients({
+        eventType: "reservation.created",
+        reservationId: payload.reservationId,
+        organizationId: payload.organizationId,
+      });
       return { jobCount: 0 };
     }
 
-    const jobs: InsertNotificationDeliveryJob[] = [];
     const basePayload = {
       reservationId: payload.reservationId,
       organizationId: payload.organizationId,
@@ -518,78 +658,20 @@ export class NotificationDeliveryService {
     };
     const idempotencyKeyBase = `reservation.created:${payload.reservationId}:org:${payload.organizationId}`;
 
-    await this.createInboxNotification({
-      userId: recipient.ownerUserId,
+    const jobs = await this.enqueueOwnerReservationFanout({
+      recipients,
       eventType: "reservation.created",
       payload: basePayload,
       idempotencyKeyBase,
-      ctx,
-    });
-
-    const email = recipient.email?.trim();
-    if (env.NOTIFICATION_EMAIL_ENABLED !== false && email) {
-      jobs.push({
-        eventType: "reservation.created",
-        channel: "EMAIL",
-        target: email,
-        organizationId: payload.organizationId,
-        reservationId: payload.reservationId,
-        payload: basePayload,
-        idempotencyKey: `reservation.created:${payload.reservationId}:org:${payload.organizationId}:email`,
-      });
-    }
-
-    const normalizedPhone = recipient.phoneNumber
-      ? normalizePhMobile(recipient.phoneNumber)
-      : "";
-    if (env.NOTIFICATION_SMS_ENABLED !== false && normalizedPhone) {
-      jobs.push({
-        eventType: "reservation.created",
-        channel: "SMS",
-        target: normalizedPhone,
-        organizationId: payload.organizationId,
-        reservationId: payload.reservationId,
-        payload: basePayload,
-        idempotencyKey: `reservation.created:${payload.reservationId}:org:${payload.organizationId}:sms`,
-      });
-    }
-
-    const webPushJobs = await this.enqueueWebPushForUser({
-      userId: recipient.ownerUserId,
-      eventType: "reservation.created",
       organizationId: payload.organizationId,
       reservationId: payload.reservationId,
-      payload: basePayload,
-      idempotencyKeyBase,
+      includeEmailSms: true,
       ctx,
     });
-    jobs.push(...webPushJobs);
 
-    const mobilePushJobs = await this.enqueueMobilePushForUser({
-      userId: recipient.ownerUserId,
-      eventType: "reservation.created",
-      organizationId: payload.organizationId,
-      reservationId: payload.reservationId,
-      payload: basePayload,
-      idempotencyKeyBase,
-      ctx,
-    });
-    jobs.push(...mobilePushJobs);
-
-    if (!jobs.length) {
-      logger.warn(
-        {
-          event: "notification_delivery.no_owner_contact",
-          eventType: "reservation.created",
-          reservationId: payload.reservationId,
-          organizationId: payload.organizationId,
-        },
-        "Owner has no email/phone for reservation.created",
-      );
-      return { jobCount: 0 };
+    if (jobs.length > 0) {
+      await this.createJobsAndTriggerDispatch(jobs, ctx);
     }
-
-    await this.createJobsAndTriggerDispatch(jobs, ctx);
 
     logger.info(
       {
@@ -598,6 +680,7 @@ export class NotificationDeliveryService {
         reservationId: payload.reservationId,
         organizationId: payload.organizationId,
         jobCount: jobs.length,
+        recipientCount: recipients.length,
       },
       "Enqueued owner reservation.created notification jobs",
     );
@@ -609,26 +692,20 @@ export class NotificationDeliveryService {
     payload: OwnerReservationGroupCreatedPayload,
     ctx?: RequestContext,
   ): Promise<{ jobCount: number }> {
-    const recipient =
-      await this.recipientRepository.findOwnerRecipientByOrganizationId(
-        payload.organizationId,
-        ctx,
-      );
+    const recipients = await this.listOwnerReservationRecipients({
+      organizationId: payload.organizationId,
+      ctx,
+    });
 
-    if (!recipient) {
-      logger.warn(
-        {
-          event: "notification_delivery.no_owner_recipient",
-          eventType: "reservation_group.created",
-          reservationGroupId: payload.reservationGroupId,
-          organizationId: payload.organizationId,
-        },
-        "No owner recipient found for reservation_group.created",
-      );
+    if (recipients.length === 0) {
+      this.logNoOptedInOwnerRecipients({
+        eventType: "reservation_group.created",
+        reservationGroupId: payload.reservationGroupId,
+        organizationId: payload.organizationId,
+      });
       return { jobCount: 0 };
     }
 
-    const jobs: InsertNotificationDeliveryJob[] = [];
     const basePayload = {
       reservationGroupId: payload.reservationGroupId,
       representativeReservationId: payload.representativeReservationId,
@@ -648,78 +725,20 @@ export class NotificationDeliveryService {
     };
     const idempotencyKeyBase = `reservation_group.created:${payload.reservationGroupId}:org:${payload.organizationId}`;
 
-    await this.createInboxNotification({
-      userId: recipient.ownerUserId,
+    const jobs = await this.enqueueOwnerReservationFanout({
+      recipients,
       eventType: "reservation_group.created",
       payload: basePayload,
       idempotencyKeyBase,
-      ctx,
-    });
-
-    const email = recipient.email?.trim();
-    if (env.NOTIFICATION_EMAIL_ENABLED !== false && email) {
-      jobs.push({
-        eventType: "reservation_group.created",
-        channel: "EMAIL",
-        target: email,
-        organizationId: payload.organizationId,
-        reservationId: payload.representativeReservationId,
-        payload: basePayload,
-        idempotencyKey: `reservation_group.created:${payload.reservationGroupId}:org:${payload.organizationId}:email`,
-      });
-    }
-
-    const normalizedPhone = recipient.phoneNumber
-      ? normalizePhMobile(recipient.phoneNumber)
-      : "";
-    if (env.NOTIFICATION_SMS_ENABLED !== false && normalizedPhone) {
-      jobs.push({
-        eventType: "reservation_group.created",
-        channel: "SMS",
-        target: normalizedPhone,
-        organizationId: payload.organizationId,
-        reservationId: payload.representativeReservationId,
-        payload: basePayload,
-        idempotencyKey: `reservation_group.created:${payload.reservationGroupId}:org:${payload.organizationId}:sms`,
-      });
-    }
-
-    const webPushJobs = await this.enqueueWebPushForUser({
-      userId: recipient.ownerUserId,
-      eventType: "reservation_group.created",
       organizationId: payload.organizationId,
       reservationId: payload.representativeReservationId,
-      payload: basePayload,
-      idempotencyKeyBase,
+      includeEmailSms: true,
       ctx,
     });
-    jobs.push(...webPushJobs);
 
-    const mobilePushJobs = await this.enqueueMobilePushForUser({
-      userId: recipient.ownerUserId,
-      eventType: "reservation_group.created",
-      organizationId: payload.organizationId,
-      reservationId: payload.representativeReservationId,
-      payload: basePayload,
-      idempotencyKeyBase,
-      ctx,
-    });
-    jobs.push(...mobilePushJobs);
-
-    if (!jobs.length) {
-      logger.warn(
-        {
-          event: "notification_delivery.no_owner_contact",
-          eventType: "reservation_group.created",
-          reservationGroupId: payload.reservationGroupId,
-          organizationId: payload.organizationId,
-        },
-        "Owner has no email/phone for reservation_group.created",
-      );
-      return { jobCount: 0 };
+    if (jobs.length > 0) {
+      await this.createJobsAndTriggerDispatch(jobs, ctx);
     }
-
-    await this.createJobsAndTriggerDispatch(jobs, ctx);
 
     logger.info(
       {
@@ -728,6 +747,7 @@ export class NotificationDeliveryService {
         reservationGroupId: payload.reservationGroupId,
         organizationId: payload.organizationId,
         jobCount: jobs.length,
+        recipientCount: recipients.length,
       },
       "Enqueued owner reservation_group.created notification jobs",
     );
@@ -1126,40 +1146,34 @@ export class NotificationDeliveryService {
       playerName: payload.playerName,
     };
     const idempotencyKeyBase = `reservation.payment_marked:${payload.reservationId}:org:${owner.organizationId}`;
-
-    const jobs: InsertNotificationDeliveryJob[] = [];
-
-    await this.createInboxNotification({
-      userId: owner.ownerUserId,
-      eventType: "reservation.payment_marked",
-      payload: basePayload,
-      idempotencyKeyBase,
-      ctx,
-    });
-
-    const webPushJobs = await this.enqueueWebPushForUser({
-      userId: owner.ownerUserId,
-      eventType: "reservation.payment_marked",
-      reservationId: payload.reservationId,
+    const recipients = await this.listOwnerReservationRecipients({
       organizationId: owner.organizationId,
-      payload: basePayload,
-      idempotencyKeyBase,
       ctx,
     });
-    jobs.push(...webPushJobs);
 
-    const mobilePushJobs = await this.enqueueMobilePushForUser({
-      userId: owner.ownerUserId,
+    if (recipients.length === 0) {
+      this.logNoOptedInOwnerRecipients({
+        eventType: "reservation.payment_marked",
+        reservationId: payload.reservationId,
+        organizationId: owner.organizationId,
+      });
+      return { jobCount: 0 };
+    }
+
+    const jobs = await this.enqueueOwnerReservationFanout({
+      recipients,
       eventType: "reservation.payment_marked",
-      reservationId: payload.reservationId,
-      organizationId: owner.organizationId,
       payload: basePayload,
       idempotencyKeyBase,
+      organizationId: owner.organizationId,
+      reservationId: payload.reservationId,
       ctx,
     });
-    jobs.push(...mobilePushJobs);
 
-    await this.createJobsAndTriggerDispatch(jobs, ctx);
+    if (jobs.length > 0) {
+      await this.createJobsAndTriggerDispatch(jobs, ctx);
+    }
+
     return { jobCount: jobs.length };
   }
 
@@ -1167,12 +1181,16 @@ export class NotificationDeliveryService {
     payload: OwnerReservationGroupPaymentMarkedPayload,
     ctx?: RequestContext,
   ): Promise<{ jobCount: number }> {
-    const owner =
-      await this.recipientRepository.findOwnerRecipientByOrganizationId(
-        payload.organizationId,
-        ctx,
-      );
-    if (!owner) {
+    const recipients = await this.listOwnerReservationRecipients({
+      organizationId: payload.organizationId,
+      ctx,
+    });
+    if (recipients.length === 0) {
+      this.logNoOptedInOwnerRecipients({
+        eventType: "reservation_group.payment_marked",
+        reservationGroupId: payload.reservationGroupId,
+        organizationId: payload.organizationId,
+      });
       return { jobCount: 0 };
     }
 
@@ -1188,41 +1206,22 @@ export class NotificationDeliveryService {
       itemCount: payload.itemCount,
       items: payload.items,
     };
-    const idempotencyKeyBase = `reservation_group.payment_marked:${payload.reservationGroupId}:org:${owner.organizationId}`;
+    const idempotencyKeyBase = `reservation_group.payment_marked:${payload.reservationGroupId}:org:${payload.organizationId}`;
 
-    const jobs: InsertNotificationDeliveryJob[] = [];
-
-    await this.createInboxNotification({
-      userId: owner.ownerUserId,
+    const jobs = await this.enqueueOwnerReservationFanout({
+      recipients,
       eventType: "reservation_group.payment_marked",
       payload: basePayload,
       idempotencyKeyBase,
-      ctx,
-    });
-
-    const webPushJobs = await this.enqueueWebPushForUser({
-      userId: owner.ownerUserId,
-      eventType: "reservation_group.payment_marked",
+      organizationId: payload.organizationId,
       reservationId: payload.representativeReservationId,
-      organizationId: owner.organizationId,
-      payload: basePayload,
-      idempotencyKeyBase,
       ctx,
     });
-    jobs.push(...webPushJobs);
 
-    const mobilePushJobs = await this.enqueueMobilePushForUser({
-      userId: owner.ownerUserId,
-      eventType: "reservation_group.payment_marked",
-      reservationId: payload.representativeReservationId,
-      organizationId: owner.organizationId,
-      payload: basePayload,
-      idempotencyKeyBase,
-      ctx,
-    });
-    jobs.push(...mobilePushJobs);
+    if (jobs.length > 0) {
+      await this.createJobsAndTriggerDispatch(jobs, ctx);
+    }
 
-    await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };
   }
 
@@ -1462,12 +1461,16 @@ export class NotificationDeliveryService {
     payload: OwnerReservationPingPayload,
     ctx?: RequestContext,
   ): Promise<{ pinged: boolean }> {
-    const recipient =
-      await this.recipientRepository.findOwnerRecipientByOrganizationId(
-        payload.organizationId,
-        ctx,
-      );
-    if (!recipient) {
+    const recipients = await this.listOwnerReservationRecipients({
+      organizationId: payload.organizationId,
+      ctx,
+    });
+    if (recipients.length === 0) {
+      this.logNoOptedInOwnerRecipients({
+        eventType: "reservation.ping_owner",
+        reservationId: payload.reservationId,
+        organizationId: payload.organizationId,
+      });
       return { pinged: false };
     }
 
@@ -1484,37 +1487,15 @@ export class NotificationDeliveryService {
       endTimeIso: payload.endTimeIso,
     };
 
-    const jobs: InsertNotificationDeliveryJob[] = [];
-
-    await this.createInboxNotification({
-      userId: recipient.ownerUserId,
+    const jobs = await this.enqueueOwnerReservationFanout({
+      recipients,
       eventType: "reservation.ping_owner",
       payload: basePayload,
       idempotencyKeyBase,
-      ctx,
-    });
-
-    const webPushJobs = await this.enqueueWebPushForUser({
-      userId: recipient.ownerUserId,
-      eventType: "reservation.ping_owner",
-      reservationId: payload.reservationId,
       organizationId: payload.organizationId,
-      payload: basePayload,
-      idempotencyKeyBase,
-      ctx,
-    });
-    jobs.push(...webPushJobs);
-
-    const mobilePushJobs = await this.enqueueMobilePushForUser({
-      userId: recipient.ownerUserId,
-      eventType: "reservation.ping_owner",
       reservationId: payload.reservationId,
-      organizationId: payload.organizationId,
-      payload: basePayload,
-      idempotencyKeyBase,
       ctx,
     });
-    jobs.push(...mobilePushJobs);
 
     if (jobs.length) {
       await this.createJobsAndTriggerDispatch(jobs, ctx);
@@ -1556,40 +1537,34 @@ export class NotificationDeliveryService {
       reason: payload.reason ?? null,
     };
     const idempotencyKeyBase = `reservation.cancelled:${payload.reservationId}:org:${owner.organizationId}`;
-
-    const jobs: InsertNotificationDeliveryJob[] = [];
-
-    await this.createInboxNotification({
-      userId: owner.ownerUserId,
-      eventType: "reservation.cancelled",
-      payload: basePayload,
-      idempotencyKeyBase,
-      ctx,
-    });
-
-    const webPushJobs = await this.enqueueWebPushForUser({
-      userId: owner.ownerUserId,
-      eventType: "reservation.cancelled",
-      reservationId: payload.reservationId,
+    const recipients = await this.listOwnerReservationRecipients({
       organizationId: owner.organizationId,
-      payload: basePayload,
-      idempotencyKeyBase,
       ctx,
     });
-    jobs.push(...webPushJobs);
 
-    const mobilePushJobs = await this.enqueueMobilePushForUser({
-      userId: owner.ownerUserId,
+    if (recipients.length === 0) {
+      this.logNoOptedInOwnerRecipients({
+        eventType: "reservation.cancelled",
+        reservationId: payload.reservationId,
+        organizationId: owner.organizationId,
+      });
+      return { jobCount: 0 };
+    }
+
+    const jobs = await this.enqueueOwnerReservationFanout({
+      recipients,
       eventType: "reservation.cancelled",
-      reservationId: payload.reservationId,
-      organizationId: owner.organizationId,
       payload: basePayload,
       idempotencyKeyBase,
+      organizationId: owner.organizationId,
+      reservationId: payload.reservationId,
       ctx,
     });
-    jobs.push(...mobilePushJobs);
 
-    await this.createJobsAndTriggerDispatch(jobs, ctx);
+    if (jobs.length > 0) {
+      await this.createJobsAndTriggerDispatch(jobs, ctx);
+    }
+
     return { jobCount: jobs.length };
   }
 
@@ -1597,12 +1572,16 @@ export class NotificationDeliveryService {
     payload: OwnerReservationGroupCancelledPayload,
     ctx?: RequestContext,
   ): Promise<{ jobCount: number }> {
-    const owner =
-      await this.recipientRepository.findOwnerRecipientByOrganizationId(
-        payload.organizationId,
-        ctx,
-      );
-    if (!owner) {
+    const recipients = await this.listOwnerReservationRecipients({
+      organizationId: payload.organizationId,
+      ctx,
+    });
+    if (recipients.length === 0) {
+      this.logNoOptedInOwnerRecipients({
+        eventType: "reservation_group.cancelled",
+        reservationGroupId: payload.reservationGroupId,
+        organizationId: payload.organizationId,
+      });
       return { jobCount: 0 };
     }
 
@@ -1619,41 +1598,22 @@ export class NotificationDeliveryService {
       items: payload.items,
       reason: payload.reason ?? null,
     };
-    const idempotencyKeyBase = `reservation_group.cancelled:${payload.reservationGroupId}:org:${owner.organizationId}`;
+    const idempotencyKeyBase = `reservation_group.cancelled:${payload.reservationGroupId}:org:${payload.organizationId}`;
 
-    const jobs: InsertNotificationDeliveryJob[] = [];
-
-    await this.createInboxNotification({
-      userId: owner.ownerUserId,
+    const jobs = await this.enqueueOwnerReservationFanout({
+      recipients,
       eventType: "reservation_group.cancelled",
       payload: basePayload,
       idempotencyKeyBase,
-      ctx,
-    });
-
-    const webPushJobs = await this.enqueueWebPushForUser({
-      userId: owner.ownerUserId,
-      eventType: "reservation_group.cancelled",
+      organizationId: payload.organizationId,
       reservationId: payload.representativeReservationId,
-      organizationId: owner.organizationId,
-      payload: basePayload,
-      idempotencyKeyBase,
       ctx,
     });
-    jobs.push(...webPushJobs);
 
-    const mobilePushJobs = await this.enqueueMobilePushForUser({
-      userId: owner.ownerUserId,
-      eventType: "reservation_group.cancelled",
-      reservationId: payload.representativeReservationId,
-      organizationId: owner.organizationId,
-      payload: basePayload,
-      idempotencyKeyBase,
-      ctx,
-    });
-    jobs.push(...mobilePushJobs);
+    if (jobs.length > 0) {
+      await this.createJobsAndTriggerDispatch(jobs, ctx);
+    }
 
-    await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };
   }
 }

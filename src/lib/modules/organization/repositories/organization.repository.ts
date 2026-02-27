@@ -1,8 +1,9 @@
-import { and, eq, ne } from "drizzle-orm";
+import { and, eq, isNotNull, ne, or } from "drizzle-orm";
 import {
   type InsertOrganization,
   type OrganizationRecord,
   organization,
+  organizationMember,
 } from "@/lib/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";
 import type { RequestContext } from "@/lib/shared/kernel/context";
@@ -19,6 +20,10 @@ export interface IOrganizationRepository {
   ): Promise<OrganizationRecord | null>;
   findByOwnerId(
     ownerId: string,
+    ctx?: RequestContext,
+  ): Promise<OrganizationRecord[]>;
+  findByUserAccess(
+    userId: string,
     ctx?: RequestContext,
   ): Promise<OrganizationRecord[]>;
   create(
@@ -83,6 +88,32 @@ export class OrganizationRepository implements IOrganizationRepository {
       .where(eq(organization.ownerUserId, ownerId));
 
     return result;
+  }
+
+  async findByUserAccess(
+    userId: string,
+    ctx?: RequestContext,
+  ): Promise<OrganizationRecord[]> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .selectDistinct({ organization })
+      .from(organization)
+      .leftJoin(
+        organizationMember,
+        and(
+          eq(organizationMember.organizationId, organization.id),
+          eq(organizationMember.userId, userId),
+          eq(organizationMember.status, "ACTIVE"),
+        ),
+      )
+      .where(
+        or(
+          eq(organization.ownerUserId, userId),
+          isNotNull(organizationMember.userId),
+        ),
+      );
+
+    return result.map((row) => row.organization);
   }
 
   async create(

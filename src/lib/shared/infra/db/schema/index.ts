@@ -36,6 +36,7 @@ export * from "./open-play";
 export * from "./open-play-chat";
 // Core tables
 export * from "./organization";
+export * from "./organization-member";
 export * from "./organization-payment";
 // Place-related tables
 export * from "./place";

@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { NotOrganizationOwnerError } from "@/lib/modules/organization/errors/organization.errors";
 import {
   InvalidReservationStatusError,
   ReservationExpiredError,
@@ -27,6 +28,8 @@ type GroupReservationStub = {
 function makeOwnerService(overrides?: {
   groupExists?: boolean;
   groupReservations?: GroupReservationStub[];
+  organizationMemberPermission?: boolean;
+  reservationDetails?: unknown[];
 }) {
   const groupExists = overrides?.groupExists ?? true;
   const futureExpiry = new Date(Date.now() + 60 * 60 * 1000);
@@ -111,6 +114,10 @@ function makeOwnerService(overrides?: {
           updatedAt: now,
         });
       }),
+    findWithDetailsByOrganization: vi
+      .fn()
+      .mockResolvedValue(overrides?.reservationDetails ?? []),
+    countByOrganizationAndStatuses: vi.fn().mockResolvedValue(0),
   };
 
   const reservationEventRepository = {
@@ -133,6 +140,19 @@ function makeOwnerService(overrides?: {
     enqueuePlayerReservationRejected: vi.fn().mockResolvedValue(undefined),
     enqueuePlayerReservationGroupRejected: vi.fn().mockResolvedValue(undefined),
   };
+
+  const expireStaleReservationsUseCase = {
+    executeForOrganization: vi.fn().mockResolvedValue(undefined),
+  };
+
+  const organizationMemberService =
+    overrides?.organizationMemberPermission === undefined
+      ? undefined
+      : {
+          hasOrganizationPermission: vi
+            .fn()
+            .mockResolvedValue(overrides.organizationMemberPermission),
+        };
 
   const service = new ReservationOwnerService(
     reservationRepository as never,
@@ -175,10 +195,17 @@ function makeOwnerService(overrides?: {
         .fn()
         .mockImplementation(async (fn: (tx: object) => unknown) => fn({})),
     } as never,
-    {
-      executeForOrganization: vi.fn().mockResolvedValue(undefined),
-    } as never,
+    expireStaleReservationsUseCase as never,
     notificationDeliveryService as never,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    organizationMemberService as never,
   );
 
   return {
@@ -186,6 +213,8 @@ function makeOwnerService(overrides?: {
     reservationRepository,
     reservationEventRepository,
     notificationDeliveryService,
+    expireStaleReservationsUseCase,
+    organizationMemberService,
   };
 }
 
@@ -463,5 +492,60 @@ describe("ReservationOwnerService group actions", () => {
         reservationGroupId: "group-1",
       }),
     ).rejects.toBeInstanceOf(ReservationGroupNotFoundError);
+  });
+});
+
+describe("ReservationOwnerService member permission checks", () => {
+  it("getForOrganization allows member with reservation.read permission", async () => {
+    const {
+      service,
+      reservationRepository,
+      expireStaleReservationsUseCase,
+      organizationMemberService,
+    } = makeOwnerService({
+      organizationMemberPermission: true,
+    });
+
+    const result = await service.getForOrganization("manager-user-1", {
+      organizationId: "org-1",
+      limit: 20,
+      offset: 0,
+    });
+
+    expect(result).toEqual([]);
+    expect(organizationMemberService).toBeDefined();
+    if (!organizationMemberService) {
+      throw new Error("Expected organizationMemberService");
+    }
+    expect(
+      vi.mocked(organizationMemberService.hasOrganizationPermission),
+    ).toHaveBeenCalledWith("manager-user-1", "org-1", "reservation.read");
+    expect(
+      vi.mocked(expireStaleReservationsUseCase.executeForOrganization),
+    ).toHaveBeenCalledWith("org-1");
+    expect(
+      vi.mocked(reservationRepository.findWithDetailsByOrganization),
+    ).toHaveBeenCalledWith("org-1", {
+      reservationId: undefined,
+      placeId: undefined,
+      courtId: undefined,
+      status: undefined,
+      limit: 20,
+      offset: 0,
+    });
+  });
+
+  it("getForOrganization denies member without reservation.read permission", async () => {
+    const { service } = makeOwnerService({
+      organizationMemberPermission: false,
+    });
+
+    await expect(
+      service.getForOrganization("viewer-user-1", {
+        organizationId: "org-1",
+        limit: 20,
+        offset: 0,
+      }),
+    ).rejects.toBeInstanceOf(NotOrganizationOwnerError);
   });
 });

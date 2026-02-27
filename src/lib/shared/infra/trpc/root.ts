@@ -25,6 +25,7 @@ import { notificationDeliveryAdminRouter } from "@/lib/modules/notification-deli
 import { openPlayRouter } from "@/lib/modules/open-play/open-play.router";
 import { organizationAdminRouter } from "@/lib/modules/organization/admin/organization-admin.router";
 import { organizationRouter } from "@/lib/modules/organization/organization.router";
+import { organizationMemberRouter } from "@/lib/modules/organization-member/organization-member.router";
 import { organizationPaymentRouter } from "@/lib/modules/organization-payment/organization-payment.router";
 import { ownerSetupRouter } from "@/lib/modules/owner-setup/owner-setup.router";
 import { paymentProofRouter } from "@/lib/modules/payment-proof/payment-proof.router";
@@ -62,6 +63,7 @@ export const appRouter = router({
   sport: sportRouter,
   profile: profileRouter,
   organization: organizationRouter,
+  organizationMember: organizationMemberRouter,
   organizationPayment: organizationPaymentRouter,
   ownerSetup: ownerSetupRouter,
   paymentProof: paymentProofRouter,

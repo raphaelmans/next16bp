@@ -1,5 +1,6 @@
 import { makeCourtRepository } from "@/lib/modules/court/factories/court.factory";
 import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
+import { makeOrganizationMemberService } from "@/lib/modules/organization-member/factories/organization-member.factory";
 import { makePlaceRepository } from "@/lib/modules/place/factories/place.factory";
 import { makeProfileRepository } from "@/lib/modules/profile/factories/profile.factory";
 import { makeReservationRepository } from "@/lib/modules/reservation/factories/reservation.factory";
@@ -52,6 +53,7 @@ export function makeReservationChatService(): ReservationChatService {
       makeReservationChatThreadRepository(),
       makeReservationChatTranscriptRepository(),
       makeChatProvider(),
+      makeOrganizationMemberService(),
     );
   }
 

@@ -1,8 +1,15 @@
 "use client";
 
-import { ArrowRight, CalendarCheck, CalendarDays, MapPin } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  CalendarCheck,
+  CalendarDays,
+  MapPin,
+} from "lucide-react";
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
+import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
 import { AppShell } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,12 +26,14 @@ import {
   StatsCard,
   TodaysBookings,
 } from "@/features/owner";
+import { shouldShowOwnerNotificationRoutingWarning } from "@/features/owner/domain";
 import { isOwnerSetupIncomplete } from "@/features/owner/helpers";
 import {
   useQueryDashboardData,
   useQueryOwnerOrganization,
   useQueryOwnerSetupStatus,
   useQueryOwnerStats,
+  useQueryReservationNotificationRoutingStatus,
 } from "@/features/owner/hooks";
 
 const OWNER_SETUP_NEXT_STEP_LABELS = {
@@ -49,6 +58,9 @@ export default function OwnerDashboardPage() {
   );
   const { data: dashboardData, isLoading: dashboardLoading } =
     useQueryDashboardData(organization?.id ?? null);
+  const routingStatusQuery = useQueryReservationNotificationRoutingStatus(
+    organization?.id ?? undefined,
+  );
   const { data: setupStatus, isLoading: setupLoading } =
     useQueryOwnerSetupStatus();
   const logoutMutation = useMutAuthLogout();
@@ -68,6 +80,13 @@ export default function OwnerDashboardPage() {
       ? "Verification under review"
       : OWNER_SETUP_NEXT_STEP_LABELS[setupStatus.nextStep]
     : null;
+
+  const showNotificationRoutingWarning =
+    shouldShowOwnerNotificationRoutingWarning({
+      organizationId: organization?.id,
+      isRoutingStatusLoading: routingStatusQuery.isLoading,
+      enabledRecipientCount: routingStatusQuery.data?.enabledRecipientCount,
+    });
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -176,6 +195,30 @@ export default function OwnerDashboardPage() {
         )}
 
         <OwnerPaymentMethodReminder />
+
+        {showNotificationRoutingWarning && (
+          <Card className="border-warning/30 bg-warning/10">
+            <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1">
+                <p className="flex items-center gap-2 font-heading font-semibold text-warning">
+                  <AlertTriangle className="h-4 w-4" />
+                  Reservation notifications are muted
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  No venue members have enabled reservation notification
+                  routing.
+                </p>
+              </div>
+              <Button asChild variant="outline">
+                <Link
+                  href={`${appRoutes.owner.settings}${SETTINGS_SECTION_HASHES.reservationNotificationRouting}`}
+                >
+                  Configure recipients
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Pending actions alert */}
         <PendingActions pendingCount={stats?.pendingReservations ?? 0} />

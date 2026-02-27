@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
   const [preference, organizations] = await Promise.all([
     userPreferenceService.findByUserId(session.userId),
-    organizationRepository.findByOwnerId(session.userId),
+    organizationRepository.findByUserAccess(session.userId),
   ]);
 
   const hasOrganization = organizations.length > 0;

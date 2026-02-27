@@ -81,6 +81,154 @@ export function useMutSetDefaultOrganizationPaymentMethod(
   });
 }
 
+export function useQueryOrganizationMembers(organizationId?: string) {
+  return useFeatureQuery(
+    ["organizationMember", "list"],
+    ownerApi.queryOrganizationMemberList,
+    { organizationId: organizationId ?? "" },
+    { enabled: !!organizationId },
+  );
+}
+
+export function useQueryOrganizationInvitations(organizationId?: string) {
+  return useFeatureQuery(
+    ["organizationMember", "listInvitations"],
+    ownerApi.queryOrganizationMemberListInvitations,
+    { organizationId: organizationId ?? "", includeHistory: false },
+    { enabled: !!organizationId },
+  );
+}
+
+export function useQueryMyOrganizationPermissions(organizationId?: string) {
+  return useFeatureQuery(
+    ["organizationMember", "getMyPermissions"],
+    ownerApi.queryOrganizationMemberGetMyPermissions,
+    { organizationId: organizationId ?? "" },
+    { enabled: !!organizationId },
+  );
+}
+
+export function useQueryMyReservationNotificationPreference(
+  organizationId?: string,
+) {
+  return useFeatureQuery(
+    ["organizationMember", "getMyReservationNotificationPreference"],
+    ownerApi.queryOrganizationMemberGetMyReservationNotificationPreference,
+    { organizationId: organizationId ?? "" },
+    { enabled: !!organizationId },
+  );
+}
+
+export function useQueryReservationNotificationRoutingStatus(
+  organizationId?: string,
+) {
+  return useFeatureQuery(
+    ["organizationMember", "getReservationNotificationRoutingStatus"],
+    ownerApi.queryOrganizationMemberGetReservationNotificationRoutingStatus,
+    { organizationId: organizationId ?? "" },
+    { enabled: !!organizationId },
+  );
+}
+
+export function useMutInviteOrganizationMember(organizationId: string) {
+  const utils = trpc.useUtils();
+  return useFeatureMutation(ownerApi.mutOrganizationMemberInvite, {
+    onSuccess: async () => {
+      await Promise.all([
+        utils.organizationMember.listInvitations.invalidate({
+          organizationId,
+        }),
+        utils.organizationMember.list.invalidate({ organizationId }),
+      ]);
+    },
+  });
+}
+
+export function useMutUpdateOrganizationMemberPermissions(
+  organizationId: string,
+) {
+  const utils = trpc.useUtils();
+  return useFeatureMutation(ownerApi.mutOrganizationMemberUpdatePermissions, {
+    onSuccess: async () => {
+      await Promise.all([
+        utils.organizationMember.list.invalidate({ organizationId }),
+        utils.organizationMember.getMyPermissions.invalidate({
+          organizationId,
+        }),
+      ]);
+    },
+  });
+}
+
+export function useMutRevokeOrganizationMember(organizationId: string) {
+  const utils = trpc.useUtils();
+  return useFeatureMutation(ownerApi.mutOrganizationMemberRevokeMember, {
+    onSuccess: async () => {
+      await Promise.all([
+        utils.organizationMember.list.invalidate({ organizationId }),
+        utils.organization.my.invalidate(),
+      ]);
+    },
+  });
+}
+
+export function useMutCancelOrganizationInvitation(organizationId: string) {
+  const utils = trpc.useUtils();
+  return useFeatureMutation(ownerApi.mutOrganizationMemberCancelInvitation, {
+    onSuccess: async () => {
+      await utils.organizationMember.listInvitations.invalidate({
+        organizationId,
+      });
+    },
+  });
+}
+
+export function useMutAcceptOrganizationInvitation() {
+  const utils = trpc.useUtils();
+  return useFeatureMutation(ownerApi.mutOrganizationMemberAcceptInvitation, {
+    onSuccess: async () => {
+      await Promise.all([
+        utils.organization.my.invalidate(),
+        utils.organizationMember.getMyPermissions.invalidate(),
+      ]);
+    },
+  });
+}
+
+export function useMutDeclineOrganizationInvitation() {
+  const utils = trpc.useUtils();
+  return useFeatureMutation(ownerApi.mutOrganizationMemberDeclineInvitation, {
+    onSuccess: async () => {
+      await utils.organization.my.invalidate();
+    },
+  });
+}
+
+export function useMutSetMyReservationNotificationPreference(
+  organizationId: string,
+) {
+  const utils = trpc.useUtils();
+  return useFeatureMutation(
+    ownerApi.mutOrganizationMemberSetMyReservationNotificationPreference,
+    {
+      onSuccess: async () => {
+        await Promise.all([
+          utils.organizationMember.getMyReservationNotificationPreference.invalidate(
+            {
+              organizationId,
+            },
+          ),
+          utils.organizationMember.getReservationNotificationRoutingStatus.invalidate(
+            {
+              organizationId,
+            },
+          ),
+        ]);
+      },
+    },
+  );
+}
+
 // ============================================================================
 // From use-organization.ts
 // ============================================================================

@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import {
   claimRequest,
   court,
@@ -32,6 +32,13 @@ export type PlayerRecipient = {
   phoneNumber: string | null;
 };
 
+export type OrganizationRecipient = {
+  organizationId: string;
+  userId: string;
+  email: string | null;
+  phoneNumber: string | null;
+};
+
 export interface INotificationRecipientRepository {
   findAdminRecipients(ctx?: RequestContext): Promise<AdminRecipient[]>;
   findOwnerRecipientByOrganizationId(
@@ -54,6 +61,11 @@ export interface INotificationRecipientRepository {
     claimRequestId: string,
     ctx?: RequestContext,
   ): Promise<OwnerRecipient | null>;
+  listOrganizationRecipientsByUserIds(
+    organizationId: string,
+    userIds: string[],
+    ctx?: RequestContext,
+  ): Promise<OrganizationRecipient[]>;
 }
 
 export class NotificationRecipientRepository
@@ -252,5 +264,40 @@ export class NotificationRecipientRepository
       email: row.orgContactEmail ?? row.ownerEmail ?? null,
       phoneNumber: row.orgContactPhone ?? row.ownerPhone ?? null,
     };
+  }
+
+  async listOrganizationRecipientsByUserIds(
+    organizationId: string,
+    userIds: string[],
+    ctx?: RequestContext,
+  ): Promise<OrganizationRecipient[]> {
+    if (userIds.length === 0) return [];
+
+    const client = this.getClient(ctx);
+    const rows = await client
+      .select({
+        userId: profile.userId,
+        email: profile.email,
+        phoneNumber: profile.phoneNumber,
+      })
+      .from(profile)
+      .where(inArray(profile.userId, userIds));
+
+    const profileByUserId = new Map(
+      rows.map((row) => [
+        row.userId,
+        { email: row.email ?? null, phoneNumber: row.phoneNumber ?? null },
+      ]),
+    );
+
+    return userIds.map((userId) => {
+      const contact = profileByUserId.get(userId);
+      return {
+        organizationId,
+        userId,
+        email: contact?.email ?? null,
+        phoneNumber: contact?.phoneNumber ?? null,
+      };
+    });
   }
 }

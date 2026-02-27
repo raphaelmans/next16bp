@@ -21,6 +21,8 @@ import type { IGuestProfileRepository } from "@/lib/modules/guest-profile/reposi
 import type { NotificationDeliveryService } from "@/lib/modules/notification-delivery/services/notification-delivery.service";
 import { NotOrganizationOwnerError } from "@/lib/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
+import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
+import type { OrganizationMemberPermission } from "@/lib/modules/organization-member/shared/permissions";
 import type { IOrganizationPaymentMethodRepository } from "@/lib/modules/organization-payment/repositories/organization-payment-method.repository";
 import type { IOrganizationReservationPolicyRepository } from "@/lib/modules/organization-payment/repositories/organization-reservation-policy.repository";
 import type { IPaymentProofRepository } from "@/lib/modules/payment-proof/repositories/payment-proof.repository";
@@ -144,6 +146,10 @@ export class ReservationOwnerService implements IReservationOwnerService {
     private courtBlockRepository?: ICourtBlockRepository,
     private organizationPaymentMethodRepository?: IOrganizationPaymentMethodRepository,
     private storageService?: IObjectStorageService,
+    private organizationMemberService?: Pick<
+      IOrganizationMemberService,
+      "hasOrganizationPermission"
+    >,
   ) {}
 
   private async attachSignedPaymentProofUrl(
@@ -200,12 +206,13 @@ export class ReservationOwnerService implements IReservationOwnerService {
   }
 
   /**
-   * Verify that the user owns the place for a court.
+   * Verify that the user has required organization permission for a court.
    * Returns the organization ID.
    */
   private async verifyCourtOwnership(
     userId: string,
     courtId: string,
+    permission: OrganizationMemberPermission,
     ctx?: RequestContext,
   ): Promise<string> {
     const court = await this.courtRepository.findById(courtId, ctx);
@@ -223,11 +230,23 @@ export class ReservationOwnerService implements IReservationOwnerService {
       throw new NotCourtOwnerError();
     }
 
-    const org = await this.organizationRepository.findById(
-      place.organizationId,
-      ctx,
-    );
-    if (!org || org.ownerUserId !== userId) {
+    const hasPermission = this.organizationMemberService
+      ? await this.organizationMemberService.hasOrganizationPermission(
+          userId,
+          place.organizationId,
+          permission,
+          ctx,
+        )
+      : Boolean(
+          (
+            await this.organizationRepository.findById(
+              place.organizationId,
+              ctx,
+            )
+          )?.ownerUserId === userId,
+        );
+
+    if (!hasPermission) {
       throw new NotCourtOwnerError();
     }
 
@@ -347,7 +366,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
         throw new CourtNotFoundError(courtId);
       }
       courtById.set(court.id, court);
-      await this.verifyCourtOwnership(userId, court.id, ctx);
+      await this.verifyCourtOwnership(
+        userId,
+        court.id,
+        "reservation.update_status",
+        ctx,
+      );
     }
 
     const placeIds = Array.from(
@@ -396,7 +420,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
         throw new ReservationNotFoundError(reservationId);
       }
 
-      await this.verifyCourtOwnership(userId, reservation.courtId, ctx);
+      await this.verifyCourtOwnership(
+        userId,
+        reservation.courtId,
+        "reservation.update_status",
+        ctx,
+      );
 
       const court = await this.courtRepository.findById(
         reservation.courtId,
@@ -742,7 +771,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
         throw new ReservationNotFoundError(data.reservationId);
       }
 
-      await this.verifyCourtOwnership(userId, reservation.courtId, ctx);
+      await this.verifyCourtOwnership(
+        userId,
+        reservation.courtId,
+        "reservation.update_status",
+        ctx,
+      );
 
       const court = await this.courtRepository.findById(
         reservation.courtId,
@@ -965,6 +999,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
       const organizationId = await this.verifyCourtOwnership(
         userId,
         reservation.courtId,
+        "reservation.update_status",
         ctx,
       );
 
@@ -1108,7 +1143,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
         throw new ReservationNotFoundError(data.reservationId);
       }
 
-      await this.verifyCourtOwnership(userId, reservation.courtId, ctx);
+      await this.verifyCourtOwnership(
+        userId,
+        reservation.courtId,
+        "reservation.update_status",
+        ctx,
+      );
 
       const court = await this.courtRepository.findById(
         reservation.courtId,
@@ -1322,17 +1362,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
         throw new PlaceNotFoundError(placeId);
       }
 
-      if (!place.organizationId) {
-        throw new NotCourtOwnerError();
-      }
-
-      const org = await this.organizationRepository.findById(
-        place.organizationId,
+      await this.verifyCourtOwnership(
+        userId,
+        data.courtId,
+        "reservation.guest_booking",
         ctx,
       );
-      if (!org || org.ownerUserId !== userId) {
-        throw new NotCourtOwnerError();
-      }
 
       // Verify guest profile exists and belongs to same org
       if (!this.guestProfileRepository) {
@@ -1523,6 +1558,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
       const organizationId = await this.verifyCourtOwnership(
         userId,
         block.courtId,
+        "reservation.guest_booking",
         ctx,
       );
 
@@ -1659,7 +1695,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     userId: string,
     data: GetActiveForCourtRangeDTO,
   ): Promise<ReservationRecord[]> {
-    await this.verifyCourtOwnership(userId, data.courtId);
+    await this.verifyCourtOwnership(userId, data.courtId, "reservation.read");
 
     return this.reservationRepository.findOverlappingActiveByCourtIds(
       [data.courtId],
@@ -1672,7 +1708,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     userId: string,
     courtId: string,
   ): Promise<ReservationRecord[]> {
-    await this.verifyCourtOwnership(userId, courtId);
+    await this.verifyCourtOwnership(userId, courtId, "reservation.read");
 
     const created = await this.reservationRepository.findByCourtIdAndStatus(
       courtId,
@@ -1698,10 +1734,17 @@ export class ReservationOwnerService implements IReservationOwnerService {
     userId: string,
     filters: GetOrgReservationsDTO,
   ): Promise<ReservationWithDetails[]> {
-    const org = await this.organizationRepository.findById(
-      filters.organizationId,
-    );
-    if (!org || org.ownerUserId !== userId) {
+    const hasPermission = this.organizationMemberService
+      ? await this.organizationMemberService.hasOrganizationPermission(
+          userId,
+          filters.organizationId,
+          "reservation.read",
+        )
+      : Boolean(
+          (await this.organizationRepository.findById(filters.organizationId))
+            ?.ownerUserId === userId,
+        );
+    if (!hasPermission) {
       throw new NotOrganizationOwnerError();
     }
 
@@ -1751,6 +1794,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     const organizationId = await this.verifyCourtOwnership(
       userId,
       reservations[0].courtId,
+      "reservation.read",
     );
 
     const details = await Promise.all(
@@ -1784,8 +1828,17 @@ export class ReservationOwnerService implements IReservationOwnerService {
     userId: string,
     organizationId: string,
   ): Promise<number> {
-    const org = await this.organizationRepository.findById(organizationId);
-    if (!org || org.ownerUserId !== userId) {
+    const hasPermission = this.organizationMemberService
+      ? await this.organizationMemberService.hasOrganizationPermission(
+          userId,
+          organizationId,
+          "reservation.read",
+        )
+      : Boolean(
+          (await this.organizationRepository.findById(organizationId))
+            ?.ownerUserId === userId,
+        );
+    if (!hasPermission) {
       throw new NotOrganizationOwnerError();
     }
 

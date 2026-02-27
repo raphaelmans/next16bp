@@ -1,4 +1,5 @@
 import { makeMobilePushTokenRepository } from "@/lib/modules/mobile-push-token/factories/mobile-push-token.factory";
+import { makeOrganizationMemberService } from "@/lib/modules/organization-member/factories/organization-member.factory";
 import { makePushSubscriptionRepository } from "@/lib/modules/push-subscription/factories/push-subscription.factory";
 import { makeUserNotificationRepository } from "@/lib/modules/user-notification/factories/user-notification.factory";
 import { getContainer } from "@/lib/shared/infra/container";
@@ -48,6 +49,7 @@ export function makeNotificationDeliveryService() {
       makeMobilePushTokenRepository(),
       makeUserNotificationRepository(),
       makeNotificationDispatchTriggerQueue(),
+      makeOrganizationMemberService(),
     );
   }
   return notificationDeliveryService;

@@ -10,6 +10,7 @@ import {
   makeOrganizationProfileRepository,
   makeOrganizationRepository,
 } from "@/lib/modules/organization/factories/organization.factory";
+import { makeOrganizationMemberService } from "@/lib/modules/organization-member/factories/organization-member.factory";
 import {
   makeOrganizationPaymentMethodRepository,
   makeOrganizationReservationPolicyRepository,
@@ -112,6 +113,7 @@ export function makeReservationOwnerService(): ReservationOwnerService {
       makeCourtBlockRepository(),
       makeOrganizationPaymentMethodRepository(),
       makeObjectStorageService(),
+      makeOrganizationMemberService(),
     );
   }
   return reservationOwnerService;

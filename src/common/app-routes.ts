@@ -120,6 +120,9 @@ export const appRoutes = {
     base: "/account",
     options: { type: "protected" as const },
     profile: "/account/profile",
+    invitations: {
+      accept: "/account/invitations/accept",
+    },
   },
   owner: {
     base: "/owner",

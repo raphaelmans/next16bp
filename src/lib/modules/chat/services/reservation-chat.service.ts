@@ -1,9 +1,10 @@
 import { createHash } from "node:crypto";
-import { and, eq, inArray, or } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
 import { NotOrganizationOwnerError } from "@/lib/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
+import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import { ProfileNotFoundError } from "@/lib/modules/profile/errors/profile.errors";
@@ -89,7 +90,30 @@ export class ReservationChatService {
     private reservationChatThreadRepository: IReservationChatThreadRepository,
     private reservationChatTranscriptRepository: IReservationChatTranscriptRepository,
     private chatProvider: IChatProvider,
+    private organizationMemberService?: Pick<
+      IOrganizationMemberService,
+      "hasOrganizationPermission" | "listOrganizationUserIdsWithPermission"
+    >,
   ) {}
+
+  private async getOwnerParticipantUserIds(
+    organizationId: string,
+    ownerUserId: string,
+    ctx?: RequestContext,
+  ): Promise<string[]> {
+    if (!this.organizationMemberService) {
+      return [ownerUserId];
+    }
+
+    const ids =
+      await this.organizationMemberService.listOrganizationUserIdsWithPermission(
+        organizationId,
+        "reservation.chat",
+        ctx,
+      );
+
+    return Array.from(new Set([ownerUserId, ...ids]));
+  }
 
   private async getReservationContext(
     reservationId: string,
@@ -391,10 +415,12 @@ export class ReservationChatService {
     }
 
     const context = await this.getReservationContext(reservationId, ctx);
-    const memberIds = [
-      context.profile.userId,
+    const ownerParticipantIds = await this.getOwnerParticipantUserIds(
+      context.organization.id,
       context.organization.ownerUserId,
-    ];
+      ctx,
+    );
+    const memberIds = [context.profile.userId, ...ownerParticipantIds];
     if (!memberIds.includes(userId)) {
       throw new ReservationChatNotParticipantError(reservationId);
     }
@@ -475,10 +501,12 @@ export class ReservationChatService {
       throw new ReservationChatNotAvailableError("GROUP_CLOSED");
     }
 
-    const memberIds = [
-      context.profile.userId,
+    const ownerParticipantIds = await this.getOwnerParticipantUserIds(
+      context.organization.id,
       context.organization.ownerUserId,
-    ];
+      ctx,
+    );
+    const memberIds = [context.profile.userId, ...ownerParticipantIds];
     if (!memberIds.includes(userId)) {
       throw new ReservationChatNotParticipantError(reservationGroupId);
     }
@@ -561,10 +589,12 @@ export class ReservationChatService {
     }
 
     const context = await this.getReservationContext(reservationId, ctx);
-    const memberIds = [
-      context.profile.userId,
+    const ownerParticipantIds = await this.getOwnerParticipantUserIds(
+      context.organization.id,
       context.organization.ownerUserId,
-    ];
+      ctx,
+    );
+    const memberIds = [context.profile.userId, ...ownerParticipantIds];
     if (!memberIds.includes(userId)) {
       throw new ReservationChatNotParticipantError(reservationId);
     }
@@ -608,10 +638,12 @@ export class ReservationChatService {
       throw new ReservationChatNotAvailableError("GROUP_CLOSED");
     }
 
-    const memberIds = [
-      context.profile.userId,
+    const ownerParticipantIds = await this.getOwnerParticipantUserIds(
+      context.organization.id,
       context.organization.ownerUserId,
-    ];
+      ctx,
+    );
+    const memberIds = [context.profile.userId, ...ownerParticipantIds];
     if (!memberIds.includes(userId)) {
       throw new ReservationChatNotParticipantError(reservationGroupId);
     }
@@ -638,10 +670,12 @@ export class ReservationChatService {
     ctx?: RequestContext,
   ) {
     const context = await this.getReservationContext(reservationId, ctx);
-    const memberIds = [
-      context.profile.userId,
+    const ownerParticipantIds = await this.getOwnerParticipantUserIds(
+      context.organization.id,
       context.organization.ownerUserId,
-    ];
+      ctx,
+    );
+    const memberIds = [context.profile.userId, ...ownerParticipantIds];
 
     const channel = await this.ensureThread(
       reservationId,
@@ -731,6 +765,9 @@ export class ReservationChatService {
     const reservationRows = reservationIds.length
       ? await client
           .select({
+            organizationId: organization.id,
+            ownerUserId: organization.ownerUserId,
+            playerUserId: profile.userId,
             reservationId: reservation.id,
             reservationGroupId: reservation.groupId,
             status: reservation.status,
@@ -748,20 +785,15 @@ export class ReservationChatService {
           .innerJoin(place, eq(court.placeId, place.id))
           .innerJoin(organization, eq(place.organizationId, organization.id))
           .innerJoin(profile, eq(reservation.playerId, profile.id))
-          .where(
-            and(
-              inArray(reservation.id, reservationIds),
-              or(
-                eq(profile.userId, userId),
-                eq(organization.ownerUserId, userId),
-              ),
-            ),
-          )
+          .where(inArray(reservation.id, reservationIds))
       : [];
 
     const reservationGroupRows = reservationGroupIds.length
       ? await client
           .select({
+            organizationId: organization.id,
+            ownerUserId: organization.ownerUserId,
+            playerUserId: profile.userId,
             reservationGroupId: reservationGroup.id,
             reservationId: reservation.id,
             status: reservation.status,
@@ -780,22 +812,79 @@ export class ReservationChatService {
           .innerJoin(place, eq(court.placeId, place.id))
           .innerJoin(organization, eq(place.organizationId, organization.id))
           .innerJoin(profile, eq(reservationGroup.playerId, profile.id))
-          .where(
-            and(
-              inArray(reservationGroup.id, reservationGroupIds),
-              or(
-                eq(profile.userId, userId),
-                eq(organization.ownerUserId, userId),
-              ),
-            ),
-          )
+          .where(inArray(reservationGroup.id, reservationGroupIds))
       : [];
+
+    const organizationPermissionCache = new Map<string, Promise<boolean>>();
+    const canAccessOrganizationChat = async (
+      organizationId: string,
+      ownerUserId: string,
+    ): Promise<boolean> => {
+      if (ownerUserId === userId) {
+        return true;
+      }
+
+      if (!this.organizationMemberService) {
+        return false;
+      }
+
+      const cached = organizationPermissionCache.get(organizationId);
+      if (cached) {
+        return cached;
+      }
+
+      const checkPromise =
+        this.organizationMemberService.hasOrganizationPermission(
+          userId,
+          organizationId,
+          "reservation.chat",
+          ctx,
+        );
+      organizationPermissionCache.set(organizationId, checkPromise);
+      return checkPromise;
+    };
+
+    const authorizedReservationRows = (
+      await Promise.all(
+        reservationRows.map(async (row) => {
+          const isPlayer = row.playerUserId === userId;
+          if (isPlayer) {
+            return row;
+          }
+
+          const canAccess = await canAccessOrganizationChat(
+            row.organizationId,
+            row.ownerUserId,
+          );
+          return canAccess ? row : null;
+        }),
+      )
+    ).filter((row): row is (typeof reservationRows)[number] => row !== null);
+
+    const authorizedReservationGroupRows = (
+      await Promise.all(
+        reservationGroupRows.map(async (row) => {
+          const isPlayer = row.playerUserId === userId;
+          if (isPlayer) {
+            return row;
+          }
+
+          const canAccess = await canAccessOrganizationChat(
+            row.organizationId,
+            row.ownerUserId,
+          );
+          return canAccess ? row : null;
+        }),
+      )
+    ).filter(
+      (row): row is (typeof reservationGroupRows)[number] => row !== null,
+    );
 
     const groupRowsById = new Map<
       string,
-      Array<(typeof reservationGroupRows)[number]>
+      Array<(typeof authorizedReservationGroupRows)[number]>
     >();
-    for (const row of reservationGroupRows) {
+    for (const row of authorizedReservationGroupRows) {
       const existing = groupRowsById.get(row.reservationGroupId) ?? [];
       existing.push(row);
       groupRowsById.set(row.reservationGroupId, existing);
@@ -847,7 +936,7 @@ export class ReservationChatService {
       })
       .filter((item) => item.reservationId !== null);
 
-    const reservationMetas = reservationRows.map((row) => ({
+    const reservationMetas = authorizedReservationRows.map((row) => ({
       threadId: makeReservationChannelId(row.reservationId),
       reservationId: row.reservationId,
       reservationGroupId: row.reservationGroupId,

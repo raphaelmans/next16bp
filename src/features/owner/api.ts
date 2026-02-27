@@ -52,6 +52,27 @@ export interface IOwnerApi {
   mutOrganizationUploadLogo: ProcedureFn<
     TrpcClientApi["organization"]["uploadLogo"]["mutate"]
   >;
+  mutOrganizationMemberInvite: ProcedureFn<
+    TrpcClientApi["organizationMember"]["invite"]["mutate"]
+  >;
+  mutOrganizationMemberUpdatePermissions: ProcedureFn<
+    TrpcClientApi["organizationMember"]["updatePermissions"]["mutate"]
+  >;
+  mutOrganizationMemberRevokeMember: ProcedureFn<
+    TrpcClientApi["organizationMember"]["revokeMember"]["mutate"]
+  >;
+  mutOrganizationMemberCancelInvitation: ProcedureFn<
+    TrpcClientApi["organizationMember"]["cancelInvitation"]["mutate"]
+  >;
+  mutOrganizationMemberAcceptInvitation: ProcedureFn<
+    TrpcClientApi["organizationMember"]["acceptInvitation"]["mutate"]
+  >;
+  mutOrganizationMemberDeclineInvitation: ProcedureFn<
+    TrpcClientApi["organizationMember"]["declineInvitation"]["mutate"]
+  >;
+  mutOrganizationMemberSetMyReservationNotificationPreference: ProcedureFn<
+    TrpcClientApi["organizationMember"]["setMyReservationNotificationPreference"]["mutate"]
+  >;
   mutPlaceManagementCreate: ProcedureFn<
     TrpcClientApi["placeManagement"]["create"]["mutate"]
   >;
@@ -108,6 +129,21 @@ export interface IOwnerApi {
   >;
   queryOrganizationMy: ProcedureFn<
     TrpcClientApi["organization"]["my"]["query"]
+  >;
+  queryOrganizationMemberList: ProcedureFn<
+    TrpcClientApi["organizationMember"]["list"]["query"]
+  >;
+  queryOrganizationMemberListInvitations: ProcedureFn<
+    TrpcClientApi["organizationMember"]["listInvitations"]["query"]
+  >;
+  queryOrganizationMemberGetMyPermissions: ProcedureFn<
+    TrpcClientApi["organizationMember"]["getMyPermissions"]["query"]
+  >;
+  queryOrganizationMemberGetMyReservationNotificationPreference: ProcedureFn<
+    TrpcClientApi["organizationMember"]["getMyReservationNotificationPreference"]["query"]
+  >;
+  queryOrganizationMemberGetReservationNotificationRoutingStatus: ProcedureFn<
+    TrpcClientApi["organizationMember"]["getReservationNotificationRoutingStatus"]["query"]
   >;
   queryOrganizationPaymentListMethods: ProcedureFn<
     TrpcClientApi["organizationPayment"]["listMethods"]["query"]
@@ -395,6 +431,85 @@ export class OwnerApi {
       this.toAppError,
     );
 
+  mutOrganizationMemberInvite: ProcedureFn<
+    TrpcClientApi["organizationMember"]["invite"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["organizationMember", "invite"],
+      (clientApi) => clientApi.organizationMember.invite.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutOrganizationMemberUpdatePermissions: ProcedureFn<
+    TrpcClientApi["organizationMember"]["updatePermissions"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["organizationMember", "updatePermissions"],
+      (clientApi) => clientApi.organizationMember.updatePermissions.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutOrganizationMemberRevokeMember: ProcedureFn<
+    TrpcClientApi["organizationMember"]["revokeMember"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["organizationMember", "revokeMember"],
+      (clientApi) => clientApi.organizationMember.revokeMember.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutOrganizationMemberCancelInvitation: ProcedureFn<
+    TrpcClientApi["organizationMember"]["cancelInvitation"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["organizationMember", "cancelInvitation"],
+      (clientApi) => clientApi.organizationMember.cancelInvitation.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutOrganizationMemberAcceptInvitation: ProcedureFn<
+    TrpcClientApi["organizationMember"]["acceptInvitation"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["organizationMember", "acceptInvitation"],
+      (clientApi) => clientApi.organizationMember.acceptInvitation.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutOrganizationMemberDeclineInvitation: ProcedureFn<
+    TrpcClientApi["organizationMember"]["declineInvitation"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["organizationMember", "declineInvitation"],
+      (clientApi) => clientApi.organizationMember.declineInvitation.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutOrganizationMemberSetMyReservationNotificationPreference: ProcedureFn<
+    TrpcClientApi["organizationMember"]["setMyReservationNotificationPreference"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["organizationMember", "setMyReservationNotificationPreference"],
+      (clientApi) =>
+        clientApi.organizationMember.setMyReservationNotificationPreference
+          .mutate,
+      input,
+      this.toAppError,
+    );
+
   mutPlaceManagementCreate: ProcedureFn<
     TrpcClientApi["placeManagement"]["create"]["mutate"]
   > = async (input) =>
@@ -619,6 +734,65 @@ export class OwnerApi {
       this.clientApi,
       ["organization", "my"],
       (clientApi) => clientApi.organization.my.query,
+      input,
+      this.toAppError,
+    );
+
+  queryOrganizationMemberList: ProcedureFn<
+    TrpcClientApi["organizationMember"]["list"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["organizationMember", "list"],
+      (clientApi) => clientApi.organizationMember.list.query,
+      input,
+      this.toAppError,
+    );
+
+  queryOrganizationMemberListInvitations: ProcedureFn<
+    TrpcClientApi["organizationMember"]["listInvitations"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["organizationMember", "listInvitations"],
+      (clientApi) => clientApi.organizationMember.listInvitations.query,
+      input,
+      this.toAppError,
+    );
+
+  queryOrganizationMemberGetMyPermissions: ProcedureFn<
+    TrpcClientApi["organizationMember"]["getMyPermissions"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["organizationMember", "getMyPermissions"],
+      (clientApi) => clientApi.organizationMember.getMyPermissions.query,
+      input,
+      this.toAppError,
+    );
+
+  queryOrganizationMemberGetMyReservationNotificationPreference: ProcedureFn<
+    TrpcClientApi["organizationMember"]["getMyReservationNotificationPreference"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["organizationMember", "getMyReservationNotificationPreference"],
+      (clientApi) =>
+        clientApi.organizationMember.getMyReservationNotificationPreference
+          .query,
+      input,
+      this.toAppError,
+    );
+
+  queryOrganizationMemberGetReservationNotificationRoutingStatus: ProcedureFn<
+    TrpcClientApi["organizationMember"]["getReservationNotificationRoutingStatus"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["organizationMember", "getReservationNotificationRoutingStatus"],
+      (clientApi) =>
+        clientApi.organizationMember.getReservationNotificationRoutingStatus
+          .query,
       input,
       this.toAppError,
     );

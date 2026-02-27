@@ -378,7 +378,7 @@ export class OrganizationService implements IOrganizationService {
   }
 
   async getMyOrganizations(userId: string): Promise<OrganizationRecord[]> {
-    return this.organizationRepository.findByOwnerId(userId);
+    return this.organizationRepository.findByUserAccess(userId);
   }
 
   async updateOrganization(

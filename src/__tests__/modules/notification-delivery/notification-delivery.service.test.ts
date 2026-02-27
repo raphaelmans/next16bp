@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NotificationDeliveryService } from "@/lib/modules/notification-delivery/services/notification-delivery.service";
 
+vi.mock("next/server", () => ({
+  after: (fn: () => void | Promise<void>) => void fn(),
+}));
+
 vi.mock("@/lib/env", () => ({
   env: {
     NOTIFICATION_EMAIL_ENABLED: true,
@@ -22,6 +26,15 @@ function makeService() {
     findOwnerRecipientByReservationId: vi.fn(),
     findOwnerRecipientByPlaceVerificationRequestId: vi.fn(),
     findOwnerRecipientByClaimRequestId: vi.fn(),
+    listOrganizationRecipientsByUserIds: vi.fn(
+      async (organizationId: string, userIds: string[]) =>
+        userIds.map((userId) => ({
+          organizationId,
+          userId,
+          email: "owner@example.com",
+          phoneNumber: "09171234567",
+        })),
+    ),
   };
 
   const pushSubscriptionRepository = {
@@ -39,6 +52,12 @@ function makeService() {
     publishDispatchKick: vi.fn(async () => undefined),
   };
 
+  const organizationMemberService = {
+    listOrganizationUserIdsForReservationNotifications: vi.fn(async () => [
+      "owner-1",
+    ]),
+  };
+
   const service = new NotificationDeliveryService(
     jobRepository as never,
     recipientRepository as never,
@@ -46,6 +65,7 @@ function makeService() {
     mobilePushTokenRepository as never,
     userNotificationRepository as never,
     dispatchTriggerQueue as never,
+    organizationMemberService as never,
   );
 
   return {
@@ -56,6 +76,7 @@ function makeService() {
     mobilePushTokenRepository,
     dispatchTriggerQueue,
     userNotificationRepository,
+    organizationMemberService,
   };
 }
 
@@ -89,20 +110,8 @@ describe("NotificationDeliveryService reservation group events", () => {
 
   it("enqueueOwnerReservationGroupCreated -> enqueues group-scoped idempotent jobs", async () => {
     // Arrange
-    const {
-      service,
-      jobRepository,
-      recipientRepository,
-      userNotificationRepository,
-    } = makeService();
-    vi.mocked(
-      recipientRepository.findOwnerRecipientByOrganizationId,
-    ).mockResolvedValue({
-      organizationId: "org-1",
-      ownerUserId: "owner-1",
-      email: "owner@example.com",
-      phoneNumber: "09171234567",
-    });
+    const { service, jobRepository, userNotificationRepository } =
+      makeService();
 
     // Act
     await service.enqueueOwnerReservationGroupCreated({
@@ -201,20 +210,8 @@ describe("NotificationDeliveryService reservation group events", () => {
 
   it("enqueueOwnerReservationGroupPaymentMarked -> routes through owner organization recipient", async () => {
     // Arrange
-    const {
-      service,
-      jobRepository,
-      recipientRepository,
-      userNotificationRepository,
-    } = makeService();
-    vi.mocked(
-      recipientRepository.findOwnerRecipientByOrganizationId,
-    ).mockResolvedValue({
-      organizationId: "org-1",
-      ownerUserId: "owner-1",
-      email: "owner@example.com",
-      phoneNumber: "09171234567",
-    });
+    const { service, jobRepository, userNotificationRepository } =
+      makeService();
 
     // Act
     await service.enqueueOwnerReservationGroupPaymentMarked({
@@ -251,16 +248,7 @@ describe("NotificationDeliveryService reservation group events", () => {
   });
 
   it("enqueueOwnerReservationGroupCreated -> does not fail when dispatch kick publish fails", async () => {
-    const { service, dispatchTriggerQueue, recipientRepository } =
-      makeService();
-    vi.mocked(
-      recipientRepository.findOwnerRecipientByOrganizationId,
-    ).mockResolvedValue({
-      organizationId: "org-1",
-      ownerUserId: "owner-1",
-      email: "owner@example.com",
-      phoneNumber: "09171234567",
-    });
+    const { service, dispatchTriggerQueue } = makeService();
     vi.mocked(dispatchTriggerQueue.publishDispatchKick).mockRejectedValue(
       new Error("QStash publish failed"),
     );
@@ -293,5 +281,102 @@ describe("NotificationDeliveryService reservation group events", () => {
         jobCount: 4,
       }),
     );
+  });
+
+  it("owner lifecycle notifications are skipped when no members opted in", async () => {
+    const { service, jobRepository, organizationMemberService } = makeService();
+    vi.mocked(
+      organizationMemberService.listOrganizationUserIdsForReservationNotifications,
+    ).mockResolvedValue([]);
+
+    await expect(
+      service.enqueueOwnerReservationGroupCreated({
+        reservationGroupId: "group-1",
+        representativeReservationId: "res-1",
+        organizationId: "org-1",
+        placeId: "place-1",
+        placeName: "Place A",
+        totalPriceCents: 3000,
+        currency: "PHP",
+        playerName: "Player A",
+        playerEmail: "player@example.com",
+        playerPhone: "09170000000",
+        itemCount: 2,
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T11:00:00.000Z",
+        expiresAtIso: "2026-02-28T10:00:00.000Z",
+        items: groupItems,
+      }),
+    ).resolves.toEqual({ jobCount: 0 });
+
+    expect(jobRepository.createMany).not.toHaveBeenCalled();
+  });
+
+  it("enqueueOwnerReservationCreated fans out jobs and inbox rows to multiple opted-in recipients", async () => {
+    const {
+      service,
+      organizationMemberService,
+      jobRepository,
+      userNotificationRepository,
+    } = makeService();
+    vi.mocked(
+      organizationMemberService.listOrganizationUserIdsForReservationNotifications,
+    ).mockResolvedValue(["owner-1", "manager-1"]);
+
+    await expect(
+      service.enqueueOwnerReservationCreated({
+        reservationId: "res-1",
+        organizationId: "org-1",
+        placeId: "place-1",
+        placeName: "Place A",
+        courtId: "court-1",
+        courtLabel: "Court 1",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T09:00:00.000Z",
+        totalPriceCents: 1500,
+        currency: "PHP",
+        playerName: "Player A",
+        playerEmail: "player@example.com",
+        playerPhone: "09170000000",
+        expiresAtIso: "2026-02-28T10:00:00.000Z",
+      }),
+    ).resolves.toEqual({ jobCount: 8 });
+
+    expect(jobRepository.createMany).toHaveBeenCalledTimes(1);
+    const jobs = vi.mocked(jobRepository.createMany).mock
+      .calls[0]?.[0] as Array<{ idempotencyKey: string; eventType: string }>;
+
+    expect(jobs).toHaveLength(8);
+    expect(jobs.every((job) => job.eventType === "reservation.created")).toBe(
+      true,
+    );
+    expect(
+      jobs.some((job) => job.idempotencyKey.includes(":user:owner-1:email")),
+    ).toBe(true);
+    expect(
+      jobs.some((job) => job.idempotencyKey.includes(":user:manager-1:email")),
+    ).toBe(true);
+    expect(userNotificationRepository.createMany).toHaveBeenCalledTimes(2);
+  });
+
+  it("enqueueOwnerReservationPing returns pinged false when no members are opted in", async () => {
+    const { service, organizationMemberService, jobRepository } = makeService();
+    vi.mocked(
+      organizationMemberService.listOrganizationUserIdsForReservationNotifications,
+    ).mockResolvedValue([]);
+
+    await expect(
+      service.enqueueOwnerReservationPing({
+        reservationId: "res-1",
+        organizationId: "org-1",
+        placeName: "Place A",
+        courtLabel: "Court 1",
+        playerName: "Player A",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T09:00:00.000Z",
+      }),
+    ).resolves.toEqual({ pinged: false });
+
+    expect(jobRepository.createMany).not.toHaveBeenCalled();
   });
 });

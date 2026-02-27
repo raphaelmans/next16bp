@@ -123,6 +123,32 @@ export const paymentMethodProviderEnum = pgEnum("payment_method_provider", [
 ]);
 
 /**
+ * Organization member role enum
+ * OWNER remains canonical at organization.ownerUserId and may be mirrored in membership contexts.
+ */
+export const organizationMemberRoleEnum = pgEnum("organization_member_role", [
+  "OWNER",
+  "MANAGER",
+  "VIEWER",
+]);
+
+/**
+ * Organization member status enum
+ */
+export const organizationMemberStatusEnum = pgEnum(
+  "organization_member_status",
+  ["ACTIVE", "REVOKED"],
+);
+
+/**
+ * Organization invitation status enum
+ */
+export const organizationInvitationStatusEnum = pgEnum(
+  "organization_invitation_status",
+  ["PENDING", "ACCEPTED", "DECLINED", "CANCELED", "EXPIRED"],
+);
+
+/**
  * Place verification status enum
  * Tracks if a place is verified for reservations.
  */
