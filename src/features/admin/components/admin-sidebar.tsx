@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
+import { KudosLogo } from "@/components/kudos";
 import { SidebarNavItem } from "@/components/layout/sidebar-nav-item";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +23,6 @@ import {
   SidebarHeader,
   SidebarMenu,
 } from "@/components/ui/sidebar";
-import { PortalSwitcher } from "@/features/auth/components/portal-switcher";
 
 interface AdminSidebarProps {
   user?: {
@@ -92,7 +92,13 @@ export function AdminSidebar({
   return (
     <Sidebar>
       <SidebarHeader className="border-b">
-        <PortalSwitcher variant="sidebar" isAdmin />
+        <div className="flex items-center gap-2 p-2">
+          <KudosLogo size={24} variant="icon" />
+          <div className="min-w-0">
+            <p className="text-sm font-heading font-semibold">Admin View</p>
+            <p className="text-xs text-muted-foreground">KudosCourts</p>
+          </div>
+        </div>
       </SidebarHeader>
 
       <SidebarContent>

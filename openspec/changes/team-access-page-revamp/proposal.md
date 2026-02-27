@@ -13,6 +13,24 @@ The Team & Access management UI is currently embedded as a single Card section w
 - **Remove Team & Access section** from `/owner/settings` page
 - No backend/API changes — all existing tRPC endpoints, services, and DB schema remain unchanged
 
+### Routing Semantics Decision
+
+- Canonical authenticated portal namespace remains `/owner/*`.
+- Team management route remains `/owner/team`.
+- Public acquisition route remains `/owners/get-started`.
+- Entity/resource namespaces remain `/venues/*` and `/org/[slug]`.
+- `/venue/*` and `/organization/*` are not adopted as portal bases in this change.
+
+Rationale:
+- `owner` is the actor portal context (player vs owner vs admin), not the venue resource namespace.
+- `venue` is already used for resources and would blur actor-vs-resource boundaries.
+- `organization` is the backend tenant model but not the current web portal namespace.
+- Keeping `/owner` avoids broad compatibility churn across routing, portal preference, and existing links.
+
+Out of scope:
+- No redirect migration, aliasing, or URL base rewrite from `/owner` to another namespace.
+- Any future namespace migration requires a separate OpenSpec change with compatibility and rollout planning.
+
 ## Capabilities
 
 ### New Capabilities

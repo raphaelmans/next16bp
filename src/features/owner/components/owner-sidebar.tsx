@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   MapPin,
   Settings,
+  Shield,
   UploadCloud,
   Users,
 } from "lucide-react";
@@ -47,7 +48,7 @@ import {
   SidebarMenuSubItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { PortalSwitcher } from "@/features/auth/components/portal-switcher";
+import { useQueryAuthSession } from "@/features/auth";
 import {
   filterVisibleNavItems,
   type PageAccessRule,
@@ -77,6 +78,7 @@ interface OwnerSidebarProps {
     avatarUrl?: string;
   };
   noOrgMode?: boolean;
+  isAdmin?: boolean;
 }
 
 const navItems = [
@@ -125,6 +127,7 @@ export function OwnerSidebar({
   currentOrganization,
   user,
   noOrgMode = false,
+  isAdmin,
 }: OwnerSidebarProps) {
   const pathname = usePathname();
   const { data: quickLinks = [], isLoading: quickLinksLoading } =
@@ -135,6 +138,8 @@ export function OwnerSidebar({
     currentOrganization?.id ?? null,
   );
   const { permissionContext } = useModOwnerPermissionContext();
+  const { data: sessionUser } = useQueryAuthSession();
+  const effectiveIsAdmin = isAdmin ?? sessionUser?.role === "admin";
 
   const hasOrganization = !noOrgMode && Boolean(currentOrganization?.id);
   const showVenuesLoading =
@@ -167,6 +172,8 @@ export function OwnerSidebar({
   const roleLabel = permissionContext
     ? ROLE_DISPLAY_LABELS[permissionContext.role]
     : "Owner";
+  const shouldShowOrgDropdown =
+    noOrgMode || organizations.length > 1 || effectiveIsAdmin;
 
   const isActive = (href: string) => {
     if (href === appRoutes.owner.base) {
@@ -207,14 +214,23 @@ export function OwnerSidebar({
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56">
-              <PortalSwitcher variant="menu-items" isOwner ownerSetupRequired />
-              <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href={appRoutes.owner.getStarted}>Go to setup hub</Link>
               </DropdownMenuItem>
+              {effectiveIsAdmin && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href={appRoutes.admin.base}>
+                      <Shield className="mr-2 h-4 w-4" />
+                      Admin Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : currentOrganization ? (
+        ) : currentOrganization && shouldShowOrgDropdown ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
@@ -243,27 +259,54 @@ export function OwnerSidebar({
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56">
-              <PortalSwitcher variant="menu-items" isOwner />
-              {organizations.length > 1 && (
+              {organizations.length > 1 &&
+                organizations.map((org) => (
+                  <DropdownMenuItem key={org.id} asChild>
+                    <Link
+                      href={`${appRoutes.owner.base}?org=${org.id}`}
+                      className="flex items-center gap-2"
+                    >
+                      <div className="flex h-6 w-6 items-center justify-center rounded bg-muted">
+                        <Building2 className="h-3 w-3" />
+                      </div>
+                      <span className="truncate">{org.name}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              {effectiveIsAdmin && (
                 <>
-                  <DropdownMenuSeparator />
-                  {organizations.map((org) => (
-                    <DropdownMenuItem key={org.id} asChild>
-                      <Link
-                        href={`${appRoutes.owner.base}?org=${org.id}`}
-                        className="flex items-center gap-2"
-                      >
-                        <div className="flex h-6 w-6 items-center justify-center rounded bg-muted">
-                          <Building2 className="h-3 w-3" />
-                        </div>
-                        <span className="truncate">{org.name}</span>
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
+                  {organizations.length > 1 && <DropdownMenuSeparator />}
+                  <DropdownMenuItem asChild>
+                    <Link href={appRoutes.admin.base}>
+                      <Shield className="mr-2 h-4 w-4" />
+                      Admin Dashboard
+                    </Link>
+                  </DropdownMenuItem>
                 </>
               )}
             </DropdownMenuContent>
           </DropdownMenu>
+        ) : currentOrganization ? (
+          <div className="flex items-center gap-2 p-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+              {currentOrganization.logoUrl ? (
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={currentOrganization.logoUrl} />
+                  <AvatarFallback>
+                    {currentOrganization.name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <Building2 className="h-4 w-4" />
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-heading font-medium truncate">
+                {currentOrganization.name}
+              </p>
+              <p className="text-xs text-muted-foreground">{roleLabel}</p>
+            </div>
+          </div>
         ) : (
           <div className="flex items-center gap-2 p-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">

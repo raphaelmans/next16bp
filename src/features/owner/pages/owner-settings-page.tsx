@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
+import { PortalPreferenceCard } from "@/features/auth/components";
 import { WebPushSettingsCard } from "@/features/notifications/components/web-push-settings";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
@@ -158,6 +159,7 @@ export default function OwnerSettingsPage() {
             currentOrganization={navOrg ?? { id: "", name: "Loading..." }}
             organizations={organizations}
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
+            isAdmin={user?.role === "admin"}
           />
         }
         navbar={
@@ -165,6 +167,7 @@ export default function OwnerSettingsPage() {
             organizationName={navOrg?.name ?? "Loading..."}
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
             onLogout={handleLogout}
+            isAdmin={user?.role === "admin"}
           />
         }
         floatingPanel={<ReservationAlertsPanel organizationId={null} />}
@@ -184,6 +187,7 @@ export default function OwnerSettingsPage() {
           currentOrganization={navOrg ?? { id: "", name: "No Organization" }}
           organizations={organizations}
           user={{ name: user?.email?.split("@")[0], email: user?.email }}
+          isAdmin={user?.role === "admin"}
         />
       }
       navbar={
@@ -191,6 +195,7 @@ export default function OwnerSettingsPage() {
           organizationName={navOrg?.name ?? "No Organization"}
           user={{ name: user?.email?.split("@")[0], email: user?.email }}
           onLogout={handleLogout}
+          isAdmin={user?.role === "admin"}
         />
       }
       floatingPanel={
@@ -256,6 +261,8 @@ export default function OwnerSettingsPage() {
               </Button>
             </div>
           </StandardFormProvider>
+
+          <PortalPreferenceCard id={SETTINGS_SECTION_IDS.defaultPortal} />
 
           <WebPushSettingsCard id={SETTINGS_SECTION_IDS.browserNotifications} />
 

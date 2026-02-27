@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar, ChevronDown, LogOut, User } from "lucide-react";
+import { Calendar, ChevronDown, LogOut, Shield, User } from "lucide-react";
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,7 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { PortalSwitcher } from "@/features/auth/components/portal-switcher";
 
 export interface UserDropdownUser {
   name: string;
@@ -24,17 +23,11 @@ export interface UserDropdownUser {
 
 interface UserDropdownProps {
   user: UserDropdownUser;
-  isOwner?: boolean;
   isAdmin: boolean;
   onSignOut?: () => void;
 }
 
-export function UserDropdown({
-  user,
-  isOwner,
-  isAdmin,
-  onSignOut,
-}: UserDropdownProps) {
+export function UserDropdown({ user, isAdmin, onSignOut }: UserDropdownProps) {
   const initials = user.name
     .split(" ")
     .map((n) => n[0])
@@ -97,15 +90,19 @@ export function UserDropdown({
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
-        {/* Dashboard Links */}
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <PortalSwitcher
-            variant="menu-items"
-            isOwner={isOwner || undefined}
-            isAdmin={isAdmin}
-          />
-        </DropdownMenuGroup>
+        {isAdmin && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem asChild>
+                <Link href={appRoutes.admin.base} className="cursor-pointer">
+                  <Shield className="mr-2 h-4 w-4" />
+                  <span>Admin Dashboard</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </>
+        )}
 
         {/* Sign Out */}
         <DropdownMenuSeparator />

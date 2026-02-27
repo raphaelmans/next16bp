@@ -5,6 +5,7 @@ import {
   ChevronDown,
   LogOut,
   Settings,
+  Shield,
   User,
 } from "lucide-react";
 import Link from "next/link";
@@ -20,12 +21,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { PortalSwitcher } from "@/features/auth/components/portal-switcher";
+import { useQueryAuthSession } from "@/features/auth";
 import { NotificationBell } from "@/features/notifications/components/notification-bell";
 
 interface OwnerNavbarProps {
   organizationName?: string;
-  noOrgMode?: boolean;
   user?: {
     name?: string;
     email?: string;
@@ -37,11 +37,13 @@ interface OwnerNavbarProps {
 
 export function OwnerNavbar({
   organizationName,
-  noOrgMode = false,
   user,
   onLogout,
   isAdmin,
 }: OwnerNavbarProps) {
+  const { data: sessionUser } = useQueryAuthSession();
+  const effectiveIsAdmin = isAdmin ?? sessionUser?.role === "admin";
+
   return (
     <div className="flex flex-1 items-center justify-between">
       {/* Left side - Logo and Organization name */}
@@ -99,18 +101,20 @@ export function OwnerNavbar({
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <PortalSwitcher
-                variant="menu-items"
-                isOwner
-                isAdmin={isAdmin}
-                ownerSetupRequired={noOrgMode}
-              />
               <DropdownMenuItem asChild>
                 <Link href={appRoutes.reservations.base}>
                   <CalendarDays className="mr-2 h-4 w-4" />
                   My Reservations
                 </Link>
               </DropdownMenuItem>
+              {effectiveIsAdmin && (
+                <DropdownMenuItem asChild>
+                  <Link href={appRoutes.admin.base}>
+                    <Shield className="mr-2 h-4 w-4" />
+                    Admin Dashboard
+                  </Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href={appRoutes.account.profile}>

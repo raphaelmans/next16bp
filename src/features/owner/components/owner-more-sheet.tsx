@@ -11,8 +11,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { Separator } from "@/components/ui/separator";
-import { PortalSwitcher } from "@/features/auth/components/portal-switcher";
 import { cn } from "@/lib/utils";
 
 interface MoreSheetItem {
@@ -58,7 +56,10 @@ export function OwnerMoreSheet({
           <DrawerDescription>Additional navigation options</DrawerDescription>
         </DrawerHeader>
 
-        <nav className="px-4 pb-2" aria-label="More navigation">
+        <nav
+          className="px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+          aria-label="More navigation"
+        >
           <ul className="space-y-1">
             {items.map((item) => {
               const Icon = item.icon;
@@ -83,12 +84,6 @@ export function OwnerMoreSheet({
             })}
           </ul>
         </nav>
-
-        <Separator className="mx-4" />
-
-        <div className="px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-          <PortalSwitcher variant="menu-items" isOwner />
-        </div>
       </DrawerContent>
     </Drawer>
   );

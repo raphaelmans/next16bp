@@ -4,6 +4,7 @@ import { CalendarDays, Home, MapPin, Shield, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
+import { KudosLogo } from "@/components/kudos";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sidebar,
@@ -24,7 +25,6 @@ interface PlayerSidebarProps {
     email?: string;
     avatarUrl?: string | null;
   };
-  portalSwitcher?: React.ReactNode;
   isAdmin?: boolean;
 }
 
@@ -39,11 +39,7 @@ const playerNavItems = [
   { title: "Profile", href: appRoutes.account.profile, icon: User },
 ];
 
-export function PlayerSidebar({
-  user,
-  portalSwitcher,
-  isAdmin = false,
-}: PlayerSidebarProps) {
+export function PlayerSidebar({ user, isAdmin = false }: PlayerSidebarProps) {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -56,7 +52,12 @@ export function PlayerSidebar({
   return (
     <Sidebar>
       <SidebarHeader className="border-b">
-        {portalSwitcher ?? null}
+        <div className="flex items-center gap-2 p-2">
+          <KudosLogo size={24} variant="icon" />
+          <span className="text-sm font-heading font-semibold">
+            KudosCourts
+          </span>
+        </div>
       </SidebarHeader>
 
       <SidebarContent>

@@ -150,6 +150,43 @@ export function useQueryAuthUserPreference(enabled: boolean) {
 }
 
 type PortalDefault = "player" | "owner";
+type SetDefaultPortalInput = { defaultPortal: PortalDefault };
+type SetDefaultPortalOutput = Awaited<
+  ReturnType<typeof authApi.mutUserPreferenceSetDefaultPortal>
+>;
+
+type UseMutSetDefaultPortalOptions = {
+  onSuccess?: (
+    data: SetDefaultPortalOutput,
+    variables: SetDefaultPortalInput,
+    context: unknown,
+  ) => void | Promise<void>;
+  onError?: (error: unknown) => void;
+};
+
+export function useMutSetDefaultPortal(
+  options?: UseMutSetDefaultPortalOptions,
+) {
+  const utils = trpc.useUtils();
+
+  return useFeatureMutation<
+    SetDefaultPortalOutput,
+    SetDefaultPortalInput,
+    unknown
+  >(authApi.mutUserPreferenceSetDefaultPortal, {
+    onSuccess: async (data, variables, context) => {
+      try {
+        localStorage.setItem(PORTAL_STORAGE_KEY, variables.defaultPortal);
+      } catch {}
+
+      await utils.userPreference.me.invalidate();
+      await options?.onSuccess?.(data, variables, context);
+    },
+    onError: (error) => {
+      options?.onError?.(error);
+    },
+  });
+}
 
 type UsePortalSwitcherDataOptions = {
   inferAdmin: boolean;
@@ -196,19 +233,11 @@ export function useModPortalSwitcherData({
     },
   );
 
-  const setDefaultPortalMutation = useFeatureMutation(
-    authApi.mutUserPreferenceSetDefaultPortal,
-    {
-      onSuccess: (_data, variables) => {
-        try {
-          localStorage.setItem(PORTAL_STORAGE_KEY, variables.defaultPortal);
-        } catch {}
-      },
-      onError: (error: unknown) => {
-        onSetDefaultPortalError?.(error);
-      },
+  const setDefaultPortalMutation = useMutSetDefaultPortal({
+    onError: (error: unknown) => {
+      onSetDefaultPortalError?.(error);
     },
-  );
+  });
 
   const setDefaultPortal = (portal: PortalDefault) => {
     setDefaultPortalMutation.mutate({

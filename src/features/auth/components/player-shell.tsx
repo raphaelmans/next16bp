@@ -9,13 +9,11 @@ import { PlayerSidebar } from "@/components/layout/player-sidebar";
 import {
   PORTAL_STORAGE_KEY,
   useMutAuthLogout,
-  useQueryAuthMyOrganizations,
   useQueryAuthSession,
   useQueryAuthUserPreference,
 } from "@/features/auth/hooks";
 import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { AuthPlayerNavbar } from "./player-navbar";
-import { PortalSwitcher } from "./portal-switcher";
 
 interface AuthPlayerShellProps {
   children: React.ReactNode;
@@ -45,8 +43,6 @@ export function AuthPlayerShell({ children }: AuthPlayerShellProps) {
   }, [userPreference?.defaultPortal]);
   const logoutMutation = useMutAuthLogout();
 
-  const { data: orgs } = useQueryAuthMyOrganizations(!!sessionUser);
-
   const user = sessionUser
     ? {
         name: sessionUser.email?.split("@")[0] || "Player",
@@ -59,7 +55,6 @@ export function AuthPlayerShell({ children }: AuthPlayerShellProps) {
         avatarUrl: null,
       };
 
-  const isOwner = (orgs?.length ?? 0) > 0;
   const isAdmin = sessionUser?.role === "admin";
 
   const handleLogout = async () => {
@@ -69,23 +64,10 @@ export function AuthPlayerShell({ children }: AuthPlayerShellProps) {
 
   return (
     <SharedPlayerShell
-      sidebar={
-        <PlayerSidebar
-          user={user}
-          isAdmin={isAdmin}
-          portalSwitcher={
-            <PortalSwitcher
-              variant="sidebar"
-              isOwner={isOwner || undefined}
-              isAdmin={isAdmin}
-            />
-          }
-        />
-      }
+      sidebar={<PlayerSidebar user={user} isAdmin={isAdmin} />}
       navbar={
         <AuthPlayerNavbar
           user={user}
-          isOwner={isOwner}
           isAdmin={isAdmin}
           onLogout={handleLogout}
         />

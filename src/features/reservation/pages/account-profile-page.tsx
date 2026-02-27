@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { appRoutes } from "@/common/app-routes";
 import { SETTINGS_SECTION_IDS } from "@/common/section-hashes";
 import { PageHeader } from "@/components/ui/page-header";
+import { PortalPreferenceCard } from "@/features/auth/components";
 import { WebPushSettingsCard } from "@/features/notifications/components/web-push-settings";
 import { OwnerCtaSection } from "@/features/reservation/components/owner-cta-section";
 import { ProfileForm } from "@/features/reservation/components/profile-form";
@@ -30,6 +31,7 @@ export default function ProfilePage() {
         </div>
         <div className="space-y-6">
           <OwnerCtaSection />
+          <PortalPreferenceCard id={SETTINGS_SECTION_IDS.defaultPortal} />
           <WebPushSettingsCard id={SETTINGS_SECTION_IDS.browserNotifications} />
         </div>
       </div>

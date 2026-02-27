@@ -24,6 +24,7 @@ export function OwnerShell({ children, hasOrganizations }: OwnerShellProps) {
   const pathname = usePathname();
   const { data: user } = useQueryAuthSession();
   const { data: userPreference } = useQueryAuthUserPreference(!!user);
+  const isAdmin = user?.role === "admin";
 
   // Immediate seed while DB preference loads (fallback for first visit)
   useEffect(() => {
@@ -66,6 +67,7 @@ export function OwnerShell({ children, hasOrganizations }: OwnerShellProps) {
             email: user?.email,
           }}
           noOrgMode={noOrgMode}
+          isAdmin={isAdmin}
         />
       }
       navbar={
@@ -73,12 +75,12 @@ export function OwnerShell({ children, hasOrganizations }: OwnerShellProps) {
           organizationName={
             organization?.name ?? (noOrgMode ? "Venue Setup" : "Dashboard")
           }
-          noOrgMode={noOrgMode}
           user={{
             name: user?.email?.split("@")[0],
             email: user?.email,
           }}
           onLogout={handleLogout}
+          isAdmin={isAdmin}
         />
       }
       bottomNav={<OwnerBottomTabs />}

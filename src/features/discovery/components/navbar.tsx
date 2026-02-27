@@ -171,7 +171,6 @@ export function Navbar({ className }: NavbarProps) {
         ) : isAuthenticated ? (
           <UserDropdown
             user={user}
-            isOwner={isOwner}
             isAdmin={isAdmin}
             onSignOut={handleSignOut}
           />

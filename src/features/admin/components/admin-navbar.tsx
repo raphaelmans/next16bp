@@ -21,7 +21,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { PortalSwitcher } from "@/features/auth/components/portal-switcher";
 import { NotificationBell } from "@/features/notifications/components/notification-bell";
 
 interface AdminNavbarProps {
@@ -31,10 +30,9 @@ interface AdminNavbarProps {
     avatarUrl?: string;
   };
   onLogout?: () => void;
-  isOwner?: boolean;
 }
 
-export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
+export function AdminNavbar({ user, onLogout }: AdminNavbarProps) {
   return (
     <div className="flex flex-1 items-center justify-between">
       {/* Left side - Logo and Admin badge */}
@@ -94,7 +92,6 @@ export function AdminNavbar({ user, onLogout, isOwner }: AdminNavbarProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <PortalSwitcher variant="menu-items" isAdmin isOwner={isOwner} />
               <DropdownMenuItem asChild>
                 <Link href={appRoutes.reservations.base}>
                   <CalendarDays className="mr-2 h-4 w-4" />

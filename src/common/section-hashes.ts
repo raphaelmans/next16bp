@@ -1,6 +1,7 @@
 export const SETTINGS_SECTION_IDS = {
   organizationProfile: "organization-profile",
   contactInformation: "contact-information",
+  defaultPortal: "default-portal",
   browserNotifications: "browser-notifications",
   reservationNotificationRouting: "reservation-notification-routing",
   paymentMethods: "payment-methods",
@@ -10,6 +11,7 @@ export const SETTINGS_SECTION_IDS = {
 export const SETTINGS_SECTION_HASHES = {
   organizationProfile: `#${SETTINGS_SECTION_IDS.organizationProfile}`,
   contactInformation: `#${SETTINGS_SECTION_IDS.contactInformation}`,
+  defaultPortal: `#${SETTINGS_SECTION_IDS.defaultPortal}`,
   browserNotifications: `#${SETTINGS_SECTION_IDS.browserNotifications}`,
   reservationNotificationRouting: `#${SETTINGS_SECTION_IDS.reservationNotificationRouting}`,
   paymentMethods: `#${SETTINGS_SECTION_IDS.paymentMethods}`,

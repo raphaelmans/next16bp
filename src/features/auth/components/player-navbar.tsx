@@ -9,14 +9,12 @@ import { NotificationBell } from "@/features/notifications/components/notificati
 
 interface AuthPlayerNavbarProps {
   user: UserDropdownUser;
-  isOwner: boolean;
   isAdmin: boolean;
   onLogout?: () => void;
 }
 
 export function AuthPlayerNavbar({
   user,
-  isOwner,
   isAdmin,
   onLogout,
 }: AuthPlayerNavbarProps) {
@@ -25,12 +23,7 @@ export function AuthPlayerNavbar({
       rightContent={
         <>
           <NotificationBell portal="player" />
-          <UserDropdown
-            user={user}
-            isOwner={isOwner}
-            isAdmin={isAdmin}
-            onSignOut={onLogout}
-          />
+          <UserDropdown user={user} isAdmin={isAdmin} onSignOut={onLogout} />
         </>
       }
     />
