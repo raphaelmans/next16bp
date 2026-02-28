@@ -61,7 +61,7 @@ export const STEP_CONFIGS: StepConfig[] = [
     label: "Verification",
     description: "Submit proof of ownership to unlock online reservations.",
     skippable: true,
-    isComplete: (s) => s.hasVerification,
+    isComplete: (s) => s.isVenueVerified,
   },
   {
     key: "complete",

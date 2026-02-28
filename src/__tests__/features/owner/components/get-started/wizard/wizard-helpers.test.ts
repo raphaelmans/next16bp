@@ -63,9 +63,26 @@ describe("wizard-helpers", () => {
       hasCourtPricing: true,
       hasPaymentMethod: true,
       hasVerification: true,
+      isVenueVerified: true,
     });
 
     expect(deriveFirstIncompleteStep(status)).toBe("complete");
+  });
+
+  it("deriveFirstIncompleteStep -> returns verify when verification is pending review", () => {
+    const status = createStatus({
+      hasOrganization: true,
+      hasVenue: true,
+      hasActiveCourt: true,
+      hasCourtSchedule: true,
+      hasCourtPricing: true,
+      hasPaymentMethod: true,
+      hasVerification: true,
+      verificationStatus: "PENDING",
+      isVenueVerified: false,
+    });
+
+    expect(deriveFirstIncompleteStep(status)).toBe("verify");
   });
 
   it("canCompleteWizard -> only true when all prerequisite steps are complete", () => {
@@ -77,6 +94,7 @@ describe("wizard-helpers", () => {
       hasCourtPricing: true,
       hasPaymentMethod: true,
       hasVerification: true,
+      isVenueVerified: true,
     });
     const incompleteStatus = createStatus({
       hasOrganization: true,
@@ -86,10 +104,23 @@ describe("wizard-helpers", () => {
       hasCourtPricing: false,
       hasPaymentMethod: true,
       hasVerification: true,
+      isVenueVerified: true,
+    });
+    const pendingVerificationStatus = createStatus({
+      hasOrganization: true,
+      hasVenue: true,
+      hasActiveCourt: true,
+      hasCourtSchedule: true,
+      hasCourtPricing: true,
+      hasPaymentMethod: true,
+      hasVerification: true,
+      verificationStatus: "PENDING",
+      isVenueVerified: false,
     });
 
     expect(canCompleteWizard(completeStatus)).toBe(true);
     expect(canCompleteWizard(incompleteStatus)).toBe(false);
+    expect(canCompleteWizard(pendingVerificationStatus)).toBe(false);
   });
 
   it("completion guard -> redirects complete step to first incomplete step", () => {
