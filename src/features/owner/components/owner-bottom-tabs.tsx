@@ -3,20 +3,30 @@
 import type { LucideIcon } from "lucide-react";
 import {
   CalendarDays,
+  CalendarRange,
+  ClipboardList,
   Ellipsis,
   LayoutDashboard,
-  MapPin,
+  LayoutGrid,
+  MapPinned,
+  Settings,
   UploadCloud,
   User,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { appRoutes } from "@/common/app-routes";
 import { Badge } from "@/components/ui/badge";
-import { useQueryReservationCounts } from "@/features/owner/hooks";
+import { shouldShowOwnerGetStartedNav } from "@/features/owner/helpers";
+import {
+  useQueryOwnerSetupStatus,
+  useQueryReservationCounts,
+} from "@/features/owner/hooks";
 import { useModOwnerPermissionContext } from "@/features/owner/hooks/organization";
 import type { OrganizationMemberRole } from "@/lib/modules/organization-member/shared/permissions";
+import { isOwnerRole } from "@/lib/modules/organization-member/shared/permissions";
 import { cn } from "@/lib/utils";
 import { OwnerMoreSheet } from "./owner-more-sheet";
 
@@ -47,8 +57,12 @@ function getTabsForRole(role: OrganizationMemberRole): TabConfig[] {
           icon: CalendarDays,
           showBadge: true,
         },
-        { label: "Courts", href: appRoutes.courts.base, icon: MapPin },
-        { label: "Venues", href: appRoutes.owner.places.base, icon: MapPin },
+        { label: "Courts", href: appRoutes.courts.base, icon: LayoutGrid },
+        {
+          label: "Venues",
+          href: appRoutes.owner.places.base,
+          icon: MapPinned,
+        },
         MORE_TAB,
       ];
     case "MANAGER":
@@ -59,7 +73,7 @@ function getTabsForRole(role: OrganizationMemberRole): TabConfig[] {
           icon: CalendarDays,
           showBadge: true,
         },
-        { label: "Courts", href: appRoutes.courts.base, icon: MapPin },
+        { label: "Courts", href: appRoutes.courts.base, icon: LayoutGrid },
         {
           label: "Imports",
           href: appRoutes.owner.imports.bookings,
@@ -75,7 +89,7 @@ function getTabsForRole(role: OrganizationMemberRole): TabConfig[] {
           icon: CalendarDays,
           showBadge: true,
         },
-        { label: "Courts", href: appRoutes.courts.base, icon: MapPin },
+        { label: "Courts", href: appRoutes.courts.base, icon: LayoutGrid },
         { label: "Profile", href: appRoutes.account.profile, icon: User },
       ];
   }
@@ -92,20 +106,20 @@ function getMoreItemsForRole(role: OrganizationMemberRole): TabConfig[] {
           icon: LayoutDashboard,
         },
         {
-          label: "Schedule",
+          label: "Availability Studio",
           href: appRoutes.owner.bookings,
-          icon: CalendarDays,
+          icon: CalendarRange,
         },
         {
           label: "Imports",
           href: appRoutes.owner.imports.bookings,
           icon: UploadCloud,
         },
-        { label: "Team", href: appRoutes.owner.team, icon: User },
+        { label: "Team", href: appRoutes.owner.team, icon: Users },
         {
           label: "Settings",
           href: appRoutes.owner.settings,
-          icon: LayoutDashboard,
+          icon: Settings,
         },
       ];
     case "MANAGER":
@@ -116,12 +130,16 @@ function getMoreItemsForRole(role: OrganizationMemberRole): TabConfig[] {
           icon: LayoutDashboard,
         },
         {
-          label: "Schedule",
+          label: "Availability Studio",
           href: appRoutes.owner.bookings,
-          icon: CalendarDays,
+          icon: CalendarRange,
         },
-        { label: "Venues", href: appRoutes.owner.places.base, icon: MapPin },
-        { label: "Team", href: appRoutes.owner.team, icon: User },
+        {
+          label: "Venues",
+          href: appRoutes.owner.places.base,
+          icon: MapPinned,
+        },
+        { label: "Team", href: appRoutes.owner.team, icon: Users },
       ];
     // VIEWER has no "More" tab
     case "VIEWER":
@@ -134,10 +152,37 @@ export function OwnerBottomTabs() {
   const [moreOpen, setMoreOpen] = useState(false);
   const { permissionContext, organizationId } = useModOwnerPermissionContext();
   const { data: reservationCounts } = useQueryReservationCounts(organizationId);
+  const { data: setupStatus, isLoading: setupStatusLoading } =
+    useQueryOwnerSetupStatus();
 
+  const noOrgMode = !organizationId;
   const role = permissionContext?.role ?? "OWNER";
   const tabs = getTabsForRole(role);
-  const moreItems = getMoreItemsForRole(role);
+
+  const showGetStarted =
+    shouldShowOwnerGetStartedNav({
+      noOrgMode,
+      setupStatusLoading,
+      setupStatus: setupStatus
+        ? {
+            isSetupComplete: setupStatus.isSetupComplete,
+            hasPaymentMethod: setupStatus.hasPaymentMethod,
+            nextStep: setupStatus.nextStep,
+          }
+        : null,
+    }) &&
+    (noOrgMode || !permissionContext || isOwnerRole(permissionContext));
+
+  const getStartedItem: TabConfig = {
+    label: "Get Started",
+    href: appRoutes.owner.getStarted,
+    icon: ClipboardList,
+  };
+
+  const moreItems = [
+    ...(showGetStarted ? [getStartedItem] : []),
+    ...getMoreItemsForRole(role),
+  ];
 
   const isActive = (href: string) => {
     if (href === appRoutes.owner.base) {

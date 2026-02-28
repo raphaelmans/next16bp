@@ -3,7 +3,6 @@
 import { Loader2 } from "lucide-react";
 import { Suspense } from "react";
 import { SetupWizard } from "@/features/owner/components/get-started/wizard/setup-wizard";
-import { PermissionGate } from "@/features/owner/components/permission-gate";
 
 function WizardFallback() {
   return (
@@ -15,10 +14,8 @@ function WizardFallback() {
 
 export default function OwnerGetStartedPage() {
   return (
-    <PermissionGate accessRule={{ type: "owner-only" }}>
-      <Suspense fallback={<WizardFallback />}>
-        <SetupWizard />
-      </Suspense>
-    </PermissionGate>
+    <Suspense fallback={<WizardFallback />}>
+      <SetupWizard />
+    </Suspense>
   );
 }
