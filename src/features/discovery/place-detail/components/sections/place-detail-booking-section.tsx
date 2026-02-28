@@ -42,6 +42,8 @@ import {
 import { useBookingMachines } from "@/features/discovery/place-detail/hooks/use-booking-machines";
 import { buildMemoryKey } from "@/features/discovery/place-detail/machines";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
+import { ExternalBookingInfoCard } from "@/features/open-play/components/external-booking-info-card";
+import { ExternalOpenPlayCreateDialog } from "@/features/open-play/components/external-open-play-create-dialog";
 import { OpenPlayVenuePanel } from "@/features/open-play/components/open-play-venue-panel";
 
 const DEFAULT_DURATION_MINUTES = 60;
@@ -579,8 +581,19 @@ export function PlaceDetailBookingSection({
             place={{ id: place.id, timeZone: placeTimeZone }}
             hostCta={
               <Button type="button" onClick={handleHostOpenPlay}>
-                Host an Open Play
+                Book in KudosCourts
               </Button>
+            }
+            externalHostCta={
+              <ExternalOpenPlayCreateDialog
+                place={{
+                  id: place.id,
+                  sports: place.sports.map((sport) => ({
+                    id: sport.id,
+                    name: sport.name,
+                  })),
+                }}
+              />
             }
           />
         ) : (
@@ -700,12 +713,14 @@ export function PlaceDetailBookingSection({
           onRemoveFromCartAction={removeCartItem}
         />
       ) : (
-        <Card className="h-fit">
-          <CardContent className="p-4 text-sm text-muted-foreground">
-            Host an Open Play by booking a time slot, then mark it as Open Play
-            at checkout.
-          </CardContent>
-        </Card>
+        <ExternalBookingInfoCard
+          className="h-fit"
+          cta={
+            <Button type="button" onClick={handleHostOpenPlay}>
+              Book in KudosCourts
+            </Button>
+          }
+        />
       )}
 
       {primaryView === "book" ? (

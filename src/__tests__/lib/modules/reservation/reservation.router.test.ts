@@ -1,5 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  IncompleteProfileError,
+  ProfileNotFoundError,
+} from "@/lib/modules/profile/errors/profile.errors";
+import {
+  NoAvailabilityError,
   NotReservationOwnerError,
   ReservationGroupNotFoundError,
   ReservationNotFoundError,
@@ -148,9 +153,51 @@ describe("reservationRouter", () => {
     expect(
       mockReservationService.createReservationForCourt,
     ).toHaveBeenCalledWith("user-1", TEST_IDS.profileId, input);
+    expect(mockProfileService.getOrCreateProfile).toHaveBeenCalledWith(
+      "user-1",
+    );
     expect(
       mockReservationService.createReservationGroup,
     ).not.toHaveBeenCalled();
+  });
+
+  it("createForCourt profile bootstrap missing -> maps to NOT_FOUND and skips reservation creation", async () => {
+    // Arrange
+    const caller = createCaller();
+    mockProfileService.getOrCreateProfile.mockRejectedValue(
+      new ProfileNotFoundError("user-1"),
+    );
+
+    // Act + Assert
+    await expect(
+      caller.createForCourt({
+        courtId: TEST_IDS.courtId1,
+        startTime: hoursFromNowIso(2),
+        durationMinutes: 60,
+      }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    expect(
+      mockReservationService.createReservationForCourt,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("createForCourt slot unavailable -> maps to BAD_REQUEST", async () => {
+    // Arrange
+    const caller = createCaller();
+    mockReservationService.createReservationForCourt.mockRejectedValue(
+      new NoAvailabilityError({
+        courtId: TEST_IDS.courtId1,
+      }),
+    );
+
+    // Act + Assert
+    await expect(
+      caller.createForCourt({
+        courtId: TEST_IDS.courtId1,
+        startTime: hoursFromNowIso(2),
+        durationMinutes: 60,
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
   });
 
   it("createForAnyCourt legacy contract -> still calls createReservationForAnyCourt", async () => {
@@ -181,6 +228,24 @@ describe("reservationRouter", () => {
     expect(
       mockReservationService.createReservationGroup,
     ).not.toHaveBeenCalled();
+  });
+
+  it("createForAnyCourt incomplete profile -> maps to BAD_REQUEST", async () => {
+    // Arrange
+    const caller = createCaller();
+    mockReservationService.createReservationForAnyCourt.mockRejectedValue(
+      new IncompleteProfileError(),
+    );
+
+    // Act + Assert
+    await expect(
+      caller.createForAnyCourt({
+        placeId: TEST_IDS.placeId,
+        sportId: TEST_IDS.sportId,
+        startTime: hoursFromNowIso(4),
+        durationMinutes: 60,
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
   });
 
   it("markPayment valid payload -> calls markPayment", async () => {
@@ -411,6 +476,21 @@ describe("reservationRouter", () => {
       TEST_IDS.profileId,
       TEST_IDS.reservationId1,
     );
+  });
+
+  it("getPaymentInfo reservation not found -> maps to NOT_FOUND", async () => {
+    // Arrange
+    const caller = createCaller();
+    mockReservationService.getPaymentInfo.mockRejectedValue(
+      new ReservationNotFoundError(TEST_IDS.reservationId1),
+    );
+
+    // Act + Assert
+    await expect(
+      caller.getPaymentInfo({
+        reservationId: TEST_IDS.reservationId1,
+      }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 
   it("getMy valid payload -> calls getMyReservations", async () => {

@@ -18,10 +18,15 @@ Toggle labels:
 Empty state:
 - Title: "No Open Plays yet"
 - Body: "Be the first to host an Open Play at this venue."
-- CTA: "Host an Open Play"
 
 Helper (when Open Play view is active):
 - "Host an Open Play by booking a time slot, then marking it as Open Play at checkout."
+
+External booking funnel card (show on Open Play surfaces):
+- Title: "Booked in Reclub?"
+- Body: "You can still host as an External Open Play (unverified) if your booking was made outside KudosCourts. For a verified Open Play, book in KudosCourts and host from your reservation."
+- Primary CTA: "Book in KudosCourts"
+- Secondary CTA: "Host External Open Play"
 
 ## 2) Open Play list card
 

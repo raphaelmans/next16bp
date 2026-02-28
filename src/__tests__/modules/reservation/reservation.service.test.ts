@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { postPlayerPaymentMarkedMessage } from "@/lib/modules/chat/ops/post-player-payment-marked-message";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import { PlaceNotBookableError } from "@/lib/modules/place-verification/errors/place-verification.errors";
 import { IncompleteProfileError } from "@/lib/modules/profile/errors/profile.errors";
@@ -7,6 +8,7 @@ import {
   NoAvailabilityError,
   NotReservationOwnerError,
   ReservationGroupInvalidError,
+  TermsNotAcceptedError,
 } from "@/lib/modules/reservation/errors/reservation.errors";
 import { ReservationService } from "@/lib/modules/reservation/services/reservation.service";
 import type { ReservationRecord } from "@/lib/shared/infra/db/schema";
@@ -69,9 +71,41 @@ type ProfileStub = {
   phoneNumber: string | null;
 };
 
+const makeReservationRecord = (
+  value: Partial<ReservationRecord> = {},
+): ReservationRecord => {
+  const now = new Date();
+
+  return {
+    id: "reservation-1",
+    courtId: TEST_IDS.courtId1,
+    startTime: new Date(now.getTime() + 2 * 60 * 60 * 1000),
+    endTime: new Date(now.getTime() + 3 * 60 * 60 * 1000),
+    totalPriceCents: 1500,
+    currency: "PHP",
+    playerId: TEST_IDS.profileId,
+    groupId: null,
+    guestProfileId: null,
+    playerNameSnapshot: "Player",
+    playerEmailSnapshot: "player@example.com",
+    playerPhoneSnapshot: "0917",
+    status: "AWAITING_PAYMENT",
+    expiresAt: new Date(now.getTime() + 60 * 60 * 1000),
+    termsAcceptedAt: null,
+    confirmedAt: null,
+    cancelledAt: null,
+    cancellationReason: null,
+    createdAt: now,
+    pingOwnerCount: 0,
+    updatedAt: now,
+    ...value,
+  };
+};
+
 function makeReservationService(overrides?: {
   courts?: CourtStub[];
   place?: PlaceStub | null;
+  organization?: { id: string; ownerUserId: string } | null;
   profile?: ProfileStub | null;
   placeVerification?: {
     status: "VERIFIED" | "PENDING";
@@ -108,6 +142,10 @@ function makeReservationService(overrides?: {
     overrides && Object.hasOwn(overrides, "place")
       ? (overrides.place ?? null)
       : defaultPlace;
+  const organization =
+    overrides && Object.hasOwn(overrides, "organization")
+      ? (overrides.organization ?? null)
+      : null;
 
   const profile = overrides?.profile ?? {
     id: TEST_IDS.profileId,
@@ -350,7 +388,13 @@ function makeReservationService(overrides?: {
   };
 
   const organizationRepository = {
-    findById: vi.fn().mockResolvedValue(null),
+    findById: vi
+      .fn()
+      .mockImplementation((id: string) =>
+        Promise.resolve(
+          organization && id === organization.id ? organization : null,
+        ),
+      ),
     findByOrganizationId: vi.fn().mockResolvedValue([]),
   };
 
@@ -427,10 +471,390 @@ function makeReservationService(overrides?: {
     reservationRepository,
     reservationEventRepository,
     profileRepository,
+    courtRepository,
     placeRepository,
     notificationDeliveryService,
   };
 }
+
+describe("ReservationService.createReservationForCourt", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockedComputeSchedulePriceDetailed.mockImplementation(
+      ({ startTime, durationMinutes }) => ({
+        result: {
+          endTime: new Date(startTime.getTime() + durationMinutes * 60_000),
+          totalPriceCents: 1800,
+          currency: "PHP",
+          pricingBreakdown: {
+            basePriceCents: 1800,
+            addonPriceCents: 0,
+            totalPriceCents: 1800,
+            addons: [],
+          },
+          warnings: [],
+        },
+        failureReason: null,
+      }),
+    );
+  });
+
+  it("creates reservation when court is available and profile is complete", async () => {
+    // Arrange
+    const { service, reservationRepository, reservationEventRepository } =
+      makeReservationService();
+
+    // Act
+    const result = await service.createReservationForCourt(
+      "user-1",
+      "profile-1",
+      {
+        courtId: TEST_IDS.courtId1,
+        startTime: hoursFromNowIso(2),
+        durationMinutes: 60,
+      },
+    );
+
+    // Assert
+    expect(result.courtId).toBe(TEST_IDS.courtId1);
+    expect(result.currency).toBe("PHP");
+    expect(result.totalPriceCents).toBe(1800);
+    expect(reservationRepository.create).toHaveBeenCalledTimes(1);
+    expect(reservationEventRepository.create).toHaveBeenCalledTimes(1);
+  });
+
+  it("rejects when court is no longer available", async () => {
+    // Arrange
+    const { service, reservationRepository } = makeReservationService();
+    vi.mocked(
+      reservationRepository.findOverlappingActiveByCourtIds,
+    ).mockResolvedValue([{ courtId: TEST_IDS.courtId1 }] as never);
+
+    // Act + Assert
+    await expect(
+      service.createReservationForCourt("user-1", "profile-1", {
+        courtId: TEST_IDS.courtId1,
+        startTime: hoursFromNowIso(2),
+        durationMinutes: 60,
+      }),
+    ).rejects.toBeInstanceOf(NoAvailabilityError);
+  });
+
+  it("rejects when player profile is incomplete", async () => {
+    // Arrange
+    const { service, reservationRepository } = makeReservationService({
+      profile: {
+        id: TEST_IDS.profileId,
+        userId: "user-1",
+        displayName: null,
+        email: null,
+        phoneNumber: null,
+      },
+    });
+
+    // Act + Assert
+    await expect(
+      service.createReservationForCourt("user-1", "profile-1", {
+        courtId: TEST_IDS.courtId1,
+        startTime: hoursFromNowIso(2),
+        durationMinutes: 60,
+      }),
+    ).rejects.toBeInstanceOf(IncompleteProfileError);
+    expect(reservationRepository.create).not.toHaveBeenCalled();
+  });
+});
+
+describe("ReservationService.createReservationForAnyCourt", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("selects the cheapest available court and creates reservation", async () => {
+    // Arrange
+    const { service, courtRepository, reservationRepository } =
+      makeReservationService();
+    vi.mocked(courtRepository.findByPlaceAndSport).mockResolvedValue([
+      {
+        id: TEST_IDS.courtId1,
+        label: "Court 1",
+        placeId: TEST_IDS.placeId,
+        isActive: true,
+      },
+      {
+        id: TEST_IDS.courtId2,
+        label: "Court 2",
+        placeId: TEST_IDS.placeId,
+        isActive: true,
+      },
+    ] as never);
+    mockedComputeSchedulePriceDetailed
+      .mockImplementationOnce(({ startTime, durationMinutes }) => ({
+        result: {
+          endTime: new Date(startTime.getTime() + durationMinutes * 60_000),
+          totalPriceCents: 3000,
+          currency: "PHP",
+          pricingBreakdown: {
+            basePriceCents: 3000,
+            addonPriceCents: 0,
+            totalPriceCents: 3000,
+            addons: [],
+          },
+          warnings: [],
+        },
+        failureReason: null,
+      }))
+      .mockImplementationOnce(({ startTime, durationMinutes }) => ({
+        result: {
+          endTime: new Date(startTime.getTime() + durationMinutes * 60_000),
+          totalPriceCents: 2200,
+          currency: "PHP",
+          pricingBreakdown: {
+            basePriceCents: 2200,
+            addonPriceCents: 0,
+            totalPriceCents: 2200,
+            addons: [],
+          },
+          warnings: [],
+        },
+        failureReason: null,
+      }));
+
+    // Act
+    const result = await service.createReservationForAnyCourt(
+      "user-1",
+      "profile-1",
+      {
+        placeId: TEST_IDS.placeId,
+        sportId: "sport-1",
+        startTime: hoursFromNowIso(2),
+        durationMinutes: 60,
+      },
+    );
+
+    // Assert
+    expect(result.courtId).toBe(TEST_IDS.courtId2);
+    expect(result.totalPriceCents).toBe(2200);
+    expect(
+      vi.mocked(reservationRepository.create).mock.calls.at(-1)?.[0]?.courtId,
+    ).toBe(TEST_IDS.courtId2);
+  });
+
+  it("rejects when no active courts are available", async () => {
+    // Arrange
+    const { service, courtRepository } = makeReservationService();
+    vi.mocked(courtRepository.findByPlaceAndSport).mockResolvedValue([]);
+
+    // Act + Assert
+    await expect(
+      service.createReservationForAnyCourt("user-1", "profile-1", {
+        placeId: TEST_IDS.placeId,
+        sportId: "sport-1",
+        startTime: hoursFromNowIso(2),
+        durationMinutes: 60,
+      }),
+    ).rejects.toBeInstanceOf(NoAvailabilityError);
+  });
+
+  it("rejects when profile is incomplete for any-court booking", async () => {
+    // Arrange
+    const { service, courtRepository, reservationRepository } =
+      makeReservationService({
+        profile: {
+          id: TEST_IDS.profileId,
+          userId: "user-1",
+          displayName: null,
+          email: null,
+          phoneNumber: null,
+        },
+      });
+    vi.mocked(courtRepository.findByPlaceAndSport).mockResolvedValue([
+      {
+        id: TEST_IDS.courtId1,
+        label: "Court 1",
+        placeId: TEST_IDS.placeId,
+        isActive: true,
+      },
+    ] as never);
+    mockedComputeSchedulePriceDetailed.mockImplementation(
+      ({ startTime, durationMinutes }) => ({
+        result: {
+          endTime: new Date(startTime.getTime() + durationMinutes * 60_000),
+          totalPriceCents: 2500,
+          currency: "PHP",
+          pricingBreakdown: {
+            basePriceCents: 2500,
+            addonPriceCents: 0,
+            totalPriceCents: 2500,
+            addons: [],
+          },
+          warnings: [],
+        },
+        failureReason: null,
+      }),
+    );
+
+    // Act + Assert
+    await expect(
+      service.createReservationForAnyCourt("user-1", "profile-1", {
+        placeId: TEST_IDS.placeId,
+        sportId: "sport-1",
+        startTime: hoursFromNowIso(2),
+        durationMinutes: 60,
+      }),
+    ).rejects.toBeInstanceOf(IncompleteProfileError);
+    expect(reservationRepository.create).not.toHaveBeenCalled();
+  });
+});
+
+describe("ReservationService.markPayment", () => {
+  it("marks payment for payable reservation", async () => {
+    // Arrange
+    const { service, reservationRepository, reservationEventRepository } =
+      makeReservationService();
+    vi.mocked(reservationRepository.findByIdForUpdate).mockResolvedValue(
+      makeReservationRecord({
+        id: "reservation-1",
+        status: "AWAITING_PAYMENT",
+        playerId: TEST_IDS.profileId,
+      }),
+    );
+
+    // Act
+    const result = await service.markPayment("user-1", TEST_IDS.profileId, {
+      reservationId: "reservation-1",
+      termsAccepted: true,
+    });
+
+    // Assert
+    expect(result.status).toBe("PAYMENT_MARKED_BY_USER");
+    expect(reservationRepository.update).toHaveBeenCalledWith(
+      "reservation-1",
+      expect.objectContaining({
+        status: "PAYMENT_MARKED_BY_USER",
+      }),
+      expect.any(Object),
+    );
+    expect(reservationEventRepository.create).toHaveBeenCalledTimes(1);
+  });
+
+  it("marks payment and triggers chat side effect when venue has organization", async () => {
+    // Arrange
+    const { service, reservationRepository } = makeReservationService({
+      place: {
+        id: TEST_IDS.placeId,
+        name: "Test Place",
+        placeType: "RESERVABLE",
+        isActive: true,
+        timeZone: "Asia/Manila",
+        organizationId: "org-1",
+      },
+      organization: {
+        id: "org-1",
+        ownerUserId: "owner-user-1",
+      },
+      profile: {
+        id: TEST_IDS.profileId,
+        userId: "player-user-1",
+        displayName: "Player",
+        email: "player@example.com",
+        phoneNumber: "0917",
+      },
+    });
+    vi.mocked(reservationRepository.findByIdForUpdate).mockResolvedValue(
+      makeReservationRecord({
+        id: "reservation-chat",
+        status: "AWAITING_PAYMENT",
+        playerId: TEST_IDS.profileId,
+      }),
+    );
+
+    // Act
+    await service.markPayment("user-1", TEST_IDS.profileId, {
+      reservationId: "reservation-chat",
+      termsAccepted: true,
+    });
+
+    // Assert
+    expect(vi.mocked(postPlayerPaymentMarkedMessage)).toHaveBeenCalledWith({
+      reservationId: "reservation-chat",
+      playerUserId: "player-user-1",
+      ownerUserId: "owner-user-1",
+    });
+  });
+
+  it("rejects when terms are not accepted", async () => {
+    // Arrange
+    const { service, reservationRepository } = makeReservationService();
+
+    // Act + Assert
+    await expect(
+      service.markPayment("user-1", TEST_IDS.profileId, {
+        reservationId: "reservation-1",
+        termsAccepted: false,
+      }),
+    ).rejects.toBeInstanceOf(TermsNotAcceptedError);
+    expect(reservationRepository.findByIdForUpdate).not.toHaveBeenCalled();
+  });
+});
+
+describe("ReservationService.cancelReservation", () => {
+  it("cancels reservation within policy window", async () => {
+    // Arrange
+    const { service, reservationRepository, reservationEventRepository } =
+      makeReservationService();
+    vi.mocked(reservationRepository.findByIdForUpdate).mockResolvedValue(
+      makeReservationRecord({
+        id: "reservation-1",
+        status: "CREATED",
+        playerId: TEST_IDS.profileId,
+        startTime: new Date(Date.now() + 4 * 60 * 60 * 1000),
+      }),
+    );
+
+    // Act
+    const result = await service.cancelReservation(
+      "user-1",
+      TEST_IDS.profileId,
+      {
+        reservationId: "reservation-1",
+        reason: "Need to reschedule",
+      },
+    );
+
+    // Assert
+    expect(result.status).toBe("CANCELLED");
+    expect(reservationRepository.update).toHaveBeenCalledWith(
+      "reservation-1",
+      expect.objectContaining({
+        status: "CANCELLED",
+        cancellationReason: "Need to reschedule",
+        expiresAt: null,
+      }),
+      expect.any(Object),
+    );
+    expect(reservationEventRepository.create).toHaveBeenCalledTimes(1);
+  });
+
+  it("rejects cancellation when reservation belongs to another profile", async () => {
+    // Arrange
+    const { service, reservationRepository } = makeReservationService();
+    vi.mocked(reservationRepository.findByIdForUpdate).mockResolvedValue(
+      makeReservationRecord({
+        id: "reservation-1",
+        status: "CREATED",
+        playerId: "different-profile",
+      }),
+    );
+
+    // Act + Assert
+    await expect(
+      service.cancelReservation("user-1", TEST_IDS.profileId, {
+        reservationId: "reservation-1",
+      }),
+    ).rejects.toBeInstanceOf(NotReservationOwnerError);
+    expect(reservationRepository.update).not.toHaveBeenCalled();
+  });
+});
 
 describe("ReservationService.createReservationGroup", () => {
   beforeEach(() => {

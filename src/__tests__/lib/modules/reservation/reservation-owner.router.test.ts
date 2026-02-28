@@ -1,6 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { CourtBlockOverlapError } from "@/lib/modules/court-block/errors/court-block.errors";
-import { ReservationGroupNotFoundError } from "@/lib/modules/reservation/errors/reservation.errors";
+import { NotCourtOwnerError } from "@/lib/modules/court/errors/court.errors";
+import {
+  CourtBlockNotFoundError,
+  CourtBlockOverlapError,
+} from "@/lib/modules/court-block/errors/court-block.errors";
+import { NotOrganizationOwnerError } from "@/lib/modules/organization/errors/organization.errors";
+import {
+  InvalidReservationStatusError,
+  ReservationGroupNotFoundError,
+  ReservationNotFoundError,
+} from "@/lib/modules/reservation/errors/reservation.errors";
 
 const TEST_IDS = {
   ownerUserId: "11111111-1111-4111-8111-111111111111",
@@ -386,6 +395,24 @@ describe("reservationOwnerRouter", () => {
     );
   });
 
+  it("confirmPaymentGroup invalid status -> maps to BAD_REQUEST", async () => {
+    // Arrange
+    const caller = createCaller();
+    mockReservationOwnerService.confirmPaymentGroup.mockRejectedValue(
+      new InvalidReservationStatusError(TEST_IDS.reservationId, "CREATED", [
+        "PAYMENT_MARKED_BY_USER",
+      ]),
+    );
+
+    // Act + Assert
+    await expect(
+      caller.confirmPaymentGroup({
+        reservationGroupId: TEST_IDS.reservationGroupId,
+        notes: "Attempted confirmation",
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
+
   it("reject legacy endpoint -> still calls rejectReservation", async () => {
     // Arrange
     const caller = createCaller();
@@ -408,5 +435,69 @@ describe("reservationOwnerRouter", () => {
         reason: "Schedule conflict",
       },
     );
+  });
+
+  it("accept legacy endpoint forbidden -> maps to FORBIDDEN", async () => {
+    // Arrange
+    const caller = createCaller();
+    mockReservationOwnerService.acceptReservation.mockRejectedValue(
+      new NotCourtOwnerError(),
+    );
+
+    // Act + Assert
+    await expect(
+      caller.accept({ reservationId: TEST_IDS.reservationId }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  it("convertWalkInBlockToGuest missing block -> maps to NOT_FOUND", async () => {
+    // Arrange
+    const caller = createCaller();
+    mockReservationOwnerService.convertWalkInBlockToGuest.mockRejectedValue(
+      new CourtBlockNotFoundError(TEST_IDS.blockId),
+    );
+
+    // Act + Assert
+    await expect(
+      caller.convertWalkInBlockToGuest({
+        blockId: TEST_IDS.blockId,
+        guestMode: "existing",
+        guestProfileId: TEST_IDS.guestProfileId,
+        notes: "Convert missing block",
+      }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+
+  it("getForOrganization not owner -> maps to FORBIDDEN", async () => {
+    // Arrange
+    const caller = createCaller();
+    mockReservationOwnerService.getForOrganization.mockRejectedValue(
+      new NotOrganizationOwnerError(TEST_IDS.organizationId),
+    );
+
+    // Act + Assert
+    await expect(
+      caller.getForOrganization({
+        organizationId: TEST_IDS.organizationId,
+        limit: 20,
+        offset: 0,
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  it("reject legacy endpoint missing reservation -> maps to NOT_FOUND", async () => {
+    // Arrange
+    const caller = createCaller();
+    mockReservationOwnerService.rejectReservation.mockRejectedValue(
+      new ReservationNotFoundError(TEST_IDS.reservationId),
+    );
+
+    // Act + Assert
+    await expect(
+      caller.reject({
+        reservationId: TEST_IDS.reservationId,
+        reason: "Schedule conflict",
+      }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 });

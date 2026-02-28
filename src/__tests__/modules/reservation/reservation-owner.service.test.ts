@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NotOrganizationOwnerError } from "@/lib/modules/organization/errors/organization.errors";
 import {
   InvalidReservationStatusError,
@@ -10,6 +10,8 @@ import { ReservationOwnerService } from "@/lib/modules/reservation/services/rese
 vi.mock("@/lib/modules/chat/ops/post-owner-confirmed-message", () => ({
   postOwnerConfirmedMessage: vi.fn(),
 }));
+
+import { postOwnerConfirmedMessage } from "@/lib/modules/chat/ops/post-owner-confirmed-message";
 
 type GroupReservationStub = {
   id: string;
@@ -56,38 +58,56 @@ function makeOwnerService(overrides?: {
   );
 
   const now = new Date();
+  const toReservationRecord = (item: GroupReservationStub) => ({
+    id: item.id,
+    courtId: item.courtId,
+    status: item.status,
+    totalPriceCents: item.totalPriceCents,
+    currency: "PHP",
+    playerId: "profile-1",
+    guestProfileId: null,
+    startTime: now,
+    endTime: new Date(now.getTime() + 60 * 60 * 1000),
+    expiresAt: item.expiresAt ?? futureExpiry,
+    termsAcceptedAt: null,
+    confirmedAt: null,
+    cancelledAt: null,
+    cancellationReason: null,
+    playerNameSnapshot: "Player",
+    playerEmailSnapshot: "player@example.com",
+    playerPhoneSnapshot: "0917",
+    createdAt: now,
+    updatedAt: now,
+  });
 
   const reservationRepository = {
     findGroupByIdForUpdate: vi
       .fn()
       .mockResolvedValue(groupExists ? { id: "group-1" } : null),
-    findByGroupIdForUpdate: vi.fn().mockResolvedValue(
-      groupReservations.map((item) => ({
-        id: item.id,
-        courtId: item.courtId,
-        status: item.status,
-        totalPriceCents: item.totalPriceCents,
-        currency: "PHP",
-        playerId: "profile-1",
-        guestProfileId: null,
-        startTime: now,
-        endTime: new Date(now.getTime() + 60 * 60 * 1000),
-        expiresAt: item.expiresAt ?? futureExpiry,
-        termsAcceptedAt: null,
-        confirmedAt: null,
-        cancelledAt: null,
-        cancellationReason: null,
-        playerNameSnapshot: "Player",
-        playerEmailSnapshot: "player@example.com",
-        playerPhoneSnapshot: "0917",
-        createdAt: now,
-        updatedAt: now,
-      })),
-    ),
+    findByGroupIdForUpdate: vi
+      .fn()
+      .mockResolvedValue(
+        groupReservations.map((item) => toReservationRecord(item)),
+      ),
+    findByIdForUpdate: vi.fn().mockImplementation((reservationId: string) => {
+      const reservation = reservationById.get(reservationId);
+      return Promise.resolve(
+        reservation ? toReservationRecord(reservation) : null,
+      );
+    }),
     update: vi
       .fn()
       .mockImplementation((id: string, payload: Record<string, unknown>) => {
         const base = reservationById.get(id);
+        if (base) {
+          reservationById.set(id, {
+            ...base,
+            status:
+              (payload.status as GroupReservationStub["status"]) ?? base.status,
+            expiresAt:
+              (payload.expiresAt as Date | null | undefined) ?? base.expiresAt,
+          });
+        }
         return Promise.resolve({
           id,
           courtId: base?.courtId ?? "court-1",
@@ -217,6 +237,10 @@ function makeOwnerService(overrides?: {
     organizationMemberService,
   };
 }
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
 
 describe("ReservationOwnerService group actions", () => {
   it("acceptReservationGroup confirms all free reservations", async () => {
@@ -386,6 +410,7 @@ describe("ReservationOwnerService group actions", () => {
     expect(
       vi.mocked(notificationDeliveryService.enqueuePlayerReservationConfirmed),
     ).not.toHaveBeenCalled();
+    expect(vi.mocked(postOwnerConfirmedMessage)).not.toHaveBeenCalled();
   });
 
   it("confirmPaymentGroup fails when one reservation is not PAYMENT_MARKED_BY_USER", async () => {
@@ -492,6 +517,175 @@ describe("ReservationOwnerService group actions", () => {
         reservationGroupId: "group-1",
       }),
     ).rejects.toBeInstanceOf(ReservationGroupNotFoundError);
+  });
+});
+
+describe("ReservationOwnerService single actions", () => {
+  it("acceptReservation moves paid reservation to AWAITING_PAYMENT", async () => {
+    // Arrange
+    const { service, notificationDeliveryService } = makeOwnerService({
+      groupReservations: [
+        {
+          id: "res-paid",
+          courtId: "court-1",
+          status: "CREATED",
+          totalPriceCents: 1500,
+        },
+      ],
+    });
+
+    // Act
+    const updated = await service.acceptReservation("owner-user-1", "res-paid");
+
+    // Assert
+    expect(updated.status).toBe("AWAITING_PAYMENT");
+    expect(
+      vi.mocked(
+        notificationDeliveryService.enqueuePlayerReservationAwaitingPayment,
+      ),
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      vi.mocked(notificationDeliveryService.enqueuePlayerReservationConfirmed),
+    ).not.toHaveBeenCalled();
+    expect(vi.mocked(postOwnerConfirmedMessage)).not.toHaveBeenCalled();
+  });
+
+  it("acceptReservation confirms free reservation and triggers confirmation chat", async () => {
+    // Arrange
+    const { service, notificationDeliveryService } = makeOwnerService({
+      groupReservations: [
+        {
+          id: "res-free",
+          courtId: "court-1",
+          status: "CREATED",
+          totalPriceCents: 0,
+        },
+      ],
+    });
+
+    // Act
+    const updated = await service.acceptReservation("owner-user-1", "res-free");
+
+    // Assert
+    expect(updated.status).toBe("CONFIRMED");
+    expect(
+      vi.mocked(notificationDeliveryService.enqueuePlayerReservationConfirmed),
+    ).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(postOwnerConfirmedMessage)).toHaveBeenCalledTimes(1);
+  });
+
+  it("confirmPayment confirms PAYMENT_MARKED_BY_USER reservation", async () => {
+    // Arrange
+    const { service, reservationRepository, notificationDeliveryService } =
+      makeOwnerService({
+        groupReservations: [
+          {
+            id: "res-payment-marked",
+            courtId: "court-1",
+            status: "PAYMENT_MARKED_BY_USER",
+            totalPriceCents: 1500,
+          },
+        ],
+      });
+
+    // Act
+    const updated = await service.confirmPayment("owner-user-1", {
+      reservationId: "res-payment-marked",
+      notes: "Payment received",
+    });
+
+    // Assert
+    expect(updated.status).toBe("CONFIRMED");
+    expect(vi.mocked(reservationRepository.update)).toHaveBeenCalledWith(
+      "res-payment-marked",
+      expect.objectContaining({
+        status: "CONFIRMED",
+      }),
+      expect.any(Object),
+    );
+    expect(
+      vi.mocked(notificationDeliveryService.enqueuePlayerReservationConfirmed),
+    ).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(postOwnerConfirmedMessage)).toHaveBeenCalledTimes(1);
+  });
+
+  it("confirmPayment rejects invalid single-reservation status", async () => {
+    // Arrange
+    const { service, reservationRepository } = makeOwnerService({
+      groupReservations: [
+        {
+          id: "res-invalid-status",
+          courtId: "court-1",
+          status: "AWAITING_PAYMENT",
+          totalPriceCents: 1500,
+        },
+      ],
+    });
+
+    // Act + Assert
+    await expect(
+      service.confirmPayment("owner-user-1", {
+        reservationId: "res-invalid-status",
+      }),
+    ).rejects.toBeInstanceOf(InvalidReservationStatusError);
+    expect(vi.mocked(reservationRepository.update)).not.toHaveBeenCalled();
+  });
+
+  it("rejection parity -> single and group actions both transition to CANCELLED", async () => {
+    // Arrange
+    const singleHarness = makeOwnerService({
+      groupReservations: [
+        {
+          id: "single-res",
+          courtId: "court-1",
+          status: "CREATED",
+          totalPriceCents: 0,
+        },
+      ],
+    });
+    const groupHarness = makeOwnerService({
+      groupReservations: [
+        {
+          id: "group-res-1",
+          courtId: "court-1",
+          status: "CREATED",
+          totalPriceCents: 0,
+        },
+      ],
+    });
+
+    // Act
+    const singleResult = await singleHarness.service.rejectReservation(
+      "owner-user-1",
+      {
+        reservationId: "single-res",
+        reason: "Owner unavailable",
+      },
+    );
+    const groupResult = await groupHarness.service.rejectReservationGroup(
+      "owner-user-1",
+      {
+        reservationGroupId: "group-1",
+        reason: "Owner unavailable",
+      },
+    );
+
+    // Assert
+    expect(singleResult.status).toBe("CANCELLED");
+    expect(groupResult).toHaveLength(1);
+    expect(groupResult[0]?.status).toBe("CANCELLED");
+    expect(
+      vi.mocked(
+        singleHarness.notificationDeliveryService
+          .enqueuePlayerReservationRejected,
+      ),
+    ).toHaveBeenCalledTimes(1);
+    expect(
+      vi.mocked(
+        groupHarness.notificationDeliveryService
+          .enqueuePlayerReservationGroupRejected,
+      ),
+    ).toHaveBeenCalledTimes(1);
   });
 });
 

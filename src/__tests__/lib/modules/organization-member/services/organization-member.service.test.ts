@@ -161,6 +161,79 @@ describe("OrganizationMemberService authorization", () => {
     expect(allowed).toBe(false);
   });
 
+  it("role permission matrix stays stable for manager and viewer", async () => {
+    const managerService = makeService({
+      membership: makeMembership({
+        userId: "manager-user-1",
+        role: "MANAGER",
+        permissions: [
+          "reservation.read",
+          "reservation.update_status",
+          "reservation.notification.receive",
+          "organization.member.manage",
+        ],
+      }),
+    }).service;
+    const viewerService = makeService({
+      membership: makeMembership({
+        userId: "viewer-user-1",
+        role: "VIEWER",
+        permissions: ["reservation.read"],
+      }),
+    }).service;
+
+    const cases: Array<{
+      service: OrganizationMemberService;
+      userId: string;
+      permission:
+        | "reservation.read"
+        | "reservation.update_status"
+        | "reservation.notification.receive"
+        | "organization.member.manage";
+      expected: boolean;
+    }> = [
+      {
+        service: managerService,
+        userId: "manager-user-1",
+        permission: "reservation.read",
+        expected: true,
+      },
+      {
+        service: managerService,
+        userId: "manager-user-1",
+        permission: "organization.member.manage",
+        expected: true,
+      },
+      {
+        service: viewerService,
+        userId: "viewer-user-1",
+        permission: "reservation.read",
+        expected: true,
+      },
+      {
+        service: viewerService,
+        userId: "viewer-user-1",
+        permission: "reservation.notification.receive",
+        expected: false,
+      },
+      {
+        service: viewerService,
+        userId: "viewer-user-1",
+        permission: "organization.member.manage",
+        expected: false,
+      },
+    ];
+
+    for (const testCase of cases) {
+      const allowed = await testCase.service.hasOrganizationPermission(
+        testCase.userId,
+        "org-1",
+        testCase.permission,
+      );
+      expect(allowed).toBe(testCase.expected);
+    }
+  });
+
   it("assertOrganizationPermission throws when permission is missing", async () => {
     const { service } = makeService({
       membership: makeMembership({
@@ -177,6 +250,24 @@ describe("OrganizationMemberService authorization", () => {
         "reservation.chat",
       ),
     ).rejects.toBeInstanceOf(OrganizationMemberPermissionDeniedError);
+  });
+
+  it("owner implicit permission covers team-management actions without membership lookup", async () => {
+    const { service, organizationMemberRepository } = makeService({
+      ownerUserId: "owner-user-1",
+      membership: null,
+    });
+
+    const context = await service.assertOrganizationPermission(
+      "owner-user-1",
+      "org-1",
+      "organization.member.manage",
+    );
+
+    expect(context.isOwner).toBe(true);
+    expect(
+      vi.mocked(organizationMemberRepository.findActiveMembership),
+    ).not.toHaveBeenCalled();
   });
 
   it("listOrganizationUserIdsWithPermission returns owner and authorized members", async () => {
@@ -197,6 +288,20 @@ describe("OrganizationMemberService authorization", () => {
     ]);
   });
 
+  it("listOrganizationUserIdsWithPermission deduplicates owner id", async () => {
+    const { service } = makeService({
+      ownerUserId: "owner-user-1",
+      userIdsWithPermission: ["owner-user-1", "manager-user-1"],
+    });
+
+    const userIds = await service.listOrganizationUserIdsWithPermission(
+      "org-1",
+      "reservation.read",
+    );
+
+    expect(userIds).toEqual(["owner-user-1", "manager-user-1"]);
+  });
+
   it("getMyReservationNotificationPreference returns opt-in state and eligibility", async () => {
     const { service } = makeService({
       ownerUserId: "owner-user-1",
@@ -213,6 +318,29 @@ describe("OrganizationMemberService authorization", () => {
       userId: "owner-user-1",
       enabled: true,
       canReceive: true,
+    });
+  });
+
+  it("getMyReservationNotificationPreference returns canReceive=false for ineligible members", async () => {
+    const { service } = makeService({
+      membership: makeMembership({
+        userId: "viewer-user-1",
+        role: "VIEWER",
+        permissions: ["reservation.read"],
+      }),
+      notificationPreference: { reservationOpsEnabled: true },
+    });
+
+    const result = await service.getMyReservationNotificationPreference(
+      "viewer-user-1",
+      "org-1",
+    );
+
+    expect(result).toEqual({
+      organizationId: "org-1",
+      userId: "viewer-user-1",
+      enabled: true,
+      canReceive: false,
     });
   });
 
@@ -266,6 +394,43 @@ describe("OrganizationMemberService authorization", () => {
     );
   });
 
+  it("setMyReservationNotificationPreference persists preference for eligible non-owner member", async () => {
+    const { service, organizationMemberRepository } = makeService({
+      membership: makeMembership({
+        userId: "manager-user-1",
+        role: "MANAGER",
+        permissions: ["reservation.read", "reservation.notification.receive"],
+      }),
+    });
+
+    const result = await service.setMyReservationNotificationPreference(
+      "manager-user-1",
+      {
+        organizationId: "org-1",
+        enabled: true,
+      },
+    );
+
+    expect(result).toEqual({
+      organizationId: "org-1",
+      userId: "manager-user-1",
+      enabled: true,
+      canReceive: true,
+    });
+    expect(
+      vi.mocked(
+        organizationMemberRepository.upsertReservationNotificationPreference,
+      ),
+    ).toHaveBeenCalledWith(
+      {
+        organizationId: "org-1",
+        userId: "manager-user-1",
+        reservationOpsEnabled: true,
+      },
+      undefined,
+    );
+  });
+
   it("getReservationNotificationRoutingStatus enforces reservation.read permission", async () => {
     const { service } = makeService({
       ownerUserId: "owner-user-1",
@@ -297,6 +462,27 @@ describe("OrganizationMemberService authorization", () => {
       organizationId: "org-1",
       enabledRecipientCount: 1,
       hasEnabledRecipients: true,
+    });
+  });
+
+  it("getReservationNotificationRoutingStatus returns muted contract when no recipients are enabled", async () => {
+    const { service } = makeService({
+      ownerUserId: "owner-user-1",
+      userIdsWithPermission: ["manager-user-1"],
+      enabledNotificationUserIds: [],
+    });
+
+    const status = await service.getReservationNotificationRoutingStatus(
+      "owner-user-1",
+      {
+        organizationId: "org-1",
+      },
+    );
+
+    expect(status).toEqual({
+      organizationId: "org-1",
+      enabledRecipientCount: 0,
+      hasEnabledRecipients: false,
     });
   });
 
@@ -338,5 +524,27 @@ describe("OrganizationMemberService authorization", () => {
       await service.listOrganizationUserIdsForReservationNotifications("org-1");
 
     expect(userIds).toEqual(["owner-user-1", "manager-user-2"]);
+  });
+
+  it("listOrganizationUserIdsForReservationNotifications returns empty when nobody is opted in", async () => {
+    const { service, organizationMemberRepository } = makeService({
+      ownerUserId: "owner-user-1",
+      userIdsWithPermission: ["manager-user-1"],
+      enabledNotificationUserIds: [],
+    });
+
+    const userIds =
+      await service.listOrganizationUserIdsForReservationNotifications("org-1");
+
+    expect(userIds).toEqual([]);
+    expect(
+      vi.mocked(
+        organizationMemberRepository.listReservationNotificationEnabledUserIds,
+      ),
+    ).toHaveBeenCalledWith(
+      "org-1",
+      ["owner-user-1", "manager-user-1"],
+      undefined,
+    );
   });
 });

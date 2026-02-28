@@ -359,6 +359,299 @@ describe("NotificationDeliveryService reservation group events", () => {
     expect(userNotificationRepository.createMany).toHaveBeenCalledTimes(2);
   });
 
+  it("enqueueOwnerReservationGroupCreated keeps idempotency and inbox rows recipient-scoped", async () => {
+    const {
+      service,
+      organizationMemberService,
+      jobRepository,
+      userNotificationRepository,
+    } = makeService();
+    vi.mocked(
+      organizationMemberService.listOrganizationUserIdsForReservationNotifications,
+    ).mockResolvedValue(["owner-1", "manager-1"]);
+
+    await expect(
+      service.enqueueOwnerReservationGroupCreated({
+        reservationGroupId: "group-1",
+        representativeReservationId: "res-1",
+        organizationId: "org-1",
+        placeId: "place-1",
+        placeName: "Place A",
+        totalPriceCents: 3000,
+        currency: "PHP",
+        playerName: "Player A",
+        playerEmail: "player@example.com",
+        playerPhone: "09170000000",
+        itemCount: 2,
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T11:00:00.000Z",
+        expiresAtIso: "2026-02-28T10:00:00.000Z",
+        items: groupItems,
+      }),
+    ).resolves.toEqual({ jobCount: 8 });
+
+    const jobs = vi.mocked(jobRepository.createMany).mock
+      .calls[0]?.[0] as Array<{ idempotencyKey: string }>;
+    expect(jobs).toHaveLength(8);
+    expect(
+      jobs.some((job) =>
+        job.idempotencyKey.includes(
+          "reservation_group.created:group-1:org:org-1:user:owner-1:email",
+        ),
+      ),
+    ).toBe(true);
+    expect(
+      jobs.some((job) =>
+        job.idempotencyKey.includes(
+          "reservation_group.created:group-1:org:org-1:user:manager-1:sms",
+        ),
+      ),
+    ).toBe(true);
+
+    expect(userNotificationRepository.createMany).toHaveBeenCalledTimes(2);
+    const inboxRows = vi
+      .mocked(userNotificationRepository.createMany)
+      .mock.calls.map((call) => call[0]?.[0] as { idempotencyKey: string });
+    expect(
+      inboxRows.some((row) =>
+        row.idempotencyKey.includes(
+          "reservation_group.created:group-1:org:org-1:user:owner-1:inbox:owner-1",
+        ),
+      ),
+    ).toBe(true);
+    expect(
+      inboxRows.some((row) =>
+        row.idempotencyKey.includes(
+          "reservation_group.created:group-1:org:org-1:user:manager-1:inbox:manager-1",
+        ),
+      ),
+    ).toBe(true);
+  });
+
+  it("enqueueOwnerReservationCancelled fans out single-reservation owner lifecycle events", async () => {
+    const {
+      service,
+      recipientRepository,
+      organizationMemberService,
+      jobRepository,
+      userNotificationRepository,
+    } = makeService();
+    vi.mocked(
+      recipientRepository.findOwnerRecipientByReservationId,
+    ).mockResolvedValue({
+      organizationId: "org-1",
+    });
+    vi.mocked(
+      organizationMemberService.listOrganizationUserIdsForReservationNotifications,
+    ).mockResolvedValue(["owner-1", "manager-1"]);
+
+    await expect(
+      service.enqueueOwnerReservationCancelled({
+        reservationId: "res-1",
+        placeName: "Place A",
+        courtLabel: "Court 1",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T09:00:00.000Z",
+        playerName: "Player A",
+        reason: "Player requested cancellation",
+      }),
+    ).resolves.toEqual({ jobCount: 4 });
+
+    const jobs = vi.mocked(jobRepository.createMany).mock
+      .calls[0]?.[0] as Array<{ eventType: string; idempotencyKey: string }>;
+    expect(jobs).toHaveLength(4);
+    expect(jobs.every((job) => job.eventType === "reservation.cancelled")).toBe(
+      true,
+    );
+    expect(
+      jobs.some((job) =>
+        job.idempotencyKey.includes(
+          "reservation.cancelled:res-1:org:org-1:user:owner-1:web_push:web-1",
+        ),
+      ),
+    ).toBe(true);
+    expect(
+      jobs.some((job) =>
+        job.idempotencyKey.includes(
+          "reservation.cancelled:res-1:org:org-1:user:manager-1:mobile_push:mob-1",
+        ),
+      ),
+    ).toBe(true);
+    expect(userNotificationRepository.createMany).toHaveBeenCalledTimes(2);
+  });
+
+  it("enqueueOwnerReservationGroupCancelled fans out grouped owner lifecycle events", async () => {
+    const { service, jobRepository, userNotificationRepository } =
+      makeService();
+
+    await expect(
+      service.enqueueOwnerReservationGroupCancelled({
+        reservationGroupId: "group-1",
+        representativeReservationId: "res-1",
+        organizationId: "org-1",
+        placeName: "Place A",
+        courtLabel: "2 courts",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T11:00:00.000Z",
+        playerName: "Player A",
+        itemCount: 2,
+        items: groupItems,
+        reason: "Player requested cancellation",
+      }),
+    ).resolves.toEqual({ jobCount: 2 });
+
+    const jobs = vi.mocked(jobRepository.createMany).mock
+      .calls[0]?.[0] as Array<{ eventType: string; idempotencyKey: string }>;
+    expect(jobs).toHaveLength(2);
+    expect(
+      jobs.every(
+        (job) =>
+          job.eventType === "reservation_group.cancelled" &&
+          job.idempotencyKey.includes(
+            "reservation_group.cancelled:group-1:org:org-1",
+          ),
+      ),
+    ).toBe(true);
+    expect(userNotificationRepository.createMany).toHaveBeenCalledTimes(1);
+  });
+
+  it("enqueueOwnerReservationGroupPaymentMarked returns muted contract when no members are opted in", async () => {
+    const { service, organizationMemberService, jobRepository } = makeService();
+    vi.mocked(
+      organizationMemberService.listOrganizationUserIdsForReservationNotifications,
+    ).mockResolvedValue([]);
+
+    await expect(
+      service.enqueueOwnerReservationGroupPaymentMarked({
+        reservationGroupId: "group-1",
+        representativeReservationId: "res-1",
+        organizationId: "org-1",
+        placeName: "Place A",
+        courtLabel: "2 courts",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T11:00:00.000Z",
+        playerName: "Player A",
+        itemCount: 2,
+        items: groupItems,
+      }),
+    ).resolves.toEqual({ jobCount: 0 });
+
+    expect(jobRepository.createMany).not.toHaveBeenCalled();
+  });
+
+  it("enqueuePlayerReservationConfirmed enqueues player lifecycle jobs and inbox row", async () => {
+    const {
+      service,
+      recipientRepository,
+      jobRepository,
+      userNotificationRepository,
+    } = makeService();
+    vi.mocked(
+      recipientRepository.findPlayerRecipientByReservationId,
+    ).mockResolvedValue({
+      userId: "player-1",
+      email: "player@example.com",
+      phoneNumber: "09170000000",
+    });
+
+    await expect(
+      service.enqueuePlayerReservationConfirmed({
+        reservationId: "res-1",
+        placeName: "Place A",
+        courtLabel: "Court 1",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T09:00:00.000Z",
+      }),
+    ).resolves.toEqual({ jobCount: 2 });
+
+    const jobs = vi.mocked(jobRepository.createMany).mock
+      .calls[0]?.[0] as Array<{ eventType: string; idempotencyKey: string }>;
+    expect(jobs).toHaveLength(2);
+    expect(jobs.every((job) => job.eventType === "reservation.confirmed")).toBe(
+      true,
+    );
+    expect(
+      jobs.every((job) =>
+        job.idempotencyKey.startsWith(
+          "reservation.confirmed:res-1:user:player-1",
+        ),
+      ),
+    ).toBe(true);
+
+    expect(userNotificationRepository.createMany).toHaveBeenCalledTimes(1);
+    const inboxRow = vi.mocked(userNotificationRepository.createMany).mock
+      .calls[0]?.[0]?.[0] as { idempotencyKey: string };
+    expect(inboxRow.idempotencyKey).toContain(
+      "reservation.confirmed:res-1:user:player-1:inbox:player-1",
+    );
+  });
+
+  it("enqueuePlayerReservationGroupRejected enqueues group lifecycle jobs with group idempotency", async () => {
+    const { service, recipientRepository, jobRepository } = makeService();
+    vi.mocked(
+      recipientRepository.findPlayerRecipientByReservationId,
+    ).mockResolvedValue({
+      userId: "player-1",
+      email: "player@example.com",
+      phoneNumber: "09170000000",
+    });
+
+    await expect(
+      service.enqueuePlayerReservationGroupRejected({
+        reservationGroupId: "group-1",
+        representativeReservationId: "res-1",
+        placeName: "Place A",
+        courtLabel: "2 courts",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T11:00:00.000Z",
+        itemCount: 2,
+        items: groupItems,
+        reason: "Overbooked",
+      }),
+    ).resolves.toEqual({ jobCount: 2 });
+
+    const jobs = vi.mocked(jobRepository.createMany).mock
+      .calls[0]?.[0] as Array<{ eventType: string; idempotencyKey: string }>;
+    expect(jobs).toHaveLength(2);
+    expect(
+      jobs.every(
+        (job) =>
+          job.eventType === "reservation_group.rejected" &&
+          job.idempotencyKey.includes(
+            "reservation_group.rejected:group-1:user:player-1",
+          ),
+      ),
+    ).toBe(true);
+  });
+
+  it("enqueuePlayerReservationAwaitingPayment returns jobCount=0 when player recipient is missing", async () => {
+    const {
+      service,
+      recipientRepository,
+      jobRepository,
+      userNotificationRepository,
+    } = makeService();
+    vi.mocked(
+      recipientRepository.findPlayerRecipientByReservationId,
+    ).mockResolvedValue(null);
+
+    await expect(
+      service.enqueuePlayerReservationAwaitingPayment({
+        reservationId: "res-1",
+        placeName: "Place A",
+        courtLabel: "Court 1",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T09:00:00.000Z",
+        expiresAtIso: "2026-02-28T10:00:00.000Z",
+        totalPriceCents: 1500,
+        currency: "PHP",
+      }),
+    ).resolves.toEqual({ jobCount: 0 });
+
+    expect(jobRepository.createMany).not.toHaveBeenCalled();
+    expect(userNotificationRepository.createMany).not.toHaveBeenCalled();
+  });
+
   it("enqueueOwnerReservationPing returns pinged false when no members are opted in", async () => {
     const { service, organizationMemberService, jobRepository } = makeService();
     vi.mocked(

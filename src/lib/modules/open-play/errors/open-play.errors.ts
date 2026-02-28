@@ -61,3 +61,57 @@ export class OpenPlayCapacityReachedError extends BusinessRuleError {
     super("This Open Play is full.", { maxPlayers });
   }
 }
+
+export class ExternalOpenPlayNotFoundError extends NotFoundError {
+  constructor(externalOpenPlayId: string) {
+    super(`External Open Play not found: ${externalOpenPlayId}`, {
+      externalOpenPlayId,
+    });
+  }
+}
+
+export class ExternalOpenPlayNotActiveError extends BusinessRuleError {
+  constructor(status: string) {
+    super(`External Open Play is not active (status: ${status}).`, { status });
+  }
+}
+
+export class ExternalOpenPlayCannotJoinOwnError extends BusinessRuleError {
+  constructor() {
+    super("You cannot join your own External Open Play.");
+  }
+}
+
+export class ExternalOpenPlayAlreadyParticipatingError extends ConflictError {
+  constructor(status: string) {
+    super("You already have a join status for this External Open Play.", {
+      status,
+    });
+  }
+}
+
+export class ExternalOpenPlayStartsInPastError extends BusinessRuleError {
+  constructor() {
+    super("This External Open Play has already started.");
+  }
+}
+
+export class ExternalOpenPlayCapacityReachedError extends BusinessRuleError {
+  constructor(maxPlayers: number) {
+    super("This External Open Play is full.", { maxPlayers });
+  }
+}
+
+export class ExternalOpenPlayNotHostError extends AuthorizationError {
+  constructor() {
+    super("Only the external host can perform this action.");
+  }
+}
+
+export class ExternalOpenPlayPromotionMismatchError extends BusinessRuleError {
+  constructor() {
+    super(
+      "Reservation does not match the external session (place, sport, or time).",
+    );
+  }
+}

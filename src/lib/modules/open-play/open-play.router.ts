@@ -15,19 +15,32 @@ import {
   ValidationError,
 } from "@/lib/shared/kernel/errors";
 import {
+  CancelExternalOpenPlaySchema,
   CancelOpenPlaySchema,
+  CloseExternalOpenPlaySchema,
   CloseOpenPlaySchema,
+  CreateExternalOpenPlaySchema,
   CreateOpenPlayFromReservationGroupSchema,
   CreateOpenPlayFromReservationSchema,
+  DecideExternalOpenPlayParticipantSchema,
   DecideOpenPlayParticipantSchema,
+  GetExternalOpenPlaySchema,
   GetOpenPlayForReservationGroupSchema,
   GetOpenPlayForReservationSchema,
   GetOpenPlaySchema,
+  LeaveExternalOpenPlaySchema,
   LeaveOpenPlaySchema,
+  ListExternalOpenPlaysByPlaceSchema,
   ListOpenPlaysByPlaceSchema,
+  PromoteExternalOpenPlaySchema,
+  ReportExternalOpenPlaySchema,
+  RequestJoinExternalOpenPlaySchema,
   RequestJoinOpenPlaySchema,
 } from "./dtos";
-import { makeOpenPlayService } from "./factories/open-play.factory";
+import {
+  makeExternalOpenPlayService,
+  makeOpenPlayService,
+} from "./factories/open-play.factory";
 
 function handleOpenPlayError(error: unknown): never {
   if (error instanceof NotFoundError) {
@@ -85,6 +98,28 @@ export const openPlayRouter = router({
       }
     }),
 
+  listExternalByPlace: publicProcedure
+    .input(ListExternalOpenPlaysByPlaceSchema)
+    .query(async ({ input }) => {
+      try {
+        const service = makeExternalOpenPlayService();
+        return await service.listPublicByPlace(input, new Date());
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
+  getExternalPublicDetail: publicProcedure
+    .input(GetExternalOpenPlaySchema)
+    .query(async ({ input }) => {
+      try {
+        const service = makeExternalOpenPlayService();
+        return await service.getPublicDetail(input, new Date());
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
   getDetail: protectedProcedure
     .input(GetOpenPlaySchema)
     .query(async ({ input, ctx }) => {
@@ -93,6 +128,25 @@ export const openPlayRouter = router({
         const profile = await profileService.getOrCreateProfile(ctx.userId);
 
         const service = makeOpenPlayService();
+        return await service.getViewerDetail(
+          ctx.userId,
+          profile.id,
+          input,
+          new Date(),
+        );
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
+  getExternalDetail: protectedProcedure
+    .input(GetExternalOpenPlaySchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const service = makeExternalOpenPlayService();
         return await service.getViewerDetail(
           ctx.userId,
           profile.id,
@@ -132,6 +186,21 @@ export const openPlayRouter = router({
           input,
         );
         return { openPlayId: created.id };
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
+  createExternal: protectedRateLimitedProcedure("sensitive")
+    .input(CreateExternalOpenPlaySchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const service = makeExternalOpenPlayService();
+        const created = await service.create(ctx.userId, profile.id, input);
+        return { externalOpenPlayId: created.id };
       } catch (error) {
         handleOpenPlayError(error);
       }
@@ -193,6 +262,25 @@ export const openPlayRouter = router({
       }
     }),
 
+  requestToJoinExternal: protectedRateLimitedProcedure("mutation")
+    .input(RequestJoinExternalOpenPlaySchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const service = makeExternalOpenPlayService();
+        const result = await service.requestToJoin(
+          ctx.userId,
+          profile.id,
+          input,
+        );
+        return { status: result.participant.status };
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
   leave: protectedProcedure
     .input(LeaveOpenPlaySchema)
     .mutation(async ({ input, ctx }) => {
@@ -208,6 +296,21 @@ export const openPlayRouter = router({
           await chatService.removeMember(input.openPlayId, ctx.userId);
         }
 
+        return { ok: true, status: result.participant?.status ?? null };
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
+  leaveExternal: protectedProcedure
+    .input(LeaveExternalOpenPlaySchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const service = makeExternalOpenPlayService();
+        const result = await service.leave(ctx.userId, profile.id, input);
         return { ok: true, status: result.participant?.status ?? null };
       } catch (error) {
         handleOpenPlayError(error);
@@ -246,6 +349,25 @@ export const openPlayRouter = router({
       }
     }),
 
+  decideExternalParticipant: protectedProcedure
+    .input(DecideExternalOpenPlayParticipantSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const service = makeExternalOpenPlayService();
+        const result = await service.decideParticipant(
+          ctx.userId,
+          profile.id,
+          input,
+        );
+        return { status: result.participant.status };
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
   close: protectedProcedure
     .input(CloseOpenPlaySchema)
     .mutation(async ({ input, ctx }) => {
@@ -253,6 +375,21 @@ export const openPlayRouter = router({
         const profileService = makeProfileService();
         const profile = await profileService.getOrCreateProfile(ctx.userId);
         const service = makeOpenPlayService();
+        const updated = await service.close(ctx.userId, profile.id, input);
+        return { status: updated.status };
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
+  closeExternal: protectedProcedure
+    .input(CloseExternalOpenPlaySchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const service = makeExternalOpenPlayService();
         const updated = await service.close(ctx.userId, profile.id, input);
         return { status: updated.status };
       } catch (error) {
@@ -269,6 +406,49 @@ export const openPlayRouter = router({
         const service = makeOpenPlayService();
         const updated = await service.cancel(ctx.userId, profile.id, input);
         return { status: updated.status };
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
+  cancelExternal: protectedProcedure
+    .input(CancelExternalOpenPlaySchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const service = makeExternalOpenPlayService();
+        const updated = await service.cancel(ctx.userId, profile.id, input);
+        return { status: updated.status };
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
+  reportExternal: protectedRateLimitedProcedure("mutation")
+    .input(ReportExternalOpenPlaySchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const service = makeExternalOpenPlayService();
+        return await service.report(ctx.userId, profile.id, input);
+      } catch (error) {
+        handleOpenPlayError(error);
+      }
+    }),
+
+  promoteExternalToVerified: protectedRateLimitedProcedure("sensitive")
+    .input(PromoteExternalOpenPlaySchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const service = makeExternalOpenPlayService();
+        return await service.promoteToVerified(ctx.userId, profile.id, input);
       } catch (error) {
         handleOpenPlayError(error);
       }

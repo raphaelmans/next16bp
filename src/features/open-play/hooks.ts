@@ -31,6 +31,27 @@ export function useModOpenPlaysByPlace(input: {
   );
 }
 
+export function useModExternalOpenPlaysByPlace(input: {
+  placeId: string;
+  fromIso?: string;
+  toIso?: string;
+  limit?: number;
+  enabled?: boolean;
+}) {
+  const { enabled = true, limit = 20, ...rest } = input;
+  return useFeatureQuery(
+    ["openPlay", "listExternalByPlace"],
+    openPlayApi.queryOpenPlayListExternalByPlace,
+    {
+      placeId: rest.placeId,
+      fromIso: rest.fromIso,
+      toIso: rest.toIso,
+      limit,
+    },
+    { enabled },
+  );
+}
+
 export function useQueryOpenPlayPublicDetail(
   openPlayId: string,
   enabled = true,
@@ -62,6 +83,51 @@ export function useQueryOpenPlayDetail(openPlayId: string, enabled = true) {
         const hasStarted = Date.parse(data.openPlay.startsAtIso) <= Date.now();
         if (hasStarted) return false;
         if (data.openPlay.status !== "ACTIVE") return false;
+        if (data.viewer.role === "host") return 15_000;
+        return data.viewer.myStatus === "REQUESTED" ||
+          data.viewer.myStatus === "WAITLISTED"
+          ? 15_000
+          : false;
+      },
+    },
+  );
+}
+
+export function useQueryExternalOpenPlayPublicDetail(
+  externalOpenPlayId: string,
+  enabled = true,
+) {
+  return useFeatureQuery(
+    ["openPlay", "getExternalPublicDetail"],
+    openPlayApi.queryOpenPlayGetExternalPublicDetail,
+    { externalOpenPlayId },
+    {
+      enabled: enabled && Boolean(externalOpenPlayId),
+      refetchOnWindowFocus: true,
+      staleTime: 10_000,
+    },
+  );
+}
+
+export function useQueryExternalOpenPlayDetail(
+  externalOpenPlayId: string,
+  enabled = true,
+) {
+  return useFeatureQuery(
+    ["openPlay", "getExternalDetail"],
+    openPlayApi.queryOpenPlayGetExternalDetail,
+    { externalOpenPlayId },
+    {
+      enabled: enabled && Boolean(externalOpenPlayId),
+      refetchOnWindowFocus: true,
+      staleTime: 10_000,
+      refetchInterval: (query) => {
+        const data = query.state.data;
+        if (!data) return false;
+        const hasStarted =
+          Date.parse(data.externalOpenPlay.startsAtIso) <= Date.now();
+        if (hasStarted) return false;
+        if (data.externalOpenPlay.status !== "ACTIVE") return false;
         if (data.viewer.role === "host") return 15_000;
         return data.viewer.myStatus === "REQUESTED" ||
           data.viewer.myStatus === "WAITLISTED"
@@ -104,6 +170,32 @@ export function useMutCreateOpenPlayFromReservation() {
     },
     onError: (error) => {
       toast.error(error?.message || "Failed to create Open Play");
+    },
+  });
+}
+
+export function useMutCreateExternalOpenPlay() {
+  const utils = trpc.useUtils();
+
+  return useFeatureMutation(openPlayApi.mutOpenPlayCreateExternal, {
+    onSuccess: async (data, variables) => {
+      const placeId = (variables as { placeId: string }).placeId;
+      toast.success("External Open Play created");
+      await Promise.all([
+        utils.openPlay.listExternalByPlace.invalidate({
+          placeId,
+          limit: 20,
+        }),
+        utils.openPlay.getExternalPublicDetail.invalidate({
+          externalOpenPlayId: data.externalOpenPlayId,
+        }),
+        utils.openPlay.getExternalDetail.invalidate({
+          externalOpenPlayId: data.externalOpenPlayId,
+        }),
+      ]);
+    },
+    onError: (error) => {
+      toast.error(error?.message || "Failed to create External Open Play");
     },
   });
 }
@@ -160,6 +252,35 @@ export function useMutRequestJoinOpenPlay() {
   });
 }
 
+export function useMutRequestJoinExternalOpenPlay() {
+  const utils = trpc.useUtils();
+
+  return useFeatureMutation(openPlayApi.mutOpenPlayRequestToJoinExternal, {
+    onSuccess: async (data, variables) => {
+      const externalOpenPlayId = (variables as { externalOpenPlayId: string })
+        .externalOpenPlayId;
+      toast.success(
+        data.status === "CONFIRMED"
+          ? "Joined External Open Play"
+          : data.status === "WAITLISTED"
+            ? "Waitlisted"
+            : "Join request sent",
+      );
+      await Promise.all([
+        utils.openPlay.getExternalPublicDetail.invalidate({
+          externalOpenPlayId,
+        }),
+        utils.openPlay.getExternalDetail.invalidate({
+          externalOpenPlayId,
+        }),
+      ]);
+    },
+    onError: (error) => {
+      toast.error(error?.message || "Unable to join External Open Play");
+    },
+  });
+}
+
 export function useMutLeaveOpenPlay() {
   const utils = trpc.useUtils();
 
@@ -182,6 +303,29 @@ export function useMutLeaveOpenPlay() {
   });
 }
 
+export function useMutLeaveExternalOpenPlay() {
+  const utils = trpc.useUtils();
+
+  return useFeatureMutation(openPlayApi.mutOpenPlayLeaveExternal, {
+    onSuccess: async (_data, variables) => {
+      const externalOpenPlayId = (variables as { externalOpenPlayId: string })
+        .externalOpenPlayId;
+      toast.success("Left External Open Play");
+      await Promise.all([
+        utils.openPlay.getExternalPublicDetail.invalidate({
+          externalOpenPlayId,
+        }),
+        utils.openPlay.getExternalDetail.invalidate({
+          externalOpenPlayId,
+        }),
+      ]);
+    },
+    onError: (error) => {
+      toast.error(error?.message || "Unable to leave External Open Play");
+    },
+  });
+}
+
 export function useMutDecideOpenPlayParticipant() {
   const utils = trpc.useUtils();
 
@@ -192,6 +336,20 @@ export function useMutDecideOpenPlayParticipant() {
     },
     onError: (error) => {
       toast.error(error?.message || "Unable to update participant");
+    },
+  });
+}
+
+export function useMutDecideExternalOpenPlayParticipant() {
+  const utils = trpc.useUtils();
+
+  return useFeatureMutation(openPlayApi.mutOpenPlayDecideExternalParticipant, {
+    onSuccess: async () => {
+      toast.success("External participant updated");
+      await utils.openPlay.getExternalDetail.invalidate();
+    },
+    onError: (error) => {
+      toast.error(error?.message || "Unable to update external participant");
     },
   });
 }
@@ -217,6 +375,28 @@ export function useMutCloseOpenPlay() {
   });
 }
 
+export function useMutCloseExternalOpenPlay() {
+  const utils = trpc.useUtils();
+  return useFeatureMutation(openPlayApi.mutOpenPlayCloseExternal, {
+    onSuccess: async (_data, variables) => {
+      const externalOpenPlayId = (variables as { externalOpenPlayId: string })
+        .externalOpenPlayId;
+      toast.success("External Open Play closed");
+      await Promise.all([
+        utils.openPlay.getExternalPublicDetail.invalidate({
+          externalOpenPlayId,
+        }),
+        utils.openPlay.getExternalDetail.invalidate({
+          externalOpenPlayId,
+        }),
+      ]);
+    },
+    onError: (error) => {
+      toast.error(error?.message || "Unable to close External Open Play");
+    },
+  });
+}
+
 export function useMutCancelOpenPlay() {
   const utils = trpc.useUtils();
   return useFeatureMutation(openPlayApi.mutOpenPlayCancel, {
@@ -234,6 +414,64 @@ export function useMutCancelOpenPlay() {
     },
     onError: (error) => {
       toast.error(error?.message || "Unable to cancel Open Play");
+    },
+  });
+}
+
+export function useMutCancelExternalOpenPlay() {
+  const utils = trpc.useUtils();
+  return useFeatureMutation(openPlayApi.mutOpenPlayCancelExternal, {
+    onSuccess: async (_data, variables) => {
+      const externalOpenPlayId = (variables as { externalOpenPlayId: string })
+        .externalOpenPlayId;
+      toast.success("External Open Play cancelled");
+      await Promise.all([
+        utils.openPlay.getExternalPublicDetail.invalidate({
+          externalOpenPlayId,
+        }),
+        utils.openPlay.getExternalDetail.invalidate({
+          externalOpenPlayId,
+        }),
+      ]);
+    },
+    onError: (error) => {
+      toast.error(error?.message || "Unable to cancel External Open Play");
+    },
+  });
+}
+
+export function useMutReportExternalOpenPlay() {
+  return useFeatureMutation(openPlayApi.mutOpenPlayReportExternal, {
+    onSuccess: (data) => {
+      if (data.hidden) {
+        toast.success("Report submitted. This session is now hidden.");
+        return;
+      }
+      toast.success("Report submitted.");
+    },
+    onError: (error) => {
+      toast.error(error?.message || "Unable to report External Open Play");
+    },
+  });
+}
+
+export function useMutPromoteExternalOpenPlayToVerified() {
+  const utils = trpc.useUtils();
+  return useFeatureMutation(openPlayApi.mutOpenPlayPromoteExternalToVerified, {
+    onSuccess: async (data) => {
+      toast.success("External session promoted to verified Open Play");
+      await Promise.all([
+        utils.openPlay.getDetail.invalidate({ openPlayId: data.openPlayId }),
+        utils.openPlay.getPublicDetail.invalidate({
+          openPlayId: data.openPlayId,
+        }),
+        utils.openPlay.getExternalDetail.invalidate(),
+        utils.openPlay.listExternalByPlace.invalidate(),
+        utils.openPlay.listByPlace.invalidate(),
+      ]);
+    },
+    onError: (error) => {
+      toast.error(error?.message || "Unable to promote External Open Play");
     },
   });
 }

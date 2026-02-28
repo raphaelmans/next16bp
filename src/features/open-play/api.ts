@@ -14,20 +14,44 @@ type ProcedureFn<TProcedure> = TProcedure extends (
 
 export interface IOpenPlayApi {
   mutOpenPlayCancel: ProcedureFn<TrpcClientApi["openPlay"]["cancel"]["mutate"]>;
+  mutOpenPlayCancelExternal: ProcedureFn<
+    TrpcClientApi["openPlay"]["cancelExternal"]["mutate"]
+  >;
   mutOpenPlayChatSendMessage: ProcedureFn<
     TrpcClientApi["openPlayChat"]["sendMessage"]["mutate"]
   >;
   mutOpenPlayClose: ProcedureFn<TrpcClientApi["openPlay"]["close"]["mutate"]>;
+  mutOpenPlayCloseExternal: ProcedureFn<
+    TrpcClientApi["openPlay"]["closeExternal"]["mutate"]
+  >;
+  mutOpenPlayCreateExternal: ProcedureFn<
+    TrpcClientApi["openPlay"]["createExternal"]["mutate"]
+  >;
   mutOpenPlayCreateFromReservation: ProcedureFn<
     TrpcClientApi["openPlay"]["createFromReservation"]["mutate"]
   >;
   mutOpenPlayCreateFromReservationGroup: ProcedureFn<
     TrpcClientApi["openPlay"]["createFromReservationGroup"]["mutate"]
   >;
+  mutOpenPlayDecideExternalParticipant: ProcedureFn<
+    TrpcClientApi["openPlay"]["decideExternalParticipant"]["mutate"]
+  >;
   mutOpenPlayDecideParticipant: ProcedureFn<
     TrpcClientApi["openPlay"]["decideParticipant"]["mutate"]
   >;
+  mutOpenPlayLeaveExternal: ProcedureFn<
+    TrpcClientApi["openPlay"]["leaveExternal"]["mutate"]
+  >;
   mutOpenPlayLeave: ProcedureFn<TrpcClientApi["openPlay"]["leave"]["mutate"]>;
+  mutOpenPlayPromoteExternalToVerified: ProcedureFn<
+    TrpcClientApi["openPlay"]["promoteExternalToVerified"]["mutate"]
+  >;
+  mutOpenPlayReportExternal: ProcedureFn<
+    TrpcClientApi["openPlay"]["reportExternal"]["mutate"]
+  >;
+  mutOpenPlayRequestToJoinExternal: ProcedureFn<
+    TrpcClientApi["openPlay"]["requestToJoinExternal"]["mutate"]
+  >;
   mutOpenPlayRequestToJoin: ProcedureFn<
     TrpcClientApi["openPlay"]["requestToJoin"]["mutate"]
   >;
@@ -36,6 +60,12 @@ export interface IOpenPlayApi {
   >;
   queryOpenPlayGetDetail: ProcedureFn<
     TrpcClientApi["openPlay"]["getDetail"]["query"]
+  >;
+  queryOpenPlayGetExternalDetail: ProcedureFn<
+    TrpcClientApi["openPlay"]["getExternalDetail"]["query"]
+  >;
+  queryOpenPlayGetExternalPublicDetail: ProcedureFn<
+    TrpcClientApi["openPlay"]["getExternalPublicDetail"]["query"]
   >;
   queryOpenPlayGetForReservation: ProcedureFn<
     TrpcClientApi["openPlay"]["getForReservation"]["query"]
@@ -48,6 +78,9 @@ export interface IOpenPlayApi {
   >;
   queryOpenPlayListByPlace: ProcedureFn<
     TrpcClientApi["openPlay"]["listByPlace"]["query"]
+  >;
+  queryOpenPlayListExternalByPlace: ProcedureFn<
+    TrpcClientApi["openPlay"]["listExternalByPlace"]["query"]
   >;
 }
 
@@ -76,6 +109,17 @@ export class OpenPlayApi {
       this.toAppError,
     );
 
+  mutOpenPlayCancelExternal: ProcedureFn<
+    TrpcClientApi["openPlay"]["cancelExternal"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["openPlay", "cancelExternal"],
+      (clientApi) => clientApi.openPlay.cancelExternal.mutate,
+      input,
+      this.toAppError,
+    );
+
   mutOpenPlayChatSendMessage: ProcedureFn<
     TrpcClientApi["openPlayChat"]["sendMessage"]["mutate"]
   > = async (input) =>
@@ -96,6 +140,28 @@ export class OpenPlayApi {
         input,
         this.toAppError,
       );
+
+  mutOpenPlayCloseExternal: ProcedureFn<
+    TrpcClientApi["openPlay"]["closeExternal"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["openPlay", "closeExternal"],
+      (clientApi) => clientApi.openPlay.closeExternal.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutOpenPlayCreateExternal: ProcedureFn<
+    TrpcClientApi["openPlay"]["createExternal"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["openPlay", "createExternal"],
+      (clientApi) => clientApi.openPlay.createExternal.mutate,
+      input,
+      this.toAppError,
+    );
 
   mutOpenPlayCreateFromReservation: ProcedureFn<
     TrpcClientApi["openPlay"]["createFromReservation"]["mutate"]
@@ -130,6 +196,17 @@ export class OpenPlayApi {
       this.toAppError,
     );
 
+  mutOpenPlayDecideExternalParticipant: ProcedureFn<
+    TrpcClientApi["openPlay"]["decideExternalParticipant"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["openPlay", "decideExternalParticipant"],
+      (clientApi) => clientApi.openPlay.decideExternalParticipant.mutate,
+      input,
+      this.toAppError,
+    );
+
   mutOpenPlayLeave: ProcedureFn<TrpcClientApi["openPlay"]["leave"]["mutate"]> =
     async (input) =>
       callTrpcMutation(
@@ -139,6 +216,50 @@ export class OpenPlayApi {
         input,
         this.toAppError,
       );
+
+  mutOpenPlayLeaveExternal: ProcedureFn<
+    TrpcClientApi["openPlay"]["leaveExternal"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["openPlay", "leaveExternal"],
+      (clientApi) => clientApi.openPlay.leaveExternal.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutOpenPlayPromoteExternalToVerified: ProcedureFn<
+    TrpcClientApi["openPlay"]["promoteExternalToVerified"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["openPlay", "promoteExternalToVerified"],
+      (clientApi) => clientApi.openPlay.promoteExternalToVerified.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutOpenPlayReportExternal: ProcedureFn<
+    TrpcClientApi["openPlay"]["reportExternal"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["openPlay", "reportExternal"],
+      (clientApi) => clientApi.openPlay.reportExternal.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutOpenPlayRequestToJoinExternal: ProcedureFn<
+    TrpcClientApi["openPlay"]["requestToJoinExternal"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["openPlay", "requestToJoinExternal"],
+      (clientApi) => clientApi.openPlay.requestToJoinExternal.mutate,
+      input,
+      this.toAppError,
+    );
 
   mutOpenPlayRequestToJoin: ProcedureFn<
     TrpcClientApi["openPlay"]["requestToJoin"]["mutate"]
@@ -169,6 +290,28 @@ export class OpenPlayApi {
       this.clientApi,
       ["openPlay", "getDetail"],
       (clientApi) => clientApi.openPlay.getDetail.query,
+      input,
+      this.toAppError,
+    );
+
+  queryOpenPlayGetExternalDetail: ProcedureFn<
+    TrpcClientApi["openPlay"]["getExternalDetail"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["openPlay", "getExternalDetail"],
+      (clientApi) => clientApi.openPlay.getExternalDetail.query,
+      input,
+      this.toAppError,
+    );
+
+  queryOpenPlayGetExternalPublicDetail: ProcedureFn<
+    TrpcClientApi["openPlay"]["getExternalPublicDetail"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["openPlay", "getExternalPublicDetail"],
+      (clientApi) => clientApi.openPlay.getExternalPublicDetail.query,
       input,
       this.toAppError,
     );
@@ -213,6 +356,17 @@ export class OpenPlayApi {
       this.clientApi,
       ["openPlay", "listByPlace"],
       (clientApi) => clientApi.openPlay.listByPlace.query,
+      input,
+      this.toAppError,
+    );
+
+  queryOpenPlayListExternalByPlace: ProcedureFn<
+    TrpcClientApi["openPlay"]["listExternalByPlace"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["openPlay", "listExternalByPlace"],
+      (clientApi) => clientApi.openPlay.listExternalByPlace.query,
       input,
       this.toAppError,
     );

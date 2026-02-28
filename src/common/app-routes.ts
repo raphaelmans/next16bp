@@ -114,6 +114,8 @@ export const appRoutes = {
     base: "/open-play",
     options: { type: "public" as const },
     detail: (openPlayId: string) => `/open-play/${openPlayId}`,
+    externalDetail: (externalOpenPlayId: string) =>
+      `/open-play/external/${externalOpenPlayId}`,
     byPlace: (placeIdOrSlug: string) => `/venues/${placeIdOrSlug}/open-play`,
   },
   account: {

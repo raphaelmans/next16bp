@@ -259,6 +259,39 @@ export const openPlayParticipantStatusEnum = pgEnum(
 );
 
 /**
+ * External open play status enum
+ * ACTIVE: listed and joinable.
+ * CLOSED: host closed before start.
+ * CANCELLED: host cancelled.
+ * PROMOTED: moved to a verified open_play row.
+ * HIDDEN: hidden after trust/safety reports.
+ */
+export const externalOpenPlayStatusEnum = pgEnum("external_open_play_status", [
+  "ACTIVE",
+  "CLOSED",
+  "CANCELLED",
+  "PROMOTED",
+  "HIDDEN",
+]);
+
+/**
+ * External open play source platform enum
+ * Tracks where the host says the slot was booked.
+ */
+export const externalOpenPlaySourcePlatformEnum = pgEnum(
+  "external_open_play_source_platform",
+  ["RECLUB", "OTHER"],
+);
+
+/**
+ * External open play report reason enum
+ */
+export const externalOpenPlayReportReasonEnum = pgEnum(
+  "external_open_play_report_reason",
+  ["FAKE_SLOT", "IMPERSONATION", "SPAM", "SAFETY", "OTHER"],
+);
+
+/**
  * Mobile push token platform enum
  * Identifies the mobile OS for Expo push tokens
  */

@@ -25,6 +25,8 @@ export * from "./court-price-override";
 export * from "./court-rate-rule";
 // Enums (must be exported first as they are referenced by other schemas)
 export * from "./enums";
+// External open play
+export * from "./external-open-play";
 // Guest profile
 export * from "./guest-profile";
 // Mobile push token

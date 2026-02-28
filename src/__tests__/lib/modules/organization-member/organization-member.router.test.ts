@@ -5,6 +5,8 @@ import { OrganizationMemberPermissionDeniedError } from "@/lib/modules/organizat
 const TEST_IDS = {
   userId: "11111111-1111-4111-8111-111111111111",
   organizationId: "22222222-2222-4222-8222-222222222222",
+  memberUserId: "33333333-3333-4333-8333-333333333333",
+  invitationId: "44444444-4444-4444-8444-444444444444",
 };
 
 const mockOrganizationMemberService = {
@@ -93,6 +95,41 @@ describe("organizationMemberRouter", () => {
     );
   });
 
+  it("listInvitations delegates includeHistory flag", async () => {
+    const caller = createCaller();
+
+    mockOrganizationMemberService.listInvitations.mockResolvedValue([]);
+
+    await caller.listInvitations({
+      organizationId: TEST_IDS.organizationId,
+      includeHistory: true,
+    });
+
+    expect(mockOrganizationMemberService.listInvitations).toHaveBeenCalledWith(
+      TEST_IDS.userId,
+      TEST_IDS.organizationId,
+      { includeHistory: true },
+    );
+  });
+
+  it("getMyPermissions delegates to service", async () => {
+    const caller = createCaller();
+    mockOrganizationMemberService.getMyPermissions.mockResolvedValue({
+      organizationId: TEST_IDS.organizationId,
+      userId: TEST_IDS.userId,
+      isOwner: false,
+      role: "MANAGER",
+      permissions: ["reservation.read"],
+    });
+
+    await caller.getMyPermissions({ organizationId: TEST_IDS.organizationId });
+
+    expect(mockOrganizationMemberService.getMyPermissions).toHaveBeenCalledWith(
+      TEST_IDS.userId,
+      TEST_IDS.organizationId,
+    );
+  });
+
   it("list maps permission denied error to FORBIDDEN", async () => {
     const caller = createCaller();
 
@@ -102,6 +139,40 @@ describe("organizationMemberRouter", () => {
 
     await expect(
       caller.list({ organizationId: TEST_IDS.organizationId }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  it("setMyReservationNotificationPreference maps permission denied to FORBIDDEN", async () => {
+    const caller = createCaller();
+
+    mockOrganizationMemberService.setMyReservationNotificationPreference.mockRejectedValue(
+      new OrganizationMemberPermissionDeniedError(
+        "reservation.notification.receive",
+      ),
+    );
+
+    await expect(
+      caller.setMyReservationNotificationPreference({
+        organizationId: TEST_IDS.organizationId,
+        enabled: true,
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
+  it("updatePermissions maps permission denied to FORBIDDEN", async () => {
+    const caller = createCaller();
+
+    mockOrganizationMemberService.updateMemberPermissions.mockRejectedValue(
+      new OrganizationMemberPermissionDeniedError("organization.member.manage"),
+    );
+
+    await expect(
+      caller.updatePermissions({
+        organizationId: TEST_IDS.organizationId,
+        memberUserId: TEST_IDS.memberUserId,
+        role: "VIEWER",
+        permissions: ["reservation.read"],
+      }),
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
@@ -130,6 +201,21 @@ describe("organizationMemberRouter", () => {
       "manager@example.com",
       { token: "token-token-token-token" },
     );
+  });
+
+  it("declineInvitation calls service with user and email", async () => {
+    const caller = createCaller("manager@example.com");
+    mockOrganizationMemberService.declineInvitation.mockResolvedValue({
+      id: TEST_IDS.invitationId,
+    });
+
+    await caller.declineInvitation({ token: "token-token-token-token" });
+
+    expect(
+      mockOrganizationMemberService.declineInvitation,
+    ).toHaveBeenCalledWith(TEST_IDS.userId, "manager@example.com", {
+      token: "token-token-token-token",
+    });
   });
 
   it("getMyReservationNotificationPreference calls service", async () => {
@@ -174,6 +260,69 @@ describe("organizationMemberRouter", () => {
       organizationId: TEST_IDS.organizationId,
       enabled: true,
     });
+  });
+
+  it("updatePermissions calls service with member payload", async () => {
+    const caller = createCaller();
+    mockOrganizationMemberService.updateMemberPermissions.mockResolvedValue({
+      id: TEST_IDS.memberUserId,
+    });
+
+    await caller.updatePermissions({
+      organizationId: TEST_IDS.organizationId,
+      memberUserId: TEST_IDS.memberUserId,
+      role: "MANAGER",
+      permissions: ["reservation.read", "reservation.chat"],
+    });
+
+    expect(
+      mockOrganizationMemberService.updateMemberPermissions,
+    ).toHaveBeenCalledWith(TEST_IDS.userId, {
+      organizationId: TEST_IDS.organizationId,
+      memberUserId: TEST_IDS.memberUserId,
+      role: "MANAGER",
+      permissions: ["reservation.read", "reservation.chat"],
+    });
+  });
+
+  it("revokeMember calls service with member payload", async () => {
+    const caller = createCaller();
+    mockOrganizationMemberService.revokeMember.mockResolvedValue({
+      id: TEST_IDS.memberUserId,
+    });
+
+    await caller.revokeMember({
+      organizationId: TEST_IDS.organizationId,
+      memberUserId: TEST_IDS.memberUserId,
+    });
+
+    expect(mockOrganizationMemberService.revokeMember).toHaveBeenCalledWith(
+      TEST_IDS.userId,
+      {
+        organizationId: TEST_IDS.organizationId,
+        memberUserId: TEST_IDS.memberUserId,
+      },
+    );
+  });
+
+  it("cancelInvitation calls service with invitation payload", async () => {
+    const caller = createCaller();
+    mockOrganizationMemberService.cancelInvitation.mockResolvedValue({
+      id: TEST_IDS.invitationId,
+    });
+
+    await caller.cancelInvitation({
+      organizationId: TEST_IDS.organizationId,
+      invitationId: TEST_IDS.invitationId,
+    });
+
+    expect(mockOrganizationMemberService.cancelInvitation).toHaveBeenCalledWith(
+      TEST_IDS.userId,
+      {
+        organizationId: TEST_IDS.organizationId,
+        invitationId: TEST_IDS.invitationId,
+      },
+    );
   });
 
   it("getReservationNotificationRoutingStatus calls service", async () => {
