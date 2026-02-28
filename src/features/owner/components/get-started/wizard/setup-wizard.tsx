@@ -110,11 +110,20 @@ export function SetupWizard() {
   const config = getStepConfig(step);
 
   return (
-    <div className="flex h-[calc(100svh-4rem)] flex-col -my-6 -mx-4 sm:-mx-6 lg:-mx-8">
+    <div className="flex h-[calc(100svh-4rem-3.5rem-max(0px,env(safe-area-inset-bottom)))] md:h-[calc(100svh-4rem)] flex-col -my-6 -mx-4 sm:-mx-6 lg:-mx-8">
       <WizardProgress
         currentStep={step}
         status={status}
         onStepClick={handleProgressClick}
+      />
+
+      <WizardNavigation
+        className="md:order-last"
+        currentStep={step}
+        status={status}
+        onBack={handleBack}
+        onSkip={handleSkip}
+        onContinue={handleContinue}
       />
 
       <div className="flex-1 min-h-0 overflow-y-auto">
@@ -126,14 +135,6 @@ export function SetupWizard() {
           />
         </WizardStepLayout>
       </div>
-
-      <WizardNavigation
-        currentStep={step}
-        status={status}
-        onBack={handleBack}
-        onSkip={handleSkip}
-        onContinue={handleContinue}
-      />
     </div>
   );
 }

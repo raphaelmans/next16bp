@@ -2,6 +2,7 @@
 
 import { ArrowLeft, ArrowRight, SkipForward } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import type { SetupStatus } from "../get-started-types";
 import {
   canCompleteWizard,
@@ -17,6 +18,7 @@ interface WizardNavigationProps {
   onBack: () => void;
   onSkip: () => void;
   onContinue: () => void;
+  className?: string;
 }
 
 export function WizardNavigation({
@@ -25,6 +27,7 @@ export function WizardNavigation({
   onBack,
   onSkip,
   onContinue,
+  className,
 }: WizardNavigationProps) {
   if (currentStep === "complete") return null;
 
@@ -40,7 +43,12 @@ export function WizardNavigation({
   const showContinue = complete;
 
   return (
-    <div className="shrink-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <div
+      className={cn(
+        "shrink-0 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:border-b-0 md:border-t",
+        className,
+      )}
+    >
       <div className="mx-auto flex max-w-2xl items-center justify-between gap-4 px-4 py-3 sm:gap-3">
         <div>
           {showBack && (
