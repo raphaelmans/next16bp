@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 import { appRoutes } from "@/common/app-routes";
 import { getSafeRedirectPath } from "@/common/redirects";
+import { getRequestOrigin } from "@/common/request-origin";
 import { env } from "@/lib/env";
 import { logger } from "@/lib/shared/infra/logger";
 import { createClient } from "@/lib/shared/infra/supabase/create-client";
@@ -16,18 +17,19 @@ export async function GET(request: NextRequest) {
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
 
+  const origin = getRequestOrigin(request);
   const redirectParam =
     searchParams.get("redirect") ?? searchParams.get("next");
   const redirectPath = getSafeRedirectPath(redirectParam, {
     fallback: appRoutes.postLogin.base,
-    origin: request.nextUrl.origin,
+    origin,
     disallowRoutes: ["guest"],
     disallowPathname: request.nextUrl.pathname,
   });
-  const redirectUrl = new URL(redirectPath, request.url);
+  const redirectUrl = new URL(redirectPath, origin);
 
   const buildAuthErrorUrl = (reason: string) => {
-    const loginUrl = new URL(appRoutes.login.from(redirectPath), request.url);
+    const loginUrl = new URL(appRoutes.login.from(redirectPath), origin);
     loginUrl.searchParams.set("auth_error", reason);
     return loginUrl;
   };

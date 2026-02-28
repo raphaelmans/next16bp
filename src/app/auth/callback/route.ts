@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { appRoutes } from "@/common/app-routes";
 import { getSafeRedirectPath } from "@/common/redirects";
+import { getRequestOrigin } from "@/common/request-origin";
 import { env } from "@/lib/env";
 import { UserRoleAlreadyExistsError } from "@/lib/modules/user-role/errors/user-role.errors";
 import { makeUserRoleService } from "@/lib/modules/user-role/factories/user-role.factory";
@@ -12,7 +13,8 @@ import { createClient } from "@/lib/shared/infra/supabase/create-client";
  * Exchanges authorization code for session.
  */
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
+  const origin = getRequestOrigin(request);
   const code = searchParams.get("code");
   const redirectPath = getSafeRedirectPath(searchParams.get("redirect"), {
     fallback: appRoutes.postLogin.base,

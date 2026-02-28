@@ -32,6 +32,7 @@ const csp = [
 
 const nextConfig: NextConfig = {
   /* config options here */
+  allowedDevOrigins: ["kudoscourts.tunn.dev", "localhost", "127.0.0.1"],
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   reactCompiler: true,
   async redirects() {

@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import { appRoutes, isGuestRoute, isProtectedRoute } from "@/common/app-routes";
 import { getSafeRedirectPath } from "@/common/redirects";
+import { getRequestOrigin } from "@/common/request-origin";
 import { logger } from "@/lib/shared/infra/logger";
 
 /**
@@ -136,23 +137,25 @@ export async function proxy(request: NextRequest) {
       "Unauthenticated request to protected route",
     );
 
+    const origin = getRequestOrigin(request);
     return NextResponse.redirect(
-      new URL(appRoutes.login.from(redirectPath), request.url),
+      new URL(appRoutes.login.from(redirectPath), origin),
     );
   }
 
   // Redirect authenticated users from guest routes
   if (user && isGuestRoute(path)) {
+    const origin = getRequestOrigin(request);
     const redirectTo = getSafeRedirectPath(
       request.nextUrl.searchParams.get("redirect"),
       {
         fallback: appRoutes.postLogin.base,
-        origin: request.nextUrl.origin,
+        origin,
         disallowRoutes: ["guest"],
         disallowPathname: path,
       },
     );
-    return NextResponse.redirect(new URL(redirectTo, request.url));
+    return NextResponse.redirect(new URL(redirectTo, origin));
   }
 
   return supabaseResponse;

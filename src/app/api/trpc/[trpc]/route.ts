@@ -1,6 +1,5 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { NextResponse } from "next/server";
-import { env } from "@/lib/env";
 import { logger } from "@/lib/shared/infra/logger";
 import { createContext } from "@/lib/shared/infra/trpc/context";
 import { appRouter } from "@/lib/shared/infra/trpc/root";
@@ -12,8 +11,11 @@ import { appRouter } from "@/lib/shared/infra/trpc/root";
 function isAllowedOrigin(origin: string, req: Request) {
   const reqOrigin = new URL(req.url).origin;
   const allowed = new Set<string>([reqOrigin]);
-  if (env.NEXT_PUBLIC_APP_URL) {
-    allowed.add(new URL(env.NEXT_PUBLIC_APP_URL).origin);
+  // Use process.env directly — the validated `env` helper strips non-local
+  // URLs in development, but we still need to trust tunnel origins for CSRF.
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  if (appUrl) {
+    allowed.add(new URL(appUrl).origin);
   }
   return allowed.has(origin);
 }
@@ -29,13 +31,18 @@ function getTrpcPath(req: Request) {
 }
 
 async function handleTrpcRequest(req: Request, method: "GET" | "POST") {
-  const secFetchSite = req.headers.get("sec-fetch-site");
-  if (secFetchSite && secFetchSite.toLowerCase() === "cross-site") {
-    return NextResponse.json({ error: "CSRF blocked" }, { status: 403 });
-  }
-
   const origin = req.headers.get("origin");
-  if (origin && !isAllowedOrigin(origin, req)) {
+  const secFetchSite = req.headers.get("sec-fetch-site");
+
+  // When an explicit origin is present, validate it against the allowlist.
+  // This covers tunnel/proxy setups where sec-fetch-site may report "cross-site"
+  // even though the origin is trusted (e.g. NEXT_PUBLIC_APP_URL).
+  if (origin) {
+    if (!isAllowedOrigin(origin, req)) {
+      return NextResponse.json({ error: "CSRF blocked" }, { status: 403 });
+    }
+  } else if (secFetchSite && secFetchSite.toLowerCase() === "cross-site") {
+    // No origin header but browser says cross-site → block.
     return NextResponse.json({ error: "CSRF blocked" }, { status: 403 });
   }
 

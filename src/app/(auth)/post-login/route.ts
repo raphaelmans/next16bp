@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { appRoutes } from "@/common/app-routes";
 import { getSafeRedirectPath } from "@/common/redirects";
+import { getRequestOrigin } from "@/common/request-origin";
 import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
 import { makeUserPreferenceService } from "@/lib/modules/user-preference/factories/user-preference.factory";
 import { getServerSession } from "@/lib/shared/infra/auth/server-session";
@@ -8,10 +9,11 @@ import { getServerSession } from "@/lib/shared/infra/auth/server-session";
 export async function GET(request: NextRequest) {
   const session = await getServerSession();
   const pathnameWithSearch = `${request.nextUrl.pathname}${request.nextUrl.search}`;
+  const origin = getRequestOrigin(request);
 
   if (!session) {
     return NextResponse.redirect(
-      new URL(appRoutes.login.from(pathnameWithSearch), request.url),
+      new URL(appRoutes.login.from(pathnameWithSearch), origin),
     );
   }
 
@@ -38,11 +40,11 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("redirect"),
     {
       fallback: fallbackRedirect,
-      origin: request.nextUrl.origin,
+      origin,
       disallowRoutes: ["guest"],
       disallowPathname: appRoutes.postLogin.base,
     },
   );
 
-  return NextResponse.redirect(new URL(redirectPath, request.url));
+  return NextResponse.redirect(new URL(redirectPath, origin));
 }
