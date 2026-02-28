@@ -69,7 +69,7 @@ export function PlayerReservationChatWidget({
   const statusLabel = getPlayerReservationStatusLabel(reservationStatus);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-[calc(5rem+max(0px,env(safe-area-inset-bottom)))] right-6 z-50 md:bottom-6">
       <Sheet open={open} onOpenChange={setOpen}>
         <Button
           type="button"
