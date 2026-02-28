@@ -1,6 +1,13 @@
 "use client";
 
-import { Calendar, ChevronDown, LogOut, Shield, User } from "lucide-react";
+import {
+  Building2,
+  Calendar,
+  ChevronDown,
+  LogOut,
+  Shield,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -24,16 +31,28 @@ export interface UserDropdownUser {
 interface UserDropdownProps {
   user: UserDropdownUser;
   isAdmin: boolean;
+  defaultPortal?: "player" | "owner";
+  ownerMenuHref?: string;
+  ownerMenuLabel?: string;
   onSignOut?: () => void;
 }
 
-export function UserDropdown({ user, isAdmin, onSignOut }: UserDropdownProps) {
+export function UserDropdown({
+  user,
+  isAdmin,
+  defaultPortal = "player",
+  ownerMenuHref,
+  ownerMenuLabel = "Venue Dashboard",
+  onSignOut,
+}: UserDropdownProps) {
   const initials = user.name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
+  const shouldShowOwnerShortcut =
+    defaultPortal === "owner" && Boolean(ownerMenuHref);
 
   const handleSignOut = () => {
     // TODO: Implement real sign out with Supabase
@@ -76,6 +95,14 @@ export function UserDropdown({ user, isAdmin, onSignOut }: UserDropdownProps) {
 
         {/* Player Links */}
         <DropdownMenuGroup>
+          {shouldShowOwnerShortcut && ownerMenuHref ? (
+            <DropdownMenuItem asChild>
+              <Link href={ownerMenuHref} className="cursor-pointer">
+                <Building2 className="mr-2 h-4 w-4" />
+                <span>{ownerMenuLabel}</span>
+              </Link>
+            </DropdownMenuItem>
+          ) : null}
           <DropdownMenuItem asChild>
             <Link href={appRoutes.reservations.base} className="cursor-pointer">
               <Calendar className="mr-2 h-4 w-4" />

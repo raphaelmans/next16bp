@@ -8,7 +8,8 @@ import {
   ChevronRight,
   ClipboardList,
   LayoutDashboard,
-  MapPin,
+  LayoutGrid,
+  MapPinned,
   Settings,
   Shield,
   UploadCloud,
@@ -350,7 +351,7 @@ export function OwnerSidebar({
                   <SidebarNavItem
                     href={appRoutes.courts.base}
                     title="Courts"
-                    icon={MapPin}
+                    icon={LayoutGrid}
                     isActive={isActive(appRoutes.courts.base)}
                     activeClassName="bg-primary text-primary-foreground"
                   />
@@ -380,7 +381,7 @@ export function OwnerSidebar({
                         }`}
                       >
                         <Link href={appRoutes.owner.places.base}>
-                          <MapPin className="h-4 w-4" />
+                          <MapPinned className="h-4 w-4" />
                           <span>Venues</span>
                         </Link>
                       </SidebarMenuButton>

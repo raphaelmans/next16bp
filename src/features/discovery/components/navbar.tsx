@@ -26,6 +26,7 @@ import {
   useMutAuthLogout,
   useQueryAuthMyOrganizations,
   useQueryAuthSession,
+  useQueryAuthUserPreference,
 } from "@/features/auth/hooks";
 import { cn } from "@/lib/utils";
 import { UserDropdown } from "./user-dropdown";
@@ -49,6 +50,7 @@ export function Navbar({ className }: NavbarProps) {
   const { mutate: logout } = useMutAuthLogout();
 
   const { data: orgs } = useQueryAuthMyOrganizations(!!sessionUser);
+  const { data: userPreference } = useQueryAuthUserPreference(!!sessionUser);
 
   const isAuthenticated = !!sessionUser;
   const isResolvingSession = sessionLoading && !sessionUser;
@@ -69,6 +71,12 @@ export function Navbar({ className }: NavbarProps) {
   const isAdmin = sessionUser?.role === "admin";
   const ownerSetupRequired = !isOwner;
   const canAccessOwner = isOwner || ownerSetupRequired;
+  const ownerMenuHref = ownerSetupRequired
+    ? appRoutes.owner.getStarted
+    : appRoutes.owner.base;
+  const ownerMenuLabel = ownerSetupRequired ? "Venue Setup" : "Venue Dashboard";
+  const showOwnerFirstMenu =
+    userPreference?.defaultPortal === "owner" && canAccessOwner;
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -172,6 +180,9 @@ export function Navbar({ className }: NavbarProps) {
           <UserDropdown
             user={user}
             isAdmin={isAdmin}
+            defaultPortal={userPreference?.defaultPortal}
+            ownerMenuHref={showOwnerFirstMenu ? ownerMenuHref : undefined}
+            ownerMenuLabel={ownerMenuLabel}
             onSignOut={handleSignOut}
           />
         ) : (
@@ -267,14 +278,35 @@ export function Navbar({ className }: NavbarProps) {
             {isAuthenticated && (
               <>
                 <Separator />
-                <Link
-                  href={appRoutes.reservations.base}
-                  className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <Calendar className="h-5 w-5" />
-                  My Reservations
-                </Link>
+                {showOwnerFirstMenu ? (
+                  <Link
+                    href={ownerMenuHref}
+                    className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Building className="h-5 w-5" />
+                    {ownerMenuLabel}
+                  </Link>
+                ) : (
+                  <Link
+                    href={appRoutes.reservations.base}
+                    className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Calendar className="h-5 w-5" />
+                    My Reservations
+                  </Link>
+                )}
+                {showOwnerFirstMenu && (
+                  <Link
+                    href={appRoutes.reservations.base}
+                    className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Calendar className="h-5 w-5" />
+                    My Reservations
+                  </Link>
+                )}
                 <Link
                   href={appRoutes.account.profile}
                   className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
