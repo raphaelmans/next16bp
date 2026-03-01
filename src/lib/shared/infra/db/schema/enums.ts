@@ -73,7 +73,10 @@ export const triggeredByRoleEnum = pgEnum("triggered_by_role", [
  * Default portal enum
  * Stores the user's preferred portal after login
  */
-export const defaultPortalEnum = pgEnum("default_portal", ["player", "owner"]);
+export const defaultPortalEnum = pgEnum("default_portal", [
+  "player",
+  "organization",
+]);
 
 /**
  * Claim request type enum

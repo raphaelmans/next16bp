@@ -37,7 +37,9 @@ export function AddVenueCard({
               </p>
               <div className="pt-2">
                 <Button variant="outline" asChild>
-                  <Link href={appRoutes.owner.places.base}>View venues</Link>
+                  <Link href={appRoutes.organization.places.base}>
+                    View venues
+                  </Link>
                 </Button>
               </div>
             </div>

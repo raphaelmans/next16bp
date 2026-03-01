@@ -373,12 +373,12 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   const handleCopyOwnerLink = async () => {
     try {
       const ownerPath = appRoutes.login.from(
-        appRoutes.owner.places.edit(courtId),
+        appRoutes.organization.places.edit(courtId),
       );
       const url = `${window.location.origin}${ownerPath}`;
       await navigator.clipboard.writeText(url);
       toast.success("Owner link copied", {
-        description: "Share this to open the owner portal after login.",
+        description: "Share this to open the organization portal after login.",
       });
     } catch (error) {
       toast.error("Unable to copy owner link", {

@@ -85,13 +85,13 @@ interface OwnerSidebarProps {
 const navItems = [
   {
     title: "Availability Studio",
-    href: appRoutes.owner.bookings,
+    href: appRoutes.organization.bookings,
     icon: CalendarRange,
     accessRule: { type: "any-member" } as PageAccessRule,
   },
   {
     title: "Reservations",
-    href: appRoutes.owner.reservations,
+    href: appRoutes.organization.reservations,
     icon: CalendarDays,
     accessRule: {
       type: "permission",
@@ -100,7 +100,7 @@ const navItems = [
   },
   {
     title: "Imports",
-    href: appRoutes.owner.imports.bookings,
+    href: appRoutes.organization.imports.bookings,
     icon: UploadCloud,
     accessRule: {
       type: "permission",
@@ -109,13 +109,13 @@ const navItems = [
   },
   {
     title: "Team",
-    href: appRoutes.owner.team,
+    href: appRoutes.organization.team,
     icon: Users,
     accessRule: { type: "any-member" } as PageAccessRule,
   },
   {
     title: "Settings",
-    href: appRoutes.owner.settings,
+    href: appRoutes.organization.settings,
     icon: Settings,
     accessRule: { type: "owner-only" } as PageAccessRule,
   },
@@ -177,14 +177,14 @@ export function OwnerSidebar({
     noOrgMode || organizations.length > 1 || effectiveIsAdmin;
 
   const isActive = (href: string) => {
-    if (href === appRoutes.owner.base) {
-      return pathname === appRoutes.owner.base;
+    if (href === appRoutes.organization.base) {
+      return pathname === appRoutes.organization.base;
     }
     return pathname.startsWith(href);
   };
 
   const getCourtBasePath = (placeId: string, courtId: string) =>
-    `${appRoutes.owner.places.courts.base(placeId)}/${courtId}`;
+    `${appRoutes.organization.places.courts.base(placeId)}/${courtId}`;
 
   const isCourtActive = (placeId: string, courtId: string) =>
     pathname.startsWith(getCourtBasePath(placeId, courtId));
@@ -216,7 +216,9 @@ export function OwnerSidebar({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56">
               <DropdownMenuItem asChild>
-                <Link href={appRoutes.owner.getStarted}>Go to setup hub</Link>
+                <Link href={appRoutes.organization.getStarted}>
+                  Go to setup hub
+                </Link>
               </DropdownMenuItem>
               {effectiveIsAdmin && (
                 <>
@@ -264,7 +266,7 @@ export function OwnerSidebar({
                 organizations.map((org) => (
                   <DropdownMenuItem key={org.id} asChild>
                     <Link
-                      href={`${appRoutes.owner.base}?org=${org.id}`}
+                      href={`${appRoutes.organization.base}?org=${org.id}`}
                       className="flex items-center gap-2"
                     >
                       <div className="flex h-6 w-6 items-center justify-center rounded bg-muted">
@@ -328,19 +330,19 @@ export function OwnerSidebar({
             <SidebarMenu>
               {/* Dashboard */}
               <SidebarNavItem
-                href={appRoutes.owner.base}
+                href={appRoutes.organization.base}
                 title="Dashboard"
                 icon={LayoutDashboard}
-                isActive={isActive(appRoutes.owner.base)}
+                isActive={isActive(appRoutes.organization.base)}
                 activeClassName="bg-primary text-primary-foreground"
               />
 
               {shouldShowGetStarted && (
                 <SidebarNavItem
-                  href={appRoutes.owner.getStarted}
+                  href={appRoutes.organization.getStarted}
                   title="Get started"
                   icon={ClipboardList}
-                  isActive={isActive(appRoutes.owner.getStarted)}
+                  isActive={isActive(appRoutes.organization.getStarted)}
                   activeClassName="bg-primary text-primary-foreground"
                 />
               )}
@@ -359,7 +361,7 @@ export function OwnerSidebar({
                   {/* Venues - collapsible with nested venues > courts */}
                   <Collapsible
                     defaultOpen={
-                      pathname.startsWith(appRoutes.owner.places.base) ||
+                      pathname.startsWith(appRoutes.organization.places.base) ||
                       quickLinks.some((place) =>
                         place.courts.some((court) =>
                           isCourtActive(place.id, court.id),
@@ -372,15 +374,17 @@ export function OwnerSidebar({
                       <SidebarMenuButton
                         asChild
                         isActive={pathname.startsWith(
-                          appRoutes.owner.places.base,
+                          appRoutes.organization.places.base,
                         )}
                         className={`font-heading ${
-                          pathname.startsWith(appRoutes.owner.places.base)
+                          pathname.startsWith(
+                            appRoutes.organization.places.base,
+                          )
                             ? "bg-primary text-primary-foreground"
                             : ""
                         }`}
                       >
-                        <Link href={appRoutes.owner.places.base}>
+                        <Link href={appRoutes.organization.places.base}>
                           <MapPinned className="h-4 w-4" />
                           <span>Venues</span>
                         </Link>
@@ -439,7 +443,7 @@ export function OwnerSidebar({
                                                   )}
                                                 >
                                                   <Link
-                                                    href={appRoutes.owner.places.courts.availability(
+                                                    href={appRoutes.organization.places.courts.availability(
                                                       place.id,
                                                       court.id,
                                                     )}
@@ -471,7 +475,7 @@ export function OwnerSidebar({
                       isActive={isActive(item.href)}
                       activeClassName="bg-primary text-primary-foreground"
                       badgeCount={
-                        item.href === appRoutes.owner.reservations
+                        item.href === appRoutes.organization.reservations
                           ? reservationsBadgeCount
                           : undefined
                       }

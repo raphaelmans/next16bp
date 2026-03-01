@@ -173,7 +173,7 @@ export function GetStartedView() {
               {status.hasVenue && (
                 <div className="flex">
                   <Button variant="outline" asChild>
-                    <Link href={appRoutes.owner.bookings}>
+                    <Link href={appRoutes.organization.bookings}>
                       <Calendar className="mr-2 h-4 w-4" />
                       View bookings
                     </Link>

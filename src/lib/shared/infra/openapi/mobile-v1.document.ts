@@ -358,20 +358,20 @@ export function createMobileV1OpenApiDocument(args: {
         }),
       },
 
-      "/owner/setup/status": {
+      "/organization/setup/status": {
         get: protectedGet({
-          operationId: "ownerSetupGetStatus",
+          operationId: "organizationSetupGetStatus",
           successSchema: OwnerSetupStatusResponseSchema,
         }),
       },
 
-      "/owner/organizations": {
+      "/organization/organizations": {
         get: protectedGet({
-          operationId: "ownerOrganizationList",
+          operationId: "organizationOrganizationList",
           successSchema: OwnerOrganizationsListResponseSchema,
         }),
         post: protectedMutation({
-          operationId: "ownerOrganizationCreate",
+          operationId: "organizationOrganizationCreate",
           bodyType: "json",
           bodySchema: z.object({
             name: z.string(),
@@ -381,158 +381,158 @@ export function createMobileV1OpenApiDocument(args: {
         }),
       },
 
-      "/owner/organizations/{organizationId}": {
+      "/organization/organizations/{organizationId}": {
         get: protectedGet({
-          operationId: "ownerOrganizationGetById",
+          operationId: "organizationOrganizationGetById",
           path: z.object({ organizationId: UuidSchema }),
           successSchema: OwnerOrganizationsCreateResponseSchema,
         }),
         patch: protectedMutation({
-          operationId: "ownerOrganizationUpdate",
+          operationId: "organizationOrganizationUpdate",
           path: z.object({ organizationId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/organizations/{organizationId}/profile": {
+      "/organization/organizations/{organizationId}/profile": {
         patch: protectedMutation({
-          operationId: "ownerOrganizationUpdateProfile",
+          operationId: "organizationOrganizationUpdateProfile",
           path: z.object({ organizationId: UuidSchema }),
           bodyType: "json",
           successSchema: GenericObjectResponseSchema,
         }),
       },
 
-      "/owner/organizations/{organizationId}/logo": {
+      "/organization/organizations/{organizationId}/logo": {
         post: protectedMutation({
-          operationId: "ownerOrganizationUploadLogo",
+          operationId: "organizationOrganizationUploadLogo",
           path: z.object({ organizationId: UuidSchema }),
           bodyType: "multipart",
           successSchema: UrlResponseSchema,
         }),
       },
 
-      "/owner/organizations/{organizationId}/venues": {
+      "/organization/organizations/{organizationId}/venues": {
         get: protectedGet({
-          operationId: "ownerVenueList",
+          operationId: "organizationVenueList",
           path: z.object({ organizationId: UuidSchema }),
         }),
         post: protectedMutation({
-          operationId: "ownerVenueCreate",
+          operationId: "organizationVenueCreate",
           path: z.object({ organizationId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/venues/{venueId}": {
+      "/organization/venues/{venueId}": {
         get: protectedGet({
-          operationId: "ownerVenueGetById",
+          operationId: "organizationVenueGetById",
           path: z.object({ venueId: UuidSchema }),
         }),
         patch: protectedMutation({
-          operationId: "ownerVenueUpdate",
+          operationId: "organizationVenueUpdate",
           path: z.object({ venueId: UuidSchema }),
           bodyType: "json",
         }),
         delete: protectedMutation({
-          operationId: "ownerVenueDelete",
+          operationId: "organizationVenueDelete",
           path: z.object({ venueId: UuidSchema }),
           successSchema: SuccessResponseSchema,
         }),
       },
 
-      "/owner/venues/{venueId}/photos": {
+      "/organization/venues/{venueId}/photos": {
         post: protectedMutation({
-          operationId: "ownerVenueUploadPhoto",
+          operationId: "organizationVenueUploadPhoto",
           path: z.object({ venueId: UuidSchema }),
           bodyType: "multipart",
         }),
       },
 
-      "/owner/venues/{venueId}/photos/{photoId}": {
+      "/organization/venues/{venueId}/photos/{photoId}": {
         delete: protectedMutation({
-          operationId: "ownerVenueDeletePhoto",
+          operationId: "organizationVenueDeletePhoto",
           path: z.object({ venueId: UuidSchema, photoId: UuidSchema }),
           successSchema: SuccessResponseSchema,
         }),
       },
 
-      "/owner/venues/{venueId}/photos/reorder": {
+      "/organization/venues/{venueId}/photos/reorder": {
         post: protectedMutation({
-          operationId: "ownerVenueReorderPhotos",
+          operationId: "organizationVenueReorderPhotos",
           path: z.object({ venueId: UuidSchema }),
           bodyType: "json",
           successSchema: PhotosResponseSchema,
         }),
       },
 
-      "/owner/venues/{venueId}/courts": {
+      "/organization/venues/{venueId}/courts": {
         get: protectedGet({
-          operationId: "ownerCourtListByVenue",
+          operationId: "organizationCourtListByVenue",
           path: z.object({ venueId: UuidSchema }),
         }),
         post: protectedMutation({
-          operationId: "ownerCourtCreate",
+          operationId: "organizationCourtCreate",
           path: z.object({ venueId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/courts/{courtId}": {
+      "/organization/courts/{courtId}": {
         get: protectedGet({
-          operationId: "ownerCourtGetById",
+          operationId: "organizationCourtGetById",
           path: z.object({ courtId: UuidSchema }),
         }),
         patch: protectedMutation({
-          operationId: "ownerCourtUpdate",
+          operationId: "organizationCourtUpdate",
           path: z.object({ courtId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/courts/{courtId}/hours": {
+      "/organization/courts/{courtId}/hours": {
         get: protectedGet({
-          operationId: "ownerCourtHoursGet",
+          operationId: "organizationCourtHoursGet",
           path: z.object({ courtId: UuidSchema }),
         }),
         put: protectedMutation({
-          operationId: "ownerCourtHoursSet",
+          operationId: "organizationCourtHoursSet",
           path: z.object({ courtId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/courts/{courtId}/hours/copy-from": {
+      "/organization/courts/{courtId}/hours/copy-from": {
         post: protectedMutation({
-          operationId: "ownerCourtHoursCopyFrom",
+          operationId: "organizationCourtHoursCopyFrom",
           path: z.object({ courtId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/courts/{courtId}/rate-rules": {
+      "/organization/courts/{courtId}/rate-rules": {
         get: protectedGet({
-          operationId: "ownerCourtRateRulesGet",
+          operationId: "organizationCourtRateRulesGet",
           path: z.object({ courtId: UuidSchema }),
         }),
         put: protectedMutation({
-          operationId: "ownerCourtRateRulesSet",
+          operationId: "organizationCourtRateRulesSet",
           path: z.object({ courtId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/courts/{courtId}/rate-rules/copy-from": {
+      "/organization/courts/{courtId}/rate-rules/copy-from": {
         post: protectedMutation({
-          operationId: "ownerCourtRateRulesCopyFrom",
+          operationId: "organizationCourtRateRulesCopyFrom",
           path: z.object({ courtId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/courts/{courtId}/blocks": {
+      "/organization/courts/{courtId}/blocks": {
         get: protectedGet({
-          operationId: "ownerCourtBlocksList",
+          operationId: "organizationCourtBlocksList",
           path: z.object({ courtId: UuidSchema }),
           query: z.object({
             startTime: StringSchema,
@@ -541,100 +541,101 @@ export function createMobileV1OpenApiDocument(args: {
         }),
       },
 
-      "/owner/courts/{courtId}/blocks/maintenance": {
+      "/organization/courts/{courtId}/blocks/maintenance": {
         post: protectedMutation({
-          operationId: "ownerCourtBlockCreateMaintenance",
+          operationId: "organizationCourtBlockCreateMaintenance",
           path: z.object({ courtId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/courts/{courtId}/blocks/walk-in": {
+      "/organization/courts/{courtId}/blocks/walk-in": {
         post: protectedMutation({
-          operationId: "ownerCourtBlockCreateWalkIn",
+          operationId: "organizationCourtBlockCreateWalkIn",
           path: z.object({ courtId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/blocks/{blockId}/cancel": {
+      "/organization/blocks/{blockId}/cancel": {
         post: protectedMutation({
-          operationId: "ownerCourtBlockCancel",
+          operationId: "organizationCourtBlockCancel",
           path: z.object({ blockId: UuidSchema }),
         }),
       },
 
-      "/owner/blocks/{blockId}/range": {
+      "/organization/blocks/{blockId}/range": {
         patch: protectedMutation({
-          operationId: "ownerCourtBlockUpdateRange",
+          operationId: "organizationCourtBlockUpdateRange",
           path: z.object({ blockId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/organizations/{organizationId}/reservations": {
+      "/organization/organizations/{organizationId}/reservations": {
         get: protectedGet({
-          operationId: "ownerReservationListByOrganization",
+          operationId: "organizationReservationListByOrganization",
           path: z.object({ organizationId: UuidSchema }),
         }),
       },
 
-      "/owner/organizations/{organizationId}/reservations/pending-count": {
+      "/organization/organizations/{organizationId}/reservations/pending-count":
+        {
+          get: protectedGet({
+            operationId: "organizationReservationPendingCount",
+            path: z.object({ organizationId: UuidSchema }),
+          }),
+        },
+
+      "/organization/reservations/{reservationId}/accept": {
+        post: protectedMutation({
+          operationId: "organizationReservationAccept",
+          path: z.object({ reservationId: UuidSchema }),
+        }),
+      },
+
+      "/organization/reservations/{reservationId}/reject": {
+        post: protectedMutation({
+          operationId: "organizationReservationReject",
+          path: z.object({ reservationId: UuidSchema }),
+          bodyType: "json",
+        }),
+      },
+
+      "/organization/reservations/{reservationId}/confirm-payment": {
+        post: protectedMutation({
+          operationId: "organizationReservationConfirmPayment",
+          path: z.object({ reservationId: UuidSchema }),
+          bodyType: "json",
+        }),
+      },
+
+      "/organization/reservations/{reservationId}/confirm-paid-offline": {
+        post: protectedMutation({
+          operationId: "organizationReservationConfirmPaidOffline",
+          path: z.object({ reservationId: UuidSchema }),
+          bodyType: "json",
+        }),
+      },
+
+      "/organization/reservations/{reservationId}/history": {
         get: protectedGet({
-          operationId: "ownerReservationPendingCount",
-          path: z.object({ organizationId: UuidSchema }),
-        }),
-      },
-
-      "/owner/reservations/{reservationId}/accept": {
-        post: protectedMutation({
-          operationId: "ownerReservationAccept",
-          path: z.object({ reservationId: UuidSchema }),
-        }),
-      },
-
-      "/owner/reservations/{reservationId}/reject": {
-        post: protectedMutation({
-          operationId: "ownerReservationReject",
-          path: z.object({ reservationId: UuidSchema }),
-          bodyType: "json",
-        }),
-      },
-
-      "/owner/reservations/{reservationId}/confirm-payment": {
-        post: protectedMutation({
-          operationId: "ownerReservationConfirmPayment",
-          path: z.object({ reservationId: UuidSchema }),
-          bodyType: "json",
-        }),
-      },
-
-      "/owner/reservations/{reservationId}/confirm-paid-offline": {
-        post: protectedMutation({
-          operationId: "ownerReservationConfirmPaidOffline",
-          path: z.object({ reservationId: UuidSchema }),
-          bodyType: "json",
-        }),
-      },
-
-      "/owner/reservations/{reservationId}/history": {
-        get: protectedGet({
-          operationId: "ownerReservationHistory",
+          operationId: "organizationReservationHistory",
           path: z.object({ reservationId: UuidSchema }),
           successSchema: OwnerReservationHistoryResponseSchema,
         }),
       },
 
-      "/owner/courts/{courtId}/reservations/pending": {
+      "/organization/courts/{courtId}/reservations/pending": {
         get: protectedGet({
-          operationId: "ownerReservationPendingByCourt",
+          operationId: "organizationReservationPendingByCourt",
           path: z.object({ courtId: UuidSchema }),
         }),
       },
 
-      "/owner/courts/{courtId}/reservations/active": {
+      "/organization/courts/{courtId}/reservations/active": {
         get: protectedGet({
-          operationId: "ownerReservationActiveByCourt",
+          operationId: "organizationReservationActiveByCourt",
           path: z.object({ courtId: UuidSchema }),
           query: z.object({
             startTime: StringSchema,
@@ -643,281 +644,282 @@ export function createMobileV1OpenApiDocument(args: {
         }),
       },
 
-      "/owner/reservations/guest-booking": {
+      "/organization/reservations/guest-booking": {
         post: protectedMutation({
-          operationId: "ownerReservationCreateGuestBooking",
+          operationId: "organizationReservationCreateGuestBooking",
           bodyType: "json",
         }),
       },
 
-      "/owner/blocks/{blockId}/convert-to-guest": {
+      "/organization/blocks/{blockId}/convert-to-guest": {
         post: protectedMutation({
-          operationId: "ownerBlockConvertToGuestBooking",
+          operationId: "organizationBlockConvertToGuestBooking",
           path: z.object({ blockId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/organizations/{organizationId}/payment-methods": {
+      "/organization/organizations/{organizationId}/payment-methods": {
         get: protectedGet({
-          operationId: "ownerPaymentMethodList",
+          operationId: "organizationPaymentMethodList",
           path: z.object({ organizationId: UuidSchema }),
           successSchema: MethodsResponseSchema,
         }),
         post: protectedMutation({
-          operationId: "ownerPaymentMethodCreate",
+          operationId: "organizationPaymentMethodCreate",
           path: z.object({ organizationId: UuidSchema }),
           bodyType: "json",
           successSchema: MethodResponseSchema,
         }),
       },
 
-      "/owner/payment-methods/{paymentMethodId}": {
+      "/organization/payment-methods/{paymentMethodId}": {
         patch: protectedMutation({
-          operationId: "ownerPaymentMethodUpdate",
+          operationId: "organizationPaymentMethodUpdate",
           path: z.object({ paymentMethodId: UuidSchema }),
           bodyType: "json",
           successSchema: MethodResponseSchema,
         }),
         delete: protectedMutation({
-          operationId: "ownerPaymentMethodDelete",
+          operationId: "organizationPaymentMethodDelete",
           path: z.object({ paymentMethodId: UuidSchema }),
           successSchema: SuccessResponseSchema,
         }),
       },
 
-      "/owner/payment-methods/{paymentMethodId}/set-default": {
+      "/organization/payment-methods/{paymentMethodId}/set-default": {
         post: protectedMutation({
-          operationId: "ownerPaymentMethodSetDefault",
+          operationId: "organizationPaymentMethodSetDefault",
           path: z.object({ paymentMethodId: UuidSchema }),
           successSchema: SuccessResponseSchema,
         }),
       },
 
-      "/owner/venues/{venueId}/verification": {
+      "/organization/venues/{venueId}/verification": {
         get: protectedGet({
-          operationId: "ownerPlaceVerificationGet",
+          operationId: "organizationPlaceVerificationGet",
           path: z.object({ venueId: UuidSchema }),
         }),
       },
 
-      "/owner/venues/{venueId}/verification/submit": {
+      "/organization/venues/{venueId}/verification/submit": {
         post: protectedMutation({
-          operationId: "ownerPlaceVerificationSubmit",
+          operationId: "organizationPlaceVerificationSubmit",
           path: z.object({ venueId: UuidSchema }),
           bodyType: "multipart",
           successSchema: SuccessResponseSchema,
         }),
       },
 
-      "/owner/venues/{venueId}/reservations/toggle": {
+      "/organization/venues/{venueId}/reservations/toggle": {
         post: protectedMutation({
-          operationId: "ownerPlaceToggleReservations",
+          operationId: "organizationPlaceToggleReservations",
           path: z.object({ venueId: UuidSchema }),
           bodyType: "json",
           successSchema: SuccessResponseSchema,
         }),
       },
 
-      "/owner/claims": {
+      "/organization/claims": {
         get: protectedGet({
-          operationId: "ownerClaimListMy",
+          operationId: "organizationClaimListMy",
         }),
         post: protectedMutation({
-          operationId: "ownerClaimCreate",
+          operationId: "organizationClaimCreate",
           bodyType: "json",
         }),
       },
 
-      "/owner/claims/{requestId}": {
+      "/organization/claims/{requestId}": {
         get: protectedGet({
-          operationId: "ownerClaimGetById",
+          operationId: "organizationClaimGetById",
           path: z.object({ requestId: UuidSchema }),
         }),
       },
 
-      "/owner/claims/{requestId}/cancel": {
+      "/organization/claims/{requestId}/cancel": {
         post: protectedMutation({
-          operationId: "ownerClaimCancel",
+          operationId: "organizationClaimCancel",
           path: z.object({ requestId: UuidSchema }),
         }),
       },
 
-      "/owner/removals": {
+      "/organization/removals": {
         post: protectedMutation({
-          operationId: "ownerClaimSubmitRemoval",
+          operationId: "organizationClaimSubmitRemoval",
           bodyType: "json",
         }),
       },
 
-      "/owner/organizations/{organizationId}/guest-profiles": {
+      "/organization/organizations/{organizationId}/guest-profiles": {
         get: protectedGet({
-          operationId: "ownerGuestProfileList",
+          operationId: "organizationGuestProfileList",
           path: z.object({ organizationId: UuidSchema }),
         }),
         post: protectedMutation({
-          operationId: "ownerGuestProfileCreate",
+          operationId: "organizationGuestProfileCreate",
           path: z.object({ organizationId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/organizations/{organizationId}/reservation-policy": {
+      "/organization/organizations/{organizationId}/reservation-policy": {
         get: protectedGet({
-          operationId: "ownerReservationPolicyGet",
+          operationId: "organizationReservationPolicyGet",
           path: z.object({ organizationId: UuidSchema }),
         }),
         patch: protectedMutation({
-          operationId: "ownerReservationPolicyUpdate",
+          operationId: "organizationReservationPolicyUpdate",
           path: z.object({ organizationId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/import/bookings": {
+      "/organization/import/bookings": {
         post: protectedMutation({
-          operationId: "ownerBookingsImportCreate",
+          operationId: "organizationBookingsImportCreate",
           bodyType: "multipart",
         }),
       },
 
-      "/owner/import/bookings/jobs": {
+      "/organization/import/bookings/jobs": {
         get: protectedGet({
-          operationId: "ownerBookingsImportJobsList",
+          operationId: "organizationBookingsImportJobsList",
         }),
       },
 
-      "/owner/import/bookings/jobs/{jobId}": {
+      "/organization/import/bookings/jobs/{jobId}": {
         get: protectedGet({
-          operationId: "ownerBookingsImportJobGet",
+          operationId: "organizationBookingsImportJobGet",
           path: z.object({ jobId: UuidSchema }),
         }),
       },
 
-      "/owner/import/bookings/jobs/{jobId}/rows": {
+      "/organization/import/bookings/jobs/{jobId}/rows": {
         get: protectedGet({
-          operationId: "ownerBookingsImportRowsList",
+          operationId: "organizationBookingsImportRowsList",
           path: z.object({ jobId: UuidSchema }),
         }),
       },
 
-      "/owner/import/bookings/jobs/{jobId}/sources": {
+      "/organization/import/bookings/jobs/{jobId}/sources": {
         get: protectedGet({
-          operationId: "ownerBookingsImportSourcesList",
+          operationId: "organizationBookingsImportSourcesList",
           path: z.object({ jobId: UuidSchema }),
         }),
       },
 
-      "/owner/import/bookings/jobs/{jobId}/discard": {
+      "/organization/import/bookings/jobs/{jobId}/discard": {
         post: protectedMutation({
-          operationId: "ownerBookingsImportJobDiscard",
+          operationId: "organizationBookingsImportJobDiscard",
           path: z.object({ jobId: UuidSchema }),
           successSchema: SuccessResponseSchema,
         }),
       },
 
-      "/owner/import/bookings/jobs/{jobId}/normalize": {
+      "/organization/import/bookings/jobs/{jobId}/normalize": {
         post: protectedMutation({
-          operationId: "ownerBookingsImportJobNormalize",
+          operationId: "organizationBookingsImportJobNormalize",
           path: z.object({ jobId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/import/bookings/jobs/{jobId}/commit": {
+      "/organization/import/bookings/jobs/{jobId}/commit": {
         post: protectedMutation({
-          operationId: "ownerBookingsImportJobCommit",
+          operationId: "organizationBookingsImportJobCommit",
           path: z.object({ jobId: UuidSchema }),
         }),
       },
 
-      "/owner/import/bookings/rows/{rowId}": {
+      "/organization/import/bookings/rows/{rowId}": {
         patch: protectedMutation({
-          operationId: "ownerBookingsImportRowUpdate",
+          operationId: "organizationBookingsImportRowUpdate",
           path: z.object({ rowId: UuidSchema }),
           bodyType: "json",
         }),
         delete: protectedMutation({
-          operationId: "ownerBookingsImportRowDelete",
+          operationId: "organizationBookingsImportRowDelete",
           path: z.object({ rowId: UuidSchema }),
           successSchema: SuccessResponseSchema,
         }),
       },
 
-      "/owner/import/bookings/rows/{rowId}/replace-with-guest": {
+      "/organization/import/bookings/rows/{rowId}/replace-with-guest": {
         post: protectedMutation({
-          operationId: "ownerBookingsImportRowReplaceWithGuest",
+          operationId: "organizationBookingsImportRowReplaceWithGuest",
           path: z.object({ rowId: UuidSchema }),
           bodyType: "json",
         }),
       },
 
-      "/owner/import/bookings/ai-usage": {
+      "/organization/import/bookings/ai-usage": {
         get: protectedGet({
-          operationId: "ownerBookingsImportAiUsage",
+          operationId: "organizationBookingsImportAiUsage",
         }),
       },
 
-      "/owner/chat/auth": {
+      "/organization/chat/auth": {
         get: protectedGet({
-          operationId: "ownerChatGetAuth",
+          operationId: "organizationChatGetAuth",
         }),
       },
 
-      "/owner/chat/reservations/{reservationId}/session": {
+      "/organization/chat/reservations/{reservationId}/session": {
         get: protectedGet({
-          operationId: "ownerReservationChatGetSession",
+          operationId: "organizationReservationChatGetSession",
           path: z.object({ reservationId: UuidSchema }),
         }),
       },
 
-      "/owner/chat/reservations/thread-metas": {
+      "/organization/chat/reservations/thread-metas": {
         get: protectedGet({
-          operationId: "ownerReservationChatThreadMetas",
+          operationId: "organizationReservationChatThreadMetas",
           query: OwnerReservationChatThreadMetasQuerySchema,
         }),
       },
 
-      "/owner/chat/reservations/{reservationId}/messages": {
+      "/organization/chat/reservations/{reservationId}/messages": {
         post: protectedMutation({
-          operationId: "ownerReservationChatSendMessage",
+          operationId: "organizationReservationChatSendMessage",
           path: z.object({ reservationId: UuidSchema }),
           bodyType: "json",
           successSchema: OkResponseSchema,
         }),
       },
 
-      "/owner/chat/claims/{claimRequestId}/session": {
+      "/organization/chat/claims/{claimRequestId}/session": {
         get: protectedGet({
-          operationId: "ownerSupportChatClaimSession",
+          operationId: "organizationSupportChatClaimSession",
           path: z.object({ claimRequestId: UuidSchema }),
         }),
       },
 
-      "/owner/chat/claims/{claimRequestId}/messages": {
+      "/organization/chat/claims/{claimRequestId}/messages": {
         post: protectedMutation({
-          operationId: "ownerSupportChatClaimSendMessage",
+          operationId: "organizationSupportChatClaimSendMessage",
           path: z.object({ claimRequestId: UuidSchema }),
           bodyType: "json",
           successSchema: OkResponseSchema,
         }),
       },
 
-      "/owner/chat/verifications/{placeVerificationRequestId}/session": {
+      "/organization/chat/verifications/{placeVerificationRequestId}/session": {
         get: protectedGet({
-          operationId: "ownerSupportChatVerificationSession",
+          operationId: "organizationSupportChatVerificationSession",
           path: z.object({ placeVerificationRequestId: UuidSchema }),
         }),
       },
 
-      "/owner/chat/verifications/{placeVerificationRequestId}/messages": {
-        post: protectedMutation({
-          operationId: "ownerSupportChatVerificationSendMessage",
-          path: z.object({ placeVerificationRequestId: UuidSchema }),
-          bodyType: "json",
-          successSchema: OkResponseSchema,
-        }),
-      },
+      "/organization/chat/verifications/{placeVerificationRequestId}/messages":
+        {
+          post: protectedMutation({
+            operationId: "organizationSupportChatVerificationSendMessage",
+            path: z.object({ placeVerificationRequestId: UuidSchema }),
+            bodyType: "json",
+            successSchema: OkResponseSchema,
+          }),
+        },
 
       "/push-tokens": {
         put: protectedMutation({

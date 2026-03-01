@@ -215,7 +215,9 @@ export function ReservationsTable({
 
           <div className="flex gap-2 mt-3">
             <Button variant="outline" size="sm" className="flex-1" asChild>
-              <Link href={appRoutes.owner.reservationDetail(reservation.id)}>
+              <Link
+                href={appRoutes.organization.reservationDetail(reservation.id)}
+              >
                 <Eye className="h-4 w-4 mr-2" />
                 View
               </Link>
@@ -432,7 +434,7 @@ export function ReservationsTable({
                           onClick={(e) => e.stopPropagation()}
                         >
                           <Link
-                            href={appRoutes.owner.reservationDetail(
+                            href={appRoutes.organization.reservationDetail(
                               reservation.id,
                             )}
                           >

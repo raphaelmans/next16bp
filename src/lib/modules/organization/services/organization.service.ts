@@ -228,7 +228,11 @@ export class OrganizationService implements IOrganizationService {
         ctx,
       );
 
-      await this.userPreferenceService.setDefaultPortal(ownerId, "owner", ctx);
+      await this.userPreferenceService.setDefaultPortal(
+        ownerId,
+        "organization",
+        ctx,
+      );
 
       logger.info(
         {

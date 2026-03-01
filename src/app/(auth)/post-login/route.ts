@@ -27,13 +27,13 @@ export async function GET(request: NextRequest) {
 
   const hasOrganization = organizations.length > 0;
   const defaultPortal = preference?.defaultPortal ?? "player";
-  const prefersOwnerPortal = defaultPortal === "owner";
+  const prefersOrganizationPortal = defaultPortal === "organization";
   const fallbackRedirect =
-    // If the account already owns an organization, owner portal wins by default.
+    // If the account already belongs to an organization, org portal wins by default.
     hasOrganization
-      ? appRoutes.owner.base
-      : prefersOwnerPortal
-        ? appRoutes.owner.getStarted
+      ? appRoutes.organization.base
+      : prefersOrganizationPortal
+        ? appRoutes.organization.getStarted
         : appRoutes.home.base;
 
   const redirectPath = getSafeRedirectPath(

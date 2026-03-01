@@ -32,7 +32,7 @@ export interface AuthOrganization {
 }
 
 export interface AuthUserPreference {
-  defaultPortal: "player" | "owner";
+  defaultPortal: "player" | "organization";
 }
 
 export function useQueryAuthSession() {
@@ -149,7 +149,7 @@ export function useQueryAuthUserPreference(enabled: boolean) {
   );
 }
 
-type PortalDefault = "player" | "owner";
+type PortalDefault = "player" | "organization";
 type SetDefaultPortalInput = { defaultPortal: PortalDefault };
 type SetDefaultPortalOutput = Awaited<
   ReturnType<typeof authApi.mutUserPreferenceSetDefaultPortal>

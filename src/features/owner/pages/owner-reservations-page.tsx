@@ -384,7 +384,9 @@ export default function OwnerReservationsPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(appRoutes.owner.reservations);
+    window.location.href = appRoutes.login.from(
+      appRoutes.organization.reservations,
+    );
   };
 
   const handleConfirmClick = (reservationId: string) => {
@@ -816,7 +818,7 @@ export default function OwnerReservationsPage() {
                 </p>
                 <Button asChild>
                   <a
-                    href={`${appRoutes.owner.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`}
+                    href={`${appRoutes.organization.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`}
                   >
                     Set up payment methods
                   </a>

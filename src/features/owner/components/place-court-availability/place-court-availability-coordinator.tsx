@@ -1286,19 +1286,19 @@ function OwnerCourtAvailabilityInner({
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.owner.places.courts.availability(placeId, courtId),
+      appRoutes.organization.places.courts.availability(placeId, courtId),
     );
   };
 
-  const scheduleHrefBase = appRoutes.owner.places.courts.schedule(
+  const scheduleHrefBase = appRoutes.organization.places.courts.schedule(
     placeId,
     courtId,
   );
   const scheduleHref = isFromSetup
     ? `${scheduleHrefBase}?from=setup`
     : scheduleHrefBase;
-  const reservationsHref = `${appRoutes.owner.reservations}?placeId=${placeId}&courtId=${courtId}`;
-  const paymentMethodsHref = `${appRoutes.owner.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`;
+  const reservationsHref = `${appRoutes.organization.reservations}?placeId=${placeId}&courtId=${courtId}`;
+  const paymentMethodsHref = `${appRoutes.organization.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`;
 
   if (orgLoading || courtLoading || placeLoading) {
     return <OwnerCourtAvailabilityLoadingState />;
@@ -1306,12 +1306,12 @@ function OwnerCourtAvailabilityInner({
 
   if (!courtData || !placeData) {
     if (!embedded) {
-      router.push(appRoutes.owner.places.courts.base(placeId));
+      router.push(appRoutes.organization.places.courts.base(placeId));
     }
     return null;
   }
 
-  const verificationHref = appRoutes.owner.verification.place(placeId);
+  const verificationHref = appRoutes.organization.verification.place(placeId);
   const verificationStatus = placeData.verification?.status ?? "UNVERIFIED";
   const reservationsEnabled =
     placeData.verification?.reservationsEnabled ?? false;
@@ -1348,15 +1348,15 @@ function OwnerCourtAvailabilityInner({
       <PageHeader
         title={courtData.court.label}
         breadcrumbs={[
-          { label: "My Venues", href: appRoutes.owner.places.base },
+          { label: "My Venues", href: appRoutes.organization.places.base },
           {
             label: placeData.place.name,
-            href: appRoutes.owner.places.courts.base(placeId),
+            href: appRoutes.organization.places.courts.base(placeId),
           },
           { label: courtData.court.label },
         ]}
         breadcrumbClassName="hidden sm:block"
-        backHref={appRoutes.owner.places.courts.base(placeId)}
+        backHref={appRoutes.organization.places.courts.base(placeId)}
         actions={
           <>
             <ToggleGroup
@@ -2054,7 +2054,7 @@ function OwnerCourtAvailabilityInner({
                                     compact={height <= TIMELINE_ROW_HEIGHT + 8}
                                     onClick={() => {
                                       router.push(
-                                        appRoutes.owner.reservationDetail(
+                                        appRoutes.organization.reservationDetail(
                                           reservation.id,
                                         ),
                                       );

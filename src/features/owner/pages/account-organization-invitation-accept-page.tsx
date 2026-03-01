@@ -153,9 +153,9 @@ export default function AccountOrganizationInvitationAcceptPage({
             <Button
               type="button"
               variant="ghost"
-              onClick={() => router.push(appRoutes.owner.base)}
+              onClick={() => router.push(appRoutes.organization.base)}
             >
-              Go to Owner Portal
+              Go to Organization Portal
             </Button>
           </div>
         </CardContent>

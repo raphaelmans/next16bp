@@ -53,14 +53,14 @@ function getTabsForRole(role: OrganizationMemberRole): TabConfig[] {
       return [
         {
           label: "Reservations",
-          href: appRoutes.owner.reservations,
+          href: appRoutes.organization.reservations,
           icon: CalendarDays,
           showBadge: true,
         },
         { label: "Courts", href: appRoutes.courts.base, icon: LayoutGrid },
         {
           label: "Venues",
-          href: appRoutes.owner.places.base,
+          href: appRoutes.organization.places.base,
           icon: MapPinned,
         },
         MORE_TAB,
@@ -69,14 +69,14 @@ function getTabsForRole(role: OrganizationMemberRole): TabConfig[] {
       return [
         {
           label: "Reservations",
-          href: appRoutes.owner.reservations,
+          href: appRoutes.organization.reservations,
           icon: CalendarDays,
           showBadge: true,
         },
         { label: "Courts", href: appRoutes.courts.base, icon: LayoutGrid },
         {
           label: "Imports",
-          href: appRoutes.owner.imports.bookings,
+          href: appRoutes.organization.imports.bookings,
           icon: UploadCloud,
         },
         MORE_TAB,
@@ -85,7 +85,7 @@ function getTabsForRole(role: OrganizationMemberRole): TabConfig[] {
       return [
         {
           label: "Reservations",
-          href: appRoutes.owner.reservations,
+          href: appRoutes.organization.reservations,
           icon: CalendarDays,
           showBadge: true,
         },
@@ -102,23 +102,23 @@ function getMoreItemsForRole(role: OrganizationMemberRole): TabConfig[] {
       return [
         {
           label: "Dashboard",
-          href: appRoutes.owner.base,
+          href: appRoutes.organization.base,
           icon: LayoutDashboard,
         },
         {
           label: "Availability Studio",
-          href: appRoutes.owner.bookings,
+          href: appRoutes.organization.bookings,
           icon: CalendarRange,
         },
         {
           label: "Imports",
-          href: appRoutes.owner.imports.bookings,
+          href: appRoutes.organization.imports.bookings,
           icon: UploadCloud,
         },
-        { label: "Team", href: appRoutes.owner.team, icon: Users },
+        { label: "Team", href: appRoutes.organization.team, icon: Users },
         {
           label: "Settings",
-          href: appRoutes.owner.settings,
+          href: appRoutes.organization.settings,
           icon: Settings,
         },
       ];
@@ -126,20 +126,20 @@ function getMoreItemsForRole(role: OrganizationMemberRole): TabConfig[] {
       return [
         {
           label: "Dashboard",
-          href: appRoutes.owner.base,
+          href: appRoutes.organization.base,
           icon: LayoutDashboard,
         },
         {
           label: "Availability Studio",
-          href: appRoutes.owner.bookings,
+          href: appRoutes.organization.bookings,
           icon: CalendarRange,
         },
         {
           label: "Venues",
-          href: appRoutes.owner.places.base,
+          href: appRoutes.organization.places.base,
           icon: MapPinned,
         },
-        { label: "Team", href: appRoutes.owner.team, icon: Users },
+        { label: "Team", href: appRoutes.organization.team, icon: Users },
       ];
     // VIEWER has no "More" tab
     case "VIEWER":
@@ -175,7 +175,7 @@ export function OwnerBottomTabs() {
 
   const getStartedItem: TabConfig = {
     label: "Get Started",
-    href: appRoutes.owner.getStarted,
+    href: appRoutes.organization.getStarted,
     icon: ClipboardList,
   };
 
@@ -185,8 +185,8 @@ export function OwnerBottomTabs() {
   ];
 
   const isActive = (href: string) => {
-    if (href === appRoutes.owner.base) {
-      return pathname === appRoutes.owner.base;
+    if (href === appRoutes.organization.base) {
+      return pathname === appRoutes.organization.base;
     }
     return pathname.startsWith(href);
   };

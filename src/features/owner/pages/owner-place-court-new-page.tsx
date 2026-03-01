@@ -47,19 +47,19 @@ export default function NewPlaceCourtPage({
   const { submitAsync, isSubmitting } = useModCourtForm({
     onSuccess: () => {
       toast.success("Court created successfully!");
-      router.push(appRoutes.owner.verification.place(placeId));
+      router.push(appRoutes.organization.verification.place(placeId));
     },
   });
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.owner.places.courts.new(placeId),
+      appRoutes.organization.places.courts.new(placeId),
     );
   };
 
   const handleCancel = () => {
-    router.push(appRoutes.owner.places.courts.base(placeId));
+    router.push(appRoutes.organization.places.courts.base(placeId));
   };
 
   const isLoading = orgLoading || placeLoading || sportsLoading;
@@ -107,7 +107,9 @@ export default function NewPlaceCourtPage({
                 You need an organization before creating courts.
               </p>
               <Button asChild>
-                <Link href={appRoutes.owner.getStarted}>Get started</Link>
+                <Link href={appRoutes.organization.getStarted}>
+                  Get started
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -117,7 +119,7 @@ export default function NewPlaceCourtPage({
   }
 
   if (!placeData) {
-    router.push(appRoutes.owner.places.base);
+    router.push(appRoutes.organization.places.base);
     return null;
   }
 
@@ -168,14 +170,14 @@ export default function NewPlaceCourtPage({
             title="Step 2 of 3 · Add a Court"
             description="Create at least one court for this venue. Next: verification."
             breadcrumbs={[
-              { label: "My Venues", href: appRoutes.owner.places.base },
+              { label: "My Venues", href: appRoutes.organization.places.base },
               {
                 label: place.name,
-                href: appRoutes.owner.places.edit(place.id),
+                href: appRoutes.organization.places.edit(place.id),
               },
               { label: "Add court" },
             ]}
-            backHref={appRoutes.owner.places.courts.base(placeId)}
+            backHref={appRoutes.organization.places.courts.base(placeId)}
             backLabel="Back to courts"
           />
 

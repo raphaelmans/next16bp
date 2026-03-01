@@ -63,7 +63,7 @@ export function OwnerNavbar({
 
       {/* Right side - User menu */}
       <div className="flex items-center gap-2">
-        {user && <NotificationBell portal="owner" />}
+        {user && <NotificationBell portal="organization" />}
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -123,7 +123,7 @@ export function OwnerNavbar({
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={appRoutes.owner.settings}>
+                <Link href={appRoutes.organization.settings}>
                   <Settings className="mr-2 h-4 w-4" />
                   Settings
                 </Link>

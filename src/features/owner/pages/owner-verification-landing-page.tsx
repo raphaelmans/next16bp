@@ -31,7 +31,7 @@ export default function OwnerVerificationLandingPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(appRoutes.owner.verify);
+    window.location.href = appRoutes.login.from(appRoutes.organization.verify);
   };
 
   if (orgLoading || placesLoading) {
@@ -104,7 +104,7 @@ export default function OwnerVerificationLandingPage() {
                 Create your first venue to submit verification documents.
                 <div className="mt-4">
                   <Link
-                    href={appRoutes.owner.places.new}
+                    href={appRoutes.organization.places.new}
                     className="text-primary hover:underline"
                   >
                     Create a venue
@@ -156,13 +156,17 @@ export default function OwnerVerificationLandingPage() {
                     <div className="flex flex-wrap gap-2">
                       <Button size="sm" asChild>
                         <Link
-                          href={appRoutes.owner.verification.place(place.id)}
+                          href={appRoutes.organization.verification.place(
+                            place.id,
+                          )}
                         >
                           Go to verification
                         </Link>
                       </Button>
                       <Button variant="outline" size="sm" asChild>
-                        <Link href={appRoutes.owner.places.edit(place.id)}>
+                        <Link
+                          href={appRoutes.organization.places.edit(place.id)}
+                        >
                           Edit venue
                         </Link>
                       </Button>

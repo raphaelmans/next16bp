@@ -26,21 +26,21 @@ export default function OwnerBookingsImportPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(appRoutes.owner.base);
+    window.location.href = appRoutes.login.from(appRoutes.organization.base);
   };
 
   const handleDraftCreated = (jobId: string) => {
     const reviewHref = isFromSetup
-      ? `${appRoutes.owner.imports.bookingsReview(jobId)}?from=setup`
-      : appRoutes.owner.imports.bookingsReview(jobId);
+      ? `${appRoutes.organization.imports.bookingsReview(jobId)}?from=setup`
+      : appRoutes.organization.imports.bookingsReview(jobId);
     router.push(reviewHref);
   };
 
   const handleCancel = () => {
     router.push(
       isFromSetup
-        ? appRoutes.owner.getStarted
-        : appRoutes.owner.imports.bookings,
+        ? appRoutes.organization.getStarted
+        : appRoutes.organization.imports.bookings,
     );
   };
 
@@ -112,8 +112,11 @@ export default function OwnerBookingsImportPage() {
             title="Import Existing Bookings"
             description="Bring in external reservations to prevent double-booking."
             breadcrumbs={[
-              { label: "Owner", href: appRoutes.owner.base },
-              { label: "Imports", href: appRoutes.owner.imports.bookings },
+              { label: "Owner", href: appRoutes.organization.base },
+              {
+                label: "Imports",
+                href: appRoutes.organization.imports.bookings,
+              },
               { label: "Bookings" },
             ]}
           />

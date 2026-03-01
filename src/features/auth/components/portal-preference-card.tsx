@@ -19,7 +19,7 @@ import {
 } from "@/features/auth/hooks";
 import { cn } from "@/lib/utils";
 
-type PortalDefault = "player" | "owner";
+type PortalDefault = "player" | "organization";
 
 interface PortalPreferenceCardProps {
   id?: string;
@@ -39,9 +39,9 @@ const portalOptions: Array<{
     icon: Home,
   },
   {
-    value: "owner",
-    title: "Owner",
-    description: "Open to owner dashboard and operations by default.",
+    value: "organization",
+    title: "Organization",
+    description: "Open to organization dashboard and operations by default.",
     icon: Building2,
   },
 ];
@@ -75,7 +75,7 @@ export function PortalPreferenceCard({
   });
 
   const handleChange = (value: string) => {
-    if (value !== "player" && value !== "owner") return;
+    if (value !== "player" && value !== "organization") return;
     if (value === selectedPortal || mutation.isPending) return;
 
     setSelectedPortal(value);

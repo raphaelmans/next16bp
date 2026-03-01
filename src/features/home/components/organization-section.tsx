@@ -63,7 +63,7 @@ export function OrganizationSection({
             </div>
           </div>
           <Button className="w-full" asChild>
-            <Link href={appRoutes.owner.base}>
+            <Link href={appRoutes.organization.base}>
               Go to Dashboard
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

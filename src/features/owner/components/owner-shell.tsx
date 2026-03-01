@@ -29,8 +29,11 @@ export function OwnerShell({ children, hasOrganizations }: OwnerShellProps) {
   // Immediate seed while DB preference loads (fallback for first visit)
   useEffect(() => {
     try {
-      if (!localStorage.getItem(PORTAL_STORAGE_KEY)) {
-        localStorage.setItem(PORTAL_STORAGE_KEY, "owner");
+      const current = localStorage.getItem(PORTAL_STORAGE_KEY);
+      if (current === "owner") {
+        localStorage.setItem(PORTAL_STORAGE_KEY, "organization");
+      } else if (!current) {
+        localStorage.setItem(PORTAL_STORAGE_KEY, "organization");
       }
     } catch {}
   }, []);
@@ -52,7 +55,7 @@ export function OwnerShell({ children, hasOrganizations }: OwnerShellProps) {
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      pathname || appRoutes.owner.base,
+      pathname || appRoutes.organization.base,
     );
   };
 

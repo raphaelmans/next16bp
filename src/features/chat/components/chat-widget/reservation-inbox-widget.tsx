@@ -61,7 +61,7 @@ export type ReservationThreadMeta = {
   endTimeIso: string;
 };
 
-type InboxKind = "player" | "owner";
+type InboxKind = "player" | "organization";
 type SyncPhase = "idle" | "syncing" | "partial" | "error";
 
 type ReservationChatOpenDetail = {
@@ -589,7 +589,7 @@ export function ReservationInboxWidget({
 
     await copyToClipboard(
       playerUrl,
-      config.kind === "owner" ? "Player booking link" : "Booking link",
+      config.kind === "organization" ? "Player booking link" : "Booking link",
     );
   }, [activeMeta, config.kind]);
 
@@ -607,7 +607,9 @@ export function ReservationInboxWidget({
               handleCopyPlayerLink().catch(() => undefined);
             }}
           >
-            {config.kind === "owner" ? "Copy player link" : "Copy booking link"}
+            {config.kind === "organization"
+              ? "Copy player link"
+              : "Copy booking link"}
           </Button>
         ) : null}
       </div>
@@ -628,8 +630,8 @@ export function ReservationInboxWidget({
         )}
       </p>
       <p className="mt-1 text-muted-foreground">
-        {config.kind === "owner" ? "Booked by" : "Venue"}:{" "}
-        {config.kind === "owner"
+        {config.kind === "organization" ? "Booked by" : "Venue"}:{" "}
+        {config.kind === "organization"
           ? activeMeta.playerDisplayName
           : activeMeta.ownerDisplayName}
       </p>
@@ -964,10 +966,12 @@ export function ReservationInboxWidget({
       onOpenChange={setOpen}
       unreadCount={unreadCount}
       triggerLabel={
-        config.kind === "owner" ? "Open booking inbox" : "Open booking messages"
+        config.kind === "organization"
+          ? "Open booking inbox"
+          : "Open booking messages"
       }
-      triggerVariant={config.kind === "owner" ? "secondary" : "default"}
-      triggerClassName={cn(config.kind === "owner" && "border")}
+      triggerVariant={config.kind === "organization" ? "secondary" : "default"}
+      triggerClassName={cn(config.kind === "organization" && "border")}
       sheetTitle={config.ui.sheetTitle}
       sheetDescription={config.ui.sheetDescription}
       isSmall={isSmall}

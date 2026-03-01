@@ -57,12 +57,12 @@ export default function EditCourtPage({ courtId }: OwnerCourtEditPageProps) {
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.owner.courts.edit(courtId),
+      appRoutes.organization.courts.edit(courtId),
     );
   };
 
   const handleCancel = () => {
-    router.push(appRoutes.owner.courts.base);
+    router.push(appRoutes.organization.courts.base);
   };
 
   if (orgsLoading || courtLoading || placesLoading || sportsLoading) {
@@ -74,7 +74,7 @@ export default function EditCourtPage({ courtId }: OwnerCourtEditPageProps) {
   }
 
   if (!courtData) {
-    router.push(appRoutes.owner.courts.base);
+    router.push(appRoutes.organization.courts.base);
     return null;
   }
 
@@ -131,11 +131,11 @@ export default function EditCourtPage({ courtId }: OwnerCourtEditPageProps) {
             title={`Edit Court: ${courtData.court.label}`}
             description="Update court details and sport assignments"
             breadcrumbs={[
-              { label: "My Courts", href: appRoutes.owner.courts.base },
+              { label: "My Courts", href: appRoutes.organization.courts.base },
               { label: courtData.court.label },
               { label: "Edit" },
             ]}
-            backHref={appRoutes.owner.courts.base}
+            backHref={appRoutes.organization.courts.base}
           />
 
           <CourtForm

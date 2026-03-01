@@ -193,7 +193,7 @@ export default function OwnerBookingsImportReviewView({
     if (selectedCourtId) {
       params.set("courtId", selectedCourtId);
     }
-    return `${appRoutes.owner.bookings}?${params.toString()}`;
+    return `${appRoutes.organization.bookings}?${params.toString()}`;
   }, [jobId, jobQuery.data]);
 
   const placeQuery = useQueryOwnerPublicPlaceById(
@@ -254,8 +254,8 @@ export default function OwnerBookingsImportReviewView({
       }
       router.push(
         isFromSetup
-          ? appRoutes.owner.getStarted
-          : appRoutes.owner.imports.bookings,
+          ? appRoutes.organization.getStarted
+          : appRoutes.organization.imports.bookings,
       );
     },
     onError: (error) => {
@@ -279,7 +279,7 @@ export default function OwnerBookingsImportReviewView({
       if (onComplete) {
         onComplete();
       } else if (isFromSetup) {
-        router.push(appRoutes.owner.getStarted);
+        router.push(appRoutes.organization.getStarted);
       }
     },
     onError: (error) => {
@@ -372,7 +372,7 @@ export default function OwnerBookingsImportReviewView({
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(appRoutes.owner.base);
+    window.location.href = appRoutes.login.from(appRoutes.organization.base);
   };
 
   const handleEditRow = (row: RowRecord) => {
@@ -551,8 +551,8 @@ export default function OwnerBookingsImportReviewView({
           title="Review Import"
           description={`${place?.name ?? "Loading..."} - ${sourceCount} file${sourceCount === 1 ? "" : "s"} import`}
           breadcrumbs={[
-            { label: "Owner", href: appRoutes.owner.base },
-            { label: "Imports", href: appRoutes.owner.imports.bookings },
+            { label: "Owner", href: appRoutes.organization.base },
+            { label: "Imports", href: appRoutes.organization.imports.bookings },
             { label: "Review" },
           ]}
         />
@@ -987,8 +987,8 @@ export default function OwnerBookingsImportReviewView({
                       }
                       router.push(
                         isFromSetup
-                          ? appRoutes.owner.getStarted
-                          : appRoutes.owner.imports.bookings,
+                          ? appRoutes.organization.getStarted
+                          : appRoutes.organization.imports.bookings,
                       );
                     }}
                   >

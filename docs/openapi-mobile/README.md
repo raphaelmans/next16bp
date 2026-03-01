@@ -148,104 +148,104 @@ The `/api/v1/` alias rewrite still works because `/api/v1/` is NOT excluded from
 
 ### Owner Setup
 
-- `GET /owner/setup/status`
+- `GET /organization/setup/status`
 
 ### Organizations + Profile + Logo
 
-- `GET /owner/organizations`
-- `POST /owner/organizations`
-- `GET /owner/organizations/{organizationId}`
-- `PATCH /owner/organizations/{organizationId}`
-- `PATCH /owner/organizations/{organizationId}/profile`
-- `POST /owner/organizations/{organizationId}/logo`
+- `GET /organization/organizations`
+- `POST /organization/organizations`
+- `GET /organization/organizations/{organizationId}`
+- `PATCH /organization/organizations/{organizationId}`
+- `PATCH /organization/organizations/{organizationId}/profile`
+- `POST /organization/organizations/{organizationId}/logo`
 
 ### Venues (Places) + Photos + Courts
 
-- `GET /owner/organizations/{organizationId}/venues`
-- `POST /owner/organizations/{organizationId}/venues`
-- `GET /owner/venues/{venueId}`
-- `PATCH /owner/venues/{venueId}`
-- `DELETE /owner/venues/{venueId}`
-- `POST /owner/venues/{venueId}/photos`
-- `DELETE /owner/venues/{venueId}/photos/{photoId}`
-- `POST /owner/venues/{venueId}/photos/reorder`
-- `GET /owner/venues/{venueId}/courts`
-- `POST /owner/venues/{venueId}/courts`
+- `GET /organization/organizations/{organizationId}/venues`
+- `POST /organization/organizations/{organizationId}/venues`
+- `GET /organization/venues/{venueId}`
+- `PATCH /organization/venues/{venueId}`
+- `DELETE /organization/venues/{venueId}`
+- `POST /organization/venues/{venueId}/photos`
+- `DELETE /organization/venues/{venueId}/photos/{photoId}`
+- `POST /organization/venues/{venueId}/photos/reorder`
+- `GET /organization/venues/{venueId}/courts`
+- `POST /organization/venues/{venueId}/courts`
 
 ### Courts + Blocks + Hours + Pricing
 
-- `GET /owner/courts/{courtId}`
-- `PATCH /owner/courts/{courtId}`
-- `GET /owner/courts/{courtId}/hours`
-- `PUT /owner/courts/{courtId}/hours`
-- `POST /owner/courts/{courtId}/hours/copy-from`
-- `GET /owner/courts/{courtId}/rate-rules`
-- `PUT /owner/courts/{courtId}/rate-rules`
-- `POST /owner/courts/{courtId}/rate-rules/copy-from`
-- `GET /owner/courts/{courtId}/blocks`
-- `POST /owner/courts/{courtId}/blocks/maintenance`
-- `POST /owner/courts/{courtId}/blocks/walk-in`
-- `POST /owner/blocks/{blockId}/cancel`
-- `PATCH /owner/blocks/{blockId}/range`
-- `POST /owner/blocks/{blockId}/convert-to-guest`
+- `GET /organization/courts/{courtId}`
+- `PATCH /organization/courts/{courtId}`
+- `GET /organization/courts/{courtId}/hours`
+- `PUT /organization/courts/{courtId}/hours`
+- `POST /organization/courts/{courtId}/hours/copy-from`
+- `GET /organization/courts/{courtId}/rate-rules`
+- `PUT /organization/courts/{courtId}/rate-rules`
+- `POST /organization/courts/{courtId}/rate-rules/copy-from`
+- `GET /organization/courts/{courtId}/blocks`
+- `POST /organization/courts/{courtId}/blocks/maintenance`
+- `POST /organization/courts/{courtId}/blocks/walk-in`
+- `POST /organization/blocks/{blockId}/cancel`
+- `PATCH /organization/blocks/{blockId}/range`
+- `POST /organization/blocks/{blockId}/convert-to-guest`
 
 ### Reservations + Guest Bookings
 
-- `GET /owner/organizations/{organizationId}/reservations`
-- `GET /owner/organizations/{organizationId}/reservations/pending-count`
-- `GET /owner/courts/{courtId}/reservations/pending`
-- `GET /owner/courts/{courtId}/reservations/active`
-- `POST /owner/reservations/{reservationId}/accept`
-- `POST /owner/reservations/{reservationId}/reject`
-- `POST /owner/reservations/{reservationId}/confirm-payment`
-- `POST /owner/reservations/{reservationId}/confirm-paid-offline`
-- `GET /owner/reservations/{reservationId}/history`
-- `POST /owner/reservations/guest-booking`
+- `GET /organization/organizations/{organizationId}/reservations`
+- `GET /organization/organizations/{organizationId}/reservations/pending-count`
+- `GET /organization/courts/{courtId}/reservations/pending`
+- `GET /organization/courts/{courtId}/reservations/active`
+- `POST /organization/reservations/{reservationId}/accept`
+- `POST /organization/reservations/{reservationId}/reject`
+- `POST /organization/reservations/{reservationId}/confirm-payment`
+- `POST /organization/reservations/{reservationId}/confirm-paid-offline`
+- `GET /organization/reservations/{reservationId}/history`
+- `POST /organization/reservations/guest-booking`
 
 ### Payment Methods
 
-- `GET /owner/organizations/{organizationId}/payment-methods`
-- `POST /owner/organizations/{organizationId}/payment-methods`
-- `PATCH /owner/payment-methods/{paymentMethodId}`
-- `DELETE /owner/payment-methods/{paymentMethodId}`
-- `POST /owner/payment-methods/{paymentMethodId}/set-default`
+- `GET /organization/organizations/{organizationId}/payment-methods`
+- `POST /organization/organizations/{organizationId}/payment-methods`
+- `PATCH /organization/payment-methods/{paymentMethodId}`
+- `DELETE /organization/payment-methods/{paymentMethodId}`
+- `POST /organization/payment-methods/{paymentMethodId}/set-default`
 
 ### Claims + Verification + Removals
 
-- `GET /owner/claims`
-- `POST /owner/claims`
-- `GET /owner/claims/{requestId}`
-- `POST /owner/claims/{requestId}/cancel`
-- `POST /owner/removals`
-- `GET /owner/venues/{venueId}/verification`
-- `POST /owner/venues/{venueId}/verification/submit`
-- `POST /owner/venues/{venueId}/reservations/toggle`
+- `GET /organization/claims`
+- `POST /organization/claims`
+- `GET /organization/claims/{requestId}`
+- `POST /organization/claims/{requestId}/cancel`
+- `POST /organization/removals`
+- `GET /organization/venues/{venueId}/verification`
+- `POST /organization/venues/{venueId}/verification/submit`
+- `POST /organization/venues/{venueId}/reservations/toggle`
 
 ### Bookings Import
 
-- `POST /owner/import/bookings`
-- `GET /owner/import/bookings/jobs`
-- `GET /owner/import/bookings/jobs/{jobId}`
-- `GET /owner/import/bookings/jobs/{jobId}/rows`
-- `GET /owner/import/bookings/jobs/{jobId}/sources`
-- `POST /owner/import/bookings/jobs/{jobId}/discard`
-- `POST /owner/import/bookings/jobs/{jobId}/normalize`
-- `POST /owner/import/bookings/jobs/{jobId}/commit`
-- `PATCH /owner/import/bookings/rows/{rowId}`
-- `DELETE /owner/import/bookings/rows/{rowId}`
-- `POST /owner/import/bookings/rows/{rowId}/replace-with-guest`
-- `GET /owner/import/bookings/ai-usage`
+- `POST /organization/import/bookings`
+- `GET /organization/import/bookings/jobs`
+- `GET /organization/import/bookings/jobs/{jobId}`
+- `GET /organization/import/bookings/jobs/{jobId}/rows`
+- `GET /organization/import/bookings/jobs/{jobId}/sources`
+- `POST /organization/import/bookings/jobs/{jobId}/discard`
+- `POST /organization/import/bookings/jobs/{jobId}/normalize`
+- `POST /organization/import/bookings/jobs/{jobId}/commit`
+- `PATCH /organization/import/bookings/rows/{rowId}`
+- `DELETE /organization/import/bookings/rows/{rowId}`
+- `POST /organization/import/bookings/rows/{rowId}/replace-with-guest`
+- `GET /organization/import/bookings/ai-usage`
 
 ### Chat (Owner)
 
-- `GET /owner/chat/auth`
-- `GET /owner/chat/reservations/{reservationId}/session`
-- `POST /owner/chat/reservations/{reservationId}/messages`
-- `GET /owner/chat/reservations/thread-metas`
-- `GET /owner/chat/claims/{claimRequestId}/session`
-- `POST /owner/chat/claims/{claimRequestId}/messages`
-- `GET /owner/chat/verifications/{placeVerificationRequestId}/session`
-- `POST /owner/chat/verifications/{placeVerificationRequestId}/messages`
+- `GET /organization/chat/auth`
+- `GET /organization/chat/reservations/{reservationId}/session`
+- `POST /organization/chat/reservations/{reservationId}/messages`
+- `GET /organization/chat/reservations/thread-metas`
+- `GET /organization/chat/claims/{claimRequestId}/session`
+- `POST /organization/chat/claims/{claimRequestId}/messages`
+- `GET /organization/chat/verifications/{placeVerificationRequestId}/session`
+- `POST /organization/chat/verifications/{placeVerificationRequestId}/messages`
 
 ### Public
 

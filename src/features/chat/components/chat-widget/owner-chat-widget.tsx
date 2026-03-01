@@ -15,7 +15,7 @@ export function OwnerChatWidget() {
       surface="floating"
       domain="reservation"
       reservationConfig={{
-        kind: "owner",
+        kind: "organization",
         storageKeys: {
           open: "owner:chat:open",
           activeReservationThreadId: "owner:chat:activeReservationThreadId",

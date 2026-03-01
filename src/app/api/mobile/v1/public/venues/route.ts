@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { ListPlacesSchema } from "@/lib/modules/place/dtos";
 import { makePlaceDiscoveryService } from "@/lib/modules/place/factories/place.factory";
+import type { PlaceSummaryItem } from "@/lib/modules/place/repositories/place.repository";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import {
@@ -12,7 +13,6 @@ import {
 } from "@/lib/shared/infra/http/parse";
 import { getRequestId } from "@/lib/shared/infra/http/request-id";
 import { validate } from "@/lib/shared/infra/http/validate";
-import type { PlaceSummaryItem } from "@/lib/modules/place/repositories/place.repository";
 import type {
   ApiErrorResponse,
   ApiResponse,

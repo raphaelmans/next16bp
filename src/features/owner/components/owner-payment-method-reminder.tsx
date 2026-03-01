@@ -38,7 +38,7 @@ export function OwnerPaymentMethodReminder() {
       title="Payment methods missing"
       description="Add a payment method to receive payments when reservations are approved."
       actionLabel="Manage payment methods"
-      actionHref={`${appRoutes.owner.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`}
+      actionHref={`${appRoutes.organization.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`}
     />
   );
 }

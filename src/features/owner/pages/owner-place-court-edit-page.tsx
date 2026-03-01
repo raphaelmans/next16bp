@@ -67,12 +67,12 @@ export default function EditPlaceCourtPage({
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.owner.places.courts.edit(placeId, courtId),
+      appRoutes.organization.places.courts.edit(placeId, courtId),
     );
   };
 
   const handleCancel = () => {
-    router.push(appRoutes.owner.places.courts.base(placeId));
+    router.push(appRoutes.organization.places.courts.base(placeId));
   };
 
   if (orgLoading || courtLoading || placeLoading || sportsLoading) {
@@ -84,7 +84,7 @@ export default function EditPlaceCourtPage({
   }
 
   if (!courtData || !placeData) {
-    router.push(appRoutes.owner.places.courts.base(placeId));
+    router.push(appRoutes.organization.places.courts.base(placeId));
     return null;
   }
 
@@ -142,14 +142,14 @@ export default function EditPlaceCourtPage({
           <PageHeader
             title={courtData.court.label}
             breadcrumbs={[
-              { label: "My Venues", href: appRoutes.owner.places.base },
+              { label: "My Venues", href: appRoutes.organization.places.base },
               {
                 label: placeData.place.name,
-                href: appRoutes.owner.places.courts.base(placeId),
+                href: appRoutes.organization.places.courts.base(placeId),
               },
               { label: courtData.court.label },
             ]}
-            backHref={appRoutes.owner.places.courts.base(placeId)}
+            backHref={appRoutes.organization.places.courts.base(placeId)}
           />
 
           <CourtPageNav placeId={placeId} courtId={courtId} />
@@ -176,7 +176,7 @@ export default function EditPlaceCourtPage({
               </p>
               <Button asChild variant="outline">
                 <Link
-                  href={`${appRoutes.owner.places.edit(placeId)}#venue-photos`}
+                  href={`${appRoutes.organization.places.edit(placeId)}#venue-photos`}
                 >
                   Manage venue photos
                 </Link>

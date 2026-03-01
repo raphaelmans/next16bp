@@ -56,7 +56,8 @@ export default async function HomePage() {
   const portalRedirectScript = [
     "try{",
     'var p=localStorage.getItem("kudos.default-portal");',
-    'if(p==="owner")location.replace("/owner");',
+    'if(p==="owner"){localStorage.setItem("kudos.default-portal","organization");p="organization";}',
+    'if(p==="organization")location.replace("/organization");',
     'else if(p==="player")location.replace("/home")',
     "}catch(e){}",
   ].join("");

@@ -80,7 +80,7 @@ export function QuickActions({ isAdmin, isOwner }: QuickActionsProps) {
         <QuickActionCard
           title="Venue Dashboard"
           icon={Building2}
-          href={appRoutes.owner.base}
+          href={appRoutes.organization.base}
           description="Manage your organization and courts"
           className="border-primary/20 bg-primary/5 hover:bg-primary/10"
           iconClassName="text-primary"

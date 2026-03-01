@@ -45,9 +45,13 @@ export class RegisterUserUseCase {
       );
 
       if (ownerIntent) {
-        await this.userPreferenceService.setDefaultPortal(user.id, "owner", {
-          tx,
-        });
+        await this.userPreferenceService.setDefaultPortal(
+          user.id,
+          "organization",
+          {
+            tx,
+          },
+        );
       }
     });
 
@@ -64,8 +68,8 @@ export class RegisterUserUseCase {
 
     const pathname = redirect.split("?")[0];
     return (
-      pathname === appRoutes.owner.base ||
-      pathname.startsWith(`${appRoutes.owner.base}/`)
+      pathname === appRoutes.organization.base ||
+      pathname.startsWith(`${appRoutes.organization.base}/`)
     );
   }
 }

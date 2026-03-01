@@ -1632,7 +1632,9 @@ function OwnerAvailabilityStudioInner() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(appRoutes.owner.bookings);
+    window.location.href = appRoutes.login.from(
+      appRoutes.organization.bookings,
+    );
   };
 
   // Submit handler — needs to read store state at call time.
@@ -1817,7 +1819,11 @@ function OwnerAvailabilityStudioInner() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Button asChild variant="outline" size="sm">
-                    <Link href={appRoutes.owner.imports.bookingsReview(jobId)}>
+                    <Link
+                      href={appRoutes.organization.imports.bookingsReview(
+                        jobId,
+                      )}
+                    >
                       Back to review
                     </Link>
                   </Button>

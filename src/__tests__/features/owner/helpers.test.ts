@@ -229,12 +229,12 @@ describe("owner RBAC helpers", () => {
     const navItems = [
       {
         title: "Dashboard",
-        href: "/owner/dashboard",
+        href: "/organization/dashboard",
         accessRule: { type: "any-member" } as const,
       },
       {
         title: "Team Access",
-        href: "/owner/team",
+        href: "/organization/team",
         accessRule: {
           type: "permission",
           permission: "organization.member.manage",
@@ -242,7 +242,7 @@ describe("owner RBAC helpers", () => {
       },
       {
         title: "Owner Billing",
-        href: "/owner/billing",
+        href: "/organization/billing",
         accessRule: { type: "owner-only" } as const,
       },
     ];

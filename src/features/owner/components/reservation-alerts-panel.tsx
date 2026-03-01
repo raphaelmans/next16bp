@@ -64,8 +64,8 @@ export function ReservationAlertsPanel({
     }
     const suffix = params.toString();
     return suffix
-      ? `${appRoutes.owner.reservationsActive}?${suffix}`
-      : appRoutes.owner.reservationsActive;
+      ? `${appRoutes.organization.reservationsActive}?${suffix}`
+      : appRoutes.organization.reservationsActive;
   }, [courtId, placeId]);
 
   const alertsQuery = useModReservationAlerts(effectiveOrganizationId, {
@@ -347,7 +347,7 @@ export function ReservationAlertsPanel({
                         asChild
                       >
                         <Link
-                          href={appRoutes.owner.reservationDetail(
+                          href={appRoutes.organization.reservationDetail(
                             reservation.id,
                           )}
                         >

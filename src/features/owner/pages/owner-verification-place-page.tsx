@@ -30,7 +30,8 @@ export default function OwnerVerificationPlacePage({
   from,
 }: OwnerVerificationPlacePageProps) {
   const router = useRouter();
-  const returnToHub = from === "setup" ? appRoutes.owner.getStarted : null;
+  const returnToHub =
+    from === "setup" ? appRoutes.organization.getStarted : null;
 
   const { data: user } = useQueryAuthSession();
   const logoutMutation = useMutAuthLogout();
@@ -48,7 +49,7 @@ export default function OwnerVerificationPlacePage({
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.owner.verification.place(placeId),
+      appRoutes.organization.verification.place(placeId),
     );
   };
 
@@ -61,7 +62,7 @@ export default function OwnerVerificationPlacePage({
   }
 
   if (!placeData) {
-    router.push(appRoutes.owner.places.base);
+    router.push(appRoutes.organization.places.base);
     return null;
   }
 
@@ -101,19 +102,19 @@ export default function OwnerVerificationPlacePage({
             title={`Verify ${place.name}`}
             description="Submit documents and enable reservations when approved."
             breadcrumbs={[
-              { label: "My Venues", href: appRoutes.owner.places.base },
+              { label: "My Venues", href: appRoutes.organization.places.base },
               {
                 label: place.name,
-                href: appRoutes.owner.places.edit(place.id),
+                href: appRoutes.organization.places.edit(place.id),
               },
               { label: "Verification" },
             ]}
-            backHref={appRoutes.owner.places.edit(place.id)}
+            backHref={appRoutes.organization.places.edit(place.id)}
             backLabel="Back to edit"
             actions={
               <div className="flex flex-wrap gap-2">
                 <Button variant="outline" size="sm" asChild>
-                  <Link href={appRoutes.owner.places.edit(place.id)}>
+                  <Link href={appRoutes.organization.places.edit(place.id)}>
                     Edit venue
                   </Link>
                 </Button>

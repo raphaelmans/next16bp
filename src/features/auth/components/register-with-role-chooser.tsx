@@ -16,7 +16,7 @@ import { RegisterForm } from "./register-form";
 
 function hasOwnerIntent(redirectParam: string | null): boolean {
   if (!redirectParam) return false;
-  return redirectParam.startsWith("/owner");
+  return redirectParam.startsWith("/organization");
 }
 
 export interface RegisterWithRoleChooserProps {
@@ -30,7 +30,7 @@ export function RegisterWithRoleChooser({
   const [selectedRole, setSelectedRole] = useState<"player" | null>(null);
 
   const ownerIntent = hasOwnerIntent(redirectParam);
-  const ownerRegisterUrl = `${appRoutes.register.owner}?redirect=${encodeURIComponent(appRoutes.owner.getStarted)}`;
+  const ownerRegisterUrl = `${appRoutes.register.owner}?redirect=${encodeURIComponent(appRoutes.organization.getStarted)}`;
 
   if (ownerIntent || selectedRole === "player") {
     return <RegisterForm redirectParam={redirectParam} />;

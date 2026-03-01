@@ -13,7 +13,7 @@ import { requireSession } from "@/lib/shared/infra/auth/server-session";
  * Provides auth protection and organization check.
  */
 export const metadata: Metadata = {
-  manifest: "/owner-manifest.webmanifest",
+  manifest: "/organization-manifest.webmanifest",
   robots: {
     index: false,
     follow: false,
@@ -26,7 +26,7 @@ export default async function OwnerLayout({
   children: React.ReactNode;
 }) {
   const headerStore = await headers();
-  const pathname = headerStore.get("x-pathname") ?? appRoutes.owner.base;
+  const pathname = headerStore.get("x-pathname") ?? appRoutes.organization.base;
 
   const session = await requireSession(pathname);
 
@@ -36,12 +36,12 @@ export default async function OwnerLayout({
   );
 
   const isOnboardingRoute =
-    pathname === appRoutes.owner.getStarted ||
-    pathname === appRoutes.owner.onboarding;
+    pathname === appRoutes.organization.getStarted ||
+    pathname === appRoutes.organization.onboarding;
   const hasOrganizations = organizations.length > 0;
 
   if (!hasOrganizations && !isOnboardingRoute) {
-    redirect(appRoutes.owner.getStarted);
+    redirect(appRoutes.organization.getStarted);
   }
 
   return (

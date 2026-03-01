@@ -20,7 +20,7 @@ type PortalSwitcherProps = {
 
 const portalRoutes: Record<Portal, string> = {
   player: appRoutes.home.base,
-  owner: appRoutes.owner.base,
+  organization: appRoutes.organization.base,
   admin: appRoutes.admin.base,
 };
 
@@ -29,8 +29,8 @@ const getCurrentPortal = (pathname: string): Portal => {
     return "admin";
   }
 
-  if (pathname.startsWith(appRoutes.owner.base)) {
-    return "owner";
+  if (pathname.startsWith(appRoutes.organization.base)) {
+    return "organization";
   }
 
   return "player";
@@ -66,14 +66,15 @@ export function PortalSwitcher({
     ownerSetupRequiredOverride ??
     (shouldInferOwner
       ? !hasOwnerOrganization
-      : !hasOwnerOrganization && userPreference?.defaultPortal === "owner");
+      : !hasOwnerOrganization &&
+        userPreference?.defaultPortal === "organization");
   const canAccessOwner =
     (isOwner ?? hasOwnerOrganization) || ownerSetupRequired;
   const canAccessAdmin = isAdmin ?? sessionUser?.role === "admin";
 
   const portalOptions: Portal[] = [
     "player",
-    ...(canAccessOwner ? (["owner"] as const) : []),
+    ...(canAccessOwner ? (["organization"] as const) : []),
     ...(canAccessAdmin ? (["admin"] as const) : []),
   ];
 
@@ -82,13 +83,13 @@ export function PortalSwitcher({
       return;
     }
 
-    if (portal === "owner" && ownerSetupRequired) {
-      router.push(appRoutes.owner.getStarted);
+    if (portal === "organization" && ownerSetupRequired) {
+      router.push(appRoutes.organization.getStarted);
     } else {
       router.push(portalRoutes[portal]);
     }
 
-    if (portal === "player" || portal === "owner") {
+    if (portal === "player" || portal === "organization") {
       setDefaultPortal(portal);
     }
   };
@@ -98,7 +99,7 @@ export function PortalSwitcher({
       variant={variant}
       currentPortal={currentPortal}
       portalOptions={portalOptions}
-      ownerSetupRequired={ownerSetupRequired}
+      organizationSetupRequired={ownerSetupRequired}
       onSwitchPortal={switchPortal}
       className={className}
     />

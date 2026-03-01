@@ -31,7 +31,7 @@ export interface UserDropdownUser {
 interface UserDropdownProps {
   user: UserDropdownUser;
   isAdmin: boolean;
-  defaultPortal?: "player" | "owner";
+  defaultPortal?: "player" | "organization";
   ownerMenuHref?: string;
   ownerMenuLabel?: string;
   onSignOut?: () => void;
@@ -52,7 +52,7 @@ export function UserDropdown({
     .toUpperCase()
     .slice(0, 2);
   const shouldShowOwnerShortcut =
-    defaultPortal === "owner" && Boolean(ownerMenuHref);
+    defaultPortal === "organization" && Boolean(ownerMenuHref);
 
   const handleSignOut = () => {
     // TODO: Implement real sign out with Supabase

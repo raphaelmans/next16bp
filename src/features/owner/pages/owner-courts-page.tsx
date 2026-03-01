@@ -54,7 +54,9 @@ export default function OwnerCourtsPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(appRoutes.owner.courts.base);
+    window.location.href = appRoutes.login.from(
+      appRoutes.organization.courts.base,
+    );
   };
 
   const handleDeactivate = (courtId: string) => {
@@ -149,7 +151,7 @@ export default function OwnerCourtsPage() {
             </p>
           </div>
           <Button asChild>
-            <Link href={appRoutes.owner.courts.setupCreate}>
+            <Link href={appRoutes.organization.courts.setupCreate}>
               <Plus className="mr-2 h-4 w-4" />
               Add New Court
             </Link>

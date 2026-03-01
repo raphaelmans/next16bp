@@ -27,7 +27,10 @@ export function AuthPlayerShell({ children }: AuthPlayerShellProps) {
   // Immediate seed while DB preference loads (fallback for first visit)
   useEffect(() => {
     try {
-      if (!localStorage.getItem(PORTAL_STORAGE_KEY)) {
+      const current = localStorage.getItem(PORTAL_STORAGE_KEY);
+      if (current === "owner") {
+        localStorage.setItem(PORTAL_STORAGE_KEY, "organization");
+      } else if (!current) {
         localStorage.setItem(PORTAL_STORAGE_KEY, "player");
       }
     } catch {}

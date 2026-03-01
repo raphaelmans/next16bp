@@ -41,7 +41,7 @@ const bellIcons: Record<NotificationBellIconVariant, typeof Bell> = {
   "bell-off": BellOff,
 };
 
-type Portal = "owner" | "player" | "admin";
+type Portal = "organization" | "player" | "admin";
 
 export function NotificationBell({ portal }: { portal: Portal }) {
   const router = useRouter();
@@ -65,8 +65,8 @@ export function NotificationBell({ portal }: { portal: Portal }) {
   const prevServerUnreadCountRef = React.useRef<number | null>(null);
 
   const settingsHref =
-    portal === "owner"
-      ? `${appRoutes.owner.settings}${SETTINGS_SECTION_HASHES.browserNotifications}`
+    portal === "organization"
+      ? `${appRoutes.organization.settings}${SETTINGS_SECTION_HASHES.browserNotifications}`
       : `${appRoutes.account.profile}${SETTINGS_SECTION_HASHES.browserNotifications}`;
 
   const onToggle = async (checked: boolean) => {

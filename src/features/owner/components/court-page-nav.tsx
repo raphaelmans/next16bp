@@ -21,7 +21,7 @@ function getHref(
   placeId: string,
   courtId: string,
 ) {
-  const routes = appRoutes.owner.places.courts;
+  const routes = appRoutes.organization.places.courts;
   switch (routeKey) {
     case "edit":
       return routes.edit(placeId, courtId);

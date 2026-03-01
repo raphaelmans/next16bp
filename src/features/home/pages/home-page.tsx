@@ -52,7 +52,7 @@ export default function HomePage() {
     }
 
     if (ownerOnboardingIntent) {
-      router.replace(appRoutes.owner.getStarted);
+      router.replace(appRoutes.organization.getStarted);
     }
   }, [
     dataLoading,

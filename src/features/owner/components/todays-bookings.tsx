@@ -143,7 +143,7 @@ export function TodaysBookings({ bookings, className }: TodaysBookingsProps) {
         {/* View all link */}
         <div className="pt-3 border-t mt-2">
           <Link
-            href={appRoutes.owner.reservations}
+            href={appRoutes.organization.reservations}
             className="text-sm text-primary hover:underline"
           >
             View all reservations

@@ -24,7 +24,7 @@ export default async function RegisterOwnerPage({
       <RegisterForm
         title="Create Owner Account"
         description="Set up your owner account to list your venue, add courts, and accept bookings."
-        defaultRedirect={appRoutes.owner.getStarted}
+        defaultRedirect={appRoutes.organization.getStarted}
         redirectParam={redirect}
       />
     </Suspense>

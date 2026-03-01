@@ -48,10 +48,22 @@ export async function proxy(request: NextRequest) {
     return `${toBase}${suffix}`;
   };
 
+  // Legacy owner URLs now live under /organization.
+  if (isExactOrChild(path, "/owner")) {
+    const nextPath = swapBase(path, "/owner", "/organization");
+    const url = request.nextUrl.clone();
+    url.pathname = nextPath;
+    return NextResponse.redirect(url, 308);
+  }
+
   // Canonical redirects: keep legacy URLs working but send list views to
   // /courts and detail views to /venues.
-  if (isExactOrChild(path, "/owner/places")) {
-    const nextPath = swapBase(path, "/owner/places", "/owner/venues");
+  if (isExactOrChild(path, "/organization/places")) {
+    const nextPath = swapBase(
+      path,
+      "/organization/places",
+      "/organization/venues",
+    );
     const url = request.nextUrl.clone();
     url.pathname = nextPath;
     return NextResponse.redirect(url, 308);
@@ -73,8 +85,8 @@ export async function proxy(request: NextRequest) {
   // Internal rewrites: serve the canonical /venues URLs using existing
   // filesystem routes under /places.
   const rewritePath = (() => {
-    if (isExactOrChild(path, "/owner/venues")) {
-      return swapBase(path, "/owner/venues", "/owner/places");
+    if (isExactOrChild(path, "/organization/venues")) {
+      return swapBase(path, "/organization/venues", "/organization/places");
     }
     if (isExactOrChild(path, "/venues")) {
       return swapBase(path, "/venues", "/places");

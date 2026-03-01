@@ -95,7 +95,7 @@ export default function OwnerDashboardPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(appRoutes.owner.base);
+    window.location.href = appRoutes.login.from(appRoutes.organization.base);
   };
 
   // Show loading skeleton while organization data loads
@@ -190,7 +190,7 @@ export default function OwnerDashboardPage() {
                 </p>
               </div>
               <Button asChild>
-                <Link href={appRoutes.owner.getStarted}>
+                <Link href={appRoutes.organization.getStarted}>
                   Get started
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -216,7 +216,7 @@ export default function OwnerDashboardPage() {
               </div>
               <Button asChild variant="outline">
                 <Link
-                  href={`${appRoutes.owner.settings}${SETTINGS_SECTION_HASHES.reservationNotificationRouting}`}
+                  href={`${appRoutes.organization.settings}${SETTINGS_SECTION_HASHES.reservationNotificationRouting}`}
                 >
                   Configure recipients
                 </Link>
@@ -243,13 +243,13 @@ export default function OwnerDashboardPage() {
                 title="Active Courts"
                 value={stats?.activeCourts ?? 0}
                 icon={MapPin}
-                href={appRoutes.owner.courts.base}
+                href={appRoutes.organization.courts.base}
               />
               <StatsCard
                 title="Pending Bookings"
                 value={stats?.pendingReservations ?? 0}
                 icon={CalendarDays}
-                href={`${appRoutes.owner.reservations}?status=pending`}
+                href={`${appRoutes.organization.reservations}?status=pending`}
               />
               <StatsCard
                 title="Today's Bookings"

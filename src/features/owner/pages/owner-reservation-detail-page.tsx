@@ -141,7 +141,7 @@ export default function OwnerReservationDetailPage({
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.owner.reservationDetail(reservationId),
+      appRoutes.organization.reservationDetail(reservationId),
     );
   };
 
@@ -310,13 +310,16 @@ export default function OwnerReservationDetailPage({
           title="Reservation Details"
           description="Review reservation status and take action"
           breadcrumbs={[
-            { label: "Reservations", href: appRoutes.owner.reservations },
+            {
+              label: "Reservations",
+              href: appRoutes.organization.reservations,
+            },
             { label: "Details" },
           ]}
         />
 
         <Button variant="ghost" size="sm" asChild className="-ml-2">
-          <Link href={appRoutes.owner.reservationsActive}>
+          <Link href={appRoutes.organization.reservationsActive}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Active Reservations
           </Link>
@@ -468,7 +471,7 @@ export default function OwnerReservationDetailPage({
                 {reservation.reservationGroupId ? (
                   <Button variant="outline" asChild>
                     <Link
-                      href={appRoutes.owner.reservationGroupDetail(
+                      href={appRoutes.organization.reservationGroupDetail(
                         reservation.reservationGroupId,
                       )}
                     >

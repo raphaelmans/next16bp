@@ -49,11 +49,11 @@ export default function CreateCourtSetupPage() {
       const targetPlaceId = selectedPlaceIdRef.current || draft.placeId || "";
       if (!targetPlaceId) {
         toast.error("Select a venue to continue setup.");
-        router.push(appRoutes.owner.courts.base);
+        router.push(appRoutes.organization.courts.base);
         return;
       }
       router.push(
-        appRoutes.owner.places.courts.setup(
+        appRoutes.organization.places.courts.setup(
           targetPlaceId,
           result.courtId,
           "schedule",
@@ -65,12 +65,12 @@ export default function CreateCourtSetupPage() {
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.owner.courts.setupCreate,
+      appRoutes.organization.courts.setupCreate,
     );
   };
 
   const handleCancel = () => {
-    router.push(appRoutes.owner.courts.base);
+    router.push(appRoutes.organization.courts.base);
   };
 
   if (orgsLoading || placesLoading || sportsLoading) {
@@ -116,7 +116,9 @@ export default function CreateCourtSetupPage() {
                 You need an organization before creating courts.
               </p>
               <Button asChild>
-                <Link href={appRoutes.owner.getStarted}>Get started</Link>
+                <Link href={appRoutes.organization.getStarted}>
+                  Get started
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -168,10 +170,10 @@ export default function CreateCourtSetupPage() {
             title="Create Court"
             description="Add court details before setting hours and pricing"
             breadcrumbs={[
-              { label: "My Courts", href: appRoutes.owner.courts.base },
+              { label: "My Courts", href: appRoutes.organization.courts.base },
               { label: "Create Court" },
             ]}
-            backHref={appRoutes.owner.courts.base}
+            backHref={appRoutes.organization.courts.base}
           />
 
           <CourtForm

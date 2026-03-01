@@ -111,7 +111,9 @@ export default function OwnerSettingsPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(appRoutes.owner.settings);
+    window.location.href = appRoutes.login.from(
+      appRoutes.organization.settings,
+    );
   };
 
   const orgSubmitting = updateOrg.isPending || isOrgSubmitting;

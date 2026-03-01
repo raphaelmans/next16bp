@@ -276,8 +276,8 @@ export default function CourtSetupWizardPage({
 
   const backHref =
     !courtIdParam || currentStep === "details"
-      ? appRoutes.owner.places.courts.base(placeId)
-      : appRoutes.owner.places.courts.setup(
+      ? appRoutes.organization.places.courts.base(placeId)
+      : appRoutes.organization.places.courts.setup(
           placeId,
           courtId,
           steps[Math.max(stepIndex - 1, 0)].key,
@@ -307,13 +307,17 @@ export default function CourtSetupWizardPage({
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     const redirectPath = courtIdParam
-      ? appRoutes.owner.places.courts.setup(placeId, courtId, currentStep)
-      : appRoutes.owner.places.courts.setupCreate(placeId);
+      ? appRoutes.organization.places.courts.setup(
+          placeId,
+          courtId,
+          currentStep,
+        )
+      : appRoutes.organization.places.courts.setupCreate(placeId);
     window.location.href = appRoutes.login.from(redirectPath);
   };
 
   const handleCancel = () => {
-    router.push(appRoutes.owner.places.courts.base(placeId));
+    router.push(appRoutes.organization.places.courts.base(placeId));
   };
 
   const isLoading =
@@ -328,12 +332,12 @@ export default function CourtSetupWizardPage({
   }
 
   if (!placeData) {
-    router.push(appRoutes.owner.places.base);
+    router.push(appRoutes.organization.places.base);
     return null;
   }
 
   if (courtIdParam && !courtData) {
-    router.push(appRoutes.owner.places.courts.base(placeId));
+    router.push(appRoutes.organization.places.courts.base(placeId));
     return null;
   }
 
@@ -382,14 +386,14 @@ export default function CourtSetupWizardPage({
             title={headerTitle}
             description="Configure details, schedule, and publishing in one flow"
             breadcrumbs={[
-              { label: "My Venues", href: appRoutes.owner.places.base },
+              { label: "My Venues", href: appRoutes.organization.places.base },
               {
                 label: placeData.place.name,
-                href: appRoutes.owner.places.courts.base(placeId),
+                href: appRoutes.organization.places.courts.base(placeId),
               },
               { label: "Setup" },
             ]}
-            backHref={appRoutes.owner.places.courts.base(placeId)}
+            backHref={appRoutes.organization.places.courts.base(placeId)}
           />
 
           <div className="flex flex-wrap items-center gap-3 rounded-lg border bg-muted/40 p-4">
@@ -461,7 +465,7 @@ export default function CourtSetupWizardPage({
                     primaryActionLabel="Save & Continue"
                     onSaved={() => {
                       if (isFromSetup) {
-                        router.push(appRoutes.owner.getStarted);
+                        router.push(appRoutes.organization.getStarted);
                         return;
                       }
                       goToStep("publish");
@@ -655,8 +659,10 @@ export default function CourtSetupWizardPage({
                         <Link
                           href={
                             isFromSetup
-                              ? appRoutes.owner.getStarted
-                              : appRoutes.owner.courts.availability(courtId)
+                              ? appRoutes.organization.getStarted
+                              : appRoutes.organization.courts.availability(
+                                  courtId,
+                                )
                           }
                         >
                           {isFromSetup

@@ -45,7 +45,7 @@ export default function OwnerPlaceCourtsPage({
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.owner.places.courts.base(placeId),
+      appRoutes.organization.places.courts.base(placeId),
     );
   };
 
@@ -60,8 +60,8 @@ export default function OwnerPlaceCourtsPage({
   };
 
   const addCourtHref = isFromSetup
-    ? `${appRoutes.owner.places.courts.setupCreate(placeId)}?from=setup`
-    : appRoutes.owner.places.courts.setupCreate(placeId);
+    ? `${appRoutes.organization.places.courts.setupCreate(placeId)}?from=setup`
+    : appRoutes.organization.places.courts.setupCreate(placeId);
 
   if (orgLoading || placeLoading) {
     return (

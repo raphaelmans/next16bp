@@ -54,7 +54,7 @@ export default function CourtSchedulePage({
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.owner.places.courts.schedule(placeId, courtId),
+      appRoutes.organization.places.courts.schedule(placeId, courtId),
     );
   };
 
@@ -67,7 +67,7 @@ export default function CourtSchedulePage({
   }
 
   if (!courtData || !placeData) {
-    router.push(appRoutes.owner.places.courts.base(placeId));
+    router.push(appRoutes.organization.places.courts.base(placeId));
     return null;
   }
 
@@ -104,14 +104,14 @@ export default function CourtSchedulePage({
         <PageHeader
           title={courtData.court.label}
           breadcrumbs={[
-            { label: "My Venues", href: appRoutes.owner.places.base },
+            { label: "My Venues", href: appRoutes.organization.places.base },
             {
               label: placeData.place.name,
-              href: appRoutes.owner.places.courts.base(placeId),
+              href: appRoutes.organization.places.courts.base(placeId),
             },
             { label: courtData.court.label },
           ]}
-          backHref={appRoutes.owner.places.courts.base(placeId)}
+          backHref={appRoutes.organization.places.courts.base(placeId)}
         />
 
         <CourtPageNav placeId={placeId} courtId={courtId} />
@@ -122,7 +122,7 @@ export default function CourtSchedulePage({
           primaryActionLabel="Save schedule"
           onSaved={() => {
             if (isFromSetup) {
-              router.push(appRoutes.owner.getStarted);
+              router.push(appRoutes.organization.getStarted);
             }
           }}
         />

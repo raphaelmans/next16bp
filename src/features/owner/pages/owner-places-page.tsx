@@ -59,7 +59,9 @@ export default function OwnerPlacesPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(appRoutes.owner.places.base);
+    window.location.href = appRoutes.login.from(
+      appRoutes.organization.places.base,
+    );
   };
 
   if (orgLoading) {
@@ -198,7 +200,7 @@ export default function OwnerPlacesPage() {
             </p>
           </div>
           <Button asChild>
-            <Link href={appRoutes.owner.places.new}>
+            <Link href={appRoutes.organization.places.new}>
               <Plus className="mr-2 h-4 w-4" />
               Add New Venue
             </Link>
@@ -302,7 +304,9 @@ export default function OwnerPlacesPage() {
                 </p>
               </div>
               <Button asChild>
-                <Link href={appRoutes.owner.places.new}>Create a venue</Link>
+                <Link href={appRoutes.organization.places.new}>
+                  Create a venue
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -377,17 +381,25 @@ export default function OwnerPlacesPage() {
 
                   <div className="flex flex-wrap gap-2">
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={appRoutes.owner.places.courts.base(place.id)}>
+                      <Link
+                        href={appRoutes.organization.places.courts.base(
+                          place.id,
+                        )}
+                      >
                         Manage Courts
                       </Link>
                     </Button>
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={appRoutes.owner.places.edit(place.id)}>
+                      <Link href={appRoutes.organization.places.edit(place.id)}>
                         Edit Venue
                       </Link>
                     </Button>
                     <Button variant="ghost" size="sm" asChild>
-                      <Link href={appRoutes.owner.verification.place(place.id)}>
+                      <Link
+                        href={appRoutes.organization.verification.place(
+                          place.id,
+                        )}
+                      >
                         Verification
                       </Link>
                     </Button>

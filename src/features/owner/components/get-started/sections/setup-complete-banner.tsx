@@ -20,7 +20,7 @@ export function SetupCompleteBanner() {
             </p>
           </div>
           <Button asChild className="w-full sm:w-auto">
-            <Link href={appRoutes.owner.bookings}>
+            <Link href={appRoutes.organization.bookings}>
               Manage reservations
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

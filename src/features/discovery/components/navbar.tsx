@@ -72,11 +72,11 @@ export function Navbar({ className }: NavbarProps) {
   const ownerSetupRequired = !isOwner;
   const canAccessOwner = isOwner || ownerSetupRequired;
   const ownerMenuHref = ownerSetupRequired
-    ? appRoutes.owner.getStarted
-    : appRoutes.owner.base;
+    ? appRoutes.organization.getStarted
+    : appRoutes.organization.base;
   const ownerMenuLabel = ownerSetupRequired ? "Venue Setup" : "Venue Dashboard";
   const showOwnerFirstMenu =
-    userPreference?.defaultPortal === "owner" && canAccessOwner;
+    userPreference?.defaultPortal === "organization" && canAccessOwner;
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -118,11 +118,11 @@ export function Navbar({ className }: NavbarProps) {
     }
 
     if (isOwner) {
-      router.push(appRoutes.owner.places.new);
+      router.push(appRoutes.organization.places.new);
       return;
     }
 
-    router.push(appRoutes.owner.getStarted);
+    router.push(appRoutes.organization.getStarted);
   };
 
   return (
@@ -326,8 +326,8 @@ export function Navbar({ className }: NavbarProps) {
                   <Link
                     href={
                       ownerSetupRequired
-                        ? appRoutes.owner.getStarted
-                        : appRoutes.owner.base
+                        ? appRoutes.organization.getStarted
+                        : appRoutes.organization.base
                     }
                     className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
                     onClick={() => setIsOpen(false)}

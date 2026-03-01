@@ -77,7 +77,7 @@ export const pushSubscriptionRouter = router({
       body: "Push notifications are working!",
       icon: "/logo.png",
       tag: "test.web_push.server",
-      url: "/owner/settings",
+      url: "/organization/settings",
     };
 
     let sent = 0;

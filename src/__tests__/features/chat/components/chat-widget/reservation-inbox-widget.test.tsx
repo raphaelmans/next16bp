@@ -113,7 +113,7 @@ vi.mock("@/features/chat/hooks/useSupabaseChatChannel", () => ({
 import { ReservationInboxWidget } from "@/features/chat/components/chat-widget/reservation-inbox-widget";
 
 const config: ReservationInboxWidgetConfig = {
-  kind: "owner",
+  kind: "organization",
   storageKeys: {
     open: "test-chat-open",
     activeReservationThreadId: "test-chat-active-thread",

@@ -168,7 +168,7 @@ export function buildReservationCreatedContent(
   payload: ReservationCreatedPayload,
   appUrl: string,
 ): NotificationContent {
-  const reservationPath = appRoutes.owner.reservationDetail(
+  const reservationPath = appRoutes.organization.reservationDetail(
     payload.reservationId,
   );
   const reservationUrl = makeUrl(appUrl, reservationPath);
@@ -263,7 +263,7 @@ export function buildReservationGroupCreatedContent(
   payload: ReservationGroupCreatedPayload,
   appUrl: string,
 ): NotificationContent {
-  const reservationPath = appRoutes.owner.reservationGroupDetail(
+  const reservationPath = appRoutes.organization.reservationGroupDetail(
     payload.reservationGroupId,
   );
   const reservationUrl = makeUrl(appUrl, reservationPath);
@@ -359,7 +359,7 @@ export function buildVerificationReviewedContent(
   payload: VerificationReviewedPayload,
   appUrl: string,
 ): NotificationContent {
-  const verifyPath = appRoutes.owner.verification.place(payload.placeId);
+  const verifyPath = appRoutes.organization.verification.place(payload.placeId);
   const verifyUrl = makeUrl(appUrl, verifyPath);
   const statusLabel = payload.status === "APPROVED" ? "approved" : "rejected";
   const isApproved = payload.status === "APPROVED";
@@ -441,7 +441,7 @@ export function buildClaimReviewedContent(
   payload: ClaimReviewedPayload,
   appUrl: string,
 ): NotificationContent {
-  const ownerPlacesPath = appRoutes.owner.places.base;
+  const ownerPlacesPath = appRoutes.organization.places.base;
   const ownerPlacesUrl = makeUrl(appUrl, ownerPlacesPath);
   const statusLabel = payload.status === "APPROVED" ? "approved" : "rejected";
   const isApproved = payload.status === "APPROVED";
@@ -566,7 +566,7 @@ export function buildReservationPaymentMarkedContent(
     push: {
       title: "Payment marked",
       body: `${payload.playerName} marked payment for ${payload.placeName}`,
-      url: appRoutes.owner.reservationDetail(payload.reservationId),
+      url: appRoutes.organization.reservationDetail(payload.reservationId),
       tag: `reservation.payment_marked:${payload.reservationId}`,
     },
     email: null,
@@ -581,7 +581,9 @@ export function buildReservationGroupPaymentMarkedContent(
     push: {
       title: "Payment marked",
       body: `${payload.playerName} marked payment for ${payload.placeName}`,
-      url: appRoutes.owner.reservationGroupDetail(payload.reservationGroupId),
+      url: appRoutes.organization.reservationGroupDetail(
+        payload.reservationGroupId,
+      ),
       tag: `reservation_group.payment_marked:${payload.reservationGroupId}`,
     },
     email: null,
@@ -676,7 +678,7 @@ export function buildReservationCancelledContent(
     push: {
       title: "Reservation cancelled",
       body: `${payload.playerName} cancelled ${payload.placeName}`,
-      url: appRoutes.owner.reservationDetail(payload.reservationId),
+      url: appRoutes.organization.reservationDetail(payload.reservationId),
       tag: `reservation.cancelled:${payload.reservationId}`,
     },
     email: null,
@@ -691,7 +693,9 @@ export function buildReservationGroupCancelledContent(
     push: {
       title: "Reservation group cancelled",
       body: `${payload.playerName} cancelled ${payload.placeName}`,
-      url: appRoutes.owner.reservationGroupDetail(payload.reservationGroupId),
+      url: appRoutes.organization.reservationGroupDetail(
+        payload.reservationGroupId,
+      ),
       tag: `reservation_group.cancelled:${payload.reservationGroupId}`,
     },
     email: null,
@@ -706,7 +710,7 @@ export function buildReservationPingOwnerContent(
     push: {
       title: "Player needs your attention",
       body: `${payload.playerName} is trying to reach you for a reservation at ${payload.placeName} (${payload.courtLabel})`,
-      url: appRoutes.owner.reservationDetail(payload.reservationId),
+      url: appRoutes.organization.reservationDetail(payload.reservationId),
       tag: `reservation.ping_owner:${payload.reservationId}`,
     },
     email: null,

@@ -90,7 +90,7 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
       await invalidatePlaceManagementAll();
       toast.success("Venue deleted successfully.");
       setDeleteDialogOpen(false);
-      router.push(appRoutes.owner.places.base);
+      router.push(appRoutes.organization.places.base);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to delete venue.");
@@ -111,13 +111,13 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     const redirectTo = isRouteReady
-      ? appRoutes.owner.places.edit(resolvedPlaceId)
-      : appRoutes.owner.places.base;
+      ? appRoutes.organization.places.edit(resolvedPlaceId)
+      : appRoutes.organization.places.base;
     window.location.href = appRoutes.login.from(redirectTo);
   };
 
   const handleCancel = () => {
-    router.push(appRoutes.owner.places.base);
+    router.push(appRoutes.organization.places.base);
   };
 
   const shouldRedirect = isRouteReady && !placeLoading && !placeData;
@@ -126,7 +126,7 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
     if (!shouldRedirect) {
       return;
     }
-    void router.replace(appRoutes.owner.places.base);
+    void router.replace(appRoutes.organization.places.base);
   }, [router, shouldRedirect]);
 
   if (orgLoading || placeLoading || !isRouteReady) {
@@ -198,11 +198,11 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
             title={`Edit Venue: ${place.name}`}
             description="Update venue details and verification status"
             breadcrumbs={[
-              { label: "My Venues", href: appRoutes.owner.places.base },
+              { label: "My Venues", href: appRoutes.organization.places.base },
               { label: place.name },
               { label: "Edit" },
             ]}
-            backHref={appRoutes.owner.places.base}
+            backHref={appRoutes.organization.places.base}
           />
 
           <PlaceForm
@@ -224,7 +224,9 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
               </p>
               <Button asChild>
                 <Link
-                  href={appRoutes.owner.verification.place(resolvedPlaceId)}
+                  href={appRoutes.organization.verification.place(
+                    resolvedPlaceId,
+                  )}
                 >
                   Go to verification
                 </Link>

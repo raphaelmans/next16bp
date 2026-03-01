@@ -9,13 +9,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export type Portal = "player" | "owner" | "admin";
+export type Portal = "player" | "organization" | "admin";
 
 type PortalSwitcherProps = {
   variant: "sidebar" | "menu-items";
   currentPortal: Portal;
   portalOptions: Portal[];
-  ownerSetupRequired?: boolean;
+  organizationSetupRequired?: boolean;
   onSwitchPortal: (portal: Portal) => void;
   className?: string;
 };
@@ -25,8 +25,8 @@ const portalConfig = {
     label: "Player View",
     icon: Home,
   },
-  owner: {
-    label: "Owner View",
+  organization: {
+    label: "Organization View",
     icon: Building2,
   },
   admin: {
@@ -39,7 +39,7 @@ export function PortalSwitcher({
   variant,
   currentPortal,
   portalOptions,
-  ownerSetupRequired = false,
+  organizationSetupRequired = false,
   onSwitchPortal,
   className,
 }: PortalSwitcherProps) {
@@ -62,7 +62,7 @@ export function PortalSwitcher({
             >
               <Icon className="mr-2 h-4 w-4" />
               <span>{option.label}</span>
-              {portal === "owner" && ownerSetupRequired && (
+              {portal === "organization" && organizationSetupRequired && (
                 <span className="ml-auto text-[11px] text-muted-foreground">
                   Setup
                 </span>
@@ -86,7 +86,7 @@ export function PortalSwitcher({
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-heading font-semibold truncate">
-              {currentPortal === "owner" && ownerSetupRequired
+              {currentPortal === "organization" && organizationSetupRequired
                 ? "Venue Setup"
                 : portalConfig[currentPortal].label}
             </p>
@@ -112,7 +112,7 @@ export function PortalSwitcher({
             >
               <Icon className="h-4 w-4" />
               <span>{option.label}</span>
-              {portal === "owner" && ownerSetupRequired && (
+              {portal === "organization" && organizationSetupRequired && (
                 <span className="ml-auto text-[11px] text-muted-foreground">
                   Setup
                 </span>

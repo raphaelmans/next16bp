@@ -13,7 +13,7 @@ export async function loginAsOwner(page: Page): Promise<void> {
     );
   }
 
-  await page.goto("/owner/get-started");
+  await page.goto("/organization/get-started");
 
   if (page.url().includes("/login")) {
     await expect(page.getByRole("textbox", { name: /email/i })).toBeVisible();
@@ -22,6 +22,6 @@ export async function loginAsOwner(page: Page): Promise<void> {
     await page.getByRole("button", { name: "Sign In" }).click();
   }
 
-  await page.waitForURL(/\/owner\/get-started/);
+  await page.waitForURL(/\/organization\/get-started/);
   await expect(page.getByText(/Step \d+ of 6/)).toBeVisible();
 }

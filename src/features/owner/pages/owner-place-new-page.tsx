@@ -45,9 +45,9 @@ export default function OwnerPlaceNewPage({
     onSuccess: (result) => {
       toast.success("Venue created successfully!");
       if (fromSetup) {
-        router.push(appRoutes.owner.getStarted);
+        router.push(appRoutes.organization.getStarted);
       } else {
-        router.push(appRoutes.owner.places.courts.new(result.placeId));
+        router.push(appRoutes.organization.places.courts.new(result.placeId));
       }
     },
   });
@@ -61,15 +61,17 @@ export default function OwnerPlaceNewPage({
     !paymentMethodsQuery.isLoading &&
     !paymentMethodsQuery.isError &&
     paymentMethods.length === 0;
-  const paymentMethodsHref = `${appRoutes.owner.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`;
+  const paymentMethodsHref = `${appRoutes.organization.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`;
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(appRoutes.owner.places.new);
+    window.location.href = appRoutes.login.from(
+      appRoutes.organization.places.new,
+    );
   };
 
   const handleCancel = () => {
-    router.push(appRoutes.owner.places.base);
+    router.push(appRoutes.organization.places.base);
   };
 
   if (orgLoading) {
@@ -115,7 +117,9 @@ export default function OwnerPlaceNewPage({
                 You need an organization before adding venues.
               </p>
               <Button asChild>
-                <Link href={appRoutes.owner.getStarted}>Get started</Link>
+                <Link href={appRoutes.organization.getStarted}>
+                  Get started
+                </Link>
               </Button>
             </CardContent>
           </Card>
@@ -156,10 +160,10 @@ export default function OwnerPlaceNewPage({
             title="Create New Venue"
             description="Add a new venue for players to discover"
             breadcrumbs={[
-              { label: "My Venues", href: appRoutes.owner.places.base },
+              { label: "My Venues", href: appRoutes.organization.places.base },
               { label: "Create" },
             ]}
-            backHref={appRoutes.owner.places.base}
+            backHref={appRoutes.organization.places.base}
           />
 
           {showPaymentMethodReminder && (

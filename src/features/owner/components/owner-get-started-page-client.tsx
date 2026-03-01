@@ -50,7 +50,9 @@ import {
 // ---------------------------------------------------------------------------
 
 const buildOwnerRegisterHref = () => {
-  const params = new URLSearchParams({ redirect: appRoutes.owner.getStarted });
+  const params = new URLSearchParams({
+    redirect: appRoutes.organization.getStarted,
+  });
   return `${appRoutes.register.owner}?${params.toString()}`;
 };
 
@@ -432,7 +434,7 @@ const slotBadgeLabels: Record<string, string> = {
 
 export default function OwnersGetStartedPage() {
   const registerHref = buildOwnerRegisterHref();
-  const loginHref = appRoutes.login.from(appRoutes.owner.getStarted);
+  const loginHref = appRoutes.login.from(appRoutes.organization.getStarted);
   const setOwnerOnboardingIntent = useSetOwnerOnboardingIntent();
 
   useEffect(() => {

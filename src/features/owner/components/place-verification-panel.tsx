@@ -199,7 +199,7 @@ export function PlaceVerificationPanel({
     const courts = await fetchCourtsByPlace(placeId);
 
     if (courts && courts.length === 0) {
-      router.push(appRoutes.owner.places.courts.base(placeId));
+      router.push(appRoutes.organization.places.courts.base(placeId));
     }
   };
 

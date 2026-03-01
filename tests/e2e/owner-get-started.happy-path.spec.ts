@@ -35,7 +35,7 @@ async function isTextVisible(page: Page, text: string): Promise<boolean> {
  * step specifically, navigate in-page via Back buttons instead.
  */
 async function goToStep(page: Page, step: string) {
-  await page.goto(`/owner/get-started?step=${step}`);
+  await page.goto(`/organization/get-started?step=${step}`);
   await expect(page.getByText(/Step \d+ of 6/)).toBeVisible();
 }
 

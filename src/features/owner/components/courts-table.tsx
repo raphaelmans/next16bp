@@ -54,7 +54,7 @@ export function CourtsTable({
   const router = useRouter();
 
   const handleRowClick = (courtId: string, placeId: string) => {
-    router.push(appRoutes.owner.places.courts.edit(placeId, courtId));
+    router.push(appRoutes.organization.places.courts.edit(placeId, courtId));
   };
 
   return (
@@ -206,7 +206,7 @@ function CourtActionsDropdown({
   fromSetup = false,
   onContainerClick,
 }: CourtActionsDropdownProps) {
-  const scheduleHrefBase = appRoutes.owner.places.courts.setup(
+  const scheduleHrefBase = appRoutes.organization.places.courts.setup(
     court.placeId,
     court.id,
     "schedule",
@@ -232,7 +232,10 @@ function CourtActionsDropdown({
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>
           <Link
-            href={appRoutes.owner.places.courts.edit(court.placeId, court.id)}
+            href={appRoutes.organization.places.courts.edit(
+              court.placeId,
+              court.id,
+            )}
           >
             <Pencil className="mr-2 h-4 w-4" />
             Edit Details
@@ -247,7 +250,7 @@ function CourtActionsDropdown({
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link
-            href={`${appRoutes.owner.reservations}?placeId=${court.placeId}&courtId=${court.id}`}
+            href={`${appRoutes.organization.reservations}?placeId=${court.placeId}&courtId=${court.id}`}
           >
             <CalendarDays className="mr-2 h-4 w-4" />
             View Bookings

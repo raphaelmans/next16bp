@@ -15,7 +15,7 @@ export const userPreferenceRouter = router({
   setDefaultPortal: protectedProcedure
     .input(
       z.object({
-        defaultPortal: z.enum(["player", "owner"]),
+        defaultPortal: z.enum(["player", "organization"]),
       }),
     )
     .mutation(async ({ input, ctx }) => {

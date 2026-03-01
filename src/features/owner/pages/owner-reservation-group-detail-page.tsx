@@ -83,7 +83,7 @@ export default function OwnerReservationGroupDetailPage({
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.owner.reservationGroupDetail(reservationGroupId),
+      appRoutes.organization.reservationGroupDetail(reservationGroupId),
     );
   };
 
@@ -175,13 +175,16 @@ export default function OwnerReservationGroupDetailPage({
           title="Reservation Group Details"
           description="Manage grouped booking lifecycle in one action."
           breadcrumbs={[
-            { label: "Reservations", href: appRoutes.owner.reservations },
+            {
+              label: "Reservations",
+              href: appRoutes.organization.reservations,
+            },
             { label: "Group Details" },
           ]}
         />
 
         <Button variant="ghost" size="sm" asChild className="-ml-2">
-          <Link href={appRoutes.owner.reservationsActive}>
+          <Link href={appRoutes.organization.reservationsActive}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Active Reservations
           </Link>

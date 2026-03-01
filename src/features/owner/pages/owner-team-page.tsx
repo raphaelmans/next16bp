@@ -148,7 +148,7 @@ export default function OwnerTeamPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(appRoutes.owner.team);
+    window.location.href = appRoutes.login.from(appRoutes.organization.team);
   };
 
   const permissionContext = permissionContextQuery.data;

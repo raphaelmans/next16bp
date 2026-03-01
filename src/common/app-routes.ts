@@ -1,4 +1,9 @@
-export type RouteType = "public" | "guest" | "protected" | "owner" | "admin";
+export type RouteType =
+  | "public"
+  | "guest"
+  | "protected"
+  | "organization"
+  | "admin";
 
 type RouteOptions = {
   type: RouteType;
@@ -126,65 +131,66 @@ export const appRoutes = {
       accept: "/account/invitations/accept",
     },
   },
-  owner: {
-    base: "/owner",
-    options: { type: "owner" as const },
-    bookings: "/owner/bookings",
-    getStarted: "/owner/get-started",
-    onboarding: "/owner/onboarding",
-    verify: "/owner/verify",
+  organization: {
+    base: "/organization",
+    options: { type: "organization" as const },
+    bookings: "/organization/bookings",
+    getStarted: "/organization/get-started",
+    onboarding: "/organization/onboarding",
+    verify: "/organization/verify",
     verification: {
-      base: "/owner/verify",
-      place: (placeId: string) => `/owner/verify/${placeId}`,
+      base: "/organization/verify",
+      place: (placeId: string) => `/organization/verify/${placeId}`,
     },
     courts: {
-      base: "/owner/courts",
-      setupCreate: "/owner/courts/setup",
-      edit: (courtId: string) => `/owner/courts/${courtId}/edit`,
+      base: "/organization/courts",
+      setupCreate: "/organization/courts/setup",
+      edit: (courtId: string) => `/organization/courts/${courtId}/edit`,
       availability: (courtId: string) =>
-        `/owner/courts/${courtId}/availability`,
+        `/organization/courts/${courtId}/availability`,
     },
     places: {
-      base: "/owner/venues",
-      new: "/owner/venues/new",
-      edit: (placeId: string) => `/owner/venues/${placeId}/edit`,
+      base: "/organization/venues",
+      new: "/organization/venues/new",
+      edit: (placeId: string) => `/organization/venues/${placeId}/edit`,
       courts: {
-        base: (placeId: string) => `/owner/venues/${placeId}/courts`,
-        new: (placeId: string) => `/owner/venues/${placeId}/courts/new`,
+        base: (placeId: string) => `/organization/venues/${placeId}/courts`,
+        new: (placeId: string) => `/organization/venues/${placeId}/courts/new`,
         setupCreate: (placeId: string) =>
-          `/owner/venues/${placeId}/courts/setup`,
+          `/organization/venues/${placeId}/courts/setup`,
         edit: (placeId: string, courtId: string) =>
-          `/owner/venues/${placeId}/courts/${courtId}/edit`,
+          `/organization/venues/${placeId}/courts/${courtId}/edit`,
         setup: (placeId: string, courtId: string, step?: string) => {
           const params = new URLSearchParams({ courtId });
           if (step) {
             params.set("step", step);
           }
-          return `/owner/venues/${placeId}/courts/setup?${params.toString()}`;
+          return `/organization/venues/${placeId}/courts/setup?${params.toString()}`;
         },
         schedule: (placeId: string, courtId: string) =>
-          `/owner/venues/${placeId}/courts/${courtId}/schedule`,
+          `/organization/venues/${placeId}/courts/${courtId}/schedule`,
         hours: (placeId: string, courtId: string) =>
-          `/owner/venues/${placeId}/courts/${courtId}/hours`,
+          `/organization/venues/${placeId}/courts/${courtId}/hours`,
         pricing: (placeId: string, courtId: string) =>
-          `/owner/venues/${placeId}/courts/${courtId}/pricing`,
+          `/organization/venues/${placeId}/courts/${courtId}/pricing`,
         availability: (placeId: string, courtId: string) =>
-          `/owner/venues/${placeId}/courts/${courtId}/availability`,
+          `/organization/venues/${placeId}/courts/${courtId}/availability`,
       },
     },
     imports: {
-      base: "/owner/import",
-      bookings: "/owner/import/bookings",
-      bookingsReview: (jobId: string) => `/owner/import/bookings/${jobId}`,
+      base: "/organization/import",
+      bookings: "/organization/import/bookings",
+      bookingsReview: (jobId: string) =>
+        `/organization/import/bookings/${jobId}`,
     },
-    reservations: "/owner/reservations",
-    reservationsActive: "/owner/reservations/active",
+    reservations: "/organization/reservations",
+    reservationsActive: "/organization/reservations/active",
     reservationDetail: (reservationId: string) =>
-      `/owner/reservations/${reservationId}`,
+      `/organization/reservations/${reservationId}`,
     reservationGroupDetail: (reservationGroupId: string) =>
-      `/owner/reservations/group/${reservationGroupId}`,
-    settings: "/owner/settings",
-    team: "/owner/team",
+      `/organization/reservations/group/${reservationGroupId}`,
+    settings: "/organization/settings",
+    team: "/organization/team",
   },
   admin: {
     base: "/admin",
@@ -221,8 +227,8 @@ const protectedBases = [
   appRoutes.dashboard.base,
   appRoutes.reservations.base,
   appRoutes.account.base,
-  appRoutes.owner.onboarding,
-  appRoutes.owner.getStarted,
+  appRoutes.organization.onboarding,
+  appRoutes.organization.getStarted,
 ];
 
 const guestBases = [
@@ -250,7 +256,7 @@ export const routeGroups = {
   public: publicBases,
   guest: guestBases,
   protected: protectedBases,
-  owner: [appRoutes.owner.base],
+  organization: [appRoutes.organization.base],
   admin: [appRoutes.admin.base],
 };
 
@@ -270,8 +276,8 @@ export function getRouteType(pathname: string): RouteType {
     return "admin";
   }
 
-  if (routeGroups.owner.some((route) => exactOrChild(pathname, route))) {
-    return "owner";
+  if (routeGroups.organization.some((route) => exactOrChild(pathname, route))) {
+    return "organization";
   }
 
   if (routeGroups.protected.some((route) => exactOrChild(pathname, route))) {
@@ -291,7 +297,7 @@ export function getRouteType(pathname: string): RouteType {
 
 export const isProtectedRoute = (pathname: string) => {
   const type = getRouteType(pathname);
-  return type === "protected" || type === "owner" || type === "admin";
+  return type === "protected" || type === "organization" || type === "admin";
 };
 
 export const isGuestRoute = (pathname: string) =>

@@ -42,8 +42,8 @@ export function OwnerMoreSheet({
   }, [pathname, open, onOpenChange]);
 
   const isActive = (href: string) => {
-    if (href === "/owner") {
-      return pathname === "/owner";
+    if (href === "/organization") {
+      return pathname === "/organization";
     }
     return pathname.startsWith(href);
   };

@@ -139,7 +139,7 @@ describe("NotificationBell", () => {
 
   it("does not render verbose explanatory copy", () => {
     // Arrange + Act
-    render(<NotificationBell portal="owner" />);
+    render(<NotificationBell portal="organization" />);
 
     // Assert
     expect(
@@ -157,7 +157,7 @@ describe("NotificationBell", () => {
     unreadCountState.count = 3;
 
     // Act
-    render(<NotificationBell portal="owner" />);
+    render(<NotificationBell portal="organization" />);
 
     // Assert
     expect(screen.getByText("3")).toBeTruthy();
@@ -170,7 +170,7 @@ describe("NotificationBell", () => {
       "denied";
 
     // Act
-    render(<NotificationBell portal="owner" />);
+    render(<NotificationBell portal="organization" />);
 
     // Assert
     expect(

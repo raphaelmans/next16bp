@@ -41,7 +41,7 @@ export function CompleteStep({ status }: CompleteStepProps) {
           </Button>
         )}
         <Button asChild>
-          <Link href={appRoutes.owner.bookings}>
+          <Link href={appRoutes.organization.bookings}>
             Go to Dashboard
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>

@@ -86,14 +86,14 @@ export default function OwnerActiveReservationsPage() {
     }
     const suffix = params.toString();
     return suffix
-      ? `${appRoutes.owner.reservations}?${suffix}`
-      : appRoutes.owner.reservations;
+      ? `${appRoutes.organization.reservations}?${suffix}`
+      : appRoutes.organization.reservations;
   }, [courtId, placeId]);
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.owner.reservationsActive,
+      appRoutes.organization.reservationsActive,
     );
   };
 
@@ -260,8 +260,11 @@ export default function OwnerActiveReservationsPage() {
           title="Active Reservations"
           description="Monitor reservations awaiting payment or confirmation"
           breadcrumbs={[
-            { label: "Owner", href: appRoutes.owner.base },
-            { label: "Reservations", href: appRoutes.owner.reservations },
+            { label: "Owner", href: appRoutes.organization.base },
+            {
+              label: "Reservations",
+              href: appRoutes.organization.reservations,
+            },
             { label: "Active" },
           ]}
           actions={
@@ -408,7 +411,7 @@ export default function OwnerActiveReservationsPage() {
                       <div className="flex flex-wrap gap-2">
                         <Button variant="outline" size="sm" asChild>
                           <Link
-                            href={appRoutes.owner.reservationDetail(
+                            href={appRoutes.organization.reservationDetail(
                               reservation.id,
                             )}
                           >
