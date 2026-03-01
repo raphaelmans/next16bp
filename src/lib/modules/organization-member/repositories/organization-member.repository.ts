@@ -22,6 +22,7 @@ export type OrganizationMemberListItem = {
   member: OrganizationMemberRecord;
   displayName: string | null;
   email: string | null;
+  avatarUrl: string | null;
 };
 
 export type OrganizationInvitationListItem = {
@@ -150,6 +151,7 @@ export class OrganizationMemberRepository
         member: organizationMember,
         displayName: profile.displayName,
         email: profile.email,
+        avatarUrl: profile.avatarUrl,
       })
       .from(organizationMember)
       .leftJoin(profile, eq(profile.userId, organizationMember.userId))

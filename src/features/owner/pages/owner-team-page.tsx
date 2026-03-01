@@ -23,7 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -378,6 +378,12 @@ export default function OwnerTeamPage() {
                 >
                   {/* Avatar */}
                   <Avatar className="h-9 w-9 shrink-0">
+                    {row.avatarUrl && (
+                      <AvatarImage
+                        src={row.avatarUrl}
+                        alt={row.displayName ?? row.email ?? "Team member"}
+                      />
+                    )}
                     <AvatarFallback className="text-xs">
                       {getInitials(row.displayName, row.email)}
                     </AvatarFallback>
@@ -399,7 +405,7 @@ export default function OwnerTeamPage() {
                       )}
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      {row.email && (
+                      {row.displayName && row.email && (
                         <span className="truncate">{row.email}</span>
                       )}
                       <span className="hidden sm:inline">·</span>

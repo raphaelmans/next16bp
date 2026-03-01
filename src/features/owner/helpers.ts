@@ -27,8 +27,8 @@ export function shouldShowOwnerGetStartedNav(input: {
   setupStatus: OwnerSetupGateInput;
 }): boolean {
   if (input.noOrgMode) return true;
-  if (input.setupStatusLoading) return true;
-  if (!input.setupStatus) return true;
+  if (input.setupStatusLoading) return false;
+  if (!input.setupStatus) return false;
   return isOwnerSetupIncomplete(input.setupStatus);
 }
 
