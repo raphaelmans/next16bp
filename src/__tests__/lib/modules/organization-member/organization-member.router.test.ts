@@ -180,7 +180,7 @@ describe("organizationMemberRouter", () => {
     const caller = createCaller("");
 
     await expect(
-      caller.acceptInvitation({ token: "token-token-token-token" }),
+      caller.acceptInvitation({ code: "A7K9-P2Q4" }),
     ).rejects.toBeInstanceOf(TRPCError);
     expect(
       mockOrganizationMemberService.acceptInvitation,
@@ -194,12 +194,12 @@ describe("organizationMemberRouter", () => {
       id: "membership-1",
     });
 
-    await caller.acceptInvitation({ token: "token-token-token-token" });
+    await caller.acceptInvitation({ code: "A7K9-P2Q4" });
 
     expect(mockOrganizationMemberService.acceptInvitation).toHaveBeenCalledWith(
       TEST_IDS.userId,
       "manager@example.com",
-      { token: "token-token-token-token" },
+      { code: "A7K9-P2Q4" },
     );
   });
 
@@ -209,12 +209,12 @@ describe("organizationMemberRouter", () => {
       id: TEST_IDS.invitationId,
     });
 
-    await caller.declineInvitation({ token: "token-token-token-token" });
+    await caller.declineInvitation({ code: "A7K9-P2Q4" });
 
     expect(
       mockOrganizationMemberService.declineInvitation,
     ).toHaveBeenCalledWith(TEST_IDS.userId, "manager@example.com", {
-      token: "token-token-token-token",
+      code: "A7K9-P2Q4",
     });
   });
 

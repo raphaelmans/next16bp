@@ -13,6 +13,7 @@ import {
   Settings,
   Shield,
   UploadCloud,
+  User,
   Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -114,6 +115,12 @@ const navItems = [
     accessRule: { type: "any-member" } as PageAccessRule,
   },
   {
+    title: "Profile",
+    href: appRoutes.account.profile,
+    icon: User,
+    accessRule: { type: "any-member" } as PageAccessRule,
+  },
+  {
     title: "Settings",
     href: appRoutes.organization.settings,
     icon: Settings,
@@ -138,7 +145,8 @@ export function OwnerSidebar({
   const { data: reservationCounts } = useQueryReservationCounts(
     currentOrganization?.id ?? null,
   );
-  const { permissionContext } = useModOwnerPermissionContext();
+  const { permissionContext, isLoading: permissionContextLoading } =
+    useModOwnerPermissionContext();
   const { data: sessionUser } = useQueryAuthSession();
   const effectiveIsAdmin = isAdmin ?? sessionUser?.role === "admin";
 
@@ -162,17 +170,21 @@ export function OwnerSidebar({
           }
         : null,
     }) &&
-    (noOrgMode || !permissionContext || isOwnerRole(permissionContext));
+    (noOrgMode || (permissionContext ? isOwnerRole(permissionContext) : false));
 
   // Filter nav items based on the user's permissions
   const visibleNavItems = permissionContext
     ? filterVisibleNavItems(navItems, permissionContext)
-    : navItems;
+    : permissionContextLoading
+      ? []
+      : navItems.filter((item) => item.accessRule.type === "any-member");
 
   // Role label for the org header (e.g. "Owner", "Manager", "Viewer")
   const roleLabel = permissionContext
     ? ROLE_DISPLAY_LABELS[permissionContext.role]
-    : "Owner";
+    : permissionContextLoading
+      ? "Loading role"
+      : "Member";
   const shouldShowOrgDropdown =
     noOrgMode || organizations.length > 1 || effectiveIsAdmin;
 

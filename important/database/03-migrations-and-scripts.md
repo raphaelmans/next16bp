@@ -11,6 +11,8 @@ Database commands are centralized in `package.json`:
 - `pnpm db:studio`
 - `pnpm db:seed:sports`
 - `pnpm db:seed:buckets`
+- `pnpm db:check:journal`
+- `pnpm db:validate:default-portal`
 - plus backfill/import/export helpers
 
 All run with `dotenvx` and `DATABASE_URL`.
@@ -44,25 +46,38 @@ These semantics come from official Drizzle docs; see `important/database/99-offi
 
 ## Script Posture (Current)
 
-Scripts importing `postgres` in `scripts/`: 8
-
-- Drizzle-based scripts (6):
+- Drizzle-based scripts include:
   - `scripts/seed-sports.ts`
   - `scripts/backfill-place-slugs.ts`
   - `scripts/list-place-locations.ts`
   - `scripts/import-curated-courts.ts`
   - `scripts/backfill-court-addon-pricing-type.ts`
   - `scripts/validate-addon-pricing-migration.ts`
-- Raw SQL / non-Drizzle exceptions (2):
+  - `scripts/validate-default-portal-migration.ts`
+- Raw SQL / non-Drizzle exceptions:
   - `scripts/seed-storage-buckets.ts`
   - `scripts/export-curated-places.ts`
 
 ## Migration Hygiene Notes
 
-- Migration directory currently contains duplicate numeric prefixes (`0015_*`, `0029_*`).
-- `drizzle/meta/_journal.json` currently lists entries up to `0020_reservation_chat` while newer SQL files are present.
+- Migration directory contains duplicate numeric prefixes (`0015_*`, `0029_*`, `0030_*`).
+- `drizzle/meta/_journal.json` is required to contain every `drizzle/*.sql` tag in deterministic filename order.
+- Snapshot metadata under `drizzle/meta/*_snapshot.json` must keep valid UUID `id` and `prevId` chain.
+- Use `pnpm db:check:journal` to validate all of the above in CI/local.
 
-Action: align migration naming/journal practices so migration ordering remains deterministic and easy to audit.
+### Local Recovery Runbook (Reset Strategy)
+
+Use this only for local/dev environments where data reset is acceptable:
+
+1. `pnpm db:check:journal`
+2. `pnpm exec dotenvx run --env-file=.env.local -- drizzle-kit drop --config drizzle.config.ts`
+3. `pnpm db:push`
+4. `pnpm db:seed:sports`
+5. `pnpm db:seed:buckets`
+6. `pnpm db:validate:default-portal`
+
+Note: incremental schema evolution still defaults to `db:generate` + `db:migrate`.
+The reset path uses `db:push` because legacy historical migrations are not yet fully replayable from an empty database.
 
 ## Recommended Operational Guardrails
 

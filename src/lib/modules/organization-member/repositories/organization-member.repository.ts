@@ -84,8 +84,12 @@ export interface IOrganizationMemberRepository {
     data: InsertOrganizationInvitation,
     ctx?: RequestContext,
   ): Promise<OrganizationInvitationRecord>;
-  findPendingInvitationByTokenHash(
-    tokenHash: string,
+  findInvitationByCodeHash(
+    codeHash: string,
+    ctx?: RequestContext,
+  ): Promise<OrganizationInvitationRecord | null>;
+  findInvitationById(
+    invitationId: string,
     ctx?: RequestContext,
   ): Promise<OrganizationInvitationRecord | null>;
   findPendingInvitationById(
@@ -104,9 +108,18 @@ export interface IOrganizationMemberRepository {
     data?: Partial<
       Pick<
         OrganizationInvitationRecord,
-        "acceptedAt" | "acceptedByUserId" | "updatedAt"
+        | "acceptedAt"
+        | "acceptedByUserId"
+        | "updatedAt"
+        | "cooldownUntil"
+        | "failedAttemptCount"
       >
     >,
+    ctx?: RequestContext,
+  ): Promise<OrganizationInvitationRecord | null>;
+  incrementInvitationFailedAttempts(
+    invitationId: string,
+    cooldownUntil: Date | null,
     ctx?: RequestContext,
   ): Promise<OrganizationInvitationRecord | null>;
 }
@@ -368,20 +381,29 @@ export class OrganizationMemberRepository
     return rows[0];
   }
 
-  async findPendingInvitationByTokenHash(
-    tokenHash: string,
+  async findInvitationByCodeHash(
+    codeHash: string,
     ctx?: RequestContext,
   ): Promise<OrganizationInvitationRecord | null> {
     const client = this.getClient(ctx);
     const rows = await client
       .select()
       .from(organizationInvitation)
-      .where(
-        and(
-          eq(organizationInvitation.tokenHash, tokenHash),
-          eq(organizationInvitation.status, "PENDING"),
-        ),
-      )
+      .where(eq(organizationInvitation.tokenHash, codeHash))
+      .limit(1);
+
+    return rows[0] ?? null;
+  }
+
+  async findInvitationById(
+    invitationId: string,
+    ctx?: RequestContext,
+  ): Promise<OrganizationInvitationRecord | null> {
+    const client = this.getClient(ctx);
+    const rows = await client
+      .select()
+      .from(organizationInvitation)
+      .where(eq(organizationInvitation.id, invitationId))
       .limit(1);
 
     return rows[0] ?? null;
@@ -441,7 +463,11 @@ export class OrganizationMemberRepository
     data?: Partial<
       Pick<
         OrganizationInvitationRecord,
-        "acceptedAt" | "acceptedByUserId" | "updatedAt"
+        | "acceptedAt"
+        | "acceptedByUserId"
+        | "updatedAt"
+        | "cooldownUntil"
+        | "failedAttemptCount"
       >
     >,
     ctx?: RequestContext,
@@ -453,7 +479,28 @@ export class OrganizationMemberRepository
         status,
         acceptedAt: data?.acceptedAt,
         acceptedByUserId: data?.acceptedByUserId,
+        cooldownUntil: data?.cooldownUntil,
+        failedAttemptCount: data?.failedAttemptCount,
         updatedAt: data?.updatedAt ?? new Date(),
+      })
+      .where(eq(organizationInvitation.id, invitationId))
+      .returning();
+
+    return rows[0] ?? null;
+  }
+
+  async incrementInvitationFailedAttempts(
+    invitationId: string,
+    cooldownUntil: Date | null,
+    ctx?: RequestContext,
+  ): Promise<OrganizationInvitationRecord | null> {
+    const client = this.getClient(ctx);
+    const rows = await client
+      .update(organizationInvitation)
+      .set({
+        failedAttemptCount: sql`${organizationInvitation.failedAttemptCount} + 1`,
+        cooldownUntil,
+        updatedAt: new Date(),
       })
       .where(eq(organizationInvitation.id, invitationId))
       .returning();

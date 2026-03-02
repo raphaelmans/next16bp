@@ -8,8 +8,21 @@ export default async function AccountInvitationAcceptRoutePage({
   searchParams,
 }: AccountInvitationAcceptRoutePageProps) {
   const queryParams = await searchParams;
+  const codeParam = queryParams.code;
+  const invitationIdParam = queryParams.invitationId;
   const tokenParam = queryParams.token;
-  const token = Array.isArray(tokenParam) ? tokenParam[0] : tokenParam;
 
-  return <AccountOrganizationInvitationAcceptPage token={token ?? null} />;
+  const code = Array.isArray(codeParam) ? codeParam[0] : codeParam;
+  const invitationId = Array.isArray(invitationIdParam)
+    ? invitationIdParam[0]
+    : invitationIdParam;
+  const legacyToken = Array.isArray(tokenParam) ? tokenParam[0] : tokenParam;
+
+  return (
+    <AccountOrganizationInvitationAcceptPage
+      initialCode={code ?? null}
+      invitationId={invitationId ?? null}
+      legacyToken={legacyToken ?? null}
+    />
+  );
 }

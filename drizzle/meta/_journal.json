@@ -110,57 +110,190 @@
     {
       "idx": 15,
       "version": "7",
+      "when": 1772059200001,
+      "tag": "0015_bookings_import_row_block_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
       "when": 1768809600012,
       "tag": "0015_place_featured_rank",
       "breakpoints": true
     },
     {
-      "idx": 16,
+      "idx": 17,
       "version": "7",
       "when": 1768809600013,
       "tag": "0016_storage_file_paths",
       "breakpoints": true
     },
     {
-      "idx": 17,
+      "idx": 18,
       "version": "7",
       "when": 1768809600014,
       "tag": "0017_enable_pg_trgm",
       "breakpoints": true
     },
     {
-      "idx": 18,
+      "idx": 19,
       "version": "7",
       "when": 1768809600015,
       "tag": "0018_reservation_no_overlap",
       "breakpoints": true
     },
     {
-      "idx": 19,
+      "idx": 20,
       "version": "7",
       "when": 1768809600016,
       "tag": "0019_place_trgm_indexes",
       "breakpoints": true
     },
     {
-      "idx": 20,
+      "idx": 21,
       "version": "7",
       "when": 1770169800000,
       "tag": "0020_reservation_chat",
       "breakpoints": true
     },
     {
-      "idx": 21,
+      "idx": 22,
+      "version": "7",
+      "when": 1772059200002,
+      "tag": "0021_notification_delivery_outbox",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1772059200003,
+      "tag": "0022_web_push_notifications",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1772059200004,
+      "tag": "0023_support_chat",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1772059200005,
+      "tag": "0024_open_play",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1772059200006,
+      "tag": "0025_open_play_cost_sharing",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1772059200007,
+      "tag": "0026_place_province_rank",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1772059200008,
+      "tag": "0027_mobile_push_token",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1772059200009,
+      "tag": "0028_mobile_push_delivery_channel",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1772059200010,
+      "tag": "0029_chat_inbox_archive",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1772059200011,
+      "tag": "0029_schedule_pricing_addons",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1772059200012,
+      "tag": "0030_place_addon_scoping",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1772059200013,
+      "tag": "0030_reservation_groups",
+      "breakpoints": true
+    },
+    {
+      "idx": 34,
       "version": "7",
       "when": 1771920000000,
       "tag": "0031_open_play_multi_court",
       "breakpoints": true
     },
     {
-      "idx": 22,
+      "idx": 35,
       "version": "7",
       "when": 1772059200000,
       "tag": "0032_user_notification_inbox",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1772059200014,
+      "tag": "0033_chat_message_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1772059200015,
+      "tag": "0034_organization_member_rbac",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1772059200016,
+      "tag": "0035_org_member_notification_preference",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1772059200017,
+      "tag": "0036_external_open_play",
+      "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1772059200018,
+      "tag": "0037_default_portal_organization",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1772222400000,
+      "tag": "0038_invitation_code_entry",
       "breakpoints": true
     }
   ]

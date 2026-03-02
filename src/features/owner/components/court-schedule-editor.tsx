@@ -9,6 +9,17 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -169,17 +180,50 @@ function ScheduleSlotRow({
 
         {/* Actions — pushed right */}
         <div className="flex items-center gap-1 ml-auto">
-          {row.allowPricing && row.hourlyRate !== "" && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs"
-              onClick={() => onApplyToAll(dayValue, row.id)}
-            >
-              Copy to all
-            </Button>
-          )}
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="text-xs"
+              >
+                Copy to all
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Copy to all days?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will copy{" "}
+                  <strong>
+                    {formatMinutesAs12h(row.startTime)} –{" "}
+                    {formatMinutesAs12h(row.endTime)}
+                  </strong>
+                  {row.allowPricing && row.hourlyRate !== "" && (
+                    <>
+                      {" "}
+                      with pricing{" "}
+                      <strong>
+                        {CURRENCY_SYMBOL}
+                        {row.hourlyRate}/hr
+                      </strong>
+                    </>
+                  )}{" "}
+                  to all other days. This will replace all existing blocks on
+                  those days.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => onApplyToAll(dayValue, row.id)}
+                >
+                  Copy
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <Button
             type="button"
             variant="ghost"

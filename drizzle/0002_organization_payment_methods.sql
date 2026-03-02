@@ -34,4 +34,4 @@ ALTER TABLE "organization_reservation_policy" ADD CONSTRAINT "organization_reser
 --> statement-breakpoint
 ALTER TABLE "organization_payment_method" ADD CONSTRAINT "organization_payment_method_organization_id_organization_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organization"("id") ON DELETE cascade ON UPDATE no action;
 --> statement-breakpoint
-DROP TABLE "reservable_place_policy";
+DROP TABLE IF EXISTS "reservable_place_policy";

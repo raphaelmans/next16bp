@@ -121,6 +121,7 @@ function getMoreItemsForRole(role: OrganizationMemberRole): TabConfig[] {
           href: appRoutes.organization.settings,
           icon: Settings,
         },
+        { label: "Profile", href: appRoutes.account.profile, icon: User },
       ];
     case "MANAGER":
       return [
@@ -140,6 +141,7 @@ function getMoreItemsForRole(role: OrganizationMemberRole): TabConfig[] {
           icon: MapPinned,
         },
         { label: "Team", href: appRoutes.organization.team, icon: Users },
+        { label: "Profile", href: appRoutes.account.profile, icon: User },
       ];
     // VIEWER has no "More" tab
     case "VIEWER":
@@ -150,14 +152,19 @@ function getMoreItemsForRole(role: OrganizationMemberRole): TabConfig[] {
 export function OwnerBottomTabs() {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
-  const { permissionContext, organizationId } = useModOwnerPermissionContext();
+  const {
+    permissionContext,
+    organizationId,
+    isLoading: permissionContextLoading,
+  } = useModOwnerPermissionContext();
   const { data: reservationCounts } = useQueryReservationCounts(organizationId);
   const { data: setupStatus, isLoading: setupStatusLoading } =
     useQueryOwnerSetupStatus();
 
   const noOrgMode = !organizationId;
-  const role = permissionContext?.role ?? "OWNER";
-  const tabs = getTabsForRole(role);
+  const role: OrganizationMemberRole | null =
+    permissionContext?.role ?? (permissionContextLoading ? null : "VIEWER");
+  const tabs = role ? getTabsForRole(role) : [];
 
   const showGetStarted =
     shouldShowOwnerGetStartedNav({
@@ -171,7 +178,7 @@ export function OwnerBottomTabs() {
           }
         : null,
     }) &&
-    (noOrgMode || !permissionContext || isOwnerRole(permissionContext));
+    (noOrgMode || (permissionContext ? isOwnerRole(permissionContext) : false));
 
   const getStartedItem: TabConfig = {
     label: "Get Started",
@@ -181,7 +188,7 @@ export function OwnerBottomTabs() {
 
   const moreItems = [
     ...(showGetStarted ? [getStartedItem] : []),
-    ...getMoreItemsForRole(role),
+    ...(role ? getMoreItemsForRole(role) : []),
   ];
 
   const isActive = (href: string) => {
@@ -192,6 +199,24 @@ export function OwnerBottomTabs() {
   };
 
   const isMoreActive = moreItems.some((item) => isActive(item.href));
+
+  if (!role && permissionContextLoading) {
+    return (
+      <nav
+        className="fixed bottom-0 left-0 right-0 z-30 border-t bg-background/95 pb-[max(0px,env(safe-area-inset-bottom))] backdrop-blur-md md:hidden"
+        aria-label="Bottom navigation loading"
+      >
+        <div className="grid h-14 grid-cols-4 items-center gap-2 px-3">
+          {["tab-1", "tab-2", "tab-3", "tab-4"].map((id) => (
+            <div
+              key={id}
+              className="h-8 rounded-md bg-muted/80 animate-pulse"
+            />
+          ))}
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <>

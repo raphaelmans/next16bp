@@ -1,7 +1,9 @@
 "use client";
 
+import { Monitor, Server } from "lucide-react";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,8 +12,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import {
-  getWebPushSettingsStatusLabel,
+  getWebPushStatusBadgeVariant,
   isWebPushDisableActionDisabled,
   isWebPushEnableActionDisabled,
 } from "../domain";
@@ -68,12 +71,9 @@ export function WebPushSettingsCard({ id }: { id?: string }) {
     }
   };
 
-  const statusLabel = getWebPushSettingsStatusLabel({
-    supported: webPush.supported,
-    configured: webPush.configured,
-    enabledOnThisDevice: webPush.enabledOnThisDevice,
-    permission: webPush.permission,
-  });
+  const { variant, label } = getWebPushStatusBadgeVariant(
+    webPush.diagnosticsCode,
+  );
 
   const enableDisabled = isWebPushEnableActionDisabled({
     busy: webPush.busy,
@@ -97,46 +97,77 @@ export function WebPushSettingsCard({ id }: { id?: string }) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="text-sm text-muted-foreground">
-          Status: <span className="text-foreground">{statusLabel}</span>
+        {/* Status */}
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-muted-foreground">Status</span>
+          <Badge variant={variant}>{label}</Badge>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <Button type="button" onClick={enable} disabled={enableDisabled}>
-            Enable
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={disable}
-            disabled={disableDisabled}
-          >
-            Disable
-          </Button>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={sendLocalTest}
-            disabled={!webPush.canSendLocalTest}
-          >
-            Test local notification
-          </Button>
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={sendServerTest}
-            disabled={!webPush.canSendServerTest}
-          >
-            Test server push
-          </Button>
+        {/* Primary action */}
+        <div className="flex gap-2">
+          {webPush.enabledOnThisDevice ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={disable}
+              disabled={disableDisabled}
+            >
+              Disable
+            </Button>
+          ) : (
+            <Button type="button" onClick={enable} disabled={enableDisabled}>
+              Enable
+            </Button>
+          )}
         </div>
 
+        {/* Test notifications */}
+        <Separator />
+        <div className="space-y-3">
+          <p className="text-xs font-medium text-muted-foreground">
+            Test Notifications
+          </p>
+          <div className="flex items-center gap-3">
+            <Monitor className="size-4 shrink-0 text-muted-foreground" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium">Local</p>
+              <p className="text-xs text-muted-foreground">
+                Verifies your browser can show notifications
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={sendLocalTest}
+              disabled={!webPush.canSendLocalTest}
+            >
+              Send
+            </Button>
+          </div>
+          <div className="flex items-center gap-3">
+            <Server className="size-4 shrink-0 text-muted-foreground" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium">Server</p>
+              <p className="text-xs text-muted-foreground">
+                Verifies the full push pipeline to this device
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={sendServerTest}
+              disabled={!webPush.canSendServerTest}
+            >
+              Send
+            </Button>
+          </div>
+        </div>
+
+        {/* Diagnostics footer */}
         <p className="text-xs text-muted-foreground">
           {webPush.diagnosticsMessage}
-        </p>
-        <p className="text-xs text-muted-foreground">
-          Local test checks that your browser can show notifications. Server
-          test verifies the full push pipeline from the server to this device.
         </p>
 
         {webPush.diagnosticsCode === "permission_denied" ? (

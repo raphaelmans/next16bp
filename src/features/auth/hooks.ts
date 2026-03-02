@@ -6,6 +6,7 @@ import {
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
 import { useSetOwnerOnboardingIntent } from "@/common/hooks/owner-onboarding-intent";
+import { buildTrpcQueryKey } from "@/common/trpc-client-call";
 import { trpc } from "@/trpc/client";
 import { getAuthApi } from "./api.runtime";
 
@@ -155,6 +156,10 @@ type SetDefaultPortalOutput = Awaited<
   ReturnType<typeof authApi.mutUserPreferenceSetDefaultPortal>
 >;
 
+type OptimisticContext = {
+  previousPreference: AuthUserPreference | undefined;
+};
+
 type UseMutSetDefaultPortalOptions = {
   onSuccess?: (
     data: SetDefaultPortalOutput,
@@ -164,26 +169,52 @@ type UseMutSetDefaultPortalOptions = {
   onError?: (error: unknown) => void;
 };
 
+const preferenceQueryKey = buildTrpcQueryKey(["userPreference", "me"]);
+
 export function useMutSetDefaultPortal(
   options?: UseMutSetDefaultPortalOptions,
 ) {
+  const queryClient = useQueryClient();
   const utils = trpc.useUtils();
 
   return useFeatureMutation<
     SetDefaultPortalOutput,
     SetDefaultPortalInput,
-    unknown
+    OptimisticContext
   >(authApi.mutUserPreferenceSetDefaultPortal, {
-    onSuccess: async (data, variables, context) => {
+    onMutate: async (variables) => {
+      await queryClient.cancelQueries({ queryKey: preferenceQueryKey });
+      const previousPreference =
+        queryClient.getQueryData<AuthUserPreference>(preferenceQueryKey);
+      queryClient.setQueryData<AuthUserPreference>(
+        preferenceQueryKey,
+        (old) => ({ ...old, defaultPortal: variables.defaultPortal }),
+      );
       try {
         localStorage.setItem(PORTAL_STORAGE_KEY, variables.defaultPortal);
       } catch {}
-
-      await utils.userPreference.me.invalidate();
+      return { previousPreference };
+    },
+    onSuccess: async (data, variables, context) => {
       await options?.onSuccess?.(data, variables, context);
     },
-    onError: (error) => {
+    onError: (error, _variables, context) => {
+      if (context?.previousPreference) {
+        queryClient.setQueryData<AuthUserPreference>(
+          preferenceQueryKey,
+          context.previousPreference,
+        );
+        try {
+          localStorage.setItem(
+            PORTAL_STORAGE_KEY,
+            context.previousPreference.defaultPortal,
+          );
+        } catch {}
+      }
       options?.onError?.(error);
+    },
+    onSettled: async () => {
+      await utils.userPreference.me.invalidate();
     },
   });
 }

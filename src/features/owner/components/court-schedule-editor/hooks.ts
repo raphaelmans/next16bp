@@ -12,7 +12,6 @@ import {
   useQueryOwnerCourts,
 } from "@/features/owner/hooks";
 import {
-  type BlockIntervals,
   type BlockRow,
   buildIntervals,
   buildRowsByDay,
@@ -150,147 +149,22 @@ export const useCourtScheduleEditor = ({
   const handleApplyToAll = React.useCallback(
     (sourceDay: number, sourceRowId: string) => {
       setRowsByDay((prev) => {
-        const sourceRow = (prev[sourceDay] ?? []).find(
-          (row) => row.id === sourceRowId,
-        );
-        if (!sourceRow || sourceRow.hourlyRate === "") return prev;
+        const sourceRows = prev[sourceDay] ?? [];
+        const sourceRow = sourceRows.find((row) => row.id === sourceRowId);
+        if (!sourceRow) return prev;
 
-        const overlaps = (a: BlockIntervals, b: BlockIntervals) =>
-          Math.max(a.startMinute, b.startMinute) <
-          Math.min(a.endMinute, b.endMinute);
-
-        const buildIntervalMap = (
-          rowsByDay: Record<number, BlockRow[]>,
-          predicate: (row: BlockRow) => boolean,
-          excludeRowId?: string,
-        ) => {
-          const map = new Map<number, BlockIntervals[]>();
-          DAY_KEYS.forEach((day) => {
-            map.set(day, []);
-          });
-
-          Object.values(rowsByDay).forEach((rows) => {
-            rows.forEach((row) => {
-              if (excludeRowId && row.id === excludeRowId) return;
-              if (!predicate(row)) return;
-              buildIntervals(row).forEach((interval) => {
-                map.get(interval.dayOfWeek)?.push(interval);
-              });
-            });
-          });
-
-          return map;
-        };
-        const next: Record<number, BlockRow[]> = {
-          0: [...(prev[0] ?? [])],
-          1: [...(prev[1] ?? [])],
-          2: [...(prev[2] ?? [])],
-          3: [...(prev[3] ?? [])],
-          4: [...(prev[4] ?? [])],
-          5: [...(prev[5] ?? [])],
-          6: [...(prev[6] ?? [])],
-        };
-
-        let applied = 0;
-        let skipped = 0;
+        const next: Record<number, BlockRow[]> = { ...prev };
 
         DAY_KEYS.forEach((currentDay) => {
-          const existingRows = next[currentDay] ?? [];
-
           if (currentDay === sourceDay) return;
-
-          const alreadyExists = existingRows.some(
-            (row) =>
-              row.startTime === sourceRow.startTime &&
-              row.endTime === sourceRow.endTime &&
-              row.isOpen === sourceRow.isOpen &&
-              row.hourlyRate === sourceRow.hourlyRate &&
-              row.allowPricing === true,
-          );
-          if (alreadyExists) {
-            skipped += 1;
-            return;
-          }
-
-          const matchingRow = existingRows.find(
-            (row) =>
-              row.startTime === sourceRow.startTime &&
-              row.endTime === sourceRow.endTime,
-          );
-
-          const candidate: BlockRow = matchingRow
-            ? {
-                ...matchingRow,
-                startTime: sourceRow.startTime,
-                endTime: sourceRow.endTime,
-                isOpen: sourceRow.isOpen,
-                hourlyRate: sourceRow.hourlyRate,
-                allowPricing: true,
-              }
-            : {
-                ...sourceRow,
-                id: createRowId(),
-                dayOfWeek: currentDay,
-                allowPricing: true,
-              };
-
-          const hoursIntervalsByDay = buildIntervalMap(
-            next,
-            (row) => row.isOpen,
-            matchingRow?.id,
-          );
-          const pricingIntervalsByDay = buildIntervalMap(
-            next,
-            (row) => row.hourlyRate !== "",
-            matchingRow?.id,
-          );
-          const candidateIntervals = buildIntervals(candidate);
-          const hasHoursOverlap =
-            candidate.isOpen &&
-            candidateIntervals.some((interval) =>
-              (hoursIntervalsByDay.get(interval.dayOfWeek) ?? []).some(
-                (existing) => overlaps(interval, existing),
-              ),
-            );
-          const hasPricingOverlap =
-            candidate.hourlyRate !== "" &&
-            candidateIntervals.some((interval) =>
-              (pricingIntervalsByDay.get(interval.dayOfWeek) ?? []).some(
-                (existing) => overlaps(interval, existing),
-              ),
-            );
-
-          if (hasHoursOverlap || hasPricingOverlap) {
-            skipped += 1;
-            return;
-          }
-
-          if (matchingRow) {
-            next[currentDay] = existingRows.map((row) =>
-              row.id === matchingRow.id ? candidate : row,
-            );
-          } else {
-            next[currentDay].push(candidate);
-          }
-          applied += 1;
+          next[currentDay] = sourceRows.map((row) => ({
+            ...row,
+            id: createRowId(),
+            dayOfWeek: currentDay,
+          }));
         });
 
-        if (applied === 0) {
-          toast.info("No days updated", {
-            description: skipped > 0 ? "All days were skipped." : undefined,
-          });
-        } else {
-          toast.success(
-            `Copied block to ${applied} day${applied === 1 ? "" : "s"}`,
-            {
-              description:
-                skipped > 0
-                  ? `Skipped ${skipped} day${skipped === 1 ? "" : "s"} due to overlaps or existing blocks.`
-                  : undefined,
-            },
-          );
-        }
-
+        toast.success("Copied schedule to all days");
         return next;
       });
     },

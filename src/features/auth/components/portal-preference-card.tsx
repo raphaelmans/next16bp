@@ -1,6 +1,7 @@
 "use client";
 
 import { Building2, Home } from "lucide-react";
+import { useRouter } from "next/navigation";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
@@ -50,35 +51,28 @@ export function PortalPreferenceCard({
   id,
   className,
 }: PortalPreferenceCardProps) {
+  const router = useRouter();
   const query = useQueryAuthUserPreference(true);
-  const [selectedPortal, setSelectedPortal] =
-    React.useState<PortalDefault>("player");
   const radioIdPrefix = React.useId();
-
-  React.useEffect(() => {
-    if (query.data?.defaultPortal) {
-      setSelectedPortal(query.data.defaultPortal);
-    }
-  }, [query.data?.defaultPortal]);
 
   const mutation = useMutSetDefaultPortal({
     onSuccess: (_data, variables) => {
-      setSelectedPortal(variables.defaultPortal);
+      document.cookie = `kudos.portal-context=${variables.defaultPortal}; path=/; max-age=31536000; samesite=lax`;
+      router.refresh();
       toast.success("Default portal updated");
     },
-    onError: async (error) => {
+    onError: (error) => {
       toast.error("Could not save default portal", {
         description: getClientErrorMessage(error, "Please try again"),
       });
-      await query.refetch();
     },
   });
 
+  const selectedPortal = query.data?.defaultPortal ?? "player";
+
   const handleChange = (value: string) => {
     if (value !== "player" && value !== "organization") return;
-    if (value === selectedPortal || mutation.isPending) return;
-
-    setSelectedPortal(value);
+    if (value === selectedPortal) return;
     mutation.mutate({ defaultPortal: value });
   };
 

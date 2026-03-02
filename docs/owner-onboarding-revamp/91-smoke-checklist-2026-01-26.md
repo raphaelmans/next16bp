@@ -108,7 +108,7 @@ Goal: validate the owner onboarding funnel end-to-end across key paths without n
 
 - [ ] Confirm DB migration for user preferences is applied in this environment
   - Table: `user_preferences`
-  - Column: `default_portal` (player/owner)
+  - Column: `default_portal` (player/organization)
 
 ## Pass/Fail Criteria
 

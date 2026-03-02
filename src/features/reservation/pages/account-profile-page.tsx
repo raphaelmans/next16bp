@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 import { appRoutes } from "@/common/app-routes";
+import { usePortalContext } from "@/common/hooks/use-portal-context";
 import { SETTINGS_SECTION_IDS } from "@/common/section-hashes";
 import { PageHeader } from "@/components/ui/page-header";
 import { PortalPreferenceCard } from "@/features/auth/components";
@@ -11,6 +12,9 @@ import { ProfileForm } from "@/features/reservation/components/profile-form";
 import { ProfileFormSkeleton } from "@/features/reservation/components/skeletons";
 
 export default function ProfilePage() {
+  const portalContext = usePortalContext();
+  const isOrgContext = portalContext === "organization";
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -20,7 +24,9 @@ export default function ProfilePage() {
           { label: "Account", href: appRoutes.account.profile },
           { label: "Profile" },
         ]}
-        backHref={appRoutes.home.base}
+        backHref={
+          isOrgContext ? appRoutes.organization.base : appRoutes.home.base
+        }
       />
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -30,7 +36,7 @@ export default function ProfilePage() {
           </Suspense>
         </div>
         <div className="space-y-6">
-          <OwnerCtaSection />
+          {!isOrgContext && <OwnerCtaSection />}
           <PortalPreferenceCard id={SETTINGS_SECTION_IDS.defaultPortal} />
           <WebPushSettingsCard id={SETTINGS_SECTION_IDS.browserNotifications} />
         </div>

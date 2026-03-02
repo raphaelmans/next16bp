@@ -8,6 +8,7 @@ import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { useQueryAuthSession } from "@/features/auth";
 import {
   useMutAcceptOrganizationInvitation,
@@ -16,10 +17,20 @@ import {
 
 type InvitationState = "idle" | "accepted" | "declined";
 
+const normalizeCodeInput = (value: string) =>
+  value
+    .toUpperCase()
+    .replace(/[^A-Z0-9-]/g, "")
+    .slice(0, 16);
+
 export default function AccountOrganizationInvitationAcceptPage({
-  token,
+  initialCode,
+  invitationId,
+  legacyToken,
 }: {
-  token: string | null;
+  initialCode: string | null;
+  invitationId: string | null;
+  legacyToken: string | null;
 }) {
   const router = useRouter();
   const { data: sessionUser } = useQueryAuthSession();
@@ -27,34 +38,33 @@ export default function AccountOrganizationInvitationAcceptPage({
   const declineInvitation = useMutDeclineOrganizationInvitation();
   const [state, setState] = React.useState<InvitationState>("idle");
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-
-  if (!token) {
-    return (
-      <div className="mx-auto w-full max-w-2xl p-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Invalid invitation link</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              The invitation token is missing. Request a new invitation from
-              your organization team.
-            </p>
-            <Button onClick={() => router.push(appRoutes.home.base)}>
-              Go to Home
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const [code, setCode] = React.useState(() =>
+    initialCode ? normalizeCodeInput(initialCode) : "",
+  );
 
   const isPending = acceptInvitation.isPending || declineInvitation.isPending;
+  const hasLegacyToken = Boolean(legacyToken && !initialCode);
+
+  const buildPayload = () => ({
+    code: normalizeCodeInput(code),
+    invitationId: invitationId ?? undefined,
+  });
+
+  const validateCode = () => {
+    const normalizedCode = normalizeCodeInput(code);
+    if (normalizedCode.length < 6) {
+      setErrorMessage("Enter a valid invitation code from your email.");
+      return false;
+    }
+    return true;
+  };
 
   const handleAccept = async () => {
     setErrorMessage(null);
+    if (!validateCode()) return;
+
     try {
-      await acceptInvitation.mutateAsync({ token });
+      await acceptInvitation.mutateAsync(buildPayload());
       setState("accepted");
       toast.success("Invitation accepted");
     } catch (error) {
@@ -69,8 +79,10 @@ export default function AccountOrganizationInvitationAcceptPage({
 
   const handleDecline = async () => {
     setErrorMessage(null);
+    if (!validateCode()) return;
+
     try {
-      await declineInvitation.mutateAsync({ token });
+      await declineInvitation.mutateAsync(buildPayload());
       setState("declined");
       toast.success("Invitation declined");
     } catch (error) {
@@ -95,6 +107,31 @@ export default function AccountOrganizationInvitationAcceptPage({
             <span className="font-medium">{sessionUser?.email}</span>. Accepting
             will grant organization access based on the invitation permissions.
           </p>
+
+          {hasLegacyToken && (
+            <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+              This invitation link format is no longer supported. Enter the
+              invitation code from your email to continue.
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium" htmlFor="invitation-code">
+              Invitation code
+            </label>
+            <Input
+              id="invitation-code"
+              type="text"
+              placeholder="A7K9-P2Q4"
+              value={code}
+              onChange={(event) => {
+                setCode(normalizeCodeInput(event.target.value));
+              }}
+              disabled={isPending || state !== "idle"}
+              autoComplete="off"
+              spellCheck={false}
+            />
+          </div>
 
           {state === "accepted" && (
             <div className="rounded-md border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-900">

@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from "node:crypto";
-import { addDays } from "date-fns";
+import { addDays, addMinutes } from "date-fns";
 import { appRoutes } from "@/common/app-routes";
 import { env } from "@/lib/env";
 import { OrganizationNotFoundError } from "@/lib/modules/organization/errors/organization.errors";
@@ -24,6 +24,7 @@ import type {
 } from "../dtos";
 import {
   OrganizationInvitationAlreadyResolvedError,
+  OrganizationInvitationCodeCooldownError,
   OrganizationInvitationEmailMismatchError,
   OrganizationInvitationExpiredError,
   OrganizationInvitationNotFoundError,
@@ -48,8 +49,17 @@ import {
 } from "../shared/permissions";
 
 const INVITATION_TTL_DAYS = 7;
+const INVITATION_CODE_LENGTH = 8;
+const INVITATION_FAILED_ATTEMPT_LIMIT = 5;
+const INVITATION_FAILED_ATTEMPT_COOLDOWN_MINUTES = 15;
+const INVITATION_CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 
 const normalizeEmail = (value: string) => value.trim().toLowerCase();
+const normalizeInvitationCode = (value: string) =>
+  value
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "");
 
 export type OrganizationPermissionContext = {
   organizationId: string;
@@ -171,15 +181,27 @@ export class OrganizationMemberService implements IOrganizationMemberService {
     private transactionManager: TransactionManager,
   ) {}
 
-  private buildTokenHash(token: string): string {
-    return createHash("sha256").update(token).digest("hex");
+  private buildCodeHash(code: string): string {
+    return createHash("sha256")
+      .update(normalizeInvitationCode(code))
+      .digest("hex");
   }
 
-  private buildInvitationToken(): { token: string; tokenHash: string } {
-    const token = randomBytes(32).toString("hex");
+  private buildInvitationCode(): { code: string; codeHash: string } {
+    const bytes = randomBytes(INVITATION_CODE_LENGTH);
+    let rawCode = "";
+    for (let index = 0; index < INVITATION_CODE_LENGTH; index += 1) {
+      rawCode +=
+        INVITATION_CODE_ALPHABET[
+          bytes[index] % INVITATION_CODE_ALPHABET.length
+        ];
+    }
+
+    const formattedCode = `${rawCode.slice(0, 4)}-${rawCode.slice(4)}`;
+
     return {
-      token,
-      tokenHash: this.buildTokenHash(token),
+      code: formattedCode,
+      codeHash: this.buildCodeHash(rawCode),
     };
   }
 
@@ -254,22 +276,26 @@ export class OrganizationMemberService implements IOrganizationMemberService {
   }
 
   private buildInvitationEmailPayload(input: {
+    invitationId: string;
     organizationName: string;
     inviteeEmail: string;
     invitedByUserId: string;
     role: OrganizationMemberRole;
     permissions: OrganizationMemberPermission[];
-    token: string;
+    code: string;
     origin: string;
   }): EmailPayload {
-    const acceptPath = `${appRoutes.account.invitations.accept}?token=${encodeURIComponent(
-      input.token,
-    )}`;
+    const acceptParams = new URLSearchParams({
+      invitationId: input.invitationId,
+      code: input.code,
+    });
+    const acceptPath = `${appRoutes.account.invitations.accept}?${acceptParams.toString()}`;
     const loginPath = appRoutes.login.from(acceptPath);
     const ctaUrl = `${input.origin}${loginPath}`;
 
     const details = [
       { label: "Organization", value: input.organizationName },
+      { label: "Invitation code", value: input.code },
       { label: "Role", value: input.role },
       {
         label: "Permissions",
@@ -284,6 +310,7 @@ export class OrganizationMemberService implements IOrganizationMemberService {
       text: [
         `You've been invited to join ${input.organizationName} on KudosCourts.`,
         "",
+        `Invitation code: ${input.code}`,
         `Role: ${input.role}`,
         `Permissions: ${input.permissions.join(", ")}`,
         "",
@@ -296,7 +323,7 @@ export class OrganizationMemberService implements IOrganizationMemberService {
         greeting: "Hi there,",
         bodyLines: [
           "You were invited to manage reservation operations in KudosCourts.",
-          "Sign in with this email, then accept the invitation.",
+          "Sign in with this email, then enter the invitation code to accept access.",
         ],
         detailRows: details,
         ctaText: "Sign in and accept invitation",
@@ -306,7 +333,7 @@ export class OrganizationMemberService implements IOrganizationMemberService {
         secondaryText: `Invited by user: ${input.invitedByUserId}`,
       }),
       headers: {
-        "Idempotency-Key": `org-invite:${input.organizationName}:${input.inviteeEmail}:${input.token}`,
+        "Idempotency-Key": `org-invite:${input.organizationName}:${input.inviteeEmail}:${input.invitationId}`,
       },
     };
   }
@@ -375,7 +402,7 @@ export class OrganizationMemberService implements IOrganizationMemberService {
       });
     }
 
-    const { token, tokenHash } = this.buildInvitationToken();
+    const { code, codeHash } = this.buildInvitationCode();
 
     const invitation = await this.transactionManager.run(async (tx) => {
       try {
@@ -385,7 +412,7 @@ export class OrganizationMemberService implements IOrganizationMemberService {
             email: normalizedEmail,
             role,
             permissions,
-            tokenHash,
+            tokenHash: codeHash,
             status: "PENDING",
             expiresAt: addDays(new Date(), INVITATION_TTL_DAYS),
             invitedByUserId: userId,
@@ -412,12 +439,13 @@ export class OrganizationMemberService implements IOrganizationMemberService {
     let emailSent = false;
     try {
       const payload = this.buildInvitationEmailPayload({
+        invitationId: invitation.id,
         organizationName: organization.name,
         inviteeEmail: normalizedEmail,
         invitedByUserId: userId,
         role,
         permissions,
-        token,
+        code,
         origin: options.origin.replace(/\/$/, ""),
       });
       await this.emailService.sendEmail(payload);
@@ -569,20 +597,78 @@ export class OrganizationMemberService implements IOrganizationMemberService {
     return canceled;
   }
 
-  async acceptInvitation(
-    userId: string,
-    userEmail: string,
-    input: ResolveOrganizationInvitationDTO,
-    ctx?: RequestContext,
-  ): Promise<OrganizationMemberListItem["member"]> {
-    const tokenHash = this.buildTokenHash(input.token);
-    const normalizedEmail = normalizeEmail(userEmail);
+  private async assertInvitationRedeemable(
+    invitation: OrganizationInvitationListItem["invitation"],
+    txCtx: RequestContext,
+  ) {
+    if (invitation.status !== "PENDING") {
+      throw new OrganizationInvitationAlreadyResolvedError({
+        invitationId: invitation.id,
+        status: invitation.status,
+      });
+    }
 
-    return this.transactionManager.run(async (tx) => {
-      const txCtx: RequestContext = { tx, requestId: ctx?.requestId };
+    if (new Date(invitation.expiresAt).getTime() < Date.now()) {
+      await this.organizationMemberRepository.updateInvitationStatus(
+        invitation.id,
+        "EXPIRED",
+        undefined,
+        txCtx,
+      );
+      throw new OrganizationInvitationExpiredError({
+        invitationId: invitation.id,
+      });
+    }
+
+    if (
+      invitation.cooldownUntil &&
+      new Date(invitation.cooldownUntil).getTime() > Date.now()
+    ) {
+      throw new OrganizationInvitationCodeCooldownError({
+        invitationId: invitation.id,
+        retryAt: invitation.cooldownUntil,
+      });
+    }
+  }
+
+  private async registerInvalidCodeAttempt(
+    invitation: OrganizationInvitationListItem["invitation"],
+    txCtx: RequestContext,
+  ) {
+    const nextAttemptCount = invitation.failedAttemptCount + 1;
+    const cooldownUntil =
+      nextAttemptCount >= INVITATION_FAILED_ATTEMPT_LIMIT
+        ? addMinutes(new Date(), INVITATION_FAILED_ATTEMPT_COOLDOWN_MINUTES)
+        : null;
+
+    const updated =
+      await this.organizationMemberRepository.incrementInvitationFailedAttempts(
+        invitation.id,
+        cooldownUntil,
+        txCtx,
+      );
+
+    if (
+      updated?.cooldownUntil &&
+      new Date(updated.cooldownUntil).getTime() > Date.now()
+    ) {
+      throw new OrganizationInvitationCodeCooldownError({
+        invitationId: invitation.id,
+        retryAt: updated.cooldownUntil,
+      });
+    }
+  }
+
+  private async resolveInvitationForCode(
+    input: ResolveOrganizationInvitationDTO,
+    txCtx: RequestContext,
+  ): Promise<OrganizationInvitationListItem["invitation"]> {
+    const codeHash = this.buildCodeHash(input.code);
+
+    if (input.invitationId) {
       const invitation =
-        await this.organizationMemberRepository.findPendingInvitationByTokenHash(
-          tokenHash,
+        await this.organizationMemberRepository.findInvitationById(
+          input.invitationId,
           txCtx,
         );
 
@@ -590,24 +676,41 @@ export class OrganizationMemberService implements IOrganizationMemberService {
         throw new OrganizationInvitationNotFoundError();
       }
 
-      if (invitation.status !== "PENDING") {
-        throw new OrganizationInvitationAlreadyResolvedError({
-          invitationId: invitation.id,
-          status: invitation.status,
-        });
+      await this.assertInvitationRedeemable(invitation, txCtx);
+
+      if (invitation.tokenHash !== codeHash) {
+        await this.registerInvalidCodeAttempt(invitation, txCtx);
+        throw new OrganizationInvitationNotFoundError();
       }
 
-      if (new Date(invitation.expiresAt).getTime() < Date.now()) {
-        await this.organizationMemberRepository.updateInvitationStatus(
-          invitation.id,
-          "EXPIRED",
-          undefined,
-          txCtx,
-        );
-        throw new OrganizationInvitationExpiredError({
-          invitationId: invitation.id,
-        });
-      }
+      return invitation;
+    }
+
+    const invitation =
+      await this.organizationMemberRepository.findInvitationByCodeHash(
+        codeHash,
+        txCtx,
+      );
+
+    if (!invitation) {
+      throw new OrganizationInvitationNotFoundError();
+    }
+
+    await this.assertInvitationRedeemable(invitation, txCtx);
+    return invitation;
+  }
+
+  async acceptInvitation(
+    userId: string,
+    userEmail: string,
+    input: ResolveOrganizationInvitationDTO,
+    ctx?: RequestContext,
+  ): Promise<OrganizationMemberListItem["member"]> {
+    const normalizedEmail = normalizeEmail(userEmail);
+
+    return this.transactionManager.run(async (tx) => {
+      const txCtx: RequestContext = { tx, requestId: ctx?.requestId };
+      const invitation = await this.resolveInvitationForCode(input, txCtx);
 
       if (normalizeEmail(invitation.email) !== normalizedEmail) {
         throw new OrganizationInvitationEmailMismatchError({
@@ -638,6 +741,8 @@ export class OrganizationMemberService implements IOrganizationMemberService {
         {
           acceptedByUserId: userId,
           acceptedAt: new Date(),
+          failedAttemptCount: 0,
+          cooldownUntil: null,
         },
         txCtx,
       );
@@ -662,39 +767,11 @@ export class OrganizationMemberService implements IOrganizationMemberService {
     input: ResolveOrganizationInvitationDTO,
     ctx?: RequestContext,
   ): Promise<OrganizationInvitationListItem["invitation"]> {
-    const tokenHash = this.buildTokenHash(input.token);
     const normalizedEmail = normalizeEmail(userEmail);
 
     return this.transactionManager.run(async (tx) => {
       const txCtx: RequestContext = { tx, requestId: ctx?.requestId };
-      const invitation =
-        await this.organizationMemberRepository.findPendingInvitationByTokenHash(
-          tokenHash,
-          txCtx,
-        );
-
-      if (!invitation) {
-        throw new OrganizationInvitationNotFoundError();
-      }
-
-      if (invitation.status !== "PENDING") {
-        throw new OrganizationInvitationAlreadyResolvedError({
-          invitationId: invitation.id,
-          status: invitation.status,
-        });
-      }
-
-      if (new Date(invitation.expiresAt).getTime() < Date.now()) {
-        await this.organizationMemberRepository.updateInvitationStatus(
-          invitation.id,
-          "EXPIRED",
-          undefined,
-          txCtx,
-        );
-        throw new OrganizationInvitationExpiredError({
-          invitationId: invitation.id,
-        });
-      }
+      const invitation = await this.resolveInvitationForCode(input, txCtx);
 
       if (normalizeEmail(invitation.email) !== normalizedEmail) {
         throw new OrganizationInvitationEmailMismatchError({
@@ -706,7 +783,10 @@ export class OrganizationMemberService implements IOrganizationMemberService {
         await this.organizationMemberRepository.updateInvitationStatus(
           invitation.id,
           "DECLINED",
-          undefined,
+          {
+            failedAttemptCount: 0,
+            cooldownUntil: null,
+          },
           txCtx,
         );
 

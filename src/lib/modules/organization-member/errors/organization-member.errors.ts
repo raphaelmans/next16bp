@@ -32,6 +32,12 @@ export class OrganizationInvitationExpiredError extends BusinessRuleError {
   }
 }
 
+export class OrganizationInvitationCodeCooldownError extends BusinessRuleError {
+  constructor(details?: Record<string, unknown>) {
+    super("Too many failed attempts. Try again later.", details);
+  }
+}
+
 export class OrganizationInvitationEmailMismatchError extends AuthorizationError {
   constructor(details?: Record<string, unknown>) {
     super("Invitation email does not match authenticated user", details);

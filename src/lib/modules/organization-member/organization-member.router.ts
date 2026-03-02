@@ -21,6 +21,7 @@ import {
 } from "./dtos";
 import {
   OrganizationInvitationAlreadyResolvedError,
+  OrganizationInvitationCodeCooldownError,
   OrganizationInvitationEmailMismatchError,
   OrganizationInvitationExpiredError,
   OrganizationInvitationNotFoundError,
@@ -68,6 +69,14 @@ function handleOrganizationMemberError(error: unknown): never {
   if (error instanceof OrganizationInvitationExpiredError) {
     throw new TRPCError({
       code: "BAD_REQUEST",
+      message: error.message,
+      cause: error,
+    });
+  }
+
+  if (error instanceof OrganizationInvitationCodeCooldownError) {
+    throw new TRPCError({
+      code: "TOO_MANY_REQUESTS",
       message: error.message,
       cause: error,
     });
@@ -211,7 +220,7 @@ export const organizationMemberRouter = router({
       }
     }),
 
-  acceptInvitation: protectedProcedure
+  acceptInvitation: protectedRateLimitedProcedure("sensitive")
     .input(ResolveOrganizationInvitationSchema)
     .mutation(async ({ ctx, input }) => {
       try {
@@ -230,7 +239,7 @@ export const organizationMemberRouter = router({
       }
     }),
 
-  declineInvitation: protectedProcedure
+  declineInvitation: protectedRateLimitedProcedure("sensitive")
     .input(ResolveOrganizationInvitationSchema)
     .mutation(async ({ ctx, input }) => {
       try {

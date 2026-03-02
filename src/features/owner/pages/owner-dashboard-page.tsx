@@ -78,7 +78,7 @@ export default function OwnerDashboardPage() {
   const showSetupCta =
     !setupLoading &&
     isOwnerSetupIncomplete(normalizedSetupStatus) &&
-    (permissionContext ? isOwnerRole(permissionContext) : true);
+    (permissionContext ? isOwnerRole(permissionContext) : false);
   const nextStepLabel = setupStatus
     ? setupStatus.nextStep === "verify_venue" &&
       setupStatus.verificationStatus === "PENDING"

@@ -179,3 +179,30 @@ export function isWebPushDisableActionDisabled(input: {
 
   return busy || !supported || !enabledOnThisDevice;
 }
+
+export type WebPushBadgeVariant =
+  | "success"
+  | "warning"
+  | "destructive"
+  | "secondary";
+
+export function getWebPushStatusBadgeVariant(
+  diagnosticsCode: WebPushDiagnosticsCode,
+): { variant: WebPushBadgeVariant; label: string } {
+  switch (diagnosticsCode) {
+    case "enabled":
+      return { variant: "success", label: "Enabled" };
+    case "not_configured":
+      return { variant: "warning", label: "Not Configured" };
+    case "granted_not_registered":
+      return { variant: "warning", label: "Not Registered" };
+    case "permission_denied":
+      return { variant: "destructive", label: "Blocked" };
+    case "unsupported":
+      return { variant: "secondary", label: "Unsupported" };
+    case "insecure_context":
+      return { variant: "secondary", label: "Insecure" };
+    case "ready":
+      return { variant: "secondary", label: "Ready" };
+  }
+}

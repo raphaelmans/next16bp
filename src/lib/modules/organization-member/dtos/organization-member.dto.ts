@@ -59,11 +59,15 @@ export const CancelOrganizationInvitationSchema = z.object({
 });
 
 export const ResolveOrganizationInvitationSchema = z.object({
-  token: z
+  invitationId: S.ids.generic.optional(),
+  code: z
     .string()
     .trim()
-    .min(16, { error: "Invitation token is required" })
-    .max(512),
+    .min(6, { error: "Invitation code is required" })
+    .max(16)
+    .regex(/^[A-Za-z0-9-]+$/, {
+      error: "Invitation code must contain only letters, numbers, and dashes",
+    }),
 });
 
 export type InviteOrganizationMemberDTO = z.infer<

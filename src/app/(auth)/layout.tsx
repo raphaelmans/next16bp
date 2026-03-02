@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { appRoutes, getRouteType } from "@/common/app-routes";
 import { AuthPlayerShell } from "@/features/auth/components/player-shell";
 import { DiscoveryPublicShell } from "@/features/discovery/components/public-shell";
+import { OwnerShell } from "@/features/owner/components/owner-shell";
 import {
   requireAdminSession,
   requireSession,
@@ -44,6 +45,15 @@ export default async function AuthLayout({
     await requireAdminSession(pathname);
   } else {
     await requireSession(pathname);
+  }
+
+  // Account routes render with the shell matching the user's last portal context
+  if (pathname.startsWith("/account")) {
+    const cookieStore = await cookies();
+    const portalContext = cookieStore.get("kudos.portal-context")?.value;
+    if (portalContext === "organization") {
+      return <OwnerShell hasOrganizations>{children}</OwnerShell>;
+    }
   }
 
   return <AuthPlayerShell>{children}</AuthPlayerShell>;

@@ -123,7 +123,7 @@ export function TeamInviteDialog({
           <DialogTitle>Invite team member</DialogTitle>
           <DialogDescription>
             Send an invitation to join your organization. They&apos;ll receive
-            an email with a link to accept.
+            an email with an invitation code and sign-in instructions.
           </DialogDescription>
         </DialogHeader>
 

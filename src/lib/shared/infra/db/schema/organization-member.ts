@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   index,
+  integer,
   jsonb,
   pgTable,
   timestamp,
@@ -89,6 +90,8 @@ export const organizationInvitation = pgTable(
       },
     ),
     acceptedAt: timestamp("accepted_at", { withTimezone: true }),
+    failedAttemptCount: integer("failed_attempt_count").notNull().default(0),
+    cooldownUntil: timestamp("cooldown_until", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -106,6 +109,7 @@ export const organizationInvitation = pgTable(
       table.status,
     ),
     index("idx_organization_invitation_expires_at").on(table.expiresAt),
+    index("idx_organization_invitation_cooldown_until").on(table.cooldownUntil),
   ],
 );
 

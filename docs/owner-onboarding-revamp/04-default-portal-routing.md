@@ -10,7 +10,7 @@ After login/signup, if there is no explicit redirect, route owners to `/owner` b
 
 ```text
 1) If an explicit redirect query param exists => always honor it.
-2) Else if user default portal is owner AND user has an organization => /owner
+2) Else if user default portal is organization AND user has an organization => /owner
 3) Else => /home
 ```
 
@@ -23,10 +23,10 @@ Rationale:
 We need a server-readable default portal preference (not localStorage).
 
 Recommended:
-- Persist `defaultPortal = owner | player` in a DB row that is 1:1 with user.
-- Set it to owner only when the user takes a durable owner action (organization created) or explicitly chooses owner intent.
+- Persist `defaultPortal = organization | player` in a DB row that is 1:1 with user.
+- Set it to organization only when the user takes a durable owner action (organization created) or explicitly chooses owner intent.
 
 ## UX Implications
 
-- Owner setup hub and/or organization creation should set `defaultPortal=owner`.
+- Owner setup hub and/or organization creation should set `defaultPortal=organization`.
 - Users should be able to change default portal later in settings.

@@ -34,6 +34,9 @@ export function AuthPlayerShell({ children }: AuthPlayerShellProps) {
         localStorage.setItem(PORTAL_STORAGE_KEY, "player");
       }
     } catch {}
+    // biome-ignore lint/suspicious/noDocumentCookie: Cookie Store API lacks Safari/Firefox support
+    document.cookie =
+      "kudos.portal-context=player; path=/; max-age=31536000; samesite=lax";
   }, []);
 
   // Sync from DB preference (authoritative — overrides stale localStorage)

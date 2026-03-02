@@ -14,7 +14,10 @@ Keep PostgreSQL portable across PaaS providers by ensuring Drizzle is the stable
 
 - Refactor `scripts/export-curated-places.ts` to Drizzle-based querying (or isolate as explicit reporting exception).
 - Evaluate `scripts/seed-storage-buckets.ts` as a provider-ops script and label it as non-portable by design.
-- Normalize migration numbering and verify `drizzle/meta/_journal.json` coverage for all intended migrations.
+- Keep `drizzle/meta/_journal.json` synchronized with `drizzle/*.sql` using `pnpm db:check:journal`.
+- Keep snapshot metadata UUID chain valid (`drizzle/meta/*_snapshot.json`) and fail fast in CI/local checks.
+- Validate enum cutovers after migration with targeted scripts (for example `pnpm db:validate:default-portal`).
+- Make historical migrations replayable from empty DB so local reset can use `db:migrate` end-to-end (remove assumptions about pre-existing tables such as `place`).
 
 ## Phase 3 - Reduce Schema Coupling to Supabase Auth
 
