@@ -36,7 +36,10 @@ import {
   useQueryReservationNotificationRoutingStatus,
 } from "@/features/owner/hooks";
 import { useModOwnerPermissionContext } from "@/features/owner/hooks/organization";
-import { isOwnerRole } from "@/lib/modules/organization-member/shared/permissions";
+import {
+  hasPermission,
+  isOwnerRole,
+} from "@/lib/modules/organization-member/shared/permissions";
 
 const OWNER_SETUP_NEXT_STEP_LABELS = {
   create_organization: "Create your organization",
@@ -79,6 +82,10 @@ export default function OwnerDashboardPage() {
     !setupLoading &&
     isOwnerSetupIncomplete(normalizedSetupStatus) &&
     (permissionContext ? isOwnerRole(permissionContext) : false);
+  const canConfigureNotificationRouting = Boolean(
+    permissionContext &&
+      hasPermission(permissionContext, "reservation.notification.receive"),
+  );
   const nextStepLabel = setupStatus
     ? setupStatus.nextStep === "verify_venue" &&
       setupStatus.verificationStatus === "PENDING"
@@ -89,6 +96,7 @@ export default function OwnerDashboardPage() {
   const showNotificationRoutingWarning =
     shouldShowOwnerNotificationRoutingWarning({
       organizationId: organization?.id,
+      canConfigureRouting: canConfigureNotificationRouting,
       isRoutingStatusLoading: routingStatusQuery.isLoading,
       enabledRecipientCount: routingStatusQuery.data?.enabledRecipientCount,
     });

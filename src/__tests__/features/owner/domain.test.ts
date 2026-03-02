@@ -98,6 +98,7 @@ describe("owner/domain", () => {
         label: "returns false when organization is missing",
         input: {
           organizationId: null,
+          canConfigureRouting: true,
           isRoutingStatusLoading: false,
           enabledRecipientCount: 0,
         },
@@ -107,6 +108,7 @@ describe("owner/domain", () => {
         label: "returns false while routing status is loading",
         input: {
           organizationId: "org-1",
+          canConfigureRouting: true,
           isRoutingStatusLoading: true,
           enabledRecipientCount: 0,
         },
@@ -117,6 +119,7 @@ describe("owner/domain", () => {
           "returns true when org exists and enabled recipient count is zero",
         input: {
           organizationId: "org-1",
+          canConfigureRouting: true,
           isRoutingStatusLoading: false,
           enabledRecipientCount: 0,
         },
@@ -127,8 +130,19 @@ describe("owner/domain", () => {
           "returns false when enabled recipient count is greater than zero",
         input: {
           organizationId: "org-1",
+          canConfigureRouting: true,
           isRoutingStatusLoading: false,
           enabledRecipientCount: 2,
+        },
+        expected: false,
+      },
+      {
+        label: "returns false when user cannot configure routing",
+        input: {
+          organizationId: "org-1",
+          canConfigureRouting: false,
+          isRoutingStatusLoading: false,
+          enabledRecipientCount: 0,
         },
         expected: false,
       },

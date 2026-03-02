@@ -1,6 +1,8 @@
 "use client";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
+
 import {
   useFeatureMutation,
   useFeatureQuery,
@@ -24,6 +26,83 @@ const urlBase64ToUint8Array = (base64String: string) => {
   }
   return outputArray;
 };
+
+export const BROWSER_PUSH_STATE_KEY = ["webPush", "browserState"] as const;
+
+type BrowserPushState = {
+  permission: NotificationPermission | null;
+  hasSubscription: boolean;
+};
+
+type UpsertRef = React.RefObject<{
+  mutateAsync: (input: {
+    subscription: {
+      endpoint: string;
+      expirationTime: string | null;
+      keys: { p256dh: string; auth: string };
+    };
+    userAgent: string;
+  }) => Promise<unknown>;
+}>;
+
+async function fetchBrowserPushState(
+  upsertRef: UpsertRef,
+): Promise<BrowserPushState> {
+  const isSupported =
+    typeof window !== "undefined" &&
+    "Notification" in window &&
+    "serviceWorker" in navigator &&
+    "PushManager" in window;
+
+  if (!isSupported) {
+    return { permission: null, hasSubscription: false };
+  }
+
+  const permission = Notification.permission;
+
+  try {
+    const reg = await navigator.serviceWorker.getRegistration("/");
+    if (!reg) {
+      return { permission, hasSubscription: false };
+    }
+
+    const subscription = await reg.pushManager.getSubscription();
+    const hasSubscription = Boolean(subscription);
+
+    // Auto-sync: if the browser has a subscription, ensure the server knows
+    // about it. The upsert is idempotent (onConflictDoUpdate on endpoint),
+    // so this is safe to call even when already in sync.
+    if (subscription && permission === "granted") {
+      const json = subscription.toJSON();
+      if (json.endpoint && json.keys?.p256dh && json.keys?.auth) {
+        try {
+          await upsertRef.current.mutateAsync({
+            subscription: {
+              endpoint: json.endpoint,
+              expirationTime:
+                typeof json.expirationTime === "number"
+                  ? String(json.expirationTime)
+                  : json.expirationTime
+                    ? String(json.expirationTime)
+                    : null,
+              keys: {
+                p256dh: json.keys.p256dh,
+                auth: json.keys.auth,
+              },
+            },
+            userAgent: navigator.userAgent,
+          });
+        } catch {
+          // Sync is best-effort — don't block UI if it fails.
+        }
+      }
+    }
+
+    return { permission, hasSubscription };
+  } catch {
+    return { permission, hasSubscription: false };
+  }
+}
 
 export type UseWebPushResult = {
   supported: boolean;
@@ -52,6 +131,8 @@ export function useModWebPush(): UseWebPushResult {
   const isSecureContext =
     typeof window !== "undefined" ? window.isSecureContext : false;
 
+  const queryClient = useQueryClient();
+
   const vapidQuery = useFeatureQuery(
     ["pushSubscription", "getVapidPublicKey"],
     notificationsApi.queryPushSubscriptionGetVapidPublicKey,
@@ -70,75 +151,34 @@ export function useModWebPush(): UseWebPushResult {
     notificationsApi.mutPushSubscriptionSendTestPush,
   );
 
-  // Ref so refresh can call upsert without being re-created on each render.
+  // Ref so queryFn can call upsert without being re-created on each render.
   const upsertRef = React.useRef(upsertMutation);
   upsertRef.current = upsertMutation;
 
-  const [permission, setPermission] =
-    React.useState<NotificationPermission | null>(
-      supported ? Notification.permission : null,
-    );
-  const [hasSubscription, setHasSubscription] = React.useState<boolean>(false);
-  const [busy, setBusy] = React.useState(false);
+  const [actionPending, setActionPending] = React.useState(false);
+
+  const browserStateQuery = useQuery({
+    queryKey: BROWSER_PUSH_STATE_KEY,
+    queryFn: () => fetchBrowserPushState(upsertRef as UpsertRef),
+    staleTime: 30_000,
+    refetchOnWindowFocus: true,
+    enabled: supported,
+  });
+
+  const permission =
+    browserStateQuery.data?.permission ??
+    (supported ? Notification.permission : null);
+  const hasSubscription = browserStateQuery.data?.hasSubscription ?? false;
+  const busy = actionPending || browserStateQuery.isFetching;
 
   const configured = Boolean(vapidQuery.data?.configured);
   const publicKey = vapidQuery.data?.publicKey ?? null;
 
   const refresh = React.useCallback(async () => {
-    if (!supported) {
-      setPermission(null);
-      setHasSubscription(false);
-      return;
-    }
-
-    setPermission(Notification.permission);
-
-    try {
-      const reg = await navigator.serviceWorker.getRegistration("/");
-      if (!reg) {
-        setHasSubscription(false);
-        return;
-      }
-
-      const subscription = await reg.pushManager.getSubscription();
-      setHasSubscription(Boolean(subscription));
-
-      // Auto-sync: if the browser has a subscription, ensure the server knows
-      // about it. The upsert is idempotent (onConflictDoUpdate on endpoint),
-      // so this is safe to call even when already in sync.
-      if (subscription && Notification.permission === "granted") {
-        const json = subscription.toJSON();
-        if (json.endpoint && json.keys?.p256dh && json.keys?.auth) {
-          try {
-            await upsertRef.current.mutateAsync({
-              subscription: {
-                endpoint: json.endpoint,
-                expirationTime:
-                  typeof json.expirationTime === "number"
-                    ? String(json.expirationTime)
-                    : json.expirationTime
-                      ? String(json.expirationTime)
-                      : null,
-                keys: {
-                  p256dh: json.keys.p256dh,
-                  auth: json.keys.auth,
-                },
-              },
-              userAgent: navigator.userAgent,
-            });
-          } catch {
-            // Sync is best-effort — don't block UI if it fails.
-          }
-        }
-      }
-    } catch {
-      setHasSubscription(false);
-    }
-  }, [supported]);
-
-  React.useEffect(() => {
-    void refresh();
-  }, [refresh]);
+    await queryClient.invalidateQueries({
+      queryKey: BROWSER_PUSH_STATE_KEY,
+    });
+  }, [queryClient]);
 
   const enable = React.useCallback(async () => {
     if (!supported) {
@@ -151,8 +191,7 @@ export function useModWebPush(): UseWebPushResult {
       throw new Error("Web Push is not configured");
     }
 
-    const previousHasSubscription = hasSubscription;
-    setBusy(true);
+    setActionPending(true);
     try {
       const reg = await navigator.serviceWorker.register("/sw.js");
 
@@ -160,9 +199,12 @@ export function useModWebPush(): UseWebPushResult {
       if (nextPermission !== "granted") {
         nextPermission = await Notification.requestPermission();
       }
-      setPermission(nextPermission);
 
       if (nextPermission !== "granted") {
+        queryClient.setQueryData<BrowserPushState>(BROWSER_PUSH_STATE_KEY, {
+          permission: nextPermission,
+          hasSubscription: false,
+        });
         throw new Error(
           nextPermission === "denied"
             ? "Permission was denied in your browser"
@@ -183,7 +225,12 @@ export function useModWebPush(): UseWebPushResult {
         throw new Error("Browser returned an invalid subscription");
       }
 
-      setHasSubscription(true);
+      // Optimistic update — instant UI feedback
+      queryClient.setQueryData<BrowserPushState>(BROWSER_PUSH_STATE_KEY, {
+        permission: nextPermission,
+        hasSubscription: true,
+      });
+
       try {
         await upsertMutation.mutateAsync({
           subscription: {
@@ -202,20 +249,29 @@ export function useModWebPush(): UseWebPushResult {
           userAgent: navigator.userAgent,
         });
       } catch (error) {
-        setHasSubscription(previousHasSubscription);
+        // Server upsert failed — re-read browser truth
+        await queryClient.invalidateQueries({
+          queryKey: BROWSER_PUSH_STATE_KEY,
+        });
         throw error;
       }
     } finally {
-      setBusy(false);
+      setActionPending(false);
     }
-  }, [hasSubscription, isSecureContext, publicKey, supported, upsertMutation]);
+  }, [isSecureContext, publicKey, queryClient, supported, upsertMutation]);
 
   const disable = React.useCallback(async () => {
     if (!supported) return;
 
-    const previousHasSubscription = hasSubscription;
-    setHasSubscription(false);
-    setBusy(true);
+    // Optimistic update
+    queryClient.setQueryData<BrowserPushState>(
+      BROWSER_PUSH_STATE_KEY,
+      (prev) => ({
+        permission: prev?.permission ?? null,
+        hasSubscription: false,
+      }),
+    );
+    setActionPending(true);
     try {
       const reg = await navigator.serviceWorker.getRegistration("/");
       const subscription = reg ? await reg.pushManager.getSubscription() : null;
@@ -237,14 +293,21 @@ export function useModWebPush(): UseWebPushResult {
         }
       }
 
-      setPermission(Notification.permission);
+      // Read final browser permission state
+      queryClient.setQueryData<BrowserPushState>(BROWSER_PUSH_STATE_KEY, {
+        permission: Notification.permission,
+        hasSubscription: false,
+      });
     } catch (error) {
-      setHasSubscription(previousHasSubscription);
+      // Re-read browser truth on failure
+      await queryClient.invalidateQueries({
+        queryKey: BROWSER_PUSH_STATE_KEY,
+      });
       throw error;
     } finally {
-      setBusy(false);
+      setActionPending(false);
     }
-  }, [hasSubscription, revokeMutation, supported]);
+  }, [queryClient, revokeMutation, supported]);
 
   const sendLocalTestNotification = React.useCallback(async () => {
     if (!supported) {
@@ -254,13 +317,20 @@ export function useModWebPush(): UseWebPushResult {
       throw new Error("Notifications require HTTPS or localhost");
     }
 
-    setBusy(true);
+    setActionPending(true);
     try {
       let nextPermission = Notification.permission;
       if (nextPermission !== "granted") {
         nextPermission = await Notification.requestPermission();
       }
-      setPermission(nextPermission);
+
+      queryClient.setQueryData<BrowserPushState>(
+        BROWSER_PUSH_STATE_KEY,
+        (prev) => ({
+          permission: nextPermission,
+          hasSubscription: prev?.hasSubscription ?? false,
+        }),
+      );
 
       if (nextPermission !== "granted") {
         throw new Error(
@@ -283,18 +353,20 @@ export function useModWebPush(): UseWebPushResult {
         },
       });
 
-      await refresh();
+      await queryClient.invalidateQueries({
+        queryKey: BROWSER_PUSH_STATE_KEY,
+      });
     } finally {
-      setBusy(false);
+      setActionPending(false);
     }
-  }, [isSecureContext, refresh, supported]);
+  }, [isSecureContext, queryClient, supported]);
 
   const sendServerTestNotification = React.useCallback(async () => {
-    setBusy(true);
+    setActionPending(true);
     try {
       await sendTestPushMutation.mutateAsync(undefined);
     } finally {
-      setBusy(false);
+      setActionPending(false);
     }
   }, [sendTestPushMutation]);
 

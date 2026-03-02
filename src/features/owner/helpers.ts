@@ -47,11 +47,13 @@ export function isOwnerPaymentMethodStepPending(
 /**
  * Discriminated union that declares how a page is gated.
  * - `owner-only`  → only the organization owner may access
+ * - `owner-or-manager` → owner or manager may access
  * - `permission`  → requires a specific permission (owners implicitly pass)
  * - `any-member`  → any active org member may access
  */
 export type PageAccessRule =
   | { type: "owner-only" }
+  | { type: "owner-or-manager" }
   | { type: "permission"; permission: OrganizationMemberPermission }
   | { type: "any-member" };
 
@@ -63,6 +65,8 @@ export function canAccessPage(
   switch (rule.type) {
     case "owner-only":
       return isOwnerRole(context);
+    case "owner-or-manager":
+      return isOwnerRole(context) || context.role === "MANAGER";
     case "permission":
       return hasPermission(context, rule.permission);
     case "any-member":

@@ -43,7 +43,13 @@ const bellIcons: Record<NotificationBellIconVariant, typeof Bell> = {
 
 type Portal = "organization" | "player" | "admin";
 
-export function NotificationBell({ portal }: { portal: Portal }) {
+export function NotificationBell({
+  portal,
+  settingsHrefOverride,
+}: {
+  portal: Portal;
+  settingsHrefOverride?: string;
+}) {
   const router = useRouter();
   const webPush = useModWebPush();
   const [open, setOpen] = React.useState(false);
@@ -64,10 +70,11 @@ export function NotificationBell({ portal }: { portal: Portal }) {
   const utils = trpc.useUtils();
   const prevServerUnreadCountRef = React.useRef<number | null>(null);
 
-  const settingsHref =
+  const defaultSettingsHref =
     portal === "organization"
       ? `${appRoutes.organization.settings}${SETTINGS_SECTION_HASHES.browserNotifications}`
       : `${appRoutes.account.profile}${SETTINGS_SECTION_HASHES.browserNotifications}`;
+  const settingsHref = settingsHrefOverride ?? defaultSettingsHref;
 
   const onToggle = async (checked: boolean) => {
     try {

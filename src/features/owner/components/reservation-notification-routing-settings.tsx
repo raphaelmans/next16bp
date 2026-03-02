@@ -1,8 +1,10 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -16,9 +18,11 @@ import {
 export function ReservationNotificationRoutingSettings({
   organizationId,
   sectionId,
+  teamAccessHref,
 }: {
   organizationId: string;
   sectionId?: string;
+  teamAccessHref?: string;
 }) {
   const preferenceQuery =
     useQueryMyReservationNotificationPreference(organizationId);
@@ -86,10 +90,17 @@ export function ReservationNotificationRoutingSettings({
         </div>
 
         {routingState.showPermissionHint ? (
-          <p className="text-xs text-muted-foreground">
-            You need <code>reservation.notification.receive</code> permission to
-            enable routing for your account.
-          </p>
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">
+              You need <code>reservation.notification.receive</code> permission
+              to enable routing for your account.
+            </p>
+            {teamAccessHref ? (
+              <Button asChild size="sm" variant="outline">
+                <Link href={teamAccessHref}>Open Team &amp; Access</Link>
+              </Button>
+            ) : null}
+          </div>
         ) : null}
 
         {routingState.showMutedWarning ? (

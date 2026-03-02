@@ -140,6 +140,11 @@ function getMoreItemsForRole(role: OrganizationMemberRole): TabConfig[] {
           href: appRoutes.organization.places.base,
           icon: MapPinned,
         },
+        {
+          label: "Settings",
+          href: appRoutes.organization.settings,
+          icon: Settings,
+        },
         { label: "Team", href: appRoutes.organization.team, icon: Users },
         { label: "Profile", href: appRoutes.account.profile, icon: User },
       ];

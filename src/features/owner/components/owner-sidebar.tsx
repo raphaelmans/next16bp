@@ -124,7 +124,7 @@ const navItems = [
     title: "Settings",
     href: appRoutes.organization.settings,
     icon: Settings,
-    accessRule: { type: "owner-only" } as PageAccessRule,
+    accessRule: { type: "owner-or-manager" } as PageAccessRule,
   },
 ];
 

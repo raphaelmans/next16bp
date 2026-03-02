@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
+import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
 import { KudosLogo } from "@/components/kudos";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useQueryAuthSession } from "@/features/auth";
 import { NotificationBell } from "@/features/notifications/components/notification-bell";
+import { canAccessPage } from "@/features/owner/helpers";
+import { useModOwnerPermissionContext } from "@/features/owner/hooks/organization";
 
 interface OwnerNavbarProps {
   organizationName?: string;
@@ -42,7 +45,14 @@ export function OwnerNavbar({
   isAdmin,
 }: OwnerNavbarProps) {
   const { data: sessionUser } = useQueryAuthSession();
+  const { permissionContext } = useModOwnerPermissionContext();
   const effectiveIsAdmin = isAdmin ?? sessionUser?.role === "admin";
+  const canAccessOrganizationSettings = permissionContext
+    ? canAccessPage(permissionContext, { type: "owner-or-manager" })
+    : false;
+  const notificationSettingsHref = canAccessOrganizationSettings
+    ? `${appRoutes.organization.settings}${SETTINGS_SECTION_HASHES.browserNotifications}`
+    : `${appRoutes.account.profile}${SETTINGS_SECTION_HASHES.browserNotifications}`;
 
   return (
     <div className="flex flex-1 items-center justify-between">
@@ -63,7 +73,12 @@ export function OwnerNavbar({
 
       {/* Right side - User menu */}
       <div className="flex items-center gap-2">
-        {user && <NotificationBell portal="organization" />}
+        {user && (
+          <NotificationBell
+            portal="organization"
+            settingsHrefOverride={notificationSettingsHref}
+          />
+        )}
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -122,12 +137,14 @@ export function OwnerNavbar({
                   Profile
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={appRoutes.organization.settings}>
-                  <Settings className="mr-2 h-4 w-4" />
-                  Settings
-                </Link>
-              </DropdownMenuItem>
+              {canAccessOrganizationSettings ? (
+                <DropdownMenuItem asChild>
+                  <Link href={appRoutes.organization.settings}>
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+              ) : null}
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={onLogout}

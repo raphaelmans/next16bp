@@ -42,6 +42,7 @@ export function deriveOwnerReservationNotificationRoutingState(
 
 export type OwnerDashboardNotificationRoutingWarningInput = {
   organizationId?: string | null;
+  canConfigureRouting: boolean;
   isRoutingStatusLoading: boolean;
   enabledRecipientCount?: number | null;
 };
@@ -51,6 +52,7 @@ export function shouldShowOwnerNotificationRoutingWarning(
 ): boolean {
   return Boolean(
     input.organizationId &&
+      input.canConfigureRouting &&
       !input.isRoutingStatusLoading &&
       (input.enabledRecipientCount ?? 0) === 0,
   );

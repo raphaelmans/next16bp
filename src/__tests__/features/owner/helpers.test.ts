@@ -199,6 +199,18 @@ describe("owner RBAC helpers", () => {
       expect(canAccessPage(managerContext, { type: "owner-only" })).toBe(false);
     });
 
+    it("allows owner-or-manager routes for owner and manager roles", () => {
+      expect(canAccessPage(ownerContext, { type: "owner-or-manager" })).toBe(
+        true,
+      );
+      expect(canAccessPage(managerContext, { type: "owner-or-manager" })).toBe(
+        true,
+      );
+      expect(canAccessPage(viewerContext, { type: "owner-or-manager" })).toBe(
+        false,
+      );
+    });
+
     it("enforces permission-based routes with owner implicit allow", () => {
       expect(
         canAccessPage(ownerContext, {
@@ -245,6 +257,11 @@ describe("owner RBAC helpers", () => {
         href: "/organization/billing",
         accessRule: { type: "owner-only" } as const,
       },
+      {
+        title: "Settings",
+        href: "/organization/settings",
+        accessRule: { type: "owner-or-manager" } as const,
+      },
     ];
 
     it("returns only accessible nav items while preserving order", () => {
@@ -253,11 +270,13 @@ describe("owner RBAC helpers", () => {
 
       expect(visibleForManager.map((item) => item.title)).toEqual([
         "Dashboard",
+        "Settings",
       ]);
       expect(visibleForOwner.map((item) => item.title)).toEqual([
         "Dashboard",
         "Team Access",
         "Owner Billing",
+        "Settings",
       ]);
     });
   });

@@ -128,6 +128,24 @@ describe("ReservationNotificationRoutingSettings", () => {
     ).toHaveProperty("disabled", true);
   });
 
+  it("shows team access CTA when user cannot receive notifications and a team link is provided", () => {
+    preferenceState.data = { enabled: false, canReceive: false };
+    routingStatusState.data = { enabledRecipientCount: 0 };
+
+    render(
+      <ReservationNotificationRoutingSettings
+        organizationId="org-1"
+        teamAccessHref="/organization/team"
+      />,
+    );
+
+    expect(
+      screen
+        .getByRole("link", { name: "Open Team & Access" })
+        .getAttribute("href"),
+    ).toBe("/organization/team");
+  });
+
   it("shows muted warning when eligible user has zero enabled recipients", () => {
     preferenceState.data = { enabled: false, canReceive: true };
     routingStatusState.data = { enabledRecipientCount: 0 };
