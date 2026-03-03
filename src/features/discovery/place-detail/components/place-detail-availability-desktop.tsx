@@ -85,7 +85,6 @@ type PlaceDetailAvailabilityDesktopProps = {
   onCourtRangeChange: (range: TimeRangeSelection) => void;
   onAnyWeekDayClick: (dayKey: string) => void;
   onCourtWeekDayClick: (dayKey: string) => void;
-  onContinue: () => void;
   onClearSelection: () => void;
   todayDayKey: string;
   maxDayKey: string;
@@ -132,7 +131,6 @@ export function PlaceDetailAvailabilityDesktop({
   onCourtRangeChange,
   onAnyWeekDayClick,
   onCourtWeekDayClick,
-  onContinue,
   onClearSelection,
   todayDayKey,
   maxDayKey,
@@ -484,7 +482,6 @@ export function PlaceDetailAvailabilityDesktop({
                   selectedRange={selectedRange}
                   onRangeChange={onAnyRangeChange}
                   onDayClick={onAnyWeekDayClick}
-                  onContinue={onContinue}
                   todayDayKey={todayDayKey}
                   maxDayKey={maxDayKey}
                   cartedStartTimes={cartedStartTimes}
@@ -505,7 +502,6 @@ export function PlaceDetailAvailabilityDesktop({
                 showPrice
                 onChange={onAnyRangeChange}
                 onClear={onClearSelection}
-                onContinue={onContinue}
                 cartedStartTimes={cartedStartTimes}
               />
             ) : (
@@ -537,7 +533,6 @@ export function PlaceDetailAvailabilityDesktop({
                 selectedRange={selectedRange}
                 onRangeChange={onCourtRangeChange}
                 onDayClick={onCourtWeekDayClick}
-                onContinue={onContinue}
                 todayDayKey={todayDayKey}
                 maxDayKey={maxDayKey}
                 sameDayAnchorDayKey={sameDayAnchorDayKey}
@@ -560,7 +555,6 @@ export function PlaceDetailAvailabilityDesktop({
               showPrice
               onChange={onCourtRangeChange}
               onClear={onClearSelection}
-              onContinue={onContinue}
               cartedStartTimes={cartedStartTimes}
             />
           ) : (

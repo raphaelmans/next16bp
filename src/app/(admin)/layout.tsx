@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { appRoutes } from "@/common/app-routes";
+import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { requireAdminSession } from "@/lib/shared/infra/auth/server-session";
 
@@ -26,9 +27,9 @@ export default async function AdminLayout({
   await requireAdminSession(pathname);
 
   return (
-    <>
+    <DashboardShell>
       {children}
       <UnifiedChatInterface surface="floating" domain="support" />
-    </>
+    </DashboardShell>
   );
 }

@@ -39,8 +39,6 @@ export interface TimeRangePickerProps {
   showPrice?: boolean;
   onChange?: (range: { startTime: string; durationMinutes: number }) => void;
   onClear?: () => void;
-  onContinue?: () => void;
-  continueLabel?: string;
   className?: string;
   cartedStartTimes?: Set<string>;
 }
@@ -97,8 +95,6 @@ interface SummaryBarProps {
   timeZone: string;
   showPrice: boolean;
   onClear?: () => void;
-  onContinue?: () => void;
-  continueLabel: string;
 }
 
 const SummaryBar = React.memo(function SummaryBar({
@@ -106,8 +102,6 @@ const SummaryBar = React.memo(function SummaryBar({
   timeZone,
   showPrice,
   onClear,
-  onContinue,
-  continueLabel,
 }: SummaryBarProps) {
   const shouldReduceMotion = useReducedMotion();
   const motionTransition = shouldReduceMotion
@@ -185,17 +179,6 @@ const SummaryBar = React.memo(function SummaryBar({
                 Clear
               </button>
             )}
-            {onContinue &&
-              !isAwaitingEndClick &&
-              activeStartIdx !== activeEndIdx && (
-                <button
-                  type="button"
-                  onClick={onContinue}
-                  className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                >
-                  {continueLabel}
-                </button>
-              )}
           </div>
         </div>
       </motion.div>
@@ -423,8 +406,6 @@ export function TimeRangePicker({
   showPrice = true,
   onChange,
   onClear,
-  onContinue,
-  continueLabel = "Continue to review",
   className,
   cartedStartTimes,
 }: TimeRangePickerProps) {
@@ -476,8 +457,6 @@ export function TimeRangePicker({
         timeZone={timeZone}
         showPrice={showPrice}
         onClear={onClear}
-        onContinue={onContinue}
-        continueLabel={continueLabel}
         className={className}
         nowMs={nowMs}
         cartedStartTimes={cartedStartTimes}
@@ -492,8 +471,6 @@ function TimeRangePickerInner({
   timeZone,
   showPrice,
   onClear,
-  onContinue,
-  continueLabel,
   className,
   nowMs,
   cartedStartTimes,
@@ -502,8 +479,6 @@ function TimeRangePickerInner({
   timeZone: string;
   showPrice: boolean;
   onClear?: () => void;
-  onContinue?: () => void;
-  continueLabel: string;
   className?: string;
   nowMs: number;
   cartedStartTimes?: Set<string>;
@@ -533,8 +508,6 @@ function TimeRangePickerInner({
         timeZone={timeZone}
         showPrice={showPrice}
         onClear={onClear}
-        onContinue={onContinue}
-        continueLabel={continueLabel}
       />
 
       {!hasSelection && (

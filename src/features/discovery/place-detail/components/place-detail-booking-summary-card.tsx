@@ -81,10 +81,12 @@ export function PlaceDetailBookingSummaryCard({
                   ?.label ?? "Select a court")}
           </p>
         </div>
-        <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">Duration</p>
-          <p className="font-medium">{formatDuration(durationMinutes)}</p>
-        </div>
+        {hasSelection && (
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">Duration</p>
+            <p className="font-medium">{formatDuration(durationMinutes)}</p>
+          </div>
+        )}
         <div className="space-y-1">
           <p className="text-sm text-muted-foreground">Optional extras</p>
           <p className="font-medium">

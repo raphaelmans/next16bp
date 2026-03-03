@@ -66,7 +66,6 @@ type PlaceDetailBookingDesktopSectionProps = {
   maxDayKey: string;
   sameDayAnchorDayKey?: string;
   availabilitySectionRef: React.RefObject<HTMLDivElement | null>;
-  onContinue: () => void;
   onSelectionSummaryChange: (summary: SelectionSummary | null) => void;
   cartItems: BookingCartItem[];
 };
@@ -100,7 +99,6 @@ export function PlaceDetailBookingDesktopSection({
   maxDayKey,
   sameDayAnchorDayKey,
   availabilitySectionRef,
-  onContinue,
   onSelectionSummaryChange,
   cartItems,
 }: PlaceDetailBookingDesktopSectionProps) {
@@ -578,7 +576,6 @@ export function PlaceDetailBookingDesktopSection({
       onCourtRangeChange={handleCourtRangeChange}
       onAnyWeekDayClick={handleAnyWeekDayClick}
       onCourtWeekDayClick={handleCourtWeekDayClick}
-      onContinue={onContinue}
       onClearSelection={() => clearSelection(true)}
       todayDayKey={todayDayKey}
       maxDayKey={maxDayKey}

@@ -42,7 +42,7 @@ export const InlineCitationText = ({
   ...props
 }: InlineCitationTextProps) => (
   <span
-    className={cn("transition-colors group-hover:bg-accent", className)}
+    className={cn("transition-colors group-hover:bg-muted", className)}
     {...props}
   />
 );

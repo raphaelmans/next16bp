@@ -33,7 +33,7 @@ export function DashboardLayout({
       {sidebar}
       <SidebarInset>
         {/* Top navbar */}
-        <header className="flex h-16 w-full shrink-0 items-center gap-2 border-b bg-background px-4 sm:px-6 lg:px-8">
+        <header className="flex h-16 w-full shrink-0 items-center gap-2 border-b bg-background px-4 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 sm:px-6 lg:px-8">
           <SidebarTrigger className="-ml-1 hidden md:flex" />
           <Separator
             orientation="vertical"

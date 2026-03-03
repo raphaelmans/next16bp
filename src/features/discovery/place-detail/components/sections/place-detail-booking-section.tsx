@@ -627,7 +627,6 @@ export function PlaceDetailBookingSection({
               maxDayKey={maxDayKey}
               sameDayAnchorDayKey={sameDayAnchorDayKey}
               availabilitySectionRef={availabilitySectionRef}
-              onContinue={handleReserve}
               onSelectionSummaryChange={handleSelectionSummaryChange}
               cartItems={cartItems}
             />

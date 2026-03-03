@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
+import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { OwnerChatWidget } from "@/features/chat/components/chat-widget/owner-chat-widget";
 import { OwnerOnboardingIntentClearer } from "@/features/owner/components/owner-onboarding-intent-clearer";
-import { OwnerShell } from "@/features/owner/components/owner-shell";
 import { makeOrganizationService } from "@/lib/modules/organization/factories/organization.factory";
 import { requireSession } from "@/lib/shared/infra/auth/server-session";
 
@@ -48,7 +48,9 @@ export default async function OwnerLayout({
     <>
       <OwnerOnboardingIntentClearer />
       <OwnerChatWidget />
-      <OwnerShell hasOrganizations={hasOrganizations}>{children}</OwnerShell>
+      <DashboardShell hasOrganizations={hasOrganizations}>
+        {children}
+      </DashboardShell>
     </>
   );
 }

@@ -61,8 +61,6 @@ export type AvailabilityMonthViewProps = {
   /** The currently committed range selection (startTime + durationMinutes). */
   selectedRange?: SelectedRange;
   onClearRange?: () => void;
-  onContinue?: () => void;
-  continueLabel?: string;
   emptyState?: React.ReactNode;
 };
 
@@ -87,8 +85,6 @@ export function AvailabilityMonthView({
   onSelectRange,
   selectedRange,
   onClearRange,
-  onContinue,
-  continueLabel,
   emptyState,
 }: AvailabilityMonthViewProps) {
   const resolvedEmptyState = emptyState ?? (
@@ -248,8 +244,6 @@ export function AvailabilityMonthView({
                     onSelectRange({ dayKey: day.dayKey, range })
                   }
                   onClear={onClearRange}
-                  onContinue={onContinue}
-                  continueLabel={continueLabel}
                 />
               ) : (
                 <TimeSlotPicker

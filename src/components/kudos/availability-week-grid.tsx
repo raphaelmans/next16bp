@@ -93,8 +93,6 @@ export type AvailabilityWeekGridProps = {
   selectedRange?: AvailabilityWeekGridRange;
   onRangeChange: (range: AvailabilityWeekGridRange) => void;
   onDayClick: (dayKey: string) => void;
-  onContinue?: () => void;
-  continueLabel?: string;
   todayDayKey: string;
   maxDayKey: string;
   sameDayAnchorDayKey?: string;
@@ -113,8 +111,6 @@ interface WeekGridSummaryBarProps {
   hoursPerDay: number;
   timeZone: string;
   onRangeChange: (range: AvailabilityWeekGridRange) => void;
-  onContinue?: () => void;
-  continueLabel: string;
 }
 
 const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
@@ -124,8 +120,6 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
   hoursPerDay,
   timeZone,
   onRangeChange,
-  onContinue,
-  continueLabel,
 }: WeekGridSummaryBarProps) {
   const shouldReduceMotion = useReducedMotion();
   const motionTransition = shouldReduceMotion
@@ -233,17 +227,6 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
             >
               Clear
             </button>
-            {onContinue &&
-              !summaryData.isAwaitingEndClick &&
-              summaryData.slotCount > 1 && (
-                <button
-                  type="button"
-                  onClick={onContinue}
-                  className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                >
-                  {continueLabel}
-                </button>
-              )}
           </div>
         </div>
       </motion.div>
@@ -443,8 +426,6 @@ export function AvailabilityWeekGrid({
   selectedRange,
   onRangeChange,
   onDayClick,
-  onContinue,
-  continueLabel = "Continue to review",
   todayDayKey,
   maxDayKey,
   sameDayAnchorDayKey,
@@ -608,8 +589,6 @@ export function AvailabilityWeekGrid({
         timeZone={timeZone}
         onRangeChange={onRangeChange}
         onDayClick={onDayClick}
-        onContinue={onContinue}
-        continueLabel={continueLabel}
         todayDayKey={todayDayKey}
         maxDayKey={maxDayKey}
         sameDayAnchorDayKey={sameDayAnchorDayKey}
@@ -634,8 +613,6 @@ interface WeekGridInnerProps {
   timeZone: string;
   onRangeChange: (range: AvailabilityWeekGridRange) => void;
   onDayClick: (dayKey: string) => void;
-  onContinue?: () => void;
-  continueLabel: string;
   todayDayKey: string;
   maxDayKey: string;
   sameDayAnchorDayKey?: string;
@@ -653,8 +630,6 @@ function WeekGridInner({
   timeZone,
   onRangeChange,
   onDayClick,
-  onContinue,
-  continueLabel,
   todayDayKey,
   maxDayKey,
   sameDayAnchorDayKey,
@@ -697,8 +672,6 @@ function WeekGridInner({
         hoursPerDay={hoursPerDay}
         timeZone={timeZone}
         onRangeChange={onRangeChange}
-        onContinue={onContinue}
-        continueLabel={continueLabel}
       />
 
       {sameDayAnchorLabel ? (

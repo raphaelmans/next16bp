@@ -373,7 +373,6 @@ export function PlaceDetailMobileSheet({
                         : onCourtRangeChange
                     }
                     onClear={onClearSelection}
-                    onContinue={onReserve}
                     cartedStartTimes={cartedStartTimes}
                   />
                 ) : (
