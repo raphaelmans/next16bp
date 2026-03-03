@@ -4,6 +4,7 @@ import Script from "next/script";
 import { Suspense } from "react";
 import { appRoutes } from "@/common/app-routes";
 import { toDialablePhone } from "@/common/phone";
+import { buildLocationLabel, humanizeSlug } from "@/common/seo-helpers";
 import { Container } from "@/components/layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
@@ -31,17 +32,21 @@ const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
 const formatCourtCount = (count: number) =>
   `${count} court${count === 1 ? "" : "s"}`;
 
-const buildLocationLabel = (place: {
-  city: string;
-  province: string;
-  address: string;
-}) => {
-  const parts = [place.city, place.province].filter(Boolean);
-  if (parts.length > 0) {
-    return parts.join(", ");
+/**
+ * Return the dominant sport name when one sport covers ≥60 % of courts.
+ */
+const getDominantSport = (
+  courts: { sportName: string }[],
+): string | undefined => {
+  if (courts.length === 0) return undefined;
+  const counts = new Map<string, number>();
+  for (const c of courts) {
+    counts.set(c.sportName, (counts.get(c.sportName) ?? 0) + 1);
   }
-
-  return place.address;
+  for (const [sport, count] of counts) {
+    if (count / courts.length >= 0.6) return sport;
+  }
+  return undefined;
 };
 
 const buildMetadataDescription = (
@@ -116,8 +121,9 @@ export async function generatePlaceDetailMetadata(
   const fallbackPath = appRoutes.places.detail(placeIdOrSlug);
   let canonicalPath = fallbackPath;
 
-  let title = "Court details";
-  let description = "View court details on KudosCourts - Philippines.";
+  const fallbackName = humanizeSlug(placeIdOrSlug);
+  let title = fallbackName;
+  let description = `View ${fallbackName} venue details, courts, and availability on KudosCourts Philippines.`;
   let imageUrl: string | undefined;
 
   try {
@@ -129,20 +135,41 @@ export async function generatePlaceDetailMetadata(
       .filter(Boolean);
 
     const locationLabel = buildLocationLabel(place);
-    title = locationLabel
-      ? `${place.name} (${locationLabel})`
-      : `${place.name} | Venue details`;
-    description = buildMetadataDescription(
+    const courtMappings = placeDetails.courts.map((c) => ({
+      sportName: c.sport.name,
+    }));
+    const dominantSport = getDominantSport(courtMappings);
+
+    // Title: include dominant sport when one exists
+    if (dominantSport && locationLabel) {
+      title = `${place.name} \u2013 ${dominantSport} Courts in ${locationLabel}`;
+    } else if (locationLabel) {
+      title = `${place.name} (${locationLabel})`;
+    } else {
+      title = `${place.name} | Venue details`;
+    }
+
+    // Description: base + amenities + CTA
+    let desc = buildMetadataDescription(
       place,
       placeDetails.courts.length,
       sports,
     );
+    const amenityNames = placeDetails.amenities
+      .map((a) => a.name?.trim())
+      .filter((n): n is string => Boolean(n));
+    if (amenityNames.length > 0) {
+      desc += ` Amenities include ${amenityNames.slice(0, 3).join(", ")}.`;
+    }
+    desc += " Check real-time availability and book online.";
+    description = desc;
+
     canonicalPath = appRoutes.places.detail(place.slug ?? place.id);
     imageUrl = toAbsoluteUrl(
       placeDetails.photos?.[0]?.url ?? placeDetails.organizationLogoUrl,
     );
   } catch {
-    // Keep fallback metadata when place lookup fails.
+    // Keep slug-based fallback metadata when place lookup fails.
   }
 
   const openGraphImages = imageUrl

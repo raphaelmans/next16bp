@@ -1,6 +1,9 @@
 "use client";
 
-import { CheckCircle2, ShieldCheck } from "lucide-react";
+import { CheckCircle2, Plus, ShieldCheck } from "lucide-react";
+import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PlaceVerificationPanel } from "@/features/owner/components/place-verification-panel";
 import type { SetupStatus } from "../../get-started-types";
@@ -39,6 +42,40 @@ export function VerifyStep({ status, onStepComplete }: VerifyStepProps) {
           </p>
         </CardContent>
       </Card>
+    );
+  }
+
+  const isPending = status.verificationStatus === "PENDING";
+
+  if (isPending) {
+    return (
+      <div className="space-y-4">
+        <PlaceVerificationPanel
+          placeId={status.primaryPlaceId}
+          placeName={status.primaryPlaceName}
+          reservationCapable
+          onSuccess={onStepComplete}
+        />
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="p-6">
+            <h4 className="font-heading font-semibold">
+              Continue setting up while you wait
+            </h4>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Verification usually takes 1–2 business days. In the meantime, you
+              can add more courts to your venue.
+            </p>
+            <Button asChild className="mt-4">
+              <Link
+                href={`${appRoutes.organization.places.courts.base(status.primaryPlaceId)}?from=setup`}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add more courts
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 

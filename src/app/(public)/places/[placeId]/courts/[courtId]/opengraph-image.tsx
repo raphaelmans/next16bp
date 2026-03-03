@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { appRoutes } from "@/common/app-routes";
-import { buildLocationLabel } from "@/common/seo-helpers";
-import { createServerCaller } from "@/lib/shared/infra/trpc/server";
+import { buildLocationLabel, humanizeSlug } from "@/common/seo-helpers";
+import { getPlaceDetailsForCourtRoute } from "@/lib/modules/discovery/server/court-detail-page";
 
 export const alt = "KudosCourts court";
 export const size = {
@@ -13,22 +13,27 @@ export const contentType = "image/png";
 export default async function OpenGraphImage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ placeId: string; courtId: string }>;
 }) {
-  const { id } = await params;
-  const fallbackPath = appRoutes.places.detail(id);
+  const { placeId, courtId } = await params;
 
-  let title = "Court details";
-  let subtitle = "Discover. Reserve. Play.";
+  let venueName = humanizeSlug(placeId);
+  let courtLine = "Court details";
+  let locationLine = "Discover. Reserve. Play.";
 
   try {
-    const caller = await createServerCaller(fallbackPath);
-    const placeDetails = await caller.place.getByIdOrSlug({
-      placeIdOrSlug: id,
-    });
+    const placeDetails = await getPlaceDetailsForCourtRoute(placeId);
     const place = placeDetails.place;
-    title = place.name;
-    subtitle = buildLocationLabel(place);
+    venueName = place.name;
+    locationLine = buildLocationLabel(place) || locationLine;
+
+    const court = placeDetails.courts.find((c) => c.court.id === courtId);
+    if (court) {
+      const sportName = court.sport.name;
+      courtLine = sportName
+        ? `${court.court.label} \u2013 ${sportName}`
+        : court.court.label;
+    }
   } catch {}
 
   return new ImageResponse(
@@ -87,21 +92,31 @@ export default async function OpenGraphImage({
           fontSize: "72px",
           fontWeight: 800,
           letterSpacing: "-2px",
-          marginBottom: "16px",
+          marginBottom: "12px",
           lineHeight: 1.1,
         }}
       >
-        {title}
+        {venueName}
       </div>
       <div
         style={{
-          fontSize: "32px",
+          fontSize: "36px",
+          fontWeight: 700,
+          color: "rgba(255,255,255,0.95)",
+          marginBottom: "12px",
+        }}
+      >
+        {courtLine}
+      </div>
+      <div
+        style={{
+          fontSize: "28px",
           fontWeight: 600,
-          color: "rgba(255,255,255,0.9)",
+          color: "rgba(255,255,255,0.85)",
           marginBottom: "24px",
         }}
       >
-        {subtitle}
+        {locationLine}
       </div>
       <div
         style={{
