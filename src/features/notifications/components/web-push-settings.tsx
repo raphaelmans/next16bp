@@ -20,13 +20,20 @@ import {
 } from "../domain";
 import { useModWebPush } from "../hooks";
 
-export function WebPushSettingsCard({ id }: { id?: string }) {
+export function WebPushSettingsCard({
+  id,
+  onEnabled,
+}: {
+  id?: string;
+  onEnabled?: () => void;
+}) {
   const webPush = useModWebPush();
 
   const enable = async () => {
     try {
       await webPush.enable();
       toast.success("Browser notifications enabled");
+      onEnabled?.();
     } catch (error) {
       toast.error("Failed to enable notifications", {
         description: getClientErrorMessage(error, "Please try again"),

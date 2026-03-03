@@ -38,8 +38,10 @@ import { PaymentMethodsManager } from "@/features/owner/components/payment-metho
 import { canAccessPage } from "@/features/owner/helpers";
 import {
   useMutRequestRemoval,
+  useMutSetMyReservationNotificationPreference,
   useMutUpdateOrganization,
   useQueryCurrentOrganization,
+  useQueryMyReservationNotificationPreference,
   useQueryOwnerOrganization,
 } from "@/features/owner/hooks";
 import { useModOwnerPermissionContext } from "@/features/owner/hooks/organization";
@@ -86,6 +88,24 @@ export default function OwnerSettingsPage() {
   } = form;
 
   const organizationId = organization?.id;
+
+  const notifPrefQuery =
+    useQueryMyReservationNotificationPreference(organizationId);
+  const setNotifPref = useMutSetMyReservationNotificationPreference(
+    organizationId ?? "",
+  );
+
+  const onPushEnabled = React.useCallback(async () => {
+    if (!organizationId) return;
+    if (notifPrefQuery.data?.enabled) return;
+    try {
+      await setNotifPref.mutateAsync({ organizationId, enabled: true });
+      toast.success("Reservation notifications also enabled for this venue.");
+    } catch {
+      // Silently ignore — the user can still toggle routing manually
+    }
+  }, [organizationId, notifPrefQuery.data?.enabled, setNotifPref]);
+
   const organizationName = organization?.name ?? "";
   const organizationSlug = organization?.slug ?? "";
   const organizationDescription = organization?.description ?? "";
@@ -360,7 +380,10 @@ export default function OwnerSettingsPage() {
 
           <PortalPreferenceCard id={SETTINGS_SECTION_IDS.defaultPortal} />
 
-          <WebPushSettingsCard id={SETTINGS_SECTION_IDS.browserNotifications} />
+          <WebPushSettingsCard
+            id={SETTINGS_SECTION_IDS.browserNotifications}
+            onEnabled={onPushEnabled}
+          />
 
           {organization?.id && (
             <ReservationNotificationRoutingSettings
