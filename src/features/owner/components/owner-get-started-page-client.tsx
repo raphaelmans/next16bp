@@ -306,14 +306,6 @@ const BETA_FEATURES = [
     icon: MessageSquare,
     badge: "Beta · Limited",
   },
-  {
-    id: "mobile",
-    title: "Mobile App",
-    description:
-      "Accept bookings, confirm payments, and check your schedule from your phone.",
-    icon: Smartphone,
-    badge: "Beta",
-  },
 ];
 
 const BUSINESS_PLUS_FEATURES = [
@@ -637,7 +629,7 @@ export default function OwnersGetStartedPage() {
           </div>
 
           {/* Beta features row */}
-          <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {BETA_FEATURES.map((feat) => {
               const Icon = feat.icon;
               return (
@@ -970,7 +962,7 @@ export default function OwnersGetStartedPage() {
       </section>
 
       {/* ----------------------------------------------------------------- */}
-      {/* MOBILE APP BANNER                                                  */}
+      {/* WORKS ON YOUR PHONE                                                */}
       {/* ----------------------------------------------------------------- */}
       <section className="py-10 sm:py-14">
         <Container size="xl">
@@ -982,24 +974,24 @@ export default function OwnersGetStartedPage() {
               <div className="flex-1 space-y-2">
                 <div className="flex items-center gap-2">
                   <h3 className="font-heading text-lg font-bold tracking-tight">
-                    Mobile app
+                    Works on your phone
                   </h3>
                   <Badge
                     variant="secondary"
                     className="text-[10px] px-1.5 py-0"
                   >
-                    Beta
+                    Available now
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Manage your courts on the go — accept bookings, confirm
-                  payments, and check your schedule from your phone. Better
-                  notifications mean you never miss a booking.
+                  Install KudosCourts on your home screen — no app store needed.
+                  Accept bookings, confirm payments, and manage your schedule
+                  from any device. Push notifications keep you in the loop.
                 </p>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1">
                   {[
+                    "Install to home screen",
                     "Accept/reject bookings",
-                    "Confirm payments",
                     "Push notifications",
                     "Full schedule view",
                   ].map((feat) => (
@@ -1012,6 +1004,9 @@ export default function OwnersGetStartedPage() {
                     </div>
                   ))}
                 </div>
+                <p className="pt-2 text-xs text-muted-foreground italic">
+                  Native mobile app coming soon.
+                </p>
               </div>
             </CardContent>
           </Card>

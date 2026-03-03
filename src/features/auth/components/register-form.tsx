@@ -20,7 +20,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Spinner } from "@/components/ui/spinner";
 import { type RegisterDTO, RegisterSchema } from "@/lib/modules/auth/dtos";
 import {
   useMutAuthLoginWithGoogle,
@@ -29,6 +28,7 @@ import {
   useMutAuthVerifySignUpOtp,
 } from "../hooks";
 import { EmailVerificationScreen } from "./email-verification-screen";
+import { GoogleSignInButton } from "./google-sign-in-button";
 
 export interface RegisterFormProps {
   title?: string;
@@ -154,22 +154,10 @@ export function RegisterForm({
       </CardHeader>
       <StandardFormProvider form={form} onSubmit={onSubmit}>
         <CardContent className="space-y-4">
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            disabled={googleSubmitting}
+          <GoogleSignInButton
             onClick={onGoogleLogin}
-          >
-            {googleSubmitting ? (
-              <span className="flex items-center justify-center gap-2">
-                <Spinner className="text-muted-foreground" />
-                Redirecting...
-              </span>
-            ) : (
-              "Continue with Google"
-            )}
-          </Button>
+            isLoading={googleSubmitting}
+          />
 
           <div className="py-2">
             <Separator />
