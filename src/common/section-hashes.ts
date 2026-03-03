@@ -20,3 +20,11 @@ export const SETTINGS_SECTION_HASHES = {
 
 export type SettingsSectionId =
   (typeof SETTINGS_SECTION_IDS)[keyof typeof SETTINGS_SECTION_IDS];
+
+const settingsSectionIdSet: ReadonlySet<SettingsSectionId> = new Set(
+  Object.values(SETTINGS_SECTION_IDS),
+);
+
+export function isSettingsSectionId(value: string): value is SettingsSectionId {
+  return settingsSectionIdSet.has(value as SettingsSectionId);
+}

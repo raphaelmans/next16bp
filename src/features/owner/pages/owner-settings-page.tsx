@@ -6,7 +6,11 @@ import Link from "next/link";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
-import { SETTINGS_SECTION_IDS } from "@/common/section-hashes";
+import {
+  isSettingsSectionId,
+  SETTINGS_SECTION_IDS,
+  type SettingsSectionId,
+} from "@/common/section-hashes";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
@@ -174,14 +178,17 @@ export default function OwnerSettingsPage() {
     ? canAccessPage(permissionContext, { type: "owner-or-manager" })
     : false;
   const isOwner = permissionContext ? isOwnerRole(permissionContext) : false;
-  const ownerOnlySectionIds = new Set([
+  const ownerOnlySectionIds = new Set<SettingsSectionId>([
     SETTINGS_SECTION_IDS.organizationProfile,
     SETTINGS_SECTION_IDS.contactInformation,
     SETTINGS_SECTION_IDS.paymentMethods,
     SETTINGS_SECTION_IDS.dangerZone,
   ]);
   const showOwnerOnlySectionHint =
-    canAccessSettings && !isOwner && ownerOnlySectionIds.has(activeSectionHash);
+    canAccessSettings &&
+    !isOwner &&
+    isSettingsSectionId(activeSectionHash) &&
+    ownerOnlySectionIds.has(activeSectionHash);
 
   if (orgLoading) {
     return (
