@@ -2,6 +2,7 @@
 
 import type { LucideIcon } from "lucide-react";
 import {
+  Building2,
   CalendarDays,
   CalendarRange,
   ClipboardList,
@@ -11,6 +12,8 @@ import {
   MapPin,
   MapPinned,
   Settings,
+  ShieldCheck,
+  Tag,
   UploadCloud,
   User,
   Users,
@@ -21,6 +24,7 @@ import { useState } from "react";
 import { appRoutes } from "@/common/app-routes";
 import { getCurrentPortal } from "@/components/layout/portal-tabs-sidebar";
 import { Badge } from "@/components/ui/badge";
+import { useQueryAdminSidebarStats } from "@/features/admin/hooks/organization";
 import {
   type MoreSheetSection,
   OwnerMoreSheet,
@@ -54,6 +58,26 @@ const playerTabs: TabConfig[] = [
   },
   { label: "Home", href: appRoutes.home.base, icon: Home },
   { label: "Profile", href: appRoutes.account.profile, icon: User },
+];
+
+// ─── Admin tabs ───────────────────────────────────────
+
+const adminTabs: TabConfig[] = [
+  { label: "Dashboard", href: appRoutes.admin.base, icon: LayoutDashboard },
+  {
+    label: "Claims",
+    href: appRoutes.admin.claims.base,
+    icon: Tag,
+    showBadge: true,
+  },
+  {
+    label: "Verify",
+    href: appRoutes.admin.placeVerification.base,
+    icon: ShieldCheck,
+    showBadge: true,
+  },
+  { label: "Courts", href: appRoutes.admin.courts.base, icon: Building2 },
+  { label: "Venues", href: appRoutes.admin.venues.base, icon: MapPin },
 ];
 
 // ─── Organization tabs (role-based) ────────────────────
@@ -219,8 +243,9 @@ export function DashboardBottomTabs({
   const currentPortal = getCurrentPortal(pathname);
   const [moreOpen, setMoreOpen] = useState(false);
 
-  // Admin portal has no bottom tabs
-  if (currentPortal === "admin") return null;
+  if (currentPortal === "admin") {
+    return <AdminBottomTabs pathname={pathname} />;
+  }
 
   if (currentPortal === "player") {
     return <BottomTabBar tabs={playerTabs} pathname={pathname} />;
@@ -416,6 +441,69 @@ function OrganizationBottomTabs({
         />
       )}
     </>
+  );
+}
+
+// ─── Admin bottom tabs (needs hooks) ─────────────────
+
+function AdminBottomTabs({ pathname }: { pathname: string }) {
+  const { data: stats } = useQueryAdminSidebarStats();
+
+  const isActive = (href: string) => {
+    if (href === appRoutes.admin.base) {
+      return pathname === appRoutes.admin.base;
+    }
+    return pathname.startsWith(href);
+  };
+
+  const getBadgeCount = (href: string): number | undefined => {
+    if (href === appRoutes.admin.claims.base) return stats.pendingClaims;
+    if (href === appRoutes.admin.placeVerification.base)
+      return stats.pendingVerifications;
+    return undefined;
+  };
+
+  return (
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-30 md:hidden border-t bg-background/95 backdrop-blur-md pb-[max(0px,env(safe-area-inset-bottom))]"
+      aria-label="Bottom navigation"
+    >
+      <div className="flex h-14 items-stretch">
+        {adminTabs.map((tab) => {
+          const Icon = tab.icon;
+          const active = isActive(tab.href);
+          const badgeCount = tab.showBadge
+            ? getBadgeCount(tab.href)
+            : undefined;
+
+          return (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              className={cn(
+                "relative flex flex-1 flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] transition-colors",
+                active ? "text-primary font-semibold" : "text-muted-foreground",
+              )}
+            >
+              <span className="relative">
+                <Icon className="h-5 w-5" />
+                {badgeCount != null && badgeCount > 0 && (
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-1.5 -right-2.5 h-4 min-w-4 px-1 text-[10px] leading-none"
+                  >
+                    {badgeCount > 99 ? "99+" : badgeCount}
+                  </Badge>
+                )}
+              </span>
+              <span className="text-[10px] font-heading leading-tight">
+                {tab.label}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
   );
 }
 
