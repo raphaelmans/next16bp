@@ -27,6 +27,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { PortalPreferenceCard } from "@/features/auth/components";
 import { WebPushSettingsCard } from "@/features/notifications/components/web-push-settings";
+import { useModWebPush } from "@/features/notifications/hooks";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
   NoAccessView,
@@ -95,16 +96,30 @@ export default function OwnerSettingsPage() {
     organizationId ?? "",
   );
 
-  const onPushEnabled = React.useCallback(async () => {
+  const webPush = useModWebPush();
+
+  const autoSyncedRef = React.useRef(false);
+  React.useEffect(() => {
+    if (autoSyncedRef.current) return;
     if (!organizationId) return;
+    if (!webPush.enabledOnThisDevice) return;
+    if (notifPrefQuery.isLoading) return;
     if (notifPrefQuery.data?.enabled) return;
-    try {
-      await setNotifPref.mutateAsync({ organizationId, enabled: true });
-      toast.success("Reservation notifications also enabled for this venue.");
-    } catch {
-      // Silently ignore — the user can still toggle routing manually
-    }
-  }, [organizationId, notifPrefQuery.data?.enabled, setNotifPref]);
+
+    autoSyncedRef.current = true;
+    setNotifPref
+      .mutateAsync({ organizationId, enabled: true })
+      .then(() =>
+        toast.success("Reservation notifications also enabled for this venue."),
+      )
+      .catch(() => {});
+  }, [
+    organizationId,
+    webPush.enabledOnThisDevice,
+    notifPrefQuery.isLoading,
+    notifPrefQuery.data?.enabled,
+    setNotifPref,
+  ]);
 
   const organizationName = organization?.name ?? "";
   const organizationSlug = organization?.slug ?? "";
@@ -380,10 +395,7 @@ export default function OwnerSettingsPage() {
 
           <PortalPreferenceCard id={SETTINGS_SECTION_IDS.defaultPortal} />
 
-          <WebPushSettingsCard
-            id={SETTINGS_SECTION_IDS.browserNotifications}
-            onEnabled={onPushEnabled}
-          />
+          <WebPushSettingsCard id={SETTINGS_SECTION_IDS.browserNotifications} />
 
           {organization?.id && (
             <ReservationNotificationRoutingSettings
