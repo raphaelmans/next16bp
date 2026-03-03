@@ -8,7 +8,6 @@ import { chatMessageRouter } from "@/lib/modules/chat/chat-message.router";
 import { chatPocRouter } from "@/lib/modules/chat/chat-poc.router";
 import { openPlayChatRouter } from "@/lib/modules/chat/open-play-chat.router";
 import { reservationChatRouter } from "@/lib/modules/chat/reservation-chat.router";
-import { supportChatRouter } from "@/lib/modules/chat/support-chat.router";
 import { claimAdminRouter } from "@/lib/modules/claim-request/admin/claim-admin.router";
 import { claimRequestRouter } from "@/lib/modules/claim-request/claim-request.router";
 import { contactRouter } from "@/lib/modules/contact/contact.router";
@@ -74,7 +73,6 @@ export const appRouter = router({
   chatPoc: chatPocRouter,
   reservationChat: reservationChatRouter,
   openPlayChat: openPlayChatRouter,
-  supportChat: supportChatRouter,
   contact: contactRouter,
   audit: auditRouter,
   availability: availabilityRouter,

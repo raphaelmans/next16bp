@@ -25,6 +25,7 @@ export type NotificationInboxItem = {
   title: string;
   body: string | null;
   href: string | null;
+  eventType: string;
   readAt: string | Date | null;
   createdAt: string | Date;
 };

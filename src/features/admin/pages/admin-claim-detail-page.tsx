@@ -53,7 +53,6 @@ import {
   useQueryClaimEvents,
 } from "@/features/admin/hooks";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
-import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { cn } from "@/lib/utils";
 
 const statusConfig = {
@@ -454,25 +453,6 @@ export default function AdminClaimDetailPage({
 
           {/* Right column - Actions */}
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Support Chat</CardTitle>
-                <CardDescription>
-                  Message the requester for clarification before you decide.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <UnifiedChatInterface
-                  surface="sheet"
-                  domain="support"
-                  kind="claim"
-                  requestId={claimId}
-                  triggerLabel="Message owner"
-                  triggerVariant="outline"
-                />
-              </CardContent>
-            </Card>
-
             {isPending ? (
               <ClaimReviewActions
                 claimType={claim.type}

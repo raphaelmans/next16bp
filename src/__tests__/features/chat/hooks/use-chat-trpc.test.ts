@@ -24,11 +24,6 @@ const {
     mutReservationChatSendMessage: vi.fn(),
     mutReservationChatSendGroupMessage: vi.fn(),
     queryReservationChatGetThreadMetas: vi.fn(),
-    mutSupportChatBackfillClaimThreads: vi.fn(),
-    mutSupportChatSendClaimMessage: vi.fn(),
-    mutSupportChatSendVerificationMessage: vi.fn(),
-    querySupportChatGetClaimSession: vi.fn(),
-    querySupportChatGetVerificationSession: vi.fn(),
   },
 }));
 
@@ -82,7 +77,7 @@ describe("use-chat-trpc hooks", () => {
     // Arrange + Act
     renderHook(() =>
       useQueryChatInboxListArchivedThreadIds(
-        { threadKind: "support" },
+        { threadKind: "reservation" },
         { enabled: true },
       ),
     );
@@ -91,7 +86,7 @@ describe("use-chat-trpc hooks", () => {
     expect(featureQuerySpy).toHaveBeenCalledWith(
       ["chatInbox", "listArchivedThreadIds"],
       chatApi.queryChatInboxListArchivedThreadIds,
-      { threadKind: "support" },
+      { threadKind: "reservation" },
       { enabled: true },
     );
   });

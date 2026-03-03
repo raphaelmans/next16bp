@@ -88,54 +88,6 @@ export function useQueryReservationChatThreadMetas(
   );
 }
 
-export function useMutSupportChatBackfillClaimThreads(
-  options?: Record<string, unknown>,
-) {
-  return useFeatureMutation(
-    chatApi.mutSupportChatBackfillClaimThreads,
-    options,
-  );
-}
-
-export function useMutSupportChatSendClaimMessage(
-  options?: Record<string, unknown>,
-) {
-  return useFeatureMutation(chatApi.mutSupportChatSendClaimMessage, options);
-}
-
-export function useMutSupportChatSendVerificationMessage(
-  options?: Record<string, unknown>,
-) {
-  return useFeatureMutation(
-    chatApi.mutSupportChatSendVerificationMessage,
-    options,
-  );
-}
-
-export function useQuerySupportChatClaimSession(
-  input?: Parameters<typeof chatApi.querySupportChatGetClaimSession>[0],
-  options?: Record<string, unknown>,
-) {
-  return useFeatureQuery(
-    ["supportChat", "getClaimSession"],
-    chatApi.querySupportChatGetClaimSession,
-    input,
-    options,
-  );
-}
-
-export function useQuerySupportChatVerificationSession(
-  input?: Parameters<typeof chatApi.querySupportChatGetVerificationSession>[0],
-  options?: Record<string, unknown>,
-) {
-  return useFeatureQuery(
-    ["supportChat", "getVerificationSession"],
-    chatApi.querySupportChatGetVerificationSession,
-    input,
-    options,
-  );
-}
-
 export function useMutChatInboxArchiveThread(
   options?: Record<string, unknown>,
 ) {

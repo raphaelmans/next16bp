@@ -3,12 +3,9 @@ import {
   isSystemReservationMessageId,
   makeReservationGroupThreadId,
   makeReservationThreadId,
-  makeSupportClaimThreadId,
-  makeSupportVerificationThreadId,
   parseInboxThreadRef,
   parseReservationGroupThreadId,
   parseReservationThreadId,
-  parseSupportThreadId,
 } from "@/lib/modules/chat/shared/domain";
 
 describe("chat shared domain", () => {
@@ -32,53 +29,6 @@ describe("chat shared domain", () => {
 
       // Act
       const parsed = parseReservationThreadId(threadId);
-
-      // Assert
-      expect(parsed).toBeNull();
-    });
-  });
-
-  describe("support thread ids", () => {
-    const cases = [
-      {
-        label: "claim id parses as claim kind",
-        threadId: makeSupportClaimThreadId("claim-1"),
-        expected: {
-          threadId: "cr-claim-1",
-          supportKind: "claim",
-          requestId: "claim-1",
-        },
-      },
-      {
-        label: "verification id parses as verification kind",
-        threadId: makeSupportVerificationThreadId("verification-1"),
-        expected: {
-          threadId: "vr-verification-1",
-          supportKind: "verification",
-          requestId: "verification-1",
-        },
-      },
-    ] as const;
-
-    for (const testCase of cases) {
-      it(testCase.label, () => {
-        // Arrange
-        const { threadId, expected } = testCase;
-
-        // Act
-        const parsed = parseSupportThreadId(threadId);
-
-        // Assert
-        expect(parsed).toEqual(expected);
-      });
-    }
-
-    it("invalid support id -> returns null", () => {
-      // Arrange
-      const threadId = "res-reservation-1";
-
-      // Act
-      const parsed = parseSupportThreadId(threadId);
 
       // Assert
       expect(parsed).toBeNull();
@@ -114,17 +64,6 @@ describe("chat shared domain", () => {
         threadId,
         reservationGroupId: "group-1",
       });
-    });
-
-    it("support scope with reservation thread id -> returns null", () => {
-      // Arrange
-      const threadId = "res-r-1";
-
-      // Act
-      const parsed = parseInboxThreadRef("support", threadId);
-
-      // Assert
-      expect(parsed).toBeNull();
     });
   });
 

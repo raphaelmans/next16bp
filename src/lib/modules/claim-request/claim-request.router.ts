@@ -1,10 +1,8 @@
-import { logger } from "@/lib/shared/infra/logger";
 import {
   protectedProcedure,
   rateLimitedProcedure,
   router,
 } from "@/lib/shared/infra/trpc/trpc";
-import { makeSupportChatService } from "../chat/factories/support-chat.factory";
 import {
   CancelClaimRequestSchema,
   GetClaimRequestByIdSchema,
@@ -25,25 +23,6 @@ export const claimRequestRouter = router({
     .mutation(async ({ input, ctx }) => {
       const service = makeClaimRequestService();
       const claimRequest = await service.submitClaimRequest(ctx.userId, input);
-
-      const supportChatService = makeSupportChatService();
-      try {
-        await supportChatService.provisionClaimThread({
-          claimRequestId: claimRequest.id,
-          createdByUserId: ctx.userId,
-        });
-      } catch (error) {
-        logger.warn(
-          {
-            event: "claim_support_chat.provision_failed",
-            claimRequestId: claimRequest.id,
-            userId: ctx.userId,
-            error: error instanceof Error ? error.message : String(error),
-          },
-          "Failed to auto-provision claim support chat",
-        );
-      }
-
       return claimRequest;
     }),
 

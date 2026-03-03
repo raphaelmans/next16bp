@@ -1,7 +1,5 @@
 export const RESERVATION_THREAD_PREFIX = "res-";
 export const RESERVATION_GROUP_THREAD_PREFIX = "grp-";
-export const SUPPORT_CLAIM_THREAD_PREFIX = "cr-";
-export const SUPPORT_VERIFICATION_THREAD_PREFIX = "vr-";
 
 export const SYSTEM_RESERVATION_MESSAGE_ID_SUFFIXES = [
   ":player-created:v1",
@@ -9,8 +7,7 @@ export const SYSTEM_RESERVATION_MESSAGE_ID_SUFFIXES = [
   ":owner-confirmed:v1",
 ] as const;
 
-export type SupportThreadKind = "claim" | "verification";
-export type InboxThreadKind = "reservation" | "support";
+export type InboxThreadKind = "reservation";
 
 export type ParsedReservationThreadId = {
   threadId: string;
@@ -26,15 +23,9 @@ export type ParsedReservationThreadRef =
   | ParsedReservationThreadId
   | ParsedReservationGroupThreadId;
 
-export type ParsedSupportThreadId = {
-  threadId: string;
-  supportKind: SupportThreadKind;
-  requestId: string;
-};
-
-export type ParsedInboxThreadRef =
-  | ({ threadKind: "reservation" } & ParsedReservationThreadRef)
-  | ({ threadKind: "support" } & ParsedSupportThreadId);
+export type ParsedInboxThreadRef = {
+  threadKind: "reservation";
+} & ParsedReservationThreadRef;
 
 function parseWithPrefix(
   threadId: string,
@@ -67,16 +58,6 @@ export function makeReservationGroupThreadId(
   return `${RESERVATION_GROUP_THREAD_PREFIX}${reservationGroupId}`;
 }
 
-export function makeSupportClaimThreadId(claimRequestId: string): string {
-  return `${SUPPORT_CLAIM_THREAD_PREFIX}${claimRequestId}`;
-}
-
-export function makeSupportVerificationThreadId(
-  placeVerificationRequestId: string,
-): string {
-  return `${SUPPORT_VERIFICATION_THREAD_PREFIX}${placeVerificationRequestId}`;
-}
-
 export function parseReservationThreadId(
   threadId: string,
 ): ParsedReservationThreadId | null {
@@ -94,38 +75,6 @@ export function parseReservationThreadId(
     threadId: parsed.threadId,
     reservationId: parsed.reservationId,
   };
-}
-
-export function parseSupportThreadId(
-  threadId: string,
-): ParsedSupportThreadId | null {
-  const claimParsed = parseWithPrefix(
-    threadId,
-    SUPPORT_CLAIM_THREAD_PREFIX,
-    "requestId",
-  );
-  if (claimParsed?.requestId) {
-    return {
-      threadId: claimParsed.threadId,
-      supportKind: "claim",
-      requestId: claimParsed.requestId,
-    };
-  }
-
-  const verificationParsed = parseWithPrefix(
-    threadId,
-    SUPPORT_VERIFICATION_THREAD_PREFIX,
-    "requestId",
-  );
-  if (verificationParsed?.requestId) {
-    return {
-      threadId: verificationParsed.threadId,
-      supportKind: "verification",
-      requestId: verificationParsed.requestId,
-    };
-  }
-
-  return null;
 }
 
 export function parseReservationGroupThreadId(
@@ -151,26 +100,17 @@ export function parseInboxThreadRef(
   threadKind: InboxThreadKind,
   threadId: string,
 ): ParsedInboxThreadRef | null {
-  if (threadKind === "reservation") {
-    const parsedReservation = parseReservationThreadId(threadId);
-    if (parsedReservation) {
-      return { threadKind, ...parsedReservation };
-    }
-
-    const parsedReservationGroup = parseReservationGroupThreadId(threadId);
-    if (parsedReservationGroup) {
-      return { threadKind, ...parsedReservationGroup };
-    }
-
-    return null;
+  const parsedReservation = parseReservationThreadId(threadId);
+  if (parsedReservation) {
+    return { threadKind, ...parsedReservation };
   }
 
-  const parsedSupport = parseSupportThreadId(threadId);
-  if (!parsedSupport) {
-    return null;
+  const parsedReservationGroup = parseReservationGroupThreadId(threadId);
+  if (parsedReservationGroup) {
+    return { threadKind, ...parsedReservationGroup };
   }
 
-  return { threadKind, ...parsedSupport };
+  return null;
 }
 
 export function isSystemReservationMessageId(

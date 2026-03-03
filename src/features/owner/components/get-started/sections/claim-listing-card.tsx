@@ -4,7 +4,6 @@ import { Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import {
   useQueryOwnerClaimRequestById,
   useQueryOwnerClaimRequests,
@@ -62,19 +61,6 @@ export function ClaimListingCard({
                   ? `Your claim request for ${pendingClaimPlaceName} is being reviewed. We will notify you once it is approved.`
                   : "Your claim request is being reviewed. We will notify you once it is approved."}
               </p>
-              {pendingClaimId ? (
-                <div className="pt-2">
-                  <UnifiedChatInterface
-                    surface="sheet"
-                    domain="support"
-                    kind="claim"
-                    requestId={pendingClaimId}
-                    triggerLabel="Message admin"
-                    triggerVariant="outline"
-                    triggerSize="sm"
-                  />
-                </div>
-              ) : null}
             </div>
           </div>
         </CardContent>

@@ -64,7 +64,10 @@ import {
   BookingStudioProvider,
   useBookingStudio,
 } from "@/features/owner/components/booking-studio/booking-studio-provider";
-import { getTimelineRangeForWeek } from "@/features/owner/components/booking-studio/court-hours";
+import {
+  getOperatingHoursForDay,
+  getOperatingHoursForWeek,
+} from "@/features/owner/components/booking-studio/court-hours";
 import { CustomBlockDialog } from "@/features/owner/components/booking-studio/custom-block-dialog";
 import {
   DraftRowCard,
@@ -95,7 +98,6 @@ import {
   guestBookingFormSchema,
   isOptimisticBlockId,
   parseDateTimeInput,
-  parseTimelineRange,
   type ReservationItem,
 } from "@/features/owner/components/booking-studio/types";
 import { useIs2xlUp } from "@/features/owner/components/booking-studio/use-is-2xl-up";
@@ -316,35 +318,13 @@ function OwnerAvailabilityStudioInner() {
 
   const courtHoursQuery = useModCourtHours(courtId);
   const dayOfWeek = getZonedDate(selectedDayStart, placeTimeZone).getDay();
-  const selectedTimelineRange = React.useMemo(
-    () => parseTimelineRange(courtHoursQuery.data ?? [], dayOfWeek),
-    [courtHoursQuery.data, dayOfWeek],
-  );
-  const timelineRange = React.useMemo(() => {
-    if (!isWeekView) return selectedTimelineRange;
-    return getTimelineRangeForWeek(
-      courtHoursQuery.data ?? [],
-      weekDayKeys,
-      placeTimeZone,
-    );
-  }, [
-    courtHoursQuery.data,
-    isWeekView,
-    placeTimeZone,
-    selectedTimelineRange,
-    weekDayKeys,
-  ]);
 
-  const { startHour, endHour } = timelineRange;
+  const hours = React.useMemo(() => {
+    const windows = courtHoursQuery.data ?? [];
+    if (!isWeekView) return getOperatingHoursForDay(windows, dayOfWeek);
+    return getOperatingHoursForWeek(windows, weekDayKeys, placeTimeZone);
+  }, [courtHoursQuery.data, dayOfWeek, isWeekView, weekDayKeys, placeTimeZone]);
 
-  const hours = React.useMemo(
-    () =>
-      Array.from(
-        { length: endHour - startHour },
-        (_, index) => startHour + index,
-      ),
-    [endHour, startHour],
-  );
   const dayHourLabels = React.useMemo(
     () =>
       hours.map((hour) =>
@@ -356,9 +336,6 @@ function OwnerAvailabilityStudioInner() {
       ),
     [dayKey, hours, placeTimeZone],
   );
-
-  const timelineStartMinute = startHour * 60;
-  const timelineEndMinute = endHour * 60;
 
   const blocksRange = React.useMemo(
     () =>
@@ -451,17 +428,9 @@ function OwnerAvailabilityStudioInner() {
         dayKey,
         dayStart: selectedDayStart,
         timeZone: placeTimeZone,
-        timelineStartMinute,
-        timelineEndMinute,
+        hours,
       }),
-    [
-      activeBlocksForSelectedDay,
-      dayKey,
-      placeTimeZone,
-      selectedDayStart,
-      timelineEndMinute,
-      timelineStartMinute,
-    ],
+    [activeBlocksForSelectedDay, dayKey, placeTimeZone, selectedDayStart, hours],
   );
 
   const weekTimelineBlocksByDayKey = React.useMemo(() => {
@@ -472,17 +441,9 @@ function OwnerAvailabilityStudioInner() {
       blocks: activeBlocks,
       weekDayKeys,
       timeZone: placeTimeZone,
-      timelineStartMinute,
-      timelineEndMinute,
+      hours,
     });
-  }, [
-    activeBlocks,
-    isWeekView,
-    placeTimeZone,
-    timelineEndMinute,
-    timelineStartMinute,
-    weekDayKeys,
-  ]);
+  }, [activeBlocks, isWeekView, placeTimeZone, hours, weekDayKeys]);
 
   const timelineReservations = React.useMemo(
     () =>
@@ -491,17 +452,9 @@ function OwnerAvailabilityStudioInner() {
         dayKey,
         dayStart: selectedDayStart,
         timeZone: placeTimeZone,
-        timelineStartMinute,
-        timelineEndMinute,
+        hours,
       }),
-    [
-      activeReservations,
-      dayKey,
-      placeTimeZone,
-      selectedDayStart,
-      timelineEndMinute,
-      timelineStartMinute,
-    ],
+    [activeReservations, dayKey, placeTimeZone, selectedDayStart, hours],
   );
 
   const weekTimelineReservationsByDayKey = React.useMemo(() => {
@@ -512,17 +465,9 @@ function OwnerAvailabilityStudioInner() {
       reservations: activeReservations,
       weekDayKeys,
       timeZone: placeTimeZone,
-      timelineStartMinute,
-      timelineEndMinute,
+      hours,
     });
-  }, [
-    activeReservations,
-    isWeekView,
-    placeTimeZone,
-    timelineEndMinute,
-    timelineStartMinute,
-    weekDayKeys,
-  ]);
+  }, [activeReservations, isWeekView, placeTimeZone, hours, weekDayKeys]);
 
   const draftTimelineBlocks = React.useMemo(
     () =>
@@ -532,21 +477,11 @@ function OwnerAvailabilityStudioInner() {
             dayKey,
             dayStart: selectedDayStart,
             timeZone: placeTimeZone,
-            timelineStartMinute,
-            timelineEndMinute,
+            hours,
             courtId,
           })
         : [],
-    [
-      courtId,
-      dayKey,
-      draftRows,
-      isImportOverlay,
-      placeTimeZone,
-      selectedDayStart,
-      timelineEndMinute,
-      timelineStartMinute,
-    ],
+    [courtId, dayKey, draftRows, isImportOverlay, placeTimeZone, selectedDayStart, hours],
   );
 
   const draftWeekTimelineBlocksByDayKey = React.useMemo(() => {
@@ -557,20 +492,10 @@ function OwnerAvailabilityStudioInner() {
       draftRows,
       weekDayKeys,
       timeZone: placeTimeZone,
-      timelineStartMinute,
-      timelineEndMinute,
+      hours,
       courtId,
     });
-  }, [
-    courtId,
-    draftRows,
-    isImportOverlay,
-    isWeekView,
-    placeTimeZone,
-    timelineEndMinute,
-    timelineStartMinute,
-    weekDayKeys,
-  ]);
+  }, [courtId, draftRows, isImportOverlay, isWeekView, placeTimeZone, hours, weekDayKeys]);
 
   const utils = useModOwnerCourtStudioTransport();
   const {
@@ -1337,7 +1262,6 @@ function OwnerAvailabilityStudioInner() {
         timelineBlocks,
         timelineReservations,
         placeTimeZone,
-        startHour,
         hours,
         dayOfWeek,
         courtHours: courtHoursQuery.data ?? [],
@@ -1350,7 +1274,6 @@ function OwnerAvailabilityStudioInner() {
       hours,
       placeTimeZone,
       setCommittedRange,
-      startHour,
       timelineBlocks,
       timelineReservations,
       courtHoursQuery.data,
@@ -1394,18 +1317,21 @@ function OwnerAvailabilityStudioInner() {
 
   const selectedTimeLabel = React.useMemo(() => {
     if (!committedRange) return "";
+    const startHourVal = hours[committedRange.startIdx];
+    const endHourVal = hours[committedRange.endIdx];
+    if (startHourVal === undefined || endHourVal === undefined) return "";
     const s = buildDateFromDayKey(
       committedDayKey,
-      (committedRange.startIdx + startHour) * 60,
+      startHourVal * 60,
       placeTimeZone,
     );
     const e = buildDateFromDayKey(
       committedDayKey,
-      (committedRange.endIdx + startHour + 1) * 60,
+      (endHourVal + 1) * 60,
       placeTimeZone,
     );
     return formatTimeRangeInTimeZone(s, e, placeTimeZone);
-  }, [committedDayKey, committedRange, placeTimeZone, startHour]);
+  }, [committedDayKey, committedRange, hours, placeTimeZone]);
 
   const shouldReduceMotion = useReducedMotion();
   const viewTransition = shouldReduceMotion
@@ -1559,11 +1485,8 @@ function OwnerAvailabilityStudioInner() {
   });
 
   const openCustomDialog = React.useCallback(() => {
-    const start = buildDateFromDayKey(
-      dayKey,
-      timelineStartMinute,
-      placeTimeZone,
-    );
+    const firstHour = hours[0] ?? 6;
+    const start = buildDateFromDayKey(dayKey, firstHour * 60, placeTimeZone);
     const end = addMinutes(start, 60);
     customForm.reset({
       blockType: "MAINTENANCE",
@@ -1572,13 +1495,7 @@ function OwnerAvailabilityStudioInner() {
       reason: "",
     });
     setCustomDialogOpen(true);
-  }, [
-    customForm,
-    dayKey,
-    placeTimeZone,
-    setCustomDialogOpen,
-    timelineStartMinute,
-  ]);
+  }, [customForm, dayKey, hours, placeTimeZone, setCustomDialogOpen]);
 
   const handleCustomSubmit = React.useCallback(
     async (values: CustomBlockFormValues) => {
@@ -1673,14 +1590,17 @@ function OwnerAvailabilityStudioInner() {
       const effectiveDayKey = isWeekView
         ? (weekCommittedDayKey ?? dayKey)
         : dayKey;
+      const startHourVal = hours[committedRange.startIdx];
+      const endHourVal = hours[committedRange.endIdx];
+      if (startHourVal === undefined || endHourVal === undefined) return;
       const s = buildDateFromDayKey(
         effectiveDayKey,
-        (committedRange.startIdx + startHour) * 60,
+        startHourVal * 60,
         placeTimeZone,
       );
       const e = buildDateFromDayKey(
         effectiveDayKey,
-        (committedRange.endIdx + startHour + 1) * 60,
+        (endHourVal + 1) * 60,
         placeTimeZone,
       );
 
@@ -1747,13 +1667,13 @@ function OwnerAvailabilityStudioInner() {
     createMaintenance,
     createWalkIn,
     dayKey,
+    hours,
     isWeekView,
     selectionBlockType,
     committedRange,
     organization?.id,
     placeTimeZone,
     resetSelectionPanel,
-    startHour,
     weekCommittedDayKey,
   ]);
 

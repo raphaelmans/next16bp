@@ -81,7 +81,7 @@ describe("ChatApi", () => {
 
     // Act + Assert
     await expect(
-      api.queryChatInboxListArchivedThreadIds({ threadKind: "support" }),
+      api.queryChatInboxListArchivedThreadIds({ threadKind: "reservation" }),
     ).rejects.toBe(appError);
   });
 });

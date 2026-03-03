@@ -37,6 +37,7 @@ describe("NotificationInbox", () => {
       title: "Reservation confirmed",
       body: "Court A",
       href: "/reservations/r1",
+      eventType: "reservation.confirmed",
       readAt: null,
       createdAt: new Date().toISOString(),
     };

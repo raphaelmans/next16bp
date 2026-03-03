@@ -7,7 +7,7 @@ import {
 import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";
 import type { RequestContext } from "@/lib/shared/kernel/context";
 
-export type ChatInboxThreadKind = "reservation" | "support";
+export type ChatInboxThreadKind = "reservation";
 
 export interface IChatInboxArchiveRepository {
   upsert(

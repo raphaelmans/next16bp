@@ -122,8 +122,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
       const dayWindows = getWindowsForDayOfWeek(courtHoursWindows, dayOfWeek);
       const openCellIndices = buildOpenCellIndexSet({
         windowsForDay: dayWindows,
-        axisStartHour: startHour,
-        cellCount: hours.length,
+        hours,
         snapMinutes: 60,
       });
 

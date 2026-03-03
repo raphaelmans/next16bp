@@ -35,6 +35,29 @@ import {
   type NotificationInboxItem,
 } from "./notification-inbox";
 
+async function invalidateQueriesForEventType(
+  eventType: string,
+  utils: ReturnType<typeof trpc.useUtils>,
+) {
+  switch (eventType) {
+    case "place_verification.approved":
+    case "place_verification.rejected":
+      await Promise.allSettled([
+        utils.placeVerification.getByPlace.invalidate(),
+        utils.placeManagement.getById.invalidate(),
+        utils.placeManagement.invalidate(),
+      ]);
+      break;
+    case "claim_request.approved":
+    case "claim_request.rejected":
+      await Promise.allSettled([
+        utils.claimRequest.getMy.invalidate(),
+        utils.ownerSetup.getStatus.invalidate(),
+      ]);
+      break;
+  }
+}
+
 const bellIcons: Record<NotificationBellIconVariant, typeof Bell> = {
   bell: Bell,
   "bell-ring": BellRing,
@@ -177,6 +200,8 @@ export function NotificationBell({
       if (!wasRead) {
         await markAsReadMutation.mutateAsync({ id: item.id });
       }
+
+      await invalidateQueriesForEventType(item.eventType, utils);
 
       if (item.href) {
         setOpen(false);

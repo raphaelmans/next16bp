@@ -1,10 +1,3 @@
-import {
-  parseSupportThreadId,
-  type SupportThreadKind,
-} from "@/lib/modules/chat/shared/domain";
-
-export type { SupportThreadKind };
-
 export type ReservationThreadMetaDomainInput = {
   status: string;
   updatedAtIso?: string | null;
@@ -121,38 +114,6 @@ export function sumReservationUnreadCounts(input: {
     const unread = input.unreadByReservationId.get(reservationId) ?? 0;
     return sum + Math.max(0, unread);
   }, 0);
-}
-
-export function getSupportThreadKind(
-  channelId: string | null | undefined,
-): SupportThreadKind | null {
-  if (!channelId) {
-    return null;
-  }
-
-  return parseSupportThreadId(channelId)?.supportKind ?? null;
-}
-
-export function getSupportThreadRequestId(
-  channelId: string | null | undefined,
-): string | null {
-  if (!channelId) {
-    return null;
-  }
-
-  return parseSupportThreadId(channelId)?.requestId ?? null;
-}
-
-export function formatSupportThreadTitle(channelId: string): string {
-  const parsed = parseSupportThreadId(channelId);
-  if (!parsed) {
-    return "Support thread";
-  }
-
-  const short = parsed.requestId.slice(0, 8).toUpperCase();
-  return parsed.supportKind === "claim"
-    ? `Claim • CR-${short}`
-    : `Verification • VR-${short}`;
 }
 
 export function isReservationStatusChatEnabled(status: string): boolean {

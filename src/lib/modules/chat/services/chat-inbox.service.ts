@@ -1,11 +1,9 @@
 import { eq } from "drizzle-orm";
 import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
 import {
-  claimRequest,
   court,
   organization,
   place,
-  placeVerificationRequest,
   profile,
   reservation,
   reservationGroup,
@@ -22,7 +20,7 @@ import type {
   ChatInboxThreadKind,
   IChatInboxArchiveRepository,
 } from "../repositories/chat-inbox-archive.repository";
-import { parseInboxThreadRef, type SupportThreadKind } from "../shared/domain";
+import { parseInboxThreadRef } from "../shared/domain";
 
 type Viewer = {
   userId: string;
@@ -94,56 +92,6 @@ export class ChatInboxService {
     throw new AuthorizationError("You cannot archive this reservation thread");
   }
 
-  private async assertSupportAccess(
-    viewer: Viewer,
-    supportKind: SupportThreadKind,
-    requestId: string,
-    ctx?: RequestContext,
-  ): Promise<void> {
-    const client = this.getClient(ctx);
-
-    if (supportKind === "claim") {
-      const rows = await client
-        .select({
-          id: claimRequest.id,
-          requestedByUserId: claimRequest.requestedByUserId,
-        })
-        .from(claimRequest)
-        .where(eq(claimRequest.id, requestId))
-        .limit(1);
-
-      const record = rows[0];
-      if (!record) {
-        throw new NotFoundError("Support claim thread not found");
-      }
-
-      const isOwner = record.requestedByUserId === viewer.userId;
-      if (!(viewer.role === "admin" || isOwner)) {
-        throw new AuthorizationError("You cannot archive this support thread");
-      }
-      return;
-    }
-
-    const rows = await client
-      .select({
-        id: placeVerificationRequest.id,
-        requestedByUserId: placeVerificationRequest.requestedByUserId,
-      })
-      .from(placeVerificationRequest)
-      .where(eq(placeVerificationRequest.id, requestId))
-      .limit(1);
-
-    const record = rows[0];
-    if (!record) {
-      throw new NotFoundError("Support verification thread not found");
-    }
-
-    const isOwner = record.requestedByUserId === viewer.userId;
-    if (!(viewer.role === "admin" || isOwner)) {
-      throw new AuthorizationError("You cannot archive this support thread");
-    }
-  }
-
   private async assertReservationGroupAccess(
     viewer: Viewer,
     reservationGroupId: string,
@@ -197,14 +145,8 @@ export class ChatInboxService {
   private parseThreadRef(threadKind: ChatInboxThreadKind, threadId: string) {
     const parsed = parseInboxThreadRef(threadKind, threadId);
     if (!parsed) {
-      if (threadKind === "reservation") {
-        throw new ValidationError(
-          "Reservation thread ids must start with 'res-' or 'grp-'",
-        );
-      }
-
       throw new ValidationError(
-        "Support thread ids must start with 'cr-' or 'vr-'",
+        "Reservation thread ids must start with 'res-' or 'grp-'",
       );
     }
 
@@ -214,10 +156,6 @@ export class ChatInboxService {
   private resolveThreadKind(threadId: string): ChatInboxThreadKind | null {
     if (parseInboxThreadRef("reservation", threadId)) {
       return "reservation";
-    }
-
-    if (parseInboxThreadRef("support", threadId)) {
-      return "support";
     }
 
     return null;
@@ -231,12 +169,12 @@ export class ChatInboxService {
   ) {
     const parsed = this.parseThreadRef(threadKind, threadId);
 
-    if (parsed.threadKind === "reservation") {
-      if ("reservationId" in parsed) {
-        await this.assertReservationAccess(viewer, parsed.reservationId, ctx);
-        return;
-      }
+    if ("reservationId" in parsed) {
+      await this.assertReservationAccess(viewer, parsed.reservationId, ctx);
+      return;
+    }
 
+    if ("reservationGroupId" in parsed) {
       await this.assertReservationGroupAccess(
         viewer,
         parsed.reservationGroupId,
@@ -244,13 +182,6 @@ export class ChatInboxService {
       );
       return;
     }
-
-    await this.assertSupportAccess(
-      viewer,
-      parsed.supportKind,
-      parsed.requestId,
-      ctx,
-    );
   }
 
   async hasThreadAccess(

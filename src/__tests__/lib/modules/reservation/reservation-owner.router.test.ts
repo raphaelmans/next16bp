@@ -472,7 +472,7 @@ describe("reservationOwnerRouter", () => {
     // Arrange
     const caller = createCaller();
     mockReservationOwnerService.getForOrganization.mockRejectedValue(
-      new NotOrganizationOwnerError(TEST_IDS.organizationId),
+      new NotOrganizationOwnerError(),
     );
 
     // Act + Assert

@@ -10,6 +10,7 @@ import {
   formatTimeInTimeZone,
 } from "@/common/format";
 import { useNowMs } from "@/common/hooks/use-now";
+import { sortHoursInScheduleOrder } from "@/common/schedule-hours";
 import { getZonedDayRangeFromDayKey } from "@/common/time-zone";
 import { cn } from "@/lib/utils";
 import {
@@ -435,17 +436,14 @@ export function AvailabilityWeekGrid({
   const nowMs = useNowMs({ intervalMs: 10_000 });
 
   const allHours = React.useMemo(() => {
-    let minHour = 23;
-    let maxHour = 0;
+    const hourSet = new Set<number>();
     for (const [, slots] of slotsByDay) {
       for (const slot of slots) {
-        const h = getHourFromSlot(slot, timeZone);
-        if (h < minHour) minHour = h;
-        if (h > maxHour) maxHour = h;
+        hourSet.add(getHourFromSlot(slot, timeZone));
       }
     }
-    if (minHour > maxHour) return [] as number[];
-    return Array.from({ length: maxHour - minHour + 1 }, (_, i) => minHour + i);
+    if (hourSet.size === 0) return [] as number[];
+    return sortHoursInScheduleOrder(Array.from(hourSet));
   }, [slotsByDay, timeZone]);
 
   const slotLookup = React.useMemo(() => {
@@ -845,13 +843,15 @@ function WeekGridInner({
 export type AvailabilityWeekGridSkeletonProps = {
   dayKeys: string[];
   timeZone: string;
+  hours?: number[];
 };
 
 export function AvailabilityWeekGridSkeleton({
   dayKeys,
   timeZone,
+  hours,
 }: AvailabilityWeekGridSkeletonProps) {
-  const skeletonHours = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+  const skeletonHours = hours ?? [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
   return (
     <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
       <div className="min-w-[700px]">

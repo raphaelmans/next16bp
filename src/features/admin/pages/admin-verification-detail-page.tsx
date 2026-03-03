@@ -38,7 +38,6 @@ import {
   useQueryPlaceVerificationRequest,
 } from "@/features/admin/hooks";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
-import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { cn } from "@/lib/utils";
 
 const statusConfig = {
@@ -435,25 +434,6 @@ export default function AdminVerificationDetailPage({
           </div>
 
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Support Chat</CardTitle>
-                <CardDescription>
-                  Message the owner for clarifications and missing details.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <UnifiedChatInterface
-                  surface="sheet"
-                  domain="support"
-                  kind="verification"
-                  requestId={requestId}
-                  triggerLabel="Message owner"
-                  triggerVariant="outline"
-                />
-              </CardContent>
-            </Card>
-
             {isPending ? (
               <PlaceVerificationReviewActions
                 placeName={place.name}

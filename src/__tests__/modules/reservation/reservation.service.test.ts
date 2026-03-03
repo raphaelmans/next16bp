@@ -790,7 +790,7 @@ describe("ReservationService.markPayment", () => {
     await expect(
       service.markPayment("user-1", TEST_IDS.profileId, {
         reservationId: "reservation-1",
-        termsAccepted: false,
+        termsAccepted: false as unknown as true,
       }),
     ).rejects.toBeInstanceOf(TermsNotAcceptedError);
     expect(reservationRepository.findByIdForUpdate).not.toHaveBeenCalled();

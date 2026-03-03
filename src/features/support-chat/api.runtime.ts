@@ -1,1 +1,0 @@
-export { getSupportChatApi } from "./api";

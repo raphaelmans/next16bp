@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { makeSupportChatService } from "@/lib/modules/chat/factories/support-chat.factory";
 import { SubmitClaimRequestSchema } from "@/lib/modules/claim-request/dtos";
 import { makeClaimRequestService } from "@/lib/modules/claim-request/factories/claim-request.factory";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
@@ -8,7 +7,6 @@ import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { parseJson } from "@/lib/shared/infra/http/parse";
 import { getRequestId } from "@/lib/shared/infra/http/request-id";
 import { validate } from "@/lib/shared/infra/http/validate";
-import { logger } from "@/lib/shared/infra/logger";
 import type {
   ApiErrorResponse,
   ApiResponse,
@@ -62,24 +60,6 @@ export async function POST(req: Request) {
       session.userId,
       input,
     );
-
-    const supportChatService = makeSupportChatService();
-    try {
-      await supportChatService.provisionClaimThread({
-        claimRequestId: claimRequest.id,
-        createdByUserId: session.userId,
-      });
-    } catch (error) {
-      logger.warn(
-        {
-          event: "claim_support_chat.provision_failed",
-          claimRequestId: claimRequest.id,
-          userId: session.userId,
-          error: error instanceof Error ? error.message : String(error),
-        },
-        "Failed to auto-provision claim support chat",
-      );
-    }
 
     return NextResponse.json<ApiResponse<typeof claimRequest>>(
       wrapResponse(claimRequest),

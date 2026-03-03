@@ -1,11 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
-  formatSupportThreadTitle,
   getChatStatusBadgeClassName,
   getPlayerReservationStatusLabel,
   getReservationReadOnlyReason,
-  getSupportThreadKind,
-  getSupportThreadRequestId,
   isReservationMetaArchived,
   isReservationStatusChatEnabled,
   parseTimestampMs,
@@ -201,38 +198,6 @@ describe("chat domain", () => {
 
       // Assert
       expect(unread).toBe(3);
-    });
-  });
-
-  describe("support thread helpers", () => {
-    it("claim thread id -> claim kind and request id", () => {
-      // Arrange
-      const channelId = "cr-claim-123";
-
-      // Act
-      const kind = getSupportThreadKind(channelId);
-      const requestId = getSupportThreadRequestId(channelId);
-      const title = formatSupportThreadTitle(channelId);
-
-      // Assert
-      expect(kind).toBe("claim");
-      expect(requestId).toBe("claim-123");
-      expect(title).toBe("Claim • CR-CLAIM-12");
-    });
-
-    it("invalid support thread id -> null values with fallback title", () => {
-      // Arrange
-      const channelId = "support-123";
-
-      // Act
-      const kind = getSupportThreadKind(channelId);
-      const requestId = getSupportThreadRequestId(channelId);
-      const title = formatSupportThreadTitle(channelId);
-
-      // Assert
-      expect(kind).toBeNull();
-      expect(requestId).toBeNull();
-      expect(title).toBe("Support thread");
     });
   });
 

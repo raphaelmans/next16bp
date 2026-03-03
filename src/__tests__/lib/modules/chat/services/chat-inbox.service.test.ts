@@ -199,8 +199,8 @@ describe("ChatInboxService", () => {
 
       // Act
       const result = await service.archiveThread(viewer, {
-        threadKind: "support",
-        threadId: "cr-1",
+        threadKind: "reservation",
+        threadId: "res-1",
       });
 
       // Assert
@@ -208,8 +208,8 @@ describe("ChatInboxService", () => {
       expect(archiveRepository.upsert).toHaveBeenCalledWith(
         {
           userId: "user-1",
-          threadKind: "support",
-          threadId: "cr-1",
+          threadKind: "reservation",
+          threadId: "res-1",
         },
         undefined,
       );

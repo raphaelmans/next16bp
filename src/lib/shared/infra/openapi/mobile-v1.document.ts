@@ -888,39 +888,6 @@ export function createMobileV1OpenApiDocument(args: {
         }),
       },
 
-      "/organization/chat/claims/{claimRequestId}/session": {
-        get: protectedGet({
-          operationId: "organizationSupportChatClaimSession",
-          path: z.object({ claimRequestId: UuidSchema }),
-        }),
-      },
-
-      "/organization/chat/claims/{claimRequestId}/messages": {
-        post: protectedMutation({
-          operationId: "organizationSupportChatClaimSendMessage",
-          path: z.object({ claimRequestId: UuidSchema }),
-          bodyType: "json",
-          successSchema: OkResponseSchema,
-        }),
-      },
-
-      "/organization/chat/verifications/{placeVerificationRequestId}/session": {
-        get: protectedGet({
-          operationId: "organizationSupportChatVerificationSession",
-          path: z.object({ placeVerificationRequestId: UuidSchema }),
-        }),
-      },
-
-      "/organization/chat/verifications/{placeVerificationRequestId}/messages":
-        {
-          post: protectedMutation({
-            operationId: "organizationSupportChatVerificationSendMessage",
-            path: z.object({ placeVerificationRequestId: UuidSchema }),
-            bodyType: "json",
-            successSchema: OkResponseSchema,
-          }),
-        },
-
       "/push-tokens": {
         put: protectedMutation({
           operationId: "pushTokenUpsert",

@@ -44,6 +44,10 @@ export function useQueryPlaceVerification(placeId: string) {
     { placeId },
     {
       enabled: !!placeId,
+      refetchInterval: (query) => {
+        const status = query.state.data?.verification?.status;
+        return status === "PENDING" ? 30_000 : false;
+      },
       select: (data): PlaceVerificationDetails => ({
         verification: data.verification
           ? {

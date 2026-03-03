@@ -340,7 +340,6 @@ function OwnerCourtAvailabilityInner({
   );
 
   const timelineStartMinute = startHour * 60;
-  const timelineEndMinute = endHour * 60;
 
   // Data fetching — range covers visible days (day or week)
   const blocksRange = React.useMemo(
@@ -436,17 +435,9 @@ function OwnerCourtAvailabilityInner({
         dayKey,
         dayStart: selectedDayStart,
         timeZone: placeTimeZone,
-        timelineStartMinute,
-        timelineEndMinute,
+        hours,
       }),
-    [
-      activeBlocksForSelectedDay,
-      dayKey,
-      placeTimeZone,
-      selectedDayStart,
-      timelineEndMinute,
-      timelineStartMinute,
-    ],
+    [activeBlocksForSelectedDay, dayKey, hours, placeTimeZone, selectedDayStart],
   );
 
   const timelineReservations = React.useMemo(
@@ -456,17 +447,9 @@ function OwnerCourtAvailabilityInner({
         dayKey,
         dayStart: selectedDayStart,
         timeZone: placeTimeZone,
-        timelineStartMinute,
-        timelineEndMinute,
+        hours,
       }),
-    [
-      activeReservations,
-      dayKey,
-      placeTimeZone,
-      selectedDayStart,
-      timelineEndMinute,
-      timelineStartMinute,
-    ],
+    [activeReservations, dayKey, hours, placeTimeZone, selectedDayStart],
   );
 
   // Week view timeline items (blocks mapped by day key)
@@ -478,17 +461,9 @@ function OwnerCourtAvailabilityInner({
       blocks: activeBlocks,
       weekDayKeys,
       timeZone: placeTimeZone,
-      timelineStartMinute,
-      timelineEndMinute,
+      hours,
     });
-  }, [
-    activeBlocks,
-    isWeekView,
-    placeTimeZone,
-    timelineEndMinute,
-    timelineStartMinute,
-    weekDayKeys,
-  ]);
+  }, [activeBlocks, hours, isWeekView, placeTimeZone, weekDayKeys]);
 
   const weekTimelineReservationsByDayKey = React.useMemo(() => {
     if (!isWeekView) {
@@ -498,17 +473,9 @@ function OwnerCourtAvailabilityInner({
       reservations: activeReservations,
       weekDayKeys,
       timeZone: placeTimeZone,
-      timelineStartMinute,
-      timelineEndMinute,
+      hours,
     });
-  }, [
-    activeReservations,
-    isWeekView,
-    placeTimeZone,
-    timelineEndMinute,
-    timelineStartMinute,
-    weekDayKeys,
-  ]);
+  }, [activeReservations, hours, isWeekView, placeTimeZone, weekDayKeys]);
 
   // Mutations
   const utils = useModOwnerCourtStudioTransport();
@@ -1027,7 +994,6 @@ function OwnerCourtAvailabilityInner({
         timelineBlocks,
         timelineReservations,
         placeTimeZone,
-        startHour,
         hours,
         dayOfWeek,
         courtHours: courtHoursQuery.data ?? [],
@@ -1040,7 +1006,6 @@ function OwnerCourtAvailabilityInner({
       hours,
       placeTimeZone,
       setCommittedRange,
-      startHour,
       timelineBlocks,
       timelineReservations,
       courtHoursQuery.data,

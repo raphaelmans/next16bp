@@ -35,21 +35,6 @@ export interface IChatApi {
   queryReservationChatGetThreadMetas: ProcedureFn<
     TrpcClientApi["reservationChat"]["getThreadMetas"]["query"]
   >;
-  mutSupportChatBackfillClaimThreads: ProcedureFn<
-    TrpcClientApi["supportChat"]["backfillClaimThreads"]["mutate"]
-  >;
-  mutSupportChatSendClaimMessage: ProcedureFn<
-    TrpcClientApi["supportChat"]["sendClaimMessage"]["mutate"]
-  >;
-  mutSupportChatSendVerificationMessage: ProcedureFn<
-    TrpcClientApi["supportChat"]["sendVerificationMessage"]["mutate"]
-  >;
-  querySupportChatGetClaimSession: ProcedureFn<
-    TrpcClientApi["supportChat"]["getClaimSession"]["query"]
-  >;
-  querySupportChatGetVerificationSession: ProcedureFn<
-    TrpcClientApi["supportChat"]["getVerificationSession"]["query"]
-  >;
   mutChatInboxArchiveThread: ProcedureFn<
     TrpcClientApi["chatInbox"]["archiveThread"]["mutate"]
   >;
@@ -158,61 +143,6 @@ export class ChatApi {
       this.clientApi,
       ["reservationChat", "getThreadMetas"],
       (clientApi) => clientApi.reservationChat.getThreadMetas.query,
-      input,
-      this.toAppError,
-    );
-
-  mutSupportChatBackfillClaimThreads: ProcedureFn<
-    TrpcClientApi["supportChat"]["backfillClaimThreads"]["mutate"]
-  > = async (input) =>
-    callTrpcMutation(
-      this.clientApi,
-      ["supportChat", "backfillClaimThreads"],
-      (clientApi) => clientApi.supportChat.backfillClaimThreads.mutate,
-      input,
-      this.toAppError,
-    );
-
-  mutSupportChatSendClaimMessage: ProcedureFn<
-    TrpcClientApi["supportChat"]["sendClaimMessage"]["mutate"]
-  > = async (input) =>
-    callTrpcMutation(
-      this.clientApi,
-      ["supportChat", "sendClaimMessage"],
-      (clientApi) => clientApi.supportChat.sendClaimMessage.mutate,
-      input,
-      this.toAppError,
-    );
-
-  mutSupportChatSendVerificationMessage: ProcedureFn<
-    TrpcClientApi["supportChat"]["sendVerificationMessage"]["mutate"]
-  > = async (input) =>
-    callTrpcMutation(
-      this.clientApi,
-      ["supportChat", "sendVerificationMessage"],
-      (clientApi) => clientApi.supportChat.sendVerificationMessage.mutate,
-      input,
-      this.toAppError,
-    );
-
-  querySupportChatGetClaimSession: ProcedureFn<
-    TrpcClientApi["supportChat"]["getClaimSession"]["query"]
-  > = async (input) =>
-    callTrpcQuery(
-      this.clientApi,
-      ["supportChat", "getClaimSession"],
-      (clientApi) => clientApi.supportChat.getClaimSession.query,
-      input,
-      this.toAppError,
-    );
-
-  querySupportChatGetVerificationSession: ProcedureFn<
-    TrpcClientApi["supportChat"]["getVerificationSession"]["query"]
-  > = async (input) =>
-    callTrpcQuery(
-      this.clientApi,
-      ["supportChat", "getVerificationSession"],
-      (clientApi) => clientApi.supportChat.getVerificationSession.query,
       input,
       this.toAppError,
     );

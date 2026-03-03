@@ -7,7 +7,7 @@ import {
 import { AppError } from "@/lib/shared/kernel/errors";
 import { makeChatInboxService } from "./factories/chat-inbox.factory";
 
-const ThreadKindSchema = z.enum(["reservation", "support"]);
+const ThreadKindSchema = z.enum(["reservation"]);
 
 function handleChatInboxError(error: unknown): never {
   if (error instanceof AppError) {
