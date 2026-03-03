@@ -32,7 +32,7 @@
     "db:pull": "dotenvx run --env-file=.env.local -- drizzle-kit pull",
     "db:generate": "dotenvx run --env-file=.env.local -- drizzle-kit generate",
     "db:migrate": "dotenvx run --env-file=.env.local -- drizzle-kit migrate",
-    "db:push": "dotenvx run --env-file=.env.local -- drizzle-kit push",
+    "db:push": "dotenvx run --env-file=.env.production -- drizzle-kit push",
     "db:studio": "dotenvx run --env-file=.env.local -- drizzle-kit studio",
     "db:seed:sports": "dotenvx run --env-file=.env.local -- tsx scripts/seed-sports.ts",
     "db:seed:buckets": "dotenvx run --env-file=.env.local -- tsx scripts/seed-storage-buckets.ts",
