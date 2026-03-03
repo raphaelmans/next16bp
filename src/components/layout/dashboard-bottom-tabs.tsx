@@ -286,7 +286,7 @@ function OrganizationBottomTabs({
   const noOrgMode = !organizationId;
   const role: OrganizationMemberRole | null =
     permissionContext?.role ?? (permissionContextLoading ? null : "VIEWER");
-  const tabs = role ? getOrgTabsForRole(role) : [];
+  const baseTabs = role ? getOrgTabsForRole(role) : [];
 
   const showGetStarted =
     shouldShowOwnerGetStartedNav({
@@ -302,17 +302,32 @@ function OrganizationBottomTabs({
     }) &&
     (noOrgMode || (permissionContext ? isOwnerRole(permissionContext) : false));
 
+  // When setup is incomplete, swap Reservations → Get Started in bottom bar
+  const tabs = showGetStarted
+    ? baseTabs.map((tab) =>
+        tab.label === "Reservations"
+          ? {
+              label: "Get Started",
+              href: appRoutes.organization.getStarted,
+              icon: ClipboardList,
+              showBadge: false,
+            }
+          : tab,
+      )
+    : baseTabs;
+
   const roleSections = role ? getOrgMoreSectionsForRole(role) : [];
 
+  // When Get Started replaces Reservations, add Reservations to More sheet
   const moreSections: MoreSheetSection[] = [
     ...(showGetStarted
       ? [
           {
             items: [
               {
-                label: "Get Started",
-                href: appRoutes.organization.getStarted,
-                icon: ClipboardList,
+                label: "Reservations",
+                href: appRoutes.organization.reservations,
+                icon: CalendarDays,
               },
             ],
           },
