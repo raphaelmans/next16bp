@@ -1,11 +1,11 @@
-export const OWNER_GET_STARTED_LAST_UPDATED_LABEL = "February 23, 2026";
+export const OWNER_GET_STARTED_LAST_UPDATED_LABEL = "March 3, 2026";
 
 export const OWNER_GET_STARTED_FAQS = [
   {
     id: "is-free",
     question: "Is KudosCourts really free?",
     answer:
-      "The essentials are free: reservation inbox, Availability Studio, court management, guest profiles, verified badge, and P2P payment coordination. No subscription fee for core setup.",
+      "The essentials are free: reservation inbox, Availability Studio, court management, guest profiles, team access with roles and permissions, multi-channel notifications, verified badge, and P2P payment coordination. No subscription fee for core setup.",
   },
   {
     id: "payments",
@@ -44,10 +44,22 @@ export const OWNER_GET_STARTED_FAQS = [
       "Yes. You can import from ICS, CSV, XLSX, or screenshots to populate your schedule without starting from zero.",
   },
   {
+    id: "team-access",
+    question: "Can I invite my staff to help manage bookings?",
+    answer:
+      "Yes. Invite team members by email and assign one of three roles: Owner (full control), Manager (reservations, guest bookings, chat, notifications, and team management), or Viewer (read-only reservation access). Each role maps to six granular permissions so you control exactly who sees and does what.",
+  },
+  {
+    id: "notifications",
+    question: "How do notifications work?",
+    answer:
+      "Notifications are delivered through five channels: in-app inbox, web push, mobile push, email, and SMS. Each team member manages their own notification preferences and can opt in to reservation alerts per venue.",
+  },
+  {
     id: "business-plus",
     question: "What is Business Plus?",
     answer:
-      "Business Plus is an upcoming premium tier with analytics, unlimited in-app chat, SEO and AI search visibility tools, integrations, and multi-user staff access.",
+      "Business Plus is an upcoming premium tier with analytics, unlimited in-app chat, SEO and AI search visibility tools, and integrations.",
   },
   {
     id: "availability-studio",

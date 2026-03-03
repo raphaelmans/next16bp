@@ -3,6 +3,7 @@
 import {
   Building,
   Calendar,
+  Loader2,
   LogOut,
   Menu,
   Search,
@@ -47,7 +48,7 @@ export function Navbar({ className }: NavbarProps) {
 
   const { data: sessionUser, isLoading: sessionLoading } =
     useQueryAuthSession();
-  const { mutate: logout } = useMutAuthLogout();
+  const { mutate: logout, isPending: isSigningOut } = useMutAuthLogout();
 
   const { data: orgs } = useQueryAuthMyOrganizations(!!sessionUser);
   const { data: userPreference } = useQueryAuthUserPreference(!!sessionUser);
@@ -97,8 +98,7 @@ export function Navbar({ className }: NavbarProps) {
   const handleSignOut = () => {
     logout(undefined, {
       onSuccess: () => {
-        router.push(appRoutes.index.base);
-        setIsOpen(false);
+        window.location.href = appRoutes.index.base;
       },
     });
   };
@@ -184,6 +184,7 @@ export function Navbar({ className }: NavbarProps) {
             ownerMenuHref={showOwnerFirstMenu ? ownerMenuHref : undefined}
             ownerMenuLabel={ownerMenuLabel}
             onSignOut={handleSignOut}
+            isSigningOut={isSigningOut}
           />
         ) : (
           <Button variant="outline" asChild className="font-heading">
@@ -375,9 +376,14 @@ export function Navbar({ className }: NavbarProps) {
                 variant="outline"
                 className="w-full justify-start text-destructive hover:text-destructive"
                 onClick={handleSignOut}
+                disabled={isSigningOut}
               >
-                <LogOut className="h-4 w-4 mr-2" />
-                Sign Out
+                {isSigningOut ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <LogOut className="h-4 w-4 mr-2" />
+                )}
+                {isSigningOut ? "Signing Out..." : "Sign Out"}
               </Button>
             ) : (
               <>

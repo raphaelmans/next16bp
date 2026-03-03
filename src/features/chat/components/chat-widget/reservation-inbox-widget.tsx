@@ -178,11 +178,9 @@ export function ReservationInboxWidget({
   const myUserId = authQuery.data?.id ?? null;
 
   useEffect(() => {
-    const storedOpen = readLocalStorage(config.storageKeys.open) === "1";
     const storedActive = readLocalStorage(
       config.storageKeys.activeReservationThreadId,
     );
-    setOpen(storedOpen);
     if (storedActive?.startsWith("res-") || storedActive?.startsWith("grp-")) {
       setActiveThreadId(storedActive);
     } else if (storedActive) {
@@ -190,11 +188,7 @@ export function ReservationInboxWidget({
     } else {
       setActiveThreadId(null);
     }
-  }, [config.storageKeys.activeReservationThreadId, config.storageKeys.open]);
-
-  useEffect(() => {
-    writeLocalStorage(config.storageKeys.open, open ? "1" : "0");
-  }, [config.storageKeys.open, open]);
+  }, [config.storageKeys.activeReservationThreadId]);
 
   useEffect(() => {
     if (activeThreadId) {

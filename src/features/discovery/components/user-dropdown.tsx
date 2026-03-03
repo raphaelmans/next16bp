@@ -4,6 +4,7 @@ import {
   Building2,
   Calendar,
   ChevronDown,
+  Loader2,
   LogOut,
   Shield,
   User,
@@ -35,6 +36,7 @@ interface UserDropdownProps {
   ownerMenuHref?: string;
   ownerMenuLabel?: string;
   onSignOut?: () => void;
+  isSigningOut?: boolean;
 }
 
 export function UserDropdown({
@@ -44,6 +46,7 @@ export function UserDropdown({
   ownerMenuHref,
   ownerMenuLabel = "Venue Dashboard",
   onSignOut,
+  isSigningOut = false,
 }: UserDropdownProps) {
   const initials = user.name
     .split(" ")
@@ -55,9 +58,6 @@ export function UserDropdown({
     defaultPortal === "organization" && Boolean(ownerMenuHref);
 
   const handleSignOut = () => {
-    // TODO: Implement real sign out with Supabase
-    // await supabase.auth.signOut();
-    // router.push("/");
     onSignOut?.();
   };
 
@@ -135,10 +135,15 @@ export function UserDropdown({
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={handleSignOut}
+          disabled={isSigningOut}
           className="cursor-pointer text-destructive focus:text-destructive"
         >
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Sign Out</span>
+          {isSigningOut ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <LogOut className="mr-2 h-4 w-4" />
+          )}
+          <span>{isSigningOut ? "Signing Out..." : "Sign Out"}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

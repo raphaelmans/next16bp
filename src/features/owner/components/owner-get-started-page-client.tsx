@@ -2,8 +2,8 @@
 
 import {
   ArrowRight,
+  Bell,
   Building2,
-  Calendar,
   CheckCircle,
   ClipboardList,
   LayoutGrid,
@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   Smartphone,
   Upload,
+  UserPlus,
   Users,
   Wallet,
 } from "lucide-react";
@@ -263,11 +264,20 @@ const FREE_FEATURES = [
     color: "accent" as const,
   },
   {
-    id: "claiming",
-    title: "Venue Claiming",
-    description: "Already listed on KudosCourts? Claim it and start managing.",
-    icon: MapPin,
+    id: "team-access",
+    title: "Team Access",
+    description:
+      "Invite managers and staff. Assign roles and permissions — control who sees and does what.",
+    icon: UserPlus,
     color: "primary" as const,
+  },
+  {
+    id: "notifications",
+    title: "Notifications",
+    description:
+      "In-app inbox, web push, mobile push, email, and SMS — per user, per venue.",
+    icon: Bell,
+    color: "accent" as const,
   },
   {
     id: "qr",
@@ -297,20 +307,12 @@ const BETA_FEATURES = [
     badge: "Beta · Limited",
   },
   {
-    id: "notifications",
-    title: "Push Notifications",
-    description:
-      "Instant alerts for bookings, payments, and actions. Improving with mobile launch.",
-    icon: Calendar,
-    badge: "Beta",
-  },
-  {
     id: "mobile",
     title: "Mobile App",
     description:
       "Accept bookings, confirm payments, and check your schedule from your phone.",
     icon: Smartphone,
-    badge: "Beta · Next Week",
+    badge: "Beta",
   },
 ];
 
@@ -319,7 +321,6 @@ const BUSINESS_PLUS_FEATURES = [
   "Unlimited in-app chat — no message limits, enhanced coordination",
   'SEO & AI search visibility — rank for "courts in [your city]" searches',
   "Integrations — connect with your existing tools and channels",
-  "Multi-user staff access — let your team manage bookings",
 ];
 
 const STEPS = [
@@ -363,7 +364,7 @@ const PERKS = [
     emoji: "⭐",
     title: "6 months of Business Plus — free",
     description:
-      "Automatically included when the premium tier launches. Analytics, unlimited chat, integrations, and staff access.",
+      "Automatically included when the premium tier launches. Analytics, unlimited chat, SEO tools, and integrations.",
   },
   {
     id: "featured",
@@ -602,12 +603,13 @@ export default function OwnersGetStartedPage() {
               The essentials to run your courts — free
             </h2>
             <p className="mx-auto max-w-xl text-muted-foreground">
-              Accept bookings, manage your schedule, and coordinate with
-              players. No subscription required for the essentials.
+              Accept bookings, manage your schedule, bring your team on board,
+              and coordinate with players. No subscription required for the
+              essentials.
             </p>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {FREE_FEATURES.map((feat) => {
               const Icon = feat.icon;
               const colors = colorMap[feat.color];
@@ -635,7 +637,7 @@ export default function OwnersGetStartedPage() {
           </div>
 
           {/* Beta features row */}
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-4 grid gap-4 sm:grid-cols-3">
             {BETA_FEATURES.map((feat) => {
               const Icon = feat.icon;
               return (
@@ -898,6 +900,76 @@ export default function OwnersGetStartedPage() {
       </section>
 
       {/* ----------------------------------------------------------------- */}
+      {/* TEAM ACCESS                                                        */}
+      {/* ----------------------------------------------------------------- */}
+      <section className="py-10 sm:py-14">
+        <Container size="xl">
+          <div className="space-y-2 text-center">
+            <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Team Access
+            </p>
+            <h2 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
+              Your team, your rules.
+            </h2>
+            <p className="mx-auto max-w-xl text-muted-foreground">
+              Invite staff by email. Assign roles so everyone has the right
+              level of access — no more, no less.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-8 grid max-w-4xl gap-4 md:grid-cols-3">
+            {[
+              {
+                emoji: "👑",
+                role: "Owner",
+                description:
+                  "Full control over organization, venues, team, and all reservations.",
+              },
+              {
+                emoji: "🔧",
+                role: "Manager",
+                description:
+                  "All permissions by default — reservations, guest bookings, chat, notifications, and team management.",
+              },
+              {
+                emoji: "👁️",
+                role: "Viewer",
+                description:
+                  "Read-only reservation access. For staff who need visibility without taking action.",
+              },
+            ].map((card) => (
+              <Card
+                key={card.role}
+                className="border-border/60 bg-card hover:border-border hover:shadow-md transition-all"
+              >
+                <CardHeader className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl" role="img" aria-hidden>
+                      {card.emoji}
+                    </span>
+                    <CardTitle className="font-heading text-base">
+                      {card.role}
+                    </CardTitle>
+                  </div>
+                  <CardDescription className="text-sm">
+                    {card.description}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+
+          <div className="mx-auto mt-6 max-w-4xl rounded-xl border border-primary/20 bg-primary/5 px-5 py-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Invite by email. Permissions per person. Team members get their
+              own notification preferences and can opt in to reservation alerts
+              for each venue.
+            </p>
+          </div>
+        </Container>
+      </section>
+
+      {/* ----------------------------------------------------------------- */}
       {/* MOBILE APP BANNER                                                  */}
       {/* ----------------------------------------------------------------- */}
       <section className="py-10 sm:py-14">
@@ -916,7 +988,7 @@ export default function OwnersGetStartedPage() {
                     variant="secondary"
                     className="text-[10px] px-1.5 py-0"
                   >
-                    Beta launching next week
+                    Beta
                   </Badge>
                 </div>
                 <p className="text-sm text-muted-foreground">
