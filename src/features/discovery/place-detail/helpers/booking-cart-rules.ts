@@ -1,8 +1,10 @@
+import { addMinutes } from "date-fns";
 import { getZonedDayKey } from "@/common/time-zone";
 
 type BookingCartRuleItem = {
   courtId: string;
   startTime: string;
+  durationMinutes: number;
 };
 
 type BookingCartKeyItem = {
@@ -31,6 +33,23 @@ export const getBookingCartDayKey = (
   placeTimeZone: string,
 ): string => getZonedDayKey(startTimeIso, placeTimeZone);
 
+/**
+ * Returns the set of dayKeys that a booking item spans.
+ * A same-day booking returns 1 key; a cross-midnight booking returns 2.
+ */
+export function getBookingCartDayKeys(
+  item: BookingCartRuleItem,
+  placeTimeZone: string,
+): Set<string> {
+  const startKey = getZonedDayKey(item.startTime, placeTimeZone);
+  const endTime = addMinutes(new Date(item.startTime), item.durationMinutes);
+  const endKey = getZonedDayKey(endTime, placeTimeZone);
+  const keys = new Set<string>();
+  keys.add(startKey);
+  keys.add(endKey);
+  return keys;
+}
+
 export function isBookingCartKeyDuplicate({
   cartItems,
   key,
@@ -58,16 +77,16 @@ export function validateBookingCartAdd({
     return { ok: true };
   }
 
-  const referenceDayKey = getBookingCartDayKey(
-    cartItems[0]?.startTime ?? candidate.startTime,
-    placeTimeZone,
-  );
+  const firstItem = cartItems[0];
+  const referenceDayKeys = firstItem
+    ? getBookingCartDayKeys(firstItem, placeTimeZone)
+    : new Set<string>();
   const candidateDayKey = getBookingCartDayKey(
     candidate.startTime,
     placeTimeZone,
   );
 
-  if (referenceDayKey !== candidateDayKey) {
+  if (!referenceDayKeys.has(candidateDayKey)) {
     return { ok: false, reason: "DIFFERENT_DAY" };
   }
 

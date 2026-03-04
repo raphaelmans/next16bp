@@ -10,6 +10,7 @@ import {
   toUtcISOString,
 } from "@/common/time-zone";
 import {
+  filterSlotsByDayKey,
   getWeekDayKeys,
   getWeekStartDayKey,
   mapAvailabilityOptionsToSlots,
@@ -148,12 +149,15 @@ export function PlaceDetailBookingMobileSection({
   }, [placeTimeZone, selectedStartTime]);
 
   const summaryDayEndIso = React.useMemo(() => {
-    if (!summaryDayDateIso) return "";
-    return toUtcISOString(
-      getZonedDayRangeForInstant(new Date(summaryDayDateIso), placeTimeZone)
-        .end,
+    if (!selectedStartTime) return "";
+    // End of the day that contains the selection's END time (supports cross-midnight)
+    const selectionEnd = new Date(
+      Date.parse(selectedStartTime) + durationMinutes * 60_000,
     );
-  }, [placeTimeZone, summaryDayDateIso]);
+    return toUtcISOString(
+      getZonedDayRangeForInstant(selectionEnd, placeTimeZone).end,
+    );
+  }, [placeTimeZone, selectedStartTime, durationMinutes]);
 
   const mobileAnyDayQuery = useQueryDiscoveryAvailabilityForPlaceSportRange(
     {
@@ -264,12 +268,18 @@ export function PlaceDetailBookingMobileSection({
       selectionMode === "any"
         ? (mobileAnyDayQuery.data?.options ?? [])
         : (mobileCourtDayQuery.data?.options ?? []);
-    const slots = mapAvailabilityOptionsToSlots(
-      options,
-      TIMELINE_SLOT_DURATION,
+    return filterSlotsByDayKey(
+      mapAvailabilityOptionsToSlots(options, TIMELINE_SLOT_DURATION),
+      selectedDayKey,
+      placeTimeZone,
     );
-    return slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
-  }, [selectionMode, mobileAnyDayQuery.data, mobileCourtDayQuery.data]);
+  }, [
+    selectionMode,
+    mobileAnyDayQuery.data,
+    mobileCourtDayQuery.data,
+    placeTimeZone,
+    selectedDayKey,
+  ]);
 
   const isMobileLoading =
     selectionMode === "any"
@@ -288,6 +298,23 @@ export function PlaceDetailBookingMobileSection({
     [durationMinutes, selectedStartTime],
   );
 
+  // Cross-day: when selection started on a different day (court mode only)
+  const crossDayStartTime = React.useMemo(() => {
+    if (!selectedStartTime || !selectedDate || selectionMode !== "court")
+      return undefined;
+    const startDayKey = getZonedDayKey(selectedStartTime, placeTimeZone);
+    const currentDayKey = getZonedDayKey(selectedDate, placeTimeZone);
+    if (startDayKey === currentDayKey) return undefined;
+    // Only support forward direction: selection on day N, viewing day N+1
+    const startDayEnd = getZonedDayRangeForInstant(
+      new Date(selectedStartTime),
+      placeTimeZone,
+    ).end;
+    const nextDayKey = getZonedDayKey(startDayEnd, placeTimeZone);
+    if (currentDayKey !== nextDayKey) return undefined;
+    return selectedStartTime;
+  }, [selectedStartTime, selectedDate, selectionMode, placeTimeZone]);
+
   const selectionSummary = React.useMemo(() => {
     const summaryOptions =
       selectionMode === "court"
@@ -295,10 +322,12 @@ export function PlaceDetailBookingMobileSection({
         : (summaryAnyAvailabilityQuery.data?.options ?? []);
     return buildBookingSelectionSummary({
       selectedStartTime,
+      durationMinutes,
       pickerSlots: mobileDaySlots,
       pricingOptions: summaryOptions,
     });
   }, [
+    durationMinutes,
     mobileDaySlots,
     selectedStartTime,
     selectionMode,
@@ -338,7 +367,10 @@ export function PlaceDetailBookingMobileSection({
             ? `-${formatInTimeZone(
                 new Date(selectionSummary.endTime),
                 placeTimeZone,
-                "h:mm a",
+                getZonedDayKey(selectedStartTime, placeTimeZone) !==
+                  getZonedDayKey(selectionSummary.endTime, placeTimeZone)
+                  ? "MMM d, h:mm a"
+                  : "h:mm a",
               )}`
             : ""
         }`
@@ -369,19 +401,41 @@ export function PlaceDetailBookingMobileSection({
       if (!date) return;
       const nextDayKey = getZonedDayKey(date, placeTimeZone);
       setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
-      clearSelection(true);
+      // Only clear when jumping to a non-adjacent day (preserves cross-midnight)
+      if (selectedStartTime) {
+        const startDayEnd = getZonedDayRangeForInstant(
+          new Date(selectedStartTime),
+          placeTimeZone,
+        ).end;
+        const adjacentDayKey = getZonedDayKey(startDayEnd, placeTimeZone);
+        const startDayKey = getZonedDayKey(selectedStartTime, placeTimeZone);
+        if (nextDayKey !== startDayKey && nextDayKey !== adjacentDayKey) {
+          clearSelection(true);
+        }
+      }
       setMobileCalendarOpen(false);
     },
-    [clearSelection, placeTimeZone, setSelectedDate],
+    [clearSelection, placeTimeZone, selectedStartTime, setSelectedDate],
   );
 
   const handleMobileDateSelect = React.useCallback(
     (date: Date) => {
       const nextDayKey = getZonedDayKey(date, placeTimeZone);
       setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
-      clearSelection(true);
+      // Only clear when navigating to a non-adjacent day (preserves cross-midnight)
+      if (selectedStartTime) {
+        const startDayEnd = getZonedDayRangeForInstant(
+          new Date(selectedStartTime),
+          placeTimeZone,
+        ).end;
+        const adjacentDayKey = getZonedDayKey(startDayEnd, placeTimeZone);
+        const startDayKey = getZonedDayKey(selectedStartTime, placeTimeZone);
+        if (nextDayKey !== startDayKey && nextDayKey !== adjacentDayKey) {
+          clearSelection(true);
+        }
+      }
     },
-    [clearSelection, placeTimeZone, setSelectedDate],
+    [clearSelection, placeTimeZone, selectedStartTime, setSelectedDate],
   );
 
   const handleMobileSportChange = React.useCallback(
@@ -429,6 +483,7 @@ export function PlaceDetailBookingMobileSection({
       selectedCourtId={selectedCourtId}
       onMobileCourtChange={handleMobileCourtChange}
       selectedDate={selectedDate}
+      selectedDayKey={selectedDayKey}
       today={today}
       placeTimeZone={placeTimeZone}
       onMobileDateSelect={handleMobileDateSelect}
@@ -456,6 +511,7 @@ export function PlaceDetailBookingMobileSection({
       onAddToCartAction={handleAddToCartWithSnapshot}
       onRemoveFromCartAction={onRemoveFromCartAction}
       cartedStartTimes={cartedStartTimes}
+      crossDayStartTime={crossDayStartTime}
     />
   );
 }

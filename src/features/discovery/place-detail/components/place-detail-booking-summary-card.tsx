@@ -1,11 +1,13 @@
 "use client";
 
 import { X } from "lucide-react";
+import { addMinutes } from "date-fns";
 import {
   formatCurrency,
   formatDuration,
   formatInTimeZone,
 } from "@/common/format";
+import { getZonedDayKey } from "@/common/time-zone";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
@@ -108,7 +110,13 @@ export function PlaceDetailBookingSummaryCard({
                 ? `- ${formatInTimeZone(
                     new Date(selectionSummary.endTime),
                     placeTimeZone,
-                    "h:mm a",
+                    getZonedDayKey(
+                      selectionSummary.startTime,
+                      placeTimeZone,
+                    ) !==
+                      getZonedDayKey(selectionSummary.endTime, placeTimeZone)
+                      ? "MMM d, h:mm a"
+                      : "h:mm a",
                   )}`
                 : ""}
               {selectionSummary.totalCents !== undefined
@@ -155,15 +163,31 @@ export function PlaceDetailBookingSummaryCard({
                 <div className="min-w-0">
                   <p className="font-medium">{item.courtLabel}</p>
                   <p className="text-xs text-muted-foreground">
-                    {formatInTimeZone(
-                      new Date(item.startTime),
-                      placeTimeZone,
-                      "MMM d, h:mm a",
-                    )}{" "}
-                    · {formatDuration(item.durationMinutes)}
-                    {item.estimatedPriceCents !== null
-                      ? ` · ${formatCurrency(item.estimatedPriceCents, item.currency)}`
-                      : ""}
+                    {(() => {
+                      const endTime = addMinutes(
+                        new Date(item.startTime),
+                        item.durationMinutes,
+                      );
+                      const crossesMidnight =
+                        getZonedDayKey(item.startTime, placeTimeZone) !==
+                        getZonedDayKey(endTime, placeTimeZone);
+                      return (
+                        <>
+                          {formatInTimeZone(
+                            new Date(item.startTime),
+                            placeTimeZone,
+                            "MMM d, h:mm a",
+                          )}
+                          {crossesMidnight
+                            ? ` - ${formatInTimeZone(endTime, placeTimeZone, "MMM d, h:mm a")}`
+                            : ""}{" "}
+                          · {formatDuration(item.durationMinutes)}
+                          {item.estimatedPriceCents !== null
+                            ? ` · ${formatCurrency(item.estimatedPriceCents, item.currency)}`
+                            : ""}
+                        </>
+                      );
+                    })()}
                   </p>
                 </div>
                 <button

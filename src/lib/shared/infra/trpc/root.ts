@@ -31,6 +31,7 @@ import { paymentProofRouter } from "@/lib/modules/payment-proof/payment-proof.ro
 import { placeRouter } from "@/lib/modules/place/place.router";
 import { placeManagementRouter } from "@/lib/modules/place/place-management.router";
 import { placeAddonRouter } from "@/lib/modules/place-addon/place-addon.router";
+import { placeBookmarkRouter } from "@/lib/modules/place-bookmark/place-bookmark.router";
 import { placeVerificationAdminRouter } from "@/lib/modules/place-verification/admin/place-verification-admin.router";
 import { placeVerificationRouter } from "@/lib/modules/place-verification/place-verification.router";
 import { profileRouter } from "@/lib/modules/profile/profile.router";
@@ -57,6 +58,7 @@ export const appRouter = router({
   courtRateRule: courtRateRuleRouter,
   place: placeRouter,
   placeAddon: placeAddonRouter,
+  placeBookmark: placeBookmarkRouter,
   placeManagement: placeManagementRouter,
   placeVerification: placeVerificationRouter,
   sport: sportRouter,

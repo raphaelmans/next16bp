@@ -10,28 +10,28 @@
  * For a normal daytime schedule (no wrap) the ascending sort is returned as-is.
  */
 export function sortHoursInScheduleOrder(hours: number[]): number[] {
-	if (hours.length <= 1) return [...hours];
+  if (hours.length <= 1) return [...hours];
 
-	const sorted = [...hours].sort((a, b) => a - b);
+  const sorted = [...hours].sort((a, b) => a - b);
 
-	let maxGap = 0;
-	let gapAfterIdx = sorted.length - 1; // default: gap after last element (wrap 23→0)
+  let maxGap = 0;
+  let gapAfterIdx = sorted.length - 1; // default: gap after last element (wrap 23→0)
 
-	for (let i = 0; i < sorted.length; i++) {
-		const current = sorted[i] as number;
-		const next = sorted[(i + 1) % sorted.length] as number;
-		const gap = (next - current + 24) % 24;
-		if (gap > maxGap) {
-			maxGap = gap;
-			gapAfterIdx = i;
-		}
-	}
+  for (let i = 0; i < sorted.length; i++) {
+    const current = sorted[i] as number;
+    const next = sorted[(i + 1) % sorted.length] as number;
+    const gap = (next - current + 24) % 24;
+    if (gap > maxGap) {
+      maxGap = gap;
+      gapAfterIdx = i;
+    }
+  }
 
-	// If the largest gap is after the last element, ascending order is already correct
-	if (gapAfterIdx === sorted.length - 1) return sorted;
+  // If the largest gap is after the last element, ascending order is already correct
+  if (gapAfterIdx === sorted.length - 1 || maxGap <= 1) return sorted;
 
-	return [
-		...sorted.slice(gapAfterIdx + 1),
-		...sorted.slice(0, gapAfterIdx + 1),
-	];
+  return [
+    ...sorted.slice(gapAfterIdx + 1),
+    ...sorted.slice(0, gapAfterIdx + 1),
+  ];
 }

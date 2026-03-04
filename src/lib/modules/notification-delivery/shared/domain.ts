@@ -263,8 +263,8 @@ export function buildReservationGroupCreatedContent(
   payload: ReservationGroupCreatedPayload,
   appUrl: string,
 ): NotificationContent {
-  const reservationPath = appRoutes.organization.reservationGroupDetail(
-    payload.reservationGroupId,
+  const reservationPath = appRoutes.organization.reservationDetail(
+    payload.representativeReservationId,
   );
   const reservationUrl = makeUrl(appUrl, reservationPath);
 
@@ -581,8 +581,8 @@ export function buildReservationGroupPaymentMarkedContent(
     push: {
       title: "Payment marked",
       body: `${payload.playerName} marked payment for ${payload.placeName}`,
-      url: appRoutes.organization.reservationGroupDetail(
-        payload.reservationGroupId,
+      url: appRoutes.organization.reservationDetail(
+        payload.representativeReservationId,
       ),
       tag: `reservation_group.payment_marked:${payload.reservationGroupId}`,
     },
@@ -693,8 +693,8 @@ export function buildReservationGroupCancelledContent(
     push: {
       title: "Reservation group cancelled",
       body: `${payload.playerName} cancelled ${payload.placeName}`,
-      url: appRoutes.organization.reservationGroupDetail(
-        payload.reservationGroupId,
+      url: appRoutes.organization.reservationDetail(
+        payload.representativeReservationId,
       ),
       tag: `reservation_group.cancelled:${payload.reservationGroupId}`,
     },

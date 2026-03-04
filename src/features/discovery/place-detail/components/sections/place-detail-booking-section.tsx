@@ -35,6 +35,7 @@ import {
   canCheckoutBookingCart,
 } from "@/features/discovery/place-detail/helpers/booking-cart-cta";
 import {
+  getBookingCartDayKeys,
   getBookingCartViolationMessage,
   isBookingCartKeyDuplicate,
   validateBookingCartAdd,
@@ -135,11 +136,15 @@ export function PlaceDetailBookingSection({
   });
 
   const placeTimeZone = place.timeZone ?? "Asia/Manila";
-  const sameDayAnchorDayKey = React.useMemo(() => {
-    const anchorStartTime = cartItems[0]?.startTime;
-    if (!anchorStartTime) return undefined;
-    return getZonedDayKey(new Date(anchorStartTime), placeTimeZone);
+  const sameDayAnchorDayKeys = React.useMemo(() => {
+    const firstItem = cartItems[0];
+    if (!firstItem) return undefined;
+    return getBookingCartDayKeys(firstItem, placeTimeZone);
   }, [cartItems, placeTimeZone]);
+  const sameDayAnchorDayKey = React.useMemo(() => {
+    if (!sameDayAnchorDayKeys) return undefined;
+    return Array.from(sameDayAnchorDayKeys)[0];
+  }, [sameDayAnchorDayKeys]);
   const today = React.useMemo(
     () => getZonedToday(placeTimeZone),
     [placeTimeZone],
@@ -281,6 +286,7 @@ export function PlaceDetailBookingSection({
     const candidate = {
       courtId: selectedCourtId,
       startTime: selectedStartTime,
+      durationMinutes,
     };
     if (isBookingCartKeyDuplicate({ cartItems, key })) {
       toast.info("This slot is already in your booking.");

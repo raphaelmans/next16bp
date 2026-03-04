@@ -39,7 +39,7 @@ const isSameInstant = (a: string, b: string): boolean => {
 const parseDayKeyToDate = (dayKey: string, timeZone?: string) =>
   getZonedDayRangeFromDayKey(dayKey, timeZone).start;
 
-const getHourFromSlot = (slot: TimeSlot, timeZone: string): number => {
+export const getHourFromSlot = (slot: TimeSlot, timeZone: string): number => {
   const d = new Date(slot.startTime);
   const parts = new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
@@ -50,11 +50,11 @@ const getHourFromSlot = (slot: TimeSlot, timeZone: string): number => {
   return hourPart ? Number.parseInt(hourPart.value, 10) : 0;
 };
 
-function isSlotAvailable(slot: TimeSlot): boolean {
+export function isSlotAvailable(slot: TimeSlot): boolean {
   return slot.status === "available";
 }
 
-function isSlotSelectable(slot: TimeSlot, nowMs: number): boolean {
+export function isSlotSelectable(slot: TimeSlot, nowMs: number): boolean {
   return isSlotAvailable(slot) && Date.parse(slot.startTime) >= nowMs;
 }
 
@@ -144,20 +144,26 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
     const endDayIdx = Math.floor(endIdx / hoursPerDay);
     const endHourIdx = endIdx % hoursPerDay;
 
-    if (startDayIdx !== endDayIdx) return null;
+    const startDk = dayKeys[startDayIdx];
+    const startHourMap = slotLookup.get(startDk);
+    if (!startHourMap) return null;
 
-    const dk = dayKeys[startDayIdx];
-    const hourMap = slotLookup.get(dk);
-    if (!hourMap) return null;
+    const endDk = dayKeys[endDayIdx];
+    const endHourMap = slotLookup.get(endDk);
+    if (!endHourMap) return null;
 
-    const startSlot = hourMap.get(allHours[startHourIdx]);
-    const endSlot = hourMap.get(allHours[endHourIdx]);
+    const startSlot = startHourMap.get(allHours[startHourIdx]);
+    const endSlot = endHourMap.get(allHours[endHourIdx]);
     if (!startSlot || !endSlot) return null;
 
     let total = 0;
     let allHavePrice = true;
-    for (let i = startHourIdx; i <= endHourIdx; i++) {
-      const slot = hourMap.get(allHours[i]);
+    for (let i = startIdx; i <= endIdx; i++) {
+      const di = Math.floor(i / hoursPerDay);
+      const hi = i % hoursPerDay;
+      const dk = dayKeys[di];
+      const hourMap = dk ? slotLookup.get(dk) : undefined;
+      const slot = hourMap?.get(allHours[hi]);
       if (slot?.priceCents !== undefined) {
         total += slot.priceCents as number;
       } else {
@@ -495,6 +501,14 @@ export function AvailabilityWeekGrid({
       hourIdx: idx % hoursPerDay,
     });
 
+    const getSlotForLinearIdx = (idx: number): TimeSlot | undefined => {
+      const { dayColIdx, hourIdx } = getDayHour(idx);
+      const dk = dayKeys[dayColIdx];
+      if (!dk) return undefined;
+      const hourMap = slotLookup.get(dk);
+      return hourMap?.get(allHours[hourIdx]);
+    };
+
     return {
       isCellAvailable: (idx) => {
         const { dayColIdx, hourIdx } = getDayHour(idx);
@@ -507,39 +521,31 @@ export function AvailabilityWeekGrid({
       computeRange: (anchorIdx, targetIdx) => {
         const a = getDayHour(anchorIdx);
         const t = getDayHour(targetIdx);
-        // Must be same day
-        if (a.dayColIdx !== t.dayColIdx) return null;
-        const dk = dayKeys[a.dayColIdx];
-        const hourMap = slotLookup.get(dk);
-        if (!hourMap) return null;
-        const lo = Math.min(a.hourIdx, t.hourIdx);
-        const hi = Math.max(a.hourIdx, t.hourIdx);
+        // Allow same day or adjacent day only
+        if (Math.abs(a.dayColIdx - t.dayColIdx) > 1) return null;
+        const lo = Math.min(anchorIdx, targetIdx);
+        const hi = Math.max(anchorIdx, targetIdx);
         for (let i = lo; i <= hi; i++) {
-          const slot = hourMap.get(allHours[i]);
+          const slot = getSlotForLinearIdx(i);
           if (!slot || !isSlotSelectable(slot, nowMs)) return null;
         }
-        return {
-          startIdx: toLinear(a.dayColIdx, lo),
-          endIdx: toLinear(a.dayColIdx, hi),
-        };
+        return { startIdx: lo, endIdx: hi };
       },
       clampToContiguous: (anchorIdx, targetIdx) => {
         const a = getDayHour(anchorIdx);
         const t = getDayHour(targetIdx);
-        if (a.dayColIdx !== t.dayColIdx) return anchorIdx;
-        const dk = dayKeys[a.dayColIdx];
-        const hourMap = slotLookup.get(dk);
-        if (!hourMap) return anchorIdx;
-        const direction = t.hourIdx >= a.hourIdx ? 1 : -1;
-        let lastValid = a.hourIdx;
-        let i = a.hourIdx + direction;
-        while (direction > 0 ? i <= t.hourIdx : i >= t.hourIdx) {
-          const slot = hourMap.get(allHours[i]);
+        // Allow same day or adjacent day only
+        if (Math.abs(a.dayColIdx - t.dayColIdx) > 1) return anchorIdx;
+        const direction = targetIdx >= anchorIdx ? 1 : -1;
+        let lastValid = anchorIdx;
+        let i = anchorIdx + direction;
+        while (direction > 0 ? i <= targetIdx : i >= targetIdx) {
+          const slot = getSlotForLinearIdx(i);
           if (!slot || !isSlotSelectable(slot, nowMs)) break;
           lastValid = i;
           i += direction;
         }
-        return toLinear(a.dayColIdx, lastValid);
+        return lastValid;
       },
       commitRange: (startIdx, endIdx) => {
         const s = getDayHour(startIdx);
@@ -555,15 +561,7 @@ export function AvailabilityWeekGrid({
         });
       },
     };
-  }, [
-    dayKeys,
-    slotLookup,
-    allHours,
-    hoursPerDay,
-    toLinear,
-    onRangeChange,
-    nowMs,
-  ]);
+  }, [dayKeys, slotLookup, allHours, hoursPerDay, onRangeChange, nowMs]);
 
   const hasAnySlots = dayKeys.some(
     (dk) => (slotsByDay.get(dk)?.length ?? 0) > 0,

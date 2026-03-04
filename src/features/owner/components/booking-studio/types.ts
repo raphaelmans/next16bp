@@ -231,15 +231,22 @@ export const parseDateTimeInput = (value: string, timeZone: string) => {
 };
 
 export const blockTypeOptions = [
-  { value: "MAINTENANCE", label: "Maintenance" },
-  { value: "WALK_IN", label: "Walk-in" },
+  { value: "GUEST_BOOKING", label: "Guest booking" },
+  { value: "MAINTENANCE", label: "Maintenance block" },
+  { value: "WALK_IN", label: "Walk-in booking" },
 ] as const;
 
 export const customBlockSchema = z.object({
-  blockType: z.enum(["MAINTENANCE", "WALK_IN"]),
+  blockType: z.enum(["MAINTENANCE", "WALK_IN", "GUEST_BOOKING"]),
   startTime: z.string().min(1, "Start time is required"),
   endTime: z.string().min(1, "End time is required"),
   reason: z.string().trim().optional(),
+  // Guest fields (only used when blockType === "GUEST_BOOKING")
+  guestMode: z.enum(["existing", "new"]).optional(),
+  guestProfileId: z.string().optional(),
+  newGuestName: z.string().optional(),
+  newGuestPhone: z.string().optional(),
+  newGuestEmail: z.string().optional(),
 });
 
 export type CustomBlockFormValues = z.infer<typeof customBlockSchema>;

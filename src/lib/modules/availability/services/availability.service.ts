@@ -1,3 +1,4 @@
+import { addDays } from "date-fns";
 import type { PricingBreakdown } from "@/common/pricing-breakdown";
 import {
   getZonedDate,
@@ -161,34 +162,40 @@ export class AvailabilityService implements IAvailabilityService {
     );
     const courtIds = [court.id];
 
-    const [hours, rules, reservations, blocks, overrides, addons] =
+    const [hours, rules, addons] = await Promise.all([
+      this.courtHoursRepository.findByCourtIds(courtIds),
+      this.courtRateRuleRepository.findByCourtIds(courtIds),
+      this.courtAddonRepository.findActiveByCourtIds(courtIds),
+    ]);
+
+    const extendedEnd = this.computeOvernightExtension(
+      end,
+      place.timeZone,
+      hours,
+    );
+
+    const [reservations, blocks, overrides, addonRules, venueAddons] =
       await Promise.all([
-        this.courtHoursRepository.findByCourtIds(courtIds),
-        this.courtRateRuleRepository.findByCourtIds(courtIds),
         this.reservationRepository.findOverlappingActiveByCourtIds(
           courtIds,
           start,
-          end,
+          extendedEnd,
         ),
         this.courtBlockRepository.findOverlappingByCourtIds(
           courtIds,
           start,
-          end,
+          extendedEnd,
         ),
         this.courtPriceOverrideRepository.findOverlappingByCourtIds(
           courtIds,
           start,
-          end,
+          extendedEnd,
         ),
-        this.courtAddonRepository.findActiveByCourtIds(courtIds),
+        this.courtAddonRepository.findRateRulesByAddonIds(
+          addons.map((addon) => addon.id),
+        ),
+        this.fetchVenueAddons(place.id),
       ]);
-
-    const [addonRules, venueAddons] = await Promise.all([
-      this.courtAddonRepository.findRateRulesByAddonIds(
-        addons.map((addon) => addon.id),
-      ),
-      this.fetchVenueAddons(place.id),
-    ]);
 
     const invalidAddonIds = this.getInvalidSelectedAddonIdsForCourt({
       selectedAddons: data.selectedAddons,
@@ -206,7 +213,7 @@ export class AvailabilityService implements IAvailabilityService {
     return this.buildAvailabilityForCourtRange({
       court,
       rangeStart: start,
-      rangeEnd: end,
+      rangeEnd: extendedEnd,
       durationMinutes: data.durationMinutes,
       timeZone: place.timeZone,
       hours,
@@ -318,21 +325,28 @@ export class AvailabilityService implements IAvailabilityService {
       );
       const placeCourtIds = placeCourts.map((court) => court.id);
 
+      const placeHours = hours.filter((h) => placeCourtIds.includes(h.courtId));
+      const extendedEnd = this.computeOvernightExtension(
+        end,
+        place.timeZone,
+        placeHours,
+      );
+
       const [reservations, blocks, overrides, venueAddons] = await Promise.all([
         this.reservationRepository.findOverlappingActiveByCourtIds(
           placeCourtIds,
           start,
-          end,
+          extendedEnd,
         ),
         this.courtBlockRepository.findOverlappingByCourtIds(
           placeCourtIds,
           start,
-          end,
+          extendedEnd,
         ),
         this.courtPriceOverrideRepository.findOverlappingByCourtIds(
           placeCourtIds,
           start,
-          end,
+          extendedEnd,
         ),
         this.fetchVenueAddons(placeId),
       ]);
@@ -357,7 +371,7 @@ export class AvailabilityService implements IAvailabilityService {
         const result = this.buildAvailabilityForCourtRange({
           court,
           rangeStart: start,
-          rangeEnd: end,
+          rangeEnd: extendedEnd,
           durationMinutes: data.durationMinutes,
           timeZone: place.timeZone,
           hours,
@@ -447,34 +461,40 @@ export class AvailabilityService implements IAvailabilityService {
     );
     const courtIds = activeCourts.map((court) => court.id);
 
-    const [hours, rules, reservations, blocks, overrides, addons] =
+    const [hours, rules, addons] = await Promise.all([
+      this.courtHoursRepository.findByCourtIds(courtIds),
+      this.courtRateRuleRepository.findByCourtIds(courtIds),
+      this.courtAddonRepository.findActiveByCourtIds(courtIds),
+    ]);
+
+    const extendedEnd = this.computeOvernightExtension(
+      end,
+      place.timeZone,
+      hours,
+    );
+
+    const [reservations, blocks, overrides, addonRules, venueAddons] =
       await Promise.all([
-        this.courtHoursRepository.findByCourtIds(courtIds),
-        this.courtRateRuleRepository.findByCourtIds(courtIds),
         this.reservationRepository.findOverlappingActiveByCourtIds(
           courtIds,
           start,
-          end,
+          extendedEnd,
         ),
         this.courtBlockRepository.findOverlappingByCourtIds(
           courtIds,
           start,
-          end,
+          extendedEnd,
         ),
         this.courtPriceOverrideRepository.findOverlappingByCourtIds(
           courtIds,
           start,
-          end,
+          extendedEnd,
         ),
-        this.courtAddonRepository.findActiveByCourtIds(courtIds),
+        this.courtAddonRepository.findRateRulesByAddonIds(
+          addons.map((addon) => addon.id),
+        ),
+        this.fetchVenueAddons(place.id),
       ]);
-
-    const [addonRules, venueAddons] = await Promise.all([
-      this.courtAddonRepository.findRateRulesByAddonIds(
-        addons.map((addon) => addon.id),
-      ),
-      this.fetchVenueAddons(place.id),
-    ]);
 
     const optionsByStart = new Map<number, AvailabilityOption>();
     const courtOptionsByStart = new Map<number, AvailabilityCourtOption[]>();
@@ -511,7 +531,7 @@ export class AvailabilityService implements IAvailabilityService {
       const result = this.buildAvailabilityForCourtRange({
         court,
         rangeStart: start,
-        rangeEnd: end,
+        rangeEnd: extendedEnd,
         durationMinutes: data.durationMinutes,
         timeZone: place.timeZone,
         hours,
@@ -634,34 +654,40 @@ export class AvailabilityService implements IAvailabilityService {
     const rangeEnd = new Date(data.endDate);
     const courtIds = [court.id];
 
-    const [hours, rules, reservations, blocks, overrides, addons] =
+    const [hours, rules, addons] = await Promise.all([
+      this.courtHoursRepository.findByCourtIds(courtIds),
+      this.courtRateRuleRepository.findByCourtIds(courtIds),
+      this.courtAddonRepository.findActiveByCourtIds(courtIds),
+    ]);
+
+    const extendedEnd = this.computeOvernightExtension(
+      rangeEnd,
+      place.timeZone,
+      hours,
+    );
+
+    const [reservations, blocks, overrides, addonRules, venueAddons] =
       await Promise.all([
-        this.courtHoursRepository.findByCourtIds(courtIds),
-        this.courtRateRuleRepository.findByCourtIds(courtIds),
         this.reservationRepository.findOverlappingActiveByCourtIds(
           courtIds,
           rangeStart,
-          rangeEnd,
+          extendedEnd,
         ),
         this.courtBlockRepository.findOverlappingByCourtIds(
           courtIds,
           rangeStart,
-          rangeEnd,
+          extendedEnd,
         ),
         this.courtPriceOverrideRepository.findOverlappingByCourtIds(
           courtIds,
           rangeStart,
-          rangeEnd,
+          extendedEnd,
         ),
-        this.courtAddonRepository.findActiveByCourtIds(courtIds),
+        this.courtAddonRepository.findRateRulesByAddonIds(
+          addons.map((addon) => addon.id),
+        ),
+        this.fetchVenueAddons(place.id),
       ]);
-
-    const [addonRules, venueAddons] = await Promise.all([
-      this.courtAddonRepository.findRateRulesByAddonIds(
-        addons.map((addon) => addon.id),
-      ),
-      this.fetchVenueAddons(place.id),
-    ]);
 
     const invalidAddonIds = this.getInvalidSelectedAddonIdsForCourt({
       selectedAddons: data.selectedAddons,
@@ -679,7 +705,7 @@ export class AvailabilityService implements IAvailabilityService {
     return this.buildAvailabilityForCourtRange({
       court,
       rangeStart,
-      rangeEnd,
+      rangeEnd: extendedEnd,
       durationMinutes: data.durationMinutes,
       timeZone: place.timeZone,
       hours,
@@ -739,34 +765,40 @@ export class AvailabilityService implements IAvailabilityService {
     const rangeEnd = new Date(data.endDate);
     const courtIds = activeCourts.map((court) => court.id);
 
-    const [hours, rules, reservations, blocks, overrides, addons] =
+    const [hours, rules, addons] = await Promise.all([
+      this.courtHoursRepository.findByCourtIds(courtIds),
+      this.courtRateRuleRepository.findByCourtIds(courtIds),
+      this.courtAddonRepository.findActiveByCourtIds(courtIds),
+    ]);
+
+    const extendedEnd = this.computeOvernightExtension(
+      rangeEnd,
+      place.timeZone,
+      hours,
+    );
+
+    const [reservations, blocks, overrides, addonRules, venueAddons] =
       await Promise.all([
-        this.courtHoursRepository.findByCourtIds(courtIds),
-        this.courtRateRuleRepository.findByCourtIds(courtIds),
         this.reservationRepository.findOverlappingActiveByCourtIds(
           courtIds,
           rangeStart,
-          rangeEnd,
+          extendedEnd,
         ),
         this.courtBlockRepository.findOverlappingByCourtIds(
           courtIds,
           rangeStart,
-          rangeEnd,
+          extendedEnd,
         ),
         this.courtPriceOverrideRepository.findOverlappingByCourtIds(
           courtIds,
           rangeStart,
-          rangeEnd,
+          extendedEnd,
         ),
-        this.courtAddonRepository.findActiveByCourtIds(courtIds),
+        this.courtAddonRepository.findRateRulesByAddonIds(
+          addons.map((addon) => addon.id),
+        ),
+        this.fetchVenueAddons(place.id),
       ]);
-
-    const [addonRules, venueAddons] = await Promise.all([
-      this.courtAddonRepository.findRateRulesByAddonIds(
-        addons.map((addon) => addon.id),
-      ),
-      this.fetchVenueAddons(place.id),
-    ]);
 
     const optionsByStart = new Map<number, AvailabilityOption>();
     const courtOptionsByStart = new Map<number, AvailabilityCourtOption[]>();
@@ -803,7 +835,7 @@ export class AvailabilityService implements IAvailabilityService {
       const result = this.buildAvailabilityForCourtRange({
         court,
         rangeStart,
-        rangeEnd,
+        rangeEnd: extendedEnd,
         durationMinutes: data.durationMinutes,
         timeZone: place.timeZone,
         hours,
@@ -939,6 +971,39 @@ export class AvailabilityService implements IAvailabilityService {
       selectedAddons,
       allowedAddonIds,
     });
+  }
+
+  /**
+   * Detect if the next calendar day has hours contiguous from midnight
+   * (e.g., 24/7 court or late-night closing past midnight).
+   * Returns an extended rangeEnd covering those overnight hours,
+   * or the original rangeEnd if no extension is needed.
+   */
+  private computeOvernightExtension(
+    rangeEnd: Date,
+    timeZone: string,
+    hoursWindows: CourtHoursWindowRecord[],
+  ): Date {
+    const rangeEndDayStart = getZonedDayRangeForInstant(
+      rangeEnd,
+      timeZone,
+    ).start;
+    const nextDayStart = addDays(rangeEndDayStart, 1);
+    const nextDayOfWeek = getZonedDate(nextDayStart, timeZone).getDay();
+
+    const nextDayWindows = hoursWindows
+      .filter((w) => w.dayOfWeek === nextDayOfWeek)
+      .sort((a, b) => a.startMinute - b.startMinute);
+
+    let contiguousEnd = 0;
+    for (const window of nextDayWindows) {
+      if (window.startMinute > contiguousEnd) break;
+      contiguousEnd = Math.max(contiguousEnd, window.endMinute);
+    }
+
+    if (contiguousEnd === 0) return rangeEnd;
+
+    return new Date(nextDayStart.getTime() + contiguousEnd * 60_000);
   }
 
   private buildAvailabilityForCourtRange(options: {

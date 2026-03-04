@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BookmarkButton } from "@/features/discovery/components/bookmark-button";
 import { cn } from "@/lib/utils";
 
 export interface PlaceSport {
@@ -48,6 +49,9 @@ interface PlaceCardProps {
   className?: string;
   isMediaLoading?: boolean;
   isMetaLoading?: boolean;
+  isBookmarked?: boolean;
+  isBookmarkPending?: boolean;
+  onBookmarkToggle?: () => void;
 }
 
 const MAX_BADGES = 3;
@@ -70,6 +74,9 @@ export function PlaceCard({
   className,
   isMediaLoading = false,
   isMetaLoading = false,
+  isBookmarked,
+  isBookmarkPending,
+  onBookmarkToggle,
 }: PlaceCardProps) {
   const imageUrl = place.coverImageUrl;
   const logoUrl = place.logoUrl?.trim();
@@ -181,6 +188,14 @@ export function PlaceCard({
             </span>
           )}
         </div>
+        {onBookmarkToggle && (
+          <BookmarkButton
+            variant="overlay"
+            isBookmarked={isBookmarked ?? false}
+            isPending={isBookmarkPending}
+            onToggle={onBookmarkToggle}
+          />
+        )}
       </div>
 
       <div

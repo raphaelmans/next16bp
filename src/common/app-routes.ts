@@ -108,6 +108,10 @@ export const appRoutes = {
     base: "/dashboard",
     options: { type: "protected" as const },
   },
+  savedVenues: {
+    base: "/saved-venues",
+    options: { type: "protected" as const },
+  },
   reservations: {
     base: "/reservations",
     options: { type: "protected" as const },
@@ -225,6 +229,7 @@ const protectedBases = [
   appRoutes.home.base,
   appRoutes.postLogin.base,
   appRoutes.dashboard.base,
+  appRoutes.savedVenues.base,
   appRoutes.reservations.base,
   appRoutes.account.base,
   appRoutes.organization.onboarding,

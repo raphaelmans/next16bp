@@ -19,7 +19,7 @@ import { SelectableTimelineRow } from "./selectable-timeline-row";
 import { TimelineBlockItem } from "./timeline-block-item";
 import { TimelineReservationItem } from "./timeline-reservation-item";
 import type { CourtBlockItem, DraftRowItem, ReservationItem } from "./types";
-import { getMinuteOfDay } from "./types";
+import { TIMELINE_ROW_HEIGHT } from "./types";
 
 function TapHoldHint() {
   const hasSelection = useRangeSelection(
@@ -91,28 +91,22 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   committedRange: { startIdx: number; endIdx: number } | null;
   onCommitRange: (dayKey: string, startIdx: number, endIdx: number) => void;
 }) {
-  const startHour = hours[0] ?? 0;
-
   const selectionConfig = React.useMemo<RangeSelectionConfig>(() => {
+    // Derive blocked indices from the day-clipped segment positions
+    // (topOffset/height already handle overnight boundaries correctly)
     const blockedHourIndices = new Set<number>();
-    for (const { block } of blocks) {
-      const blockStart = getMinuteOfDay(block.startTime, timeZone);
-      const blockEnd = getMinuteOfDay(block.endTime, timeZone);
-      for (let m = blockStart; m < blockEnd; m += 60) {
-        const idx = Math.floor(m / 60) - startHour;
-        if (idx >= 0 && idx < hours.length) {
-          blockedHourIndices.add(idx);
-        }
+    for (const { topOffset, height } of blocks) {
+      const startIdx = Math.floor(topOffset / TIMELINE_ROW_HEIGHT);
+      const endIdx = Math.ceil((topOffset + height) / TIMELINE_ROW_HEIGHT);
+      for (let i = startIdx; i < endIdx; i++) {
+        blockedHourIndices.add(i);
       }
     }
-    for (const { reservation } of reservations) {
-      const resStart = getMinuteOfDay(reservation.startTime, timeZone);
-      const resEnd = getMinuteOfDay(reservation.endTime, timeZone);
-      for (let m = resStart; m < resEnd; m += 60) {
-        const idx = Math.floor(m / 60) - startHour;
-        if (idx >= 0 && idx < hours.length) {
-          blockedHourIndices.add(idx);
-        }
+    for (const { topOffset, height } of reservations) {
+      const startIdx = Math.floor(topOffset / TIMELINE_ROW_HEIGHT);
+      const endIdx = Math.ceil((topOffset + height) / TIMELINE_ROW_HEIGHT);
+      for (let i = startIdx; i < endIdx; i++) {
+        blockedHourIndices.add(i);
       }
     }
 
@@ -168,7 +162,6 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
     hours,
     onCommitRange,
     reservations,
-    startHour,
     timeZone,
   ]);
 

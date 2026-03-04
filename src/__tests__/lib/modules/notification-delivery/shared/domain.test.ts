@@ -126,4 +126,95 @@ describe("notification content reservation links", () => {
     expect(awaitingContent.push.url).toBe("/reservations/res-1/payment");
     expect(confirmedContent.push.url).toBe("/reservations/res-1");
   });
+
+  it("routes grouped owner lifecycle events to owner reservation detail", () => {
+    const groupItems = [
+      {
+        reservationId: "res-1",
+        courtId: "court-1",
+        courtLabel: "Court 1",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T09:00:00.000Z",
+        totalPriceCents: 1200,
+        currency: "PHP",
+      },
+      {
+        reservationId: "res-2",
+        courtId: "court-2",
+        courtLabel: "Court 2",
+        startTimeIso: "2026-03-01T10:00:00.000Z",
+        endTimeIso: "2026-03-01T11:00:00.000Z",
+        totalPriceCents: 1800,
+        currency: "PHP",
+      },
+    ];
+
+    const created = buildNotificationContent(
+      "reservation_group.created",
+      {
+        reservationGroupId: "grp-1",
+        representativeReservationId: "res-1",
+        organizationId: "org-1",
+        placeId: "place-1",
+        placeName: "Place A",
+        totalPriceCents: 3000,
+        currency: "PHP",
+        playerName: "Player One",
+        playerEmail: "player@example.com",
+        playerPhone: "09170000000",
+        itemCount: 2,
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T11:00:00.000Z",
+        items: groupItems,
+      },
+      "",
+    );
+    const paymentMarked = buildNotificationContent(
+      "reservation_group.payment_marked",
+      {
+        reservationGroupId: "grp-1",
+        representativeReservationId: "res-1",
+        organizationId: "org-1",
+        placeName: "Place A",
+        courtLabel: "2 courts",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T11:00:00.000Z",
+        playerName: "Player One",
+        itemCount: 2,
+        items: groupItems,
+      },
+      "",
+    );
+    const cancelled = buildNotificationContent(
+      "reservation_group.cancelled",
+      {
+        reservationGroupId: "grp-1",
+        representativeReservationId: "res-1",
+        organizationId: "org-1",
+        placeName: "Place A",
+        courtLabel: "2 courts",
+        startTimeIso: "2026-03-01T08:00:00.000Z",
+        endTimeIso: "2026-03-01T11:00:00.000Z",
+        playerName: "Player One",
+        itemCount: 2,
+        items: groupItems,
+        reason: "Player cancelled",
+      },
+      "",
+    );
+
+    if ("error" in created) {
+      throw new Error(created.error);
+    }
+    if ("error" in paymentMarked) {
+      throw new Error(paymentMarked.error);
+    }
+    if ("error" in cancelled) {
+      throw new Error(cancelled.error);
+    }
+
+    expect(created.push.url).toBe("/organization/reservations/res-1");
+    expect(paymentMarked.push.url).toBe("/organization/reservations/res-1");
+    expect(cancelled.push.url).toBe("/organization/reservations/res-1");
+  });
 });

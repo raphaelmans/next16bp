@@ -12,6 +12,7 @@ describe("validateBookingCartAdd", () => {
       candidate: {
         courtId: "court-a",
         startTime: "2026-02-24T01:00:00.000Z",
+        durationMinutes: 60,
       },
       placeTimeZone: "Asia/Manila",
     });
@@ -25,11 +26,13 @@ describe("validateBookingCartAdd", () => {
         {
           courtId: "court-a",
           startTime: "2026-02-24T01:00:00.000Z",
+          durationMinutes: 60,
         },
       ],
       candidate: {
         courtId: "court-b",
         startTime: "2026-02-24T09:00:00.000Z",
+        durationMinutes: 60,
       },
       placeTimeZone: "Asia/Manila",
     });
@@ -44,12 +47,14 @@ describe("validateBookingCartAdd", () => {
           courtId: "court-a",
           // 2026-02-24 23:30 Asia/Manila
           startTime: "2026-02-24T15:30:00.000Z",
+          durationMinutes: 60,
         },
       ],
       candidate: {
         courtId: "court-b",
         // 2026-02-25 00:30 Asia/Manila
         startTime: "2026-02-24T16:30:00.000Z",
+        durationMinutes: 60,
       },
       placeTimeZone: "Asia/Manila",
     });
@@ -63,11 +68,13 @@ describe("validateBookingCartAdd", () => {
         {
           courtId: "court-a",
           startTime: "2026-02-24T01:00:00.000Z",
+          durationMinutes: 60,
         },
       ],
       candidate: {
         courtId: "court-a",
         startTime: "2026-02-24T09:00:00.000Z",
+        durationMinutes: 60,
       },
       placeTimeZone: "Asia/Manila",
     });

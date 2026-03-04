@@ -4,6 +4,7 @@ import {
   Building2,
   Calendar,
   ChevronDown,
+  Heart,
   Loader2,
   LogOut,
   Shield,
@@ -103,6 +104,12 @@ export function UserDropdown({
               </Link>
             </DropdownMenuItem>
           ) : null}
+          <DropdownMenuItem asChild>
+            <Link href={appRoutes.savedVenues.base} className="cursor-pointer">
+              <Heart className="mr-2 h-4 w-4" />
+              <span>Saved Venues</span>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href={appRoutes.reservations.base} className="cursor-pointer">
               <Calendar className="mr-2 h-4 w-4" />

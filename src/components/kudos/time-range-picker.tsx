@@ -4,8 +4,13 @@ import { Check, Info } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { useShallow } from "zustand/shallow";
-import { formatCurrency, formatTimeInTimeZone } from "@/common/format";
+import {
+  formatCurrency,
+  formatInTimeZone,
+  formatTimeInTimeZone,
+} from "@/common/format";
 import { useNowMs } from "@/common/hooks/use-now";
+import { getZonedDayKey } from "@/common/time-zone";
 import { useTouchIntent } from "@/common/use-touch-intent";
 import { cn } from "@/lib/utils";
 import {
@@ -36,18 +41,22 @@ export interface TimeRangePickerProps {
   timeZone: string;
   selectedStartTime?: string;
   selectedDurationMinutes?: number;
+  selectedDayKey?: string;
+  showDaySeparators?: boolean;
   showPrice?: boolean;
   onChange?: (range: { startTime: string; durationMinutes: number }) => void;
   onClear?: () => void;
   className?: string;
   cartedStartTimes?: Set<string>;
+  /** When set, the selection started on a previous day (cross-midnight). */
+  crossDayStartTime?: string;
 }
 
-function isSlotAvailable(slot: TimeSlot): boolean {
+export function isSlotAvailable(slot: TimeSlot): boolean {
   return slot.status === "available";
 }
 
-function isSlotSelectable(slot: TimeSlot, nowMs: number): boolean {
+export function isSlotSelectable(slot: TimeSlot, nowMs: number): boolean {
   return isSlotAvailable(slot) && Date.parse(slot.startTime) >= nowMs;
 }
 
@@ -194,6 +203,7 @@ interface TimeSlotRowProps {
   idx: number;
   slot: TimeSlot;
   timeZone: string;
+  dayContextLabel?: string;
   showPrice: boolean;
   isPast?: boolean;
   isInCart: boolean;
@@ -203,6 +213,7 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
   idx,
   slot,
   timeZone,
+  dayContextLabel,
   showPrice,
   isPast,
   isInCart,
@@ -252,7 +263,7 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
       tabIndex={available ? 0 : -1}
       disabled={!available}
       aria-pressed={inRange}
-      aria-label={`${startLabel} to ${endLabel}${
+      aria-label={`${dayContextLabel ? `${dayContextLabel}, ` : ""}${startLabel} to ${endLabel}${
         isPassed ? " (passed)" : !available ? " (unavailable)" : ""
       }`}
       className={cn(
@@ -352,6 +363,11 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
 
       {/* Status / price */}
       <span className="flex flex-1 items-center gap-2">
+        {dayContextLabel && (
+          <span className="inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+            {dayContextLabel}
+          </span>
+        )}
         {isMaintenance && (
           <span className="inline-flex items-center rounded-md bg-warning-light px-2 py-0.5 text-[11px] font-medium text-warning-foreground">
             Maintenance
@@ -403,11 +419,14 @@ export function TimeRangePicker({
   timeZone,
   selectedStartTime,
   selectedDurationMinutes,
+  selectedDayKey,
+  showDaySeparators = true,
   showPrice = true,
   onChange,
   onClear,
   className,
   cartedStartTimes,
+  crossDayStartTime,
 }: TimeRangePickerProps) {
   const nowMs = useNowMs({ intervalMs: 10_000 });
 
@@ -416,9 +435,30 @@ export function TimeRangePicker({
     if (!selectedStartTime || !selectedDurationMinutes) return null;
     const selectedStartMs = Date.parse(selectedStartTime);
     if (selectedStartMs < nowMs) return null;
+
     const startIdx = slots.findIndex((s) =>
       isSameInstant(s.startTime, selectedStartTime),
     );
+
+    if (startIdx === -1 && slots.length > 0) {
+      // Cross-day: selection start is before the visible slots
+      const firstSlotMs = Date.parse(slots[0].startTime);
+      if (selectedStartMs < firstSlotMs) {
+        const preSlotMinutes = Math.round(
+          (firstSlotMs - selectedStartMs) / 60_000,
+        );
+        const remainingMinutes = selectedDurationMinutes - preSlotMinutes;
+        if (remainingMinutes <= 0) return null;
+        const visibleSlotCount = Math.ceil(
+          remainingMinutes / SLOT_STEP_MINUTES,
+        );
+        const endIdx = visibleSlotCount - 1;
+        if (endIdx >= slots.length) return null;
+        return { startIdx: 0, endIdx };
+      }
+      return null;
+    }
+
     if (startIdx === -1) return null;
     const slotCount = selectedDurationMinutes / SLOT_STEP_MINUTES;
     const endIdx = startIdx + slotCount - 1;
@@ -440,14 +480,30 @@ export function TimeRangePicker({
       commitRange: (startIdx, endIdx) => {
         const startSlot = slots[startIdx];
         if (!startSlot) return;
-        const slotCount = endIdx - startIdx + 1;
-        onChange?.({
-          startTime: startSlot.startTime,
-          durationMinutes: slotCount * SLOT_STEP_MINUTES,
-        });
+
+        if (crossDayStartTime) {
+          // Cross-day: compute total duration from the cross-day anchor
+          const endSlot = slots[endIdx];
+          if (!endSlot) return;
+          const endMs =
+            Date.parse(endSlot.startTime) + SLOT_STEP_MINUTES * 60_000;
+          const totalMinutes = Math.round(
+            (endMs - Date.parse(crossDayStartTime)) / 60_000,
+          );
+          onChange?.({
+            startTime: crossDayStartTime,
+            durationMinutes: totalMinutes,
+          });
+        } else {
+          const slotCount = endIdx - startIdx + 1;
+          onChange?.({
+            startTime: startSlot.startTime,
+            durationMinutes: slotCount * SLOT_STEP_MINUTES,
+          });
+        }
       },
     }),
-    [slots, nowMs, onChange],
+    [slots, nowMs, onChange, crossDayStartTime],
   );
 
   return (
@@ -460,6 +516,8 @@ export function TimeRangePicker({
         className={className}
         nowMs={nowMs}
         cartedStartTimes={cartedStartTimes}
+        selectedDayKey={selectedDayKey}
+        showDaySeparators={showDaySeparators}
       />
     </RangeSelectionProvider>
   );
@@ -474,6 +532,8 @@ function TimeRangePickerInner({
   className,
   nowMs,
   cartedStartTimes,
+  selectedDayKey,
+  showDaySeparators,
 }: {
   slots: TimeSlot[];
   timeZone: string;
@@ -482,6 +542,8 @@ function TimeRangePickerInner({
   className?: string;
   nowMs: number;
   cartedStartTimes?: Set<string>;
+  selectedDayKey?: string;
+  showDaySeparators: boolean;
 }) {
   const { pointerUp, setHoveredIdx } = useRangeSelection(
     useShallow((s) => ({
@@ -518,19 +580,46 @@ function TimeRangePickerInner({
       )}
 
       <div className="relative overflow-hidden rounded-xl border border-border/80 bg-card shadow-sm">
-        {slots.map((slot, idx) => (
-          <TimeSlotRow
-            key={slot.id}
-            idx={idx}
-            slot={slot}
-            timeZone={timeZone}
-            showPrice={showPrice}
-            isPast={Date.parse(slot.startTime) < nowMs}
-            isInCart={
-              cartedStartTimes?.has(String(Date.parse(slot.startTime))) ?? false
-            }
-          />
-        ))}
+        {slots.map((slot, idx) => {
+          const slotDayKey = getZonedDayKey(slot.startTime, timeZone);
+          const previousSlot = idx > 0 ? slots[idx - 1] : undefined;
+          const previousDayKey = previousSlot
+            ? getZonedDayKey(previousSlot.startTime, timeZone)
+            : undefined;
+          const shouldRenderDayHeader =
+            showDaySeparators && slotDayKey !== previousDayKey;
+          const dayHeaderLabel = formatInTimeZone(
+            slot.startTime,
+            timeZone,
+            "EEE, MMM d",
+          );
+          const dayContextLabel =
+            selectedDayKey && slotDayKey !== selectedDayKey
+              ? dayHeaderLabel
+              : undefined;
+
+          return (
+            <React.Fragment key={slot.id}>
+              {shouldRenderDayHeader && (
+                <div className="border-b border-border/50 bg-muted/30 px-4 py-2 text-xs font-semibold text-muted-foreground">
+                  {dayHeaderLabel}
+                </div>
+              )}
+              <TimeSlotRow
+                idx={idx}
+                slot={slot}
+                timeZone={timeZone}
+                dayContextLabel={dayContextLabel}
+                showPrice={showPrice}
+                isPast={Date.parse(slot.startTime) < nowMs}
+                isInCart={
+                  cartedStartTimes?.has(String(Date.parse(slot.startTime))) ??
+                  false
+                }
+              />
+            </React.Fragment>
+          );
+        })}
       </div>
 
       {slots.length === 0 && (

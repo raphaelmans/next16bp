@@ -54,6 +54,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useQueryAuthSession } from "@/features/auth";
 import {
+  filterSlotsByDayKey,
   getAvailabilityErrorInfo,
   getPlaceVerificationDisplay,
   type PlaceVerificationDisplayInput,
@@ -320,8 +321,18 @@ export default function CourtDetailClient({
   // Day slots
   const daySlots: TimeSlot[] = React.useMemo(() => {
     if (isWeekView) return [];
-    return mapOptionsToSlots(dayAvailabilityQuery.data?.options ?? []);
-  }, [dayAvailabilityQuery.data, isWeekView, mapOptionsToSlots]);
+    return filterSlotsByDayKey(
+      mapOptionsToSlots(dayAvailabilityQuery.data?.options ?? []),
+      dayKey,
+      placeTimeZone,
+    );
+  }, [
+    dayAvailabilityQuery.data,
+    dayKey,
+    isWeekView,
+    mapOptionsToSlots,
+    placeTimeZone,
+  ]);
 
   const dayDiagnostics = React.useMemo(() => {
     if (isWeekView) return null;
@@ -886,6 +897,7 @@ export default function CourtDetailClient({
                   <TimeRangePicker
                     slots={daySlots}
                     timeZone={placeTimeZone}
+                    selectedDayKey={dayKey}
                     selectedStartTime={selectedRange?.startTime}
                     selectedDurationMinutes={selectedRange?.durationMinutes}
                     showPrice

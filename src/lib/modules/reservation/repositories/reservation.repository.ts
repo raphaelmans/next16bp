@@ -404,6 +404,7 @@ export class ReservationRepository implements IReservationRepository {
         courtId: court.id,
         courtName: sql<string>`concat(${place.name}, ' - ', ${court.label})`,
         placeId: place.id,
+        placeSlug: place.slug,
         placeName: place.name,
         placeAddress: place.address,
         placeCity: place.city,
@@ -438,6 +439,7 @@ export class ReservationRepository implements IReservationRepository {
         court.id,
         court.label,
         place.id,
+        place.slug,
         place.name,
         place.address,
         place.city,
@@ -455,6 +457,7 @@ export class ReservationRepository implements IReservationRepository {
     return results.map((row) => ({
       ...row,
       reservationGroupId: row.reservationGroupId ?? null,
+      placeSlug: row.placeSlug ?? null,
       coverImageUrl: row.coverImageUrl ?? null,
       createdAt: toIsoString(row.createdAt),
       expiresAt: toIsoString(row.expiresAt),

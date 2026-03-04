@@ -266,6 +266,18 @@ export const mapAvailabilityOptionsToSlots = (
       (option.unavailableReason as TimeSlot["unavailableReason"]) ?? undefined,
   }));
 
+export const filterSlotsByDayKey = (
+  slots: TimeSlot[],
+  dayKey: string,
+  timeZone: string,
+): TimeSlot[] => {
+  const filtered = slots.filter(
+    (slot) => getZonedDayKey(slot.startTime, timeZone) === dayKey,
+  );
+  filtered.sort((a, b) => a.startTime.localeCompare(b.startTime));
+  return filtered;
+};
+
 export const groupSlotsByDayKey = (slots: TimeSlot[], timeZone: string) => {
   const byDay = new Map<string, TimeSlot[]>();
   for (const slot of slots) {

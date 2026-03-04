@@ -1,8 +1,16 @@
 "use client";
 
-import { AlertTriangle, Calendar, ChevronDown, RefreshCw } from "lucide-react";
+import {
+  AlertTriangle,
+  Calendar,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  RefreshCw,
+} from "lucide-react";
 import type * as React from "react";
 import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
+import { getZonedDayKey } from "@/common/time-zone";
 import { AvailabilityEmptyState } from "@/components/availability-empty-state";
 import {
   AvailabilityWeekGrid,
@@ -68,6 +76,10 @@ type PlaceDetailAvailabilityDesktopProps = {
   calendarPopoverOpen: boolean;
   setCalendarPopoverOpen: (open: boolean) => void;
   weekHeaderLabel: string;
+  onPrevWeek: () => void;
+  onNextWeek: () => void;
+  isPrevWeekDisabled: boolean;
+  isNextWeekDisabled: boolean;
   selectedDate?: Date;
   onCalendarJump: (date: Date | undefined) => void;
   todayRangeStart: Date;
@@ -114,6 +126,10 @@ export function PlaceDetailAvailabilityDesktop({
   calendarPopoverOpen,
   setCalendarPopoverOpen,
   weekHeaderLabel,
+  onPrevWeek,
+  onNextWeek,
+  isPrevWeekDisabled,
+  isNextWeekDisabled,
   selectedDate,
   onCalendarJump,
   todayRangeStart,
@@ -143,6 +159,9 @@ export function PlaceDetailAvailabilityDesktop({
   cartedStartTimes,
 }: PlaceDetailAvailabilityDesktopProps) {
   const isCourtWeekView = courtViewMode === "week";
+  const selectedDayKey = selectedDate
+    ? getZonedDayKey(selectedDate, placeTimeZone)
+    : undefined;
 
   return (
     <div ref={availabilitySectionRef} className="scroll-mt-24 hidden lg:block">
@@ -255,42 +274,66 @@ export function PlaceDetailAvailabilityDesktop({
 
               {anyViewMode === "week" ? (
                 <div className="flex flex-wrap items-center gap-2">
-                  <Popover
-                    open={calendarPopoverOpen}
-                    onOpenChange={setCalendarPopoverOpen}
-                  >
-                    <PopoverTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        aria-label="Open calendar to jump to a date"
-                      >
-                        <Calendar className="h-3.5 w-3.5" />
-                        {weekHeaderLabel}
-                        <ChevronDown
-                          className={cn(
-                            "h-3 w-3 opacity-50 transition-transform duration-200",
-                            calendarPopoverOpen && "rotate-180",
-                          )}
+                  <div className="flex items-center gap-1">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={onPrevWeek}
+                      disabled={isPrevWeekDisabled}
+                      aria-label="Previous week"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Popover
+                      open={calendarPopoverOpen}
+                      onOpenChange={setCalendarPopoverOpen}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          aria-label="Open calendar to jump to a date"
+                        >
+                          <Calendar className="h-3.5 w-3.5" />
+                          {weekHeaderLabel}
+                          <ChevronDown
+                            className={cn(
+                              "h-3 w-3 opacity-50 transition-transform duration-200",
+                              calendarPopoverOpen && "rotate-180",
+                            )}
+                          />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <CalendarWidget
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={onCalendarJump}
+                          disabled={(date) => {
+                            if (date < todayRangeStart) return true;
+                            if (date > maxBookingDate) return true;
+                            return false;
+                          }}
+                          timeZone={placeTimeZone}
+                          initialFocus
                         />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <CalendarWidget
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={onCalendarJump}
-                        disabled={(date) => {
-                          if (date < todayRangeStart) return true;
-                          if (date > maxBookingDate) return true;
-                          return false;
-                        }}
-                        timeZone={placeTimeZone}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                      </PopoverContent>
+                    </Popover>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={onNextWeek}
+                      disabled={isNextWeekDisabled}
+                      aria-label="Next week"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <Button
                     type="button"
                     variant="outline"
@@ -351,42 +394,66 @@ export function PlaceDetailAvailabilityDesktop({
 
               {isCourtWeekView ? (
                 <div className="flex flex-wrap items-center gap-2">
-                  <Popover
-                    open={calendarPopoverOpen}
-                    onOpenChange={setCalendarPopoverOpen}
-                  >
-                    <PopoverTrigger asChild>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        aria-label="Open calendar to jump to a date"
-                      >
-                        <Calendar className="h-3.5 w-3.5" />
-                        {weekHeaderLabel}
-                        <ChevronDown
-                          className={cn(
-                            "h-3 w-3 opacity-50 transition-transform duration-200",
-                            calendarPopoverOpen && "rotate-180",
-                          )}
+                  <div className="flex items-center gap-1">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={onPrevWeek}
+                      disabled={isPrevWeekDisabled}
+                      aria-label="Previous week"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    <Popover
+                      open={calendarPopoverOpen}
+                      onOpenChange={setCalendarPopoverOpen}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          aria-label="Open calendar to jump to a date"
+                        >
+                          <Calendar className="h-3.5 w-3.5" />
+                          {weekHeaderLabel}
+                          <ChevronDown
+                            className={cn(
+                              "h-3 w-3 opacity-50 transition-transform duration-200",
+                              calendarPopoverOpen && "rotate-180",
+                            )}
+                          />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <CalendarWidget
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={onCalendarJump}
+                          disabled={(date) => {
+                            if (date < todayRangeStart) return true;
+                            if (date > maxBookingDate) return true;
+                            return false;
+                          }}
+                          timeZone={placeTimeZone}
+                          initialFocus
                         />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <CalendarWidget
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={onCalendarJump}
-                        disabled={(date) => {
-                          if (date < todayRangeStart) return true;
-                          if (date > maxBookingDate) return true;
-                          return false;
-                        }}
-                        timeZone={placeTimeZone}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                      </PopoverContent>
+                    </Popover>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={onNextWeek}
+                      disabled={isNextWeekDisabled}
+                      aria-label="Next week"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
                   <Button
                     type="button"
                     variant="outline"
@@ -497,6 +564,7 @@ export function PlaceDetailAvailabilityDesktop({
               <TimeRangePicker
                 slots={anyDaySlots}
                 timeZone={placeTimeZone}
+                selectedDayKey={selectedDayKey}
                 selectedStartTime={selectedRange?.startTime}
                 selectedDurationMinutes={selectedRange?.durationMinutes}
                 showPrice
@@ -550,6 +618,7 @@ export function PlaceDetailAvailabilityDesktop({
             <TimeRangePicker
               slots={courtDaySlots}
               timeZone={placeTimeZone}
+              selectedDayKey={selectedDayKey}
               selectedStartTime={selectedRange?.startTime}
               selectedDurationMinutes={selectedRange?.durationMinutes}
               showPrice

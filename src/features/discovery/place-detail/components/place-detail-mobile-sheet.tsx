@@ -59,6 +59,7 @@ type PlaceDetailMobileSheetProps = {
   selectedCourtId?: string;
   onMobileCourtChange: (courtId: string | undefined) => void;
   selectedDate?: Date;
+  selectedDayKey?: string;
   today: Date;
   placeTimeZone: string;
   onMobileDateSelect: (date: Date) => void;
@@ -86,6 +87,7 @@ type PlaceDetailMobileSheetProps = {
   onAddToCartAction: () => void;
   onRemoveFromCartAction: (key: string) => void;
   cartedStartTimes?: Set<string>;
+  crossDayStartTime?: string;
 };
 
 export function PlaceDetailMobileSheet({
@@ -100,6 +102,7 @@ export function PlaceDetailMobileSheet({
   selectedCourtId,
   onMobileCourtChange,
   selectedDate,
+  selectedDayKey,
   today,
   placeTimeZone,
   onMobileDateSelect,
@@ -127,6 +130,7 @@ export function PlaceDetailMobileSheet({
   onAddToCartAction,
   onRemoveFromCartAction,
   cartedStartTimes,
+  crossDayStartTime,
 }: PlaceDetailMobileSheetProps) {
   const cartItemCount = cartItems.length;
   const hasCartItems = cartItemCount > 0;
@@ -364,6 +368,7 @@ export function PlaceDetailMobileSheet({
                   <TimeRangePicker
                     slots={mobileDaySlots}
                     timeZone={placeTimeZone}
+                    selectedDayKey={selectedDayKey}
                     selectedStartTime={selectedRange?.startTime}
                     selectedDurationMinutes={selectedRange?.durationMinutes}
                     showPrice
@@ -374,6 +379,7 @@ export function PlaceDetailMobileSheet({
                     }
                     onClear={onClearSelection}
                     cartedStartTimes={cartedStartTimes}
+                    crossDayStartTime={crossDayStartTime}
                   />
                 ) : (
                   <div className="py-6 text-center text-sm text-muted-foreground">

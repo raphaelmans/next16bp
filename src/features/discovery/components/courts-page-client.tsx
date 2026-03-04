@@ -31,6 +31,7 @@ import {
   useModDiscoveryFilters,
   useModDiscoveryPlaceCardDetails,
   useModDiscoveryPlaceSummaries,
+  useModPlaceBookmarkBatch,
 } from "@/features/discovery/hooks";
 
 type PaginationItemModel =
@@ -143,6 +144,12 @@ function CourtsPageContent({
   );
   const { mediaById, metaById, isMediaLoading, isMetaLoading } =
     useModDiscoveryPlaceCardDetails(placeIds, effectiveSportId ?? undefined);
+  const {
+    bookmarkedSet,
+    toggleBookmark,
+    isPending: isBookmarkPending,
+    pendingPlaceId,
+  } = useModPlaceBookmarkBatch(placeIds);
   const places = useMemo(
     () =>
       placeSummaries.map((summary) =>
@@ -267,6 +274,11 @@ function CourtsPageContent({
                   place={place}
                   isMediaLoading={isMediaLoading}
                   isMetaLoading={isMetaLoading}
+                  isBookmarked={bookmarkedSet.has(place.id)}
+                  isBookmarkPending={
+                    isBookmarkPending && pendingPlaceId === place.id
+                  }
+                  onBookmarkToggle={() => toggleBookmark(place.id)}
                 />
               ))}
             </div>

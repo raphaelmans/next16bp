@@ -3,6 +3,7 @@
 import {
   Building,
   Calendar,
+  Heart,
   Loader2,
   LogOut,
   Menu,
@@ -308,6 +309,14 @@ export function Navbar({ className }: NavbarProps) {
                     My Reservations
                   </Link>
                 )}
+                <Link
+                  href={appRoutes.savedVenues.base}
+                  className="py-2 text-lg font-heading font-semibold flex items-center gap-2"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Heart className="h-5 w-5" />
+                  Saved Venues
+                </Link>
                 <Link
                   href={appRoutes.account.profile}
                   className="py-2 text-lg font-heading font-semibold flex items-center gap-2"

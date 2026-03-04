@@ -50,6 +50,7 @@ export const ReservationGroupDetailItemSchema = z.object({
   }),
   place: z.object({
     id: S.ids.placeId,
+    slug: z.string().nullable(),
     name: z.string(),
     address: z.string(),
     city: z.string(),

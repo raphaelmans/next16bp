@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PhotoCarousel } from "@/features/discovery/components";
+import { BookmarkButton } from "@/features/discovery/components/bookmark-button";
 import type { PlaceDetail } from "@/features/discovery/hooks";
 
 type PlaceDetailHeroProps = {
@@ -16,6 +17,9 @@ type PlaceDetailHeroProps = {
   hasCallCta: boolean;
   callHref: string;
   onCheckAvailability: () => void;
+  isBookmarked?: boolean;
+  isBookmarkPending?: boolean;
+  onBookmarkToggle?: () => void;
 };
 
 export function PlaceDetailHero({
@@ -27,6 +31,9 @@ export function PlaceDetailHero({
   hasCallCta,
   callHref,
   onCheckAvailability,
+  isBookmarked,
+  isBookmarkPending,
+  onBookmarkToggle,
 }: PlaceDetailHeroProps) {
   const logoUrl = place.logoUrl?.trim();
   const logoFallback = place.name
@@ -101,6 +108,14 @@ export function PlaceDetailHero({
                 Call
               </a>
             </Button>
+          )}
+          {onBookmarkToggle && (
+            <BookmarkButton
+              variant="inline"
+              isBookmarked={isBookmarked ?? false}
+              isPending={isBookmarkPending}
+              onToggle={onBookmarkToggle}
+            />
           )}
         </div>
       </div>

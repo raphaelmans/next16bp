@@ -63,7 +63,17 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <h3 className="font-medium text-foreground truncate">
-                {court.name}
+                {court.placeSlug ? (
+                  <Link
+                    href={appRoutes.places.detail(court.placeSlug)}
+                    className="hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {court.name}
+                  </Link>
+                ) : (
+                  court.name
+                )}
               </h3>
               <p className="text-sm text-muted-foreground truncate">
                 {court.address}

@@ -1409,6 +1409,7 @@ export class ReservationService implements IReservationService {
         },
         place: {
           id: row.place.id,
+          slug: row.place.slug,
           name: row.place.name,
           address: row.place.address,
           city: row.place.city,

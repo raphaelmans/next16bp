@@ -45,6 +45,7 @@ export * from "./place";
 export * from "./place-addon";
 export * from "./place-addon-rate-rule";
 export * from "./place-amenity";
+export * from "./place-bookmark";
 export * from "./place-photo";
 export * from "./place-verification";
 export * from "./profile";

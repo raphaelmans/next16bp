@@ -10,6 +10,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { getBlockCtaLabel } from "@/features/owner/booking-studio/helpers";
 import { useBookingStudio } from "./booking-studio-provider";
 import { SelectionPanelForm } from "./selection-panel-form";
 
@@ -75,13 +76,7 @@ export const MobileCreateBlockDrawer = React.memo(
               className="w-full"
               disabled={isCreatingBlock}
             >
-              {isCreatingBlock
-                ? "Saving..."
-                : selectionBlockType === "WALK_IN"
-                  ? "Save walk-in booking"
-                  : selectionBlockType === "MAINTENANCE"
-                    ? "Save maintenance block"
-                    : "Save guest booking"}
+              {getBlockCtaLabel(selectionBlockType, isCreatingBlock)}
             </Button>
           </DrawerFooter>
         </DrawerContent>

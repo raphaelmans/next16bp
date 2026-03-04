@@ -284,6 +284,7 @@ type ReservationListItemData = {
   expiresAt: string | null;
   courtId: string;
   courtName: string;
+  placeSlug?: string | null;
   placeAddress: string;
   coverImageUrl: string | null;
   slotStartTime: string;
@@ -414,6 +415,7 @@ function aggregateGroupedItems(
       reservationGroupId,
       isGroupPrimary: true,
       groupItemCount: sortedItems.length,
+      placeSlug: primary.placeSlug,
       courtName:
         sortedItems.length > 1
           ? `${placeName} - ${sortedItems.length} courts`
@@ -503,6 +505,7 @@ export function useModMyReservations(options: UseMyReservationsOptions = {}) {
             court: {
               id: item.courtId,
               name: item.courtName,
+              placeSlug: item.placeSlug ?? undefined,
               address: item.placeAddress,
               coverImageUrl: item.coverImageUrl ?? undefined,
             },
@@ -626,6 +629,7 @@ export interface ReservationListItem {
   court: {
     id: string;
     name: string;
+    placeSlug?: string;
     address: string;
     coverImageUrl?: string;
   };

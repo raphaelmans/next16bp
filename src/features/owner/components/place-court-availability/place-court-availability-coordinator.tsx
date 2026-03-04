@@ -62,6 +62,7 @@ import {
   buildTimelineReservationsForDay,
   buildWeekTimelineBlocksByDayKey,
   buildWeekTimelineReservationsByDayKey,
+  getBlockCtaLabel,
 } from "@/features/owner/booking-studio/helpers";
 import { useBookingStudioViewState } from "@/features/owner/booking-studio/hooks";
 import { ReservationAlertsPanel } from "@/features/owner/components";
@@ -69,7 +70,10 @@ import {
   BookingStudioProvider,
   useBookingStudio,
 } from "@/features/owner/components/booking-studio/booking-studio-provider";
-import { getTimelineRangeForWeek } from "@/features/owner/components/booking-studio/court-hours";
+import {
+  getOperatingHoursForDay,
+  getOperatingHoursForWeek,
+} from "@/features/owner/components/booking-studio/court-hours";
 import { CustomBlockDialog } from "@/features/owner/components/booking-studio/custom-block-dialog";
 import { GuestBookingDialog } from "@/features/owner/components/booking-studio/guest-booking-dialog";
 import { ManageBlockDialog } from "@/features/owner/components/booking-studio/manage-block-dialog";
@@ -94,7 +98,6 @@ import {
   guestBookingFormSchema,
   isOptimisticBlockId,
   parseDateTimeInput,
-  parseTimelineRange,
   type ReservationItem,
   type StudioView,
   TIMELINE_ROW_HEIGHT,
@@ -298,35 +301,13 @@ function OwnerCourtAvailabilityInner({
   const courtHoursQuery = useModCourtHours(courtId);
   const courtRateRulesQuery = useModCourtRateRules(courtId);
   const dayOfWeek = getZonedDate(selectedDayStart, placeTimeZone).getDay();
-  const selectedTimelineRange = React.useMemo(
-    () => parseTimelineRange(courtHoursQuery.data ?? [], dayOfWeek),
-    [courtHoursQuery.data, dayOfWeek],
-  );
-  const timelineRange = React.useMemo(() => {
-    if (!isWeekView) return selectedTimelineRange;
-    return getTimelineRangeForWeek(
-      courtHoursQuery.data ?? [],
-      weekDayKeys,
-      placeTimeZone,
-    );
-  }, [
-    courtHoursQuery.data,
-    isWeekView,
-    placeTimeZone,
-    selectedTimelineRange,
-    weekDayKeys,
-  ]);
 
-  const { startHour, endHour } = timelineRange;
+  const hours = React.useMemo(() => {
+    const windows = courtHoursQuery.data ?? [];
+    if (!isWeekView) return getOperatingHoursForDay(windows, dayOfWeek);
+    return getOperatingHoursForWeek(windows, weekDayKeys, placeTimeZone);
+  }, [courtHoursQuery.data, dayOfWeek, isWeekView, weekDayKeys, placeTimeZone]);
 
-  const hours = React.useMemo(
-    () =>
-      Array.from(
-        { length: endHour - startHour },
-        (_, index) => startHour + index,
-      ),
-    [endHour, startHour],
-  );
   const dayHourLabels = React.useMemo(
     () =>
       hours.map((hour) =>
@@ -339,7 +320,7 @@ function OwnerCourtAvailabilityInner({
     [dayKey, hours, placeTimeZone],
   );
 
-  const timelineStartMinute = startHour * 60;
+  const timelineStartMinute = (hours[0] ?? 6) * 60;
 
   // Data fetching — range covers visible days (day or week)
   const blocksRange = React.useMemo(
@@ -437,7 +418,13 @@ function OwnerCourtAvailabilityInner({
         timeZone: placeTimeZone,
         hours,
       }),
-    [activeBlocksForSelectedDay, dayKey, hours, placeTimeZone, selectedDayStart],
+    [
+      activeBlocksForSelectedDay,
+      dayKey,
+      hours,
+      placeTimeZone,
+      selectedDayStart,
+    ],
   );
 
   const timelineReservations = React.useMemo(
@@ -993,7 +980,6 @@ function OwnerCourtAvailabilityInner({
       buildDaySelectionConfig({
         timelineBlocks,
         timelineReservations,
-        placeTimeZone,
         hours,
         dayOfWeek,
         courtHours: courtHoursQuery.data ?? [],
@@ -1004,7 +990,6 @@ function OwnerCourtAvailabilityInner({
       }),
     [
       hours,
-      placeTimeZone,
       setCommittedRange,
       timelineBlocks,
       timelineReservations,
@@ -1032,18 +1017,20 @@ function OwnerCourtAvailabilityInner({
 
   const selectedTimeLabel = React.useMemo(() => {
     if (!committedRange) return "";
-    const s = buildDateFromDayKey(
-      committedDayKey,
-      (committedRange.startIdx + startHour) * 60,
-      placeTimeZone,
-    );
-    const e = buildDateFromDayKey(
-      committedDayKey,
-      (committedRange.endIdx + startHour + 1) * 60,
-      placeTimeZone,
-    );
+    const startHourVal = hours[committedRange.startIdx];
+    const endHourVal = hours[committedRange.endIdx];
+    if (startHourVal === undefined || endHourVal === undefined) return "";
+    const firstHour = hours[0] ?? 0;
+    const startMin =
+      startHourVal < firstHour ? startHourVal * 60 + 1440 : startHourVal * 60;
+    const endMin =
+      endHourVal < firstHour
+        ? (endHourVal + 1) * 60 + 1440
+        : (endHourVal + 1) * 60;
+    const s = buildDateFromDayKey(committedDayKey, startMin, placeTimeZone);
+    const e = buildDateFromDayKey(committedDayKey, endMin, placeTimeZone);
     return formatTimeRangeInTimeZone(s, e, placeTimeZone);
-  }, [committedDayKey, committedRange, placeTimeZone, startHour]);
+  }, [committedDayKey, committedRange, hours, placeTimeZone]);
 
   const shouldReduceMotion = useReducedMotion();
   const viewTransition = shouldReduceMotion
@@ -1058,6 +1045,11 @@ function OwnerCourtAvailabilityInner({
       startTime: "",
       endTime: "",
       reason: "",
+      guestMode: "existing",
+      guestProfileId: "",
+      newGuestName: "",
+      newGuestPhone: "",
+      newGuestEmail: "",
     },
   });
 
@@ -1099,20 +1091,54 @@ function OwnerCourtAvailabilityInner({
       }
 
       try {
-        const payload = {
-          courtId,
-          startTime: toUtcISOString(start),
-          endTime: toUtcISOString(end),
-          reason: values.reason?.trim() || undefined,
-        };
+        if (values.blockType === "GUEST_BOOKING") {
+          let guestProfileId = values.guestProfileId;
 
-        if (values.blockType === "MAINTENANCE") {
-          await createMaintenance.mutateAsync(payload);
+          if (values.guestMode === "new") {
+            if (!values.newGuestName?.trim()) {
+              toast.error("Guest name is required");
+              return;
+            }
+            const guest = await createGuestProfile.mutateAsync({
+              organizationId: organization?.id ?? "",
+              displayName: values.newGuestName.trim(),
+              phoneNumber: values.newGuestPhone?.trim() || undefined,
+              email: values.newGuestEmail?.trim() || undefined,
+            });
+            guestProfileId = guest.id;
+          }
+
+          if (!guestProfileId) {
+            toast.error("Please select or create a guest");
+            return;
+          }
+
+          await createGuestBooking.mutateAsync({
+            courtId,
+            startTime: toUtcISOString(start),
+            endTime: toUtcISOString(end),
+            guestProfileId,
+            notes: values.reason?.trim() || undefined,
+          });
+
+          toast.success("Guest booking added");
         } else {
-          await createWalkIn.mutateAsync(payload);
+          const payload = {
+            courtId,
+            startTime: toUtcISOString(start),
+            endTime: toUtcISOString(end),
+            reason: values.reason?.trim() || undefined,
+          };
+
+          if (values.blockType === "MAINTENANCE") {
+            await createMaintenance.mutateAsync(payload);
+          } else {
+            await createWalkIn.mutateAsync(payload);
+          }
+
+          toast.success("Block created");
         }
 
-        toast.success("Block created");
         setCustomDialogOpen(false);
       } catch (error) {
         toast.error("Unable to create block", {
@@ -1122,8 +1148,11 @@ function OwnerCourtAvailabilityInner({
     },
     [
       courtId,
+      createGuestBooking,
+      createGuestProfile,
       createMaintenance,
       createWalkIn,
+      organization?.id,
       placeTimeZone,
       setCustomDialogOpen,
     ],
@@ -1165,16 +1194,18 @@ function OwnerCourtAvailabilityInner({
         toast.error("Select a time range first");
         return;
       }
-      const s = buildDateFromDayKey(
-        committedDayKey,
-        (committedRange.startIdx + startHour) * 60,
-        placeTimeZone,
-      );
-      const e = buildDateFromDayKey(
-        committedDayKey,
-        (committedRange.endIdx + startHour + 1) * 60,
-        placeTimeZone,
-      );
+      const startHourVal = hours[committedRange.startIdx];
+      const endHourVal = hours[committedRange.endIdx];
+      if (startHourVal === undefined || endHourVal === undefined) return;
+      const firstHour = hours[0] ?? 0;
+      const startMin =
+        startHourVal < firstHour ? startHourVal * 60 + 1440 : startHourVal * 60;
+      const endMin =
+        endHourVal < firstHour
+          ? (endHourVal + 1) * 60 + 1440
+          : (endHourVal + 1) * 60;
+      const s = buildDateFromDayKey(committedDayKey, startMin, placeTimeZone);
+      const e = buildDateFromDayKey(committedDayKey, endMin, placeTimeZone);
 
       if (selectionBlockType === "GUEST_BOOKING") {
         const currentGuestMode = guestModeRef.current;
@@ -1245,7 +1276,7 @@ function OwnerCourtAvailabilityInner({
     organization?.id,
     placeTimeZone,
     resetSelectionPanel,
-    startHour,
+    hours,
   ]);
 
   const handleLogout = async () => {
@@ -1458,13 +1489,10 @@ function OwnerCourtAvailabilityInner({
                               className="flex-1"
                               disabled={isCreatingBlock}
                             >
-                              {isCreatingBlock
-                                ? "Saving..."
-                                : selectionBlockType === "WALK_IN"
-                                  ? "Save walk-in"
-                                  : selectionBlockType === "MAINTENANCE"
-                                    ? "Save maintenance"
-                                    : "Save guest booking"}
+                              {getBlockCtaLabel(
+                                selectionBlockType,
+                                isCreatingBlock,
+                              )}
                             </Button>
                             <Button
                               type="button"
@@ -1780,13 +1808,10 @@ function OwnerCourtAvailabilityInner({
                               className="flex-1"
                               disabled={isCreatingBlock}
                             >
-                              {isCreatingBlock
-                                ? "Saving..."
-                                : selectionBlockType === "WALK_IN"
-                                  ? "Save walk-in"
-                                  : selectionBlockType === "MAINTENANCE"
-                                    ? "Save maintenance"
-                                    : "Save guest booking"}
+                              {getBlockCtaLabel(
+                                selectionBlockType,
+                                isCreatingBlock,
+                              )}
                             </Button>
                             <Button
                               type="button"
@@ -2140,6 +2165,14 @@ function OwnerCourtAvailabilityInner({
         handleCustomSubmit={handleCustomSubmit}
         isCreatingBlock={isCreatingBlock}
         placeTimeZone={placeTimeZone}
+        guestProfilesData={
+          (guestProfilesQuery.data ?? []) as Array<{
+            id: string;
+            displayName: string;
+            phoneNumber: string | null;
+          }>
+        }
+        guestProfilesLoading={guestProfilesQuery.isLoading}
       />
 
       <GuestBookingDialog

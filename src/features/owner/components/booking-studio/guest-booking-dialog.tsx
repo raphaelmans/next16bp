@@ -30,6 +30,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { getBlockCtaLabel } from "@/features/owner/booking-studio/helpers";
 import { cn } from "@/lib/utils";
 import { useBookingStudio } from "./booking-studio-provider";
 import type { GuestBookingFormValues } from "./types";
@@ -236,9 +237,10 @@ export const GuestBookingDialog = React.memo(function GuestBookingDialog({
               type="submit"
               disabled={isSubmitting || guestBookingForm.formState.isSubmitting}
             >
-              {isSubmitting || guestBookingForm.formState.isSubmitting
-                ? "Saving…"
-                : "Save guest booking"}
+              {getBlockCtaLabel(
+                "GUEST_BOOKING",
+                isSubmitting || guestBookingForm.formState.isSubmitting,
+              )}
             </Button>
           </DialogFooter>
         </StandardFormProvider>

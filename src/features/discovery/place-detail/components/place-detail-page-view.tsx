@@ -8,7 +8,10 @@ import { copyToClipboard } from "@/common/utils/clipboard";
 import { Container } from "@/components/layout";
 import { useQueryAuthSession } from "@/features/auth/hooks";
 import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
-import { useModPlaceDetail } from "@/features/discovery/hooks";
+import {
+  useModPlaceBookmark,
+  useModPlaceDetail,
+} from "@/features/discovery/hooks";
 import { PlaceDetail } from "@/features/discovery/place-detail/components/place-detail";
 import { PlaceDetailAmenitiesCard } from "@/features/discovery/place-detail/components/place-detail-amenities-card";
 import { PlaceDetailContactCard } from "@/features/discovery/place-detail/components/place-detail-contact-card";
@@ -39,6 +42,7 @@ export default function PlaceDetailPageView({
   }, [placeIdOrSlug, resetTransientUi]);
 
   const { data: place, isLoading } = useModPlaceDetail({ placeIdOrSlug });
+  const bookmark = useModPlaceBookmark(place?.id);
 
   if (isLoading) {
     return <PlaceDetail.Skeleton />;
@@ -157,6 +161,9 @@ export default function PlaceDetailPageView({
         hasCallCta={hasCallCta}
         callHref={callHref}
         onCheckAvailability={handleScrollToAvailability}
+        isBookmarked={bookmark.isBookmarked}
+        isBookmarkPending={bookmark.isPending}
+        onBookmarkToggle={bookmark.toggle}
       />
 
       <div className="mt-4 grid gap-6 pb-[70vh] lg:mt-6 lg:grid-cols-3 lg:pb-24">

@@ -25,25 +25,37 @@ const isSameInstant = (a: string, b: string): boolean => {
 
 export function buildBookingSelectionSummary(options: {
   selectedStartTime?: string;
+  durationMinutes?: number;
   pickerSlots: TimeSlot[];
   pricingOptions: BookingSummaryPricingOption[];
 }): BookingSelectionSummary | null {
-  const { selectedStartTime, pickerSlots, pricingOptions } = options;
+  const { selectedStartTime, durationMinutes, pickerSlots, pricingOptions } =
+    options;
   if (!selectedStartTime) return null;
-
-  const pickerSlot = pickerSlots.find((slot) =>
-    isSameInstant(slot.startTime, selectedStartTime),
-  );
-  if (!pickerSlot) return null;
 
   const pricingOption = pricingOptions.find((option) =>
     isSameInstant(option.startTime, selectedStartTime),
   );
 
+  const pickerSlot = pickerSlots.find((slot) =>
+    isSameInstant(slot.startTime, selectedStartTime),
+  );
+
+  // Cross-day fallback: compute endTime from startTime + durationMinutes
+  const fallbackEndTime = durationMinutes
+    ? new Date(
+        Date.parse(selectedStartTime) + durationMinutes * 60_000,
+      ).toISOString()
+    : undefined;
+
+  const endTime =
+    pricingOption?.endTime ?? pickerSlot?.endTime ?? fallbackEndTime;
+  if (!endTime) return null;
+
   return {
     startTime: selectedStartTime,
-    endTime: pricingOption?.endTime ?? pickerSlot.endTime,
+    endTime,
     totalCents: pricingOption?.totalPriceCents,
-    currency: pricingOption?.currency ?? pickerSlot.currency ?? "PHP",
+    currency: pricingOption?.currency ?? pickerSlot?.currency ?? "PHP",
   };
 }

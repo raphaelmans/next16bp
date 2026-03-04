@@ -467,18 +467,6 @@ export default function OwnerReservationDetailPage({
                     )}
                   </div>
                 )}
-
-                {reservation.reservationGroupId ? (
-                  <Button variant="outline" asChild>
-                    <Link
-                      href={appRoutes.organization.reservationGroupDetail(
-                        reservation.reservationGroupId,
-                      )}
-                    >
-                      Open Group Detail
-                    </Link>
-                  </Button>
-                ) : null}
               </CardContent>
             </Card>
 

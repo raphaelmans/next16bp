@@ -119,6 +119,7 @@ export default function ReservationDetailPage({
   }
 
   const courtName = `${placeRecord.name} - ${courtRecord.label}`;
+  const venueHref = appRoutes.places.detail(placeRecord.slug ?? placeRecord.id);
   const court = {
     id: courtRecord.id,
     name: courtName,
@@ -269,7 +270,11 @@ export default function ReservationDetailPage({
 
       <div className="grid gap-6 lg:grid-cols-3 mt-6 overflow-hidden">
         <div className="lg:col-span-2 space-y-6">
-          <BookingDetailsCard court={court} timeSlot={transformedTimeSlot} />
+          <BookingDetailsCard
+            court={court}
+            timeSlot={transformedTimeSlot}
+            venueHref={venueHref}
+          />
 
           {organizationForDisplay && (
             <Card>
@@ -352,7 +357,14 @@ export default function ReservationDetailPage({
                   >
                     <div>
                       <p className="font-medium">
-                        {item.place.name} - {item.court.label}
+                        <Link
+                          href={appRoutes.places.detail(
+                            item.place.slug ?? item.place.id,
+                          )}
+                          className="hover:underline"
+                        >
+                          {item.place.name} - {item.court.label}
+                        </Link>
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {formatDateShort(item.startTimeIso)} ·{" "}

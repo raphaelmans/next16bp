@@ -2,6 +2,7 @@
 
 import { Calendar, Clock, ExternalLink, MapPin } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   formatCurrency,
   formatDate,
@@ -29,11 +30,13 @@ interface BookingDetailsCardProps {
     currency: string;
     createdAt?: string | Date;
   };
+  venueHref?: string;
 }
 
 export function BookingDetailsCard({
   court,
   timeSlot,
+  venueHref,
 }: BookingDetailsCardProps) {
   const imageUrl = court.coverImageUrl?.trim();
   const hasCoordinates =
@@ -73,7 +76,13 @@ export function BookingDetailsCard({
           </div>
           <div className="min-w-0 space-y-1">
             <h3 className="font-semibold text-foreground break-words">
-              {court.name}
+              {venueHref ? (
+                <Link href={venueHref} className="hover:underline">
+                  {court.name}
+                </Link>
+              ) : (
+                court.name
+              )}
             </h3>
             <div className="flex items-start gap-1.5 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4 shrink-0 mt-0.5" />

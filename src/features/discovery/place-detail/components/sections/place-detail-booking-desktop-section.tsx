@@ -1,5 +1,6 @@
 "use client";
 
+import { addDays } from "date-fns";
 import * as React from "react";
 import { formatInTimeZone } from "@/common/format";
 import { useMediaQuery } from "@/common/hooks/use-media-query";
@@ -12,6 +13,7 @@ import {
 import type { TimeSlot } from "@/components/kudos";
 import {
   buildSlotsByDayKey,
+  filterSlotsByDayKey,
   getAvailabilityErrorInfo,
   getWeekDayKeys,
   getWeekStartDayKey,
@@ -302,20 +304,39 @@ export function PlaceDetailBookingDesktopSection({
 
   const anyDaySlots = React.useMemo(() => {
     if (selectionMode !== "any" || anyViewMode !== "day") return [];
-    const slots = mapAvailabilityOptionsToSlots(
-      anyDayAvailabilityQuery.data?.options ?? [],
-      TIMELINE_SLOT_DURATION,
+    return filterSlotsByDayKey(
+      mapAvailabilityOptionsToSlots(
+        anyDayAvailabilityQuery.data?.options ?? [],
+        TIMELINE_SLOT_DURATION,
+      ),
+      selectedDayKey,
+      placeTimeZone,
     );
-    return slots.sort((a, b) => a.startTime.localeCompare(b.startTime));
-  }, [anyDayAvailabilityQuery.data, anyViewMode, selectionMode]);
+  }, [
+    anyDayAvailabilityQuery.data,
+    anyViewMode,
+    placeTimeZone,
+    selectedDayKey,
+    selectionMode,
+  ]);
 
   const courtDaySlots = React.useMemo(() => {
     if (!isCourtMode || isCourtWeekView) return [];
-    return mapAvailabilityOptionsToSlots(
-      courtDayAvailabilityQuery.data?.options ?? [],
-      TIMELINE_SLOT_DURATION,
+    return filterSlotsByDayKey(
+      mapAvailabilityOptionsToSlots(
+        courtDayAvailabilityQuery.data?.options ?? [],
+        TIMELINE_SLOT_DURATION,
+      ),
+      selectedDayKey,
+      placeTimeZone,
     );
-  }, [courtDayAvailabilityQuery.data, isCourtMode, isCourtWeekView]);
+  }, [
+    courtDayAvailabilityQuery.data,
+    isCourtMode,
+    isCourtWeekView,
+    placeTimeZone,
+    selectedDayKey,
+  ]);
 
   const courtDayDiagnostics = React.useMemo(() => {
     if (!isCourtMode || isCourtWeekView) return null;
@@ -397,6 +418,7 @@ export function PlaceDetailBookingDesktopSection({
         : (summaryAnyAvailabilityQuery.data?.options ?? []);
     return buildBookingSelectionSummary({
       selectedStartTime,
+      durationMinutes,
       pickerSlots: slotsForDay,
       pricingOptions: summaryOptions,
     });
@@ -406,6 +428,7 @@ export function PlaceDetailBookingDesktopSection({
     anyWeekSlotsByDay,
     courtDaySlots,
     courtWeekSlotsByDay,
+    durationMinutes,
     isCourtWeekView,
     placeTimeZone,
     summaryAnyAvailabilityQuery.data?.options,
@@ -519,6 +542,56 @@ export function PlaceDetailBookingDesktopSection({
     clearSelection(true);
   }, [clearSelection, maxBookingDate, setSelectedDate]);
 
+  const handlePrevWeek = React.useCallback(() => {
+    const currentWeekStart = parseDayKeyToDate(
+      weekDayKeys[0] ?? selectedDayKey,
+      placeTimeZone,
+    );
+    const prevWeekDate = addDays(currentWeekStart, -7);
+    handleCalendarJump(
+      prevWeekDate < todayRangeStart ? todayRangeStart : prevWeekDate,
+    );
+  }, [
+    handleCalendarJump,
+    placeTimeZone,
+    selectedDayKey,
+    todayRangeStart,
+    weekDayKeys,
+  ]);
+
+  const handleNextWeek = React.useCallback(() => {
+    const currentWeekEnd = parseDayKeyToDate(
+      weekDayKeys[6] ?? selectedDayKey,
+      placeTimeZone,
+    );
+    const nextWeekDate = addDays(currentWeekEnd, 1);
+    handleCalendarJump(
+      nextWeekDate > maxBookingDate ? maxBookingDate : nextWeekDate,
+    );
+  }, [
+    handleCalendarJump,
+    maxBookingDate,
+    placeTimeZone,
+    selectedDayKey,
+    weekDayKeys,
+  ]);
+
+  const isPrevWeekDisabled = React.useMemo(() => {
+    const weekStart = parseDayKeyToDate(
+      weekDayKeys[0] ?? selectedDayKey,
+      placeTimeZone,
+    );
+    return weekStart <= todayRangeStart;
+  }, [placeTimeZone, selectedDayKey, todayRangeStart, weekDayKeys]);
+
+  const isNextWeekDisabled = React.useMemo(() => {
+    const weekEnd = parseDayKeyToDate(
+      weekDayKeys[6] ?? selectedDayKey,
+      placeTimeZone,
+    );
+    return weekEnd >= maxBookingDate;
+  }, [maxBookingDate, placeTimeZone, selectedDayKey, weekDayKeys]);
+
   const isAnyWeekView = selectionMode === "any" && anyViewMode === "week";
   const weekHeaderLabel = React.useMemo(() => {
     if (!isCourtWeekView && !isAnyWeekView) return "";
@@ -559,6 +632,10 @@ export function PlaceDetailBookingDesktopSection({
       calendarPopoverOpen={calendarPopoverOpen}
       setCalendarPopoverOpen={setCalendarPopoverOpen}
       weekHeaderLabel={weekHeaderLabel}
+      onPrevWeek={handlePrevWeek}
+      onNextWeek={handleNextWeek}
+      isPrevWeekDisabled={isPrevWeekDisabled}
+      isNextWeekDisabled={isNextWeekDisabled}
       selectedDate={selectedDate}
       onCalendarJump={handleCalendarJump}
       todayRangeStart={todayRangeStart}

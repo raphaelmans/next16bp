@@ -24,6 +24,7 @@ export const ReservationListItemSchema = z.object({
   courtId: S.ids.courtId,
   courtName: z.string(),
   placeId: S.ids.placeId,
+  placeSlug: z.string().nullable(),
   placeName: z.string(),
   placeAddress: z.string(),
   placeCity: z.string(),

@@ -2,6 +2,7 @@
 
 import { trpc } from "@/trpc/client";
 
+export * from "./bookmark";
 export * from "./filters";
 export * from "./place-detail";
 export {
