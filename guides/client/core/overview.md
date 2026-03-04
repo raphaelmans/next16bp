@@ -1,232 +1,62 @@
-# Frontend Architecture Overview
+# Client Core Overview (Agnostic)
 
-> High-level overview of the frontend architecture, linking to detailed documentation for each concern.
+This folder is the canonical client base.
+Framework docs must implement these contracts, not replace them.
 
-## Architecture Summary
+## Start Here (New Project)
 
-This frontend follows a **feature-based architecture** with clear separation between business logic and presentation, type-safe data fetching, and standardized UI patterns.
+Use this order for a new project or contributor onboarding:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                         Page (Route)                         │
-│                    (Next.js App Router)                      │
-└─────────────────────────────┬───────────────────────────────┘
-                              │
-              ┌───────────────┴───────────────┐
-              ▼                               ▼
-┌─────────────────────────┐     ┌─────────────────────────────┐
-│   Feature Component     │     │      Feature Hook           │
-│  (Business logic,       │     │  (URL state, custom logic)  │
-│   data fetching)        │     │                             │
-└───────────┬─────────────┘     └─────────────────────────────┘
-            │
-            ▼
-┌─────────────────────────┐
-│ Presentation Component  │
-│  (Form fields, cards,   │
-│   lists - no fetching)  │
-└───────────┬─────────────┘
-            │
-            ▼
-┌─────────────────────────┐
-│     UI Primitives       │
-│  (shadcn/ui, Radix)     │
-└─────────────────────────┘
-```
+1. `client/core/onboarding.md`
+2. `client/core/architecture.md`
+3. `client/core/conventions.md`
+4. `client/core/folder-structure.md`
+5. `client/core/client-api-architecture.md`
+6. `client/core/server-state-tanstack-query.md`
+7. `client/core/error-handling.md`
+8. `client/core/logging.md`
+9. `client/core/testing.md`
 
-## Core Principles
+Then read framework details:
 
-| Principle                          | Description                                                     |
-| ---------------------------------- | --------------------------------------------------------------- |
-| **Feature-based organization**     | Co-locate components, hooks, schemas by feature                 |
-| **Business/Presentation split**    | Data fetching in business components, rendering in presentation |
-| **Type-safe data flow**            | Zod schemas → tRPC → TanStack Query → Components                |
-| **URL as state**                   | Use nuqs for shareable, bookmarkable UI state                   |
-| **Standardized forms**             | StandardForm components reduce boilerplate                      |
-| **Composition over configuration** | Compose small components, use children for flexibility          |
+- ReactJS: [client/frameworks/reactjs/README.md](../frameworks/reactjs/README.md)
+- Next.js: [client/frameworks/reactjs/metaframeworks/nextjs/README.md](../frameworks/reactjs/metaframeworks/nextjs/README.md)
 
-## Technology Stack
+## Key Decisions (Defaults)
 
-> **Note:** Version numbers below are reference points from when this documentation was created. Always check `package.json` for actual versions in your project.
+- Query keys use Query Key Factory for non-tRPC adapters in `src/common/query-keys/*`; tRPC uses generated `@trpc/react-query` keys/utils.
+- Errors normalize from `unknown` to `AppError`; UI branches on `AppError.kind`, not transport-specific shapes.
+- Toast usage is facade-first; feature code should not import toast providers directly.
+- Client logging uses `debug` through `src/common/logging/*` (dev default with break-glass override).
+- Feature APIs use `I<Feature>Api` + `class <Feature>Api` + `create<Feature>Api` for testable boundaries.
+- Domain transforms use precedence: `src/lib/modules/<module>/shared/*` first, then `src/features/<feature>/*`.
 
-| Concern       | Technology           |
-| ------------- | -------------------- |
-| Framework     | Next.js (App Router) |
-| React         | React                |
-| API Layer     | tRPC                 |
-| Server State  | TanStack Query       |
-| Validation    | Zod                  |
-| Forms         | react-hook-form      |
-| URL State     | nuqs                 |
-| Client State  | Zustand              |
-| UI Components | shadcn/ui + Radix    |
-| Styling       | Tailwind CSS         |
+## Common Mistakes
 
-## Server Code Location
+- Putting HTTP or tRPC calls directly in presentation components.
+- Mixing cache invalidation logic into route/presentation layers.
+- Creating feature state stores for server data that should stay in query cache.
+- Copying patterns from `client/drafts/*` as if canonical.
 
-All server-side code lives under `src/lib/`. When importing DTOs or schemas:
+Rule:
 
-```typescript
-// Shared DTOs (cross-module)
-import { PaginationInputSchema } from "@/lib/shared/kernel/pagination";
-import { ImageAssetSchema } from "@/lib/shared/kernel/dtos/common";
+- New and modified files follow core contracts.
+- Legacy files can migrate incrementally.
 
-// Module-specific DTOs
-import { CreateUserSchema } from "@/lib/modules/user/dtos/create-user.dto";
-```
+## Core Index
 
-See [server documentation](../../server/README.md) for the full server architecture.
-
-## Layer Responsibilities
-
-| Layer                      | Responsibility                                 | Data Fetching          |
-| -------------------------- | ---------------------------------------------- | ---------------------- |
-| **Page**                   | Route entry, layout, metadata                  | Server components only |
-| **Feature Component**      | Business logic, queries, mutations, form setup | Yes                    |
-| **Presentation Component** | UI rendering, form fields, event handling      | No                     |
-| **UI Primitive**           | Atomic, generic, reusable components           | No                     |
-
-### Component Decision Flow
-
-```
-Does it fetch data or manage form state?
-├── Yes → Feature Component (business)
-│   └── Does it need URL state?
-│       ├── Yes → Use nuqs hook
-│       └── No → Use TanStack Query directly
-└── No → Presentation Component
-    └── Does it need form context?
-        ├── Yes → Use useFormContext
-        └── No → Pure props-based component
-```
-
-## Data Flow
-
-### Schema Layers
-
-| Layer               | Location                        | Purpose                          |
-| ------------------- | ------------------------------- | -------------------------------- |
-| **Database Schema** | `lib/core/schemas/`             | Entity definitions (drizzle-zod) |
-| **DTO Schema**      | `lib/core/dtos/`                | API contracts, validation        |
-| **Form Schema**     | `features/<feature>/schemas.ts` | UI-specific, composed from DTOs  |
-
-### Request Flow
-
-```
-User Interaction
-     │
-     ▼
-┌─────────────────┐
-│  Feature Form   │ ─── Validates with Zod (Form Schema)
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  tRPC Mutation  │ ─── Type-safe API call
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│  Server (tRPC)  │ ─── Validates with DTO Schema
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│    Database     │
-└─────────────────┘
-         │
-         ▼
-    Cache Invalidation
-         │
-         ▼
-    UI Re-renders
-```
-
-## Documentation Index
-
-| Document                                  | Description                              |
-| ----------------------------------------- | ---------------------------------------- |
-| [Conventions](./conventions.md)           | Layer responsibilities, decision flows   |
-| [Data Fetching](./data-fetching.md)       | tRPC + TanStack Query patterns           |
-| [Forms](./forms.md)                       | Zod + RHF + StandardForm conventions     |
-| [State Management](./state-management.md) | URL state (nuqs), client state (Zustand) |
-| [UI Patterns](./ui-patterns.md)           | shadcn/ui, component separation          |
-| [Error Handling](./error-handling.md)     | Toast, form errors, boundaries           |
-| [Folder Structure](./folder-structure.md) | Directory architecture                   |
-
-## Quick Reference
-
-### Data Fetching
-
-```typescript
-// Query
-const { data, isLoading } = trpc.user.getById.useQuery({ id });
-
-// Dependent query
-const profileQuery = trpc.profile.get.useQuery();
-const settingsQuery = trpc.settings.get.useQuery(
-  { profileId: profileQuery.data?.id ?? "" },
-  { enabled: !!profileQuery.data?.id },
-);
-
-// Mutation with cache invalidation
-const trpcUtils = trpc.useUtils();
-const mutation = trpc.user.update.useMutation();
-
-await mutation.mutateAsync(data);
-await trpcUtils.user.getById.invalidate({ id });
-```
-
-### Forms
-
-```typescript
-// Standard form setup
-<StandardFormProvider form={form} onSubmit={onSubmit}>
-  <StandardFormError />
-  <StandardFormInput<FormType> name='email' label='Email' required />
-  <StandardFormSelect<FormType> name='role' label='Role' options={options} />
-  <Button type='submit'>Save</Button>
-</StandardFormProvider>
-```
-
-### URL State
-
-```typescript
-// Type-safe URL state
-const [tab, setTab] = useQueryState(
-  "tab",
-  parseAsStringLiteral(["overview", "settings"]).withDefault("overview"),
-);
-```
-
-### Client State (Zustand)
-
-```typescript
-// Global store
-const count = useCounterStore((state) => state.count);
-
-// Context store (isolated)
-const value = useStoreInContext((state) => state.value);
-```
-
-## Common Contracts
-
-Located in `src/common/`:
-
-| Contract        | Purpose                          |
-| --------------- | -------------------------------- |
-| `types.ts`      | Shared TypeScript types          |
-| `constants.ts`  | App-wide constants, query params |
-| `app-routes.ts` | Route path definitions           |
-| `hooks.ts`      | Shared custom hooks              |
-
-## Checklist for New Features
-
-- [ ] Create feature folder under `src/features/<feature>/`
-- [ ] Define Zod schema in `schemas.ts` (compose from DTOs)
-- [ ] Create business component (`<feature>-form.tsx`)
-- [ ] Create presentation components (`<feature>-form-fields.tsx`)
-- [ ] Add feature-specific hooks in `hooks.ts`
-- [ ] Use StandardForm components where applicable
-- [ ] Handle loading and error states
-- [ ] Invalidate relevant queries after mutations
+| Document | Description |
+| --- | --- |
+| [Onboarding](./onboarding.md) | New project + contributor startup checklist |
+| [Architecture](./architecture.md) | Core principles and boundaries |
+| [Conventions](./conventions.md) | Layer ownership + decision flows |
+| [Folder Structure](./folder-structure.md) | Directory and feature starter contracts |
+| [Client API Architecture](./client-api-architecture.md) | `clientApi -> featureApi -> query adapter` |
+| [Zod Validation](./validation-zod.md) | Schema boundaries + normalization |
+| [Domain Logic](./domain-logic.md) | Shared vs client-only transformations |
+| [Server State](./server-state-tanstack-query.md) | TanStack Query playbook |
+| [Query Keys](./query-keys.md) | Query key conventions (Query Key Factory) |
+| [State Management](./state-management.md) | Conceptual state decision guide |
+| [Error Handling](./error-handling.md) | Error taxonomy + handling rules |
+| [Logging](./logging.md) | Client logging conventions (`debug`) |
+| [Testing](./testing.md) | Unit testing standard: `__tests__` layout, AAA, test doubles |

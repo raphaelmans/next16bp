@@ -1,8 +1,9 @@
+import type { Session, User } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@/shared/infra/supabase/types";
-import type { User, Session } from "@supabase/supabase-js";
 import {
-  InvalidCredentialsError,
+  AuthOAuthStartFailedError,
   EmailNotVerifiedError,
+  InvalidCredentialsError,
   UserAlreadyExistsError,
 } from "../errors/auth.errors";
 
@@ -20,6 +21,7 @@ export interface IAuthRepository {
     email: string,
     redirectTo: string,
   ): Promise<{ user: User | null; session: Session | null }>;
+  signInWithGoogleOAuth(redirectTo: string): Promise<{ url: string }>;
   signUp(
     email: string,
     password: string,
@@ -38,6 +40,10 @@ export interface IAuthRepository {
 export class AuthRepository implements IAuthRepository {
   constructor(private client: SupabaseClient) {}
 
+  private normalizeEmail(email: string) {
+    return email.trim().toLowerCase();
+  }
+
   async getCurrentUser(): Promise<User | null> {
     const {
       data: { user },
@@ -51,8 +57,9 @@ export class AuthRepository implements IAuthRepository {
     email: string,
     password: string,
   ): Promise<{ user: User; session: Session }> {
+    const normalizedEmail = this.normalizeEmail(email);
     const { data, error } = await this.client.auth.signInWithPassword({
-      email,
+      email: normalizedEmail,
       password,
     });
 
@@ -61,7 +68,7 @@ export class AuthRepository implements IAuthRepository {
         throw new InvalidCredentialsError();
       }
       if (error.message.includes("Email not confirmed")) {
-        throw new EmailNotVerifiedError(email);
+        throw new EmailNotVerifiedError(normalizedEmail);
       }
       throw error;
     }
@@ -73,8 +80,9 @@ export class AuthRepository implements IAuthRepository {
     email: string,
     redirectTo: string,
   ): Promise<{ user: User | null; session: Session | null }> {
+    const normalizedEmail = this.normalizeEmail(email);
     const { data, error } = await this.client.auth.signInWithOtp({
-      email,
+      email: normalizedEmail,
       options: { shouldCreateUser: true, emailRedirectTo: redirectTo },
     });
 
@@ -82,20 +90,35 @@ export class AuthRepository implements IAuthRepository {
     return data;
   }
 
+  async signInWithGoogleOAuth(redirectTo: string): Promise<{ url: string }> {
+    const { data, error } = await this.client.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo },
+    });
+
+    if (error) throw error;
+    if (!data.url) {
+      throw new AuthOAuthStartFailedError("google");
+    }
+
+    return { url: data.url };
+  }
+
   async signUp(
     email: string,
     password: string,
     redirectTo: string,
   ): Promise<{ user: User | null; session: Session | null }> {
+    const normalizedEmail = this.normalizeEmail(email);
     const { data, error } = await this.client.auth.signUp({
-      email,
+      email: normalizedEmail,
       password,
       options: { emailRedirectTo: redirectTo },
     });
 
     if (error) {
       if (error.message.includes("already registered")) {
-        throw new UserAlreadyExistsError(email);
+        throw new UserAlreadyExistsError(normalizedEmail);
       }
       throw error;
     }

@@ -1,6 +1,7 @@
-import { router } from "./trpc";
-import { healthRouter } from "@/modules/health/health.router";
 import { authRouter } from "@/modules/auth/auth.router";
+import { healthRouter } from "@/modules/health/health.router";
+import { profileRouter } from "@/modules/profile/profile.router";
+import { router } from "./trpc";
 
 /**
  * Root router combining all module routers.
@@ -8,6 +9,7 @@ import { authRouter } from "@/modules/auth/auth.router";
 export const appRouter = router({
   health: healthRouter,
   auth: authRouter,
+  profile: profileRouter,
 });
 
 /**

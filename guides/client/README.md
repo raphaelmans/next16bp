@@ -1,6 +1,6 @@
 # Frontend Architecture Documentation
 
-> Feature-based architecture for React frontends with Next.js, tRPC, TanStack Query, and TypeScript.
+> Feature-based client architecture with a framework-agnostic core and framework/metaframework-specific layers.
 
 See [../README.md](../README.md) for the unified project folder structure and full documentation index.
 
@@ -9,7 +9,7 @@ See [../README.md](../README.md) for the unified project folder structure and fu
 This documentation describes a **production-ready frontend architecture** that emphasizes:
 
 - Feature-based organization
-- Type-safe data fetching with tRPC
+- A strict client API chain (`clientApi -> featureApi -> query adapter -> components`)
 - Standardized form patterns
 - Clear separation of business and presentation logic
 
@@ -22,9 +22,9 @@ This documentation describes a **production-ready frontend architecture** that e
               ┌───────────────┴───────────────┐
               ▼                               ▼
 ┌─────────────────────────┐     ┌─────────────────────────────┐
-│   Feature Component     │     │      Feature Hook           │
-│  (Business logic,       │     │  (URL state, custom logic)  │
-│   data fetching)        │     │                             │
+│   Feature Component     │     │  Query Adapter Hook         │
+│  (Business orchestration│     │  (useQuery/useMut/useMod,   │
+│   + form wiring)        │     │   cache/invalidation)       │
 └───────────┬─────────────┘     └─────────────────────────────┘
             │
             ▼
@@ -48,7 +48,7 @@ This documentation describes a **production-ready frontend architecture** that e
 | ------------- | -------------------- |
 | Framework     | Next.js (App Router) |
 | React         | React                |
-| API Layer     | tRPC                 |
+| API Layer     | Adapter choice (tRPC / route handlers) |
 | Server State  | TanStack Query       |
 | Validation    | Zod                  |
 | Forms         | react-hook-form      |
@@ -59,25 +59,48 @@ This documentation describes a **production-ready frontend architecture** that e
 
 ## Documentation Structure
 
-### Core Documentation
+### Core Documentation (Agnostic)
 
-| Document                                       | Description                                           |
-| ---------------------------------------------- | ----------------------------------------------------- |
-| [Overview](./core/overview.md)                 | Architecture summary, principles, quick reference     |
-| [Conventions](./core/conventions.md)           | Layer responsibilities, decision flows, common module |
-| [Data Fetching](./core/data-fetching.md)       | tRPC + TanStack Query patterns                        |
-| [Forms](./core/forms.md)                       | Zod + react-hook-form + StandardForm                  |
-| [State Management](./core/state-management.md) | URL state (nuqs), client state (Zustand)              |
-| [UI Patterns](./core/ui-patterns.md)           | shadcn/ui, component separation                       |
-| [Error Handling](./core/error-handling.md)     | Toast, form errors, error boundaries                  |
-| [Environment](./core/environment.md)           | Type-safe environment variables (@t3-oss/env-nextjs)  |
-| [Folder Structure](./core/folder-structure.md) | Directory architecture                                |
+| Document | Description |
+| --- | --- |
+| [Onboarding](./core/onboarding.md) | New project + contributor startup checklist |
+| [Core Index](./core/overview.md) | Core index + links |
+| [Architecture](./core/architecture.md) | Core principles and boundaries |
+| [Conventions](./core/conventions.md) | Layer responsibilities + file boundaries |
+| [Client API Architecture](./core/client-api-architecture.md) | `clientApi -> featureApi -> query adapter` |
+| [Zod Validation](./core/validation-zod.md) | Schema boundaries + normalization |
+| [Domain Logic](./core/domain-logic.md) | Shared vs client-only transformations |
+| [Server State](./core/server-state-tanstack-query.md) | TanStack Query core patterns |
+| [Query Keys](./core/query-keys.md) | Query key conventions (Query Key Factory) |
+| [State Management](./core/state-management.md) | Conceptual state decision guide |
+| [Error Handling](./core/error-handling.md) | Error taxonomy + handling rules |
+| [Logging](./core/logging.md) | Client logging conventions (`debug`) |
+| [Folder Structure](./core/folder-structure.md) | Framework-agnostic directory conventions |
 
-### References
+### Framework Documentation
 
-The `references/` folder contains detailed implementation guides from an existing codebase.
+| Document | Description |
+| --- | --- |
+| [Frameworks Index](./frameworks/README.md) | Framework-specific docs |
+| [ReactJS Index](./frameworks/reactjs/README.md) | React-specific implementation |
+| [Next.js Index](./frameworks/reactjs/metaframeworks/nextjs/README.md) | Next.js App Router + SSR/params + adapters |
+
+### Drafts
+
+The `drafts/` folder contains detailed implementation guides from an existing codebase.
+These documents are **non-canonical** and may be outdated.
+
+Start here: [Drafts Overview](./drafts/overview.md)
+
+### Diagrams
+
+ASCII diagrams for structure, data flow, and state management live in:
+
+- [client/diagrams.md](./diagrams.md)
 
 ## Quick Start
+
+Start with: [client/core/onboarding.md](./core/onboarding.md)
 
 ### Component Decision Flow
 
@@ -93,13 +116,8 @@ Does it fetch data or own form state?
 ### Data Fetching
 
 ```typescript
-// Query
-const { data, isLoading } = trpc.user.getById.useQuery({ id });
-
-// Mutation with cache invalidation
-const trpcUtils = trpc.useUtils();
-await mutation.mutateAsync(data);
-await trpcUtils.user.invalidate();
+// Preferred: follow the client API chain.
+// components -> query adapter -> featureApi -> clientApi -> network
 ```
 
 ### Forms
@@ -133,16 +151,18 @@ For detailed frontend-specific folder conventions, see [./core/folder-structure.
 | ------------------------------- | ------------------------------------------------------ |
 | **Feature-based**               | Co-locate components, hooks, schemas by feature        |
 | **Business/Presentation split** | Data in business components, rendering in presentation |
-| **Type-safe data flow**         | Zod → tRPC → TanStack Query → Components               |
-| **URL as state**                | Use nuqs for shareable UI state                        |
+| **Type-safe data flow**         | Zod + typed APIs + TanStack Query → Components         |
+| **URL as state**                | Use a metaframework URL-state adapter (Next.js: nuqs)  |
 | **Standardized forms**          | StandardForm components for consistency                |
 
 ## Checklist for New Features
 
 - [ ] Create `src/features/<feature>/` folder
+- [ ] Define `api.ts` with `I<Feature>Api` + `class <Feature>Api` + `create<Feature>Api`
 - [ ] Define schemas in `schemas.ts`
 - [ ] Create business component for data/forms
 - [ ] Create presentation components for fields
 - [ ] Add URL state hooks in `hooks.ts` if needed
+- [ ] Add tests in `src/__tests__/features/<feature>/`: `api.test.ts` (mock deps), `domain.test.ts` / `helpers.test.ts` (pure, no mocks) — see `client/core/testing.md`
 - [ ] Add route to `app-routes.ts`
-- [ ] Create page in `app/(authenticated)/<feature>/`
+- [ ] Create page in the appropriate route group under `app/` (project-defined, e.g. `app/(protected)/<feature>/`)

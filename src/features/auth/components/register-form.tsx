@@ -1,21 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { RegisterSchema, type RegisterDTO } from "@/modules/auth/dtos";
-import { useRegister } from "../hooks/use-auth";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { appRoutes } from "@/common/app-routes";
+import { getSafeRedirectPath } from "@/common/redirects";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -24,10 +15,34 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { type RegisterDTO, RegisterSchema } from "@/modules/auth/dtos";
+import { useLoginWithGoogle, useRegister } from "../hooks/use-auth";
+import { GoogleSignInButton } from "./google-sign-in-button";
 
-export function RegisterForm() {
+export interface RegisterFormProps {
+  redirectParam?: string | null;
+}
+
+export function RegisterForm({ redirectParam }: RegisterFormProps = {}) {
   const [success, setSuccess] = useState(false);
   const registerMutation = useRegister();
+  const googleLoginMutation = useLoginWithGoogle();
+
+  const redirectUrl = getSafeRedirectPath(redirectParam, {
+    fallback: appRoutes.postLogin.base,
+    origin: typeof window !== "undefined" ? window.location.origin : undefined,
+    disallowRoutes: ["guest"],
+  });
 
   const form = useForm<RegisterDTO>({
     resolver: zodResolver(RegisterSchema),
@@ -39,7 +54,10 @@ export function RegisterForm() {
 
   const onSubmit = async (data: RegisterDTO) => {
     try {
-      await registerMutation.mutateAsync(data);
+      await registerMutation.mutateAsync({
+        ...data,
+        redirect: redirectUrl,
+      });
       setSuccess(true);
     } catch (error) {
       if (error instanceof Error) {
@@ -49,6 +67,26 @@ export function RegisterForm() {
       }
     }
   };
+
+  const onGoogleLogin = async () => {
+    try {
+      const result = await googleLoginMutation.mutateAsync({
+        redirect: redirectUrl,
+      });
+      window.location.assign(result.url);
+    } catch (error) {
+      if (error instanceof Error) {
+        form.setError("root", { message: error.message });
+      } else {
+        form.setError("root", { message: "An unexpected error occurred" });
+      }
+    }
+  };
+
+  const loginHref =
+    redirectUrl !== appRoutes.postLogin.base
+      ? `${appRoutes.login.base}?redirect=${encodeURIComponent(redirectUrl)}`
+      : appRoutes.login.base;
 
   if (success) {
     return (
@@ -61,7 +99,10 @@ export function RegisterForm() {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Link href="/login" className="text-primary hover:underline text-sm">
+          <Link
+            href={loginHref}
+            className="text-primary hover:underline text-sm"
+          >
             Back to sign in
           </Link>
         </CardFooter>
@@ -85,6 +126,13 @@ export function RegisterForm() {
                 {form.formState.errors.root.message}
               </div>
             )}
+
+            <GoogleSignInButton
+              onClick={onGoogleLogin}
+              isLoading={googleLoginMutation.isPending}
+            />
+
+            <Separator />
 
             <FormField
               control={form.control}
@@ -138,7 +186,7 @@ export function RegisterForm() {
 
             <div className="text-muted-foreground text-sm">
               Already have an account?{" "}
-              <Link href="/login" className="text-primary hover:underline">
+              <Link href={loginHref} className="text-primary hover:underline">
                 Sign in
               </Link>
             </div>

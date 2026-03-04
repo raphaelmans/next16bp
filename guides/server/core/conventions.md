@@ -4,11 +4,31 @@
 
 ## Layer Responsibilities
 
+### Transport + Contract Strategy
+
+- Contract source of truth is `Zod` schemas (see `./api-contracts-zod-first.md`).
+- Current primary transport is `tRPC`; OpenAPI is supported as migration/coexistence transport.
+- Transport adapters (tRPC routers, OpenAPI route handlers/controllers) must call the same usecase/service boundaries.
+- Business/domain layers MUST NOT import transport-specific types.
+- Capability naming and transport mapping rules are defined in `./endpoint-naming.md`.
+
+### Canonical Layer Chain
+
+All backend modules follow this chain:
+
+`controller -> usecase (optional, for complex orchestration) -> service (SRP domain logic) -> repository`
+
+Dependency and testing boundaries must align to this flow.
+
+Canonical testing rules are defined in:
+
+- [Testing Service Layer](./testing-service-layer.md)
+
 ### Routers/Controllers
 
 **Responsibilities:**
 
-- Handle HTTP/tRPC concerns only
+- Handle HTTP/tRPC/OpenAPI concerns only
 - Parse requests into DTOs
 - Call **one** use case or **one** service per operation
 - Map results/errors to HTTP responses
@@ -19,13 +39,17 @@
 - No repository access
 - No service-to-service orchestration
 - Router handles null check for `findById` (throws `NotFoundError` if null)
+- Cross-cutting controls (auth, rate limiting) belong in transport middleware/procedures
 
 ```typescript
 // modules/user/user.router.ts
 
+import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
+
 export const userRouter = router({
   getById: protectedProcedure
-    .input(z.object({ id: z.string().uuid() }))
+    .input(z.object({ id: S.ids.generic }))
     .query(async ({ input }) => {
       const user = await makeUserService().findById(input.id);
       if (!user) {
@@ -52,12 +76,16 @@ A use case represents a **business action or workflow**, not an HTTP endpoint.
 - Use cases may depend on multiple services
 - Use cases do **not** know about HTTP or ORM details
 - Use cases are class-based with an `execute` method
+- Constructor dependencies MUST be interface types (not concrete classes)
 
 **When to create a use case:**
 
 - Multi-service orchestration
 - Side effects (email, audit, events)
 - Complex workflows
+
+For background delivery side effects, prefer transactional enqueue using the outbox pattern:
+- [Async Jobs + Outbox](./async-jobs-outbox.md)
 
 **When NOT to create a use case:**
 
@@ -111,6 +139,7 @@ export class RegisterUserUseCase {
 - No orchestration logic
 - No infrastructure knowledge
 - Accept optional `RequestContext` for external transaction participation
+- Constructor dependencies MUST be interface types (not concrete classes)
 
 **Method patterns:**
 
@@ -168,6 +197,7 @@ export class UserService implements IUserService {
 - ORM/database code lives here
 - Accept transaction context via `RequestContext`
 - Never create transactions
+- Repository interfaces MUST be defined and implemented explicitly
 
 ```typescript
 // modules/user/repositories/user.repository.ts
@@ -213,6 +243,7 @@ We use **manual DI with factories**.
 
 - No `new` across layers
 - Factories own all object creation
+- Factories MUST wire interfaces to implementations in one place for isolated testing
 
 ### Factory Organization
 
@@ -408,10 +439,11 @@ export type User = z.infer<typeof UserSchema>;
 // modules/user/dtos/create-user.dto.ts
 
 import { z } from "zod";
+import { S } from "@/shared/kernel/schemas";
 
 export const CreateUserSchema = z.object({
-  email: z.string().email(),
-  name: z.string().min(1).max(100),
+  email: S.common.email,
+  name: S.common.requiredText,
   role: z.enum(["admin", "member"]).default("member"),
 });
 
@@ -467,6 +499,32 @@ export const UpdateUserSchema = z.object({
 
 export type UpdateUserDTO = z.infer<typeof UpdateUserSchema>;
 ```
+
+## Module Shared Code (`lib/modules/<module>/shared/`)
+
+Some modules need **shared, reusable code** that is still domain-specific (not kernel).
+
+Convention:
+
+- Put module-owned shared code in `lib/modules/<module>/shared/`.
+- Treat it as potentially **isomorphic**: safe to import from both server and client code when needed.
+
+Typical contents:
+
+- Zod schemas + inferred types that represent module concepts
+- deterministic calculations and invariants (pure functions)
+- domain-specific error types that do not depend on server infrastructure
+
+Rules:
+
+- Must not import `shared/infra/*` (DB, logger, auth, tRPC init).
+- Must not depend on framework-only code.
+- Keep it pure and portable so it can be extracted to a workspace package later.
+
+Example (pattern reference):
+
+- `modules/webhooks/shared/webhook.schemas.ts`
+- `modules/webhooks/shared/webhook.errors.ts`
 
 ### Mapping Rules
 
@@ -539,12 +597,12 @@ export type UpdateUserDTO = z.infer<typeof UpdateUserSchema>;
 
 These are **explicitly deferred**:
 
-- Async outbox pattern
 - Event-driven architecture
 - Microservices
 - Full CQRS
 
-They will be revisited when the system demands them.
+See [Async Jobs + Outbox](./async-jobs-outbox.md) for the recommended pattern when background delivery is required.
+Event-driven architecture and full CQRS are still deferred.
 
 ---
 
@@ -639,7 +697,16 @@ if (!result) throw new Error('Entity not found');
 - [ ] No direct logging (handled by middleware)
 - [ ] Sensitive fields omitted before returning
 
-### tRPC Infrastructure (`shared/infra/trpc/`)
+### Transport Infrastructure (`shared/infra/trpc/`, OpenAPI handlers/controllers)
+
+Common:
+
+- [ ] Zod schema contracts reused from canonical contract definitions
+- [ ] No business logic in transport adapter
+- [ ] Request-scoped metadata (`requestId`) present in error mapping
+- [ ] Auth/rate-limit enforcement applied at transport boundary
+
+tRPC-specific:
 
 - [ ] Logger middleware applied to ALL procedures
 - [ ] `publicProcedure = loggedProcedure`
@@ -648,6 +715,12 @@ if (!result) throw new Error('Entity not found');
 - [ ] Known errors (`AppError`) logged at `warn` level
 - [ ] Unknown errors logged at `error` level
 - [ ] Context includes `log` (child logger with requestId)
+
+OpenAPI-specific:
+
+- [ ] Route handlers/controllers validate inputs with shared Zod schemas
+- [ ] Error mapping returns shared error contract (`code`, `message`, `requestId`, `details?`)
+- [ ] Response payload shape follows shared API contract guidance
 
 ```typescript
 // Error formatter MUST include requestId
@@ -659,13 +732,26 @@ ctx?.log.warn(
 
 ### Root Router Registration
 
-- [ ] Router imported in `shared/infra/trpc/root.ts`
-- [ ] Router added to `appRouter`
+- [ ] tRPC router imported in `shared/infra/trpc/root.ts` (if tRPC is enabled)
+- [ ] OpenAPI route/controller wired in runtime router tree (if OpenAPI is enabled)
+
+### Testability Standard (MUST)
+
+- [ ] Layer tests exist for all implemented layers in the module:
+  - controller/router tests
+  - use case tests (if use case exists)
+  - service tests
+  - repository tests
+- [ ] Test doubles (stub/spy/mock/fake) are chosen per boundary and documented in tests
+- [ ] Fixture-based regression tests exist for unstable boundary contracts
+- [ ] Dual-transport capabilities include parity tests (tRPC vs OpenAPI)
+- [ ] Test structure follows `core/testing-service-layer.md`
 
 ### Final Module Verification
 
 - [ ] TypeScript compiles without errors
 - [ ] All interfaces have implementations
+- [ ] Layer test suites pass for implemented layers
 - [ ] All error classes have unique codes
 - [ ] Business events logged in service layer
 - [ ] No logging in repository layer

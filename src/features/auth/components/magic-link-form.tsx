@@ -1,21 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { MagicLinkSchema, type MagicLinkDTO } from "@/modules/auth/dtos";
-import { useMagicLink } from "../hooks/use-auth";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { appRoutes } from "@/common/app-routes";
+import { getSafeRedirectPath } from "@/common/redirects";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -24,10 +15,31 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { type MagicLinkDTO, MagicLinkSchema } from "@/modules/auth/dtos";
+import { useMagicLink } from "../hooks/use-auth";
 
-export function MagicLinkForm() {
+export interface MagicLinkFormProps {
+  redirectParam?: string | null;
+}
+
+export function MagicLinkForm({ redirectParam }: MagicLinkFormProps = {}) {
   const [success, setSuccess] = useState(false);
   const magicLinkMutation = useMagicLink();
+
+  const redirectUrl = getSafeRedirectPath(redirectParam, {
+    fallback: appRoutes.postLogin.base,
+    origin: typeof window !== "undefined" ? window.location.origin : undefined,
+    disallowRoutes: ["guest"],
+  });
 
   const form = useForm<MagicLinkDTO>({
     resolver: zodResolver(MagicLinkSchema),
@@ -38,7 +50,10 @@ export function MagicLinkForm() {
 
   const onSubmit = async (data: MagicLinkDTO) => {
     try {
-      await magicLinkMutation.mutateAsync(data);
+      await magicLinkMutation.mutateAsync({
+        ...data,
+        redirect: redirectUrl,
+      });
       setSuccess(true);
     } catch (error) {
       if (error instanceof Error) {
@@ -48,6 +63,11 @@ export function MagicLinkForm() {
       }
     }
   };
+
+  const loginHref =
+    redirectUrl !== appRoutes.postLogin.base
+      ? `${appRoutes.login.base}?redirect=${encodeURIComponent(redirectUrl)}`
+      : appRoutes.login.base;
 
   if (success) {
     return (
@@ -60,7 +80,10 @@ export function MagicLinkForm() {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Link href="/login" className="text-primary hover:underline text-sm">
+          <Link
+            href={loginHref}
+            className="text-primary hover:underline text-sm"
+          >
             Back to sign in
           </Link>
         </CardFooter>
@@ -115,7 +138,7 @@ export function MagicLinkForm() {
             </Button>
 
             <div className="text-muted-foreground text-sm">
-              <Link href="/login" className="text-primary hover:underline">
+              <Link href={loginHref} className="text-primary hover:underline">
                 Sign in with password
               </Link>
             </div>

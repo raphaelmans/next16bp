@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import { getQueryClient } from "@/trpc/query-client";
 
@@ -51,6 +51,17 @@ export function useMagicLink() {
 
   return useMutation({
     ...trpc.auth.loginWithMagicLink.mutationOptions(),
+  });
+}
+
+/**
+ * Hook for Google OAuth login mutation.
+ */
+export function useLoginWithGoogle() {
+  const trpc = useTRPC();
+
+  return useMutation({
+    ...trpc.auth.loginWithGoogle.mutationOptions(),
   });
 }
 

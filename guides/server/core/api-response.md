@@ -1,13 +1,14 @@
 # API Response Structure
 
-> Standard HTTP response structure, pagination patterns, and tRPC integration.
+> Standard response contract and pagination patterns across tRPC and OpenAPI adapters.
 
 ## Principles
 
 - Envelope pattern for all responses
 - OpenAPI-aligned structure
 - Consistent shape for frontend consumption
-- Pagination compatible with tRPC `useInfiniteQuery`
+- Pagination compatible with tRPC `useInfiniteQuery` and REST/OpenAPI clients
+- Contract schemas are defined once (Zod-first) and reused by both transports
 
 ## Success Response - Single Resource
 
@@ -83,7 +84,9 @@
 
 ## Error Response
 
-Defined in [Error Handling](./error-handling.md).
+Defined in [Error Handling](./error-handling.md) and typed as `ApiErrorResponse` in `shared/kernel/response.ts`.
+
+`message` must always be public-safe text. Internal diagnostics (SQL/provider errors, stack traces) must never be serialized to clients.
 
 ```typescript
 {
@@ -105,7 +108,15 @@ Defined in [Error Handling](./error-handling.md).
     "userId": "550e8400-e29b-41d4-a716-446655440000"
   }
 }
+
+{
+  "code": "INTERNAL_ERROR",
+  "message": "An unexpected error occurred",
+  "requestId": "req-abc-123"
+}
 ```
+
+For OpenAPI-style Next.js route handlers (`app/api/**/route.ts`), return `ApiResponse<T>` for 2xx responses and `ApiErrorResponse` for non-2xx. See [`../runtime/nodejs/metaframeworks/nextjs/route-handlers.md`](../runtime/nodejs/metaframeworks/nextjs/route-handlers.md) for a complete template.
 
 ## Pagination Types & Schemas
 
@@ -171,6 +182,17 @@ export type PaginatedResponse<T> = {
 
 import { z } from "zod";
 
+export type ApiResponse<T> = {
+  data: T;
+};
+
+export interface ApiErrorResponse {
+  code: string;
+  message: string; // Public-safe user-facing message
+  requestId: string;
+  details?: Record<string, unknown>;
+}
+
 /**
  * Creates a single resource response schema.
  */
@@ -179,10 +201,6 @@ export function createResponseSchema<T extends z.ZodType>(dataSchema: T) {
     data: dataSchema,
   });
 }
-
-export type ApiResponse<T> = {
-  data: T;
-};
 ```
 
 ## Pagination Helper
@@ -256,9 +274,9 @@ export const ListUsersInputSchema = PaginationInputSchema.extend({
 export type ListUsersInput = z.infer<typeof ListUsersInputSchema>;
 ```
 
-## tRPC Integration
+## Transport Examples
 
-### Router Example
+### tRPC Router Example
 
 ```typescript
 // modules/user/user.router.ts
@@ -291,7 +309,7 @@ export const userRouter = router({
 });
 ```
 
-### Service Example
+### Shared Service Example
 
 ```typescript
 // modules/user/services/user.service.ts
@@ -340,7 +358,7 @@ export class UserService {
 }
 ```
 
-### Client Usage with `useInfiniteQuery`
+### tRPC Client Usage with `useInfiniteQuery`
 
 ```typescript
 // Client-side (React)
@@ -383,6 +401,30 @@ function UserList() {
       )}
     </div>
   );
+}
+```
+
+### OpenAPI Route Handler Example
+
+```typescript
+// app/api/profiles/route.ts
+
+import { NextResponse } from "next/server";
+import { randomUUID } from "crypto";
+import type { ApiResponse, ApiErrorResponse } from "@/shared/kernel/response";
+import { wrapResponse } from "@/shared/utils/response";
+import { handleError } from "@/shared/infra/http/error-handler";
+
+export async function GET(req: Request) {
+  const requestId = req.headers.get("x-request-id") ?? randomUUID();
+
+  try {
+    const result = await makeProfileService().list(/* parsed query */);
+    return NextResponse.json<ApiResponse<typeof result>>(wrapResponse(result));
+  } catch (error) {
+    const { status, body } = handleError(error, requestId);
+    return NextResponse.json<ApiErrorResponse>(body, { status });
+  }
 }
 ```
 
@@ -438,3 +480,26 @@ src/lib/
 - [ ] Endpoint DTOs extend `PaginationInputSchema` with custom filters
 - [ ] Services implement search on relevant fields
 - [ ] Routers return consistent envelope structure
+
+## External Route Contract Hardening (Required)
+
+For externally consumed HTTP endpoints (for example mobile/public APIs), route adapters MUST keep success contracts explicit at compile time.
+
+- Do not use `ApiResponse<unknown>` or `ApiResponse<any>`.
+- Do not hide payload types inside wrappers such as `{ data: { method: unknown } }`.
+- Prefer method-level aliases derived from service interfaces:
+
+```typescript
+type GetThingResponse = Awaited<ReturnType<IThingService["getThing"]>>;
+return NextResponse.json<ApiResponse<GetThingResponse>>(wrapResponse(result));
+```
+
+- Migration fallback (temporary): `ApiResponse<typeof result>` is acceptable when service interface aliasing is not yet wired.
+- Keep route handlers thin and derive contracts from service/use-case boundaries, not route-local ad-hoc types.
+
+Recommended CI gates:
+
+```bash
+rg -n "ApiResponse<unknown>|ApiResponse<any>" src/app/api --glob '**/route.ts'
+rg -n "ApiResponse<\\{[^\\n}]*unknown" src/app/api --glob '**/route.ts'
+```

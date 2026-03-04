@@ -1,6 +1,8 @@
-import type { IAuthRepository } from "../repositories/auth.repository";
-import type { User, Session } from "@supabase/supabase-js";
+import type { Session, User } from "@supabase/supabase-js";
+import { appRoutes } from "@/common/app-routes";
+import { getSafeRedirectPath } from "@/common/redirects";
 import { logger } from "@/shared/infra/logger";
+import type { IAuthRepository } from "../repositories/auth.repository";
 
 /**
  * Interface for authentication service.
@@ -15,11 +17,17 @@ export interface IAuthService {
   signInWithMagicLink(
     email: string,
     baseUrl: string,
+    redirect?: string,
   ): Promise<{ user: User | null; session: Session | null }>;
+  startGoogleOAuth(
+    baseUrl: string,
+    redirect?: string,
+  ): Promise<{ url: string }>;
   signUp(
     email: string,
     password: string,
     baseUrl: string,
+    redirect?: string,
   ): Promise<{ user: User | null; session: Session | null }>;
   signOut(): Promise<void>;
   exchangeCodeForSession(
@@ -58,8 +66,16 @@ export class AuthService implements IAuthService {
   async signInWithMagicLink(
     email: string,
     baseUrl: string,
+    redirect?: string,
   ): Promise<{ user: User | null; session: Session | null }> {
-    const redirectTo = `${baseUrl}/auth/callback`;
+    const safeRedirect = getSafeRedirectPath(redirect, {
+      fallback: appRoutes.postLogin.base,
+      origin: baseUrl,
+      disallowRoutes: ["guest"],
+    });
+    const redirectTo = `${baseUrl}/auth/callback?redirect=${encodeURIComponent(
+      safeRedirect,
+    )}`;
     const result = await this.authRepository.signInWithOtp(email, redirectTo);
 
     logger.info(
@@ -70,12 +86,42 @@ export class AuthService implements IAuthService {
     return result;
   }
 
+  async startGoogleOAuth(
+    baseUrl: string,
+    redirect?: string,
+  ): Promise<{ url: string }> {
+    const safeRedirect = getSafeRedirectPath(redirect, {
+      fallback: appRoutes.postLogin.base,
+      origin: baseUrl,
+      disallowRoutes: ["guest"],
+    });
+    const redirectTo = `${baseUrl}/auth/callback?redirect=${encodeURIComponent(
+      safeRedirect,
+    )}`;
+    const result = await this.authRepository.signInWithGoogleOAuth(redirectTo);
+
+    logger.info(
+      { event: "user.oauth_started", provider: "google" },
+      "Google OAuth started",
+    );
+
+    return result;
+  }
+
   async signUp(
     email: string,
     password: string,
     baseUrl: string,
+    redirect?: string,
   ): Promise<{ user: User | null; session: Session | null }> {
-    const redirectTo = `${baseUrl}/auth/callback`;
+    const safeRedirect = getSafeRedirectPath(redirect, {
+      fallback: appRoutes.postLogin.base,
+      origin: baseUrl,
+      disallowRoutes: ["guest"],
+    });
+    const redirectTo = `${baseUrl}/auth/callback?redirect=${encodeURIComponent(
+      safeRedirect,
+    )}`;
     const result = await this.authRepository.signUp(
       email,
       password,

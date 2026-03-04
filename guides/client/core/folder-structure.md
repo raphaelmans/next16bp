@@ -1,284 +1,106 @@
-# Folder Structure
+# Folder Structure (Agnostic)
 
-> Directory architecture and organization patterns.
+This document describes framework-agnostic client directory conventions.
 
 ## High-Level Structure
 
-```
+```text
 src/
-├── app/                 # Next.js App Router (routes)
-├── common/              # App-wide shared utilities
-├── components/          # Shared UI components
-├── features/            # Feature modules
-├── hooks/               # Global React hooks
-└── lib/                 # Core logic & integrations
+  <routes>/            # Metaframework-owned routes (Next.js: app/)
+  common/              # App-wide shared utilities
+    errors/            # AppError contract + adapters/facades
+    query-keys/        # Server-state cache keys (cross-feature)
+    toast/             # Toast facade + provider adapters
+    logging/           # Client logging (debug) + wrappers/adapters
+  components/          # Shared UI components
+  features/            # Feature modules (primary unit of organization)
+  hooks/               # Global framework hooks (React only)
+  lib/                 # Core logic & integrations
 ```
 
-## Detailed Structure
+Metaframework-specific routing conventions:
 
-```
-src/
-├── app/                                    # Next.js App Router
-│   ├── (api)/                              # API route group
-│   │   └── api/
-│   │       ├── trpc/[...trpc]/
-│   │       │   └── route.ts                # tRPC handler
-│   │       └── webhooks/
-│   │           └── stripe/route.ts
-│   │
-│   ├── (authenticated)/                    # Protected routes
-│   │   ├── layout.tsx                      # Auth check, sidebar
-│   │   ├── dashboard/
-│   │   │   ├── page.tsx
-│   │   │   ├── loading.tsx
-│   │   │   └── error.tsx
-│   │   ├── profile/
-│   │   │   └── page.tsx
-│   │   └── settings/
-│   │       └── page.tsx
-│   │
-│   ├── (guest)/                            # Public routes
-│   │   ├── layout.tsx
-│   │   ├── login/
-│   │   │   └── page.tsx
-│   │   └── signup/
-│   │       └── page.tsx
-│   │
-│   ├── layout.tsx                          # Root layout (providers)
-│   ├── page.tsx                            # Home page
-│   ├── error.tsx                           # Global error boundary
-│   └── globals.css                         # Global styles
-│
-├── common/                                 # App-wide shared code
-│   ├── providers/                          # React context providers
-│   │   ├── trpc-provider.tsx
-│   │   ├── theme-provider.tsx
-│   │   └── index.tsx
-│   ├── app-routes.ts                       # Route path definitions
-│   ├── constants.ts                        # Global constants
-│   ├── hooks.ts                            # Shared custom hooks
-│   ├── types.ts                            # Shared TypeScript types
-│   └── utils.ts                            # Utility functions
-│
-├── components/                             # Shared UI components
-│   ├── ui/                                 # shadcn/ui primitives
-│   │   ├── button.tsx
-│   │   ├── input.tsx
-│   │   ├── form.tsx
-│   │   ├── dialog.tsx
-│   │   ├── card.tsx
-│   │   ├── skeleton.tsx
-│   │   ├── toast.tsx
-│   │   └── ...
-│   ├── form/                               # StandardForm components
-│   │   ├── StandardFormProvider.tsx
-│   │   ├── StandardFormError.tsx
-│   │   ├── fields/
-│   │   │   ├── StandardFormInput.tsx
-│   │   │   ├── StandardFormSelect.tsx
-│   │   │   ├── StandardFormTextarea.tsx
-│   │   │   └── StandardFormField.tsx
-│   │   ├── context.tsx
-│   │   ├── types.ts
-│   │   └── index.ts
-│   ├── custom-ui/                          # Composed business components
-│   │   ├── data-table.tsx
-│   │   ├── page-header.tsx
-│   │   └── ...
-│   └── common/                             # Other shared components
-│       └── StandardSearch.tsx
-│
-├── features/                               # Feature modules
-│   ├── auth/
-│   │   ├── components/
-│   │   │   ├── auth-login-form.tsx
-│   │   │   └── auth-register-form.tsx
-│   │   ├── hooks.ts
-│   │   └── schemas.ts
-│   │
-│   ├── profile/
-│   │   ├── components/
-│   │   │   ├── profile-form.tsx            # Business component
-│   │   │   └── profile-form-fields.tsx     # Presentation components
-│   │   ├── hooks.ts                        # URL state, custom hooks
-│   │   └── schemas.ts                      # Zod schemas
-│   │
-│   └── <feature>/
-│       ├── components/
-│       │   ├── <feature>-form.tsx
-│       │   ├── <feature>-form-fields.tsx
-│       │   ├── <feature>-list.tsx
-│       │   └── <feature>-card.tsx
-│       ├── stores/                         # Zustand stores (if needed)
-│       │   └── <name>-store.ts
-│       ├── hooks.ts
-│       └── schemas.ts
-│
-├── hooks/                                  # Global React hooks
-│   ├── use-mobile.tsx
-│   └── use-toast.ts
-│
-└── lib/                                    # Server code & integrations
-    ├── shared/                             # Shared kernel (server)
-    │   ├── kernel/                         # Core types & contracts
-    │   │   ├── context.ts                  # RequestContext
-    │   │   ├── transaction.ts              # TransactionManager
-    │   │   ├── errors.ts                   # Base error classes
-    │   │   ├── pagination.ts               # Pagination types
-    │   │   └── dtos/                       # Cross-module DTOs
-    │   │       └── common.ts               # ImageAssetSchema, etc.
-    │   └── infra/                          # Infrastructure
-    │       ├── db/                         # Drizzle client, schema
-    │       ├── trpc/                       # tRPC setup, middleware
-    │       └── logger/                     # Pino configuration
-    │
-    ├── modules/                            # Backend domain modules
-    │   └── <module>/
-    │       ├── <module>.router.ts          # tRPC router
-    │       ├── dtos/                       # Module-specific DTOs
-    │       ├── services/                   # Business logic
-    │       └── repositories/               # Data access
-    │
-    ├── trpc/                               # tRPC client setup
-    │   ├── client.ts                       # Client export
-    │   ├── query-client.ts                 # QueryClient factory
-    │   └── transformers.ts                 # Custom transformers
-    │
-    ├── env/                                # Environment config
-    │   └── index.ts                        # @t3-oss/env-nextjs
-    │
-    └── utils.ts                            # Utility functions
-```
-
-## Route Groups
-
-| Group             | Purpose         | Auth Required |
-| ----------------- | --------------- | ------------- |
-| `(api)`           | API endpoints   | Varies        |
-| `(authenticated)` | Protected pages | Yes           |
-| `(guest)`         | Public pages    | No            |
+- Next.js: `client/frameworks/reactjs/metaframeworks/nextjs/folder-structure.md`
 
 ## Feature Module Structure
 
-Each feature follows this pattern:
-
-```
+```text
 src/features/<feature>/
-├── components/
-│   ├── <feature>-form.tsx           # Business component (data fetching)
-│   ├── <feature>-form-fields.tsx    # Presentation components
-│   ├── <feature>-list.tsx           # List view
-│   ├── <feature>-card.tsx           # Card component
-│   └── <feature>-skeleton.tsx       # Loading skeleton
-├── stores/                          # Zustand stores (optional)
-│   └── <name>-store.ts
-├── hooks.ts                         # URL state, feature hooks
-└── schemas.ts                       # Zod form schemas
+  components/
+    <feature>-view.tsx          # business component (composition + wiring)
+    <feature>-fields.tsx        # presentation components (render-only)
+  hooks.ts                      # query adapter (framework-specific)
+  api.ts                        # I<Feature>Api + <Feature>Api class + factory
+  schemas.ts                    # Zod schemas + derived types + mapping helpers
+  types.ts                      # non-DTO types
+  domain.ts                     # pure business rules
+  helpers.ts                    # small pure helpers
 ```
 
-## Naming Conventions
+## Feature Starter Contract
 
-### Files
+Required files for a new feature:
 
-| Type              | Convention             | Example             |
-| ----------------- | ---------------------- | ------------------- |
-| Page              | `page.tsx`             | `page.tsx`          |
-| Layout            | `layout.tsx`           | `layout.tsx`        |
-| Loading           | `loading.tsx`          | `loading.tsx`       |
-| Error             | `error.tsx`            | `error.tsx`         |
-| Feature component | `<feature>-<type>.tsx` | `profile-form.tsx`  |
-| UI primitive      | `<component>.tsx`      | `button.tsx`        |
-| Hook              | `use-<name>.ts`        | `use-toast.ts`      |
-| Store             | `<name>-store.ts`      | `customer-store.ts` |
-| Schema            | `schemas.ts`           | `schemas.ts`        |
-| DTO               | `<entity>-dtos.ts`     | `profile-dtos.ts`   |
+- `components/<feature>-view.tsx` (business wiring/composition)
+- `components/<feature>-fields.tsx` (presentation-only UI, if form/field heavy)
+- `api.ts` (`I<Feature>Api` + `<Feature>Api` + factory)
+- `hooks.ts` (query adapter)
+- `schemas.ts` (zod schemas + derived types)
 
-### Components
+Recommended files:
 
-| Type               | Convention              | Example                 |
-| ------------------ | ----------------------- | ----------------------- |
-| Page component     | `<Name>Page`            | `ProfilePage`           |
-| Feature component  | `<Feature><Type>`       | `ProfileForm`           |
-| Presentation field | `<Feature><Field>Field` | `ProfileFirstNameField` |
-| UI primitive       | `<Name>`                | `Button`                |
+- `domain.ts` for deterministic domain rules
+- `helpers.ts` for small pure transforms
+- `types.ts` for non-DTO feature-owned types
 
-## Import Aliases
+Optional:
 
-```typescript
-// tsconfig.json
-{
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
-}
+- `stores/*` only for client coordination state (not primary server data)
+
+Tests for these files go in `src/__tests__/features/<feature>/` — never colocated.
+See Testing Layout below and `client/core/testing.md`.
+
+## Ownership Boundaries by Path
+
+- `src/features/<feature>/api.ts`: endpoint-scoped data access for one feature via `I<Feature>Api` + class implementation.
+- `src/features/<feature>/hooks.ts`: query/mutation/cache behavior.
+- `src/features/<feature>/components/*`: composition + rendering only.
+- `src/common/query-keys/*`: cross-feature cache key contracts.
+- `src/common/errors/*`: `AppError` contract + normalization adapters/facades.
+- `src/common/toast/*`: notification facade + provider adapters.
+- `src/common/logging/*`: logger contract + adapters/wrappers.
+
+## Testing Layout
+
+Tests live in `src/__tests__/` and **mirror the source tree exactly**. Never colocate test files next to source files.
+
+```text
+src/
+  __tests__/
+    features/
+      <feature>/
+        api.test.ts       # mock clientApi + toAppError, assert class behavior
+        hooks.test.ts     # mock I<Feature>Api, assert query/invalidation behavior
+        domain.test.ts    # pure table-driven tests (no mocks)
+        helpers.test.ts   # pure table-driven tests (no mocks)
+    common/
+      errors/
+        error-adapter.test.ts
+    lib/
+      modules/
+        <module>/
+          shared/
+            domain.test.ts
 ```
 
-```typescript
-// Usage
-import { Button } from "@/components/ui/button";
-import { trpc } from "@/lib/trpc/client";
-import { profileFormSchema } from "@/features/profile/schemas";
-import appRoutes from "@/common/app-routes";
-```
+Full testing standard: `client/core/testing.md`.
 
-## Import Order
+## Cross-Feature Promotion Rules
 
-```typescript
-// 1. React/Next.js
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+Promote from feature-local to `src/common/*` only when all are true:
 
-// 2. External libraries
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+1. used in multiple features
+2. not owned by one domain workflow
+3. stable API contract is clear
 
-// 3. Internal - components
-import { Button } from "@/components/ui/button";
-import { StandardFormProvider } from "@/components/form";
-
-// 4. Internal - common/lib
-import { trpc } from "@/lib/trpc/client";
-import appRoutes from "@/common/app-routes";
-
-// 5. Internal - feature (relative)
-import { ProfileFirstNameField } from "./profile-form-fields";
-import { profileFormSchema, type ProfileFormHandler } from "../schemas";
-```
-
-## Decision Guide
-
-| Question                        | Location                         |
-| ------------------------------- | -------------------------------- |
-| Is it a page/route?             | `app/(group)/<route>/page.tsx`   |
-| Is it a layout?                 | `app/(group)/layout.tsx`         |
-| Is it a UI primitive?           | `components/ui/`                 |
-| Is it a StandardForm component? | `components/form/`               |
-| Is it a composed component?     | `components/custom-ui/`          |
-| Is it feature-specific?         | `features/<feature>/components/` |
-| Is it a form schema?            | `features/<feature>/schemas.ts`  |
-| Is it a URL state hook?         | `features/<feature>/hooks.ts`    |
-| Is it a Zustand store?          | `features/<feature>/stores/`     |
-| Is it shared across features?   | `common/`                        |
-| Is it a cross-module DTO?       | `lib/shared/kernel/dtos/`        |
-| Is it a module-specific DTO?    | `lib/modules/<module>/dtos/`     |
-| Is it a global hook?            | `hooks/`                         |
-
-## Colocation Rules
-
-1. **Feature-specific code** → `features/<feature>/`
-2. **Shared UI** → `components/`
-3. **App-wide utilities** → `common/`
-4. **Cross-module DTOs** → `lib/shared/kernel/dtos/`
-5. **Module-specific server code** → `lib/modules/<module>/`
-6. **Third-party integrations** → `lib/`
-
-## Checklist for New Features
-
-- [ ] Create `src/features/<feature>/` folder
-- [ ] Add `schemas.ts` with Zod schemas
-- [ ] Add `hooks.ts` for URL state (if needed)
-- [ ] Create components in `components/` folder
-- [ ] Add routes to `app-routes.ts`
-- [ ] Create page in `app/(authenticated)/<feature>/page.tsx`
+Otherwise keep it in the feature module.

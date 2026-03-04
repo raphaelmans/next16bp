@@ -1,8 +1,9 @@
-import type { IAuthService } from "../services/auth.service";
+import type { IProfileService } from "@/modules/profile/services/profile.service";
 import type { IUserRoleService } from "@/modules/user-role/services/user-role.service";
 import type { TransactionManager } from "@/shared/kernel/transaction";
 import type { RegisterDTO } from "../dtos/register.dto";
 import { AuthRegistrationFailedError } from "../errors/auth.errors";
+import type { IAuthService } from "../services/auth.service";
 
 /**
  * RegisterUserUseCase orchestrates user registration.
@@ -14,6 +15,7 @@ export class RegisterUserUseCase {
   constructor(
     private authService: IAuthService,
     private userRoleService: IUserRoleService,
+    private profileService: IProfileService,
     private transactionManager: TransactionManager,
   ) {}
 
@@ -23,22 +25,25 @@ export class RegisterUserUseCase {
       input.email,
       input.password,
       baseUrl,
+      input.redirect,
     );
 
     if (!result.user) {
       throw new AuthRegistrationFailedError(input.email);
     }
+    const user = result.user;
 
     // 2. Create user role in our database (within transaction)
     await this.transactionManager.run(async (tx) => {
       await this.userRoleService.create(
-        { userId: result.user!.id, role: "member" },
+        { userId: user.id, role: "member" },
         { tx },
       );
     });
+    await this.profileService.getOrCreateProfile(user.id, user.email);
 
     return {
-      user: { id: result.user.id, email: result.user.email },
+      user: { id: user.id, email: user.email },
       session: result.session,
     };
   }

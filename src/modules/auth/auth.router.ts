@@ -1,13 +1,18 @@
 import {
-  router,
-  publicProcedure,
   protectedProcedure,
+  publicProcedure,
+  router,
 } from "@/shared/infra/trpc/trpc";
+import {
+  LoginSchema,
+  MagicLinkSchema,
+  RegisterSchema,
+  StartGoogleOAuthSchema,
+} from "./dtos";
 import {
   makeAuthService,
   makeRegisterUserUseCase,
 } from "./factories/auth.factory";
-import { LoginSchema, RegisterSchema, MagicLinkSchema } from "./dtos";
 
 export const authRouter = router({
   login: publicProcedure.input(LoginSchema).mutation(async ({ input, ctx }) => {
@@ -20,8 +25,23 @@ export const authRouter = router({
     .input(MagicLinkSchema)
     .mutation(async ({ input, ctx }) => {
       const authService = makeAuthService(ctx.cookies);
-      await authService.signInWithMagicLink(input.email, ctx.origin);
+      await authService.signInWithMagicLink(
+        input.email,
+        ctx.origin,
+        input.redirect,
+      );
       return { success: true, message: "Magic link sent to email" };
+    }),
+
+  loginWithGoogle: publicProcedure
+    .input(StartGoogleOAuthSchema)
+    .mutation(async ({ input, ctx }) => {
+      const authService = makeAuthService(ctx.cookies);
+      const result = await authService.startGoogleOAuth(
+        ctx.origin,
+        input.redirect,
+      );
+      return { url: result.url };
     }),
 
   register: publicProcedure

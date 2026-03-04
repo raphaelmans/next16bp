@@ -3,4 +3,5 @@
  * Import individual table schemas here as they are created.
  */
 
+export * from "./profile";
 export * from "./user-roles";

@@ -1,468 +1,199 @@
-# Frontend Architecture Conventions
+# Client Architecture Conventions (Agnostic)
 
-> Core architectural conventions defining layer responsibilities, component patterns, and the common module.
+Core conventions that should remain valid if we swap frameworks.
 
 ## Layer Responsibilities
 
-### Pages (Route Components)
+### Route Layer (Metaframework-Owned)
 
-**Location:** `src/app/`
+Owns:
 
-**Responsibilities:**
+- route entrypoints (pages)
+- layout composition
+- SSR/RSC behavior
+- param/searchParam parsing
 
-- Route entry points
-- Layout composition
-- Metadata (SEO, OpenGraph)
-- Server-side data fetching (RSC)
+Does not own:
 
-**Rules:**
+- feature business logic
+- transport/caching rules
 
-- Minimal logic
-- Delegate to feature components
-- Use route groups for organization (`(authenticated)/`, `(guest)/`)
+### Feature Business Layer
 
-```typescript
-// src/app/(authenticated)/profile/page.tsx
+Owns:
 
-import { ProfileForm } from '@/features/profile/components/profile-form'
+- composing sections and flows
+- loading/error wiring
+- form orchestration
+- calling the query adapter
 
-export const metadata = {
-  title: 'Profile Settings',
-}
-
-export default function ProfilePage() {
-  return (
-    <div className='container py-8'>
-      <h1 className='text-2xl font-bold mb-6'>Profile Settings</h1>
-      <ProfileForm />
-    </div>
-  )
-}
-```
+Does not own:
 
-### Feature Components (Business Layer)
+- transport (HTTP/tRPC)
+- cache invalidation rules
 
-**Location:** `src/features/<feature>/components/<feature>-form.tsx`
+### Query Adapter Layer (Server State + Cache)
 
-**Responsibilities:**
+Owns:
 
-- Data fetching (queries, mutations)
-- Form state management
-- Business logic orchestration
-- Cache invalidation
-- Navigation
+- query/mutation definitions
+- query keys (for non-tRPC adapters, defined in `src/common/query-keys/<feature>.ts`)
+- cache utilities/invalidation (for tRPC adapters, via generated tRPC query utilities)
+- invalidation / optimistic updates
+- combined loading/success/error composition for multiple query units
 
-**Rules:**
+Depends on:
 
-- One feature component per major UI interaction
-- Owns the form setup (`useForm`, `zodResolver`)
-- Handles submission logic
-- Delegates rendering to presentation components
+- `featureApi` (not transport)
 
-```typescript
-// src/features/profile/components/profile-form.tsx
-'use client'
+### Presentation Layer
 
-export default function ProfileForm() {
-  // Data fetching
-  const profileQuery = trpc.profile.getByCurrentUser.useQuery()
+Owns:
 
-  // Form setup
-  const form = useForm<ProfileFormHandler>({
-    resolver: zodResolver(profileFormSchema),
-  })
+- render-only UI (fields/cards/lists)
 
-  // Mutations
-  const updateMut = trpc.profile.update.useMutation()
-  const trpcUtils = trpc.useUtils()
+Does not own:
 
-  // Business logic
-  const onSubmit = async (data: ProfileFormHandler) => {
-    await updateMut.mutateAsync(data)
-    await trpcUtils.profile.getByCurrentUser.invalidate()
-    router.push(appRoutes.dashboard)
-  }
+- fetching/mutations
+- navigation/route parsing
 
-  // Render with presentation components
-  return (
-    <StandardFormProvider form={form} onSubmit={onSubmit}>
-      <ProfileFirstNameField />
-      <ProfileLastNameField />
-      <Button type='submit'>Save</Button>
-    </StandardFormProvider>
-  )
-}
-```
+## Execution Decision Flows
 
-### Presentation Components (Display Layer)
+### 1) Where should logic go?
 
-**Location:** `src/features/<feature>/components/<feature>-form-fields.tsx`
+Use this decision chain:
 
-**Responsibilities:**
+1. Is this transport-specific (HTTP/tRPC/auth headers/retry wiring)?
+   - Put in `clientApi` or metaframework boundary docs.
+2. Is this endpoint-scoped request/response orchestration?
+   - Put in `src/features/<feature>/api.ts` (`featureApi`).
+3. Is this cache/query behavior (keys, invalidation, optimistic update)?
+   - Put in `src/features/<feature>/hooks.ts` (query adapter).
+4. Is this pure domain rule or deterministic transformation?
+   - Put in `domain.ts` or `helpers.ts`.
+5. Is this render-only?
+   - Keep in presentation component.
 
-- UI rendering
-- Form context consumption
-- Styling and layout
-- User interaction handling (via callbacks)
+### 2) Should it live in `feature` or `common`?
 
-**Rules:**
+1. Used by multiple features and no feature ownership? Put in `src/common/*`.
+2. Owned by one feature even if reused nearby? Keep in that feature.
+3. Reusable across server + client for one module? Use `src/lib/modules/<module>/shared/*` first.
 
-- No data fetching
-- No direct API calls
-- Use `useFormContext` for form state
-- Pure rendering based on props/context
+## Feature Module File Boundaries
 
-```typescript
-// src/features/profile/components/profile-form-fields.tsx
-'use client'
+In `src/features/<feature>/`:
 
-import { useFormContext } from 'react-hook-form'
-import type { ProfileFormHandler } from '../schemas'
-
-export function ProfileFirstNameField() {
-  const { control } = useFormContext<ProfileFormHandler>()
+- `hooks.ts`: query adapter (framework-specific)
+- `api.ts`: `I<Feature>Api` contract + `<Feature>Api` class + `create<Feature>Api` factory
+- `schemas.ts`: Zod schemas + derived types + DTO-to-feature mapping helpers
+- `types.ts`: shared feature types (non-DTO)
+- `domain.ts`: business rules (pure, deterministic)
+- `helpers.ts`: small pure utilities (formatting, grouping, transforms)
 
-  return (
-    <StandardFormInput<ProfileFormHandler>
-      name='firstName'
-      label='First Name'
-      placeholder='John'
-      required
-    />
-  )
-}
-```
+## Feature API Contract (Required)
 
-### UI Primitives (Component Library)
+For each feature API:
 
-**Location:** `src/components/ui/`
+- define `I<Feature>Api` first
+- implement `class <Feature>Api implements I<Feature>Api`
+- expose `create<Feature>Api(deps)` factory
 
-**Responsibilities:**
+Dependency rules:
 
-- Atomic, generic components
-- shadcn/ui implementations
-- Radix UI wrappers
+- inject transport boundary (`clientApi`)
+- inject error normalizer (`toAppError`)
+- inject optional deterministic utilities only when needed (`clock`, `idFactory`)
 
-**Rules:**
+Testing rules:
 
-- No business logic
-- No feature-specific code
-- Fully reusable across features
-- Follow shadcn/ui conventions
-
-```typescript
-// src/components/ui/button.tsx
-// Standard shadcn/ui component
-```
-
-### Feature Hooks
+- unit test class behavior by mocking injected dependencies
+- query adapter tests mock `I<Feature>Api` (not transport providers)
+- domain helpers stay function-based and are tested without mocks
+- all test files live in `src/__tests__/` mirroring the source tree (never colocated)
 
-**Location:** `src/features/<feature>/hooks.ts`
+Full standard: `client/core/testing.md`.
 
-**Responsibilities:**
+## Domain Logic Placement (Precedence)
 
-- URL state management (nuqs)
-- Feature-specific custom logic
-- Derived state calculations
-
-**Rules:**
-
-- Reusable within the feature
-- May use nuqs for URL state
-- No direct data fetching (use tRPC hooks in components)
-
-```typescript
-// src/features/landing/hooks.ts
-
-import { parseAsStringLiteral, useQueryState } from "nuqs";
-
-const landingStates = ["login", "signup"] as const;
-
-export const useQueryLandingState = () => {
-  return useQueryState(
-    "step",
-    parseAsStringLiteral(landingStates).withOptions({ history: "push" }),
-  );
-};
-```
-
-## Decision Flows
-
-### Component Type Decision
-
-```
-Does it fetch data or own form state?
-├── Yes → Feature Component (business)
-│   └── Create: <feature>-form.tsx or <feature>-view.tsx
-└── No → Presentation Component
-    └── Does it consume form context?
-        ├── Yes → Create: <feature>-form-fields.tsx
-        └── No → Props-based component
-            └── Is it feature-specific?
-                ├── Yes → features/<feature>/components/
-                └── No → components/ui/ or components/custom-ui/
-```
-
-### Data Fetching Decision
-
-```
-Is data needed for this component?
-├── No → Don't fetch, receive via props
-└── Yes
-    └── Is it server-side (RSC)?
-        ├── Yes → Use tRPC caller in page
-        └── No (client component)
-            └── Is it dependent on other data?
-                ├── Yes → Use enabled flag
-                │   trpc.x.useQuery({ id }, { enabled: !!id })
-                └── No → Direct query
-                    trpc.x.useQuery()
-```
-
-### State Management Decision
-
-```
-What kind of state is this?
-├── Server data → TanStack Query (via tRPC)
-├── Form data → react-hook-form
-├── URL state (shareable) → nuqs
-├── Global UI state → Zustand (global store)
-└── Local component tree state → Zustand (context store)
-```
-
-## Common Module
-
-**Location:** `src/common/`
-
-The common module contains app-wide shared code that doesn't belong to a specific feature.
-
-### Structure
-
-```
-src/common/
-├── providers/          # React context providers
-│   ├── trpc-provider.tsx
-│   ├── theme-provider.tsx
-│   └── index.tsx
-├── hooks.ts            # Shared custom hooks
-├── constants.ts        # Global constants, query params
-├── app-routes.ts       # Route path definitions
-├── types.ts            # Shared TypeScript types
-└── utils.ts            # Utility functions
-```
-
-### app-routes.ts
-
-Centralized route definitions:
-
-```typescript
-// src/common/app-routes.ts
-
-const appRoutes = {
-  home: "/",
-  auth: {
-    login: "/login",
-    signup: "/signup",
-    forgotPassword: "/forgot-password",
-  },
-  dashboard: "/dashboard",
-  profile: {
-    base: "/profile",
-    edit: "/profile/edit",
-  },
-  settings: {
-    base: "/settings",
-    billing: "/settings/billing",
-  },
-} as const;
-
-export default appRoutes;
-```
-
-### constants.ts
-
-Global constants including URL query params:
-
-```typescript
-// src/common/constants.ts
-
-export const appQueryParams = {
-  error: "error",
-  step: "step",
-  tab: "tab",
-  page: "page",
-  search: "q",
-} as const;
-
-export const FILE_SIZE_LIMITS = {
-  PROFILE_IMAGE: 5 * 1024 * 1024,
-  DOCUMENT: 10 * 1024 * 1024,
-} as const;
-```
-
-### types.ts
-
-Shared TypeScript types:
-
-```typescript
-// src/common/types.ts
-
-export type Nullable<T> = T | null;
-export type Optional<T> = T | undefined;
-
-export interface PaginationParams {
-  page: number;
-  limit: number;
-}
-
-export interface PaginatedResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-  hasMore: boolean;
-}
-```
-
-### hooks.ts
-
-Shared custom hooks:
-
-```typescript
-// src/common/hooks.ts
-
-export function useCatchErrorToast() {
-  const { toast } = useToast();
-
-  return async <T>(
-    fn: () => Promise<T>,
-    options?: { description?: string },
-  ): Promise<T | undefined> => {
-    try {
-      const result = await fn();
-      if (options?.description) {
-        toast({ description: options.description });
-      }
-      return result;
-    } catch (error) {
-      toast({
-        description:
-          error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive",
-      });
-      return undefined;
-    }
-  };
-}
-
-export function useErrorToast() {
-  const { toast } = useToast();
-  return (options: { description: string; variant?: "destructive" }) => {
-    toast(options);
-  };
-}
-```
-
-## Schema Conventions
-
-### Three-Layer Schema Architecture
-
-```
-┌─────────────────────────────────────────────────────────┐
-│  Layer 1: Database Schemas (drizzle-zod)               │
-│  Location: src/lib/shared/infra/db/schema.ts           │
-│  Owner: Backend                                         │
-└─────────────────────────────────────────────────────────┘
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│  Layer 2: DTOs (API Contracts)                          │
-│  Shared: src/lib/shared/kernel/dtos/                    │
-│  Module: src/lib/modules/<module>/dtos/                 │
-│  Owner: Shared (Backend defines, Frontend consumes)     │
-└─────────────────────────────────────────────────────────┘
-                         ▼
-┌─────────────────────────────────────────────────────────┐
-│  Layer 3: Form Schemas                                  │
-│  Location: src/features/<feature>/schemas.ts            │
-│  Owner: Frontend                                        │
-└─────────────────────────────────────────────────────────┘
-```
-
-### Form Schema Pattern
-
-```typescript
-// src/features/profile/schemas.ts
-
-import { z } from "zod";
-import { UpdateProfileInputSchema } from "@/lib/modules/profile/dtos/update-profile.dto";
-import { ImageAssetSchema } from "@/lib/shared/kernel/dtos/common";
-
-// Compose DTO with UI-specific fields
-export const profileFormSchema =
-  UpdateProfileInputSchema.merge(ImageAssetSchema); // Add file handling
-
-export type ProfileFormHandler = z.infer<typeof profileFormSchema>;
-```
-
-## Naming Conventions
-
-### Files
-
-| Type                | Convention                  | Example                   |
-| ------------------- | --------------------------- | ------------------------- |
-| Feature component   | `<feature>-<type>.tsx`      | `profile-form.tsx`        |
-| Presentation fields | `<feature>-form-fields.tsx` | `profile-form-fields.tsx` |
-| Feature hooks       | `hooks.ts`                  | `hooks.ts`                |
-| Feature schemas     | `schemas.ts`                | `schemas.ts`              |
-| UI primitive        | `<component>.tsx`           | `button.tsx`              |
-
-### Components
-
-| Type               | Convention           | Example                 |
-| ------------------ | -------------------- | ----------------------- |
-| Feature component  | `PascalCase`         | `ProfileForm`           |
-| Presentation field | `PascalCase + Field` | `ProfileFirstNameField` |
-| UI primitive       | `PascalCase`         | `Button`                |
-
-### Hooks
-
-| Type           | Convention             | Example                |
-| -------------- | ---------------------- | ---------------------- |
-| URL state hook | `useQuery<Name>State`  | `useQueryLandingState` |
-| Feature hook   | `use<Feature><Action>` | `useProfileUpdate`     |
-| Shared hook    | `use<Action>`          | `useCatchErrorToast`   |
-
-## Import Order
-
-```typescript
-// 1. React/Next
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-
-// 2. External libraries
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-// 3. Internal - UI components
-import { Button } from "@/components/ui/button";
-import { StandardFormProvider } from "@/components/form";
-
-// 4. Internal - common/lib
-import { trpc } from "@/lib/trpc/client";
-import appRoutes from "@/common/app-routes";
-
-// 5. Internal - feature (relative)
-import { ProfileFirstNameField } from "./profile-form-fields";
-import { profileFormSchema, type ProfileFormHandler } from "../schemas";
-```
-
-## Checklist
-
-- [ ] Feature folder created under `src/features/<feature>/`
-- [ ] Schema defined in `schemas.ts`, composed from DTOs
-- [ ] Business component handles data fetching and form state
-- [ ] Presentation components use `useFormContext`, no fetching
-- [ ] URL state uses nuqs with centralized param names
-- [ ] Mutations invalidate relevant queries
-- [ ] Loading and error states handled
-- [ ] Routes added to `app-routes.ts`
+When you need domain-specific rules or transformations:
+
+1. Prefer module-owned shared code (reusable across server + client): `src/lib/modules/<module>/shared/*`
+2. Otherwise keep it client-only in the feature: `src/features/<feature>/(domain.ts|helpers.ts)`
+
+More details: `client/core/domain-logic.md`.
+
+## Key Rules
+
+- Components never talk to HTTP directly.
+- Cache rules live in the query adapter layer.
+- Zod parses at boundaries (recommended).
+- Hook/query units follow single responsibility.
+
+## Non-Blocking Side Effects
+
+Treat telemetry/analytics and other best-effort side effects as non-blocking:
+
+- never block submit/navigation UX on non-critical side effects
+- swallow/report failures appropriately
+- keep business-critical workflows independent from telemetry success
+
+## Transport Guard Boundaries
+
+Security and transport controls belong at metaframework/server boundaries, not in presentation components:
+
+- CSRF/origin checks
+- rate limiting
+- request correlation metadata attachment (`requestId`, optional path metadata)
+
+## Naming Conventions (Core Contracts)
+
+Feature files:
+
+- `api.ts`: `I<Feature>Api` + `<Feature>Api` + factory
+- `hooks.ts`: query adapter hooks (framework-specific implementation)
+- `schemas.ts`: zod schemas + derived types + mapping helpers
+- `domain.ts`: pure domain logic
+- `helpers.ts`: small pure transforms
+
+Hook naming (for hook-based frameworks):
+
+- Single-responsibility query hook: `useQuery<Feature><Noun>`
+- Single-responsibility mutation hook: `useMut<Feature><Verb>`
+- Composed hook (multiple query/mutation units): `useMod<DescriptiveName>`
+
+Rules:
+
+- `useQuery*` / `useMut*` must each own one server-state responsibility.
+- Composition belongs in `useMod*`, not in a single query/mutation hook.
+- Feature API classes stay in `api.ts` behind `I<Feature>Api`.
+- `domain.ts` / `helpers.ts` remain function-based (no feature API classes there).
+
+## Import and Colocation Rules
+
+Import order:
+
+1. framework/runtime imports
+2. external packages
+3. internal absolute imports (`@/...`)
+4. relative imports
+
+Colocation:
+
+- Keep feature-owned logic in `src/features/<feature>/*`.
+- Move only genuinely cross-feature contracts to `src/common/*`.
+- Do not colocate transport code in presentation folders.
+
+## PR Review Checklist (Client Core)
+
+- [ ] Layer ownership is respected (route vs business vs query adapter vs presentation)
+- [ ] No direct transport calls from presentation components
+- [ ] Query/cache behavior is centralized in query adapter layer
+- [ ] Hook names follow `useQuery*` / `useMut*` / `useMod*` convention
+- [ ] `api.ts` follows `I<Feature>Api` + `<Feature>Api` + factory contract
+- [ ] Query adapters depend on `I<Feature>Api` (not direct transport clients)
+- [ ] Domain transforms follow precedence (`lib/modules/<module>/shared` first, then feature-local)
+- [ ] `domain.ts` / `helpers.ts` tests are pure (no mocks)
+- [ ] `api.ts` unit tests mock injected dependencies (`clientApi`, `toAppError`)
+- [ ] Test files are in `src/__tests__/` mirroring source tree (not colocated)
+- [ ] Shared contracts are in `src/common/*` only when truly cross-feature

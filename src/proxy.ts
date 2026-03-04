@@ -1,24 +1,8 @@
-import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-
-/**
- * Routes that require authentication.
- * Users will be redirected to /login if not authenticated.
- */
-const PROTECTED_ROUTES = ["/dashboard", "/settings", "/profile"];
-
-/**
- * Routes that are only accessible to unauthenticated users.
- * Authenticated users will be redirected to /.
- */
-const AUTH_ROUTES = ["/login", "/register", "/magic-link"];
-
-/**
- * Check if path matches any of the given routes.
- */
-function matchesRoute(path: string, routes: string[]): boolean {
-  return routes.some((route) => path === route || path.startsWith(`${route}/`));
-}
+import { type NextRequest, NextResponse } from "next/server";
+import { appRoutes, isGuestRoute, isProtectedRoute } from "@/common/app-routes";
+import { getSafeRedirectPath } from "@/common/redirects";
+import { getRequestOrigin } from "@/common/request-origin";
 
 /**
  * Next.js proxy for session refresh and route protection.
@@ -30,47 +14,67 @@ function matchesRoute(path: string, routes: string[]): boolean {
  * The proxy runtime is nodejs-only (edge runtime not supported).
  */
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  const path = request.nextUrl.pathname;
+  const redirectPath = `${request.nextUrl.pathname}${request.nextUrl.search}`;
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", path);
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => {
-            request.cookies.set(name, value);
-          });
-          supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) => {
-            supabaseResponse.cookies.set(name, value, options);
-          });
-        },
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabasePublishableKey =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!supabaseUrl || !supabasePublishableKey) {
+    throw new Error("Supabase env vars are missing");
+  }
+
+  let supabaseResponse = NextResponse.next({
+    request: { headers: requestHeaders },
+  });
+
+  const supabase = createServerClient(supabaseUrl, supabasePublishableKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) => {
+          request.cookies.set(name, value);
+        });
+        supabaseResponse = NextResponse.next({
+          request: { headers: requestHeaders },
+        });
+        cookiesToSet.forEach(({ name, value, options }) => {
+          supabaseResponse.cookies.set(name, value, options);
+        });
       },
     },
-  );
+  });
 
   // IMPORTANT: This refreshes the session
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const path = request.nextUrl.pathname;
-
   // Redirect unauthenticated users from protected routes
-  if (!user && matchesRoute(path, PROTECTED_ROUTES)) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", path);
-    return NextResponse.redirect(loginUrl);
+  if (!user && isProtectedRoute(path)) {
+    const origin = getRequestOrigin(request);
+    return NextResponse.redirect(
+      new URL(appRoutes.login.from(redirectPath), origin),
+    );
   }
 
-  // Redirect authenticated users from auth routes
-  if (user && matchesRoute(path, AUTH_ROUTES)) {
-    const redirectTo = request.nextUrl.searchParams.get("redirect") || "/";
-    return NextResponse.redirect(new URL(redirectTo, request.url));
+  // Redirect authenticated users from guest routes
+  if (user && isGuestRoute(path)) {
+    const origin = getRequestOrigin(request);
+    const redirectTo = getSafeRedirectPath(
+      request.nextUrl.searchParams.get("redirect"),
+      {
+        fallback: appRoutes.postLogin.base,
+        origin,
+        disallowRoutes: ["guest"],
+        disallowPathname: path,
+      },
+    );
+    return NextResponse.redirect(new URL(redirectTo, origin));
   }
 
   return supabaseResponse;

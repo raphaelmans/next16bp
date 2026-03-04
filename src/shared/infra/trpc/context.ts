@@ -1,12 +1,13 @@
-import { randomUUID } from "crypto";
-import { cookies, headers } from "next/headers";
-import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
+import { randomUUID } from "node:crypto";
 import type { CookieMethodsServer } from "@supabase/ssr";
-import { createClient } from "@/shared/infra/supabase/create-client";
-import { createRequestLogger } from "@/shared/infra/logger";
+import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
+import { cookies } from "next/headers";
+import { getRequestOrigin } from "@/common/request-origin";
 import { env } from "@/lib/env";
-import type { Session } from "@/shared/kernel/auth";
 import { makeUserRoleRepository } from "@/modules/user-role/factories/user-role.factory";
+import { createRequestLogger } from "@/shared/infra/logger";
+import { createClient } from "@/shared/infra/supabase/create-client";
+import type { Session } from "@/shared/kernel/auth";
 
 export interface Context {
   requestId: string;
@@ -31,7 +32,6 @@ export async function createContext({
 }: FetchCreateContextFnOptions): Promise<Context> {
   const requestId = req.headers.get("x-request-id") ?? randomUUID();
   const cookieStore = await cookies();
-  const headerStore = await headers();
 
   const cookieMethods: CookieMethodsServer = {
     getAll() {
@@ -61,12 +61,19 @@ export async function createContext({
       data: { user },
     } = await supabase.auth.getUser();
     if (user) {
-      // Fetch role from user_roles table
-      const userRole = await makeUserRoleRepository().findByUserId(user.id);
+      let role: Session["role"] = "member";
+      try {
+        // Fetch role from user_roles table (fallback to member).
+        const userRole = await makeUserRoleRepository().findByUserId(user.id);
+        role = (userRole?.role as Session["role"]) ?? "member";
+      } catch {
+        role = "member";
+      }
+
       session = {
         userId: user.id,
-        email: user.email!,
-        role: (userRole?.role as Session["role"]) ?? "member",
+        email: user.email ?? "",
+        role,
       };
     }
   } catch {
@@ -85,7 +92,7 @@ export async function createContext({
     session,
     userId: session?.userId ?? null,
     cookies: cookieMethods,
-    origin: headerStore.get("origin") ?? "http://localhost:3000",
+    origin: getRequestOrigin(req),
     log,
   };
 }

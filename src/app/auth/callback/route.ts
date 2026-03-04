@@ -1,16 +1,27 @@
-import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { createClient } from "@/shared/infra/supabase/create-client";
+import { NextResponse } from "next/server";
+import { appRoutes } from "@/common/app-routes";
+import { getSafeRedirectPath } from "@/common/redirects";
+import { getRequestOrigin } from "@/common/request-origin";
 import { env } from "@/lib/env";
+import { makeProfileService } from "@/modules/profile/factories/profile.factory";
+import { UserRoleAlreadyExistsError } from "@/modules/user-role/errors/user-role.errors";
+import { makeUserRoleService } from "@/modules/user-role/factories/user-role.factory";
+import { createClient } from "@/shared/infra/supabase/create-client";
 
 /**
  * Auth callback route handler for OAuth and magic link flows.
  * Exchanges authorization code for session.
  */
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
+  const origin = getRequestOrigin(request);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/";
+  const redirectPath = getSafeRedirectPath(searchParams.get("redirect"), {
+    fallback: appRoutes.postLogin.base,
+    origin,
+    disallowRoutes: ["guest"],
+  });
 
   if (code) {
     const cookieStore = await cookies();
@@ -29,22 +40,32 @@ export async function GET(request: Request) {
       },
     );
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      const forwardedHost = request.headers.get("x-forwarded-host");
-      const isLocalEnv = process.env.NODE_ENV === "development";
+      if (data.user) {
+        try {
+          await makeUserRoleService().create({
+            userId: data.user.id,
+            role: "member",
+          });
+        } catch (roleError) {
+          if (!(roleError instanceof UserRoleAlreadyExistsError)) {
+            throw roleError;
+          }
+        }
 
-      if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`);
+        await makeProfileService().getOrCreateProfile(
+          data.user.id,
+          data.user.email,
+        );
       }
-      if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`);
-      }
-      return NextResponse.redirect(`${origin}${next}`);
+
+      const baseUrl = env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? origin;
+      return NextResponse.redirect(`${baseUrl}${redirectPath}`);
     }
   }
 
   // Redirect to index on error (as requested)
-  return NextResponse.redirect(`${origin}/`);
+  return NextResponse.redirect(`${origin}${appRoutes.index.base}`);
 }

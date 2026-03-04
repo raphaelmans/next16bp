@@ -1,6 +1,7 @@
 "use client";
 
-import { useSession, useLogout } from "@/features/auth";
+import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useLogout, useSession } from "@/features/auth";
 
 export default function DashboardPage() {
   const { data: user, isLoading } = useSession();
@@ -17,7 +19,7 @@ export default function DashboardPage() {
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
-    window.location.href = "/login";
+    window.location.href = appRoutes.login.base;
   };
 
   if (isLoading) {
@@ -49,6 +51,12 @@ export default function DashboardPage() {
             <strong>Role:</strong> {user?.role}
           </p>
         </div>
+        <Link
+          href={appRoutes.account.profile}
+          className="text-primary text-sm hover:underline"
+        >
+          Edit Profile
+        </Link>
         <Button
           variant="outline"
           onClick={handleLogout}
