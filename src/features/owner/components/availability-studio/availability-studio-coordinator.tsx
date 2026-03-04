@@ -1765,7 +1765,7 @@ function OwnerAvailabilityStudioInner() {
           onToday={handleMobileToday}
         />
 
-        <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <div className="grid gap-6 2xl:grid-cols-[280px_minmax(0,1fr)]">
           <div className="hidden 2xl:block space-y-6">
             <Card>
               <CardContent className="space-y-3 p-6">

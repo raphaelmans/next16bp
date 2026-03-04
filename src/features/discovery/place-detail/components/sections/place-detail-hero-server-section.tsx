@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { PlaceDetail } from "@/features/discovery/hooks/place-detail";
+import { PlaceDetailBookmarkSlot } from "@/features/discovery/place-detail/components/place-detail-bookmark-slot";
 
 type PlaceDetailHeroServerSectionProps = {
   place: PlaceDetail;
@@ -98,6 +99,7 @@ export function PlaceDetailHeroServerSection({
             </a>
           </Button>
         )}
+        <PlaceDetailBookmarkSlot placeId={place.id} />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays, Home, MapPin, User } from "lucide-react";
+import { CalendarDays, Heart, Home, MapPin, User } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
 import { SidebarNavItem } from "@/components/layout/sidebar-nav-item";
@@ -14,6 +14,7 @@ import {
 const playerNavItems = [
   { title: "Home", href: appRoutes.home.base, icon: Home },
   { title: "Courts", href: appRoutes.courts.base, icon: MapPin },
+  { title: "Saved", href: appRoutes.savedVenues.base, icon: Heart },
   {
     title: "Reservations",
     href: appRoutes.reservations.base,
