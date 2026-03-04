@@ -42,6 +42,7 @@
     "db:backfill:stream-reservation-chat-members": "dotenvx run --env-file=.env.local -- tsx scripts/backfill-stream-reservation-chat-members.ts",
     "db:import:curated-courts": "dotenvx run --env-file=.env.local -- tsx scripts/import-curated-courts.ts --file scripts/templates/curated-courts-template.csv",
     "db:export:curated-places": "dotenvx run --env-file=.env.local -- tsx scripts/export-curated-places.ts",
+    "scrape:curated-courts": "dotenvx run --env-file=.env.local -- tsx scripts/firecrawl-curated-courts.ts",
     "db:backfill:place-slugs": "dotenvx run --env-file=.env.local -- tsx scripts/backfill-place-slugs.ts",
     "db:check:journal": "tsx scripts/quality/check-drizzle-journal.ts",
     "db:validate:default-portal": "dotenvx run --env-file=.env.local -- tsx scripts/validate-default-portal-migration.ts",

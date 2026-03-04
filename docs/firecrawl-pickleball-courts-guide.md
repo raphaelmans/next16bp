@@ -153,6 +153,55 @@ curl -s -X POST "https://api.firecrawl.dev/v2/extract" \
   }'
 ```
 
+## Repo Script: Sports360 → Curated CSV
+
+This repo includes `scripts/firecrawl-curated-courts.ts`, which:
+
+1. Maps URLs from a start URL (`/v2/map`) or reads URLs from `--urls-file`
+2. Expands discovery with Sports360 `storehubs` routes (`/sportshub/:name`)
+3. Tracks URL/row inventory in a persistent state file
+4. Extracts structured venue data (`/v2/extract`) only for new URLs by default
+5. Writes import-ready CSV, extraction audit JSON, and migration coverage report
+
+Run:
+
+```bash
+pnpm scrape:curated-courts
+pnpm scrape:curated-courts -- --start-url https://app.sports360.ph/
+pnpm scrape:curated-courts -- --dry-run
+pnpm scrape:curated-courts -- --urls-file scripts/output/sports360-urls.txt
+pnpm scrape:curated-courts -- --discover-only
+pnpm scrape:curated-courts -- --rescrape-all
+```
+
+Outputs (default):
+
+- `scripts/output/sports360-curated-courts.csv`
+- `scripts/output/sports360-curated-courts.raw.json`
+- `scripts/output/sports360-scrape-state.json`
+- `scripts/output/sports360-coverage.json`
+
+Important flags:
+
+- `--discover-only`: map and update inventory, but skip extraction.
+- `--rescrape-all`: ignore state and scrape URLs again.
+- `--state <path>`: override scrape state file path.
+- `--coverage-output <path>`: override coverage report path.
+- `--skip-db-coverage`: skip DB lookup for migrated-vs-pending reporting.
+
+Suggested brute-force workflow:
+
+1. Discover only:
+   `pnpm scrape:curated-courts -- --discover-only`
+2. Scrape only new/unseen pages:
+   `pnpm scrape:curated-courts`
+3. Review pending migration backlog from coverage report:
+   `scripts/output/sports360-coverage.json`
+4. Import:
+   `pnpm db:import:curated-courts -- --file scripts/output/sports360-curated-courts.csv --dry-run`
+5. Import for real:
+   `pnpm db:import:curated-courts -- --file scripts/output/sports360-curated-courts.csv`
+
 ## Post-Processing: Convert JSON → CSV
 
 For each scraped item, map JSON fields into the CSV columns:
@@ -167,12 +216,13 @@ For each scraped item, map JSON fields into the CSV columns:
 
 ```bash
 pnpm db:seed:sports
-pnpm db:import:curated-courts -- --dry-run
-pnpm db:import:curated-courts
+pnpm db:import:curated-courts -- --file scripts/output/sports360-curated-courts.csv --dry-run
+pnpm db:import:curated-courts -- --file scripts/output/sports360-curated-courts.csv
 ```
 
 ## Tips
 
 - Normalize `city` to match your admin filter list (e.g., `BGC`, `Makati`).
-- Avoid duplicate rows: the importer skips existing rows matching `name + city`.
+- Avoid duplicate rows: importer dedupe is `name + city + province`.
 - When unsure about `courts`, default to `pickleball|` and let labels auto-generate.
+- Re-runs are idempotent at scrape level via canonical URL state; use `--rescrape-all` only when needed.

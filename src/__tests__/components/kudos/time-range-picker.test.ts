@@ -196,4 +196,49 @@ describe("TimeRangePicker day-context rendering", () => {
     });
     expect(nextDay11Pm.hasAttribute("disabled")).toBe(false);
   });
+
+  it("does not auto-select midnight when prior-day selection ends at day boundary", () => {
+    render(
+      React.createElement(TimeRangePicker, {
+        slots: [
+          makeSlot(
+            "2099-03-05T16:00:00.000Z",
+            "2099-03-05T17:00:00.000Z",
+            "available",
+          ), // 12:00 AM-1:00 AM Mar 6 PHT
+        ],
+        timeZone: timezone,
+        selectedDayKey: "2099-03-06",
+        selectedStartTime: "2099-03-05T15:00:00.000Z", // 11:00 PM Mar 5 PHT
+        selectedDurationMinutes: 60,
+      }),
+    );
+
+    expect(screen.queryByText(/Click another slot to extend/i)).toBeFalsy();
+  });
+
+  it("keeps visible highlight when a same-day selection spills past day end", () => {
+    render(
+      React.createElement(TimeRangePicker, {
+        slots: [
+          makeSlot(
+            "2099-03-05T14:00:00.000Z",
+            "2099-03-05T15:00:00.000Z",
+            "available",
+          ), // 10:00 PM Mar 5 PHT
+          makeSlot(
+            "2099-03-05T15:00:00.000Z",
+            "2099-03-05T16:00:00.000Z",
+            "available",
+          ), // 11:00 PM Mar 5 PHT
+        ],
+        timeZone: timezone,
+        selectedDayKey: "2099-03-05",
+        selectedStartTime: "2099-03-05T14:00:00.000Z",
+        selectedDurationMinutes: 300, // spills into Mar 6
+      }),
+    );
+
+    expect(screen.getByText("10:00 PM – 12:00 AM")).toBeTruthy();
+  });
 });

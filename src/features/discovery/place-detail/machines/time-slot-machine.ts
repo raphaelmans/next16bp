@@ -49,7 +49,9 @@ export const timeSlotMachine = setup({
 
     assignDate: assign(({ event }) => ({
       date: event.type === "SELECT_DATE" ? event.date : null,
-      ...computeDateSelection(),
+      ...computeDateSelection(
+        event.type === "SELECT_DATE" ? event.preserveSelection : false,
+      ),
     })),
 
     assignGoToToday: assign(({ context, event }) => ({

@@ -122,7 +122,12 @@ export function computeCourtSwitch(
 }
 
 /** Compute new context when selecting a date. */
-export function computeDateSelection(): Partial<TimeSlotContext> {
+export function computeDateSelection(
+  preserveSelection?: boolean,
+): Partial<TimeSlotContext> {
+  if (preserveSelection) {
+    return { lastAddedSnapshot: null };
+  }
   return {
     startTime: null,
     lastAddedSnapshot: null,

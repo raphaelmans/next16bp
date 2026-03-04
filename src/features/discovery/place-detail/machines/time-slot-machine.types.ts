@@ -59,7 +59,7 @@ export type TimeSlotEvent =
   | { type: "CLEAR_COURT" }
   | { type: "SET_MODE_ANY" }
   | { type: "SET_MODE_COURT" }
-  | { type: "SELECT_DATE"; date: string }
+  | { type: "SELECT_DATE"; date: string; preserveSelection?: boolean }
   | { type: "GO_TO_TODAY"; todayDayKey: string }
   | { type: "SET_VIEW_WEEK" }
   | { type: "SET_VIEW_DAY" }

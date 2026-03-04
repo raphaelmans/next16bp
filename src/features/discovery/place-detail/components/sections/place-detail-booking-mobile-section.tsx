@@ -24,6 +24,10 @@ import {
 } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
 import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
+import {
+  getNextDayKeyForInstant,
+  isSameOrNextDay,
+} from "@/features/discovery/place-detail/helpers/date-adjacency";
 import { useModMobileWeekPrefetch } from "@/features/discovery/place-detail/hooks/use-mobile-week-prefetch";
 import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
@@ -41,7 +45,10 @@ type PlaceDetailBookingMobileSectionProps = {
   place: PlaceDetail;
   placeTimeZone: string;
   selectedDate?: Date;
-  setSelectedDate: (date: Date | undefined) => void;
+  setSelectedDate: (
+    date: Date | undefined,
+    options?: { preserveSelection?: boolean },
+  ) => void;
   durationMinutes: number;
   setDurationMinutes: (minutes: number) => void;
   selectedSportId?: string;
@@ -306,14 +313,28 @@ export function PlaceDetailBookingMobileSection({
     const currentDayKey = getZonedDayKey(selectedDate, placeTimeZone);
     if (startDayKey === currentDayKey) return undefined;
     // Only support forward direction: selection on day N, viewing day N+1
-    const startDayEnd = getZonedDayRangeForInstant(
-      new Date(selectedStartTime),
+    const nextDayKey = getNextDayKeyForInstant(
+      selectedStartTime,
       placeTimeZone,
-    ).end;
-    const nextDayKey = getZonedDayKey(startDayEnd, placeTimeZone);
+    );
     if (currentDayKey !== nextDayKey) return undefined;
+    // Cross-day anchor is only needed when current-day view has no visible
+    // overlap from the existing selection (e.g., 10 PM-11 PM previous day).
+    // Once overlap exists, let new taps start a fresh range on current day.
+    const currentDayStartMs = Date.parse(
+      getZonedStartOfDayIso(selectedDate, placeTimeZone),
+    );
+    const selectionEndMs =
+      Date.parse(selectedStartTime) + durationMinutes * 60_000;
+    if (selectionEndMs > currentDayStartMs) return undefined;
     return selectedStartTime;
-  }, [selectedStartTime, selectedDate, selectionMode, placeTimeZone]);
+  }, [
+    durationMinutes,
+    selectedStartTime,
+    selectedDate,
+    selectionMode,
+    placeTimeZone,
+  ]);
 
   const selectionSummary = React.useMemo(() => {
     const summaryOptions =
@@ -378,6 +399,8 @@ export function PlaceDetailBookingMobileSection({
 
   const handleCourtRangeChange = React.useCallback(
     (range: { startTime: string; durationMinutes: number }) => {
+      // Mirror desktop behavior: trust picker's committed range.
+      // The picker already handles cross-day anchoring via crossDayStartTime.
       setSelectedStartTime(range.startTime);
       setDurationMinutes(range.durationMinutes);
     },
@@ -400,18 +423,20 @@ export function PlaceDetailBookingMobileSection({
     (date: Date | undefined) => {
       if (!date) return;
       const nextDayKey = getZonedDayKey(date, placeTimeZone);
-      setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
-      // Only clear when jumping to a non-adjacent day (preserves cross-midnight)
       if (selectedStartTime) {
-        const startDayEnd = getZonedDayRangeForInstant(
-          new Date(selectedStartTime),
-          placeTimeZone,
-        ).end;
-        const adjacentDayKey = getZonedDayKey(startDayEnd, placeTimeZone);
-        const startDayKey = getZonedDayKey(selectedStartTime, placeTimeZone);
-        if (nextDayKey !== startDayKey && nextDayKey !== adjacentDayKey) {
+        const isAdjacentOrSame = isSameOrNextDay({
+          selectedStartTimeIso: selectedStartTime,
+          candidateDayKey: nextDayKey,
+          timeZone: placeTimeZone,
+        });
+        setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone), {
+          preserveSelection: isAdjacentOrSame,
+        });
+        if (!isAdjacentOrSame) {
           clearSelection(true);
         }
+      } else {
+        setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
       }
       setMobileCalendarOpen(false);
     },
@@ -421,18 +446,20 @@ export function PlaceDetailBookingMobileSection({
   const handleMobileDateSelect = React.useCallback(
     (date: Date) => {
       const nextDayKey = getZonedDayKey(date, placeTimeZone);
-      setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
-      // Only clear when navigating to a non-adjacent day (preserves cross-midnight)
       if (selectedStartTime) {
-        const startDayEnd = getZonedDayRangeForInstant(
-          new Date(selectedStartTime),
-          placeTimeZone,
-        ).end;
-        const adjacentDayKey = getZonedDayKey(startDayEnd, placeTimeZone);
-        const startDayKey = getZonedDayKey(selectedStartTime, placeTimeZone);
-        if (nextDayKey !== startDayKey && nextDayKey !== adjacentDayKey) {
+        const isAdjacentOrSame = isSameOrNextDay({
+          selectedStartTimeIso: selectedStartTime,
+          candidateDayKey: nextDayKey,
+          timeZone: placeTimeZone,
+        });
+        setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone), {
+          preserveSelection: isAdjacentOrSame,
+        });
+        if (!isAdjacentOrSame) {
           clearSelection(true);
         }
+      } else {
+        setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
       }
     },
     [clearSelection, placeTimeZone, selectedStartTime, setSelectedDate],

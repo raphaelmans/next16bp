@@ -448,6 +448,7 @@ export function TimeRangePicker({
           (firstSlotMs - selectedStartMs) / 60_000,
         );
         const remainingMinutes = selectedDurationMinutes - preSlotMinutes;
+        // No visible overlap on this day.
         if (remainingMinutes <= 0) return null;
         const visibleSlotCount = Math.ceil(
           remainingMinutes / SLOT_STEP_MINUTES,
@@ -462,7 +463,12 @@ export function TimeRangePicker({
     if (startIdx === -1) return null;
     const slotCount = selectedDurationMinutes / SLOT_STEP_MINUTES;
     const endIdx = startIdx + slotCount - 1;
-    if (endIdx >= slots.length) return null;
+    // Selection can spill past this day's visible slots; keep visible portion
+    // highlighted instead of clearing the day view.
+    if (endIdx >= slots.length) {
+      if (startIdx >= slots.length) return null;
+      return { startIdx, endIdx: slots.length - 1 };
+    }
     return { startIdx, endIdx };
   }, [nowMs, selectedStartTime, selectedDurationMinutes, slots]);
 

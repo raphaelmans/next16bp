@@ -181,11 +181,15 @@ export function useBookingMachines({
 
   // --- Setters (match old callback API) ---
   const setSelectedDate = useCallback(
-    (date: Date | undefined) => {
+    (
+      date: Date | undefined,
+      options?: { preserveSelection?: boolean },
+    ) => {
       if (!date) return;
       sendTimeSlot({
         type: "SELECT_DATE",
         date: getZonedDayKey(date, placeTimeZone),
+        preserveSelection: options?.preserveSelection,
       });
     },
     [placeTimeZone, sendTimeSlot],
