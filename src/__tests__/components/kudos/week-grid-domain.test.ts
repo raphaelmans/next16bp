@@ -143,4 +143,93 @@ describe("week-grid-domain", () => {
 
     expect(range).toBeNull();
   });
+
+  it("deriveWeekGridCommittedRange renders visible overlap when start is outside current week", () => {
+    const dayKeys = ["2026-03-15", "2026-03-16"];
+    const slotsByDay = new Map<string, TimeSlot[]>([
+      [
+        "2026-03-15",
+        [
+          makeSlot("2026-03-15", 0),
+          makeSlot("2026-03-15", 1),
+          makeSlot("2026-03-15", 2),
+        ],
+      ],
+      [
+        "2026-03-16",
+        [
+          makeSlot("2026-03-16", 0),
+          makeSlot("2026-03-16", 1),
+          makeSlot("2026-03-16", 2),
+        ],
+      ],
+    ]);
+
+    const { allHours, slotLookup, hoursPerDay } = buildWeekGridHourModel(
+      slotsByDay,
+      "UTC",
+      dayKeys,
+    );
+
+    const range = deriveWeekGridCommittedRange({
+      selectedRange: {
+        // Starts in the previous day/week (Mar 14 22:00 UTC), ends Mar 15 02:00 UTC
+        startTime: "2026-03-14T22:00:00.000Z",
+        durationMinutes: 240,
+      },
+      dayKeys,
+      slotLookup,
+      allHours,
+      hoursPerDay,
+      nowMs: Date.parse("2026-03-01T00:00:00.000Z"),
+    });
+
+    expect(range).toEqual({
+      startIdx: toWeekGridLinearIndex(0, 0, hoursPerDay), // Mar 15 00:00
+      endIdx: toWeekGridLinearIndex(0, 1, hoursPerDay), // Mar 15 01:00
+    });
+  });
+
+  it("deriveWeekGridCommittedRange returns null when selection has no overlap with current week", () => {
+    const dayKeys = ["2026-03-15", "2026-03-16"];
+    const slotsByDay = new Map<string, TimeSlot[]>([
+      [
+        "2026-03-15",
+        [
+          makeSlot("2026-03-15", 0),
+          makeSlot("2026-03-15", 1),
+          makeSlot("2026-03-15", 2),
+        ],
+      ],
+      [
+        "2026-03-16",
+        [
+          makeSlot("2026-03-16", 0),
+          makeSlot("2026-03-16", 1),
+          makeSlot("2026-03-16", 2),
+        ],
+      ],
+    ]);
+
+    const { allHours, slotLookup, hoursPerDay } = buildWeekGridHourModel(
+      slotsByDay,
+      "UTC",
+      dayKeys,
+    );
+
+    const range = deriveWeekGridCommittedRange({
+      selectedRange: {
+        // Entirely outside visible week
+        startTime: "2026-03-14T18:00:00.000Z",
+        durationMinutes: 120,
+      },
+      dayKeys,
+      slotLookup,
+      allHours,
+      hoursPerDay,
+      nowMs: Date.parse("2026-03-01T00:00:00.000Z"),
+    });
+
+    expect(range).toBeNull();
+  });
 });

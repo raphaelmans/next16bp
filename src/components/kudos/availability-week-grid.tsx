@@ -202,9 +202,7 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
             <div
               className={cn(
                 "shrink-0 items-center justify-center rounded-lg bg-primary/10",
-                compact
-                  ? "flex h-6 w-6"
-                  : "flex h-8 w-8",
+                compact ? "flex h-6 w-6" : "flex h-8 w-8",
               )}
             >
               <div className="h-2.5 w-2.5 rounded-full bg-primary" />
@@ -533,11 +531,12 @@ export function AvailabilityWeekGrid({
         const dk = dayKeys[s.dayColIdx];
         const hourMap = slotLookup.get(dk);
         if (!hourMap) return;
-        const slot = hourMap.get(allHours[s.hourIdx]);
-        if (!slot) return;
+        const startSlot = hourMap.get(allHours[s.hourIdx]);
+        if (!startSlot) return;
         const slotCount = endIdx - startIdx + 1;
+
         onRangeChange({
-          startTime: slot.startTime,
+          startTime: startSlot.startTime,
           durationMinutes: slotCount * TIMELINE_SLOT_DURATION,
         });
       },
@@ -699,15 +698,19 @@ function WeekGridInner({
 
               const headerContent = (
                 <>
-                  <div className={compact ? "text-[9px] leading-tight" : undefined}>
-                    {formatInTimeZone(date, timeZone, compact ? "EEEEEE" : "EEE")}
+                  <div
+                    className={compact ? "text-[9px] leading-tight" : undefined}
+                  >
+                    {formatInTimeZone(
+                      date,
+                      timeZone,
+                      compact ? "EEEEEE" : "EEE",
+                    )}
                   </div>
                   <div
                     className={cn(
                       "font-heading font-bold",
-                      compact
-                        ? "mt-0 text-xs"
-                        : "mt-0.5 text-base",
+                      compact ? "mt-0 text-xs" : "mt-0.5 text-base",
                       isToday &&
                         (compact
                           ? "inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground"
@@ -791,7 +794,9 @@ function WeekGridInner({
                         ? "pr-1.5 pt-0.5 text-[10px] text-muted-foreground/70"
                         : "pr-2 pt-1 text-xs text-muted-foreground",
                     )}
-                    style={{ height: compact ? COMPACT_ROW_HEIGHT : WEEK_ROW_HEIGHT }}
+                    style={{
+                      height: compact ? COMPACT_ROW_HEIGHT : WEEK_ROW_HEIGHT,
+                    }}
                   >
                     <span className="w-full">
                       {formatInTimeZone(labelDate, timeZone, "h a")}

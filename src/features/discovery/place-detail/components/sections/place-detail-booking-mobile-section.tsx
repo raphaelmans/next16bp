@@ -18,12 +18,14 @@ import {
 } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
 import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
+import { resolveCourtRangeAcrossWeekBoundary } from "@/features/discovery/place-detail/helpers/cross-week-range";
 import { isWithinAdjacentWeek } from "@/features/discovery/place-detail/helpers/date-adjacency";
 import {
   getSelectionSummaryQueryWindow,
   getWeekGridQueryWindow,
 } from "@/features/discovery/place-detail/helpers/week-grid-query-window";
 import { useModMobileWeekPrefetch } from "@/features/discovery/place-detail/hooks/use-mobile-week-prefetch";
+import { useModNextWeekPrefetch } from "@/features/discovery/place-detail/hooks/use-next-week-prefetch";
 import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
 
@@ -278,6 +280,25 @@ export function PlaceDetailBookingMobileSection({
     utils,
   });
 
+  useModNextWeekPrefetch({
+    showBooking: true,
+    isActiveSurface: !isDesktopViewport,
+    placeId: place.id,
+    placeTimeZone,
+    selectionMode,
+    selectedSportId,
+    selectedCourtId,
+    selectedStartTime,
+    currentWeekStartDayKey: weekStartDayKey,
+    durationMinutes: TIMELINE_SLOT_DURATION,
+    todayRangeStart,
+    maxBookingDate,
+    hasPrefetchedWeek: hasPrefetchedMobileWeek,
+    markPrefetchedWeek: markPrefetchedMobileWeek,
+    clearPrefetchedWeek: clearPrefetchedMobileWeek,
+    utils,
+  });
+
   // Build week slots map from week-range query data
   const mobileWeekSlotsByDay = React.useMemo(() => {
     const options =
@@ -381,12 +402,25 @@ export function PlaceDetailBookingMobileSection({
 
   const handleCourtRangeChange = React.useCallback(
     (range: { startTime: string; durationMinutes: number }) => {
-      // Mirror desktop behavior: trust picker's committed range.
-      // The picker already handles cross-day anchoring via crossDayStartTime.
-      setSelectedStartTime(range.startTime);
-      setDurationMinutes(range.durationMinutes);
+      const resolvedRange = resolveCourtRangeAcrossWeekBoundary({
+        selectedStartTime,
+        incomingRange: range,
+        visibleWeekDayKeys: weekDayKeys,
+        slotsByDay: mobileWeekSlotsByDay,
+        timeZone: placeTimeZone,
+        nowMs: Date.now(),
+      });
+      setSelectedStartTime(resolvedRange.startTime);
+      setDurationMinutes(resolvedRange.durationMinutes);
     },
-    [setDurationMinutes, setSelectedStartTime],
+    [
+      mobileWeekSlotsByDay,
+      placeTimeZone,
+      selectedStartTime,
+      setDurationMinutes,
+      setSelectedStartTime,
+      weekDayKeys,
+    ],
   );
 
   const handleAnyRangeChange = React.useCallback(
@@ -395,10 +429,25 @@ export function PlaceDetailBookingMobileSection({
         setSelectedStartTime(undefined);
         return;
       }
-      setSelectedStartTime(range.startTime);
-      setDurationMinutes(range.durationMinutes);
+      const resolvedRange = resolveCourtRangeAcrossWeekBoundary({
+        selectedStartTime,
+        incomingRange: range,
+        visibleWeekDayKeys: weekDayKeys,
+        slotsByDay: mobileWeekSlotsByDay,
+        timeZone: placeTimeZone,
+        nowMs: Date.now(),
+      });
+      setSelectedStartTime(resolvedRange.startTime);
+      setDurationMinutes(resolvedRange.durationMinutes);
     },
-    [setDurationMinutes, setSelectedStartTime],
+    [
+      mobileWeekSlotsByDay,
+      placeTimeZone,
+      selectedStartTime,
+      setDurationMinutes,
+      setSelectedStartTime,
+      weekDayKeys,
+    ],
   );
 
   const handleMobileCalendarJump = React.useCallback(

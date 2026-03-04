@@ -72,8 +72,19 @@ export function deriveWeekGridCommittedRange(params: {
     params;
   if (!selectedRange) return null;
   if (hoursPerDay <= 0) return null;
-  if (Date.parse(selectedRange.startTime) < nowMs) return null;
+  if (selectedRange.durationMinutes <= 0) return null;
 
+  const selectionStartMs = Date.parse(selectedRange.startTime);
+  if (!Number.isFinite(selectionStartMs)) return null;
+  if (selectionStartMs < nowMs) return null;
+
+  const selectionEndMs =
+    selectionStartMs + selectedRange.durationMinutes * 60_000;
+  if (!Number.isFinite(selectionEndMs) || selectionEndMs <= selectionStartMs) {
+    return null;
+  }
+
+  // Fast-path when the selected start is visible in the rendered grid.
   for (let di = 0; di < dayKeys.length; di++) {
     const dk = dayKeys[di];
     const hourMap = slotLookup.get(dk);
@@ -98,6 +109,44 @@ export function deriveWeekGridCommittedRange(params: {
         endIdx: toWeekGridLinearIndex(endDi, endHi, hoursPerDay),
       };
     }
+  }
+
+  // Fallback for cross-week views: render the visible overlap so users still
+  // see the selected segment after week navigation.
+  let overlapStartIdx: number | null = null;
+  let overlapEndIdx: number | null = null;
+
+  for (let di = 0; di < dayKeys.length; di++) {
+    const dk = dayKeys[di];
+    const hourMap = slotLookup.get(dk);
+    if (!hourMap) continue;
+
+    for (let hi = 0; hi < allHours.length; hi++) {
+      const slot = hourMap.get(allHours[hi]);
+      if (!slot) continue;
+
+      const slotStartMs = Date.parse(slot.startTime);
+      const slotEndMs = Date.parse(slot.endTime);
+      if (!Number.isFinite(slotStartMs) || !Number.isFinite(slotEndMs)) {
+        continue;
+      }
+
+      const overlapsSelection =
+        slotStartMs < selectionEndMs && slotEndMs > selectionStartMs;
+      if (!overlapsSelection) continue;
+
+      const idx = toWeekGridLinearIndex(di, hi, hoursPerDay);
+      if (overlapStartIdx === null || idx < overlapStartIdx) {
+        overlapStartIdx = idx;
+      }
+      if (overlapEndIdx === null || idx > overlapEndIdx) {
+        overlapEndIdx = idx;
+      }
+    }
+  }
+
+  if (overlapStartIdx !== null && overlapEndIdx !== null) {
+    return { startIdx: overlapStartIdx, endIdx: overlapEndIdx };
   }
 
   return null;
