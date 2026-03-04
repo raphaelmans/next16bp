@@ -15,6 +15,7 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
   cellIndex,
   placing,
   onPlace,
+  compact,
 }: {
   dayKey: string;
   startMinute: number;
@@ -22,6 +23,7 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
   cellIndex: number;
   placing?: boolean;
   onPlace?: (dayKey: string, startMinute: number) => void;
+  compact?: boolean;
 }) {
   const cellState = useCellState(cellIndex);
   const pointerDown = useRangeSelection((s) => s.pointerDown);
@@ -143,7 +145,8 @@ export const SelectableTimelineRow = React.memo(function SelectableTimelineRow({
       tabIndex={isInteractive ? 0 : -1}
       aria-disabled={!isInteractive}
       className={cn(
-        "group/cell relative block w-full h-[56px] rounded-md border-t border-border/70 transition-colors",
+        "group/cell relative block w-full rounded-md border-t border-border/50 transition-colors",
+        compact ? "h-[48px]" : "h-[56px]",
         "appearance-none",
         "bg-card",
         isInteractive &&

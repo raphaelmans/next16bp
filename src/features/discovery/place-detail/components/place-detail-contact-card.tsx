@@ -16,23 +16,6 @@ type PlaceDetailContactCardProps = {
   onCopyViber?: () => void;
 };
 
-const EMAIL_PATTERN = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
-
-function stripSourceMarkers(value: string): string {
-  if (!value) return "";
-
-  const withoutSource = value.replace(
-    /(?:^|\s*\|\s*)Source:\s*https?:\/\/\S+/gi,
-    "",
-  );
-
-  return withoutSource
-    .replace(/\s*\|\s*\|\s*/g, " | ")
-    .replace(/^\s*\|\s*/, "")
-    .replace(/\s*\|\s*$/, "")
-    .trim();
-}
-
 export function PlaceDetailContactCard({
   hasContactDetail,
   contactDetail,
@@ -43,21 +26,6 @@ export function PlaceDetailContactCard({
   onCopyPhone,
   onCopyViber,
 }: PlaceDetailContactCardProps) {
-  const otherContactInfo = stripSourceMarkers(
-    contactDetail?.otherContactInfo?.trim() ?? "",
-  );
-  const emailMatch = otherContactInfo.match(EMAIL_PATTERN);
-  const contactEmail = emailMatch?.[0] ?? "";
-  const otherWithoutEmail = contactEmail
-    ? otherContactInfo
-        .replace(/email\s*:\s*/i, "")
-        .replace(contactEmail, "")
-        .replace(/\s*\|\s*\|\s*/g, " | ")
-        .replace(/^\s*\|\s*/, "")
-        .replace(/\s*\|\s*$/, "")
-        .trim()
-    : otherContactInfo;
-
   return (
     <Card>
       <CardHeader>
@@ -159,21 +127,10 @@ export function PlaceDetailContactCard({
             </div>
           </div>
         )}
-        {contactEmail && (
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span className="text-muted-foreground">Email</span>
-            <a
-              href={`mailto:${contactEmail}`}
-              className="inline-flex items-center gap-1 text-accent hover:underline"
-            >
-              {contactEmail}
-            </a>
-          </div>
-        )}
-        {otherWithoutEmail && (
+        {contactDetail?.otherContactInfo && (
           <div className="space-y-1">
             <span className="text-muted-foreground">Other</span>
-            <p className="text-sm">{otherWithoutEmail}</p>
+            <p className="text-sm">{contactDetail.otherContactInfo}</p>
           </div>
         )}
       </CardContent>

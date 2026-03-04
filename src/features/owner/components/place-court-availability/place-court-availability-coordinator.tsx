@@ -1,12 +1,10 @@
 "use client";
 
-import { TZDate } from "@date-fns/tz";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addDays, addMinutes, addMonths, endOfMonth } from "date-fns";
+import { addDays, addMinutes } from "date-fns";
 import debounce from "debounce";
 import {
   CalendarIcon,
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
   MousePointerClick,
@@ -36,7 +34,6 @@ import {
 } from "@/common/time-zone";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
-import { MobileDateStrip } from "@/components/kudos/mobile-date-strip";
 import { RangeSelectionProvider } from "@/components/kudos/range-selection";
 import { AppShell } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -44,12 +41,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/ui/page-header";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -100,6 +93,7 @@ import {
   parseDateTimeInput,
   type ReservationItem,
   type StudioView,
+  COMPACT_TIMELINE_ROW_HEIGHT,
   TIMELINE_ROW_HEIGHT,
 } from "@/features/owner/components/booking-studio/types";
 import { useIs2xlUp } from "@/features/owner/components/booking-studio/use-is-2xl-up";
@@ -230,25 +224,7 @@ function OwnerCourtAvailabilityInner({
     navigateWeek,
   } = useBookingStudioViewState({
     timeZone: placeTimeZone,
-    forceView: is2xlUp ? undefined : "day",
   });
-
-  const navigateMonth = React.useCallback(
-    (direction: 1 | -1) => {
-      const current = getZonedDayRangeFromDayKey(dayKey, placeTimeZone).start;
-      const targetMonth = addMonths(current, direction);
-      const lastDay = endOfMonth(targetMonth);
-      const targetDay = Math.min(current.getDate(), lastDay.getDate());
-      const targetDate = new TZDate(
-        targetMonth.getFullYear(),
-        targetMonth.getMonth(),
-        targetDay,
-        placeTimeZone,
-      );
-      setDayKeyParam(getZonedDayKey(targetDate, placeTimeZone));
-    },
-    [dayKey, placeTimeZone, setDayKeyParam],
-  );
 
   // Store reads
   const calendarMonth = useBookingStudio((s) => s.calendarMonth);
@@ -439,6 +415,10 @@ function OwnerCourtAvailabilityInner({
     [activeReservations, dayKey, hours, placeTimeZone, selectedDayStart],
   );
 
+  const weekRowHeight = is2xlUp
+    ? TIMELINE_ROW_HEIGHT
+    : COMPACT_TIMELINE_ROW_HEIGHT;
+
   // Week view timeline items (blocks mapped by day key)
   const weekTimelineBlocksByDayKey = React.useMemo(() => {
     if (!isWeekView) {
@@ -449,8 +429,9 @@ function OwnerCourtAvailabilityInner({
       weekDayKeys,
       timeZone: placeTimeZone,
       hours,
+      rowHeight: weekRowHeight,
     });
-  }, [activeBlocks, hours, isWeekView, placeTimeZone, weekDayKeys]);
+  }, [activeBlocks, hours, isWeekView, placeTimeZone, weekDayKeys, weekRowHeight]);
 
   const weekTimelineReservationsByDayKey = React.useMemo(() => {
     if (!isWeekView) {
@@ -461,8 +442,9 @@ function OwnerCourtAvailabilityInner({
       weekDayKeys,
       timeZone: placeTimeZone,
       hours,
+      rowHeight: weekRowHeight,
     });
-  }, [activeReservations, hours, isWeekView, placeTimeZone, weekDayKeys]);
+  }, [activeReservations, hours, isWeekView, placeTimeZone, weekDayKeys, weekRowHeight]);
 
   // Mutations
   const utils = useModOwnerCourtStudioTransport();
@@ -1371,7 +1353,7 @@ function OwnerCourtAvailabilityInner({
               onValueChange={(value) => {
                 if (value) setViewParam(value as StudioView);
               }}
-              className="hidden 2xl:flex"
+              className="flex"
             >
               <ToggleGroupItem value="day" aria-label="Day view">
                 Day
@@ -1406,7 +1388,7 @@ function OwnerCourtAvailabilityInner({
       />
 
       <AnimatePresence mode="wait" initial={false}>
-        {is2xlUp && isWeekView ? (
+        {isWeekView ? (
           <motion.div
             key="week"
             initial={{ opacity: 0, scale: 0.98 }}
@@ -1565,31 +1547,74 @@ function OwnerCourtAvailabilityInner({
 
               {/* Week timeline */}
               <Card>
-                <CardContent className="space-y-4 p-6">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
+                <CardContent className="space-y-4 p-4 2xl:p-6">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-1 2xl:gap-2">
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
+                        className="h-8 w-8 2xl:h-9 2xl:w-9"
                         onClick={() => navigateWeek(-1)}
                       >
                         <ChevronLeft className="h-4 w-4" />
                       </Button>
-                      <h2 className="text-lg font-heading font-semibold">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className="gap-1.5 text-sm font-heading font-semibold 2xl:text-lg 2xl:pointer-events-none"
+                        onClick={() => setMobileCalendarOpen(true)}
+                      >
+                        <CalendarIcon className="h-3.5 w-3.5 2xl:hidden" />
                         {weekLabel}
-                      </h2>
+                      </Button>
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
+                        className="h-8 w-8 2xl:h-9 2xl:w-9"
                         onClick={() => navigateWeek(1)}
                       >
                         <ChevronRight className="h-4 w-4" />
                       </Button>
                     </div>
-                    <Badge variant="outline">Snap: 60m</Badge>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="2xl:hidden"
+                        onClick={handleMobileToday}
+                      >
+                        Today
+                      </Button>
+                      <Badge variant="outline" className="hidden 2xl:inline-flex">Snap: 60m</Badge>
+                    </div>
                   </div>
+
+                  <Dialog
+                    open={mobileCalendarOpen}
+                    onOpenChange={setMobileCalendarOpen}
+                  >
+                    <DialogContent className="w-auto p-0 sm:max-w-fit 2xl:hidden">
+                      <DialogTitle className="sr-only">
+                        Select date
+                      </DialogTitle>
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(date) => {
+                          if (date) {
+                            handleMobileDateSelect(date);
+                            setMobileCalendarOpen(false);
+                          }
+                        }}
+                        month={calendarMonth}
+                        onMonthChange={setCalendarMonth}
+                        timeZone={placeTimeZone}
+                      />
+                    </DialogContent>
+                  </Dialog>
 
                   {blocksQuery.error ? (
                     <Alert variant="destructive">
@@ -1602,12 +1627,23 @@ function OwnerCourtAvailabilityInner({
                       </AlertDescription>
                     </Alert>
                   ) : (
-                    <div className="relative overflow-x-auto">
+                    <div
+                      className={cn(
+                        "relative",
+                        is2xlUp
+                          ? "overflow-x-auto"
+                          : "overflow-y-auto",
+                      )}
+                      style={
+                        is2xlUp ? undefined : { maxHeight: "calc(70vh - 80px)" }
+                      }
+                    >
                       <div
                         className="grid gap-x-0"
                         style={{
-                          gridTemplateColumns:
-                            "72px repeat(7, minmax(100px, 1fr))",
+                          gridTemplateColumns: is2xlUp
+                            ? "72px repeat(7, minmax(100px, 1fr))"
+                            : "36px repeat(7, 1fr)",
                         }}
                       >
                         <div />
@@ -1624,7 +1660,10 @@ function OwnerCourtAvailabilityInner({
                               key={`header-${wdk}`}
                               type="button"
                               className={cn(
-                                "border-b px-1 py-2 text-center text-xs font-semibold transition-colors",
+                                "border-b border-border/50 text-center font-semibold transition-colors",
+                                is2xlUp
+                                  ? "px-1 py-2 text-xs"
+                                  : "px-0.5 py-1.5 text-[9px]",
                                 isToday && "text-primary",
                                 isSelectedDay && "bg-primary/5",
                                 isPastDay && "text-muted-foreground/60",
@@ -1634,18 +1673,27 @@ function OwnerCourtAvailabilityInner({
                                 setViewParam("day");
                               }}
                             >
-                              <div>
+                              <div
+                                className={
+                                  is2xlUp ? undefined : "text-[9px] leading-tight"
+                                }
+                              >
                                 {formatInTimeZone(
                                   wdStart,
                                   placeTimeZone,
-                                  "EEE",
+                                  is2xlUp ? "EEE" : "EEEEEE",
                                 )}
                               </div>
                               <div
                                 className={cn(
-                                  "mt-0.5 text-lg",
+                                  "font-heading font-bold",
+                                  is2xlUp
+                                    ? "mt-0.5 text-lg"
+                                    : "mt-0 text-xs",
                                   isToday &&
-                                    "inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground",
+                                    (is2xlUp
+                                      ? "inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground"
+                                      : "inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground"),
                                 )}
                               >
                                 {formatInTimeZone(wdStart, placeTimeZone, "d")}
@@ -1658,25 +1706,33 @@ function OwnerCourtAvailabilityInner({
                       <div
                         className="grid gap-x-0"
                         style={{
-                          gridTemplateColumns:
-                            "72px repeat(7, minmax(100px, 1fr))",
+                          gridTemplateColumns: is2xlUp
+                            ? "72px repeat(7, minmax(100px, 1fr))"
+                            : "36px repeat(7, 1fr)",
                         }}
                       >
                         <div>
                           {hours.map((hour) => (
                             <div
                               key={`week-label-${hour}`}
-                              className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
-                            >
-                              {formatInTimeZone(
-                                buildDateFromDayKey(
-                                  dayKey,
-                                  hour * 60,
-                                  placeTimeZone,
-                                ),
-                                placeTimeZone,
-                                "h a",
+                              className={cn(
+                                "flex items-start font-mono text-right",
+                                is2xlUp
+                                  ? "h-[56px] pt-2 pr-2 text-xs text-muted-foreground"
+                                  : "h-[48px] pt-0.5 pr-1.5 text-[10px] text-muted-foreground/70",
                               )}
+                            >
+                              <span className="w-full">
+                                {formatInTimeZone(
+                                  buildDateFromDayKey(
+                                    dayKey,
+                                    hour * 60,
+                                    placeTimeZone,
+                                  ),
+                                  placeTimeZone,
+                                  "h a",
+                                )}
+                              </span>
                             </div>
                           ))}
                         </div>
@@ -1714,6 +1770,7 @@ function OwnerCourtAvailabilityInner({
                             }
                             onCommitRange={handleWeekCommitRange}
                             onClearRange={handleWeekClearRange}
+                            compact={!is2xlUp}
                           />
                         ))}
                       </div>
@@ -1883,95 +1940,79 @@ function OwnerCourtAvailabilityInner({
               {/* Center — timeline */}
               <Card>
                 <CardContent className="space-y-4 p-6 pr-8 pb-6 lg:pr-6 lg:pb-6">
-                  {/* Mobile header */}
-                  <div className="space-y-3 2xl:hidden">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => navigateMonth(-1)}
-                        >
-                          <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        <Popover
-                          open={mobileCalendarOpen}
-                          onOpenChange={setMobileCalendarOpen}
-                        >
-                          <PopoverTrigger asChild>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              className="gap-1.5 text-sm font-medium min-w-0"
-                            >
-                              <CalendarIcon className="h-3.5 w-3.5" />
-                              <span className="truncate">{weekLabel}</span>
-                              <ChevronDown
-                                className={cn(
-                                  "h-3.5 w-3.5 transition-transform",
-                                  mobileCalendarOpen && "rotate-180",
-                                )}
-                              />
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={selectedDate}
-                              onSelect={(date) => {
-                                if (date) {
-                                  setDayKeyParam(
-                                    getZonedDayKey(date, placeTimeZone),
-                                  );
-                                  setMobileCalendarOpen(false);
-                                }
-                              }}
-                              month={calendarMonth}
-                              onMonthChange={setCalendarMonth}
-                              timeZone={placeTimeZone}
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => navigateMonth(1)}
-                        >
-                          <ChevronRight className="h-4 w-4" />
-                        </Button>
-                      </div>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-1 2xl:gap-2">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 2xl:hidden"
+                        onClick={() => {
+                          const prev = addDays(selectedDate, -1);
+                          handleMobileDateSelect(prev);
+                        }}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className="gap-1.5 text-sm font-heading font-semibold 2xl:text-lg 2xl:pointer-events-none"
+                        onClick={() => setMobileCalendarOpen(true)}
+                      >
+                        <CalendarIcon className="h-3.5 w-3.5 2xl:hidden" />
+                        {selectedDayLabel}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 2xl:hidden"
+                        onClick={() => {
+                          const next = addDays(selectedDate, 1);
+                          handleMobileDateSelect(next);
+                        }}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex items-center gap-2">
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
+                        className="2xl:hidden"
                         onClick={handleMobileToday}
-                        className="shrink-0"
                       >
                         Today
                       </Button>
+                      <Badge variant="outline" className="hidden 2xl:inline-flex">Snap: 60m</Badge>
                     </div>
-                    <MobileDateStrip
-                      selectedDate={selectedDate}
-                      onDateSelect={handleMobileDateSelect}
-                      timeZone={placeTimeZone}
-                      todayDate={todayDate}
-                    />
                   </div>
 
-                  {/* Desktop header */}
-                  <div className="hidden 2xl:flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <h2 className="text-lg font-heading font-semibold">
-                        Day Timeline
-                      </h2>
-                      <p className="text-sm text-muted-foreground">
-                        {selectedDayLabel}
-                      </p>
-                    </div>
-                    <Badge variant="outline">Snap: 60m</Badge>
-                  </div>
+                  <Dialog
+                    open={mobileCalendarOpen}
+                    onOpenChange={setMobileCalendarOpen}
+                  >
+                    <DialogContent className="w-auto p-0 sm:max-w-fit 2xl:hidden">
+                      <DialogTitle className="sr-only">
+                        Select date
+                      </DialogTitle>
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(date) => {
+                          if (date) {
+                            handleMobileDateSelect(date);
+                            setMobileCalendarOpen(false);
+                          }
+                        }}
+                        month={calendarMonth}
+                        onMonthChange={setCalendarMonth}
+                        timeZone={placeTimeZone}
+                      />
+                    </DialogContent>
+                  </Dialog>
 
                   {blocksQuery.error ? (
                     <Alert variant="destructive">

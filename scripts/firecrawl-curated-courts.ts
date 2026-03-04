@@ -1450,7 +1450,7 @@ function buildPickleheadsFallbackRows(
         instagram_url: "",
         viber_contact: "",
         website_url: url,
-        other_contact_info: `Source: ${url}`,
+        other_contact_info: "",
         amenities: "",
         courts: `${sportSlug}|`,
         photo_urls: "",

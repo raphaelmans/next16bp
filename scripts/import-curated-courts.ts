@@ -12,6 +12,7 @@
  * Notes:
  *   - country is forced to "PH" (any provided value is ignored)
  *   - time_zone is forced to "Asia/Manila" (any provided value is ignored)
+ *   - other_contact_info is intentionally ignored for curated imports
  *   - duplicates are detected by (name, city, province) case-insensitive
  *   - duplicate checks only consider existing CURATED places
  *   - photo_urls may be comma- or newline-separated
@@ -342,7 +343,8 @@ function parseRow(
   }
 
   const viberInfo = getValue(row, headerMap, "viber_contact");
-  const otherContactInfo = getValue(row, headerMap, "other_contact_info");
+  // Keep curated imports free of scraped provenance/contact blobs.
+  const otherContactInfo = "";
 
   const amenitiesRaw = parseList(getValue(row, headerMap, "amenities"), ";");
   const amenities = Array.from(

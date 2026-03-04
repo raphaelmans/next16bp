@@ -731,7 +731,8 @@ function toProvisionalRowWithSource(value: unknown): RowWithSource | null {
     instagram_url: normalizeString(rowObject.instagram_url),
     viber_contact: normalizeString(rowObject.viber_contact),
     website_url: normalizeString(rowObject.website_url),
-    other_contact_info: normalizeString(rowObject.other_contact_info),
+    // Intentionally blank for curated migration output.
+    other_contact_info: "",
     amenities: normalizeString(rowObject.amenities),
     courts: normalizeString(rowObject.courts),
     photo_urls: normalizeString(rowObject.photo_urls),
@@ -954,9 +955,8 @@ async function main() {
         normalizeString(normalized.viberContact) || rowEntry.row.viber_contact,
       website_url:
         sanitizeUrlValue(normalized.websiteUrl) || rowEntry.row.website_url,
-      other_contact_info:
-        normalizeString(normalized.otherContactInfo) ||
-        rowEntry.row.other_contact_info,
+      // Intentionally blank for curated migration output.
+      other_contact_info: "",
       amenities: amenities.join(";"),
       courts: courts.join(";"),
       photo_urls: photoUrls.join(","),

@@ -120,7 +120,7 @@ export function AvailabilityStudioToolbar({
             onValueChange={(nextView) => {
               if (nextView) onViewChange(nextView as StudioView);
             }}
-            className="hidden 2xl:flex"
+            className="flex"
           >
             <ToggleGroupItem value="day" aria-label="Day view">
               Day

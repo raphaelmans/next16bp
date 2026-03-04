@@ -1,0 +1,53 @@
+{
+  "generatedAt": "2026-03-04T14:40:28.510Z",
+  "inputPath": "scripts/output/pickleheads-curated-courts.raw.json",
+  "outputPath": "scripts/output/pickleheads-curated-courts.normalized.csv",
+  "unresolvedOutputPath": "scripts/output/pickleheads-curated-courts.unresolved.csv",
+  "reportOutputPath": "scripts/output/pickleheads-curated-courts.normalize-report.json",
+  "model": "gpt-5-mini",
+  "sportSlug": "pickleball",
+  "batchSize": 15,
+  "totalRawRecords": 58,
+  "acceptedRows": 54,
+  "unresolvedRows": 4,
+  "duplicateRows": 0,
+  "unresolved": [
+    {
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/philippines/the-riviera-sports-and-country-club-inc",
+      "name": "The Riviera Sports And Country Club Inc",
+      "address": "Philippines, Calabarzon, Philippines",
+      "city": "Philippines",
+      "province": "Calabarzon",
+      "reason": "City value is 'Philippines' (not a city) and province is given as region 'Calabarzon' — cannot determine which province (Cavite, Laguna, Batangas, Rizal, or Quezon) this venue belongs to.",
+      "confidence": "low"
+    },
+    {
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/philippines/violago-compound",
+      "name": "Violago Compound",
+      "address": "Philippines, Central Luzon, Philippines",
+      "city": "Philippines",
+      "province": "Central Luzon",
+      "reason": "City value is 'Philippines' (ambiguous) and no matching city found in PH location catalog for 'Violago Compound' / provided data. Province given as region 'Central Luzon' but specific province could not be determined from the source data.",
+      "confidence": "low"
+    },
+    {
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/philippines/the-pickleball-hideout",
+      "name": "The Pickleball Hideout",
+      "address": "Philippines, Western Visayas, Philippines",
+      "city": "Philippines",
+      "province": "Western Visayas",
+      "reason": "city value 'Philippines' is not a valid PH city and only region 'Western Visayas' is provided — cannot determine canonical province/city.",
+      "confidence": "low"
+    },
+    {
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/philippines/dink-yard",
+      "name": "Dink Yard",
+      "address": "Philippines, Central Visayas, Philippines",
+      "city": "Philippines",
+      "province": "Central Visayas",
+      "reason": "city value 'Philippines' is not a valid PH city and only region 'Central Visayas' is provided — cannot determine canonical province/city.",
+      "confidence": "low"
+    }
+  ],
+  "duplicates": []
+}

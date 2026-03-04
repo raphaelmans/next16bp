@@ -10,6 +10,7 @@ import {
 export const DEFAULT_START_HOUR = 6;
 export const DEFAULT_END_HOUR = 22;
 export const TIMELINE_ROW_HEIGHT = 56;
+export const COMPACT_TIMELINE_ROW_HEIGHT = 48;
 
 export const generateOptimisticId = () =>
   `optimistic:${Date.now()}:${Math.random().toString(36).slice(2, 9)}`;

@@ -137,8 +137,9 @@ const getTimelineSegment = (options: {
   dayStart: Date;
   timeZone: string;
   hours: number[];
+  rowHeight?: number;
 }) => {
-  const { startTime, endTime, dayKey, dayStart, timeZone, hours } = options;
+  const { startTime, endTime, dayKey, dayStart, timeZone, hours, rowHeight = TIMELINE_ROW_HEIGHT } = options;
   const dayEndExclusive = addDays(dayStart, 1);
 
   if (startTime >= dayEndExclusive || endTime <= dayStart) {
@@ -161,10 +162,10 @@ const getTimelineSegment = (options: {
   // If end falls in a gap hour, clamp to the end of the grid.
   const clampedEndPos = endPos ?? hours.length;
 
-  const height = (clampedEndPos - startPos) * TIMELINE_ROW_HEIGHT;
+  const height = (clampedEndPos - startPos) * rowHeight;
   if (height <= 0) return null;
 
-  const topOffset = startPos * TIMELINE_ROW_HEIGHT;
+  const topOffset = startPos * rowHeight;
   return { topOffset, height };
 };
 
@@ -178,8 +179,9 @@ export const buildTimelineBlocksForDay = (options: {
   dayStart: Date;
   timeZone: string;
   hours: number[];
+  rowHeight?: number;
 }) => {
-  const { blocks, dayKey, dayStart, timeZone, hours } = options;
+  const { blocks, dayKey, dayStart, timeZone, hours, rowHeight } = options;
 
   return blocks
     .map((block) => {
@@ -190,6 +192,7 @@ export const buildTimelineBlocksForDay = (options: {
         dayStart,
         timeZone,
         hours,
+        rowHeight,
       });
       return segment ? { block, ...segment } : null;
     })
@@ -202,8 +205,9 @@ export const buildTimelineReservationsForDay = (options: {
   dayStart: Date;
   timeZone: string;
   hours: number[];
+  rowHeight?: number;
 }) => {
-  const { reservations, dayKey, dayStart, timeZone, hours } = options;
+  const { reservations, dayKey, dayStart, timeZone, hours, rowHeight } = options;
 
   return reservations
     .map((reservation) => {
@@ -214,6 +218,7 @@ export const buildTimelineReservationsForDay = (options: {
         dayStart,
         timeZone,
         hours,
+        rowHeight,
       });
       return segment ? { reservation, ...segment } : null;
     })
@@ -229,8 +234,9 @@ export const buildWeekTimelineBlocksByDayKey = (options: {
   weekDayKeys: string[];
   timeZone: string;
   hours: number[];
+  rowHeight?: number;
 }) => {
-  const { blocks, weekDayKeys, timeZone, hours } = options;
+  const { blocks, weekDayKeys, timeZone, hours, rowHeight } = options;
   const byDayKey = new Map<string, TimelineBlockSegment[]>();
 
   for (const dayKey of weekDayKeys) {
@@ -241,6 +247,7 @@ export const buildWeekTimelineBlocksByDayKey = (options: {
       dayStart,
       timeZone,
       hours,
+      rowHeight,
     });
     byDayKey.set(dayKey, items);
   }
@@ -253,8 +260,9 @@ export const buildWeekTimelineReservationsByDayKey = (options: {
   weekDayKeys: string[];
   timeZone: string;
   hours: number[];
+  rowHeight?: number;
 }) => {
-  const { reservations, weekDayKeys, timeZone, hours } = options;
+  const { reservations, weekDayKeys, timeZone, hours, rowHeight } = options;
   const byDayKey = new Map<string, TimelineReservationSegment[]>();
 
   for (const dayKey of weekDayKeys) {
@@ -265,6 +273,7 @@ export const buildWeekTimelineReservationsByDayKey = (options: {
       dayStart,
       timeZone,
       hours,
+      rowHeight,
     });
     byDayKey.set(dayKey, items);
   }
@@ -279,8 +288,9 @@ export const buildDraftTimelineBlocksForDay = (options: {
   timeZone: string;
   hours: number[];
   courtId?: string;
+  rowHeight?: number;
 }) => {
-  const { draftRows, dayKey, dayStart, timeZone, hours, courtId } = options;
+  const { draftRows, dayKey, dayStart, timeZone, hours, courtId, rowHeight } = options;
 
   return draftRows
     .filter((row) => row.status !== "COMMITTED" && row.status !== "SKIPPED")
@@ -294,6 +304,7 @@ export const buildDraftTimelineBlocksForDay = (options: {
         dayStart,
         timeZone,
         hours,
+        rowHeight,
       });
       return segment ? { row, ...segment } : null;
     })
@@ -306,8 +317,9 @@ export const buildDraftWeekTimelineBlocksByDayKey = (options: {
   timeZone: string;
   hours: number[];
   courtId?: string;
+  rowHeight?: number;
 }) => {
-  const { draftRows, weekDayKeys, timeZone, hours, courtId } = options;
+  const { draftRows, weekDayKeys, timeZone, hours, courtId, rowHeight } = options;
   const byDayKey = new Map<string, DraftTimelineSegment[]>();
 
   for (const dayKey of weekDayKeys) {
@@ -319,6 +331,7 @@ export const buildDraftWeekTimelineBlocksByDayKey = (options: {
       timeZone,
       hours,
       courtId,
+      rowHeight,
     });
     byDayKey.set(dayKey, items);
   }

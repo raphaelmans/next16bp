@@ -19,7 +19,7 @@ import { SelectableTimelineRow } from "./selectable-timeline-row";
 import { TimelineBlockItem } from "./timeline-block-item";
 import { TimelineReservationItem } from "./timeline-reservation-item";
 import type { CourtBlockItem, DraftRowItem, ReservationItem } from "./types";
-import { TIMELINE_ROW_HEIGHT } from "./types";
+import { COMPACT_TIMELINE_ROW_HEIGHT, TIMELINE_ROW_HEIGHT } from "./types";
 
 function TapHoldHint() {
   const hasSelection = useRangeSelection(
@@ -53,6 +53,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   committedRange,
   onCommitRange,
   onClearRange,
+  compact,
 }: {
   dayKey: string;
   hours: number[];
@@ -92,21 +93,24 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   committedRange: { startIdx: number; endIdx: number } | null;
   onCommitRange: (dayKey: string, startIdx: number, endIdx: number) => void;
   onClearRange?: () => void;
+  compact?: boolean;
 }) {
+  const rowHeight = compact ? COMPACT_TIMELINE_ROW_HEIGHT : TIMELINE_ROW_HEIGHT;
+
   const selectionConfig = React.useMemo<RangeSelectionConfig>(() => {
     // Derive blocked indices from the day-clipped segment positions
     // (topOffset/height already handle overnight boundaries correctly)
     const blockedHourIndices = new Set<number>();
     for (const { topOffset, height } of blocks) {
-      const startIdx = Math.floor(topOffset / TIMELINE_ROW_HEIGHT);
-      const endIdx = Math.ceil((topOffset + height) / TIMELINE_ROW_HEIGHT);
+      const startIdx = Math.floor(topOffset / rowHeight);
+      const endIdx = Math.ceil((topOffset + height) / rowHeight);
       for (let i = startIdx; i < endIdx; i++) {
         blockedHourIndices.add(i);
       }
     }
     for (const { topOffset, height } of reservations) {
-      const startIdx = Math.floor(topOffset / TIMELINE_ROW_HEIGHT);
-      const endIdx = Math.ceil((topOffset + height) / TIMELINE_ROW_HEIGHT);
+      const startIdx = Math.floor(topOffset / rowHeight);
+      const endIdx = Math.ceil((topOffset + height) / rowHeight);
       for (let i = startIdx; i < endIdx; i++) {
         blockedHourIndices.add(i);
       }
@@ -166,6 +170,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
     onClearRange,
     onCommitRange,
     reservations,
+    rowHeight,
     timeZone,
   ]);
 
@@ -176,7 +181,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
     >
       <div
         className={cn(
-          "relative border-l border-border/70",
+          "relative border-l border-border/50",
           isPastDay && "bg-muted/40",
         )}
       >
@@ -191,6 +196,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
               cellIndex={hourIndex}
               placing={placing}
               onPlace={onPlace}
+              compact={compact}
             />
           ))}
         </div>

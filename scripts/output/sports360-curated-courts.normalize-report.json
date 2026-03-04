@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-03-04T14:35:36.312Z",
+  "inputPath": "scripts/output/sports360-curated-courts.raw.json",
+  "outputPath": "scripts/output/sports360-curated-courts.normalized.csv",
+  "unresolvedOutputPath": "scripts/output/sports360-curated-courts.unresolved.csv",
+  "reportOutputPath": "scripts/output/sports360-curated-courts.normalize-report.json",
+  "model": "gpt-5-mini",
+  "sportSlug": "pickleball",
+  "batchSize": 15,
+  "totalRawRecords": 92,
+  "acceptedRows": 89,
+  "unresolvedRows": 3,
+  "duplicateRows": 0,
+  "unresolved": [
+    {
+      "sourceUrl": "https://app.sports360.ph/sportshub/Sports360%20Arena",
+      "name": "Sports360 Arena",
+      "address": "sports360",
+      "city": "sports360",
+      "province": "sports360",
+      "reason": "Province and city fields contain the string 'sports360' and cannot be mapped to a canonical Philippine province/city.",
+      "confidence": "low"
+    },
+    {
+      "sourceUrl": "https://app.sports360.ph/sportshub/002%20Pickle%20Club",
+      "name": "002 Pickle Club",
+      "address": "mia sports center",
+      "city": "mia sports center",
+      "province": "mia sports center",
+      "reason": "Province and city fields contain 'mia sports center' (likely a venue name), not a canonical Philippine province/city.",
+      "confidence": "low"
+    },
+    {
+      "sourceUrl": "https://app.sports360.ph/sportshub/The%20Dink%20Zone",
+      "name": "The Dink Zone",
+      "address": "3rd floor, EB Town Center",
+      "city": "3rd floor",
+      "province": "EB Town Center",
+      "reason": "Could not map province/city: city='3rd floor' and province='EB Town Center' are not recognized in the location catalog; ambiguous/missing locality information.",
+      "confidence": "low"
+    }
+  ],
+  "duplicates": []
+}

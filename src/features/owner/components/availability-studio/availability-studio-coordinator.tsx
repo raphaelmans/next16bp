@@ -5,7 +5,6 @@ import { addDays, addMinutes, differenceInMinutes } from "date-fns";
 import debounce from "debounce";
 import {
   CalendarIcon,
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
   MousePointerClick,
@@ -29,7 +28,6 @@ import {
 } from "@/common/time-zone";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
-import { MobileDateStrip } from "@/components/kudos/mobile-date-strip";
 import { RangeSelectionProvider } from "@/components/kudos/range-selection";
 import { AppShell } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -97,9 +95,11 @@ import {
   type GuestBookingFormValues,
   generateOptimisticId,
   guestBookingFormSchema,
+  COMPACT_TIMELINE_ROW_HEIGHT,
   isOptimisticBlockId,
   parseDateTimeInput,
   type ReservationItem,
+  TIMELINE_ROW_HEIGHT,
 } from "@/features/owner/components/booking-studio/types";
 import { useIs2xlUp } from "@/features/owner/components/booking-studio/use-is-2xl-up";
 import { useManageBlock } from "@/features/owner/components/booking-studio/use-manage-block";
@@ -189,7 +189,6 @@ function OwnerAvailabilityStudioInner() {
     navigateWeek,
   } = useBookingStudioViewState({
     timeZone: placeTimeZone,
-    forceView: is2xlUp ? undefined : "day",
   });
   const [jobIdParam, setJobIdParam] = useQueryState(
     "jobId",
@@ -440,6 +439,10 @@ function OwnerAvailabilityStudioInner() {
     ],
   );
 
+  const weekRowHeight = is2xlUp
+    ? TIMELINE_ROW_HEIGHT
+    : COMPACT_TIMELINE_ROW_HEIGHT;
+
   const weekTimelineBlocksByDayKey = React.useMemo(() => {
     if (!isWeekView) {
       return new Map();
@@ -449,8 +452,9 @@ function OwnerAvailabilityStudioInner() {
       weekDayKeys,
       timeZone: placeTimeZone,
       hours,
+      rowHeight: weekRowHeight,
     });
-  }, [activeBlocks, isWeekView, placeTimeZone, hours, weekDayKeys]);
+  }, [activeBlocks, isWeekView, placeTimeZone, hours, weekDayKeys, weekRowHeight]);
 
   const timelineReservations = React.useMemo(
     () =>
@@ -473,8 +477,9 @@ function OwnerAvailabilityStudioInner() {
       weekDayKeys,
       timeZone: placeTimeZone,
       hours,
+      rowHeight: weekRowHeight,
     });
-  }, [activeReservations, isWeekView, placeTimeZone, hours, weekDayKeys]);
+  }, [activeReservations, isWeekView, placeTimeZone, hours, weekDayKeys, weekRowHeight]);
 
   const draftTimelineBlocks = React.useMemo(
     () =>
@@ -509,6 +514,7 @@ function OwnerAvailabilityStudioInner() {
       timeZone: placeTimeZone,
       hours,
       courtId,
+      rowHeight: weekRowHeight,
     });
   }, [
     courtId,
@@ -518,6 +524,7 @@ function OwnerAvailabilityStudioInner() {
     placeTimeZone,
     hours,
     weekDayKeys,
+    weekRowHeight,
   ]);
 
   const utils = useModOwnerCourtStudioTransport();
@@ -1910,7 +1917,7 @@ function OwnerAvailabilityStudioInner() {
         />
 
         <AnimatePresence mode="wait" initial={false}>
-          {is2xlUp && isWeekView ? (
+          {isWeekView ? (
             <motion.div
               key="week"
               initial={{ opacity: 0, scale: 0.98 }}
@@ -2103,31 +2110,74 @@ function OwnerAvailabilityStudioInner() {
                 </div>
 
                 <Card>
-                  <CardContent className="space-y-4 p-6">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div className="flex items-center gap-2">
+                  <CardContent className="space-y-4 p-4 2xl:p-6">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-1 2xl:gap-2">
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
+                          className="h-8 w-8 2xl:h-9 2xl:w-9"
                           onClick={() => navigateWeek(-1)}
                         >
                           <ChevronLeft className="h-4 w-4" />
                         </Button>
-                        <h2 className="text-lg font-heading font-semibold">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="gap-1.5 text-sm font-heading font-semibold 2xl:text-lg 2xl:pointer-events-none"
+                          onClick={() => setMobileCalendarOpen(true)}
+                        >
+                          <CalendarIcon className="h-3.5 w-3.5 2xl:hidden" />
                           {weekLabel}
-                        </h2>
+                        </Button>
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
+                          className="h-8 w-8 2xl:h-9 2xl:w-9"
                           onClick={() => navigateWeek(1)}
                         >
                           <ChevronRight className="h-4 w-4" />
                         </Button>
                       </div>
-                      <Badge variant="outline">Snap: 60m</Badge>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="2xl:hidden"
+                          onClick={handleMobileToday}
+                        >
+                          Today
+                        </Button>
+                        <Badge variant="outline" className="hidden 2xl:inline-flex">Snap: 60m</Badge>
+                      </div>
                     </div>
+
+                    <Dialog
+                      open={mobileCalendarOpen}
+                      onOpenChange={setMobileCalendarOpen}
+                    >
+                      <DialogContent className="w-auto p-0 sm:max-w-fit 2xl:hidden">
+                        <DialogTitle className="sr-only">
+                          Select date
+                        </DialogTitle>
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={(date) => {
+                            if (date) {
+                              handleMobileDateSelect(date);
+                              setMobileCalendarOpen(false);
+                            }
+                          }}
+                          month={calendarMonth}
+                          onMonthChange={setCalendarMonth}
+                          timeZone={placeTimeZone}
+                        />
+                      </DialogContent>
+                    </Dialog>
 
                     {!placeId || !courtId ? (
                       <Alert>
@@ -2147,12 +2197,23 @@ function OwnerAvailabilityStudioInner() {
                         </AlertDescription>
                       </Alert>
                     ) : (
-                      <div className="relative overflow-x-auto">
+                      <div
+                        className={cn(
+                          "relative",
+                          is2xlUp
+                            ? "overflow-x-auto"
+                            : "overflow-y-auto",
+                        )}
+                        style={
+                          is2xlUp ? undefined : { maxHeight: "calc(70vh - 80px)" }
+                        }
+                      >
                         <div
                           className="grid gap-x-0"
                           style={{
-                            gridTemplateColumns:
-                              "72px repeat(7, minmax(100px, 1fr))",
+                            gridTemplateColumns: is2xlUp
+                              ? "72px repeat(7, minmax(100px, 1fr))"
+                              : "36px repeat(7, 1fr)",
                           }}
                         >
                           <div />
@@ -2169,7 +2230,10 @@ function OwnerAvailabilityStudioInner() {
                                 key={`header-${wdk}`}
                                 type="button"
                                 className={cn(
-                                  "border-b px-1 py-2 text-center text-xs font-semibold transition-colors",
+                                  "border-b border-border/50 text-center font-semibold transition-colors",
+                                  is2xlUp
+                                    ? "px-1 py-2 text-xs"
+                                    : "px-0.5 py-1.5 text-[9px]",
                                   isToday && "text-primary",
                                   isSelectedDay && "bg-primary/5",
                                   isPastDay && "text-muted-foreground/60",
@@ -2179,18 +2243,27 @@ function OwnerAvailabilityStudioInner() {
                                   setViewParam("day");
                                 }}
                               >
-                                <div>
+                                <div
+                                  className={
+                                    is2xlUp ? undefined : "text-[9px] leading-tight"
+                                  }
+                                >
                                   {formatInTimeZone(
                                     wdStart,
                                     placeTimeZone,
-                                    "EEE",
+                                    is2xlUp ? "EEE" : "EEEEEE",
                                   )}
                                 </div>
                                 <div
                                   className={cn(
-                                    "mt-0.5 text-lg",
+                                    "font-heading font-bold",
+                                    is2xlUp
+                                      ? "mt-0.5 text-lg"
+                                      : "mt-0 text-xs",
                                     isToday &&
-                                      "inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground",
+                                      (is2xlUp
+                                        ? "inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground"
+                                        : "inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground"),
                                   )}
                                 >
                                   {formatInTimeZone(
@@ -2207,25 +2280,33 @@ function OwnerAvailabilityStudioInner() {
                         <div
                           className="grid gap-x-0"
                           style={{
-                            gridTemplateColumns:
-                              "72px repeat(7, minmax(100px, 1fr))",
+                            gridTemplateColumns: is2xlUp
+                              ? "72px repeat(7, minmax(100px, 1fr))"
+                              : "36px repeat(7, 1fr)",
                           }}
                         >
                           <div>
                             {hours.map((hour) => (
                               <div
                                 key={`week-label-${hour}`}
-                                className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
-                              >
-                                {formatInTimeZone(
-                                  buildDateFromDayKey(
-                                    dayKey,
-                                    hour * 60,
-                                    placeTimeZone,
-                                  ),
-                                  placeTimeZone,
-                                  "h a",
+                                className={cn(
+                                  "flex items-start font-mono text-right",
+                                  is2xlUp
+                                    ? "h-[56px] pt-2 pr-2 text-xs text-muted-foreground"
+                                    : "h-[48px] pt-0.5 pr-1.5 text-[10px] text-muted-foreground/70",
                                 )}
+                              >
+                                <span className="w-full">
+                                  {formatInTimeZone(
+                                    buildDateFromDayKey(
+                                      dayKey,
+                                      hour * 60,
+                                      placeTimeZone,
+                                    ),
+                                    placeTimeZone,
+                                    "h a",
+                                  )}
+                                </span>
                               </div>
                             ))}
                           </div>
@@ -2259,6 +2340,7 @@ function OwnerAvailabilityStudioInner() {
                               }
                               onCommitRange={handleWeekCommitRange}
                               onClearRange={handleWeekClearRange}
+                              compact={!is2xlUp}
                             />
                           ))}
                         </div>
@@ -2463,78 +2545,79 @@ function OwnerAvailabilityStudioInner() {
 
                 <Card>
                   <CardContent className="space-y-4 p-6 pr-8 pb-6 lg:pr-6 lg:pb-6">
-                    <div className="space-y-3 2xl:hidden">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-1 2xl:gap-2">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 2xl:hidden"
+                          onClick={() => {
+                            const prev = addDays(selectedDate, -1);
+                            handleMobileDateSelect(prev);
+                          }}
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="gap-1.5 text-sm font-heading font-semibold 2xl:text-lg 2xl:pointer-events-none"
+                          onClick={() => setMobileCalendarOpen(true)}
+                        >
+                          <CalendarIcon className="h-3.5 w-3.5 2xl:hidden" />
+                          {selectedDayLabel}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 2xl:hidden"
+                          onClick={() => {
+                            const next = addDays(selectedDate, 1);
+                            handleMobileDateSelect(next);
+                          }}
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </div>
                       <div className="flex items-center gap-2">
                         <Button
                           type="button"
                           variant="outline"
                           size="sm"
-                          className="min-w-0 flex-1 justify-start gap-1.5"
-                          aria-haspopup="dialog"
-                          aria-expanded={mobileCalendarOpen}
-                          onClick={() => setMobileCalendarOpen(true)}
-                        >
-                          <CalendarIcon className="h-3.5 w-3.5" />
-                          <span className="truncate">{weekLabel}</span>
-                          <ChevronDown
-                            aria-hidden="true"
-                            className={cn(
-                              "ml-auto h-3.5 w-3.5 shrink-0 transition-transform",
-                              mobileCalendarOpen && "rotate-180",
-                            )}
-                          />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
+                          className="2xl:hidden"
                           onClick={handleMobileToday}
                         >
                           Today
                         </Button>
+                        <Badge variant="outline" className="hidden 2xl:inline-flex">Snap: 60m</Badge>
                       </div>
-                      <Dialog
-                        open={mobileCalendarOpen}
-                        onOpenChange={setMobileCalendarOpen}
-                      >
-                        <DialogContent className="w-auto p-0 sm:max-w-fit">
-                          <DialogTitle className="sr-only">
-                            Select date
-                          </DialogTitle>
-                          <Calendar
-                            mode="single"
-                            selected={selectedDate}
-                            onSelect={(date) => {
-                              if (date) {
-                                handleMobileDateSelect(date);
-                                setMobileCalendarOpen(false);
-                              }
-                            }}
-                            month={calendarMonth}
-                            onMonthChange={setCalendarMonth}
-                            timeZone={placeTimeZone}
-                          />
-                        </DialogContent>
-                      </Dialog>
-                      <MobileDateStrip
-                        selectedDate={selectedDate}
-                        onDateSelect={handleMobileDateSelect}
-                        timeZone={placeTimeZone}
-                        todayDate={todayDate}
-                      />
                     </div>
 
-                    <div className="hidden 2xl:flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <h2 className="text-lg font-heading font-semibold">
-                          Day Timeline
-                        </h2>
-                        <p className="text-sm text-muted-foreground">
-                          {selectedDayLabel}
-                        </p>
-                      </div>
-                      <Badge variant="outline">Snap: 60m</Badge>
-                    </div>
+                    <Dialog
+                      open={mobileCalendarOpen}
+                      onOpenChange={setMobileCalendarOpen}
+                    >
+                      <DialogContent className="w-auto p-0 sm:max-w-fit 2xl:hidden">
+                        <DialogTitle className="sr-only">
+                          Select date
+                        </DialogTitle>
+                        <Calendar
+                          mode="single"
+                          selected={selectedDate}
+                          onSelect={(date) => {
+                            if (date) {
+                              handleMobileDateSelect(date);
+                              setMobileCalendarOpen(false);
+                            }
+                          }}
+                          month={calendarMonth}
+                          onMonthChange={setCalendarMonth}
+                          timeZone={placeTimeZone}
+                        />
+                      </DialogContent>
+                    </Dialog>
 
                     {!placeId || !courtId ? (
                       <Alert>

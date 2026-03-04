@@ -1,0 +1,4 @@
+source_url,name,address,city,province,reason,confidence
+https://app.sports360.ph/sportshub/Sports360%20Arena,Sports360 Arena,sports360,sports360,sports360,Province and city fields contain the string 'sports360' and cannot be mapped to a canonical Philippine province/city.,low
+https://app.sports360.ph/sportshub/002%20Pickle%20Club,002 Pickle Club,mia sports center,mia sports center,mia sports center,"Province and city fields contain 'mia sports center' (likely a venue name), not a canonical Philippine province/city.",low
+https://app.sports360.ph/sportshub/The%20Dink%20Zone,The Dink Zone,"3rd floor, EB Town Center",3rd floor,EB Town Center,Could not map province/city: city='3rd floor' and province='EB Town Center' are not recognized in the location catalog; ambiguous/missing locality information.,low
