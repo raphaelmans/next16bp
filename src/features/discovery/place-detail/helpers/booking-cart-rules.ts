@@ -81,12 +81,12 @@ export function validateBookingCartAdd({
   const referenceDayKeys = firstItem
     ? getBookingCartDayKeys(firstItem, placeTimeZone)
     : new Set<string>();
-  const candidateDayKey = getBookingCartDayKey(
-    candidate.startTime,
-    placeTimeZone,
+  const candidateDayKeys = getBookingCartDayKeys(candidate, placeTimeZone);
+  const touchesReferenceDayWindow = Array.from(candidateDayKeys).some((key) =>
+    referenceDayKeys.has(key),
   );
 
-  if (!referenceDayKeys.has(candidateDayKey)) {
+  if (!touchesReferenceDayWindow) {
     return { ok: false, reason: "DIFFERENT_DAY" };
   }
 

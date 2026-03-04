@@ -11,8 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import type { StudioView } from "@/features/owner/components/booking-studio/types";
 
 type Option = {
   id: string;
@@ -31,10 +29,8 @@ type AvailabilityStudioToolbarProps = {
   courts: CourtOption[];
   courtsLoading: boolean;
   placeTimeZone: string;
-  view: StudioView;
   onPlaceChange: (placeId: string) => void;
   onCourtChange: (courtId: string) => void;
-  onViewChange: (view: StudioView) => void;
   onToday: () => void;
 };
 
@@ -45,10 +41,8 @@ export function AvailabilityStudioToolbar({
   courts,
   courtsLoading,
   placeTimeZone,
-  view,
   onPlaceChange,
   onCourtChange,
-  onViewChange,
   onToday,
 }: AvailabilityStudioToolbarProps) {
   return (
@@ -114,21 +108,6 @@ export function AvailabilityStudioToolbar({
           >
             Today
           </Button>
-          <ToggleGroup
-            type="single"
-            value={view}
-            onValueChange={(nextView) => {
-              if (nextView) onViewChange(nextView as StudioView);
-            }}
-            className="flex"
-          >
-            <ToggleGroupItem value="day" aria-label="Day view">
-              Day
-            </ToggleGroupItem>
-            <ToggleGroupItem value="week" aria-label="Week view">
-              Week
-            </ToggleGroupItem>
-          </ToggleGroup>
         </div>
       </CardContent>
     </Card>

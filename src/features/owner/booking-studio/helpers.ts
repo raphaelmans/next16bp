@@ -139,7 +139,15 @@ const getTimelineSegment = (options: {
   hours: number[];
   rowHeight?: number;
 }) => {
-  const { startTime, endTime, dayKey, dayStart, timeZone, hours, rowHeight = TIMELINE_ROW_HEIGHT } = options;
+  const {
+    startTime,
+    endTime,
+    dayKey,
+    dayStart,
+    timeZone,
+    hours,
+    rowHeight = TIMELINE_ROW_HEIGHT,
+  } = options;
   const dayEndExclusive = addDays(dayStart, 1);
 
   if (startTime >= dayEndExclusive || endTime <= dayStart) {
@@ -207,7 +215,8 @@ export const buildTimelineReservationsForDay = (options: {
   hours: number[];
   rowHeight?: number;
 }) => {
-  const { reservations, dayKey, dayStart, timeZone, hours, rowHeight } = options;
+  const { reservations, dayKey, dayStart, timeZone, hours, rowHeight } =
+    options;
 
   return reservations
     .map((reservation) => {
@@ -290,7 +299,8 @@ export const buildDraftTimelineBlocksForDay = (options: {
   courtId?: string;
   rowHeight?: number;
 }) => {
-  const { draftRows, dayKey, dayStart, timeZone, hours, courtId, rowHeight } = options;
+  const { draftRows, dayKey, dayStart, timeZone, hours, courtId, rowHeight } =
+    options;
 
   return draftRows
     .filter((row) => row.status !== "COMMITTED" && row.status !== "SKIPPED")
@@ -319,7 +329,8 @@ export const buildDraftWeekTimelineBlocksByDayKey = (options: {
   courtId?: string;
   rowHeight?: number;
 }) => {
-  const { draftRows, weekDayKeys, timeZone, hours, courtId, rowHeight } = options;
+  const { draftRows, weekDayKeys, timeZone, hours, courtId, rowHeight } =
+    options;
   const byDayKey = new Map<string, DraftTimelineSegment[]>();
 
   for (const dayKey of weekDayKeys) {

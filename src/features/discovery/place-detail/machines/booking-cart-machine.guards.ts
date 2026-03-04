@@ -27,6 +27,7 @@ export function canAddItem({ context, event }: GuardArgs): boolean {
     candidate: {
       courtId: event.item.courtId,
       startTime: event.item.startTime,
+      durationMinutes: event.item.durationMinutes,
     },
     placeTimeZone: context.placeTimeZone,
   });
@@ -52,6 +53,7 @@ export function getAddItemValidationError({
     candidate: {
       courtId: event.item.courtId,
       startTime: event.item.startTime,
+      durationMinutes: event.item.durationMinutes,
     },
     placeTimeZone: context.placeTimeZone,
   });

@@ -45,8 +45,8 @@ describe("validateBookingCartAdd", () => {
       cartItems: [
         {
           courtId: "court-a",
-          // 2026-02-24 23:30 Asia/Manila
-          startTime: "2026-02-24T15:30:00.000Z",
+          // 2026-02-24 22:00 Asia/Manila (same-day booking)
+          startTime: "2026-02-24T14:00:00.000Z",
           durationMinutes: 60,
         },
       ],
@@ -55,6 +55,72 @@ describe("validateBookingCartAdd", () => {
         // 2026-02-25 00:30 Asia/Manila
         startTime: "2026-02-24T16:30:00.000Z",
         durationMinutes: 60,
+      },
+      placeTimeZone: "Asia/Manila",
+    });
+
+    expect(result).toEqual({ ok: false, reason: "DIFFERENT_DAY" });
+  });
+
+  it("allows candidate when first cart item spans midnight and candidate starts on next day", () => {
+    const result = validateBookingCartAdd({
+      cartItems: [
+        {
+          courtId: "court-a",
+          // Mar 21 9:00 PM PHT -> Mar 22 2:00 AM PHT
+          startTime: "2026-03-21T13:00:00.000Z",
+          durationMinutes: 300,
+        },
+      ],
+      candidate: {
+        courtId: "court-b",
+        // Mar 22 10:00 AM PHT
+        startTime: "2026-03-22T02:00:00.000Z",
+        durationMinutes: 60,
+      },
+      placeTimeZone: "Asia/Manila",
+    });
+
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("allows candidate span when it touches one of the first item's day keys", () => {
+    const result = validateBookingCartAdd({
+      cartItems: [
+        {
+          courtId: "court-a",
+          // Mar 21 9:00 PM PHT -> Mar 22 2:00 AM PHT
+          startTime: "2026-03-21T13:00:00.000Z",
+          durationMinutes: 300,
+        },
+      ],
+      candidate: {
+        courtId: "court-b",
+        // Mar 22 11:00 PM PHT -> Mar 23 1:00 AM PHT
+        startTime: "2026-03-22T15:00:00.000Z",
+        durationMinutes: 120,
+      },
+      placeTimeZone: "Asia/Manila",
+    });
+
+    expect(result).toEqual({ ok: true });
+  });
+
+  it("rejects candidate span when it does not touch the first item's day window", () => {
+    const result = validateBookingCartAdd({
+      cartItems: [
+        {
+          courtId: "court-a",
+          // Mar 21 9:00 PM PHT -> Mar 22 2:00 AM PHT
+          startTime: "2026-03-21T13:00:00.000Z",
+          durationMinutes: 300,
+        },
+      ],
+      candidate: {
+        courtId: "court-b",
+        // Mar 23 9:00 PM PHT
+        startTime: "2026-03-23T13:00:00.000Z",
+        durationMinutes: 120,
       },
       placeTimeZone: "Asia/Manila",
     });

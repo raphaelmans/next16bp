@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addDays, addMinutes, differenceInMinutes } from "date-fns";
+import { addMinutes, differenceInMinutes } from "date-fns";
 import debounce from "debounce";
 import {
   CalendarIcon,
@@ -15,20 +15,11 @@ import { parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
-import {
-  formatCurrency,
-  formatInTimeZone,
-  formatTimeRangeInTimeZone,
-} from "@/common/format";
+import { formatTimeRangeInTimeZone } from "@/common/format";
 import { DEFAULT_TIME_ZONE } from "@/common/location-defaults";
-import {
-  getZonedDate,
-  getZonedDayRangeFromDayKey,
-  toUtcISOString,
-} from "@/common/time-zone";
+import { toUtcISOString } from "@/common/time-zone";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
-import { RangeSelectionProvider } from "@/components/kudos/range-selection";
 import { AppShell } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -46,12 +37,8 @@ import {
 } from "@/features/owner";
 import {
   buildBlocksRange,
-  buildDaySelectionConfig,
   buildDraftRowsState,
-  buildDraftTimelineBlocksForDay,
   buildDraftWeekTimelineBlocksByDayKey,
-  buildTimelineBlocksForDay,
-  buildTimelineReservationsForDay,
   buildWeekTimelineBlocksByDayKey,
   buildWeekTimelineReservationsByDayKey,
   getBlockCtaLabel,
@@ -63,28 +50,18 @@ import {
   BookingStudioProvider,
   useBookingStudio,
 } from "@/features/owner/components/booking-studio/booking-studio-provider";
-import {
-  getOperatingHoursForDay,
-  getOperatingHoursForWeek,
-} from "@/features/owner/components/booking-studio/court-hours";
+import { getOperatingHoursForWeek } from "@/features/owner/components/booking-studio/court-hours";
 import { CustomBlockDialog } from "@/features/owner/components/booking-studio/custom-block-dialog";
-import {
-  DraftRowCard,
-  DraftTimelineBlock,
-} from "@/features/owner/components/booking-studio/draft-row-card";
+import { DraftRowCard } from "@/features/owner/components/booking-studio/draft-row-card";
 import { GuestBookingDialog } from "@/features/owner/components/booking-studio/guest-booking-dialog";
 import { ManageBlockDialog } from "@/features/owner/components/booking-studio/manage-block-dialog";
 import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-studio/mobile-create-block-drawer";
-import { MobileDayBlocksList } from "@/features/owner/components/booking-studio/mobile-day-blocks-list";
 import { MobileManageBlockPeekBar } from "@/features/owner/components/booking-studio/mobile-manage-block-peek-bar";
 import { MobileSelectionPeekBar } from "@/features/owner/components/booking-studio/mobile-selection-peek-bar";
 import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
 import { ReplaceWithGuestDialog } from "@/features/owner/components/booking-studio/replace-with-guest-dialog";
 import { computeClampedResizeRange } from "@/features/owner/components/booking-studio/resize-helpers";
-import { SelectableTimelineRow } from "@/features/owner/components/booking-studio/selectable-timeline-row";
 import { SelectionPanelForm } from "@/features/owner/components/booking-studio/selection-panel-form";
-import { TimelineBlockItem } from "@/features/owner/components/booking-studio/timeline-block-item";
-import { TimelineReservationItem } from "@/features/owner/components/booking-studio/timeline-reservation-item";
 import {
   buildDateFromDayKey,
   type CourtBlockItem,
@@ -103,7 +80,7 @@ import {
 } from "@/features/owner/components/booking-studio/types";
 import { useIs2xlUp } from "@/features/owner/components/booking-studio/use-is-2xl-up";
 import { useManageBlock } from "@/features/owner/components/booking-studio/use-manage-block";
-import { WeekDayColumn } from "@/features/owner/components/booking-studio/week-day-column";
+import { OwnerAvailabilityWeekGrid } from "@/features/owner/components/booking-studio/owner-availability-week-grid";
 import {
   useModCourtHours,
   useModOwnerCourtFilter,
@@ -130,7 +107,6 @@ import {
   useQueryOwnerOrganization,
   useQueryOwnerPlaces,
 } from "@/features/owner/hooks";
-import { cn } from "@/lib/utils";
 
 export default function OwnerAvailabilityStudioPage() {
   return (
@@ -172,16 +148,9 @@ function OwnerAvailabilityStudioInner() {
 
   const {
     dayKey,
-    setDayKeyParam,
-    view,
-    setViewParam,
-    isWeekView,
-    selectedDayStart,
     selectedDate,
-    selectedDayLabel,
     weekDayKeys,
     weekLabel,
-    todayDate,
     todayDayKey,
     visibleDayKeys,
     handleMobileDateSelect,
@@ -317,25 +286,11 @@ function OwnerAvailabilityStudioInner() {
   }, [guestSearch, setDebouncedGuestSearch]);
 
   const courtHoursQuery = useModCourtHours(courtId);
-  const dayOfWeek = getZonedDate(selectedDayStart, placeTimeZone).getDay();
 
   const hours = React.useMemo(() => {
     const windows = courtHoursQuery.data ?? [];
-    if (!isWeekView) return getOperatingHoursForDay(windows, dayOfWeek);
     return getOperatingHoursForWeek(windows, weekDayKeys, placeTimeZone);
-  }, [courtHoursQuery.data, dayOfWeek, isWeekView, weekDayKeys, placeTimeZone]);
-
-  const dayHourLabels = React.useMemo(
-    () =>
-      hours.map((hour) =>
-        formatInTimeZone(
-          buildDateFromDayKey(dayKey, hour * 60, placeTimeZone),
-          placeTimeZone,
-          "h a",
-        ),
-      ),
-    [dayKey, hours, placeTimeZone],
-  );
+  }, [courtHoursQuery.data, weekDayKeys, placeTimeZone]);
 
   const blocksRange = React.useMemo(
     () =>
@@ -399,54 +354,11 @@ function OwnerAvailabilityStudioInner() {
     [activeBlocks],
   );
 
-  const selectedDayEndExclusive = React.useMemo(
-    () => addDays(selectedDayStart, 1),
-    [selectedDayStart],
-  );
-
-  const activeBlocksForSelectedDay = React.useMemo(() => {
-    return activeBlocks.filter((block) => {
-      const startTime = new Date(block.startTime);
-      const endTime = new Date(block.endTime);
-      return startTime < selectedDayEndExclusive && endTime > selectedDayStart;
-    });
-  }, [activeBlocks, selectedDayEndExclusive, selectedDayStart]);
-
-  const dayBlocks = React.useMemo(
-    () =>
-      [...activeBlocksForSelectedDay].sort(
-        (a, b) =>
-          new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
-      ),
-    [activeBlocksForSelectedDay],
-  );
-
-  const timelineBlocks = React.useMemo(
-    () =>
-      buildTimelineBlocksForDay({
-        blocks: activeBlocksForSelectedDay,
-        dayKey,
-        dayStart: selectedDayStart,
-        timeZone: placeTimeZone,
-        hours,
-      }),
-    [
-      activeBlocksForSelectedDay,
-      dayKey,
-      placeTimeZone,
-      selectedDayStart,
-      hours,
-    ],
-  );
-
   const weekRowHeight = is2xlUp
     ? TIMELINE_ROW_HEIGHT
     : COMPACT_TIMELINE_ROW_HEIGHT;
 
   const weekTimelineBlocksByDayKey = React.useMemo(() => {
-    if (!isWeekView) {
-      return new Map();
-    }
     return buildWeekTimelineBlocksByDayKey({
       blocks: activeBlocks,
       weekDayKeys,
@@ -454,24 +366,9 @@ function OwnerAvailabilityStudioInner() {
       hours,
       rowHeight: weekRowHeight,
     });
-  }, [activeBlocks, isWeekView, placeTimeZone, hours, weekDayKeys, weekRowHeight]);
-
-  const timelineReservations = React.useMemo(
-    () =>
-      buildTimelineReservationsForDay({
-        reservations: activeReservations,
-        dayKey,
-        dayStart: selectedDayStart,
-        timeZone: placeTimeZone,
-        hours,
-      }),
-    [activeReservations, dayKey, placeTimeZone, selectedDayStart, hours],
-  );
+  }, [activeBlocks, placeTimeZone, hours, weekDayKeys, weekRowHeight]);
 
   const weekTimelineReservationsByDayKey = React.useMemo(() => {
-    if (!isWeekView) {
-      return new Map();
-    }
     return buildWeekTimelineReservationsByDayKey({
       reservations: activeReservations,
       weekDayKeys,
@@ -479,33 +376,10 @@ function OwnerAvailabilityStudioInner() {
       hours,
       rowHeight: weekRowHeight,
     });
-  }, [activeReservations, isWeekView, placeTimeZone, hours, weekDayKeys, weekRowHeight]);
-
-  const draftTimelineBlocks = React.useMemo(
-    () =>
-      isImportOverlay
-        ? buildDraftTimelineBlocksForDay({
-            draftRows,
-            dayKey,
-            dayStart: selectedDayStart,
-            timeZone: placeTimeZone,
-            hours,
-            courtId,
-          })
-        : [],
-    [
-      courtId,
-      dayKey,
-      draftRows,
-      isImportOverlay,
-      placeTimeZone,
-      selectedDayStart,
-      hours,
-    ],
-  );
+  }, [activeReservations, placeTimeZone, hours, weekDayKeys, weekRowHeight]);
 
   const draftWeekTimelineBlocksByDayKey = React.useMemo(() => {
-    if (!isImportOverlay || !isWeekView) {
+    if (!isImportOverlay) {
       return new Map();
     }
     return buildDraftWeekTimelineBlocksByDayKey({
@@ -520,7 +394,6 @@ function OwnerAvailabilityStudioInner() {
     courtId,
     draftRows,
     isImportOverlay,
-    isWeekView,
     placeTimeZone,
     hours,
     weekDayKeys,
@@ -1285,44 +1158,24 @@ function OwnerAvailabilityStudioInner() {
     }
   }, [discardImport, jobId, setJobIdParam]);
 
-  // Mobile selection config
-  const daySelectionConfig = React.useMemo(
-    () =>
-      buildDaySelectionConfig({
-        timelineBlocks,
-        timelineReservations,
-        hours,
-        dayOfWeek,
-        courtHours: courtHoursQuery.data ?? [],
-        onCommitRange: (startIdx, endIdx) => {
-          setCommittedRange({ startIdx, endIdx });
-          manageBlock.close();
-        },
-        onClear: () => {
-          setCommittedRange(null);
-          manageBlock.close();
-        },
-      }),
-    [
-      hours,
-      setCommittedRange,
-      timelineBlocks,
-      timelineReservations,
-      courtHoursQuery.data,
-      dayOfWeek,
-      manageBlock.close,
-    ],
-  );
-
   // Track which day column committed the range in week view
   const [weekCommittedDayKey, setWeekCommittedDayKey] = React.useState<
     string | null
   >(null);
+  const [weekCommittedEndDayKey, setWeekCommittedEndDayKey] = React.useState<
+    string | null
+  >(null);
 
   const handleWeekCommitRange = React.useCallback(
-    (columnDayKey: string, s: number, e: number) => {
-      setCommittedRange({ startIdx: s, endIdx: e });
-      setWeekCommittedDayKey(columnDayKey);
+    (
+      startDayKey: string,
+      startHourIdx: number,
+      endDayKey: string,
+      endHourIdx: number,
+    ) => {
+      setCommittedRange({ startIdx: startHourIdx, endIdx: endHourIdx });
+      setWeekCommittedDayKey(startDayKey);
+      setWeekCommittedEndDayKey(endDayKey);
       manageBlock.close();
     },
     [setCommittedRange, manageBlock.close],
@@ -1331,6 +1184,7 @@ function OwnerAvailabilityStudioInner() {
   const handleWeekClearRange = React.useCallback(() => {
     setCommittedRange(null);
     setWeekCommittedDayKey(null);
+    setWeekCommittedEndDayKey(null);
     manageBlock.close();
   }, [setCommittedRange, manageBlock.close]);
 
@@ -1351,7 +1205,8 @@ function OwnerAvailabilityStudioInner() {
   }, [is2xlUp, setMobileDrawerOpen]);
 
   // The effective dayKey for committed range display
-  const committedDayKey = isWeekView ? (weekCommittedDayKey ?? dayKey) : dayKey;
+  const committedDayKey = weekCommittedDayKey ?? dayKey;
+  const committedEndDayKey = weekCommittedEndDayKey ?? committedDayKey;
 
   const selectedTimeLabel = React.useMemo(() => {
     if (!committedRange) return "";
@@ -1366,14 +1221,11 @@ function OwnerAvailabilityStudioInner() {
         ? (endHourVal + 1) * 60 + 1440
         : (endHourVal + 1) * 60;
     const s = buildDateFromDayKey(committedDayKey, startMin, placeTimeZone);
-    const e = buildDateFromDayKey(committedDayKey, endMin, placeTimeZone);
+    const e = buildDateFromDayKey(committedEndDayKey, endMin, placeTimeZone);
     return formatTimeRangeInTimeZone(s, e, placeTimeZone);
-  }, [committedDayKey, committedRange, hours, placeTimeZone]);
+  }, [committedDayKey, committedEndDayKey, committedRange, hours, placeTimeZone]);
 
   const shouldReduceMotion = useReducedMotion();
-  const viewTransition = shouldReduceMotion
-    ? { duration: 0 }
-    : { duration: 0.25, ease: "easeOut" as const };
 
   const [armedDraftRowId, setArmedDraftRowId] = React.useState<string | null>(
     null,
@@ -1666,9 +1518,8 @@ function OwnerAvailabilityStudioInner() {
         toast.error("Select a court and time range first");
         return;
       }
-      const effectiveDayKey = isWeekView
-        ? (weekCommittedDayKey ?? dayKey)
-        : dayKey;
+      const effectiveDayKey = weekCommittedDayKey ?? dayKey;
+      const effectiveEndDayKey = weekCommittedEndDayKey ?? effectiveDayKey;
       const startHourVal = hours[committedRange.startIdx];
       const endHourVal = hours[committedRange.endIdx];
       if (startHourVal === undefined || endHourVal === undefined) return;
@@ -1680,7 +1531,7 @@ function OwnerAvailabilityStudioInner() {
           ? (endHourVal + 1) * 60 + 1440
           : (endHourVal + 1) * 60;
       const s = buildDateFromDayKey(effectiveDayKey, startMin, placeTimeZone);
-      const e = buildDateFromDayKey(effectiveDayKey, endMin, placeTimeZone);
+      const e = buildDateFromDayKey(effectiveEndDayKey, endMin, placeTimeZone);
 
       if (selectionBlockType === "GUEST_BOOKING") {
         const currentGuestMode = guestModeRef.current;
@@ -1746,13 +1597,13 @@ function OwnerAvailabilityStudioInner() {
     createWalkIn,
     dayKey,
     hours,
-    isWeekView,
     selectionBlockType,
     committedRange,
     organization?.id,
     placeTimeZone,
     resetSelectionPanel,
     weekCommittedDayKey,
+    weekCommittedEndDayKey,
   ]);
 
   if (orgLoading) {
@@ -1909,922 +1760,311 @@ function OwnerAvailabilityStudioInner() {
           courts={courts}
           courtsLoading={courtsLoading}
           placeTimeZone={placeTimeZone}
-          view={view}
           onPlaceChange={setPlaceId}
           onCourtChange={setCourtId}
-          onViewChange={(nextView) => setViewParam(nextView)}
           onToday={handleMobileToday}
         />
 
-        <AnimatePresence mode="wait" initial={false}>
-          {isWeekView ? (
-            <motion.div
-              key="week"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.02 }}
-              transition={viewTransition}
-            >
-              <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
-                <div className="hidden 2xl:block space-y-6">
-                  <Card>
-                    <CardContent className="space-y-3 p-6">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium">Browse month</p>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={handleMobileToday}
-                        >
-                          Today
-                        </Button>
-                      </div>
-                      <Calendar
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={(date) => {
-                          if (date) handleMobileDateSelect(date);
-                        }}
-                        month={calendarMonth}
-                        onMonthChange={setCalendarMonth}
-                        timeZone={placeTimeZone}
-                      />
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardContent className="space-y-4 p-6">
-                      <AnimatePresence mode="wait" initial={false}>
-                        {committedRange ? (
-                          <motion.div
-                            key="week-form"
-                            initial={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: 8 }
-                            }
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: -8 }
-                            }
-                            transition={{
-                              duration: 0.2,
-                              ease: [0.25, 0.46, 0.45, 0.94],
-                            }}
-                            className="space-y-4"
-                          >
-                            <div className="space-y-1">
-                              <h3 className="text-sm font-heading font-semibold">
-                                Create Block
-                              </h3>
-                              <p className="text-xs text-muted-foreground">
-                                {selectedTimeLabel} · {placeTimeZone}
-                              </p>
-                            </div>
-                            <SelectionPanelForm
-                              blockType={selectionBlockType}
-                              onBlockTypeChange={setSelectionBlockType}
-                              guestModeState={guestModeState}
-                              organizationId={organization?.id ?? ""}
-                              onGuestModeChange={(mode) => {
-                                setGuestMode(mode);
-                                setGuestModeState(mode);
-                              }}
-                              onGuestNameChange={setGuestName}
-                              onGuestPhoneChange={setGuestPhone}
-                              onGuestEmailChange={setGuestEmail}
-                              onGuestProfileIdChange={setGuestProfileId}
-                              onNotesChange={setNotes}
-                            />
-                            <div className="flex gap-2">
-                              <Button
-                                onClick={handleSelectionSubmit}
-                                className="flex-1"
-                                disabled={isCreatingBlock}
-                              >
-                                {getBlockCtaLabel(
-                                  selectionBlockType,
-                                  isCreatingBlock,
-                                )}
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => resetSelectionPanel()}
-                              >
-                                Cancel
-                              </Button>
-                            </div>
-                          </motion.div>
-                        ) : (
-                          <motion.div
-                            key="week-empty"
-                            initial={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: 8 }
-                            }
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: -8 }
-                            }
-                            transition={{
-                              duration: 0.2,
-                              ease: [0.25, 0.46, 0.45, 0.94],
-                            }}
-                            className="space-y-4"
-                          >
-                            <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
-                              <div className="flex items-center gap-2">
-                                <MousePointerClick className="size-4 text-primary/60" />
-                                <h3 className="text-sm font-heading font-semibold">
-                                  Create Block
-                                </h3>
-                              </div>
-                              <p className="text-xs text-muted-foreground">
-                                Click a start time, then an end time on the
-                                timeline to select a range.
-                              </p>
-                            </div>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={openCustomDialog}
-                              disabled={!courtId}
-                              className="w-full justify-start"
-                            >
-                              Custom block...
-                            </Button>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                      {isImportOverlay ? (
-                        <div className="space-y-3 pt-2">
-                          <Separator />
-                          <div className="space-y-1">
-                            <h4 className="text-sm font-heading font-semibold">
-                              Imported Drafts
-                            </h4>
-                            <p className="text-xs text-muted-foreground">
-                              Tap a draft row, then tap a slot to place it.
-                            </p>
-                          </div>
-                          {rowsQuery.isLoading ? (
-                            <div className="space-y-2">
-                              <Skeleton className="h-12 w-full" />
-                              <Skeleton className="h-12 w-full" />
-                            </div>
-                          ) : draftRowsSorted.length === 0 ? (
-                            <p className="text-xs text-muted-foreground">
-                              No draft rows yet.
-                            </p>
-                          ) : (
-                            <div className="space-y-2">
-                              {draftRowsSorted.slice(0, 8).map((row) => (
-                                <DraftRowCard
-                                  key={row.id}
-                                  row={row}
-                                  timeZone={placeTimeZone}
-                                  disabled={isDraftDragDisabled}
-                                  selectedCourt={selectedCourt?.label ?? null}
-                                  isArmed={row.id === armedDraftRowId}
-                                  onArm={handleArmDraftRow}
-                                />
-                              ))}
-                              {draftRowsSorted.length > 8 ? (
-                                <p className="text-xs text-muted-foreground">
-                                  Showing first 8 rows.
-                                </p>
-                              ) : null}
-                            </div>
-                          )}
-                        </div>
-                      ) : null}
-                    </CardContent>
-                  </Card>
+        <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+          <div className="hidden 2xl:block space-y-6">
+            <Card>
+              <CardContent className="space-y-3 p-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium">Browse month</p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleMobileToday}
+                  >
+                    Today
+                  </Button>
                 </div>
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(date) => {
+                    if (date) handleMobileDateSelect(date);
+                  }}
+                  month={calendarMonth}
+                  onMonthChange={setCalendarMonth}
+                  timeZone={placeTimeZone}
+                />
+              </CardContent>
+            </Card>
 
-                <Card>
-                  <CardContent className="space-y-4 p-4 2xl:p-6">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-1 2xl:gap-2">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 2xl:h-9 2xl:w-9"
-                          onClick={() => navigateWeek(-1)}
-                        >
-                          <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          className="gap-1.5 text-sm font-heading font-semibold 2xl:text-lg 2xl:pointer-events-none"
-                          onClick={() => setMobileCalendarOpen(true)}
-                        >
-                          <CalendarIcon className="h-3.5 w-3.5 2xl:hidden" />
-                          {weekLabel}
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 2xl:h-9 2xl:w-9"
-                          onClick={() => navigateWeek(1)}
-                        >
-                          <ChevronRight className="h-4 w-4" />
-                        </Button>
+            <Card>
+              <CardContent className="space-y-4 p-6">
+                <AnimatePresence mode="wait" initial={false}>
+                  {committedRange ? (
+                    <motion.div
+                      key="week-form"
+                      initial={
+                        shouldReduceMotion
+                          ? { opacity: 0 }
+                          : { opacity: 0, y: 8 }
+                      }
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={
+                        shouldReduceMotion
+                          ? { opacity: 0 }
+                          : { opacity: 0, y: -8 }
+                      }
+                      transition={{
+                        duration: 0.2,
+                        ease: [0.25, 0.46, 0.45, 0.94],
+                      }}
+                      className="space-y-4"
+                    >
+                      <div className="space-y-1">
+                        <h3 className="text-sm font-heading font-semibold">
+                          Create Block
+                        </h3>
+                        <p className="text-xs text-muted-foreground">
+                          {selectedTimeLabel} · {placeTimeZone}
+                        </p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <SelectionPanelForm
+                        blockType={selectionBlockType}
+                        onBlockTypeChange={setSelectionBlockType}
+                        guestModeState={guestModeState}
+                        organizationId={organization?.id ?? ""}
+                        onGuestModeChange={(mode) => {
+                          setGuestMode(mode);
+                          setGuestModeState(mode);
+                        }}
+                        onGuestNameChange={setGuestName}
+                        onGuestPhoneChange={setGuestPhone}
+                        onGuestEmailChange={setGuestEmail}
+                        onGuestProfileIdChange={setGuestProfileId}
+                        onNotesChange={setNotes}
+                      />
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={handleSelectionSubmit}
+                          className="flex-1"
+                          disabled={isCreatingBlock}
+                        >
+                          {getBlockCtaLabel(
+                            selectionBlockType,
+                            isCreatingBlock,
+                          )}
+                        </Button>
                         <Button
                           type="button"
                           variant="outline"
-                          size="sm"
-                          className="2xl:hidden"
-                          onClick={handleMobileToday}
+                          onClick={() => resetSelectionPanel()}
                         >
-                          Today
+                          Cancel
                         </Button>
-                        <Badge variant="outline" className="hidden 2xl:inline-flex">Snap: 60m</Badge>
                       </div>
-                    </div>
-
-                    <Dialog
-                      open={mobileCalendarOpen}
-                      onOpenChange={setMobileCalendarOpen}
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="week-empty"
+                      initial={
+                        shouldReduceMotion
+                          ? { opacity: 0 }
+                          : { opacity: 0, y: 8 }
+                      }
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={
+                        shouldReduceMotion
+                          ? { opacity: 0 }
+                          : { opacity: 0, y: -8 }
+                      }
+                      transition={{
+                        duration: 0.2,
+                        ease: [0.25, 0.46, 0.45, 0.94],
+                      }}
+                      className="space-y-4"
                     >
-                      <DialogContent className="w-auto p-0 sm:max-w-fit 2xl:hidden">
-                        <DialogTitle className="sr-only">
-                          Select date
-                        </DialogTitle>
-                        <Calendar
-                          mode="single"
-                          selected={selectedDate}
-                          onSelect={(date) => {
-                            if (date) {
-                              handleMobileDateSelect(date);
-                              setMobileCalendarOpen(false);
-                            }
-                          }}
-                          month={calendarMonth}
-                          onMonthChange={setCalendarMonth}
-                          timeZone={placeTimeZone}
-                        />
-                      </DialogContent>
-                    </Dialog>
-
-                    {!placeId || !courtId ? (
-                      <Alert>
-                        <AlertTitle>Select a venue and court</AlertTitle>
-                        <AlertDescription>
-                          Choose a venue and court to load the week grid.
-                        </AlertDescription>
-                      </Alert>
-                    ) : blocksQuery.error ? (
-                      <Alert variant="destructive">
-                        <AlertTitle>Failed to load blocks</AlertTitle>
-                        <AlertDescription>
-                          {getClientErrorMessage(
-                            blocksQuery.error,
-                            "Please try again.",
-                          )}
-                        </AlertDescription>
-                      </Alert>
-                    ) : (
-                      <div
-                        className={cn(
-                          "relative",
-                          is2xlUp
-                            ? "overflow-x-auto"
-                            : "overflow-y-auto",
-                        )}
-                        style={
-                          is2xlUp ? undefined : { maxHeight: "calc(70vh - 80px)" }
-                        }
+                      <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <MousePointerClick className="size-4 text-primary/60" />
+                          <h3 className="text-sm font-heading font-semibold">
+                            Create Block
+                          </h3>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Click a start time, then an end time on the timeline
+                          to select a range.
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={openCustomDialog}
+                        disabled={!courtId}
+                        className="w-full justify-start"
                       >
-                        <div
-                          className="grid gap-x-0"
-                          style={{
-                            gridTemplateColumns: is2xlUp
-                              ? "72px repeat(7, minmax(100px, 1fr))"
-                              : "36px repeat(7, 1fr)",
-                          }}
-                        >
-                          <div />
-                          {weekDayKeys.map((wdk) => {
-                            const wdStart = getZonedDayRangeFromDayKey(
-                              wdk,
-                              placeTimeZone,
-                            ).start;
-                            const isToday = wdk === todayDayKey;
-                            const isPastDay = wdk < todayDayKey;
-                            const isSelectedDay = wdk === dayKey;
-                            return (
-                              <button
-                                key={`header-${wdk}`}
-                                type="button"
-                                className={cn(
-                                  "border-b border-border/50 text-center font-semibold transition-colors",
-                                  is2xlUp
-                                    ? "px-1 py-2 text-xs"
-                                    : "px-0.5 py-1.5 text-[9px]",
-                                  isToday && "text-primary",
-                                  isSelectedDay && "bg-primary/5",
-                                  isPastDay && "text-muted-foreground/60",
-                                )}
-                                onClick={() => {
-                                  setDayKeyParam(wdk);
-                                  setViewParam("day");
-                                }}
-                              >
-                                <div
-                                  className={
-                                    is2xlUp ? undefined : "text-[9px] leading-tight"
-                                  }
-                                >
-                                  {formatInTimeZone(
-                                    wdStart,
-                                    placeTimeZone,
-                                    is2xlUp ? "EEE" : "EEEEEE",
-                                  )}
-                                </div>
-                                <div
-                                  className={cn(
-                                    "font-heading font-bold",
-                                    is2xlUp
-                                      ? "mt-0.5 text-lg"
-                                      : "mt-0 text-xs",
-                                    isToday &&
-                                      (is2xlUp
-                                        ? "inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground"
-                                        : "inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground"),
-                                  )}
-                                >
-                                  {formatInTimeZone(
-                                    wdStart,
-                                    placeTimeZone,
-                                    "d",
-                                  )}
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-
-                        <div
-                          className="grid gap-x-0"
-                          style={{
-                            gridTemplateColumns: is2xlUp
-                              ? "72px repeat(7, minmax(100px, 1fr))"
-                              : "36px repeat(7, 1fr)",
-                          }}
-                        >
-                          <div>
-                            {hours.map((hour) => (
-                              <div
-                                key={`week-label-${hour}`}
-                                className={cn(
-                                  "flex items-start font-mono text-right",
-                                  is2xlUp
-                                    ? "h-[56px] pt-2 pr-2 text-xs text-muted-foreground"
-                                    : "h-[48px] pt-0.5 pr-1.5 text-[10px] text-muted-foreground/70",
-                                )}
-                              >
-                                <span className="w-full">
-                                  {formatInTimeZone(
-                                    buildDateFromDayKey(
-                                      dayKey,
-                                      hour * 60,
-                                      placeTimeZone,
-                                    ),
-                                    placeTimeZone,
-                                    "h a",
-                                  )}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-
-                          {weekDayKeys.map((wdk) => (
-                            <WeekDayColumn
-                              key={`week-col-${wdk}`}
-                              dayKey={wdk}
-                              hours={hours}
-                              blocks={weekTimelineBlocksByDayKey.get(wdk) ?? []}
-                              draftBlocks={
-                                draftWeekTimelineBlocksByDayKey.get(wdk) ?? []
-                              }
-                              reservations={
-                                weekTimelineReservationsByDayKey.get(wdk) ?? []
-                              }
-                              timeZone={placeTimeZone}
-                              disabled={isDragDisabled}
-                              isPastDay={wdk < todayDayKey}
-                              courtHoursWindows={courtHoursQuery.data ?? []}
-                              pendingBlockIds={pendingBlockIds}
-                              onSelectBlock={manageBlock.select}
-                              placing={isPlacingDraftRow}
-                              onPlace={handlePlaceDraftRow}
-                              onResizePreview={handleResizePreview}
-                              onResizeCommit={handleResizeCommit}
-                              committedRange={
-                                weekCommittedDayKey === wdk
-                                  ? committedRange
-                                  : null
-                              }
-                              onCommitRange={handleWeekCommitRange}
-                              onClearRange={handleWeekClearRange}
-                              compact={!is2xlUp}
-                            />
-                          ))}
-                        </div>
-                        {blocksQuery.isLoading ? (
-                          <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
+                        Custom block...
+                      </Button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                {isImportOverlay ? (
+                  <div className="space-y-3 pt-2">
+                    <Separator />
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-heading font-semibold">
+                        Imported Drafts
+                      </h4>
+                      <p className="text-xs text-muted-foreground">
+                        Tap a draft row, then tap a slot to place it.
+                      </p>
+                    </div>
+                    {rowsQuery.isLoading ? (
+                      <div className="space-y-2">
+                        <Skeleton className="h-12 w-full" />
+                        <Skeleton className="h-12 w-full" />
+                      </div>
+                    ) : draftRowsSorted.length === 0 ? (
+                      <p className="text-xs text-muted-foreground">
+                        No draft rows yet.
+                      </p>
+                    ) : (
+                      <div className="space-y-2">
+                        {draftRowsSorted.slice(0, 8).map((row) => (
+                          <DraftRowCard
+                            key={row.id}
+                            row={row}
+                            timeZone={placeTimeZone}
+                            disabled={isDraftDragDisabled}
+                            selectedCourt={selectedCourt?.label ?? null}
+                            isArmed={row.id === armedDraftRowId}
+                            onArm={handleArmDraftRow}
+                          />
+                        ))}
+                        {draftRowsSorted.length > 8 ? (
+                          <p className="text-xs text-muted-foreground">
+                            Showing first 8 rows.
+                          </p>
                         ) : null}
                       </div>
                     )}
-                  </CardContent>
-                </Card>
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="day"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.02 }}
-              transition={viewTransition}
-            >
-              <div className="grid gap-6 2xl:grid-cols-[280px_minmax(0,1fr)_320px]">
-                <div className="hidden 2xl:block space-y-6">
-                  <Card>
-                    <CardContent className="space-y-3 p-6">
-                      <div className="flex items-center justify-between">
-                        <h2 className="text-sm font-heading font-semibold">
-                          Day Selector
-                        </h2>
-                        <Badge variant="secondary">{selectedDayLabel}</Badge>
-                      </div>
-                      <Calendar
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={(date) => {
-                          if (date) {
-                            handleMobileDateSelect(date);
-                          }
-                        }}
-                        month={calendarMonth}
-                        onMonthChange={setCalendarMonth}
-                        timeZone={placeTimeZone}
-                      />
-                    </CardContent>
-                  </Card>
+                  </div>
+                ) : null}
+              </CardContent>
+            </Card>
+          </div>
 
-                  <Card>
-                    <CardContent className="space-y-4 p-6">
-                      <AnimatePresence mode="wait" initial={false}>
-                        {committedRange ? (
-                          <motion.div
-                            key="day-form"
-                            initial={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: 8 }
-                            }
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: -8 }
-                            }
-                            transition={{
-                              duration: 0.2,
-                              ease: [0.25, 0.46, 0.45, 0.94],
-                            }}
-                            className="space-y-4"
-                          >
-                            <div className="space-y-1">
-                              <h3 className="text-sm font-heading font-semibold">
-                                Create Block
-                              </h3>
-                              <p className="text-xs text-muted-foreground">
-                                {selectedTimeLabel} · {placeTimeZone}
-                              </p>
-                            </div>
-                            <SelectionPanelForm
-                              blockType={selectionBlockType}
-                              onBlockTypeChange={setSelectionBlockType}
-                              guestModeState={guestModeState}
-                              organizationId={organization?.id ?? ""}
-                              onGuestModeChange={(mode) => {
-                                setGuestMode(mode);
-                                setGuestModeState(mode);
-                              }}
-                              onGuestNameChange={setGuestName}
-                              onGuestPhoneChange={setGuestPhone}
-                              onGuestEmailChange={setGuestEmail}
-                              onGuestProfileIdChange={setGuestProfileId}
-                              onNotesChange={setNotes}
-                            />
-                            <div className="flex gap-2">
-                              <Button
-                                onClick={handleSelectionSubmit}
-                                className="flex-1"
-                                disabled={isCreatingBlock}
-                              >
-                                {getBlockCtaLabel(
-                                  selectionBlockType,
-                                  isCreatingBlock,
-                                )}
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => resetSelectionPanel()}
-                              >
-                                Cancel
-                              </Button>
-                            </div>
-                          </motion.div>
-                        ) : (
-                          <motion.div
-                            key="day-empty"
-                            initial={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: 8 }
-                            }
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={
-                              shouldReduceMotion
-                                ? { opacity: 0 }
-                                : { opacity: 0, y: -8 }
-                            }
-                            transition={{
-                              duration: 0.2,
-                              ease: [0.25, 0.46, 0.45, 0.94],
-                            }}
-                            className="space-y-4"
-                          >
-                            <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
-                              <div className="flex items-center gap-2">
-                                <MousePointerClick className="size-4 text-primary/60" />
-                                <h3 className="text-sm font-heading font-semibold">
-                                  Create Block
-                                </h3>
-                              </div>
-                              <p className="text-xs text-muted-foreground">
-                                Click a start time, then an end time on the
-                                timeline to select a range.
-                              </p>
-                            </div>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={openCustomDialog}
-                              disabled={!courtId}
-                              className="w-full justify-start"
-                            >
-                              Custom block...
-                            </Button>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                      {isImportOverlay ? (
-                        <div className="space-y-3 pt-2">
-                          <Separator />
-                          <div className="space-y-1">
-                            <h4 className="text-sm font-heading font-semibold">
-                              Imported Drafts
-                            </h4>
-                            <p className="text-xs text-muted-foreground">
-                              Tap a draft row, then tap a slot to place it.
-                            </p>
-                          </div>
-                          {rowsQuery.isLoading ? (
-                            <div className="space-y-2">
-                              <Skeleton className="h-12 w-full" />
-                              <Skeleton className="h-12 w-full" />
-                            </div>
-                          ) : draftRowsSorted.length === 0 ? (
-                            <p className="text-xs text-muted-foreground">
-                              No draft rows yet.
-                            </p>
-                          ) : (
-                            <div className="space-y-2">
-                              {draftRowsSorted.slice(0, 8).map((row) => (
-                                <DraftRowCard
-                                  key={row.id}
-                                  row={row}
-                                  timeZone={placeTimeZone}
-                                  disabled={isDraftDragDisabled}
-                                  selectedCourt={selectedCourt?.label ?? null}
-                                  isArmed={row.id === armedDraftRowId}
-                                  onArm={handleArmDraftRow}
-                                />
-                              ))}
-                              {draftRowsSorted.length > 8 ? (
-                                <p className="text-xs text-muted-foreground">
-                                  Showing first 8 rows. Open the import review
-                                  for full list.
-                                </p>
-                              ) : null}
-                            </div>
-                          )}
-                        </div>
-                      ) : null}
-                    </CardContent>
-                  </Card>
+          <Card>
+            <CardContent className="space-y-4 p-4 2xl:p-6">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-1 2xl:gap-2">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 2xl:h-9 2xl:w-9"
+                    onClick={() => navigateWeek(-1)}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="gap-1.5 text-sm font-heading font-semibold 2xl:text-lg 2xl:pointer-events-none"
+                    onClick={() => setMobileCalendarOpen(true)}
+                  >
+                    <CalendarIcon className="h-3.5 w-3.5 2xl:hidden" />
+                    {weekLabel}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 2xl:h-9 2xl:w-9"
+                    onClick={() => navigateWeek(1)}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
                 </div>
-
-                <Card>
-                  <CardContent className="space-y-4 p-6 pr-8 pb-6 lg:pr-6 lg:pb-6">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-1 2xl:gap-2">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 2xl:hidden"
-                          onClick={() => {
-                            const prev = addDays(selectedDate, -1);
-                            handleMobileDateSelect(prev);
-                          }}
-                        >
-                          <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          className="gap-1.5 text-sm font-heading font-semibold 2xl:text-lg 2xl:pointer-events-none"
-                          onClick={() => setMobileCalendarOpen(true)}
-                        >
-                          <CalendarIcon className="h-3.5 w-3.5 2xl:hidden" />
-                          {selectedDayLabel}
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 2xl:hidden"
-                          onClick={() => {
-                            const next = addDays(selectedDate, 1);
-                            handleMobileDateSelect(next);
-                          }}
-                        >
-                          <ChevronRight className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="2xl:hidden"
-                          onClick={handleMobileToday}
-                        >
-                          Today
-                        </Button>
-                        <Badge variant="outline" className="hidden 2xl:inline-flex">Snap: 60m</Badge>
-                      </div>
-                    </div>
-
-                    <Dialog
-                      open={mobileCalendarOpen}
-                      onOpenChange={setMobileCalendarOpen}
-                    >
-                      <DialogContent className="w-auto p-0 sm:max-w-fit 2xl:hidden">
-                        <DialogTitle className="sr-only">
-                          Select date
-                        </DialogTitle>
-                        <Calendar
-                          mode="single"
-                          selected={selectedDate}
-                          onSelect={(date) => {
-                            if (date) {
-                              handleMobileDateSelect(date);
-                              setMobileCalendarOpen(false);
-                            }
-                          }}
-                          month={calendarMonth}
-                          onMonthChange={setCalendarMonth}
-                          timeZone={placeTimeZone}
-                        />
-                      </DialogContent>
-                    </Dialog>
-
-                    {!placeId || !courtId ? (
-                      <Alert>
-                        <AlertTitle>Select a venue and court</AlertTitle>
-                        <AlertDescription>
-                          Choose a venue and court to load the timeline.
-                        </AlertDescription>
-                      </Alert>
-                    ) : blocksQuery.error ? (
-                      <Alert variant="destructive">
-                        <AlertTitle>Failed to load blocks</AlertTitle>
-                        <AlertDescription>
-                          {getClientErrorMessage(
-                            blocksQuery.error,
-                            "Please try again.",
-                          )}
-                        </AlertDescription>
-                      </Alert>
-                    ) : (
-                      <RangeSelectionProvider
-                        config={daySelectionConfig}
-                        committedRange={committedRange}
-                      >
-                        <div className="relative">
-                          <div className="grid grid-cols-1 gap-x-3 md:grid-cols-[72px_minmax(0,1fr)]">
-                            <div className="hidden space-y-0 md:block">
-                              {dayHourLabels.map((hourLabel, index) => (
-                                <div
-                                  key={`label-${hours[index] ?? index}`}
-                                  className="flex h-[56px] items-start pt-2 text-xs text-muted-foreground"
-                                >
-                                  {hourLabel}
-                                </div>
-                              ))}
-                            </div>
-
-                            <div className="relative">
-                              <div className="space-y-0">
-                                {hours.map((hour, hourIndex) => (
-                                  <SelectableTimelineRow
-                                    key={`row-${hour}`}
-                                    dayKey={dayKey}
-                                    startMinute={hour * 60}
-                                    disabled={isDragDisabled}
-                                    cellIndex={hourIndex}
-                                    placing={isPlacingDraftRow}
-                                    onPlace={handlePlaceDraftRow}
-                                  />
-                                ))}
-                              </div>
-                              <div className="pointer-events-none absolute inset-0">
-                                {timelineBlocks.map(
-                                  ({ block, topOffset, height }) => (
-                                    <TimelineBlockItem
-                                      key={block.id}
-                                      block={block}
-                                      topOffset={topOffset}
-                                      height={height}
-                                      timeZone={placeTimeZone}
-                                      disabled={isDragDisabled}
-                                      isPending={pendingBlockIds.has(block.id)}
-                                      onSelect={manageBlock.select}
-                                      onResizePreview={
-                                        (block.type === "WALK_IN" ||
-                                          block.type === "MAINTENANCE") &&
-                                        !pendingBlockIds.has(block.id)
-                                          ? handleResizePreview
-                                          : undefined
-                                      }
-                                      onResizeCommit={
-                                        (block.type === "WALK_IN" ||
-                                          block.type === "MAINTENANCE") &&
-                                        !pendingBlockIds.has(block.id)
-                                          ? handleResizeCommit
-                                          : undefined
-                                      }
-                                    />
-                                  ),
-                                )}
-                                {draftTimelineBlocks.map(
-                                  ({ row, topOffset, height }) => (
-                                    <DraftTimelineBlock
-                                      key={`draft-${row.id}`}
-                                      row={row}
-                                      topOffset={topOffset}
-                                      height={height}
-                                      timeZone={placeTimeZone}
-                                    />
-                                  ),
-                                )}
-                                {timelineReservations.map(
-                                  ({ reservation, topOffset, height }) => (
-                                    <TimelineReservationItem
-                                      key={`res-${reservation.id}`}
-                                      reservation={reservation}
-                                      topOffset={topOffset}
-                                      height={height}
-                                      timeZone={placeTimeZone}
-                                    />
-                                  ),
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                          {blocksQuery.isLoading ? (
-                            <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
-                          ) : null}
-                        </div>
-                      </RangeSelectionProvider>
-                    )}
-
-                    <div className="2xl:hidden">
-                      <MobileDayBlocksList
-                        blocks={dayBlocks}
-                        isLoading={blocksQuery.isLoading}
-                        timeZone={placeTimeZone}
-                        selectedDayLabel={selectedDayLabel}
-                        onRemoveBlock={handleCancelBlock}
-                        onConvertWalkIn={handleOpenReplaceDialog}
-                        isCancelPending={cancelBlock.isPending}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="hidden 2xl:block">
-                  <CardContent className="space-y-4 p-6">
-                    <div className="space-y-1">
-                      <h3 className="text-lg font-heading font-semibold">
-                        Blocks · {selectedDayLabel}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Review and remove blocks for this day.
-                      </p>
-                    </div>
-
-                    <Separator />
-
-                    {blocksQuery.isLoading ? (
-                      <div className="space-y-3">
-                        <Skeleton className="h-16 w-full" />
-                        <Skeleton className="h-16 w-full" />
-                      </div>
-                    ) : dayBlocks.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">
-                        No blocks on this day yet.
-                      </p>
-                    ) : (
-                      <div className="space-y-3">
-                        {dayBlocks.map((block) => (
-                          <div key={block.id} className="rounded-lg border p-3">
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="space-y-1">
-                                <Badge
-                                  variant={
-                                    block.type === "WALK_IN"
-                                      ? "paid"
-                                      : "warning"
-                                  }
-                                >
-                                  {block.type === "WALK_IN"
-                                    ? "Walk-in"
-                                    : "Maintenance"}
-                                </Badge>
-                                <p className="text-sm font-medium">
-                                  {formatTimeRangeInTimeZone(
-                                    block.startTime,
-                                    block.endTime,
-                                    placeTimeZone,
-                                  )}
-                                </p>
-                                {block.reason ? (
-                                  <p className="text-xs text-muted-foreground">
-                                    {block.reason}
-                                  </p>
-                                ) : null}
-                              </div>
-                              <div className="flex flex-col items-end gap-2">
-                                {block.type === "WALK_IN" ? (
-                                  <span className="text-sm font-semibold">
-                                    {formatCurrency(
-                                      block.totalPriceCents,
-                                      block.currency,
-                                    )}
-                                  </span>
-                                ) : null}
-                                <Button
-                                  type="button"
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => handleCancelBlock(block.id)}
-                                  disabled={cancelBlock.isPending}
-                                >
-                                  Remove
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="2xl:hidden"
+                    onClick={handleMobileToday}
+                  >
+                    Today
+                  </Button>
+                  <Badge variant="outline" className="hidden 2xl:inline-flex">
+                    Snap: 60m
+                  </Badge>
+                </div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+
+              <Dialog
+                open={mobileCalendarOpen}
+                onOpenChange={setMobileCalendarOpen}
+              >
+                <DialogContent className="w-auto p-0 sm:max-w-fit 2xl:hidden">
+                  <DialogTitle className="sr-only">Select date</DialogTitle>
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={(date) => {
+                      if (date) {
+                        handleMobileDateSelect(date);
+                        setMobileCalendarOpen(false);
+                      }
+                    }}
+                    month={calendarMonth}
+                    onMonthChange={setCalendarMonth}
+                    timeZone={placeTimeZone}
+                  />
+                </DialogContent>
+              </Dialog>
+
+              {!placeId || !courtId ? (
+                <Alert>
+                  <AlertTitle>Select a venue and court</AlertTitle>
+                  <AlertDescription>
+                    Choose a venue and court to load the week grid.
+                  </AlertDescription>
+                </Alert>
+              ) : blocksQuery.error ? (
+                <Alert variant="destructive">
+                  <AlertTitle>Failed to load blocks</AlertTitle>
+                  <AlertDescription>
+                    {getClientErrorMessage(
+                      blocksQuery.error,
+                      "Please try again.",
+                    )}
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <OwnerAvailabilityWeekGrid
+                  weekDays={weekDayKeys}
+                  hours={hours}
+                  timeZone={placeTimeZone}
+                  compact={!is2xlUp}
+                  blocksByDay={weekTimelineBlocksByDayKey}
+                  draftBlocksByDay={draftWeekTimelineBlocksByDayKey}
+                  reservationsByDay={weekTimelineReservationsByDayKey}
+                  courtHoursWindows={courtHoursQuery.data ?? []}
+                  pendingBlockIds={pendingBlockIds}
+                  onSelectBlock={manageBlock.select}
+                  placing={isPlacingDraftRow}
+                  onPlace={handlePlaceDraftRow}
+                  onResizePreview={handleResizePreview}
+                  onResizeCommit={handleResizeCommit}
+                  committedRange={committedRange}
+                  weekCommittedDayKey={weekCommittedDayKey}
+                  weekCommittedEndDayKey={weekCommittedEndDayKey}
+                  onCommitRange={handleWeekCommitRange}
+                  onClearRange={handleWeekClearRange}
+                  disabled={isDragDisabled}
+                  todayDayKey={todayDayKey}
+                  blocksLoading={blocksQuery.isLoading}
+                />
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
         <RemoveBlockDialog confirmRemoveBlock={confirmRemoveBlock} />
 
