@@ -3,31 +3,26 @@
 import * as React from "react";
 import { formatInTimeZone } from "@/common/format";
 import { useMediaQuery } from "@/common/hooks/use-media-query";
+import { getZonedDayKey } from "@/common/time-zone";
 import {
-  getZonedDayKey,
-  getZonedDayRangeForInstant,
-  getZonedStartOfDayIso,
-  toUtcISOString,
-} from "@/common/time-zone";
-import {
-  filterSlotsByDayKey,
+  buildSlotsByDayKey,
   getWeekDayKeys,
   getWeekStartDayKey,
-  mapAvailabilityOptionsToSlots,
   parseDayKeyToDate,
 } from "@/features/discovery/helpers";
 import {
   type PlaceDetail,
   useModDiscoveryPrefetchPort,
-  useQueryDiscoveryAvailabilityForCourt,
+  useQueryDiscoveryAvailabilityForCourtRange,
   useQueryDiscoveryAvailabilityForPlaceSportRange,
 } from "@/features/discovery/hooks";
 import { PlaceDetail as PlaceDetailCompound } from "@/features/discovery/place-detail/components/place-detail";
 import { buildBookingSelectionSummary } from "@/features/discovery/place-detail/helpers/booking-summary";
+import { isWithinAdjacentWeek } from "@/features/discovery/place-detail/helpers/date-adjacency";
 import {
-  getNextDayKeyForInstant,
-  isSameOrNextDay,
-} from "@/features/discovery/place-detail/helpers/date-adjacency";
+  getSelectionSummaryQueryWindow,
+  getWeekGridQueryWindow,
+} from "@/features/discovery/place-detail/helpers/week-grid-query-window";
 import { useModMobileWeekPrefetch } from "@/features/discovery/place-detail/hooks/use-mobile-week-prefetch";
 import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
@@ -109,6 +104,10 @@ export function PlaceDetailBookingMobileSection({
 }: PlaceDetailBookingMobileSectionProps) {
   const utils = useModDiscoveryPrefetchPort();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const isDesktopViewport =
+    isDesktop ||
+    (typeof window !== "undefined" &&
+      window.matchMedia("(min-width: 1024px)").matches);
   const mobileSheetExpanded = usePlaceDetailUiStore(
     (s) => s.mobileSheetExpanded,
   );
@@ -145,98 +144,105 @@ export function PlaceDetailBookingMobileSection({
     [placeTimeZone, weekStartDayKey],
   );
 
-  const mobileDayDateIso = React.useMemo(
-    () => getZonedStartOfDayIso(selectedDate ?? today, placeTimeZone),
-    [placeTimeZone, selectedDate, today],
+  const weekQueryWindow = React.useMemo(
+    () =>
+      getWeekGridQueryWindow({
+        weekDayKeys,
+        selectedDayKey,
+        selectedStartTime,
+        timeZone: placeTimeZone,
+        todayRangeStart,
+        maxBookingDate,
+      }),
+    [
+      maxBookingDate,
+      placeTimeZone,
+      selectedDayKey,
+      selectedStartTime,
+      todayRangeStart,
+      weekDayKeys,
+    ],
   );
 
-  const summaryDayDateIso = React.useMemo(() => {
-    if (!selectedStartTime) return "";
-    return getZonedStartOfDayIso(new Date(selectedStartTime), placeTimeZone);
-  }, [placeTimeZone, selectedStartTime]);
+  const summaryQueryWindow = React.useMemo(
+    () =>
+      getSelectionSummaryQueryWindow({
+        selectedStartTime,
+        durationMinutes,
+        timeZone: placeTimeZone,
+      }),
+    [durationMinutes, placeTimeZone, selectedStartTime],
+  );
 
-  const summaryDayEndIso = React.useMemo(() => {
-    if (!selectedStartTime) return "";
-    // End of the day that contains the selection's END time (supports cross-midnight)
-    const selectionEnd = new Date(
-      Date.parse(selectedStartTime) + durationMinutes * 60_000,
-    );
-    return toUtcISOString(
-      getZonedDayRangeForInstant(selectionEnd, placeTimeZone).end,
-    );
-  }, [placeTimeZone, selectedStartTime, durationMinutes]);
+  // Week-range queries (one per mode)
+  const mobileCourtWeekQuery = useQueryDiscoveryAvailabilityForCourtRange(
+    {
+      courtId: selectedCourtId ?? "",
+      startDate: weekQueryWindow.startDateIso,
+      endDate: weekQueryWindow.endDateIso,
+      durationMinutes: TIMELINE_SLOT_DURATION,
+      includeUnavailable: true,
+    },
+    !isDesktopViewport &&
+      mobileSheetExpanded &&
+      selectionMode === "court" &&
+      !!selectedCourtId,
+  );
 
-  const mobileAnyDayQuery = useQueryDiscoveryAvailabilityForPlaceSportRange(
+  const mobileAnyWeekQuery = useQueryDiscoveryAvailabilityForPlaceSportRange(
     {
       placeId: place.id,
       sportId: selectedSportId ?? "",
-      startDate: mobileDayDateIso,
-      endDate: mobileDayDateIso
-        ? toUtcISOString(
-            getZonedDayRangeForInstant(
-              new Date(mobileDayDateIso),
-              placeTimeZone,
-            ).end,
-          )
-        : "",
+      startDate: weekQueryWindow.startDateIso,
+      endDate: weekQueryWindow.endDateIso,
       durationMinutes: TIMELINE_SLOT_DURATION,
       includeUnavailable: true,
       includeCourtOptions: false,
     },
-    !isDesktop &&
+    !isDesktopViewport &&
       mobileSheetExpanded &&
       selectionMode === "any" &&
-      !!selectedSportId &&
-      !!mobileDayDateIso,
+      !!selectedSportId,
   );
 
-  const mobileCourtDayQuery = useQueryDiscoveryAvailabilityForCourt(
-    {
-      courtId: selectedCourtId ?? "",
-      date: mobileDayDateIso,
-      durationMinutes: TIMELINE_SLOT_DURATION,
-      includeUnavailable: true,
-    },
-    !isDesktop &&
-      mobileSheetExpanded &&
-      selectionMode === "court" &&
-      !!selectedCourtId &&
-      !!mobileDayDateIso,
-  );
-
-  const summaryCourtAvailabilityQuery = useQueryDiscoveryAvailabilityForCourt(
-    {
-      courtId: selectedCourtId ?? "",
-      date: summaryDayDateIso,
-      durationMinutes,
-      includeUnavailable: true,
-      selectedAddons,
-    },
-    !isDesktop &&
-      selectionMode === "court" &&
-      !!selectedStartTime &&
-      !!selectedCourtId &&
-      !!summaryDayDateIso &&
-      durationMinutes > 0,
-  );
+  // Summary pricing queries (use selected duration for pricing accuracy)
+  const summaryCourtAvailabilityQuery =
+    useQueryDiscoveryAvailabilityForCourtRange(
+      {
+        courtId: selectedCourtId ?? "",
+        startDate: summaryQueryWindow.startDateIso,
+        endDate: summaryQueryWindow.endDateIso,
+        durationMinutes,
+        includeUnavailable: true,
+        selectedAddons,
+      },
+      !isDesktopViewport &&
+        selectionMode === "court" &&
+        !!selectedStartTime &&
+        !!selectedCourtId &&
+        !!summaryQueryWindow.startDateIso &&
+        !!summaryQueryWindow.endDateIso &&
+        durationMinutes > 0,
+    );
 
   const summaryAnyAvailabilityQuery =
     useQueryDiscoveryAvailabilityForPlaceSportRange(
       {
         placeId: place.id,
         sportId: selectedSportId ?? "",
-        startDate: summaryDayDateIso,
-        endDate: summaryDayEndIso,
+        startDate: summaryQueryWindow.startDateIso,
+        endDate: summaryQueryWindow.endDateIso,
         durationMinutes,
         includeUnavailable: true,
         includeCourtOptions: false,
+        selectedAddons,
       },
-      !isDesktop &&
+      !isDesktopViewport &&
         selectionMode === "any" &&
         !!selectedStartTime &&
         !!selectedSportId &&
-        !!summaryDayDateIso &&
-        !!summaryDayEndIso &&
+        !!summaryQueryWindow.startDateIso &&
+        !!summaryQueryWindow.endDateIso &&
         durationMinutes > 0,
     );
 
@@ -254,7 +260,7 @@ export function PlaceDetailBookingMobileSection({
 
   useModMobileWeekPrefetch({
     showBooking: true,
-    isDesktop,
+    isDesktop: isDesktopViewport,
     mobileSheetExpanded,
     placeId: place.id,
     placeTimeZone,
@@ -264,38 +270,36 @@ export function PlaceDetailBookingMobileSection({
     weekStartDayKey,
     weekDayKeys,
     durationMinutes: TIMELINE_SLOT_DURATION,
+    todayRangeStart,
+    maxBookingDate,
     hasPrefetchedMobileWeek,
     markPrefetchedMobileWeek,
     clearPrefetchedMobileWeek,
     utils,
   });
 
-  const mobileDaySlots = React.useMemo(() => {
+  // Build week slots map from week-range query data
+  const mobileWeekSlotsByDay = React.useMemo(() => {
     const options =
       selectionMode === "any"
-        ? (mobileAnyDayQuery.data?.options ?? [])
-        : (mobileCourtDayQuery.data?.options ?? []);
-    return filterSlotsByDayKey(
-      mapAvailabilityOptionsToSlots(options, TIMELINE_SLOT_DURATION),
-      selectedDayKey,
-      placeTimeZone,
-    );
+        ? (mobileAnyWeekQuery.data?.options ?? [])
+        : (mobileCourtWeekQuery.data?.options ?? []);
+    return buildSlotsByDayKey(options, placeTimeZone, TIMELINE_SLOT_DURATION);
   }, [
     selectionMode,
-    mobileAnyDayQuery.data,
-    mobileCourtDayQuery.data,
+    mobileAnyWeekQuery.data,
+    mobileCourtWeekQuery.data,
     placeTimeZone,
-    selectedDayKey,
   ]);
 
   const isMobileLoading =
     selectionMode === "any"
-      ? mobileAnyDayQuery.isLoading && !mobileAnyDayQuery.data
-      : mobileCourtDayQuery.isLoading && !mobileCourtDayQuery.data;
+      ? mobileAnyWeekQuery.isLoading && !mobileAnyWeekQuery.data
+      : mobileCourtWeekQuery.isLoading && !mobileCourtWeekQuery.data;
   const isMobileRefreshing =
     selectionMode === "any"
-      ? mobileAnyDayQuery.isFetching && !!mobileAnyDayQuery.data
-      : mobileCourtDayQuery.isFetching && !!mobileCourtDayQuery.data;
+      ? mobileAnyWeekQuery.isFetching && !!mobileAnyWeekQuery.data
+      : mobileCourtWeekQuery.isFetching && !!mobileCourtWeekQuery.data;
 
   const selectedRange = React.useMemo(
     () =>
@@ -305,36 +309,14 @@ export function PlaceDetailBookingMobileSection({
     [durationMinutes, selectedStartTime],
   );
 
-  // Cross-day: when selection started on a different day (court mode only)
-  const crossDayStartTime = React.useMemo(() => {
-    if (!selectedStartTime || !selectedDate || selectionMode !== "court")
-      return undefined;
-    const startDayKey = getZonedDayKey(selectedStartTime, placeTimeZone);
-    const currentDayKey = getZonedDayKey(selectedDate, placeTimeZone);
-    if (startDayKey === currentDayKey) return undefined;
-    // Only support forward direction: selection on day N, viewing day N+1
-    const nextDayKey = getNextDayKeyForInstant(
-      selectedStartTime,
-      placeTimeZone,
-    );
-    if (currentDayKey !== nextDayKey) return undefined;
-    // Cross-day anchor is only needed when current-day view has no visible
-    // overlap from the existing selection (e.g., 10 PM-11 PM previous day).
-    // Once overlap exists, let new taps start a fresh range on current day.
-    const currentDayStartMs = Date.parse(
-      getZonedStartOfDayIso(selectedDate, placeTimeZone),
-    );
-    const selectionEndMs =
-      Date.parse(selectedStartTime) + durationMinutes * 60_000;
-    if (selectionEndMs > currentDayStartMs) return undefined;
-    return selectedStartTime;
-  }, [
-    durationMinutes,
-    selectedStartTime,
-    selectedDate,
-    selectionMode,
-    placeTimeZone,
-  ]);
+  // Flatten week slots for summary computation
+  const allWeekSlots = React.useMemo(() => {
+    const slots: import("@/components/kudos").TimeSlot[] = [];
+    for (const [, daySlots] of mobileWeekSlotsByDay) {
+      slots.push(...daySlots);
+    }
+    return slots;
+  }, [mobileWeekSlotsByDay]);
 
   const selectionSummary = React.useMemo(() => {
     const summaryOptions =
@@ -344,12 +326,12 @@ export function PlaceDetailBookingMobileSection({
     return buildBookingSelectionSummary({
       selectedStartTime,
       durationMinutes,
-      pickerSlots: mobileDaySlots,
+      pickerSlots: allWeekSlots,
       pricingOptions: summaryOptions,
     });
   }, [
     durationMinutes,
-    mobileDaySlots,
+    allWeekSlots,
     selectedStartTime,
     selectionMode,
     summaryAnyAvailabilityQuery.data?.options,
@@ -357,9 +339,9 @@ export function PlaceDetailBookingMobileSection({
   ]);
 
   React.useEffect(() => {
-    if (isDesktop) return;
+    if (isDesktopViewport) return;
     onSelectionSummaryChange(selectionSummary);
-  }, [isDesktop, onSelectionSummaryChange, selectionSummary]);
+  }, [isDesktopViewport, onSelectionSummaryChange, selectionSummary]);
 
   const hasSelection = !!selectedStartTime;
   const formattedDateLabel = React.useMemo(
@@ -424,43 +406,21 @@ export function PlaceDetailBookingMobileSection({
       if (!date) return;
       const nextDayKey = getZonedDayKey(date, placeTimeZone);
       if (selectedStartTime) {
-        const isAdjacentOrSame = isSameOrNextDay({
+        const preserveSelection = isWithinAdjacentWeek({
           selectedStartTimeIso: selectedStartTime,
           candidateDayKey: nextDayKey,
           timeZone: placeTimeZone,
         });
         setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone), {
-          preserveSelection: isAdjacentOrSame,
+          preserveSelection,
         });
-        if (!isAdjacentOrSame) {
+        if (!preserveSelection) {
           clearSelection(true);
         }
       } else {
         setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
       }
       setMobileCalendarOpen(false);
-    },
-    [clearSelection, placeTimeZone, selectedStartTime, setSelectedDate],
-  );
-
-  const handleMobileDateSelect = React.useCallback(
-    (date: Date) => {
-      const nextDayKey = getZonedDayKey(date, placeTimeZone);
-      if (selectedStartTime) {
-        const isAdjacentOrSame = isSameOrNextDay({
-          selectedStartTimeIso: selectedStartTime,
-          candidateDayKey: nextDayKey,
-          timeZone: placeTimeZone,
-        });
-        setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone), {
-          preserveSelection: isAdjacentOrSame,
-        });
-        if (!isAdjacentOrSame) {
-          clearSelection(true);
-        }
-      } else {
-        setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
-      }
     },
     [clearSelection, placeTimeZone, selectedStartTime, setSelectedDate],
   );
@@ -510,10 +470,7 @@ export function PlaceDetailBookingMobileSection({
       selectedCourtId={selectedCourtId}
       onMobileCourtChange={handleMobileCourtChange}
       selectedDate={selectedDate}
-      selectedDayKey={selectedDayKey}
-      today={today}
       placeTimeZone={placeTimeZone}
-      onMobileDateSelect={handleMobileDateSelect}
       mobileCalendarOpen={mobileCalendarOpen}
       setMobileCalendarOpen={setMobileCalendarOpen}
       onMobileCalendarJump={handleMobileCalendarJump}
@@ -521,7 +478,10 @@ export function PlaceDetailBookingMobileSection({
       maxBookingDate={maxBookingDate}
       isMobileRefreshing={isMobileRefreshing}
       isMobileLoading={isMobileLoading}
-      mobileDaySlots={mobileDaySlots}
+      weekDayKeys={weekDayKeys}
+      weekSlotsByDay={mobileWeekSlotsByDay}
+      todayDayKey={getZonedDayKey(today, placeTimeZone)}
+      maxDayKey={getZonedDayKey(maxBookingDate, placeTimeZone)}
       selectedRange={selectedRange}
       onAnyRangeChange={handleAnyRangeChange}
       onCourtRangeChange={handleCourtRangeChange}
@@ -538,7 +498,6 @@ export function PlaceDetailBookingMobileSection({
       onAddToCartAction={handleAddToCartWithSnapshot}
       onRemoveFromCartAction={onRemoveFromCartAction}
       cartedStartTimes={cartedStartTimes}
-      crossDayStartTime={crossDayStartTime}
     />
   );
 }

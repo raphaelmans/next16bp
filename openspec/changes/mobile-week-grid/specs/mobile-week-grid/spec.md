@@ -128,6 +128,10 @@ The system SHALL visually distinguish cells whose time slots are already added t
 - **WHEN** user taps a cell that is already in the cart
 - **THEN** the cell does not become a new selection anchor
 
+#### Scenario: Carted cell cannot be included while extending range
+- **WHEN** user extends a range via tap or drag toward a carted cell
+- **THEN** the committed range excludes the carted cell and cannot cross through it
+
 ### Requirement: Skeleton loading state
 The system SHALL display a skeleton/shimmer loading state while week availability data is being fetched, matching the grid's column and row structure.
 
@@ -149,3 +153,53 @@ The system SHALL replace `MobileDateStrip` and `TimeRangePicker` with `MobileWee
 #### Scenario: Components remain importable
 - **WHEN** other parts of the application import `MobileDateStrip` or `TimeRangePicker`
 - **THEN** the imports resolve successfully (components are not deleted, only removed from the booking sheet)
+
+### Requirement: Selection state is preserved across week navigation
+The system SHALL preserve the committed selection state when users navigate between weeks. Selection SHALL remain in state even when it is outside the currently displayed week.
+
+#### Scenario: Jump away from selected week
+- **WHEN** user has an active selection in week W and navigates to week W+1 (or any other week)
+- **THEN** the selection remains committed in state and is not auto-cleared
+
+#### Scenario: Return to selected week
+- **WHEN** user navigates back to the week that contains the committed selection
+- **THEN** the corresponding cells are highlighted again and summary information is restored from committed state
+
+### Requirement: Selection duration is capped at 24 hours
+The system SHALL prevent selection ranges longer than `1440` minutes in week-grid interactions.
+
+#### Scenario: Tap extension beyond 24 hours
+- **WHEN** user taps an anchor and taps a target that would create a range longer than 24 hours
+- **THEN** the range commit is rejected or clamped so the committed duration does not exceed 24 hours
+
+#### Scenario: Drag extension beyond 24 hours
+- **WHEN** user drag-selects across cells such that the raw drag span exceeds 24 hours
+- **THEN** the drag preview/commit is clamped to the furthest contiguous selectable cell within 24 hours
+
+### Requirement: Shared range-selection clears on same-cell reselect
+The system SHALL clear a single-cell committed selection when the same cell is tapped/clicked again. This behavior SHALL be consistent across player and owner surfaces that use shared range-selection primitives.
+
+#### Scenario: Mobile week grid same-cell clear
+- **WHEN** user taps a cell to set a single-cell anchor and taps the same cell again
+- **THEN** committed selection is cleared
+
+#### Scenario: Player desktop week grid same-cell clear
+- **WHEN** user clicks a cell to set a single-cell anchor and clicks the same cell again
+- **THEN** committed selection is cleared
+
+#### Scenario: Owner week/day selector same-cell clear
+- **WHEN** owner sets a single-cell selection in a timeline/week-column selector and reselects the same cell
+- **THEN** committed selection is cleared
+
+### Requirement: Week-range fetching uses one request per mode/week
+The system SHALL fetch displayed mobile week availability using one week-range request per mode/week combination, rather than fan-out per-day requests.
+
+#### Scenario: Court mode uses one range request
+- **WHEN** mobile booking is in court mode for week W
+- **THEN** the client issues one `getForCourtRange` request for W
+- **AND** does not issue separate per-day `getForCourt` requests for each day in W
+
+#### Scenario: Any-court mode uses one range request
+- **WHEN** mobile booking is in any-court mode for week W
+- **THEN** the client issues one `getForPlaceSportRange` request for W
+- **AND** does not issue separate per-day requests for each day in W

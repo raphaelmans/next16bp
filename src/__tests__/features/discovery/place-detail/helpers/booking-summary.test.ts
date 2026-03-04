@@ -97,6 +97,65 @@ describe("buildBookingSelectionSummary", () => {
     });
   });
 
+  it("derives instant local total from contiguous picker slots", () => {
+    const summary = buildBookingSelectionSummary({
+      selectedStartTime: "2026-02-26T03:00:00.000Z",
+      durationMinutes: 180,
+      pickerSlots: [
+        makeSlot({
+          startTime: "2026-02-26T03:00:00.000Z",
+          endTime: "2026-02-26T04:00:00.000Z",
+          priceCents: 50000,
+        }),
+        makeSlot({
+          startTime: "2026-02-26T04:00:00.000Z",
+          endTime: "2026-02-26T05:00:00.000Z",
+          priceCents: 50000,
+        }),
+        makeSlot({
+          startTime: "2026-02-26T05:00:00.000Z",
+          endTime: "2026-02-26T06:00:00.000Z",
+          priceCents: 50000,
+        }),
+      ],
+      pricingOptions: [],
+    });
+
+    expect(summary).toEqual({
+      startTime: "2026-02-26T03:00:00.000Z",
+      endTime: "2026-02-26T06:00:00.000Z",
+      totalCents: 150000,
+      currency: "PHP",
+    });
+  });
+
+  it("keeps total undefined when local slot chain is incomplete", () => {
+    const summary = buildBookingSelectionSummary({
+      selectedStartTime: "2026-02-26T03:00:00.000Z",
+      durationMinutes: 180,
+      pickerSlots: [
+        makeSlot({
+          startTime: "2026-02-26T03:00:00.000Z",
+          endTime: "2026-02-26T04:00:00.000Z",
+          priceCents: 50000,
+        }),
+        makeSlot({
+          startTime: "2026-02-26T05:00:00.000Z",
+          endTime: "2026-02-26T06:00:00.000Z",
+          priceCents: 50000,
+        }),
+      ],
+      pricingOptions: [],
+    });
+
+    expect(summary).toEqual({
+      startTime: "2026-02-26T03:00:00.000Z",
+      endTime: "2026-02-26T06:00:00.000Z",
+      totalCents: undefined,
+      currency: "PHP",
+    });
+  });
+
   it("matches equivalent instants when ISO formatting differs", () => {
     const summary = buildBookingSelectionSummary({
       selectedStartTime: "2026-02-26T03:00:00.000Z",

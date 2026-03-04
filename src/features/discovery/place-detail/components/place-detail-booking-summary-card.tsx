@@ -1,7 +1,7 @@
 "use client";
 
-import { X } from "lucide-react";
 import { addMinutes } from "date-fns";
+import { X } from "lucide-react";
 import {
   formatCurrency,
   formatDuration,
@@ -66,7 +66,12 @@ export function PlaceDetailBookingSummaryCard({
     0,
   );
   const cartCurrency = cartItems[0]?.currency ?? "PHP";
-  const hasEstimate = cartItems.some((i) => i.estimatedPriceCents !== null);
+  const pricedItemCount = cartItems.filter(
+    (item) => item.estimatedPriceCents !== null,
+  ).length;
+  const unpricedItemCount = cartItems.length - pricedItemCount;
+  const hasEstimate = pricedItemCount > 0;
+  const hasPartialEstimate = unpricedItemCount > 0;
 
   return (
     <Card>
@@ -184,7 +189,7 @@ export function PlaceDetailBookingSummaryCard({
                           · {formatDuration(item.durationMinutes)}
                           {item.estimatedPriceCents !== null
                             ? ` · ${formatCurrency(item.estimatedPriceCents, item.currency)}`
-                            : ""}
+                            : " · Price unavailable"}
                         </>
                       );
                     })()}
@@ -202,11 +207,19 @@ export function PlaceDetailBookingSummaryCard({
             ))}
             {hasEstimate && (
               <div className="flex items-center justify-between border-t pt-2 text-sm">
-                <p className="text-muted-foreground">Estimated total</p>
+                <p className="text-muted-foreground">
+                  {hasPartialEstimate ? "Partial estimate" : "Estimated total"}
+                </p>
                 <p className="font-semibold">
                   {formatCurrency(estimatedTotalCents, cartCurrency)}
                 </p>
               </div>
+            )}
+            {hasPartialEstimate && (
+              <p className="text-xs text-muted-foreground">
+                {unpricedItemCount} court
+                {unpricedItemCount === 1 ? "" : "s"} pending price estimate.
+              </p>
             )}
           </div>
         )}

@@ -10,14 +10,10 @@ import {
 } from "lucide-react";
 import type * as React from "react";
 import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
-import { getZonedDayKey } from "@/common/time-zone";
-import { AvailabilityEmptyState } from "@/components/availability-empty-state";
 import {
   AvailabilityWeekGrid,
   AvailabilityWeekGridSkeleton,
   KudosDatePicker,
-  TimeRangePicker,
-  TimeRangePickerSkeleton,
   type TimeSlot,
 } from "@/components/kudos";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -32,10 +28,6 @@ import {
 } from "@/components/ui/popover";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import type {
-  AvailabilityDiagnostics,
-  PlaceContactDetail,
-} from "@/features/discovery/hooks";
 import { cn } from "@/lib/utils";
 
 type TimeRangeSelection = {
@@ -69,10 +61,6 @@ type PlaceDetailAvailabilityDesktopProps = {
   courtsForSport: CourtOption[];
   selectedCourtId?: string;
   onCourtSelect: (courtId: string) => void;
-  anyViewMode: "week" | "day";
-  onAnyViewModeChange: (mode: "week" | "day") => void;
-  courtViewMode: "week" | "day";
-  onCourtViewModeChange: (mode: "week" | "day") => void;
   calendarPopoverOpen: boolean;
   setCalendarPopoverOpen: (open: boolean) => void;
   weekHeaderLabel: string;
@@ -101,11 +89,6 @@ type PlaceDetailAvailabilityDesktopProps = {
   todayDayKey: string;
   maxDayKey: string;
   sameDayAnchorDayKey?: string;
-  anyDaySlots: TimeSlot[];
-  courtDaySlots: TimeSlot[];
-  anyDayDiagnostics: AvailabilityDiagnostics | null;
-  courtDayDiagnostics: AvailabilityDiagnostics | null;
-  contactDetail?: PlaceContactDetail;
   cartedStartTimes?: Set<string>;
 };
 
@@ -119,10 +102,6 @@ export function PlaceDetailAvailabilityDesktop({
   courtsForSport,
   selectedCourtId,
   onCourtSelect,
-  anyViewMode,
-  onAnyViewModeChange,
-  courtViewMode,
-  onCourtViewModeChange,
   calendarPopoverOpen,
   setCalendarPopoverOpen,
   weekHeaderLabel,
@@ -151,18 +130,8 @@ export function PlaceDetailAvailabilityDesktop({
   todayDayKey,
   maxDayKey,
   sameDayAnchorDayKey,
-  anyDaySlots,
-  courtDaySlots,
-  anyDayDiagnostics,
-  courtDayDiagnostics,
-  contactDetail,
   cartedStartTimes,
 }: PlaceDetailAvailabilityDesktopProps) {
-  const isCourtWeekView = courtViewMode === "week";
-  const selectedDayKey = selectedDate
-    ? getZonedDayKey(selectedDate, placeTimeZone)
-    : undefined;
-
   return (
     <div ref={availabilitySectionRef} className="scroll-mt-24 hidden lg:block">
       <Card>
@@ -171,8 +140,8 @@ export function PlaceDetailAvailabilityDesktop({
             <div className="space-y-1">
               <CardTitle>Availability</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Browse times across courts, or pick a specific court to select a
-                range.
+                Browse weekly availability and select a start/end range directly
+                on the grid.
               </p>
             </div>
             <Badge variant="secondary" className="bg-accent/10 text-accent">
@@ -245,257 +214,94 @@ export function PlaceDetailAvailabilityDesktop({
             )}
           </div>
 
-          {selectionMode === "any" && (
-            <div className="space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">Schedule view</p>
-                  <p className="text-xs text-muted-foreground">
-                    Click a start time, then click an end time to select a
-                    range.
-                  </p>
-                </div>
-                <ToggleGroup
-                  type="single"
-                  value={anyViewMode}
-                  onValueChange={(value) => {
-                    if (!value) return;
-                    onAnyViewModeChange(value as "week" | "day");
-                  }}
-                >
-                  <ToggleGroupItem value="week" size="sm">
-                    Week
-                  </ToggleGroupItem>
-                  <ToggleGroupItem value="day" size="sm">
-                    Day
-                  </ToggleGroupItem>
-                </ToggleGroup>
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="space-y-1">
+                <p className="text-sm font-medium">Week of {weekHeaderLabel}</p>
+                <p className="text-xs text-muted-foreground">
+                  Choose a start slot, then choose an end slot.
+                </p>
               </div>
-
-              {anyViewMode === "week" ? (
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="flex items-center gap-1">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={onPrevWeek}
-                      disabled={isPrevWeekDisabled}
-                      aria-label="Previous week"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Popover
-                      open={calendarPopoverOpen}
-                      onOpenChange={setCalendarPopoverOpen}
-                    >
-                      <PopoverTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          aria-label="Open calendar to jump to a date"
-                        >
-                          <Calendar className="h-3.5 w-3.5" />
-                          {weekHeaderLabel}
-                          <ChevronDown
-                            className={cn(
-                              "h-3 w-3 opacity-50 transition-transform duration-200",
-                              calendarPopoverOpen && "rotate-180",
-                            )}
-                          />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <CalendarWidget
-                          mode="single"
-                          selected={selectedDate}
-                          onSelect={onCalendarJump}
-                          disabled={(date) => {
-                            if (date < todayRangeStart) return true;
-                            if (date > maxBookingDate) return true;
-                            return false;
-                          }}
-                          timeZone={placeTimeZone}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={onNextWeek}
-                      disabled={isNextWeekDisabled}
-                      aria-label="Next week"
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={onGoToToday}
-                  >
-                    Today
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex flex-wrap items-center gap-2">
-                  <KudosDatePicker
-                    value={selectedDate}
-                    onChange={onCalendarJump}
-                    placeholder="Choose a date"
-                    maxDate={maxBookingDate}
-                    timeZone={placeTimeZone}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={onGoToToday}
-                  >
-                    Today
-                  </Button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {selectionMode === "court" && (
-            <div className="space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">Schedule view</p>
-                  <p className="text-xs text-muted-foreground">
-                    Click a start time, then click an end time to select a
-                    range.
-                  </p>
-                </div>
-                <ToggleGroup
-                  type="single"
-                  value={courtViewMode}
-                  onValueChange={(value) => {
-                    if (!value) return;
-                    onCourtViewModeChange(value as "week" | "day");
-                  }}
+              <div className="flex items-center gap-1 rounded-lg border border-border bg-muted/30 p-1">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7"
+                  onClick={onPrevWeek}
+                  disabled={isPrevWeekDisabled}
+                  aria-label="Previous week"
                 >
-                  <ToggleGroupItem value="week" size="sm">
-                    Week
-                  </ToggleGroupItem>
-                  <ToggleGroupItem value="day" size="sm">
-                    Day
-                  </ToggleGroupItem>
-                </ToggleGroup>
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Popover
+                  open={calendarPopoverOpen}
+                  onOpenChange={setCalendarPopoverOpen}
+                >
+                  <PopoverTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="h-7 gap-1 px-2 text-xs font-medium"
+                    >
+                      <Calendar className="h-3.5 w-3.5" />
+                      {weekHeaderLabel}
+                      <ChevronDown className="h-3 w-3" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="w-auto p-0">
+                    <CalendarWidget
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={onCalendarJump}
+                      disabled={(date) =>
+                        date < todayRangeStart || date > maxBookingDate
+                      }
+                      timeZone={placeTimeZone}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7"
+                  onClick={onNextWeek}
+                  disabled={isNextWeekDisabled}
+                  aria-label="Next week"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
               </div>
-
-              {isCourtWeekView ? (
-                <div className="flex flex-wrap items-center gap-2">
-                  <div className="flex items-center gap-1">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={onPrevWeek}
-                      disabled={isPrevWeekDisabled}
-                      aria-label="Previous week"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Popover
-                      open={calendarPopoverOpen}
-                      onOpenChange={setCalendarPopoverOpen}
-                    >
-                      <PopoverTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          aria-label="Open calendar to jump to a date"
-                        >
-                          <Calendar className="h-3.5 w-3.5" />
-                          {weekHeaderLabel}
-                          <ChevronDown
-                            className={cn(
-                              "h-3 w-3 opacity-50 transition-transform duration-200",
-                              calendarPopoverOpen && "rotate-180",
-                            )}
-                          />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <CalendarWidget
-                          mode="single"
-                          selected={selectedDate}
-                          onSelect={onCalendarJump}
-                          disabled={(date) => {
-                            if (date < todayRangeStart) return true;
-                            if (date > maxBookingDate) return true;
-                            return false;
-                          }}
-                          timeZone={placeTimeZone}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={onNextWeek}
-                      disabled={isNextWeekDisabled}
-                      aria-label="Next week"
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={onGoToToday}
-                  >
-                    Today
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex flex-wrap items-center gap-2">
-                  <KudosDatePicker
-                    value={selectedDate}
-                    onChange={onCalendarJump}
-                    placeholder="Choose a date"
-                    maxDate={maxBookingDate}
-                    timeZone={placeTimeZone}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={onGoToToday}
-                  >
-                    Today
-                  </Button>
-                </div>
-              )}
             </div>
-          )}
+
+            <div className="flex flex-wrap items-center gap-2">
+              <KudosDatePicker
+                value={selectedDate}
+                onChange={onCalendarJump}
+                timeZone={placeTimeZone}
+                minDate={todayRangeStart}
+                maxDate={maxBookingDate}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onGoToToday}
+              >
+                Today
+              </Button>
+            </div>
+          </div>
         </CardHeader>
 
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-0">
           {activeAvailabilityError.isError && (
-            <Alert variant="destructive">
+            <Alert variant="destructive" className="border-dashed">
               <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>
-                {activeAvailabilityError.isBookingWindowError
-                  ? "Date beyond booking window"
-                  : "Failed to load availability"}
-              </AlertTitle>
-              <AlertDescription>
+              <AlertTitle>Unable to load availability</AlertTitle>
+              <AlertDescription className="space-y-3">
                 {activeAvailabilityError.isBookingWindowError ? (
                   <div className="flex flex-col gap-2">
                     <p>
@@ -535,48 +341,22 @@ export function PlaceDetailAvailabilityDesktop({
           )}
 
           {selectionMode === "any" ? (
-            anyViewMode === "week" ? (
-              isLoadingAvailability ? (
-                <AvailabilityWeekGridSkeleton
-                  dayKeys={weekDayKeys}
-                  timeZone={placeTimeZone}
-                />
-              ) : (
-                <AvailabilityWeekGrid
-                  dayKeys={weekDayKeys}
-                  slotsByDay={anyWeekSlotsByDay}
-                  timeZone={placeTimeZone}
-                  selectedRange={selectedRange}
-                  onRangeChange={onAnyRangeChange}
-                  onDayClick={onAnyWeekDayClick}
-                  todayDayKey={todayDayKey}
-                  maxDayKey={maxDayKey}
-                  cartedStartTimes={cartedStartTimes}
-                />
-              )
-            ) : !selectedDate ? (
-              <p className="py-6 text-center text-sm text-muted-foreground">
-                Select a date to see available start times.
-              </p>
-            ) : isLoadingAvailability ? (
-              <TimeRangePickerSkeleton count={8} />
-            ) : anyDaySlots.length > 0 ? (
-              <TimeRangePicker
-                slots={anyDaySlots}
+            isLoadingAvailability ? (
+              <AvailabilityWeekGridSkeleton
+                dayKeys={weekDayKeys}
                 timeZone={placeTimeZone}
-                selectedDayKey={selectedDayKey}
-                selectedStartTime={selectedRange?.startTime}
-                selectedDurationMinutes={selectedRange?.durationMinutes}
-                showPrice
-                onChange={onAnyRangeChange}
-                onClear={onClearSelection}
-                cartedStartTimes={cartedStartTimes}
               />
             ) : (
-              <AvailabilityEmptyState
-                diagnostics={anyDayDiagnostics}
-                variant="public"
-                contact={contactDetail}
+              <AvailabilityWeekGrid
+                dayKeys={weekDayKeys}
+                slotsByDay={anyWeekSlotsByDay}
+                timeZone={placeTimeZone}
+                selectedRange={selectedRange}
+                onRangeChange={onAnyRangeChange}
+                onDayClick={onAnyWeekDayClick}
+                todayDayKey={todayDayKey}
+                maxDayKey={maxDayKey}
+                cartedStartTimes={cartedStartTimes}
               />
             )
           ) : !courtsForSport.length ? (
@@ -587,52 +367,37 @@ export function PlaceDetailAvailabilityDesktop({
             <p className="py-6 text-center text-sm text-muted-foreground">
               Select a court to see available times.
             </p>
-          ) : isCourtWeekView ? (
-            isLoadingAvailability ? (
-              <AvailabilityWeekGridSkeleton
-                dayKeys={weekDayKeys}
-                timeZone={placeTimeZone}
-              />
-            ) : (
-              <AvailabilityWeekGrid
-                dayKeys={weekDayKeys}
-                slotsByDay={courtWeekSlotsByDay}
-                timeZone={placeTimeZone}
-                selectedRange={selectedRange}
-                onRangeChange={onCourtRangeChange}
-                onDayClick={onCourtWeekDayClick}
-                todayDayKey={todayDayKey}
-                maxDayKey={maxDayKey}
-                sameDayAnchorDayKey={sameDayAnchorDayKey}
-                sameDayCueMode="highlight-anchor"
-                cartedStartTimes={cartedStartTimes}
-              />
-            )
-          ) : !selectedDate ? (
-            <p className="py-6 text-center text-sm text-muted-foreground">
-              Select a date to see available start times.
-            </p>
           ) : isLoadingAvailability ? (
-            <TimeRangePickerSkeleton count={8} />
-          ) : courtDaySlots.length > 0 ? (
-            <TimeRangePicker
-              slots={courtDaySlots}
+            <AvailabilityWeekGridSkeleton
+              dayKeys={weekDayKeys}
               timeZone={placeTimeZone}
-              selectedDayKey={selectedDayKey}
-              selectedStartTime={selectedRange?.startTime}
-              selectedDurationMinutes={selectedRange?.durationMinutes}
-              showPrice
-              onChange={onCourtRangeChange}
-              onClear={onClearSelection}
-              cartedStartTimes={cartedStartTimes}
             />
           ) : (
-            <AvailabilityEmptyState
-              diagnostics={courtDayDiagnostics}
-              variant="public"
-              contact={contactDetail}
+            <AvailabilityWeekGrid
+              dayKeys={weekDayKeys}
+              slotsByDay={courtWeekSlotsByDay}
+              timeZone={placeTimeZone}
+              selectedRange={selectedRange}
+              onRangeChange={onCourtRangeChange}
+              onDayClick={onCourtWeekDayClick}
+              todayDayKey={todayDayKey}
+              maxDayKey={maxDayKey}
+              sameDayAnchorDayKey={sameDayAnchorDayKey}
+              sameDayCueMode="highlight-anchor"
+              cartedStartTimes={cartedStartTimes}
             />
           )}
+
+          <div className="flex justify-end">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={onClearSelection}
+            >
+              Clear selection
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>

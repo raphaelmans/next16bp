@@ -1291,6 +1291,10 @@ function OwnerAvailabilityStudioInner() {
           setCommittedRange({ startIdx, endIdx });
           manageBlock.close();
         },
+        onClear: () => {
+          setCommittedRange(null);
+          manageBlock.close();
+        },
       }),
     [
       hours,
@@ -1316,6 +1320,12 @@ function OwnerAvailabilityStudioInner() {
     },
     [setCommittedRange, manageBlock.close],
   );
+
+  const handleWeekClearRange = React.useCallback(() => {
+    setCommittedRange(null);
+    setWeekCommittedDayKey(null);
+    manageBlock.close();
+  }, [setCommittedRange, manageBlock.close]);
 
   const handleMobileDrawerClose = React.useCallback(
     (open: boolean) => {
@@ -2248,6 +2258,7 @@ function OwnerAvailabilityStudioInner() {
                                   : null
                               }
                               onCommitRange={handleWeekCommitRange}
+                              onClearRange={handleWeekClearRange}
                             />
                           ))}
                         </div>

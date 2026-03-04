@@ -10,6 +10,8 @@ export interface RangeSelectionConfig {
   clampToContiguous: (anchorIdx: number, targetIdx: number) => number;
   /** Commit a range to the parent (calls onChange/onRangeChange) */
   commitRange: (startIdx: number, endIdx: number) => void;
+  /** Called when selection is cleared via same-cell reselect. If not provided, clearing is disabled. */
+  onClear?: () => void;
 }
 
 export interface RangeSelectionRange {

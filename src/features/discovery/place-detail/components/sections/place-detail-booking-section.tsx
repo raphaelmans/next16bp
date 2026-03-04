@@ -40,6 +40,7 @@ import {
   isBookingCartKeyDuplicate,
   validateBookingCartAdd,
 } from "@/features/discovery/place-detail/helpers/booking-cart-rules";
+import { isSelectionEstimateReady } from "@/features/discovery/place-detail/helpers/selection-estimate";
 import { useBookingMachines } from "@/features/discovery/place-detail/hooks/use-booking-machines";
 import { buildMemoryKey } from "@/features/discovery/place-detail/machines";
 import { usePlaceDetailUiStore } from "@/features/discovery/place-detail/stores/place-detail-ui-store";
@@ -114,10 +115,6 @@ export function PlaceDetailBookingSection({
     setSelectedAddons,
     selectedStartTime,
     setSelectedStartTime,
-    courtViewMode,
-    setCourtViewMode,
-    anyViewMode,
-    setAnyViewMode,
     courtsForSport,
     clearSelection,
     cartItems,
@@ -278,6 +275,15 @@ export function PlaceDetailBookingSection({
       !selectedSportId
     )
       return;
+    const hasReadyEstimate = isSelectionEstimateReady({
+      selectedStartTime,
+      durationMinutes,
+      selectionSummary,
+    });
+    if (!hasReadyEstimate) {
+      toast.info("Please wait for pricing to update, then add this slot.");
+      return;
+    }
 
     const courtLabel =
       courtsForSport.find((c) => c.id === selectedCourtId)?.label ??
@@ -302,6 +308,10 @@ export function PlaceDetailBookingSection({
       toast.error(getBookingCartViolationMessage(validation.reason));
       return;
     }
+    if (!selectionSummary || typeof selectionSummary.totalCents !== "number") {
+      toast.info("Please wait for pricing to update, then add this slot.");
+      return;
+    }
 
     addCartItem({
       key,
@@ -310,8 +320,8 @@ export function PlaceDetailBookingSection({
       sportId: selectedSportId,
       startTime: candidate.startTime,
       durationMinutes,
-      estimatedPriceCents: selectionSummary?.totalCents ?? null,
-      currency: selectionSummary?.currency ?? "PHP",
+      estimatedPriceCents: selectionSummary.totalCents ?? null,
+      currency: selectionSummary.currency,
     });
 
     // Build the memory key and notify the time slot machine
@@ -494,11 +504,17 @@ export function PlaceDetailBookingSection({
   }, [clearCart]);
 
   const hasSelection = !!selectedStartTime;
+  const hasPricedSelection = isSelectionEstimateReady({
+    selectedStartTime,
+    durationMinutes,
+    selectionSummary,
+  });
   const canAddToCart =
     selectionMode === "court" &&
     hasSelection &&
     !!selectedCourtId &&
-    !!selectedSportId;
+    !!selectedSportId &&
+    hasPricedSelection;
 
   const summaryCta = buildBookingSummaryCtaState({
     cartItemCount: cartItems.length,
@@ -620,10 +636,6 @@ export function PlaceDetailBookingSection({
               selectedAddons={selectedAddons}
               selectedStartTime={selectedStartTime}
               setSelectedStartTime={setSelectedStartTime}
-              courtViewMode={courtViewMode}
-              setCourtViewMode={setCourtViewMode}
-              anyViewMode={anyViewMode}
-              setAnyViewMode={setAnyViewMode}
               courtsForSport={courtsForSport}
               clearSelection={clearSelection}
               today={today}

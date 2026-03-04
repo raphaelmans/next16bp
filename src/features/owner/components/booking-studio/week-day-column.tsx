@@ -52,6 +52,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   onResizeCommit,
   committedRange,
   onCommitRange,
+  onClearRange,
 }: {
   dayKey: string;
   hours: number[];
@@ -90,6 +91,7 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
   }) => void;
   committedRange: { startIdx: number; endIdx: number } | null;
   onCommitRange: (dayKey: string, startIdx: number, endIdx: number) => void;
+  onClearRange?: () => void;
 }) {
   const selectionConfig = React.useMemo<RangeSelectionConfig>(() => {
     // Derive blocked indices from the day-clipped segment positions
@@ -154,12 +156,14 @@ export const WeekDayColumn = React.memo(function WeekDayColumn({
       commitRange: (s: number, e: number) => {
         onCommitRange(dayKey, s, e);
       },
+      onClear: onClearRange,
     };
   }, [
     blocks,
     courtHoursWindows,
     dayKey,
     hours,
+    onClearRange,
     onCommitRange,
     reservations,
     timeZone,

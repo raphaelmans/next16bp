@@ -16,7 +16,14 @@ import type { CellVisualState } from "./types";
 export function useCellState(idx: number): CellVisualState {
   return useRangeSelection(
     useShallow((s) => {
-      const { anchorIdx, hoverIdx, committedRange, config, hoveredIdx } = s;
+      const {
+        anchorIdx,
+        hoverIdx,
+        committedRange,
+        canExtendCommittedSingle,
+        config,
+        hoveredIdx,
+      } = s;
       const activeRange = deriveActiveRange({
         anchorIdx,
         hoverIdx,
@@ -34,11 +41,13 @@ export function useCellState(idx: number): CellVisualState {
       const isAwaitingEndClick = deriveIsAwaitingEndClick({
         anchorIdx,
         committedRange,
+        canExtendCommittedSingle,
       });
       const hoverPreviewRange = deriveHoverPreviewRange({
         anchorIdx,
         hoveredIdx,
         committedRange,
+        canExtendCommittedSingle,
         config,
       });
 

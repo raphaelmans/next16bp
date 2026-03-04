@@ -109,6 +109,22 @@ Rules:
 - Keep cases in source order matching the function's branching logic.
 - Name `label` as the scenario, not the assertion.
 
+## Cross-Surface Parity Tests (Desktop/Mobile)
+
+When desktop and mobile share business behavior, test the shared domain once and
+verify both surfaces consume that same behavior.
+
+Rules:
+
+- add focused unit tests for the shared pure module (source of truth)
+- include edge cases that previously diverged between surfaces (for example
+  overnight/cross-day slot mapping, outlier-hour derivation, committed range
+  wrap behavior)
+- keep mobile and desktop component tests lightweight and assert parity outcomes
+  against the shared domain contract
+- if desktop behavior is confirmed correct, write parity tests that lock mobile
+  to the same domain outputs instead of duplicating mobile-only business logic
+
 ## Dependency-Injected Tests (api.ts classes)
 
 Test `<Feature>Api` by mocking **only its injected dependencies**, not internals.

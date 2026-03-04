@@ -337,6 +337,7 @@ export const buildDaySelectionConfig = (options: {
   dayOfWeek: number;
   courtHours: CourtHoursWindow[];
   onCommitRange: (startIdx: number, endIdx: number) => void;
+  onClear?: () => void;
 }) => {
   const {
     timelineBlocks,
@@ -345,6 +346,7 @@ export const buildDaySelectionConfig = (options: {
     dayOfWeek,
     courtHours,
     onCommitRange,
+    onClear,
   } = options;
 
   // Derive blocked indices from the day-clipped segment positions
@@ -409,6 +411,7 @@ export const buildDaySelectionConfig = (options: {
     commitRange: (startIdx: number, endIdx: number) => {
       onCommitRange(startIdx, endIdx);
     },
+    onClear,
   };
 
   return config;

@@ -153,76 +153,70 @@ curl -s -X POST "https://api.firecrawl.dev/v2/extract" \
   }'
 ```
 
-## Repo Script: Sports360 → Curated CSV
+## Repo Pipeline: Crawl -> Raw -> AI Normalize -> Seed
 
-This repo includes `scripts/firecrawl-curated-courts.ts`, which:
+This repo supports a staged pipeline:
 
-1. Maps URLs from a start URL (`/v2/map`) or reads URLs from `--urls-file`
-2. Expands discovery with Sports360 `storehubs` routes (`/sportshub/:name`)
-3. Tracks URL/row inventory in a persistent state file
-4. Extracts structured venue data (`/v2/extract`) only for new URLs by default
-5. Writes import-ready CSV, extraction audit JSON, and migration coverage report
+1. Crawl pages and emit raw artifact only
+2. Normalize with AI structured output into canonical PH city/province names
+3. Seed normalized CSV into DB
 
-Run:
+### Stage 1: Crawl to Raw
+
+Use `scripts/firecrawl-curated-courts.ts` in crawl-only mode:
 
 ```bash
-pnpm scrape:curated-courts
-pnpm scrape:curated-courts -- --start-url https://app.sports360.ph/
-pnpm scrape:curated-courts -- --dry-run
-pnpm scrape:curated-courts -- --urls-file scripts/output/sports360-urls.txt
-pnpm scrape:curated-courts -- --discover-only
-pnpm scrape:curated-courts -- --rescrape-all
+pnpm scrape:curated:crawl -- --start-url https://app.sports360.ph/ --raw-output scripts/output/sports360-curated-courts.raw.json --state scripts/output/sports360-scrape-state.json --coverage-output scripts/output/sports360-coverage.json --rescrape-all
+
+pnpm scrape:curated:crawl -- --start-url https://www.pickleheads.com/courts/ph --raw-output scripts/output/pickleheads-curated-courts.raw.json --state scripts/output/pickleheads-scrape-state.json --coverage-output scripts/output/pickleheads-coverage.json --rescrape-all
 ```
 
-Outputs (default):
+`--crawl-only` mode is baked into `pnpm scrape:curated:crawl` and writes:
 
-- `scripts/output/sports360-curated-courts.csv`
-- `scripts/output/sports360-curated-courts.raw.json`
-- `scripts/output/sports360-scrape-state.json`
-- `scripts/output/sports360-coverage.json`
+- `*.raw.json` with `rawRecords` payload for normalization
+- state + coverage artifacts
+
+### Stage 2: Normalize Raw with AI Structured Output
+
+Use `scripts/normalize-curated-courts-ai.ts`:
+
+```bash
+pnpm scrape:curated:normalize -- --input scripts/output/sports360-curated-courts.raw.json --model gpt-5-mini
+pnpm scrape:curated:normalize -- --input scripts/output/pickleheads-curated-courts.raw.json --model gpt-5-mini
+```
+
+Outputs:
+
+- `*.normalized.csv` (import-ready, canonical PH location names)
+- `*.unresolved.csv` (rows AI could not confidently canonicalize)
+- `*.normalize-report.json` (stats + unresolved reasons + duplicates)
 
 Important flags:
 
-- `--discover-only`: map and update inventory, but skip extraction.
-- `--rescrape-all`: ignore state and scrape URLs again.
-- `--state <path>`: override scrape state file path.
-- `--coverage-output <path>`: override coverage report path.
-- `--skip-db-coverage`: skip DB lookup for migrated-vs-pending reporting.
+- `--model <model>`: default `gpt-5-mini`
+- `--ph-locations-file <path>`: default `public/assets/files/ph-provinces-cities.enriched.json`
+- `--batch-size <n>`: batch size for AI normalization
+- `--dry-run`: preview without writing files
 
-Suggested brute-force workflow:
+### Stage 3: Reset Curated Staging + Seed
 
-1. Discover only:
-   `pnpm scrape:curated-courts -- --discover-only`
-2. Scrape only new/unseen pages:
-   `pnpm scrape:curated-courts`
-3. Review pending migration backlog from coverage report:
-   `scripts/output/sports360-coverage.json`
-4. Import:
-   `pnpm db:import:curated-courts -- --file scripts/output/sports360-curated-courts.csv --dry-run`
-5. Import for real:
-   `pnpm db:import:curated-courts -- --file scripts/output/sports360-curated-courts.csv`
-
-## Post-Processing: Convert JSON → CSV
-
-For each scraped item, map JSON fields into the CSV columns:
-
-- `amenities`: join with `;`
-- `courts`: join with `;`
-- `photo_urls`: join with `,`
-- `country`: default to `PH` if missing
-- `time_zone`: default to `Asia/Manila` if missing
-
-## Import into DB
+Reset curated staging data (safe preserve slug default):
 
 ```bash
-pnpm db:seed:sports
-pnpm db:import:curated-courts -- --file scripts/output/sports360-curated-courts.csv --dry-run
-pnpm db:import:curated-courts -- --file scripts/output/sports360-curated-courts.csv
+pnpm db:reset:curated-staging -- --dry-run
+pnpm db:reset:curated-staging -- --confirm --preserve-slug kudos-courts-complex
+```
+
+Then import normalized CSV:
+
+```bash
+pnpm db:import:curated-courts -- --file scripts/output/sports360-curated-courts.normalized.csv --dry-run
+pnpm db:import:curated-courts -- --file scripts/output/sports360-curated-courts.normalized.csv
 ```
 
 ## Tips
 
-- Normalize `city` to match your admin filter list (e.g., `BGC`, `Makati`).
-- Avoid duplicate rows: importer dedupe is `name + city + province`.
-- When unsure about `courts`, default to `pickleball|` and let labels auto-generate.
-- Re-runs are idempotent at scrape level via canonical URL state; use `--rescrape-all` only when needed.
+- Keep unresolved rows out of import; review `*.unresolved.csv` first.
+- Normalized CSV is the only file that should be seeded (`*.normalized.csv`).
+- Re-runs are idempotent in normalize stage via source URL + fallback row key dedupe.
+- Run `pnpm db:reset:curated-staging -- --dry-run` before any destructive reset.

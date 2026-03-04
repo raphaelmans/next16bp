@@ -10,12 +10,14 @@ type ActiveRangeState = {
 type AwaitingEndClickState = {
   anchorIdx: number | null;
   committedRange: RangeSelectionRange | null;
+  canExtendCommittedSingle?: boolean;
 };
 
 type HoverPreviewState = {
   anchorIdx: number | null;
   hoveredIdx: number | null;
   committedRange: RangeSelectionRange | null;
+  canExtendCommittedSingle?: boolean;
   config: RangeSelectionConfig;
 };
 
@@ -35,8 +37,10 @@ export function deriveActiveRange({
 export function deriveIsAwaitingEndClick({
   anchorIdx,
   committedRange,
+  canExtendCommittedSingle = true,
 }: AwaitingEndClickState): boolean {
   return (
+    canExtendCommittedSingle &&
     committedRange !== null &&
     committedRange.startIdx === committedRange.endIdx &&
     anchorIdx === null
@@ -47,9 +51,18 @@ export function deriveHoverPreviewRange({
   anchorIdx,
   hoveredIdx,
   committedRange,
+  canExtendCommittedSingle,
   config,
 }: HoverPreviewState): RangeSelectionRange | null {
-  if (!deriveIsAwaitingEndClick({ anchorIdx, committedRange })) return null;
+  if (
+    !deriveIsAwaitingEndClick({
+      anchorIdx,
+      committedRange,
+      canExtendCommittedSingle,
+    })
+  ) {
+    return null;
+  }
   if (hoveredIdx === null || !committedRange) return null;
   if (hoveredIdx === committedRange.startIdx) return null;
   return config.computeRange(committedRange.startIdx, hoveredIdx);

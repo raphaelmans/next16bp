@@ -89,6 +89,45 @@ Desktop already solves this with `AvailabilityWeekGrid` — a 7-column color-cod
 
 **Rationale**: The grid shows exactly 7 days. Week-to-week navigation needs a calendar view, which already exists. Adding left/right week arrows is a minor enhancement but not required for v1.
 
+### 8. Selection invariants (locked business logic)
+
+**Choice**: Selection behavior follows strict invariants across week-grid interactions:
+- Range must be contiguous.
+- Range can span only same-day or adjacent-day columns.
+- Tapping/clicking the currently selected single-cell anchor clears selection.
+- Tapping/clicking a non-adjacent target resets to a new single-cell anchor.
+- Carted cells are non-selectable.
+
+**Rationale**: This matches expected booking UX, prevents hidden state drift, and removes ambiguity in shared range-selection behavior.
+
+### 9. Preserve selection across week navigation
+
+**Choice**: Week jumps preserve committed selection state even when the selected range is not in the visible week.
+
+**Rationale**: This aligns with the selected mobile behavior and avoids unintended clearing while browsing weeks. When navigating back to the week containing the selection, highlight and summary should reappear from committed state.
+
+### 10. Global range-selection behavior alignment
+
+**Choice**: Same-cell clear behavior is implemented in the shared range-selection engine and applied consistently to:
+- Player booking week-grid flows.
+- Owner timeline/week-column flows that use the shared selection primitives.
+
+**Rationale**: A single behavior contract avoids divergence between mobile, desktop, and owner tools and reduces maintenance burden.
+
+### 11. Duration guardrail in week-grid selection
+
+**Choice**: Apply a hard 24-hour (`1440` minutes) max duration cap in week-grid range computation and clamp logic.
+
+**Rationale**: Backend availability constraints already enforce this limit. Enforcing it in selection logic prevents invalid UI states and avoids server-roundtrip error flows.
+
+### 12. Mobile data contract: one week query per mode/week
+
+**Choice**: Mobile week availability uses one week-range request per displayed week per mode:
+- Court mode: `getForCourtRange`.
+- Any-court mode: `getForPlaceSportRange`.
+
+**Rationale**: This is the required contract for predictable cache behavior and reduced request volume. Per-day prefetch bursts are out of scope for the migrated mobile booking flow.
+
 ## Risks / Trade-offs
 
 **[Risk] 44px cells may feel cramped on iPhone SE (375px)** → Mitigation: Cells meet WCAG minimums. On 390px+ devices (iPhone 12+, which is 90%+ of traffic), cells are 48px+. Monitor analytics for accidental taps.

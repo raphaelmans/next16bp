@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   getNextDayKeyForInstant,
   isSameOrNextDay,
+  isWithinAdjacentWeek,
 } from "@/features/discovery/place-detail/helpers/date-adjacency";
 
 describe("date-adjacency helpers", () => {
@@ -41,6 +42,28 @@ describe("date-adjacency helpers", () => {
       isSameOrNextDay({
         selectedStartTimeIso: startTime,
         candidateDayKey: "2026-03-08",
+        timeZone,
+      }),
+    ).toBe(false);
+  });
+
+  it("returns true when candidate is within adjacent week window", () => {
+    const startTime = "2026-03-06T14:00:00.000Z";
+    expect(
+      isWithinAdjacentWeek({
+        selectedStartTimeIso: startTime,
+        candidateDayKey: "2026-03-13",
+        timeZone,
+      }),
+    ).toBe(true);
+  });
+
+  it("returns false when candidate is beyond adjacent week window", () => {
+    const startTime = "2026-03-06T14:00:00.000Z";
+    expect(
+      isWithinAdjacentWeek({
+        selectedStartTimeIso: startTime,
+        candidateDayKey: "2026-03-14",
         timeZone,
       }),
     ).toBe(false);

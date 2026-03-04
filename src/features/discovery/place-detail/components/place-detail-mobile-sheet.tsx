@@ -8,8 +8,8 @@ import {
   formatInTimeZone,
 } from "@/common/format";
 import {
-  TimeRangePicker,
-  TimeRangePickerSkeleton,
+  MobileWeekGrid,
+  MobileWeekGridSkeleton,
   type TimeSlot,
 } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MobileDateStrip } from "@/features/discovery/components";
 import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { cn } from "@/lib/utils";
 
@@ -59,10 +58,7 @@ type PlaceDetailMobileSheetProps = {
   selectedCourtId?: string;
   onMobileCourtChange: (courtId: string | undefined) => void;
   selectedDate?: Date;
-  selectedDayKey?: string;
-  today: Date;
   placeTimeZone: string;
-  onMobileDateSelect: (date: Date) => void;
   mobileCalendarOpen: boolean;
   setMobileCalendarOpen: (open: boolean) => void;
   onMobileCalendarJump: (date: Date | undefined) => void;
@@ -70,7 +66,10 @@ type PlaceDetailMobileSheetProps = {
   maxBookingDate: Date;
   isMobileRefreshing: boolean;
   isMobileLoading: boolean;
-  mobileDaySlots: TimeSlot[];
+  weekDayKeys: string[];
+  weekSlotsByDay: Map<string, TimeSlot[]>;
+  todayDayKey: string;
+  maxDayKey: string;
   selectedRange?: TimeRangeSelection;
   onAnyRangeChange: (range: TimeRangeSelection) => void;
   onCourtRangeChange: (range: TimeRangeSelection) => void;
@@ -87,7 +86,6 @@ type PlaceDetailMobileSheetProps = {
   onAddToCartAction: () => void;
   onRemoveFromCartAction: (key: string) => void;
   cartedStartTimes?: Set<string>;
-  crossDayStartTime?: string;
 };
 
 export function PlaceDetailMobileSheet({
@@ -102,10 +100,7 @@ export function PlaceDetailMobileSheet({
   selectedCourtId,
   onMobileCourtChange,
   selectedDate,
-  selectedDayKey,
-  today,
   placeTimeZone,
-  onMobileDateSelect,
   mobileCalendarOpen,
   setMobileCalendarOpen,
   onMobileCalendarJump,
@@ -113,7 +108,10 @@ export function PlaceDetailMobileSheet({
   maxBookingDate,
   isMobileRefreshing,
   isMobileLoading,
-  mobileDaySlots,
+  weekDayKeys,
+  weekSlotsByDay,
+  todayDayKey,
+  maxDayKey,
   selectedRange,
   onAnyRangeChange,
   onCourtRangeChange,
@@ -130,7 +128,6 @@ export function PlaceDetailMobileSheet({
   onAddToCartAction,
   onRemoveFromCartAction,
   cartedStartTimes,
-  crossDayStartTime,
 }: PlaceDetailMobileSheetProps) {
   const cartItemCount = cartItems.length;
   const hasCartItems = cartItemCount > 0;
@@ -139,9 +136,12 @@ export function PlaceDetailMobileSheet({
   >("select");
   const isReviewStep = mobileFlowStep === "review" && hasCartItems;
 
-  const hasEstimatedTotal = cartItems.some(
+  const pricedItemCount = cartItems.filter(
     (item) => item.estimatedPriceCents !== null,
-  );
+  ).length;
+  const unpricedItemCount = cartItemCount - pricedItemCount;
+  const hasEstimatedTotal = pricedItemCount > 0;
+  const hasPartialEstimate = unpricedItemCount > 0;
   const estimatedTotalCents = cartItems.reduce(
     (sum, item) => sum + (item.estimatedPriceCents ?? 0),
     0,
@@ -226,7 +226,7 @@ export function PlaceDetailMobileSheet({
                         · {formatDuration(item.durationMinutes)}
                         {item.estimatedPriceCents !== null
                           ? ` · ${formatCurrency(item.estimatedPriceCents, item.currency)}`
-                          : ""}
+                          : " · Price unavailable"}
                       </p>
                     </div>
                     <button
@@ -241,11 +241,21 @@ export function PlaceDetailMobileSheet({
                 ))}
                 {hasEstimatedTotal && (
                   <div className="flex items-center justify-between border-t pt-2 text-sm">
-                    <p className="text-muted-foreground">Estimated total</p>
+                    <p className="text-muted-foreground">
+                      {hasPartialEstimate
+                        ? "Partial estimate"
+                        : "Estimated total"}
+                    </p>
                     <p className="font-semibold">
                       {formatCurrency(estimatedTotalCents, cartCurrency)}
                     </p>
                   </div>
+                )}
+                {hasPartialEstimate && (
+                  <p className="text-xs text-muted-foreground">
+                    {unpricedItemCount} court
+                    {unpricedItemCount === 1 ? "" : "s"} pending price estimate.
+                  </p>
                 )}
               </div>
             </div>
@@ -304,7 +314,7 @@ export function PlaceDetailMobileSheet({
                 </div>
               </div>
 
-              <div className="space-y-2 px-5 pb-3">
+              <div className="px-5 pb-3">
                 <Button
                   type="button"
                   variant="outline"
@@ -321,12 +331,6 @@ export function PlaceDetailMobileSheet({
                       )
                     : "Pick a date"}
                 </Button>
-                <MobileDateStrip
-                  selectedDate={selectedDate ?? today}
-                  onDateSelect={onMobileDateSelect}
-                  timeZone={placeTimeZone}
-                  todayDate={today}
-                />
               </div>
 
               <Dialog
@@ -363,28 +367,23 @@ export function PlaceDetailMobileSheet({
                   </div>
                 )}
                 {isMobileLoading ? (
-                  <TimeRangePickerSkeleton count={5} />
-                ) : mobileDaySlots.length > 0 ? (
-                  <TimeRangePicker
-                    slots={mobileDaySlots}
+                  <MobileWeekGridSkeleton />
+                ) : (
+                  <MobileWeekGrid
+                    dayKeys={weekDayKeys}
+                    slotsByDay={weekSlotsByDay}
                     timeZone={placeTimeZone}
-                    selectedDayKey={selectedDayKey}
-                    selectedStartTime={selectedRange?.startTime}
-                    selectedDurationMinutes={selectedRange?.durationMinutes}
-                    showPrice
-                    onChange={
+                    selectedRange={selectedRange}
+                    onRangeChange={
                       selectionMode === "any"
                         ? onAnyRangeChange
                         : onCourtRangeChange
                     }
                     onClear={onClearSelection}
+                    todayDayKey={todayDayKey}
+                    maxDayKey={maxDayKey}
                     cartedStartTimes={cartedStartTimes}
-                    crossDayStartTime={crossDayStartTime}
                   />
-                ) : (
-                  <div className="py-6 text-center text-sm text-muted-foreground">
-                    No available slots for this date.
-                  </div>
                 )}
               </div>
             </>

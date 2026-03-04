@@ -1,11 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  getZonedDayRangeForInstant,
-  getZonedStartOfDayIso,
-  toUtcISOString,
-} from "@/common/time-zone";
+import { getZonedDayRangeForInstant, toUtcISOString } from "@/common/time-zone";
 import { parseDayKeyToDate } from "@/features/discovery/helpers";
 import type { RouterInputs } from "@/trpc/types";
 
@@ -19,10 +15,12 @@ type DiscoveryPrefetchUtils = {
         input: RouterInputs["availability"]["getForPlaceSportRange"],
       ) => Promise<unknown>;
     };
-    getForCourt: {
-      getData: (input: RouterInputs["availability"]["getForCourt"]) => unknown;
+    getForCourtRange: {
+      getData: (
+        input: RouterInputs["availability"]["getForCourtRange"],
+      ) => unknown;
       fetch: (
-        input: RouterInputs["availability"]["getForCourt"],
+        input: RouterInputs["availability"]["getForCourtRange"],
       ) => Promise<unknown>;
     };
   };
@@ -40,6 +38,8 @@ type UseMobileWeekPrefetchOptions = {
   weekStartDayKey: string;
   weekDayKeys: string[];
   durationMinutes: number;
+  todayRangeStart: Date;
+  maxBookingDate: Date;
   hasPrefetchedMobileWeek: (key: string) => boolean;
   markPrefetchedMobileWeek: (key: string) => void;
   clearPrefetchedMobileWeek: (key: string) => void;
@@ -58,6 +58,8 @@ export function useModMobileWeekPrefetch({
   weekStartDayKey,
   weekDayKeys,
   durationMinutes,
+  todayRangeStart,
+  maxBookingDate,
   hasPrefetchedMobileWeek,
   markPrefetchedMobileWeek,
   clearPrefetchedMobileWeek,
@@ -91,48 +93,57 @@ export function useModMobileWeekPrefetch({
 
     markPrefetchedMobileWeek(weekCacheKey);
 
-    const prefetchWeek = async () => {
-      const requests = weekDayKeys.map(async (dayKey) => {
-        const date = parseDayKeyToDate(dayKey, placeTimeZone);
-        const dayStartIso = getZonedStartOfDayIso(date, placeTimeZone);
+    const firstDayKey = weekDayKeys[0];
+    const lastDayKey = weekDayKeys[weekDayKeys.length - 1];
+    if (!firstDayKey || !lastDayKey) {
+      return;
+    }
 
+    const weekStart = parseDayKeyToDate(firstDayKey, placeTimeZone);
+    const clampedStart =
+      weekStart < todayRangeStart ? todayRangeStart : weekStart;
+    const startDate = toUtcISOString(clampedStart);
+
+    const weekEnd = getZonedDayRangeForInstant(
+      parseDayKeyToDate(lastDayKey, placeTimeZone),
+      placeTimeZone,
+    ).end;
+    const maxEnd = getZonedDayRangeForInstant(
+      maxBookingDate,
+      placeTimeZone,
+    ).end;
+    const endDate = toUtcISOString(weekEnd > maxEnd ? maxEnd : weekEnd);
+
+    const prefetchWeek = async () => {
+      try {
         if (selectionMode === "any") {
           const input = {
             placeId,
             sportId: selectedSportId ?? "",
-            startDate: dayStartIso,
-            endDate: toUtcISOString(
-              getZonedDayRangeForInstant(date, placeTimeZone).end,
-            ),
+            startDate,
+            endDate,
             durationMinutes,
             includeUnavailable: true,
             includeCourtOptions: false,
           };
 
-          if (utils.availability.getForPlaceSportRange.getData(input)) {
-            return;
+          if (!utils.availability.getForPlaceSportRange.getData(input)) {
+            await utils.availability.getForPlaceSportRange.fetch(input);
           }
+        } else {
+          const input = {
+            courtId: selectedCourtId ?? "",
+            startDate,
+            endDate,
+            durationMinutes,
+            includeUnavailable: true,
+          };
 
-          await utils.availability.getForPlaceSportRange.fetch(input);
-          return;
+          if (!utils.availability.getForCourtRange.getData(input)) {
+            await utils.availability.getForCourtRange.fetch(input);
+          }
         }
-
-        const input = {
-          courtId: selectedCourtId ?? "",
-          date: dayStartIso,
-          durationMinutes,
-          includeUnavailable: true,
-        };
-
-        if (utils.availability.getForCourt.getData(input)) {
-          return;
-        }
-
-        await utils.availability.getForCourt.fetch(input);
-      });
-
-      const results = await Promise.allSettled(requests);
-      if (results.some((result) => result.status === "rejected")) {
+      } catch {
         clearPrefetchedMobileWeek(weekCacheKey);
       }
     };
@@ -144,6 +155,7 @@ export function useModMobileWeekPrefetch({
     hasPrefetchedMobileWeek,
     isDesktop,
     markPrefetchedMobileWeek,
+    maxBookingDate,
     mobileSheetExpanded,
     placeId,
     placeTimeZone,
@@ -151,6 +163,7 @@ export function useModMobileWeekPrefetch({
     selectedSportId,
     selectionMode,
     showBooking,
+    todayRangeStart,
     utils,
     weekDayKeys,
     weekStartDayKey,

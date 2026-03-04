@@ -43,13 +43,10 @@ export function RangeSelectionProvider({
   }, [store, config]);
 
   useLayoutEffect(() => {
-    const current = store.getState().committedRange;
-    const isSame =
-      current?.startIdx === committedRange?.startIdx &&
-      current?.endIdx === committedRange?.endIdx;
-    if (!isSame) {
-      store.getState().setCommittedRange(committedRange);
-    }
+    // Always sync committed range from parent.
+    // Index semantics can change when grid shape/timeline changes
+    // (e.g., different day/hour set), even if numeric indices match.
+    store.getState().setCommittedRange(committedRange);
   }, [store, committedRange]);
 
   return (

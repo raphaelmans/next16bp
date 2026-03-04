@@ -33,9 +33,7 @@ function makeProps(overrides?: Partial<MobileSheetProps>): MobileSheetProps {
     selectedCourtId: "court-1",
     onMobileCourtChange: vi.fn(),
     selectedDate: new Date("2026-02-25T00:00:00.000Z"),
-    today: new Date("2026-02-24T00:00:00.000Z"),
     placeTimeZone: "Asia/Manila",
-    onMobileDateSelect: vi.fn(),
     mobileCalendarOpen: false,
     setMobileCalendarOpen: vi.fn(),
     onMobileCalendarJump: vi.fn(),
@@ -43,7 +41,18 @@ function makeProps(overrides?: Partial<MobileSheetProps>): MobileSheetProps {
     maxBookingDate: new Date("2026-04-25T00:00:00.000Z"),
     isMobileRefreshing: false,
     isMobileLoading: true,
-    mobileDaySlots: [],
+    weekDayKeys: [
+      "2026-02-23",
+      "2026-02-24",
+      "2026-02-25",
+      "2026-02-26",
+      "2026-02-27",
+      "2026-02-28",
+      "2026-03-01",
+    ],
+    weekSlotsByDay: new Map(),
+    todayDayKey: "2026-02-24",
+    maxDayKey: "2026-04-25",
     selectedRange: {
       startTime: "2026-02-25T01:00:00.000Z",
       durationMinutes: 60,
@@ -89,7 +98,7 @@ describe("PlaceDetailMobileSheet", () => {
     fireEvent.click(screen.getByRole("button", { name: "Add to booking" }));
 
     expect(onAddToCartAction).toHaveBeenCalledTimes(1);
-    expect(onClearSelection).toHaveBeenCalledTimes(1);
+    // onClearSelection is called by the parent's onAddToCartAction handler, not by the sheet itself
     expect(screen.getByText("Step 2 of 2 · Review booking")).toBeTruthy();
   });
 
@@ -108,7 +117,7 @@ describe("PlaceDetailMobileSheet", () => {
               courtId: "court-2",
               courtLabel: "Court Two",
               startTime: "2026-02-25T02:00:00.000Z",
-              estimatedPriceCents: 70000,
+              estimatedPriceCents: null,
             }),
           ],
           onRemoveFromCartAction,
@@ -121,6 +130,9 @@ describe("PlaceDetailMobileSheet", () => {
     expect(screen.getByText("Courts in booking (2)")).toBeTruthy();
     expect(screen.getByText("Court One")).toBeTruthy();
     expect(screen.getByText("Court Two")).toBeTruthy();
+    expect(screen.getByText(/Price unavailable/)).toBeTruthy();
+    expect(screen.getByText("Partial estimate")).toBeTruthy();
+    expect(screen.getByText("1 court pending price estimate.")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Remove Court One" }));
     expect(onRemoveFromCartAction).toHaveBeenCalledWith(

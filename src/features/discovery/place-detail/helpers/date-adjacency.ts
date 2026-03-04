@@ -1,7 +1,17 @@
 import { addDays } from "date-fns";
-import { getZonedDayKey, getZonedDayRangeForInstant } from "@/common/time-zone";
+import {
+  getZonedDayKey,
+  getZonedDayRangeForInstant,
+  getZonedDayRangeFromDayKey,
+} from "@/common/time-zone";
 
 type SameOrNextDayOptions = {
+  selectedStartTimeIso: string;
+  candidateDayKey: string;
+  timeZone: string;
+};
+
+type WithinAdjacentWeekOptions = {
   selectedStartTimeIso: string;
   candidateDayKey: string;
   timeZone: string;
@@ -33,4 +43,28 @@ export function isSameOrNextDay({
   return (
     candidateDayKey === getNextDayKeyForInstant(selectedStartTimeIso, timeZone)
   );
+}
+
+/**
+ * True when candidate day is within +/- 7 calendar days of selected start day
+ * (in place timezone). Used to preserve selection across adjacent week jumps.
+ */
+export function isWithinAdjacentWeek({
+  selectedStartTimeIso,
+  candidateDayKey,
+  timeZone,
+}: WithinAdjacentWeekOptions): boolean {
+  const selectedDayStart = getZonedDayRangeForInstant(
+    selectedStartTimeIso,
+    timeZone,
+  ).start;
+  const candidateDayStart = getZonedDayRangeFromDayKey(
+    candidateDayKey,
+    timeZone,
+  ).start;
+  const diffMs = Math.abs(
+    candidateDayStart.getTime() - selectedDayStart.getTime(),
+  );
+  const diffDays = Math.round(diffMs / (24 * 60 * 60 * 1000));
+  return diffDays <= 7;
 }

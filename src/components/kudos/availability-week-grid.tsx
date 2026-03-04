@@ -10,7 +10,6 @@ import {
   formatTimeInTimeZone,
 } from "@/common/format";
 import { useNowMs } from "@/common/hooks/use-now";
-import { sortHoursInScheduleOrder } from "@/common/schedule-hours";
 import { getZonedDayRangeFromDayKey } from "@/common/time-zone";
 import { cn } from "@/lib/utils";
 import {
@@ -23,40 +22,26 @@ import {
   useRangeSelection,
 } from "./range-selection";
 import type { TimeSlot } from "./time-slot-picker";
+import {
+  buildWeekGridHourModel,
+  deriveWeekGridCommittedRange,
+  toWeekGridLinearIndex,
+} from "./week-grid-domain";
+import {
+  getHourFromSlot,
+  isSlotAvailable,
+  isSlotSelectable,
+  MAX_SLOT_COUNT,
+  TIMELINE_SLOT_DURATION,
+} from "./week-grid-utils";
 
-const TIMELINE_SLOT_DURATION = 60;
+export { getHourFromSlot, isSlotAvailable, isSlotSelectable };
+
 const WEEK_ROW_HEIGHT = 56;
-
-const isSameInstant = (a: string, b: string): boolean => {
-  const aMs = Date.parse(a);
-  const bMs = Date.parse(b);
-  if (Number.isFinite(aMs) && Number.isFinite(bMs)) {
-    return aMs === bMs;
-  }
-  return a === b;
-};
+const COMPACT_ROW_HEIGHT = 48;
 
 const parseDayKeyToDate = (dayKey: string, timeZone?: string) =>
   getZonedDayRangeFromDayKey(dayKey, timeZone).start;
-
-export const getHourFromSlot = (slot: TimeSlot, timeZone: string): number => {
-  const d = new Date(slot.startTime);
-  const parts = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    hour12: false,
-    timeZone,
-  }).formatToParts(d);
-  const hourPart = parts.find((p) => p.type === "hour");
-  return hourPart ? Number.parseInt(hourPart.value, 10) : 0;
-};
-
-export function isSlotAvailable(slot: TimeSlot): boolean {
-  return slot.status === "available";
-}
-
-export function isSlotSelectable(slot: TimeSlot, nowMs: number): boolean {
-  return isSlotAvailable(slot) && Date.parse(slot.startTime) >= nowMs;
-}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -99,6 +84,7 @@ export type AvailabilityWeekGridProps = {
   sameDayAnchorDayKey?: string;
   sameDayCueMode?: AvailabilityWeekGridCueMode;
   cartedStartTimes?: Set<string>;
+  compact?: boolean;
 };
 
 // ---------------------------------------------------------------------------
@@ -112,6 +98,7 @@ interface WeekGridSummaryBarProps {
   hoursPerDay: number;
   timeZone: string;
   onRangeChange: (range: AvailabilityWeekGridRange) => void;
+  compact?: boolean;
 }
 
 const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
@@ -121,6 +108,7 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
   hoursPerDay,
   timeZone,
   onRangeChange,
+  compact,
 }: WeekGridSummaryBarProps) {
   const shouldReduceMotion = useReducedMotion();
   const motionTransition = shouldReduceMotion
@@ -204,9 +192,21 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
         transition={motionTransition}
         className="overflow-hidden"
       >
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+        <div
+          className={cn(
+            "flex flex-wrap items-center justify-between rounded-xl border border-primary/20 bg-primary/5",
+            compact ? "gap-2 px-3 py-2.5" : "gap-3 px-4 py-3",
+          )}
+        >
+          <div className={cn("flex items-center", compact ? "gap-2" : "gap-3")}>
+            <div
+              className={cn(
+                "shrink-0 items-center justify-center rounded-lg bg-primary/10",
+                compact
+                  ? "flex h-6 w-6"
+                  : "flex h-8 w-8",
+              )}
+            >
               <div className="h-2.5 w-2.5 rounded-full bg-primary" />
             </div>
             <div>
@@ -218,7 +218,9 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
               <p className="text-xs text-muted-foreground">
                 {summaryData.durationHours}h
                 {summaryData.isAwaitingEndClick &&
-                  " \u00B7 Click another slot to extend"}
+                  (compact
+                    ? " \u00B7 Tap to extend"
+                    : " \u00B7 Click another slot to extend")}
                 {summaryData.priceCents !== undefined &&
                   ` \u00B7 ${formatCurrency(summaryData.priceCents, summaryData.currency)}`}
               </p>
@@ -253,6 +255,7 @@ interface WeekGridCellProps {
   isDisabled: boolean;
   timeZone: string;
   isInCart: boolean;
+  compact?: boolean;
 }
 
 const WeekGridCell = React.memo(function WeekGridCell({
@@ -263,6 +266,7 @@ const WeekGridCell = React.memo(function WeekGridCell({
   isDisabled,
   timeZone,
   isInCart,
+  compact,
 }: WeekGridCellProps) {
   const shouldReduceMotion = useReducedMotion();
   const motionTransition = shouldReduceMotion
@@ -335,7 +339,8 @@ const WeekGridCell = React.memo(function WeekGridCell({
         }
       }}
       className={cn(
-        "group/cell relative flex w-full items-center justify-center border-t border-border/50 transition-all duration-150 touch-none",
+        "group/cell relative flex w-full items-center justify-center border-t border-border/50 transition-all duration-150",
+        compact ? "touch-pan-y" : "touch-none",
         canSelect &&
           !inRange &&
           !inHoverPreview &&
@@ -352,7 +357,7 @@ const WeekGridCell = React.memo(function WeekGridCell({
         isDisabled && "cursor-not-allowed bg-muted/40",
         !slot && "bg-transparent",
       )}
-      style={{ height: WEEK_ROW_HEIGHT }}
+      style={{ height: compact ? COMPACT_ROW_HEIGHT : WEEK_ROW_HEIGHT }}
     >
       {/* Left accent bar for selected range */}
       {inRange && (
@@ -368,10 +373,10 @@ const WeekGridCell = React.memo(function WeekGridCell({
         />
       )}
 
-      {isReserved && (
+      {isReserved && !compact && (
         <span className="text-xs font-medium text-destructive/50">Booked</span>
       )}
-      {isMaintenance && (
+      {isMaintenance && !compact && (
         <span className="text-xs font-medium text-warning-foreground/60">
           Maint.
         </span>
@@ -388,7 +393,7 @@ const WeekGridCell = React.memo(function WeekGridCell({
             )}
             transition={motionTransition}
           />
-          {slot?.priceCents !== undefined && (
+          {!compact && slot?.priceCents !== undefined && (
             <span className="text-xs font-medium tabular-nums text-primary/70">
               {formatCurrency(slot.priceCents, slot.currency ?? "PHP")}
             </span>
@@ -400,7 +405,7 @@ const WeekGridCell = React.memo(function WeekGridCell({
           <div className="flex h-4 w-4 items-center justify-center rounded-full bg-success/20">
             <Check className="h-2.5 w-2.5 text-success" />
           </div>
-          {slot.priceCents !== undefined && (
+          {!compact && slot.priceCents !== undefined && (
             <span className="text-xs font-medium tabular-nums text-success/80">
               {formatCurrency(slot.priceCents, slot.currency ?? "PHP")}
             </span>
@@ -409,7 +414,7 @@ const WeekGridCell = React.memo(function WeekGridCell({
       )}
       {available && !inRange && !isInCart && slot && (
         <div className="flex flex-col items-center gap-0.5">
-          {slot.priceCents !== undefined ? (
+          {!compact && slot.priceCents !== undefined ? (
             <span className="text-xs font-medium tabular-nums text-success/80 group-hover/cell:text-success">
               {formatCurrency(slot.priceCents, slot.currency ?? "PHP")}
             </span>
@@ -438,61 +443,35 @@ export function AvailabilityWeekGrid({
   sameDayAnchorDayKey,
   sameDayCueMode = "none",
   cartedStartTimes,
+  compact = false,
 }: AvailabilityWeekGridProps) {
   const nowMs = useNowMs({ intervalMs: 10_000 });
 
-  const allHours = React.useMemo(() => {
-    const hourSet = new Set<number>();
-    for (const [, slots] of slotsByDay) {
-      for (const slot of slots) {
-        hourSet.add(getHourFromSlot(slot, timeZone));
-      }
-    }
-    if (hourSet.size === 0) return [] as number[];
-    return sortHoursInScheduleOrder(Array.from(hourSet));
-  }, [slotsByDay, timeZone]);
-
-  const slotLookup = React.useMemo(() => {
-    const map = new Map<string, Map<number, TimeSlot>>();
-    for (const [dk, slots] of slotsByDay) {
-      const hourMap = new Map<number, TimeSlot>();
-      for (const slot of slots) {
-        hourMap.set(getHourFromSlot(slot, timeZone), slot);
-      }
-      map.set(dk, hourMap);
-    }
-    return map;
-  }, [slotsByDay, timeZone]);
-
-  const hoursPerDay = allHours.length;
+  const { allHours, slotLookup, hoursPerDay } = React.useMemo(
+    () => buildWeekGridHourModel(slotsByDay, timeZone, dayKeys),
+    [dayKeys, slotsByDay, timeZone],
+  );
 
   // Linear index mapping: linearIdx = dayColIndex * hoursPerDay + hourIdx
   const toLinear = React.useCallback(
-    (dayColIdx: number, hourIdx: number) => dayColIdx * hoursPerDay + hourIdx,
+    (dayColIdx: number, hourIdx: number) =>
+      toWeekGridLinearIndex(dayColIdx, hourIdx, hoursPerDay),
     [hoursPerDay],
   );
 
   // Committed selection → linear indices
-  const committedRange = React.useMemo(() => {
-    if (!selectedRange) return null;
-    if (Date.parse(selectedRange.startTime) < nowMs) return null;
-    for (let di = 0; di < dayKeys.length; di++) {
-      const dk = dayKeys[di];
-      const hourMap = slotLookup.get(dk);
-      if (!hourMap) continue;
-      for (let hi = 0; hi < allHours.length; hi++) {
-        const slot = hourMap.get(allHours[hi]);
-        if (slot && isSameInstant(slot.startTime, selectedRange.startTime)) {
-          const count = selectedRange.durationMinutes / TIMELINE_SLOT_DURATION;
-          return {
-            startIdx: toLinear(di, hi),
-            endIdx: toLinear(di, hi + count - 1),
-          };
-        }
-      }
-    }
-    return null;
-  }, [selectedRange, dayKeys, slotLookup, allHours, toLinear, nowMs]);
+  const committedRange = React.useMemo(
+    () =>
+      deriveWeekGridCommittedRange({
+        selectedRange,
+        dayKeys,
+        slotLookup,
+        allHours,
+        hoursPerDay,
+        nowMs,
+      }),
+    [selectedRange, dayKeys, slotLookup, allHours, hoursPerDay, nowMs],
+  );
 
   // Build config
   const config = React.useMemo<RangeSelectionConfig>(() => {
@@ -525,6 +504,8 @@ export function AvailabilityWeekGrid({
         if (Math.abs(a.dayColIdx - t.dayColIdx) > 1) return null;
         const lo = Math.min(anchorIdx, targetIdx);
         const hi = Math.max(anchorIdx, targetIdx);
+        // Enforce 24-hour max range
+        if (hi - lo + 1 > MAX_SLOT_COUNT) return null;
         for (let i = lo; i <= hi; i++) {
           const slot = getSlotForLinearIdx(i);
           if (!slot || !isSlotSelectable(slot, nowMs)) return null;
@@ -560,6 +541,9 @@ export function AvailabilityWeekGrid({
           durationMinutes: slotCount * TIMELINE_SLOT_DURATION,
         });
       },
+      onClear: () => {
+        onRangeChange({ startTime: "", durationMinutes: 0 });
+      },
     };
   }, [dayKeys, slotLookup, allHours, hoursPerDay, onRangeChange, nowMs]);
 
@@ -592,6 +576,7 @@ export function AvailabilityWeekGrid({
         toLinear={toLinear}
         nowMs={nowMs}
         cartedStartTimes={cartedStartTimes}
+        compact={compact}
       />
     </RangeSelectionProvider>
   );
@@ -616,6 +601,7 @@ interface WeekGridInnerProps {
   toLinear: (dayColIdx: number, hourIdx: number) => number;
   nowMs: number;
   cartedStartTimes?: Set<string>;
+  compact?: boolean;
 }
 
 function WeekGridInner({
@@ -633,6 +619,7 @@ function WeekGridInner({
   toLinear,
   nowMs,
   cartedStartTimes,
+  compact,
 }: WeekGridInnerProps) {
   const { pointerUp, setHoveredIdx } = useRangeSelection(
     useShallow((s) => ({
@@ -655,7 +642,7 @@ function WeekGridInner({
 
   return (
     <div
-      className="space-y-3 select-none"
+      className={cn("select-none", compact ? "space-y-2" : "space-y-3")}
       onPointerLeave={() => {
         if (isDragging) pointerUp();
         setHoveredIdx(null);
@@ -668,6 +655,7 @@ function WeekGridInner({
         hoursPerDay={hoursPerDay}
         timeZone={timeZone}
         onRangeChange={onRangeChange}
+        compact={compact}
       />
 
       {sameDayAnchorLabel ? (
@@ -678,13 +666,22 @@ function WeekGridInner({
         </div>
       ) : null}
 
-      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory">
-        <div className="min-w-[700px]">
+      <div
+        className={cn(
+          compact
+            ? "overflow-y-auto"
+            : "overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory",
+        )}
+        style={compact ? { maxHeight: "calc(50vh - 80px)" } : undefined}
+      >
+        <div className={compact ? undefined : "min-w-[700px]"}>
           {/* Day headers */}
           <div
             className="grid gap-x-0"
             style={{
-              gridTemplateColumns: "60px repeat(7, minmax(80px, 1fr))",
+              gridTemplateColumns: compact
+                ? "36px repeat(7, 1fr)"
+                : "60px repeat(7, minmax(80px, 1fr))",
             }}
           >
             <div />
@@ -699,45 +696,72 @@ function WeekGridInner({
                 cueMode: sameDayCueMode,
               });
               const isAnchorCue = dayCueState === "anchor";
+
+              const headerContent = (
+                <>
+                  <div className={compact ? "text-[9px] leading-tight" : undefined}>
+                    {formatInTimeZone(date, timeZone, compact ? "EEEEEE" : "EEE")}
+                  </div>
+                  <div
+                    className={cn(
+                      "font-heading font-bold",
+                      compact
+                        ? "mt-0 text-xs"
+                        : "mt-0.5 text-base",
+                      isToday &&
+                        (compact
+                          ? "inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground"
+                          : "inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground"),
+                    )}
+                  >
+                    {formatInTimeZone(date, timeZone, "d")}
+                  </div>
+                </>
+              );
+
+              const sharedClasses = cn(
+                compact
+                  ? "border-b border-border/50 px-0.5 py-1.5 text-center text-[9px] font-semibold"
+                  : "border-b border-border/70 px-1 py-2 text-center text-xs font-semibold transition-colors",
+                isAnchorCue &&
+                  !isPast &&
+                  !isBeyondMax &&
+                  "bg-success-light/60 text-success shadow-[inset_0_0_0_1px_hsl(var(--success)/0.45)]",
+                hasAnchorCue &&
+                  !isAnchorCue &&
+                  !isPast &&
+                  !isBeyondMax &&
+                  "bg-muted/20",
+                isToday && !isAnchorCue && "text-primary",
+                isPast && "text-muted-foreground/40",
+                isBeyondMax && "text-muted-foreground/40",
+                !compact &&
+                  !isPast &&
+                  !isBeyondMax &&
+                  (isAnchorCue
+                    ? "hover:bg-success-light/70 cursor-pointer"
+                    : hasAnchorCue
+                      ? "hover:bg-muted/30 cursor-pointer"
+                      : "hover:bg-accent/10 cursor-pointer"),
+              );
+
+              if (compact) {
+                return (
+                  <div key={`hdr-${dk}`} className={sharedClasses}>
+                    {headerContent}
+                  </div>
+                );
+              }
+
               return (
                 <button
                   key={`hdr-${dk}`}
                   type="button"
                   onClick={() => onDayClick(dk)}
                   disabled={isPast || isBeyondMax}
-                  className={cn(
-                    "border-b border-border/70 px-1 py-2 text-center text-xs font-semibold transition-colors",
-                    isAnchorCue &&
-                      !isPast &&
-                      !isBeyondMax &&
-                      "bg-success-light/60 text-success shadow-[inset_0_0_0_1px_hsl(var(--success)/0.45)]",
-                    hasAnchorCue &&
-                      !isAnchorCue &&
-                      !isPast &&
-                      !isBeyondMax &&
-                      "bg-muted/20",
-                    isToday && !isAnchorCue && "text-primary",
-                    isPast && "text-muted-foreground/40",
-                    isBeyondMax && "text-muted-foreground/40",
-                    !isPast &&
-                      !isBeyondMax &&
-                      (isAnchorCue
-                        ? "hover:bg-success-light/70 cursor-pointer"
-                        : hasAnchorCue
-                          ? "hover:bg-muted/30 cursor-pointer"
-                          : "hover:bg-accent/10 cursor-pointer"),
-                  )}
+                  className={sharedClasses}
                 >
-                  <div>{formatInTimeZone(date, timeZone, "EEE")}</div>
-                  <div
-                    className={cn(
-                      "mt-0.5 text-base font-heading font-bold",
-                      isToday &&
-                        "inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground",
-                    )}
-                  >
-                    {formatInTimeZone(date, timeZone, "d")}
-                  </div>
+                  {headerContent}
                 </button>
               );
             })}
@@ -747,7 +771,9 @@ function WeekGridInner({
           <div
             className="grid gap-x-0"
             style={{
-              gridTemplateColumns: "60px repeat(7, minmax(80px, 1fr))",
+              gridTemplateColumns: compact
+                ? "36px repeat(7, 1fr)"
+                : "60px repeat(7, minmax(80px, 1fr))",
             }}
           >
             <div>
@@ -759,8 +785,13 @@ function WeekGridInner({
                 return (
                   <div
                     key={`tlabel-${hour}`}
-                    className="flex items-start pr-2 pt-1 text-right text-xs text-muted-foreground font-mono"
-                    style={{ height: WEEK_ROW_HEIGHT }}
+                    className={cn(
+                      "flex items-start text-right font-mono",
+                      compact
+                        ? "pr-1.5 pt-0.5 text-[10px] text-muted-foreground/70"
+                        : "pr-2 pt-1 text-xs text-muted-foreground",
+                    )}
+                    style={{ height: compact ? COMPACT_ROW_HEIGHT : WEEK_ROW_HEIGHT }}
                   >
                     <span className="w-full">
                       {formatInTimeZone(labelDate, timeZone, "h a")}
@@ -787,7 +818,8 @@ function WeekGridInner({
                 <div
                   key={`col-${dk}`}
                   className={cn(
-                    "relative border-l border-border/70",
+                    "relative border-l",
+                    compact ? "border-border/50" : "border-border/70",
                     isDayDisabled && "opacity-40",
                     isAnchorCue &&
                       !isDayDisabled &&
@@ -821,6 +853,7 @@ function WeekGridInner({
                               ) ?? false)
                             : false
                         }
+                        compact={compact}
                       />
                     );
                   })}

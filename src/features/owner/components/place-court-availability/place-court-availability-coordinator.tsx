@@ -972,6 +972,12 @@ function OwnerCourtAvailabilityInner({
     [setCommittedRange, manageBlock.close],
   );
 
+  const handleWeekClearRange = React.useCallback(() => {
+    setCommittedRange(null);
+    setWeekCommittedDayKey(null);
+    manageBlock.close();
+  }, [setCommittedRange, manageBlock.close]);
+
   const committedDayKey = isWeekView ? (weekCommittedDayKey ?? dayKey) : dayKey;
 
   // Range selection config (day view only)
@@ -985,6 +991,10 @@ function OwnerCourtAvailabilityInner({
         courtHours: courtHoursQuery.data ?? [],
         onCommitRange: (startIdx, endIdx) => {
           setCommittedRange({ startIdx, endIdx });
+          manageBlock.close();
+        },
+        onClear: () => {
+          setCommittedRange(null);
           manageBlock.close();
         },
       }),
@@ -1703,6 +1713,7 @@ function OwnerCourtAvailabilityInner({
                                 : null
                             }
                             onCommitRange={handleWeekCommitRange}
+                            onClearRange={handleWeekClearRange}
                           />
                         ))}
                       </div>

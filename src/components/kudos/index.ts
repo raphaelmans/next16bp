@@ -29,6 +29,12 @@ export { LocationPin, MapMarker } from "./location-pin";
 // Branding
 export { KudosLogo, KudosLogoIcon } from "./logo";
 export {
+  MobileWeekGrid,
+  type MobileWeekGridProps,
+  type MobileWeekGridRange,
+  MobileWeekGridSkeleton,
+} from "./mobile-week-grid";
+export {
   PlaceCard,
   type PlaceCardLinkScope,
   type PlaceCardPlace,

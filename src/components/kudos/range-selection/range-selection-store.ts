@@ -17,6 +17,7 @@ export interface RangeSelectionState {
 
   // Synced from parent props
   committedRange: RangeSelectionRange | null;
+  canExtendCommittedSingle: boolean;
 
   // Injected config
   config: RangeSelectionConfig;
@@ -33,7 +34,11 @@ export interface RangeSelectionState {
 
   commitRangeInternal: (
     range: RangeSelectionRange,
-    opts?: { suppressClick?: boolean; clearDrag?: boolean },
+    opts?: {
+      suppressClick?: boolean;
+      clearDrag?: boolean;
+      canExtendCommittedSingle?: boolean;
+    },
   ) => void;
 }
 
@@ -70,10 +75,22 @@ export const createRangeSelectionStore = (
       suppressClick: false,
       pointerDownMeta: null,
       committedRange: null,
+      canExtendCommittedSingle: false,
       config: initialConfig,
 
       setConfig: (config) => set({ config }),
-      setCommittedRange: (range) => set({ committedRange: range }),
+      setCommittedRange: (range) => {
+        const current = get().committedRange;
+        const isSame =
+          current?.startIdx === range?.startIdx &&
+          current?.endIdx === range?.endIdx;
+        set({
+          committedRange: range,
+          canExtendCommittedSingle: isSame
+            ? get().canExtendCommittedSingle
+            : false,
+        });
+      },
 
       // Keep visual selection stable by updating committedRange immediately.
       // Parent state is still notified via config.commitRange.
@@ -87,11 +104,13 @@ export const createRangeSelectionStore = (
         opts?: {
           suppressClick?: boolean;
           clearDrag?: boolean;
+          canExtendCommittedSingle?: boolean;
         },
       ) => {
         const { config } = get();
         set({
           committedRange: range,
+          canExtendCommittedSingle: opts?.canExtendCommittedSingle ?? false,
           ...(opts?.suppressClick ? { suppressClick: true } : {}),
           ...(opts?.clearDrag
             ? {
@@ -139,7 +158,14 @@ export const createRangeSelectionStore = (
 
       pointerUp: () => {
         removeGlobalListener();
-        const { anchorIdx, hoverIdx, didDrag, committedRange, config } = get();
+        const {
+          anchorIdx,
+          hoverIdx,
+          didDrag,
+          committedRange,
+          canExtendCommittedSingle,
+          config,
+        } = get();
 
         if (anchorIdx === null || hoverIdx === null) {
           set({ anchorIdx: null, hoverIdx: null, pointerDownMeta: null });
@@ -166,6 +192,27 @@ export const createRangeSelectionStore = (
           if (
             isSingle &&
             committedRange &&
+            anchorIdx === committedRange.startIdx &&
+            config.onClear
+          ) {
+            // Same-cell reselect: clear selection
+            set({
+              committedRange: null,
+              canExtendCommittedSingle: false,
+              suppressClick: true,
+              anchorIdx: null,
+              hoverIdx: null,
+              didDrag: false,
+              pointerDownMeta: null,
+            });
+            config.onClear();
+            return;
+          }
+
+          if (
+            isSingle &&
+            committedRange &&
+            canExtendCommittedSingle &&
             anchorIdx !== committedRange.startIdx
           ) {
             // Two-click flow: extend
@@ -174,18 +221,27 @@ export const createRangeSelectionStore = (
               anchorIdx,
             );
             if (range) {
-              get().commitRangeInternal(range, { suppressClick: true });
+              get().commitRangeInternal(range, {
+                suppressClick: true,
+                canExtendCommittedSingle: false,
+              });
             } else {
               get().commitRangeInternal(
                 { startIdx: anchorIdx, endIdx: anchorIdx },
-                { suppressClick: true },
+                {
+                  suppressClick: true,
+                  canExtendCommittedSingle: true,
+                },
               );
             }
           } else {
             // New start
             get().commitRangeInternal(
               { startIdx: anchorIdx, endIdx: anchorIdx },
-              { suppressClick: true },
+              {
+                suppressClick: true,
+                canExtendCommittedSingle: true,
+              },
             );
           }
         }
@@ -204,7 +260,7 @@ export const createRangeSelectionStore = (
           set({ suppressClick: false });
           return;
         }
-        const { committedRange, config } = s;
+        const { committedRange, canExtendCommittedSingle, config } = s;
         if (!config.isCellAvailable(idx)) return;
 
         // Clear stale drag state
@@ -219,7 +275,9 @@ export const createRangeSelectionStore = (
         if (shiftKey && committedRange) {
           const range = config.computeRange(committedRange.startIdx, idx);
           if (range) {
-            get().commitRangeInternal(range);
+            get().commitRangeInternal(range, {
+              canExtendCommittedSingle: false,
+            });
             return;
           }
         }
@@ -228,18 +286,44 @@ export const createRangeSelectionStore = (
         const isSingle =
           committedRange !== null &&
           committedRange.startIdx === committedRange.endIdx;
-        if (isSingle && committedRange && idx !== committedRange.startIdx) {
+
+        // Same-cell reselect: clear selection
+        if (
+          isSingle &&
+          committedRange &&
+          idx === committedRange.startIdx &&
+          config.onClear
+        ) {
+          set({ committedRange: null, canExtendCommittedSingle: false });
+          config.onClear();
+          return;
+        }
+
+        if (
+          isSingle &&
+          committedRange &&
+          canExtendCommittedSingle &&
+          idx !== committedRange.startIdx
+        ) {
           const range = config.computeRange(committedRange.startIdx, idx);
           if (range) {
-            get().commitRangeInternal(range);
+            get().commitRangeInternal(range, {
+              canExtendCommittedSingle: false,
+            });
           } else {
-            get().commitRangeInternal({ startIdx: idx, endIdx: idx });
+            get().commitRangeInternal(
+              { startIdx: idx, endIdx: idx },
+              { canExtendCommittedSingle: true },
+            );
           }
           return;
         }
 
         // New start
-        get().commitRangeInternal({ startIdx: idx, endIdx: idx });
+        get().commitRangeInternal(
+          { startIdx: idx, endIdx: idx },
+          { canExtendCommittedSingle: true },
+        );
       },
 
       setHoveredIdx: (idx) => set({ hoveredIdx: idx }),

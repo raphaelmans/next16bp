@@ -9,14 +9,20 @@
  * Usage:
  *   pnpm scrape:curated-courts
  *   pnpm scrape:curated-courts -- --start-url https://app.sports360.ph/
+ *   pnpm scrape:curated-courts -- --start-url https://www.pickleheads.com/courts/ph
  *   pnpm scrape:curated-courts -- --max-urls 80 --map-limit 300
  *   pnpm scrape:curated-courts -- --urls-file scripts/output/sports360-urls.txt
+ *   pnpm scrape:curated-courts -- --discover-only
+ *   pnpm scrape:curated-courts -- --crawl-only
  *   pnpm scrape:curated-courts -- --dry-run
  */
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { openai } from "@ai-sdk/openai";
+import { generateObject } from "ai";
 import postgres from "postgres";
+import { z } from "zod";
 
 interface ScriptOptions {
   startUrl: string;
@@ -24,6 +30,10 @@ interface ScriptOptions {
   rawOutputPath: string;
   statePath: string;
   coverageOutputPath: string;
+  phLocationsPath: string;
+  normalizePhLocations: boolean;
+  useAiLocationNormalization: boolean;
+  locationModel: string;
   sportSlug: string;
   mapLimit: number;
   maxUrls: number;
@@ -31,6 +41,7 @@ interface ScriptOptions {
   pollTimeoutMs: number;
   dryRun: boolean;
   discoverOnly: boolean;
+  crawlOnly: boolean;
   rescrapeAll: boolean;
   skipDbCoverage: boolean;
   mapSearch: string | null;
@@ -112,6 +123,16 @@ interface ExistingCuratedPlace {
   province: string;
 }
 
+interface PHLocationCity {
+  name: string;
+  displayName: string;
+  slug: string;
+}
+
+interface PHLocationProvince extends PHLocationCity {
+  cities: PHLocationCity[];
+}
+
 type JsonObject = Record<string, unknown>;
 
 const FIRECRAWL_BASE_URL = "https://api.firecrawl.dev/v2";
@@ -122,6 +143,10 @@ const DEFAULT_OPTIONS: ScriptOptions = {
   rawOutputPath: "scripts/output/sports360-curated-courts.raw.json",
   statePath: "scripts/output/sports360-scrape-state.json",
   coverageOutputPath: "scripts/output/sports360-coverage.json",
+  phLocationsPath: "public/assets/files/ph-provinces-cities.enriched.json",
+  normalizePhLocations: true,
+  useAiLocationNormalization: true,
+  locationModel: "gpt-4.1-mini",
   sportSlug: "pickleball",
   mapLimit: 250,
   maxUrls: 80,
@@ -129,6 +154,7 @@ const DEFAULT_OPTIONS: ScriptOptions = {
   pollTimeoutMs: 120_000,
   dryRun: false,
   discoverOnly: false,
+  crawlOnly: false,
   rescrapeAll: false,
   skipDbCoverage: false,
   mapSearch: "sports venue court branch location",
@@ -218,6 +244,22 @@ const EXTRACT_STATUS_FAILED = new Set([
   "cancelled",
   "canceled",
 ]);
+const MAX_EXTRACT_URLS_PER_REQUEST = 10;
+
+const AI_LOCATION_NORMALIZATION_SCHEMA = z.object({
+  normalized: z.array(
+    z.object({
+      index: z.number().int().min(0),
+      province: z.string().optional().nullable(),
+      city: z.string().optional().nullable(),
+    }),
+  ),
+});
+
+const AI_SINGLE_LOCATION_SCHEMA = z.object({
+  province: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
+});
 
 function parseNumber(
   rawValue: string | undefined,
@@ -260,6 +302,11 @@ function parseArgs(): ScriptOptions {
       continue;
     }
 
+    if (arg === "--crawl-only") {
+      options.crawlOnly = true;
+      continue;
+    }
+
     if (arg === "--rescrape-all") {
       options.rescrapeAll = true;
       continue;
@@ -267,6 +314,16 @@ function parseArgs(): ScriptOptions {
 
     if (arg === "--skip-db-coverage") {
       options.skipDbCoverage = true;
+      continue;
+    }
+
+    if (arg === "--no-ph-normalize") {
+      options.normalizePhLocations = false;
+      continue;
+    }
+
+    if (arg === "--no-ai-location-normalize") {
+      options.useAiLocationNormalization = false;
       continue;
     }
 
@@ -332,6 +389,32 @@ function parseArgs(): ScriptOptions {
 
     if (arg.startsWith("--coverage-output=")) {
       options.coverageOutputPath = arg.replace("--coverage-output=", "");
+      continue;
+    }
+
+    if (arg === "--ph-locations-file") {
+      const value = args[i + 1];
+      if (!value) throw new Error("--ph-locations-file requires a value");
+      options.phLocationsPath = value;
+      i += 1;
+      continue;
+    }
+
+    if (arg.startsWith("--ph-locations-file=")) {
+      options.phLocationsPath = arg.replace("--ph-locations-file=", "");
+      continue;
+    }
+
+    if (arg === "--location-model") {
+      const value = args[i + 1];
+      if (!value) throw new Error("--location-model requires a value");
+      options.locationModel = value.trim();
+      i += 1;
+      continue;
+    }
+
+    if (arg.startsWith("--location-model=")) {
+      options.locationModel = arg.replace("--location-model=", "").trim();
       continue;
     }
 
@@ -480,6 +563,10 @@ function parseArgs(): ScriptOptions {
     throw new Error("--sport-slug cannot be empty");
   }
 
+  if (!options.locationModel) {
+    throw new Error("--location-model cannot be empty");
+  }
+
   return options;
 }
 
@@ -534,6 +621,14 @@ function isValidHttpUrl(value: string): boolean {
 
 function ensureUnique(values: string[]): string[] {
   return Array.from(new Set(values));
+}
+
+function chunkArray<T>(items: T[], chunkSize: number): T[][] {
+  const chunks: T[][] = [];
+  for (let index = 0; index < items.length; index += chunkSize) {
+    chunks.push(items.slice(index, index + chunkSize));
+  }
+  return chunks;
 }
 
 function normalizeKeyPart(value: string): string {
@@ -795,6 +890,27 @@ function getRootDomain(host: string): string {
   return parts.slice(-2).join(".");
 }
 
+function isWithinDomainSpecificScope(url: string, startUrl: string): boolean {
+  try {
+    const start = new URL(startUrl);
+    const current = new URL(url);
+
+    if (
+      start.host.endsWith("pickleheads.com") &&
+      start.pathname.startsWith("/courts/ph")
+    ) {
+      return (
+        current.host.endsWith("pickleheads.com") &&
+        current.pathname.startsWith("/courts/ph")
+      );
+    }
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function selectCandidateUrls(
   urls: string[],
   options: ScriptOptions,
@@ -815,6 +931,7 @@ function selectCandidateUrls(
       const host = new URL(url).host;
       return host === startHost || getRootDomain(host) === startRootDomain;
     })
+    .filter((url) => isWithinDomainSpecificScope(url, options.startUrl))
     .filter((url) => !hasStaticAssetExtension(url));
 
   const excludeFiltered = baseCandidates.filter((url) => {
@@ -844,6 +961,7 @@ function selectCandidateUrls(
 function buildExtractPrompt(sportSlug: string): string {
   return [
     "Extract a single sports venue listing from this page.",
+    "Only return venues located in the Philippines.",
     "Return JSON only with fields in schema.",
     "If a field is missing, return null or empty array.",
     "For courts, return an array of strings using one of:",
@@ -907,30 +1025,57 @@ async function runExtract(
   options: ScriptOptions,
   urls: string[],
 ): Promise<JsonObject> {
-  const response = await firecrawlRequest(apiKey, "/extract", {
-    method: "POST",
-    body: JSON.stringify({
-      urls,
-      prompt: buildExtractPrompt(options.sportSlug),
-      schema: EXTRACT_SCHEMA,
-    }),
-  });
-
-  const responseObject = toObject(response);
-  if (!responseObject) {
-    throw new Error("Unexpected extract response");
+  if (urls.length === 0) {
+    return { data: [] };
   }
 
-  if (responseHasExtractData(responseObject)) {
-    return responseObject;
+  const uniqueUrls = ensureUnique(urls);
+  const urlBatches = chunkArray(uniqueUrls, MAX_EXTRACT_URLS_PER_REQUEST);
+  const allItems: JsonObject[] = [];
+  const batches: Array<{
+    index: number;
+    urlCount: number;
+    itemCount: number;
+    jobId: string | null;
+  }> = [];
+
+  for (const [index, batchUrls] of urlBatches.entries()) {
+    const response = await firecrawlRequest(apiKey, "/extract", {
+      method: "POST",
+      body: JSON.stringify({
+        urls: batchUrls,
+        prompt: buildExtractPrompt(options.sportSlug),
+        schema: EXTRACT_SCHEMA,
+      }),
+    });
+
+    const responseObject = toObject(response);
+    if (!responseObject) {
+      throw new Error("Unexpected extract response");
+    }
+
+    const jobId = normalizeString(responseObject.id) || null;
+    const settledPayload = responseHasExtractData(responseObject)
+      ? responseObject
+      : jobId
+        ? await pollExtract(apiKey, jobId, options)
+        : responseObject;
+
+    const items = collectExtractItems(settledPayload);
+    allItems.push(...items);
+
+    batches.push({
+      index,
+      urlCount: batchUrls.length,
+      itemCount: items.length,
+      jobId,
+    });
   }
 
-  const jobId = normalizeString(responseObject.id);
-  if (!jobId) {
-    return responseObject;
-  }
-
-  return pollExtract(apiKey, jobId, options);
+  return {
+    data: allItems,
+    batches,
+  };
 }
 
 function collectExtractItems(payload: JsonObject): JsonObject[] {
@@ -1034,6 +1179,16 @@ function buildRowFromExtractedRecord(
     return null;
   }
 
+  const rawCountry = normalizeString(extracted.country).toLowerCase();
+  if (
+    rawCountry &&
+    rawCountry !== "ph" &&
+    rawCountry !== "philippines" &&
+    rawCountry !== "philippine"
+  ) {
+    return null;
+  }
+
   const amenities = ensureUnique(toStringArray(extracted.amenities));
   const courts = normalizeCourts(extracted.courts, sportSlug);
   const photoUrls = ensureUnique(
@@ -1130,6 +1285,15 @@ function buildRowFromSports360Storehub(
     return null;
   }
 
+  const lowerAddress = address.toLowerCase();
+  if (
+    lowerAddress.includes("australia") ||
+    lowerAddress.includes("new south wales") ||
+    /\bnsw\b/.test(lowerAddress)
+  ) {
+    return null;
+  }
+
   const { city, province } = inferCityProvinceFromAddress(address);
   const phone = normalizeString(hub.hubContactNo);
   const email = normalizeString(hub.hubEmailAdd);
@@ -1162,6 +1326,15 @@ function buildRowFromSports360Storehub(
 function isSports360Host(startUrl: string): boolean {
   const host = new URL(startUrl).host.toLowerCase();
   return host.endsWith("sports360.ph");
+}
+
+function slugToDisplayName(value: string): string {
+  return value
+    .split("-")
+    .filter((part) => part.length > 0)
+    .map((part) => part[0]?.toUpperCase() + part.slice(1))
+    .join(" ")
+    .trim();
 }
 
 function buildSports360StorehubPageUrl(
@@ -1229,6 +1402,63 @@ async function fetchSports360FallbackRows(
       return {
         row,
         sourceUrl,
+      } satisfies RowWithSource;
+    })
+    .filter((item): item is RowWithSource => Boolean(item));
+
+  return dedupeRowsWithSource(rows);
+}
+
+function buildPickleheadsFallbackRows(
+  urls: string[],
+  sportSlug: string,
+): RowWithSource[] {
+  const rows = urls
+    .map((url) => {
+      if (!isValidHttpUrl(url)) return null;
+
+      const parsed = new URL(url);
+      if (!parsed.host.endsWith("pickleheads.com")) return null;
+      if (!parsed.pathname.startsWith("/courts/ph/")) return null;
+
+      const segments = parsed.pathname.split("/").filter((segment) => segment);
+      if (segments.length < 5) return null;
+      if (segments[0] !== "courts" || segments[1] !== "ph") return null;
+
+      const provinceSlug = segments[2] ?? "";
+      const citySlug = segments[3] ?? "";
+      const venueSlug = segments.slice(4).join("-");
+
+      if (!provinceSlug || !citySlug || !venueSlug) return null;
+
+      const name = slugToDisplayName(venueSlug);
+      const city = slugToDisplayName(citySlug);
+      const province = slugToDisplayName(provinceSlug);
+
+      if (!name || !city || !province) return null;
+
+      const row: CuratedCsvRow = {
+        name,
+        address: `${city}, ${province}, Philippines`,
+        city,
+        province,
+        country: "PH",
+        time_zone: "Asia/Manila",
+        latitude: "",
+        longitude: "",
+        facebook_url: "",
+        instagram_url: "",
+        viber_contact: "",
+        website_url: url,
+        other_contact_info: `Source: ${url}`,
+        amenities: "",
+        courts: `${sportSlug}|`,
+        photo_urls: "",
+      };
+
+      return {
+        row,
+        sourceUrl: url,
       } satisfies RowWithSource;
     })
     .filter((item): item is RowWithSource => Boolean(item));
@@ -1464,6 +1694,564 @@ function selectUrlsForThisRun(
   };
 }
 
+function normalizeLocationToken(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\bq[\s.]*c\b/g, "quezon city")
+    .replace(/\bqc\b/g, "quezon city")
+    .replace(/\bncr\b/g, "metro manila")
+    .replace(/\bmm\b/g, "metro manila")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function normalizeCityToken(value: string): string {
+  return normalizeLocationToken(value)
+    .replace(/^island garden city of\s+/, "")
+    .replace(/^science city of\s+/, "")
+    .replace(/^city of\s+/, "")
+    .replace(/^municipality of\s+/, "")
+    .replace(/\s+city$/, "")
+    .trim();
+}
+
+function isSubstringLikeMatch(target: string, candidate: string): boolean {
+  if (!target || !candidate) return false;
+
+  if (target.includes(candidate) || candidate.includes(target)) {
+    return true;
+  }
+
+  const ignoredTokens = new Set(["city", "province", "of"]);
+  const meaningfulTokens = candidate
+    .split(" ")
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 4 && !ignoredTokens.has(token));
+
+  for (const token of meaningfulTokens) {
+    if (target.includes(token)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function extractLocationCandidates(row: CuratedCsvRow): string[] {
+  const addressParts = row.address
+    .split(",")
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0);
+
+  return [row.city, row.province, row.name, ...addressParts];
+}
+
+function findProvinceByName(
+  provinces: PHLocationProvince[],
+  value: string,
+): PHLocationProvince | null {
+  const target = normalizeLocationToken(value);
+  if (!target) return null;
+
+  for (const province of provinces) {
+    const candidates = [
+      province.name,
+      province.displayName,
+      province.slug,
+      province.displayName.replace(/^Province of\s+/i, ""),
+    ];
+    if (
+      candidates.some(
+        (candidate) => normalizeLocationToken(candidate) === target,
+      )
+    ) {
+      return province;
+    }
+  }
+
+  return null;
+}
+
+function findProvinceBySubstring(
+  provinces: PHLocationProvince[],
+  value: string,
+): PHLocationProvince | null {
+  const target = normalizeLocationToken(value);
+  if (!target || target.length < 4) return null;
+
+  const matches = provinces.filter((province) => {
+    const candidates = [
+      province.name,
+      province.displayName,
+      province.slug,
+      province.displayName.replace(/^Province of\s+/i, ""),
+    ]
+      .map((candidate) => normalizeLocationToken(candidate))
+      .filter((candidate) => candidate.length >= 4);
+
+    return candidates.some((candidate) =>
+      isSubstringLikeMatch(target, candidate),
+    );
+  });
+
+  if (matches.length === 1) {
+    return matches[0] ?? null;
+  }
+
+  return null;
+}
+
+function findCityInProvinceByName(
+  province: PHLocationProvince,
+  value: string,
+): PHLocationCity | null {
+  const target = normalizeCityToken(value);
+  if (!target) return null;
+
+  for (const city of province.cities) {
+    const candidates = [city.name, city.displayName, city.slug];
+    if (
+      candidates.some((candidate) => normalizeCityToken(candidate) === target)
+    ) {
+      return city;
+    }
+  }
+
+  return null;
+}
+
+function findCityInProvinceBySubstring(
+  province: PHLocationProvince,
+  value: string,
+): PHLocationCity | null {
+  const target = normalizeCityToken(value);
+  if (!target || target.length < 4) return null;
+
+  const matches = province.cities.filter((city) => {
+    const candidates = [city.name, city.displayName, city.slug]
+      .map((candidate) => normalizeCityToken(candidate))
+      .filter((candidate) => candidate.length >= 4);
+
+    return candidates.some((candidate) =>
+      isSubstringLikeMatch(target, candidate),
+    );
+  });
+
+  if (matches.length === 1) {
+    return matches[0] ?? null;
+  }
+
+  return null;
+}
+
+function findCityAcrossProvincesByName(
+  provinces: PHLocationProvince[],
+  value: string,
+): { province: PHLocationProvince; city: PHLocationCity } | null {
+  const target = normalizeCityToken(value);
+  if (!target) return null;
+
+  const matches: Array<{ province: PHLocationProvince; city: PHLocationCity }> =
+    [];
+
+  for (const province of provinces) {
+    for (const city of province.cities) {
+      const candidates = [city.name, city.displayName, city.slug];
+      if (
+        candidates.some((candidate) => normalizeCityToken(candidate) === target)
+      ) {
+        matches.push({ province, city });
+      }
+    }
+  }
+
+  if (matches.length === 1) {
+    return matches[0] ?? null;
+  }
+
+  return null;
+}
+
+function findCityAcrossProvincesBySubstring(
+  provinces: PHLocationProvince[],
+  value: string,
+): { province: PHLocationProvince; city: PHLocationCity } | null {
+  const target = normalizeCityToken(value);
+  if (!target || target.length < 4) return null;
+
+  const matches: Array<{ province: PHLocationProvince; city: PHLocationCity }> =
+    [];
+
+  for (const province of provinces) {
+    for (const city of province.cities) {
+      const candidates = [city.name, city.displayName, city.slug]
+        .map((candidate) => normalizeCityToken(candidate))
+        .filter((candidate) => candidate.length >= 4);
+
+      if (
+        candidates.some((candidate) => isSubstringLikeMatch(target, candidate))
+      ) {
+        matches.push({ province, city });
+      }
+    }
+  }
+
+  const uniqueMatches = Array.from(
+    new Map(
+      matches.map((match) => [
+        `${match.province.slug}|${match.city.slug}`,
+        match,
+      ]),
+    ).values(),
+  );
+
+  if (uniqueMatches.length === 1) {
+    return uniqueMatches[0] ?? null;
+  }
+
+  return null;
+}
+
+function resolveLocationDeterministically(
+  row: CuratedCsvRow,
+  provinces: PHLocationProvince[],
+): { province: PHLocationProvince; city: PHLocationCity } | null {
+  const locationCandidates = extractLocationCandidates(row);
+
+  let province = findProvinceByName(provinces, row.province);
+  if (!province) {
+    for (const candidate of locationCandidates) {
+      province = findProvinceByName(provinces, candidate);
+      if (province) break;
+    }
+  }
+  if (!province) {
+    for (const candidate of locationCandidates) {
+      province = findProvinceBySubstring(provinces, candidate);
+      if (province) break;
+    }
+  }
+
+  if (province) {
+    let city = findCityInProvinceByName(province, row.city);
+    if (!city) {
+      for (const candidate of locationCandidates) {
+        city = findCityInProvinceByName(province, candidate);
+        if (city) break;
+      }
+    }
+    if (!city) {
+      for (const candidate of locationCandidates) {
+        city = findCityInProvinceBySubstring(province, candidate);
+        if (city) break;
+      }
+    }
+    if (city) {
+      return { province, city };
+    }
+  }
+
+  let across = findCityAcrossProvincesByName(provinces, row.city);
+  if (!across) {
+    for (const candidate of locationCandidates) {
+      across = findCityAcrossProvincesByName(provinces, candidate);
+      if (across) break;
+    }
+  }
+  if (!across) {
+    for (const candidate of locationCandidates) {
+      across = findCityAcrossProvincesBySubstring(provinces, candidate);
+      if (across) break;
+    }
+  }
+
+  return across;
+}
+
+function applyCanonicalLocationSuggestion(args: {
+  provinces: PHLocationProvince[];
+  target: CuratedCsvRow;
+  provinceValue: string;
+  cityValue: string;
+}): boolean {
+  const provinceMatch = findProvinceByName(args.provinces, args.provinceValue);
+  if (!provinceMatch) return false;
+
+  const cityInProvince = findCityInProvinceByName(
+    provinceMatch,
+    args.cityValue,
+  );
+  const cityAcross = cityInProvince
+    ? null
+    : findCityAcrossProvincesByName(args.provinces, args.cityValue);
+
+  const resolvedProvince = cityInProvince
+    ? provinceMatch
+    : (cityAcross?.province ?? null);
+  const cityMatch = cityInProvince ?? cityAcross?.city ?? null;
+  if (!resolvedProvince || !cityMatch) return false;
+
+  args.target.province = resolvedProvince.name;
+  args.target.city = cityMatch.name;
+  return true;
+}
+
+async function loadPhLocationCatalog(
+  locationsPath: string,
+): Promise<PHLocationProvince[]> {
+  const resolvedPath = path.resolve(process.cwd(), locationsPath);
+  const raw = await readFile(resolvedPath, "utf-8");
+  const parsed = JSON.parse(raw) as unknown;
+  if (!Array.isArray(parsed)) {
+    throw new Error(`Invalid PH locations JSON at ${resolvedPath}`);
+  }
+
+  const provinces = parsed
+    .map((item) => toObject(item))
+    .filter((item): item is JsonObject => Boolean(item))
+    .map((item) => {
+      const cities = Array.isArray(item.cities)
+        ? item.cities
+            .map((city) => toObject(city))
+            .filter((city): city is JsonObject => Boolean(city))
+            .map((city) => ({
+              name: normalizeString(city.name),
+              displayName: normalizeString(city.displayName),
+              slug: normalizeString(city.slug),
+            }))
+            .filter((city) => city.name && city.displayName && city.slug)
+        : [];
+
+      return {
+        name: normalizeString(item.name),
+        displayName: normalizeString(item.displayName),
+        slug: normalizeString(item.slug),
+        cities,
+      } satisfies PHLocationProvince;
+    })
+    .filter(
+      (province) =>
+        province.name &&
+        province.displayName &&
+        province.slug &&
+        province.cities.length > 0,
+    );
+
+  if (provinces.length === 0) {
+    throw new Error(`No provinces found in ${resolvedPath}`);
+  }
+
+  return provinces;
+}
+
+async function normalizeRowsToPhCatalog(
+  rowsWithSource: RowWithSource[],
+  options: ScriptOptions,
+): Promise<{
+  rows: RowWithSource[];
+  deterministicResolved: number;
+  aiResolved: number;
+  unresolved: number;
+}> {
+  if (!options.normalizePhLocations || rowsWithSource.length === 0) {
+    return {
+      rows: rowsWithSource,
+      deterministicResolved: 0,
+      aiResolved: 0,
+      unresolved: 0,
+    };
+  }
+
+  const provinces = await loadPhLocationCatalog(options.phLocationsPath);
+  const nextRows = rowsWithSource.map((item) => ({
+    ...item,
+    row: { ...item.row },
+  }));
+
+  const unresolvedIndexes: number[] = [];
+  let deterministicResolved = 0;
+
+  for (const [index, item] of nextRows.entries()) {
+    const deterministic = resolveLocationDeterministically(item.row, provinces);
+    if (!deterministic) {
+      unresolvedIndexes.push(index);
+      continue;
+    }
+
+    item.row.province = deterministic.province.name;
+    item.row.city = deterministic.city.name;
+    deterministicResolved += 1;
+  }
+
+  if (unresolvedIndexes.length === 0 || !options.useAiLocationNormalization) {
+    return {
+      rows: nextRows,
+      deterministicResolved,
+      aiResolved: 0,
+      unresolved: unresolvedIndexes.length,
+    };
+  }
+
+  if (!process.env.OPENAI_API_KEY) {
+    console.log(
+      "OPENAI_API_KEY is not set. Falling back to deterministic location normalization only.",
+    );
+    return {
+      rows: nextRows,
+      deterministicResolved,
+      aiResolved: 0,
+      unresolved: unresolvedIndexes.length,
+    };
+  }
+
+  const unresolvedRowsPayload = unresolvedIndexes.map((index) => {
+    const item = nextRows[index];
+    return {
+      index,
+      name: item?.row.name ?? "",
+      address: item?.row.address ?? "",
+      city: item?.row.city ?? "",
+      province: item?.row.province ?? "",
+      sourceUrl: item?.sourceUrl ?? "",
+    };
+  });
+
+  const locationCatalogPrompt = provinces.map((province) => ({
+    provinceName: province.name,
+    provinceDisplayName: province.displayName,
+    provinceSlug: province.slug,
+    cities: province.cities.map((city) => ({
+      cityName: city.name,
+      cityDisplayName: city.displayName,
+      citySlug: city.slug,
+    })),
+  }));
+
+  let object: z.infer<typeof AI_LOCATION_NORMALIZATION_SCHEMA>;
+  try {
+    const response = await generateObject({
+      model: openai(options.locationModel),
+      schema: AI_LOCATION_NORMALIZATION_SCHEMA,
+      system:
+        "You normalize Philippine venue locations. Use only values from the provided location catalog.",
+      prompt: [
+        "Location catalog JSON:",
+        JSON.stringify(locationCatalogPrompt),
+        "",
+        "Rows to normalize JSON:",
+        JSON.stringify(unresolvedRowsPayload),
+        "",
+        "Return suggestions for each row index using the best matching province and city from the catalog.",
+        'When possible, prefer canonical "provinceName" and "cityName" values.',
+        "If uncertain, omit that row from output instead of returning empty values.",
+      ].join("\n"),
+    });
+    object = response.object;
+  } catch (error) {
+    console.warn(
+      "AI location normalization failed. Falling back to deterministic-only normalization.",
+    );
+    if (error instanceof Error) {
+      console.warn(error.message);
+    }
+    return {
+      rows: nextRows,
+      deterministicResolved,
+      aiResolved: 0,
+      unresolved: unresolvedIndexes.length,
+    };
+  }
+
+  let aiResolved = 0;
+  for (const item of object.normalized) {
+    const target = nextRows[item.index];
+    if (!target) continue;
+
+    const provinceValue = normalizeString(item.province);
+    const cityValue = normalizeString(item.city);
+    if (!provinceValue || !cityValue) continue;
+
+    const wasApplied = applyCanonicalLocationSuggestion({
+      provinces,
+      target: target.row,
+      provinceValue,
+      cityValue,
+    });
+    if (wasApplied) {
+      aiResolved += 1;
+    }
+  }
+
+  const unresolvedAfterBatchPass = unresolvedIndexes.filter((index) => {
+    const item = nextRows[index];
+    if (!item) return false;
+    return !resolveLocationDeterministically(item.row, provinces);
+  });
+
+  for (const index of unresolvedAfterBatchPass) {
+    const target = nextRows[index];
+    if (!target) continue;
+
+    try {
+      const response = await generateObject({
+        model: openai(options.locationModel),
+        schema: AI_SINGLE_LOCATION_SCHEMA,
+        system:
+          "You normalize one Philippine venue location. Use only values from the provided location catalog.",
+        prompt: [
+          "Location catalog JSON:",
+          JSON.stringify(locationCatalogPrompt),
+          "",
+          "Row to normalize JSON:",
+          JSON.stringify({
+            index,
+            name: target.row.name,
+            address: target.row.address,
+            city: target.row.city,
+            province: target.row.province,
+            sourceUrl: target.sourceUrl,
+          }),
+          "",
+          'Return the best matching province and city from the catalog using canonical "provinceName" and "cityName" values.',
+        ].join("\n"),
+      });
+
+      const provinceValue = normalizeString(response.object.province);
+      const cityValue = normalizeString(response.object.city);
+      if (!provinceValue || !cityValue) {
+        continue;
+      }
+
+      const wasApplied = applyCanonicalLocationSuggestion({
+        provinces,
+        target: target.row,
+        provinceValue,
+        cityValue,
+      });
+      if (wasApplied) {
+        aiResolved += 1;
+      }
+    } catch {
+      // Keep unresolved rows as-is when single-row AI fallback fails.
+    }
+  }
+
+  const unresolvedAfterAi = nextRows.filter((item) => {
+    const matched = resolveLocationDeterministically(item.row, provinces);
+    return !matched;
+  }).length;
+
+  return {
+    rows: nextRows,
+    deterministicResolved,
+    aiResolved,
+    unresolved: unresolvedAfterAi,
+  };
+}
+
 async function fetchExistingCuratedPlaces(
   connectionString: string,
 ): Promise<ExistingCuratedPlace[]> {
@@ -1484,9 +2272,13 @@ async function main() {
   const options = parseArgs();
 
   const apiKey = process.env.FIRECRAWL_API_KEY;
-  if (!apiKey) {
+  const canSkipFirecrawlApiKey = Boolean(
+    options.discoverOnly && options.urlsFilePath,
+  );
+  if (!apiKey && !canSkipFirecrawlApiKey) {
     throw new Error("FIRECRAWL_API_KEY environment variable is not set");
   }
+  const firecrawlApiKey = apiKey ?? "";
 
   const resolvedOutputPath = path.resolve(process.cwd(), options.outputPath);
   const resolvedRawPath = path.resolve(process.cwd(), options.rawOutputPath);
@@ -1501,7 +2293,7 @@ async function main() {
 
   let sourceUrls = options.urlsFilePath
     ? await loadUrlsFromFile(options.urlsFilePath)
-    : await mapUrls(options, apiKey);
+    : await mapUrls(options, firecrawlApiKey);
 
   if (!options.urlsFilePath && sourceUrls.length === 0) {
     console.log("Firecrawl map returned no links. Trying sitemap fallback...");
@@ -1557,16 +2349,44 @@ async function main() {
   let rowsWithSource: RowWithSource[] = [];
   let extractItems: JsonObject[] = [];
   let usedSports360ApiFallback = false;
+  let usedPickleheadsUrlFallback = false;
   let usedDiscoverOnlyMode = false;
+  const shouldUsePickleheadsUrlFallback = new URL(
+    options.startUrl,
+  ).host.endsWith("pickleheads.com");
 
   if (options.discoverOnly) {
     usedDiscoverOnlyMode = true;
     console.log("Discover-only mode enabled. Skipping extraction step.");
+  } else if (shouldUsePickleheadsUrlFallback && candidateUrls.length > 0) {
+    rowsWithSource = buildPickleheadsFallbackRows(
+      candidateUrls,
+      options.sportSlug,
+    );
+    usedPickleheadsUrlFallback = rowsWithSource.length > 0;
+    markAttemptedUrls(state, candidateUrls, runAt);
+    const fallbackUrls = rowsWithSource
+      .map((item) => item.sourceUrl)
+      .filter((url) => isValidHttpUrl(url));
+    touchDiscoveredUrls(state, fallbackUrls, runAt);
+    const fallbackSet = new Set(
+      fallbackUrls.map((url) => canonicalizeUrl(url)),
+    );
+    for (const candidateUrl of candidateUrls) {
+      const canonical = canonicalizeUrl(candidateUrl);
+      if (!fallbackSet.has(canonical)) {
+        markUrlNoData(state, candidateUrl, runAt);
+      }
+    }
   } else if (candidateUrls.length > 0) {
     markAttemptedUrls(state, candidateUrls, runAt);
     let extractPayload: JsonObject;
     try {
-      extractPayload = await runExtract(apiKey, options, candidateUrls);
+      extractPayload = await runExtract(
+        firecrawlApiKey,
+        options,
+        candidateUrls,
+      );
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Unknown extract error";
@@ -1604,11 +2424,9 @@ async function main() {
 
       const urlsWithRows = new Set<string>();
       for (const item of rowsWithSource) {
-        const rowKey = upsertRowState(state, item.row, item.sourceUrl, runAt);
         if (item.sourceUrl) {
           const canonical = canonicalizeUrl(item.sourceUrl);
           urlsWithRows.add(canonical);
-          markUrlScraped(state, item.sourceUrl, rowKey, item.row.name, runAt);
         }
       }
 
@@ -1617,6 +2435,22 @@ async function main() {
           markUrlNoData(state, attemptedUrl, runAt);
         }
       }
+    }
+  }
+
+  if (!options.discoverOnly && rowsWithSource.length === 0) {
+    const pickleheadsFallbackRows = buildPickleheadsFallbackRows(
+      candidateUrls,
+      options.sportSlug,
+    );
+    if (pickleheadsFallbackRows.length > 0) {
+      rowsWithSource = pickleheadsFallbackRows;
+      usedPickleheadsUrlFallback = true;
+      const fallbackUrls = rowsWithSource
+        .map((item) => item.sourceUrl)
+        .filter((url) => isValidHttpUrl(url));
+      touchDiscoveredUrls(state, fallbackUrls, runAt);
+      markAttemptedUrls(state, fallbackUrls, runAt);
     }
   }
 
@@ -1633,24 +2467,51 @@ async function main() {
         .filter((url) => isValidHttpUrl(url));
       touchDiscoveredUrls(state, fallbackUrls, runAt);
       markAttemptedUrls(state, fallbackUrls, runAt);
-      for (const item of rowsWithSource) {
-        const rowKey = upsertRowState(state, item.row, item.sourceUrl, runAt);
-        markUrlScraped(state, item.sourceUrl, rowKey, item.row.name, runAt);
-      }
     }
+  }
+
+  const locationNormalization = await normalizeRowsToPhCatalog(rowsWithSource, {
+    ...options,
+    normalizePhLocations: options.crawlOnly
+      ? false
+      : options.normalizePhLocations,
+  });
+  rowsWithSource = dedupeRowsWithSource(locationNormalization.rows);
+
+  for (const item of rowsWithSource) {
+    const rowKey = upsertRowState(state, item.row, item.sourceUrl, runAt);
+    markUrlScraped(state, item.sourceUrl, rowKey, item.row.name, runAt);
   }
 
   const rows = dedupeRows(rowsWithSource.map((item) => item.row));
 
-  if (!options.discoverOnly && rows.length === 0) {
+  if (options.normalizePhLocations && !options.crawlOnly) {
+    console.log(
+      `PH location normalization: deterministic=${locationNormalization.deterministicResolved}, ai=${locationNormalization.aiResolved}, unresolved=${locationNormalization.unresolved}`,
+    );
+  }
+
+  const noRowsFound = rows.length === 0;
+
+  if (
+    !options.discoverOnly &&
+    noRowsFound &&
+    !shouldUsePickleheadsUrlFallback
+  ) {
     throw new Error(
       "No candidate URLs after filtering and no fallback rows found. Use --urls-file with explicit venue URLs.",
     );
+  }
+  if (!options.discoverOnly && noRowsFound && shouldUsePickleheadsUrlFallback) {
+    console.log("No new Pickleheads court pages found in this run.");
   }
   if (usedSports360ApiFallback) {
     console.log(
       `No crawlable candidate pages found. Using Sports360 public API fallback (${rows.length} rows).`,
     );
+  }
+  if (usedPickleheadsUrlFallback) {
+    console.log(`Using Pickleheads URL fallback (${rows.length} rows).`);
   }
 
   const discoveredRows = Object.values(state.rows);
@@ -1709,6 +2570,13 @@ async function main() {
     generatedAt: runAt,
     startUrl: options.startUrl,
     dbCoverageEnabled,
+    phLocationNormalization: {
+      enabled: options.normalizePhLocations && !options.crawlOnly,
+      aiEnabled: options.useAiLocationNormalization,
+      deterministicResolved: locationNormalization.deterministicResolved,
+      aiResolved: locationNormalization.aiResolved,
+      unresolved: locationNormalization.unresolved,
+    },
     discoveredUrls: discoveredUrlCount,
     scrapedUrls: scrapedUrlCount,
     noDataUrls: noDataUrlCount,
@@ -1735,7 +2603,19 @@ async function main() {
     candidateUrlsSelectedForRun: candidateUrls,
     skippedAlreadyScrapedUrls,
     usedSports360ApiFallback,
+    usedPickleheadsUrlFallback,
     usedDiscoverOnlyMode,
+    usedCrawlOnlyMode: options.crawlOnly,
+    rawRecords: rowsWithSource,
+    phLocationNormalization: {
+      enabled: options.normalizePhLocations && !options.crawlOnly,
+      aiEnabled: options.useAiLocationNormalization,
+      deterministicResolved: locationNormalization.deterministicResolved,
+      aiResolved: locationNormalization.aiResolved,
+      unresolved: locationNormalization.unresolved,
+      locationsFile: options.phLocationsPath,
+      locationModel: options.locationModel,
+    },
     extractItems,
     coverageSummary: {
       discoveredRows: discoveredRows.length,
@@ -1760,6 +2640,11 @@ async function main() {
             pendingMigrationRows: pendingMigrationRows.length,
             dbCoverageEnabled,
           },
+          phLocationNormalization: {
+            deterministicResolved: locationNormalization.deterministicResolved,
+            aiResolved: locationNormalization.aiResolved,
+            unresolved: locationNormalization.unresolved,
+          },
         },
         null,
         2,
@@ -1782,12 +2667,12 @@ async function main() {
       "utf-8",
     ),
   ];
-  if (!options.discoverOnly) {
+  if (!options.discoverOnly && !options.crawlOnly && rows.length > 0) {
     writeTasks.push(writeFile(resolvedOutputPath, csv, "utf-8"));
   }
   await Promise.all(writeTasks);
 
-  if (!options.discoverOnly) {
+  if (!options.discoverOnly && !options.crawlOnly && rows.length > 0) {
     console.log(`Wrote ${rows.length} curated rows to ${resolvedOutputPath}`);
   }
   console.log(`Wrote extraction audit JSON to ${resolvedRawPath}`);
@@ -1799,7 +2684,11 @@ async function main() {
   console.log(
     options.discoverOnly
       ? "Next: rerun without --discover-only to scrape only new URLs."
-      : `Next: pnpm db:import:curated-courts -- --file ${options.outputPath} --dry-run`,
+      : options.crawlOnly
+        ? `Next: pnpm scrape:curated:normalize -- --input ${options.rawOutputPath}`
+        : rows.length > 0
+          ? `Next: pnpm db:import:curated-courts -- --file ${options.outputPath} --dry-run`
+          : "Next: no import needed for this run; new rows were not found.",
   );
 }
 
