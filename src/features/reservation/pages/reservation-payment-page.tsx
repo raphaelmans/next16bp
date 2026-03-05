@@ -289,7 +289,7 @@ export default function PaymentPage({
         <div className="max-w-lg mx-auto">
           <Card>
             <CardContent className="p-6 text-center">
-              <CheckCircle className="h-12 w-12 mx-auto text-[#059669] mb-4" />
+              <CheckCircle className="h-12 w-12 mx-auto text-success mb-4" />
               <h2 className="font-heading font-semibold text-lg mb-2">
                 Payment Already Marked
               </h2>

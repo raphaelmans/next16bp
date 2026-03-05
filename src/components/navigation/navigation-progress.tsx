@@ -253,7 +253,7 @@ export function NavigationProgress() {
         <div
           className={cn(
             "relative h-full origin-left overflow-hidden rounded-full transition-[width] duration-150 ease-out",
-            "bg-gradient-to-r from-primary via-accent to-primary shadow-[0_0_10px_rgba(13,148,136,0.25)]",
+            "bg-gradient-to-r from-primary via-accent to-primary shadow-[0_0_10px_color-mix(in_oklch,var(--color-primary)_25%,transparent)]",
           )}
           style={{ width: `${progress}%` }}
         >
@@ -262,7 +262,7 @@ export function NavigationProgress() {
               className={cn(
                 "pointer-events-none absolute inset-0",
                 "before:absolute before:inset-0 before:block before:content-['']",
-                "before:bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.6),transparent)] before:opacity-70",
+                "before:bg-[linear-gradient(90deg,transparent,oklch(1_0_0/0.6),transparent)] before:opacity-70",
                 "before:translate-x-[-60%] before:animate-[courtline-scan_1.6s_linear_infinite]",
               )}
             />
