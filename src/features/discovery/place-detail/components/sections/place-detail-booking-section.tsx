@@ -191,12 +191,9 @@ export function PlaceDetailBookingSection({
     const MAX_TIMEOUT_MS = 0x7fffffff;
     const delayMs = Math.min(selectedStartMs - nowMs + 250, MAX_TIMEOUT_MS);
 
-    const timeoutId = window.setTimeout(
-      () => {
-        sendTimeSlot({ type: "SLOT_EXPIRED" });
-      },
-      delayMs,
-    );
+    const timeoutId = window.setTimeout(() => {
+      sendTimeSlot({ type: "SLOT_EXPIRED" });
+    }, delayMs);
 
     return () => {
       window.clearTimeout(timeoutId);

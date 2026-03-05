@@ -183,9 +183,7 @@ export function PlaceDetailBookingSummaryCard({
                             placeTimeZone,
                             "MMM d, h:mm a",
                           )}
-                          {crossesMidnight
-                            ? ` - ${formatInTimeZone(endTime, placeTimeZone, "MMM d, h:mm a")}`
-                            : ""}{" "}
+                          {` - ${formatInTimeZone(endTime, placeTimeZone, crossesMidnight ? "MMM d, h:mm a" : "h:mm a")}`}{" "}
                           · {formatDuration(item.durationMinutes)}
                           {item.estimatedPriceCents !== null
                             ? ` · ${formatCurrency(item.estimatedPriceCents, item.currency)}`

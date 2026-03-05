@@ -132,11 +132,22 @@ export function PlaceDetailMobileSheet({
   isNextWeekDisabled,
   onGoToToday,
 }: PlaceDetailMobileSheetProps) {
+  const scrollRef = React.useRef<HTMLDivElement>(null);
   const cartItemCount = cartItems.length;
   const hasCartItems = cartItemCount > 0;
   const [mobileFlowStep, setMobileFlowStep] = React.useState<
     "select" | "review"
   >("select");
+
+  React.useEffect(() => {
+    // Use rAF to ensure DOM has updated after the week change re-render
+    const id = requestAnimationFrame(() => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = 0;
+      }
+    });
+    return () => cancelAnimationFrame(id);
+  }, [weekHeaderLabel]);
   const isReviewStep = mobileFlowStep === "review" && hasCartItems;
 
   const pricedItemCount = cartItems.filter(
@@ -236,9 +247,7 @@ export function PlaceDetailMobileSheet({
                                 placeTimeZone,
                                 "MMM d, h:mm a",
                               )}
-                              {crossesMidnight
-                                ? ` - ${formatInTimeZone(endTime, placeTimeZone, "MMM d, h:mm a")}`
-                                : ""}{" "}
+                              {` - ${formatInTimeZone(endTime, placeTimeZone, crossesMidnight ? "MMM d, h:mm a" : "h:mm a")}`}{" "}
                               · {formatDuration(item.durationMinutes)}
                               {item.estimatedPriceCents !== null
                                 ? ` · ${formatCurrency(item.estimatedPriceCents, item.currency)}`
@@ -349,7 +358,10 @@ export function PlaceDetailMobileSheet({
                 />
               </div>
 
-              <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-2">
+              <div
+                ref={scrollRef}
+                className="min-h-0 flex-1 overflow-y-auto px-5 pb-2"
+              >
                 {isMobileRefreshing && (
                   <div className="mb-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                     <Loader2 className="h-3 w-3 animate-spin" />

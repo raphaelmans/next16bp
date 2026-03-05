@@ -17,6 +17,8 @@ import type {
 } from "@/lib/shared/kernel/response";
 import { wrapResponse } from "@/lib/shared/utils/response";
 import {
+  GoogleLocGeocodeRequestSchema,
+  type GoogleLocGeocodeResponse,
   GoogleLocNearbyRequestSchema,
   type GoogleLocNearbyResponse,
   GoogleLocPreviewRequestSchema,
@@ -104,6 +106,40 @@ export async function handleGoogleLocPreview(
     const result = await service.preview(body);
 
     const response = NextResponse.json<ApiResponse<GoogleLocPreviewResponse>>(
+      wrapResponse(result),
+    );
+    if (options?.deprecatedAlias) applyDeprecationHeaders(response);
+
+    return response;
+  } catch (error) {
+    const { status, body } = handleError(error, requestId);
+    return NextResponse.json<ApiErrorResponse>(body, { status });
+  }
+}
+
+export async function handleGoogleLocGeocode(
+  req: Request,
+  options?: HandlerOptions,
+) {
+  const requestId = getRequestId(req);
+  try {
+    const session = await resolveGoogleLocSession(req, requestId);
+    const rl = await enforceRateLimit({
+      req,
+      tier: "geocodeSearch",
+      requestId,
+      identifier: session.userId,
+    });
+    if (!rl.ok) return rl.response;
+
+    const body = validate(
+      GoogleLocGeocodeRequestSchema,
+      await parseJsonBody(req),
+    );
+    const service = makeGoogleLocService();
+    const result = await service.geocode(body);
+
+    const response = NextResponse.json<ApiResponse<GoogleLocGeocodeResponse>>(
       wrapResponse(result),
     );
     if (options?.deprecatedAlias) applyDeprecationHeaders(response);

@@ -104,7 +104,13 @@ export function Navbar({ className }: NavbarProps) {
     });
   };
 
-  const handleListYourPlace = () => {
+  const listYourVenueHref = !isAuthenticated
+    ? appRoutes.ownersGetStarted.base
+    : isOwner
+      ? appRoutes.organization.places.new
+      : appRoutes.organization.getStarted;
+
+  const handleListYourPlaceClick = () => {
     trackEvent({
       event: "funnel.owner_list_your_venue_nav_clicked",
       properties: {
@@ -112,18 +118,6 @@ export function Navbar({ className }: NavbarProps) {
         owner: isOwner,
       },
     });
-
-    if (!isAuthenticated) {
-      router.push(appRoutes.ownersGetStarted.base);
-      return;
-    }
-
-    if (isOwner) {
-      router.push(appRoutes.organization.places.new);
-      return;
-    }
-
-    router.push(appRoutes.organization.getStarted);
   };
 
   return (
@@ -167,10 +161,11 @@ export function Navbar({ className }: NavbarProps) {
       <div className="hidden md:flex items-center gap-3">
         <Button
           variant="ghost"
-          onClick={handleListYourPlace}
+          asChild
+          onClick={handleListYourPlaceClick}
           className="font-heading text-accent"
         >
-          List Your Venue
+          <Link href={listYourVenueHref}>List Your Venue</Link>
         </Button>
 
         {isResolvingSession ? (
@@ -362,16 +357,16 @@ export function Navbar({ className }: NavbarProps) {
             <Separator />
 
             {/* List Your Venue */}
-            <button
-              type="button"
+            <Link
+              href={listYourVenueHref}
               onClick={() => {
-                handleListYourPlace();
+                handleListYourPlaceClick();
                 setIsOpen(false);
               }}
               className="py-2 text-lg font-heading font-semibold text-accent hover:text-accent/80 text-left"
             >
               List Your Venue
-            </button>
+            </Link>
 
             <Separator />
 

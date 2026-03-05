@@ -9,4 +9,5 @@ export const googleLocQueryKeys = createQueryKeys("googleLoc", {
     radius?: number;
     max?: number;
   }) => [args.lat, args.lng, args.radius, args.max],
+  geocode: (address: string) => [address],
 });

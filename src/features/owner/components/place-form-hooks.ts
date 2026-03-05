@@ -84,6 +84,8 @@ export const usePlaceFormState = ({
   const provinceValue = useWatch({ control, name: "province" });
   const cityValue = useWatch({ control, name: "city" });
   const nameValue = useWatch({ control, name: "name" });
+  const latitudeValue = useWatch({ control, name: "latitude" });
+  const longitudeValue = useWatch({ control, name: "longitude" });
 
   const previewMutation = useGoogleLocPreviewMutation({
     onSuccess: (data) => {
@@ -222,6 +224,19 @@ export const usePlaceFormState = ({
     }
   };
 
+  const handleMapPinChange = (lat: number, lng: number) => {
+    setValue("latitude", lat, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
+    setValue("longitude", lng, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
+  };
+
   const handlePreview = () => {
     if (!googleUrl.trim()) return;
     previewMutation.reset();
@@ -248,6 +263,9 @@ export const usePlaceFormState = ({
     isProvinceDisabled,
     isCityDisabled,
     coordinateLabel,
+    latitudeValue,
+    longitudeValue,
+    handleMapPinChange,
     handleSubmit,
     submitting,
     isSubmitDisabled,

@@ -222,6 +222,85 @@ export function useGoogleLocPreviewMutation(
   });
 }
 
+export type GoogleLocGeocodeResult = {
+  lat: number;
+  lng: number;
+  formattedAddress?: string;
+};
+
+// --- geocode client + hook ---
+
+const geocodeClient = {
+  async geocode(args: {
+    address: string;
+    signal?: AbortSignal;
+  }): Promise<GoogleLocGeocodeResult> {
+    const response = await googleLocKy.post("/api/v1/google-loc/geocode", {
+      json: { address: args.address },
+      signal: args.signal,
+    });
+
+    const json = (await response.json()) as unknown;
+
+    if (!response.ok) {
+      if (isApiErrorResponse(json)) {
+        throw new ApiClientError({
+          code: json.code,
+          message: json.message,
+          requestId: json.requestId,
+          httpStatus: response.status,
+          details: json.details,
+        });
+      }
+
+      throw new ApiClientError({
+        code: "INTERNAL_ERROR",
+        message: "Request failed",
+        requestId: "unknown",
+        httpStatus: response.status,
+      });
+    }
+
+    if (!isApiResponse<GoogleLocGeocodeResult>(json)) {
+      throw new ApiClientError({
+        code: "INTERNAL_ERROR",
+        message: "Invalid response",
+        requestId: "unknown",
+        httpStatus: response.status,
+      });
+    }
+
+    return json.data;
+  },
+};
+
+export function useGoogleLocGeocodeMutation(
+  options?: UseMutationOptions<
+    GoogleLocGeocodeResult,
+    ApiClientError,
+    { address: string },
+    unknown
+  >,
+) {
+  const queryClient = useQueryClient();
+  const { onSuccess, ...rest } = options ?? {};
+
+  return useMutation({
+    ...rest,
+    mutationKey: googleLocQueryKeys.geocode._def,
+    mutationFn: ({ address }: { address: string }) =>
+      geocodeClient.geocode({ address }),
+    onSuccess: (data, variables, onMutateResult, context) => {
+      queryClient.setQueryData(
+        googleLocQueryKeys.geocode(variables.address).queryKey,
+        data,
+      );
+
+      onSuccess?.(data, variables, onMutateResult, context);
+    },
+  });
+}
+
 export function useGoogleLocNearbyMutation(
   options?: UseMutationOptions<
     GoogleLocNearbyResult,

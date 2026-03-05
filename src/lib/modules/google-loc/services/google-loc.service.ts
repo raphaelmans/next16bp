@@ -1,6 +1,8 @@
 import { BadGatewayError, ValidationError } from "@/lib/shared/kernel/errors";
 import { resolveGooglePlaceId } from "@/lib/shared/lib/google-maps/resolve-google-place-id";
 import type {
+  GoogleLocGeocodeRequest,
+  GoogleLocGeocodeResponse,
   GoogleLocNearbyRequest,
   GoogleLocNearbyResponse,
   GoogleLocPreviewRequest,
@@ -343,5 +345,64 @@ export class GoogleLocService implements IGoogleLocService {
       .slice(0, max);
 
     return { places };
+  }
+
+  async geocode(
+    args: GoogleLocGeocodeRequest,
+  ): Promise<GoogleLocGeocodeResponse> {
+    const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+    if (!apiKey) {
+      throw new ValidationError("Missing GOOGLE_MAPS_API_KEY");
+    }
+
+    const params = new URLSearchParams({
+      address: args.address,
+      region: "ph",
+      key: apiKey,
+    });
+
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?${params.toString()}`,
+      { cache: "no-store" },
+    );
+
+    const json = (await response.json()) as {
+      status?: string;
+      error_message?: string;
+      results?: Array<{
+        geometry?: { location?: { lat: number; lng: number } };
+        formatted_address?: string;
+      }>;
+    };
+
+    if (!response.ok) {
+      throw new BadGatewayError("Google Geocoding request failed", {
+        status: response.status,
+        body: json,
+      });
+    }
+
+    if (json.status === "ZERO_RESULTS" || (json.results?.length ?? 0) === 0) {
+      throw new ValidationError("No results found for that address");
+    }
+
+    if (json.status && json.status !== "OK") {
+      throw new BadGatewayError("Google Geocoding status error", {
+        status: json.status,
+        error: json.error_message,
+      });
+    }
+
+    const first = json.results?.[0];
+    const location = first?.geometry?.location;
+    if (!location) {
+      throw new ValidationError("No results found for that address");
+    }
+
+    return {
+      lat: location.lat,
+      lng: location.lng,
+      formattedAddress: first?.formatted_address,
+    };
   }
 }

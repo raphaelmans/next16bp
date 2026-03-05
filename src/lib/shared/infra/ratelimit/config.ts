@@ -20,6 +20,8 @@ export const RATE_LIMIT_TIERS = {
   chatSession: { requests: 12, window: "1 m" as const },
   /** AI-powered normalization operations - 3 req/10 min */
   aiNormalize: { requests: 3, window: "10 m" as const },
+  /** Map geocode searches (venue setup) - 3 req/1 h */
+  geocodeSearch: { requests: 3, window: "1 h" as const },
 } as const;
 
 export type RateLimitTier = keyof typeof RATE_LIMIT_TIERS;

@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
 import { PLACE_AMENITIES } from "@/common/amenities";
 import {
   StandardFormCheckbox,
@@ -18,12 +18,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { PlaceFormData } from "../schemas";
 import { type PlaceFormValues, SAMPLE_GOOGLE_URL } from "./place-form-helpers";
 import { usePlaceFormState } from "./place-form-hooks";
+import { PlaceMapPicker } from "./place-map-picker";
 
 interface PlaceFormProps {
   defaultValues?: Partial<PlaceFormValues>;
@@ -57,6 +63,9 @@ export function PlaceForm({
     isProvinceDisabled,
     isCityDisabled,
     coordinateLabel,
+    latitudeValue,
+    longitudeValue,
+    handleMapPinChange,
     handleSubmit,
     submitting,
     isSubmitDisabled,
@@ -235,52 +244,20 @@ export function PlaceForm({
         <CardHeader>
           <CardTitle>Map (optional)</CardTitle>
           <CardDescription>
-            Paste a Google Maps link to auto-fill coordinates. Address and city
-            still require confirmation.
+            Click on the map or search an address to set the venue location.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="googleUrl">Google Maps URL</Label>
-            <Input
-              id="googleUrl"
-              value={googleUrl}
-              onChange={(event) => setGoogleUrl(event.target.value)}
-              placeholder={SAMPLE_GOOGLE_URL}
-              inputMode="url"
-            />
-            {hasEmbedKey ? null : (
-              <p className="text-xs text-muted-foreground">
-                Embed previews are disabled until a Google Maps key is
-                configured.
-              </p>
-            )}
-            <p className="text-xs text-muted-foreground">
-              Example: {SAMPLE_GOOGLE_URL}
-            </p>
-          </div>
-
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handlePreview}
-            disabled={googleUrl.trim().length === 0 || isPreviewing}
-            className="w-full"
-          >
-            {isPreviewing ? (
-              <span className="inline-flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Resolving…
-              </span>
-            ) : (
-              "Preview"
-            )}
-          </Button>
+          <PlaceMapPicker
+            latitude={latitudeValue}
+            longitude={longitudeValue}
+            onChange={handleMapPinChange}
+          />
 
           <div className="grid gap-4 sm:grid-cols-2">
             <StandardFormField<PlaceFormValues>
               name="latitude"
-              label="Latitude (optional)"
+              label="Latitude"
             >
               {({ field }) => (
                 <Input
@@ -303,7 +280,7 @@ export function PlaceForm({
 
             <StandardFormField<PlaceFormValues>
               name="longitude"
-              label="Longitude (optional)"
+              label="Longitude"
             >
               {({ field }) => (
                 <Input
@@ -325,99 +302,150 @@ export function PlaceForm({
             </StandardFormField>
           </div>
 
-          {previewErrorMessage && (
-            <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
-              {previewErrorMessage}
-            </div>
-          )}
-
-          {previewResult && (
-            <div className="space-y-4 rounded-xl border border-border/60 bg-muted/20 p-4">
-              <div className="space-y-3 text-sm">
-                <div>
-                  <div className="text-xs text-muted-foreground">
-                    Resolved URL
-                  </div>
-                  {previewResult.resolvedUrl ? (
-                    <a
-                      href={previewResult.resolvedUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="break-all text-accent hover:underline"
-                    >
-                      {previewResult.resolvedUrl}
-                    </a>
-                  ) : (
-                    <span className="text-muted-foreground">(none)</span>
-                  )}
-                </div>
-
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <div className="text-xs text-muted-foreground">
-                      Suggested name
-                    </div>
-                    <div>{previewResult.suggestedName ?? "(none)"}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-muted-foreground">
-                      Coordinates
-                    </div>
-                    <div>
-                      {coordinateLabel ? (
-                        <span className="font-mono">{coordinateLabel}</span>
-                      ) : (
-                        "(none)"
-                      )}
-                      {previewResult.zoom !== undefined && (
-                        <span className="text-muted-foreground">
-                          {` · z${previewResult.zoom}`}
-                        </span>
-                      )}
-                      {previewResult.source && (
-                        <span className="text-muted-foreground">
-                          {` · ${previewResult.source}`}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
+          <Collapsible>
+            <CollapsibleTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                className="flex w-full items-center gap-2 text-sm text-muted-foreground"
+              >
+                <ChevronRight className="h-4 w-4 transition-transform [[data-state=open]>*>&]:rotate-90" />
+                Or paste a Google Maps link
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-4 pt-2">
+              <div className="space-y-2">
+                <Label htmlFor="googleUrl">Google Maps URL</Label>
+                <Input
+                  id="googleUrl"
+                  value={googleUrl}
+                  onChange={(event) => setGoogleUrl(event.target.value)}
+                  placeholder={SAMPLE_GOOGLE_URL}
+                  inputMode="url"
+                />
+                {hasEmbedKey ? null : (
+                  <p className="text-xs text-muted-foreground">
+                    Embed previews are disabled until a Google Maps key is
+                    configured.
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  Example: {SAMPLE_GOOGLE_URL}
+                </p>
               </div>
 
-              {previewResult.warnings.length > 0 && (
-                <div className="rounded-lg border border-border/60 bg-muted/40 p-3">
-                  <div className="text-xs font-medium">Warnings</div>
-                  <ul className="mt-1 list-disc pl-5 text-xs text-muted-foreground">
-                    {previewResult.warnings.map((warning: string) => (
-                      <li key={warning}>{warning}</li>
-                    ))}
-                  </ul>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handlePreview}
+                disabled={googleUrl.trim().length === 0 || isPreviewing}
+                className="w-full"
+              >
+                {isPreviewing ? (
+                  <span className="inline-flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Resolving…
+                  </span>
+                ) : (
+                  "Preview"
+                )}
+              </Button>
+
+              {previewErrorMessage && (
+                <div className="rounded-xl border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+                  {previewErrorMessage}
                 </div>
               )}
 
-              {previewResult.embedSrc ? (
-                <div className="space-y-2">
-                  <div className="text-sm font-medium">Embed preview</div>
-                  <div className="aspect-video overflow-hidden rounded-xl border border-border/60 bg-muted">
-                    <iframe
-                      title="Google Maps Embed"
-                      src={previewResult.embedSrc}
-                      className="h-full w-full"
-                      loading="lazy"
-                      allowFullScreen
-                      referrerPolicy="no-referrer-when-downgrade"
-                    />
+              {previewResult && (
+                <div className="space-y-4 rounded-xl border border-border/60 bg-muted/20 p-4">
+                  <div className="space-y-3 text-sm">
+                    <div>
+                      <div className="text-xs text-muted-foreground">
+                        Resolved URL
+                      </div>
+                      {previewResult.resolvedUrl ? (
+                        <a
+                          href={previewResult.resolvedUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="break-all text-accent hover:underline"
+                        >
+                          {previewResult.resolvedUrl}
+                        </a>
+                      ) : (
+                        <span className="text-muted-foreground">(none)</span>
+                      )}
+                    </div>
+
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div>
+                        <div className="text-xs text-muted-foreground">
+                          Suggested name
+                        </div>
+                        <div>{previewResult.suggestedName ?? "(none)"}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-muted-foreground">
+                          Coordinates
+                        </div>
+                        <div>
+                          {coordinateLabel ? (
+                            <span className="font-mono">{coordinateLabel}</span>
+                          ) : (
+                            "(none)"
+                          )}
+                          {previewResult.zoom !== undefined && (
+                            <span className="text-muted-foreground">
+                              {` · z${previewResult.zoom}`}
+                            </span>
+                          )}
+                          {previewResult.source && (
+                            <span className="text-muted-foreground">
+                              {` · ${previewResult.source}`}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="rounded-lg border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
-                  {hasEmbedKey
-                    ? "No embed preview available for this link."
-                    : "Embed preview unavailable (missing Google Maps key)."}
+
+                  {previewResult.warnings.length > 0 && (
+                    <div className="rounded-lg border border-border/60 bg-muted/40 p-3">
+                      <div className="text-xs font-medium">Warnings</div>
+                      <ul className="mt-1 list-disc pl-5 text-xs text-muted-foreground">
+                        {previewResult.warnings.map((warning: string) => (
+                          <li key={warning}>{warning}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {previewResult.embedSrc ? (
+                    <div className="space-y-2">
+                      <div className="text-sm font-medium">Embed preview</div>
+                      <div className="aspect-video overflow-hidden rounded-xl border border-border/60 bg-muted">
+                        <iframe
+                          title="Google Maps Embed"
+                          src={previewResult.embedSrc}
+                          className="h-full w-full"
+                          loading="lazy"
+                          allowFullScreen
+                          referrerPolicy="no-referrer-when-downgrade"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="rounded-lg border border-border/60 bg-muted/40 p-3 text-sm text-muted-foreground">
+                      {hasEmbedKey
+                        ? "No embed preview available for this link."
+                        : "Embed preview unavailable (missing Google Maps key)."}
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
-          )}
+            </CollapsibleContent>
+          </Collapsible>
         </CardContent>
       </Card>
 

@@ -58,3 +58,20 @@ export type GoogleLocNearbyPlace = z.infer<typeof GoogleLocNearbyPlaceSchema>;
 export type GoogleLocNearbyResponse = z.infer<
   typeof GoogleLocNearbyResponseSchema
 >;
+
+export const GoogleLocGeocodeRequestSchema = z.object({
+  address: z.string().trim().min(1).max(200),
+});
+
+export const GoogleLocGeocodeResponseSchema = z.object({
+  lat: z.number().finite(),
+  lng: z.number().finite(),
+  formattedAddress: z.string().optional(),
+});
+
+export type GoogleLocGeocodeRequest = z.infer<
+  typeof GoogleLocGeocodeRequestSchema
+>;
+export type GoogleLocGeocodeResponse = z.infer<
+  typeof GoogleLocGeocodeResponseSchema
+>;

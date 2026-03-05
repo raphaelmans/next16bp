@@ -393,10 +393,12 @@ const WeekGridCell = React.memo(function WeekGridCell({
             transition={motionTransition}
           />
           {slot?.priceCents !== undefined && (
-            <span className={cn(
-              "font-medium tabular-nums text-primary/70",
-              compact ? "max-w-full truncate text-[11px]" : "text-xs",
-            )}>
+            <span
+              className={cn(
+                "font-medium tabular-nums text-primary/70",
+                compact ? "max-w-full truncate text-[11px]" : "text-xs",
+              )}
+            >
               {formatCurrencyWhole(slot.priceCents, slot.currency ?? "PHP")}
             </span>
           )}
@@ -408,10 +410,12 @@ const WeekGridCell = React.memo(function WeekGridCell({
             <Check className="h-2.5 w-2.5 text-success" />
           </div>
           {slot.priceCents !== undefined && (
-            <span className={cn(
-              "font-medium tabular-nums text-success/80",
-              compact ? "max-w-full truncate text-[11px]" : "text-xs",
-            )}>
+            <span
+              className={cn(
+                "font-medium tabular-nums text-success/80",
+                compact ? "max-w-full truncate text-[11px]" : "text-xs",
+              )}
+            >
               {formatCurrencyWhole(slot.priceCents, slot.currency ?? "PHP")}
             </span>
           )}
@@ -420,10 +424,12 @@ const WeekGridCell = React.memo(function WeekGridCell({
       {available && !inRange && !isInCart && slot && (
         <div className="flex flex-col items-center gap-0.5">
           {slot.priceCents !== undefined ? (
-            <span className={cn(
-              "font-medium tabular-nums text-success/80 group-hover/cell:text-success",
-              compact ? "max-w-full truncate text-[11px]" : "text-xs",
-            )}>
+            <span
+              className={cn(
+                "font-medium tabular-nums text-success/80 group-hover/cell:text-success",
+                compact ? "max-w-full truncate text-[11px]" : "text-xs",
+              )}
+            >
               {formatCurrencyWhole(slot.priceCents, slot.currency ?? "PHP")}
             </span>
           ) : (
@@ -901,9 +907,7 @@ export function AvailabilityWeekGridSkeleton({
 }: AvailabilityWeekGridSkeletonProps) {
   const skeletonHours = hours ?? [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
   const rowHeight = compact ? COMPACT_ROW_HEIGHT : WEEK_ROW_HEIGHT;
-  const colTemplate = compact
-    ? "36px repeat(7, 1fr)"
-    : "48px repeat(7, 1fr)";
+  const colTemplate = compact ? "36px repeat(7, 1fr)" : "48px repeat(7, 1fr)";
   return (
     <div
       className={cn(
