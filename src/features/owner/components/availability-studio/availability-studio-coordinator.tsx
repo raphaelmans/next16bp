@@ -11,7 +11,6 @@ import {
   MousePointerClick,
   RefreshCw,
 } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
@@ -1372,8 +1371,6 @@ function OwnerAvailabilityStudioInner() {
     placeTimeZone,
   ]);
 
-  const shouldReduceMotion = useReducedMotion();
-
   const [armedDraftRowId, setArmedDraftRowId] = React.useState<string | null>(
     null,
   );
@@ -1940,27 +1937,8 @@ function OwnerAvailabilityStudioInner() {
 
             <Card>
               <CardContent className="space-y-4 p-6">
-                <AnimatePresence mode="wait" initial={false}>
-                  {committedRange ? (
-                    <motion.div
-                      key="week-form"
-                      initial={
-                        shouldReduceMotion
-                          ? { opacity: 0 }
-                          : { opacity: 0, y: 8 }
-                      }
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={
-                        shouldReduceMotion
-                          ? { opacity: 0 }
-                          : { opacity: 0, y: -8 }
-                      }
-                      transition={{
-                        duration: 0.2,
-                        ease: [0.25, 0.46, 0.45, 0.94],
-                      }}
-                      className="space-y-4"
-                    >
+                {committedRange ? (
+                    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-1 duration-200">
                       <div className="space-y-1">
                         <h3 className="text-sm font-heading font-semibold">
                           Create Block
@@ -2001,27 +1979,9 @@ function OwnerAvailabilityStudioInner() {
                           Cancel
                         </Button>
                       </div>
-                    </motion.div>
+                    </div>
                   ) : (
-                    <motion.div
-                      key="week-empty"
-                      initial={
-                        shouldReduceMotion
-                          ? { opacity: 0 }
-                          : { opacity: 0, y: 8 }
-                      }
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={
-                        shouldReduceMotion
-                          ? { opacity: 0 }
-                          : { opacity: 0, y: -8 }
-                      }
-                      transition={{
-                        duration: 0.2,
-                        ease: [0.25, 0.46, 0.45, 0.94],
-                      }}
-                      className="space-y-4"
-                    >
+                    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-1 duration-200">
                       <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
                         <div className="flex items-center gap-2">
                           <MousePointerClick className="size-4 text-primary/60" />
@@ -2043,9 +2003,8 @@ function OwnerAvailabilityStudioInner() {
                       >
                         Custom block...
                       </Button>
-                    </motion.div>
+                    </div>
                   )}
-                </AnimatePresence>
                 {isImportOverlay ? (
                   <div className="space-y-3 pt-2">
                     <Separator />

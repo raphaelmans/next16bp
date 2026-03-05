@@ -1,7 +1,6 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { useShallow } from "zustand/shallow";
 import {
@@ -111,11 +110,6 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
   onRangeChange,
   compact,
 }: WeekGridSummaryBarProps) {
-  const shouldReduceMotion = useReducedMotion();
-  const motionTransition = shouldReduceMotion
-    ? { duration: 0 }
-    : { duration: 0.15, ease: "easeOut" as const };
-
   const activeStartIdx = useRangeSelection(selectActiveStartIdx);
   const activeEndIdx = useRangeSelection(selectActiveEndIdx);
   const isAwaitingEndClick = useRangeSelection((s) =>
@@ -184,14 +178,8 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
   if (!summaryData) return null;
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key="summary"
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: 1, height: "auto" }}
-        exit={{ opacity: 0, height: 0 }}
-        transition={motionTransition}
-        className="overflow-hidden"
+      <div
+        className="overflow-hidden animate-in fade-in duration-150"
       >
         <div
           className={cn(
@@ -237,8 +225,7 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
             </button>
           </div>
         </div>
-      </motion.div>
-    </AnimatePresence>
+      </div>
   );
 });
 
@@ -267,11 +254,6 @@ const WeekGridCell = React.memo(function WeekGridCell({
   isInCart,
   compact,
 }: WeekGridCellProps) {
-  const shouldReduceMotion = useReducedMotion();
-  const motionTransition = shouldReduceMotion
-    ? { duration: 0 }
-    : { duration: 0.15, ease: "easeOut" as const };
-
   const { inRange, isStart, isEnd, inHoverPreview, isPendingStart } =
     useCellState(linearIdx);
 
@@ -360,15 +342,12 @@ const WeekGridCell = React.memo(function WeekGridCell({
     >
       {/* Left accent bar for selected range */}
       {inRange && (
-        <motion.div
-          initial={shouldReduceMotion ? false : { scaleY: 0 }}
-          animate={{ scaleY: 1 }}
+        <div
           className={cn(
-            "absolute left-0 top-0 bottom-0 w-1 bg-primary origin-top",
+            "absolute left-0 top-0 bottom-0 w-1 bg-primary origin-top animate-in fade-in duration-150",
             isStart && "rounded-tl",
             isEnd && "rounded-bl",
           )}
-          transition={motionTransition}
         />
       )}
 
@@ -382,15 +361,12 @@ const WeekGridCell = React.memo(function WeekGridCell({
       )}
       {inRange && (
         <div className="flex flex-col items-center gap-0.5">
-          <motion.div
-            initial={shouldReduceMotion ? false : { scale: 0.5 }}
-            animate={{ scale: 1 }}
+          <div
             className={cn(
-              "h-2 w-2 rounded-full bg-primary shadow-sm shadow-primary/25",
+              "h-2 w-2 rounded-full bg-primary shadow-sm shadow-primary/25 animate-in zoom-in-50 duration-150",
               isPendingStart &&
                 "h-2.5 w-2.5 ring-2 ring-primary/20 animate-pulse",
             )}
-            transition={motionTransition}
           />
           {slot?.priceCents !== undefined && (
             <span

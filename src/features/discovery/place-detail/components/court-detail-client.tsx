@@ -10,7 +10,6 @@ import {
   ExternalLink,
   RefreshCw,
 } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -144,8 +143,6 @@ export default function CourtDetailClient({
   const pathname = usePathname();
   const { data: session } = useQueryAuthSession();
   const isAuthenticated = !!session;
-  const shouldReduceMotion = useReducedMotion();
-
   const verificationDisplay = getPlaceVerificationDisplay({
     placeType: placeType as PlaceVerificationDisplayInput["placeType"],
     verificationStatus:
@@ -565,10 +562,6 @@ export default function CourtDetailClient({
     return `${startLabel} – ${endLabel}`;
   }, [isWeekView, placeTimeZone, weekDayKeys]);
 
-  const motionTransition = shouldReduceMotion
-    ? { duration: 0 }
-    : { duration: 0.25, ease: "easeOut" as const };
-
   if (!showBooking) {
     const heading =
       placeType === "RESERVABLE"
@@ -827,14 +820,10 @@ export default function CourtDetailClient({
             </div>
 
             {/* Availability views */}
-            <AnimatePresence mode="wait" initial={false}>
               {isWeekView ? (
-                <motion.div
+                <div
                   key={`week-${weekStartDayKey}`}
-                  initial={{ opacity: 0, x: shouldReduceMotion ? 0 : 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: shouldReduceMotion ? 0 : -10 }}
-                  transition={motionTransition}
+                  className="animate-in fade-in duration-200"
                 >
                   {isLoadingTimes ? (
                     <AvailabilityWeekGridSkeleton
@@ -857,42 +846,21 @@ export default function CourtDetailClient({
                       maxDayKey={maxDayKey}
                     />
                   )}
-                </motion.div>
+                </div>
               ) : !selectedDate ? (
-                <motion.div
-                  key="no-date"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={motionTransition}
-                >
+                <div className="animate-in fade-in duration-200">
                   <p className="text-sm text-muted-foreground py-6 text-center">
                     Select a date to see available start times.
                   </p>
-                </motion.div>
+                </div>
               ) : isLoadingTimes ? (
-                <motion.div
-                  key="loading"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={motionTransition}
-                >
+                <div className="animate-in fade-in duration-200">
                   <TimeRangePickerSkeleton count={8} />
-                </motion.div>
+                </div>
               ) : daySlots.length > 0 ? (
-                <motion.div
+                <div
                   key={`day-${dayKey}`}
-                  initial={{
-                    opacity: 0,
-                    y: shouldReduceMotion ? 0 : 6,
-                  }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{
-                    opacity: 0,
-                    y: shouldReduceMotion ? 0 : -6,
-                  }}
-                  transition={motionTransition}
+                  className="animate-in fade-in duration-200"
                 >
                   <TimeRangePicker
                     slots={daySlots}
@@ -904,23 +872,16 @@ export default function CourtDetailClient({
                     onChange={handleRangeChange}
                     onClear={clearSelection}
                   />
-                </motion.div>
+                </div>
               ) : (
-                <motion.div
-                  key="empty"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={motionTransition}
-                >
+                <div className="animate-in fade-in duration-200">
                   <AvailabilityEmptyState
                     diagnostics={dayDiagnostics}
                     variant="public"
                     contact={contactDetail}
                   />
-                </motion.div>
+                </div>
               )}
-            </AnimatePresence>
           </CardContent>
         </Card>
       </div>

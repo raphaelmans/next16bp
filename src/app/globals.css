@@ -173,6 +173,15 @@
   --font-heading: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
 }
 
+@keyframes shimmer {
+  0% {
+    background-position: 100% center;
+  }
+  100% {
+    background-position: 0% center;
+  }
+}
+
 @keyframes courtline-scan {
   0% {
     transform: translateX(-60%);

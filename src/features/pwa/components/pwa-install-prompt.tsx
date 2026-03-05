@@ -1,7 +1,6 @@
 "use client";
 
 import { Download, Share, SquarePlus, X } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,6 @@ const SHOW_DELAY_MS = 5000;
 
 export function PwaInstallPrompt() {
   const { canInstall, isInstalled, isIOS, promptInstall } = useInstallPrompt();
-  const prefersReducedMotion = useReducedMotion();
   const [dismissed, setDismissed] = useState(true);
   const [delayPassed, setDelayPassed] = useState(false);
   const [showIOSSteps, setShowIOSSteps] = useState(false);
@@ -45,16 +43,10 @@ export function PwaInstallPrompt() {
     !isInstalled && !dismissed && delayPassed && (canInstall || isIOS);
 
   return (
-    <AnimatePresence>
+    <>
       {isVisible && (
-        <motion.div
-          initial={
-            prefersReducedMotion ? { opacity: 0 } : { y: 80, opacity: 0 }
-          }
-          animate={prefersReducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
-          exit={prefersReducedMotion ? { opacity: 0 } : { y: 80, opacity: 0 }}
-          transition={{ type: "spring", damping: 28, stiffness: 260 }}
-          className="fixed bottom-14 left-0 right-0 z-40 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:bottom-0"
+        <div
+          className="fixed bottom-14 left-0 right-0 z-40 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:bottom-0 animate-in slide-in-from-bottom-20 fade-in duration-300"
         >
           <div className="mx-auto max-w-md rounded-xl border border-border/60 bg-background/80 shadow-lg shadow-black/5 backdrop-blur-xl">
             <div className="relative flex items-start gap-3 p-3">
@@ -116,9 +108,9 @@ export function PwaInstallPrompt() {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }
 

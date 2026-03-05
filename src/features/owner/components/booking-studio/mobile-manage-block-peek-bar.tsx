@@ -1,11 +1,11 @@
 "use client";
 
 import { ChevronRight, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 import { formatTimeRangeInTimeZone } from "@/common/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Drawer,
   DrawerContent,
@@ -52,14 +52,9 @@ export const MobileManageBlockPeekBar = React.memo(
 
     return (
       <>
-        <AnimatePresence>
-          {block && !drawerOpen && (
-            <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed bottom-[calc(3.5rem+max(0px,env(safe-area-inset-bottom)))] left-0 right-0 z-50 border-t bg-background md:bottom-0 md:pb-[env(safe-area-inset-bottom)]"
+        {block && !drawerOpen && (
+            <div
+              className="fixed bottom-[calc(3.5rem+max(0px,env(safe-area-inset-bottom)))] left-0 right-0 z-50 border-t bg-background md:bottom-0 md:pb-[env(safe-area-inset-bottom)] animate-in slide-in-from-bottom duration-200"
             >
               <div className="flex w-full items-center gap-3 px-4 py-3">
                 <button
@@ -90,9 +85,8 @@ export const MobileManageBlockPeekBar = React.memo(
                   <X className="h-4 w-4" />
                 </button>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
 
         <Drawer
           open={drawerOpen}
@@ -129,7 +123,7 @@ export const MobileManageBlockPeekBar = React.memo(
                     }
                   }}
                 >
-                  {isCancelPending ? "Removing..." : "Remove block"}
+                  {isCancelPending && <Spinner />} Remove block
                 </Button>
                 {isWalkIn && onConvertWalkIn && (
                   <Button
