@@ -435,20 +435,16 @@ export class AvailabilityService implements IAvailabilityService {
       return { options: [], diagnostics: emptyDiagnostics };
     }
 
-    const verification = await this.placeVerificationRepository.findByPlaceId(
-      place.id,
-    );
+    const [verification, courts] = await Promise.all([
+      this.placeVerificationRepository.findByPlaceId(place.id),
+      this.courtRepository.findByPlaceAndSport(data.placeId, data.sportId),
+    ]);
     if (!this.isPlaceBookable(verification)) {
       return {
         options: [],
         diagnostics: { ...emptyDiagnostics, reservationsDisabled: true },
       };
     }
-
-    const courts = await this.courtRepository.findByPlaceAndSport(
-      data.placeId,
-      data.sportId,
-    );
 
     const activeCourts = courts.filter((court) => court.isActive);
     if (activeCourts.length === 0) {
@@ -741,20 +737,16 @@ export class AvailabilityService implements IAvailabilityService {
       return { options: [], diagnostics: emptyDiagnostics };
     }
 
-    const verification = await this.placeVerificationRepository.findByPlaceId(
-      place.id,
-    );
+    const [verification, courts] = await Promise.all([
+      this.placeVerificationRepository.findByPlaceId(place.id),
+      this.courtRepository.findByPlaceAndSport(data.placeId, data.sportId),
+    ]);
     if (!this.isPlaceBookable(verification)) {
       return {
         options: [],
         diagnostics: { ...emptyDiagnostics, reservationsDisabled: true },
       };
     }
-
-    const courts = await this.courtRepository.findByPlaceAndSport(
-      data.placeId,
-      data.sportId,
-    );
 
     const activeCourts = courts.filter((court) => court.isActive);
     if (activeCourts.length === 0) {

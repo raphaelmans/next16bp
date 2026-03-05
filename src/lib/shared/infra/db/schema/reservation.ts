@@ -119,6 +119,11 @@ export const reservation = pgTable(
       .where(
         sql`${table.status} IN ('CREATED', 'AWAITING_PAYMENT', 'PAYMENT_MARKED_BY_USER')`,
       ),
+    index("idx_reservation_active_court_time")
+      .on(table.courtId, table.startTime, table.endTime)
+      .where(
+        sql`${table.status} IN ('CREATED', 'AWAITING_PAYMENT', 'PAYMENT_MARKED_BY_USER', 'CONFIRMED')`,
+      ),
     check(
       "chk_reservation_identity",
       sql`((${table.playerId} IS NOT NULL)::int + (${table.guestProfileId} IS NOT NULL)::int) = 1`,
