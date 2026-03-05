@@ -5,6 +5,7 @@ import { formatCurrency, formatTimeRangeInTimeZone } from "@/common/format";
 import { toast } from "@/common/toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Dialog,
   DialogContent,
@@ -128,9 +129,7 @@ export const CancelReservationDialog = React.memo(
                 disabled={!reason.trim() || cancelMutation.isPending}
                 onClick={handleCancel}
               >
-                {cancelMutation.isPending
-                  ? "Cancelling..."
-                  : "Cancel Reservation"}
+                {cancelMutation.isPending && <Spinner />} Cancel Reservation
               </Button>
             )}
             <Button variant="outline" onClick={handleClose}>
