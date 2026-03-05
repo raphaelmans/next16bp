@@ -19,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { Separator } from "@/components/ui/separator";
 import { type RegisterDTO, RegisterSchema } from "@/lib/modules/auth/dtos";
 import {
@@ -184,7 +185,7 @@ export function RegisterForm({
 
         <CardFooter className="mt-6 flex flex-col gap-4">
           <Button type="submit" className="w-full" disabled={isSubmitDisabled}>
-            {submitting ? "Creating account..." : "Create Account"}
+            {submitting && <Spinner />} Create Account
           </Button>
 
           <div className="text-muted-foreground text-sm">

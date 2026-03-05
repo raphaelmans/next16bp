@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState } from "react";
 import { trackEvent } from "@/common/clients/telemetry-client";
 import { useDebouncedValue } from "@/common/hooks/use-debounced-value";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Spinner } from "@/components/ui/spinner";
 import {
   useMutOwnerSubmitClaim,
   useQueryOwnerClaimablePlaces,
@@ -103,7 +104,7 @@ export function ClaimSearchDialog({
           <ScrollArea className="h-[min(50dvh,24rem)] w-full rounded-md border">
             {isSearching ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                <Spinner className="h-6 w-6 text-muted-foreground" />
               </div>
             ) : unclaimedResults.length === 0 ? (
               <p className="text-center text-sm text-muted-foreground py-8">
@@ -131,11 +132,7 @@ export function ClaimSearchDialog({
                       onClick={() => handleSubmitClaim(item.place.id)}
                       disabled={submitClaimMutation.isPending}
                     >
-                      {submitClaimMutation.isPending ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        "Claim"
-                      )}
+                      {submitClaimMutation.isPending && <Spinner />} Claim
                     </Button>
                   </div>
                 ))}

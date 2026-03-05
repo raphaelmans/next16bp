@@ -43,16 +43,16 @@ export function ClaimListingCard({
 
   if (hasPendingClaim) {
     return (
-      <Card className="border-yellow-500/20 bg-yellow-50/50 dark:bg-yellow-950/20">
+      <Card className="border-warning/20 bg-warning-light">
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-yellow-500/10 text-yellow-600">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-warning/10 text-warning">
               <Search className="h-6 w-6" />
             </div>
             <div className="flex-1 space-y-1">
               <div className="flex items-center gap-2">
                 <p className="font-heading font-semibold">Claim pending</p>
-                <Badge variant="outline" className="text-xs text-yellow-600">
+                <Badge variant="outline" className="text-xs text-warning">
                   Under review
                 </Badge>
               </div>

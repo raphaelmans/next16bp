@@ -19,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { type MagicLinkDTO, MagicLinkSchema } from "@/lib/modules/auth/dtos";
 import { useMutAuthMagicLink, useMutAuthVerifyEmailOtp } from "../hooks";
 import { EmailVerificationScreen } from "./email-verification-screen";
@@ -106,9 +107,9 @@ export function MagicLinkForm({ redirectParam }: MagicLinkFormProps = {}) {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Magic Link Sign In</CardTitle>
+        <CardTitle>Sign in with email link</CardTitle>
         <CardDescription>
-          Enter your email and we&apos;ll send you a link to sign in
+          Enter your email and we&apos;ll send you a sign-in link
         </CardDescription>
       </CardHeader>
       <StandardFormProvider form={form} onSubmit={onSubmit}>
@@ -125,7 +126,7 @@ export function MagicLinkForm({ redirectParam }: MagicLinkFormProps = {}) {
 
         <CardFooter className="mt-6 flex flex-col gap-4">
           <Button type="submit" className="w-full" disabled={isSubmitDisabled}>
-            {submitting ? "Sending..." : "Send Magic Link"}
+            {submitting && <Spinner />} Send link
           </Button>
 
           <div className="text-muted-foreground text-sm">

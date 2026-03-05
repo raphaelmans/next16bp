@@ -124,3 +124,57 @@ Confidence: 95 — clear starting point per plan.
 - The layout components were already well-structured with token classes from previous work
 - 36 files still have `dark:` classes — mostly shadcn UI components (harmless since .dark class removed) and some feature files (will be cleaned in Steps 7-9)
 - health-check.tsx has hardcoded colors (yellow-100, red-100, green-100) — dev-only component, documented exception
+
+## Iteration 6 — Step 6 DONE
+
+### Completed
+- Migrated 5 primary empty state patterns to shadcn Empty component family
+- Deleted `src/components/kudos/empty-state.tsx` (custom EmptyState wrapper)
+- Removed `EmptyState` from kudos barrel export
+- Files migrated:
+  1. **empty-results.tsx**: kudos EmptyState → shadcn Empty with icon + CTA
+  2. **public-organization-page.tsx**: kudos EmptyState → shadcn Empty with Building2 icon
+  3. **availability-empty-state.tsx**: custom div layout → shadcn Empty (kept business logic, diagnostics, contact actions)
+  4. **owner-reservations-page.tsx**: custom inline empty state → shadcn Empty
+  5. **saved-venues-page.tsx**: custom inline empty state → shadcn Empty with Heart icon
+- Committed: 73a294a
+
+### Observations
+- `courts-empty-state.tsx` already used shadcn Empty — no changes needed
+- `reservation-list.tsx` and `notification-inbox.tsx` already used shadcn Empty — no changes needed
+- `ConversationEmptyState` (ai-elements/chat) is a different pattern for chat threads — left as-is
+- `availability-month-view.tsx` default empty state is text-only inline — fits "text-only for inline/secondary" spec
+- Inline "No X yet" patterns in secondary contexts (owner-team, admin pages, etc.) are text-only per spec guidance
+- Lint: 59 errors / 39 warnings (all pre-existing, none from our changes)
+
+## Iteration 7 — Step 7 DONE
+
+### Completed
+- Fixed 6 loading text violations in auth components (missed by Step 3):
+  1. `login-form.tsx` - "Signing in..." → spinner + "Sign In"
+  2. `register-form.tsx` - "Creating account..." → spinner + "Create Account"
+  3. `email-otp-form.tsx` - "Verifying..." and "Sending..." → spinner + static labels
+  4. `magic-link-form.tsx` - "Sending..." → spinner + "Send link"
+  5. `email-verification-screen.tsx` - "Verifying..." → spinner + "Verify"
+- Fixed 1 loading text violation in onboarding:
+  1. `org-step.tsx` - "Setting up..." text → spinner only
+- Removed 3 `dark:` classes from onboarding sections:
+  1. `claim-listing-card.tsx` - `dark:bg-yellow-950/20`
+  2. `setup-stale-banner.tsx` - `dark:bg-yellow-950/20`
+  3. `verify-venue-card.tsx` - `dark:bg-yellow-950/20`
+- Replaced all hardcoded yellow/amber colors with `warning` tokens across 5 files:
+  - `claim-listing-card.tsx`, `verify-venue-card.tsx`, `setup-stale-banner.tsx`
+  - `venue-step.tsx`, `courts-step.tsx`
+- Replaced all Loader2 with Spinner in 6 onboarding files:
+  - `setup-wizard.tsx`, `org-step.tsx`, `venue-step.tsx`
+  - `claim-search-dialog.tsx`, `setup-stale-banner.tsx`, `setup-error-banner.tsx`
+- Improved auth copywriting:
+  - Login: "Enter your credentials to access your account" → "Sign in with your email and password"
+  - Magic Link: "Magic Link Sign In" → "Sign in with email link"
+  - Email OTP verify description: added period for consistency
+
+### Observations
+- Auth components already use shadcn Card structure — no structural migration needed
+- Onboarding wizard already well-structured with shadcn components
+- `setup-complete-banner.tsx` already clean (no dark:, no loading text, token colors)
+- Lint: 66 errors / 39 warnings (all pre-existing, none from our changes)

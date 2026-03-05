@@ -1,6 +1,6 @@
-import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 
 interface SetupStaleBannerProps {
   isFetching: boolean;
@@ -12,7 +12,7 @@ export function SetupStaleBanner({
   onRefresh,
 }: SetupStaleBannerProps) {
   return (
-    <Card className="border-yellow-500/20 bg-yellow-50/50 dark:bg-yellow-950/20">
+    <Card className="border-warning/20 bg-warning-light">
       <CardContent className="p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-muted-foreground">
@@ -24,7 +24,7 @@ export function SetupStaleBanner({
             onClick={onRefresh}
             disabled={isFetching}
           >
-            {isFetching && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isFetching && <Spinner className="mr-2" />}
             Refresh
           </Button>
         </div>

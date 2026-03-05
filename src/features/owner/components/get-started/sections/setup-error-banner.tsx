@@ -1,8 +1,9 @@
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 
 interface SetupErrorBannerProps {
   error: unknown;
@@ -39,9 +40,7 @@ export function SetupErrorBanner({
                   onClick={onRetry}
                   disabled={isFetching}
                 >
-                  {isFetching && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
+                  {isFetching && <Spinner className="mr-2" />}
                   Retry
                 </Button>
               </div>

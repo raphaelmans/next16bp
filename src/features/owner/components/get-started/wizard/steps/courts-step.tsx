@@ -39,7 +39,7 @@ export function CourtsStep({
     return (
       <Card>
         <CardContent className="flex items-center gap-4 p-6">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-warning/10 text-warning">
             <Clock className="h-5 w-5" />
           </div>
           <div className="flex-1">
