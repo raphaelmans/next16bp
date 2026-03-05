@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { appRoutes } from "@/common/app-routes";
@@ -13,6 +13,7 @@ import {
 import { KudosStatusBadge, type ReservationStatus } from "@/components/kudos";
 import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
 import { BookingDetailsCard } from "@/features/reservation/components/booking-details-card";
@@ -95,7 +96,7 @@ export default function ReservationDetailPage({
     return (
       <Container className="py-6">
         <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Spinner className="h-8 w-8 text-muted-foreground" />
         </div>
       </Container>
     );

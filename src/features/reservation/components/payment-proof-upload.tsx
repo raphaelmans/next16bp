@@ -1,8 +1,9 @@
 "use client";
 
-import { FileImage, Loader2, Upload, X } from "lucide-react";
+import { FileImage, Upload, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -166,14 +167,8 @@ export function PaymentProofUpload({
             className="w-full"
             disabled={!selectedFile || uploadPaymentProof.isPending}
           >
-            {uploadPaymentProof.isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Uploading...
-              </>
-            ) : (
-              "Submit Payment Proof"
-            )}
+            {uploadPaymentProof.isPending && <Spinner />}
+            Submit Payment Proof
           </Button>
         </form>
       </CardContent>
