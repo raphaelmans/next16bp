@@ -393,7 +393,7 @@ async function PlaceDetailPageServerSection({
               <div id="availability-studio" className="sr-only">
                 Availability Studio
               </div>
-              <div className="mt-4 grid gap-6 pb-[70vh] lg:mt-6 lg:grid-cols-3 lg:pb-24">
+              <div className="mt-4 grid gap-6 pb-8 lg:mt-6 lg:grid-cols-3">
                 <PlaceDetailAvailabilityStudioSlot
                   place={place}
                   isBookable={isBookable}

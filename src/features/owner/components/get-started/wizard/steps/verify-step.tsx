@@ -10,6 +10,7 @@ import type { SetupStatus } from "../../get-started-types";
 
 interface VerifyStepProps {
   status: SetupStatus;
+  isTransitioning?: boolean;
   onStepComplete: () => void;
 }
 

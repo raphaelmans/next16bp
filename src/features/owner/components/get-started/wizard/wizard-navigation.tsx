@@ -17,6 +17,7 @@ import type { WizardStep } from "./wizard-types";
 interface WizardNavigationProps {
   currentStep: WizardStep;
   status: SetupStatus;
+  isTransitioning?: boolean;
   onBack: () => void;
   onSkip: () => void;
   onContinue: () => void;
@@ -26,6 +27,7 @@ interface WizardNavigationProps {
 export function WizardNavigation({
   currentStep,
   status,
+  isTransitioning,
   onBack,
   onSkip,
   onContinue,
@@ -61,6 +63,7 @@ export function WizardNavigation({
             <Button
               variant="ghost"
               className="min-h-[44px] cursor-pointer px-4 text-muted-foreground hover:bg-muted/80 hover:text-foreground sm:min-h-9 sm:px-3"
+              disabled={isTransitioning}
               onClick={onBack}
             >
               <ArrowLeft className="mr-2 h-5 w-5 sm:h-4 sm:w-4" />
@@ -73,6 +76,7 @@ export function WizardNavigation({
             <Button
               variant="ghost"
               className="min-h-[44px] cursor-pointer px-4 text-muted-foreground hover:text-foreground sm:min-h-9 sm:px-3"
+              disabled={isTransitioning}
               onClick={onSkip}
             >
               Skip
@@ -82,6 +86,7 @@ export function WizardNavigation({
           {showContinue && (
             <Button
               className="min-h-[44px] cursor-pointer px-6 text-base font-semibold sm:min-h-9 sm:px-5 sm:text-sm"
+              disabled={isTransitioning}
               onClick={onContinue}
             >
               Continue

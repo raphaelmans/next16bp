@@ -166,7 +166,7 @@ export default function PlaceDetailPageView({
         onBookmarkToggle={bookmark.toggle}
       />
 
-      <div className="mt-4 grid gap-6 pb-[70vh] lg:mt-6 lg:grid-cols-3 lg:pb-24">
+      <div className="mt-4 grid gap-6 pb-8 lg:mt-6 lg:grid-cols-3">
         {showBooking ? (
           <PlaceDetailBookingSection
             place={place}

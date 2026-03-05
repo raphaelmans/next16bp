@@ -1,16 +1,21 @@
 "use client";
 
-import { Building2, CheckCircle2 } from "lucide-react";
+import { Building2, CheckCircle2, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
 import type { SetupStatus } from "../../get-started-types";
 
 interface OrgStepProps {
   status: SetupStatus;
+  isTransitioning?: boolean;
   onStepComplete: () => void;
 }
 
-export function OrgStep({ status, onStepComplete }: OrgStepProps) {
+export function OrgStep({
+  status,
+  isTransitioning,
+  onStepComplete,
+}: OrgStepProps) {
   if (status.hasOrganization && status.organization) {
     return (
       <Card>
@@ -27,6 +32,15 @@ export function OrgStep({ status, onStepComplete }: OrgStepProps) {
           <CheckCircle2 className="h-5 w-5 text-primary" />
         </CardContent>
       </Card>
+    );
+  }
+
+  if (isTransitioning) {
+    return (
+      <div className="flex items-center justify-center gap-2 py-8 text-muted-foreground">
+        <Loader2 className="h-5 w-5 animate-spin" />
+        <span className="text-sm">Setting up...</span>
+      </div>
     );
   }
 

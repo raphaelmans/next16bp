@@ -7,6 +7,7 @@ import type { SetupStatus } from "../../get-started-types";
 
 interface PaymentStepProps {
   status: SetupStatus;
+  isTransitioning?: boolean;
   onStepComplete: () => void;
 }
 

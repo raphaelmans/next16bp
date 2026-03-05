@@ -8,6 +8,7 @@ import type { SetupStatus } from "../../get-started-types";
 
 interface ConfigStepProps {
   status: SetupStatus;
+  isTransitioning?: boolean;
   onStepComplete: () => void;
 }
 

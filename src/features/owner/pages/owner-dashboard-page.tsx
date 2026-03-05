@@ -3,6 +3,7 @@
 import {
   AlertTriangle,
   ArrowRight,
+  BarChart3,
   CalendarCheck,
   CalendarDays,
   MapPin,
@@ -16,7 +17,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import {
-  ComingSoonCard,
   OwnerNavbar,
   OwnerPaymentMethodReminder,
   OwnerSidebar,
@@ -26,6 +26,7 @@ import {
   StatsCard,
   TodaysBookings,
 } from "@/features/owner";
+import { AnalyticsSection } from "@/features/owner/components/analytics/analytics-section";
 import { shouldShowOwnerNotificationRoutingWarning } from "@/features/owner/domain";
 import { isOwnerSetupIncomplete } from "@/features/owner/helpers";
 import {
@@ -135,8 +136,7 @@ export default function OwnerDashboardPage() {
         <div className="space-y-6">
           <Skeleton className="h-8 w-64" />
           <Skeleton className="h-16 w-full" />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Skeleton className="h-32" />
+          <div className="grid gap-4 sm:grid-cols-3">
             <Skeleton className="h-32" />
             <Skeleton className="h-32" />
             <Skeleton className="h-32" />
@@ -237,22 +237,15 @@ export default function OwnerDashboardPage() {
         <PendingActions pendingCount={stats?.pendingReservations ?? 0} />
 
         {/* Stats cards */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-3">
           {statsLoading ? (
             <>
-              <Skeleton className="h-32" />
               <Skeleton className="h-32" />
               <Skeleton className="h-32" />
               <Skeleton className="h-32" />
             </>
           ) : (
             <>
-              <StatsCard
-                title="Active Courts"
-                value={stats?.activeCourts ?? 0}
-                icon={MapPin}
-                href={appRoutes.organization.courts.base}
-              />
               <StatsCard
                 title="Pending Bookings"
                 value={stats?.pendingReservations ?? 0}
@@ -264,10 +257,30 @@ export default function OwnerDashboardPage() {
                 value={dashboardData?.todayBookingsCount ?? 0}
                 icon={CalendarCheck}
               />
-              <ComingSoonCard title="Monthly Revenue" />
+              <StatsCard
+                title="Active Courts"
+                value={stats?.activeCourts ?? 0}
+                icon={MapPin}
+                href={appRoutes.organization.courts.base}
+              />
             </>
           )}
         </div>
+
+        {/* Analytics CTA */}
+        <button
+          type="button"
+          onClick={() =>
+            document
+              .getElementById("analytics-section")
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
+          className="flex w-full items-center gap-3 rounded-lg border bg-muted/40 px-4 py-2.5 text-left text-sm text-muted-foreground transition-colors hover:bg-muted/70"
+        >
+          <BarChart3 className="h-4 w-4 shrink-0" />
+          <span>View detailed analytics — revenue, utilization &amp; operations</span>
+          <ArrowRight className="ml-auto h-3.5 w-3.5 shrink-0" />
+        </button>
 
         <div className="grid gap-6 lg:grid-cols-2">
           {dashboardLoading ? (
@@ -283,6 +296,11 @@ export default function OwnerDashboardPage() {
               <TodaysBookings bookings={dashboardData?.todaySchedule ?? []} />
             </>
           )}
+        </div>
+
+        {/* Analytics Section */}
+        <div id="analytics-section" className="border-t pt-6 scroll-mt-4">
+          <AnalyticsSection organizationId={organization?.id ?? null} />
         </div>
       </div>
     </AppShell>

@@ -253,6 +253,15 @@ export interface IOwnerApi {
   queryAuditReservationHistory: ProcedureFn<
     TrpcClientApi["audit"]["reservationHistory"]["query"]
   >;
+  queryAnalyticsGetRevenue: ProcedureFn<
+    TrpcClientApi["analytics"]["getRevenue"]["query"]
+  >;
+  queryAnalyticsGetUtilization: ProcedureFn<
+    TrpcClientApi["analytics"]["getUtilization"]["query"]
+  >;
+  queryAnalyticsGetOperations: ProcedureFn<
+    TrpcClientApi["analytics"]["getOperations"]["query"]
+  >;
 }
 
 export type OwnerApiDeps = {
@@ -1211,6 +1220,39 @@ export class OwnerApi {
       this.clientApi,
       ["audit", "reservationHistory"],
       (clientApi) => clientApi.audit.reservationHistory.query,
+      input,
+      this.toAppError,
+    );
+
+  queryAnalyticsGetRevenue: ProcedureFn<
+    TrpcClientApi["analytics"]["getRevenue"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["analytics", "getRevenue"],
+      (clientApi) => clientApi.analytics.getRevenue.query,
+      input,
+      this.toAppError,
+    );
+
+  queryAnalyticsGetUtilization: ProcedureFn<
+    TrpcClientApi["analytics"]["getUtilization"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["analytics", "getUtilization"],
+      (clientApi) => clientApi.analytics.getUtilization.query,
+      input,
+      this.toAppError,
+    );
+
+  queryAnalyticsGetOperations: ProcedureFn<
+    TrpcClientApi["analytics"]["getOperations"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["analytics", "getOperations"],
+      (clientApi) => clientApi.analytics.getOperations.query,
       input,
       this.toAppError,
     );

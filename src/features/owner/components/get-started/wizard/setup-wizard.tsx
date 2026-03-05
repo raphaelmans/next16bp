@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { trackEvent } from "@/common/clients/telemetry-client";
 import { useModOwnerInvalidation } from "@/features/owner/hooks";
 import { useModGetStartedSetup } from "../get-started-hooks";
@@ -30,6 +30,7 @@ export function SetupWizard() {
   const { status, isLoading, error, refetch, raw } = useModGetStartedSetup();
   const [step, setStep] = useWizardStep();
   const { invalidateOwnerSetupStatus } = useModOwnerInvalidation();
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useWizardAutoSkip(status, isLoading, step, setStep);
 
@@ -37,6 +38,7 @@ export function SetupWizard() {
   useEffect(() => {
     if (prevStepRef.current !== step) {
       prevStepRef.current = step;
+      setIsTransitioning(false);
       trackEvent({
         event: "funnel.owner_wizard_step_viewed",
         properties: { step },
@@ -64,6 +66,7 @@ export function SetupWizard() {
   );
 
   const handleStepComplete = useCallback(async () => {
+    setIsTransitioning(true);
     await invalidateOwnerSetupStatus();
     const next = getNextStep(step);
     navigateNext(next);
@@ -121,6 +124,7 @@ export function SetupWizard() {
         className="md:order-last"
         currentStep={step}
         status={status}
+        isTransitioning={isTransitioning}
         onBack={handleBack}
         onSkip={handleSkip}
         onContinue={handleContinue}
@@ -131,6 +135,7 @@ export function SetupWizard() {
           <ActiveStep
             step={step}
             status={status}
+            isTransitioning={isTransitioning}
             onStepComplete={handleStepComplete}
           />
         </WizardStepLayout>
@@ -142,25 +147,63 @@ export function SetupWizard() {
 function ActiveStep({
   step,
   status,
+  isTransitioning,
   onStepComplete,
 }: {
   step: WizardStep;
   status: ReturnType<typeof useModGetStartedSetup>["status"];
+  isTransitioning: boolean;
   onStepComplete: () => void;
 }) {
   switch (step) {
     case "org":
-      return <OrgStep status={status} onStepComplete={onStepComplete} />;
+      return (
+        <OrgStep
+          status={status}
+          isTransitioning={isTransitioning}
+          onStepComplete={onStepComplete}
+        />
+      );
     case "venue":
-      return <VenueStep status={status} onStepComplete={onStepComplete} />;
+      return (
+        <VenueStep
+          status={status}
+          isTransitioning={isTransitioning}
+          onStepComplete={onStepComplete}
+        />
+      );
     case "courts":
-      return <CourtsStep status={status} onStepComplete={onStepComplete} />;
+      return (
+        <CourtsStep
+          status={status}
+          isTransitioning={isTransitioning}
+          onStepComplete={onStepComplete}
+        />
+      );
     case "config":
-      return <ConfigStep status={status} onStepComplete={onStepComplete} />;
+      return (
+        <ConfigStep
+          status={status}
+          isTransitioning={isTransitioning}
+          onStepComplete={onStepComplete}
+        />
+      );
     case "payment":
-      return <PaymentStep status={status} onStepComplete={onStepComplete} />;
+      return (
+        <PaymentStep
+          status={status}
+          isTransitioning={isTransitioning}
+          onStepComplete={onStepComplete}
+        />
+      );
     case "verify":
-      return <VerifyStep status={status} onStepComplete={onStepComplete} />;
+      return (
+        <VerifyStep
+          status={status}
+          isTransitioning={isTransitioning}
+          onStepComplete={onStepComplete}
+        />
+      );
     case "complete":
       return <CompleteStep status={status} />;
   }

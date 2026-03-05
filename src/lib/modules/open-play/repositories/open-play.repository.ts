@@ -209,7 +209,7 @@ export class OpenPlayRepository implements IOpenPlayRepository {
       // For single-court: require confirmed reservation still in the future.
       // For group: rely on openPlay.status being ACTIVE (service manages lifecycle).
       sql`(
-        (${openPlay.reservationId} IS NOT NULL AND ${reservation.status} = 'CONFIRMED' AND ${reservation.endTime} > ${now})
+        (${openPlay.reservationId} IS NOT NULL AND ${reservation.status} = 'CONFIRMED' AND ${reservation.endTime} > ${toIso(now)})
         OR
         (${openPlay.reservationGroupId} IS NOT NULL)
       )`,

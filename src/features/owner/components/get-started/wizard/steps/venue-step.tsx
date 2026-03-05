@@ -30,10 +30,15 @@ type VenuePath = "choice" | "add-new" | "claim";
 
 interface VenueStepProps {
   status: SetupStatus;
+  isTransitioning?: boolean;
   onStepComplete: () => void;
 }
 
-export function VenueStep({ status, onStepComplete }: VenueStepProps) {
+export function VenueStep({
+  status,
+  isTransitioning,
+  onStepComplete,
+}: VenueStepProps) {
   const [path, setPath] = useState<VenuePath>("choice");
 
   if (status.hasVenue) {
@@ -80,6 +85,7 @@ export function VenueStep({ status, onStepComplete }: VenueStepProps) {
     return (
       <ClaimSearchInline
         organizationId={status.organizationId}
+        isTransitioning={isTransitioning}
         onStepComplete={onStepComplete}
         onBack={() => setPath("choice")}
       />
@@ -89,6 +95,7 @@ export function VenueStep({ status, onStepComplete }: VenueStepProps) {
   return (
     <AddVenueInline
       organizationId={status.organizationId}
+      isTransitioning={isTransitioning}
       onStepComplete={onStepComplete}
       onBack={() => setPath("choice")}
     />
@@ -134,10 +141,12 @@ function VenueChoiceScreen({
 
 function AddVenueInline({
   organizationId,
+  isTransitioning,
   onStepComplete,
   onBack,
 }: {
   organizationId: string | undefined;
+  isTransitioning?: boolean;
   onStepComplete: () => void;
   onBack: () => void;
 }) {
@@ -153,17 +162,19 @@ function AddVenueInline({
     <PlaceForm
       onSubmit={submitAsync}
       onCancel={onBack}
-      isSubmitting={isSubmitting}
+      isSubmitting={isSubmitting || !!isTransitioning}
     />
   );
 }
 
 function ClaimSearchInline({
   organizationId,
+  isTransitioning,
   onStepComplete,
   onBack,
 }: {
   organizationId: string | undefined;
+  isTransitioning?: boolean;
   onStepComplete: () => void;
   onBack: () => void;
 }) {
@@ -253,7 +264,7 @@ function ClaimSearchInline({
                   size="sm"
                   className="shrink-0"
                   onClick={() => handleSubmitClaim(item.place.id)}
-                  disabled={submitClaimMutation.isPending}
+                  disabled={submitClaimMutation.isPending || !!isTransitioning}
                 >
                   {submitClaimMutation.isPending ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

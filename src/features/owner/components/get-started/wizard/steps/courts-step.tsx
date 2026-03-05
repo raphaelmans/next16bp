@@ -14,10 +14,15 @@ import type { SetupStatus } from "../../get-started-types";
 
 interface CourtsStepProps {
   status: SetupStatus;
+  isTransitioning?: boolean;
   onStepComplete: () => void;
 }
 
-export function CourtsStep({ status, onStepComplete }: CourtsStepProps) {
+export function CourtsStep({
+  status,
+  isTransitioning,
+  onStepComplete,
+}: CourtsStepProps) {
   const { data: places = [], isLoading: placesLoading } = useQueryOwnerPlaces(
     status.organizationId ?? null,
   );
@@ -93,7 +98,7 @@ export function CourtsStep({ status, onStepComplete }: CourtsStepProps) {
       sportOptions={sportOptions}
       onSubmit={submitAsync}
       onCancel={() => {}}
-      isSubmitting={isSubmitting}
+      isSubmitting={isSubmitting || !!isTransitioning}
       disablePlaceSelect={!!status.primaryPlaceId}
       defaultValues={
         status.primaryPlaceId ? { placeId: status.primaryPlaceId } : undefined

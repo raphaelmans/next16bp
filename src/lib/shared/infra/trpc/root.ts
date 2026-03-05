@@ -1,3 +1,4 @@
+import { analyticsRouter } from "@/lib/modules/analytics/analytics.router";
 import { auditRouter } from "@/lib/modules/audit/audit.router";
 import { authRouter } from "@/lib/modules/auth/auth.router";
 import { availabilityRouter } from "@/lib/modules/availability/availability.router";
@@ -47,6 +48,7 @@ import { router } from "./trpc";
  * Root router combining all module routers.
  */
 export const appRouter = router({
+  analytics: analyticsRouter,
   health: healthRouter,
   auth: authRouter,
   court: courtRouter,
