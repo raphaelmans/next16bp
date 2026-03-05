@@ -49,7 +49,11 @@ export function RevenueByDowChart({ data }: RevenueByDowChartProps) {
             />
           }
         />
-        <Bar dataKey="totalCents" fill="var(--color-chart-2)" radius={[4, 4, 0, 0]} />
+        <Bar
+          dataKey="totalCents"
+          fill="var(--color-chart-2)"
+          radius={[4, 4, 0, 0]}
+        />
       </BarChart>
     </ChartContainer>
   );

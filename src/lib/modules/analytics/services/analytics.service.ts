@@ -86,9 +86,7 @@ export class AnalyticsService {
     const courtLabels = await this.repo.getCourtLabels(courtIds);
 
     // Calculate available hours per court over the date range
-    const daysInRange = Math.ceil(
-      (toMs - fromMs) / (1000 * 60 * 60 * 24),
-    );
+    const daysInRange = Math.ceil((toMs - fromMs) / (1000 * 60 * 60 * 24));
     const availableHoursByCourt = new Map<string, number>();
     for (const courtId of courtIds) {
       const courtWindows = windows.filter((w) => w.courtId === courtId);
@@ -135,9 +133,7 @@ export class AnalyticsService {
       0,
     );
     const overallUtilizationPct =
-      totalAvailable > 0
-        ? Math.round((totalBooked / totalAvailable) * 100)
-        : 0;
+      totalAvailable > 0 ? Math.round((totalBooked / totalAvailable) * 100) : 0;
 
     // Peak utilization (evenings 17-22 + weekends)
     const peakSlots = slots.filter((s) => {
@@ -233,8 +229,8 @@ export class AnalyticsService {
     // Response time histogram
     const responseTimeBuckets = RESPONSE_TIME_BUCKETS.map((bucket) => {
       const prevMax =
-        RESPONSE_TIME_BUCKETS[RESPONSE_TIME_BUCKETS.indexOf(bucket) - 1]
-          ?.max ?? 0;
+        RESPONSE_TIME_BUCKETS[RESPONSE_TIME_BUCKETS.indexOf(bucket) - 1]?.max ??
+        0;
       const count = responseTimes.filter(
         (t) => t >= prevMax && t < bucket.max,
       ).length;
@@ -256,9 +252,7 @@ export class AnalyticsService {
       pct: cancelTotal > 0 ? Math.round((r.count / cancelTotal) * 100) : 0,
     }));
     const cancellationRate =
-      totalCount > 0
-        ? Math.round((cancelTotal / totalCount) * 100)
-        : 0;
+      totalCount > 0 ? Math.round((cancelTotal / totalCount) * 100) : 0;
 
     // Lead time buckets
     const leadTimeBuckets = LEAD_TIME_BUCKETS.map((bucket) => {

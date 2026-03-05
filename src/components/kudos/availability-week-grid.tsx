@@ -178,54 +178,50 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
   if (!summaryData) return null;
 
   return (
+    <div className="overflow-hidden animate-in fade-in duration-150">
       <div
-        className="overflow-hidden animate-in fade-in duration-150"
+        className={cn(
+          "flex flex-wrap items-center justify-between rounded-xl border border-primary/20 bg-primary/5",
+          compact ? "gap-2 px-3 py-2.5" : "gap-3 px-4 py-3",
+        )}
       >
-        <div
-          className={cn(
-            "flex flex-wrap items-center justify-between rounded-xl border border-primary/20 bg-primary/5",
-            compact ? "gap-2 px-3 py-2.5" : "gap-3 px-4 py-3",
-          )}
-        >
-          <div className={cn("flex items-center", compact ? "gap-2" : "gap-3")}>
-            <div
-              className={cn(
-                "shrink-0 items-center justify-center rounded-lg bg-primary/10",
-                compact ? "flex h-6 w-6" : "flex h-8 w-8",
-              )}
-            >
-              <div className="h-2.5 w-2.5 rounded-full bg-primary" />
-            </div>
-            <div>
-              <p className="font-heading text-sm font-semibold text-foreground">
-                {formatTimeInTimeZone(summaryData.startTime, timeZone)}
-                {" \u2013 "}
-                {formatTimeInTimeZone(summaryData.endTime, timeZone)}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {summaryData.durationHours}h
-                {summaryData.isAwaitingEndClick &&
-                  (compact
-                    ? " \u00B7 Tap to extend"
-                    : " \u00B7 Click another slot to extend")}
-                {summaryData.priceCents !== undefined &&
-                  ` \u00B7 ${formatCurrency(summaryData.priceCents, summaryData.currency)}`}
-              </p>
-            </div>
+        <div className={cn("flex items-center", compact ? "gap-2" : "gap-3")}>
+          <div
+            className={cn(
+              "shrink-0 items-center justify-center rounded-lg bg-primary/10",
+              compact ? "flex h-6 w-6" : "flex h-8 w-8",
+            )}
+          >
+            <div className="h-2.5 w-2.5 rounded-full bg-primary" />
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() =>
-                onRangeChange({ startTime: "", durationMinutes: 0 })
-              }
-              className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            >
-              Clear
-            </button>
+          <div>
+            <p className="font-heading text-sm font-semibold text-foreground">
+              {formatTimeInTimeZone(summaryData.startTime, timeZone)}
+              {" \u2013 "}
+              {formatTimeInTimeZone(summaryData.endTime, timeZone)}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {summaryData.durationHours}h
+              {summaryData.isAwaitingEndClick &&
+                (compact
+                  ? " \u00B7 Tap to extend"
+                  : " \u00B7 Click another slot to extend")}
+              {summaryData.priceCents !== undefined &&
+                ` \u00B7 ${formatCurrency(summaryData.priceCents, summaryData.currency)}`}
+            </p>
           </div>
         </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => onRangeChange({ startTime: "", durationMinutes: 0 })}
+            className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            Clear
+          </button>
+        </div>
       </div>
+    </div>
   );
 });
 

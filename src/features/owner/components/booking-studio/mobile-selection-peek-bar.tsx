@@ -21,9 +21,7 @@ export const MobileSelectionPeekBar = React.memo(
     return (
       <>
         {visible && (
-          <div
-            className="fixed bottom-[calc(3.5rem+max(0px,env(safe-area-inset-bottom)))] left-0 right-0 z-50 border-t bg-background md:bottom-0 md:pb-[env(safe-area-inset-bottom)] animate-in slide-in-from-bottom duration-200"
-          >
+          <div className="fixed bottom-[calc(3.5rem+max(0px,env(safe-area-inset-bottom)))] left-0 right-0 z-50 border-t bg-background md:bottom-0 md:pb-[env(safe-area-inset-bottom)] animate-in slide-in-from-bottom duration-200">
             <button
               type="button"
               onClick={onOpen}

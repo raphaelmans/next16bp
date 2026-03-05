@@ -47,7 +47,11 @@ export function BookingsByHourChart({ data }: BookingsByHourChartProps) {
         />
         <YAxis tickLine={false} axisLine={false} width={30} />
         <ChartTooltip content={<ChartTooltipContent />} />
-        <Bar dataKey="count" fill="var(--color-chart-1)" radius={[4, 4, 0, 0]} />
+        <Bar
+          dataKey="count"
+          fill="var(--color-chart-1)"
+          radius={[4, 4, 0, 0]}
+        />
       </BarChart>
     </ChartContainer>
   );

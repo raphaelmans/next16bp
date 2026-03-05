@@ -45,9 +45,7 @@ export function PwaInstallPrompt() {
   return (
     <>
       {isVisible && (
-        <div
-          className="fixed bottom-14 left-0 right-0 z-40 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:bottom-0 animate-in slide-in-from-bottom-20 fade-in duration-300"
-        >
+        <div className="fixed bottom-14 left-0 right-0 z-40 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:bottom-0 animate-in slide-in-from-bottom-20 fade-in duration-300">
           <div className="mx-auto max-w-md rounded-xl border border-border/60 bg-background/80 shadow-lg shadow-black/5 backdrop-blur-xl">
             <div className="relative flex items-start gap-3 p-3">
               {/* Dismiss */}

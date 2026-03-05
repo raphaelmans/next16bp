@@ -117,9 +117,7 @@ export function LoginForm({
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle>Sign In</CardTitle>
-        <CardDescription>
-          Sign in with your email and password
-        </CardDescription>
+        <CardDescription>Sign in with your email and password</CardDescription>
         {showBookingContext && (
           <p className="text-sm text-muted-foreground">
             You&apos;ll return to your reservation after signing in.

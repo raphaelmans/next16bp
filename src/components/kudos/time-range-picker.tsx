@@ -140,45 +140,40 @@ const SummaryBar = React.memo(function SummaryBar({
     (activeEndIdx - activeStartIdx + 1) * (SLOT_STEP_MINUTES / 60);
 
   return (
-      <div
-        className="overflow-hidden animate-in fade-in duration-150"
-      >
-        <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-              <div className="h-2.5 w-2.5 rounded-full bg-primary" />
-            </div>
-            <div>
-              <p className="font-heading text-sm font-semibold text-foreground">
-                {formatTimeInTimeZone(
-                  slots[activeStartIdx].startTime,
-                  timeZone,
-                )}
-                {" \u2013 "}
-                {formatTimeInTimeZone(slots[activeEndIdx].endTime, timeZone)}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {durationHours}h
-                {isAwaitingEndClick && " \u00B7 Click another slot to extend"}
-                {showPrice &&
-                  rangePriceCents !== undefined &&
-                  ` \u00B7 ${formatCurrency(rangePriceCents, rangeCurrency)}`}
-              </p>
-            </div>
+    <div className="overflow-hidden animate-in fade-in duration-150">
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+            <div className="h-2.5 w-2.5 rounded-full bg-primary" />
           </div>
-          <div className="flex items-center gap-2">
-            {onClear && (
-              <button
-                type="button"
-                onClick={onClear}
-                className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              >
-                Clear
-              </button>
-            )}
+          <div>
+            <p className="font-heading text-sm font-semibold text-foreground">
+              {formatTimeInTimeZone(slots[activeStartIdx].startTime, timeZone)}
+              {" \u2013 "}
+              {formatTimeInTimeZone(slots[activeEndIdx].endTime, timeZone)}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {durationHours}h
+              {isAwaitingEndClick && " \u00B7 Click another slot to extend"}
+              {showPrice &&
+                rangePriceCents !== undefined &&
+                ` \u00B7 ${formatCurrency(rangePriceCents, rangeCurrency)}`}
+            </p>
           </div>
         </div>
+        <div className="flex items-center gap-2">
+          {onClear && (
+            <button
+              type="button"
+              onClick={onClear}
+              className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              Clear
+            </button>
+          )}
+        </div>
       </div>
+    </div>
   );
 });
 
@@ -312,9 +307,7 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
             <Check className="h-2.5 w-2.5 text-success" />
           </div>
         ) : inRange ? (
-          <div
-            className="h-2.5 w-2.5 rounded-full bg-primary shadow-sm shadow-primary/25 animate-in zoom-in-50 duration-150"
-          />
+          <div className="h-2.5 w-2.5 rounded-full bg-primary shadow-sm shadow-primary/25 animate-in zoom-in-50 duration-150" />
         ) : (
           <div
             className={cn(

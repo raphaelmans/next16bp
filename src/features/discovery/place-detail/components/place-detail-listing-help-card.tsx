@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  ArrowRight,
-  BadgeCheck,
-  CircleHelp,
-  Flag,
-} from "lucide-react";
+import { ArrowRight, BadgeCheck, CircleHelp, Flag } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
 import { Spinner } from "@/components/ui/spinner";
 import {

@@ -486,9 +486,7 @@ export function PaymentMethodsManager({
                 Cancel
               </Button>
               <Button type="submit" disabled={isPaymentSubmitDisabled}>
-                {paymentSubmitting && (
-                  <Spinner className="h-4 w-4 mr-2" />
-                )}
+                {paymentSubmitting && <Spinner className="h-4 w-4 mr-2" />}
                 {editingPaymentMethod ? "Save Changes" : "Add Method"}
               </Button>
             </DialogFooter>

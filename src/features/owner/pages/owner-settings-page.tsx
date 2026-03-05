@@ -385,9 +385,7 @@ export default function OwnerSettingsPage() {
               {/* Save Button */}
               <div className="flex justify-end">
                 <Button type="submit" disabled={isOrgSubmitDisabled}>
-                  {orgSubmitting && (
-                    <Spinner className="h-4 w-4 mr-2" />
-                  )}
+                  {orgSubmitting && <Spinner className="h-4 w-4 mr-2" />}
                   Save Changes
                 </Button>
               </div>

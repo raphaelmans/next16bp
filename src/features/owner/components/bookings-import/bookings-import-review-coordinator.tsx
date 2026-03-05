@@ -1225,9 +1225,7 @@ export default function OwnerBookingsImportReviewView({
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleCommit}>
-              {commitMutation.isPending && (
-                <Spinner className="mr-2 h-4 w-4" />
-              )}
+              {commitMutation.isPending && <Spinner className="mr-2 h-4 w-4" />}
               Commit
             </AlertDialogAction>
           </AlertDialogFooter>

@@ -44,9 +44,7 @@ export function AnalyticsKpiCard({
               <TrendingDown className="h-3.5 w-3.5 text-red-500" />
             )}
             <span
-              className={
-                trend.value >= 0 ? "text-emerald-600" : "text-red-500"
-              }
+              className={trend.value >= 0 ? "text-emerald-600" : "text-red-500"}
             >
               {trend.value >= 0 ? "+" : ""}
               {trend.value}%

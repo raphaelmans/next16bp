@@ -820,68 +820,68 @@ export default function CourtDetailClient({
             </div>
 
             {/* Availability views */}
-              {isWeekView ? (
-                <div
-                  key={`week-${weekStartDayKey}`}
-                  className="animate-in fade-in duration-200"
-                >
-                  {isLoadingTimes ? (
-                    <AvailabilityWeekGridSkeleton
-                      dayKeys={weekDayKeys}
-                      timeZone={placeTimeZone}
-                    />
-                  ) : (
-                    <AvailabilityWeekGrid
-                      dayKeys={weekDayKeys}
-                      slotsByDay={weekSlotsByDay}
-                      timeZone={placeTimeZone}
-                      selectedRange={selectedRange}
-                      onRangeChange={handleRangeChange}
-                      onDayClick={(dk) => {
-                        setDayKeyParam(dk);
-                        setViewParam("day");
-                        clearSelection();
-                      }}
-                      todayDayKey={todayDayKey}
-                      maxDayKey={maxDayKey}
-                    />
-                  )}
-                </div>
-              ) : !selectedDate ? (
-                <div className="animate-in fade-in duration-200">
-                  <p className="text-sm text-muted-foreground py-6 text-center">
-                    Select a date to see available start times.
-                  </p>
-                </div>
-              ) : isLoadingTimes ? (
-                <div className="animate-in fade-in duration-200">
-                  <TimeRangePickerSkeleton count={8} />
-                </div>
-              ) : daySlots.length > 0 ? (
-                <div
-                  key={`day-${dayKey}`}
-                  className="animate-in fade-in duration-200"
-                >
-                  <TimeRangePicker
-                    slots={daySlots}
+            {isWeekView ? (
+              <div
+                key={`week-${weekStartDayKey}`}
+                className="animate-in fade-in duration-200"
+              >
+                {isLoadingTimes ? (
+                  <AvailabilityWeekGridSkeleton
+                    dayKeys={weekDayKeys}
                     timeZone={placeTimeZone}
-                    selectedDayKey={dayKey}
-                    selectedStartTime={selectedRange?.startTime}
-                    selectedDurationMinutes={selectedRange?.durationMinutes}
-                    showPrice
-                    onChange={handleRangeChange}
-                    onClear={clearSelection}
                   />
-                </div>
-              ) : (
-                <div className="animate-in fade-in duration-200">
-                  <AvailabilityEmptyState
-                    diagnostics={dayDiagnostics}
-                    variant="public"
-                    contact={contactDetail}
+                ) : (
+                  <AvailabilityWeekGrid
+                    dayKeys={weekDayKeys}
+                    slotsByDay={weekSlotsByDay}
+                    timeZone={placeTimeZone}
+                    selectedRange={selectedRange}
+                    onRangeChange={handleRangeChange}
+                    onDayClick={(dk) => {
+                      setDayKeyParam(dk);
+                      setViewParam("day");
+                      clearSelection();
+                    }}
+                    todayDayKey={todayDayKey}
+                    maxDayKey={maxDayKey}
                   />
-                </div>
-              )}
+                )}
+              </div>
+            ) : !selectedDate ? (
+              <div className="animate-in fade-in duration-200">
+                <p className="text-sm text-muted-foreground py-6 text-center">
+                  Select a date to see available start times.
+                </p>
+              </div>
+            ) : isLoadingTimes ? (
+              <div className="animate-in fade-in duration-200">
+                <TimeRangePickerSkeleton count={8} />
+              </div>
+            ) : daySlots.length > 0 ? (
+              <div
+                key={`day-${dayKey}`}
+                className="animate-in fade-in duration-200"
+              >
+                <TimeRangePicker
+                  slots={daySlots}
+                  timeZone={placeTimeZone}
+                  selectedDayKey={dayKey}
+                  selectedStartTime={selectedRange?.startTime}
+                  selectedDurationMinutes={selectedRange?.durationMinutes}
+                  showPrice
+                  onChange={handleRangeChange}
+                  onClear={clearSelection}
+                />
+              </div>
+            ) : (
+              <div className="animate-in fade-in duration-200">
+                <AvailabilityEmptyState
+                  diagnostics={dayDiagnostics}
+                  variant="public"
+                  contact={contactDetail}
+                />
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

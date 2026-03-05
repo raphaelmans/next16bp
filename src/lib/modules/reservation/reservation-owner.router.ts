@@ -21,6 +21,7 @@ import {
 import { AppError } from "@/lib/shared/kernel/errors";
 import {
   AcceptReservationSchema,
+  CancelReservationOwnerSchema,
   ConfirmPaidOfflineSchema,
   ConfirmPaymentSchema,
   ConvertWalkInBlockSchema,
@@ -30,9 +31,8 @@ import {
   GetPendingCountSchema,
   GetPendingForCourtSchema,
   GetReservationLinkedDetailSchema,
-  CancelReservationOwnerSchema,
-  ResolveReservationGroupSchema,
   RejectReservationSchema,
+  ResolveReservationGroupSchema,
 } from "./dtos";
 import {
   InvalidReservationStatusError,
@@ -271,10 +271,7 @@ export const reservationOwnerRouter = router({
     .query(async ({ input, ctx }) => {
       try {
         const service = makeReservationOwnerService();
-        return await service.resolveLegacyReservationGroup(
-          ctx.userId,
-          input,
-        );
+        return await service.resolveLegacyReservationGroup(ctx.userId, input);
       } catch (error) {
         handleReservationOwnerError(error);
       }

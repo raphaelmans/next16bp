@@ -1938,73 +1938,73 @@ function OwnerAvailabilityStudioInner() {
             <Card>
               <CardContent className="space-y-4 p-6">
                 {committedRange ? (
-                    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-1 duration-200">
-                      <div className="space-y-1">
-                        <h3 className="text-sm font-heading font-semibold">
-                          Create Block
-                        </h3>
-                        <p className="text-xs text-muted-foreground">
-                          {selectedTimeLabel} · {placeTimeZone}
-                        </p>
-                      </div>
-                      <SelectionPanelForm
-                        blockType={selectionBlockType}
-                        onBlockTypeChange={setSelectionBlockType}
-                        guestModeState={guestModeState}
-                        organizationId={organization?.id ?? ""}
-                        onGuestModeChange={(mode) => {
-                          setGuestMode(mode);
-                          setGuestModeState(mode);
-                        }}
-                        onGuestNameChange={setGuestName}
-                        onGuestPhoneChange={setGuestPhone}
-                        onGuestEmailChange={setGuestEmail}
-                        onGuestProfileIdChange={setGuestProfileId}
-                        onNotesChange={setNotes}
-                      />
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={handleSelectionSubmit}
-                          className="flex-1"
-                          disabled={isCreatingBlock}
-                        >
-                          {isCreatingBlock && <Spinner />}
-                          {getBlockCtaLabel(selectionBlockType)}
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => resetSelectionPanel()}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
+                  <div className="space-y-4 animate-in fade-in slide-in-from-bottom-1 duration-200">
+                    <div className="space-y-1">
+                      <h3 className="text-sm font-heading font-semibold">
+                        Create Block
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedTimeLabel} · {placeTimeZone}
+                      </p>
                     </div>
-                  ) : (
-                    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-1 duration-200">
-                      <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
-                        <div className="flex items-center gap-2">
-                          <MousePointerClick className="size-4 text-primary/60" />
-                          <h3 className="text-sm font-heading font-semibold">
-                            Create Block
-                          </h3>
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          Click a start time, then an end time on the timeline
-                          to select a range.
-                        </p>
-                      </div>
+                    <SelectionPanelForm
+                      blockType={selectionBlockType}
+                      onBlockTypeChange={setSelectionBlockType}
+                      guestModeState={guestModeState}
+                      organizationId={organization?.id ?? ""}
+                      onGuestModeChange={(mode) => {
+                        setGuestMode(mode);
+                        setGuestModeState(mode);
+                      }}
+                      onGuestNameChange={setGuestName}
+                      onGuestPhoneChange={setGuestPhone}
+                      onGuestEmailChange={setGuestEmail}
+                      onGuestProfileIdChange={setGuestProfileId}
+                      onNotesChange={setNotes}
+                    />
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={handleSelectionSubmit}
+                        className="flex-1"
+                        disabled={isCreatingBlock}
+                      >
+                        {isCreatingBlock && <Spinner />}
+                        {getBlockCtaLabel(selectionBlockType)}
+                      </Button>
                       <Button
                         type="button"
                         variant="outline"
-                        onClick={openCustomDialog}
-                        disabled={!courtId}
-                        className="w-full justify-start"
+                        onClick={() => resetSelectionPanel()}
                       >
-                        Custom block...
+                        Cancel
                       </Button>
                     </div>
-                  )}
+                  </div>
+                ) : (
+                  <div className="space-y-4 animate-in fade-in slide-in-from-bottom-1 duration-200">
+                    <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <MousePointerClick className="size-4 text-primary/60" />
+                        <h3 className="text-sm font-heading font-semibold">
+                          Create Block
+                        </h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Click a start time, then an end time on the timeline to
+                        select a range.
+                      </p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={openCustomDialog}
+                      disabled={!courtId}
+                      className="w-full justify-start"
+                    >
+                      Custom block...
+                    </Button>
+                  </div>
+                )}
                 {isImportOverlay ? (
                   <div className="space-y-3 pt-2">
                     <Separator />

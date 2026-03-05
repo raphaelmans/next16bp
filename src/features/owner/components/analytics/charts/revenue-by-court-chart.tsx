@@ -57,7 +57,11 @@ export function RevenueByCourtChart({ data }: RevenueByCourtChartProps) {
             />
           }
         />
-        <Bar dataKey="totalCents" fill="var(--color-chart-1)" radius={[0, 4, 4, 0]} />
+        <Bar
+          dataKey="totalCents"
+          fill="var(--color-chart-1)"
+          radius={[0, 4, 4, 0]}
+        />
       </BarChart>
     </ChartContainer>
   );

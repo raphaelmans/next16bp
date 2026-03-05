@@ -517,9 +517,7 @@ export function BookingsImportUploadForm({
               </Button>
             </div>
             <Button onClick={handleContinue} disabled={!canContinue}>
-              {isUploading ? (
-                <Spinner className="mr-2 h-4 w-4" />
-              ) : null}
+              {isUploading ? <Spinner className="mr-2 h-4 w-4" /> : null}
               {isUploading ? "Uploading" : "Continue"}
             </Button>
           </div>

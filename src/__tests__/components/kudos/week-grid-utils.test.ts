@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
+import type { TimeSlot } from "@/components/kudos/time-slot-picker";
 import {
+  getHourFromSlot,
+  isSameInstant,
+  isSlotAvailable,
+  isSlotSelectable,
   MAX_DURATION_MINUTES,
   MAX_SLOT_COUNT,
   TIMELINE_SLOT_DURATION,
-  getHourFromSlot,
-  isSlotAvailable,
-  isSlotSelectable,
-  isSameInstant,
 } from "@/components/kudos/week-grid-utils";
-import type { TimeSlot } from "@/components/kudos/time-slot-picker";
 
 const TZ = "Asia/Manila";
 

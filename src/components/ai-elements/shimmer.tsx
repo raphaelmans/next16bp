@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  type CSSProperties,
-  type ElementType,
-  memo,
-  useMemo,
-} from "react";
+import { type CSSProperties, type ElementType, memo, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 export interface TextShimmerProps {

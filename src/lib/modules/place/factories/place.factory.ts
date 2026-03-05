@@ -1,6 +1,6 @@
 import { makeCourtRepository } from "@/lib/modules/court/factories/court.factory";
-import { makeOrganizationMemberService } from "@/lib/modules/organization-member/factories/organization-member.factory";
 import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
+import { makeOrganizationMemberService } from "@/lib/modules/organization-member/factories/organization-member.factory";
 import { makeObjectStorageService } from "@/lib/modules/storage/factories/storage.factory";
 import { getContainer } from "@/lib/shared/infra/container";
 import { PlaceRepository } from "../repositories/place.repository";

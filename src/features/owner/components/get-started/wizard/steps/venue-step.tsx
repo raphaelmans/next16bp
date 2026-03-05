@@ -266,11 +266,7 @@ function ClaimSearchInline({
                   onClick={() => handleSubmitClaim(item.place.id)}
                   disabled={submitClaimMutation.isPending || !!isTransitioning}
                 >
-                  {submitClaimMutation.isPending ? (
-                    <Spinner />
-                  ) : (
-                    "Claim"
-                  )}
+                  {submitClaimMutation.isPending ? <Spinner /> : "Claim"}
                 </Button>
               </div>
             ))}

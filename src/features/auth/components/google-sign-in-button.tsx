@@ -52,7 +52,11 @@ export function GoogleSignInButton({
       onClick={onClick}
     >
       <span className="flex items-center justify-center gap-2">
-        {isLoading ? <Spinner className="text-muted-foreground" /> : <GoogleIcon />}
+        {isLoading ? (
+          <Spinner className="text-muted-foreground" />
+        ) : (
+          <GoogleIcon />
+        )}
         {label}
       </span>
     </Button>

@@ -58,7 +58,11 @@ export function RevenueByHourChart({ data }: RevenueByHourChartProps) {
             />
           }
         />
-        <Bar dataKey="totalCents" fill="var(--color-chart-1)" radius={[4, 4, 0, 0]} />
+        <Bar
+          dataKey="totalCents"
+          fill="var(--color-chart-1)"
+          radius={[4, 4, 0, 0]}
+        />
       </BarChart>
     </ChartContainer>
   );

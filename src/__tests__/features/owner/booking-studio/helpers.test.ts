@@ -194,10 +194,7 @@ describe("getBlockCtaLabel", () => {
     { blockType: "WALK_IN", expected: "Save walk-in" },
     { blockType: "MAINTENANCE", expected: "Save block" },
     { blockType: "GUEST_BOOKING", expected: "Save booking" },
-  ])(
-    "returns '$expected' for $blockType",
-    ({ blockType, expected }) => {
-      expect(getBlockCtaLabel(blockType)).toBe(expected);
-    },
-  );
+  ])("returns '$expected' for $blockType", ({ blockType, expected }) => {
+    expect(getBlockCtaLabel(blockType)).toBe(expected);
+  });
 });

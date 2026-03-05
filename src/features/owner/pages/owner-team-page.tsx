@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  MoreHorizontal,
-  Search,
-  ShieldAlert,
-  UserPlus,
-  X,
-} from "lucide-react";
+import { MoreHorizontal, Search, ShieldAlert, UserPlus, X } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
@@ -556,9 +550,7 @@ export default function OwnerTeamPage() {
               onClick={handleRevoke}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {revokeMember.isPending && (
-                <Spinner className="mr-2 h-4 w-4" />
-              )}
+              {revokeMember.isPending && <Spinner className="mr-2 h-4 w-4" />}
               Revoke access
             </AlertDialogAction>
           </AlertDialogFooter>

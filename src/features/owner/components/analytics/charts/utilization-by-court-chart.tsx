@@ -56,7 +56,11 @@ export function UtilizationByCourtChart({
         <ChartTooltip
           content={<ChartTooltipContent formatter={(value) => `${value}%`} />}
         />
-        <Bar dataKey="utilizationPct" fill="var(--color-chart-3)" radius={[0, 4, 4, 0]} />
+        <Bar
+          dataKey="utilizationPct"
+          fill="var(--color-chart-3)"
+          radius={[0, 4, 4, 0]}
+        />
       </BarChart>
     </ChartContainer>
   );
