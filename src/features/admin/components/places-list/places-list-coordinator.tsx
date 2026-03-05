@@ -6,7 +6,6 @@ import {
   Edit,
   ExternalLink,
   History,
-  Loader2,
   MapPin,
   MoreHorizontal,
   Phone,
@@ -37,6 +36,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -979,9 +979,7 @@ export function AdminPlacesList({
               }
               className="bg-destructive text-white hover:bg-destructive/90"
             >
-              {deletePlaceMutation.isPending && (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              )}
+              {deletePlaceMutation.isPending && <Spinner className="mr-2" />}
               Delete {entityName}
             </AlertDialogAction>
           </AlertDialogFooter>

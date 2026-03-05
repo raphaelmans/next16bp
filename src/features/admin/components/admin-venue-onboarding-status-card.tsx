@@ -1,7 +1,8 @@
 "use client";
 
-import { Check, Loader2, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Card,
   CardContent,
@@ -67,7 +68,7 @@ export function AdminVenueOnboardingStatusCard({
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-4">
-            <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            <Spinner className="size-5" />
           </div>
         </CardContent>
       </Card>

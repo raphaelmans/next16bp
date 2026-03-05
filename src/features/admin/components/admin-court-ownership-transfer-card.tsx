@@ -1,8 +1,9 @@
 "use client";
 
-import { Check, ChevronsUpDown, Copy, Loader2 } from "lucide-react";
+import { Check, ChevronsUpDown, Copy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Card,
   CardContent,
@@ -268,9 +269,7 @@ export function AdminCourtOwnershipTransferCard({
                   onClick={onTransfer}
                   disabled={transferDisabled}
                 >
-                  {transferPending && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
+                  {transferPending && <Spinner className="mr-2" />}
                   Transfer
                 </Button>
               </DialogFooter>
@@ -319,9 +318,7 @@ export function AdminCourtOwnershipTransferCard({
                   onClick={onRecurate}
                   disabled={recurateDisabled}
                 >
-                  {recuratePending && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
+                  {recuratePending && <Spinner className="mr-2" />}
                   Return to curated
                 </Button>
               </DialogFooter>

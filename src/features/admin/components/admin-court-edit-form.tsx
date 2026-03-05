@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { UseFormReturn } from "react-hook-form";
@@ -163,7 +163,7 @@ export function AdminCourtEditForm({
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {removePhotoPending && pendingPhotoId === removePhotoTargetId ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Spinner className="mr-2" />
               ) : (
                 <Trash2 className="mr-2 h-4 w-4" />
               )}
@@ -567,13 +567,11 @@ export function AdminCourtEditForm({
                 disabled={uploadPhotoPending}
               >
                 {uploadPhotoPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Spinner />
                 ) : (
                   <Plus className="h-4 w-4" />
                 )}
-                <span className="ml-2">
-                  {uploadPhotoPending ? "Uploading..." : "Add photo"}
-                </span>
+                <span className="ml-2">Add photo</span>
               </Button>
             </div>
           </div>
@@ -605,7 +603,7 @@ export function AdminCourtEditForm({
                   aria-label="Remove photo"
                 >
                   {removePhotoPending && pendingPhotoId === photo.id ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Spinner />
                   ) : (
                     <Trash2 className="h-4 w-4" />
                   )}
@@ -621,7 +619,7 @@ export function AdminCourtEditForm({
           <Link href={appRoutes.admin.courts.base}>Cancel</Link>
         </Button>
         <Button type="submit" disabled={isSubmitDisabled}>
-          {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {submitting && <Spinner />}
           Save Changes
         </Button>
       </div>

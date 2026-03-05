@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import type { CourtAddonForm } from "@/features/court-addons/schemas";
 import {
@@ -232,7 +233,7 @@ export function PlaceAddonEditor({ placeId }: PlaceAddonEditorProps) {
   if (isLoading) {
     return (
       <div className="flex min-h-[140px] items-center justify-center rounded-lg border">
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        <Spinner className="size-5" />
       </div>
     );
   }
@@ -631,14 +632,8 @@ export function PlaceAddonEditor({ placeId }: PlaceAddonEditorProps) {
             onClick={handleSave}
             disabled={saveMutation.isPending}
           >
-            {saveMutation.isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving…
-              </>
-            ) : (
-              "Save add-ons"
-            )}
+            {saveMutation.isPending && <Spinner />}
+            Save add-ons
           </Button>
         </div>
       </CardContent>

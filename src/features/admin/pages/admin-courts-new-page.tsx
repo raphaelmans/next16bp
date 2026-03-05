@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
@@ -824,7 +824,7 @@ export default function NewCuratedCourtPage() {
               <Link href={appRoutes.admin.courts.base}>Cancel</Link>
             </Button>
             <Button type="submit" disabled={isSubmitDisabled}>
-              {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {submitting && <Spinner className="mr-2" />}
               Create Court
             </Button>
           </div>
