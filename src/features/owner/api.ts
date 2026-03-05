@@ -662,6 +662,28 @@ export class OwnerApi {
       this.toAppError,
     );
 
+  mutReservationOwnerCancel: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["cancel"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservationOwner", "cancel"],
+      (clientApi) => clientApi.reservationOwner.cancel.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutReservationOwnerCancelGroup: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["cancelGroup"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservationOwner", "cancelGroup"],
+      (clientApi) => clientApi.reservationOwner.cancelGroup.mutate,
+      input,
+      this.toAppError,
+    );
+
   queryCourtHoursGet: ProcedureFn<TrpcClientApi["courtHours"]["get"]["query"]> =
     async (input) =>
       callTrpcQuery(

@@ -5,6 +5,7 @@ import {
 } from "@/lib/modules/court/dtos";
 import { makeCourtManagementService } from "@/lib/modules/court/factories/court.factory";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
+import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { parseJson } from "@/lib/shared/infra/http/parse";
@@ -68,6 +69,12 @@ export async function PATCH(req: Request, context: { params: Params }) {
 
     const service = makeCourtManagementService();
     const court = await service.updateCourt(session.userId, input);
+    if (court.placeId) {
+      await revalidatePublicPlaceDetailPaths({
+        placeId: court.placeId,
+        requestId,
+      });
+    }
 
     return NextResponse.json<ApiResponse<typeof court>>(wrapResponse(court));
   } catch (error) {

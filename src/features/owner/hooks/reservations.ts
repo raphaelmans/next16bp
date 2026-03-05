@@ -811,6 +811,39 @@ export function useMutRejectReservationGroup() {
   });
 }
 
+type CancelReservationActionInput = ReservationActionInput & {
+  reason: string;
+};
+
+export function useMutCancelReservation() {
+  const utils = trpc.useUtils();
+
+  return useFeatureMutation(
+    async (input: CancelReservationActionInput) => {
+      if (input.reservationGroupId) {
+        return ownerApi.mutReservationOwnerCancelGroup({
+          reservationGroupId: input.reservationGroupId,
+          reason: input.reason,
+        });
+      }
+
+      return ownerApi.mutReservationOwnerCancel({
+        reservationId: input.reservationId,
+        reason: input.reason,
+      });
+    },
+    {
+      onSuccess: async () => {
+        await Promise.all([
+          utils.reservationOwner.getForOrganization.invalidate(),
+          utils.reservationOwner.getActiveForCourtRange.invalidate(),
+          utils.reservationOwner.getPendingCount.invalidate(),
+        ]);
+      },
+    },
+  );
+}
+
 export function useQueryReservationGroupDetail(reservationGroupId?: string) {
   return useFeatureQuery(
     ["reservationOwner", "getGroupDetail"],

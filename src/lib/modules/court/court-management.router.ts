@@ -1,4 +1,6 @@
 import { TRPCError } from "@trpc/server";
+import { OrganizationMemberPermissionDeniedError } from "@/lib/modules/organization-member/errors/organization-member.errors";
+import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import {
   protectedProcedure,
   protectedRateLimitedProcedure,
@@ -10,7 +12,6 @@ import {
   ListCourtsByPlaceSchema,
   UpdateCourtSchema,
 } from "./dtos";
-import { OrganizationMemberPermissionDeniedError } from "@/lib/modules/organization-member/errors/organization-member.errors";
 import {
   CourtNotFoundError,
   DuplicateCourtLabelError,
@@ -52,7 +53,13 @@ export const courtManagementRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makeCourtManagementService();
-        return await service.createCourt(ctx.userId, input);
+        const court = await service.createCourt(ctx.userId, input);
+        if (court.placeId) {
+          await revalidatePublicPlaceDetailPaths({
+            placeId: court.placeId,
+          });
+        }
+        return court;
       } catch (error) {
         handleCourtManagementError(error);
       }
@@ -62,7 +69,13 @@ export const courtManagementRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makeCourtManagementService();
-        return await service.updateCourt(ctx.userId, input);
+        const court = await service.updateCourt(ctx.userId, input);
+        if (court.placeId) {
+          await revalidatePublicPlaceDetailPaths({
+            placeId: court.placeId,
+          });
+        }
+        return court;
       } catch (error) {
         handleCourtManagementError(error);
       }

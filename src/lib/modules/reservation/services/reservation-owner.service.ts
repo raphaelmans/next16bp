@@ -1,4 +1,5 @@
 import { addMinutes, differenceInMinutes } from "date-fns";
+import { postOwnerCancelledMessage } from "@/lib/modules/chat/ops/post-owner-cancelled-message";
 import { postOwnerConfirmedMessage } from "@/lib/modules/chat/ops/post-owner-confirmed-message";
 import {
   CourtNotFoundError,
@@ -38,6 +39,8 @@ import type { TransactionManager } from "@/lib/shared/kernel/transaction";
 import { computeSchedulePrice } from "@/lib/shared/lib/schedule-availability";
 import type {
   AcceptReservationGroupDTO,
+  CancelReservationGroupOwnerDTO,
+  CancelReservationOwnerDTO,
   ConfirmPaidOfflineDTO,
   ConfirmPaymentDTO,
   ConfirmPaymentGroupDTO,
@@ -95,6 +98,14 @@ export interface IReservationOwnerService {
   rejectReservationGroup(
     userId: string,
     data: RejectReservationGroupDTO,
+  ): Promise<ReservationRecord[]>;
+  cancelReservation(
+    userId: string,
+    data: CancelReservationOwnerDTO,
+  ): Promise<ReservationRecord>;
+  cancelReservationGroup(
+    userId: string,
+    data: CancelReservationGroupOwnerDTO,
   ): Promise<ReservationRecord[]>;
   createGuestBooking(
     userId: string,
@@ -313,6 +324,44 @@ export class ReservationOwnerService implements IReservationOwnerService {
           ownerId: ownerUserId,
         },
         "Failed to post owner confirmed chat message",
+      );
+    }
+  }
+
+  private async postOwnerCancelledMessageBestEffort(
+    reservation: ReservationRecord,
+    ownerUserId: string,
+    reason: string,
+  ) {
+    try {
+      if (!reservation.playerId) {
+        return;
+      }
+
+      const profile = await this.profileRepository.findById(
+        reservation.playerId,
+      );
+      const playerUserId = profile?.userId;
+
+      if (!playerUserId) {
+        return;
+      }
+
+      await postOwnerCancelledMessage({
+        reservationId: reservation.id,
+        ownerUserId,
+        playerUserId,
+        reason,
+      });
+    } catch (error) {
+      logger.warn(
+        {
+          err: error,
+          event: "reservation.owner_cancelled_chat_message_failed",
+          reservationId: reservation.id,
+          ownerId: ownerUserId,
+        },
+        "Failed to post owner cancelled chat message",
       );
     }
   }
@@ -1342,6 +1391,240 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       return updated;
     });
+  }
+
+  async cancelReservation(
+    userId: string,
+    data: CancelReservationOwnerDTO,
+  ): Promise<ReservationRecord> {
+    const updated = await this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+
+      const reservation = await this.reservationRepository.findByIdForUpdate(
+        data.reservationId,
+        ctx,
+      );
+      if (!reservation) {
+        throw new ReservationNotFoundError(data.reservationId);
+      }
+
+      await this.verifyCourtOwnership(
+        userId,
+        reservation.courtId,
+        "reservation.update_status",
+        ctx,
+      );
+
+      const court = await this.courtRepository.findById(
+        reservation.courtId,
+        ctx,
+      );
+      if (!court) {
+        throw new CourtNotFoundError(reservation.courtId);
+      }
+      const placeId = this.requireCourtPlaceId(court.placeId);
+      const place = await this.placeRepository.findById(placeId, ctx);
+      if (!place) {
+        throw new PlaceNotFoundError(placeId);
+      }
+
+      if (reservation.status !== "CONFIRMED") {
+        throw new InvalidReservationStatusError(
+          data.reservationId,
+          reservation.status,
+          ["CONFIRMED"],
+        );
+      }
+
+      const result = await this.reservationRepository.update(
+        data.reservationId,
+        {
+          status: "CANCELLED",
+          cancelledAt: new Date(),
+          cancellationReason: data.reason,
+          expiresAt: null,
+        },
+        ctx,
+      );
+
+      await this.reservationEventRepository.create(
+        {
+          reservationId: data.reservationId,
+          fromStatus: "CONFIRMED",
+          toStatus: "CANCELLED",
+          triggeredByUserId: userId,
+          triggeredByRole: "OWNER",
+          notes: `Cancelled by owner: ${data.reason}`,
+        },
+        ctx,
+      );
+
+      logger.info(
+        {
+          event: "reservation.cancelled_by_owner",
+          reservationId: data.reservationId,
+          ownerId: userId,
+          reason: data.reason,
+        },
+        "Reservation cancelled by owner",
+      );
+
+      await this.notificationDeliveryService.enqueuePlayerReservationCancelledByOwner(
+        {
+          reservationId: data.reservationId,
+          placeName: place.name,
+          courtLabel: court.label,
+          startTimeIso: result.startTime.toISOString(),
+          endTimeIso: result.endTime.toISOString(),
+          reason: data.reason,
+        },
+        ctx,
+      );
+
+      return result;
+    });
+
+    await this.postOwnerCancelledMessageBestEffort(
+      updated,
+      userId,
+      data.reason,
+    );
+
+    return updated;
+  }
+
+  async cancelReservationGroup(
+    userId: string,
+    data: CancelReservationGroupOwnerDTO,
+  ): Promise<ReservationRecord[]> {
+    const allUpdated = await this.transactionManager.run(async (tx) => {
+      const ctx: RequestContext = { tx };
+      const { reservations, courtById, placeById } =
+        await this.loadReservationGroupForOwnerAction(
+          userId,
+          data.reservationGroupId,
+          ctx,
+        );
+
+      const updated: ReservationRecord[] = [];
+      for (const reservation of reservations) {
+        if (reservation.status !== "CONFIRMED") {
+          throw new InvalidReservationStatusError(
+            reservation.id,
+            reservation.status,
+            ["CONFIRMED"],
+          );
+        }
+
+        const court = courtById.get(reservation.courtId);
+        if (!court) {
+          throw new CourtNotFoundError(reservation.courtId);
+        }
+
+        const itemUpdated = await this.reservationRepository.update(
+          reservation.id,
+          {
+            status: "CANCELLED",
+            cancelledAt: new Date(),
+            cancellationReason: data.reason,
+            expiresAt: null,
+          },
+          ctx,
+        );
+
+        await this.reservationEventRepository.create(
+          {
+            reservationId: reservation.id,
+            fromStatus: "CONFIRMED",
+            toStatus: "CANCELLED",
+            triggeredByUserId: userId,
+            triggeredByRole: "OWNER",
+            notes: `Cancelled by owner (group): ${data.reason}`,
+          },
+          ctx,
+        );
+
+        updated.push(itemUpdated);
+      }
+
+      if (updated.length > 0) {
+        const sorted = updated
+          .slice()
+          .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+        const representative = sorted[0];
+        const latest = sorted[sorted.length - 1] ?? representative;
+        const representativeCourt = courtById.get(representative.courtId);
+        if (!representativeCourt) {
+          throw new CourtNotFoundError(representative.courtId);
+        }
+        const representativePlaceId = this.requireCourtPlaceId(
+          representativeCourt.placeId,
+        );
+        const representativePlace = placeById.get(representativePlaceId);
+        if (!representativePlace) {
+          throw new PlaceNotFoundError(representativePlaceId);
+        }
+
+        const itemSummaries = sorted.map((item) => ({
+          reservationId: item.id,
+          courtId: item.courtId,
+          courtLabel: courtById.get(item.courtId)?.label ?? "Court",
+          startTimeIso: item.startTime.toISOString(),
+          endTimeIso: item.endTime.toISOString(),
+          totalPriceCents: item.totalPriceCents,
+          currency: item.currency,
+          expiresAtIso: item.expiresAt
+            ? new Date(item.expiresAt).toISOString()
+            : null,
+        }));
+
+        await this.notificationDeliveryService.enqueuePlayerReservationGroupCancelledByOwner(
+          {
+            reservationGroupId: data.reservationGroupId,
+            representativeReservationId: representative.id,
+            placeName: representativePlace.name,
+            courtLabel:
+              itemSummaries.length > 1
+                ? `${itemSummaries.length} courts`
+                : (itemSummaries[0]?.courtLabel ?? "Court"),
+            startTimeIso: representative.startTime.toISOString(),
+            endTimeIso: latest.endTime.toISOString(),
+            itemCount: itemSummaries.length,
+            items: itemSummaries,
+            reason: data.reason,
+          },
+          ctx,
+        );
+      }
+
+      logger.info(
+        {
+          event: "reservation.group_cancelled_by_owner",
+          reservationGroupId: data.reservationGroupId,
+          ownerId: userId,
+          count: updated.length,
+          reason: data.reason,
+        },
+        "Reservation group cancelled by owner",
+      );
+
+      return updated;
+    });
+
+    if (allUpdated.length > 0) {
+      const sorted = allUpdated
+        .slice()
+        .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+      const representative = sorted[0];
+
+      await this.postOwnerCancelledMessageBestEffort(
+        representative,
+        userId,
+        data.reason,
+      );
+    }
+
+    return allUpdated;
   }
 
   async createGuestBooking(

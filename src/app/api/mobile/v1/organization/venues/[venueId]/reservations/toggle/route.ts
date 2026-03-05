@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { TogglePlaceReservationsSchema } from "@/lib/modules/place-verification/dtos";
 import { makePlaceVerificationService } from "@/lib/modules/place-verification/factories/place-verification.factory";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
+import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { parseJson } from "@/lib/shared/infra/http/parse";
@@ -41,6 +42,10 @@ export async function POST(req: Request, context: { params: Params }) {
 
     const service = makePlaceVerificationService();
     await service.toggleReservations(session.userId, input);
+    await revalidatePublicPlaceDetailPaths({
+      placeId: input.placeId,
+      requestId,
+    });
 
     return NextResponse.json<
       ApiResponse<TogglePlaceReservationsMobileResponse>

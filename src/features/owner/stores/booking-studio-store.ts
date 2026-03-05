@@ -1,4 +1,5 @@
 import { createStore } from "zustand/vanilla";
+import type { ReservationItem } from "../components/booking-studio/types";
 
 export interface BookingStudioState {
   // Dialog state
@@ -6,6 +7,7 @@ export interface BookingStudioState {
   guestBookingTimes: { start: Date; end: Date } | null;
   customDialogOpen: boolean;
   pendingRemoveBlockId: string | null;
+  selectedReservation: ReservationItem | null;
 
   // Guest search (desktop dialog)
   guestSearch: string;
@@ -41,6 +43,7 @@ export interface BookingStudioState {
   setGuestBookingTimes: (times: { start: Date; end: Date } | null) => void;
   setCustomDialogOpen: (open: boolean) => void;
   setPendingRemoveBlockId: (id: string | null) => void;
+  setSelectedReservation: (reservation: ReservationItem | null) => void;
   setGuestSearch: (search: string) => void;
   setDebouncedGuestSearch: (search: string) => void;
   setGuestComboboxOpen: (open: boolean) => void;
@@ -78,6 +81,7 @@ export const createBookingStudioStore = (initialDate: Date) =>
     guestBookingTimes: null,
     customDialogOpen: false,
     pendingRemoveBlockId: null,
+    selectedReservation: null,
 
     // Guest search
     guestSearch: "",
@@ -113,6 +117,8 @@ export const createBookingStudioStore = (initialDate: Date) =>
     setGuestBookingTimes: (times) => set({ guestBookingTimes: times }),
     setCustomDialogOpen: (open) => set({ customDialogOpen: open }),
     setPendingRemoveBlockId: (id) => set({ pendingRemoveBlockId: id }),
+    setSelectedReservation: (reservation) =>
+      set({ selectedReservation: reservation }),
     setGuestSearch: (search) => set({ guestSearch: search }),
     setDebouncedGuestSearch: (search) => set({ debouncedGuestSearch: search }),
     setGuestComboboxOpen: (open) => set({ guestComboboxOpen: open }),

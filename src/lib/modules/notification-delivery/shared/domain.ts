@@ -10,10 +10,12 @@ import {
   claimReviewedSchema,
   type NotificationEventType,
   type ReservationAwaitingPaymentPayload,
+  type ReservationCancelledByOwnerPayload,
   type ReservationCancelledPayload,
   type ReservationConfirmedPayload,
   type ReservationCreatedPayload,
   type ReservationGroupAwaitingPaymentPayload,
+  type ReservationGroupCancelledByOwnerPayload,
   type ReservationGroupCancelledPayload,
   type ReservationGroupConfirmedPayload,
   type ReservationGroupCreatedPayload,
@@ -23,10 +25,12 @@ import {
   type ReservationPingOwnerPayload,
   type ReservationRejectedPayload,
   reservationAwaitingPaymentSchema,
+  reservationCancelledByOwnerSchema,
   reservationCancelledSchema,
   reservationConfirmedSchema,
   reservationCreatedSchema,
   reservationGroupAwaitingPaymentSchema,
+  reservationGroupCancelledByOwnerSchema,
   reservationGroupCancelledSchema,
   reservationGroupConfirmedSchema,
   reservationGroupCreatedSchema,
@@ -703,6 +707,46 @@ export function buildReservationGroupCancelledContent(
   };
 }
 
+export function buildReservationCancelledByOwnerContent(
+  payload: ReservationCancelledByOwnerPayload,
+): NotificationContent {
+  const playerPath = getPlayerReservationPath({
+    reservationId: payload.reservationId,
+    status: "CANCELLED",
+  });
+
+  return {
+    push: {
+      title: "Booking cancelled by venue",
+      body: payload.placeName,
+      url: playerPath,
+      tag: `reservation.cancelled_by_owner:${payload.reservationId}`,
+    },
+    email: null,
+    smsText: null,
+  };
+}
+
+export function buildReservationGroupCancelledByOwnerContent(
+  payload: ReservationGroupCancelledByOwnerPayload,
+): NotificationContent {
+  const playerPath = getPlayerReservationPath({
+    reservationId: payload.representativeReservationId,
+    status: "CANCELLED",
+  });
+
+  return {
+    push: {
+      title: "Group booking cancelled by venue",
+      body: payload.placeName,
+      url: playerPath,
+      tag: `reservation_group.cancelled_by_owner:${payload.reservationGroupId}`,
+    },
+    email: null,
+    smsText: null,
+  };
+}
+
 export function buildReservationPingOwnerContent(
   payload: ReservationPingOwnerPayload,
 ): NotificationContent {
@@ -808,6 +852,15 @@ const EVENT_HANDLERS: Record<NotificationEventType, EventHandler> = {
   "reservation_group.cancelled": {
     schema: reservationGroupCancelledSchema,
     build: buildReservationGroupCancelledContent as EventHandler["build"],
+  },
+  "reservation.cancelled_by_owner": {
+    schema: reservationCancelledByOwnerSchema,
+    build: buildReservationCancelledByOwnerContent as EventHandler["build"],
+  },
+  "reservation_group.cancelled_by_owner": {
+    schema: reservationGroupCancelledByOwnerSchema,
+    build:
+      buildReservationGroupCancelledByOwnerContent as EventHandler["build"],
   },
   "reservation.ping_owner": {
     schema: reservationPingOwnerSchema,

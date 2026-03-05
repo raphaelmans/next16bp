@@ -32,6 +32,8 @@ import {
   GetPendingCountSchema,
   GetPendingForCourtSchema,
   GetReservationGroupDetailSchema,
+  CancelReservationGroupOwnerSchema,
+  CancelReservationOwnerSchema,
   RejectReservationGroupSchema,
   RejectReservationSchema,
 } from "./dtos";
@@ -203,6 +205,34 @@ export const reservationOwnerRouter = router({
       try {
         const service = makeReservationOwnerService();
         return await service.rejectReservationGroup(ctx.userId, input);
+      } catch (error) {
+        handleReservationOwnerError(error);
+      }
+    }),
+
+  /**
+   * Cancel a confirmed reservation (owner only)
+   */
+  cancel: protectedRateLimitedProcedure("sensitive")
+    .input(CancelReservationOwnerSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationOwnerService();
+        return await service.cancelReservation(ctx.userId, input);
+      } catch (error) {
+        handleReservationOwnerError(error);
+      }
+    }),
+
+  /**
+   * Cancel all confirmed reservations in a group (owner only)
+   */
+  cancelGroup: protectedRateLimitedProcedure("sensitive")
+    .input(CancelReservationGroupOwnerSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationOwnerService();
+        return await service.cancelReservationGroup(ctx.userId, input);
       } catch (error) {
         handleReservationOwnerError(error);
       }

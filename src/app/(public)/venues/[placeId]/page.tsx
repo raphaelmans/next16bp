@@ -8,7 +8,7 @@ type VenueDetailRoutePageProps = {
   params: Promise<{ placeId: string }>;
 };
 
-export const revalidate = 3600;
+export const revalidate = false;
 
 export async function generateMetadata({
   params,

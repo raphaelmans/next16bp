@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { revalidateAllPublicPlaceDetailPages } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import {
   adminProcedure,
   adminRateLimitedProcedure,
@@ -97,6 +98,7 @@ export const placeVerificationAdminRouter = router({
       try {
         const service = makePlaceVerificationAdminService();
         await service.approve(ctx.userId, input);
+        revalidateAllPublicPlaceDetailPages();
         return { success: true };
       } catch (error) {
         handleAdminPlaceVerificationError(error);
@@ -108,6 +110,7 @@ export const placeVerificationAdminRouter = router({
       try {
         const service = makePlaceVerificationAdminService();
         await service.reject(ctx.userId, input);
+        revalidateAllPublicPlaceDetailPages();
         return { success: true };
       } catch (error) {
         handleAdminPlaceVerificationError(error);

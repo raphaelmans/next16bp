@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import {
   protectedProcedure,
   protectedRateLimitedProcedure,
@@ -77,6 +78,9 @@ export const placeVerificationRouter = router({
       try {
         const service = makePlaceVerificationService();
         await service.submitRequest(ctx.userId, input);
+        await revalidatePublicPlaceDetailPaths({
+          placeId: input.placeId,
+        });
         return { success: true };
       } catch (error) {
         handlePlaceVerificationError(error);
@@ -98,6 +102,9 @@ export const placeVerificationRouter = router({
       try {
         const service = makePlaceVerificationService();
         await service.toggleReservations(ctx.userId, input);
+        await revalidatePublicPlaceDetailPaths({
+          placeId: input.placeId,
+        });
         return { success: true };
       } catch (error) {
         handlePlaceVerificationError(error);

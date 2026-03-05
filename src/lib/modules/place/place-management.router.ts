@@ -1,9 +1,10 @@
 import { TRPCError } from "@trpc/server";
-import { OrganizationMemberPermissionDeniedError } from "@/lib/modules/organization-member/errors/organization-member.errors";
 import {
   NotOrganizationOwnerError,
   OrganizationNotFoundError,
 } from "@/lib/modules/organization/errors/organization.errors";
+import { OrganizationMemberPermissionDeniedError } from "@/lib/modules/organization-member/errors/organization-member.errors";
+import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import {
   protectedProcedure,
   protectedRateLimitedProcedure,
@@ -103,6 +104,10 @@ export const placeManagementRouter = router({
       try {
         const service = makePlaceManagementService();
         const place = await service.updatePlace(ctx.userId, input);
+        await revalidatePublicPlaceDetailPaths({
+          placeId: place.id,
+          placeSlug: place.slug,
+        });
         return redactPlaceLocale(place);
       } catch (error) {
         handlePlaceManagementError(error);
@@ -113,7 +118,12 @@ export const placeManagementRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makePlaceManagementService();
+        const existing = await service.getPlaceById(ctx.userId, input.placeId);
         await service.deletePlace(ctx.userId, input.placeId);
+        await revalidatePublicPlaceDetailPaths({
+          placeId: input.placeId,
+          placeSlug: existing.place.slug,
+        });
         return { success: true };
       } catch (error) {
         handlePlaceManagementError(error);
@@ -146,11 +156,15 @@ export const placeManagementRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makePlaceManagementService();
-        return await service.uploadPhoto(
+        const photo = await service.uploadPhoto(
           ctx.userId,
           input.placeId,
           input.image,
         );
+        await revalidatePublicPlaceDetailPaths({
+          placeId: input.placeId,
+        });
+        return photo;
       } catch (error) {
         handlePlaceManagementError(error);
       }
@@ -161,6 +175,9 @@ export const placeManagementRouter = router({
       try {
         const service = makePlaceManagementService();
         await service.removePhoto(ctx.userId, input.placeId, input.photoId);
+        await revalidatePublicPlaceDetailPaths({
+          placeId: input.placeId,
+        });
         return { success: true };
       } catch (error) {
         handlePlaceManagementError(error);
@@ -176,6 +193,9 @@ export const placeManagementRouter = router({
           input.placeId,
           input.orderedIds,
         );
+        await revalidatePublicPlaceDetailPaths({
+          placeId: input.placeId,
+        });
         return { photos };
       } catch (error) {
         handlePlaceManagementError(error);

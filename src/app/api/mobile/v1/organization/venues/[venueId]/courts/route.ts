@@ -6,6 +6,7 @@ import {
 import { makeCourtManagementService } from "@/lib/modules/court/factories/court.factory";
 import type { ICourtManagementService } from "@/lib/modules/court/services/court-management.service";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
+import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { parseJson } from "@/lib/shared/infra/http/parse";
@@ -77,6 +78,12 @@ export async function POST(req: Request, context: { params: Params }) {
 
     const service = makeCourtManagementService();
     const court = await service.createCourt(session.userId, input);
+    if (court.placeId) {
+      await revalidatePublicPlaceDetailPaths({
+        placeId: court.placeId,
+        requestId,
+      });
+    }
 
     return NextResponse.json<ApiResponse<CreateCourtMobileResponse>>(
       wrapResponse(court),

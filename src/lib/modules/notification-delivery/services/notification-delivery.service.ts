@@ -177,6 +177,27 @@ export type PlayerReservationGroupRejectedPayload = {
   reason?: string | null;
 };
 
+export type PlayerReservationCancelledByOwnerPayload = {
+  reservationId: string;
+  placeName: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  reason?: string | null;
+};
+
+export type PlayerReservationGroupCancelledByOwnerPayload = {
+  reservationGroupId: string;
+  representativeReservationId: string;
+  placeName: string;
+  courtLabel: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  itemCount: number;
+  items: ReservationGroupItemSummary[];
+  reason?: string | null;
+};
+
 export type OwnerReservationPingPayload = {
   reservationId: string;
   organizationId: string;
@@ -1446,6 +1467,123 @@ export class NotificationDeliveryService {
     const mobilePushJobs = await this.enqueueMobilePushForUser({
       userId: recipient.userId,
       eventType: "reservation_group.rejected",
+      reservationId: payload.representativeReservationId,
+      payload: basePayload,
+      idempotencyKeyBase,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueuePlayerReservationCancelledByOwner(
+    payload: PlayerReservationCancelledByOwnerPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    const recipient =
+      await this.recipientRepository.findPlayerRecipientByReservationId(
+        payload.reservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      reason: payload.reason ?? null,
+    };
+    const idempotencyKeyBase = `reservation.cancelled_by_owner:${payload.reservationId}:user:${recipient.userId}`;
+
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    await this.createInboxNotification({
+      userId: recipient.userId,
+      eventType: "reservation.cancelled_by_owner",
+      payload: basePayload,
+      idempotencyKeyBase,
+      ctx,
+    });
+
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: recipient.userId,
+      eventType: "reservation.cancelled_by_owner",
+      reservationId: payload.reservationId,
+      payload: basePayload,
+      idempotencyKeyBase,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.userId,
+      eventType: "reservation.cancelled_by_owner",
+      reservationId: payload.reservationId,
+      payload: basePayload,
+      idempotencyKeyBase,
+      ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueuePlayerReservationGroupCancelledByOwner(
+    payload: PlayerReservationGroupCancelledByOwnerPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    const recipient =
+      await this.recipientRepository.findPlayerRecipientByReservationId(
+        payload.representativeReservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationGroupId: payload.reservationGroupId,
+      representativeReservationId: payload.representativeReservationId,
+      placeName: payload.placeName,
+      courtLabel: payload.courtLabel,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      itemCount: payload.itemCount,
+      items: payload.items,
+      reason: payload.reason ?? null,
+    };
+    const idempotencyKeyBase = `reservation_group.cancelled_by_owner:${payload.reservationGroupId}:user:${recipient.userId}`;
+
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    await this.createInboxNotification({
+      userId: recipient.userId,
+      eventType: "reservation_group.cancelled_by_owner",
+      payload: basePayload,
+      idempotencyKeyBase,
+      ctx,
+    });
+
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: recipient.userId,
+      eventType: "reservation_group.cancelled_by_owner",
+      reservationId: payload.representativeReservationId,
+      payload: basePayload,
+      idempotencyKeyBase,
+      ctx,
+    });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: recipient.userId,
+      eventType: "reservation_group.cancelled_by_owner",
       reservationId: payload.representativeReservationId,
       payload: basePayload,
       idempotencyKeyBase,
