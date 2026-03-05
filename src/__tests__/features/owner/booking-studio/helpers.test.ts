@@ -46,6 +46,7 @@ const makeReservation = (
   playerNameSnapshot: "Player",
   guestProfileId: null,
   playerId: null,
+  groupId: null,
 });
 
 // ---------------------------------------------------------------------------
