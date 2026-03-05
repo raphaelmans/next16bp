@@ -483,6 +483,7 @@ export function OwnerAvailabilityWeekGrid({
         reservationsByDay={reservationsByDay}
         pendingBlockIds={pendingBlockIds}
         onSelectBlock={onSelectBlock}
+        onSelectReservation={onSelectReservation}
         placing={placing}
         onPlace={onPlace}
         onResizePreview={onResizePreview}
@@ -510,6 +511,7 @@ type OwnerWeekGridInnerProps = {
   reservationsByDay: Map<string, ReservationSegment[]>;
   pendingBlockIds: Set<string>;
   onSelectBlock?: (blockId: string) => void;
+  onSelectReservation?: (reservation: ReservationItem) => void;
   placing: boolean;
   onPlace?: (dayKey: string, startMinute: number) => void;
   onResizePreview?: (args: ResizeArgs) => void;
@@ -530,6 +532,7 @@ function OwnerWeekGridInner({
   reservationsByDay,
   pendingBlockIds,
   onSelectBlock,
+  onSelectReservation,
   placing,
   onPlace,
   onResizePreview,

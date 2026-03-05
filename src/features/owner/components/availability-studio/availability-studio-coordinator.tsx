@@ -1860,10 +1860,8 @@ function OwnerAvailabilityStudioInner() {
           courtId={courtId}
           courts={courts}
           courtsLoading={courtsLoading}
-          placeTimeZone={placeTimeZone}
           onPlaceChange={setPlaceId}
           onCourtChange={setCourtId}
-          onToday={handleMobileToday}
         />
 
         <div className="grid gap-6 2xl:grid-cols-[280px_minmax(0,1fr)]">

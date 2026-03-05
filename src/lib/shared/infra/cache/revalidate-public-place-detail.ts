@@ -3,7 +3,6 @@ import "server-only";
 import { revalidatePath } from "next/cache";
 import { appRoutes } from "@/common/app-routes";
 import { logger } from "@/lib/shared/infra/logger";
-import { publicCaller } from "@/trpc/server";
 
 type RevalidatePublicPlaceDetailPathsInput = {
   placeId: string;
@@ -23,17 +22,6 @@ const addPublicPlacePaths = (paths: Set<string>, placeSlugOrId: string) => {
   paths.add(`${LEGACY_PUBLIC_PLACE_BASE_PATH}/${placeSlugOrId}`);
 };
 
-const resolvePlaceSlug = async (placeId: string) => {
-  try {
-    const placeDetails = await publicCaller.place.getByIdOrSlug({
-      placeIdOrSlug: placeId,
-    });
-    return normalizePathToken(placeDetails.place.slug);
-  } catch {
-    return undefined;
-  }
-};
-
 export async function revalidatePublicPlaceDetailPaths({
   placeId,
   placeSlug,
@@ -49,7 +37,7 @@ export async function revalidatePublicPlaceDetailPaths({
     const slugToUse =
       normalizedPlaceSlug && normalizedPlaceSlug !== normalizedPlaceId
         ? normalizedPlaceSlug
-        : await resolvePlaceSlug(normalizedPlaceId);
+        : undefined;
 
     const paths = new Set<string>();
     addPublicPlacePaths(paths, normalizedPlaceId);
@@ -59,6 +47,12 @@ export async function revalidatePublicPlaceDetailPaths({
 
     for (const path of paths) {
       revalidatePath(path);
+    }
+
+    // If slug is unavailable, refresh dynamic place-detail page patterns to
+    // invalidate slug-based public URLs without introducing router import cycles.
+    if (!slugToUse) {
+      revalidateAllPublicPlaceDetailPages(requestId);
     }
   } catch (error) {
     logger.warn(
