@@ -24,10 +24,10 @@ import {
   getPlaceCourtsSectionData,
   getPlaceVenueSectionData,
 } from "@/features/discovery/place-detail/server/place-detail-section-data";
-import { env } from "@/lib/env";
+import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 import { isUuid } from "@/lib/slug";
 
-const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+const appUrl = getCanonicalOrigin();
 
 const formatCourtCount = (count: number) =>
   `${count} court${count === 1 ? "" : "s"}`;

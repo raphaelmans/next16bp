@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import { appRoutes } from "@/common/app-routes";
 import { formatInTimeZone, formatTimeRangeInTimeZone } from "@/common/format";
 import { ExternalOpenPlayDetailPage as ExternalOpenPlayDetailFeaturePage } from "@/features/open-play/pages/external-open-play-detail-page";
-import { env } from "@/lib/env";
 import { getExternalOpenPlayPublicDetail } from "@/lib/modules/open-play/server/external-open-play-public-detail";
+import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 
 type ExternalOpenPlayDetailRouteParams = {
   externalOpenPlayId: string;
 };
 
-const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+const appUrl = getCanonicalOrigin();
 
 export async function generateMetadata({
   params,

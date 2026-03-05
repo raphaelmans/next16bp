@@ -1,4 +1,4 @@
-import { env } from "@/lib/env";
+import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 import { Container } from "@/components/layout/container";
 import { appRoutes } from "@/common/app-routes";
 
@@ -9,7 +9,7 @@ export const metadata = {
   alternates: {
     canonical: new URL(
       appRoutes.terms.base,
-      env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com",
+      getCanonicalOrigin(),
     ),
   },
   openGraph: {
@@ -18,7 +18,7 @@ export const metadata = {
       "Review the KudosCourts terms covering booking requests, payments, and platform guidelines.",
     url: new URL(
       appRoutes.terms.base,
-      env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com",
+      getCanonicalOrigin(),
     ),
   },
   twitter: {

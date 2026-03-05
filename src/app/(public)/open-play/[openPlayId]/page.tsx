@@ -6,14 +6,14 @@ import {
   formatTimeRangeInTimeZone,
 } from "@/common/format";
 import { OpenPlayDetailPage as OpenPlayDetailFeaturePage } from "@/features/open-play/pages/open-play-detail-page";
-import { env } from "@/lib/env";
 import { getOpenPlayPublicDetail } from "@/lib/modules/open-play/server/open-play-public-detail";
+import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 
 type OpenPlayDetailPageParams = {
   openPlayId: string;
 };
 
-const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+const appUrl = getCanonicalOrigin();
 
 export async function generateMetadata({
   params,

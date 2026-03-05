@@ -4,8 +4,8 @@ import Script from "next/script";
 import { appRoutes } from "@/common/app-routes";
 import { buildLocationLabel, humanizeSlug } from "@/common/seo-helpers";
 import { CourtDetailPage as DiscoveryCourtDetailPage } from "@/features/discovery/place-detail/pages/court-detail-page";
-import { env } from "@/lib/env";
 import { getPlaceDetailsForCourtRoute } from "@/lib/modules/discovery/server/court-detail-page";
+import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 import { isUuid } from "@/lib/slug";
 
 type PageProps = {
@@ -13,7 +13,7 @@ type PageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+const appUrl = getCanonicalOrigin();
 
 const toAbsoluteUrl = (value?: string | null) => {
   if (!value) return undefined;

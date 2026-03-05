@@ -109,7 +109,7 @@ export function OrganizationForm({
             placeholder={previewSlug}
           />
           <p className="text-xs text-muted-foreground">
-            Preview: kudoscourts.com/{previewSlug}
+            Preview: kudoscourts.ph/{previewSlug}
           </p>
         </div>
 
