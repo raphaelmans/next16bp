@@ -13,7 +13,7 @@ interface RevenueByHourChartProps {
 }
 
 const chartConfig = {
-  totalCents: { label: "Revenue", color: "#0D9488" },
+  totalCents: { label: "Revenue", color: "var(--color-chart-1)" },
 } satisfies ChartConfig;
 
 function formatHour(hour: number): string {
@@ -54,13 +54,11 @@ export function RevenueByHourChart({ data }: RevenueByHourChartProps) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value) =>
-                `P${Number(value).toLocaleString()}`
-              }
+              formatter={(value) => `P${Number(value).toLocaleString()}`}
             />
           }
         />
-        <Bar dataKey="totalCents" fill="#0D9488" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="totalCents" fill="var(--color-chart-1)" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ChartContainer>
   );

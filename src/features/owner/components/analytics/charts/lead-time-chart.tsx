@@ -13,7 +13,7 @@ interface LeadTimeChartProps {
 }
 
 const chartConfig = {
-  pct: { label: "% of bookings", color: "#D97706" },
+  pct: { label: "% of bookings", color: "var(--color-chart-4)" },
 } satisfies ChartConfig;
 
 export function LeadTimeChart({ data }: LeadTimeChartProps) {
@@ -42,13 +42,9 @@ export function LeadTimeChart({ data }: LeadTimeChartProps) {
           width={70}
         />
         <ChartTooltip
-          content={
-            <ChartTooltipContent
-              formatter={(value) => `${value}%`}
-            />
-          }
+          content={<ChartTooltipContent formatter={(value) => `${value}%`} />}
         />
-        <Bar dataKey="pct" fill="#D97706" radius={[0, 4, 4, 0]} />
+        <Bar dataKey="pct" fill="var(--color-chart-4)" radius={[0, 4, 4, 0]} />
       </BarChart>
     </ChartContainer>
   );

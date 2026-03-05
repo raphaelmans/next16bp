@@ -15,7 +15,7 @@ interface RevenueByDowChartProps {
 }
 
 const chartConfig = {
-  totalCents: { label: "Revenue", color: "#F97316" },
+  totalCents: { label: "Revenue", color: "var(--color-chart-2)" },
 } satisfies ChartConfig;
 
 export function RevenueByDowChart({ data }: RevenueByDowChartProps) {
@@ -45,13 +45,11 @@ export function RevenueByDowChart({ data }: RevenueByDowChartProps) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value) =>
-                `P${Number(value).toLocaleString()}`
-              }
+              formatter={(value) => `P${Number(value).toLocaleString()}`}
             />
           }
         />
-        <Bar dataKey="totalCents" fill="#F97316" radius={[4, 4, 0, 0]} />
+        <Bar dataKey="totalCents" fill="var(--color-chart-2)" radius={[4, 4, 0, 0]} />
       </BarChart>
     </ChartContainer>
   );

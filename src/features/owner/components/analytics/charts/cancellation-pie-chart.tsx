@@ -15,7 +15,12 @@ const REASON_LABELS: Record<string, string> = {
   system: "System",
 };
 
-const COLORS = ["#D97706", "#DC2626", "#0D9488", "#6B7280"];
+const COLORS = [
+  "var(--color-chart-4)",
+  "var(--color-chart-5)",
+  "var(--color-chart-1)",
+  "var(--color-muted-foreground)",
+];
 
 interface CancellationPieChartProps {
   data: { reason: string; count: number; pct: number }[];

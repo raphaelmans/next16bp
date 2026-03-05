@@ -13,7 +13,7 @@ interface ResponseTimeChartProps {
 }
 
 const chartConfig = {
-  pct: { label: "% of bookings", color: "#0D9488" },
+  pct: { label: "% of bookings", color: "var(--color-chart-1)" },
 } satisfies ChartConfig;
 
 export function ResponseTimeChart({ data }: ResponseTimeChartProps) {
@@ -42,13 +42,9 @@ export function ResponseTimeChart({ data }: ResponseTimeChartProps) {
           width={50}
         />
         <ChartTooltip
-          content={
-            <ChartTooltipContent
-              formatter={(value) => `${value}%`}
-            />
-          }
+          content={<ChartTooltipContent formatter={(value) => `${value}%`} />}
         />
-        <Bar dataKey="pct" fill="#0D9488" radius={[0, 4, 4, 0]} />
+        <Bar dataKey="pct" fill="var(--color-chart-1)" radius={[0, 4, 4, 0]} />
       </BarChart>
     </ChartContainer>
   );
