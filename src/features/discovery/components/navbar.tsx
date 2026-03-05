@@ -123,7 +123,7 @@ export function Navbar({ className }: NavbarProps) {
   return (
     <nav
       className={cn(
-        "fixed top-4 left-4 right-4 z-50",
+        "fixed top-[max(1rem,env(safe-area-inset-top))] left-4 right-4 z-50",
         "bg-background/95 backdrop-blur-md",
         "border border-border/60 rounded-xl",
         "h-16 px-4",

@@ -51,17 +51,10 @@ export function GoogleSignInButton({
       disabled={isLoading}
       onClick={onClick}
     >
-      {isLoading ? (
-        <span className="flex items-center justify-center gap-2">
-          <Spinner className="text-muted-foreground" />
-          Redirecting...
-        </span>
-      ) : (
-        <span className="flex items-center justify-center gap-2">
-          <GoogleIcon />
-          {label}
-        </span>
-      )}
+      <span className="flex items-center justify-center gap-2">
+        {isLoading ? <Spinner className="text-muted-foreground" /> : <GoogleIcon />}
+        {label}
+      </span>
     </Button>
   );
 }

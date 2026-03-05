@@ -123,7 +123,7 @@ export default function AdminVerificationPage() {
               <RefreshCw
                 className={cn("mr-2 h-4 w-4", isFetching && "animate-spin")}
               />
-              {isFetching ? "Refreshing" : "Refresh"}
+              Refresh
             </Button>
           </div>
         </div>
