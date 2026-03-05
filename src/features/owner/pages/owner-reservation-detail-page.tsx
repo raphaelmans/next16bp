@@ -29,7 +29,7 @@ import {
   useMutRejectReservation,
   useQueryOwnerOrganization,
   useQueryOwnerReservationHistory,
-  useQueryReservationGroupDetail,
+  useQueryReservationLinkedDetail,
 } from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
 
@@ -114,9 +114,7 @@ export default function OwnerReservationDetailPage({
     reservationIds: [reservationId],
   });
 
-  const reservationGroupQuery = useQueryReservationGroupDetail(
-    reservation?.reservationGroupId ?? undefined,
-  );
+  const reservationGroupQuery = useQueryReservationLinkedDetail(reservationId);
   const reservationGroupItems = React.useMemo(
     () =>
       (
@@ -165,7 +163,6 @@ export default function OwnerReservationDetailPage({
     mutation.mutate(
       {
         reservationId: reservation.id,
-        reservationGroupId: reservation.reservationGroupId,
       },
       {
         onSuccess: () => {
@@ -184,7 +181,6 @@ export default function OwnerReservationDetailPage({
     rejectMutation.mutate(
       {
         reservationId: reservation.id,
-        reservationGroupId: reservation.reservationGroupId,
         reason,
       },
       {

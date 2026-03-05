@@ -31,11 +31,11 @@ describe("owner reservation group legacy route redirect", () => {
   });
 
   it("redirects grouped URL to canonical owner reservation detail", async () => {
-    const getGroupDetailMock = vi.fn().mockResolvedValue({
-      reservations: [{ id: "res-1" }],
+    const resolveLegacyGroupMock = vi.fn().mockResolvedValue({
+      reservationId: "res-1",
     });
     createServerCallerMock.mockResolvedValue({
-      reservationOwner: { getGroupDetail: getGroupDetailMock },
+      reservationOwner: { resolveLegacyGroup: resolveLegacyGroupMock },
     });
 
     await expect(
@@ -47,7 +47,7 @@ describe("owner reservation group legacy route redirect", () => {
     expect(createServerCallerMock).toHaveBeenCalledWith(
       "/organization/reservations/group/grp-1",
     );
-    expect(getGroupDetailMock).toHaveBeenCalledWith({
+    expect(resolveLegacyGroupMock).toHaveBeenCalledWith({
       reservationGroupId: "grp-1",
     });
     expect(redirectMock).toHaveBeenCalledWith(
@@ -56,9 +56,9 @@ describe("owner reservation group legacy route redirect", () => {
   });
 
   it("redirects to reservations list when representative reservation is missing", async () => {
-    const getGroupDetailMock = vi.fn().mockResolvedValue({ reservations: [] });
+    const resolveLegacyGroupMock = vi.fn().mockResolvedValue(null);
     createServerCallerMock.mockResolvedValue({
-      reservationOwner: { getGroupDetail: getGroupDetailMock },
+      reservationOwner: { resolveLegacyGroup: resolveLegacyGroupMock },
     });
 
     await expect(
@@ -73,11 +73,11 @@ describe("owner reservation group legacy route redirect", () => {
   });
 
   it("redirects unauthorized access to login", async () => {
-    const getGroupDetailMock = vi
+    const resolveLegacyGroupMock = vi
       .fn()
       .mockRejectedValue(new TRPCError({ code: "UNAUTHORIZED" }));
     createServerCallerMock.mockResolvedValue({
-      reservationOwner: { getGroupDetail: getGroupDetailMock },
+      reservationOwner: { resolveLegacyGroup: resolveLegacyGroupMock },
     });
 
     await expect(

@@ -1,9 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NotCourtOwnerError } from "@/lib/modules/court/errors/court.errors";
-import {
-  CourtBlockNotFoundError,
-  CourtBlockOverlapError,
-} from "@/lib/modules/court-block/errors/court-block.errors";
+import { CourtBlockNotFoundError } from "@/lib/modules/court-block/errors/court-block.errors";
 import { NotOrganizationOwnerError } from "@/lib/modules/organization/errors/organization.errors";
 import {
   InvalidReservationStatusError,
@@ -24,18 +21,17 @@ const TEST_IDS = {
 
 const mockReservationOwnerService = {
   acceptReservation: vi.fn(),
-  acceptReservationGroup: vi.fn(),
   confirmPayment: vi.fn(),
-  confirmPaymentGroup: vi.fn(),
   confirmPaidOffline: vi.fn(),
   rejectReservation: vi.fn(),
-  rejectReservationGroup: vi.fn(),
+  cancelReservation: vi.fn(),
   createGuestBooking: vi.fn(),
   convertWalkInBlockToGuest: vi.fn(),
   getActiveForCourtRange: vi.fn(),
   getPendingForCourt: vi.fn(),
   getForOrganization: vi.fn(),
-  getReservationGroupDetail: vi.fn(),
+  getReservationLinkedDetail: vi.fn(),
+  resolveLegacyReservationGroup: vi.fn(),
   getPendingCount: vi.fn(),
 };
 
@@ -86,73 +82,55 @@ describe("reservationOwnerRouter", () => {
     vi.clearAllMocks();
   });
 
-  it("acceptGroup valid payload -> calls acceptReservationGroup", async () => {
-    // Arrange
+  it("accept -> calls acceptReservation", async () => {
     const caller = createCaller();
-    mockReservationOwnerService.acceptReservationGroup.mockResolvedValue([]);
-
-    // Act
-    await caller.acceptGroup({
-      reservationGroupId: TEST_IDS.reservationGroupId,
+    mockReservationOwnerService.acceptReservation.mockResolvedValue({
+      id: TEST_IDS.reservationId,
+      status: "AWAITING_PAYMENT",
     });
 
-    // Assert
-    expect(
-      mockReservationOwnerService.acceptReservationGroup,
-    ).toHaveBeenCalledWith(TEST_IDS.ownerUserId, {
-      reservationGroupId: TEST_IDS.reservationGroupId,
-    });
-  });
+    await caller.accept({ reservationId: TEST_IDS.reservationId });
 
-  it("acceptGroup group not found -> maps to NOT_FOUND", async () => {
-    // Arrange
-    const caller = createCaller();
-    mockReservationOwnerService.acceptReservationGroup.mockRejectedValue(
-      new ReservationGroupNotFoundError(TEST_IDS.reservationGroupId),
+    expect(mockReservationOwnerService.acceptReservation).toHaveBeenCalledWith(
+      TEST_IDS.ownerUserId,
+      TEST_IDS.reservationId,
     );
-
-    // Act + Assert
-    await expect(
-      caller.acceptGroup({ reservationGroupId: TEST_IDS.reservationGroupId }),
-    ).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 
-  it("confirmPaymentGroup valid payload -> calls confirmPaymentGroup", async () => {
-    // Arrange
+  it("confirmPayment -> calls confirmPayment", async () => {
     const caller = createCaller();
-    mockReservationOwnerService.confirmPaymentGroup.mockResolvedValue([]);
-
-    // Act
-    await caller.confirmPaymentGroup({
-      reservationGroupId: TEST_IDS.reservationGroupId,
-      notes: "All receipts validated",
+    mockReservationOwnerService.confirmPayment.mockResolvedValue({
+      id: TEST_IDS.reservationId,
+      status: "CONFIRMED",
     });
 
-    // Assert
-    expect(
-      mockReservationOwnerService.confirmPaymentGroup,
-    ).toHaveBeenCalledWith(TEST_IDS.ownerUserId, {
-      reservationGroupId: TEST_IDS.reservationGroupId,
-      notes: "All receipts validated",
+    await caller.confirmPayment({
+      reservationId: TEST_IDS.reservationId,
+      notes: "Receipt validated",
     });
+
+    expect(mockReservationOwnerService.confirmPayment).toHaveBeenCalledWith(
+      TEST_IDS.ownerUserId,
+      {
+        reservationId: TEST_IDS.reservationId,
+        notes: "Receipt validated",
+      },
+    );
   });
 
-  it("confirmPaidOffline valid payload -> calls confirmPaidOffline", async () => {
-    // Arrange
+  it("confirmPaidOffline -> calls confirmPaidOffline", async () => {
     const caller = createCaller();
     mockReservationOwnerService.confirmPaidOffline.mockResolvedValue({
       id: TEST_IDS.reservationId,
       status: "CONFIRMED",
     });
 
-    // Act
     await caller.confirmPaidOffline({
       reservationId: TEST_IDS.reservationId,
       paymentMethodId: TEST_IDS.paymentMethodId,
       paymentReference: "REF-123",
     });
 
-    // Assert
     expect(mockReservationOwnerService.confirmPaidOffline).toHaveBeenCalledWith(
       TEST_IDS.ownerUserId,
       {
@@ -163,28 +141,49 @@ describe("reservationOwnerRouter", () => {
     );
   });
 
-  it("rejectGroup valid payload -> calls rejectReservationGroup", async () => {
-    // Arrange
+  it("reject -> calls rejectReservation", async () => {
     const caller = createCaller();
-    mockReservationOwnerService.rejectReservationGroup.mockResolvedValue([]);
+    mockReservationOwnerService.rejectReservation.mockResolvedValue({
+      id: TEST_IDS.reservationId,
+      status: "CANCELLED",
+    });
 
-    // Act
-    await caller.rejectGroup({
-      reservationGroupId: TEST_IDS.reservationGroupId,
+    await caller.reject({
+      reservationId: TEST_IDS.reservationId,
       reason: "Schedule conflict",
     });
 
-    // Assert
-    expect(
-      mockReservationOwnerService.rejectReservationGroup,
-    ).toHaveBeenCalledWith(TEST_IDS.ownerUserId, {
-      reservationGroupId: TEST_IDS.reservationGroupId,
-      reason: "Schedule conflict",
-    });
+    expect(mockReservationOwnerService.rejectReservation).toHaveBeenCalledWith(
+      TEST_IDS.ownerUserId,
+      {
+        reservationId: TEST_IDS.reservationId,
+        reason: "Schedule conflict",
+      },
+    );
   });
 
-  it("createGuestBooking valid payload -> calls createGuestBooking", async () => {
-    // Arrange
+  it("cancel -> calls cancelReservation", async () => {
+    const caller = createCaller();
+    mockReservationOwnerService.cancelReservation.mockResolvedValue({
+      id: TEST_IDS.reservationId,
+      status: "CANCELLED",
+    });
+
+    await caller.cancel({
+      reservationId: TEST_IDS.reservationId,
+      reason: "Owner cancellation",
+    });
+
+    expect(mockReservationOwnerService.cancelReservation).toHaveBeenCalledWith(
+      TEST_IDS.ownerUserId,
+      {
+        reservationId: TEST_IDS.reservationId,
+        reason: "Owner cancellation",
+      },
+    );
+  });
+
+  it("createGuestBooking -> calls createGuestBooking", async () => {
     const caller = createCaller();
     const input = {
       courtId: TEST_IDS.courtId,
@@ -198,60 +197,35 @@ describe("reservationOwnerRouter", () => {
       status: "CONFIRMED",
     });
 
-    // Act
     await caller.createGuestBooking(input);
 
-    // Assert
     expect(mockReservationOwnerService.createGuestBooking).toHaveBeenCalledWith(
       TEST_IDS.ownerUserId,
       input,
     );
   });
 
-  it("createGuestBooking overlap error -> maps to CONFLICT", async () => {
-    // Arrange
-    const caller = createCaller();
-    mockReservationOwnerService.createGuestBooking.mockRejectedValue(
-      new CourtBlockOverlapError({ courtId: TEST_IDS.courtId }),
-    );
-
-    // Act + Assert
-    await expect(
-      caller.createGuestBooking({
-        courtId: TEST_IDS.courtId,
-        startTime: hoursFromNowIso(2),
-        endTime: hoursFromNowIso(3),
-        guestProfileId: TEST_IDS.guestProfileId,
-        notes: "Walk-in confirmed",
-      }),
-    ).rejects.toMatchObject({ code: "CONFLICT" });
-  });
-
-  it("convertWalkInBlockToGuest valid payload -> calls convertWalkInBlockToGuest", async () => {
-    // Arrange
+  it("convertWalkInBlockToGuest -> calls convertWalkInBlockToGuest", async () => {
     const caller = createCaller();
     const input = {
       blockId: TEST_IDS.blockId,
       guestMode: "existing" as const,
       guestProfileId: TEST_IDS.guestProfileId,
-      notes: "Converted from walk-in block",
+      notes: "Converted walk-in",
     };
     mockReservationOwnerService.convertWalkInBlockToGuest.mockResolvedValue({
       id: TEST_IDS.reservationId,
       status: "CONFIRMED",
     });
 
-    // Act
     await caller.convertWalkInBlockToGuest(input);
 
-    // Assert
     expect(
       mockReservationOwnerService.convertWalkInBlockToGuest,
     ).toHaveBeenCalledWith(TEST_IDS.ownerUserId, input);
   });
 
-  it("getActiveForCourtRange valid payload -> calls getActiveForCourtRange", async () => {
-    // Arrange
+  it("getActiveForCourtRange -> calls getActiveForCourtRange", async () => {
     const caller = createCaller();
     const input = {
       courtId: TEST_IDS.courtId,
@@ -260,36 +234,27 @@ describe("reservationOwnerRouter", () => {
     };
     mockReservationOwnerService.getActiveForCourtRange.mockResolvedValue([]);
 
-    // Act
     const result = await caller.getActiveForCourtRange(input);
 
-    // Assert
     expect(result).toEqual([]);
     expect(
       mockReservationOwnerService.getActiveForCourtRange,
     ).toHaveBeenCalledWith(TEST_IDS.ownerUserId, input);
   });
 
-  it("getPendingForCourt valid payload -> calls getPendingForCourt", async () => {
-    // Arrange
+  it("getPendingForCourt -> calls getPendingForCourt", async () => {
     const caller = createCaller();
     mockReservationOwnerService.getPendingForCourt.mockResolvedValue([]);
 
-    // Act
-    const result = await caller.getPendingForCourt({
-      courtId: TEST_IDS.courtId,
-    });
+    await caller.getPendingForCourt({ courtId: TEST_IDS.courtId });
 
-    // Assert
-    expect(result).toEqual([]);
     expect(mockReservationOwnerService.getPendingForCourt).toHaveBeenCalledWith(
       TEST_IDS.ownerUserId,
       TEST_IDS.courtId,
     );
   });
 
-  it("getForOrganization valid payload -> calls getForOrganization", async () => {
-    // Arrange
+  it("getForOrganization -> calls getForOrganization", async () => {
     const caller = createCaller();
     const input = {
       organizationId: TEST_IDS.organizationId,
@@ -299,10 +264,8 @@ describe("reservationOwnerRouter", () => {
     };
     mockReservationOwnerService.getForOrganization.mockResolvedValue([]);
 
-    // Act
     const result = await caller.getForOrganization(input);
 
-    // Assert
     expect(result).toEqual([]);
     expect(mockReservationOwnerService.getForOrganization).toHaveBeenCalledWith(
       TEST_IDS.ownerUserId,
@@ -310,42 +273,52 @@ describe("reservationOwnerRouter", () => {
     );
   });
 
-  it("getGroupDetail valid payload -> calls getReservationGroupDetail", async () => {
-    // Arrange
+  it("getLinkedDetail -> calls getReservationLinkedDetail", async () => {
     const caller = createCaller();
-    mockReservationOwnerService.getReservationGroupDetail.mockResolvedValue({
-      reservationGroupId: TEST_IDS.reservationGroupId,
+    mockReservationOwnerService.getReservationLinkedDetail.mockResolvedValue({
       reservations: [],
     });
 
-    // Act
-    const result = await caller.getGroupDetail({
-      reservationGroupId: TEST_IDS.reservationGroupId,
+    const result = await caller.getLinkedDetail({
+      reservationId: TEST_IDS.reservationId,
     });
 
-    // Assert
-    expect(result).toEqual({
-      reservationGroupId: TEST_IDS.reservationGroupId,
-      reservations: [],
-    });
+    expect(result).toEqual({ reservations: [] });
     expect(
-      mockReservationOwnerService.getReservationGroupDetail,
+      mockReservationOwnerService.getReservationLinkedDetail,
+    ).toHaveBeenCalledWith(TEST_IDS.ownerUserId, {
+      reservationId: TEST_IDS.reservationId,
+    });
+  });
+
+  it("resolveLegacyGroup -> calls resolveLegacyReservationGroup", async () => {
+    const caller = createCaller();
+    mockReservationOwnerService.resolveLegacyReservationGroup.mockResolvedValue(
+      {
+        reservationId: TEST_IDS.reservationId,
+      },
+    );
+
+    const result = await caller.resolveLegacyGroup({
+      reservationGroupId: TEST_IDS.reservationGroupId,
+    });
+
+    expect(result).toEqual({ reservationId: TEST_IDS.reservationId });
+    expect(
+      mockReservationOwnerService.resolveLegacyReservationGroup,
     ).toHaveBeenCalledWith(TEST_IDS.ownerUserId, {
       reservationGroupId: TEST_IDS.reservationGroupId,
     });
   });
 
-  it("getPendingCount valid payload -> calls getPendingCount", async () => {
-    // Arrange
+  it("getPendingCount -> calls getPendingCount", async () => {
     const caller = createCaller();
     mockReservationOwnerService.getPendingCount.mockResolvedValue(3);
 
-    // Act
     const result = await caller.getPendingCount({
       organizationId: TEST_IDS.organizationId,
     });
 
-    // Assert
     expect(result).toBe(3);
     expect(mockReservationOwnerService.getPendingCount).toHaveBeenCalledWith(
       TEST_IDS.ownerUserId,
@@ -353,129 +326,68 @@ describe("reservationOwnerRouter", () => {
     );
   });
 
-  it("accept legacy endpoint -> still calls acceptReservation", async () => {
-    // Arrange
-    const caller = createCaller();
-    mockReservationOwnerService.acceptReservation.mockResolvedValue({
-      id: TEST_IDS.reservationId,
-      status: "AWAITING_PAYMENT",
-    });
-
-    // Act
-    await caller.accept({ reservationId: TEST_IDS.reservationId });
-
-    // Assert
-    expect(mockReservationOwnerService.acceptReservation).toHaveBeenCalledWith(
-      TEST_IDS.ownerUserId,
-      TEST_IDS.reservationId,
-    );
-  });
-
-  it("confirmPayment legacy endpoint -> still calls confirmPayment", async () => {
-    // Arrange
-    const caller = createCaller();
-    mockReservationOwnerService.confirmPayment.mockResolvedValue({
-      id: TEST_IDS.reservationId,
-      status: "CONFIRMED",
-    });
-
-    // Act
-    await caller.confirmPayment({
-      reservationId: TEST_IDS.reservationId,
-      notes: "Receipt accepted",
-    });
-
-    // Assert
-    expect(mockReservationOwnerService.confirmPayment).toHaveBeenCalledWith(
-      TEST_IDS.ownerUserId,
-      {
-        reservationId: TEST_IDS.reservationId,
-        notes: "Receipt accepted",
-      },
-    );
-  });
-
-  it("confirmPaymentGroup invalid status -> maps to BAD_REQUEST", async () => {
-    // Arrange
-    const caller = createCaller();
-    mockReservationOwnerService.confirmPaymentGroup.mockRejectedValue(
-      new InvalidReservationStatusError(TEST_IDS.reservationId, "CREATED", [
-        "PAYMENT_MARKED_BY_USER",
-      ]),
-    );
-
-    // Act + Assert
-    await expect(
-      caller.confirmPaymentGroup({
-        reservationGroupId: TEST_IDS.reservationGroupId,
-        notes: "Attempted confirmation",
-      }),
-    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
-  });
-
-  it("reject legacy endpoint -> still calls rejectReservation", async () => {
-    // Arrange
-    const caller = createCaller();
-    mockReservationOwnerService.rejectReservation.mockResolvedValue({
-      id: TEST_IDS.reservationId,
-      status: "CANCELLED",
-    });
-
-    // Act
-    await caller.reject({
-      reservationId: TEST_IDS.reservationId,
-      reason: "Schedule conflict",
-    });
-
-    // Assert
-    expect(mockReservationOwnerService.rejectReservation).toHaveBeenCalledWith(
-      TEST_IDS.ownerUserId,
-      {
-        reservationId: TEST_IDS.reservationId,
-        reason: "Schedule conflict",
-      },
-    );
-  });
-
-  it("accept legacy endpoint forbidden -> maps to FORBIDDEN", async () => {
-    // Arrange
+  it("accept forbidden -> maps to FORBIDDEN", async () => {
     const caller = createCaller();
     mockReservationOwnerService.acceptReservation.mockRejectedValue(
       new NotCourtOwnerError(),
     );
 
-    // Act + Assert
     await expect(
       caller.accept({ reservationId: TEST_IDS.reservationId }),
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
+  it("confirmPayment invalid status -> maps to BAD_REQUEST", async () => {
+    const caller = createCaller();
+    mockReservationOwnerService.confirmPayment.mockRejectedValue(
+      new InvalidReservationStatusError(TEST_IDS.reservationId, "CREATED", [
+        "PAYMENT_MARKED_BY_USER",
+      ]),
+    );
+
+    await expect(
+      caller.confirmPayment({
+        reservationId: TEST_IDS.reservationId,
+        notes: "Attempted confirmation",
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
+
+  it("resolveLegacyGroup group not found -> maps to NOT_FOUND", async () => {
+    const caller = createCaller();
+    mockReservationOwnerService.resolveLegacyReservationGroup.mockRejectedValue(
+      new ReservationGroupNotFoundError(TEST_IDS.reservationGroupId),
+    );
+
+    await expect(
+      caller.resolveLegacyGroup({
+        reservationGroupId: TEST_IDS.reservationGroupId,
+      }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+
   it("convertWalkInBlockToGuest missing block -> maps to NOT_FOUND", async () => {
-    // Arrange
     const caller = createCaller();
     mockReservationOwnerService.convertWalkInBlockToGuest.mockRejectedValue(
       new CourtBlockNotFoundError(TEST_IDS.blockId),
     );
 
-    // Act + Assert
     await expect(
       caller.convertWalkInBlockToGuest({
         blockId: TEST_IDS.blockId,
         guestMode: "existing",
         guestProfileId: TEST_IDS.guestProfileId,
-        notes: "Convert missing block",
+        notes: "Missing block",
       }),
     ).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 
   it("getForOrganization not owner -> maps to FORBIDDEN", async () => {
-    // Arrange
     const caller = createCaller();
     mockReservationOwnerService.getForOrganization.mockRejectedValue(
       new NotOrganizationOwnerError(),
     );
 
-    // Act + Assert
     await expect(
       caller.getForOrganization({
         organizationId: TEST_IDS.organizationId,
@@ -485,19 +397,14 @@ describe("reservationOwnerRouter", () => {
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
-  it("reject legacy endpoint missing reservation -> maps to NOT_FOUND", async () => {
-    // Arrange
+  it("getLinkedDetail missing reservation -> maps to NOT_FOUND", async () => {
     const caller = createCaller();
-    mockReservationOwnerService.rejectReservation.mockRejectedValue(
+    mockReservationOwnerService.getReservationLinkedDetail.mockRejectedValue(
       new ReservationNotFoundError(TEST_IDS.reservationId),
     );
 
-    // Act + Assert
     await expect(
-      caller.reject({
-        reservationId: TEST_IDS.reservationId,
-        reason: "Schedule conflict",
-      }),
+      caller.getLinkedDetail({ reservationId: TEST_IDS.reservationId }),
     ).rejects.toMatchObject({ code: "NOT_FOUND" });
   });
 });

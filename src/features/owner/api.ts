@@ -97,20 +97,11 @@ export interface IOwnerApi {
   mutReservationOwnerAccept: ProcedureFn<
     TrpcClientApi["reservationOwner"]["accept"]["mutate"]
   >;
-  mutReservationOwnerAcceptGroup: ProcedureFn<
-    TrpcClientApi["reservationOwner"]["acceptGroup"]["mutate"]
-  >;
   mutReservationOwnerConfirmPayment: ProcedureFn<
     TrpcClientApi["reservationOwner"]["confirmPayment"]["mutate"]
   >;
-  mutReservationOwnerConfirmPaymentGroup: ProcedureFn<
-    TrpcClientApi["reservationOwner"]["confirmPaymentGroup"]["mutate"]
-  >;
   mutReservationOwnerReject: ProcedureFn<
     TrpcClientApi["reservationOwner"]["reject"]["mutate"]
-  >;
-  mutReservationOwnerRejectGroup: ProcedureFn<
-    TrpcClientApi["reservationOwner"]["rejectGroup"]["mutate"]
   >;
   queryCourtAddonGet: ProcedureFn<TrpcClientApi["courtAddon"]["get"]["query"]>;
   queryPlaceAddonGet: ProcedureFn<TrpcClientApi["placeAddon"]["get"]["query"]>;
@@ -163,8 +154,8 @@ export interface IOwnerApi {
   queryReservationOwnerGetForOrganization: ProcedureFn<
     TrpcClientApi["reservationOwner"]["getForOrganization"]["query"]
   >;
-  queryReservationOwnerGetGroupDetail: ProcedureFn<
-    TrpcClientApi["reservationOwner"]["getGroupDetail"]["query"]
+  queryReservationOwnerGetLinkedDetail: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["getLinkedDetail"]["query"]
   >;
   queryReservationOwnerGetPendingCount: ProcedureFn<
     TrpcClientApi["reservationOwner"]["getPendingCount"]["query"]
@@ -607,17 +598,6 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutReservationOwnerAcceptGroup: ProcedureFn<
-    TrpcClientApi["reservationOwner"]["acceptGroup"]["mutate"]
-  > = async (input) =>
-    callTrpcMutation(
-      this.clientApi,
-      ["reservationOwner", "acceptGroup"],
-      (clientApi) => clientApi.reservationOwner.acceptGroup.mutate,
-      input,
-      this.toAppError,
-    );
-
   mutReservationOwnerConfirmPayment: ProcedureFn<
     TrpcClientApi["reservationOwner"]["confirmPayment"]["mutate"]
   > = async (input) =>
@@ -625,17 +605,6 @@ export class OwnerApi {
       this.clientApi,
       ["reservationOwner", "confirmPayment"],
       (clientApi) => clientApi.reservationOwner.confirmPayment.mutate,
-      input,
-      this.toAppError,
-    );
-
-  mutReservationOwnerConfirmPaymentGroup: ProcedureFn<
-    TrpcClientApi["reservationOwner"]["confirmPaymentGroup"]["mutate"]
-  > = async (input) =>
-    callTrpcMutation(
-      this.clientApi,
-      ["reservationOwner", "confirmPaymentGroup"],
-      (clientApi) => clientApi.reservationOwner.confirmPaymentGroup.mutate,
       input,
       this.toAppError,
     );
@@ -651,17 +620,6 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  mutReservationOwnerRejectGroup: ProcedureFn<
-    TrpcClientApi["reservationOwner"]["rejectGroup"]["mutate"]
-  > = async (input) =>
-    callTrpcMutation(
-      this.clientApi,
-      ["reservationOwner", "rejectGroup"],
-      (clientApi) => clientApi.reservationOwner.rejectGroup.mutate,
-      input,
-      this.toAppError,
-    );
-
   mutReservationOwnerCancel: ProcedureFn<
     TrpcClientApi["reservationOwner"]["cancel"]["mutate"]
   > = async (input) =>
@@ -669,17 +627,6 @@ export class OwnerApi {
       this.clientApi,
       ["reservationOwner", "cancel"],
       (clientApi) => clientApi.reservationOwner.cancel.mutate,
-      input,
-      this.toAppError,
-    );
-
-  mutReservationOwnerCancelGroup: ProcedureFn<
-    TrpcClientApi["reservationOwner"]["cancelGroup"]["mutate"]
-  > = async (input) =>
-    callTrpcMutation(
-      this.clientApi,
-      ["reservationOwner", "cancelGroup"],
-      (clientApi) => clientApi.reservationOwner.cancelGroup.mutate,
       input,
       this.toAppError,
     );
@@ -894,13 +841,13 @@ export class OwnerApi {
       this.toAppError,
     );
 
-  queryReservationOwnerGetGroupDetail: ProcedureFn<
-    TrpcClientApi["reservationOwner"]["getGroupDetail"]["query"]
+  queryReservationOwnerGetLinkedDetail: ProcedureFn<
+    TrpcClientApi["reservationOwner"]["getLinkedDetail"]["query"]
   > = async (input) =>
     callTrpcQuery(
       this.clientApi,
-      ["reservationOwner", "getGroupDetail"],
-      (clientApi) => clientApi.reservationOwner.getGroupDetail.query,
+      ["reservationOwner", "getLinkedDetail"],
+      (clientApi) => clientApi.reservationOwner.getLinkedDetail.query,
       input,
       this.toAppError,
     );

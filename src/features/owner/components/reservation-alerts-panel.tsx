@@ -139,7 +139,6 @@ export function ReservationAlertsPanel({
     mutation.mutate(
       {
         reservationId: selectedReservation.id,
-        reservationGroupId: selectedReservation.reservationGroupId,
       },
       {
         onSuccess: () => {
@@ -158,7 +157,6 @@ export function ReservationAlertsPanel({
     rejectMutation.mutate(
       {
         reservationId: selectedReservation.id,
-        reservationGroupId: selectedReservation.reservationGroupId,
         reason,
       },
       {

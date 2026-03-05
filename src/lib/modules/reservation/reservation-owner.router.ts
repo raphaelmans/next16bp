@@ -20,10 +20,8 @@ import {
 } from "@/lib/shared/infra/trpc/trpc";
 import { AppError } from "@/lib/shared/kernel/errors";
 import {
-  AcceptReservationGroupSchema,
   AcceptReservationSchema,
   ConfirmPaidOfflineSchema,
-  ConfirmPaymentGroupSchema,
   ConfirmPaymentSchema,
   ConvertWalkInBlockSchema,
   CreateGuestBookingSchema,
@@ -31,10 +29,9 @@ import {
   GetOrgReservationsSchema,
   GetPendingCountSchema,
   GetPendingForCourtSchema,
-  GetReservationGroupDetailSchema,
-  CancelReservationGroupOwnerSchema,
+  GetReservationLinkedDetailSchema,
   CancelReservationOwnerSchema,
-  RejectReservationGroupSchema,
+  ResolveReservationGroupSchema,
   RejectReservationSchema,
 } from "./dtos";
 import {
@@ -127,20 +124,6 @@ export const reservationOwnerRouter = router({
     }),
 
   /**
-   * Accept all reservations in a reservation group (owner only)
-   */
-  acceptGroup: protectedRateLimitedProcedure("sensitive")
-    .input(AcceptReservationGroupSchema)
-    .mutation(async ({ input, ctx }) => {
-      try {
-        const service = makeReservationOwnerService();
-        return await service.acceptReservationGroup(ctx.userId, input);
-      } catch (error) {
-        handleReservationOwnerError(error);
-      }
-    }),
-
-  /**
    * Confirm payment for a reservation (owner only)
    */
   confirmPayment: protectedRateLimitedProcedure("sensitive")
@@ -149,20 +132,6 @@ export const reservationOwnerRouter = router({
       try {
         const service = makeReservationOwnerService();
         return await service.confirmPayment(ctx.userId, input);
-      } catch (error) {
-        handleReservationOwnerError(error);
-      }
-    }),
-
-  /**
-   * Confirm payment for all reservations in a group (owner only)
-   */
-  confirmPaymentGroup: protectedRateLimitedProcedure("sensitive")
-    .input(ConfirmPaymentGroupSchema)
-    .mutation(async ({ input, ctx }) => {
-      try {
-        const service = makeReservationOwnerService();
-        return await service.confirmPaymentGroup(ctx.userId, input);
       } catch (error) {
         handleReservationOwnerError(error);
       }
@@ -197,20 +166,6 @@ export const reservationOwnerRouter = router({
     }),
 
   /**
-   * Reject all reservations in a reservation group (owner only)
-   */
-  rejectGroup: protectedRateLimitedProcedure("sensitive")
-    .input(RejectReservationGroupSchema)
-    .mutation(async ({ input, ctx }) => {
-      try {
-        const service = makeReservationOwnerService();
-        return await service.rejectReservationGroup(ctx.userId, input);
-      } catch (error) {
-        handleReservationOwnerError(error);
-      }
-    }),
-
-  /**
    * Cancel a confirmed reservation (owner only)
    */
   cancel: protectedRateLimitedProcedure("sensitive")
@@ -219,20 +174,6 @@ export const reservationOwnerRouter = router({
       try {
         const service = makeReservationOwnerService();
         return await service.cancelReservation(ctx.userId, input);
-      } catch (error) {
-        handleReservationOwnerError(error);
-      }
-    }),
-
-  /**
-   * Cancel all confirmed reservations in a group (owner only)
-   */
-  cancelGroup: protectedRateLimitedProcedure("sensitive")
-    .input(CancelReservationGroupOwnerSchema)
-    .mutation(async ({ input, ctx }) => {
-      try {
-        const service = makeReservationOwnerService();
-        return await service.cancelReservationGroup(ctx.userId, input);
       } catch (error) {
         handleReservationOwnerError(error);
       }
@@ -309,14 +250,31 @@ export const reservationOwnerRouter = router({
     }),
 
   /**
-   * Get grouped reservation detail (owner only)
+   * Get linked reservation detail (owner only)
    */
-  getGroupDetail: protectedProcedure
-    .input(GetReservationGroupDetailSchema)
+  getLinkedDetail: protectedProcedure
+    .input(GetReservationLinkedDetailSchema)
     .query(async ({ input, ctx }) => {
       try {
         const service = makeReservationOwnerService();
-        return await service.getReservationGroupDetail(ctx.userId, input);
+        return await service.getReservationLinkedDetail(ctx.userId, input);
+      } catch (error) {
+        handleReservationOwnerError(error);
+      }
+    }),
+
+  /**
+   * Resolve legacy reservation group URL to a canonical reservation ID.
+   */
+  resolveLegacyGroup: protectedProcedure
+    .input(ResolveReservationGroupSchema)
+    .query(async ({ input, ctx }) => {
+      try {
+        const service = makeReservationOwnerService();
+        return await service.resolveLegacyReservationGroup(
+          ctx.userId,
+          input,
+        );
       } catch (error) {
         handleReservationOwnerError(error);
       }

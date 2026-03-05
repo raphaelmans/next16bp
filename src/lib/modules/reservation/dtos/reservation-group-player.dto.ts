@@ -13,22 +13,22 @@ const ReservationStatusSchema = z.enum(
   { error: V.reservation.status.invalid.message },
 );
 
-export const GetPlayerReservationGroupDetailSchema = z.object({
-  reservationGroupId: S.ids.generic,
+export const GetPlayerReservationLinkedDetailSchema = z.object({
+  reservationId: S.ids.reservationId,
 });
 
-export type GetPlayerReservationGroupDetailDTO = z.infer<
-  typeof GetPlayerReservationGroupDetailSchema
+export type GetPlayerReservationLinkedDetailDTO = z.infer<
+  typeof GetPlayerReservationLinkedDetailSchema
 >;
 
-export const MarkPaymentGroupSchema = z.object({
-  reservationGroupId: S.ids.generic,
+export const MarkPaymentLinkedSchema = z.object({
+  reservationId: S.ids.reservationId,
   termsAccepted: z.literal(true, {
     error: V.reservation.termsAccepted.message,
   }),
 });
 
-export type MarkPaymentGroupDTO = z.infer<typeof MarkPaymentGroupSchema>;
+export type MarkPaymentLinkedDTO = z.infer<typeof MarkPaymentLinkedSchema>;
 
 export const ReservationGroupStatusSummarySchema = z.object({
   totalItems: z.number().int().min(0),

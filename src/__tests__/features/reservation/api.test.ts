@@ -10,11 +10,11 @@ vi.mock("@/common/trpc-client-call", () => ({
 }));
 
 describe("ReservationApi", () => {
-  it("queryReservationGetGroupDetail success -> uses getGroupDetail transport path", async () => {
+  it("queryReservationGetLinkedDetail success -> uses getLinkedDetail transport path", async () => {
     // Arrange
     const clientApi = {
       reservation: {
-        getGroupDetail: { query: vi.fn() },
+        getLinkedDetail: { query: vi.fn() },
       },
     } as never;
     const toAppError = vi.fn((error: unknown) => error as never);
@@ -23,36 +23,36 @@ describe("ReservationApi", () => {
     callTrpcQueryMock.mockResolvedValue(expected);
 
     // Act
-    const result = await api.queryReservationGetGroupDetail({
-      reservationGroupId: "group-1",
+    const result = await api.queryReservationGetLinkedDetail({
+      reservationId: "res-1",
     });
 
     // Assert
     expect(result).toEqual(expected);
     expect(callTrpcQueryMock).toHaveBeenCalledWith(
       clientApi,
-      ["reservation", "getGroupDetail"],
+      ["reservation", "getLinkedDetail"],
       expect.any(Function),
-      { reservationGroupId: "group-1" },
+      { reservationId: "res-1" },
       toAppError,
     );
   });
 
-  it("mutReservationMarkPaymentGroup success -> uses markPaymentGroup transport path", async () => {
+  it("mutReservationMarkPaymentLinked success -> uses markPaymentLinked transport path", async () => {
     // Arrange
     const clientApi = {
       reservation: {
-        markPaymentGroup: { mutate: vi.fn() },
+        markPaymentLinked: { mutate: vi.fn() },
       },
     } as never;
     const toAppError = vi.fn((error: unknown) => error as never);
     const api = new ReservationApi({ clientApi, toAppError });
-    const expected = { reservationGroupId: "group-1" };
+    const expected = { reservationGroupId: "group-1", reservations: [] };
     callTrpcMutationMock.mockResolvedValue(expected);
 
     // Act
-    const result = await api.mutReservationMarkPaymentGroup({
-      reservationGroupId: "group-1",
+    const result = await api.mutReservationMarkPaymentLinked({
+      reservationId: "res-1",
       termsAccepted: true,
     });
 
@@ -60,9 +60,9 @@ describe("ReservationApi", () => {
     expect(result).toEqual(expected);
     expect(callTrpcMutationMock).toHaveBeenCalledWith(
       clientApi,
-      ["reservation", "markPaymentGroup"],
+      ["reservation", "markPaymentLinked"],
       expect.any(Function),
-      { reservationGroupId: "group-1", termsAccepted: true },
+      { reservationId: "res-1", termsAccepted: true },
       toAppError,
     );
   });

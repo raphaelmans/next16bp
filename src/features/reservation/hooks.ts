@@ -185,13 +185,13 @@ export function useMutMarkPayment() {
   });
 }
 
-export function useMutMarkPaymentGroup() {
+export function useMutMarkPaymentLinked() {
   const utils = trpc.useUtils();
 
-  return useFeatureMutation(reservationApi.mutReservationMarkPaymentGroup, {
+  return useFeatureMutation(reservationApi.mutReservationMarkPaymentLinked, {
     onSuccess: async (data, variables) => {
-      const reservationGroupId = (variables as { reservationGroupId: string })
-        .reservationGroupId;
+      const reservationId = (variables as { reservationId: string })
+        .reservationId;
       toast.success("Payment submitted successfully!", {
         description: "The court owner will verify your payment shortly.",
       });
@@ -201,18 +201,16 @@ export function useMutMarkPaymentGroup() {
       ).reservations.map((r) => r.id);
 
       await Promise.all([
-        utils.reservation.getGroupDetail.invalidate({
-          reservationGroupId,
+        utils.reservation.getLinkedDetail.invalidate({
+          reservationId,
         }),
         utils.reservation.getMy.invalidate(),
         utils.reservation.getMyWithDetails.invalidate(),
         utils.reservationChat.getThreadMetas.invalidate(),
-        utils.reservationChat.getGroupSession.invalidate({
-          reservationGroupId,
-        }),
         ...reservationIds.flatMap((reservationId) => [
           utils.reservation.getDetail.invalidate({ reservationId }),
           utils.reservation.getById.invalidate({ reservationId }),
+          utils.reservationChat.getSession.invalidate({ reservationId }),
         ]),
       ]);
     },
@@ -734,16 +732,16 @@ export function useQueryReservationDetail(
   );
 }
 
-export function useQueryReservationGroupDetail(
-  reservationGroupId: string,
+export function useQueryReservationLinkedDetail(
+  reservationId: string,
   refetchInterval?: number,
 ) {
   return useFeatureQuery(
-    ["reservation", "getGroupDetail"],
-    reservationApi.queryReservationGetGroupDetail,
-    { reservationGroupId },
+    ["reservation", "getLinkedDetail"],
+    reservationApi.queryReservationGetLinkedDetail,
+    { reservationId },
     {
-      enabled: Boolean(reservationGroupId),
+      enabled: Boolean(reservationId),
       refetchInterval,
     },
   );
@@ -819,14 +817,13 @@ export function useModReservationRealtimePlayerStream(
           utils.reservation.getDetail.invalidate({
             reservationId: event.reservationId,
           }),
-          utils.reservation.getGroupDetail.invalidate(),
+          utils.reservation.getLinkedDetail.invalidate(),
           utils.reservation.getMy.invalidate(),
           utils.reservation.getMyWithDetails.invalidate(),
           utils.reservationChat.getThreadMetas.invalidate(),
           utils.reservationChat.getSession.invalidate({
             reservationId: event.reservationId,
           }),
-          utils.reservationChat.getGroupSession.invalidate(),
         ]);
       },
     });

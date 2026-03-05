@@ -38,10 +38,10 @@ import {
   useModReservationRealtimePlayerStream,
   useMutAddPaymentProof,
   useMutMarkPayment,
-  useMutMarkPaymentGroup,
+  useMutMarkPaymentLinked,
   useMutUploadPaymentProof,
   useQueryReservationDetail,
-  useQueryReservationGroupDetail,
+  useQueryReservationLinkedDetail,
   useQueryReservationPaymentInfo,
 } from "@/features/reservation/hooks";
 
@@ -77,13 +77,10 @@ export default function PaymentPage({
     useQueryReservationDetail(reservationId);
 
   const reservation = reservationDetail?.reservation;
-  const reservationGroupId = reservation?.groupId ?? null;
 
-  // Group payment support
-  const { data: groupData } = useQueryReservationGroupDetail(
-    reservationGroupId ?? "",
-  );
-  const isGroupPayment = Boolean(reservationGroupId && groupData);
+  // Linked payment support
+  const { data: groupData } = useQueryReservationLinkedDetail(reservationId);
+  const isGroupPayment = Boolean(groupData && groupData.items.length > 1);
   const realtimeReservationIds = [
     reservationId,
     ...(groupData?.items.map((item) => item.reservationId) ?? []),
@@ -94,7 +91,7 @@ export default function PaymentPage({
     reservationIds: realtimeReservationIds,
   });
 
-  const markPaymentGroup = useMutMarkPaymentGroup();
+  const markPaymentLinked = useMutMarkPaymentLinked();
 
   const payableAwaitingItems = useMemo(() => {
     if (!groupData) return [];
@@ -197,11 +194,10 @@ export default function PaymentPage({
       toast.error("Please accept the terms to continue");
       return;
     }
-    if (!reservationGroupId) return;
 
     try {
-      await markPaymentGroup.mutateAsync({
-        reservationGroupId,
+      await markPaymentLinked.mutateAsync({
+        reservationId,
         termsAccepted: true,
       });
 
@@ -435,10 +431,10 @@ export default function PaymentPage({
           <Button
             className="w-full"
             size="lg"
-            disabled={!termsAccepted || markPaymentGroup.isPending}
+            disabled={!termsAccepted || markPaymentLinked.isPending}
             onClick={handleGroupPaymentSubmit}
           >
-            {markPaymentGroup.isPending ? (
+            {markPaymentLinked.isPending ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                 Submitting...

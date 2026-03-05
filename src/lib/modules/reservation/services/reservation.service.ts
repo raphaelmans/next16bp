@@ -52,9 +52,9 @@ import type {
   CreateReservationForCourtDTO,
   CreateReservationGroupDTO,
   GetMyReservationsDTO,
-  GetPlayerReservationGroupDetailDTO,
+  GetPlayerReservationLinkedDetailDTO,
   MarkPaymentDTO,
-  MarkPaymentGroupDTO,
+  MarkPaymentLinkedDTO,
   PingOwnerDTO,
   ReservationListItemRecord,
 } from "../dtos";
@@ -83,6 +83,15 @@ import {
 
 const DEFAULT_OWNER_REVIEW_MINUTES = 45;
 const DEFAULT_CANCELLATION_CUTOFF_MINUTES = 0;
+
+type GetPlayerReservationGroupDetailDTO = {
+  reservationGroupId: string;
+};
+
+type MarkPaymentGroupDTO = {
+  reservationGroupId: string;
+  termsAccepted: true;
+};
 
 interface CourtAvailabilitySelection {
   courtId: string;
@@ -195,10 +204,10 @@ export interface IReservationService {
     profileId: string,
     data: MarkPaymentDTO,
   ): Promise<ReservationRecord>;
-  markPaymentGroup(
+  markPaymentLinked(
     userId: string,
     profileId: string,
-    data: MarkPaymentGroupDTO,
+    data: MarkPaymentLinkedDTO,
   ): Promise<ReservationGroupPaymentResult>;
   cancelReservation(
     userId: string,
@@ -211,10 +220,10 @@ export interface IReservationService {
     reservationId: string,
   ): Promise<ReservationPaymentInfo>;
   getReservationDetail(reservationId: string): Promise<ReservationDetail>;
-  getReservationGroupDetail(
+  getReservationLinkedDetail(
     userId: string,
     profileId: string,
-    data: GetPlayerReservationGroupDetailDTO,
+    data: GetPlayerReservationLinkedDetailDTO,
   ): Promise<ReservationGroupDetail>;
   getReservationById(reservationId: string): Promise<{
     reservation: ReservationRecord;
@@ -1420,6 +1429,75 @@ export class ReservationService implements IReservationService {
     };
   }
 
+  async getReservationLinkedDetail(
+    userId: string,
+    profileId: string,
+    data: GetPlayerReservationLinkedDetailDTO,
+  ): Promise<ReservationGroupDetail> {
+    const source = await this.reservationRepository.findById(
+      data.reservationId,
+    );
+    if (!source) {
+      throw new ReservationNotFoundError(data.reservationId);
+    }
+
+    if (source.groupId) {
+      return this.getReservationGroupDetail(userId, profileId, {
+        reservationGroupId: source.groupId,
+      });
+    }
+
+    const detail = await this.getReservationDetail(data.reservationId);
+    if (detail.reservation.playerId !== profileId) {
+      throw new NotReservationOwnerError();
+    }
+
+    const statusSummary = this.buildReservationGroupStatusSummary([
+      detail.reservation,
+    ]);
+
+    return {
+      reservationGroup: {
+        id: detail.reservation.id,
+        placeId: detail.place.id,
+        playerId: detail.reservation.playerId,
+        playerNameSnapshot: detail.reservation.playerNameSnapshot,
+        playerEmailSnapshot: detail.reservation.playerEmailSnapshot,
+        playerPhoneSnapshot: detail.reservation.playerPhoneSnapshot,
+        totalPriceCents: detail.reservation.totalPriceCents,
+        currency: detail.reservation.currency,
+        createdAt: detail.reservation.createdAt,
+        updatedAt: detail.reservation.updatedAt,
+      },
+      statusSummary,
+      items: [
+        {
+          reservationId: detail.reservation.id,
+          status: detail.reservation.status,
+          startTimeIso: detail.reservation.startTime.toISOString(),
+          endTimeIso: detail.reservation.endTime.toISOString(),
+          totalPriceCents: detail.reservation.totalPriceCents,
+          currency: detail.reservation.currency,
+          expiresAtIso: detail.reservation.expiresAt
+            ? new Date(detail.reservation.expiresAt).toISOString()
+            : null,
+          court: {
+            id: detail.court.id,
+            label: detail.court.label,
+          },
+          place: {
+            id: detail.place.id,
+            slug: detail.place.slug,
+            name: detail.place.name,
+            address: detail.place.address,
+            city: detail.place.city,
+            timeZone: detail.place.timeZone,
+          },
+        },
+      ],
+    };
+  }
+
   async markPaymentGroup(
     userId: string,
     profileId: string,
@@ -1586,6 +1664,35 @@ export class ReservationService implements IReservationService {
     return {
       reservationGroupId: data.reservationGroupId,
       reservations: updatedReservations,
+    };
+  }
+
+  async markPaymentLinked(
+    userId: string,
+    profileId: string,
+    data: MarkPaymentLinkedDTO,
+  ): Promise<ReservationGroupPaymentResult> {
+    const source = await this.reservationRepository.findById(
+      data.reservationId,
+    );
+    if (!source) {
+      throw new ReservationNotFoundError(data.reservationId);
+    }
+
+    if (source.groupId) {
+      return this.markPaymentGroup(userId, profileId, {
+        reservationGroupId: source.groupId,
+        termsAccepted: data.termsAccepted,
+      });
+    }
+
+    const updated = await this.markPayment(userId, profileId, {
+      reservationId: data.reservationId,
+      termsAccepted: data.termsAccepted,
+    });
+    return {
+      reservationGroupId: updated.id,
+      reservations: [updated],
     };
   }
 

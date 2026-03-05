@@ -24,7 +24,7 @@ import {
   useModReservationInvalidation,
   useModReservationRealtimePlayerStream,
   useQueryReservationDetail,
-  useQueryReservationGroupDetail,
+  useQueryReservationLinkedDetail,
 } from "@/features/reservation/hooks";
 
 interface ReservationEvent {
@@ -56,10 +56,9 @@ export default function ReservationDetailPage({
     isFetching: isFetchingReservation,
   } = useQueryReservationDetail(id, RESERVATION_DETAIL_REFETCH_INTERVAL_MS);
 
-  const reservationGroupId = reservationDetail?.reservation?.groupId ?? null;
-  const { data: groupData } = useQueryReservationGroupDetail(
-    reservationGroupId ?? "",
-    reservationGroupId ? RESERVATION_DETAIL_REFETCH_INTERVAL_MS : undefined,
+  const { data: groupData } = useQueryReservationLinkedDetail(
+    reservationId,
+    RESERVATION_DETAIL_REFETCH_INTERVAL_MS,
   );
   const realtimeReservationIds = [
     id,

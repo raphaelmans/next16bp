@@ -452,7 +452,6 @@ export default function OwnerReservationsPage() {
     mutation.mutate(
       {
         reservationId: selectedReservation.id,
-        reservationGroupId: selectedReservation.reservationGroupId,
       },
       {
         onSuccess: () => {
@@ -472,7 +471,6 @@ export default function OwnerReservationsPage() {
     rejectMutation.mutate(
       {
         reservationId: selectedReservation.id,
-        reservationGroupId: selectedReservation.reservationGroupId,
         reason,
       },
       {
