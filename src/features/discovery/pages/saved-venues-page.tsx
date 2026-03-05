@@ -8,6 +8,14 @@ import { PlaceCard, PlaceCardSkeleton } from "@/components/kudos";
 import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
   buildDiscoveryPlaceCard,
   useModDiscoveryPlaceCardDetails,
   useModPlaceBookmarkBatch,
@@ -79,19 +87,23 @@ export function SavedVenuesPage() {
   if (items.length === 0 && offset === 0) {
     return (
       <Container className="py-8">
-        <div className="flex flex-col items-center justify-center py-24 text-center">
-          <Heart className="h-12 w-12 text-muted-foreground/50" />
-          <h2 className="mt-4 font-heading text-xl font-semibold">
-            No saved venues yet
-          </h2>
-          <p className="mt-2 max-w-sm text-muted-foreground">
-            Browse courts and tap the heart icon to save venues you like for
-            quick access later.
-          </p>
-          <Button asChild className="mt-6">
-            <Link href={appRoutes.courts.base}>Browse Courts</Link>
-          </Button>
-        </div>
+        <Empty className="py-24">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <Heart />
+            </EmptyMedia>
+            <EmptyTitle>No saved venues yet</EmptyTitle>
+            <EmptyDescription>
+              Browse courts and tap the heart icon to save venues you like for
+              quick access later.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button asChild>
+              <Link href={appRoutes.courts.base}>Browse Courts</Link>
+            </Button>
+          </EmptyContent>
+        </Empty>
       </Container>
     );
   }

@@ -33,6 +33,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 import {
   Popover,
@@ -133,13 +140,15 @@ function ReservationsEmptyState({ type }: { type: TabValue | "all" }) {
   const { icon: Icon, title, description } = config[type];
 
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="rounded-full bg-muted p-4 mb-4">
-        <Icon className="h-8 w-8 text-muted-foreground" />
-      </div>
-      <h3 className="font-heading font-semibold text-lg mb-2">{title}</h3>
-      <p className="text-muted-foreground text-sm max-w-sm">{description}</p>
-    </div>
+    <Empty className="border-0 py-12">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <Icon />
+        </EmptyMedia>
+        <EmptyTitle>{title}</EmptyTitle>
+        <EmptyDescription>{description}</EmptyDescription>
+      </EmptyHeader>
+    </Empty>
   );
 }
 

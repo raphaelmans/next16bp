@@ -1,8 +1,16 @@
 "use client";
 
-import { AlertCircle, ExternalLink, Phone } from "lucide-react";
+import { AlertCircle, CalendarX, ExternalLink, Phone } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { cn } from "@/lib/utils";
 
 export interface AvailabilityDiagnostics {
@@ -201,35 +209,34 @@ export function AvailabilityEmptyState({
       reason === "unknown");
 
   return (
-    <div
-      className={cn(
-        "flex flex-col items-center gap-2 py-6 text-center",
-        className,
-      )}
-    >
-      {showWarningIcon && (
-        <AlertCircle className="h-5 w-5 text-amber-500" aria-hidden="true" />
-      )}
-      <p className="text-sm font-medium">{title}</p>
-      <p className="text-sm text-muted-foreground max-w-md">{body}</p>
+    <Empty className={cn("border-0 py-6", className)}>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          {showWarningIcon ? <AlertCircle /> : <CalendarX />}
+        </EmptyMedia>
+        <EmptyTitle>{title}</EmptyTitle>
+        <EmptyDescription>{body}</EmptyDescription>
+      </EmptyHeader>
 
-      {variant === "owner" &&
-        reason === "reservations_disabled" &&
-        verificationHref && (
-          <Button asChild size="sm" className="mt-2">
-            <Link href={verificationHref}>Enable reservations</Link>
-          </Button>
-        )}
+      <EmptyContent>
+        {variant === "owner" &&
+          reason === "reservations_disabled" &&
+          verificationHref && (
+            <Button asChild size="sm">
+              <Link href={verificationHref}>Enable reservations</Link>
+            </Button>
+          )}
 
-      {variant === "owner" &&
-        reason !== "reservations_disabled" &&
-        scheduleHref && (
-          <Button asChild variant="outline" size="sm" className="mt-2">
-            <Link href={scheduleHref}>Edit schedule & pricing</Link>
-          </Button>
-        )}
+        {variant === "owner" &&
+          reason !== "reservations_disabled" &&
+          scheduleHref && (
+            <Button asChild variant="outline" size="sm">
+              <Link href={scheduleHref}>Edit schedule & pricing</Link>
+            </Button>
+          )}
 
-      {showContactInfo && <ContactActions contact={contact} />}
-    </div>
+        {showContactInfo && <ContactActions contact={contact} />}
+      </EmptyContent>
+    </Empty>
   );
 }

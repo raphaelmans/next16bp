@@ -3,7 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 import { appRoutes } from "@/common/app-routes";
-import { EmptyState, PlaceCard } from "@/components/kudos";
+import { PlaceCard } from "@/components/kudos";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { BentoGrid, BentoItem } from "@/components/layout/bento-grid";
 import { Container } from "@/components/layout/container";
 import { Badge } from "@/components/ui/badge";
@@ -256,18 +264,22 @@ export function PublicOrganizationPage({
 
           <div className="mt-6">
             {!hasVenues ? (
-              <Card className="border-border/60">
-                <CardContent className="p-0">
-                  <EmptyState
-                    title="No venues listed yet"
-                    description="Check back soon, or browse other courts on KudosCourts."
-                    action={{
-                      label: "Browse Courts",
-                      href: appRoutes.courts.base,
-                    }}
-                  />
-                </CardContent>
-              </Card>
+              <Empty className="border rounded-lg">
+                <EmptyHeader>
+                  <EmptyMedia variant="icon">
+                    <Building2 />
+                  </EmptyMedia>
+                  <EmptyTitle>No venues listed yet</EmptyTitle>
+                  <EmptyDescription>
+                    Check back soon, or browse other courts on KudosCourts.
+                  </EmptyDescription>
+                </EmptyHeader>
+                <EmptyContent>
+                  <Button asChild variant="outline">
+                    <Link href={appRoutes.courts.base}>Browse Courts</Link>
+                  </Button>
+                </EmptyContent>
+              </Empty>
             ) : (
               <BentoGrid cols={12} className="items-stretch">
                 {landing.places.map((place, index) => {
