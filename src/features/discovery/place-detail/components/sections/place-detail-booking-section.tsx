@@ -186,11 +186,16 @@ export function PlaceDetailBookingSection({
       return;
     }
 
+    // Browsers store setTimeout delays as a 32-bit signed integer.
+    // Delays exceeding 2^31-1 ms (~24.8 days) overflow and fire immediately.
+    const MAX_TIMEOUT_MS = 0x7fffffff;
+    const delayMs = Math.min(selectedStartMs - nowMs + 250, MAX_TIMEOUT_MS);
+
     const timeoutId = window.setTimeout(
       () => {
         sendTimeSlot({ type: "SLOT_EXPIRED" });
       },
-      selectedStartMs - nowMs + 250,
+      delayMs,
     );
 
     return () => {

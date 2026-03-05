@@ -13,21 +13,36 @@ import {
  * @param cents - Amount in cents (e.g., 20000 for PHP 200.00)
  * @param currency - Currency code (default: PHP)
  */
+const currencySymbols: Record<string, string> = {
+  PHP: "₱",
+  USD: "$",
+  EUR: "€",
+};
+
 export function formatCurrency(
   cents: number,
   currency: string = "PHP",
 ): string {
   const amount = cents / 100;
-  const currencySymbols: Record<string, string> = {
-    PHP: "₱",
-    USD: "$",
-    EUR: "€",
-  };
   const symbol = currencySymbols[currency] ?? currency;
   return `${symbol}${amount.toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
+}
+
+/**
+ * Format currency from cents as a whole number (no decimals)
+ * @param cents - Amount in cents (e.g., 20000 for PHP 200)
+ * @param currency - Currency code (default: PHP)
+ */
+export function formatCurrencyWhole(
+  cents: number,
+  currency: string = "PHP",
+): string {
+  const amount = Math.round(cents / 100);
+  const symbol = currencySymbols[currency] ?? currency;
+  return `${symbol}${amount.toLocaleString("en-US")}`;
 }
 
 /**

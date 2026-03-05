@@ -65,6 +65,7 @@ export function MobileWeekGrid({
 export function MobileWeekGridSkeleton() {
   return (
     <AvailabilityWeekGridSkeleton
+      compact
       dayKeys={[
         "2026-03-01",
         "2026-03-02",
@@ -75,7 +76,7 @@ export function MobileWeekGridSkeleton() {
         "2026-03-07",
       ]}
       timeZone="Asia/Manila"
-      hours={[6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]}
+      hours={[8, 9, 10, 11, 12, 13, 14, 15]}
     />
   );
 }

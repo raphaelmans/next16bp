@@ -6,6 +6,7 @@ import * as React from "react";
 import { useShallow } from "zustand/shallow";
 import {
   formatCurrency,
+  formatCurrencyWhole,
   formatInTimeZone,
   formatTimeInTimeZone,
 } from "@/common/format";
@@ -391,9 +392,12 @@ const WeekGridCell = React.memo(function WeekGridCell({
             )}
             transition={motionTransition}
           />
-          {!compact && slot?.priceCents !== undefined && (
-            <span className="text-xs font-medium tabular-nums text-primary/70">
-              {formatCurrency(slot.priceCents, slot.currency ?? "PHP")}
+          {slot?.priceCents !== undefined && (
+            <span className={cn(
+              "font-medium tabular-nums text-primary/70",
+              compact ? "max-w-full truncate text-[11px]" : "text-xs",
+            )}>
+              {formatCurrencyWhole(slot.priceCents, slot.currency ?? "PHP")}
             </span>
           )}
         </div>
@@ -403,18 +407,24 @@ const WeekGridCell = React.memo(function WeekGridCell({
           <div className="flex h-4 w-4 items-center justify-center rounded-full bg-success/20">
             <Check className="h-2.5 w-2.5 text-success" />
           </div>
-          {!compact && slot.priceCents !== undefined && (
-            <span className="text-xs font-medium tabular-nums text-success/80">
-              {formatCurrency(slot.priceCents, slot.currency ?? "PHP")}
+          {slot.priceCents !== undefined && (
+            <span className={cn(
+              "font-medium tabular-nums text-success/80",
+              compact ? "max-w-full truncate text-[11px]" : "text-xs",
+            )}>
+              {formatCurrencyWhole(slot.priceCents, slot.currency ?? "PHP")}
             </span>
           )}
         </div>
       )}
       {available && !inRange && !isInCart && slot && (
         <div className="flex flex-col items-center gap-0.5">
-          {!compact && slot.priceCents !== undefined ? (
-            <span className="text-xs font-medium tabular-nums text-success/80 group-hover/cell:text-success">
-              {formatCurrency(slot.priceCents, slot.currency ?? "PHP")}
+          {slot.priceCents !== undefined ? (
+            <span className={cn(
+              "font-medium tabular-nums text-success/80 group-hover/cell:text-success",
+              compact ? "max-w-full truncate text-[11px]" : "text-xs",
+            )}>
+              {formatCurrencyWhole(slot.priceCents, slot.currency ?? "PHP")}
             </span>
           ) : (
             <div className="h-1.5 w-1.5 rounded-full bg-success/50 transition-transform group-hover/cell:scale-150 group-hover/cell:bg-success" />
@@ -673,14 +683,14 @@ function WeekGridInner({
         )}
         style={compact ? { maxHeight: "calc(50vh - 80px)" } : undefined}
       >
-        <div className={compact ? undefined : "min-w-[700px]"}>
+        <div>
           {/* Day headers */}
           <div
             className="grid gap-x-0"
             style={{
               gridTemplateColumns: compact
                 ? "36px repeat(7, 1fr)"
-                : "60px repeat(7, minmax(80px, 1fr))",
+                : "48px repeat(7, 1fr)",
             }}
           >
             <div />
@@ -776,7 +786,7 @@ function WeekGridInner({
             style={{
               gridTemplateColumns: compact
                 ? "36px repeat(7, 1fr)"
-                : "60px repeat(7, minmax(80px, 1fr))",
+                : "48px repeat(7, 1fr)",
             }}
           >
             <div>
@@ -880,22 +890,30 @@ export type AvailabilityWeekGridSkeletonProps = {
   dayKeys: string[];
   timeZone: string;
   hours?: number[];
+  compact?: boolean;
 };
 
 export function AvailabilityWeekGridSkeleton({
   dayKeys,
   timeZone,
   hours,
+  compact,
 }: AvailabilityWeekGridSkeletonProps) {
   const skeletonHours = hours ?? [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+  const rowHeight = compact ? COMPACT_ROW_HEIGHT : WEEK_ROW_HEIGHT;
+  const colTemplate = compact
+    ? "36px repeat(7, 1fr)"
+    : "48px repeat(7, 1fr)";
   return (
-    <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-      <div className="min-w-[700px]">
+    <div
+      className={cn(
+        compact ? "" : "overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0",
+      )}
+    >
+      <div>
         <div
           className="grid gap-x-0"
-          style={{
-            gridTemplateColumns: "60px repeat(7, minmax(80px, 1fr))",
-          }}
+          style={{ gridTemplateColumns: colTemplate }}
         >
           <div />
           {dayKeys.map((dk) => {
@@ -903,10 +921,22 @@ export function AvailabilityWeekGridSkeleton({
             return (
               <div
                 key={`skel-hdr-${dk}`}
-                className="border-b border-border/70 px-1 py-2 text-center text-xs font-semibold"
+                className={cn(
+                  "border-b border-border/70 text-center font-semibold",
+                  compact
+                    ? "px-0.5 py-1 text-[9px] leading-tight"
+                    : "px-1 py-2 text-xs",
+                )}
               >
-                <div>{formatInTimeZone(date, timeZone, "EEE")}</div>
-                <div className="mt-0.5 text-base font-heading font-bold">
+                <div>
+                  {formatInTimeZone(date, timeZone, compact ? "EEEEEE" : "EEE")}
+                </div>
+                <div
+                  className={cn(
+                    "font-heading font-bold",
+                    compact ? "mt-0 text-xs" : "mt-0.5 text-base",
+                  )}
+                >
                   {formatInTimeZone(date, timeZone, "d")}
                 </div>
               </div>
@@ -916,16 +946,17 @@ export function AvailabilityWeekGridSkeleton({
 
         <div
           className="grid gap-x-0"
-          style={{
-            gridTemplateColumns: "60px repeat(7, minmax(80px, 1fr))",
-          }}
+          style={{ gridTemplateColumns: colTemplate }}
         >
           <div>
             {skeletonHours.map((h) => (
               <div
                 key={`skel-t-${h}`}
-                className="flex items-start pr-2 pt-1 text-right text-xs text-muted-foreground font-mono"
-                style={{ height: WEEK_ROW_HEIGHT }}
+                className={cn(
+                  "flex items-start text-right text-muted-foreground font-mono",
+                  compact ? "pr-1 pt-0.5 text-[10px]" : "pr-2 pt-1 text-xs",
+                )}
+                style={{ height: rowHeight }}
               >
                 <span className="w-full">
                   {h > 12 ? `${h - 12} PM` : h === 12 ? "12 PM" : `${h} AM`}
@@ -939,9 +970,14 @@ export function AvailabilityWeekGridSkeleton({
                 <div
                   key={`${dk}-${h}`}
                   className="border-t border-border/50"
-                  style={{ height: WEEK_ROW_HEIGHT }}
+                  style={{ height: rowHeight }}
                 >
-                  <div className="mx-2 mt-2 h-4 rounded bg-muted animate-pulse" />
+                  <div
+                    className={cn(
+                      "rounded bg-muted animate-pulse",
+                      compact ? "mx-1 mt-1.5 h-3" : "mx-2 mt-2 h-4",
+                    )}
+                  />
                 </div>
               ))}
             </div>

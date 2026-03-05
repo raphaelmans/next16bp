@@ -7,6 +7,7 @@ import {
   CalendarRange,
   ClipboardList,
   Ellipsis,
+  Heart,
   Home,
   LayoutDashboard,
   MapPin,
@@ -15,7 +16,6 @@ import {
   ShieldCheck,
   Tag,
   UploadCloud,
-  User,
   Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -57,7 +57,7 @@ const playerTabs: TabConfig[] = [
     icon: CalendarDays,
   },
   { label: "Home", href: appRoutes.home.base, icon: Home },
-  { label: "Profile", href: appRoutes.account.profile, icon: User },
+  { label: "Saved", href: appRoutes.savedVenues.base, icon: Heart },
 ];
 
 // ─── Admin tabs ───────────────────────────────────────

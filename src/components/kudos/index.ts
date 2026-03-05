@@ -62,3 +62,4 @@ export {
   type TimelineItem,
   type TimelineItemStatus,
 } from "./timeline";
+export { WeekNavigator, type WeekNavigatorProps } from "./week-navigator";

@@ -1,31 +1,18 @@
 "use client";
 
-import {
-  AlertTriangle,
-  Calendar,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  RefreshCw,
-} from "lucide-react";
+import { AlertTriangle, RefreshCw } from "lucide-react";
 import type * as React from "react";
 import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
 import {
   AvailabilityWeekGrid,
   AvailabilityWeekGridSkeleton,
-  KudosDatePicker,
   type TimeSlot,
+  WeekNavigator,
 } from "@/components/kudos";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarWidget } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
@@ -61,8 +48,6 @@ type PlaceDetailAvailabilityDesktopProps = {
   courtsForSport: CourtOption[];
   selectedCourtId?: string;
   onCourtSelect: (courtId: string) => void;
-  calendarPopoverOpen: boolean;
-  setCalendarPopoverOpen: (open: boolean) => void;
   weekHeaderLabel: string;
   onPrevWeek: () => void;
   onNextWeek: () => void;
@@ -102,8 +87,6 @@ export function PlaceDetailAvailabilityDesktop({
   courtsForSport,
   selectedCourtId,
   onCourtSelect,
-  calendarPopoverOpen,
-  setCalendarPopoverOpen,
   weekHeaderLabel,
   onPrevWeek,
   onNextWeek,
@@ -222,76 +205,19 @@ export function PlaceDetailAvailabilityDesktop({
                   Choose a start slot, then choose an end slot.
                 </p>
               </div>
-              <div className="flex items-center gap-1 rounded-lg border border-border bg-muted/30 p-1">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={onPrevWeek}
-                  disabled={isPrevWeekDisabled}
-                  aria-label="Previous week"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <Popover
-                  open={calendarPopoverOpen}
-                  onOpenChange={setCalendarPopoverOpen}
-                >
-                  <PopoverTrigger asChild>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className="h-7 gap-1 px-2 text-xs font-medium"
-                    >
-                      <Calendar className="h-3.5 w-3.5" />
-                      {weekHeaderLabel}
-                      <ChevronDown className="h-3 w-3" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent align="end" className="w-auto p-0">
-                    <CalendarWidget
-                      mode="single"
-                      selected={selectedDate}
-                      onSelect={onCalendarJump}
-                      disabled={(date) =>
-                        date < todayRangeStart || date > maxBookingDate
-                      }
-                      timeZone={placeTimeZone}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={onNextWeek}
-                  disabled={isNextWeekDisabled}
-                  aria-label="Next week"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <KudosDatePicker
-                value={selectedDate}
-                onChange={onCalendarJump}
-                timeZone={placeTimeZone}
-                minDate={todayRangeStart}
-                maxDate={maxBookingDate}
+              <WeekNavigator
+                weekHeaderLabel={weekHeaderLabel}
+                onPrevWeek={onPrevWeek}
+                onNextWeek={onNextWeek}
+                isPrevWeekDisabled={isPrevWeekDisabled}
+                isNextWeekDisabled={isNextWeekDisabled}
+                onGoToToday={onGoToToday}
+                selectedDate={selectedDate}
+                onCalendarJump={onCalendarJump}
+                todayRangeStart={todayRangeStart}
+                maxBookingDate={maxBookingDate}
+                placeTimeZone={placeTimeZone}
               />
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={onGoToToday}
-              >
-                Today
-              </Button>
             </div>
           </div>
         </CardHeader>

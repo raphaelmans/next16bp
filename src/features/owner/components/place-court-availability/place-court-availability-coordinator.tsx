@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { keepPreviousData } from "@tanstack/react-query";
 import { addDays, addMinutes } from "date-fns";
 import debounce from "debounce";
 import {
@@ -11,7 +12,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
@@ -104,23 +105,13 @@ import {
   useQueryOwnerPlaceById,
 } from "@/features/owner/hooks";
 
-type OwnerCourtAvailabilityPageProps = {
-  placeId: string;
-  courtId: string;
-  fromSetup: boolean;
-};
-
-export default function OwnerCourtAvailabilityPage({
-  placeId,
-  courtId,
-  fromSetup,
-}: OwnerCourtAvailabilityPageProps) {
+export default function OwnerCourtAvailabilityPage() {
+  const params = useParams<{ placeId: string; courtId: string }>();
   return (
     <BookingStudioProvider initialDate={new Date()}>
       <OwnerCourtAvailabilityInner
-        placeId={placeId}
-        courtId={courtId}
-        fromSetup={fromSetup}
+        placeId={params.placeId}
+        courtId={params.courtId}
       />
     </BookingStudioProvider>
   );
@@ -140,7 +131,6 @@ export function AvailabilityCoordinatorContent(props: {
       <OwnerCourtAvailabilityInner
         placeId={props.placeId}
         courtId={props.courtId}
-        fromSetup={false}
         embedded
       />
     </BookingStudioProvider>
@@ -150,18 +140,17 @@ export function AvailabilityCoordinatorContent(props: {
 type OwnerCourtAvailabilityInnerProps = {
   placeId: string;
   courtId: string;
-  fromSetup: boolean;
   embedded?: boolean;
 };
 
 function OwnerCourtAvailabilityInner({
   placeId,
   courtId,
-  fromSetup,
   embedded = false,
 }: OwnerCourtAvailabilityInnerProps) {
   const router = useRouter();
-  const isFromSetup = fromSetup;
+  const searchParams = useSearchParams();
+  const isFromSetup = searchParams.get("from") === "setup";
 
   const { data: user } = useQueryAuthSession();
   const logoutMutation = useMutAuthLogout();
@@ -290,6 +279,7 @@ function OwnerCourtAvailabilityInner({
 
   const blocksQuery = useQueryOwnerCourtBlocksForRange(blocksQueryInput, {
     enabled: Boolean(courtId),
+    placeholderData: keepPreviousData,
   });
 
   const reservationsQueryInput = React.useMemo(
@@ -303,7 +293,7 @@ function OwnerCourtAvailabilityInner({
 
   const reservationsQuery = useQueryOwnerActiveReservationsForCourtRange(
     reservationsQueryInput,
-    { enabled: Boolean(courtId) },
+    { enabled: Boolean(courtId), placeholderData: keepPreviousData },
   );
 
   const activeReservations = React.useMemo(
@@ -1348,7 +1338,7 @@ function OwnerCourtAvailabilityInner({
 
       <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         {/* Left sidebar — calendar + create block panel */}
-        <div className="hidden 2xl:block space-y-6">
+        <div className="hidden lg:block space-y-6">
           <Card>
             <CardContent className="space-y-3 p-6">
               <div className="flex items-center justify-between">
@@ -1490,14 +1480,14 @@ function OwnerCourtAvailabilityInner({
 
         {/* Week timeline */}
         <Card>
-          <CardContent className="space-y-4 p-4 2xl:p-6">
+          <CardContent className="space-y-4 p-4 lg:p-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-1 2xl:gap-2">
+              <div className="flex items-center gap-1 lg:gap-2">
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 2xl:h-9 2xl:w-9"
+                  className="h-8 w-8 lg:h-9 lg:w-9"
                   onClick={() => navigateWeek(-1)}
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -1505,17 +1495,17 @@ function OwnerCourtAvailabilityInner({
                 <Button
                   type="button"
                   variant="ghost"
-                  className="gap-1.5 text-sm font-heading font-semibold 2xl:text-lg 2xl:pointer-events-none"
+                  className="gap-1.5 text-sm font-heading font-semibold lg:text-lg lg:pointer-events-none"
                   onClick={() => setMobileCalendarOpen(true)}
                 >
-                  <CalendarIcon className="h-3.5 w-3.5 2xl:hidden" />
+                  <CalendarIcon className="h-3.5 w-3.5 lg:hidden" />
                   {weekLabel}
                 </Button>
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 2xl:h-9 2xl:w-9"
+                  className="h-8 w-8 lg:h-9 lg:w-9"
                   onClick={() => navigateWeek(1)}
                 >
                   <ChevronRight className="h-4 w-4" />
@@ -1526,12 +1516,12 @@ function OwnerCourtAvailabilityInner({
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="2xl:hidden"
+                  className="lg:hidden"
                   onClick={handleMobileToday}
                 >
                   Today
                 </Button>
-                <Badge variant="outline" className="hidden 2xl:inline-flex">
+                <Badge variant="outline" className="hidden lg:inline-flex">
                   Snap: 60m
                 </Badge>
               </div>
@@ -1541,7 +1531,7 @@ function OwnerCourtAvailabilityInner({
               open={mobileCalendarOpen}
               onOpenChange={setMobileCalendarOpen}
             >
-              <DialogContent className="w-auto p-0 sm:max-w-fit 2xl:hidden">
+              <DialogContent className="w-auto p-0 sm:max-w-fit lg:hidden">
                 <DialogTitle className="sr-only">Select date</DialogTitle>
                 <Calendar
                   mode="single"
@@ -1598,7 +1588,7 @@ function OwnerCourtAvailabilityInner({
                 onClearRange={handleWeekClearRange}
                 disabled={false}
                 todayDayKey={todayDayKey}
-                blocksLoading={blocksQuery.isLoading}
+                blocksLoading={blocksQuery.isFetching}
               />
             )}
           </CardContent>

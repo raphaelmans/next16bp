@@ -677,14 +677,13 @@ function OwnerWeekGridInner({
                 onResizeCommit={onResizeCommit}
                 compact={compact}
               />
+              {blocksLoading && (
+                <div className="absolute inset-0 animate-pulse bg-muted/50" />
+              )}
             </div>
           );
         })}
       </div>
-
-      {blocksLoading ? (
-        <div className="absolute inset-0 rounded-lg bg-background/70 backdrop-blur-sm" />
-      ) : null}
     </div>
   );
 }

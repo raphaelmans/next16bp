@@ -1,26 +1,21 @@
 "use client";
 
-import { Calendar, ChevronDown, ChevronUp, Loader2, X } from "lucide-react";
+import { addMinutes } from "date-fns";
+import { ChevronDown, ChevronUp, Loader2, X } from "lucide-react";
 import * as React from "react";
 import {
   formatCurrency,
   formatDuration,
   formatInTimeZone,
 } from "@/common/format";
+import { getZonedDayKey } from "@/common/time-zone";
 import {
   MobileWeekGrid,
   MobileWeekGridSkeleton,
   type TimeSlot,
+  WeekNavigator,
 } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarWidget } from "@/components/ui/calendar";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { cn } from "@/lib/utils";
 
@@ -59,9 +54,7 @@ type PlaceDetailMobileSheetProps = {
   onMobileCourtChange: (courtId: string | undefined) => void;
   selectedDate?: Date;
   placeTimeZone: string;
-  mobileCalendarOpen: boolean;
-  setMobileCalendarOpen: (open: boolean) => void;
-  onMobileCalendarJump: (date: Date | undefined) => void;
+  onCalendarJump: (date: Date | undefined) => void;
   todayRangeStart: Date;
   maxBookingDate: Date;
   isMobileRefreshing: boolean;
@@ -86,6 +79,12 @@ type PlaceDetailMobileSheetProps = {
   onAddToCartAction: () => void;
   onRemoveFromCartAction: (key: string) => void;
   cartedStartTimes?: Set<string>;
+  weekHeaderLabel: string;
+  onPrevWeek: () => void;
+  onNextWeek: () => void;
+  isPrevWeekDisabled: boolean;
+  isNextWeekDisabled: boolean;
+  onGoToToday: () => void;
 };
 
 export function PlaceDetailMobileSheet({
@@ -101,9 +100,7 @@ export function PlaceDetailMobileSheet({
   onMobileCourtChange,
   selectedDate,
   placeTimeZone,
-  mobileCalendarOpen,
-  setMobileCalendarOpen,
-  onMobileCalendarJump,
+  onCalendarJump,
   todayRangeStart,
   maxBookingDate,
   isMobileRefreshing,
@@ -128,6 +125,12 @@ export function PlaceDetailMobileSheet({
   onAddToCartAction,
   onRemoveFromCartAction,
   cartedStartTimes,
+  weekHeaderLabel,
+  onPrevWeek,
+  onNextWeek,
+  isPrevWeekDisabled,
+  isNextWeekDisabled,
+  onGoToToday,
 }: PlaceDetailMobileSheetProps) {
   const cartItemCount = cartItems.length;
   const hasCartItems = cartItemCount > 0;
@@ -218,15 +221,31 @@ export function PlaceDetailMobileSheet({
                     <div className="min-w-0">
                       <p className="font-medium">{item.courtLabel}</p>
                       <p className="text-xs text-muted-foreground">
-                        {formatInTimeZone(
-                          new Date(item.startTime),
-                          placeTimeZone,
-                          "MMM d, h:mm a",
-                        )}{" "}
-                        · {formatDuration(item.durationMinutes)}
-                        {item.estimatedPriceCents !== null
-                          ? ` · ${formatCurrency(item.estimatedPriceCents, item.currency)}`
-                          : " · Price unavailable"}
+                        {(() => {
+                          const endTime = addMinutes(
+                            new Date(item.startTime),
+                            item.durationMinutes,
+                          );
+                          const crossesMidnight =
+                            getZonedDayKey(item.startTime, placeTimeZone) !==
+                            getZonedDayKey(endTime, placeTimeZone);
+                          return (
+                            <>
+                              {formatInTimeZone(
+                                new Date(item.startTime),
+                                placeTimeZone,
+                                "MMM d, h:mm a",
+                              )}
+                              {crossesMidnight
+                                ? ` - ${formatInTimeZone(endTime, placeTimeZone, "MMM d, h:mm a")}`
+                                : ""}{" "}
+                              · {formatDuration(item.durationMinutes)}
+                              {item.estimatedPriceCents !== null
+                                ? ` · ${formatCurrency(item.estimatedPriceCents, item.currency)}`
+                                : " · Price unavailable"}
+                            </>
+                          );
+                        })()}
                       </p>
                     </div>
                     <button
@@ -315,49 +334,20 @@ export function PlaceDetailMobileSheet({
               </div>
 
               <div className="px-5 pb-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-start"
-                  onClick={() => setMobileCalendarOpen(true)}
-                >
-                  <Calendar className="h-3.5 w-3.5" />
-                  {selectedDate
-                    ? formatInTimeZone(
-                        selectedDate,
-                        placeTimeZone,
-                        "EEEE, MMM d",
-                      )
-                    : "Pick a date"}
-                </Button>
+                <WeekNavigator
+                  weekHeaderLabel={weekHeaderLabel}
+                  onPrevWeek={onPrevWeek}
+                  onNextWeek={onNextWeek}
+                  isPrevWeekDisabled={isPrevWeekDisabled}
+                  isNextWeekDisabled={isNextWeekDisabled}
+                  onGoToToday={onGoToToday}
+                  selectedDate={selectedDate}
+                  onCalendarJump={onCalendarJump}
+                  todayRangeStart={todayRangeStart}
+                  maxBookingDate={maxBookingDate}
+                  placeTimeZone={placeTimeZone}
+                />
               </div>
-
-              <Dialog
-                open={mobileCalendarOpen}
-                onOpenChange={setMobileCalendarOpen}
-              >
-                <DialogContent className="p-0 sm:max-w-fit">
-                  <DialogHeader className="sr-only">
-                    <DialogTitle>Select a date</DialogTitle>
-                    <DialogDescription>
-                      Choose a date to view availability
-                    </DialogDescription>
-                  </DialogHeader>
-                  <CalendarWidget
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={onMobileCalendarJump}
-                    disabled={(date) => {
-                      if (date < todayRangeStart) return true;
-                      if (date > maxBookingDate) return true;
-                      return false;
-                    }}
-                    timeZone={placeTimeZone}
-                    initialFocus
-                  />
-                </DialogContent>
-              </Dialog>
 
               <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-2">
                 {isMobileRefreshing && (

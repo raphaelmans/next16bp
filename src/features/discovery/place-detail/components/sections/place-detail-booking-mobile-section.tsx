@@ -1,5 +1,6 @@
 "use client";
 
+import { addDays } from "date-fns";
 import * as React from "react";
 import { formatInTimeZone } from "@/common/format";
 import { useMediaQuery } from "@/common/hooks/use-media-query";
@@ -116,8 +117,6 @@ export function PlaceDetailBookingMobileSection({
   const setMobileSheetExpanded = usePlaceDetailUiStore(
     (s) => s.setMobileSheetExpanded,
   );
-  const [mobileCalendarOpen, setMobileCalendarOpen] = React.useState(false);
-
   const cartedStartTimes = React.useMemo(() => {
     if (selectionMode !== "court" || !selectedCourtId) return undefined;
     const set = new Set<string>();
@@ -400,6 +399,117 @@ export function PlaceDetailBookingMobileSection({
         }`
       : "";
 
+  const weekStartDate = React.useMemo(
+    () => parseDayKeyToDate(weekDayKeys[0] ?? selectedDayKey, placeTimeZone),
+    [placeTimeZone, selectedDayKey, weekDayKeys],
+  );
+
+  const weekEndDate = React.useMemo(
+    () => parseDayKeyToDate(weekDayKeys[6] ?? selectedDayKey, placeTimeZone),
+    [placeTimeZone, selectedDayKey, weekDayKeys],
+  );
+
+  const weekHeaderLabel = React.useMemo(() => {
+    const startLabel = formatInTimeZone(weekStartDate, placeTimeZone, "MMM d");
+    const endLabel = formatInTimeZone(
+      weekEndDate,
+      placeTimeZone,
+      "MMM d, yyyy",
+    );
+    return `${startLabel} - ${endLabel}`;
+  }, [placeTimeZone, weekEndDate, weekStartDate]);
+
+  const handlePrevWeek = React.useCallback(() => {
+    const prevWeekDate = addDays(weekStartDate, -7);
+    const target =
+      prevWeekDate < todayRangeStart ? todayRangeStart : prevWeekDate;
+    if (selectedStartTime) {
+      const nextDayKey = getZonedDayKey(target, placeTimeZone);
+      const preserveSelection = isWithinAdjacentWeek({
+        selectedStartTimeIso: selectedStartTime,
+        candidateDayKey: nextDayKey,
+        timeZone: placeTimeZone,
+      });
+      setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone), {
+        preserveSelection,
+      });
+      if (!preserveSelection) {
+        clearSelection(true);
+      }
+    } else {
+      setSelectedDate(target);
+    }
+  }, [
+    clearSelection,
+    placeTimeZone,
+    selectedStartTime,
+    setSelectedDate,
+    todayRangeStart,
+    weekStartDate,
+  ]);
+
+  const handleNextWeek = React.useCallback(() => {
+    const nextWeekDate = addDays(weekStartDate, 7);
+    const target =
+      nextWeekDate > maxBookingDate ? maxBookingDate : nextWeekDate;
+    if (selectedStartTime) {
+      const nextDayKey = getZonedDayKey(target, placeTimeZone);
+      const preserveSelection = isWithinAdjacentWeek({
+        selectedStartTimeIso: selectedStartTime,
+        candidateDayKey: nextDayKey,
+        timeZone: placeTimeZone,
+      });
+      setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone), {
+        preserveSelection,
+      });
+      if (!preserveSelection) {
+        clearSelection(true);
+      }
+    } else {
+      setSelectedDate(target);
+    }
+  }, [
+    clearSelection,
+    maxBookingDate,
+    placeTimeZone,
+    selectedStartTime,
+    setSelectedDate,
+    weekStartDate,
+  ]);
+
+  const isPrevWeekDisabled = React.useMemo(() => {
+    return weekStartDate <= todayRangeStart;
+  }, [todayRangeStart, weekStartDate]);
+
+  const isNextWeekDisabled = React.useMemo(() => {
+    return weekEndDate >= maxBookingDate;
+  }, [maxBookingDate, weekEndDate]);
+
+  const handleGoToToday = React.useCallback(() => {
+    if (selectedStartTime) {
+      const todayDayKey = getZonedDayKey(today, placeTimeZone);
+      const preserveSelection = isWithinAdjacentWeek({
+        selectedStartTimeIso: selectedStartTime,
+        candidateDayKey: todayDayKey,
+        timeZone: placeTimeZone,
+      });
+      setSelectedDate(parseDayKeyToDate(todayDayKey, placeTimeZone), {
+        preserveSelection,
+      });
+      if (!preserveSelection) {
+        clearSelection(true);
+      }
+    } else {
+      setSelectedDate(today);
+    }
+  }, [
+    clearSelection,
+    placeTimeZone,
+    selectedStartTime,
+    setSelectedDate,
+    today,
+  ]);
+
   const handleCourtRangeChange = React.useCallback(
     (range: { startTime: string; durationMinutes: number }) => {
       const resolvedRange = resolveCourtRangeAcrossWeekBoundary({
@@ -469,7 +579,6 @@ export function PlaceDetailBookingMobileSection({
       } else {
         setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
       }
-      setMobileCalendarOpen(false);
     },
     [clearSelection, placeTimeZone, selectedStartTime, setSelectedDate],
   );
@@ -520,9 +629,7 @@ export function PlaceDetailBookingMobileSection({
       onMobileCourtChange={handleMobileCourtChange}
       selectedDate={selectedDate}
       placeTimeZone={placeTimeZone}
-      mobileCalendarOpen={mobileCalendarOpen}
-      setMobileCalendarOpen={setMobileCalendarOpen}
-      onMobileCalendarJump={handleMobileCalendarJump}
+      onCalendarJump={handleMobileCalendarJump}
       todayRangeStart={todayRangeStart}
       maxBookingDate={maxBookingDate}
       isMobileRefreshing={isMobileRefreshing}
@@ -547,6 +654,12 @@ export function PlaceDetailBookingMobileSection({
       onAddToCartAction={handleAddToCartWithSnapshot}
       onRemoveFromCartAction={onRemoveFromCartAction}
       cartedStartTimes={cartedStartTimes}
+      weekHeaderLabel={weekHeaderLabel}
+      onPrevWeek={handlePrevWeek}
+      onNextWeek={handleNextWeek}
+      isPrevWeekDisabled={isPrevWeekDisabled}
+      isNextWeekDisabled={isNextWeekDisabled}
+      onGoToToday={handleGoToToday}
     />
   );
 }

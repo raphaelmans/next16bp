@@ -105,8 +105,6 @@ export function PlaceDetailBookingDesktopSection({
     isDesktop ||
     (typeof window !== "undefined" &&
       window.matchMedia("(min-width: 1024px)").matches);
-  const [calendarPopoverOpen, setCalendarPopoverOpen] = React.useState(false);
-
   const selectedDayKey = React.useMemo(
     () => getZonedDayKey(selectedDate ?? today, placeTimeZone),
     [placeTimeZone, selectedDate, today],
@@ -368,7 +366,7 @@ export function PlaceDetailBookingDesktopSection({
   }, [isDesktopViewport, onSelectionSummaryChange, selectionSummary]);
 
   const setDateWithSelectionPolicy = React.useCallback(
-    (date: Date | undefined, closeCalendar = false) => {
+    (date: Date | undefined) => {
       if (!date) return;
 
       const nextDayKey = getZonedDayKey(date, placeTimeZone);
@@ -382,10 +380,6 @@ export function PlaceDetailBookingDesktopSection({
         }
       } else {
         setSelectedDate(parseDayKeyToDate(nextDayKey, placeTimeZone));
-      }
-
-      if (closeCalendar) {
-        setCalendarPopoverOpen(false);
       }
     },
     [
@@ -453,7 +447,7 @@ export function PlaceDetailBookingDesktopSection({
 
   const handleCalendarJump = React.useCallback(
     (date: Date | undefined) => {
-      setDateWithSelectionPolicy(date, true);
+      setDateWithSelectionPolicy(date);
     },
     [setDateWithSelectionPolicy],
   );
@@ -542,8 +536,6 @@ export function PlaceDetailBookingDesktopSection({
       courtsForSport={courtsForSport}
       selectedCourtId={selectedCourtId}
       onCourtSelect={handleDesktopCourtSelect}
-      calendarPopoverOpen={calendarPopoverOpen}
-      setCalendarPopoverOpen={setCalendarPopoverOpen}
       weekHeaderLabel={weekHeaderLabel}
       onPrevWeek={handlePrevWeek}
       onNextWeek={handleNextWeek}
