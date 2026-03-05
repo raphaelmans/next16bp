@@ -13,7 +13,7 @@ vi.mock("next/headers", () => ({
 }));
 
 vi.mock("next/navigation", () => ({
-  redirect: (...args: unknown[]) => redirectMock(...args),
+  redirect: (path: string) => redirectMock(path),
 }));
 
 vi.mock("@/lib/shared/infra/trpc/server", () => ({

@@ -1,10 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_CURRENCY } from "@/common/location-defaults";
-import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
-import {
-  NotPlaceOwnerError,
-  PlaceNotFoundError,
-} from "@/lib/modules/place/errors/place.errors";
+import { OrganizationMemberPermissionDeniedError } from "@/lib/modules/organization-member/errors/organization-member.errors";
+import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
+import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import type { SetPlaceAddonsDTO } from "@/lib/modules/place-addon/dtos";
 import {
@@ -156,8 +154,15 @@ const createHarness = (options?: {
     ),
   };
 
-  const organizationRepositoryFns = {
-    findById: vi.fn(async () => ({ id: ORG_ID, ownerUserId })),
+  const organizationMemberServiceFns = {
+    assertOrganizationPermission: vi.fn(async (userId: string) => {
+      if (userId !== ownerUserId) {
+        throw new OrganizationMemberPermissionDeniedError("place.manage", {
+          organizationId: ORG_ID,
+          userId,
+        });
+      }
+    }),
   };
 
   const run = vi.fn(async (fn: (tx: unknown) => Promise<unknown>) =>
@@ -167,7 +172,7 @@ const createHarness = (options?: {
   const service = new PlaceAddonService(
     placeAddonRepositoryFns as unknown as IPlaceAddonRepository,
     placeRepositoryFns as unknown as IPlaceRepository,
-    organizationRepositoryFns as unknown as IOrganizationRepository,
+    organizationMemberServiceFns as unknown as IOrganizationMemberService,
     { run } as unknown as TransactionManager,
   );
 
@@ -177,7 +182,7 @@ const createHarness = (options?: {
     run,
     placeAddonRepositoryFns,
     placeRepositoryFns,
-    organizationRepositoryFns,
+    organizationMemberServiceFns,
   };
 };
 
@@ -199,10 +204,11 @@ describe("PlaceAddonService", () => {
           tx: harness.txMarker,
         },
       );
-      expect(harness.organizationRepositoryFns.findById).toHaveBeenCalledWith(
-        ORG_ID,
-        { tx: harness.txMarker },
-      );
+      expect(
+        harness.organizationMemberServiceFns.assertOrganizationPermission,
+      ).toHaveBeenCalledWith(OWNER_USER_ID, ORG_ID, "place.manage", {
+        tx: harness.txMarker,
+      });
       expect(
         harness.placeAddonRepositoryFns.deleteByPlaceId,
       ).toHaveBeenCalledWith(PLACE_ID, { tx: harness.txMarker });
@@ -273,13 +279,13 @@ describe("PlaceAddonService", () => {
       ).rejects.toBeInstanceOf(PlaceAddonOverlapError);
     });
 
-    it("non-owner user -> throws NotPlaceOwnerError", async () => {
+    it("non-owner user -> throws OrganizationMemberPermissionDeniedError", async () => {
       const harness = createHarness({ ownerUserId: "someone-else" });
       const payload = createPayload([createFlatAddon()]);
 
       await expect(
         harness.service.setForPlace(OWNER_USER_ID, payload),
-      ).rejects.toBeInstanceOf(NotPlaceOwnerError);
+      ).rejects.toBeInstanceOf(OrganizationMemberPermissionDeniedError);
     });
 
     it("missing place -> throws PlaceNotFoundError", async () => {

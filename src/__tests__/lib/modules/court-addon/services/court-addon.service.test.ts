@@ -1,9 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_CURRENCY } from "@/common/location-defaults";
-import {
-  CourtNotFoundError,
-  NotCourtOwnerError,
-} from "@/lib/modules/court/errors/court.errors";
+import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
 import type { SetCourtAddonsDTO } from "@/lib/modules/court-addon/dtos";
 import {
@@ -12,7 +9,8 @@ import {
 } from "@/lib/modules/court-addon/errors/court-addon.errors";
 import type { ICourtAddonRepository } from "@/lib/modules/court-addon/repositories/court-addon.repository";
 import { CourtAddonService } from "@/lib/modules/court-addon/services/court-addon.service";
-import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
+import { OrganizationMemberPermissionDeniedError } from "@/lib/modules/organization-member/errors/organization-member.errors";
+import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import type {
   CourtAddonRateRuleRecord,
@@ -171,8 +169,15 @@ const createHarness = (options?: {
     })),
   };
 
-  const organizationRepositoryFns = {
-    findById: vi.fn(async () => ({ id: ORG_ID, ownerUserId })),
+  const organizationMemberServiceFns = {
+    assertOrganizationPermission: vi.fn(async (userId: string) => {
+      if (userId !== ownerUserId) {
+        throw new OrganizationMemberPermissionDeniedError("place.manage", {
+          organizationId: ORG_ID,
+          userId,
+        });
+      }
+    }),
   };
 
   const run = vi.fn(async (fn: (tx: unknown) => Promise<unknown>) =>
@@ -183,7 +188,7 @@ const createHarness = (options?: {
     courtAddonRepositoryFns as unknown as ICourtAddonRepository,
     courtRepositoryFns as unknown as ICourtRepository,
     placeRepositoryFns as unknown as IPlaceRepository,
-    organizationRepositoryFns as unknown as IOrganizationRepository,
+    organizationMemberServiceFns as unknown as IOrganizationMemberService,
     { run } as unknown as TransactionManager,
   );
 
@@ -194,7 +199,7 @@ const createHarness = (options?: {
     courtAddonRepositoryFns,
     courtRepositoryFns,
     placeRepositoryFns,
-    organizationRepositoryFns,
+    organizationMemberServiceFns,
   };
 };
 
@@ -218,10 +223,11 @@ describe("CourtAddonService", () => {
         PLACE_ID,
         { tx: harness.txMarker },
       );
-      expect(harness.organizationRepositoryFns.findById).toHaveBeenCalledWith(
-        ORG_ID,
-        { tx: harness.txMarker },
-      );
+      expect(
+        harness.organizationMemberServiceFns.assertOrganizationPermission,
+      ).toHaveBeenCalledWith(OWNER_USER_ID, ORG_ID, "place.manage", {
+        tx: harness.txMarker,
+      });
       expect(
         harness.courtAddonRepositoryFns.deleteByCourtId,
       ).toHaveBeenCalledWith(COURT_ID, { tx: harness.txMarker });
@@ -308,13 +314,13 @@ describe("CourtAddonService", () => {
       ).rejects.toBeInstanceOf(CourtAddonOverlapError);
     });
 
-    it("non-owner user -> throws NotCourtOwnerError", async () => {
+    it("non-owner user -> throws OrganizationMemberPermissionDeniedError", async () => {
       const harness = createHarness({ ownerUserId: "someone-else" });
       const payload = createPayload([createHourlyAddon()]);
 
       await expect(
         harness.service.setForCourt(OWNER_USER_ID, payload),
-      ).rejects.toBeInstanceOf(NotCourtOwnerError);
+      ).rejects.toBeInstanceOf(OrganizationMemberPermissionDeniedError);
     });
 
     it("missing court -> throws CourtNotFoundError", async () => {
