@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { DEFAULT_COUNTRY, DEFAULT_TIME_ZONE } from "@/common/location-defaults";
+import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
 import {
   NotOrganizationOwnerError,
   OrganizationNotFoundError,
@@ -74,6 +75,7 @@ export class PlaceManagementService implements IPlaceManagementService {
     private placeRepository: IPlaceRepository,
     private placePhotoRepository: IPlacePhotoRepository,
     private organizationRepository: IOrganizationRepository,
+    private organizationMemberService: IOrganizationMemberService,
     private transactionManager: TransactionManager,
     private storageService: IObjectStorageService,
   ) {}
@@ -176,7 +178,7 @@ export class PlaceManagementService implements IPlaceManagementService {
         throw new PlaceNotFoundError(data.placeId);
       }
 
-      await this.assertOwner(userId, place.organizationId, ctx);
+      await this.assertPlaceManageAccess(userId, place.organizationId, ctx);
 
       const {
         placeId,
@@ -290,7 +292,7 @@ export class PlaceManagementService implements IPlaceManagementService {
   ): Promise<
     (PlaceRecord & { verification: PlaceVerificationRecord | null })[]
   > {
-    await this.assertOwner(userId, data.organizationId);
+    await this.assertPlaceManageAccess(userId, data.organizationId);
     return this.placeRepository.findByOrganizationIdWithVerification(
       data.organizationId,
     );
@@ -305,7 +307,7 @@ export class PlaceManagementService implements IPlaceManagementService {
       throw new PlaceNotFoundError(placeId);
     }
 
-    await this.assertOwner(userId, place.place.organizationId);
+    await this.assertPlaceManageAccess(userId, place.place.organizationId);
     return place;
   }
 
@@ -476,6 +478,23 @@ export class PlaceManagementService implements IPlaceManagementService {
 
       return this.placePhotoRepository.findByPlaceId(placeId, ctx);
     });
+  }
+
+  private async assertPlaceManageAccess(
+    userId: string,
+    organizationId?: string | null,
+    ctx?: RequestContext,
+  ): Promise<void> {
+    if (!organizationId) {
+      throw new NotPlaceOwnerError();
+    }
+
+    await this.organizationMemberService.assertOrganizationPermission(
+      userId,
+      organizationId,
+      "place.manage",
+      ctx,
+    );
   }
 
   private async assertOwner(

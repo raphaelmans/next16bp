@@ -7,7 +7,7 @@ import type { ICourtRepository } from "@/lib/modules/court/repositories/court.re
 import type { ICourtHoursRepository } from "@/lib/modules/court-hours/repositories/court-hours.repository";
 import type { ICourtPriceOverrideRepository } from "@/lib/modules/court-price-override/repositories/court-price-override.repository";
 import type { ICourtRateRuleRepository } from "@/lib/modules/court-rate-rule/repositories/court-rate-rule.repository";
-import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
+import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import type { IReservationRepository } from "@/lib/modules/reservation/repositories/reservation.repository";
@@ -66,7 +66,7 @@ export class CourtBlockService implements ICourtBlockService {
     private reservationRepository: IReservationRepository,
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
-    private organizationRepository: IOrganizationRepository,
+    private organizationMemberService: IOrganizationMemberService,
     private courtHoursRepository: ICourtHoursRepository,
     private courtRateRuleRepository: ICourtRateRuleRepository,
     private courtPriceOverrideRepository: ICourtPriceOverrideRepository,
@@ -359,13 +359,12 @@ export class CourtBlockService implements ICourtBlockService {
       throw new NotCourtOwnerError();
     }
 
-    const organization = await this.organizationRepository.findById(
+    await this.organizationMemberService.assertOrganizationPermission(
+      userId,
       place.organizationId,
+      "place.manage",
       ctx,
     );
-    if (!organization || organization.ownerUserId !== userId) {
-      throw new NotCourtOwnerError();
-    }
 
     return { court, place };
   }

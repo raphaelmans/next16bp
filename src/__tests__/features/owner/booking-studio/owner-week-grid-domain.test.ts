@@ -164,7 +164,12 @@ describe("buildOwnerSelectionConfig", () => {
       const start = dayToLinearIndex(5, 4, hoursPerDay);
       const end = dayToLinearIndex(5, 6, hoursPerDay);
       config.commitRange(start, end);
-      expect(onCommitRange).toHaveBeenCalledWith("2026-03-07", 4, "2026-03-07", 6);
+      expect(onCommitRange).toHaveBeenCalledWith(
+        "2026-03-07",
+        4,
+        "2026-03-07",
+        6,
+      );
     });
 
     it("reports different dayKeys for cross-day range", () => {
@@ -173,7 +178,12 @@ describe("buildOwnerSelectionConfig", () => {
       const start = dayToLinearIndex(5, 17, hoursPerDay);
       const end = dayToLinearIndex(6, 2, hoursPerDay);
       config.commitRange(start, end);
-      expect(onCommitRange).toHaveBeenCalledWith("2026-03-07", 17, "2026-03-08", 2);
+      expect(onCommitRange).toHaveBeenCalledWith(
+        "2026-03-07",
+        17,
+        "2026-03-08",
+        2,
+      );
     });
   });
 
@@ -203,7 +213,12 @@ describe("buildOwnerSelectionConfig", () => {
       const blocksByDay = new Map([
         [
           "2026-03-07",
-          [{ topOffset: 10 * TIMELINE_ROW_HEIGHT, height: TIMELINE_ROW_HEIGHT }],
+          [
+            {
+              topOffset: 10 * TIMELINE_ROW_HEIGHT,
+              height: TIMELINE_ROW_HEIGHT,
+            },
+          ],
         ],
       ]);
       const { config } = makeConfig({ blocksByDay });

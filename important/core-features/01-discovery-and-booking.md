@@ -77,6 +77,7 @@ Calendar view of court availability at a specific venue.
 - Time slots color-coded by status (available, booked, blocked)
 - Court selector to filter which courts are shown
 - Time zone aware display
+- Overnight and cross-week range support for contiguous hourly slots (for example, Sunday 11:00 PM to Monday 2:00 AM when windows are continuous)
 
 **Business purpose:** The schedule view is the decision point — "Is the court available when I want to play?" A clear, visual schedule reduces booking abandonment.
 
@@ -86,7 +87,7 @@ The core conversion action — player selects a slot and creates a reservation.
 
 ### Happy Path
 
-1. **Select a time slot** — Player picks an available slot from the schedule view or court detail page. The date picker is time-zone aware.
+1. **Select a time slot** — Player picks an available slot from the schedule view or court detail page. The date picker is time-zone aware, and range selection can span midnight when contiguous slots exist.
 2. **Review booking details** — Court name, venue, date, start time, duration (default 60 minutes, configurable), and live price calculation.
 3. **Select add-ons (optional)** — If the venue offers extras (shoe rental, ball rental, etc.), the player can add them. Each add-on shows its price.
 4. **Multi-court option** — Player can add more courts to the same reservation group for a combined booking.
@@ -97,6 +98,7 @@ The core conversion action — player selects a slot and creates a reservation.
 ### Negative Paths
 
 - **Slot no longer available** — If another player books the same slot before confirmation, the system rejects the request and the player must choose a different time.
+- **Range is not contiguous** — Cross-midnight or cross-week range extension only works when every hourly slot in-between is still available.
 - **Profile incomplete** — Booking is blocked until the player provides name, email, and phone number.
 - **Venue not reservable** — If the venue is not verified, has no payment method, or has reservations disabled, the booking button is not shown. The page explains why.
 - **Past time slot** — Cannot book a slot in the past. Validation prevents this.

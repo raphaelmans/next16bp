@@ -192,7 +192,9 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
         <ReservationAlertsPanel organizationId={organization?.id ?? null} />
       }
     >
-      <PermissionGate accessRule={{ type: "owner-only" }}>
+      <PermissionGate
+        accessRule={{ type: "permission", permission: "place.manage" }}
+      >
         <div className="space-y-6">
           <PageHeader
             title={`Edit Venue: ${place.name}`}

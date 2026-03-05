@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { protectedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
+import { OrganizationMemberPermissionDeniedError } from "@/lib/modules/organization-member/errors/organization-member.errors";
 import {
   NotPlaceOwnerError,
   PlaceNotFoundError,
@@ -52,7 +53,10 @@ function handlePlaceAddonError(error: unknown): never {
     });
   }
 
-  if (error instanceof NotPlaceOwnerError) {
+  if (
+    error instanceof NotPlaceOwnerError ||
+    error instanceof OrganizationMemberPermissionDeniedError
+  ) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: error.message,

@@ -1,5 +1,5 @@
 import { makeCourtRepository } from "@/lib/modules/court/factories/court.factory";
-import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
+import { makeOrganizationMemberService } from "@/lib/modules/organization-member/factories/organization-member.factory";
 import { makePlaceRepository } from "@/lib/modules/place/factories/place.factory";
 import { getContainer } from "@/lib/shared/infra/container";
 import { CourtHoursRepository } from "../repositories/court-hours.repository";
@@ -21,7 +21,7 @@ export function makeCourtHoursService(): CourtHoursService {
       makeCourtHoursRepository(),
       makeCourtRepository(),
       makePlaceRepository(),
-      makeOrganizationRepository(),
+      makeOrganizationMemberService(),
       getContainer().transactionManager,
     );
   }

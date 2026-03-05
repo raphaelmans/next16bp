@@ -15,6 +15,7 @@ The primary conversion path from the player's perspective.
  │
  ▼
 [4] Checks court schedule (weekly calendar, available slots highlighted)
+ │   → Can extend selection across midnight/week boundary when hourly slots are contiguous
  │
  ▼
 [5] Selects a time slot
@@ -33,14 +34,14 @@ The primary conversion path from the player's perspective.
 [8] Sees payment instructions (owner's bank/wallet details, countdown timer)
  │   → Transfers money externally (GCash, bank app, etc.)
  │   → Uploads proof (reference number, screenshot)
- │   → Clicks "I Have Paid" → Reservation PAYMENT_MARKED
+ │   → Clicks "I Have Paid" → Reservation PAYMENT_MARKED_BY_USER
  │
  ▼
 [9] Owner verifies payment → Reservation CONFIRMED
  │   → Player receives push/inbox notification
  │
  ▼
-[10] Player plays on scheduled date → Reservation COMPLETED
+[10] Player plays on scheduled date → Reservation remains CONFIRMED and later appears in Past tab by end-time cutoff
 ```
 
 ### Drop-Off Points
@@ -90,13 +91,13 @@ From signup to receiving the first booking.
  │
  ▼
 [8] Wizard complete screen
- │   ⚠ NO notification opt-in prompt
+ │   ⚠ NO in-wizard notification activation step
  │   ⚠ NO team invite prompt
- │   ⚠ NO "your venue is live" moment
+ │   ⚠ Dashboard warnings exist later, but setup completion itself is still silent
  │
  ▼
 [9] Owner lands on dashboard
- │   ⚠ NO post-setup guidance
+ │   → Setup and notification routing warnings can appear here
  │
  ▼
 [10] Venue becomes visible to players (once verified + configured)
@@ -117,7 +118,7 @@ From signup to receiving the first booking.
 | 3 → 4 (Claim path) | Admin delay blocks progress, no ETA | High |
 | 5 (Schedule) | Complex UI, user skips and forgets | Medium |
 | 7 (Verification) | Async approval, user may not return | Medium |
-| 8 → 9 (Post-wizard) | No guidance, no notification/team prompts | Critical |
+| 8 → 9 (Post-wizard) | No in-wizard handoff for notifications/team; relies on later dashboard follow-up | Critical |
 | 11 → 12 (First booking) | Notifications off → booking missed | Critical |
 
 ---
@@ -179,15 +180,14 @@ How a staff member joins and becomes operational.
 How a member goes from "no alerts" to "fully receiving notifications."
 
 ```
-[1] Member is on the dashboard (no notification prompt anywhere)
+[1] Member is on the dashboard
  │
  ▼
-[2] Must find notification settings (in settings or bell dropdown)
+[2] May see dashboard warning if zero recipients are enabled; otherwise must find notification settings manually
  │
  ▼
 [3] Toggle "Receive reservation notifications" → ON
- │   ⚠ This enables inbox + email only
- │   ⚠ Push requires a SEPARATE step
+ │   ⚠ Push permission still requires a separate browser permission step
  │
  ▼
 [4] Navigate to web push settings (different location)
@@ -205,7 +205,7 @@ How a member goes from "no alerts" to "fully receiving notifications."
 
 | Stage | Risk | Severity |
 |-------|------|----------|
-| 1 → 2 | No prompt — user must know to look | Critical |
+| 1 → 2 | Warning is conditional; many users still must know where to look | Critical |
 | 3 → 4 | Two disconnected steps — user assumes step 3 is enough | High |
 | 5 | Browser deny = permanent block, no recovery guidance | Medium |
 
@@ -244,7 +244,7 @@ What the owner experiences from booking to completion.
  └── Reject → CANCELLED
  │
  ▼
-[6] Play date arrives → COMPLETED (automatic)
+[6] Play date arrives → reservation remains CONFIRMED; UI classification moves it to Past by end time
 ```
 
 ---
@@ -290,7 +290,7 @@ The most impactful gaps cluster around **transitions between features**:
 
 | Transition | Gap |
 |-----------|-----|
-| **Onboarding → Notifications** | No bridge. Owner completes setup but is never prompted to enable alerts. |
+| **Onboarding → Notifications** | No in-wizard bridge. Activation is still outside setup completion. |
 | **Team Invite → Member Activation** | No bridge. Invited members have no onboarding and no notification prompt. |
 | **Booking → Owner Response** | Email only covers new bookings. Expiration has no alert. |
 | **Setup → Discoverability** | No visibility into when the venue goes live or what blocks it. |

@@ -42,7 +42,7 @@ Configure operating hours per day of the week with time blocks and hourly rates.
 
 ### Step 5: Payment Method — Skippable
 
-Add at least one payment method via Stripe. The first method is automatically set as default.
+Add at least one organization payment method (mobile wallet or bank). The first active method can be set as default for player payment instructions.
 
 ### Step 6: Venue Verification — Skippable
 
@@ -77,7 +77,7 @@ After completing the wizard:
 - The "Get Started" nav item disappears
 - The owner lands on the booking management dashboard
 - There is **no prompt to invite team members**
-- There is **no prompt to enable notifications**
+- There is **no in-wizard notification activation step** (dashboard warning exists later if zero recipients are enabled)
 - There is **no guided "next steps" experience**
 - There is **no "your venue is live" celebration email or banner**
 - There is **no clarity on when the venue becomes visible to players**

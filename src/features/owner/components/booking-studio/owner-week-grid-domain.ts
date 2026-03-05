@@ -158,8 +158,7 @@ export function buildOwnerSelectionConfig(
         const next = current + dir;
         if (isUnavailable(next)) break;
         // Cap at hoursPerDay slots
-        const span =
-          Math.abs(next - anchorIdx) + 1;
+        const span = Math.abs(next - anchorIdx) + 1;
         if (span > hoursPerDay) break;
         current = next;
       }

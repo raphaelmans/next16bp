@@ -10,6 +10,8 @@ This is where venue owners configure everything about their physical spaces — 
 
 The central hub for managing all venues under the owner's organization.
 
+**Access model:** Owners always have access. Managers with `place.manage` can also edit venue/court configuration (including schedule and pricing). Viewers can browse venue pages in navigation but cannot manage configuration.
+
 **What the owner sees:**
 - Organization logo (uploadable)
 - Verification status summary: counts of pending, verified, rejected, and unverified venues
@@ -113,9 +115,10 @@ The owner configures availability on a per-day-of-week basis:
 | Sunday | Closed | — | — | — |
 
 **Validation rules:**
-- Time blocks within the same day cannot overlap
-- Start time must be before end time
-- At least one block is needed for the court to be schedulable
+- Time blocks cannot overlap after normalization.
+- `end > start` means same-day window.
+- `end <= start` is treated as an overnight window and split into two persisted windows (current day to midnight, then next day from midnight).
+- At least one valid window is needed for the court to be schedulable.
 
 ### Availability Studio
 
@@ -128,7 +131,7 @@ The Availability Studio is a visual calendar interface for managing court availa
 - Day-by-day mobile view for smaller screens
 - Quick actions to replace or manage individual blocks
 
-**Business purpose:** While the schedule sets the recurring weekly pattern, the Availability Studio lets owners manage exceptions — blocking off a court for maintenance, adjusting hours for a holiday, etc.
+**Business purpose:** While the schedule sets the recurring weekly pattern, the Availability Studio lets owners manage exceptions — blocking off a court for maintenance, adjusting hours for a holiday, etc. Availability generation also extends into contiguous next-day midnight windows, which enables overnight and 24/7 booking visibility.
 
 ## Add-On Configuration
 

@@ -10,6 +10,7 @@ import {
   ListCourtsByPlaceSchema,
   UpdateCourtSchema,
 } from "./dtos";
+import { OrganizationMemberPermissionDeniedError } from "@/lib/modules/organization-member/errors/organization-member.errors";
 import {
   CourtNotFoundError,
   DuplicateCourtLabelError,
@@ -25,7 +26,10 @@ function handleCourtManagementError(error: unknown): never {
       cause: error,
     });
   }
-  if (error instanceof NotCourtOwnerError) {
+  if (
+    error instanceof NotCourtOwnerError ||
+    error instanceof OrganizationMemberPermissionDeniedError
+  ) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: error.message,

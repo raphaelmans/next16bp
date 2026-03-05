@@ -61,9 +61,11 @@ Users who are both players and venue owners can switch between portals:
 
 The player's reservation management page.
 
-**Tabs:**
-- **Upcoming** — Confirmed future bookings
-- **Past** — Completed bookings
+**Reservation views:**
+- **Pending** — Created / awaiting payment / payment-marked reservations requiring follow-up
+- **Upcoming** — Confirmed reservations with future end time
+- **Past** — Confirmed reservations with past end time
+- **Cancelled** — Cancelled or expired reservations
 
 **Each reservation shows:**
 - Reservation ID
@@ -80,6 +82,14 @@ The player's reservation management page.
 - Owner contact information for paid bookings
 - Chat widget to message the venue
 - Actions: Cancel reservation, Ping owner (send nudge), Create Open Play from this reservation
+
+## Saved Venues (Bookmarks)
+
+Players can save/bookmark venues and return to them later:
+
+- Heart/save action on discovery cards and venue surfaces
+- Dedicated `/saved-venues` page with pagination
+- Per-user bookmark storage linked to profile
 
 ## Invitations
 
@@ -116,4 +126,3 @@ The platform supports installation as a PWA:
 - **No account deletion** — users cannot delete their own account from the UI
 - **No booking history export** — players cannot download their reservation history
 - **No notification history page** — notifications are only accessible via the bell dropdown (up to 20 items)
-- **No saved venues or favorites** — players cannot bookmark venues for quick access later

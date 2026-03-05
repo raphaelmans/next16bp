@@ -31,10 +31,9 @@ Every active reservation has a chat thread connecting the player and the venue.
 |--------|:-:|
 | CREATED | Yes |
 | AWAITING_PAYMENT | Yes |
-| PAYMENT_MARKED | Yes |
+| PAYMENT_MARKED_BY_USER | Yes |
 | CONFIRMED | Yes |
-| COMPLETED | No (archived) |
-| REJECTED | No |
+| EXPIRED | No |
 | CANCELLED | No |
 
 ### Owner Chat Inbox Widget

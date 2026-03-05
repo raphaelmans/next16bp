@@ -38,6 +38,7 @@ const PERMISSION_LABELS: Record<OrganizationMemberPermission, string> = {
   "reservation.chat": "Access reservation chat",
   "reservation.notification.receive": "Receive reservation notifications",
   "organization.member.manage": "Manage members and invitations",
+  "place.manage": "Manage venues and courts",
 };
 
 const RESERVATION_PERMISSIONS: OrganizationMemberPermission[] = [
@@ -47,6 +48,8 @@ const RESERVATION_PERMISSIONS: OrganizationMemberPermission[] = [
   "reservation.chat",
   "reservation.notification.receive",
 ];
+
+const VENUE_PERMISSIONS: OrganizationMemberPermission[] = ["place.manage"];
 
 const ADMIN_PERMISSIONS: OrganizationMemberPermission[] = [
   "organization.member.manage",
@@ -196,6 +199,7 @@ export function TeamMemberPermissionsSheet({
           <div className="space-y-3">
             <Label>Permissions</Label>
             {renderPermissionGroup("Reservations", RESERVATION_PERMISSIONS)}
+            {renderPermissionGroup("Venues", VENUE_PERMISSIONS)}
             {renderPermissionGroup("Administration", ADMIN_PERMISSIONS)}
           </div>
         </div>

@@ -1,7 +1,8 @@
-import { addDays } from "date-fns";
+import { addDays, addMinutes } from "date-fns";
 import { formatInTimeZone } from "@/common/format";
 import { getZonedDayKey, getZonedDayRangeFromDayKey } from "@/common/time-zone";
 import type { RangeSelectionConfig } from "@/components/kudos/range-selection";
+import { isWithinAdjacentWeek } from "@/features/discovery/place-detail/helpers/date-adjacency";
 import {
   buildOpenCellIndexSet,
   type CourtHoursWindow,
@@ -453,9 +454,9 @@ const BLOCK_CTA_LABELS: Record<
   "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING",
   string
 > = {
-  WALK_IN: "Save walk-in booking",
-  MAINTENANCE: "Save maintenance block",
-  GUEST_BOOKING: "Save guest booking",
+  WALK_IN: "Save walk-in",
+  MAINTENANCE: "Save block",
+  GUEST_BOOKING: "Save booking",
 };
 
 export function getBlockCtaLabel(
@@ -534,3 +535,196 @@ export const buildDraftRowsState = (options: {
     isImportCommitted,
   };
 };
+
+// ---------------------------------------------------------------------------
+// Committed range ↔ absolute ISO time conversion
+// ---------------------------------------------------------------------------
+
+export const committedRangeToIso = (options: {
+  startDayKey: string;
+  startHourIdx: number;
+  endDayKey: string;
+  endHourIdx: number;
+  hours: number[];
+  timeZone: string;
+}): { startIso: string; endIso: string } | null => {
+  const { startDayKey, startHourIdx, endDayKey, endHourIdx, hours, timeZone } =
+    options;
+  const startHourVal = hours[startHourIdx];
+  const endHourVal = hours[endHourIdx];
+  if (startHourVal === undefined || endHourVal === undefined) return null;
+
+  const firstHour = hours[0] ?? 0;
+  const startMin =
+    startHourVal < firstHour ? startHourVal * 60 + 1440 : startHourVal * 60;
+  const endMin =
+    endHourVal < firstHour
+      ? (endHourVal + 1) * 60 + 1440
+      : (endHourVal + 1) * 60;
+
+  const dayStart = getZonedDayRangeFromDayKey(startDayKey, timeZone).start;
+  const dayEnd = getZonedDayRangeFromDayKey(endDayKey, timeZone).start;
+  return {
+    startIso: addMinutes(dayStart, startMin).toISOString(),
+    endIso: addMinutes(dayEnd, endMin).toISOString(),
+  };
+};
+
+// ---------------------------------------------------------------------------
+// Cross-week range merge for owner availability studio
+// ---------------------------------------------------------------------------
+
+type OverlaySegment = { topOffset: number; height: number };
+
+export type ResolveOwnerCrossWeekRangeOptions = {
+  oldStartDayKey: string;
+  oldStartHourIdx: number;
+  oldEndDayKey: string;
+  oldEndHourIdx: number;
+  newStartDayKey: string;
+  newStartHourIdx: number;
+  newEndDayKey: string;
+  newEndHourIdx: number;
+  hours: number[];
+  timeZone: string;
+  blocksByDay: Map<string, OverlaySegment[]>;
+  reservationsByDay: Map<string, OverlaySegment[]>;
+};
+
+type MergedOwnerRange = {
+  startDayKey: string;
+  startHourIdx: number;
+  endDayKey: string;
+  endHourIdx: number;
+};
+
+export function resolveOwnerRangeAcrossWeekBoundary(
+  options: ResolveOwnerCrossWeekRangeOptions,
+): MergedOwnerRange {
+  const {
+    oldStartDayKey,
+    oldStartHourIdx,
+    oldEndDayKey,
+    oldEndHourIdx,
+    newStartDayKey,
+    newStartHourIdx,
+    newEndDayKey,
+    newEndHourIdx,
+    hours,
+    timeZone,
+    blocksByDay,
+    reservationsByDay,
+  } = options;
+
+  const fallback: MergedOwnerRange = {
+    startDayKey: newStartDayKey,
+    startHourIdx: newStartHourIdx,
+    endDayKey: newEndDayKey,
+    endHourIdx: newEndHourIdx,
+  };
+
+  const oldIso = committedRangeToIso({
+    startDayKey: oldStartDayKey,
+    startHourIdx: oldStartHourIdx,
+    endDayKey: oldEndDayKey,
+    endHourIdx: oldEndHourIdx,
+    hours,
+    timeZone,
+  });
+  const newIso = committedRangeToIso({
+    startDayKey: newStartDayKey,
+    startHourIdx: newStartHourIdx,
+    endDayKey: newEndDayKey,
+    endHourIdx: newEndHourIdx,
+    hours,
+    timeZone,
+  });
+  if (!oldIso || !newIso) return fallback;
+
+  // Check adjacency
+  if (
+    !isWithinAdjacentWeek({
+      selectedStartTimeIso: oldIso.startIso,
+      candidateDayKey: newStartDayKey,
+      timeZone,
+    })
+  ) {
+    return fallback;
+  }
+
+  // Determine merge direction: old before new or new before old
+  const oldEndMs = Date.parse(oldIso.endIso);
+  const newStartMs = Date.parse(newIso.startIso);
+  const oldStartMs = Date.parse(oldIso.startIso);
+  const newEndMs = Date.parse(newIso.endIso);
+
+  let mergedStartDayKey: string;
+  let mergedStartHourIdx: number;
+  let mergedEndDayKey: string;
+  let mergedEndHourIdx: number;
+  let gapStartMs: number;
+  let gapEndMs: number;
+
+  if (oldEndMs <= newStartMs) {
+    // Old ends before new starts — merge forward
+    mergedStartDayKey = oldStartDayKey;
+    mergedStartHourIdx = oldStartHourIdx;
+    mergedEndDayKey = newEndDayKey;
+    mergedEndHourIdx = newEndHourIdx;
+    gapStartMs = oldEndMs;
+    gapEndMs = newStartMs;
+  } else if (newEndMs <= oldStartMs) {
+    // New ends before old starts — merge backward
+    mergedStartDayKey = newStartDayKey;
+    mergedStartHourIdx = newStartHourIdx;
+    mergedEndDayKey = oldEndDayKey;
+    mergedEndHourIdx = oldEndHourIdx;
+    gapStartMs = newEndMs;
+    gapEndMs = oldStartMs;
+  } else {
+    // Overlapping ranges — just use the new selection
+    return fallback;
+  }
+
+  // Check gap days for blocks/reservations.
+  // blocksByDay values are pixel-positioned segments so we only check
+  // whether any segments exist on days that fall within the gap.
+  if (gapStartMs < gapEndMs) {
+    const gapStartDayKey = getZonedDayKey(new Date(gapStartMs), timeZone);
+    const gapEndDayKey = getZonedDayKey(new Date(gapEndMs), timeZone);
+    let cursor = getZonedDayRangeFromDayKey(gapStartDayKey, timeZone).start;
+    const gapEndDate = getZonedDayRangeFromDayKey(gapEndDayKey, timeZone).end;
+
+    while (cursor <= gapEndDate) {
+      const dk = getZonedDayKey(cursor, timeZone);
+      const dayBlocks = blocksByDay.get(dk) ?? [];
+      const dayReservations = reservationsByDay.get(dk) ?? [];
+      if (dayBlocks.length > 0 || dayReservations.length > 0) {
+        return fallback;
+      }
+      cursor = addDays(cursor, 1);
+    }
+  }
+
+  // Validate total span doesn't exceed hoursPerDay (one day max)
+  const mergedIso = committedRangeToIso({
+    startDayKey: mergedStartDayKey,
+    startHourIdx: mergedStartHourIdx,
+    endDayKey: mergedEndDayKey,
+    endHourIdx: mergedEndHourIdx,
+    hours,
+    timeZone,
+  });
+  if (!mergedIso) return fallback;
+  const mergedTotalMs =
+    Date.parse(mergedIso.endIso) - Date.parse(mergedIso.startIso);
+  const maxDurationMs = hours.length * 60 * 60_000;
+  if (mergedTotalMs > maxDurationMs) return fallback;
+
+  return {
+    startDayKey: mergedStartDayKey,
+    startHourIdx: mergedStartHourIdx,
+    endDayKey: mergedEndDayKey,
+    endHourIdx: mergedEndHourIdx,
+  };
+}

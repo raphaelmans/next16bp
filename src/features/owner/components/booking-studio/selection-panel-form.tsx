@@ -40,16 +40,16 @@ export const SelectionPanelForm = React.memo(function SelectionPanelForm({
               value as "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING",
             );
         }}
-        className="w-full"
+        className="w-full flex-wrap"
       >
-        <ToggleGroupItem value="GUEST_BOOKING" className="flex-1">
+        <ToggleGroupItem value="GUEST_BOOKING" className="flex-1 shrink">
           Guest
         </ToggleGroupItem>
-        <ToggleGroupItem value="WALK_IN" className="flex-1">
+        <ToggleGroupItem value="WALK_IN" className="flex-1 shrink">
           Walk-in
         </ToggleGroupItem>
-        <ToggleGroupItem value="MAINTENANCE" className="flex-1">
-          Maintenance
+        <ToggleGroupItem value="MAINTENANCE" className="flex-1 shrink">
+          Maint.
         </ToggleGroupItem>
       </ToggleGroup>
 

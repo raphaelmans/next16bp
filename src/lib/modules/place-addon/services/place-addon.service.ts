@@ -1,5 +1,5 @@
 import { DEFAULT_CURRENCY } from "@/common/location-defaults";
-import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
+import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
 import {
   NotPlaceOwnerError,
   PlaceNotFoundError,
@@ -36,7 +36,7 @@ export class PlaceAddonService implements IPlaceAddonService {
   constructor(
     private placeAddonRepository: IPlaceAddonRepository,
     private placeRepository: IPlaceRepository,
-    private organizationRepository: IOrganizationRepository,
+    private organizationMemberService: IOrganizationMemberService,
     private transactionManager: TransactionManager,
   ) {}
 
@@ -128,13 +128,12 @@ export class PlaceAddonService implements IPlaceAddonService {
       throw new NotPlaceOwnerError();
     }
 
-    const organization = await this.organizationRepository.findById(
+    await this.organizationMemberService.assertOrganizationPermission(
+      userId,
       place.organizationId,
+      "place.manage",
       ctx,
     );
-    if (!organization || organization.ownerUserId !== userId) {
-      throw new NotPlaceOwnerError();
-    }
   }
 
   private assertAddonPayloadValidity(data: SetPlaceAddonsDTO): void {

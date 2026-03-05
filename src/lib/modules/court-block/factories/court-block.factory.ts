@@ -2,7 +2,7 @@ import { makeCourtRepository } from "@/lib/modules/court/factories/court.factory
 import { makeCourtHoursRepository } from "@/lib/modules/court-hours/factories/court-hours.factory";
 import { makeCourtPriceOverrideRepository } from "@/lib/modules/court-price-override/factories/court-price-override.factory";
 import { makeCourtRateRuleRepository } from "@/lib/modules/court-rate-rule/factories/court-rate-rule.factory";
-import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
+import { makeOrganizationMemberService } from "@/lib/modules/organization-member/factories/organization-member.factory";
 import { makePlaceRepository } from "@/lib/modules/place/factories/place.factory";
 import { ReservationRepository } from "@/lib/modules/reservation/repositories/reservation.repository";
 import { getContainer } from "@/lib/shared/infra/container";
@@ -34,7 +34,7 @@ export function makeCourtBlockService(): CourtBlockService {
       makeReservationRepository(),
       makeCourtRepository(),
       makePlaceRepository(),
-      makeOrganizationRepository(),
+      makeOrganizationMemberService(),
       makeCourtHoursRepository(),
       makeCourtRateRuleRepository(),
       makeCourtPriceOverrideRepository(),

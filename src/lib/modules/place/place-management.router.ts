@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { OrganizationMemberPermissionDeniedError } from "@/lib/modules/organization-member/errors/organization-member.errors";
 import {
   NotOrganizationOwnerError,
   OrganizationNotFoundError,
@@ -58,7 +59,8 @@ function handlePlaceManagementError(error: unknown): never {
   }
   if (
     error instanceof NotOrganizationOwnerError ||
-    error instanceof NotPlaceOwnerError
+    error instanceof NotPlaceOwnerError ||
+    error instanceof OrganizationMemberPermissionDeniedError
   ) {
     throw new TRPCError({
       code: "FORBIDDEN",

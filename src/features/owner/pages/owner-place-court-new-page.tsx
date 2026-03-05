@@ -164,7 +164,9 @@ export default function NewPlaceCourtPage({
         <ReservationAlertsPanel organizationId={organization.id} />
       }
     >
-      <PermissionGate accessRule={{ type: "owner-only" }}>
+      <PermissionGate
+        accessRule={{ type: "permission", permission: "place.manage" }}
+      >
         <div className="space-y-6">
           <PageHeader
             title="Step 2 of 3 · Add a Court"

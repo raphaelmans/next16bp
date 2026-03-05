@@ -20,6 +20,7 @@ export function BookmarkButton({
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
     if (isPending) return;
     onToggle();
   };

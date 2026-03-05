@@ -2,7 +2,7 @@
 
 ## Purpose
 
-KudosCourts operates in the Philippines where online card payments are not the default for many customers. The payment system is designed around manual/offline payment methods common in the local market — bank transfers, mobile wallets (GCash, PayMaya), and cash.
+KudosCourts operates in the Philippines where online card payments are not the default for many customers. The payment system is designed around manual/offline payment methods common in the local market — bank transfers, mobile wallets (GCash, Maya), and cash.
 
 ## How Payment Works (Happy Path)
 
@@ -23,7 +23,7 @@ Owners configure their accepted payment methods in Settings:
 - Fields: Account name, account number, instructions
 
 **Mobile Wallet:**
-- Supported: GCash, PayMaya
+- Supported: GCash, Maya
 - Fields: Account name, account number, instructions
 
 Owners can:
@@ -63,13 +63,13 @@ When a player marks a reservation as paid:
 - The reservation list shows the "Payment Marked" status
 - The owner can review the proof (reference number, screenshot) on the reservation detail
 - Actions available:
-  - **Confirm Payment** — Reservation moves to CONFIRMED
-  - **Mark as Paid Offline** — For walk-in/cash payments where the owner received payment in person. Requires selecting the payment method used and entering a reference number.
-  - **Reject** — If the proof is insufficient or fraudulent
+  - **Confirm Payment** — For `PAYMENT_MARKED_BY_USER`, moves reservation to `CONFIRMED`
+  - **Reject** — For pre-confirmed statuses, cancels the reservation with owner-provided reason context
+  - **Mark as Paid Offline** — Separate fast path for paid bookings still in `CREATED` (walk-in/cash already collected). Requires active payment method + reference.
 
 ## Free Bookings
 
-If a court has no pricing configured (rate is zero), the payment flow is skipped entirely. The reservation goes directly from "Accepted" to "Confirmed."
+If the booking total is zero, owner acceptance skips payment-hold flow and confirms directly.
 
 ## Payment Expiration
 

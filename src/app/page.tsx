@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import Script from "next/script";
 import { HOME_FAQS } from "@/features/home/constants/home-faq";
 import { HomeLandingPage } from "@/features/home/pages/home-landing-page";
@@ -46,9 +48,13 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 3600;
-
 export default async function HomePage() {
+  const cookieStore = await cookies();
+  const portalCookie = cookieStore.get("kudos.portal-context");
+  if (portalCookie?.value === "organization") {
+    redirect("/organization");
+  }
+
   const featuredPlaces = await getHomeFeaturedPlaces();
 
   await prefetchHomeData();

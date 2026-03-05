@@ -46,7 +46,7 @@ Before a venue can accept online bookings, the owner must submit proof of owners
 - **Approve** — Venue becomes "VERIFIED." The public listing gets a verified badge. Online reservations become possible.
 - **Reject** — Venue stays unverified. Owner must resubmit.
 
-**Current gap:** When rejecting, there is no structured way to communicate the rejection reason back to the owner. The owner sees "REJECTED" status but does not know what was wrong or how to fix it.
+**Current behavior:** Admin review captures review notes (required on rejection), and these notes are persisted and shown in review detail surfaces.
 
 ## Courts Management
 

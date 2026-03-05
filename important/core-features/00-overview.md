@@ -74,4 +74,4 @@ Discovery ──→ Booking ──→ Reservation Created
 
 ## Documentation Basis
 
-Based on full repository analysis of the KudosCourts codebase (Feb 2026). Written for the product team to support feature discussions, pitch deck preparation, and design work.
+Based on full repository analysis of the KudosCourts codebase (updated March 2026). Written for the product team to support feature discussions, pitch deck preparation, and design work.

@@ -3,6 +3,7 @@ import {
   CourtNotFoundError,
   NotCourtOwnerError,
 } from "@/lib/modules/court/errors/court.errors";
+import { OrganizationMemberPermissionDeniedError } from "@/lib/modules/organization-member/errors/organization-member.errors";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import { protectedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
 import {
@@ -34,7 +35,10 @@ function handleCourtBlockError(error: unknown): never {
     });
   }
 
-  if (error instanceof NotCourtOwnerError) {
+  if (
+    error instanceof NotCourtOwnerError ||
+    error instanceof OrganizationMemberPermissionDeniedError
+  ) {
     throw new TRPCError({
       code: "FORBIDDEN",
       message: error.message,

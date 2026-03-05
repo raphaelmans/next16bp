@@ -5,7 +5,7 @@ import {
   NotCourtOwnerError,
 } from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
-import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
+import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
 import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import type { CourtRateRuleRecord } from "@/lib/shared/infra/db/schema";
 import { logger } from "@/lib/shared/infra/logger";
@@ -33,7 +33,7 @@ export class CourtRateRuleService implements ICourtRateRuleService {
     private courtRateRuleRepository: ICourtRateRuleRepository,
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
-    private organizationRepository: IOrganizationRepository,
+    private organizationMemberService: IOrganizationMemberService,
     private transactionManager: TransactionManager,
   ) {}
 
@@ -182,13 +182,12 @@ export class CourtRateRuleService implements ICourtRateRuleService {
       throw new NotCourtOwnerError();
     }
 
-    const organization = await this.organizationRepository.findById(
+    await this.organizationMemberService.assertOrganizationPermission(
+      userId,
       place.organizationId,
+      "place.manage",
       ctx,
     );
-    if (!organization || organization.ownerUserId !== userId) {
-      throw new NotCourtOwnerError();
-    }
   }
 
   private assertNoOverlaps(

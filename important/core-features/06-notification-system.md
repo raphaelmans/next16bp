@@ -2,61 +2,68 @@
 
 ## Purpose
 
-When a player books a court, the venue must respond promptly — accept the booking, confirm payment, or reject. The notification system ensures the right people at the venue are alerted when booking events occur.
+Reservation operations only work if owners and players receive lifecycle signals quickly. The notification system handles inbox items plus async delivery jobs for push/email/SMS channels.
 
 ## Notification Channels
 
 | Channel | What the User Experiences | Status |
 |---------|--------------------------|:-:|
-| **In-App Inbox** | Bell icon in the navbar with unread count badge. Dropdown shows up to 20 notifications with mark-read actions. | Fully implemented |
-| **Web Push** | Browser popup notifications, even when the app tab is in the background. Multi-device support. | Fully implemented |
-| **Mobile Push** | Native push notifications on the mobile app. Multi-device support. | Fully implemented |
-| **Email** | HTML email with full booking details and a "Review & Respond" button. | Partial — only new bookings |
-| **SMS** | Text message with compact summary and link. | Infrastructure built, not fully connected |
+| **In-App Inbox** | Bell icon + unread badge, latest notifications list, mark-read actions | Fully implemented |
+| **Web Push** | Browser push for subscribed devices | Fully implemented |
+| **Mobile Push** | Native push for registered mobile tokens | Fully implemented |
+| **Email** | HTML lifecycle emails | Partial |
+| **SMS** | Text fallback/summary notifications | Partial |
 
-## What Events Trigger Notifications?
+## Reservation Event Coverage
 
-| Event | What Happened | Who Gets Notified | Email | Push/Inbox |
-|-------|--------------|-------------------|:-:|:-:|
-| New booking | Player reserved a court | Owner + opted-in members | Yes | Yes |
-| Group booking | Player reserved multiple courts | Owner + opted-in members | Yes | Yes |
-| Awaiting payment | Booking accepted, waiting for player to pay | Player only | No | Yes |
-| Payment marked | Player uploaded payment proof | Owner + opted-in members | No | Yes |
-| Booking confirmed | Owner confirmed the reservation | Player only | No | Yes |
-| Booking rejected | Owner declined the reservation | Player only | No | Yes |
-| Booking cancelled | Player cancelled | Owner + opted-in members | No | Yes |
-| Player pinged | Player sent a nudge to the owner | Owner + opted-in members | No | Yes |
+For reservation lifecycle events, channels are event-specific:
 
-Only 2 of 8 events send email. The rest rely on push and inbox only.
+| Event Family | Who Gets Notified | Email/SMS | Push + Inbox |
+|--------------|-------------------|:-:|:-:|
+| `reservation.created` + `reservation_group.created` | Owner + opted-in members | Yes | Yes |
+| `reservation.awaiting_payment` (+ group variant) | Player | No | Yes |
+| `reservation.payment_marked` (+ group variant) | Owner + opted-in members | No | Yes |
+| `reservation.confirmed` (+ group variant) | Player | No | Yes |
+| `reservation.rejected` (+ group variant) | Player | No | Yes |
+| `reservation.cancelled` (+ group variant) | Owner + opted-in members | No | Yes |
+| `reservation.ping_owner` | Owner + opted-in members | No | Yes |
 
-## Who Receives Notifications?
+Notes:
+- Email/SMS is currently concentrated on "new booking" reservation events.
+- Expiration events still do not generate owner-facing notifications.
 
-Three-layer filter:
+## Non-Reservation Notification Coverage
 
-1. **Permission** — Only members with the "Receive reservation notifications" permission are eligible. Viewers do not have this by default.
-2. **Opt-in** — Eligible members must toggle their notification preference ON. This is a single toggle per member per organization — all-or-nothing across all channels.
-3. **Delivery** — Notifications go to all enabled channels simultaneously. There is no per-channel preference.
+Admin/verification flows also use notifications:
+- Verification requested/reviewed
+- Claim reviewed
+
+Those flows support push and email/SMS content generation where applicable.
+
+## Who Receives Reservation Notifications?
+
+Three filters are applied:
+
+1. **Permission eligibility**: user must have `reservation.notification.receive` (owner is implicitly eligible).
+2. **Organization opt-in preference**: `reservationOpsEnabled` must be true for that user/org.
+3. **Channel availability**: push subscription/token, email address, phone number, and channel flags determine which jobs are enqueued.
 
 ## Notification Preferences UI
 
-Located in notification routing settings:
-
-- Master toggle: "Receive venue reservation lifecycle notifications"
-- Count of currently opted-in members (e.g., "2 of 3 opted in")
-- Warning if zero members are opted in
-- Permission hint if the user lacks the required permission
+Current owner-side behavior:
+- Routing toggle for reservation lifecycle notifications.
+- Enabled-recipient count.
+- Warning if no recipients are enabled.
+- Permission-aware messaging when user cannot manage routing.
 
 ## Delivery Reliability
 
-- Notification jobs are created within the same database transaction as the booking event — no notification is lost even if the system crashes afterward.
-- A background process picks up and dispatches pending jobs in batches.
-- Failed deliveries retry with increasing delays up to 5 attempts.
-- Each notification has a uniqueness key to prevent duplicates.
+- Notification jobs are persisted first, then dispatched asynchronously.
+- Dispatch is retried with backoff up to retry limits.
+- Idempotency keys prevent duplicate delivery jobs.
 
-## What the User Experiences Today
+## Current UX Reality
 
-**As an Owner (after setup):** No notification prompt during or after onboarding. Must manually find notification settings, toggle ON, then separately grant browser push permission.
-
-**As an Invited Team Member:** No welcome screen or notification prompt after accepting. Must independently discover settings and enable notifications.
-
-**If nobody opts in:** New bookings appear in the reservation list but nobody is alerted. The settings page shows a warning, but no proactive nudge appears elsewhere. Bookings may expire unnoticed.
+- There is still no dedicated "enable notifications" step inside wizard completion.
+- Dashboard now surfaces a reservation routing warning when no recipients are enabled.
+- Team members still need to separately enable routing and push permissions themselves.

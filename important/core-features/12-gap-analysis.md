@@ -12,13 +12,13 @@
 
 ## Onboarding & Setup
 
-### P0-01: No Notification Opt-In During or After Setup
+### P0-01: No Notification Activation Step Inside Setup Completion
 
-The owner completes the full wizard, arrives at the dashboard, and is never prompted to enable notifications. If they do not independently discover the notification settings, they will never be alerted when a player books.
+The wizard completion flow still does not include a built-in notification activation step (routing toggle + push permission). Dashboard warnings exist, but this critical activation is still out-of-band from the setup funnel.
 
 **Impact:** First booking goes unnoticed → no confirmation → automatic expiration → player churns.
 
-**Recommendation:** Add a notification opt-in step to the wizard completion (or post-setup nudge). Prompt the owner to toggle notification preference ON and grant browser push permission in one combined flow.
+**Recommendation:** Add an explicit notification activation step to wizard completion and run routing + push permission in one guided interaction.
 
 ---
 
@@ -62,9 +62,9 @@ The "Complete" step requires a manual click to leave. No auto-redirect.
 
 ---
 
-### P1-04: Skippable Steps Not Re-Surfaced
+### P1-04: Skippable Steps Are Not Fully Re-Surfaced Contextually
 
-Schedule & Pricing, Payment, and Verification can be skipped. Once dismissed, there is no persistent reminder to complete them outside the Get Started hub.
+Schedule, verification, payment, and team/notification readiness can be skipped during onboarding. Some reminders now appear on dashboard, but the flow is still fragmented and not presented as a single follow-through checklist.
 
 **Impact:** Venue may go live without pricing (not bookable), without payment (cannot process), or without verification (not visible to players).
 
@@ -124,13 +124,13 @@ Invited members land on the dashboard with no welcome screen, no role explanatio
 
 ---
 
-### P1-06: Viewer Role Overly Limited on Mobile
+### P1-06: Viewer Mobile Navigation Is Limited vs Desktop
 
-Viewers see only 3 tabs (Reservations, Courts, Profile) with no "More" menu. They cannot access Dashboard, Team, or Availability Studio from mobile.
+Viewers now see mobile tabs for Reservations, Studio, and Venues, but still have no "More" sheet and no direct mobile path to dashboard-level context or team page actions.
 
 **Impact:** Significant gap between desktop and mobile experience for Viewers.
 
-**Recommendation:** Give Viewers a "More" menu with accessible pages (Dashboard, Team, Availability Studio).
+**Recommendation:** Give Viewers a "More" menu with accessible pages (Dashboard, Team, Profile) for parity with desktop context.
 
 ---
 
@@ -154,11 +154,11 @@ Members are invited one at a time. Tedious for venues with 5+ staff.
 
 ## Notifications
 
-### P0-05: Email Only Covers 2 of 8 Events
+### P0-05: Reservation Email Coverage Is Still Narrow
 
-Only new bookings trigger email. Payment marked, confirmed, rejected, cancelled, and player ping use push/inbox only.
+Email/SMS coverage is concentrated on `reservation.created` and `reservation_group.created`. Follow-up lifecycle events (awaiting payment, payment marked, confirmed, rejected, cancelled, ping) remain push/inbox-only.
 
-**Impact:** If push is not enabled (common on desktop), 6 of 8 events are only visible by opening the app.
+**Impact:** If push is not enabled (common on desktop), most follow-up lifecycle events are only visible by opening the app.
 
 **Recommendation:** Extend email to at least: payment marked, booking cancelled, player ping.
 
@@ -184,13 +184,13 @@ The notification preference is all-or-nothing. Users cannot say "email yes, push
 
 ---
 
-### P1-09: Zero-Opted-In Warning Only in Settings
+### P1-09: Zero-Recipient Warning Is Dashboard-Centric
 
-The warning that no members are receiving notifications only appears in the notification routing settings page.
+The warning is now visible on dashboard, but still not integrated into high-frequency operational surfaces (for example, reservation inbox/review workflows).
 
-**Impact:** The owner must navigate to settings to discover the problem.
+**Impact:** Owners focused in reservation operations can still miss this warning if they rarely use dashboard.
 
-**Recommendation:** Surface this warning on the dashboard or as a persistent banner.
+**Recommendation:** Mirror the warning into reservation inbox/review surfaces, not just dashboard.
 
 ---
 
@@ -231,16 +231,6 @@ When an owner confirms or rejects a booking, the player is only notified via pus
 **Impact:** If the player does not have push enabled or is not checking the app, they may not know their booking was confirmed or rejected until they show up (or do not).
 
 **Recommendation:** Send email for all status changes that affect the player: confirmed, rejected, cancelled.
-
----
-
-### P1-12: No Guided Recovery From Failed Verification
-
-If verification is rejected, the owner sees "REJECTED" with no explanation.
-
-**Impact:** Dead end. Owner cannot fix the issue without contacting support.
-
-**Recommendation:** Include rejection reason (set by admin) and clear resubmission instructions.
 
 ---
 
@@ -304,14 +294,6 @@ No visibility into how long claims or verifications have been pending. No escala
 
 ## Accounts
 
-### P2-07: No Saved Venues or Favorites
-
-Players cannot bookmark venues for quick access later.
-
-**Recommendation:** Add a favorites/saved venues feature for returning players.
-
----
-
 ### P2-08: No Booking History Export
 
 Players cannot download their reservation history.
@@ -325,5 +307,5 @@ Players cannot download their reservation history.
 | Severity | Count | Key Theme |
 |----------|:-----:|-----------|
 | **P0** | 6 | Notification blindness, missing permission gates |
-| **P1** | 16 | Onboarding friction, email coverage gaps, UX consistency |
-| **P2** | 8 | Polish, convenience features, future scalability |
+| **P1** | 15 | Onboarding friction, email coverage gaps, UX consistency |
+| **P2** | 7 | Polish, convenience features, future scalability |

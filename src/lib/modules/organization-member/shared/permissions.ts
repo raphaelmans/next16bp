@@ -29,6 +29,7 @@ export const ORGANIZATION_MEMBER_PERMISSIONS = [
   "reservation.chat",
   "reservation.notification.receive",
   "organization.member.manage",
+  "place.manage",
 ] as const;
 
 export type OrganizationMemberPermission =
@@ -41,6 +42,7 @@ export const DEFAULT_MANAGER_PERMISSIONS: OrganizationMemberPermission[] = [
   "reservation.chat",
   "reservation.notification.receive",
   "organization.member.manage",
+  "place.manage",
 ];
 
 export const DEFAULT_VIEWER_PERMISSIONS: OrganizationMemberPermission[] = [

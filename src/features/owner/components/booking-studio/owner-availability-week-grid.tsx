@@ -385,25 +385,43 @@ export function OwnerAvailabilityWeekGrid({
 }: OwnerAvailabilityWeekGridProps) {
   const hoursPerDay = hours.length;
 
-  // Build the linear committed range from per-day range
+  // Build the linear committed range from per-day range.
+  // Handles cross-week overlap: when the committed start/end day key falls
+  // outside the visible weekDays, clamp to the visible boundary so the
+  // highlight remains visible for the overlapping portion.
   const linearCommittedRange = React.useMemo(() => {
     if (!committedRange || !weekCommittedDayKey) return null;
-    const startDayColIdx = weekDays.indexOf(weekCommittedDayKey);
-    const endDayColIdx = weekDays.indexOf(
-      weekCommittedEndDayKey ?? weekCommittedDayKey,
-    );
+
+    const firstWeekDay = weekDays[0] ?? "";
+    const lastWeekDay = weekDays[weekDays.length - 1] ?? "";
+    const endDk = weekCommittedEndDayKey ?? weekCommittedDayKey;
+
+    let startDayColIdx = weekDays.indexOf(weekCommittedDayKey);
+    let endDayColIdx = weekDays.indexOf(endDk);
+    let effectiveStartHourIdx = committedRange.startIdx;
+    let effectiveEndHourIdx = committedRange.endIdx;
+
+    // Cross-week: committed start is before visible week
+    if (startDayColIdx === -1 && weekCommittedDayKey < firstWeekDay) {
+      startDayColIdx = 0;
+      effectiveStartHourIdx = 0;
+    }
+
+    // Cross-week: committed end is after visible week
+    if (endDayColIdx === -1 && endDk > lastWeekDay) {
+      endDayColIdx = weekDays.length - 1;
+      effectiveEndHourIdx = hoursPerDay - 1;
+    }
+
     if (startDayColIdx === -1 || endDayColIdx === -1) return null;
+
     return {
       startIdx: dayToLinearIndex(
         startDayColIdx,
-        committedRange.startIdx,
+        effectiveStartHourIdx,
         hoursPerDay,
       ),
-      endIdx: dayToLinearIndex(
-        endDayColIdx,
-        committedRange.endIdx,
-        hoursPerDay,
-      ),
+      endIdx: dayToLinearIndex(endDayColIdx, effectiveEndHourIdx, hoursPerDay),
     };
   }, [
     committedRange,

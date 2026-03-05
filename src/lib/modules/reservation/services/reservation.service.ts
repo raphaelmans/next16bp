@@ -129,6 +129,7 @@ export interface ReservationGroupDetailItem {
   };
   place: {
     id: string;
+    slug: string;
     name: string;
     address: string;
     city: string;

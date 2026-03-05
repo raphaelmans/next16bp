@@ -380,7 +380,9 @@ export default function CourtSetupWizardPage({
         />
       }
     >
-      <PermissionGate accessRule={{ type: "owner-only" }}>
+      <PermissionGate
+        accessRule={{ type: "permission", permission: "place.manage" }}
+      >
         <div className="space-y-6">
           <PageHeader
             title={headerTitle}

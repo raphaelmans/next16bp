@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addMinutes, differenceInMinutes } from "date-fns";
+import { addDays, addMinutes, differenceInMinutes } from "date-fns";
 import debounce from "debounce";
 import {
   CalendarIcon,
@@ -17,7 +17,11 @@ import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
 import { formatTimeRangeInTimeZone } from "@/common/format";
 import { DEFAULT_TIME_ZONE } from "@/common/location-defaults";
-import { toUtcISOString } from "@/common/time-zone";
+import {
+  getZonedDayKey,
+  getZonedDayRangeFromDayKey,
+  toUtcISOString,
+} from "@/common/time-zone";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { AppShell } from "@/components/layout";
@@ -42,6 +46,8 @@ import {
   buildWeekTimelineBlocksByDayKey,
   buildWeekTimelineReservationsByDayKey,
   getBlockCtaLabel,
+  getWeekDayKeys,
+  resolveOwnerRangeAcrossWeekBoundary,
 } from "@/features/owner/booking-studio/helpers";
 import { useBookingStudioViewState } from "@/features/owner/booking-studio/hooks";
 import { AvailabilityStudioLoadingShell } from "@/features/owner/components/availability-studio/availability-studio-loading-shell";
@@ -58,12 +64,14 @@ import { ManageBlockDialog } from "@/features/owner/components/booking-studio/ma
 import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-studio/mobile-create-block-drawer";
 import { MobileManageBlockPeekBar } from "@/features/owner/components/booking-studio/mobile-manage-block-peek-bar";
 import { MobileSelectionPeekBar } from "@/features/owner/components/booking-studio/mobile-selection-peek-bar";
+import { OwnerAvailabilityWeekGrid } from "@/features/owner/components/booking-studio/owner-availability-week-grid";
 import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
 import { ReplaceWithGuestDialog } from "@/features/owner/components/booking-studio/replace-with-guest-dialog";
 import { computeClampedResizeRange } from "@/features/owner/components/booking-studio/resize-helpers";
 import { SelectionPanelForm } from "@/features/owner/components/booking-studio/selection-panel-form";
 import {
   buildDateFromDayKey,
+  COMPACT_TIMELINE_ROW_HEIGHT,
   type CourtBlockItem,
   type CustomBlockFormValues,
   customBlockSchema,
@@ -72,7 +80,6 @@ import {
   type GuestBookingFormValues,
   generateOptimisticId,
   guestBookingFormSchema,
-  COMPACT_TIMELINE_ROW_HEIGHT,
   isOptimisticBlockId,
   parseDateTimeInput,
   type ReservationItem,
@@ -80,7 +87,6 @@ import {
 } from "@/features/owner/components/booking-studio/types";
 import { useIs2xlUp } from "@/features/owner/components/booking-studio/use-is-2xl-up";
 import { useManageBlock } from "@/features/owner/components/booking-studio/use-manage-block";
-import { OwnerAvailabilityWeekGrid } from "@/features/owner/components/booking-studio/owner-availability-week-grid";
 import {
   useModCourtHours,
   useModOwnerCourtFilter,
@@ -1173,12 +1179,54 @@ function OwnerAvailabilityStudioInner() {
       endDayKey: string,
       endHourIdx: number,
     ) => {
+      // Attempt cross-week merge when an existing committed range is on an
+      // adjacent week (e.g. Saturday → navigate → select Sunday).
+      if (
+        weekCommittedDayKey &&
+        committedRange &&
+        !weekDayKeys.includes(weekCommittedDayKey)
+      ) {
+        const merged = resolveOwnerRangeAcrossWeekBoundary({
+          oldStartDayKey: weekCommittedDayKey,
+          oldStartHourIdx: committedRange.startIdx,
+          oldEndDayKey: weekCommittedEndDayKey ?? weekCommittedDayKey,
+          oldEndHourIdx: committedRange.endIdx,
+          newStartDayKey: startDayKey,
+          newStartHourIdx: startHourIdx,
+          newEndDayKey: endDayKey,
+          newEndHourIdx: endHourIdx,
+          hours,
+          timeZone: placeTimeZone,
+          blocksByDay: weekTimelineBlocksByDayKey,
+          reservationsByDay: weekTimelineReservationsByDayKey,
+        });
+        setCommittedRange({
+          startIdx: merged.startHourIdx,
+          endIdx: merged.endHourIdx,
+        });
+        setWeekCommittedDayKey(merged.startDayKey);
+        setWeekCommittedEndDayKey(merged.endDayKey);
+        manageBlock.close();
+        return;
+      }
+
       setCommittedRange({ startIdx: startHourIdx, endIdx: endHourIdx });
       setWeekCommittedDayKey(startDayKey);
       setWeekCommittedEndDayKey(endDayKey);
       manageBlock.close();
     },
-    [setCommittedRange, manageBlock.close],
+    [
+      weekCommittedDayKey,
+      weekCommittedEndDayKey,
+      committedRange,
+      weekDayKeys,
+      hours,
+      placeTimeZone,
+      weekTimelineBlocksByDayKey,
+      weekTimelineReservationsByDayKey,
+      setCommittedRange,
+      manageBlock.close,
+    ],
   );
 
   const handleWeekClearRange = React.useCallback(() => {
@@ -1187,6 +1235,47 @@ function OwnerAvailabilityStudioInner() {
     setWeekCommittedEndDayKey(null);
     manageBlock.close();
   }, [setCommittedRange, manageBlock.close]);
+
+  // Prefetch next week's blocks + reservations for instant navigation
+  const prefetchedWeeksRef = React.useRef(new Set<string>());
+  React.useEffect(() => {
+    if (!courtId || blocksQuery.isLoading) return;
+
+    const weekStart = weekDayKeys[0];
+    if (!weekStart) return;
+
+    const nextWeekStartDate = addDays(
+      getZonedDayRangeFromDayKey(weekStart, placeTimeZone).start,
+      7,
+    );
+    const nextWeekStartDayKey = getZonedDayKey(
+      nextWeekStartDate,
+      placeTimeZone,
+    );
+    const nextWeekDays = getWeekDayKeys(nextWeekStartDayKey, placeTimeZone);
+    const nextRange = buildBlocksRange({
+      dayKey: nextWeekStartDayKey,
+      visibleDayKeys: nextWeekDays,
+      timeZone: placeTimeZone,
+    });
+
+    const cacheKey = `${courtId}:${nextWeekStartDayKey}`;
+    if (prefetchedWeeksRef.current.has(cacheKey)) return;
+    prefetchedWeeksRef.current.add(cacheKey);
+
+    const nextStartIso = toUtcISOString(nextRange.start);
+    const nextEndIso = toUtcISOString(nextRange.end);
+    const input = { courtId, startTime: nextStartIso, endTime: nextEndIso };
+
+    void utils.courtBlock.listForCourtRange.fetch(input).catch(() => {
+      prefetchedWeeksRef.current.delete(cacheKey);
+    });
+    void utils.reservationOwner.getActiveForCourtRange
+      .fetch(input)
+      .catch(() => {
+        prefetchedWeeksRef.current.delete(cacheKey);
+      });
+  }, [courtId, blocksQuery.isLoading, weekDayKeys, placeTimeZone, utils]);
 
   const handleMobileDrawerClose = React.useCallback(
     (open: boolean) => {
@@ -1223,7 +1312,13 @@ function OwnerAvailabilityStudioInner() {
     const s = buildDateFromDayKey(committedDayKey, startMin, placeTimeZone);
     const e = buildDateFromDayKey(committedEndDayKey, endMin, placeTimeZone);
     return formatTimeRangeInTimeZone(s, e, placeTimeZone);
-  }, [committedDayKey, committedEndDayKey, committedRange, hours, placeTimeZone]);
+  }, [
+    committedDayKey,
+    committedEndDayKey,
+    committedRange,
+    hours,
+    placeTimeZone,
+  ]);
 
   const shouldReduceMotion = useReducedMotion();
 

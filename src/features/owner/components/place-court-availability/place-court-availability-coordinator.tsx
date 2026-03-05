@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addMinutes } from "date-fns";
+import { addDays, addMinutes } from "date-fns";
 import debounce from "debounce";
 import {
   CalendarIcon,
@@ -22,7 +22,11 @@ import {
   type ReservationEnablementIssueCode,
 } from "@/common/reservation-enablement";
 import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
-import { getZonedDayKey, toUtcISOString } from "@/common/time-zone";
+import {
+  getZonedDayKey,
+  getZonedDayRangeFromDayKey,
+  toUtcISOString,
+} from "@/common/time-zone";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { AppShell } from "@/components/layout";
@@ -40,6 +44,8 @@ import {
   buildWeekTimelineBlocksByDayKey,
   buildWeekTimelineReservationsByDayKey,
   getBlockCtaLabel,
+  getWeekDayKeys,
+  resolveOwnerRangeAcrossWeekBoundary,
 } from "@/features/owner/booking-studio/helpers";
 import { useBookingStudioViewState } from "@/features/owner/booking-studio/hooks";
 import { ReservationAlertsPanel } from "@/features/owner/components";
@@ -853,12 +859,54 @@ function OwnerCourtAvailabilityInner({
       endDayKey: string,
       endHourIdx: number,
     ) => {
+      // Attempt cross-week merge when an existing committed range is on an
+      // adjacent week (e.g. Saturday → navigate → select Sunday).
+      if (
+        weekCommittedDayKey &&
+        committedRange &&
+        !weekDayKeys.includes(weekCommittedDayKey)
+      ) {
+        const merged = resolveOwnerRangeAcrossWeekBoundary({
+          oldStartDayKey: weekCommittedDayKey,
+          oldStartHourIdx: committedRange.startIdx,
+          oldEndDayKey: weekCommittedEndDayKey ?? weekCommittedDayKey,
+          oldEndHourIdx: committedRange.endIdx,
+          newStartDayKey: startDayKey,
+          newStartHourIdx: startHourIdx,
+          newEndDayKey: endDayKey,
+          newEndHourIdx: endHourIdx,
+          hours,
+          timeZone: placeTimeZone,
+          blocksByDay: weekTimelineBlocksByDayKey,
+          reservationsByDay: weekTimelineReservationsByDayKey,
+        });
+        setCommittedRange({
+          startIdx: merged.startHourIdx,
+          endIdx: merged.endHourIdx,
+        });
+        setWeekCommittedDayKey(merged.startDayKey);
+        setWeekCommittedEndDayKey(merged.endDayKey);
+        manageBlock.close();
+        return;
+      }
+
       setCommittedRange({ startIdx: startHourIdx, endIdx: endHourIdx });
       setWeekCommittedDayKey(startDayKey);
       setWeekCommittedEndDayKey(endDayKey);
       manageBlock.close();
     },
-    [setCommittedRange, manageBlock.close],
+    [
+      weekCommittedDayKey,
+      weekCommittedEndDayKey,
+      committedRange,
+      weekDayKeys,
+      hours,
+      placeTimeZone,
+      weekTimelineBlocksByDayKey,
+      weekTimelineReservationsByDayKey,
+      setCommittedRange,
+      manageBlock.close,
+    ],
   );
 
   const handleWeekClearRange = React.useCallback(() => {
@@ -867,6 +915,47 @@ function OwnerCourtAvailabilityInner({
     setWeekCommittedEndDayKey(null);
     manageBlock.close();
   }, [setCommittedRange, manageBlock.close]);
+
+  // Prefetch next week's blocks + reservations for instant navigation
+  const prefetchedWeeksRef = React.useRef(new Set<string>());
+  React.useEffect(() => {
+    if (!courtId || blocksQuery.isLoading) return;
+
+    const weekStart = weekDayKeys[0];
+    if (!weekStart) return;
+
+    const nextWeekStartDate = addDays(
+      getZonedDayRangeFromDayKey(weekStart, placeTimeZone).start,
+      7,
+    );
+    const nextWeekStartDayKey = getZonedDayKey(
+      nextWeekStartDate,
+      placeTimeZone,
+    );
+    const nextWeekDays = getWeekDayKeys(nextWeekStartDayKey, placeTimeZone);
+    const nextRange = buildBlocksRange({
+      dayKey: nextWeekStartDayKey,
+      visibleDayKeys: nextWeekDays,
+      timeZone: placeTimeZone,
+    });
+
+    const cacheKey = `${courtId}:${nextWeekStartDayKey}`;
+    if (prefetchedWeeksRef.current.has(cacheKey)) return;
+    prefetchedWeeksRef.current.add(cacheKey);
+
+    const nextStartIso = toUtcISOString(nextRange.start);
+    const nextEndIso = toUtcISOString(nextRange.end);
+    const input = { courtId, startTime: nextStartIso, endTime: nextEndIso };
+
+    void utils.courtBlock.listForCourtRange.fetch(input).catch(() => {
+      prefetchedWeeksRef.current.delete(cacheKey);
+    });
+    void utils.reservationOwner.getActiveForCourtRange
+      .fetch(input)
+      .catch(() => {
+        prefetchedWeeksRef.current.delete(cacheKey);
+      });
+  }, [courtId, blocksQuery.isLoading, weekDayKeys, placeTimeZone, utils]);
 
   const committedDayKey = weekCommittedDayKey ?? dayKey;
   const committedEndDayKey = weekCommittedEndDayKey ?? committedDayKey;
@@ -902,7 +991,13 @@ function OwnerCourtAvailabilityInner({
     const s = buildDateFromDayKey(committedDayKey, startMin, placeTimeZone);
     const e = buildDateFromDayKey(committedEndDayKey, endMin, placeTimeZone);
     return formatTimeRangeInTimeZone(s, e, placeTimeZone);
-  }, [committedDayKey, committedEndDayKey, committedRange, hours, placeTimeZone]);
+  }, [
+    committedDayKey,
+    committedEndDayKey,
+    committedRange,
+    hours,
+    placeTimeZone,
+  ]);
 
   const shouldReduceMotion = useReducedMotion();
 
