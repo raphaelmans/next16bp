@@ -411,7 +411,10 @@ async function PlaceDetailPageServerSection({
             </>
           )}
 
-          <div className="mt-6 grid gap-6 pb-8 lg:grid-cols-2 lg:pb-16">
+          <div
+            id="courts-info"
+            className="mt-6 grid gap-6 pb-8 lg:grid-cols-2 lg:pb-16"
+          >
             <Suspense fallback={<PlaceDetailCourtsServerSectionFallback />}>
               <PlaceDetailCourtsServerSection
                 dataPromise={courtsSectionPromise}

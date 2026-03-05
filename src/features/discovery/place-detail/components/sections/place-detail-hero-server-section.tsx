@@ -1,4 +1,4 @@
-import { Calendar, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { Calendar, LayoutGrid, MapPin, Phone, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -89,6 +89,12 @@ export function PlaceDetailHeroServerSection({
           <a href={directionsUrl} target="_blank" rel="noopener noreferrer">
             <MapPin className="h-4 w-4" />
             Directions
+          </a>
+        </Button>
+        <Button asChild variant="outline" size="sm">
+          <a href="#courts-info">
+            <LayoutGrid className="h-4 w-4" />
+            Courts & info
           </a>
         </Button>
         {hasCallCta && (

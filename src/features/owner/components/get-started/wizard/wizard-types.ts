@@ -38,7 +38,7 @@ export const STEP_CONFIGS: StepConfig[] = [
   {
     key: "courts",
     label: "Courts",
-    description: "Add at least one court to your venue.",
+    description: "Set up your first court — you can add more anytime.",
     skippable: false,
     isComplete: (s) => s.hasActiveCourt,
   },

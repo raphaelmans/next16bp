@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  CheckCircle2,
   Clock,
   Image as ImageIcon,
   Loader2,
@@ -258,33 +257,39 @@ export default function OwnerPlacesPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-dashed">
-          <CardContent className="p-4 sm:p-5">
-            <div className="flex flex-wrap items-center gap-3 text-sm">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-primary" />
-                <span className="font-medium">Verification status</span>
+        {(verificationCounts.PENDING > 0 ||
+          verificationCounts.REJECTED > 0 ||
+          verificationCounts.UNVERIFIED > 0) && (
+          <Card className="border-dashed">
+            <CardContent className="p-4 sm:p-5">
+              <div className="flex flex-wrap items-center gap-3 text-sm">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4 text-primary" />
+                  <span className="font-medium">Verification status</span>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  {verificationCounts.PENDING > 0 && (
+                    <Badge variant="secondary" className="gap-1">
+                      <Clock className="h-3 w-3" />
+                      {verificationCounts.PENDING} pending
+                    </Badge>
+                  )}
+                  {verificationCounts.REJECTED > 0 && (
+                    <Badge variant="destructive" className="gap-1">
+                      <XCircle className="h-3 w-3" />
+                      {verificationCounts.REJECTED} rejected
+                    </Badge>
+                  )}
+                  {verificationCounts.UNVERIFIED > 0 && (
+                    <Badge variant="outline" className="gap-1">
+                      {verificationCounts.UNVERIFIED} unverified
+                    </Badge>
+                  )}
+                </div>
               </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary" className="gap-1">
-                  <Clock className="h-3 w-3" />
-                  {verificationCounts.PENDING} pending
-                </Badge>
-                <Badge variant="success" className="gap-1">
-                  <CheckCircle2 className="h-3 w-3" />
-                  {verificationCounts.VERIFIED} verified
-                </Badge>
-                <Badge variant="destructive" className="gap-1">
-                  <XCircle className="h-3 w-3" />
-                  {verificationCounts.REJECTED} rejected
-                </Badge>
-                <Badge variant="outline" className="gap-1">
-                  {verificationCounts.UNVERIFIED} unverified
-                </Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
 
         {placesLoading ? (
           <div className="grid gap-4 sm:grid-cols-2">

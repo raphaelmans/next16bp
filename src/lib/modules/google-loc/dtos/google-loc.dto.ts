@@ -63,14 +63,21 @@ export const GoogleLocGeocodeRequestSchema = z.object({
   address: z.string().trim().min(1).max(200),
 });
 
-export const GoogleLocGeocodeResponseSchema = z.object({
+export const GoogleLocGeocodeResultSchema = z.object({
   lat: z.number().finite(),
   lng: z.number().finite(),
-  formattedAddress: z.string().optional(),
+  formattedAddress: z.string(),
+});
+
+export const GoogleLocGeocodeResponseSchema = z.object({
+  results: z.array(GoogleLocGeocodeResultSchema),
 });
 
 export type GoogleLocGeocodeRequest = z.infer<
   typeof GoogleLocGeocodeRequestSchema
+>;
+export type GoogleLocGeocodeResult = z.infer<
+  typeof GoogleLocGeocodeResultSchema
 >;
 export type GoogleLocGeocodeResponse = z.infer<
   typeof GoogleLocGeocodeResponseSchema

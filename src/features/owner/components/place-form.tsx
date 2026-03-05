@@ -252,6 +252,7 @@ export function PlaceForm({
             latitude={latitudeValue}
             longitude={longitudeValue}
             onChange={handleMapPinChange}
+            searchEnabled={!isEditing}
           />
 
           <div className="grid gap-4 sm:grid-cols-2">

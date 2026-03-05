@@ -9,6 +9,7 @@ import {
   getHomeFeaturedPlaces,
   prefetchHomeData,
 } from "@/lib/modules/home/server/home-page-data";
+import { getServerSession } from "@/lib/shared/infra/auth/server-session";
 import { HydrateClient } from "@/trpc/server";
 
 const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
@@ -52,7 +53,10 @@ export default async function HomePage() {
   const cookieStore = await cookies();
   const portalCookie = cookieStore.get("kudos.portal-context");
   if (portalCookie?.value === "organization") {
-    redirect("/organization");
+    const session = await getServerSession();
+    if (session) {
+      redirect("/organization");
+    }
   }
 
   const featuredPlaces = await getHomeFeaturedPlaces();
@@ -61,6 +65,8 @@ export default async function HomePage() {
 
   const portalRedirectScript = [
     "try{",
+    // Skip redirect if no Supabase auth cookie (user is logged out)
+    "if(!/sb-[^=]+-auth-token=/.test(document.cookie))throw 0;",
     'var p=localStorage.getItem("kudos.default-portal");',
     'if(p==="owner"){localStorage.setItem("kudos.default-portal","organization");p="organization";}',
     'if(p==="organization")location.replace("/organization");',

@@ -358,6 +358,7 @@ export class GoogleLocService implements IGoogleLocService {
     const params = new URLSearchParams({
       address: args.address,
       region: "ph",
+      components: "country:PH",
       key: apiKey,
     });
 
@@ -393,16 +394,19 @@ export class GoogleLocService implements IGoogleLocService {
       });
     }
 
-    const first = json.results?.[0];
-    const location = first?.geometry?.location;
-    if (!location) {
+    const results = (json.results ?? [])
+      .filter((r) => r.geometry?.location)
+      .slice(0, 5)
+      .map((r) => ({
+        lat: r.geometry!.location!.lat,
+        lng: r.geometry!.location!.lng,
+        formattedAddress: r.formatted_address ?? "Unknown address",
+      }));
+
+    if (results.length === 0) {
       throw new ValidationError("No results found for that address");
     }
 
-    return {
-      lat: location.lat,
-      lng: location.lng,
-      formattedAddress: first?.formatted_address,
-    };
+    return { results };
   }
 }

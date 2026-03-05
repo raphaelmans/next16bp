@@ -222,10 +222,14 @@ export function useGoogleLocPreviewMutation(
   });
 }
 
-export type GoogleLocGeocodeResult = {
+export type GoogleLocGeocodePlace = {
   lat: number;
   lng: number;
-  formattedAddress?: string;
+  formattedAddress: string;
+};
+
+export type GoogleLocGeocodeResult = {
+  results: GoogleLocGeocodePlace[];
 };
 
 // --- geocode client + hook ---
