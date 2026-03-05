@@ -131,14 +131,8 @@ export function ContactUsForm() {
             Your details stay private and are only used to reply.
           </p>
           <Button type="submit" size="lg" disabled={isSubmitDisabled}>
-            {submitting ? (
-              <span className="flex items-center gap-2">
-                <Spinner className="text-primary-foreground" />
-                Sending...
-              </span>
-            ) : (
-              "Send message"
-            )}
+            {submitting && <Spinner className="text-primary-foreground" />}
+            Send message
           </Button>
         </CardFooter>
       </StandardFormProvider>
