@@ -1,13 +1,13 @@
 "use client";
 
 import {
-  Loader2,
   MoreHorizontal,
   Search,
   ShieldAlert,
   UserPlus,
   X,
 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
 import { toast } from "@/common/toast";
@@ -557,7 +557,7 @@ export default function OwnerTeamPage() {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {revokeMember.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Spinner className="mr-2 h-4 w-4" />
               )}
               Revoke access
             </AlertDialogAction>
@@ -590,7 +590,7 @@ export default function OwnerTeamPage() {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {cancelInvitation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Spinner className="mr-2 h-4 w-4" />
               )}
               Cancel invitation
             </AlertDialogAction>

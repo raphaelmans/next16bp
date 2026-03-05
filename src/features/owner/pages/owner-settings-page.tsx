@@ -1,7 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -385,7 +386,7 @@ export default function OwnerSettingsPage() {
               <div className="flex justify-end">
                 <Button type="submit" disabled={isOrgSubmitDisabled}>
                   {orgSubmitting && (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Spinner className="h-4 w-4 mr-2" />
                   )}
                   Save Changes
                 </Button>

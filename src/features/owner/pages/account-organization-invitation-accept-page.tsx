@@ -1,6 +1,7 @@
 "use client";
 
-import { CheckCircle2, Loader2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
@@ -172,7 +173,7 @@ export default function AccountOrganizationInvitationAcceptPage({
               disabled={isPending || state !== "idle"}
             >
               {acceptInvitation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Spinner className="mr-2 h-4 w-4" />
               )}
               Accept invitation
             </Button>
@@ -183,7 +184,7 @@ export default function AccountOrganizationInvitationAcceptPage({
               disabled={isPending || state !== "idle"}
             >
               {declineInvitation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Spinner className="mr-2 h-4 w-4" />
               )}
               Decline
             </Button>

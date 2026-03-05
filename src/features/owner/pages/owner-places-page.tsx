@@ -3,12 +3,12 @@
 import {
   Clock,
   Image as ImageIcon,
-  Loader2,
   Plus,
   Settings2,
   ShieldCheck,
   XCircle,
 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import { type ChangeEvent, useRef } from "react";
 import { appRoutes } from "@/common/app-routes";
@@ -222,7 +222,7 @@ export default function OwnerPlacesPage() {
               disabled={isUploadingLogo}
             >
               {isUploadingLogo ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Spinner className="mr-2 h-4 w-4" />
               ) : (
                 <ImageIcon className="mr-2 h-4 w-4" />
               )}

@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
@@ -326,7 +327,7 @@ export default function CourtSetupWizardPage({
   if (isLoading) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Spinner className="h-8 w-8 text-muted-foreground" />
       </div>
     );
   }
@@ -496,7 +497,7 @@ export default function CourtSetupWizardPage({
                 <div className="space-y-6">
                   {isPrereqsLoading ? (
                     <div className="flex min-h-[120px] items-center justify-center">
-                      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                      <Spinner className="h-6 w-6 text-muted-foreground" />
                     </div>
                   ) : (
                     <div className="space-y-4">

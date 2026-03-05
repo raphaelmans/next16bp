@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { Card } from "@/components/ui/card";
 import {
   Select,
@@ -75,7 +75,7 @@ export function AvailabilityStudioToolbar({
               }
             />
             {courtsLoading ? (
-              <Loader2 className="pointer-events-none absolute right-8 size-4 animate-spin text-muted-foreground" />
+              <Spinner className="pointer-events-none absolute right-8 size-4 text-muted-foreground" />
             ) : null}
           </SelectTrigger>
           <SelectContent>

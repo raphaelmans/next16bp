@@ -381,7 +381,7 @@ export function CourtScheduleEditor({
                         className={cn(
                           "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
                           hasSlots
-                            ? "bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300"
+                            ? "bg-teal-100 text-teal-700"
                             : "bg-muted text-muted-foreground",
                         )}
                       >

@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   ArrowRight,
   Image as ImageIcon,
-  Loader2,
   Star,
   X,
 } from "lucide-react";
@@ -12,6 +11,7 @@ import Image from "next/image";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import {
   useMutRemovePlacePhoto,
@@ -132,13 +132,11 @@ export function PlacePhotoUpload({
               disabled={uploadPhoto.isPending}
             >
               {uploadPhoto.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Spinner className="h-4 w-4" />
               ) : (
                 <ImageIcon className="h-4 w-4" />
               )}
-              <span className="ml-2">
-                {uploadPhoto.isPending ? "Uploading..." : "Add photo"}
-              </span>
+              <span className="ml-2">Add photo</span>
             </Button>
           </>
         ) : (
@@ -221,7 +219,7 @@ export function PlacePhotoUpload({
                 aria-label="Remove photo"
               >
                 {removePhoto.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Spinner className="h-4 w-4" />
                 ) : (
                   <X className="h-4 w-4" />
                 )}
@@ -238,13 +236,11 @@ export function PlacePhotoUpload({
             className="aspect-square rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-2 text-muted-foreground hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
           >
             {uploadPhoto.isPending ? (
-              <Loader2 className="h-8 w-8 animate-spin" />
+              <Spinner className="h-8 w-8" />
             ) : (
               <ImageIcon className="h-8 w-8" />
             )}
-            <span className="text-xs">
-              {uploadPhoto.isPending ? "Uploading..." : "Add"}
-            </span>
+            <span className="text-xs">Add</span>
           </button>
         ) : null}
       </div>

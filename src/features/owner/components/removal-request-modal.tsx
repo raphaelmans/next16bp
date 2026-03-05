@@ -1,7 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "@/common/toast";
@@ -146,7 +147,7 @@ export function RemovalRequestModal({
               variant="destructive"
               disabled={isSubmitDisabled}
             >
-              {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {submitting && <Spinner className="h-4 w-4 mr-2" />}
               Submit Request
             </Button>
           </DialogFooter>

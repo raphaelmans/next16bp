@@ -1,6 +1,7 @@
 "use client";
 
-import { Loader2, ShieldAlert, UserMinus, UserPlus, X } from "lucide-react";
+import { ShieldAlert, UserMinus, UserPlus, X } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
@@ -403,7 +404,7 @@ export function TeamAccessManager({
                 disabled={inviteMember.isPending}
               >
                 {inviteMember.isPending ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Spinner className="mr-2 h-4 w-4" />
                 ) : (
                   <UserPlus className="mr-2 h-4 w-4" />
                 )}
@@ -504,7 +505,7 @@ export function TeamAccessManager({
                           disabled={!draft.dirty || updatePermissions.isPending}
                         >
                           {updatePermissions.isPending && (
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            <Spinner className="mr-2 h-4 w-4" />
                           )}
                           Save access
                         </Button>

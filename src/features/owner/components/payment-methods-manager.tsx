@@ -1,7 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Pencil, Plus, Star, Trash2 } from "lucide-react";
+import { Pencil, Plus, Star, Trash2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -486,7 +487,7 @@ export function PaymentMethodsManager({
               </Button>
               <Button type="submit" disabled={isPaymentSubmitDisabled}>
                 {paymentSubmitting && (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <Spinner className="h-4 w-4 mr-2" />
                 )}
                 {editingPaymentMethod ? "Save Changes" : "Add Method"}
               </Button>
@@ -520,7 +521,7 @@ export function PaymentMethodsManager({
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {deletePaymentMethod.isPending && (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Spinner className="h-4 w-4 mr-2" />
               )}
               Delete
             </AlertDialogAction>

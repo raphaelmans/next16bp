@@ -1,15 +1,16 @@
 "use client";
 
-import { useCallback, useId, useState } from "react";
 import {
+  AdvancedMarker,
   APIProvider,
   Map,
-  AdvancedMarker,
+  type MapMouseEvent,
   Pin,
   useMap,
-  type MapMouseEvent,
 } from "@vis.gl/react-google-maps";
-import { Loader2, MapPin, Pencil, Search } from "lucide-react";
+import { MapPin, Pencil, Search } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
+import { useCallback, useId, useState } from "react";
 import {
   type GoogleLocGeocodePlace,
   isApiClientError,
@@ -195,7 +196,7 @@ function MapPickerInner({
               disabled={!searchQuery.trim() || geocodeMutation.isPending}
             >
               {geocodeMutation.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Spinner className="h-4 w-4" />
               ) : (
                 <Search className="h-4 w-4" />
               )}

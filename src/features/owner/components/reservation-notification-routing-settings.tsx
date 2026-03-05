@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
@@ -112,7 +112,7 @@ export function ReservationNotificationRoutingSettings({
 
         {routingState.busy ? (
           <div className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-            <Loader2 className="size-3 animate-spin" />
+            <Spinner className="size-3" />
             Syncing notification routing status...
           </div>
         ) : null}

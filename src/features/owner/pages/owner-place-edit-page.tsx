@@ -1,6 +1,7 @@
 "use client";
 
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -132,7 +133,7 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
   if (orgLoading || placeLoading || !isRouteReady) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Spinner className="h-8 w-8 text-muted-foreground" />
       </div>
     );
   }
@@ -319,7 +320,7 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
                       {deletePlaceMutation.isPending && (
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        <Spinner className="h-4 w-4 mr-2" />
                       )}
                       Delete venue
                     </AlertDialogAction>

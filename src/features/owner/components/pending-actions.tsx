@@ -16,13 +16,13 @@ export function PendingActions({ pendingCount }: PendingActionsProps) {
   }
 
   return (
-    <Alert className="border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/50">
-      <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-500" />
-      <AlertTitle className="text-amber-800 dark:text-amber-200">
+    <Alert className="border-warning bg-warning/10">
+      <AlertTriangle className="h-4 w-4 text-warning-foreground" />
+      <AlertTitle className="text-warning-foreground">
         Action Required
       </AlertTitle>
       <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <span className="text-amber-700 dark:text-amber-300">
+        <span className="text-warning-foreground">
           {pendingCount} booking{pendingCount !== 1 ? "s" : ""} awaiting
           confirmation
         </span>
