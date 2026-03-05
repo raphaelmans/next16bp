@@ -1296,7 +1296,7 @@ function OwnerCourtAvailabilityInner({
   const showPricingBanner = hasIssue("NO_PRICING");
 
   const content = (
-    <div className="space-y-6 pb-24 lg:pb-0">
+    <div className="space-y-6 pb-24 2xl:pb-0">
       <PageHeader
         title={courtData.court.label}
         breadcrumbs={[
@@ -1336,9 +1336,9 @@ function OwnerCourtAvailabilityInner({
         paymentMethodsHref={paymentMethodsHref}
       />
 
-      <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+      <div className="grid gap-6 2xl:grid-cols-[280px_minmax(0,1fr)]">
         {/* Left sidebar — calendar + create block panel */}
-        <div className="hidden lg:block space-y-6">
+        <div className="hidden 2xl:block space-y-6">
           <Card>
             <CardContent className="space-y-3 p-6">
               <div className="flex items-center justify-between">
@@ -1480,14 +1480,14 @@ function OwnerCourtAvailabilityInner({
 
         {/* Week timeline */}
         <Card>
-          <CardContent className="space-y-4 p-4 lg:p-6">
+          <CardContent className="space-y-4 p-4 2xl:p-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-1 lg:gap-2">
+              <div className="flex items-center gap-1 2xl:gap-2">
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 lg:h-9 lg:w-9"
+                  className="h-8 w-8 2xl:h-9 2xl:w-9"
                   onClick={() => navigateWeek(-1)}
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -1495,17 +1495,17 @@ function OwnerCourtAvailabilityInner({
                 <Button
                   type="button"
                   variant="ghost"
-                  className="gap-1.5 text-sm font-heading font-semibold lg:text-lg lg:pointer-events-none"
+                  className="gap-1.5 text-sm font-heading font-semibold 2xl:text-lg 2xl:pointer-events-none"
                   onClick={() => setMobileCalendarOpen(true)}
                 >
-                  <CalendarIcon className="h-3.5 w-3.5 lg:hidden" />
+                  <CalendarIcon className="h-3.5 w-3.5 2xl:hidden" />
                   {weekLabel}
                 </Button>
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 lg:h-9 lg:w-9"
+                  className="h-8 w-8 2xl:h-9 2xl:w-9"
                   onClick={() => navigateWeek(1)}
                 >
                   <ChevronRight className="h-4 w-4" />
@@ -1516,12 +1516,12 @@ function OwnerCourtAvailabilityInner({
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="lg:hidden"
+                  className="2xl:hidden"
                   onClick={handleMobileToday}
                 >
                   Today
                 </Button>
-                <Badge variant="outline" className="hidden lg:inline-flex">
+                <Badge variant="outline" className="hidden 2xl:inline-flex">
                   Snap: 60m
                 </Badge>
               </div>
@@ -1531,7 +1531,7 @@ function OwnerCourtAvailabilityInner({
               open={mobileCalendarOpen}
               onOpenChange={setMobileCalendarOpen}
             >
-              <DialogContent className="w-auto p-0 sm:max-w-fit lg:hidden">
+              <DialogContent className="w-auto p-0 sm:max-w-fit 2xl:hidden">
                 <DialogTitle className="sr-only">Select date</DialogTitle>
                 <Calendar
                   mode="single"

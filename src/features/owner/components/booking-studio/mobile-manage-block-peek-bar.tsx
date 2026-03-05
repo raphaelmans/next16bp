@@ -59,7 +59,7 @@ export const MobileManageBlockPeekBar = React.memo(
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed bottom-0 left-0 right-0 z-50 border-t bg-background pb-[env(safe-area-inset-bottom)]"
+              className="fixed bottom-[calc(3.5rem+max(0px,env(safe-area-inset-bottom)))] left-0 right-0 z-50 border-t bg-background md:bottom-0 md:pb-[env(safe-area-inset-bottom)]"
             >
               <div className="flex w-full items-center gap-3 px-4 py-3">
                 <button
