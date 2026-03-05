@@ -35,6 +35,7 @@ function makeProps(overrides?: Partial<MobileSheetProps>): MobileSheetProps {
     selectedDate: new Date("2026-02-25T00:00:00.000Z"),
     placeTimeZone: "Asia/Manila",
     onCalendarJump: vi.fn(),
+    weekHeaderLabel: "Feb 23 – Mar 1",
     todayRangeStart: new Date("2026-02-24T00:00:00.000Z"),
     maxBookingDate: new Date("2026-04-25T00:00:00.000Z"),
     isMobileRefreshing: false,
@@ -74,6 +75,11 @@ function makeProps(overrides?: Partial<MobileSheetProps>): MobileSheetProps {
     canAddToCart: true,
     onAddToCartAction: vi.fn(),
     onRemoveFromCartAction: vi.fn(),
+    onPrevWeek: vi.fn(),
+    onNextWeek: vi.fn(),
+    isPrevWeekDisabled: false,
+    isNextWeekDisabled: false,
+    onGoToToday: vi.fn(),
     ...overrides,
   };
 }

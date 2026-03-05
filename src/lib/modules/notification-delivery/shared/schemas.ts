@@ -185,6 +185,27 @@ export const reservationGroupCancelledSchema = z.object({
   reason: z.string().nullable().optional(),
 });
 
+export const reservationCancelledByOwnerSchema = z.object({
+  reservationId: z.string(),
+  placeName: z.string(),
+  courtLabel: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  reason: z.string().nullable().optional(),
+});
+
+export const reservationGroupCancelledByOwnerSchema = z.object({
+  reservationGroupId: z.string(),
+  representativeReservationId: z.string(),
+  placeName: z.string(),
+  courtLabel: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  itemCount: z.number(),
+  items: z.array(reservationGroupItemSchema),
+  reason: z.string().nullable().optional(),
+});
+
 export const reservationPingOwnerSchema = z.object({
   reservationId: z.string(),
   organizationId: z.string(),
@@ -245,6 +266,12 @@ export type ReservationCancelledPayload = z.infer<
 export type ReservationGroupCancelledPayload = z.infer<
   typeof reservationGroupCancelledSchema
 >;
+export type ReservationCancelledByOwnerPayload = z.infer<
+  typeof reservationCancelledByOwnerSchema
+>;
+export type ReservationGroupCancelledByOwnerPayload = z.infer<
+  typeof reservationGroupCancelledByOwnerSchema
+>;
 export type ReservationPingOwnerPayload = z.infer<
   typeof reservationPingOwnerSchema
 >;
@@ -268,5 +295,7 @@ export type NotificationEventType =
   | "reservation_group.rejected"
   | "reservation.cancelled"
   | "reservation_group.cancelled"
+  | "reservation.cancelled_by_owner"
+  | "reservation_group.cancelled_by_owner"
   | "reservation.ping_owner"
   | "test.web_push";

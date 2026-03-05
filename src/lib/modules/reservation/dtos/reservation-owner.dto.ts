@@ -65,6 +65,24 @@ export type RejectReservationGroupDTO = z.infer<
   typeof RejectReservationGroupSchema
 >;
 
+export const CancelReservationOwnerSchema = z.object({
+  reservationId: S.ids.reservationId,
+  reason: S.reservation.rejectReason,
+});
+
+export type CancelReservationOwnerDTO = z.infer<
+  typeof CancelReservationOwnerSchema
+>;
+
+export const CancelReservationGroupOwnerSchema = z.object({
+  reservationGroupId: S.ids.generic,
+  reason: S.reservation.rejectReason,
+});
+
+export type CancelReservationGroupOwnerDTO = z.infer<
+  typeof CancelReservationGroupOwnerSchema
+>;
+
 export const GetOrgReservationsSchema = z.object({
   organizationId: S.ids.organizationId,
   reservationId: S.ids.reservationId.optional(),

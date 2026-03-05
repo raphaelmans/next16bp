@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { UploadPlacePhotoSchema } from "@/lib/modules/place/dtos";
 import { makePlaceManagementService } from "@/lib/modules/place/factories/place.factory";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
+import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { parseFormData } from "@/lib/shared/infra/http/parse";
@@ -43,6 +44,10 @@ export async function POST(req: Request, context: { params: Params }) {
       input.placeId,
       input.image,
     );
+    await revalidatePublicPlaceDetailPaths({
+      placeId: input.placeId,
+      requestId,
+    });
 
     return NextResponse.json<ApiResponse<typeof photo>>(wrapResponse(photo));
   } catch (error) {

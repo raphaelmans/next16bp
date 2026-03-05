@@ -1,8 +1,6 @@
 "use client";
 
-import { CalendarIcon, Loader2 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
   Select,
@@ -28,10 +26,8 @@ type AvailabilityStudioToolbarProps = {
   courtId: string;
   courts: CourtOption[];
   courtsLoading: boolean;
-  placeTimeZone: string;
   onPlaceChange: (placeId: string) => void;
   onCourtChange: (courtId: string) => void;
-  onToday: () => void;
 };
 
 export function AvailabilityStudioToolbar({
@@ -40,13 +36,11 @@ export function AvailabilityStudioToolbar({
   courtId,
   courts,
   courtsLoading,
-  placeTimeZone,
   onPlaceChange,
   onCourtChange,
-  onToday,
 }: AvailabilityStudioToolbarProps) {
   return (
-    <Card className="flex flex-wrap items-end gap-4 p-6">
+    <Card className="flex flex-wrap items-start justify-start gap-4 p-6">
       <div className="w-full space-y-2 sm:min-w-[220px] sm:w-auto">
         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
           Venue
@@ -92,21 +86,6 @@ export function AvailabilityStudioToolbar({
             ))}
           </SelectContent>
         </Select>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <Badge variant="outline" className="gap-2">
-          <CalendarIcon className="h-3.5 w-3.5" />
-          {placeTimeZone}
-        </Badge>
-        <Button
-          type="button"
-          variant="outline"
-          className="hidden lg:inline-flex"
-          onClick={onToday}
-        >
-          Today
-        </Button>
       </div>
     </Card>
   );

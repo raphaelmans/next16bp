@@ -1,3 +1,4 @@
+import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import {
   adminProcedure,
   adminRateLimitedProcedure,
@@ -71,7 +72,11 @@ export const adminCourtRouter = router({
     .input(UploadCourtPhotoSchema)
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
-      return service.uploadPhoto(ctx.userId, input);
+      const photo = await service.uploadPhoto(ctx.userId, input);
+      await revalidatePublicPlaceDetailPaths({
+        placeId: input.placeId,
+      });
+      return photo;
     }),
 
   /**
@@ -82,6 +87,9 @@ export const adminCourtRouter = router({
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
       await service.removePhoto(ctx.userId, input);
+      await revalidatePublicPlaceDetailPaths({
+        placeId: input.placeId,
+      });
       return { success: true };
     }),
 
@@ -93,7 +101,11 @@ export const adminCourtRouter = router({
     .input(AdminUpdateCourtSchema)
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
-      return service.updatePlace(ctx.userId, input);
+      const updated = await service.updatePlace(ctx.userId, input);
+      await revalidatePublicPlaceDetailPaths({
+        placeId: input.placeId,
+      });
+      return updated;
     }),
 
   /**
@@ -104,7 +116,14 @@ export const adminCourtRouter = router({
     .input(AdminDeletePlaceSchema)
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
+      const existing = await service.getPlaceById(ctx.userId, {
+        placeId: input.placeId,
+      });
       await service.deletePlaceHard(ctx.userId, input.placeId);
+      await revalidatePublicPlaceDetailPaths({
+        placeId: input.placeId,
+        placeSlug: existing.place.slug,
+      });
       return { success: true };
     }),
 
@@ -116,7 +135,15 @@ export const adminCourtRouter = router({
     .input(DeactivateCourtSchema)
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
-      return service.deactivatePlace(ctx.userId, input.placeId, input.reason);
+      const result = await service.deactivatePlace(
+        ctx.userId,
+        input.placeId,
+        input.reason,
+      );
+      await revalidatePublicPlaceDetailPaths({
+        placeId: input.placeId,
+      });
+      return result;
     }),
 
   /**
@@ -127,7 +154,11 @@ export const adminCourtRouter = router({
     .input(ActivateCourtSchema)
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
-      return service.activatePlace(ctx.userId, input.placeId);
+      const result = await service.activatePlace(ctx.userId, input.placeId);
+      await revalidatePublicPlaceDetailPaths({
+        placeId: input.placeId,
+      });
+      return result;
     }),
 
   /**
@@ -138,7 +169,14 @@ export const adminCourtRouter = router({
     .input(TransferPlaceSchema)
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
-      return service.transferPlaceToOrganization(ctx.userId, input);
+      const result = await service.transferPlaceToOrganization(
+        ctx.userId,
+        input,
+      );
+      await revalidatePublicPlaceDetailPaths({
+        placeId: input.placeId,
+      });
+      return result;
     }),
 
   /**
@@ -149,7 +187,11 @@ export const adminCourtRouter = router({
     .input(RecuratePlaceSchema)
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
-      return service.recuratePlace(ctx.userId, input);
+      const result = await service.recuratePlace(ctx.userId, input);
+      await revalidatePublicPlaceDetailPaths({
+        placeId: input.placeId,
+      });
+      return result;
     }),
 
   /**

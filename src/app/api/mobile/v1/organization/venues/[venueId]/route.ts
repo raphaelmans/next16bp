@@ -6,6 +6,7 @@ import {
 } from "@/lib/modules/place/dtos";
 import { makePlaceManagementService } from "@/lib/modules/place/factories/place.factory";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
+import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { parseJson } from "@/lib/shared/infra/http/parse";
@@ -115,6 +116,11 @@ export async function PATCH(req: Request, context: { params: Params }) {
     const service = makePlaceManagementService();
     const place = await service.updatePlace(session.userId, input);
     const redactedPlace = redactPlaceLocale(place);
+    await revalidatePublicPlaceDetailPaths({
+      placeId: place.id,
+      placeSlug: place.slug,
+      requestId,
+    });
 
     return NextResponse.json(wrapResponse(redactedPlace));
   } catch (error) {
@@ -139,7 +145,13 @@ export async function DELETE(req: Request, context: { params: Params }) {
 
     const input = validate(DeletePlaceSchema, { placeId: venueId });
     const service = makePlaceManagementService();
+    const existing = await service.getPlaceById(session.userId, input.placeId);
     await service.deletePlace(session.userId, input.placeId);
+    await revalidatePublicPlaceDetailPaths({
+      placeId: input.placeId,
+      placeSlug: existing.place.slug,
+      requestId,
+    });
 
     return NextResponse.json<ApiResponse<{ success: true }>>(
       wrapResponse({ success: true }),

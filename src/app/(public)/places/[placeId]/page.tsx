@@ -8,6 +8,8 @@ type PlaceDetailRoutePageProps = {
   params: Promise<{ placeId: string }>;
 };
 
+export const revalidate = false;
+
 export async function generateMetadata({
   params,
 }: PlaceDetailRoutePageProps): Promise<Metadata> {

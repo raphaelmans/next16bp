@@ -68,6 +68,7 @@ export type OwnerAvailabilityWeekGridProps = {
   courtHoursWindows?: CourtHoursWindow[];
   pendingBlockIds: Set<string>;
   onSelectBlock?: (blockId: string) => void;
+  onSelectReservation?: (reservation: ReservationItem) => void;
   placing?: boolean;
   onPlace?: (dayKey: string, startMinute: number) => void;
   onResizePreview?: (args: ResizeArgs) => void;
@@ -286,6 +287,7 @@ type DayOverlayProps = {
   isPastDay: boolean;
   pendingBlockIds: Set<string>;
   onSelectBlock?: (blockId: string) => void;
+  onSelectReservation?: (reservation: ReservationItem) => void;
   onResizePreview?: (args: ResizeArgs) => void;
   onResizeCommit?: (args: ResizeArgs) => void;
   compact: boolean;
@@ -300,6 +302,7 @@ const DayOverlay = React.memo(function DayOverlay({
   isPastDay,
   pendingBlockIds,
   onSelectBlock,
+  onSelectReservation,
   onResizePreview,
   onResizeCommit,
   compact,
@@ -349,6 +352,11 @@ const DayOverlay = React.memo(function DayOverlay({
           height={height}
           timeZone={timeZone}
           compact={compact}
+          onClick={
+            onSelectReservation
+              ? () => onSelectReservation(reservation)
+              : undefined
+          }
         />
       ))}
     </div>
@@ -370,6 +378,7 @@ export function OwnerAvailabilityWeekGrid({
   courtHoursWindows,
   pendingBlockIds,
   onSelectBlock,
+  onSelectReservation,
   placing = false,
   onPlace,
   onResizePreview,
@@ -474,6 +483,7 @@ export function OwnerAvailabilityWeekGrid({
         reservationsByDay={reservationsByDay}
         pendingBlockIds={pendingBlockIds}
         onSelectBlock={onSelectBlock}
+        onSelectReservation={onSelectReservation}
         placing={placing}
         onPlace={onPlace}
         onResizePreview={onResizePreview}
@@ -501,6 +511,7 @@ type OwnerWeekGridInnerProps = {
   reservationsByDay: Map<string, ReservationSegment[]>;
   pendingBlockIds: Set<string>;
   onSelectBlock?: (blockId: string) => void;
+  onSelectReservation?: (reservation: ReservationItem) => void;
   placing: boolean;
   onPlace?: (dayKey: string, startMinute: number) => void;
   onResizePreview?: (args: ResizeArgs) => void;
@@ -521,6 +532,7 @@ function OwnerWeekGridInner({
   reservationsByDay,
   pendingBlockIds,
   onSelectBlock,
+  onSelectReservation,
   placing,
   onPlace,
   onResizePreview,
@@ -673,6 +685,7 @@ function OwnerWeekGridInner({
                 isPastDay={isPastDay}
                 pendingBlockIds={pendingBlockIds}
                 onSelectBlock={onSelectBlock}
+                onSelectReservation={onSelectReservation}
                 onResizePreview={onResizePreview}
                 onResizeCommit={onResizeCommit}
                 compact={compact}

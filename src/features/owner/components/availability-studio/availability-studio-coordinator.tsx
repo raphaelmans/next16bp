@@ -66,6 +66,7 @@ import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-stu
 import { MobileManageBlockPeekBar } from "@/features/owner/components/booking-studio/mobile-manage-block-peek-bar";
 import { MobileSelectionPeekBar } from "@/features/owner/components/booking-studio/mobile-selection-peek-bar";
 import { OwnerAvailabilityWeekGrid } from "@/features/owner/components/booking-studio/owner-availability-week-grid";
+import { CancelReservationDialog } from "@/features/owner/components/booking-studio/cancel-reservation-dialog";
 import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
 import { ReplaceWithGuestDialog } from "@/features/owner/components/booking-studio/replace-with-guest-dialog";
 import { computeClampedResizeRange } from "@/features/owner/components/booking-studio/resize-helpers";
@@ -254,6 +255,9 @@ function OwnerAvailabilityStudioInner() {
   const guestBookingOpen = useBookingStudio((s) => s.guestBookingOpen);
   const closeGuestBookingDialog = useBookingStudio(
     (s) => s.closeGuestBookingDialog,
+  );
+  const setSelectedReservation = useBookingStudio(
+    (s) => s.setSelectedReservation,
   );
   const replaceDialogOpen = useBookingStudio((s) => s.replaceDialogOpen);
   const replaceBlockId = useBookingStudio((s) => s.replaceBlockId);
@@ -1856,10 +1860,8 @@ function OwnerAvailabilityStudioInner() {
           courtId={courtId}
           courts={courts}
           courtsLoading={courtsLoading}
-          placeTimeZone={placeTimeZone}
           onPlaceChange={setPlaceId}
           onCourtChange={setCourtId}
-          onToday={handleMobileToday}
         />
 
         <div className="grid gap-6 2xl:grid-cols-[280px_minmax(0,1fr)]">
@@ -2145,6 +2147,7 @@ function OwnerAvailabilityStudioInner() {
                   courtHoursWindows={courtHoursQuery.data ?? []}
                   pendingBlockIds={pendingBlockIds}
                   onSelectBlock={manageBlock.select}
+                  onSelectReservation={setSelectedReservation}
                   placing={isPlacingDraftRow}
                   onPlace={handlePlaceDraftRow}
                   onResizePreview={handleResizePreview}
@@ -2164,6 +2167,7 @@ function OwnerAvailabilityStudioInner() {
         </div>
 
         <RemoveBlockDialog confirmRemoveBlock={confirmRemoveBlock} />
+        <CancelReservationDialog timeZone={placeTimeZone} />
 
         <CustomBlockDialog
           customForm={customForm}

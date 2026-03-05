@@ -93,6 +93,7 @@ export type ReservationItem = {
   playerNameSnapshot: string | null;
   guestProfileId: string | null;
   playerId: string | null;
+  groupId: string | null;
 };
 
 export type DraftRowItem = {

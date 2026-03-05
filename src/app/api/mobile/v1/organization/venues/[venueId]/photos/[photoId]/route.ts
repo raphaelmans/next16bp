@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { RemovePlacePhotoSchema } from "@/lib/modules/place/dtos";
 import { makePlaceManagementService } from "@/lib/modules/place/factories/place.factory";
 import { requireMobileSession } from "@/lib/shared/infra/auth/mobile-session";
+import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import { handleError } from "@/lib/shared/infra/http/error-handler";
 import { enforceRateLimit } from "@/lib/shared/infra/http/http-rate-limit";
 import { getRequestId } from "@/lib/shared/infra/http/request-id";
@@ -38,6 +39,10 @@ export async function DELETE(req: Request, context: { params: Params }) {
 
     const service = makePlaceManagementService();
     await service.removePhoto(session.userId, input.placeId, input.photoId);
+    await revalidatePublicPlaceDetailPaths({
+      placeId: input.placeId,
+      requestId,
+    });
 
     return NextResponse.json<ApiResponse<{ success: true }>>(
       wrapResponse({ success: true }),
