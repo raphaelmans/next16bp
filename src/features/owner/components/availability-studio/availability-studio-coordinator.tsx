@@ -31,6 +31,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
@@ -1989,10 +1990,8 @@ function OwnerAvailabilityStudioInner() {
                           className="flex-1"
                           disabled={isCreatingBlock}
                         >
-                          {getBlockCtaLabel(
-                            selectionBlockType,
-                            isCreatingBlock,
-                          )}
+                          {isCreatingBlock && <Spinner />}
+                          {getBlockCtaLabel(selectionBlockType)}
                         </Button>
                         <Button
                           type="button"

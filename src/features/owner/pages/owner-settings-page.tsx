@@ -230,7 +230,7 @@ export default function OwnerSettingsPage() {
       <AppShell
         sidebar={
           <OwnerSidebar
-            currentOrganization={navOrg ?? { id: "", name: "Loading..." }}
+            currentOrganization={navOrg ?? { id: "", name: "" }}
             organizations={organizations}
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
             isAdmin={user?.role === "admin"}
@@ -238,7 +238,7 @@ export default function OwnerSettingsPage() {
         }
         navbar={
           <OwnerNavbar
-            organizationName={navOrg?.name ?? "Loading..."}
+            organizationName={navOrg?.name ?? ""}
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
             onLogout={handleLogout}
             isAdmin={user?.role === "admin"}
@@ -259,7 +259,7 @@ export default function OwnerSettingsPage() {
       <AppShell
         sidebar={
           <OwnerSidebar
-            currentOrganization={navOrg ?? { id: "", name: "Loading..." }}
+            currentOrganization={navOrg ?? { id: "", name: "" }}
             organizations={organizations}
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
             isAdmin={user?.role === "admin"}
@@ -267,7 +267,7 @@ export default function OwnerSettingsPage() {
         }
         navbar={
           <OwnerNavbar
-            organizationName={navOrg?.name ?? "Loading..."}
+            organizationName={navOrg?.name ?? ""}
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
             onLogout={handleLogout}
             isAdmin={user?.role === "admin"}

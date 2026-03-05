@@ -1,9 +1,10 @@
 "use client";
 
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -189,7 +190,7 @@ export function CourtHoursEditor({
   if (hoursLoading) {
     return (
       <div className="flex min-h-[200px] items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Spinner className="size-6 text-muted-foreground" />
       </div>
     );
   }
@@ -320,7 +321,8 @@ export function CourtHoursEditor({
             onClick={handleSave}
             disabled={saveHours.isPending}
           >
-            {saveHours.isPending ? "Saving..." : primaryActionLabel}
+            {saveHours.isPending && <Spinner />}
+            {primaryActionLabel}
           </Button>
         </div>
       </CardContent>

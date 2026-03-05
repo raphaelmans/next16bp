@@ -3,6 +3,7 @@
 import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Command,
   CommandEmpty,
@@ -113,9 +114,11 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
                 />
                 <CommandList>
                   <CommandEmpty>
-                    {mobileGuestProfilesQuery.isLoading
-                      ? "Loading..."
-                      : "No guests found."}
+                    {mobileGuestProfilesQuery.isLoading ? (
+                      <Spinner className="mx-auto" />
+                    ) : (
+                      "No guests found."
+                    )}
                   </CommandEmpty>
                   <CommandGroup>
                     {(mobileGuestProfilesQuery.data ?? []).map((guest) => (

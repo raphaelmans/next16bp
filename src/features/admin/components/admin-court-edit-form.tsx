@@ -22,6 +22,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Card,
   CardContent,
@@ -251,14 +252,8 @@ export function AdminCourtEditForm({
             disabled={googleUrl.trim().length === 0 || isPreviewing}
             className="w-full"
           >
-            {isPreviewing ? (
-              <span className="inline-flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Resolving…
-              </span>
-            ) : (
-              "Locate"
-            )}
+            {isPreviewing && <Spinner />}
+            Locate
           </Button>
 
           <input type="hidden" {...register("latitude")} />

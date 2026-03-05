@@ -186,7 +186,7 @@ export function useModClaims(options: UseClaimsOptions = {}) {
           organizationName: item.organizationId
             ? `Org ${item.organizationId.slice(0, 8)}...`
             : "Guest request",
-          ownerName: "Loading...",
+          ownerName: "",
           ownerEmail: "loading@example.com",
           guestName: item.guestName ?? undefined,
           guestEmail: item.guestEmail ?? undefined,

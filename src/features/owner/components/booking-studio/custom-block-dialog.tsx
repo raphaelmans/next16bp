@@ -10,6 +10,7 @@ import {
   StandardFormTextarea,
 } from "@/components/form";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Command,
   CommandEmpty,
@@ -151,9 +152,11 @@ export const CustomBlockDialog = React.memo(function CustomBlockDialog({
                         <CommandInput placeholder="Search guests..." />
                         <CommandList>
                           <CommandEmpty>
-                            {guestProfilesLoading
-                              ? "Loading..."
-                              : "No guests found."}
+                            {guestProfilesLoading ? (
+                              <Spinner className="mx-auto" />
+                            ) : (
+                              "No guests found."
+                            )}
                           </CommandEmpty>
                           <CommandGroup>
                             {guestProfilesData.map((guest) => (
@@ -229,7 +232,8 @@ export const CustomBlockDialog = React.memo(function CustomBlockDialog({
               Cancel
             </Button>
             <Button type="submit" disabled={isCreatingBlock}>
-              {getBlockCtaLabel(watchedBlockType, isCreatingBlock)}
+              {isCreatingBlock && <Spinner />}
+              {getBlockCtaLabel(watchedBlockType)}
             </Button>
           </DialogFooter>
         </StandardFormProvider>

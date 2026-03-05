@@ -10,6 +10,7 @@ import {
   StandardFormTextarea,
 } from "@/components/form";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Command,
   CommandEmpty,
@@ -169,9 +170,11 @@ export const ReplaceWithGuestDialog = React.memo(
                         />
                         <CommandList>
                           <CommandEmpty>
-                            {guestProfilesLoading
-                              ? "Loading..."
-                              : "No guests found."}
+                            {guestProfilesLoading ? (
+                              <Spinner className="mx-auto" />
+                            ) : (
+                              "No guests found."
+                            )}
                           </CommandEmpty>
                           <CommandGroup>
                             {guestProfilesData.map((guest) => (

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Image as ImageIcon, Loader2, Plus, Trash2 } from "lucide-react";
+import { Image as ImageIcon, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { type Control, useFieldArray, useForm } from "react-hook-form";
@@ -34,6 +34,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Card,
   CardContent,
@@ -716,7 +717,7 @@ export default function AdminCourtsBatchView() {
                                 disabled={!googleUrlValue || isPreviewing}
                               >
                                 {isPreviewing ? (
-                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  <Spinner className="mr-2" />
                                 ) : (
                                   <Plus className="mr-2 h-4 w-4" />
                                 )}
@@ -1063,7 +1064,8 @@ export default function AdminCourtsBatchView() {
               <Link href={appRoutes.admin.courts.base}>Back to Courts</Link>
             </Button>
             <Button type="submit" disabled={isSubmitDisabled}>
-              {submitting ? "Submitting..." : "Submit Batch"}
+              {submitting && <Spinner />}
+              Submit Batch
             </Button>
           </div>
         </StandardFormProvider>

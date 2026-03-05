@@ -448,7 +448,7 @@ export default function OwnerBookingsImportReviewView({
       <AppShell
         sidebar={
           <OwnerSidebar
-            currentOrganization={{ id: "", name: "Loading..." }}
+            currentOrganization={{ id: "", name: "" }}
             organizations={[]}
             user={{
               name: user?.email?.split("@")[0],
@@ -458,7 +458,7 @@ export default function OwnerBookingsImportReviewView({
         }
         navbar={
           <OwnerNavbar
-            organizationName="Loading..."
+            organizationName=""
             user={{
               name: user?.email?.split("@")[0],
               email: user?.email,
@@ -549,7 +549,7 @@ export default function OwnerBookingsImportReviewView({
       <div className="space-y-6">
         <PageHeader
           title="Review Import"
-          description={`${place?.name ?? "Loading..."} - ${sourceCount} file${sourceCount === 1 ? "" : "s"} import`}
+          description={`${place?.name ?? ""} - ${sourceCount} file${sourceCount === 1 ? "" : "s"} import`}
           breadcrumbs={[
             { label: "Owner", href: appRoutes.organization.base },
             { label: "Imports", href: appRoutes.organization.imports.bookings },

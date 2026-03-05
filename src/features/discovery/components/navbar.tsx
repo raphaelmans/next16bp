@@ -4,7 +4,6 @@ import {
   Building,
   Calendar,
   Heart,
-  Loader2,
   LogOut,
   Menu,
   Search,
@@ -21,6 +20,7 @@ import { trackEvent } from "@/common/clients/telemetry-client";
 import { URLQueryBuilder } from "@/common/url-query-builder";
 import { KudosLogo } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -170,7 +170,7 @@ export function Navbar({ className }: NavbarProps) {
 
         {isResolvingSession ? (
           <Button variant="outline" className="font-heading" disabled>
-            Loading...
+            <Spinner />
           </Button>
         ) : isAuthenticated ? (
           <UserDropdown
@@ -373,7 +373,7 @@ export function Navbar({ className }: NavbarProps) {
             {/* Auth Actions */}
             {isResolvingSession ? (
               <Button variant="outline" className="w-full" disabled>
-                Loading...
+                <Spinner />
               </Button>
             ) : isAuthenticated ? (
               <Button
@@ -383,11 +383,11 @@ export function Navbar({ className }: NavbarProps) {
                 disabled={isSigningOut}
               >
                 {isSigningOut ? (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <Spinner className="mr-2" />
                 ) : (
                   <LogOut className="h-4 w-4 mr-2" />
                 )}
-                {isSigningOut ? "Signing Out..." : "Sign Out"}
+                Sign Out
               </Button>
             ) : (
               <>

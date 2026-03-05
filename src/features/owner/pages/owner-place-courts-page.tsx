@@ -68,7 +68,7 @@ export default function OwnerPlaceCourtsPage({
       <AppShell
         sidebar={
           <OwnerSidebar
-            currentOrganization={{ id: "", name: "Loading..." }}
+            currentOrganization={{ id: "", name: "" }}
             organizations={[]}
             user={{
               name: user?.email?.split("@")[0],
@@ -78,7 +78,7 @@ export default function OwnerPlaceCourtsPage({
         }
         navbar={
           <OwnerNavbar
-            organizationName="Loading..."
+            organizationName=""
             user={{
               name: user?.email?.split("@")[0],
               email: user?.email,

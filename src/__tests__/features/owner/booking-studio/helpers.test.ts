@@ -189,31 +189,15 @@ describe("buildTimelineReservationsForDay", () => {
 describe("getBlockCtaLabel", () => {
   it.each<{
     blockType: "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING";
-    isSubmitting: boolean;
     expected: string;
   }>([
-    {
-      blockType: "WALK_IN",
-      isSubmitting: false,
-      expected: "Save walk-in booking",
-    },
-    { blockType: "WALK_IN", isSubmitting: true, expected: "Saving..." },
-    {
-      blockType: "MAINTENANCE",
-      isSubmitting: false,
-      expected: "Save maintenance block",
-    },
-    { blockType: "MAINTENANCE", isSubmitting: true, expected: "Saving..." },
-    {
-      blockType: "GUEST_BOOKING",
-      isSubmitting: false,
-      expected: "Save guest booking",
-    },
-    { blockType: "GUEST_BOOKING", isSubmitting: true, expected: "Saving..." },
+    { blockType: "WALK_IN", expected: "Save walk-in" },
+    { blockType: "MAINTENANCE", expected: "Save block" },
+    { blockType: "GUEST_BOOKING", expected: "Save booking" },
   ])(
-    "returns '$expected' for $blockType (isSubmitting=$isSubmitting)",
-    ({ blockType, isSubmitting, expected }) => {
-      expect(getBlockCtaLabel(blockType, isSubmitting)).toBe(expected);
+    "returns '$expected' for $blockType",
+    ({ blockType, expected }) => {
+      expect(getBlockCtaLabel(blockType)).toBe(expected);
     },
   );
 });

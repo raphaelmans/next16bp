@@ -19,7 +19,7 @@ export function AvailabilityStudioLoadingShell({
     <AppShell
       sidebar={
         <OwnerSidebar
-          currentOrganization={{ id: "", name: "Loading..." }}
+          currentOrganization={{ id: "", name: "" }}
           organizations={[]}
           user={{
             name: userName,
@@ -29,7 +29,7 @@ export function AvailabilityStudioLoadingShell({
       }
       navbar={
         <OwnerNavbar
-          organizationName="Loading..."
+          organizationName=""
           user={{
             name: userName,
             email: userEmail,

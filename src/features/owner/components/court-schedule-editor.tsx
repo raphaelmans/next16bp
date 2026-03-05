@@ -1,6 +1,6 @@
 "use client";
 
-import { CirclePlus, Loader2, Trash2 } from "lucide-react";
+import { CirclePlus, Trash2 } from "lucide-react";
 import * as React from "react";
 import {
   Accordion,
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -307,7 +308,7 @@ export function CourtScheduleEditor({
   if (isLoading) {
     return (
       <div className="flex min-h-[200px] items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Spinner className="size-6 text-muted-foreground" />
       </div>
     );
   }
@@ -493,7 +494,8 @@ export function CourtScheduleEditor({
             disabled={isSaving}
             className="w-full sm:w-auto"
           >
-            {isSaving ? "Saving..." : primaryActionLabel}
+            {isSaving && <Spinner />}
+            {primaryActionLabel}
           </Button>
         </div>
       </CardContent>

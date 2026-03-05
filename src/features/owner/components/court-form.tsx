@@ -13,6 +13,7 @@ import {
   StandardFormSelect,
 } from "@/components/form";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   type CourtFormData,
@@ -284,12 +285,9 @@ export function CourtForm({
             </Button>
           )}
           <Button type="submit" disabled={isSubmitDisabled}>
-            {submitting
-              ? isEditing
-                ? "Saving..."
-                : "Creating..."
-              : (primaryActionLabel ??
-                (isEditing ? "Save Changes" : "Create Court"))}
+            {submitting && <Spinner />}
+            {primaryActionLabel ??
+              (isEditing ? "Save Changes" : "Create Court")}
           </Button>
         </div>
       </div>

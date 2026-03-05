@@ -237,14 +237,14 @@ export default function OwnerTeamPage() {
     <AppShell
       sidebar={
         <OwnerSidebar
-          currentOrganization={navOrg ?? { id: "", name: "Loading..." }}
+          currentOrganization={navOrg ?? { id: "", name: "" }}
           organizations={organizations}
           user={{ name: user?.email?.split("@")[0], email: user?.email }}
         />
       }
       navbar={
         <OwnerNavbar
-          organizationName={navOrg?.name ?? "Loading..."}
+          organizationName={navOrg?.name ?? ""}
           user={{ name: user?.email?.split("@")[0], email: user?.email }}
           onLogout={handleLogout}
         />
