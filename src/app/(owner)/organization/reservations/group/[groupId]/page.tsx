@@ -21,7 +21,7 @@ export default async function OwnerReservationGroupDetailRoutePage({
 
   const groupDetail = await (async () => {
     const caller = await createServerCaller(pathname);
-    return caller.reservationOwner.getGroupDetail({
+    return caller.reservationOwner.resolveLegacyGroup({
       reservationGroupId: groupId,
     });
   })().catch((error) => {
@@ -31,7 +31,7 @@ export default async function OwnerReservationGroupDetailRoutePage({
     return null;
   });
 
-  const representativeReservationId = groupDetail?.reservations?.[0]?.id;
+  const representativeReservationId = groupDetail?.reservationId;
   if (!representativeReservationId) {
     redirect(appRoutes.organization.reservations);
   }

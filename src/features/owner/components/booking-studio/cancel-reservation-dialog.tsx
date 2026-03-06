@@ -29,34 +29,27 @@ export const CancelReservationDialog = React.memo(
 
     const open = selectedReservation !== null;
     const isConfirmed = selectedReservation?.status === "CONFIRMED";
-    const hasGroup = Boolean(selectedReservation?.groupId);
+    const hasLinkedReservations = Boolean(selectedReservation?.groupId);
 
     const handleClose = React.useCallback(() => {
       setSelectedReservation(null);
       setReason("");
     }, [setSelectedReservation]);
 
-    const handleCancel = React.useCallback(
-      async (mode: "single" | "group") => {
-        if (!selectedReservation || !reason.trim()) return;
+    const handleCancel = React.useCallback(async () => {
+      if (!selectedReservation || !reason.trim()) return;
 
-        try {
-          await cancelMutation.mutateAsync({
-            reservationId: selectedReservation.id,
-            reservationGroupId:
-              mode === "group" ? selectedReservation.groupId : undefined,
-            reason: reason.trim(),
-          });
-          toast.success(
-            mode === "group" ? "Group booking cancelled" : "Booking cancelled",
-          );
-          handleClose();
-        } catch {
-          toast.error("Failed to cancel booking. Please try again.");
-        }
-      },
-      [selectedReservation, reason, cancelMutation, handleClose],
-    );
+      try {
+        await cancelMutation.mutateAsync({
+          reservationId: selectedReservation.id,
+          reason: reason.trim(),
+        });
+        toast.success("Reservation cancelled");
+        handleClose();
+      } catch {
+        toast.error("Failed to cancel reservation. Please try again.");
+      }
+    }, [selectedReservation, reason, cancelMutation, handleClose]);
 
     if (!selectedReservation) return null;
 
@@ -103,9 +96,9 @@ export const CancelReservationDialog = React.memo(
                   )}
                 </span>
               )}
-              {hasGroup && (
+              {hasLinkedReservations && (
                 <Badge variant="outline" className="text-xs">
-                  Group booking
+                  Linked booking
                 </Badge>
               )}
             </div>
@@ -130,26 +123,15 @@ export const CancelReservationDialog = React.memo(
 
           <DialogFooter className="flex-col gap-2 sm:flex-col">
             {isConfirmed && (
-              <>
-                <Button
-                  variant="destructive"
-                  disabled={!reason.trim() || cancelMutation.isPending}
-                  onClick={() => handleCancel("single")}
-                >
-                  {cancelMutation.isPending
-                    ? "Cancelling..."
-                    : "Cancel This Booking"}
-                </Button>
-                {hasGroup && (
-                  <Button
-                    variant="destructive"
-                    disabled={!reason.trim() || cancelMutation.isPending}
-                    onClick={() => handleCancel("group")}
-                  >
-                    Cancel Entire Group
-                  </Button>
-                )}
-              </>
+              <Button
+                variant="destructive"
+                disabled={!reason.trim() || cancelMutation.isPending}
+                onClick={handleCancel}
+              >
+                {cancelMutation.isPending
+                  ? "Cancelling..."
+                  : "Cancel Reservation"}
+              </Button>
             )}
             <Button variant="outline" onClick={handleClose}>
               Close

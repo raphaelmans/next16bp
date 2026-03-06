@@ -21,8 +21,8 @@ import {
   CreateReservationGroupSchema,
   GetMyReservationsSchema,
   GetPaymentInfoSchema,
-  GetPlayerReservationGroupDetailSchema,
-  MarkPaymentGroupSchema,
+  GetPlayerReservationLinkedDetailSchema,
+  MarkPaymentLinkedSchema,
   MarkPaymentSchema,
   PingOwnerSchema,
 } from "./dtos";
@@ -170,17 +170,17 @@ export const reservationRouter = router({
     }),
 
   /**
-   * Mark payment as complete for all payable reservations in a reservation group
+   * Mark payment as complete for all payable linked reservations.
    */
-  markPaymentGroup: protectedProcedure
-    .input(MarkPaymentGroupSchema)
+  markPaymentLinked: protectedProcedure
+    .input(MarkPaymentLinkedSchema)
     .mutation(async ({ input, ctx }) => {
       try {
         const profileService = makeProfileService();
         const profile = await profileService.getOrCreateProfile(ctx.userId);
 
         const reservationService = makeReservationService();
-        return await reservationService.markPaymentGroup(
+        return await reservationService.markPaymentLinked(
           ctx.userId,
           profile.id,
           input,
@@ -264,16 +264,16 @@ export const reservationRouter = router({
     }),
 
   /**
-   * Get grouped reservation detail for the current player
+   * Get linked reservation detail for the current player.
    */
-  getGroupDetail: protectedProcedure
-    .input(GetPlayerReservationGroupDetailSchema)
+  getLinkedDetail: protectedProcedure
+    .input(GetPlayerReservationLinkedDetailSchema)
     .query(async ({ input, ctx }) => {
       try {
         const profileService = makeProfileService();
         const profile = await profileService.getOrCreateProfile(ctx.userId);
         const reservationService = makeReservationService();
-        return await reservationService.getReservationGroupDetail(
+        return await reservationService.getReservationLinkedDetail(
           ctx.userId,
           profile.id,
           input,

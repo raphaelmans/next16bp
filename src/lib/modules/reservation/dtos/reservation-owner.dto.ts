@@ -19,14 +19,6 @@ export const AcceptReservationSchema = z.object({
 
 export type AcceptReservationDTO = z.infer<typeof AcceptReservationSchema>;
 
-export const AcceptReservationGroupSchema = z.object({
-  reservationGroupId: S.ids.generic,
-});
-
-export type AcceptReservationGroupDTO = z.infer<
-  typeof AcceptReservationGroupSchema
->;
-
 export const ConfirmPaidOfflineSchema = z.object({
   reservationId: S.ids.reservationId,
   paymentMethodId: S.ids.paymentMethodId,
@@ -42,28 +34,12 @@ export const ConfirmPaymentSchema = z.object({
 
 export type ConfirmPaymentDTO = z.infer<typeof ConfirmPaymentSchema>;
 
-export const ConfirmPaymentGroupSchema = z.object({
-  reservationGroupId: S.ids.generic,
-  notes: S.reservation.notes,
-});
-
-export type ConfirmPaymentGroupDTO = z.infer<typeof ConfirmPaymentGroupSchema>;
-
 export const RejectReservationSchema = z.object({
   reservationId: S.ids.reservationId,
   reason: S.reservation.rejectReason,
 });
 
 export type RejectReservationDTO = z.infer<typeof RejectReservationSchema>;
-
-export const RejectReservationGroupSchema = z.object({
-  reservationGroupId: S.ids.generic,
-  reason: S.reservation.rejectReason,
-});
-
-export type RejectReservationGroupDTO = z.infer<
-  typeof RejectReservationGroupSchema
->;
 
 export const CancelReservationOwnerSchema = z.object({
   reservationId: S.ids.reservationId,
@@ -72,15 +48,6 @@ export const CancelReservationOwnerSchema = z.object({
 
 export type CancelReservationOwnerDTO = z.infer<
   typeof CancelReservationOwnerSchema
->;
-
-export const CancelReservationGroupOwnerSchema = z.object({
-  reservationGroupId: S.ids.generic,
-  reason: S.reservation.rejectReason,
-});
-
-export type CancelReservationGroupOwnerDTO = z.infer<
-  typeof CancelReservationGroupOwnerSchema
 >;
 
 export const GetOrgReservationsSchema = z.object({
@@ -95,12 +62,20 @@ export const GetOrgReservationsSchema = z.object({
 
 export type GetOrgReservationsDTO = z.infer<typeof GetOrgReservationsSchema>;
 
-export const GetReservationGroupDetailSchema = z.object({
+export const GetReservationLinkedDetailSchema = z.object({
+  reservationId: S.ids.reservationId,
+});
+
+export type GetReservationLinkedDetailDTO = z.infer<
+  typeof GetReservationLinkedDetailSchema
+>;
+
+export const ResolveReservationGroupSchema = z.object({
   reservationGroupId: S.ids.generic,
 });
 
-export type GetReservationGroupDetailDTO = z.infer<
-  typeof GetReservationGroupDetailSchema
+export type ResolveReservationGroupDTO = z.infer<
+  typeof ResolveReservationGroupSchema
 >;
 
 export const GetPendingForCourtSchema = z.object({

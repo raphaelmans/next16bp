@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
   MousePointerClick,
+  RefreshCw,
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
@@ -57,6 +58,7 @@ import {
   BookingStudioProvider,
   useBookingStudio,
 } from "@/features/owner/components/booking-studio/booking-studio-provider";
+import { CancelReservationDialog } from "@/features/owner/components/booking-studio/cancel-reservation-dialog";
 import { getOperatingHoursForWeek } from "@/features/owner/components/booking-studio/court-hours";
 import { CustomBlockDialog } from "@/features/owner/components/booking-studio/custom-block-dialog";
 import { DraftRowCard } from "@/features/owner/components/booking-studio/draft-row-card";
@@ -66,7 +68,6 @@ import { MobileCreateBlockDrawer } from "@/features/owner/components/booking-stu
 import { MobileManageBlockPeekBar } from "@/features/owner/components/booking-studio/mobile-manage-block-peek-bar";
 import { MobileSelectionPeekBar } from "@/features/owner/components/booking-studio/mobile-selection-peek-bar";
 import { OwnerAvailabilityWeekGrid } from "@/features/owner/components/booking-studio/owner-availability-week-grid";
-import { CancelReservationDialog } from "@/features/owner/components/booking-studio/cancel-reservation-dialog";
 import { RemoveBlockDialog } from "@/features/owner/components/booking-studio/remove-block-dialog";
 import { ReplaceWithGuestDialog } from "@/features/owner/components/booking-studio/replace-with-guest-dialog";
 import { computeClampedResizeRange } from "@/features/owner/components/booking-studio/resize-helpers";
@@ -348,6 +349,50 @@ function OwnerAvailabilityStudioInner() {
     reservationsQueryInput,
     { enabled: Boolean(courtId), placeholderData: keepPreviousData },
   );
+
+  const [isRefreshingAvailability, setIsRefreshingAvailability] =
+    React.useState(false);
+
+  const canRefreshAvailability = Boolean(courtId || (isImportOverlay && jobId));
+  const isAvailabilityFetching =
+    blocksQuery.isFetching ||
+    reservationsQuery.isFetching ||
+    courtHoursQuery.isFetching ||
+    (isImportOverlay && (jobQuery.isFetching || rowsQuery.isFetching));
+
+  const handleRefreshAvailability = React.useCallback(async () => {
+    if (!canRefreshAvailability) return;
+
+    setIsRefreshingAvailability(true);
+    try {
+      const refreshTasks: Array<Promise<unknown>> = [];
+
+      if (courtId) {
+        refreshTasks.push(courtHoursQuery.refetch());
+        refreshTasks.push(blocksQuery.refetch());
+        refreshTasks.push(reservationsQuery.refetch());
+      }
+
+      if (isImportOverlay && jobId) {
+        refreshTasks.push(jobQuery.refetch());
+        refreshTasks.push(rowsQuery.refetch());
+      }
+
+      await Promise.all(refreshTasks);
+    } finally {
+      setIsRefreshingAvailability(false);
+    }
+  }, [
+    blocksQuery,
+    canRefreshAvailability,
+    courtHoursQuery,
+    courtId,
+    isImportOverlay,
+    jobId,
+    jobQuery,
+    reservationsQuery,
+    rowsQuery,
+  ]);
 
   const activeReservations = React.useMemo(
     () => (reservationsQuery.data ?? []) as ReservationItem[],
@@ -2081,6 +2126,24 @@ function OwnerAvailabilityStudioInner() {
                   </Button>
                 </div>
                 <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => void handleRefreshAvailability()}
+                    disabled={
+                      !canRefreshAvailability || isRefreshingAvailability
+                    }
+                  >
+                    <RefreshCw
+                      className={`h-4 w-4 ${
+                        isRefreshingAvailability || isAvailabilityFetching
+                          ? "animate-spin"
+                          : ""
+                      }`}
+                    />
+                    <span className="hidden sm:inline">Refresh</span>
+                  </Button>
                   <Button
                     type="button"
                     variant="outline"

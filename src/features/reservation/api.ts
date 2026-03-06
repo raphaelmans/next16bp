@@ -38,8 +38,8 @@ export interface IReservationApi {
   mutReservationMarkPayment: ProcedureFn<
     TrpcClientApi["reservation"]["markPayment"]["mutate"]
   >;
-  mutReservationMarkPaymentGroup: ProcedureFn<
-    TrpcClientApi["reservation"]["markPaymentGroup"]["mutate"]
+  mutReservationMarkPaymentLinked: ProcedureFn<
+    TrpcClientApi["reservation"]["markPaymentLinked"]["mutate"]
   >;
   mutReservationPingOwner: ProcedureFn<
     TrpcClientApi["reservation"]["pingOwner"]["mutate"]
@@ -48,8 +48,8 @@ export interface IReservationApi {
   queryReservationGetById: ProcedureFn<
     TrpcClientApi["reservation"]["getById"]["query"]
   >;
-  queryReservationGetGroupDetail: ProcedureFn<
-    TrpcClientApi["reservation"]["getGroupDetail"]["query"]
+  queryReservationGetLinkedDetail: ProcedureFn<
+    TrpcClientApi["reservation"]["getLinkedDetail"]["query"]
   >;
   queryReservationGetDetail: ProcedureFn<
     TrpcClientApi["reservation"]["getDetail"]["query"]
@@ -174,13 +174,13 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  mutReservationMarkPaymentGroup: ProcedureFn<
-    TrpcClientApi["reservation"]["markPaymentGroup"]["mutate"]
+  mutReservationMarkPaymentLinked: ProcedureFn<
+    TrpcClientApi["reservation"]["markPaymentLinked"]["mutate"]
   > = async (input) =>
     callTrpcMutation(
       this.clientApi,
-      ["reservation", "markPaymentGroup"],
-      (clientApi) => clientApi.reservation.markPaymentGroup.mutate,
+      ["reservation", "markPaymentLinked"],
+      (clientApi) => clientApi.reservation.markPaymentLinked.mutate,
       input,
       this.toAppError,
     );
@@ -218,13 +218,13 @@ export class ReservationApi {
       this.toAppError,
     );
 
-  queryReservationGetGroupDetail: ProcedureFn<
-    TrpcClientApi["reservation"]["getGroupDetail"]["query"]
+  queryReservationGetLinkedDetail: ProcedureFn<
+    TrpcClientApi["reservation"]["getLinkedDetail"]["query"]
   > = async (input) =>
     callTrpcQuery(
       this.clientApi,
-      ["reservation", "getGroupDetail"],
-      (clientApi) => clientApi.reservation.getGroupDetail.query,
+      ["reservation", "getLinkedDetail"],
+      (clientApi) => clientApi.reservation.getLinkedDetail.query,
       input,
       this.toAppError,
     );

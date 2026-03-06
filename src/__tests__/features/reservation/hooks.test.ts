@@ -6,8 +6,8 @@ const { featureQuerySpy, featureMutationSpy, reservationApi } = vi.hoisted(
     featureQuerySpy: vi.fn(),
     featureMutationSpy: vi.fn(),
     reservationApi: {
-      queryReservationGetGroupDetail: vi.fn(),
-      mutReservationMarkPaymentGroup: vi.fn(),
+      queryReservationGetLinkedDetail: vi.fn(),
+      mutReservationMarkPaymentLinked: vi.fn(),
     },
   }),
 );
@@ -38,13 +38,13 @@ vi.mock("@/trpc/client", () => ({
   trpc: {
     useUtils: () => ({
       reservation: {
-        getGroupDetail: { invalidate: vi.fn(async () => undefined) },
+        getLinkedDetail: { invalidate: vi.fn(async () => undefined) },
         getMy: { invalidate: vi.fn(async () => undefined) },
         getMyWithDetails: { invalidate: vi.fn(async () => undefined) },
       },
       reservationChat: {
         getThreadMetas: { invalidate: vi.fn(async () => undefined) },
-        getGroupSession: { invalidate: vi.fn(async () => undefined) },
+        getSession: { invalidate: vi.fn(async () => undefined) },
       },
     }),
   },
@@ -71,31 +71,31 @@ vi.mock("@/common/toast", () => ({
 }));
 
 import {
-  useMutMarkPaymentGroup,
-  useQueryReservationGroupDetail,
+  useMutMarkPaymentLinked,
+  useQueryReservationLinkedDetail,
 } from "@/features/reservation/hooks";
 
 describe("reservation hooks", () => {
-  it("useQueryReservationGroupDetail -> uses feature query adapter", () => {
+  it("useQueryReservationLinkedDetail -> uses feature query adapter", () => {
     // Arrange + Act
-    renderHook(() => useQueryReservationGroupDetail("group-1", 5000));
+    renderHook(() => useQueryReservationLinkedDetail("res-1", 5000));
 
     // Assert
     expect(featureQuerySpy).toHaveBeenCalledWith(
-      ["reservation", "getGroupDetail"],
-      reservationApi.queryReservationGetGroupDetail,
-      { reservationGroupId: "group-1" },
+      ["reservation", "getLinkedDetail"],
+      reservationApi.queryReservationGetLinkedDetail,
+      { reservationId: "res-1" },
       { enabled: true, refetchInterval: 5000 },
     );
   });
 
-  it("useMutMarkPaymentGroup -> uses feature mutation adapter", () => {
+  it("useMutMarkPaymentLinked -> uses feature mutation adapter", () => {
     // Arrange + Act
-    renderHook(() => useMutMarkPaymentGroup());
+    renderHook(() => useMutMarkPaymentLinked());
 
     // Assert
     expect(featureMutationSpy).toHaveBeenCalledWith(
-      reservationApi.mutReservationMarkPaymentGroup,
+      reservationApi.mutReservationMarkPaymentLinked,
       expect.any(Object),
     );
   });

@@ -25,7 +25,7 @@ import {
   useMutConfirmReservation,
   useMutRejectReservation,
   useQueryOwnerOrganization,
-  useQueryReservationGroupDetail,
+  useQueryReservationLinkedDetail,
 } from "@/features/owner/hooks";
 
 const stageLabelMap: Record<string, string> = {
@@ -38,16 +38,16 @@ const stageLabelMap: Record<string, string> = {
 };
 
 type OwnerReservationGroupDetailPageProps = {
-  reservationGroupId: string;
+  reservationId: string;
 };
 
 export default function OwnerReservationGroupDetailPage({
-  reservationGroupId,
+  reservationId,
 }: OwnerReservationGroupDetailPageProps) {
   const { data: user } = useQueryAuthSession();
   const logoutMutation = useMutAuthLogout();
   const { organization, organizations } = useQueryOwnerOrganization();
-  const groupQuery = useQueryReservationGroupDetail(reservationGroupId);
+  const groupQuery = useQueryReservationLinkedDetail(reservationId);
   const acceptMutation = useMutAcceptReservation();
   const confirmMutation = useMutConfirmReservation();
   const rejectMutation = useMutRejectReservation();
@@ -83,7 +83,7 @@ export default function OwnerReservationGroupDetailPage({
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
     window.location.href = appRoutes.login.from(
-      appRoutes.organization.reservationGroupDetail(reservationGroupId),
+      appRoutes.organization.reservationDetail(reservationId),
     );
   };
 
@@ -100,7 +100,6 @@ export default function OwnerReservationGroupDetailPage({
     mutation.mutate(
       {
         reservationId: firstReservation.id,
-        reservationGroupId,
       },
       {
         onSuccess: () => {
@@ -119,7 +118,6 @@ export default function OwnerReservationGroupDetailPage({
     rejectMutation.mutate(
       {
         reservationId: firstReservation.id,
-        reservationGroupId,
         reason,
       },
       {

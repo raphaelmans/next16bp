@@ -38,20 +38,17 @@ import type { RequestContext } from "@/lib/shared/kernel/context";
 import type { TransactionManager } from "@/lib/shared/kernel/transaction";
 import { computeSchedulePrice } from "@/lib/shared/lib/schedule-availability";
 import type {
-  AcceptReservationGroupDTO,
-  CancelReservationGroupOwnerDTO,
   CancelReservationOwnerDTO,
   ConfirmPaidOfflineDTO,
   ConfirmPaymentDTO,
-  ConfirmPaymentGroupDTO,
   ConvertWalkInBlockDTO,
   CreateGuestBookingDTO,
   GetActiveForCourtRangeDTO,
   GetOrgReservationsDTO,
-  GetReservationGroupDetailDTO,
+  GetReservationLinkedDetailDTO,
   RejectReservationDTO,
-  RejectReservationGroupDTO,
   ReservationWithDetails,
+  ResolveReservationGroupDTO,
 } from "../dtos";
 import {
   InvalidReservationStatusError,
@@ -70,23 +67,34 @@ import type { IExpireStaleReservationsUseCase } from "../use-cases/expire-stale-
 
 const DEFAULT_PAYMENT_HOLD_MINUTES = 45;
 
+type AcceptReservationGroupDTO = {
+  reservationGroupId: string;
+};
+
+type ConfirmPaymentGroupDTO = {
+  reservationGroupId: string;
+  notes?: string;
+};
+
+type RejectReservationGroupDTO = {
+  reservationGroupId: string;
+  reason: string;
+};
+
+type CancelReservationGroupOwnerDTO = {
+  reservationGroupId: string;
+  reason: string;
+};
+
 export interface IReservationOwnerService {
   acceptReservation(
     userId: string,
     reservationId: string,
   ): Promise<ReservationRecord>;
-  acceptReservationGroup(
-    userId: string,
-    data: AcceptReservationGroupDTO,
-  ): Promise<ReservationRecord[]>;
   confirmPayment(
     userId: string,
     data: ConfirmPaymentDTO,
   ): Promise<ReservationRecord>;
-  confirmPaymentGroup(
-    userId: string,
-    data: ConfirmPaymentGroupDTO,
-  ): Promise<ReservationRecord[]>;
   confirmPaidOffline(
     userId: string,
     data: ConfirmPaidOfflineDTO,
@@ -95,18 +103,10 @@ export interface IReservationOwnerService {
     userId: string,
     data: RejectReservationDTO,
   ): Promise<ReservationRecord>;
-  rejectReservationGroup(
-    userId: string,
-    data: RejectReservationGroupDTO,
-  ): Promise<ReservationRecord[]>;
   cancelReservation(
     userId: string,
     data: CancelReservationOwnerDTO,
   ): Promise<ReservationRecord>;
-  cancelReservationGroup(
-    userId: string,
-    data: CancelReservationGroupOwnerDTO,
-  ): Promise<ReservationRecord[]>;
   createGuestBooking(
     userId: string,
     data: CreateGuestBookingDTO,
@@ -127,12 +127,17 @@ export interface IReservationOwnerService {
     userId: string,
     filters: GetOrgReservationsDTO,
   ): Promise<ReservationWithDetails[]>;
-  getReservationGroupDetail(
+  getReservationLinkedDetail(
     userId: string,
-    data: GetReservationGroupDetailDTO,
+    data: GetReservationLinkedDetailDTO,
   ): Promise<{
-    reservationGroupId: string;
     reservations: ReservationWithDetails[];
+  }>;
+  resolveLegacyReservationGroup(
+    userId: string,
+    data: ResolveReservationGroupDTO,
+  ): Promise<{
+    reservationId: string;
   }>;
   getPendingCount(userId: string, organizationId: string): Promise<number>;
 }
@@ -458,6 +463,24 @@ export class ReservationOwnerService implements IReservationOwnerService {
     userId: string,
     reservationId: string,
   ): Promise<ReservationRecord> {
+    const sourceReservation =
+      await this.reservationRepository.findById(reservationId);
+    if (!sourceReservation) {
+      throw new ReservationNotFoundError(reservationId);
+    }
+
+    if (sourceReservation.groupId) {
+      const linked = await this.acceptReservationGroup(userId, {
+        reservationGroupId: sourceReservation.groupId,
+      });
+      const representative =
+        linked.find((item) => item.id === reservationId) ?? linked[0];
+      if (!representative) {
+        throw new ReservationGroupNotFoundError(sourceReservation.groupId);
+      }
+      return representative;
+    }
+
     const updated = await this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
@@ -808,6 +831,26 @@ export class ReservationOwnerService implements IReservationOwnerService {
     userId: string,
     data: ConfirmPaymentDTO,
   ): Promise<ReservationRecord> {
+    const sourceReservation = await this.reservationRepository.findById(
+      data.reservationId,
+    );
+    if (!sourceReservation) {
+      throw new ReservationNotFoundError(data.reservationId);
+    }
+
+    if (sourceReservation.groupId) {
+      const linked = await this.confirmPaymentGroup(userId, {
+        reservationGroupId: sourceReservation.groupId,
+        notes: data.notes,
+      });
+      const representative =
+        linked.find((item) => item.id === data.reservationId) ?? linked[0];
+      if (!representative) {
+        throw new ReservationGroupNotFoundError(sourceReservation.groupId);
+      }
+      return representative;
+    }
+
     const updated = await this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
@@ -1181,6 +1224,26 @@ export class ReservationOwnerService implements IReservationOwnerService {
     userId: string,
     data: RejectReservationDTO,
   ): Promise<ReservationRecord> {
+    const sourceReservation = await this.reservationRepository.findById(
+      data.reservationId,
+    );
+    if (!sourceReservation) {
+      throw new ReservationNotFoundError(data.reservationId);
+    }
+
+    if (sourceReservation.groupId) {
+      const linked = await this.rejectReservationGroup(userId, {
+        reservationGroupId: sourceReservation.groupId,
+        reason: data.reason,
+      });
+      const representative =
+        linked.find((item) => item.id === data.reservationId) ?? linked[0];
+      if (!representative) {
+        throw new ReservationGroupNotFoundError(sourceReservation.groupId);
+      }
+      return representative;
+    }
+
     return this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
@@ -1397,6 +1460,26 @@ export class ReservationOwnerService implements IReservationOwnerService {
     userId: string,
     data: CancelReservationOwnerDTO,
   ): Promise<ReservationRecord> {
+    const sourceReservation = await this.reservationRepository.findById(
+      data.reservationId,
+    );
+    if (!sourceReservation) {
+      throw new ReservationNotFoundError(data.reservationId);
+    }
+
+    if (sourceReservation.groupId) {
+      const linked = await this.cancelReservationGroup(userId, {
+        reservationGroupId: sourceReservation.groupId,
+        reason: data.reason,
+      });
+      const representative =
+        linked.find((item) => item.id === data.reservationId) ?? linked[0];
+      if (!representative) {
+        throw new ReservationGroupNotFoundError(sourceReservation.groupId);
+      }
+      return representative;
+    }
+
     const updated = await this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
@@ -2053,25 +2136,58 @@ export class ReservationOwnerService implements IReservationOwnerService {
     );
   }
 
-  async getReservationGroupDetail(
+  async getReservationLinkedDetail(
     userId: string,
-    data: GetReservationGroupDetailDTO,
+    data: GetReservationLinkedDetailDTO,
   ): Promise<{
-    reservationGroupId: string;
     reservations: ReservationWithDetails[];
   }> {
+    const sourceReservation = await this.reservationRepository.findById(
+      data.reservationId,
+    );
+    if (!sourceReservation) {
+      throw new ReservationNotFoundError(data.reservationId);
+    }
+
+    if (!sourceReservation.groupId) {
+      const organizationId = await this.verifyCourtOwnership(
+        userId,
+        sourceReservation.courtId,
+        "reservation.read",
+      );
+      const [record] =
+        await this.reservationRepository.findWithDetailsByOrganization(
+          organizationId,
+          {
+            reservationId: sourceReservation.id,
+            placeId: undefined,
+            courtId: undefined,
+            status: undefined,
+            limit: 1,
+            offset: 0,
+          },
+        );
+      if (!record) {
+        throw new ReservationNotFoundError(sourceReservation.id);
+      }
+
+      return {
+        reservations: [await this.attachSignedPaymentProofUrl(record)],
+      };
+    }
+
     const group = await this.reservationRepository.findGroupById(
-      data.reservationGroupId,
+      sourceReservation.groupId,
     );
     if (!group) {
-      throw new ReservationGroupNotFoundError(data.reservationGroupId);
+      throw new ReservationGroupNotFoundError(sourceReservation.groupId);
     }
 
     const reservations = await this.reservationRepository.findByGroupId(
-      data.reservationGroupId,
+      sourceReservation.groupId,
     );
     if (reservations.length === 0) {
-      throw new ReservationGroupNotFoundError(data.reservationGroupId);
+      throw new ReservationGroupNotFoundError(sourceReservation.groupId);
     }
 
     const organizationId = await this.verifyCourtOwnership(
@@ -2101,10 +2217,41 @@ export class ReservationOwnerService implements IReservationOwnerService {
       }),
     );
 
-    return {
-      reservationGroupId: group.id,
-      reservations: details,
-    };
+    return { reservations: details };
+  }
+
+  async resolveLegacyReservationGroup(
+    userId: string,
+    data: ResolveReservationGroupDTO,
+  ): Promise<{ reservationId: string }> {
+    const group = await this.reservationRepository.findGroupById(
+      data.reservationGroupId,
+    );
+    if (!group) {
+      throw new ReservationGroupNotFoundError(data.reservationGroupId);
+    }
+
+    const reservations = await this.reservationRepository.findByGroupId(
+      data.reservationGroupId,
+    );
+    if (reservations.length === 0) {
+      throw new ReservationGroupNotFoundError(data.reservationGroupId);
+    }
+
+    await this.verifyCourtOwnership(
+      userId,
+      reservations[0].courtId,
+      "reservation.read",
+    );
+
+    const representative = reservations
+      .slice()
+      .sort((a, b) => a.startTime.getTime() - b.startTime.getTime())[0];
+    if (!representative) {
+      throw new ReservationGroupNotFoundError(data.reservationGroupId);
+    }
+
+    return { reservationId: representative.id };
   }
 
   async getPendingCount(
