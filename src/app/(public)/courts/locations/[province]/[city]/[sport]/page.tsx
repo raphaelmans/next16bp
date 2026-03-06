@@ -226,8 +226,8 @@ export default async function CourtsCitySportPage({
         .limit(6),
     ]);
 
-  const placeCount = Number(placeCountRow?.value ?? 0);
-  const courtCount = Number(courtCountRow?.value ?? 0);
+  const placeCount = Number(placeCountRow?.[0]?.value ?? 0);
+  const courtCount = Number(courtCountRow?.[0]?.value ?? 0);
   const canonicalPath = appRoutes.courts.locations.sport(
     context.province.slug,
     context.city.slug,
