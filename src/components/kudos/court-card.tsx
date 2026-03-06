@@ -47,8 +47,8 @@ export function CourtCard({
   const aspectRatio = variant === "featured" ? "aspect-[4/3]" : "aspect-[16/9]";
 
   const getBadgeVariant = () => {
-    if (court.type === "CURATED") return "contact";
-    if (court.isFree) return "free";
+    if (court.type === "CURATED") return "outline";
+    if (court.isFree) return "success";
     return "paid";
   };
 

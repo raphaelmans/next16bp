@@ -5,6 +5,7 @@ import * as React from "react";
 import { useShallow } from "zustand/shallow";
 import { formatInTimeZone } from "@/common/format";
 import { getZonedDayRangeFromDayKey } from "@/common/time-zone";
+import { useTouchIntent } from "@/common/use-touch-intent";
 import {
   type RangeSelectionConfig,
   RangeSelectionProvider,
@@ -141,21 +142,19 @@ const OwnerWeekGridCell = React.memo(function OwnerWeekGridCell({
   const isPlacing = Boolean(placing && onPlace);
   const rowHeight = compact ? COMPACT_TIMELINE_ROW_HEIGHT : TIMELINE_ROW_HEIGHT;
 
-  // Touch delay state
-  const pendingRef = React.useRef<{
-    timer: ReturnType<typeof setTimeout>;
-    startX: number;
-    startY: number;
-  } | null>(null);
-
-  const cancelPending = React.useCallback(() => {
-    if (pendingRef.current) {
-      clearTimeout(pendingRef.current.timer);
-      pendingRef.current = null;
-    }
-  }, []);
-
-  React.useEffect(() => cancelPending, [cancelPending]);
+  const touchIntent = useTouchIntent({
+    onConfirm: React.useCallback(
+      (e: React.PointerEvent) => {
+        if (!isInteractive || isPlacing) return;
+        pointerDown(linearIdx, {
+          clientX: e.clientX,
+          clientY: e.clientY,
+          pointerType: e.pointerType,
+        });
+      },
+      [linearIdx, isInteractive, isPlacing, pointerDown],
+    ),
+  });
 
   const handlePointerDown = React.useCallback(
     (e: React.PointerEvent) => {
@@ -164,40 +163,10 @@ const OwnerWeekGridCell = React.memo(function OwnerWeekGridCell({
         e.preventDefault();
         return;
       }
-      if (e.pointerType !== "touch") {
-        e.preventDefault();
-        pointerDown(linearIdx, {
-          clientX: e.clientX,
-          clientY: e.clientY,
-          pointerType: e.pointerType,
-        });
-        return;
-      }
-      cancelPending();
-      const timer = setTimeout(() => {
-        pendingRef.current = null;
-        pointerDown(linearIdx);
-      }, 150);
-      pendingRef.current = {
-        timer,
-        startX: e.clientX,
-        startY: e.clientY,
-      };
+      e.preventDefault();
+      touchIntent.onPointerDown(e);
     },
-    [linearIdx, isInteractive, isPlacing, pointerDown, cancelPending],
-  );
-
-  const handlePointerMove = React.useCallback(
-    (e: React.PointerEvent) => {
-      if (pendingRef.current) {
-        const dx = e.clientX - pendingRef.current.startX;
-        const dy = e.clientY - pendingRef.current.startY;
-        if (dx * dx + dy * dy > 100) {
-          cancelPending();
-        }
-      }
-    },
-    [cancelPending],
+    [isInteractive, isPlacing, touchIntent],
   );
 
   const handlePointerEnter = React.useCallback(
@@ -214,9 +183,9 @@ const OwnerWeekGridCell = React.memo(function OwnerWeekGridCell({
   );
 
   const handlePointerLeave = React.useCallback(() => {
-    cancelPending();
+    touchIntent.cancel();
     setHoveredIdx(null);
-  }, [cancelPending, setHoveredIdx]);
+  }, [touchIntent, setHoveredIdx]);
 
   const handleClick = React.useCallback(
     (e: React.MouseEvent) => {
@@ -264,7 +233,7 @@ const OwnerWeekGridCell = React.memo(function OwnerWeekGridCell({
       )}
       style={{ height: rowHeight }}
       onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
+      onPointerMove={touchIntent.onPointerMove}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       onClick={handleClick}

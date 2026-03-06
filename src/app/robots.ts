@@ -24,7 +24,7 @@ const privatePaths = [
   "/places/*/book",
   "/poc",
   "/poc/*",
-] as const;
+] satisfies string[];
 
 export default function robots(): MetadataRoute.Robots {
   if (!isProduction) {

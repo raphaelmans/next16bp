@@ -1,6 +1,6 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, Info } from "lucide-react";
 import * as React from "react";
 import { useShallow } from "zustand/shallow";
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/common/format";
 import { useNowMs } from "@/common/hooks/use-now";
 import { getZonedDayRangeFromDayKey } from "@/common/time-zone";
+import { useTouchIntent } from "@/common/use-touch-intent";
 import { cn } from "@/lib/utils";
 import {
   deriveIsAwaitingEndClick,
@@ -226,6 +227,23 @@ const WeekGridSummaryBar = React.memo(function WeekGridSummaryBar({
 });
 
 // ---------------------------------------------------------------------------
+// Tap-hold hint (mobile)
+// ---------------------------------------------------------------------------
+
+function TapHoldHint() {
+  const hasSelection = useRangeSelection(
+    (s) => s.committedRange !== null || s.anchorIdx !== null,
+  );
+  if (hasSelection) return null;
+  return (
+    <p className="flex items-center gap-1.5 px-2 py-1 text-xs text-muted-foreground md:hidden">
+      <Info className="h-3.5 w-3.5 shrink-0" />
+      Tap and hold to select
+    </p>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Grid Cell (memoized, subscribes to own visual state)
 // ---------------------------------------------------------------------------
 
@@ -268,6 +286,21 @@ const WeekGridCell = React.memo(function WeekGridCell({
   const isMaintenance = slot?.unavailableReason === "MAINTENANCE";
   const isReserved = isBooked && !isMaintenance;
 
+  const touchIntent = useTouchIntent({
+    onConfirm: React.useCallback(
+      (e: React.PointerEvent) => {
+        if (slot && available && !isDisabled) {
+          pointerDown(linearIdx, {
+            clientX: e.clientX,
+            clientY: e.clientY,
+            pointerType: e.pointerType,
+          });
+        }
+      },
+      [slot, available, isDisabled, pointerDown, linearIdx],
+    ),
+  });
+
   return (
     <button
       key={`${dayKey}-${hourIdx}`}
@@ -282,14 +315,9 @@ const WeekGridCell = React.memo(function WeekGridCell({
       }
       onPointerDown={(e) => {
         e.preventDefault();
-        if (slot && available && !isDisabled) {
-          pointerDown(linearIdx, {
-            clientX: e.clientX,
-            clientY: e.clientY,
-            pointerType: e.pointerType,
-          });
-        }
+        touchIntent.onPointerDown(e);
       }}
+      onPointerMove={touchIntent.onPointerMove}
       onPointerEnter={(e) => {
         if (!isDisabled) {
           pointerEnter(linearIdx, {
@@ -300,7 +328,10 @@ const WeekGridCell = React.memo(function WeekGridCell({
           if (available) setHoveredIdx(linearIdx);
         }
       }}
-      onPointerLeave={() => setHoveredIdx(null)}
+      onPointerLeave={() => {
+        touchIntent.cancel();
+        setHoveredIdx(null);
+      }}
       onClick={(e) => {
         if (slot && available && !isDisabled) click(linearIdx, e.shiftKey);
       }}
@@ -644,6 +675,8 @@ function WeekGridInner({
         onRangeChange={onRangeChange}
         compact={compact}
       />
+
+      <TapHoldHint />
 
       {sameDayAnchorLabel ? (
         <div className="rounded-lg border border-success/35 bg-success-light/30 px-3 py-2 text-xs text-muted-foreground">

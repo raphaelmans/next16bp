@@ -114,8 +114,8 @@ export default async function CourtsProvincePage({
         .limit(6),
     ]);
 
-  const placeCount = Number(placeCountRow?.value ?? 0);
-  const courtCount = Number(courtCountRow?.value ?? 0);
+  const placeCount = Number(placeCountRow[0]?.value ?? 0);
+  const courtCount = Number(courtCountRow[0]?.value ?? 0);
   const topCities = topCityRows
     .map((row) => {
       const city = findCityByName(province, row.city);

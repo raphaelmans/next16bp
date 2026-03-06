@@ -43,7 +43,7 @@ export function ContactSection({
       <CardHeader>
         <div className="flex items-center gap-2">
           <CardTitle>Contact to Book</CardTitle>
-          <Badge variant="contact">Curated</Badge>
+          <Badge variant="outline">Curated</Badge>
         </div>
         <p className="text-sm text-muted-foreground">
           This court is managed externally. Contact them directly to book.
