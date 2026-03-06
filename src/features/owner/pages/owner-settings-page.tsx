@@ -1,7 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle, Loader2 } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -230,7 +231,7 @@ export default function OwnerSettingsPage() {
       <AppShell
         sidebar={
           <OwnerSidebar
-            currentOrganization={navOrg ?? { id: "", name: "Loading..." }}
+            currentOrganization={navOrg ?? { id: "", name: "" }}
             organizations={organizations}
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
             isAdmin={user?.role === "admin"}
@@ -238,7 +239,7 @@ export default function OwnerSettingsPage() {
         }
         navbar={
           <OwnerNavbar
-            organizationName={navOrg?.name ?? "Loading..."}
+            organizationName={navOrg?.name ?? ""}
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
             onLogout={handleLogout}
             isAdmin={user?.role === "admin"}
@@ -259,7 +260,7 @@ export default function OwnerSettingsPage() {
       <AppShell
         sidebar={
           <OwnerSidebar
-            currentOrganization={navOrg ?? { id: "", name: "Loading..." }}
+            currentOrganization={navOrg ?? { id: "", name: "" }}
             organizations={organizations}
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
             isAdmin={user?.role === "admin"}
@@ -267,7 +268,7 @@ export default function OwnerSettingsPage() {
         }
         navbar={
           <OwnerNavbar
-            organizationName={navOrg?.name ?? "Loading..."}
+            organizationName={navOrg?.name ?? ""}
             user={{ name: user?.email?.split("@")[0], email: user?.email }}
             onLogout={handleLogout}
             isAdmin={user?.role === "admin"}
@@ -327,7 +328,7 @@ export default function OwnerSettingsPage() {
           </div>
 
           {showOwnerOnlySectionHint ? (
-            <div className="rounded-md border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
+            <div className="rounded-md border border-warning/30 bg-warning-light p-4 text-sm text-warning-foreground">
               <div className="font-medium">
                 That section is only available to organization owners.
               </div>
@@ -384,9 +385,7 @@ export default function OwnerSettingsPage() {
               {/* Save Button */}
               <div className="flex justify-end">
                 <Button type="submit" disabled={isOrgSubmitDisabled}>
-                  {orgSubmitting && (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  )}
+                  {orgSubmitting && <Spinner className="h-4 w-4 mr-2" />}
                   Save Changes
                 </Button>
               </div>

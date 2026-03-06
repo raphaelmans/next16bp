@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export function FeaturedPlaceholderCard() {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-accent/5 p-6 text-center">
+    <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/5 to-primary/5 p-6 text-center">
       <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
         <Star className="h-6 w-6" />
       </div>

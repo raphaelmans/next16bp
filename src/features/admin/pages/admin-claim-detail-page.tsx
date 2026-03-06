@@ -421,7 +421,7 @@ export default function AdminClaimDetailPage({
                         <div
                           className={cn(
                             "w-2 h-2 rounded-full mt-2",
-                            event.type === "submitted" && "bg-accent",
+                            event.type === "submitted" && "bg-primary",
                             event.type === "approved" && "bg-success",
                             event.type === "rejected" && "bg-destructive",
                             event.type === "note_added" &&
@@ -473,9 +473,9 @@ export default function AdminClaimDetailPage({
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       {claim.status === "approved" ? (
-                        <CheckCircle2 className="h-5 w-5 text-green-600" />
+                        <CheckCircle2 className="h-5 w-5 text-success" />
                       ) : (
-                        <XCircle className="h-5 w-5 text-red-600" />
+                        <XCircle className="h-5 w-5 text-destructive" />
                       )}
                       <span className="font-medium">
                         {claim.status === "approved" ? "Approved" : "Rejected"}{" "}

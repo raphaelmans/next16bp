@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { OG_BRAND, OG_GRADIENTS } from "@/common/og-brand";
 
 // Twitter/X Image metadata - 1200x630 for summary_large_image card
 export const alt =
@@ -20,7 +21,7 @@ export default function TwitterImage() {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        background: "linear-gradient(135deg, #0F766E 0%, #0D9488 100%)",
+        background: OG_GRADIENTS.tealBg,
         fontFamily: "system-ui, sans-serif",
         padding: "60px 80px",
       }}
@@ -78,7 +79,7 @@ export default function TwitterImage() {
           style={{
             marginTop: "32px",
             padding: "12px 24px",
-            background: "linear-gradient(135deg, #FB923C 0%, #F97316 100%)",
+            background: OG_GRADIENTS.accentBar,
             borderRadius: "8px",
             fontSize: "18px",
             fontWeight: 600,
@@ -117,8 +118,11 @@ export default function TwitterImage() {
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
           >
-            <rect width="375" height="375" fill="#0d9488" />
-            <g fill="#fafaf9" transform="translate(99.06738 280.162856)">
+            <rect width="375" height="375" fill={OG_BRAND.teal} />
+            <g
+              fill={OG_BRAND.background}
+              transform="translate(99.06738 280.162856)"
+            >
               <path d="M 124.1875 0 L 52.4375 -92.328125 L 121.921875 -177.125 L 170.59375 -177.125 L 92.328125 -85.046875 L 92.328125 -101.109375 L 173.109375 0 Z M 17.0625 0 L 17.0625 -177.125 L 56.453125 -177.125 L 56.453125 0 Z M 17.0625 0 " />
             </g>
           </svg>
@@ -133,7 +137,7 @@ export default function TwitterImage() {
           left: "0",
           right: "0",
           height: "6px",
-          background: "linear-gradient(90deg, #FB923C 0%, #F97316 100%)",
+          background: OG_GRADIENTS.accentBar,
         }}
       />
     </div>,

@@ -48,7 +48,7 @@ const stageConfig: Record<
   CREATED: {
     label: "Needs Acceptance",
     variant: "outline",
-    className: "bg-amber-50 text-amber-700 border-amber-200",
+    className: "bg-warning-light text-warning border-warning/20",
   },
   AWAITING_PAYMENT: {
     label: "Awaiting Payment",
@@ -63,17 +63,17 @@ const stageConfig: Record<
   CONFIRMED: {
     label: "Confirmed",
     variant: "outline",
-    className: "bg-green-50 text-green-700 border-green-200",
+    className: "bg-success-light text-success border-success/20",
   },
   EXPIRED: {
     label: "Expired",
     variant: "outline",
-    className: "bg-red-50 text-red-700 border-red-200",
+    className: "bg-destructive-light text-destructive border-destructive/20",
   },
   CANCELLED: {
     label: "Cancelled",
     variant: "outline",
-    className: "bg-slate-50 text-slate-700 border-slate-200",
+    className: "bg-muted text-muted-foreground border-border",
   },
 };
 
@@ -275,7 +275,7 @@ export function ReservationsTable({
                 <div className="flex gap-2 pt-2">
                   <Button
                     size="sm"
-                    className="flex-1 bg-green-600 hover:bg-green-700"
+                    className="flex-1 bg-success hover:bg-success/90"
                     onClick={() => onConfirm?.(reservation.id)}
                     disabled={isLoading}
                   >
@@ -445,7 +445,7 @@ export function ReservationsTable({
                           <>
                             <Button
                               size="sm"
-                              className="bg-green-600 hover:bg-green-700"
+                              className="bg-success hover:bg-success/90"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 onConfirm?.(reservation.id);

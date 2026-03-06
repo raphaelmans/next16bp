@@ -2,13 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { differenceInMinutes, format } from "date-fns";
-import {
-  ArrowLeft,
-  CheckCircle,
-  Clock,
-  Loader2,
-  MessageSquare,
-} from "lucide-react";
+import { ArrowLeft, CheckCircle, Clock, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -23,6 +17,7 @@ import { toast } from "@/common/toast";
 import { StandardFormProvider } from "@/components/form";
 import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CountdownTimer } from "@/features/reservation/components/countdown-timer";
 import { PaymentInfoCard } from "@/features/reservation/components/payment-info-card";
@@ -230,7 +225,7 @@ export default function PaymentPage({
     return (
       <Container className="py-6">
         <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Spinner className="size-8 text-muted-foreground" />
         </div>
       </Container>
     );
@@ -289,7 +284,7 @@ export default function PaymentPage({
         <div className="max-w-lg mx-auto">
           <Card>
             <CardContent className="p-6 text-center">
-              <CheckCircle className="h-12 w-12 mx-auto text-[#059669] mb-4" />
+              <CheckCircle className="h-12 w-12 mx-auto text-success mb-4" />
               <h2 className="font-heading font-semibold text-lg mb-2">
                 Payment Already Marked
               </h2>
@@ -434,14 +429,8 @@ export default function PaymentPage({
             disabled={!termsAccepted || markPaymentLinked.isPending}
             onClick={handleGroupPaymentSubmit}
           >
-            {markPaymentLinked.isPending ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Submitting...
-              </>
-            ) : (
-              "Submit Group Payment"
-            )}
+            {markPaymentLinked.isPending && <Spinner />}
+            Submit Group Payment
           </Button>
         </div>
       </Container>
@@ -552,15 +541,11 @@ export default function PaymentPage({
             size="lg"
           >
             {isSubmitting ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Processing...
-              </>
+              <Spinner />
             ) : (
-              <>
-                <CheckCircle className="h-4 w-4 mr-2" />I Have Paid
-              </>
+              <CheckCircle className="h-4 w-4 mr-2" />
             )}
+            {isSubmitting ? "Confirming" : "I Have Paid"}
           </Button>
 
           <p className="text-xs text-muted-foreground text-center">

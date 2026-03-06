@@ -65,7 +65,7 @@ export function BookingSummaryCard({
         <div>
           <h3 className="font-heading font-semibold text-lg">{court.name}</h3>
           <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">
-            <MapPin className="h-4 w-4 text-accent" />
+            <MapPin className="h-4 w-4 text-primary" />
             <span>{court.address}</span>
           </div>
         </div>

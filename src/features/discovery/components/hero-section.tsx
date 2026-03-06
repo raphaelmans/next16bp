@@ -88,7 +88,7 @@ export function HeroSection({ className }: HeroSectionProps) {
               key={location.slug}
               variant="ghost"
               size="sm"
-              className="text-accent hover:text-accent/80"
+              className="text-primary hover:text-primary/80"
               onClick={() => handleLocationClick(location.slug)}
             >
               <MapPin className="h-3 w-3 mr-1" />

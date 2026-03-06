@@ -14,9 +14,9 @@ export interface TimelineItem {
 }
 
 const statusColors: Record<TimelineItemStatus, string> = {
-  success: "bg-green-500",
-  warning: "bg-amber-500",
-  error: "bg-red-500",
+  success: "bg-success",
+  warning: "bg-warning",
+  error: "bg-destructive",
   default: "bg-primary",
 };
 

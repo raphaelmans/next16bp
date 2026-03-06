@@ -2,7 +2,15 @@
 
 import { MapPin } from "lucide-react";
 import { appRoutes } from "@/common/app-routes";
-import { EmptyState } from "@/components/kudos";
+import { Button } from "@/components/ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 
 interface EmptyResultsProps {
   query?: string;
@@ -11,25 +19,29 @@ interface EmptyResultsProps {
 
 export function EmptyResults({ query, onClearFilters }: EmptyResultsProps) {
   return (
-    <EmptyState
-      icon={MapPin}
-      title="No courts found"
-      description={
-        query
-          ? `We couldn't find any courts matching "${query}". Try adjusting your search or filters.`
-          : "No courts match your current filters. Try adjusting your search criteria."
-      }
-      action={
-        onClearFilters
-          ? {
-              label: "Clear filters",
-              onClick: onClearFilters,
-            }
-          : {
-              label: "Browse all courts",
-              href: appRoutes.courts.base,
-            }
-      }
-    />
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <MapPin />
+        </EmptyMedia>
+        <EmptyTitle>No courts found</EmptyTitle>
+        <EmptyDescription>
+          {query
+            ? `We couldn't find any courts matching "${query}". Try adjusting your search or filters.`
+            : "No courts match your current filters. Try adjusting your search criteria."}
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        {onClearFilters ? (
+          <Button variant="outline" onClick={onClearFilters}>
+            Clear filters
+          </Button>
+        ) : (
+          <Button asChild variant="outline">
+            <a href={appRoutes.courts.base}>Browse all courts</a>
+          </Button>
+        )}
+      </EmptyContent>
+    </Empty>
   );
 }

@@ -18,6 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { Separator } from "@/components/ui/separator";
 import { type LoginDTO, LoginSchema } from "@/lib/modules/auth/dtos";
 import { useMutAuthLogin, useMutAuthLoginWithGoogle } from "../hooks";
@@ -116,9 +117,7 @@ export function LoginForm({
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle>Sign In</CardTitle>
-        <CardDescription>
-          Enter your credentials to access your account
-        </CardDescription>
+        <CardDescription>Sign in with your email and password</CardDescription>
         {showBookingContext && (
           <p className="text-sm text-muted-foreground">
             You&apos;ll return to your reservation after signing in.
@@ -160,7 +159,7 @@ export function LoginForm({
 
         <CardFooter className="mt-6 flex flex-col gap-4">
           <Button type="submit" className="w-full" disabled={isSubmitDisabled}>
-            {submitting ? "Signing in..." : "Sign In"}
+            {submitting && <Spinner />} Sign In
           </Button>
 
           <div className="text-muted-foreground text-sm">

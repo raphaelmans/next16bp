@@ -1,11 +1,14 @@
-import { and, eq, sql, inArray } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { court } from "@/lib/shared/infra/db/schema/court";
 import { courtHoursWindow } from "@/lib/shared/infra/db/schema/court-hours-window";
 import { place } from "@/lib/shared/infra/db/schema/place";
 import type { DbClient } from "@/lib/shared/infra/db/types";
 
 function pgArray(ids: string[]) {
-  return sql`ARRAY[${sql.join(ids.map((id) => sql`${id}`), sql`, `)}]::uuid[]`;
+  return sql`ARRAY[${sql.join(
+    ids.map((id) => sql`${id}`),
+    sql`, `,
+  )}]::uuid[]`;
 }
 
 export class AnalyticsRepository {
@@ -17,10 +20,7 @@ export class AnalyticsRepository {
       .from(court)
       .innerJoin(place, eq(court.placeId, place.id))
       .where(
-        and(
-          eq(place.organizationId, organizationId),
-          eq(court.isActive, true),
-        ),
+        and(eq(place.organizationId, organizationId), eq(court.isActive, true)),
       );
     return rows.map((r) => r.id);
   }
@@ -67,11 +67,7 @@ export class AnalyticsRepository {
     }));
   }
 
-  async getRevenueByCourt(
-    courtIds: string[],
-    from: string,
-    to: string,
-  ) {
+  async getRevenueByCourt(courtIds: string[], from: string, to: string) {
     if (courtIds.length === 0) return [];
     const rows = await this.db.execute<{
       court_id: string;
@@ -156,8 +152,7 @@ export class AnalyticsRepository {
   }
 
   async getRevenueTotals(courtIds: string[], from: string, to: string) {
-    if (courtIds.length === 0)
-      return { totalCents: 0, bookingCount: 0 };
+    if (courtIds.length === 0) return { totalCents: 0, bookingCount: 0 };
     const rows = await this.db.execute<{
       total_cents: string;
       booking_count: string;
@@ -247,11 +242,7 @@ export class AnalyticsRepository {
     }));
   }
 
-  async getMaintenanceHours(
-    courtIds: string[],
-    from: string,
-    to: string,
-  ) {
+  async getMaintenanceHours(courtIds: string[], from: string, to: string) {
     if (courtIds.length === 0) return 0;
     const rows = await this.db.execute<{ total_hours: string }>(sql`
       SELECT
@@ -268,11 +259,7 @@ export class AnalyticsRepository {
 
   // ── Operations Queries ──────────────────────────────────────────────────
 
-  async getResponseTimes(
-    courtIds: string[],
-    from: string,
-    to: string,
-  ) {
+  async getResponseTimes(courtIds: string[], from: string, to: string) {
     if (courtIds.length === 0) return [];
     const rows = await this.db.execute<{
       response_minutes: string;
@@ -296,11 +283,7 @@ export class AnalyticsRepository {
     return rows.map((r) => Number(r.response_minutes));
   }
 
-  async getCancellationBreakdown(
-    courtIds: string[],
-    from: string,
-    to: string,
-  ) {
+  async getCancellationBreakdown(courtIds: string[], from: string, to: string) {
     if (courtIds.length === 0) return [];
     const rows = await this.db.execute<{
       reason: string;
@@ -335,11 +318,7 @@ export class AnalyticsRepository {
     }));
   }
 
-  async getTotalReservationCount(
-    courtIds: string[],
-    from: string,
-    to: string,
-  ) {
+  async getTotalReservationCount(courtIds: string[], from: string, to: string) {
     if (courtIds.length === 0) return 0;
     const rows = await this.db.execute<{ count: string }>(sql`
       SELECT COUNT(*)::text AS count
@@ -351,11 +330,7 @@ export class AnalyticsRepository {
     return Number(rows[0]?.count ?? 0);
   }
 
-  async getLeadTimes(
-    courtIds: string[],
-    from: string,
-    to: string,
-  ) {
+  async getLeadTimes(courtIds: string[], from: string, to: string) {
     if (courtIds.length === 0) return [];
     const rows = await this.db.execute<{
       lead_hours: string;

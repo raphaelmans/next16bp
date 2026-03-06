@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { useMemo, useState } from "react";
 import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
 import { Container } from "@/components/layout";
@@ -82,14 +82,8 @@ export default function GoogleLocPocPage() {
               disabled={!canSubmit || isLoading}
               className="w-full"
             >
-              {isLoading ? (
-                <span className="inline-flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Resolving…
-                </span>
-              ) : (
-                "Preview"
-              )}
+              {isLoading && <Spinner />}
+              Preview
             </Button>
 
             {errorMessage && (
@@ -116,7 +110,7 @@ export default function GoogleLocPocPage() {
                       href={result.resolvedUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="break-all text-accent hover:underline"
+                      className="break-all text-primary hover:underline"
                     >
                       {result.resolvedUrl}
                     </a>

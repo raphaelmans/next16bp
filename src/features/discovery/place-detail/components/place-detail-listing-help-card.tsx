@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  ArrowRight,
-  BadgeCheck,
-  CircleHelp,
-  Flag,
-  Loader2,
-} from "lucide-react";
+import { ArrowRight, BadgeCheck, CircleHelp, Flag } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
+import { Spinner } from "@/components/ui/spinner";
 import {
   StandardFormInput,
   StandardFormProvider,
@@ -149,9 +144,7 @@ export function PlaceDetailListingHelpCard({
                         Cancel
                       </Button>
                       <Button type="submit" disabled={claimDisabled}>
-                        {claimSubmitting && (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        )}
+                        {claimSubmitting && <Spinner />}
                         Submit claim
                       </Button>
                     </DialogFooter>
@@ -239,9 +232,7 @@ export function PlaceDetailListingHelpCard({
                         Cancel
                       </Button>
                       <Button type="submit" disabled={removalDisabled}>
-                        {removalSubmitting && (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        )}
+                        {removalSubmitting && <Spinner />}
                         Submit request
                       </Button>
                     </DialogFooter>

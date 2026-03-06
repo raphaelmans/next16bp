@@ -49,7 +49,7 @@ function Carousel({
   className,
   children,
   ...props
-}: React.ComponentProps<"section"> & CarouselProps) {
+}: React.ComponentProps<"div"> & CarouselProps) {
   const [carouselRef, api] = useEmblaCarousel(
     {
       ...opts,
@@ -75,7 +75,7 @@ function Carousel({
   }, [api]);
 
   const handleKeyDown = React.useCallback(
-    (event: React.KeyboardEvent<HTMLElement>) => {
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
       if (event.key === "ArrowLeft") {
         event.preventDefault();
         scrollPrev();
@@ -117,14 +117,16 @@ function Carousel({
         canScrollNext,
       }}
     >
-      <section
+      <div
         onKeyDownCapture={handleKeyDown}
         className={cn("relative", className)}
+        role="region"
+        aria-roledescription="carousel"
         data-slot="carousel"
         {...props}
       >
         {children}
-      </section>
+      </div>
     </CarouselContext.Provider>
   );
 }
@@ -155,6 +157,8 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
 
   return (
     <div
+      role="group"
+      aria-roledescription="slide"
       data-slot="carousel-item"
       className={cn(
         "min-w-0 shrink-0 grow-0 basis-full",

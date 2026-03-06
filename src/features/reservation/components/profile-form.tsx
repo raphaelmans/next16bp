@@ -11,6 +11,7 @@ import { getClientErrorMessage } from "@/common/toast/errors";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Card,
   CardContent,
@@ -154,7 +155,8 @@ export function ProfileForm() {
               </p>
             )}
             <Button type="submit" disabled={isSubmitDisabled}>
-              {submitting ? "Saving..." : "Save Changes"}
+              {submitting && <Spinner />}
+              Save Changes
             </Button>
           </div>
         </StandardFormProvider>

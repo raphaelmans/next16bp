@@ -461,9 +461,7 @@ const BLOCK_CTA_LABELS: Record<
 
 export function getBlockCtaLabel(
   blockType: "WALK_IN" | "MAINTENANCE" | "GUEST_BOOKING",
-  isSubmitting: boolean,
 ): string {
-  if (isSubmitting) return "Saving...";
   return BLOCK_CTA_LABELS[blockType];
 }
 

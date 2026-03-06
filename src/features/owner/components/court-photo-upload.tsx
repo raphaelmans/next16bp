@@ -1,6 +1,7 @@
 "use client";
 
-import { Image as ImageIcon, Loader2, X } from "lucide-react";
+import { Image as ImageIcon, X } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Image from "next/image";
 import { useRef } from "react";
 import { useMutRemoveCourtPhoto, useMutUploadCourtPhoto } from "../hooks";
@@ -83,7 +84,7 @@ export function CourtPhotoUpload({
                 className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-50"
               >
                 {removePhoto.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Spinner className="h-4 w-4" />
                 ) : (
                   <X className="h-4 w-4" />
                 )}
@@ -108,13 +109,11 @@ export function CourtPhotoUpload({
               className="aspect-square rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-2 text-muted-foreground hover:border-primary hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {uploadPhoto.isPending ? (
-                <Loader2 className="h-8 w-8 animate-spin" />
+                <Spinner className="h-8 w-8" />
               ) : (
                 <ImageIcon className="h-8 w-8" />
               )}
-              <span className="text-xs">
-                {uploadPhoto.isPending ? "Uploading..." : "Add Photo"}
-              </span>
+              <span className="text-xs">Add Photo</span>
             </button>
           </>
         )}

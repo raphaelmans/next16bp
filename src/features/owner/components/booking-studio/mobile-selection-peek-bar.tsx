@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronRight, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 import { useBookingStudio } from "./booking-studio-provider";
 
@@ -20,15 +19,9 @@ export const MobileSelectionPeekBar = React.memo(
     const visible = !!committedRange && !mobileDrawerOpen;
 
     return (
-      <AnimatePresence>
+      <>
         {visible && (
-          <motion.div
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed bottom-[calc(3.5rem+max(0px,env(safe-area-inset-bottom)))] left-0 right-0 z-50 border-t bg-background md:bottom-0 md:pb-[env(safe-area-inset-bottom)]"
-          >
+          <div className="fixed bottom-[calc(3.5rem+max(0px,env(safe-area-inset-bottom)))] left-0 right-0 z-50 border-t bg-background md:bottom-0 md:pb-[env(safe-area-inset-bottom)] animate-in slide-in-from-bottom duration-200">
             <button
               type="button"
               onClick={onOpen}
@@ -55,9 +48,9 @@ export const MobileSelectionPeekBar = React.memo(
                 <X className="h-4 w-4" />
               </button>
             </button>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
+      </>
     );
   },
 );

@@ -1,7 +1,6 @@
 "use client";
 
 import { Check, Info } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as React from "react";
 import { useShallow } from "zustand/shallow";
 import {
@@ -112,11 +111,6 @@ const SummaryBar = React.memo(function SummaryBar({
   showPrice,
   onClear,
 }: SummaryBarProps) {
-  const shouldReduceMotion = useReducedMotion();
-  const motionTransition = shouldReduceMotion
-    ? { duration: 0 }
-    : { duration: 0.15, ease: "easeOut" as const };
-
   const activeStartIdx = useRangeSelection(selectActiveStartIdx);
   const activeEndIdx = useRangeSelection(selectActiveEndIdx);
   const isAwaitingEndClick = useRangeSelection((s) =>
@@ -146,52 +140,40 @@ const SummaryBar = React.memo(function SummaryBar({
     (activeEndIdx - activeStartIdx + 1) * (SLOT_STEP_MINUTES / 60);
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key="summary"
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: 1, height: "auto" }}
-        exit={{ opacity: 0, height: 0 }}
-        transition={motionTransition}
-        className="overflow-hidden"
-      >
-        <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-              <div className="h-2.5 w-2.5 rounded-full bg-primary" />
-            </div>
-            <div>
-              <p className="font-heading text-sm font-semibold text-foreground">
-                {formatTimeInTimeZone(
-                  slots[activeStartIdx].startTime,
-                  timeZone,
-                )}
-                {" \u2013 "}
-                {formatTimeInTimeZone(slots[activeEndIdx].endTime, timeZone)}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {durationHours}h
-                {isAwaitingEndClick && " \u00B7 Click another slot to extend"}
-                {showPrice &&
-                  rangePriceCents !== undefined &&
-                  ` \u00B7 ${formatCurrency(rangePriceCents, rangeCurrency)}`}
-              </p>
-            </div>
+    <div className="overflow-hidden animate-in fade-in duration-150">
+      <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+            <div className="h-2.5 w-2.5 rounded-full bg-primary" />
           </div>
-          <div className="flex items-center gap-2">
-            {onClear && (
-              <button
-                type="button"
-                onClick={onClear}
-                className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              >
-                Clear
-              </button>
-            )}
+          <div>
+            <p className="font-heading text-sm font-semibold text-foreground">
+              {formatTimeInTimeZone(slots[activeStartIdx].startTime, timeZone)}
+              {" \u2013 "}
+              {formatTimeInTimeZone(slots[activeEndIdx].endTime, timeZone)}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {durationHours}h
+              {isAwaitingEndClick && " \u00B7 Click another slot to extend"}
+              {showPrice &&
+                rangePriceCents !== undefined &&
+                ` \u00B7 ${formatCurrency(rangePriceCents, rangeCurrency)}`}
+            </p>
           </div>
         </div>
-      </motion.div>
-    </AnimatePresence>
+        <div className="flex items-center gap-2">
+          {onClear && (
+            <button
+              type="button"
+              onClick={onClear}
+              className="rounded-md px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 });
 
@@ -218,11 +200,6 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
   isPast,
   isInCart,
 }: TimeSlotRowProps) {
-  const shouldReduceMotion = useReducedMotion();
-  const motionTransition = shouldReduceMotion
-    ? { duration: 0 }
-    : { duration: 0.15, ease: "easeOut" as const };
-
   const { inRange, isStart, isEnd, inHoverPreview } = useCellState(idx);
 
   const { pointerDown, pointerEnter, click, setHoveredIdx } = useRangeSelection(
@@ -308,14 +285,12 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
     >
       {/* Left accent bar for selected range */}
       {inRange && (
-        <motion.div
-          layoutId={shouldReduceMotion ? undefined : "range-bar"}
+        <div
           className={cn(
-            "absolute left-0 top-0 bottom-0 w-1 bg-primary",
+            "absolute left-0 top-0 bottom-0 w-1 bg-primary animate-in fade-in duration-150",
             isStart && "rounded-tl-xl",
             isEnd && "rounded-bl-xl",
           )}
-          transition={motionTransition}
         />
       )}
 
@@ -332,12 +307,7 @@ const TimeSlotRow = React.memo(function TimeSlotRow({
             <Check className="h-2.5 w-2.5 text-success" />
           </div>
         ) : inRange ? (
-          <motion.div
-            initial={{ scale: 0.5 }}
-            animate={{ scale: 1 }}
-            className="h-2.5 w-2.5 rounded-full bg-primary shadow-sm shadow-primary/25"
-            transition={motionTransition}
-          />
+          <div className="h-2.5 w-2.5 rounded-full bg-primary shadow-sm shadow-primary/25 animate-in zoom-in-50 duration-150" />
         ) : (
           <div
             className={cn(

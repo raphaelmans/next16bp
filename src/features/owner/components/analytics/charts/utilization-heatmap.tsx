@@ -58,10 +58,7 @@ export function UtilizationHeatmap({ data }: UtilizationHeatmapProps) {
                 return (
                   <div
                     key={h}
-                    className={cn(
-                      "flex-1 rounded-sm h-6",
-                      getCellColor(pct),
-                    )}
+                    className={cn("flex-1 rounded-sm h-6", getCellColor(pct))}
                     title={`${label} ${h}:00 - ${pct}%`}
                   />
                 );
@@ -76,8 +73,7 @@ export function UtilizationHeatmap({ data }: UtilizationHeatmapProps) {
           <span className="inline-block h-3 w-3 rounded-sm bg-muted" /> 0%
         </span>
         <span className="flex items-center gap-1">
-          <span className="inline-block h-3 w-3 rounded-sm bg-teal-100" />{" "}
-          1-25%
+          <span className="inline-block h-3 w-3 rounded-sm bg-teal-100" /> 1-25%
         </span>
         <span className="flex items-center gap-1">
           <span className="inline-block h-3 w-3 rounded-sm bg-teal-200" />{" "}
@@ -88,8 +84,7 @@ export function UtilizationHeatmap({ data }: UtilizationHeatmapProps) {
           50-75%
         </span>
         <span className="flex items-center gap-1">
-          <span className="inline-block h-3 w-3 rounded-sm bg-teal-600" />{" "}
-          75%+
+          <span className="inline-block h-3 w-3 rounded-sm bg-teal-600" /> 75%+
         </span>
       </div>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -567,7 +567,7 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   if (courtLoading || provincesCitiesQuery.isLoading || !isFormReady) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Spinner className="size-8" />
       </div>
     );
   }

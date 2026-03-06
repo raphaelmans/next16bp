@@ -44,13 +44,13 @@ export function BatchResultsPanel({ batchResult }: BatchResultsPanelProps) {
             <div className="text-sm text-muted-foreground">Total</div>
           </div>
           <div className="rounded-lg border p-4">
-            <div className="text-2xl font-bold text-green-600">
+            <div className="text-2xl font-bold text-success">
               {batchResult.summary.created}
             </div>
             <div className="text-sm text-muted-foreground">Created</div>
           </div>
           <div className="rounded-lg border p-4">
-            <div className="text-2xl font-bold text-amber-600">
+            <div className="text-2xl font-bold text-warning">
               {batchResult.summary.skipped}
             </div>
             <div className="text-sm text-muted-foreground">Skipped</div>

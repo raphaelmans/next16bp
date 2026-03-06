@@ -35,7 +35,7 @@ export function ContactUsPageView() {
     <div className="relative">
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-20 left-1/2 h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute top-32 -left-20 h-[320px] w-[320px] rounded-full bg-accent/10 blur-3xl" />
+        <div className="absolute top-32 -left-20 h-[320px] w-[320px] rounded-full bg-primary/10 blur-3xl" />
       </div>
 
       <section className="py-10 sm:py-14">

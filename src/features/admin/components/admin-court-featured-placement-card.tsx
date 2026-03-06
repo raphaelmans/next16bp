@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -61,9 +61,7 @@ export function AdminCourtFeaturedPlacementCard({
             onClick={onSaveFeaturedRank}
             disabled={isSavingFeaturedRank || isUpdating}
           >
-            {isSavingFeaturedRank ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : null}
+            {isSavingFeaturedRank ? <Spinner className="mr-2" /> : null}
             Save featured rank
           </Button>
         </div>
@@ -85,9 +83,7 @@ export function AdminCourtFeaturedPlacementCard({
             onClick={onSaveProvinceRank}
             disabled={isSavingProvinceRank || isUpdating}
           >
-            {isSavingProvinceRank ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : null}
+            {isSavingProvinceRank ? <Spinner className="mr-2" /> : null}
             Save province rank
           </Button>
         </div>

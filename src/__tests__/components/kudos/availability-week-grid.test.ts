@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { sortHoursInScheduleOrder } from "@/common/schedule-hours";
 import {
   getHourFromSlot,
   getWeekGridDayCueState,
@@ -6,7 +7,6 @@ import {
   isSlotSelectable,
 } from "@/components/kudos/availability-week-grid";
 import type { TimeSlot } from "@/components/kudos/time-slot-picker";
-import { sortHoursInScheduleOrder } from "@/common/schedule-hours";
 
 // ---------------------------------------------------------------------------
 // Fixtures — cross-midnight booking scenario

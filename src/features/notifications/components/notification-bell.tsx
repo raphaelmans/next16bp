@@ -255,7 +255,7 @@ export function NotificationBell({
         <Button type="button" variant="ghost" size="icon" className="relative">
           <BellIcon className="h-4 w-4" />
           {badgeCount ? (
-            <span className="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] leading-4 font-semibold text-white">
+            <span className="absolute -right-1 -top-1 inline-flex min-w-5 items-center justify-center rounded-full bg-destructive px-1 text-[10px] leading-4 font-semibold text-white">
               {badgeCount}
             </span>
           ) : null}

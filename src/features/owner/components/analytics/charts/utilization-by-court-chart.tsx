@@ -13,7 +13,7 @@ interface UtilizationByCourtChartProps {
 }
 
 const chartConfig = {
-  utilizationPct: { label: "Utilization", color: "#059669" },
+  utilizationPct: { label: "Utilization", color: "var(--color-chart-3)" },
 } satisfies ChartConfig;
 
 export function UtilizationByCourtChart({
@@ -34,7 +34,11 @@ export function UtilizationByCourtChart({
 
   return (
     <ChartContainer config={chartConfig} className="h-48 w-full">
-      <BarChart data={chartData} layout="vertical" margin={{ left: 8, right: 12 }}>
+      <BarChart
+        data={chartData}
+        layout="vertical"
+        margin={{ left: 8, right: 12 }}
+      >
         <XAxis
           type="number"
           domain={[0, 100]}
@@ -50,13 +54,13 @@ export function UtilizationByCourtChart({
           width={80}
         />
         <ChartTooltip
-          content={
-            <ChartTooltipContent
-              formatter={(value) => `${value}%`}
-            />
-          }
+          content={<ChartTooltipContent formatter={(value) => `${value}%`} />}
         />
-        <Bar dataKey="utilizationPct" fill="#059669" radius={[0, 4, 4, 0]} />
+        <Bar
+          dataKey="utilizationPct"
+          fill="var(--color-chart-3)"
+          radius={[0, 4, 4, 0]}
+        />
       </BarChart>
     </ChartContainer>
   );

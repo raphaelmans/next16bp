@@ -23,7 +23,7 @@ export function NoAccessView({
 }: NoAccessViewProps) {
   return (
     <div className="space-y-6">
-      <div className="rounded-md border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
+      <div className="rounded-md border border-warning/30 bg-warning-light p-4 text-sm text-warning-foreground">
         <div className="flex items-center gap-2 font-medium">
           <ShieldAlert className="h-4 w-4" />
           {title}

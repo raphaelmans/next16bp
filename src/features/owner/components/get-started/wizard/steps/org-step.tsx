@@ -1,6 +1,7 @@
 "use client";
 
-import { Building2, CheckCircle2, Loader2 } from "lucide-react";
+import { Building2, CheckCircle2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent } from "@/components/ui/card";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
 import type { SetupStatus } from "../../get-started-types";
@@ -37,9 +38,8 @@ export function OrgStep({
 
   if (isTransitioning) {
     return (
-      <div className="flex items-center justify-center gap-2 py-8 text-muted-foreground">
-        <Loader2 className="h-5 w-5 animate-spin" />
-        <span className="text-sm">Setting up...</span>
+      <div className="flex items-center justify-center py-8 text-muted-foreground">
+        <Spinner className="h-5 w-5" />
       </div>
     );
   }

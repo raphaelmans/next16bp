@@ -48,7 +48,9 @@ export const MobileDayBlocksList = React.memo(function MobileDayBlocksList({
           <div key={block.id} className="rounded-lg border p-3">
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
-                <Badge variant={block.type === "WALK_IN" ? "paid" : "warning"}>
+                <Badge
+                  variant={block.type === "WALK_IN" ? "warning" : "secondary"}
+                >
                   {block.type === "WALK_IN" ? "Walk-in" : "Maintenance"}
                 </Badge>
                 <p className="text-sm font-medium">

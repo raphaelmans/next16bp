@@ -117,7 +117,7 @@ const statusBannerConfig: Record<
     description:
       "Pay now to keep this slot. Then mark payment for owner confirmation.",
     className:
-      "border-amber-500/20 bg-amber-500/5 text-amber-600 dark:text-amber-500 [&>svg]:text-amber-600 dark:[&>svg]:text-amber-500",
+      "border-warning/20 bg-warning/5 text-warning [&>svg]:text-warning",
     variant: "default",
   },
   PAYMENT_MARKED_BY_USER: {
@@ -133,7 +133,7 @@ const statusBannerConfig: Record<
     title: "Reservation Confirmed",
     description: "Your booking is confirmed! See you at the court.",
     className:
-      "border-green-500/20 bg-green-500/5 text-green-600 dark:text-green-500 [&>svg]:text-green-600 dark:[&>svg]:text-green-500",
+      "border-success/20 bg-success/5 text-success [&>svg]:text-success",
     variant: "default",
   },
   EXPIRED: {

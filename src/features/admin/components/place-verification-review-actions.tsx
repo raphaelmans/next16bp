@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Loader2, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import * as React from "react";
 import {
   AlertDialog,
@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -68,7 +69,7 @@ export function PlaceVerificationReviewActions({
             }
             disabled={disabled || isLoading}
           >
-            <div className="flex items-start space-x-3 rounded-lg border border-green-200 bg-green-50/50 p-4">
+            <div className="flex items-start space-x-3 rounded-lg border border-success/20 bg-success-light p-4">
               <RadioGroupItem value="approve" id="approve" className="mt-1" />
               <div className="space-y-1">
                 <Label htmlFor="approve" className="cursor-pointer font-medium">
@@ -81,7 +82,7 @@ export function PlaceVerificationReviewActions({
               </div>
             </div>
 
-            <div className="flex items-start space-x-3 rounded-lg border border-red-200 bg-red-50/50 p-4">
+            <div className="flex items-start space-x-3 rounded-lg border border-destructive/20 bg-destructive-light p-4">
               <RadioGroupItem value="reject" id="reject" className="mt-1" />
               <div className="space-y-1">
                 <Label htmlFor="reject" className="cursor-pointer font-medium">
@@ -128,7 +129,7 @@ export function PlaceVerificationReviewActions({
             className="w-full"
             variant={decision === "approve" ? "default" : "destructive"}
           >
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isLoading && <Spinner className="mr-2" />}
             {decision === "approve" ? (
               <>
                 <Check className="mr-2 h-4 w-4" />
@@ -178,7 +179,7 @@ export function PlaceVerificationReviewActions({
                   : ""
               }
             >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading && <Spinner className="mr-2" />}
               Confirm {decision === "approve" ? "approval" : "rejection"}
             </AlertDialogAction>
           </AlertDialogFooter>

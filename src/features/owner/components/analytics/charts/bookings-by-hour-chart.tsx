@@ -13,7 +13,7 @@ interface BookingsByHourChartProps {
 }
 
 const chartConfig = {
-  count: { label: "Bookings", color: "#0D9488" },
+  count: { label: "Bookings", color: "var(--color-chart-1)" },
 } satisfies ChartConfig;
 
 function formatHour(hour: number): string {
@@ -47,7 +47,11 @@ export function BookingsByHourChart({ data }: BookingsByHourChartProps) {
         />
         <YAxis tickLine={false} axisLine={false} width={30} />
         <ChartTooltip content={<ChartTooltipContent />} />
-        <Bar dataKey="count" fill="#0D9488" radius={[4, 4, 0, 0]} />
+        <Bar
+          dataKey="count"
+          fill="var(--color-chart-1)"
+          radius={[4, 4, 0, 0]}
+        />
       </BarChart>
     </ChartContainer>
   );

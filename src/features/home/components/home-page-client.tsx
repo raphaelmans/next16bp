@@ -82,7 +82,7 @@ const OWNER_BENEFITS = [
     title: "Easy Setup",
     description:
       "Add your venue and set your hours in minutes. No technical skills needed.",
-    iconBg: "bg-accent/10 text-accent",
+    iconBg: "bg-primary/10 text-primary",
   },
   {
     icon: Gift,
@@ -106,7 +106,7 @@ const HOW_IT_WORKS = [
     title: "Pick a slot",
     description:
       "Browse real-time availability. Tap the time that works for you.",
-    numBg: "bg-accent/10 text-accent",
+    numBg: "bg-primary/10 text-primary",
   },
   {
     step: 3,
@@ -216,7 +216,7 @@ function FinalCtaSearch() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex items-center bg-white rounded-[14px] p-[5px] pl-[18px] shadow-lg min-w-0 sm:min-w-[380px] transition-shadow focus-within:shadow-xl">
+      <div className="flex items-center bg-card rounded-[14px] p-[5px] pl-[18px] shadow-lg min-w-0 sm:min-w-[380px] transition-shadow focus-within:shadow-xl">
         <input
           type="search"
           value={query}
@@ -249,9 +249,9 @@ export default function HomePageClient({
           className="absolute inset-0 pointer-events-none"
           style={{
             background: [
-              "radial-gradient(ellipse 70% 50% at 15% 35%, rgba(13,148,136,0.07) 0%, transparent 55%)",
-              "radial-gradient(ellipse 50% 70% at 85% 25%, rgba(249,115,22,0.05) 0%, transparent 45%)",
-              "radial-gradient(ellipse 60% 40% at 50% 90%, rgba(13,148,136,0.03) 0%, transparent 50%)",
+              "radial-gradient(ellipse 70% 50% at 15% 35%, color-mix(in oklch, var(--color-primary) 7%, transparent) 0%, transparent 55%)",
+              "radial-gradient(ellipse 50% 70% at 85% 25%, color-mix(in oklch, var(--color-primary) 5%, transparent) 0%, transparent 45%)",
+              "radial-gradient(ellipse 60% 40% at 50% 90%, color-mix(in oklch, var(--color-primary) 3%, transparent) 0%, transparent 50%)",
             ].join(", "),
           }}
         />
@@ -291,7 +291,7 @@ export default function HomePageClient({
                 Own a court?{" "}
                 <Link
                   href={appRoutes.listYourVenue.base}
-                  className="text-accent font-semibold font-heading hover:underline"
+                  className="text-primary font-semibold font-heading hover:underline"
                 >
                   List your venue — free for venues &rarr;
                 </Link>
@@ -301,9 +301,9 @@ export default function HomePageClient({
             {/* Right — showcase cards (hidden on mobile) */}
             <div className="relative h-[480px] hidden lg:block">
               {/* Main card */}
-              <div className="absolute w-[310px] top-[10px] left-[10px] z-[3] rotate-[-1.5deg] rounded-[20px] border border-border bg-card shadow-[0_4px_6px_rgba(26,25,23,0.03),0_12px_36px_rgba(26,25,23,0.07)] overflow-hidden transition-transform duration-400 hover:-translate-y-1.5 hover:rotate-0 animate-slide-in-right stagger-2">
-                <div className="h-[130px] relative flex items-end p-3 bg-gradient-to-br from-[#0F766E] to-[#14B8A6]">
-                  <span className="font-heading text-[10px] font-bold uppercase tracking-[0.06em] text-white bg-white/20 px-2.5 py-1 rounded-md backdrop-blur-sm">
+              <div className="absolute w-[310px] top-[10px] left-[10px] z-[3] rotate-[-1.5deg] rounded-[20px] border border-border bg-card shadow-[0_4px_6px_oklch(0_0_0/0.03),0_12px_36px_oklch(0_0_0/0.07)] overflow-hidden transition-transform duration-400 hover:-translate-y-1.5 hover:rotate-0 animate-slide-in-right stagger-2">
+                <div className="h-[130px] relative flex items-end p-3 bg-gradient-to-br from-primary/90 to-primary">
+                  <span className="font-heading text-[10px] font-bold uppercase tracking-[0.06em] text-primary-foreground bg-primary-foreground/20 px-2.5 py-1 rounded-md backdrop-blur-sm">
                     Badminton
                   </span>
                 </div>
@@ -312,7 +312,7 @@ export default function HomePageClient({
                     Smash Zone Cebu
                   </h4>
                   <p className="text-xs text-muted-foreground flex items-center gap-1 mb-2.5">
-                    <MapPin className="h-3 w-3 text-accent" />
+                    <MapPin className="h-3 w-3 text-primary" />
                     Cebu City · 4 courts
                   </p>
                   <div className="flex gap-1 flex-wrap">
@@ -322,7 +322,7 @@ export default function HomePageClient({
                     <span className="px-2 py-0.5 rounded-md font-mono text-[10px] font-medium bg-success-light text-success">
                       3 PM
                     </span>
-                    <span className="px-2 py-0.5 rounded-md font-mono text-[10px] font-medium bg-accent/10 text-accent border border-accent/15">
+                    <span className="px-2 py-0.5 rounded-md font-mono text-[10px] font-medium bg-primary/10 text-primary border border-primary/15">
                       4 PM
                     </span>
                     <span className="px-2 py-0.5 rounded-md font-mono text-[10px] font-medium bg-muted text-muted-foreground/60 line-through">
@@ -347,9 +347,9 @@ export default function HomePageClient({
               </div>
 
               {/* Secondary card */}
-              <div className="absolute w-[270px] top-[80px] right-[-10px] z-[2] rotate-[2.5deg] rounded-[20px] border border-border bg-card shadow-[0_4px_6px_rgba(26,25,23,0.03),0_12px_36px_rgba(26,25,23,0.07)] overflow-hidden transition-transform duration-400 hover:-translate-y-1.5 hover:rotate-0 animate-slide-in-right stagger-4">
-                <div className="h-[130px] relative flex items-end p-3 bg-gradient-to-br from-accent to-[#FB923C]">
-                  <span className="font-heading text-[10px] font-bold uppercase tracking-[0.06em] text-white bg-white/20 px-2.5 py-1 rounded-md backdrop-blur-sm">
+              <div className="absolute w-[270px] top-[80px] right-[-10px] z-[2] rotate-[2.5deg] rounded-[20px] border border-border bg-card shadow-[0_4px_6px_oklch(0_0_0/0.03),0_12px_36px_oklch(0_0_0/0.07)] overflow-hidden transition-transform duration-400 hover:-translate-y-1.5 hover:rotate-0 animate-slide-in-right stagger-4">
+                <div className="h-[130px] relative flex items-end p-3 bg-gradient-to-br from-primary to-primary/80">
+                  <span className="font-heading text-[10px] font-bold uppercase tracking-[0.06em] text-primary-foreground bg-primary-foreground/20 px-2.5 py-1 rounded-md backdrop-blur-sm">
                     Pickleball
                   </span>
                 </div>
@@ -358,7 +358,7 @@ export default function HomePageClient({
                     Rally Hub QC
                   </h4>
                   <p className="text-xs text-muted-foreground flex items-center gap-1 mb-2.5">
-                    <MapPin className="h-3 w-3 text-accent" />
+                    <MapPin className="h-3 w-3 text-primary" />
                     Quezon City · 6 courts
                   </p>
                   <div className="flex gap-1 flex-wrap">
@@ -376,7 +376,7 @@ export default function HomePageClient({
               </div>
 
               {/* Floating badge — live */}
-              <div className="absolute bottom-[50px] left-[-16px] z-[5] bg-card rounded-[14px] px-4 py-2.5 shadow-[0_6px_20px_rgba(26,25,23,0.09)] border border-border flex items-center gap-2.5 animate-slide-in-right stagger-5">
+              <div className="absolute bottom-[50px] left-[-16px] z-[5] bg-card rounded-[14px] px-4 py-2.5 shadow-[0_6px_20px_oklch(0_0_0/0.09)] border border-border flex items-center gap-2.5 animate-slide-in-right stagger-5">
                 <div className="w-9 h-9 rounded-[10px] bg-success-light flex items-center justify-center">
                   <Check className="h-[18px] w-[18px] text-success" />
                 </div>
@@ -391,7 +391,7 @@ export default function HomePageClient({
               </div>
 
               {/* Floating badge — count */}
-              <div className="absolute top-[10px] right-[16px] z-[5] bg-card rounded-[14px] px-4 py-2.5 shadow-[0_6px_20px_rgba(26,25,23,0.09)] border border-border text-center font-heading animate-slide-in-right stagger-5">
+              <div className="absolute top-[10px] right-[16px] z-[5] bg-card rounded-[14px] px-4 py-2.5 shadow-[0_6px_20px_oklch(0_0_0/0.09)] border border-border text-center font-heading animate-slide-in-right stagger-5">
                 <StatsCountBadge />
               </div>
             </div>
@@ -468,7 +468,7 @@ export default function HomePageClient({
 
             {/* Arrow divider */}
             <div className="flex items-center justify-center py-3 md:py-0">
-              <div className="w-11 h-11 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-[0_4px_14px_rgba(13,148,136,0.25)] md:rotate-0 rotate-90">
+              <div className="w-11 h-11 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-[0_4px_14px_color-mix(in_oklch,var(--color-primary)_25%,transparent)] md:rotate-0 rotate-90">
                 <ArrowRight className="h-5 w-5" />
               </div>
             </div>
@@ -545,7 +545,7 @@ export default function HomePageClient({
                 return (
                   <div
                     key={benefit.title}
-                    className="p-8 rounded-[20px] bg-card border border-border transition-all hover:-translate-y-1 hover:shadow-[0_8px_28px_rgba(26,25,23,0.06)]"
+                    className="p-8 rounded-[20px] bg-card border border-border transition-all hover:-translate-y-1 hover:shadow-[0_8px_28px_oklch(0_0_0/0.06)]"
                   >
                     <div
                       className={`w-[52px] h-[52px] rounded-[14px] flex items-center justify-center mb-[18px] ${benefit.iconBg}`}
@@ -567,7 +567,7 @@ export default function HomePageClient({
               <Button
                 asChild
                 size="lg"
-                className="h-[52px] px-[34px] rounded-[14px] font-heading font-bold text-[15px] shadow-[0_4px_16px_rgba(13,148,136,0.2)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.3)]"
+                className="h-[52px] px-[34px] rounded-[14px] font-heading font-bold text-[15px] shadow-[0_4px_16px_color-mix(in_oklch,var(--color-primary)_20%,transparent)] hover:shadow-[0_6px_24px_color-mix(in_oklch,var(--color-primary)_30%,transparent)]"
               >
                 <Link href={appRoutes.listYourVenue.base}>
                   List Your Venue — Free
@@ -636,8 +636,8 @@ export default function HomePageClient({
           className="absolute inset-0 pointer-events-none"
           style={{
             background: [
-              "repeating-linear-gradient(0deg, transparent, transparent 58px, rgba(255,255,255,0.04) 58px, rgba(255,255,255,0.04) 60px)",
-              "repeating-linear-gradient(90deg, transparent, transparent 58px, rgba(255,255,255,0.04) 58px, rgba(255,255,255,0.04) 60px)",
+              "repeating-linear-gradient(0deg, transparent, transparent 58px, oklch(1 0 0 / 0.04) 58px, oklch(1 0 0 / 0.04) 60px)",
+              "repeating-linear-gradient(90deg, transparent, transparent 58px, oklch(1 0 0 / 0.04) 58px, oklch(1 0 0 / 0.04) 60px)",
             ].join(", "),
           }}
         />

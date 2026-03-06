@@ -200,12 +200,12 @@ export function ReservationAlertsPanel({
         header={
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2">
-              <Bell className="h-4 w-4 text-accent" />
+              <Bell className="h-4 w-4 text-primary" />
               <CardTitle className="text-sm font-heading">
                 Active Reservations
               </CardTitle>
               {newCount > 0 && (
-                <Badge className="bg-accent/15 text-accent border border-accent/20">
+                <Badge className="bg-primary/15 text-primary border border-primary/20">
                   {newCount} new
                 </Badge>
               )}
@@ -227,7 +227,7 @@ export function ReservationAlertsPanel({
             <span>Last updated: {lastUpdatedLabel}</span>
             <Link
               href={reservationsActiveHref}
-              className="flex items-center gap-1 text-accent hover:underline"
+              className="flex items-center gap-1 text-primary hover:underline"
             >
               View all
               <ExternalLink className="h-3 w-3" />
@@ -263,7 +263,7 @@ export function ReservationAlertsPanel({
             No active reservations right now.
             <Link
               href={reservationsActiveHref}
-              className="block mt-2 text-accent hover:underline"
+              className="block mt-2 text-primary hover:underline"
             >
               Go to active reservations
             </Link>
@@ -289,7 +289,7 @@ export function ReservationAlertsPanel({
                 const stageClassName = isAwaiting
                   ? "bg-warning/10 text-warning border border-warning/20"
                   : reservation.reservationStatus === "CREATED"
-                    ? "bg-amber-50 text-amber-700 border border-amber-200"
+                    ? "bg-warning-light text-warning border border-warning/20"
                     : "bg-primary/10 text-primary border border-primary/20";
                 const expiresAt = reservation.expiresAt
                   ? new Date(reservation.expiresAt)
@@ -310,7 +310,7 @@ export function ReservationAlertsPanel({
                     className={cn(
                       "rounded-md border p-3 space-y-2",
                       newIds.has(reservation.id) &&
-                        "border-accent/40 bg-accent/5",
+                        "border-primary/40 bg-primary/5",
                     )}
                   >
                     <div className="flex items-start justify-between gap-2">

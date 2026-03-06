@@ -59,7 +59,7 @@ export function HomeSearchForm({
     return (
       <div>
         <form onSubmit={handleSearch}>
-          <div className="flex items-center rounded-2xl border-[1.5px] border-border bg-card p-1.5 pl-5 shadow-sm transition-all duration-300 focus-within:border-primary focus-within:shadow-[0_0_0_4px_rgba(13,148,136,0.07),0_8px_28px_rgba(13,148,136,0.09)] focus-within:-translate-y-0.5 max-w-[470px]">
+          <div className="flex items-center rounded-2xl border-[1.5px] border-border bg-card p-1.5 pl-5 shadow-sm transition-all duration-300 focus-within:border-primary focus-within:shadow-[0_0_0_4px_color-mix(in_oklch,var(--color-primary)_7%,transparent),0_8px_28px_color-mix(in_oklch,var(--color-primary)_9%,transparent)] focus-within:-translate-y-0.5 max-w-[470px]">
             <Search className="h-[18px] w-[18px] text-muted-foreground/60 mr-2.5 shrink-0" />
             <input
               type="search"
@@ -87,9 +87,9 @@ export function HomeSearchForm({
               onClick={() =>
                 handleLocationClick(location.provinceSlug, location.citySlug)
               }
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-border text-xs font-medium font-heading text-muted-foreground transition-all hover:border-accent hover:text-accent hover:bg-accent/5"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-border text-xs font-medium font-heading text-muted-foreground transition-all hover:border-primary hover:text-primary hover:bg-primary/5"
             >
-              <MapPin className="h-[11px] w-[11px] text-accent" />
+              <MapPin className="h-[11px] w-[11px] text-primary" />
               {location.label}
             </Link>
           ))}

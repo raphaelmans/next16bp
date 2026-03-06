@@ -44,7 +44,7 @@ export function AdBanner({ placement, className }: AdBannerProps) {
   return (
     <Card
       className={cn(
-        "relative overflow-hidden bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 p-4 sm:p-6",
+        "relative overflow-hidden bg-gradient-to-r from-primary/5 via-primary/5 to-primary/5 p-4 sm:p-6",
         className,
       )}
     >

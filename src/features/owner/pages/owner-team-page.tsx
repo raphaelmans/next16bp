@@ -1,13 +1,7 @@
 "use client";
 
-import {
-  Loader2,
-  MoreHorizontal,
-  Search,
-  ShieldAlert,
-  UserPlus,
-  X,
-} from "lucide-react";
+import { MoreHorizontal, Search, ShieldAlert, UserPlus, X } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
 import { toast } from "@/common/toast";
@@ -237,14 +231,14 @@ export default function OwnerTeamPage() {
     <AppShell
       sidebar={
         <OwnerSidebar
-          currentOrganization={navOrg ?? { id: "", name: "Loading..." }}
+          currentOrganization={navOrg ?? { id: "", name: "" }}
           organizations={organizations}
           user={{ name: user?.email?.split("@")[0], email: user?.email }}
         />
       }
       navbar={
         <OwnerNavbar
-          organizationName={navOrg?.name ?? "Loading..."}
+          organizationName={navOrg?.name ?? ""}
           user={{ name: user?.email?.split("@")[0], email: user?.email }}
           onLogout={handleLogout}
         />
@@ -285,7 +279,7 @@ export default function OwnerTeamPage() {
             Manage your team members and permissions
           </p>
         </div>
-        <div className="rounded-md border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
+        <div className="rounded-md border border-warning/30 bg-warning-light p-4 text-sm text-warning-foreground">
           <div className="flex items-center gap-2 font-medium">
             <ShieldAlert className="h-4 w-4" />
             You do not have permission to manage members.
@@ -556,9 +550,7 @@ export default function OwnerTeamPage() {
               onClick={handleRevoke}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {revokeMember.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
+              {revokeMember.isPending && <Spinner className="mr-2 h-4 w-4" />}
               Revoke access
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -590,7 +582,7 @@ export default function OwnerTeamPage() {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {cancelInvitation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Spinner className="mr-2 h-4 w-4" />
               )}
               Cancel invitation
             </AlertDialogAction>

@@ -2,6 +2,7 @@
 
 import { Camera } from "lucide-react";
 import { useRef } from "react";
+import { Spinner } from "@/components/ui/spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
@@ -79,7 +80,8 @@ export function AvatarUpload({
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
         >
-          {isUploading ? "Uploading..." : "Change Avatar"}
+          {isUploading && <Spinner />}
+          Change Avatar
         </Button>
         <p className="text-xs text-muted-foreground">
           JPG, PNG, or GIF. Max 5MB.

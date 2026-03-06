@@ -3,6 +3,9 @@
 import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Command,
   CommandEmpty,
@@ -113,9 +116,11 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
                 />
                 <CommandList>
                   <CommandEmpty>
-                    {mobileGuestProfilesQuery.isLoading
-                      ? "Loading..."
-                      : "No guests found."}
+                    {mobileGuestProfilesQuery.isLoading ? (
+                      <Spinner className="mx-auto" />
+                    ) : (
+                      "No guests found."
+                    )}
                   </CommandEmpty>
                   <CommandGroup>
                     {(mobileGuestProfilesQuery.data ?? []).map((guest) => (
@@ -150,24 +155,21 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
         <>
           <label className="block space-y-2">
             <span className="text-sm font-medium">Guest name</span>
-            <input
-              className="w-full rounded-md border bg-transparent px-3 py-2 text-base"
+            <Input
               placeholder="Juan Dela Cruz"
               onChange={(e) => onGuestNameChange(e.target.value)}
             />
           </label>
           <label className="block space-y-2">
             <span className="text-sm font-medium">Phone (optional)</span>
-            <input
-              className="w-full rounded-md border bg-transparent px-3 py-2 text-base"
+            <Input
               placeholder="09171234567"
               onChange={(e) => onGuestPhoneChange(e.target.value)}
             />
           </label>
           <label className="block space-y-2">
             <span className="text-sm font-medium">Email (optional)</span>
-            <input
-              className="w-full rounded-md border bg-transparent px-3 py-2 text-base"
+            <Input
               placeholder="guest@example.com"
               onChange={(e) => onGuestEmailChange(e.target.value)}
             />
@@ -177,8 +179,7 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
 
       <label className="block space-y-2">
         <span className="text-sm font-medium">Notes (optional)</span>
-        <textarea
-          className="w-full rounded-md border bg-transparent px-3 py-2 text-base"
+        <Textarea
           placeholder="Internal notes"
           rows={2}
           onChange={(e) => onNotesChange(e.target.value)}

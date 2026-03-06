@@ -5,13 +5,13 @@ import {
   CheckCircle2,
   Clock,
   FileText,
-  Loader2,
   Lock,
   ShieldCheck,
   ToggleLeft,
   ToggleRight,
   XCircle,
 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -236,7 +236,7 @@ export function PlaceVerificationPanel({
       <CardContent className="space-y-6">
         {isLoading ? (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Spinner className="h-4 w-4" />
             Loading verification status...
           </div>
         ) : (
@@ -281,7 +281,7 @@ export function PlaceVerificationPanel({
                 className="min-w-[160px]"
               >
                 {toggleReservations.isPending ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Spinner className="mr-2 h-4 w-4" />
                 ) : reservationsEnabled ? (
                   <ToggleLeft className="mr-2 h-4 w-4" />
                 ) : (
@@ -389,7 +389,7 @@ export function PlaceVerificationPanel({
                   }
                 >
                   {submitVerification.isPending && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Spinner className="mr-2 h-4 w-4" />
                   )}
                   Submit for review
                 </Button>

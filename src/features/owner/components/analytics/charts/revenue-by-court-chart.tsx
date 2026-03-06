@@ -13,7 +13,7 @@ interface RevenueByCourtChartProps {
 }
 
 const chartConfig = {
-  totalCents: { label: "Revenue", color: "#0D9488" },
+  totalCents: { label: "Revenue", color: "var(--color-chart-1)" },
 } satisfies ChartConfig;
 
 export function RevenueByCourtChart({ data }: RevenueByCourtChartProps) {
@@ -32,7 +32,11 @@ export function RevenueByCourtChart({ data }: RevenueByCourtChartProps) {
 
   return (
     <ChartContainer config={chartConfig} className="h-48 w-full">
-      <BarChart data={chartData} layout="vertical" margin={{ left: 8, right: 12 }}>
+      <BarChart
+        data={chartData}
+        layout="vertical"
+        margin={{ left: 8, right: 12 }}
+      >
         <XAxis
           type="number"
           tickFormatter={(v: number) => `P${v.toLocaleString()}`}
@@ -49,13 +53,15 @@ export function RevenueByCourtChart({ data }: RevenueByCourtChartProps) {
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value) =>
-                `P${Number(value).toLocaleString()}`
-              }
+              formatter={(value) => `P${Number(value).toLocaleString()}`}
             />
           }
         />
-        <Bar dataKey="totalCents" fill="#0D9488" radius={[0, 4, 4, 0]} />
+        <Bar
+          dataKey="totalCents"
+          fill="var(--color-chart-1)"
+          radius={[0, 4, 4, 0]}
+        />
       </BarChart>
     </ChartContainer>
   );

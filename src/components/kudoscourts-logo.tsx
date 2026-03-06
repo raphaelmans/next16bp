@@ -25,9 +25,9 @@ export function KudosCourtsLogo({
           <stop offset="0%" style={{ stopColor: "#0F766E" }} />
           <stop offset="100%" style={{ stopColor: "#0D9488" }} />
         </linearGradient>
-        <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: "#FB923C" }} />
-          <stop offset="100%" style={{ stopColor: "#F97316" }} />
+        <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style={{ stopColor: "#5EEAD4" }} />
+          <stop offset="100%" style={{ stopColor: "#2DD4BF" }} />
         </linearGradient>
       </defs>
       <rect width="512" height="512" rx="96" fill="url(#bgGrad)" />
@@ -77,7 +77,7 @@ export function KudosCourtsLogo({
           strokeWidth="8"
           opacity="0.5"
         />
-        <circle cx="160" cy="160" r="48" fill="url(#orangeGrad)" />
+        <circle cx="160" cy="160" r="48" fill="url(#accentGrad)" />
         <circle cx="160" cy="160" r="24" fill="white" />
       </g>
     </svg>

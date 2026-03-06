@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { MobileGuestForm } from "./mobile-guest-form";
 
@@ -56,8 +57,7 @@ export const SelectionPanelForm = React.memo(function SelectionPanelForm({
       {blockType !== "GUEST_BOOKING" ? (
         <label className="block space-y-2">
           <span className="text-sm font-medium">Note (optional)</span>
-          <textarea
-            className="w-full rounded-md border bg-transparent px-3 py-2 text-base"
+          <Textarea
             placeholder={
               blockType === "MAINTENANCE"
                 ? "e.g. Net replacement"

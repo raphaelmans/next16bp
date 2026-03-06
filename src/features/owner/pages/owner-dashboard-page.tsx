@@ -113,7 +113,7 @@ export default function OwnerDashboardPage() {
       <AppShell
         sidebar={
           <OwnerSidebar
-            currentOrganization={{ id: "", name: "Loading..." }}
+            currentOrganization={{ id: "", name: "" }}
             organizations={[]}
             user={{
               name: user?.email?.split("@")[0],
@@ -123,7 +123,7 @@ export default function OwnerDashboardPage() {
         }
         navbar={
           <OwnerNavbar
-            organizationName="Loading..."
+            organizationName=""
             user={{
               name: user?.email?.split("@")[0],
               email: user?.email,
@@ -278,7 +278,9 @@ export default function OwnerDashboardPage() {
           className="flex w-full items-center gap-3 rounded-lg border bg-muted/40 px-4 py-2.5 text-left text-sm text-muted-foreground transition-colors hover:bg-muted/70"
         >
           <BarChart3 className="h-4 w-4 shrink-0" />
-          <span>View detailed analytics — revenue, utilization &amp; operations</span>
+          <span>
+            View detailed analytics — revenue, utilization &amp; operations
+          </span>
           <ArrowRight className="ml-auto h-3.5 w-3.5 shrink-0" />
         </button>
 

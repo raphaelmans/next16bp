@@ -50,9 +50,8 @@ export function CourtPageNav({ placeId, courtId }: CourtPageNavProps) {
             href={href}
             className={cn(
               "inline-flex h-[calc(100%-1px)] items-center justify-center rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow]",
-              "text-foreground dark:text-muted-foreground",
-              isActive &&
-                "bg-background shadow-sm dark:bg-input/30 dark:text-foreground dark:border-input",
+              "text-foreground",
+              isActive && "bg-background shadow-sm",
             )}
           >
             {item.label}

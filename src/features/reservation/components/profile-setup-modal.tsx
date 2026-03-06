@@ -8,6 +8,7 @@ import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Dialog,
   DialogContent,
@@ -109,7 +110,8 @@ export function ProfileSetupModal({
 
           <div className="flex justify-end pt-2">
             <Button type="submit" disabled={submitting || !isValid}>
-              {submitting ? "Saving..." : "Save & Continue"}
+              {submitting && <Spinner />}
+              Save & Continue
             </Button>
           </div>
         </StandardFormProvider>

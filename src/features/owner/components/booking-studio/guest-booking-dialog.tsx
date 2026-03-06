@@ -9,6 +9,7 @@ import {
   StandardFormTextarea,
 } from "@/components/form";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Command,
   CommandEmpty,
@@ -160,9 +161,11 @@ export const GuestBookingDialog = React.memo(function GuestBookingDialog({
                       />
                       <CommandList>
                         <CommandEmpty>
-                          {guestProfilesLoading
-                            ? "Loading..."
-                            : "No guests found."}
+                          {guestProfilesLoading ? (
+                            <Spinner className="mx-auto" />
+                          ) : (
+                            "No guests found."
+                          )}
                         </CommandEmpty>
                         <CommandGroup>
                           {guestProfilesData.map((guest) => (
@@ -237,10 +240,10 @@ export const GuestBookingDialog = React.memo(function GuestBookingDialog({
               type="submit"
               disabled={isSubmitting || guestBookingForm.formState.isSubmitting}
             >
-              {getBlockCtaLabel(
-                "GUEST_BOOKING",
-                isSubmitting || guestBookingForm.formState.isSubmitting,
+              {(isSubmitting || guestBookingForm.formState.isSubmitting) && (
+                <Spinner />
               )}
+              {getBlockCtaLabel("GUEST_BOOKING")}
             </Button>
           </DialogFooter>
         </StandardFormProvider>

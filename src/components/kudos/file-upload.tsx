@@ -1,9 +1,10 @@
 "use client";
 
-import { Image as ImageIcon, Loader2, Upload, X } from "lucide-react";
+import { Image as ImageIcon, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
 interface FileUploadProps {
@@ -121,7 +122,7 @@ export function FileUpload({
           <Image src={preview} alt="Preview" fill className="object-cover" />
           {isUploading && (
             <div className="absolute inset-0 flex items-center justify-center bg-background/80">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <Spinner className="size-8" />
             </div>
           )}
         </div>

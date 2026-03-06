@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
@@ -76,7 +76,7 @@ export default function CreateCourtSetupPage() {
   if (orgsLoading || placesLoading || sportsLoading) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Spinner className="h-8 w-8 text-muted-foreground" />
       </div>
     );
   }

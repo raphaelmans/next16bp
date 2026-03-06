@@ -1,6 +1,7 @@
 "use client";
 
-import { Check, Loader2 } from "lucide-react";
+import { Check } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -58,10 +59,10 @@ export function ConfirmDialog({
               onConfirm();
             }}
             disabled={isLoading}
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-success hover:bg-success/90"
           >
             {isLoading ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              <Spinner className="h-4 w-4 mr-2" />
             ) : (
               <Check className="h-4 w-4 mr-2" />
             )}

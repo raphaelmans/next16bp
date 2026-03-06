@@ -8,7 +8,7 @@ export function AboutPageView() {
     <Container className="py-12">
       <div className="max-w-3xl space-y-8">
         <div className="space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
             Company
           </p>
           <h1 className="font-heading text-3xl font-bold tracking-tight">

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   type ChartConfig,
   ChartContainer,
@@ -26,8 +20,8 @@ interface RevenueTrendChartProps {
 }
 
 const chartConfig = {
-  current: { label: "Current", color: "#0D9488" },
-  previous: { label: "Previous", color: "#D1D5DB" },
+  current: { label: "Current", color: "var(--color-chart-1)" },
+  previous: { label: "Previous", color: "var(--color-border)" },
 } satisfies ChartConfig;
 
 function formatCurrency(cents: number): string {
@@ -66,16 +60,14 @@ export function RevenueTrendChart({
         <ChartTooltip
           content={
             <ChartTooltipContent
-              formatter={(value) =>
-                formatCurrency(Number(value) * 100)
-              }
+              formatter={(value) => formatCurrency(Number(value) * 100)}
             />
           }
         />
         <Area
           type="monotone"
           dataKey="previous"
-          stroke="#D1D5DB"
+          stroke="var(--color-border)"
           fill="transparent"
           strokeDasharray="5 5"
           strokeWidth={1.5}
@@ -83,8 +75,8 @@ export function RevenueTrendChart({
         <Area
           type="monotone"
           dataKey="current"
-          stroke="#0D9488"
-          fill="#0D948820"
+          stroke="var(--color-chart-1)"
+          fill="color-mix(in oklch, var(--color-chart-1) 12%, transparent)"
           strokeWidth={2}
         />
       </AreaChart>

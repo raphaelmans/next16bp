@@ -40,7 +40,9 @@ export function BookmarkButton({
         <Heart
           className={cn(
             "h-4 w-4 transition-colors duration-200",
-            isBookmarked ? "fill-accent text-accent" : "text-muted-foreground",
+            isBookmarked
+              ? "fill-primary text-primary"
+              : "text-muted-foreground",
           )}
         />
       </button>
@@ -50,7 +52,7 @@ export function BookmarkButton({
   return (
     <Button
       type="button"
-      variant={isBookmarked ? "accent" : "outline"}
+      variant={isBookmarked ? "default" : "outline"}
       size="sm"
       onClick={handleClick}
       disabled={isPending}

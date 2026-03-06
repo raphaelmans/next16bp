@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Drawer,
   DrawerContent,
@@ -76,7 +77,8 @@ export const MobileCreateBlockDrawer = React.memo(
               className="w-full"
               disabled={isCreatingBlock}
             >
-              {getBlockCtaLabel(selectionBlockType, isCreatingBlock)}
+              {isCreatingBlock && <Spinner />}
+              {getBlockCtaLabel(selectionBlockType)}
             </Button>
           </DrawerFooter>
         </DrawerContent>

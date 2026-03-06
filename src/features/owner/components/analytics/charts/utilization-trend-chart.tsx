@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
   type ChartConfig,
   ChartContainer,
@@ -19,7 +13,7 @@ interface UtilizationTrendChartProps {
 }
 
 const chartConfig = {
-  utilizationPct: { label: "Utilization", color: "#059669" },
+  utilizationPct: { label: "Utilization", color: "var(--color-chart-3)" },
 } satisfies ChartConfig;
 
 export function UtilizationTrendChart({ data }: UtilizationTrendChartProps) {
@@ -49,16 +43,12 @@ export function UtilizationTrendChart({ data }: UtilizationTrendChartProps) {
           width={40}
         />
         <ChartTooltip
-          content={
-            <ChartTooltipContent
-              formatter={(value) => `${value}%`}
-            />
-          }
+          content={<ChartTooltipContent formatter={(value) => `${value}%`} />}
         />
         <Line
           type="monotone"
           dataKey="utilizationPct"
-          stroke="#059669"
+          stroke="var(--color-chart-3)"
           strokeWidth={2}
           dot={false}
         />

@@ -26,7 +26,7 @@ export function BlockInfoDisplay({
     <div className="space-y-3">
       <div className="flex items-center gap-2">
         <Badge
-          variant={isWalkIn ? "paid" : "warning"}
+          variant={isWalkIn ? "warning" : "secondary"}
           className="text-[10px] px-1.5 py-0"
         >
           {isWalkIn ? "Walk-in" : "Maintenance"}

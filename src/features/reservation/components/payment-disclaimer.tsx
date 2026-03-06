@@ -13,13 +13,13 @@ export function PaymentDisclaimer({ className }: PaymentDisclaimerProps) {
     <Alert
       variant="destructive"
       className={cn(
-        "bg-amber-500/10 border-amber-500/20 text-amber-800 dark:text-amber-200 [&>svg]:text-amber-600",
+        "bg-warning/10 border-warning/20 text-warning-foreground [&>svg]:text-warning",
         className,
       )}
     >
       <AlertTriangle className="h-4 w-4" />
       <AlertTitle>Payment Disclaimer</AlertTitle>
-      <AlertDescription className="text-amber-700 dark:text-amber-300">
+      <AlertDescription className="text-warning">
         <strong>KudosCourts does not process payments.</strong> All payments are
         made directly between you and the court owner via GCash or bank
         transfer. We are not responsible for any payment disputes or issues.

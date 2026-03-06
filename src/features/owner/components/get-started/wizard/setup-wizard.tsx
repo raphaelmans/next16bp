@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { trackEvent } from "@/common/clients/telemetry-client";
 import { useModOwnerInvalidation } from "@/features/owner/hooks";
@@ -105,7 +105,7 @@ export function SetupWizard() {
   if (isLoading) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Spinner className="h-8 w-8 text-muted-foreground" />
       </div>
     );
   }

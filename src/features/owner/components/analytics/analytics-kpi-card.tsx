@@ -39,14 +39,12 @@ export function AnalyticsKpiCard({
         {trend && (
           <div className="mt-1 flex items-center gap-1 text-xs">
             {trend.value >= 0 ? (
-              <TrendingUp className="h-3.5 w-3.5 text-emerald-600" />
+              <TrendingUp className="h-3.5 w-3.5 text-success" />
             ) : (
-              <TrendingDown className="h-3.5 w-3.5 text-red-500" />
+              <TrendingDown className="h-3.5 w-3.5 text-destructive" />
             )}
             <span
-              className={
-                trend.value >= 0 ? "text-emerald-600" : "text-red-500"
-              }
+              className={trend.value >= 0 ? "text-success" : "text-destructive"}
             >
               {trend.value >= 0 ? "+" : ""}
               {trend.value}%

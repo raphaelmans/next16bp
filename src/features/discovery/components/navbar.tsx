@@ -4,7 +4,6 @@ import {
   Building,
   Calendar,
   Heart,
-  Loader2,
   LogOut,
   Menu,
   Search,
@@ -21,6 +20,7 @@ import { trackEvent } from "@/common/clients/telemetry-client";
 import { URLQueryBuilder } from "@/common/url-query-builder";
 import { KudosLogo } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -123,7 +123,7 @@ export function Navbar({ className }: NavbarProps) {
   return (
     <nav
       className={cn(
-        "fixed top-4 left-4 right-4 z-50",
+        "fixed top-[max(1rem,env(safe-area-inset-top))] left-4 right-4 z-50",
         "bg-background/95 backdrop-blur-md",
         "border border-border/60 rounded-xl",
         "h-16 px-4",
@@ -163,14 +163,14 @@ export function Navbar({ className }: NavbarProps) {
           variant="ghost"
           asChild
           onClick={handleListYourPlaceClick}
-          className="font-heading text-accent"
+          className="font-heading text-primary"
         >
           <Link href={listYourVenueHref}>List Your Venue</Link>
         </Button>
 
         {isResolvingSession ? (
           <Button variant="outline" className="font-heading" disabled>
-            Loading...
+            <Spinner />
           </Button>
         ) : isAuthenticated ? (
           <UserDropdown
@@ -363,7 +363,7 @@ export function Navbar({ className }: NavbarProps) {
                 handleListYourPlaceClick();
                 setIsOpen(false);
               }}
-              className="py-2 text-lg font-heading font-semibold text-accent hover:text-accent/80 text-left"
+              className="py-2 text-lg font-heading font-semibold text-primary hover:text-primary/80 text-left"
             >
               List Your Venue
             </Link>
@@ -373,7 +373,7 @@ export function Navbar({ className }: NavbarProps) {
             {/* Auth Actions */}
             {isResolvingSession ? (
               <Button variant="outline" className="w-full" disabled>
-                Loading...
+                <Spinner />
               </Button>
             ) : isAuthenticated ? (
               <Button
@@ -383,11 +383,11 @@ export function Navbar({ className }: NavbarProps) {
                 disabled={isSigningOut}
               >
                 {isSigningOut ? (
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <Spinner className="mr-2" />
                 ) : (
                   <LogOut className="h-4 w-4 mr-2" />
                 )}
-                {isSigningOut ? "Signing Out..." : "Sign Out"}
+                Sign Out
               </Button>
             ) : (
               <>

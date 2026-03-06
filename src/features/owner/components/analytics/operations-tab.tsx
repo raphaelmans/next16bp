@@ -25,7 +25,7 @@ function formatResponseTime(minutes: number | null): string {
 function formatLeadTime(hours: number | null): string {
   if (hours === null) return "N/A";
   if (hours < 24) return `${Math.round(hours)}h`;
-  const days = Math.round(hours / 24 * 10) / 10;
+  const days = Math.round((hours / 24) * 10) / 10;
   return `${days} days`;
 }
 
@@ -72,7 +72,9 @@ export function OperationsTab({ data, isLoading }: OperationsTabProps) {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base">Response Time Distribution</CardTitle>
+            <CardTitle className="text-base">
+              Response Time Distribution
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <ResponseTimeChart data={data.responseTimeBuckets} />

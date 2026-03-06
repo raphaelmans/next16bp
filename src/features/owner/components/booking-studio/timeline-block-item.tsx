@@ -68,14 +68,14 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
           <span
             className={cn(
               "text-[10px] font-semibold truncate",
-              isWalkIn ? "text-primary" : "text-amber-600",
+              isWalkIn ? "text-warning" : "text-muted-foreground",
             )}
           >
             {isWalkIn ? "W" : "M"}
           </span>
         ) : (
           <Badge
-            variant={isWalkIn ? "paid" : "warning"}
+            variant={isWalkIn ? "warning" : "secondary"}
             className="text-[10px] px-1.5 py-0"
           >
             {isWalkIn ? "Walk-in" : "Maintenance"}
@@ -133,7 +133,7 @@ export const TimelineBlockItem = React.memo(function TimelineBlockItem({
     compact
       ? "left-0.5 right-0.5 border-l-2 px-1 py-0.5"
       : "left-1 right-1 border-l-4 px-3 py-2",
-    isWalkIn ? "border-l-primary" : "border-l-amber-500",
+    isWalkIn ? "border-l-warning" : "border-l-muted-foreground",
     "group",
     effectiveDisabled ? "cursor-not-allowed" : "cursor-default",
     isPending && "opacity-80",

@@ -5,7 +5,6 @@ import {
   Calendar,
   ChevronDown,
   Heart,
-  Loader2,
   LogOut,
   Shield,
   User,
@@ -13,6 +12,7 @@ import {
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -146,11 +146,11 @@ export function UserDropdown({
           className="cursor-pointer text-destructive focus:text-destructive"
         >
           {isSigningOut ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Spinner className="mr-2" />
           ) : (
             <LogOut className="mr-2 h-4 w-4" />
           )}
-          <span>{isSigningOut ? "Signing Out..." : "Sign Out"}</span>
+          <span>Sign Out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

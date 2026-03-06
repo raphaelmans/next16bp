@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
@@ -25,6 +25,7 @@ import {
 } from "@/components/form";
 import { AppShell } from "@/components/layout";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Card,
   CardContent,
@@ -460,14 +461,8 @@ export default function NewCuratedCourtPage() {
                 disabled={googleUrl.trim().length === 0 || isPreviewing}
                 className="w-full"
               >
-                {isPreviewing ? (
-                  <span className="inline-flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Resolving…
-                  </span>
-                ) : (
-                  "Locate"
-                )}
+                {isPreviewing && <Spinner />}
+                Locate
               </Button>
 
               <input type="hidden" {...register("lat")} />
@@ -492,7 +487,7 @@ export default function NewCuratedCourtPage() {
                           href={previewResult.resolvedUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="break-all text-accent hover:underline"
+                          className="break-all text-primary hover:underline"
                         >
                           {previewResult.resolvedUrl}
                         </a>
@@ -829,7 +824,7 @@ export default function NewCuratedCourtPage() {
               <Link href={appRoutes.admin.courts.base}>Cancel</Link>
             </Button>
             <Button type="submit" disabled={isSubmitDisabled}>
-              {submitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              {submitting && <Spinner className="mr-2" />}
               Create Court
             </Button>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { addMinutes } from "date-fns";
-import { ChevronDown, ChevronUp, Loader2, X } from "lucide-react";
+import { ChevronDown, ChevronUp, X } from "lucide-react";
 import * as React from "react";
 import {
   formatCurrency,
@@ -16,6 +16,7 @@ import {
   WeekNavigator,
 } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
 import { cn } from "@/lib/utils";
 
@@ -191,7 +192,7 @@ export function PlaceDetailMobileSheet({
   }
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 flex max-h-[85vh] flex-col rounded-t-3xl bg-background shadow-[0_-10px_40px_rgba(0,0,0,0.15)] lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 flex max-h-[85vh] flex-col rounded-t-3xl bg-background pb-[max(0px,env(safe-area-inset-bottom))] shadow-[0_-10px_40px_oklch(0_0_0/0.15)] lg:hidden">
       <button
         type="button"
         className="flex w-full flex-col items-center pt-3 pb-2"
@@ -318,7 +319,7 @@ export function PlaceDetailMobileSheet({
                       "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
                       selectionMode === "any"
                         ? "border-primary bg-primary/10 text-primary"
-                        : "border-border bg-card text-foreground hover:border-accent/30 hover:bg-accent/10",
+                        : "border-border bg-card text-foreground hover:border-primary/30 hover:bg-primary/10",
                     )}
                   >
                     Any court
@@ -333,7 +334,7 @@ export function PlaceDetailMobileSheet({
                         selectionMode === "court" &&
                           selectedCourtId === court.id
                           ? "border-primary bg-primary/10 text-primary"
-                          : "border-border bg-card text-foreground hover:border-accent/30 hover:bg-accent/10",
+                          : "border-border bg-card text-foreground hover:border-primary/30 hover:bg-primary/10",
                       )}
                     >
                       {court.label}
@@ -363,9 +364,8 @@ export function PlaceDetailMobileSheet({
                 className="min-h-0 flex-1 overflow-y-auto px-5 pb-2"
               >
                 {isMobileRefreshing && (
-                  <div className="mb-2 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <Loader2 className="h-3 w-3 animate-spin" />
-                    Updating availability...
+                  <div className="mb-2 flex justify-center">
+                    <Spinner className="h-4 w-4" />
                   </div>
                 )}
                 {isMobileLoading ? (

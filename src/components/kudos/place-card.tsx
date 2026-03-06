@@ -256,7 +256,7 @@ export function PlaceCard({
 
         <div className="mt-1 space-y-1">
           <div className="flex items-center gap-1">
-            <MapPin className="h-3 w-3 text-accent shrink-0" />
+            <MapPin className="h-3 w-3 text-primary shrink-0" />
             <span
               className={cn(
                 "line-clamp-1 font-medium text-foreground",

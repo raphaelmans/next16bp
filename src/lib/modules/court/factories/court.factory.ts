@@ -1,7 +1,7 @@
 import { makeCourtHoursRepository } from "@/lib/modules/court-hours/factories/court-hours.factory";
 import { makeCourtRateRuleRepository } from "@/lib/modules/court-rate-rule/factories/court-rate-rule.factory";
-import { makeOrganizationMemberService } from "@/lib/modules/organization-member/factories/organization-member.factory";
 import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
+import { makeOrganizationMemberService } from "@/lib/modules/organization-member/factories/organization-member.factory";
 import { makePlaceRepository } from "@/lib/modules/place/factories/place.factory";
 import { makePlaceVerificationRepository } from "@/lib/modules/place-verification/factories/place-verification.factory";
 import { makeObjectStorageService } from "@/lib/modules/storage/factories/storage.factory";

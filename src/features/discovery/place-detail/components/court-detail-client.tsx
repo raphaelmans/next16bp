@@ -10,7 +10,6 @@ import {
   ExternalLink,
   RefreshCw,
 } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -144,8 +143,6 @@ export default function CourtDetailClient({
   const pathname = usePathname();
   const { data: session } = useQueryAuthSession();
   const isAuthenticated = !!session;
-  const shouldReduceMotion = useReducedMotion();
-
   const verificationDisplay = getPlaceVerificationDisplay({
     placeType: placeType as PlaceVerificationDisplayInput["placeType"],
     verificationStatus:
@@ -565,10 +562,6 @@ export default function CourtDetailClient({
     return `${startLabel} – ${endLabel}`;
   }, [isWeekView, placeTimeZone, weekDayKeys]);
 
-  const motionTransition = shouldReduceMotion
-    ? { duration: 0 }
-    : { duration: 0.25, ease: "easeOut" as const };
-
   if (!showBooking) {
     const heading =
       placeType === "RESERVABLE"
@@ -766,7 +759,7 @@ export default function CourtDetailClient({
               )}
             >
               <div className="flex items-start gap-2">
-                <Clock className="h-4 w-4 text-accent mt-0.5" />
+                <Clock className="h-4 w-4 text-primary mt-0.5" />
                 <div>
                   <p className="text-sm font-heading font-semibold">
                     {hasSelection && startTimeParam
@@ -827,107 +820,75 @@ export default function CourtDetailClient({
             </div>
 
             {/* Availability views */}
-            <AnimatePresence mode="wait" initial={false}>
-              {isWeekView ? (
-                <motion.div
-                  key={`week-${weekStartDayKey}`}
-                  initial={{ opacity: 0, x: shouldReduceMotion ? 0 : 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: shouldReduceMotion ? 0 : -10 }}
-                  transition={motionTransition}
-                >
-                  {isLoadingTimes ? (
-                    <AvailabilityWeekGridSkeleton
-                      dayKeys={weekDayKeys}
-                      timeZone={placeTimeZone}
-                    />
-                  ) : (
-                    <AvailabilityWeekGrid
-                      dayKeys={weekDayKeys}
-                      slotsByDay={weekSlotsByDay}
-                      timeZone={placeTimeZone}
-                      selectedRange={selectedRange}
-                      onRangeChange={handleRangeChange}
-                      onDayClick={(dk) => {
-                        setDayKeyParam(dk);
-                        setViewParam("day");
-                        clearSelection();
-                      }}
-                      todayDayKey={todayDayKey}
-                      maxDayKey={maxDayKey}
-                    />
-                  )}
-                </motion.div>
-              ) : !selectedDate ? (
-                <motion.div
-                  key="no-date"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={motionTransition}
-                >
-                  <p className="text-sm text-muted-foreground py-6 text-center">
-                    Select a date to see available start times.
-                  </p>
-                </motion.div>
-              ) : isLoadingTimes ? (
-                <motion.div
-                  key="loading"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={motionTransition}
-                >
-                  <TimeRangePickerSkeleton count={8} />
-                </motion.div>
-              ) : daySlots.length > 0 ? (
-                <motion.div
-                  key={`day-${dayKey}`}
-                  initial={{
-                    opacity: 0,
-                    y: shouldReduceMotion ? 0 : 6,
-                  }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{
-                    opacity: 0,
-                    y: shouldReduceMotion ? 0 : -6,
-                  }}
-                  transition={motionTransition}
-                >
-                  <TimeRangePicker
-                    slots={daySlots}
+            {isWeekView ? (
+              <div
+                key={`week-${weekStartDayKey}`}
+                className="animate-in fade-in duration-200"
+              >
+                {isLoadingTimes ? (
+                  <AvailabilityWeekGridSkeleton
+                    dayKeys={weekDayKeys}
                     timeZone={placeTimeZone}
-                    selectedDayKey={dayKey}
-                    selectedStartTime={selectedRange?.startTime}
-                    selectedDurationMinutes={selectedRange?.durationMinutes}
-                    showPrice
-                    onChange={handleRangeChange}
-                    onClear={clearSelection}
                   />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="empty"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={motionTransition}
-                >
-                  <AvailabilityEmptyState
-                    diagnostics={dayDiagnostics}
-                    variant="public"
-                    contact={contactDetail}
+                ) : (
+                  <AvailabilityWeekGrid
+                    dayKeys={weekDayKeys}
+                    slotsByDay={weekSlotsByDay}
+                    timeZone={placeTimeZone}
+                    selectedRange={selectedRange}
+                    onRangeChange={handleRangeChange}
+                    onDayClick={(dk) => {
+                      setDayKeyParam(dk);
+                      setViewParam("day");
+                      clearSelection();
+                    }}
+                    todayDayKey={todayDayKey}
+                    maxDayKey={maxDayKey}
                   />
-                </motion.div>
-              )}
-            </AnimatePresence>
+                )}
+              </div>
+            ) : !selectedDate ? (
+              <div className="animate-in fade-in duration-200">
+                <p className="text-sm text-muted-foreground py-6 text-center">
+                  Select a date to see available start times.
+                </p>
+              </div>
+            ) : isLoadingTimes ? (
+              <div className="animate-in fade-in duration-200">
+                <TimeRangePickerSkeleton count={8} />
+              </div>
+            ) : daySlots.length > 0 ? (
+              <div
+                key={`day-${dayKey}`}
+                className="animate-in fade-in duration-200"
+              >
+                <TimeRangePicker
+                  slots={daySlots}
+                  timeZone={placeTimeZone}
+                  selectedDayKey={dayKey}
+                  selectedStartTime={selectedRange?.startTime}
+                  selectedDurationMinutes={selectedRange?.durationMinutes}
+                  showPrice
+                  onChange={handleRangeChange}
+                  onClear={clearSelection}
+                />
+              </div>
+            ) : (
+              <div className="animate-in fade-in duration-200">
+                <AvailabilityEmptyState
+                  diagnostics={dayDiagnostics}
+                  variant="public"
+                  contact={contactDetail}
+                />
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
 
       {/* Mobile sticky CTA */}
       {hasSelection && startTimeParam && (
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 p-4 shadow-lg backdrop-blur sm:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-lg backdrop-blur sm:hidden">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="text-sm font-medium">

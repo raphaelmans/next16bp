@@ -10,7 +10,6 @@ import {
   ChevronRight,
   MousePointerClick,
 } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
@@ -35,6 +34,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/ui/page-header";
@@ -989,8 +989,6 @@ function OwnerCourtAvailabilityInner({
     placeTimeZone,
   ]);
 
-  const shouldReduceMotion = useReducedMotion();
-
   // Custom block dialog
   const customForm = useForm<CustomBlockFormValues>({
     resolver: zodResolver(customBlockSchema),
@@ -1371,109 +1369,76 @@ function OwnerCourtAvailabilityInner({
 
           <Card>
             <CardContent className="space-y-4 p-6">
-              <AnimatePresence mode="wait" initial={false}>
-                {committedRange ? (
-                  <motion.div
-                    key="week-form"
-                    initial={
-                      shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }
-                    }
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={
-                      shouldReduceMotion
-                        ? { opacity: 0 }
-                        : { opacity: 0, y: -8 }
-                    }
-                    transition={{
-                      duration: 0.2,
-                      ease: [0.25, 0.46, 0.45, 0.94],
+              {committedRange ? (
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-1 duration-200">
+                  <div className="space-y-1">
+                    <h3 className="text-sm font-heading font-semibold">
+                      Create Block
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      {selectedTimeLabel} · {placeTimeZone}
+                    </p>
+                  </div>
+                  <SelectionPanelForm
+                    blockType={selectionBlockType}
+                    onBlockTypeChange={setSelectionBlockType}
+                    guestModeState={guestModeState}
+                    organizationId={organization?.id ?? ""}
+                    onGuestModeChange={(mode) => {
+                      setGuestMode(mode);
+                      setGuestModeState(mode);
                     }}
-                    className="space-y-4"
-                  >
-                    <div className="space-y-1">
-                      <h3 className="text-sm font-heading font-semibold">
-                        Create Block
-                      </h3>
-                      <p className="text-xs text-muted-foreground">
-                        {selectedTimeLabel} · {placeTimeZone}
-                      </p>
-                    </div>
-                    <SelectionPanelForm
-                      blockType={selectionBlockType}
-                      onBlockTypeChange={setSelectionBlockType}
-                      guestModeState={guestModeState}
-                      organizationId={organization?.id ?? ""}
-                      onGuestModeChange={(mode) => {
-                        setGuestMode(mode);
-                        setGuestModeState(mode);
-                      }}
-                      onGuestNameChange={setGuestName}
-                      onGuestPhoneChange={setGuestPhone}
-                      onGuestEmailChange={setGuestEmail}
-                      onGuestProfileIdChange={setGuestProfileId}
-                      onNotesChange={setNotes}
-                    />
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={handleSelectionSubmit}
-                        className="flex-1"
-                        disabled={isCreatingBlock}
-                      >
-                        {getBlockCtaLabel(selectionBlockType, isCreatingBlock)}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => {
-                          resetSelectionPanel();
-                          setWeekCommittedDayKey(null);
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="week-empty"
-                    initial={
-                      shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }
-                    }
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={
-                      shouldReduceMotion
-                        ? { opacity: 0 }
-                        : { opacity: 0, y: -8 }
-                    }
-                    transition={{
-                      duration: 0.2,
-                      ease: [0.25, 0.46, 0.45, 0.94],
-                    }}
-                    className="space-y-4"
-                  >
-                    <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <MousePointerClick className="size-4 text-primary/60" />
-                        <h3 className="text-sm font-heading font-semibold">
-                          Create Block
-                        </h3>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        Click a start time, then an end time on any day column
-                        to select a range.
-                      </p>
-                    </div>
+                    onGuestNameChange={setGuestName}
+                    onGuestPhoneChange={setGuestPhone}
+                    onGuestEmailChange={setGuestEmail}
+                    onGuestProfileIdChange={setGuestProfileId}
+                    onNotesChange={setNotes}
+                  />
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handleSelectionSubmit}
+                      className="flex-1"
+                      disabled={isCreatingBlock}
+                    >
+                      {isCreatingBlock && <Spinner />}
+                      {getBlockCtaLabel(selectionBlockType)}
+                    </Button>
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={openCustomDialog}
-                      className="w-full justify-start"
+                      onClick={() => {
+                        resetSelectionPanel();
+                        setWeekCommittedDayKey(null);
+                      }}
                     >
-                      Custom block...
+                      Cancel
                     </Button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-1 duration-200">
+                  <div className="rounded-lg border border-dashed border-primary/20 bg-primary/5 p-4 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <MousePointerClick className="size-4 text-primary/60" />
+                      <h3 className="text-sm font-heading font-semibold">
+                        Create Block
+                      </h3>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Click a start time, then an end time on any day column to
+                      select a range.
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={openCustomDialog}
+                    className="w-full justify-start"
+                  >
+                    Custom block...
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

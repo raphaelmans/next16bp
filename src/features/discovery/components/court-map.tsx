@@ -103,7 +103,7 @@ export function PlaceMap({
         />
         {selectedPlace && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <LocationPin size={48} className="text-accent drop-shadow-lg" />
+            <LocationPin size={48} className="text-primary drop-shadow-lg" />
           </div>
         )}
 

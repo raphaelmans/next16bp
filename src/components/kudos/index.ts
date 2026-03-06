@@ -21,7 +21,6 @@ export {
 } from "./court-card";
 export { KudosDatePicker } from "./date-picker";
 // UI Components
-export { EmptyState } from "./empty-state";
 export { FeaturedPlaceholderCard } from "./featured-placeholder-card";
 export { FileUpload } from "./file-upload";
 export { GoogleMapsEmbed } from "./google-maps-embed";

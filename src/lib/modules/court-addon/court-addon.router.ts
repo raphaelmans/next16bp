@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
-import { protectedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
 import { OrganizationMemberPermissionDeniedError } from "@/lib/modules/organization-member/errors/organization-member.errors";
+import { protectedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
 import {
   CourtNotFoundError,
   NotCourtOwnerError,

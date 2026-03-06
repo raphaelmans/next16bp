@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, Loader2 } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { PLACE_AMENITIES } from "@/common/amenities";
 import {
   StandardFormCheckbox,
@@ -10,6 +10,7 @@ import {
   StandardFormProvider,
 } from "@/components/form";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Card,
   CardContent,
@@ -81,7 +82,7 @@ export function PlaceForm({
   if (shouldHydrateDefaults && !isFormReady) {
     return (
       <div className="flex min-h-[240px] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Spinner className="size-8 text-muted-foreground" />
       </div>
     );
   }
@@ -342,14 +343,8 @@ export function PlaceForm({
                 disabled={googleUrl.trim().length === 0 || isPreviewing}
                 className="w-full"
               >
-                {isPreviewing ? (
-                  <span className="inline-flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Resolving…
-                  </span>
-                ) : (
-                  "Preview"
-                )}
+                {isPreviewing && <Spinner />}
+                Preview
               </Button>
 
               {previewErrorMessage && (
@@ -370,7 +365,7 @@ export function PlaceForm({
                           href={previewResult.resolvedUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="break-all text-accent hover:underline"
+                          className="break-all text-primary hover:underline"
                         >
                           {previewResult.resolvedUrl}
                         </a>
@@ -455,13 +450,8 @@ export function PlaceForm({
           Cancel
         </Button>
         <Button type="submit" disabled={isSubmitDisabled}>
-          {submitting
-            ? isEditing
-              ? "Saving..."
-              : "Creating..."
-            : isEditing
-              ? "Save Changes"
-              : "Create Venue"}
+          {submitting && <Spinner />}
+          {isEditing ? "Save Changes" : "Create Venue"}
         </Button>
       </div>
     </StandardFormProvider>

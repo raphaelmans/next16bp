@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from "uuid";
 import { DEFAULT_COUNTRY, DEFAULT_TIME_ZONE } from "@/common/location-defaults";
-import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
 import {
   NotOrganizationOwnerError,
   OrganizationNotFoundError,
 } from "@/lib/modules/organization/errors/organization.errors";
 import type { IOrganizationRepository } from "@/lib/modules/organization/repositories/organization.repository";
+import type { IOrganizationMemberService } from "@/lib/modules/organization-member/services/organization-member.service";
 import { STORAGE_BUCKETS } from "@/lib/modules/storage/dtos";
 import type { IObjectStorageService } from "@/lib/modules/storage/services/object-storage.service";
 import type {

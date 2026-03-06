@@ -1,6 +1,7 @@
 "use client";
 
-import { Copy, Globe, Loader2, Plus, Target, Trash2 } from "lucide-react";
+import { Copy, Globe, Plus, Target, Trash2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -458,7 +459,7 @@ export function CourtAddonEditor({
   if (isLoading) {
     return (
       <div className="flex min-h-[140px] items-center justify-center rounded-lg border">
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        <Spinner className="h-5 w-5 text-muted-foreground" />
       </div>
     );
   }
@@ -989,7 +990,7 @@ export function CourtAddonEditor({
             <Button type="button" onClick={handleSave} disabled={isSaving}>
               {isSaving ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Spinner className="mr-2 h-4 w-4" />
                   Saving…
                 </>
               ) : (

@@ -6,10 +6,10 @@ import {
   FileSpreadsheet,
   FileText,
   Image as ImageIcon,
-  Loader2,
   UploadCloud,
   X,
 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { useEffect, useState } from "react";
 import { type Accept, type FileRejection, useDropzone } from "react-dropzone";
 import { toast } from "@/common/toast";
@@ -517,9 +517,7 @@ export function BookingsImportUploadForm({
               </Button>
             </div>
             <Button onClick={handleContinue} disabled={!canContinue}>
-              {isUploading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : null}
+              {isUploading ? <Spinner className="mr-2 h-4 w-4" /> : null}
               {isUploading ? "Uploading" : "Continue"}
             </Button>
           </div>

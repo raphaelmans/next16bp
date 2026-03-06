@@ -109,7 +109,7 @@ export function CourtCard({
           </h3>
 
           <div className="flex items-center gap-1 text-muted-foreground mt-1">
-            <MapPin className="h-3 w-3 text-accent shrink-0" />
+            <MapPin className="h-3 w-3 text-primary shrink-0" />
             <span
               className={cn(
                 "line-clamp-1",

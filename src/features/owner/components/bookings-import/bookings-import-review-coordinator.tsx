@@ -1,6 +1,7 @@
 "use client";
 
-import { AlertCircle, ChevronLeft, Edit, Loader2, Trash2 } from "lucide-react";
+import { AlertCircle, ChevronLeft, Edit, Trash2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { parseAsString, useQueryState } from "nuqs";
@@ -448,7 +449,7 @@ export default function OwnerBookingsImportReviewView({
       <AppShell
         sidebar={
           <OwnerSidebar
-            currentOrganization={{ id: "", name: "Loading..." }}
+            currentOrganization={{ id: "", name: "" }}
             organizations={[]}
             user={{
               name: user?.email?.split("@")[0],
@@ -458,7 +459,7 @@ export default function OwnerBookingsImportReviewView({
         }
         navbar={
           <OwnerNavbar
-            organizationName="Loading..."
+            organizationName=""
             user={{
               name: user?.email?.split("@")[0],
               email: user?.email,
@@ -549,7 +550,7 @@ export default function OwnerBookingsImportReviewView({
       <div className="space-y-6">
         <PageHeader
           title="Review Import"
-          description={`${place?.name ?? "Loading..."} - ${sourceCount} file${sourceCount === 1 ? "" : "s"} import`}
+          description={`${place?.name ?? ""} - ${sourceCount} file${sourceCount === 1 ? "" : "s"} import`}
           breadcrumbs={[
             { label: "Owner", href: appRoutes.organization.base },
             { label: "Imports", href: appRoutes.organization.imports.bookings },
@@ -580,7 +581,7 @@ export default function OwnerBookingsImportReviewView({
                     </div>
                     <div>
                       <span className="text-muted-foreground">Valid: </span>
-                      <span className="font-medium text-green-600">
+                      <span className="font-medium text-success">
                         {job.validRowCount ?? 0}
                       </span>
                     </div>
@@ -608,7 +609,7 @@ export default function OwnerBookingsImportReviewView({
                   <div className="space-y-6">
                     {isNormalizing ? (
                       <div className="flex flex-col items-center gap-4 py-8">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                        <Spinner className="h-8 w-8 text-primary" />
                         <p className="text-muted-foreground">
                           Normalizing your import data...
                         </p>
@@ -630,7 +631,7 @@ export default function OwnerBookingsImportReviewView({
                                 disabled={normalizeMutation.isPending}
                               >
                                 {normalizeMutation.isPending && (
-                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  <Spinner className="mr-2 h-4 w-4" />
                                 )}
                                 Parse files
                               </Button>
@@ -645,7 +646,7 @@ export default function OwnerBookingsImportReviewView({
                               }
                             >
                               {normalizeMutation.isPending && (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                <Spinner className="mr-2 h-4 w-4" />
                               )}
                               Use AI (one-time)
                             </Button>
@@ -961,7 +962,7 @@ export default function OwnerBookingsImportReviewView({
                       disabled={!canCommit || commitMutation.isPending}
                     >
                       {commitMutation.isPending && (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Spinner className="mr-2 h-4 w-4" />
                       )}
                       Commit {statusCounts.VALID} valid rows
                     </Button>
@@ -1006,7 +1007,7 @@ export default function OwnerBookingsImportReviewView({
                   }
                 >
                   {discardMutation.isPending && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Spinner className="mr-2 h-4 w-4" />
                   )}
                   Discard import
                 </Button>
@@ -1149,7 +1150,7 @@ export default function OwnerBookingsImportReviewView({
               disabled={updateRowMutation.isPending}
             >
               {updateRowMutation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Spinner className="mr-2 h-4 w-4" />
               )}
               Save
             </Button>
@@ -1177,7 +1178,7 @@ export default function OwnerBookingsImportReviewView({
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {deleteRowMutation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Spinner className="mr-2 h-4 w-4" />
               )}
               Delete
             </AlertDialogAction>
@@ -1202,7 +1203,7 @@ export default function OwnerBookingsImportReviewView({
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {discardMutation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Spinner className="mr-2 h-4 w-4" />
               )}
               Discard
             </AlertDialogAction>
@@ -1224,9 +1225,7 @@ export default function OwnerBookingsImportReviewView({
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleCommit}>
-              {commitMutation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
+              {commitMutation.isPending && <Spinner className="mr-2 h-4 w-4" />}
               Commit
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -1252,7 +1251,7 @@ export default function OwnerBookingsImportReviewView({
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleConfirmAiNormalize}>
               {normalizeMutation.isPending && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Spinner className="mr-2 h-4 w-4" />
               )}
               Use AI (one-time)
             </AlertDialogAction>

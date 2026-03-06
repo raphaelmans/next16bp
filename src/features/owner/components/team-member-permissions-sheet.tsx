@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
@@ -218,7 +218,7 @@ export function TeamMemberPermissionsSheet({
             disabled={!isDirty || updatePermissions.isPending}
           >
             {updatePermissions.isPending && (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Spinner className="mr-2 h-4 w-4" />
             )}
             Save changes
           </Button>

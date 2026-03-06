@@ -38,10 +38,8 @@ const kudosStatusBadgeVariants = cva(
     variants: {
       variant: {
         primary: "bg-primary/10 text-primary border border-primary/20",
-        warning:
-          "bg-amber-500/10 text-amber-600 border border-amber-500/20 dark:text-amber-500",
-        success:
-          "bg-green-500/10 text-green-600 border border-green-500/20 dark:text-green-500",
+        warning: "bg-warning/10 text-warning border border-warning/20",
+        success: "bg-success/10 text-success border border-success/20",
         destructive:
           "bg-destructive/10 text-destructive border border-destructive/20",
         secondary: "bg-muted text-muted-foreground border border-border",

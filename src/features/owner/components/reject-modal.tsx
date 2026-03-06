@@ -1,6 +1,7 @@
 "use client";
 
-import { Loader2, X } from "lucide-react";
+import { X } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -104,7 +105,7 @@ export function RejectModal({
               disabled={isLoading || !reason.trim()}
             >
               {isLoading ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                <Spinner className="h-4 w-4 mr-2" />
               ) : (
                 <X className="h-4 w-4 mr-2" />
               )}
