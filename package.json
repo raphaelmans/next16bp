@@ -44,6 +44,8 @@
     "db:backfill:stream-reservation-chat-members": "dotenvx run --env-file=.env.local -- tsx scripts/backfill-stream-reservation-chat-members.ts",
     "db:import:curated-courts": "dotenvx run --env-file=.env.local -- tsx scripts/import-curated-courts.ts --file scripts/templates/curated-courts-template.csv",
     "db:export:curated-places": "dotenvx run --env-file=.env.local -- tsx scripts/export-curated-places.ts",
+    "db:deactivate:nonprod-indexables": "dotenvx run --env-file=.env.local -- tsx scripts/deactivate-non-production-indexables.ts",
+    "db:deactivate:nonprod-indexables:execute": "dotenvx run --env-file=.env.local -- tsx scripts/deactivate-non-production-indexables.ts --execute",
     "scrape:curated:crawl": "dotenvx run --env-file=.env.local -- tsx scripts/firecrawl-curated-courts.ts --crawl-only --no-ph-normalize --skip-db-coverage",
     "scrape:curated:normalize": "dotenvx run --env-file=.env.local -- tsx scripts/normalize-curated-courts-ai.ts",
     "scrape:curated-courts": "dotenvx run --env-file=.env.local -- tsx scripts/firecrawl-curated-courts.ts",

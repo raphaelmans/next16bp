@@ -4,15 +4,15 @@ import { redirect } from "next/navigation";
 import Script from "next/script";
 import { HOME_FAQS } from "@/features/home/constants/home-faq";
 import { HomeLandingPage } from "@/features/home/pages/home-landing-page";
-import { env } from "@/lib/env";
 import {
   getHomeFeaturedPlaces,
   prefetchHomeData,
 } from "@/lib/modules/home/server/home-page-data";
 import { getServerSession } from "@/lib/shared/infra/auth/server-session";
+import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 import { HydrateClient } from "@/trpc/server";
 
-const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+const appUrl = getCanonicalOrigin();
 const canonicalUrl = new URL("/", appUrl);
 const title =
   "Book Pickleball, Badminton, Basketball, and Tennis Courts in the Philippines";

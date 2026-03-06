@@ -3,9 +3,9 @@ import Script from "next/script";
 import { appRoutes } from "@/common/app-routes";
 import { OWNER_GET_STARTED_FAQS } from "@/features/owner/constants/owner-get-started-faq";
 import { OwnerPublicGetStartedPage } from "@/features/owner/pages/owner-public-get-started-page";
-import { env } from "@/lib/env";
+import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 
-const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+const appUrl = getCanonicalOrigin();
 const canonicalUrl = new URL(appRoutes.ownersGetStarted.base, appUrl);
 const title = "Free Reservation System for Sports Venues in the Philippines";
 const description =

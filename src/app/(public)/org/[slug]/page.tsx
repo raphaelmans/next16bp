@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PublicOrganizationPage } from "@/features/organization/pages/public-organization-page";
-import { env } from "@/lib/env";
 import {
   getOrganizationBySlugForMetadata,
   getOrganizationLandingBySlug,
 } from "@/lib/modules/organization/server/public-organization-page";
+import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function OrgSlugPage({ params }: Props) {
   const { slug } = await params;
-  const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+  const appUrl = getCanonicalOrigin();
 
   try {
     const landing = await getOrganizationLandingBySlug(slug);

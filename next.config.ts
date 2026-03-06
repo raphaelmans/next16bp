@@ -30,6 +30,9 @@ const csp = [
   "upgrade-insecure-requests",
 ].join("; ");
 
+const canonicalApexHost = "kudoscourts.ph";
+const canonicalApexOrigin = `https://${canonicalApexHost}`;
+
 const nextConfig: NextConfig = {
   /* config options here */
   allowedDevOrigins: ["kudoscourts.tunn.dev", "localhost", "127.0.0.1"],
@@ -37,6 +40,39 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   async redirects() {
     return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "kudoscourts.com",
+          },
+        ],
+        destination: `${canonicalApexOrigin}/:path*`,
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "www.kudoscourts.com",
+          },
+        ],
+        destination: `${canonicalApexOrigin}/:path*`,
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "www.kudoscourts.ph",
+          },
+        ],
+        destination: `${canonicalApexOrigin}/:path*`,
+        permanent: true,
+      },
       {
         source: "/contact",
         destination: "/contact-us",

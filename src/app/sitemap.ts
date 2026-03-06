@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import type { MetadataRoute } from "next";
 import { appRoutes } from "@/common/app-routes";
-import { env } from "@/lib/env";
+import { isSeoIndexableSlug } from "@/common/seo-slug-filter";
 import { db } from "@/lib/shared/infra/db/drizzle";
 import {
   court,
@@ -13,11 +13,11 @@ import {
   getPHProvincesCities,
   resolveLocationSlugs,
 } from "@/lib/shared/lib/ph-location-data.server";
+import { buildCanonicalUrl } from "@/lib/shared/utils/canonical-origin";
 
 export const revalidate = 3600;
 
-const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
-const buildUrl = (path: string) => new URL(path, appUrl).toString();
+const buildUrl = (path: string) => buildCanonicalUrl(path);
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [placeRows, orgRows, locationRows, locationSportRows] =
@@ -141,19 +141,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  const placeEntries: MetadataRoute.Sitemap = placeRows.map((row) => ({
-    url: buildUrl(appRoutes.places.detail(row.slug)),
-    lastModified: row.updatedAt ?? undefined,
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+  const placeEntries: MetadataRoute.Sitemap = placeRows
+    .filter((row) => isSeoIndexableSlug(row.slug))
+    .map((row) => ({
+      url: buildUrl(appRoutes.places.detail(row.slug)),
+      lastModified: row.updatedAt ?? undefined,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }));
 
-  const orgEntries: MetadataRoute.Sitemap = orgRows.map((row) => ({
-    url: buildUrl(`/org/${row.slug}`),
-    lastModified: row.updatedAt ?? undefined,
-    changeFrequency: "weekly" as const,
-    priority: 0.6,
-  }));
+  const orgEntries: MetadataRoute.Sitemap = orgRows
+    .filter((row) => isSeoIndexableSlug(row.slug))
+    .map((row) => ({
+      url: buildUrl(`/org/${row.slug}`),
+      lastModified: row.updatedAt ?? undefined,
+      changeFrequency: "weekly" as const,
+      priority: 0.6,
+    }));
 
   return [...staticEntries, ...locationEntries, ...placeEntries, ...orgEntries];
 }

@@ -5,6 +5,7 @@ import Script from "next/script";
 import { Providers } from "@/common/providers";
 import { PwaInstallPrompt } from "@/features/pwa/components/pwa-install-prompt";
 import { SwRegister } from "@/features/pwa/components/sw-register";
+import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -26,7 +27,7 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://kudoscourts.com";
+const appUrl = getCanonicalOrigin();
 const isProduction =
   process.env.VERCEL_ENV === "production" ||
   process.env.NODE_ENV === "production";

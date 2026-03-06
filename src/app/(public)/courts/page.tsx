@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { appRoutes } from "@/common/app-routes";
 import { DiscoveryCourtsPage } from "@/features/discovery/pages/courts-page";
-import { env } from "@/lib/env";
+import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 
-const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+const appUrl = getCanonicalOrigin();
 const canonicalUrl = new URL(appRoutes.courts.base, appUrl);
 const title = "Browse Sports Courts in the Philippines";
 const description =

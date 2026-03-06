@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { appRoutes } from "@/common/app-routes";
 import OpenPlayPlacePageView from "@/features/open-play/components/open-play-place-page-view";
-import { env } from "@/lib/env";
 import { getPlaceDetailsByIdOrSlug } from "@/lib/shared/lib/place-details.server";
+import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 
-const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+const appUrl = getCanonicalOrigin();
 
 export async function generateOpenPlayPlaceMetadata(
   placeId: string,

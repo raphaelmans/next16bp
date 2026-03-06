@@ -1,10 +1,30 @@
 import type { MetadataRoute } from "next";
-import { env } from "@/lib/env";
+import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 
-const appUrl = env.NEXT_PUBLIC_APP_URL ?? "https://kudoscourts.com";
+const appUrl = getCanonicalOrigin();
 const isProduction =
   process.env.VERCEL_ENV === "production" ||
   process.env.NODE_ENV === "production";
+const privatePaths = [
+  "/api",
+  "/admin",
+  "/organization",
+  "/dashboard",
+  "/account",
+  "/reservations",
+  "/login",
+  "/register",
+  "/magic-link",
+  "/auth",
+  "/courts/*/schedule",
+  "/venues/*/schedule",
+  "/places/*/schedule",
+  "/courts/*/book",
+  "/venues/*/book",
+  "/places/*/book",
+  "/poc",
+  "/poc/*",
+] as const;
 
 export default function robots(): MetadataRoute.Robots {
   if (!isProduction) {
@@ -21,27 +41,12 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
+        userAgent: ["GPTBot", "ClaudeBot", "Google-Extended"],
+        disallow: "/",
+      },
+      {
         userAgent: "*",
-        disallow: [
-          "/api",
-          "/admin",
-          "/organization",
-          "/dashboard",
-          "/account",
-          "/reservations",
-          "/login",
-          "/register",
-          "/magic-link",
-          "/auth",
-          "/courts/*/schedule",
-          "/venues/*/schedule",
-          "/places/*/schedule",
-          "/courts/*/book",
-          "/venues/*/book",
-          "/places/*/book",
-          "/poc",
-          "/poc/*",
-        ],
+        disallow: privatePaths,
       },
     ],
     sitemap: `${appUrl}/sitemap.xml`,
