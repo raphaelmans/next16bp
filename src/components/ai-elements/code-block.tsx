@@ -199,7 +199,6 @@ export function highlightCode(
         lang: langToUse,
         themes: {
           light: "github-light",
-          "github-dark",
         },
       });
 
