@@ -86,3 +86,7 @@
 2026-03-05T19:32:18.305973Z  INFO ralph::loop_runner: Completion event LOOP_COMPLETE detected.
 2026-03-05T19:32:18.307162Z  INFO ralph_core::event_loop: Wrapping up: completed. 14 iterations in 1h 21m 49s. reason=completed iterations=14 duration=1h 21m 49s
 2026-03-05T19:32:18.327354Z  INFO ralph_core::landing: Beginning landing sequence loop_id=primary
+2026-03-05T19:32:18.517809Z  INFO ralph_core::landing: Auto-committed changes during landing loop_id=primary commit=Some("07be590706199bc62fde8358555bc59f9035d98f") files=72
+2026-03-05T19:32:21.866381Z  INFO ralph_core::landing: Generated handoff file loop_id=primary path=/Users/raphaelm/Documents/Coding/boilerplates/next16bp/.ralph/agent/handoff.md completed=14 open=0
+2026-03-05T19:32:21.894461Z  INFO ralph_core::loop_completion: Landing completed with auto-commit commit=Some("07be590706199bc62fde8358555bc59f9035d98f") handoff=/Users/raphaelm/Documents/Coding/boilerplates/next16bp/.ralph/agent/handoff.md
+2026-03-05T19:32:21.894478Z  INFO ralph::loop_runner: Primary loop landed successfully committed=true handoff=/Users/raphaelm/Documents/Coding/boilerplates/next16bp/.ralph/agent/handoff.md open_tasks=0
