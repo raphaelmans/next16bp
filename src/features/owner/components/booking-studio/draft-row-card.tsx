@@ -30,7 +30,7 @@ export const DraftTimelineBlock = React.memo(function DraftTimelineBlock({
         status === "ERROR"
           ? "border-destructive/30"
           : status === "WARNING"
-            ? "border-amber-400/30"
+            ? "border-warning/30"
             : "border-primary/30",
       )}
       style={{ top: topOffset, height }}

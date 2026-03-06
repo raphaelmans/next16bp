@@ -43,14 +43,14 @@ export function StatsCard({
             {trend && (
               <div className="flex items-center gap-1 text-sm">
                 {trend.value >= 0 ? (
-                  <TrendingUp className="h-4 w-4 text-green-600" />
+                  <TrendingUp className="h-4 w-4 text-success" />
                 ) : (
-                  <TrendingDown className="h-4 w-4 text-red-600" />
+                  <TrendingDown className="h-4 w-4 text-destructive" />
                 )}
                 <span
                   className={cn(
                     "font-medium",
-                    trend.value >= 0 ? "text-green-600" : "text-red-600",
+                    trend.value >= 0 ? "text-success" : "text-destructive",
                   )}
                 >
                   {trend.value > 0 ? "+" : ""}

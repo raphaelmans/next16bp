@@ -1845,7 +1845,7 @@ function OwnerAvailabilityStudioInner() {
                   </div>
                   <div>
                     <span className="text-muted-foreground">Valid:</span>{" "}
-                    <span className="font-medium text-green-600">
+                    <span className="font-medium text-success">
                       {job.validRowCount ?? 0}
                     </span>
                   </div>

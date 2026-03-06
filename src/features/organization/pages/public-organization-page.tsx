@@ -80,7 +80,7 @@ export function PublicOrganizationPage({
       <section className="relative overflow-hidden py-10 sm:py-14">
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute -top-24 left-1/2 h-72 w-[42rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute -bottom-28 left-1/3 h-72 w-[36rem] -translate-x-1/2 rounded-full bg-accent/10 blur-3xl" />
+          <div className="absolute -bottom-28 left-1/3 h-72 w-[36rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
           <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-background" />
         </div>
 
@@ -136,7 +136,7 @@ export function PublicOrganizationPage({
                     <div className="mt-6 grid gap-2 text-sm">
                       {landing.profile?.address && (
                         <div className="flex items-start gap-2">
-                          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                           <span className="text-muted-foreground">
                             {landing.profile.address}
                           </span>
@@ -376,7 +376,7 @@ export function PublicOrganizationPage({
                   ) : null}
                   {landing.profile?.address ? (
                     <div className="flex items-start gap-2 text-muted-foreground">
-                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                       <span>{landing.profile.address}</span>
                     </div>
                   ) : null}

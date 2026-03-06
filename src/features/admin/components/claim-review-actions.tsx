@@ -80,7 +80,7 @@ export function ClaimReviewActions({
             onValueChange={(v) => setDecision(v as "approve" | "reject")}
             disabled={disabled || isLoading}
           >
-            <div className="flex items-start space-x-3 p-4 rounded-lg border bg-green-50/50 border-green-200">
+            <div className="flex items-start space-x-3 p-4 rounded-lg border bg-success-light border-success/20">
               <RadioGroupItem value="approve" id="approve" className="mt-1" />
               <div className="space-y-1">
                 <Label htmlFor="approve" className="font-medium cursor-pointer">
@@ -92,7 +92,7 @@ export function ClaimReviewActions({
               </div>
             </div>
 
-            <div className="flex items-start space-x-3 p-4 rounded-lg border bg-red-50/50 border-red-200">
+            <div className="flex items-start space-x-3 p-4 rounded-lg border bg-destructive-light border-destructive/20">
               <RadioGroupItem value="reject" id="reject" className="mt-1" />
               <div className="space-y-1">
                 <Label htmlFor="reject" className="font-medium cursor-pointer">

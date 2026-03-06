@@ -82,7 +82,7 @@ const OWNER_BENEFITS = [
     title: "Easy Setup",
     description:
       "Add your venue and set your hours in minutes. No technical skills needed.",
-    iconBg: "bg-accent/10 text-accent",
+    iconBg: "bg-primary/10 text-primary",
   },
   {
     icon: Gift,
@@ -106,7 +106,7 @@ const HOW_IT_WORKS = [
     title: "Pick a slot",
     description:
       "Browse real-time availability. Tap the time that works for you.",
-    numBg: "bg-accent/10 text-accent",
+    numBg: "bg-primary/10 text-primary",
   },
   {
     step: 3,
@@ -250,7 +250,7 @@ export default function HomePageClient({
           style={{
             background: [
               "radial-gradient(ellipse 70% 50% at 15% 35%, color-mix(in oklch, var(--color-primary) 7%, transparent) 0%, transparent 55%)",
-              "radial-gradient(ellipse 50% 70% at 85% 25%, color-mix(in oklch, var(--color-accent) 5%, transparent) 0%, transparent 45%)",
+              "radial-gradient(ellipse 50% 70% at 85% 25%, color-mix(in oklch, var(--color-primary) 5%, transparent) 0%, transparent 45%)",
               "radial-gradient(ellipse 60% 40% at 50% 90%, color-mix(in oklch, var(--color-primary) 3%, transparent) 0%, transparent 50%)",
             ].join(", "),
           }}
@@ -291,7 +291,7 @@ export default function HomePageClient({
                 Own a court?{" "}
                 <Link
                   href={appRoutes.listYourVenue.base}
-                  className="text-accent font-semibold font-heading hover:underline"
+                  className="text-primary font-semibold font-heading hover:underline"
                 >
                   List your venue — free for venues &rarr;
                 </Link>
@@ -312,7 +312,7 @@ export default function HomePageClient({
                     Smash Zone Cebu
                   </h4>
                   <p className="text-xs text-muted-foreground flex items-center gap-1 mb-2.5">
-                    <MapPin className="h-3 w-3 text-accent" />
+                    <MapPin className="h-3 w-3 text-primary" />
                     Cebu City · 4 courts
                   </p>
                   <div className="flex gap-1 flex-wrap">
@@ -322,7 +322,7 @@ export default function HomePageClient({
                     <span className="px-2 py-0.5 rounded-md font-mono text-[10px] font-medium bg-success-light text-success">
                       3 PM
                     </span>
-                    <span className="px-2 py-0.5 rounded-md font-mono text-[10px] font-medium bg-accent/10 text-accent border border-accent/15">
+                    <span className="px-2 py-0.5 rounded-md font-mono text-[10px] font-medium bg-primary/10 text-primary border border-primary/15">
                       4 PM
                     </span>
                     <span className="px-2 py-0.5 rounded-md font-mono text-[10px] font-medium bg-muted text-muted-foreground/60 line-through">
@@ -348,7 +348,7 @@ export default function HomePageClient({
 
               {/* Secondary card */}
               <div className="absolute w-[270px] top-[80px] right-[-10px] z-[2] rotate-[2.5deg] rounded-[20px] border border-border bg-card shadow-[0_4px_6px_oklch(0_0_0/0.03),0_12px_36px_oklch(0_0_0/0.07)] overflow-hidden transition-transform duration-400 hover:-translate-y-1.5 hover:rotate-0 animate-slide-in-right stagger-4">
-                <div className="h-[130px] relative flex items-end p-3 bg-gradient-to-br from-accent to-accent/80">
+                <div className="h-[130px] relative flex items-end p-3 bg-gradient-to-br from-primary to-primary/80">
                   <span className="font-heading text-[10px] font-bold uppercase tracking-[0.06em] text-primary-foreground bg-primary-foreground/20 px-2.5 py-1 rounded-md backdrop-blur-sm">
                     Pickleball
                   </span>
@@ -358,7 +358,7 @@ export default function HomePageClient({
                     Rally Hub QC
                   </h4>
                   <p className="text-xs text-muted-foreground flex items-center gap-1 mb-2.5">
-                    <MapPin className="h-3 w-3 text-accent" />
+                    <MapPin className="h-3 w-3 text-primary" />
                     Quezon City · 6 courts
                   </p>
                   <div className="flex gap-1 flex-wrap">

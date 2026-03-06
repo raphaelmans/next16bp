@@ -733,7 +733,7 @@ function WeekGridInner({
                     ? "hover:bg-success-light/70 cursor-pointer"
                     : hasAnchorCue
                       ? "hover:bg-muted/30 cursor-pointer"
-                      : "hover:bg-accent/10 cursor-pointer"),
+                      : "hover:bg-primary/10 cursor-pointer"),
               );
 
               if (compact) {

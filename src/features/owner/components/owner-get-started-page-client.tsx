@@ -137,8 +137,8 @@ const STUDIO_BLOCKS = [
   {
     id: "available",
     label: "Available",
-    color: "bg-emerald-50 text-emerald-700 border-dashed border-emerald-200",
-    dotColor: "bg-emerald-500",
+    color: "bg-success-light text-success border-dashed border-success/20",
+    dotColor: "bg-success",
     description:
       "Open time players can book through the platform. Pricing uses your hourly rate rules. Updates in real-time.",
   },
@@ -153,24 +153,24 @@ const STUDIO_BLOCKS = [
   {
     id: "walkin",
     label: "Walk-in",
-    color: "bg-orange-50 text-orange-600 border-dashed border-orange-200",
-    dotColor: "bg-orange-400",
+    color: "bg-warning/5 text-warning border-dashed border-warning/15",
+    dotColor: "bg-warning/50",
     description:
       "Reserve time for walk-in customers. When someone shows up and pays, convert the block into a confirmed guest booking with one tap.",
   },
   {
     id: "guest",
     label: "Guest Booking",
-    color: "bg-orange-100 text-orange-700 border-orange-300",
-    dotColor: "bg-orange-500",
+    color: "bg-warning/10 text-warning border-warning/20",
+    dotColor: "bg-warning/70",
     description:
       "A confirmed reservation you created directly for a customer. Perfect for regulars, phone bookings, or anyone who pays through traditional channels.",
   },
   {
     id: "booked",
     label: "Booked",
-    color: "bg-orange-200/60 text-orange-800 border-orange-300",
-    dotColor: "bg-orange-600",
+    color: "bg-warning/15 text-warning-foreground border-warning/25",
+    dotColor: "bg-warning",
     description:
       "A player booked this slot through the app. The booking went through the full flow — request, acceptance, payment confirmation.",
   },
@@ -230,7 +230,7 @@ const FREE_FEATURES = [
     description:
       "Visual block editor for your schedule — available slots, maintenance, walk-ins, and guest bookings.",
     icon: LayoutGrid,
-    color: "accent" as const,
+    color: "primary" as const,
   },
   {
     id: "guest-profiles",
@@ -261,7 +261,7 @@ const FREE_FEATURES = [
     title: "Verified Badge",
     description: "Build trust with players and unlock online reservations.",
     icon: ShieldCheck,
-    color: "accent" as const,
+    color: "primary" as const,
   },
   {
     id: "team-access",
@@ -277,7 +277,7 @@ const FREE_FEATURES = [
     description:
       "In-app inbox, web push, mobile push, email, and SMS — per user, per venue.",
     icon: Bell,
-    color: "accent" as const,
+    color: "primary" as const,
   },
   {
     id: "qr",
@@ -376,7 +376,6 @@ const PERKS = [
 
 const colorMap = {
   primary: { bg: "bg-primary/10", text: "text-primary" },
-  accent: { bg: "bg-accent/10", text: "text-accent" },
   muted: { bg: "bg-muted", text: "text-foreground" },
 };
 
@@ -398,19 +397,19 @@ const TIMELINE_SLOTS = [
 ];
 
 const slotStyles: Record<string, string> = {
-  available: "bg-emerald-50 border-dashed border-emerald-200 text-emerald-700",
-  booked: "bg-orange-200/60 border-orange-300 text-orange-800",
+  available: "bg-success-light border-dashed border-success/20 text-success",
+  booked: "bg-warning/15 border-warning/25 text-warning-foreground",
   maintenance: "bg-muted/60 border-border text-muted-foreground",
-  walkin: "bg-orange-50 border-dashed border-orange-200 text-orange-600",
-  guest: "bg-orange-100 border-orange-300 text-orange-700",
+  walkin: "bg-warning/5 border-dashed border-warning/15 text-warning",
+  guest: "bg-warning/10 border-warning/20 text-warning",
 };
 
 const slotBadgeStyles: Record<string, string> = {
-  available: "bg-emerald-100 text-emerald-800",
-  booked: "bg-orange-200 text-orange-800",
+  available: "bg-success-light text-success",
+  booked: "bg-warning/15 text-warning-foreground",
   maintenance: "bg-muted text-muted-foreground",
-  walkin: "bg-orange-100 text-orange-700",
-  guest: "bg-orange-200/80 text-orange-800",
+  walkin: "bg-warning/5 text-warning",
+  guest: "bg-warning/10 text-warning",
 };
 
 const slotBadgeLabels: Record<string, string> = {
@@ -447,7 +446,7 @@ export default function OwnersGetStartedPage() {
       {/* Background blurs */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-24 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute top-40 -left-24 h-[340px] w-[340px] rounded-full bg-accent/10 blur-3xl" />
+        <div className="absolute top-40 -left-24 h-[340px] w-[340px] rounded-full bg-primary/10 blur-3xl" />
       </div>
 
       {/* ----------------------------------------------------------------- */}
@@ -505,7 +504,7 @@ export default function OwnersGetStartedPage() {
               Already have an account?{" "}
               <Link
                 href={loginHref}
-                className="text-accent hover:underline"
+                className="text-primary hover:underline"
                 onClick={() =>
                   trackEvent({
                     event: "funnel.owner_get_started_signin_clicked",
@@ -708,7 +707,7 @@ export default function OwnersGetStartedPage() {
                               }
                               className={
                                 step === "Confirmed"
-                                  ? "bg-emerald-600 hover:bg-emerald-600"
+                                  ? "bg-success hover:bg-success"
                                   : ""
                               }
                             >
@@ -1023,7 +1022,7 @@ export default function OwnersGetStartedPage() {
               <div className="flex-1 space-y-3">
                 <Badge
                   variant="outline"
-                  className="border-accent/30 text-accent"
+                  className="border-primary/30 text-primary"
                 >
                   Coming Soon
                 </Badge>
@@ -1038,7 +1037,7 @@ export default function OwnersGetStartedPage() {
               <div className="flex-1 space-y-2">
                 {BUSINESS_PLUS_FEATURES.map((feat) => (
                   <div key={feat} className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 shrink-0 text-accent mt-0.5" />
+                    <CheckCircle className="h-4 w-4 shrink-0 text-primary mt-0.5" />
                     <p className="text-sm text-muted-foreground">{feat}</p>
                   </div>
                 ))}

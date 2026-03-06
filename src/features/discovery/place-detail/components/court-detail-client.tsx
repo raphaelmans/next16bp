@@ -759,7 +759,7 @@ export default function CourtDetailClient({
               )}
             >
               <div className="flex items-start gap-2">
-                <Clock className="h-4 w-4 text-accent mt-0.5" />
+                <Clock className="h-4 w-4 text-primary mt-0.5" />
                 <div>
                   <p className="text-sm font-heading font-semibold">
                     {hasSelection && startTimeParam

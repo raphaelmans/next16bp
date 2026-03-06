@@ -69,7 +69,7 @@ export function PlaceVerificationReviewActions({
             }
             disabled={disabled || isLoading}
           >
-            <div className="flex items-start space-x-3 rounded-lg border border-green-200 bg-green-50/50 p-4">
+            <div className="flex items-start space-x-3 rounded-lg border border-success/20 bg-success-light p-4">
               <RadioGroupItem value="approve" id="approve" className="mt-1" />
               <div className="space-y-1">
                 <Label htmlFor="approve" className="cursor-pointer font-medium">
@@ -82,7 +82,7 @@ export function PlaceVerificationReviewActions({
               </div>
             </div>
 
-            <div className="flex items-start space-x-3 rounded-lg border border-red-200 bg-red-50/50 p-4">
+            <div className="flex items-start space-x-3 rounded-lg border border-destructive/20 bg-destructive-light p-4">
               <RadioGroupItem value="reject" id="reject" className="mt-1" />
               <div className="space-y-1">
                 <Label htmlFor="reject" className="cursor-pointer font-medium">

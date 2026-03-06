@@ -61,7 +61,7 @@ export const MobileManageBlockPeekBar = React.memo(
                 className="flex flex-1 items-center gap-3 text-left min-w-0"
               >
                 <Badge
-                  variant={isWalkIn ? "paid" : "warning"}
+                  variant={isWalkIn ? "warning" : "secondary"}
                   className="shrink-0 text-[10px] px-1.5 py-0"
                 >
                   {isWalkIn ? "Walk-in" : "Maintenance"}

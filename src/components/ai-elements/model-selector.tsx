@@ -180,7 +180,7 @@ export const ModelSelectorLogo = ({
   <img
     {...props}
     alt={`${provider} logo`}
-    className={cn("size-3 dark:invert", className)}
+    className={cn("size-3", className)}
     height={12}
     src={`https://models.dev/logos/${provider}.svg`}
     width={12}
@@ -195,7 +195,7 @@ export const ModelSelectorLogoGroup = ({
 }: ModelSelectorLogoGroupProps) => (
   <div
     className={cn(
-      "flex shrink-0 items-center -space-x-1 [&>img]:rounded-full [&>img]:bg-background [&>img]:p-px [&>img]:ring-1 dark:[&>img]:bg-foreground",
+      "flex shrink-0 items-center -space-x-1 [&>img]:rounded-full [&>img]:bg-background [&>img]:p-px [&>img]:ring-1",
       className,
     )}
     {...props}

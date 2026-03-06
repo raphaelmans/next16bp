@@ -87,9 +87,9 @@ export function HomeSearchForm({
               onClick={() =>
                 handleLocationClick(location.provinceSlug, location.citySlug)
               }
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-border text-xs font-medium font-heading text-muted-foreground transition-all hover:border-accent hover:text-accent hover:bg-accent/5"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-border text-xs font-medium font-heading text-muted-foreground transition-all hover:border-primary hover:text-primary hover:bg-primary/5"
             >
-              <MapPin className="h-[11px] w-[11px] text-accent" />
+              <MapPin className="h-[11px] w-[11px] text-primary" />
               {location.label}
             </Link>
           ))}

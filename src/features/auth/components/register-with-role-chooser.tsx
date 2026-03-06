@@ -65,9 +65,9 @@ export function RegisterWithRoleChooser({
           <button
             type="button"
             onClick={() => router.push(ownerRegisterUrl)}
-            className="flex items-start gap-4 rounded-xl border border-border/60 bg-card p-4 text-left transition-colors hover:border-accent hover:bg-accent/5"
+            className="flex items-start gap-4 rounded-xl border border-border/60 bg-card p-4 text-left transition-colors hover:border-primary hover:bg-primary/5"
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <Building2 className="h-5 w-5" />
             </div>
             <div className="space-y-1">

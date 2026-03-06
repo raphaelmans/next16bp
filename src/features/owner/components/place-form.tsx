@@ -365,7 +365,7 @@ export function PlaceForm({
                           href={previewResult.resolvedUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="break-all text-accent hover:underline"
+                          className="break-all text-primary hover:underline"
                         >
                           {previewResult.resolvedUrl}
                         </a>

@@ -11,6 +11,8 @@ Big-bang cutover of the entire UI layer to shadcn-ui components on a dedicated b
 - Remove dark mode (`.dark` block in globals.css, `dark:` variants)
 - Replace all hardcoded hex/rgba with CSS variable tokens (27 files)
 - **CRITICAL: No loading text anywhere.** Replace all "Loading...", "Saving...", "Creating..." etc. with spinner icons only (45 instances, 26 files)
+- **[DONE] Remove orange from design system entirely:** `--accent` changed to subtle warm neutral. Orange tokens removed. All former orange use cases remapped to `primary` (teal) or semantic tokens. 98 files updated.
+- **[DONE] Overhaul ALL interactive state colors:** Accent token fix cascaded to all 13 shadcn components. All hardcoded `amber-*` → `warning`/`warning-light` tokens, `green-*`/`emerald-*` → `success`/`success-light` tokens, `orange-*` → semantic equivalents, `red-*` → `destructive`/`destructive-light` tokens. All `dark:` variants stripped (light-only). Badge component extended with `success`, `warning`, `paid` variants. Booking slot types use semantic color palette: available=success, booked=primary, walkin=warning, guest=secondary, maintenance=muted.
 - Full /clarify copywriting pass — active voice, friendly errors, contextual CTAs
 - Full /normalize + /polish pass — consistent spacing, radius, typography
 - Safe zones: `env(safe-area-inset-*)` on all fixed elements
@@ -33,6 +35,10 @@ Big-bang cutover of the entire UI layer to shadcn-ui components on a dedicated b
 - **Given** all fixed-position elements on iOS **Then** safe areas respected
 - **Given** booking studio operations (create, resize, guest, remove) **Then** all functional post-redesign
 - **Given** owner onboarding wizard **Then** all 7 steps complete successfully
+- **[PASS]** `--accent` in globals.css is `oklch(0.96 0.005 90)` — subtle warm neutral
+- **[PASS]** Zero matches for orange hex/oklch values across all CSS and TSX
+- **[PASS]** Zero matches for hardcoded Tailwind color classes (`orange-|amber-|green-|emerald-|red-`) in TSX files. All replaced with design tokens. `dark:` variants stripped. Documented exceptions: notification-bell (bg-destructive for badge), speech-input (border-destructive/30 for pulse), code-block (shiki dark theme).
+- **[PASS]** Badge component includes `success`, `warning`, `paid` semantic variants
 - **Given** mobile viewport (375px) **Then** bottom tab bar visible with role-appropriate tabs
 
 ## Spec Reference

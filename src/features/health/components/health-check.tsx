@@ -15,14 +15,14 @@ export function HealthCheck() {
 
   if (isError) {
     return (
-      <div className="fixed bottom-4 right-4 rounded-lg bg-red-100 px-4 py-2 text-sm text-red-800 shadow-lg">
+      <div className="fixed bottom-4 right-4 rounded-lg bg-destructive-light px-4 py-2 text-sm text-destructive shadow-lg">
         Health check failed: {error?.message}
       </div>
     );
   }
 
   return (
-    <div className="fixed bottom-4 right-4 rounded-lg bg-green-100 px-4 py-2 text-sm text-green-800 shadow-lg">
+    <div className="fixed bottom-4 right-4 rounded-lg bg-success/10 px-4 py-2 text-sm text-success shadow-lg">
       <div className="font-medium">Server: {data?.status}</div>
       <div className="text-xs opacity-75">
         Uptime: {Math.floor(data?.uptime ?? 0)}s

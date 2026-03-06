@@ -36,7 +36,7 @@ import { cn } from "@/lib/utils";
 const stageConfig = {
   CREATED: {
     label: "Needs acceptance",
-    className: "bg-amber-50 text-amber-700 border-amber-200",
+    className: "bg-warning-light text-warning border-warning/20",
   },
   AWAITING_PAYMENT: {
     label: "Awaiting payment",
@@ -48,15 +48,15 @@ const stageConfig = {
   },
   CONFIRMED: {
     label: "Confirmed",
-    className: "bg-green-50 text-green-700 border-green-200",
+    className: "bg-success-light text-success border-success/20",
   },
   EXPIRED: {
     label: "Expired",
-    className: "bg-red-50 text-red-700 border-red-200",
+    className: "bg-destructive-light text-destructive border-destructive/20",
   },
   CANCELLED: {
     label: "Cancelled",
-    className: "bg-slate-50 text-slate-700 border-slate-200",
+    className: "bg-muted text-muted-foreground border-border",
   },
 } as const;
 

@@ -1030,14 +1030,14 @@ export default function PlaceBookingPage({
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-accent" />
+                <ShieldCheck className="h-4 w-4 text-primary" />
                 <span>
                   After you confirm, your request is held while the owner
                   reviews availability.
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <CalendarCheck className="h-4 w-4 text-accent" />
+                <CalendarCheck className="h-4 w-4 text-primary" />
                 <span>
                   {isMultiCourtBooking
                     ? `${multiCourtSummaryItems.length} courts · ${formatCurrency(
@@ -1222,7 +1222,7 @@ export default function PlaceBookingPage({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="w-full justify-start text-accent hover:text-accent"
+                  className="w-full justify-start text-primary hover:text-primary"
                   onClick={() => scrollToSection(detailsSectionRef)}
                 >
                   Review booking details

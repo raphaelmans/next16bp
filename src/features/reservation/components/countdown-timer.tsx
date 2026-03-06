@@ -57,9 +57,7 @@ export function CountdownTimer({ expiresAt, onExpire }: CountdownTimerProps) {
     <div
       className={cn(
         "flex items-center gap-2 rounded-lg p-4",
-        isWarning
-          ? "bg-amber-500/10 text-amber-700"
-          : "bg-muted text-foreground",
+        isWarning ? "bg-warning/10 text-warning" : "bg-muted text-foreground",
       )}
     >
       <Clock className="h-5 w-5" />

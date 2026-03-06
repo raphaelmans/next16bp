@@ -2,9 +2,8 @@
    KudosCourts - Design System Theme (Logo-Aligned)
    Version: 1.2
 
-   Brand Colors (from logo):
-   - Primary:     Teal (#0D9488)          → Main CTAs, focus ring
-   - Accent:      Orange (#F97316)        → Links, availability, location pins
+   Brand Colors:
+   - Primary:     Teal (#0D9488)          → Main CTAs, focus ring, links, icons
    - Destructive: Red (#DC2626)           → Cancel, delete, errors
 
    Typography:
@@ -55,11 +54,11 @@
   --muted-foreground: oklch(0.55 0.01 90);
 
   /* ─────────────────────────────────────────────────────────────────────────────
-     ACCENT - Orange (from logo: #FB923C → #F97316)
-     Links, highlights, location pins, availability indicators
+     ACCENT - Subtle warm neutral (shadcn hover/focus background)
+     Used by shadcn for dropdown items, menu items, toggles, etc.
      ───────────────────────────────────────────────────────────────────────────── */
-  --accent: oklch(0.7 0.18 45);
-  --accent-foreground: oklch(0.99 0 0);
+  --accent: oklch(0.96 0.005 90);
+  --accent-foreground: oklch(0.2 0.01 90);
 
   /* ─────────────────────────────────────────────────────────────────────────────
      DESTRUCTIVE - Red (#DC2626)
@@ -79,7 +78,7 @@
      CHARTS - Full brand palette
      ───────────────────────────────────────────────────────────────────────────── */
   --chart-1: oklch(0.58 0.11 175); /* Teal */
-  --chart-2: oklch(0.7 0.18 45); /* Orange */
+  --chart-2: oklch(0.55 0.15 260); /* Indigo */
   --chart-3: oklch(0.6 0.15 160); /* Success Green */
   --chart-4: oklch(0.65 0.15 70); /* Warning Amber */
   --chart-5: oklch(0.55 0.22 27); /* Red */

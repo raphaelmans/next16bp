@@ -403,7 +403,7 @@ export default function AdminVerificationDetailPage({
                         <div
                           className={cn(
                             "w-2 h-2 rounded-full mt-2",
-                            event.toStatus === "PENDING" && "bg-accent",
+                            event.toStatus === "PENDING" && "bg-primary",
                             event.toStatus === "APPROVED" && "bg-success",
                             event.toStatus === "REJECTED" && "bg-destructive",
                           )}
@@ -488,11 +488,11 @@ export default function AdminVerificationDetailPage({
               </CardHeader>
               <CardContent className="space-y-3 text-sm text-muted-foreground">
                 <div className="flex items-start gap-2">
-                  <ShieldCheck className="h-4 w-4 text-accent" />
+                  <ShieldCheck className="h-4 w-4 text-primary" />
                   <span>Venue is marked verified for players.</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <AlertCircle className="h-4 w-4 text-accent" />
+                  <AlertCircle className="h-4 w-4 text-primary" />
                   <span>
                     Reservations remain disabled until owner enables them.
                   </span>

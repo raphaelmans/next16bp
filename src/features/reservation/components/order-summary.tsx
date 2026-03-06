@@ -70,7 +70,7 @@ export function OrderSummary({
             type="button"
             variant="ghost"
             size="sm"
-            className="w-full justify-start text-accent hover:text-accent"
+            className="w-full justify-start text-primary hover:text-primary"
             onClick={onReviewDetails}
           >
             {reviewLabel}

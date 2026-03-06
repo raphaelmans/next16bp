@@ -184,3 +184,37 @@ Use shadcn MCP to reset all UI primitives to latest shadcn defaults, then custom
 - Custom non-shadcn components (`button-group`, `spinner`, `field`, `empty`, `page-header`, `kbd`, `item`, `input-group`, `draggable-panel`) are either replaced with shadcn equivalents or rebuilt on shadcn primitives
 
 **Answer:** Confirmed. Reset shadcn primitives via MCP, update theming to align with design system. shadcn is the component source of truth.
+
+---
+
+### Q14: Accent Color — Remove Orange Entirely
+
+The `--accent` token is currently vivid orange (`oklch(0.7 0.18 45)` / ~#F97316). This violates Q1's decision: "Remove the existing design system entirely, retain only the primary teal color." Orange is not teal — it should never have been carried over.
+
+shadcn-ui uses `--accent` as the hover/highlight background for interactive list items (dropdown menus, context menus, select items, command palette, sidebar items, navigation menus — 40+ occurrences across 20 files). A vivid orange hover state is jarring and violates web design guidelines where hover backgrounds should be subtle.
+
+Fix: Set `--accent` to a subtle warm neutral (aligned with `--secondary` / `--muted`) per shadcn defaults. Remove orange from the design system entirely — no `--brand-orange`, no orange tokens. Anywhere currently using orange (links, availability indicators, location pins, chart-2) must be re-mapped to teal variants or warm neutrals.
+
+**Answer:** Confirmed. Orange is gone. Only primary teal retained per Q1. `--accent` becomes a subtle neutral for hover states. All former orange use cases re-map to teal or neutrals.
+
+---
+
+### Q15: Interactive State Colors — Full Audit & Overhaul
+
+A full audit of hover, focus, active, and data-state color classes reveals systematic violations of web design guidelines for interactive states. The problems fall into three tiers:
+
+**Tier 1 — CRITICAL: Orange accent on hover/focus backgrounds (20 instances, 8 core shadcn components)**
+shadcn components use `hover:bg-accent`, `focus:bg-accent`, and `data-[state=open]:bg-accent` — all resolving to vivid orange. Affected: `button.tsx` (outline/ghost variants), `dropdown-menu.tsx`, `context-menu.tsx`, `select.tsx`, `menubar.tsx`, `navigation-menu.tsx`, `toggle.tsx`, `badge.tsx`, `calendar.tsx`, `dialog.tsx`. Plus feature components: `home-search-form.tsx`, `register-with-role-chooser.tsx`, `place-detail-mobile-sheet.tsx`, `place-detail-availability-desktop.tsx`, `item.tsx`.
+
+**Tier 2 — HIGH: Hardcoded Tailwind color classes bypassing design tokens (~50+ instances)**
+Raw `bg-orange-*`/`text-orange-*` (~12 instances in owner-get-started-page, schema-display, tool.tsx), `bg-amber-*`/`text-amber-*` (~30 instances across 15+ files for warning/pending states), `bg-green-*`/`text-green-*` (~15 instances across 10+ files for success/confirm states). These bypass the `--warning`, `--success`, `--warning-light`, `--success-light` tokens already defined in globals.css.
+
+**Tier 3 — LOW: Brand-specific hex colors (acceptable)**
+Social media brand colors in `contact-section.tsx` (`#1877F2` Facebook, `#E4405F` Instagram) — contextually appropriate, documented exceptions.
+
+**Fix strategy:**
+1. Change `--accent` to subtle warm neutral → fixes all 20 Tier 1 instances automatically via CSS cascade
+2. Replace all hardcoded `orange-*`, `amber-*`, `green-*` Tailwind classes with design token equivalents (`bg-warning-light`, `text-warning`, `bg-success-light`, `text-success`, etc.)
+3. Ensure all interactive states follow web design guidelines: hover backgrounds barely-there, focus rings visible but not garish, active states subtle darkening
+
+**Answer:** Confirmed. Full interactive state overhaul. Tier 1 fixes via token change, Tier 2 via class replacement with design tokens, Tier 3 documented exceptions. All hover/focus/active states must feel gentle and professional.

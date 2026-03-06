@@ -37,7 +37,7 @@ export const TimelineReservationItem = React.memo(
       compact
         ? "left-0.5 right-0.5 border-l-2 px-1 py-0.5"
         : "left-1 right-1 border-l-4 px-3 py-2",
-      "border-l-emerald-500",
+      "border-l-success",
       onClick
         ? "cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
         : "cursor-default",
@@ -57,7 +57,7 @@ export const TimelineReservationItem = React.memo(
           )}
         >
           {compact ? (
-            <span className="text-[10px] font-semibold truncate text-emerald-600">
+            <span className="text-[10px] font-semibold truncate text-success">
               R
             </span>
           ) : (
@@ -112,7 +112,7 @@ export const TimelineReservationItem = React.memo(
           )}
         >
           {compact ? (
-            <span className="text-[10px] font-semibold truncate text-emerald-600">
+            <span className="text-[10px] font-semibold truncate text-success">
               R
             </span>
           ) : (

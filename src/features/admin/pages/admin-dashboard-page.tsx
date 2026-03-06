@@ -148,7 +148,7 @@ export default function AdminDashboardPage() {
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div>
                 <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-amber-500" />
+                  <AlertTriangle className="h-5 w-5 text-warning" />
                   Pending Claims
                 </CardTitle>
                 <CardDescription>Claims awaiting your review</CardDescription>
@@ -169,7 +169,7 @@ export default function AdminDashboardPage() {
                 </div>
               ) : pendingClaims.length === 0 ? (
                 <div className="text-center py-6 text-muted-foreground">
-                  <CheckCircle2 className="h-8 w-8 mx-auto mb-2 text-green-500" />
+                  <CheckCircle2 className="h-8 w-8 mx-auto mb-2 text-success" />
                   <p>No pending claims</p>
                 </div>
               ) : (

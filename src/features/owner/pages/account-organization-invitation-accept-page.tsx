@@ -110,7 +110,7 @@ export default function AccountOrganizationInvitationAcceptPage({
           </p>
 
           {hasLegacyToken && (
-            <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+            <div className="rounded-md border border-warning/30 bg-warning-light p-3 text-sm text-warning-foreground">
               This invitation link format is no longer supported. Enter the
               invitation code from your email to continue.
             </div>
@@ -135,7 +135,7 @@ export default function AccountOrganizationInvitationAcceptPage({
           </div>
 
           {state === "accepted" && (
-            <div className="rounded-md border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-900">
+            <div className="rounded-md border border-success/30 bg-success-light p-3 text-sm text-success">
               <div className="flex items-center gap-2 font-medium">
                 <CheckCircle2 className="h-4 w-4" />
                 Invitation accepted.
@@ -148,7 +148,7 @@ export default function AccountOrganizationInvitationAcceptPage({
           )}
 
           {state === "declined" && (
-            <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
+            <div className="rounded-md border border-warning/30 bg-warning-light p-3 text-sm text-warning-foreground">
               <div className="flex items-center gap-2 font-medium">
                 <XCircle className="h-4 w-4" />
                 Invitation declined.

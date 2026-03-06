@@ -130,7 +130,7 @@ export default function ExternalOpenPlayDetailPageView({
     <Container className="py-6">
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          <Card className="border-amber-500/30 bg-amber-500/5">
+          <Card className="border-warning/30 bg-warning/5">
             <CardHeader>
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
@@ -161,7 +161,7 @@ export default function ExternalOpenPlayDetailPageView({
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="rounded-md border border-amber-500/20 bg-amber-500/10 p-3 text-sm text-amber-900">
+              <div className="rounded-md border border-warning/20 bg-warning/10 p-3 text-sm text-warning-foreground">
                 This session was created from an external booking source (
                 {data.externalOpenPlay.sourcePlatform === "RECLUB"
                   ? "Reclub"
@@ -176,7 +176,7 @@ export default function ExternalOpenPlayDetailPageView({
               ) : null}
 
               {promotedOpenPlayId ? (
-                <div className="rounded-md border bg-green-500/5 p-3 text-sm">
+                <div className="rounded-md border bg-success/5 p-3 text-sm">
                   This session has been promoted to a verified Open Play.
                   <div className="mt-2">
                     <Button variant="outline" asChild size="sm">

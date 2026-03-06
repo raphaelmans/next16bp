@@ -328,7 +328,7 @@ export default function OwnerSettingsPage() {
           </div>
 
           {showOwnerOnlySectionHint ? (
-            <div className="rounded-md border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
+            <div className="rounded-md border border-warning/30 bg-warning-light p-4 text-sm text-warning-foreground">
               <div className="font-medium">
                 That section is only available to organization owners.
               </div>

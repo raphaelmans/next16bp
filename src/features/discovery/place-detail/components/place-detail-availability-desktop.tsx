@@ -127,7 +127,7 @@ export function PlaceDetailAvailabilityDesktop({
                 on the grid.
               </p>
             </div>
-            <Badge variant="secondary" className="bg-accent/10 text-accent">
+            <Badge variant="secondary" className="bg-primary/10 text-primary">
               Live availability
             </Badge>
           </div>
@@ -180,7 +180,7 @@ export function PlaceDetailAvailabilityDesktop({
                             "shrink-0 rounded-lg border px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
                             selectedCourtId === court.id
                               ? "border-primary bg-primary/10 text-primary"
-                              : "border-border bg-card text-foreground hover:border-accent/30 hover:bg-accent/10",
+                              : "border-border bg-card text-foreground hover:border-primary/30 hover:bg-primary/10",
                           )}
                         >
                           {court.label}

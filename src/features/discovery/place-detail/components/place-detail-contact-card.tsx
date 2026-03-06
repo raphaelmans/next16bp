@@ -68,7 +68,7 @@ export function PlaceDetailContactCard({
               href={contactDetail.websiteUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-accent hover:underline"
+              className="inline-flex items-center gap-1 text-primary hover:underline"
             >
               Visit
               <ExternalLink className="h-3 w-3" />
@@ -82,7 +82,7 @@ export function PlaceDetailContactCard({
               href={contactDetail.facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-accent hover:underline"
+              className="inline-flex items-center gap-1 text-primary hover:underline"
             >
               View
               <ExternalLink className="h-3 w-3" />
@@ -96,7 +96,7 @@ export function PlaceDetailContactCard({
               href={contactDetail.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-accent hover:underline"
+              className="inline-flex items-center gap-1 text-primary hover:underline"
             >
               View
               <ExternalLink className="h-3 w-3" />

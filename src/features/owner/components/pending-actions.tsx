@@ -29,7 +29,7 @@ export function PendingActions({ pendingCount }: PendingActionsProps) {
         <Button
           asChild
           size="sm"
-          className="bg-amber-600 hover:bg-amber-700 text-white w-fit"
+          className="bg-warning hover:bg-warning/90 text-white w-fit"
         >
           <Link href={`${appRoutes.organization.reservations}?status=pending`}>
             Review Now

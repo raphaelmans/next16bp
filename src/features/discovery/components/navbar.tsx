@@ -163,7 +163,7 @@ export function Navbar({ className }: NavbarProps) {
           variant="ghost"
           asChild
           onClick={handleListYourPlaceClick}
-          className="font-heading text-accent"
+          className="font-heading text-primary"
         >
           <Link href={listYourVenueHref}>List Your Venue</Link>
         </Button>
@@ -363,7 +363,7 @@ export function Navbar({ className }: NavbarProps) {
                 handleListYourPlaceClick();
                 setIsOpen(false);
               }}
-              className="py-2 text-lg font-heading font-semibold text-accent hover:text-accent/80 text-left"
+              className="py-2 text-lg font-heading font-semibold text-primary hover:text-primary/80 text-left"
             >
               List Your Venue
             </Link>

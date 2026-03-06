@@ -20,7 +20,7 @@ export function LocationPin({
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={cn("shrink-0 text-accent", className)}
+      className={cn("shrink-0 text-primary", className)}
       {...props}
     >
       <title>Location</title>
@@ -62,7 +62,7 @@ export function MapMarker({
         size={isSelected ? 40 : 32}
         className={cn(
           "drop-shadow-md transition-all",
-          isSelected ? "text-primary" : "text-accent",
+          isSelected ? "text-primary" : "text-primary",
         )}
       />
       {(label || price) && (
