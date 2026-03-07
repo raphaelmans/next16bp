@@ -237,10 +237,16 @@ export type GoogleLocGeocodeResult = {
 const geocodeClient = {
   async geocode(args: {
     address: string;
+    city?: string;
+    province?: string;
     signal?: AbortSignal;
   }): Promise<GoogleLocGeocodeResult> {
     const response = await googleLocKy.post("/api/v1/google-loc/geocode", {
-      json: { address: args.address },
+      json: {
+        address: args.address,
+        ...(args.city && { city: args.city }),
+        ...(args.province && { province: args.province }),
+      },
       signal: args.signal,
     });
 
@@ -282,7 +288,7 @@ export function useGoogleLocGeocodeMutation(
   options?: UseMutationOptions<
     GoogleLocGeocodeResult,
     ApiClientError,
-    { address: string },
+    { address: string; city?: string; province?: string },
     unknown
   >,
 ) {
@@ -292,8 +298,15 @@ export function useGoogleLocGeocodeMutation(
   return useMutation({
     ...rest,
     mutationKey: googleLocQueryKeys.geocode._def,
-    mutationFn: ({ address }: { address: string }) =>
-      geocodeClient.geocode({ address }),
+    mutationFn: ({
+      address,
+      city,
+      province,
+    }: {
+      address: string;
+      city?: string;
+      province?: string;
+    }) => geocodeClient.geocode({ address, city, province }),
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.setQueryData(
         googleLocQueryKeys.geocode(variables.address).queryKey,

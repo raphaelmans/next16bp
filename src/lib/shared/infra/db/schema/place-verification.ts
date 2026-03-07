@@ -1,7 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
-  check,
   index,
   integer,
   pgTable,
@@ -22,42 +21,26 @@ import { place } from "./place";
  * Place Verification table
  * Controls whether a place is verified and bookable.
  */
-export const placeVerification = pgTable(
-  "place_verification",
-  {
-    placeId: uuid("place_id")
-      .primaryKey()
-      .references(() => place.id, { onDelete: "cascade" }),
-    status: placeVerificationStatusEnum("status")
-      .notNull()
-      .default("UNVERIFIED"),
-    verifiedAt: timestamp("verified_at", { withTimezone: true }),
-    verifiedByUserId: uuid("verified_by_user_id").references(
-      () => authUsers.id,
-      {
-        onDelete: "set null",
-      },
-    ),
-    reservationsEnabled: boolean("reservations_enabled")
-      .notNull()
-      .default(false),
-    reservationsEnabledAt: timestamp("reservations_enabled_at", {
-      withTimezone: true,
-    }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true })
-      .defaultNow()
-      .notNull(),
-  },
-  (table) => [
-    check(
-      "place_verification_requires_verified",
-      sql`${table.reservationsEnabled} = false OR ${table.status} = 'VERIFIED'`,
-    ),
-  ],
-);
+export const placeVerification = pgTable("place_verification", {
+  placeId: uuid("place_id")
+    .primaryKey()
+    .references(() => place.id, { onDelete: "cascade" }),
+  status: placeVerificationStatusEnum("status").notNull().default("UNVERIFIED"),
+  verifiedAt: timestamp("verified_at", { withTimezone: true }),
+  verifiedByUserId: uuid("verified_by_user_id").references(() => authUsers.id, {
+    onDelete: "set null",
+  }),
+  reservationsEnabled: boolean("reservations_enabled").notNull().default(false),
+  reservationsEnabledAt: timestamp("reservations_enabled_at", {
+    withTimezone: true,
+  }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
 
 export const PlaceVerificationSchema = createSelectSchema(placeVerification);
 export const InsertPlaceVerificationSchema =

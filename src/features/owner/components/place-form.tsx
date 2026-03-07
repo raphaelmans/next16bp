@@ -66,6 +66,8 @@ export function PlaceForm({
     coordinateLabel,
     latitudeValue,
     longitudeValue,
+    provinceValue,
+    cityValue,
     handleMapPinChange,
     handleSubmit,
     submitting,
@@ -254,6 +256,9 @@ export function PlaceForm({
             longitude={longitudeValue}
             onChange={handleMapPinChange}
             searchEnabled={!isEditing}
+            defaultInteractive={!isEditing}
+            city={cityValue}
+            province={provinceValue}
           />
 
           <div className="grid gap-4 sm:grid-cols-2">

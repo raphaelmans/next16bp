@@ -355,52 +355,54 @@ export class GoogleLocService implements IGoogleLocService {
       throw new ValidationError("Missing GOOGLE_MAPS_API_KEY");
     }
 
-    const params = new URLSearchParams({
-      address: args.address,
-      region: "ph",
-      components: "country:PH",
-      key: apiKey,
-    });
+    const textQuery = [args.address, args.city, args.province]
+      .filter(Boolean)
+      .join(", ");
 
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?${params.toString()}`,
-      { cache: "no-store" },
+      "https://places.googleapis.com/v1/places:searchText",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": apiKey,
+          "X-Goog-FieldMask":
+            "places.displayName,places.formattedAddress,places.location",
+        },
+        body: JSON.stringify({ textQuery }),
+        cache: "no-store",
+      },
     );
 
+    if (!response.ok) {
+      const errorBody = await response.text();
+      throw new BadGatewayError("Google Places Text Search request failed", {
+        status: response.status,
+        body: errorBody,
+      });
+    }
+
     const json = (await response.json()) as {
-      status?: string;
-      error_message?: string;
-      results?: Array<{
-        geometry?: { location?: { lat: number; lng: number } };
-        formatted_address?: string;
+      places?: Array<{
+        displayName?: { text: string };
+        formattedAddress?: string;
+        location?: { latitude: number; longitude: number };
       }>;
     };
 
-    if (!response.ok) {
-      throw new BadGatewayError("Google Geocoding request failed", {
-        status: response.status,
-        body: json,
-      });
-    }
+    const places = json.places ?? [];
 
-    if (json.status === "ZERO_RESULTS" || (json.results?.length ?? 0) === 0) {
+    if (places.length === 0) {
       throw new ValidationError("No results found for that address");
     }
 
-    if (json.status && json.status !== "OK") {
-      throw new BadGatewayError("Google Geocoding status error", {
-        status: json.status,
-        error: json.error_message,
-      });
-    }
-
-    const results = (json.results ?? [])
-      .filter((r) => r.geometry?.location)
+    const results = places
+      .filter((p) => p.location)
       .slice(0, 5)
-      .map((r) => ({
-        lat: r.geometry!.location!.lat,
-        lng: r.geometry!.location!.lng,
-        formattedAddress: r.formatted_address ?? "Unknown address",
+      .map((p) => ({
+        lat: p.location?.latitude ?? 0,
+        lng: p.location?.longitude ?? 0,
+        formattedAddress: p.formattedAddress ?? "Unknown address",
       }));
 
     if (results.length === 0) {

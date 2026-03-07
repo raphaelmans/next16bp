@@ -31,6 +31,12 @@ interface PlaceMapPickerProps {
   onChange: (lat: number, lng: number) => void;
   /** When false, hides the address search bar. Default: true */
   searchEnabled?: boolean;
+  /** When true, skips the static preview and shows the interactive map immediately. Default: false */
+  defaultInteractive?: boolean;
+  /** City context for better geocode results */
+  city?: string;
+  /** Province context for better geocode results */
+  province?: string;
 }
 
 export function PlaceMapPicker({
@@ -38,9 +44,12 @@ export function PlaceMapPicker({
   longitude,
   onChange,
   searchEnabled = true,
+  defaultInteractive = false,
+  city,
+  province,
 }: PlaceMapPickerProps) {
   const apiKey = env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY;
-  const [isInteractive, setIsInteractive] = useState(false);
+  const [isInteractive, setIsInteractive] = useState(defaultInteractive);
 
   const hasCoordinates = latitude !== undefined && longitude !== undefined;
 
@@ -89,6 +98,8 @@ export function PlaceMapPicker({
         longitude={longitude}
         onChange={onChange}
         searchEnabled={searchEnabled}
+        city={city}
+        province={province}
       />
     </APIProvider>
   );
@@ -99,6 +110,8 @@ function MapPickerInner({
   longitude,
   onChange,
   searchEnabled = true,
+  city,
+  province,
 }: PlaceMapPickerProps) {
   const map = useMap();
 
@@ -142,7 +155,7 @@ function MapPickerInner({
 
     setSearchError(null);
     geocodeMutation.mutate(
-      { address: query },
+      { address: query, city, province },
       {
         onError: (error) => {
           if (isApiClientError(error) && error.httpStatus === 429) {
@@ -163,7 +176,7 @@ function MapPickerInner({
         },
       },
     );
-  }, [searchQuery, geocodeMutation]);
+  }, [searchQuery, geocodeMutation, city, province]);
 
   const handleSearchKeyDown = useCallback(
     (event: React.KeyboardEvent) => {

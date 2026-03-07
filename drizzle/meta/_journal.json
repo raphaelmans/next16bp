@@ -302,6 +302,13 @@
       "when": 1772840000000,
       "tag": "0039_availability_change_event",
       "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1772893800000,
+      "tag": "0040_remove_place_verification_requires_verified",
+      "breakpoints": true
     }
   ]
 }

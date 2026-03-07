@@ -61,6 +61,8 @@ export type GoogleLocNearbyResponse = z.infer<
 
 export const GoogleLocGeocodeRequestSchema = z.object({
   address: z.string().trim().min(1).max(200),
+  city: z.string().trim().max(100).optional(),
+  province: z.string().trim().max(100).optional(),
 });
 
 export const GoogleLocGeocodeResultSchema = z.object({

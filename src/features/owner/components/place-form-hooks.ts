@@ -265,6 +265,8 @@ export const usePlaceFormState = ({
     coordinateLabel,
     latitudeValue,
     longitudeValue,
+    provinceValue,
+    cityValue,
     handleMapPinChange,
     handleSubmit,
     submitting,

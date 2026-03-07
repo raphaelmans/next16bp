@@ -63,7 +63,8 @@
     "script:test-tier3": "dotenvx run --env-file=.env.local -- tsx scripts/test-tier3-normalize.ts",
     "script:test-all-tiers": "pnpm script:test-tier0 && pnpm script:test-tier1 && pnpm script:test-tier2 && pnpm script:test-tier3",
     "script:promote-tier3": "tsx scripts/promote-tier3.ts",
-    "script:validate-addon-pricing-migration": "dotenvx run --env-file=.env.local -- tsx scripts/validate-addon-pricing-migration.ts"
+    "script:validate-addon-pricing-migration": "dotenvx run --env-file=.env.local -- tsx scripts/validate-addon-pricing-migration.ts",
+    "script:test-geocode": "dotenvx run --env-file=.env.local -- tsx scripts/test-geocode.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.89",
