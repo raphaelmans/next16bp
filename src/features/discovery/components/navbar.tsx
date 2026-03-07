@@ -208,7 +208,7 @@ export function Navbar({ className }: NavbarProps) {
           side="right"
           className="w-[320px] sm:w-[360px] overflow-y-auto"
         >
-          <div className="flex flex-col gap-4 mt-8 pb-8">
+          <div className="flex flex-col gap-4 px-4 mt-8 pb-8">
             {/* Mobile Search */}
             <form
               action={appRoutes.courts.base}
